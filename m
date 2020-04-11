@@ -2,99 +2,96 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A66C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74BFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C580720936
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8625720CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SINfAoTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgDKVnw (ORCPT
+        id S1726786AbgDKVsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 17:43:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726029AbgDKVnw (ORCPT
+        Sat, 11 Apr 2020 17:48:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgDKVsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 17:43:52 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03BLX4Fe008984;
-        Sat, 11 Apr 2020 17:43:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30b6ttftpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 11 Apr 2020 17:43:43 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03BLaZ5M013776;
-        Sat, 11 Apr 2020 17:43:43 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30b6ttftpp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 11 Apr 2020 17:43:43 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03BLfMVK007615;
-        Sat, 11 Apr 2020 21:43:42 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03dal.us.ibm.com with ESMTP id 30b5h5xayg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 11 Apr 2020 21:43:42 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03BLhfVn12452540
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 11 Apr 2020 21:43:41 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A71392805E;
-        Sat, 11 Apr 2020 21:43:41 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF3EA28058;
-        Sat, 11 Apr 2020 21:43:40 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.65.249.129])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 11 Apr 2020 21:43:40 +0000 (GMT)
-Subject: Re: [PATCH v2 0/2] support to read and tune appraise mode in runtime
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        zhang.jia@linux.alibaba.com
-Cc:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, zhangliguang@linux.alibaba.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200409103440.47946-1-tianjia.zhang@linux.alibaba.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <1e160d08-788a-0c3b-0f9f-2077e55b286a@linux.vnet.ibm.com>
-Date:   Sat, 11 Apr 2020 17:43:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Apr 2020 17:48:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6ZNCz+B4KIIk9p9ZumerQ70SmmhJHlat7P94bUwDWh8=; b=SINfAoTU4O24ytUDtYf1j82q+Z
+        A1I3Ar8BrxWzvcxSg5gnFiUsb9qYKWvPSQR8YklWS0mUivQrwrgYFVzZeMfJAro6cscJhv312rb9q
+        rebxadfwUUQudNav98lFPeHlzsOLnHymVfcahAaAz291r6PvfK80krtUtUGyKQ5L3FyxZE2Hy3bOE
+        vAA99nQjABglrww54wXf5XYkdqPHUIg99xvICtZES0NxrPFdDTP1DRQZb5R4xmsVOcJOKuBzpsHZJ
+        FkxE8iXkaeNsgLXTmMiAhN6ZXjxCYTlCJKAZnCIHDeofv+vO31n6+y+e3jVtQyQOR+siiz8hHwyJ1
+        r5YgqHmQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jNNz8-0004lD-Ct; Sat, 11 Apr 2020 21:48:18 +0000
+Date:   Sat, 11 Apr 2020 14:48:18 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Rename page_offset() to page_pos()
+Message-ID: <20200411214818.GH21484@bombadil.infradead.org>
+References: <20200411203220.GG21484@bombadil.infradead.org>
+ <CAHk-=wgCAGVwAVTuaoJu4bF99JEG66iN7_vzih=Z33GMmOTC_Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200409103440.47946-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-11_06:2020-04-11,2020-04-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxlogscore=983
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004110193
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgCAGVwAVTuaoJu4bF99JEG66iN7_vzih=Z33GMmOTC_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 11, 2020 at 01:57:56PM -0700, Linus Torvalds wrote:
+> So honestly, i the confusion is that we have "pgoff_t", which is the
+> offset of the page counted in _pages_, then my reaction is that
+> 
+>  (a) I think the truly confusing name is "pgoff_t" (and any
+> "page_offset" variable of that type). Calling that "pgindex_t" and
+> "page_index" would be a real clarification.
 
-On 4/9/20 6:34 AM, Tianjia Zhang wrote:
-> Support the read and write operations of ima_appraise by adding a
-> securifyfs file 'appraise_mode'.
->
-> In order to tune appraise mode in runtime, writing a PKCS#7 signature
+I think you're right.  I have a patch series queued for 5.8 which
+renames a lot of 'pgoff_t offset' to 'pgoff_t index'.  I wouldn't mind
+at all renaming pgoff_t to pgindex_t.  If you're amenable, pgidx_t would
+be shorter.
 
-I am curious to know why would you tune appraise mode in runtime ?
+>  (b) if we really do want to rename page_offset() because of confusion
+> with the page index "offset", then the logical thing would be to
+> clarify that it's a byte offset, not the page index.
 
-Thanks & Regards,
+I wasn't entirely forthcoming ... I actually want to introduce a new
 
-       - Nayna
+#define page_offset(page, x) ((unsigned long)(x) & (page_size(page) - 1))
+
+to simplify handling huge pages.  So I always want to see offset be a
+byte count.  offset_in_page() is already taken, and I have no idea what
+else to call the function to get the offset of this address within a
+particular page.
+
+> If we'd want a _descriptive_ name, then "byte_offset_of_page()" would
+> probably be that. That's hard to mis-understand.
+> 
+> Yes that's also more of a mouthful, and it still has the "two
+> different names for the same thing" issue wrt
+> stable/old/rebased/whatever patches.
+
+That was one of the options we discussed, along with file_offset_of_page().
+
+> Which is why I'd much rather change "pgoff_t" to "pgindex_t" and
+> related "page_offset" variables to "page_index" variables.
+
+There's only about 20 of those out of the 938 pgoff_t users.  But there's
+over a hundred called 'pgoff'.  I need to get smarter about using
+Coccinelle; I'm sure it can do this.
 
