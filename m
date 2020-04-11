@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2509CC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A89C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF4B20708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870E7216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646688;
-	bh=DhzcEptChd0fwK1XPOxrmKjNSnVlPf5I4TA6HXVaIOw=;
+	s=default; t=1586646692;
+	bh=Sc9PaM8KG2j2M4LGfGMIyubp9wA2UO0p2iGeSHmlML0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXFTj+UHZXmdI4g90R6stwrJuHzwdQI1H4TRFuD6KHzqu0SetzjnYowBAOKFBIPMJ
-	 KFP2U1RXvxHViWmBJaIcH/UaugQcIQoqWSXjounS/hMdbw8nU/ZqubGe06eCDj2ljX
-	 C5eVy0RhloDuw/LOF6TIgmuGXtOtQ4V3TBj02a20=
+	b=Hvv4J4WX1fBm+LVkxPzN7SpouiiHR2H0TOxHHz2ckTbJ0ODRu4Atxj7mw/fBZKqaH
+	 eUgy3+7bNRxrTx5mKJe9f9HnrJGTbcw8zg+dLVi/S5QebRsIYnOEfADdYVNa1cUyDU
+	 hje87mYfnQdMwTY6trPv9v9imfuhK+BuQxNLiB28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbgDKXL0 (ORCPT
+        id S1729923AbgDKXLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728318AbgDKXLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:19 -0400
+        id S1729882AbgDKXLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4834821D7E;
-        Sat, 11 Apr 2020 23:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DEF120708;
+        Sat, 11 Apr 2020 23:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646679;
-        bh=DhzcEptChd0fwK1XPOxrmKjNSnVlPf5I4TA6HXVaIOw=;
+        s=default; t=1586646683;
+        bh=Sc9PaM8KG2j2M4LGfGMIyubp9wA2UO0p2iGeSHmlML0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZojzTM8Hz3gUVt7Hy3A4az7eYiRrGzOBVJqZeqRTRtKhpbXMIJnfpWc4Tg2PLTn0
-         0mzeaWwAjeNQp4FFinHft9QSRir2+XG71z5OquL1mWOY6RSqYGhe/WDcqybQSHi71U
-         QpxUxMA/deXYLt+Tokms1Ok6P1y7jXF/xgxPep6g=
+        b=NEQOiXTe+ScAHlodTO3N9AIlA5b87anXfjkQV7y0wTbboAvulLLcO9LGfcuCdZE22
+         nMcg91nrruUiKP9+golgMSYrCgcFZz2kekfw4JHzBc0fbH3J2tqRdedhURanRbbjW5
+         t/PBvPZcHK/pyEjeQ0FFUuVI8ayzM5EkFEiqItMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 076/108] net: axienet: Propagate failure of DMA descriptor setup
-Date:   Sat, 11 Apr 2020 19:09:11 -0400
-Message-Id: <20200411230943.24951-76-sashal@kernel.org>
+Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 079/108] brcmfmac: fix the incorrect return value in brcmf_inform_single_bss().
+Date:   Sat, 11 Apr 2020 19:09:14 -0400
+Message-Id: <20200411230943.24951-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,112 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Raveendran Somu <raveendran.somu@cypress.com>
 
-[ Upstream commit ee44d0b78839b21591501424fd3cb3648cc803b5 ]
+[ Upstream commit bd9944918ceb28ede97f715d209e220db5e92c09 ]
 
-When we fail allocating the DMA buffers in axienet_dma_bd_init(), we
-report this error, but carry on with initialisation nevertheless.
+The function brcmf_inform_single_bss returns the value as success,
+even when the length exceeds the maximum value.
+The fix is to send appropriate code on this error.
+This issue is observed when Cypress test group reported random fmac
+crashes when running their tests and the path was identified from the
+crash logs. With this fix the random failure issue in Cypress test group
+was resolved.
 
-This leads to a kernel panic when the driver later wants to send a
-packet, as it uses uninitialised data structures.
-
-Make the axienet_device_reset() routine return an error value, as it
-contains the DMA buffer initialisation. Make sure we propagate the error
-up the chain and eventually fail the driver initialisation, to avoid
-relying on non-initialised buffers.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585124429-97371-4-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 26 ++++++++++++++-----
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 345a795666e92..bb6e52f3bdf9b 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -437,9 +437,10 @@ static void axienet_setoptions(struct net_device *ndev, u32 options)
- 	lp->options |= options;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index e3ebb7abbdaed..28e08de04986f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -2812,7 +2812,7 @@ static s32 brcmf_inform_single_bss(struct brcmf_cfg80211_info *cfg,
  
--static void __axienet_device_reset(struct axienet_local *lp)
-+static int __axienet_device_reset(struct axienet_local *lp)
- {
- 	u32 timeout;
-+
- 	/* Reset Axi DMA. This would reset Axi Ethernet core as well. The reset
- 	 * process of Axi DMA takes a while to complete as all pending
- 	 * commands/transfers will be flushed or completed during this
-@@ -455,9 +456,11 @@ static void __axienet_device_reset(struct axienet_local *lp)
- 		if (--timeout == 0) {
- 			netdev_err(lp->ndev, "%s: DMA reset timeout!\n",
- 				   __func__);
--			break;
-+			return -ETIMEDOUT;
- 		}
- 	}
-+
-+	return 0;
- }
- 
- /**
-@@ -470,13 +473,17 @@ static void __axienet_device_reset(struct axienet_local *lp)
-  * areconnected to Axi Ethernet reset lines, this in turn resets the Axi
-  * Ethernet core. No separate hardware reset is done for the Axi Ethernet
-  * core.
-+ * Returns 0 on success or a negative error number otherwise.
-  */
--static void axienet_device_reset(struct net_device *ndev)
-+static int axienet_device_reset(struct net_device *ndev)
- {
- 	u32 axienet_status;
- 	struct axienet_local *lp = netdev_priv(ndev);
-+	int ret;
- 
--	__axienet_device_reset(lp);
-+	ret = __axienet_device_reset(lp);
-+	if (ret)
-+		return ret;
- 
- 	lp->max_frm_size = XAE_MAX_VLAN_FRAME_SIZE;
- 	lp->options |= XAE_OPTION_VLAN;
-@@ -491,9 +498,11 @@ static void axienet_device_reset(struct net_device *ndev)
- 			lp->options |= XAE_OPTION_JUMBO;
+ 	if (le32_to_cpu(bi->length) > WL_BSS_INFO_MAX) {
+ 		bphy_err(drvr, "Bss info is larger than buffer. Discarding\n");
+-		return 0;
++		return -EINVAL;
  	}
  
--	if (axienet_dma_bd_init(ndev)) {
-+	ret = axienet_dma_bd_init(ndev);
-+	if (ret) {
- 		netdev_err(ndev, "%s: descriptor allocation failed\n",
- 			   __func__);
-+		return ret;
- 	}
- 
- 	axienet_status = axienet_ior(lp, XAE_RCW1_OFFSET);
-@@ -518,6 +527,8 @@ static void axienet_device_reset(struct net_device *ndev)
- 	axienet_setoptions(ndev, lp->options);
- 
- 	netif_trans_update(ndev);
-+
-+	return 0;
- }
- 
- /**
-@@ -921,8 +932,9 @@ static int axienet_open(struct net_device *ndev)
- 	 */
- 	mutex_lock(&lp->mii_bus->mdio_lock);
- 	axienet_mdio_disable(lp);
--	axienet_device_reset(ndev);
--	ret = axienet_mdio_enable(lp);
-+	ret = axienet_device_reset(ndev);
-+	if (ret == 0)
-+		ret = axienet_mdio_enable(lp);
- 	mutex_unlock(&lp->mii_bus->mdio_lock);
- 	if (ret < 0)
- 		return ret;
+ 	if (!bi->ctl_ch) {
 -- 
 2.20.1
 
