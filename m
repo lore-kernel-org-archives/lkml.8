@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE1C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBB2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5BE20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576D420787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647698;
-	bh=a5MhkjJhLGiofqjLrUGMZvtWcls7SfWJinIAmTiwpEI=;
+	s=default; t=1586647702;
+	bh=NIa4Pc3mor/nTpJVhUxJObP/1o6lJ0kvr9Hw5UNiyhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eV9GUX7WGcT9VYqQ2dkpd1RtTPq3sOfJUgCzPG3kOpzC5KyM/Oxomgm+KUltXJZrW
-	 lS89kOf4QTOSLz/53pQCFJ6v7j1xzRzYWRnSHX8bh23eGX5bcaaPaWNz1/q5zxu4jF
-	 xxTSUGrRbQH2nA0vfkSTYIRy/tbZO8SBWISobfEg=
+	b=dX6Uq0WE1MZUTpbRKt6JLuxTdEc1qLWivLUHkvC16dEk12/grG4kIZLgc6qfTtago
+	 X9GEvGpDmj6DnLoCrhCVsnsR1B1lBCMk6+rA0j4geCsLwoX7TP/G9mTwkFymyVpx0/
+	 hEjLP8/TkOa0km9eB5QVIXFIIAJYjmd8Qh1ahsd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgDKXLY (ORCPT
+        id S1730381AbgDKX2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50904 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbgDKXLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:20 -0400
+        id S1729424AbgDKXLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80EF320708;
-        Sat, 11 Apr 2020 23:11:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F41652166E;
+        Sat, 11 Apr 2020 23:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646680;
-        bh=a5MhkjJhLGiofqjLrUGMZvtWcls7SfWJinIAmTiwpEI=;
+        s=default; t=1586646684;
+        bh=NIa4Pc3mor/nTpJVhUxJObP/1o6lJ0kvr9Hw5UNiyhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTZEHiinJ82lMHSI9T5ac+UmZVBiuK4SEqHLOCpy8CSnqAtpWgdnOFvB5yMGcVSGZ
-         XIBk6Ca8C/K09OQAnzoxqLpxUxgn4dyrFm4LyujuBMOuupqSOrkOWjF/KV/Hg19RLc
-         gm0VZT50tjrUwo6+LaHEkxI/4cFUFZSjcS++m6SE=
+        b=lF9iwf2BYt7AMNm4E2NEdgHTDBMMqJTygniEDr6Su8rTpw1a7fryMQOnkrYI6kAAo
+         xF2H+Y9zBmSQVTJ6HpFxd407Fw1TE51RxOrmlw7UtHXbNkF3VRbm+zjyse/UDwmAT1
+         fxYK4AfGsnd6DXMwzTWIWloO+15pGl/LFPcjlQJ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 077/108] brcmfmac: Fix driver crash on USB control transfer timeout
-Date:   Sat, 11 Apr 2020 19:09:12 -0400
-Message-Id: <20200411230943.24951-77-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 080/108] xfrm: add prep for esp beet mode offload
+Date:   Sat, 11 Apr 2020 19:09:15 -0400
+Message-Id: <20200411230943.24951-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -63,57 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raveendran Somu <raveendran.somu@cypress.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 93a5bfbc7cad8bf3dea81c9bc07761c1226a0860 ]
+[ Upstream commit 308491755f36c461ee67290af159fdba6be0169d ]
 
-When the control transfer gets timed out, the error status
-was returned without killing that urb, this leads to using
-the same urb. This issue causes the kernel crash as the same
-urb is sumbitted multiple times. The fix is to kill the
-urb for timeout transfer before returning error
+Like __xfrm_transport/mode_tunnel_prep(), this patch is to add
+__xfrm_mode_beet_prep() to fix the transport_header for gso
+segments, and reset skb mac_len, and pull skb data to the
+proto inside esp.
 
-Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585124429-97371-2-git-send-email-chi-hsien.lin@cypress.com
+This patch also fixes a panic, reported by ltp:
+
+  # modprobe esp4_offload
+  # runltp -f net_stress.ipsec_tcp
+
+  [ 2452.780511] kernel BUG at net/core/skbuff.c:109!
+  [ 2452.799851] Call Trace:
+  [ 2452.800298]  <IRQ>
+  [ 2452.800705]  skb_push.cold.98+0x14/0x20
+  [ 2452.801396]  esp_xmit+0x17b/0x270 [esp4_offload]
+  [ 2452.802799]  validate_xmit_xfrm+0x22f/0x2e0
+  [ 2452.804285]  __dev_queue_xmit+0x589/0x910
+  [ 2452.806264]  __neigh_update+0x3d7/0xa50
+  [ 2452.806958]  arp_process+0x259/0x810
+  [ 2452.807589]  arp_rcv+0x18a/0x1c
+
+It was caused by the skb going to esp_xmit with a wrong transport
+header.
+
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/xfrm/xfrm_device.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index 575ed19e91951..10387a7f5d565 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -328,11 +328,12 @@ static int brcmf_usb_tx_ctlpkt(struct device *dev, u8 *buf, u32 len)
- 		return err;
- 	}
- 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
--	clear_bit(0, &devinfo->ctl_op);
- 	if (!timeout) {
- 		brcmf_err("Txctl wait timed out\n");
-+		usb_kill_urb(devinfo->ctl_urb);
- 		err = -EIO;
- 	}
-+	clear_bit(0, &devinfo->ctl_op);
- 	return err;
+diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
+index 64486ad813411..0159de5ace90f 100644
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -46,6 +46,25 @@ static void __xfrm_mode_tunnel_prep(struct xfrm_state *x, struct sk_buff *skb,
+ 	pskb_pull(skb, skb->mac_len + x->props.header_len);
  }
  
-@@ -358,11 +359,12 @@ static int brcmf_usb_rx_ctlpkt(struct device *dev, u8 *buf, u32 len)
++static void __xfrm_mode_beet_prep(struct xfrm_state *x, struct sk_buff *skb,
++				  unsigned int hsize)
++{
++	struct xfrm_offload *xo = xfrm_offload(skb);
++	int phlen = 0;
++
++	if (xo->flags & XFRM_GSO_SEGMENT)
++		skb->transport_header = skb->network_header + hsize;
++
++	skb_reset_mac_len(skb);
++	if (x->sel.family != AF_INET6) {
++		phlen = IPV4_BEET_PHMAXLEN;
++		if (x->outer_mode.family == AF_INET6)
++			phlen += sizeof(struct ipv6hdr) - sizeof(struct iphdr);
++	}
++
++	pskb_pull(skb, skb->mac_len + hsize + (x->props.header_len - phlen));
++}
++
+ /* Adjust pointers into the packet when IPsec is done at layer2 */
+ static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
+ {
+@@ -66,9 +85,16 @@ static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
+ 			return __xfrm_transport_prep(x, skb,
+ 						     sizeof(struct ipv6hdr));
+ 		break;
++	case XFRM_MODE_BEET:
++		if (x->outer_mode.family == AF_INET)
++			return __xfrm_mode_beet_prep(x, skb,
++						     sizeof(struct iphdr));
++		if (x->outer_mode.family == AF_INET6)
++			return __xfrm_mode_beet_prep(x, skb,
++						     sizeof(struct ipv6hdr));
++		break;
+ 	case XFRM_MODE_ROUTEOPTIMIZATION:
+ 	case XFRM_MODE_IN_TRIGGER:
+-	case XFRM_MODE_BEET:
+ 		break;
  	}
- 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
- 	err = devinfo->ctl_urb_status;
--	clear_bit(0, &devinfo->ctl_op);
- 	if (!timeout) {
- 		brcmf_err("rxctl wait timed out\n");
-+		usb_kill_urb(devinfo->ctl_urb);
- 		err = -EIO;
- 	}
-+	clear_bit(0, &devinfo->ctl_op);
- 	if (!err)
- 		return devinfo->ctl_urb_actual_length;
- 	else
+ }
 -- 
 2.20.1
 
