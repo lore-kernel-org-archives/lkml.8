@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91853C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6647C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4B5206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BE6206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648722;
-	bh=BA1wD0MQngE1+OqOCXzhdFMDL6m9GfMjTw4r8v0uF80=;
+	s=default; t=1586648729;
+	bh=h7bIQ/J1z0zSTp+AbT7/HkqsVIeJEoQSgkH8AnSejOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSsOamevDa1HgUe1CW/2qn+MVy2XnplDZmsqDp4RsT9FGnYIF+Jfil7KpeFmh7+zS
-	 F6Wxez68fnNTdpTCs17EQAddwmj0sYyIUkzbFFIUIDv5ebgWf4tJDlQcLvAA29dZ8h
-	 YHBotypX/sLlTwOoRtJyCyA+Bq3hXKklPTFrRQKA=
+	b=i0XEEAdVPIq3tWkLGPH9SL5G+qUkJ3seWLt3vCNKfZnGlAa9qk5TQbLgR86cdWkKr
+	 IQD2gLchzs/eMNWRSkoa78W6UHa51pC93crb4st2R6g8ljeclQPADcchmt1aNf7wWF
+	 q70kR/bEayxk6LBktQCAoB9f/YBBNdMYB8eEQjrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgDKXpU (ORCPT
+        id S1729716AbgDKXp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40172 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:45:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726991AbgDKXFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:43 -0400
+        id S1727016AbgDKXFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B90B3214D8;
-        Sat, 11 Apr 2020 23:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 752ED21835;
+        Sat, 11 Apr 2020 23:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646343;
-        bh=BA1wD0MQngE1+OqOCXzhdFMDL6m9GfMjTw4r8v0uF80=;
+        s=default; t=1586646340;
+        bh=h7bIQ/J1z0zSTp+AbT7/HkqsVIeJEoQSgkH8AnSejOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYJWC2X5hmv9n9ZWr1/0mLRAleepWhLbrPojLaOlXlVR/UGTPDfr0pAav689EMJCS
-         mOUZYlRtCPPxdptRQLTLugIEybLVu54NXwokNsdKCGNBXG93aTB+9ok4MLwBjlvcTY
-         2j5M334K26wWg/hTaMKrqqB8JFtGtONs06zpn1tA=
+        b=A2Mj35PGBSocNb+b0gR22ZVmTE/dfktY8u1kX6lPTQLrttWaq3EKN1aeIXAB0WZ1Q
+         6POKmV6N4PRREodFCW4jw574U5K6l0+NzWlc4Ec7q+N3P/R33B++cR+Wgj/yEWkMVd
+         E39pz0Uc7eehKvkgGx+Pxa0CKnF4bL5ixn8yvwtk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 092/149] scsi: qla2xxx: Handle NVME status iocb correctly
-Date:   Sat, 11 Apr 2020 19:02:49 -0400
-Message-Id: <20200411230347.22371-92-sashal@kernel.org>
+Cc:     Yong Zhao <Yong.Zhao@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 090/149] drm/amdkfd: Fix a memory leak in queue creation error handling
+Date:   Sat, 11 Apr 2020 19:02:47 -0400
+Message-Id: <20200411230347.22371-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,106 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Easi <aeasi@marvell.com>
+From: Yong Zhao <Yong.Zhao@amd.com>
 
-[ Upstream commit 3d582b34992ba2fe4065f01019f0c08d12916faa ]
+[ Upstream commit 66f28b9a169855367d6e3ef71001969a8bffb19b ]
 
-Certain state flags bit combinations are not checked and not handled
-correctly. Plus, do not log a normal underrun situation where there is
-no frame drop.
+When the queue creation failed, some resources were not freed. Fix it.
 
-Link: https://lore.kernel.org/r/20200226224022.24518-17-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Yong Zhao <Yong.Zhao@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 47 ++++++++++++++++++++++++++++------
- 1 file changed, 39 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index e40705d38cea7..afaf9d483cd29 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1910,6 +1910,7 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	struct nvmefc_fcp_req *fd;
- 	uint16_t        ret = QLA_SUCCESS;
- 	uint16_t	comp_status = le16_to_cpu(sts->comp_status);
-+	int		logit = 0;
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c
+index 31fcd1b51f00f..4f7927b661ff4 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c
+@@ -328,6 +328,9 @@ int pqm_create_queue(struct process_queue_manager *pqm,
+ 	return retval;
  
- 	iocb = &sp->u.iocb_cmd;
- 	fcport = sp->fcport;
-@@ -1920,6 +1921,12 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	if (unlikely(iocb->u.nvme.aen_op))
- 		atomic_dec(&sp->vha->hw->nvme_active_aen_cnt);
- 
-+	if (unlikely(comp_status != CS_COMPLETE))
-+		logit = 1;
-+
-+	fd->transferred_length = fd->payload_length -
-+	    le32_to_cpu(sts->residual_len);
-+
- 	/*
- 	 * State flags: Bit 6 and 0.
- 	 * If 0 is set, we don't care about 6.
-@@ -1930,8 +1937,20 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	 */
- 	if (!(state_flags & (SF_FCP_RSP_DMA | SF_NVME_ERSP))) {
- 		iocb->u.nvme.rsp_pyld_len = 0;
--	} else if ((state_flags & SF_FCP_RSP_DMA)) {
-+	} else if ((state_flags & (SF_FCP_RSP_DMA | SF_NVME_ERSP)) ==
-+			(SF_FCP_RSP_DMA | SF_NVME_ERSP)) {
-+		/* Response already DMA'd to fd->rspaddr. */
- 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
-+	} else if ((state_flags & SF_FCP_RSP_DMA)) {
-+		/*
-+		 * Non-zero value in first 12 bytes of NVMe_RSP IU, treat this
-+		 * as an error.
-+		 */
-+		iocb->u.nvme.rsp_pyld_len = 0;
-+		fd->transferred_length = 0;
-+		ql_dbg(ql_dbg_io, fcport->vha, 0x307a,
-+			"Unexpected values in NVMe_RSP IU.\n");
-+		logit = 1;
- 	} else if (state_flags & SF_NVME_ERSP) {
- 		uint32_t *inbuf, *outbuf;
- 		uint16_t iter;
-@@ -1954,16 +1973,28 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
- 		for (; iter; iter--)
- 			*outbuf++ = swab32(*inbuf++);
--	} else { /* unhandled case */
--	    ql_log(ql_log_warn, fcport->vha, 0x503a,
--		"NVME-%s error. Unhandled state_flags of %x\n",
--		sp->name, state_flags);
- 	}
- 
--	fd->transferred_length = fd->payload_length -
--	    le32_to_cpu(sts->residual_len);
-+	if (state_flags & SF_NVME_ERSP) {
-+		struct nvme_fc_ersp_iu *rsp_iu = fd->rspaddr;
-+		u32 tgt_xfer_len;
- 
--	if (unlikely(comp_status != CS_COMPLETE))
-+		tgt_xfer_len = be32_to_cpu(rsp_iu->xfrd_len);
-+		if (fd->transferred_length != tgt_xfer_len) {
-+			ql_dbg(ql_dbg_io, fcport->vha, 0x3079,
-+				"Dropped frame(s) detected (sent/rcvd=%u/%u).\n",
-+				tgt_xfer_len, fd->transferred_length);
-+			logit = 1;
-+		} else if (comp_status == CS_DATA_UNDERRUN) {
-+			/*
-+			 * Do not log if this is just an underflow and there
-+			 * is no data loss.
-+			 */
-+			logit = 0;
-+		}
-+	}
-+
-+	if (unlikely(logit))
- 		ql_log(ql_log_warn, fcport->vha, 0x5060,
- 		   "NVME-%s ERR Handling - hdl=%x status(%x) tr_len:%x resid=%x  ox_id=%x\n",
- 		   sp->name, sp->handle, comp_status,
+ err_create_queue:
++	uninit_queue(q);
++	if (kq)
++		kernel_queue_uninit(kq, false);
+ 	kfree(pqn);
+ err_allocate_pqn:
+ 	/* check if queues list is empty unregister process from device */
 -- 
 2.20.1
 
