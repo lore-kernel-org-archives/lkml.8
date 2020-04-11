@@ -2,123 +2,169 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF7BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C553AC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A320E206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607910;
-	bh=7UERCu65CgP0U500+F+o3KO4ii49B6mhq0xWCr9GZ+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZCr8iSipunekPyeL9Jp1XGdKXwCHEt9i0BrILJJtelcvyGCxEePMMRaZAQV4VVkBO
-	 7qvID+y4Oqoo2RxizEdtz6a0OljLflQLsdGpJDD0MTampdcIiGQEhBms0qZs+3WxMs
-	 jGCog7iU6L4cwlCfqWQ8BKxFM2Z2GoHratp/TG6g=
+	by mail.kernel.org (Postfix) with ESMTP id 96C30206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVKtwmuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgDKMZF (ORCPT
+        id S1729026AbgDKMZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgDKMQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBAD22173E;
-        Sat, 11 Apr 2020 12:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607419;
-        bh=7UERCu65CgP0U500+F+o3KO4ii49B6mhq0xWCr9GZ+0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1b5mkGqP2lY+mol2FczUVlFrWRaFy18aCYQKYsY5dsd6bnTWlMgsS2pzlNT7ySK2K
-         mtxP8gucIjSZQiuyVc/35PEbGKqlKEo+h6ftL/WJrTV+DzurafHbWtFhv1ATlMa9rb
-         YZPymndxd6vUq7KGzKab9k24PgfZ8HH8zjXg+Iys=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jason Wang <jasowang@redhat.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 5.4 12/41] tun: Dont put_page() for all negative return values from XDP program
-Date:   Sat, 11 Apr 2020 14:09:21 +0200
-Message-Id: <20200411115504.966396550@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
-References: <20200411115504.124035693@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Sat, 11 Apr 2020 08:25:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42914 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbgDKMZQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:25:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j2so5044807wrs.9;
+        Sat, 11 Apr 2020 05:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PXnvbLdLrQw02Pv9aTraJTstO6BsBfshSbSvruk1AoI=;
+        b=eVKtwmuP9eIdsk0DhszqFM/hq7WkqRqir5lOWmDDJZ+lZVcGXyuUuO/jOnjM8mDYM+
+         SFYkcV9yi9yuUYTPhE2MftExFAECb2nT5xyY8TKHr7yD9lTPMjb9SlFwUnejhZ62EscA
+         toWiRpCF6/OhwypaUSnWTJ+yLZk/kyKeRmg5ztC4/axZrd8Yhmid80PA+dDCmM3agaDM
+         QTk01KBvlhT/6u15/u6/GDqWSNwWBAOGMk+R7SUs/3Ezir6yzC354SZFHsS16HbXG9e9
+         X76vq9XIbqCmrPwdVP+Esd3xTNJDcxCkSGKb8ZJuVinoBP/X0GXyPmhZiWyRSzOEZV4o
+         YBqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PXnvbLdLrQw02Pv9aTraJTstO6BsBfshSbSvruk1AoI=;
+        b=CKMxZZ8INH5cNMiLVd3BZoWJYR9UrKOOvSxTH3ycu5Zum8P5R5MiF5ihKmIOkY5w4r
+         SZ+se6taE+qRyNRdFyr3YPemHAn5ZQ3sS28in1d9GPBlIpS9cjtazo7YPbofm0edFnfO
+         b80wgC28iJQjJdawHgpwBp2V/aa2/5udqUuROboiUa1im9+tNMDrau0RZC7XdDTKbw2g
+         vSe5m1nE5KZW6a2WjwJltcjwtIRHunwamGttzh9Z/GqYiJrc9W26SLR5MkKjfMP7c3le
+         eTgcZL8TMk4OjvHshXFUI4zi/57eDTzjJBvHQLIYRCcGirRmh9eRG7xxAJdLn8afPGl7
+         xing==
+X-Gm-Message-State: AGi0PuaYs3/5g8+kaPzRueDdLx5eAo5si93JwyyeCmsUH2SxA/p7pDo7
+        51wtV/isFmurCsN1YO5PHXGZ4cVf
+X-Google-Smtp-Source: APiQypIdubht9dZYotoZNNgJZ0IsRf27uQmOuX3WrqdShZOIC5TejYPydYZrpUauBMUEpVWmYHWhbA==
+X-Received: by 2002:adf:f9cc:: with SMTP id w12mr9762920wrr.148.1586607914276;
+        Sat, 11 Apr 2020 05:25:14 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v19sm675565wra.57.2020.04.11.05.25.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 Apr 2020 05:25:13 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] dt-bindings: sram: convert rockchip-pmu-sram bindings to yaml
+Date:   Sat, 11 Apr 2020 14:25:07 +0200
+Message-Id: <20200411122507.4040-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+Current dts files with 'rockchip-pmu-sram' compatible nodes
+are now verified with sram.yaml, although the original
+text document still exists. Merge rockchip-pmu-sram.txt
+with sram.yaml by adding it as description with an example.
+Make #address-cells, #size-cells and ranges optional
+if there are no child nodes to prevent yaml warnings.
 
-[ Upstream commit bee348907d19d654e8524d3a946dcd25b693aa7e ]
-
-When an XDP program is installed, tun_build_skb() grabs a reference to
-the current page fragment page if the program returns XDP_REDIRECT or
-XDP_TX. However, since tun_xdp_act() passes through negative return
-values from the XDP program, it is possible to trigger the error path by
-mistake and accidentally drop a reference to the fragments page without
-taking one, leading to a spurious free. This is believed to be the cause
-of some KASAN use-after-free reports from syzbot [1], although without a
-reproducer it is not possible to confirm whether this patch fixes the
-problem.
-
-Ensure that we only drop a reference to the fragments page if the XDP
-transmit or redirect operations actually fail.
-
-[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-CC: Eric Dumazet <edumazet@google.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- drivers/net/tun.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Changes v4:
+  Make some properties optional
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(str
- 			alloc_frag->offset += buflen;
- 		}
- 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
--		if (err < 0)
--			goto err_xdp;
-+		if (err < 0) {
-+			if (act == XDP_REDIRECT || act == XDP_TX)
-+				put_page(alloc_frag->page);
-+			goto out;
-+		}
+Changes v3:
+  Document the compatible
+
+Changed v2:
+  Merge with sram.yaml
+---
+ .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 -------------
+ Documentation/devicetree/bindings/sram/sram.yaml   | 26 +++++++++++++++++++---
+ 2 files changed, 23 insertions(+), 19 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+
+diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+deleted file mode 100644
+index 6b42fda30..000000000
+--- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-Rockchip SRAM for pmu:
+-------------------------------
+-
+-The sram of pmu is used to store the function of resume from maskrom(the 1st
+-level loader). This is a common use of the "pmu-sram" because it keeps power
+-even in low power states in the system.
+-
+-Required node properties:
+-- compatible : should be "rockchip,rk3288-pmu-sram"
+-- reg : physical base address and the size of the registers window
+-
+-Example:
+-	sram@ff720000 {
+-		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
+-		reg = <0xff720000 0x1000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+index 7b83cc6c9..f474fee47 100644
+--- a/Documentation/devicetree/bindings/sram/sram.yaml
++++ b/Documentation/devicetree/bindings/sram/sram.yaml
+@@ -29,6 +29,7 @@ properties:
+       enum:
+         - mmio-sram
+         - atmel,sama5d2-securam
++        - rockchip,rk3288-pmu-sram
+ 
+   reg:
+     maxItems: 1
+@@ -118,9 +119,18 @@ patternProperties:
+ required:
+   - compatible
+   - reg
+-  - "#address-cells"
+-  - "#size-cells"
+-  - ranges
 +
- 		if (err == XDP_REDIRECT)
- 			xdp_do_flush_map();
- 		if (err != XDP_PASS)
-@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(str
++if:
++  properties:
++    compatible:
++      contains:
++        const: rockchip,rk3288-pmu-sram
++
++else:
++  required:
++    - "#address-cells"
++    - "#size-cells"
++    - ranges
  
- 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+ additionalProperties: false
  
--err_xdp:
--	put_page(alloc_frag->page);
- out:
- 	rcu_read_unlock();
- 	local_bh_enable();
-
+@@ -224,6 +234,16 @@ examples:
+     };
+ 
+   - |
++    // Rockchip's rk3288 SoC uses the sram of pmu to store the function of
++    // resume from maskrom(the 1st level loader). This is a common use of
++    // the "pmu-sram" because it keeps power even in low power states
++    // in the system.
++    sram@ff720000 {
++      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
++      reg = <0xff720000 0x1000>;
++    };
++
++  - |
+     // Allwinner's A80 SoC uses part of the secure sram for hotplugging of the
+     // primary core (cpu0). Once the core gets powered up it checks if a magic
+     // value is set at a specific location. If it is then the BROM will jump
+-- 
+2.11.0
 
