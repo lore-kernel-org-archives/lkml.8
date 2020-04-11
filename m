@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41162C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714AEC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171A42084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC382084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607606;
-	bh=datS3IKUZA9bgjNevrozUDfBcVDSvmpXzGjOJIW+x4A=;
+	s=default; t=1586607614;
+	bh=EmfY0OTG7JZDE8KriKilKrAHF7WbXWBGs5/1e/lrTow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgeybPxNKwTwgSpzVUoWSm8xDw/1kQ5rNtG+jC7Ic/G5Gt784snu/Q8FNqAnKDfgI
-	 tY1wQ6dMcQJveFAe3P4I4EG+r3E61IJyYTPLP5CpmDwE91CpDumSBRTirp8Bqh3ZZG
-	 uvBGg3X6080vxmBCUl642TuiU/eKh9wuhKq5cVdc=
+	b=wAkbigMMNuvQA/LQzwH4efCm73Yg9S+z23hBcdbjbukJyA+YUzGw8Xrl5vhVf/U3V
+	 u45xrN0J5ab4uiOl6acSVBkNsTyhAvoawTa6ZqsTT6wyVncFwHe/7UaDegyspzPN5t
+	 0zy5G8wd0K/Myylg1v2u63BNIyOfGwkc9S9qXJas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgDKMUD (ORCPT
+        id S1728988AbgDKMUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:20:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728915AbgDKMUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:02 -0400
+        id S1728929AbgDKMUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F225A20644;
-        Sat, 11 Apr 2020 12:20:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4AB120644;
+        Sat, 11 Apr 2020 12:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607602;
-        bh=datS3IKUZA9bgjNevrozUDfBcVDSvmpXzGjOJIW+x4A=;
+        s=default; t=1586607607;
+        bh=EmfY0OTG7JZDE8KriKilKrAHF7WbXWBGs5/1e/lrTow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xSWC9BHqoRkIBj9FcVcPoe6IiNiaqEDB1Bk461gVvQ0i5mfubAGphwQVe3bIGSoK2
-         rtJaOcQY7MKPFRx0aGMzpdviuCp2HuNUDwHcVUlFX+SRum8LseRRKroSYEMmQr7Sb3
-         z7lktQ+hhr8zHpWrds1Z0mwJOv9s3VlAePSOp8Og=
+        b=RJzVYaYmkzDh88xwbDyOCT/KiQpwdZQy+QjP7qfyQ7jEfWiDaOqT9vYenlnFGwIWg
+         9JUwzpnCOFUJbrP5ws+1LKibAOAYdsfpIW8bomQQT4FSBZ8y7/MfoETdqgnJ8VgdqO
+         pFo+J2wZ7uN8o4uAryYhJ7zvVOlqlYXyc7EZlohw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 08/44] net_sched: fix a missing refcnt in tcindex_init()
-Date:   Sat, 11 Apr 2020 14:09:28 +0200
-Message-Id: <20200411115457.578493370@linuxfoundation.org>
+        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
+        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
+        mkl@pengutronix.de, davem@davemloft.net
+Subject: [PATCH 5.5 10/44] slcan: Dont transmit uninitialized stack data in padding
+Date:   Sat, 11 Apr 2020 14:09:30 +0200
+Message-Id: <20200411115457.729173605@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -64,35 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Richard Palethorpe <rpalethorpe@suse.com>
 
-[ Upstream commit a8eab6d35e22f4f21471f16147be79529cd6aaf7 ]
+[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
 
-The initial refcnt of struct tcindex_data should be 1,
-it is clear that I forgot to set it to 1 in tcindex_init().
-This leads to a dec-after-zero warning.
+struct can_frame contains some padding which is not explicitly zeroed in
+slc_bump. This uninitialized data will then be transmitted if the stack
+initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
 
-Reported-by: syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com
-Fixes: 304e024216a8 ("net_sched: add a temporary refcnt for struct tcindex_data")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+This commit just zeroes the whole struct including the padding.
+
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: security@kernel.org
+Cc: wg@grandegger.com
+Cc: mkl@pengutronix.de
+Cc: davem@davemloft.net
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/can/slcan.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -151,6 +151,7 @@ static int tcindex_init(struct tcf_proto
- 	p->mask = 0xffff;
- 	p->hash = DEFAULT_HASH_SIZE;
- 	p->fall_through = 1;
-+	refcount_set(&p->refcnt, 1); /* Paired with tcindex_destroy_work() */
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -148,7 +148,7 @@ static void slc_bump(struct slcan *sl)
+ 	u32 tmpid;
+ 	char *cmd = sl->rbuff;
  
- 	rcu_assign_pointer(tp->root, p);
- 	return 0;
+-	cf.can_id = 0;
++	memset(&cf, 0, sizeof(cf));
+ 
+ 	switch (*cmd) {
+ 	case 'r':
+@@ -187,8 +187,6 @@ static void slc_bump(struct slcan *sl)
+ 	else
+ 		return;
+ 
+-	*(u64 *) (&cf.data) = 0; /* clear payload */
+-
+ 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
+ 	if (!(cf.can_id & CAN_RTR_FLAG)) {
+ 		for (i = 0; i < cf.can_dlc; i++) {
 
 
