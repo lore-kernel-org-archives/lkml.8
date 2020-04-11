@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F63C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A55AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519E920757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309EB20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646919;
-	bh=j/J7T8YddQ1GP3noX8Bur2iaAUFZ2iuLy0+IRzGiSN4=;
+	s=default; t=1586646923;
+	bh=G3UUIHyg7xSxPYcVcLYBK8Zfu2gVBd/q3PMHYp8s44I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0GwXIMYW3lymk6H+pqNXFZR3NG9bt6qbEv6SdbF8puNUAXbo762R/jJzGlEPuq5h
-	 64O5nYfEwkZbur14houXjyTAHHv7MnSBHwiX9ZwHpld4RsDvSnZ0tdImoP8zjpw04f
-	 KL87RPCge64NuQX7nCYkB68lALNlLWpwm3SJVMYk=
+	b=KqAMGxhSxMmJQf8ZLpYjqmB9T9YrahgHHAdOwzbYVLb5HDu2943P7jUQQOGMMVYY/
+	 bDNxLA4nPt8e55OKS/jkEfuHynVa7o7l50oS3sO4E+zVtaq8fdKogRP21XK9YCDaDV
+	 PXvPrB/aAOvDtWFQWjX0ZWhE21Dy+DO1mVb5oElk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbgDKXPK (ORCPT
+        id S1730958AbgDKXPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57330 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgDKXPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:15:03 -0400
+        id S1730082AbgDKXO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B716F216FD;
-        Sat, 11 Apr 2020 23:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E12420787;
+        Sat, 11 Apr 2020 23:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646903;
-        bh=j/J7T8YddQ1GP3noX8Bur2iaAUFZ2iuLy0+IRzGiSN4=;
+        s=default; t=1586646899;
+        bh=G3UUIHyg7xSxPYcVcLYBK8Zfu2gVBd/q3PMHYp8s44I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZ2gT/aBD3Grtbb5c7B6fnG4ZoTcAj6v3Nr9PulpwuByrjS5Ml1O6fInPrcAQpNL0
-         4ntH8U2wE69IyKwYsM34gWdlMwLUDV/DL0SVXs2JIy9xHE4tZvXpbPnE+2j4FjD4tX
-         hHigmy1oAmvef3/xOTd6kg1giObHcRBwD3YvBs1M=
+        b=wxXM3FzuI8ztVk3zO/jVKpX3cgXyBxl3bbQTRbeCqM6cZXFL2P04vmhQULMvynQvC
+         4kh8e2j79VylXJ8t3VlNTYKgXR85DlfWj2jJYsEB4/ac6ZiKilMk7+MKTqEIan/z1y
+         sXSFNvEWyoAvFXOR3mmtSbfdONg1yFFj9csMUvpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/16] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sat, 11 Apr 2020 19:14:43 -0400
-Message-Id: <20200411231447.27182-13-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/16] drm/omap: fix possible object reference leak
+Date:   Sat, 11 Apr 2020 19:14:39 -0400
+Message-Id: <20200411231447.27182-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
 References: <20200411231447.27182-1-sashal@kernel.org>
@@ -62,38 +67,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 71811cac8532b2387b3414f7cd8fe9e497482864 ]
+[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+The call to of_find_matching_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/rfcomm/tty.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/video/fbdev/omap2/dss/omapdss-boot-init.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-index 8e385a0ae60e0..939fbf7b352d4 100644
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
- 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
--		else if (dlc) {
--			rfcomm_dlc_put(dlc);
-+		if (dlc)
- 			return -EBUSY;
--		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
- 		if (!dlc)
- 			return -ENOMEM;
+diff --git a/drivers/video/fbdev/omap2/dss/omapdss-boot-init.c b/drivers/video/fbdev/omap2/dss/omapdss-boot-init.c
+index 8b6f6d5fdd68b..43186fa8a13c9 100644
+--- a/drivers/video/fbdev/omap2/dss/omapdss-boot-init.c
++++ b/drivers/video/fbdev/omap2/dss/omapdss-boot-init.c
+@@ -194,7 +194,7 @@ static int __init omapdss_boot_init(void)
+ 	dss = of_find_matching_node(NULL, omapdss_of_match);
+ 
+ 	if (dss == NULL || !of_device_is_available(dss))
+-		return 0;
++		goto put_node;
+ 
+ 	omapdss_walk_device(dss, true);
+ 
+@@ -221,6 +221,8 @@ static int __init omapdss_boot_init(void)
+ 		kfree(n);
+ 	}
+ 
++put_node:
++	of_node_put(dss);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
