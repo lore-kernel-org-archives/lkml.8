@@ -2,219 +2,126 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3158FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04E4C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08DE206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A970C20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FAkU2UMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgDKAtl (ORCPT
+        id S1726794AbgDKAu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 20:49:41 -0400
-Received: from shells.gnugeneration.com ([66.240.222.126]:38546 "EHLO
-        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgDKAtk (ORCPT
+        Fri, 10 Apr 2020 20:50:26 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:20771 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726766AbgDKAuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 20:49:40 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Apr 2020 20:49:40 EDT
-Received: by shells.gnugeneration.com (Postfix, from userid 1000)
-        id 27A6A1A402BF; Fri, 10 Apr 2020 17:43:20 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 17:43:20 -0700
-From:   Vito Caputo <vcaputo@pengaru.com>
-To:     netdev@vger.kernel.org
-Cc:     courmisch@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: kernel BUG at net/phonet/socket.c:LINE!
-Message-ID: <20200411004320.py2cashe4edsjdzp@shells.gnugeneration.com>
-References: <00000000000062b41d05a2ea82b0@google.com>
+        Fri, 10 Apr 2020 20:50:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586566225; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=SB4GqjxTYxSwE2Jrbaeh5PW7vM2AAVJ1/jWY1f7zthg=; b=FAkU2UMyHmA8bnA8NQ3uScbfIibD8lgvD5X2AEwikSouHPrqZs5apJ7zCwHFmFGcyiRDOGn3
+ QRdICWs3cq3o+wVYC/PODtLxdII9mmxJRrkFghUC/iEbTLJA3u+mYE27y2wRHt2PJl6Vx6ct
+ P5i6s9ZDJNfky78dIsRgsRRgGRY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e911444.7f050544c3b0-smtp-out-n05;
+ Sat, 11 Apr 2020 00:50:12 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7B13BC432C2; Sat, 11 Apr 2020 00:50:11 +0000 (UTC)
+Received: from [10.110.2.190] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22BA1C433CB;
+        Sat, 11 Apr 2020 00:50:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22BA1C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device
+ nodes
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>
+References: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
+ <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
+ <20200407233848.GN20625@builder.lan>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <b54f9190-78c9-5b6a-932c-ad2b7b4444f3@codeaurora.org>
+Date:   Fri, 10 Apr 2020 17:50:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000062b41d05a2ea82b0@google.com>
+In-Reply-To: <20200407233848.GN20625@builder.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello peeps,
 
-I stared a bit at the code surrounding this report, and maybe someone more
-familiar with the network stack can clear something up for me real quick:
-
-> RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
-
-net/phonet/socket.c:
-202 static int pn_socket_autobind(struct socket *sock)
-203 {
-204         struct sockaddr_pn sa;
-205         int err;
-206 
-207         memset(&sa, 0, sizeof(sa));
-208         sa.spn_family = AF_PHONET;
-209         err = pn_socket_bind(sock, (struct sockaddr *)&sa,
-210                                 sizeof(struct sockaddr_pn));
-211         if (err != -EINVAL)
-212                 return err;
-213         BUG_ON(!pn_port(pn_sk(sock->sk)->sobject));
-214         return 0; /* socket was already bound */
-215 }
-
-line 213 is the BUG_ON for !sock->sk->sobject, a phonet-specific member:
-
-include/net/phonet/phonet.h:
- 23 struct pn_sock {
- 24         struct sock     sk;
- 25         u16             sobject;
- 26         u16             dobject;
- 27         u8              resource;
- 28 };
-
-pn_socket_autobind() expects that to be non-null whenever pn_socket_bind()
-returns -EINVAL, which seems odd, but the comment claims it's already bound,
-let's look at pn_socket_bind():
-
-net/phonet/socket.c:
-156 static int pn_socket_bind(struct socket *sock, struct sockaddr *addr, int len)
-157 {
-158         struct sock *sk = sock->sk;
-159         struct pn_sock *pn = pn_sk(sk);
-160         struct sockaddr_pn *spn = (struct sockaddr_pn *)addr;
-161         int err;
-162         u16 handle;
-163         u8 saddr;
-164 
-165         if (sk->sk_prot->bind)
-166                 return sk->sk_prot->bind(sk, addr, len);
-167 
-168         if (len < sizeof(struct sockaddr_pn))
-169                 return -EINVAL;
-170         if (spn->spn_family != AF_PHONET)
-171                 return -EAFNOSUPPORT;
-172 
-173         handle = pn_sockaddr_get_object((struct sockaddr_pn *)addr);
-174         saddr = pn_addr(handle);
-175         if (saddr && phonet_address_lookup(sock_net(sk), saddr))
-176                 return -EADDRNOTAVAIL;
-177 
-178         lock_sock(sk); 
-179         if (sk->sk_state != TCP_CLOSE || pn_port(pn->sobject)) {
-180                 err = -EINVAL; /* attempt to rebind */
-181                 goto out;
-182         }
-183         WARN_ON(sk_hashed(sk));
-184         mutex_lock(&port_mutex);
-185         err = sk->sk_prot->get_port(sk, pn_port(handle));
-186         if (err)
-187                 goto out_port;
-188 
-189         /* get_port() sets the port, bind() sets the address if applicable */
-190         pn->sobject = pn_object(saddr, pn_port(pn->sobject));
-191         pn->resource = spn->spn_resource;
-192 
-193         /* Enable RX on the socket */
-194         err = sk->sk_prot->hash(sk);
-195 out_port:
-196         mutex_unlock(&port_mutex);
-197 out:
-198         release_sock(sk);
-199         return err;
-200 }
-
-
-The first return branch in there simply hands off the bind to and indirection
-sk->sk_prot->bind() if present.  This smells ripe for breaking the assumptions
-of that BUG_ON().  I'm assuming there's no point for such an indirection if not
-to enable a potentially non-phonet-ops hook, otherwise we'd just be do the
-bind.  If not, isn't this plain recursive?  Color me confused.  Will other
-bind() implementations return -EINVAL when already bound with sobject set? no.
-
-Furthermore, -EINVAL is also returned when len < sizeof(struct sockaddr_pn),
-maybe the rebind case should return -EADDRINUSE instead of -EINVAL?
-
-I must be missing some things.
-
-Regards,
-Vito Caputo
-
-
-On Fri, Apr 10, 2020 at 12:16:17AM -0700, syzbot wrote:
-> Hello,
+On 4/7/2020 4:38 PM, Bjorn Andersson wrote:
+> On Tue 07 Apr 15:24 PDT 2020, Wesley Cheng wrote:
 > 
-> syzbot found the following crash on:
+>> From: Jack Pham <jackp@codeaurora.org>
+>>
+>> Add device nodes for the USB3 controller, QMP SS PHY and
+>> SNPS HS PHY.
+>>
 > 
-> HEAD commit:    b93cfb9c net: icmp6: do not select saddr from iif when rou..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13501d2be00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=94a7f1dec460ee83
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2dc91e7fc3dea88b1e8a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> Thanks for the respin Wesley, and thanks for testing Vinod. Just spotted
+> one little details below.
 > 
-> Unfortunately, I don't have any reproducer for this crash yet.
+>> Signed-off-by: Jack Pham <jackp@codeaurora.org>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Tested-by: Vinod Koul <vinod.koul@linaro.org>
+>> ---
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+2dc91e7fc3dea88b1e8a@syzkaller.appspotmail.com
+> Please make a habit of documenting what changed since the previous
+> version here, below the ---.
 > 
-> ------------[ cut here ]------------
-> kernel BUG at net/phonet/socket.c:213!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 8394 Comm: syz-executor.4 Not tainted 5.6.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
-> RIP: 0010:pn_socket_autobind+0x13c/0x160 net/phonet/socket.c:202
-> Code: 44 05 00 00 00 00 00 44 89 e0 48 8b 4c 24 58 65 48 33 0c 25 28 00 00 00 75 23 48 83 c4 60 5b 5d 41 5c 41 5d c3 e8 b4 ad 41 fa <0f> 0b e8 9d 56 7f fa eb 9f e8 b6 56 7f fa e9 6d ff ff ff e8 0c dd
-> RSP: 0018:ffffc900034cfda8 EFLAGS: 00010212
-> RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc90011d66000
-> RDX: 0000000000000081 RSI: ffffffff873183dc RDI: 0000000000000003
-> RBP: 1ffff92000699fb5 R08: ffff8880620f61c0 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f84223c9700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004d8730 CR3: 000000005cce0000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  pn_socket_listen+0x40/0x200 net/phonet/socket.c:399
->  __sys_listen+0x17d/0x250 net/socket.c:1696
->  __do_sys_listen net/socket.c:1705 [inline]
->  __se_sys_listen net/socket.c:1703 [inline]
->  __x64_sys_listen+0x50/0x70 net/socket.c:1703
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45c889
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f84223c8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000032
-> RAX: ffffffffffffffda RBX: 00007f84223c96d4 RCX: 000000000045c889
-> RDX: 0000000000000000 RSI: 000000000000007d RDI: 0000000000000003
-> RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-> R13: 0000000000000712 R14: 00000000004c9e2d R15: 000000000076bf0c
-> Modules linked in:
-> ---[ end trace 65d6f1331216c544 ]---
-> RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
-> RIP: 0010:pn_socket_autobind+0x13c/0x160 net/phonet/socket.c:202
-> Code: 44 05 00 00 00 00 00 44 89 e0 48 8b 4c 24 58 65 48 33 0c 25 28 00 00 00 75 23 48 83 c4 60 5b 5d 41 5c 41 5d c3 e8 b4 ad 41 fa <0f> 0b e8 9d 56 7f fa eb 9f e8 b6 56 7f fa e9 6d ff ff ff e8 0c dd
-> RSP: 0018:ffffc900034cfda8 EFLAGS: 00010212
-> RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc90011d66000
-> RDX: 0000000000000081 RSI: ffffffff873183dc RDI: 0000000000000003
-> RBP: 1ffff92000699fb5 R08: ffff8880620f61c0 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f84223c9700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000076c000 CR3: 000000005cce0000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
+>>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
+>>  2 files changed, 113 insertions(+)
+> [..]
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> [..]
+>> +		usb_1_hsphy: phy@88e2000 {
+>> +			compatible = "qcom,usb-snps-hs-7nm-phy",
+>> +							"qcom,sm8150-usb-hs-phy";
+> [..]
+>> +		usb_1: usb@a6f8800 {
+>> +			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
 > 
+> The first cell here should be qcom,sm8150-dwc3. The Linux driver will
+> "fall through" and match on the less specific "qcom,dwc3", but if we in
+> the future realize that we have sm8150 specific behavior/quirks we can
+> make the driver match on the more specific one to implement this.
 > 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> And similarly the order of the compatibles in &usb_1_hsphy should be
+> reversed as well.
 > 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Regards,
+> Bjorn
+> 
+
+Hi Bjorn,
+
+Thanks for the input.  Will do that and re-submit v4.
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
