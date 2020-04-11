@@ -2,111 +2,103 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0CAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C85AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B6E2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647577;
-	bh=6+bWPDXJPSzVT3DAvVk4z5aXpF04J4dNJSc3XKD31JY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HSgm7XtsYYDHA++eY8XBb4oGv4ZawPL7cPJ15Kq4Ua4jR0FeQjxG03D3gulbkMxcF
-	 qgYMP4GSav/J2HLKbqpcKLlY+ifz8ZKDIHZji6H1khL7dfT3m0FgfbBi/DlX6A0IHL
-	 gXzQy0PsAX5b5HszggvCNTTgOa/ulcYg4+qCOGaM=
+	by mail.kernel.org (Postfix) with ESMTP id 7602921D7B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="S6ObeyaX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbgDKX0O (ORCPT
+        id S1730888AbgDKX0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:26:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730028AbgDKXLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:26:19 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35359 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730026AbgDKXLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Apr 2020 19:11:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FE31215A4;
-        Sat, 11 Apr 2020 23:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646715;
-        bh=6+bWPDXJPSzVT3DAvVk4z5aXpF04J4dNJSc3XKD31JY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqMtr8+5FPl6qpxoCi87vFlWTYlsBwHEQ68LtabgxoNK359OXtfKnbXEtEgsm2TaS
-         X6OiB5aLtCk8CljE3blbh0fFBIPEg0Vat4LKEoTbvBo+IRtCbKdvZTWxr4tKv/pnOW
-         IfCOAKewRcxf91cs9QmYXgLI4LYADNx0E/JoDrhQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 106/108] svcrdma: Fix leak of transport addresses
-Date:   Sat, 11 Apr 2020 19:09:41 -0400
-Message-Id: <20200411230943.24951-106-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
-References: <20200411230943.24951-1-sashal@kernel.org>
+Received: by mail-ed1-f65.google.com with SMTP id c7so7116709edl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 16:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j1v+KX0c0vN9YAU7uM6QypK1ttzUW4y+OxpBn0M3m3M=;
+        b=S6ObeyaX8+WvxpzJV4Jp692S50a2yGFQh+4wOaDJVvpFjCLDrfQyw1CF8MiCC/Hkoo
+         Wu2yLceSH7wqAkDDS78Nm3CM0oxEYnNWKTuOzNspGDbKt70Ov+mkz08p+UqjRthkXDQe
+         7g+ywrKByPcQX7Z4VirISCe93FyM5bqM/Cd59h6IO7TQQfn6Ng/bQpFzYYyC988z8brO
+         WuH/iPJkS3KW0lt7gA2tvIDd86Q1P6r+mGijPNe3owwUZGobTjXFX8e6fSWQ1NTiM+AQ
+         JfKFxArsy6uKqudGjR9mqyzywvRJikOWlwke+x9Hw9HGnRe5ql+mTFQAETohZEZ+DwUZ
+         T40Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j1v+KX0c0vN9YAU7uM6QypK1ttzUW4y+OxpBn0M3m3M=;
+        b=MJ++UtvYaUjn/5FDFsv2b2javtyMkwrYw5uSSQ0zHr1AekhZBKk2zpGtCUxOLsHj+o
+         0Vl5Ybolxx2wKFdUA8zKZHhwCmYzSm1oIqGABG2NQMZYxzK4+z0AMwfsEsiKyj49wICG
+         bnQUqjK0G496dq9WrCn+Sw6sX68v9hSP/948PaC1jVL++FzmeWSEbJeLS7slHUm9sgNB
+         S7WfJ+AZar1QmWWETesYXpGeOgjkUIN2rKb/okbHHyYF3xU9d2/VLCVnJgN1lQ97M/id
+         V+fnnGQuvaKR3kKOKBBy3130oQfI7DXky9B784+jxsPs9UQNcxU1lMYt+/QSPjhJOQMo
+         R27Q==
+X-Gm-Message-State: AGi0PuYH5ZdMP3IrjY4JLEpmK2Uv6kZdj4WGtCt4s+rV8EX5j58TtcjK
+        LflV/NMqe9pzPqiIry1rtoIWqnBTyreHsU/mpFU1JQ==
+X-Google-Smtp-Source: APiQypIQV+O4plRu4V7wCIyi5dxeIfE6EeeB3ExaZvqvAUx/G7mUWqkxg21V766Y2OZi676a3KrW4JA/WqDlJwvAoNw=
+X-Received: by 2002:a17:906:2994:: with SMTP id x20mr9475367eje.156.1586646714555;
+ Sat, 11 Apr 2020 16:11:54 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200410141813.29497-1-colin.king@canonical.com>
+In-Reply-To: <20200410141813.29497-1-colin.king@canonical.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sat, 11 Apr 2020 20:11:43 -0300
+Message-ID: <CAAEAJfB3D7KxruC2TzeEhyeF8qGHOWUa2hKmqcptub5gciSAxQ@mail.gmail.com>
+Subject: Re: [PATCH] media: gspca: remove redundant assignment to variable status
+To:     Colin King <colin.king@canonical.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Fri, 10 Apr 2020 at 11:18, Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The variable status is being assigned a value that is never read.
+> The assignment is redundant and can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Kernel memory leak detected:
-
-unreferenced object 0xffff888849cdf480 (size 8):
-  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
-  hex dump (first 8 bytes):
-    30 00 cd 49 88 88 ff ff                          0..I....
-  backtrace:
-    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
-    [<00000000a2724354>] kstrdup+0x2b/0x43
-    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
-    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
-    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
-    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
-    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
-    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
-    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
-    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
-    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
-    [<000000005205fb78>] kthread+0xf6/0xfb
-    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
-
-Introduce a call to xprt_rdma_free_addresses() similar to the way
-that the TCP backchannel releases a transport's peer address
-strings.
-
-Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index 908e78bb87c64..c4fb930779a92 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -250,6 +250,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
- {
- 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
- 
-+	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
- }
- 
--- 
-2.20.1
-
+> ---
+>  drivers/media/usb/gspca/mr97310a.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/media/usb/gspca/mr97310a.c b/drivers/media/usb/gspca/mr97310a.c
+> index 502fc2eaffe0..464aa61cd914 100644
+> --- a/drivers/media/usb/gspca/mr97310a.c
+> +++ b/drivers/media/usb/gspca/mr97310a.c
+> @@ -287,7 +287,6 @@ static int zero_the_pointer(struct gspca_dev *gspca_dev)
+>                         return err_code;
+>
+>                 err_code = cam_get_response16(gspca_dev, 0x21, 0);
+> -               status = data[0];
+>                 tries++;
+>                 if (err_code < 0)
+>                         return err_code;
+> --
+> 2.25.1
+>
