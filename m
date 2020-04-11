@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5285FC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C92C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D09A206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D075206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647867;
-	bh=DV5Siq9nxgXQLlufSKA5rpKeFOV7fcM+GMowbjG7CGg=;
+	s=default; t=1586647872;
+	bh=ZXMzDijToI0Xp1tlWp3wP7ZbDdz7Yh1T+un0pHOH3tA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/ypvIWDYFq4sZGrA//MDpHOD1GLlK1qhU3XmBnL5t+t4RSWIwt4rjgjVGV22o0SF
-	 ZZc9eXS5hpNnpE52PNiVgIUSfl/CtqCtMz6YyCidrS2xFfhr5TqOd9pXIW9LOnUSL6
-	 431Lq1HKL9orPS3FKO3yeOLoOCBtKNy+hr0GWvyc=
+	b=FNiPvisMsn/lsN5/zj/+ZWNXwaXIhWtT5v4hsxSLblwMr5FT9Fu8CqI74uWaVvCfn
+	 qk9oyxtWyRqqfrx02zIPNcEldRqEIsFcrqFNbSECvhdaaoYDh61Z153XXAcgI4QMzK
+	 aq2bRiEpGDzNovGgETY7E1nPdjWR5pTHb5hWAHYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgDKXbF (ORCPT
+        id S1728447AbgDKXKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:31:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729576AbgDKXK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:26 -0400
+        id S1728995AbgDKXKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 108252166E;
-        Sat, 11 Apr 2020 23:10:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A76216FD;
+        Sat, 11 Apr 2020 23:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646626;
-        bh=DV5Siq9nxgXQLlufSKA5rpKeFOV7fcM+GMowbjG7CGg=;
+        s=default; t=1586646623;
+        bh=ZXMzDijToI0Xp1tlWp3wP7ZbDdz7Yh1T+un0pHOH3tA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKV5zs8TztdwrioaGdwtQBeMDFVeeLKtq7muDddBLbcPaprGIHMRBS+0YAM/2tmiJ
-         A87ZAAAszQTurbIC9lGU/guGm6uKPRnaJ4DEXmPmEaEG6aWxXj2Hx2EpqyYTqj/4Yo
-         GdfZz1jl51CGn/E8QDSGiiOCPT+AKLvH4roOSe/U=
+        b=cHt2675JR0RR5xZqC7j3MU584QtfuGN1Ja8OTijfp2SHnxbJ5xH/Zvge04A7Mrb41
+         bwOF/uIZ/VomXvH3fQbcEVeIwjFhlaZElR7DY6vlLsZEhst5amZOf1Xd6U9FGXFjRM
+         pYYI3AUZdlb+0W0YE4/EXQcIp8f70VnHwlfjZBK8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 035/108] RDMA/rxe: Fix configuration of atomic queue pair attributes
-Date:   Sat, 11 Apr 2020 19:08:30 -0400
-Message-Id: <20200411230943.24951-35-sashal@kernel.org>
+Cc:     Aric Cyr <aric.cyr@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 032/108] drm/amd/display: Only round InfoFrame refresh rates
+Date:   Sat, 11 Apr 2020 19:08:27 -0400
+Message-Id: <20200411230943.24951-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,73 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit fb3063d31995cc4cf1d47a406bb61d6fb1b1d58d ]
+[ Upstream commit 3fc6376ed6f2f67bc9fb0c7a3cf07967d6aa6216 ]
 
-From the comment above the definition of the roundup_pow_of_two() macro:
+[Why]
+When calculating nominal refresh rates, don't round.
+Only the VSIF needs to be rounded.
 
-     The result is undefined when n == 0.
+[How]
+Revert rounding change for nominal and just round when forming the
+FreeSync VSIF.
 
-Hence only pass positive values to roundup_pow_of_two(). This patch fixes
-the following UBSAN complaint:
-
-  UBSAN: Undefined behaviour in ./include/linux/log2.h:57:13
-  shift exponent 64 is too large for 64-bit type 'long unsigned int'
-  Call Trace:
-   dump_stack+0xa5/0xe6
-   ubsan_epilogue+0x9/0x26
-   __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
-   rxe_qp_from_attr.cold+0x37/0x5d [rdma_rxe]
-   rxe_modify_qp+0x59/0x70 [rdma_rxe]
-   _ib_modify_qp+0x5aa/0x7c0 [ib_core]
-   ib_modify_qp+0x3b/0x50 [ib_core]
-   cma_modify_qp_rtr+0x234/0x260 [rdma_cm]
-   __rdma_accept+0x1a7/0x650 [rdma_cm]
-   nvmet_rdma_cm_handler+0x1286/0x14cd [nvmet_rdma]
-   cma_cm_event_handler+0x6b/0x330 [rdma_cm]
-   cma_ib_req_handler+0xe60/0x22d0 [rdma_cm]
-   cm_process_work+0x30/0x140 [ib_cm]
-   cm_req_handler+0x11f4/0x1cd0 [ib_cm]
-   cm_work_handler+0xb8/0x344e [ib_cm]
-   process_one_work+0x569/0xb60
-   worker_thread+0x7a/0x5d0
-   kthread+0x1e6/0x210
-   ret_from_fork+0x24/0x30
-
-Link: https://lore.kernel.org/r/20200217205714.26937-1-bvanassche@acm.org
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_qp.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index e2c6d1cedf416..f85273883794b 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -592,15 +592,16 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
- 	int err;
+diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+index 7d67cb2c61f04..37090384c2302 100644
+--- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
++++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+@@ -520,12 +520,12 @@ static void build_vrr_infopacket_data(const struct mod_vrr_params *vrr,
+ 		infopacket->sb[6] |= 0x04;
  
- 	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
--		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
-+		int max_rd_atomic = attr->max_rd_atomic ?
-+			roundup_pow_of_two(attr->max_rd_atomic) : 0;
+ 	/* PB7 = FreeSync Minimum refresh rate (Hz) */
+-	infopacket->sb[7] = (unsigned char)(vrr->min_refresh_in_uhz / 1000000);
++	infopacket->sb[7] = (unsigned char)((vrr->min_refresh_in_uhz + 500000) / 1000000);
  
- 		qp->attr.max_rd_atomic = max_rd_atomic;
- 		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
- 	}
+ 	/* PB8 = FreeSync Maximum refresh rate (Hz)
+ 	 * Note: We should never go above the field rate of the mode timing set.
+ 	 */
+-	infopacket->sb[8] = (unsigned char)(vrr->max_refresh_in_uhz / 1000000);
++	infopacket->sb[8] = (unsigned char)((vrr->max_refresh_in_uhz + 500000) / 1000000);
  
- 	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
--		int max_dest_rd_atomic =
--			__roundup_pow_of_two(attr->max_dest_rd_atomic);
-+		int max_dest_rd_atomic = attr->max_dest_rd_atomic ?
-+			roundup_pow_of_two(attr->max_dest_rd_atomic) : 0;
  
- 		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
+ 	//FreeSync HDR
+@@ -743,10 +743,6 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
+ 	nominal_field_rate_in_uhz =
+ 			mod_freesync_calc_nominal_field_rate(stream);
+ 
+-	/* Rounded to the nearest Hz */
+-	nominal_field_rate_in_uhz = 1000000ULL *
+-			div_u64(nominal_field_rate_in_uhz + 500000, 1000000);
+-
+ 	min_refresh_in_uhz = in_config->min_refresh_in_uhz;
+ 	max_refresh_in_uhz = in_config->max_refresh_in_uhz;
  
 -- 
 2.20.1
