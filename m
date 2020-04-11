@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D56C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C86BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B834214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5594E20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607135;
-	bh=07I6Bw/G51yx+YqzTzZ37w7TB15uW1/mpGnuPKZHymY=;
+	s=default; t=1586607139;
+	bh=aoqivjAdPfLXCHPm7MVh9istfFKL/G+QKC2KQBc0cpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bs8iPv3RYHj8Z+Z83laABb4ZXSEZYpzexhPUPWVFBYiIQ6NzNREQVDEx8jobP/N1+
-	 02BH6i5R6X0XGJbcVh8jU1XYmzqijjtEgVsGjoBQITuQIUsv3MQ1E7gjxXNryY38ii
-	 s153v8oEF9hFgluavxwXpiIQGZsAKfsp7SKKKUsw=
+	b=BIyBrCKTIT5AHkbbSHVrJOXdbSwGrPXK9fuVBdqtoMF7dsnZJpyHpejURVUW7kjHk
+	 DCtTz5xijlFbprKhZMmEckQOFHFSXeDBoqwhR6B+GAojV28yG9XK7pjtPpsdDqswb7
+	 c0vwP9TydTGmIX9rPy54nUMmZDiq/5NDpP44XTjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgDKMMN (ORCPT
+        id S1727199AbgDKMMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbgDKMMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:06 -0400
+        id S1727183AbgDKMMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2749021744;
-        Sat, 11 Apr 2020 12:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098BD21744;
+        Sat, 11 Apr 2020 12:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607126;
-        bh=07I6Bw/G51yx+YqzTzZ37w7TB15uW1/mpGnuPKZHymY=;
+        s=default; t=1586607131;
+        bh=aoqivjAdPfLXCHPm7MVh9istfFKL/G+QKC2KQBc0cpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/y8JDnFhSuAyfEERCgm9Bp0CO1IsdMBqBgYmySoJ/jS/1GMO5NdlCh+08SJ0z66B
-         KGXFTKQovGiv8nemPLGoA6aDWPdZrvk4kgepmhxhC7czrI9Lvg9jsJ9JawbcxyOdkW
-         5+UiqQLsjxCnd7ny9iUqTlt1XxLDlkihLz+nE3S4=
+        b=xz93EiA3+oS3Xbjz42bFENCZLlRgATkVwrICVGrU3sO0ICVVdm0EJV8mu8Q++gPuC
+         UFsmcucmUvTCaK6fjdet/eWDn2vpjcCXqpfK/Iy+agTPfHG4HYPO9gisMZjtLKU1Bj
+         JgTiSZIW3Pcgpl0jbECOjkBwV59cJ9T5DhMXrdiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 18/32] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-Date:   Sat, 11 Apr 2020 14:08:57 +0200
-Message-Id: <20200411115420.726560940@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.9 02/32] l2tp: fix race between l2tp_session_delete() and l2tp_tunnel_closeall()
+Date:   Sat, 11 Apr 2020 14:08:41 +0200
+Message-Id: <20200411115419.004556589@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -61,63 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
+commit b228a94066406b6c456321d69643b0d7ce11cfa6 upstream.
 
-After the power-down bit is cleared, the chip internally triggers a
-global reset. According to the KSZ9031 documentation, we have to wait at
-least 1ms for the reset to finish.
+There are several ways to remove L2TP sessions:
 
-If the chip is accessed during reset, read will return 0xffff, while
-write will be ignored. Depending on the system performance and MDIO bus
-speed, we may or may not run in to this issue.
+  * deleting a session explicitly using the netlink interface (with
+    L2TP_CMD_SESSION_DELETE),
+  * deleting the session's parent tunnel (either by closing the
+    tunnel's file descriptor or using the netlink interface),
+  * closing the PPPOL2TP file descriptor of a PPP pseudo-wire.
 
-This bug was discovered on an iMX6QP system with KSZ9031 PHY and
-attached PHY interrupt line. If IRQ was used, the link status update was
-lost. In polling mode, the link status update was always correct.
+In some cases, when these methods are used concurrently on the same
+session, the session can be removed twice, leading to use-after-free
+bugs.
 
-The investigation showed, that during a read-modify-write access, the
-read returned 0xffff (while the chip was still in reset) and
-corresponding write hit the chip _after_ reset and triggered (due to the
-0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
-resulting in the next write being lost due to the new reset cycle.
+This patch adds a 'dead' flag, used by l2tp_session_delete() and
+l2tp_tunnel_closeall() to prevent them from stepping on each other's
+toes.
 
-This patch fixes the issue by adding a 1...2 ms sleep after the
-genphy_resume().
+The session deletion path used when closing a PPPOL2TP file descriptor
+doesn't need to be adapted. It already has to ensure that a session
+remains valid for the lifetime of its PPPOL2TP file descriptor.
+So it takes an extra reference on the session in the ->session_close()
+callback (pppol2tp_session_close()), which is eventually dropped
+in the ->sk_destruct() callback of the PPPOL2TP socket
+(pppol2tp_session_destruct()).
+Still, __l2tp_session_unhash() and l2tp_session_queue_purge() can be
+called twice and even concurrently for a given session, but thanks to
+proper locking and re-initialisation of list fields, this is not an
+issue.
 
-Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/micrel.c |    7 +++++++
- 1 file changed, 7 insertions(+)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -28,6 +28,7 @@
- #include <linux/micrel_phy.h>
- #include <linux/of.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
+---
+ net/l2tp/l2tp_core.c |    6 ++++++
+ net/l2tp/l2tp_core.h |    1 +
+ 2 files changed, 7 insertions(+)
+
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1351,6 +1351,9 @@ again:
  
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
-@@ -728,6 +729,12 @@ static int kszphy_resume(struct phy_devi
- {
- 	genphy_resume(phydev);
+ 			hlist_del_init(&session->hlist);
  
-+	/* After switching from power-down to normal mode, an internal global
-+	 * reset is automatically generated. Wait a minimum of 1 ms before
-+	 * read/write access to the PHY registers.
-+	 */
-+	usleep_range(1000, 2000);
++			if (test_and_set_bit(0, &session->dead))
++				goto again;
 +
- 	/* Enable PHY Interrupts */
- 	if (phy_interrupt_is_valid(phydev)) {
- 		phydev->interrupts = PHY_INTERRUPT_ENABLED;
+ 			if (session->ref != NULL)
+ 				(*session->ref)(session);
+ 
+@@ -1799,6 +1802,9 @@ EXPORT_SYMBOL_GPL(__l2tp_session_unhash)
+  */
+ int l2tp_session_delete(struct l2tp_session *session)
+ {
++	if (test_and_set_bit(0, &session->dead))
++		return 0;
++
+ 	if (session->ref)
+ 		(*session->ref)(session);
+ 	__l2tp_session_unhash(session);
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -84,6 +84,7 @@ struct l2tp_session_cfg {
+ struct l2tp_session {
+ 	int			magic;		/* should be
+ 						 * L2TP_SESSION_MAGIC */
++	long			dead;
+ 
+ 	struct l2tp_tunnel	*tunnel;	/* back pointer to tunnel
+ 						 * context */
 
 
