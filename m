@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA885C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907D8C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB6220644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4B420692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608093;
-	bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
+	s=default; t=1586608096;
+	bh=MesyVyOKCevRf+2TnmIg4GCFkNmuAs9DzQo/LPs8jfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7HPK7DdzWYc8s9FI6v3Gw78Q6Y+vgOzwH2mjSS9cJAt5XYRZutoQd8AJ7YB6R+Xr
-	 WgSjNIreG99MJQQACkZll+TBog3vW12KUSI4xMpzyf7eqaRjboQjKScHS3EO6a+yC6
-	 8NplkcK+fUo+uq+8QoWuh9yDaFNwibbeZUBXaWNE=
+	b=kt/CG7+7J0Rno53CYSlj+fa8YLC4LU2zbiC0Xi8HMEm1GGtqWGahUMeE9gdgePbs+
+	 IaccZkaAkd8VeYTppRNkc1ChWtT3aji7Av1GjpWjtiUPrf/c1Zdu6hsr+8CWhBirGq
+	 mMTn2CEjs7hExSCFG0x3RUNtItzuhhepGwNQ3v0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgDKMNG (ORCPT
+        id S1726678AbgDKMNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbgDKMNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:02 -0400
+        id S1727444AbgDKMM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E173621556;
-        Sat, 11 Apr 2020 12:13:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F122137B;
+        Sat, 11 Apr 2020 12:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607182;
-        bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
+        s=default; t=1586607180;
+        bh=MesyVyOKCevRf+2TnmIg4GCFkNmuAs9DzQo/LPs8jfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OX2ywap5V4jG4S/DnkqFTjTtylV3l7CanNzGtx1iy4rFRK84+0FfNim5Zu8RSgQ/L
-         Wo/p+crdu0aC+YbSLFWipW7RfuxyvuoZMCLT7b4dSDRqqbhRKrRP+9y2Hop2Y6UQAg
-         fV/2qBGHnwwfIn3br9xZCjgdeJvMecgnZrPue1k0=
+        b=ETY5g+FK50UkzMOq/saVI28xdGz70vL/m+xAn3F1Jwb9rOeQxoLXlLLnW428Z89Hk
+         P8c1hn4RslzsPuenDcZP+P+ku9IaY9t4VMZWQnAECOVAVWxUGCnjraY/K5KY1XTFCE
+         w8lDrAUZod5yz9ETb6g63paadgvNwhq1u92BRw0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.9 26/32] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sat, 11 Apr 2020 14:09:05 +0200
-Message-Id: <20200411115422.334652602@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 32/32] drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
+Date:   Sat, 11 Apr 2020 14:09:11 +0200
+Message-Id: <20200411115422.925768776@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -62,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-commit 71811cac8532b2387b3414f7cd8fe9e497482864 upstream.
+commit a4c30a4861c54af78c4eb8b7855524c1a96d9f80 upstream.
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+When parsing the reply of a DP_REMOTE_DPCD_READ DPCD command the
+result is wrong due to a missing idx increment.
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+This was never noticed since DP_REMOTE_DPCD_READ is currently not
+used, but if you enable it, then it is all wrong.
+
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/e72ddac2-1dc0-100a-d816-9ac98ac009dd@xs4all.nl
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/rfcomm/tty.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
- 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
--		else if (dlc) {
--			rfcomm_dlc_put(dlc);
-+		if (dlc)
- 			return -EBUSY;
--		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
- 		if (!dlc)
- 			return -ENOMEM;
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -431,6 +431,7 @@ static bool drm_dp_sideband_parse_remote
+ 	if (idx > raw->curlen)
+ 		goto fail_len;
+ 	repmsg->u.remote_dpcd_read_ack.num_bytes = raw->msg[idx];
++	idx++;
+ 	if (idx > raw->curlen)
+ 		goto fail_len;
+ 
 
 
