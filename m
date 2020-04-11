@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18868C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE1C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CF320787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5BE20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647689;
-	bh=QtqcqNrh8gSI5otoesP8d0n0ilG3XoCr6525kSbeVKI=;
+	s=default; t=1586647698;
+	bh=a5MhkjJhLGiofqjLrUGMZvtWcls7SfWJinIAmTiwpEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ainWHisKldwlRK/RdeM78lmjExUahgygnTQj81bAXLGEe06n+z9vFpu1RDRLDgmc0
-	 uqy+vZb766JuDF9zZrFON20XK4vvLAFWjuJW2bIrtjs+vbMNE/xTurC+GCxwf5gUHC
-	 /FpaoFp7EFOvSeDbQveOs6Wh10SqClQQ7pY4N8tc=
+	b=eV9GUX7WGcT9VYqQ2dkpd1RtTPq3sOfJUgCzPG3kOpzC5KyM/Oxomgm+KUltXJZrW
+	 lS89kOf4QTOSLz/53pQCFJ6v7j1xzRzYWRnSHX8bh23eGX5bcaaPaWNz1/q5zxu4jF
+	 xxTSUGrRbQH2nA0vfkSTYIRy/tbZO8SBWISobfEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbgDKX2G (ORCPT
+        id S1729891AbgDKXLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbgDKXL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:28 -0400
+        id S1729868AbgDKXLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 657C420CC7;
-        Sat, 11 Apr 2020 23:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80EF320708;
+        Sat, 11 Apr 2020 23:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646688;
-        bh=QtqcqNrh8gSI5otoesP8d0n0ilG3XoCr6525kSbeVKI=;
+        s=default; t=1586646680;
+        bh=a5MhkjJhLGiofqjLrUGMZvtWcls7SfWJinIAmTiwpEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqmaARHB3ZsvkAQcAYZFLXpv0LL0FRWbgdV7hVA4o84nRKHz6JFCquoITnFbSKqqF
-         OewC3al/ofiwiyJTZF/73Df4jADCAQAYkDAKMC0LTivZ/2jze4MCahPcFzmVbvc5dE
-         /OOIpn+qK7r3yax7MZ7Q6Tdm9gKY8XKNX5IPBKpA=
+        b=cTZEHiinJ82lMHSI9T5ac+UmZVBiuK4SEqHLOCpy8CSnqAtpWgdnOFvB5yMGcVSGZ
+         XIBk6Ca8C/K09OQAnzoxqLpxUxgn4dyrFm4LyujuBMOuupqSOrkOWjF/KV/Hg19RLc
+         gm0VZT50tjrUwo6+LaHEkxI/4cFUFZSjcS++m6SE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 083/108] netfilter: nf_tables: silence a RCU-list warning in nft_table_lookup()
-Date:   Sat, 11 Apr 2020 19:09:18 -0400
-Message-Id: <20200411230943.24951-83-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 077/108] brcmfmac: Fix driver crash on USB control transfer timeout
+Date:   Sat, 11 Apr 2020 19:09:12 -0400
+Message-Id: <20200411230943.24951-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,61 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Raveendran Somu <raveendran.somu@cypress.com>
 
-[ Upstream commit 0a6a9515fe390976cd762c52d8d4f446d7a14285 ]
+[ Upstream commit 93a5bfbc7cad8bf3dea81c9bc07761c1226a0860 ]
 
-It is safe to traverse &net->nft.tables with &net->nft.commit_mutex
-held using list_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false
-positive,
+When the control transfer gets timed out, the error status
+was returned without killing that urb, this leads to using
+the same urb. This issue causes the kernel crash as the same
+urb is sumbitted multiple times. The fix is to kill the
+urb for timeout transfer before returning error
 
-WARNING: suspicious RCU usage
-net/netfilter/nf_tables_api.c:523 RCU-list traversed in non-reader section!!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by iptables/1384:
- #0: ffffffff9745c4a8 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x25/0x60 [nf_tables]
-
-Call Trace:
- dump_stack+0xa1/0xea
- lockdep_rcu_suspicious+0x103/0x10d
- nft_table_lookup.part.0+0x116/0x120 [nf_tables]
- nf_tables_newtable+0x12c/0x7d0 [nf_tables]
- nfnetlink_rcv_batch+0x559/0x1190 [nfnetlink]
- nfnetlink_rcv+0x1da/0x210 [nfnetlink]
- netlink_unicast+0x306/0x460
- netlink_sendmsg+0x44b/0x770
- ____sys_sendmsg+0x46b/0x4a0
- ___sys_sendmsg+0x138/0x1a0
- __sys_sendmsg+0xb6/0x130
- __x64_sys_sendmsg+0x48/0x50
- do_syscall_64+0x69/0xf4
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585124429-97371-2-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 068daff41f6e6..e94326cc853c2 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -456,7 +456,8 @@ static struct nft_table *nft_table_lookup(const struct net *net,
- 	if (nla == NULL)
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 575ed19e91951..10387a7f5d565 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -328,11 +328,12 @@ static int brcmf_usb_tx_ctlpkt(struct device *dev, u8 *buf, u32 len)
+ 		return err;
+ 	}
+ 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
+-	clear_bit(0, &devinfo->ctl_op);
+ 	if (!timeout) {
+ 		brcmf_err("Txctl wait timed out\n");
++		usb_kill_urb(devinfo->ctl_urb);
+ 		err = -EIO;
+ 	}
++	clear_bit(0, &devinfo->ctl_op);
+ 	return err;
+ }
  
--	list_for_each_entry_rcu(table, &net->nft.tables, list) {
-+	list_for_each_entry_rcu(table, &net->nft.tables, list,
-+				lockdep_is_held(&net->nft.commit_mutex)) {
- 		if (!nla_strcmp(nla, table->name) &&
- 		    table->family == family &&
- 		    nft_active_genmask(table, genmask))
+@@ -358,11 +359,12 @@ static int brcmf_usb_rx_ctlpkt(struct device *dev, u8 *buf, u32 len)
+ 	}
+ 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
+ 	err = devinfo->ctl_urb_status;
+-	clear_bit(0, &devinfo->ctl_op);
+ 	if (!timeout) {
+ 		brcmf_err("rxctl wait timed out\n");
++		usb_kill_urb(devinfo->ctl_urb);
+ 		err = -EIO;
+ 	}
++	clear_bit(0, &devinfo->ctl_op);
+ 	if (!err)
+ 		return devinfo->ctl_urb_actual_length;
+ 	else
 -- 
 2.20.1
 
