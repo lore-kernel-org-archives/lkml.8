@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B357AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF1DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAD620936
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232D120787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647909;
-	bh=vQ3jZm3eZAgzaKu5PDnf7Uubas4hx5OoyrLHm1E/q4Y=;
+	s=default; t=1586647913;
+	bh=STQzFU6IpBy9QafJaROwwjjxCvfjuYae1pwq00wToGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sO/tu1mYydOvnZEbSKvJhHHk3YljuvuNR/3nRmDhsX465Rm3ly+9aCk4qJpGWhbUh
-	 DvLsA7AIoEUaL0jrVOlZ9FnZ0yasz6XQci6NLIDryGDr4o0O2ldiGvjsaAeu0XAy3L
-	 5lqq9McORstBllgQWSl1oiCK/4N1o5SOKBiNSmI4=
+	b=IiJaRsP9VjEE4Ezcsb3oxPEL2sBwY1gIpnslvm0tYo51YGBQGZGxkwyvC3MjEFNx5
+	 j4IrSKxSoy+I9889N4tQGBvS3ALBiVtCc86rlWZBpte/KrjaEDh6/CU+a/EqOVQgwr
+	 vZDF7Gzp1JFAZoqT37OXrGujWB72H+yowXQen5Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgDKXKN (ORCPT
+        id S1728339AbgDKXbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48214 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:31:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbgDKXKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:07 -0400
+        id S1729487AbgDKXKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5604C2192A;
-        Sat, 11 Apr 2020 23:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78C5420787;
+        Sat, 11 Apr 2020 23:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646607;
-        bh=vQ3jZm3eZAgzaKu5PDnf7Uubas4hx5OoyrLHm1E/q4Y=;
+        s=default; t=1586646613;
+        bh=STQzFU6IpBy9QafJaROwwjjxCvfjuYae1pwq00wToGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxUyykHkJnCTPFeNvs8pyb3vWpMP8kofCbFwQY9TQl/t6ooepPewdhC7Iz45jJcZl
-         ow4LoxG/E+uqZINXdm53xaayP27TWHwuZRMa5GcIvljA6VcwRKP0X0Q9Bmmtb+rQ1/
-         iKH7hf/fRJ7XXhC57YCAA2QNWiQqIVTBSFppZo6E=
+        b=Waf4HJ+jwM3/OUtfS+4/8EbR2nU51Q8PP3EQsdLh81oRDhRaPAZY1TK9Ugvmema5l
+         XmJ6gsvVlEuaYo6sVErlwJ4OshlC0cTmTuDfyL+fz3ZF1mnc5EDdsAL+14o8ahV/+2
+         hvmcdG7HL/Lu2UL5YwJMouwpbo8vaOOPEAzuBwQw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 019/108] ath10k: use kzalloc to read for ath10k_sdio_hif_diag_read
-Date:   Sat, 11 Apr 2020 19:08:14 -0400
-Message-Id: <20200411230943.24951-19-sashal@kernel.org>
+Cc:     Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 024/108] drm/amd/display: Stop if retimer is not available
+Date:   Sat, 11 Apr 2020 19:08:19 -0400
+Message-Id: <20200411230943.24951-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,141 +61,349 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Gong <wgong@codeaurora.org>
+From: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 
-[ Upstream commit 402f2992b4d62760cce7c689ff216ea3bf4d6e8a ]
+[ Upstream commit a0e40018dcc3f59a10ca21d58f8ea8ceb1b035ac ]
 
-When use command to read values, it crashed.
+Raven provides retimer feature support that requires i2c interaction in
+order to make it work well, all settings required for this configuration
+are loaded from the Atom bios which include the i2c address. If the
+retimer feature is not available, we should abort the attempt to set
+this feature, otherwise, it makes the following line return
+I2C_CHANNEL_OPERATION_NO_RESPONSE:
 
-command:
-dd if=/sys/kernel/debug/ieee80211/phy0/ath10k/mem_value count=1 bs=4 skip=$((0x100233))
+ i2c_success = i2c_write(pipe_ctx, slave_address, buffer, sizeof(buffer));
+ ...
+ if (!i2c_success)
+   ASSERT(i2c_success);
 
-It will call to ath10k_sdio_hif_diag_read with address = 0x4008cc and buf_len = 4.
+This ends up causing problems with hotplugging HDMI displays on Raven,
+and causes retimer settings to warn like so:
 
-Then system crash:
-[ 1786.013258] Unable to handle kernel paging request at virtual address ffffffc00bd45000
-[ 1786.013273] Mem abort info:
-[ 1786.013281]   ESR = 0x96000045
-[ 1786.013291]   Exception class = DABT (current EL), IL = 32 bits
-[ 1786.013299]   SET = 0, FnV = 0
-[ 1786.013307]   EA = 0, S1PTW = 0
-[ 1786.013314] Data abort info:
-[ 1786.013322]   ISV = 0, ISS = 0x00000045
-[ 1786.013330]   CM = 0, WnR = 1
-[ 1786.013342] swapper pgtable: 4k pages, 39-bit VAs, pgdp = 000000008542a60e
-[ 1786.013350] [ffffffc00bd45000] pgd=0000000000000000, pud=0000000000000000
-[ 1786.013368] Internal error: Oops: 96000045 [#1] PREEMPT SMP
-[ 1786.013609] Process swapper/0 (pid: 0, stack limit = 0x0000000084b153c6)
-[ 1786.013623] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.19.86 #137
-[ 1786.013631] Hardware name: MediaTek krane sku176 board (DT)
-[ 1786.013643] pstate: 80000085 (Nzcv daIf -PAN -UAO)
-[ 1786.013662] pc : __memcpy+0x94/0x180
-[ 1786.013678] lr : swiotlb_tbl_unmap_single+0x84/0x150
-[ 1786.013686] sp : ffffff8008003c60
-[ 1786.013694] x29: ffffff8008003c90 x28: ffffffae96411f80
-[ 1786.013708] x27: ffffffae960d2018 x26: ffffff8019a4b9a8
-[ 1786.013721] x25: 0000000000000000 x24: 0000000000000001
-[ 1786.013734] x23: ffffffae96567000 x22: 00000000000051d4
-[ 1786.013747] x21: 0000000000000000 x20: 00000000fe6e9000
-[ 1786.013760] x19: 0000000000000004 x18: 0000000000000020
-[ 1786.013773] x17: 0000000000000001 x16: 0000000000000000
-[ 1786.013787] x15: 00000000ffffffff x14: 00000000000044c0
-[ 1786.013800] x13: 0000000000365ba4 x12: 0000000000000000
-[ 1786.013813] x11: 0000000000000001 x10: 00000037be6e9000
-[ 1786.013826] x9 : ffffffc940000000 x8 : 000000000bd45000
-[ 1786.013839] x7 : 0000000000000000 x6 : ffffffc00bd45000
-[ 1786.013852] x5 : 0000000000000000 x4 : 0000000000000000
-[ 1786.013865] x3 : 0000000000000c00 x2 : 0000000000000004
-[ 1786.013878] x1 : fffffff7be6e9004 x0 : ffffffc00bd45000
-[ 1786.013891] Call trace:
-[ 1786.013903]  __memcpy+0x94/0x180
-[ 1786.013914]  unmap_single+0x6c/0x84
-[ 1786.013925]  swiotlb_unmap_sg_attrs+0x54/0x80
-[ 1786.013938]  __swiotlb_unmap_sg_attrs+0x8c/0xa4
-[ 1786.013952]  msdc_unprepare_data+0x6c/0x84
-[ 1786.013963]  msdc_request_done+0x58/0x84
-[ 1786.013974]  msdc_data_xfer_done+0x1a0/0x1c8
-[ 1786.013985]  msdc_irq+0x12c/0x17c
-[ 1786.013996]  __handle_irq_event_percpu+0xe4/0x250
-[ 1786.014006]  handle_irq_event_percpu+0x28/0x68
-[ 1786.014015]  handle_irq_event+0x48/0x78
-[ 1786.014026]  handle_fasteoi_irq+0xd0/0x1a0
-[ 1786.014039]  __handle_domain_irq+0x84/0xc4
-[ 1786.014050]  gic_handle_irq+0x124/0x1a4
-[ 1786.014059]  el1_irq+0xb0/0x128
-[ 1786.014072]  cpuidle_enter_state+0x298/0x328
-[ 1786.014082]  cpuidle_enter+0x30/0x40
-[ 1786.014094]  do_idle+0x190/0x268
-[ 1786.014104]  cpu_startup_entry+0x24/0x28
-[ 1786.014116]  rest_init+0xd4/0xe0
-[ 1786.014126]  start_kernel+0x30c/0x38c
-[ 1786.014139] Code: f8408423 f80084c3 36100062 b8404423 (b80044c3)
-[ 1786.014150] ---[ end trace 3b02ddb698ea69ee ]---
-[ 1786.015415] Kernel panic - not syncing: Fatal exception in interrupt
-[ 1786.015433] SMP: stopping secondary CPUs
-[ 1786.015447] Kernel Offset: 0x2e8d200000 from 0xffffff8008000000
-[ 1786.015458] CPU features: 0x0,2188200c
-[ 1786.015466] Memory Limit: none
+WARNING: CPU: 1 PID: 429 at
+drivers/gpu/drm/amd/amdgpu/../dal/dc/core/dc_link.c:1998
+write_i2c_retimer_setting+0xc2/0x3c0 [amdgpu] Modules linked in:
+edac_mce_amd ccp kvm irqbypass binfmt_misc crct10dif_pclmul crc32_pclmul
+ghash_clmulni_intel snd_hda_codec_realtek snd_hda_codec_generic
+ledtrig_audio snd_hda_codec_hdmi snd_hda_intel amdgpu(+) snd_hda_codec
+snd_hda_core snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event
+snd_rawmidi aesni_intel snd_seq amd_iommu_v2 gpu_sched aes_x86_64
+crypto_simd cryptd glue_helper snd_seq_device ttm drm_kms_helper
+snd_timer eeepc_wmi wmi_bmof asus_wmi sparse_keymap drm mxm_wmi snd
+k10temp fb_sys_fops syscopyarea sysfillrect sysimgblt soundcore joydev
+input_leds mac_hid sch_fq_codel parport_pc ppdev lp parport ip_tables
+x_tables autofs4 igb i2c_algo_bit hid_generic usbhid i2c_piix4 dca ahci
+hid libahci video wmi gpio_amdpt gpio_generic CPU: 1 PID: 429 Comm:
+systemd-udevd Tainted: G        W         5.2.0-rc1sept162019+ #1
+Hardware name: System manufacturer System Product Name/ROG STRIX B450-F
+GAMING, BIOS 2605 08/06/2019
+RIP: 0010:write_i2c_retimer_setting+0xc2/0x3c0 [amdgpu]
+Code: ff 0f b6 4d ce 44 0f b6 45 cf 44 0f b6 c8 45 89 cf 44 89 e2 48 c7
+c6 f0 34 bc c0 bf 04 00 00 00 e8 63 b0 90 ff 45 84 ff 75 02 <0f> 0b 42
+0f b6 04 73 8d 50 f6 80 fa 02 77 8c 3c 0a 0f 85 c8 00 00 RSP:
+0018:ffffa99d02726fd0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffa99d02727035 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff976acc857440
+RBP: ffffa99d02727018 R08: 0000000000000002 R09: 000000000002a600
+R10: ffffe90610193680 R11: 00000000000005e3 R12: 000000000000005d
+R13: ffff976ac4b201b8 R14: 0000000000000001 R15: 0000000000000000
+FS:  00007f14f99e1680(0000) GS:ffff976acc840000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdf212843b8 CR3: 0000000408906000 CR4: 00000000003406e0
+Call Trace:
+ core_link_enable_stream+0x626/0x680 [amdgpu]
+ dce110_apply_ctx_to_hw+0x414/0x4e0 [amdgpu]
+ dc_commit_state+0x331/0x5e0 [amdgpu]
+ ? drm_calc_timestamping_constants+0xf9/0x150 [drm]
+ amdgpu_dm_atomic_commit_tail+0x395/0x1e00 [amdgpu]
+ ? dm_plane_helper_prepare_fb+0x20c/0x280 [amdgpu]
+ commit_tail+0x42/0x70 [drm_kms_helper]
+ drm_atomic_helper_commit+0x10c/0x120 [drm_kms_helper]
+ amdgpu_dm_atomic_commit+0x95/0xa0 [amdgpu]
+ drm_atomic_commit+0x4a/0x50 [drm]
+ restore_fbdev_mode_atomic+0x1c0/0x1e0 [drm_kms_helper]
+ restore_fbdev_mode+0x4c/0x160 [drm_kms_helper]
+ ? _cond_resched+0x19/0x40
+ drm_fb_helper_restore_fbdev_mode_unlocked+0x4e/0xa0 [drm_kms_helper]
+ drm_fb_helper_set_par+0x2d/0x50 [drm_kms_helper]
+ fbcon_init+0x471/0x630
+ visual_init+0xd5/0x130
+ do_bind_con_driver+0x20a/0x430
+ do_take_over_console+0x7d/0x1b0
+ do_fbcon_takeover+0x5c/0xb0
+ fbcon_event_notify+0x6cd/0x8a0
+ notifier_call_chain+0x4c/0x70
+ blocking_notifier_call_chain+0x43/0x60
+ fb_notifier_call_chain+0x1b/0x20
+ register_framebuffer+0x254/0x360
+ __drm_fb_helper_initial_config_and_unlock+0x2c5/0x510 [drm_kms_helper]
+ drm_fb_helper_initial_config+0x35/0x40 [drm_kms_helper]
+ amdgpu_fbdev_init+0xcd/0x100 [amdgpu]
+ amdgpu_device_init+0x1156/0x1930 [amdgpu]
+ amdgpu_driver_load_kms+0x8d/0x2e0 [amdgpu]
+ drm_dev_register+0x12b/0x1c0 [drm]
+ amdgpu_pci_probe+0xd3/0x160 [amdgpu]
+ local_pci_probe+0x47/0xa0
+ pci_device_probe+0x142/0x1b0
+ really_probe+0xf5/0x3d0
+ driver_probe_device+0x11b/0x130
+ device_driver_attach+0x58/0x60
+ __driver_attach+0xa3/0x140
+ ? device_driver_attach+0x60/0x60
+ ? device_driver_attach+0x60/0x60
+ bus_for_each_dev+0x74/0xb0
+ ? kmem_cache_alloc_trace+0x1a3/0x1c0
+ driver_attach+0x1e/0x20
+ bus_add_driver+0x147/0x220
+ ? 0xffffffffc0cb9000
+ driver_register+0x60/0x100
+ ? 0xffffffffc0cb9000
+ __pci_register_driver+0x5a/0x60
+ amdgpu_init+0x74/0x83 [amdgpu]
+ do_one_initcall+0x4a/0x1fa
+ ? _cond_resched+0x19/0x40
+ ? kmem_cache_alloc_trace+0x3f/0x1c0
+ ? __vunmap+0x1cc/0x200
+ do_init_module+0x5f/0x227
+ load_module+0x2330/0x2b40
+ __do_sys_finit_module+0xfc/0x120
+ ? __do_sys_finit_module+0xfc/0x120
+ __x64_sys_finit_module+0x1a/0x20
+ do_syscall_64+0x5a/0x130
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7f14f9500839
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89
+f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff9bc4f5a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000055afb5abce30 RCX: 00007f14f9500839
+RDX: 0000000000000000 RSI: 000055afb5ace0f0 RDI: 0000000000000017
+RBP: 000055afb5ace0f0 R08: 0000000000000000 R09: 000000000000000a
+R10: 0000000000000017 R11: 0000000000000246 R12: 0000000000000000
+R13: 000055afb5aad800 R14: 0000000000020000 R15: 0000000000000000
+---[ end trace c286e96563966f08 ]---
 
-For sdio chip, it need the memory which is kmalloc, if it is
-vmalloc from ath10k_mem_value_read, then it have a memory error.
-kzalloc of ath10k_sdio_hif_diag_read32 is the correct type, so
-add kzalloc in ath10k_sdio_hif_diag_read to replace the buffer
-which is vmalloc from ath10k_mem_value_read.
+This commit reworks the way that we handle i2c write for retimer in the
+way that we abort this configuration if the feature is not available in
+the device. For debug sake, we kept a simple log message in case the
+retimer is not available.
 
-This patch only effect sdio chip.
-
-Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00029.
-
-Signed-off-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 67 ++++++++-----------
+ 1 file changed, 29 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index 9870d2d095c87..8fe626deadeb0 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -1582,23 +1582,33 @@ static int ath10k_sdio_hif_diag_read(struct ath10k *ar, u32 address, void *buf,
- 				     size_t buf_len)
- {
- 	int ret;
-+	void *mem;
-+
-+	mem = kzalloc(buf_len, GFP_KERNEL);
-+	if (!mem)
-+		return -ENOMEM;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 3aedc724241ef..f06a95d3576b9 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -1733,8 +1733,7 @@ static void write_i2c_retimer_setting(
+ 				slave_address, buffer[0], buffer[1], i2c_success?1:0);
  
- 	/* set window register to start read cycle */
- 	ret = ath10k_sdio_write32(ar, MBOX_WINDOW_READ_ADDR_ADDRESS, address);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to set mbox window read address: %d", ret);
--		return ret;
-+		goto out;
+ 			if (!i2c_success)
+-				/* Write failure */
+-				ASSERT(i2c_success);
++				goto i2c_write_fail;
+ 
+ 			/* Based on DP159 specs, APPLY_RX_TX_CHANGE bit in 0x0A
+ 			 * needs to be set to 1 on every 0xA-0xC write.
+@@ -1752,8 +1751,7 @@ static void write_i2c_retimer_setting(
+ 						pipe_ctx->stream->link->ddc,
+ 						slave_address, &offset, 1, &value, 1);
+ 					if (!i2c_success)
+-						/* Write failure */
+-						ASSERT(i2c_success);
++						goto i2c_write_fail;
+ 				}
+ 
+ 				buffer[0] = offset;
+@@ -1765,8 +1763,7 @@ static void write_i2c_retimer_setting(
+ 					offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 					slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 				if (!i2c_success)
+-					/* Write failure */
+-					ASSERT(i2c_success);
++					goto i2c_write_fail;
+ 			}
+ 		}
  	}
+@@ -1786,8 +1783,7 @@ static void write_i2c_retimer_setting(
+ 					slave_address, buffer[0], buffer[1], i2c_success?1:0);
  
- 	/* read the data */
--	ret = ath10k_sdio_read(ar, MBOX_WINDOW_DATA_ADDRESS, buf, buf_len);
-+	ret = ath10k_sdio_read(ar, MBOX_WINDOW_DATA_ADDRESS, mem, buf_len);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to read from mbox window data address: %d\n",
- 			    ret);
--		return ret;
-+		goto out;
+ 				if (!i2c_success)
+-					/* Write failure */
+-					ASSERT(i2c_success);
++					goto i2c_write_fail;
+ 
+ 				/* Based on DP159 specs, APPLY_RX_TX_CHANGE bit in 0x0A
+ 				 * needs to be set to 1 on every 0xA-0xC write.
+@@ -1805,8 +1801,7 @@ static void write_i2c_retimer_setting(
+ 								pipe_ctx->stream->link->ddc,
+ 								slave_address, &offset, 1, &value, 1);
+ 						if (!i2c_success)
+-							/* Write failure */
+-							ASSERT(i2c_success);
++							goto i2c_write_fail;
+ 					}
+ 
+ 					buffer[0] = offset;
+@@ -1818,8 +1813,7 @@ static void write_i2c_retimer_setting(
+ 						offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 						slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 					if (!i2c_success)
+-						/* Write failure */
+-						ASSERT(i2c_success);
++						goto i2c_write_fail;
+ 				}
+ 			}
+ 		}
+@@ -1837,8 +1831,7 @@ static void write_i2c_retimer_setting(
+ 				offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 				slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 		if (!i2c_success)
+-			/* Write failure */
+-			ASSERT(i2c_success);
++			goto i2c_write_fail;
+ 
+ 		/* Write offset 0x00 to 0x23 */
+ 		buffer[0] = 0x00;
+@@ -1849,8 +1842,7 @@ static void write_i2c_retimer_setting(
+ 			offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 			slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 		if (!i2c_success)
+-			/* Write failure */
+-			ASSERT(i2c_success);
++			goto i2c_write_fail;
+ 
+ 		/* Write offset 0xff to 0x00 */
+ 		buffer[0] = 0xff;
+@@ -1861,10 +1853,14 @@ static void write_i2c_retimer_setting(
+ 			offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 			slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 		if (!i2c_success)
+-			/* Write failure */
+-			ASSERT(i2c_success);
++			goto i2c_write_fail;
+ 
  	}
- 
--	return 0;
-+	memcpy(buf, mem, buf_len);
 +
-+out:
-+	kfree(mem);
++	return;
 +
-+	return ret;
++i2c_write_fail:
++	DC_LOG_DEBUG("Set retimer failed");
  }
  
- static int ath10k_sdio_hif_diag_read32(struct ath10k *ar, u32 address,
+ static void write_i2c_default_retimer_setting(
+@@ -1889,8 +1885,7 @@ static void write_i2c_default_retimer_setting(
+ 		offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 		slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		goto i2c_write_fail;
+ 
+ 	/* Write offset 0x0A to 0x17 */
+ 	buffer[0] = 0x0A;
+@@ -1901,8 +1896,7 @@ static void write_i2c_default_retimer_setting(
+ 		offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 		slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		goto i2c_write_fail;
+ 
+ 	/* Write offset 0x0B to 0xDA or 0xD8 */
+ 	buffer[0] = 0x0B;
+@@ -1913,8 +1907,7 @@ static void write_i2c_default_retimer_setting(
+ 		offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 		slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		goto i2c_write_fail;
+ 
+ 	/* Write offset 0x0A to 0x17 */
+ 	buffer[0] = 0x0A;
+@@ -1925,8 +1918,7 @@ static void write_i2c_default_retimer_setting(
+ 		offset = 0x%x, reg_val= 0x%x, i2c_success = %d\n",
+ 		slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		goto i2c_write_fail;
+ 
+ 	/* Write offset 0x0C to 0x1D or 0x91 */
+ 	buffer[0] = 0x0C;
+@@ -1937,8 +1929,7 @@ static void write_i2c_default_retimer_setting(
+ 		offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 		slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		goto i2c_write_fail;
+ 
+ 	/* Write offset 0x0A to 0x17 */
+ 	buffer[0] = 0x0A;
+@@ -1949,8 +1940,7 @@ static void write_i2c_default_retimer_setting(
+ 		offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 		slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		goto i2c_write_fail;
+ 
+ 
+ 	if (is_vga_mode) {
+@@ -1965,8 +1955,7 @@ static void write_i2c_default_retimer_setting(
+ 			offset = 0x%x, reg_val = 0x%x, i2c_success = %d\n",
+ 			slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 		if (!i2c_success)
+-			/* Write failure */
+-			ASSERT(i2c_success);
++			goto i2c_write_fail;
+ 
+ 		/* Write offset 0x00 to 0x23 */
+ 		buffer[0] = 0x00;
+@@ -1977,8 +1966,7 @@ static void write_i2c_default_retimer_setting(
+ 			offset = 0x%x, reg_val= 0x%x, i2c_success = %d\n",
+ 			slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 		if (!i2c_success)
+-			/* Write failure */
+-			ASSERT(i2c_success);
++			goto i2c_write_fail;
+ 
+ 		/* Write offset 0xff to 0x00 */
+ 		buffer[0] = 0xff;
+@@ -1989,9 +1977,13 @@ static void write_i2c_default_retimer_setting(
+ 			offset = 0x%x, reg_val= 0x%x, i2c_success = %d end here\n",
+ 			slave_address, buffer[0], buffer[1], i2c_success?1:0);
+ 		if (!i2c_success)
+-			/* Write failure */
+-			ASSERT(i2c_success);
++			goto i2c_write_fail;
+ 	}
++
++	return;
++
++i2c_write_fail:
++	DC_LOG_DEBUG("Set default retimer failed");
+ }
+ 
+ static void write_i2c_redriver_setting(
+@@ -2020,8 +2012,7 @@ static void write_i2c_redriver_setting(
+ 		slave_address, buffer[3], buffer[4], buffer[5], buffer[6], i2c_success?1:0);
+ 
+ 	if (!i2c_success)
+-		/* Write failure */
+-		ASSERT(i2c_success);
++		DC_LOG_DEBUG("Set redriver failed");
+ }
+ 
+ static void enable_link_hdmi(struct pipe_ctx *pipe_ctx)
 -- 
 2.20.1
 
