@@ -2,154 +2,336 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E29C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 19:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E724DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 19:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6951220709
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 19:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5E720709
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 19:23:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jj7e/Bqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDKTPQ (ORCPT
+        id S1726744AbgDKTXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 15:15:16 -0400
-Received: from mail-db8eur05olkn2014.outbound.protection.outlook.com ([40.92.89.14]:33792
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726129AbgDKTPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 15:15:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BSSYOTIiajy4hMpiHtCmcqDYemLEmQ0Cdee5JWsixEU6456e4Vmqf9x/HscpgIpn1BrkoCoS9qbbskF5x2oDkmsB3XNq6vJCQM8Sbo47YSJNlQo+CTjK+y74RWGLsYgSi4zgdfm5x/k4opzsXPuq3lqBp8AuFpgQZuG5RmYMrRPnCktu6TiEP0tDGs7EuJk+zbb8NkXjbwskd8SPKcAuJK3xw9ouyU8dZ3Z6zMCmgUXSGtezXjEiaMSdbpauI2D41vAB5uUk/0DwCmu7DESSFVV//wbA8aTmYtyjwlPzSIaP3Ge3ttyH51GilItwLsjBzCsQ51YrMEL15UOXJhPjfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wgw5cGUTQYABehzIE+Ng3Pf9aIBCQV/MFF5UTdQXAH8=;
- b=NEFP5laDaj4ynHgm8r/i5Hu//whZQouHMTepT50+lLhwtMOUSrtFYHZUB5+/AOlk7nsJcZo1dYGZLnEN/xErbJiihlFkGqESIDg3nElNZIn/W+1z6hZGhZPlRIr6fbI/yWH5qmCzBv1Nney5s4ATlT2YFWKLsZVike4Caw0dMy3fLVEblTt3DygbXIqEeTMtJNchU20CTBSzLWfja+n8mXoAhdn25B8crr9v4Y1aeMP1jBbY+t+rHG6JpXaHapH2RUc/dtbLTq/iB6ELP+562QWRq9BB9A++svLJ4ekQIhbVRT+TQvAbMloVq46gtGVVkok29GY+j5HWlyrl9lB7cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from DB8EUR05FT044.eop-eur05.prod.protection.outlook.com
- (2a01:111:e400:fc0f::4a) by
- DB8EUR05HT157.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::73)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Sat, 11 Apr
- 2020 19:15:13 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- (2a01:111:e400:fc0f::43) by DB8EUR05FT044.mail.protection.outlook.com
- (2a01:111:e400:fc0f::225) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
- Transport; Sat, 11 Apr 2020 19:15:13 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:0F07663C374A591FC983CF8A60BDFC578EB320C786A2DD91170756D4861772FE;UpperCasedChecksum:A94949A8F4003641CBE8BC812FAFB826370C8A84BAFC22CB96052FE889565FD3;SizeAsReceived:9863;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2900.026; Sat, 11 Apr 2020
- 19:15:13 +0000
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
- <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
- <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
- <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <87imi8nzlw.fsf@x220.int.ebiederm.org>
- <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
- <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
- <20200411182043.GA3136@redhat.com>
- <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170660DA597EAAAC0AC1B5BE4DF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Sat, 11 Apr 2020 21:15:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+        Sat, 11 Apr 2020 15:23:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40134 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgDKTXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 15:23:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=SgqKM3spE6mtY9h8mMydKIrhlpWx8n0IUZfulRaiV30=; b=Jj7e/BqkuhcMA8to44KkTi06Bs
+        iXA+IjaMPRjuLERXPMsbyq0FXHFc0f6sFJ/TfoMo+Gt75LzYmJc76uxWd9OPPsPN5BGm15ajFl1BI
+        9KJLz64yJunAtGtOGlAVDmo3oMnov8YCt3gCcCGWuYMAQdIVWc/+zxgDiEF8j3ExkQ1A/OSOkBKni
+        V71HuxiJWJq3N3ZVq4LUXmHLY+z3MnpQ9bNj9PubkTZ1aJqT5U+1nfbJIWYpbnKHibhjpqzkJYhqx
+        UxUc5AM7GRNbEh//ZK6irIuJlE8xQFiJachnHbr2IweynoM5rtUYmM7i+bjG05Pa/xAS/Ivzku1+y
+        a8LgKaVQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jNLiZ-00009v-C6; Sat, 11 Apr 2020 19:23:03 +0000
+Subject: Re: [PATCH 3/3] driver: rpmon: add rpmon_qmi driver
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+References: <20200411095301.18780-1-wenhu.wang@vivo.com>
+ <20200411095301.18780-4-wenhu.wang@vivo.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4aea2dc0-3378-9da0-9123-115a5c3e9893@infradead.org>
+Date:   Sat, 11 Apr 2020 12:23:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200411095301.18780-4-wenhu.wang@vivo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR0101CA0055.eurprd01.prod.exchangelabs.com
- (2603:10a6:200:41::23) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <b831e601-cd32-8cc7-84c9-18cdee490fe0@hotmail.de>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM4PR0101CA0055.eurprd01.prod.exchangelabs.com (2603:10a6:200:41::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Sat, 11 Apr 2020 19:15:12 +0000
-X-Microsoft-Original-Message-ID: <b831e601-cd32-8cc7-84c9-18cdee490fe0@hotmail.de>
-X-TMN:  [QxvFPkz8Rfjpp5PBNOCS1AyR/tWJj7gA]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 288e018c-d0be-4ac1-ed18-08d7de4ca928
-X-MS-TrafficTypeDiagnostic: DB8EUR05HT157:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jliJ+j4uEW3aMgGWDHYY2lFMa8oXLIH8uEo9yfyeBqYKWU44WPinhhhRc/U7BNWsu1MqOR+7zfE4V/Qi4OqZqTlB3Dama5CFHn4ogciDin36gQb03MLm46wUeJzVt0b6uT0LRnNV8sGrzy4DSi4iJkPv3PF8i97CPriPnu/tRIeMMkuQky+0rTJUvAUy8Rp5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR03MB5170.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: m/UHKUkZarDzTEhEKaNGOtlAdv852PRf3aqwhip13xaWKOFxOpnLAb689FXccuKWcnua8ZzZ8dT4UbqWOAkcKn6u4lO7zH2DENqYuDOc8hPw5AWMRuVx6iLaM23VGyYvxhtW3jL923EnGDLW6oRaqw==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 288e018c-d0be-4ac1-ed18-08d7de4ca928
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2020 19:15:13.6654
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi--
 
+On 4/11/20 2:53 AM, Wang Wenhu wrote:
+> RPMON_QMI is used by RPMON to communicate with remote processors
+> with QMI APIs if enabled. RPMON_QMI itself is designed as a modular
+> framework that would introduce different kinds of message sets
+> which may be updated for versions.
+> 
+> RPMON_QMI creates a device of rpmon_device type for each remote
+> processor endpoint. All the endpoint devices shares an unique set
+> of QMI suite.
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+>  drivers/rpmon/Kconfig     |  15 ++
+>  drivers/rpmon/Makefile    |   1 +
+>  drivers/rpmon/rpmon_qmi.c | 434 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 450 insertions(+)
+>  create mode 100644 drivers/rpmon/rpmon_qmi.c
+> 
 
-On 4/11/20 8:29 PM, Linus Torvalds wrote:
-> On Sat, Apr 11, 2020 at 11:21 AM Oleg Nesterov <oleg@redhat.com> wrote:
->>
->> On 04/09, Linus Torvalds wrote:
->>>
->>>  (1) have execve() not wait for dead threads while holding the cred
->>> mutex
->>
->> This is what I tried to do 3 years ago, see
-> 
-> Well, you did it differently - by moving the "wait for dead threads"
-> logic to after releasing the lock.
-> 
-> My simpler patch was lazier - just don't wait for dead threads at all,
-> since they are dead and not interesting.
+> diff --git a/drivers/rpmon/rpmon_qmi.c b/drivers/rpmon/rpmon_qmi.c
+> new file mode 100644
+> index 000000000000..ae49510cbb83
+> --- /dev/null
+> +++ b/drivers/rpmon/rpmon_qmi.c
+> @@ -0,0 +1,434 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
+> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
+> + * All rights reserved.
+> + *
+> + * RPMON: An implementation of remote processor monitor freamwork
 
-But won't the dead thread's lifetime overlap the new thread's lifetime
-from the tracer's POV?
+                                                           framework
 
+> + * for platforms that multi-processors exists. RPMON is implemented
 
-Bernd.
+      confusing sentence above.
 
+> + * with chardev and sysfs class as interfaces to communicate with
+> + * the user level. It supports different communication interfaces
+> + * added modularly with remote processors. Currently QMI implementation
+> + * is available.
+> + *
+> + * RPMON could be used to detect the stabilities of remote processors,
+> + * collect any kinds of information you are interested with, take
+
+                                               interested in, take
+
+> + * actions like connection status check, and so on. Enhancements can
+> + * be made upon current implementation.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/rpmon.h>
+> +#include <linux/soc/qcom/qmi.h>
+> +#include <linux/of_platform.h>
+> +#include "rpmon_qmi.h"
+> +
+> +#define DRIVER_NAME "rpmon_qmi_drv"
+> +
+> +/*
+> + * Remote processor registered.
+> + */
+> +#define RP_REGISTERED		0x0001
+> +
+> +/*
+> + * work struct for message processing.
+> + */
+> +struct recv_work {
+> +	struct work_struct work;
+> +	struct sockaddr_qrtr sq;
+> +	void *msg;
+> +};
+> +
+> +/*
+> + * Delayed work to take a reset action when a failure is detected.
+> + */
+> +struct exec_cb_work {
+> +	struct delayed_work		dwk;
+> +	struct rpmon_qmi_device *rdev;
+> +	u32			checks;
+> +};
+> +
+> +struct rpmon_qmi_exec_fn {
+> +	int (*exec_call)(struct rpmon_qmi_device *rdev);
+> +};
+> +
+> +struct rpmon_qmi_cb_fn {
+> +	void (*callback)(struct work_struct *work);
+> +	u32 msg_len;
+> +};
+> +
+> +static DEFINE_MUTEX(rdev_list_lock);
+> +static LIST_HEAD(rdev_list);
+> +static struct rpmon_qmi *rpqmi;
+> +static struct workqueue_struct *rpqmi_wq;
+
+[snip]
+
+> +/**
+> + * rpmon_qmi_exec_cb_worker - callback worker for execution
+> + * @work: work to been done
+> + *
+> + * Called as worker handler by the signle worker thread of rpmon_wq.
+
+                                      single
+
+> + * The worker is scheduled after timeout ms duration since the execution.
+> + */
+> +static void rpmon_qmi_exec_cb_worker(struct work_struct *work)
+> +{
+> +	struct delayed_work *dwk = to_delayed_work(work);
+> +	struct exec_cb_work *ewk =
+> +			container_of(dwk, struct exec_cb_work, dwk);
+> +	struct rpmon_qmi_device *rdev = ewk->rdev;
+> +
+> +	mutex_lock(&rdev_list_lock);
+> +	if (ewk->checks <= atomic_read(&rdev->reports)) {
+> +		pr_debug("%s health check success", rdev->info->name);
+> +		goto out;
+> +	}
+> +
+> +	pr_err("subsystem %s failed to respond in time", rdev->info->name);
+> +
+> +	rpmon_event_notify(rdev->info, RPMON_EVENT_CHKCONN_FAIL);
+> +
+> +out:
+> +	mutex_unlock(&rdev_list_lock);
+> +	kfree(ewk);
+> +}
+> +
+> +static struct rpmon_qmi_cb_fn rpmon_qmi_event_callbacks[] = {
+> +	{
+> +		.callback = rpmon_qmi_register_req_cb,
+> +		.msg_len = sizeof(struct rpmon_register_req),
+> +	},
+> +	{
+> +		.callback = rpmon_qmi_conn_check_resp_cb,
+> +		.msg_len = sizeof(struct rpmon_conn_check_resp),
+> +	},
+> +};
+> +
+> +/**
+> + * rpmon_qmi_conn_check - send indication, initiate and queue callback work
+> + * @rdev: device interface of specific remote processor to be checked
+> + */
+> +static int rpmon_qmi_conn_check(struct rpmon_qmi_device *rdev)
+> +{
+> +	struct exec_cb_work *ewk;
+> +
+> +	mutex_lock(&rdev_list_lock);
+> +	if (!(rdev->flag & RP_REGISTERED)) {
+> +		pr_err("%s has not registered", rdev->info->name);
+> +		return -ENOANO;
+
+Why ENOANO?
+
+> +	}
+> +
+> +	if (!__ratelimit(&rdev->ratelimit)) {
+> +		pr_err("%s rate-limited", rdev->info->name);
+> +		return 0;
+> +	}
+> +	mutex_unlock(&rdev_list_lock);
+> +
+> +	rdev->rqmi->sendmsg(rdev, NULL, 0);
+> +
+> +	ewk = kzalloc(sizeof(*ewk), GFP_KERNEL);
+> +	if (!ewk)
+> +		return -ENOANO;
+
+ditto.
+
+> +	ewk->rdev = rdev;
+> +	ewk->checks = atomic_inc_return(&rdev->checks);
+> +	INIT_DELAYED_WORK(&ewk->dwk, rpmon_qmi_exec_cb_worker);
+> +	queue_delayed_work(rpqmi_wq,
+> +			   &ewk->dwk, msecs_to_jiffies(rdev->timeout));
+> +
+> +	return 0;
+> +}
+> +
+> +static struct rpmon_qmi_exec_fn rpmon_qmi_exec_calls[] = {
+> +	{.exec_call = rpmon_qmi_conn_check},
+> +};
+> +
+> +static int rpmon_qmi_monitor(struct rpmon_info *info, u32 event)
+> +{
+> +	struct rpmon_qmi_device *rdev = (struct rpmon_qmi_device *)info->priv;
+> +	int i;
+> +
+> +	for (i = 0; i < RPMON_EXEC_MAX; i++) {
+> +		if (event & RPMON_ACTION(i)) {
+> +			if (i >= (sizeof(rpmon_qmi_exec_calls) /
+> +				  sizeof(struct rpmon_qmi_exec_fn)))
+> +				return -ENOTSUPP;
+> +
+
+I'm not totally up about speculative fetches, but is any of
+<linux/nospec.h> needed here?
+
+> +			if (rpmon_qmi_exec_calls[i].exec_call)
+> +				return rpmon_qmi_exec_calls[i].exec_call(rdev);
+> +			else
+> +				return -ENOTSUPP;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+
+[snip]
+
+> +static void rpmon_qmi_msg_callback(enum rpmon_qmi_msg_type type,
+> +			struct sockaddr_qrtr *sq,
+> +			const void *msg)
+> +{
+> +	struct recv_work *rwk;
+> +
+> +	if (type >= (sizeof(rpmon_qmi_event_callbacks) /
+> +		     sizeof(struct rpmon_qmi_cb_fn))) {
+> +		pr_err("Error none supported message type.\n");
+
+		              non-supported
+
+> +		return;
+> +	}
+> +
+> +	if (rpmon_qmi_event_callbacks[type].callback) {
+> +		rwk = kzalloc(sizeof(*rwk), GFP_KERNEL);
+> +		if (!rwk) {
+> +			pr_err("Error to alloc recv_work");
+> +			return;
+> +		}
+> +
+> +		INIT_WORK(&rwk->work, rpmon_qmi_event_callbacks[type].callback);
+> +		memcpy(&rwk->sq, sq, sizeof(*sq));
+> +
+> +		rwk->msg = kzalloc(rpmon_qmi_event_callbacks[type].msg_len,
+> +				   GFP_KERNEL);
+> +		if (!rwk->msg) {
+> +			pr_err("Error to alloc message of recv_work");
+> +			kfree(rwk);
+> +			return;
+> +		}
+> +
+> +		memcpy(rwk->msg, msg, rpmon_qmi_event_callbacks[type].msg_len);
+> +		queue_work(rpqmi_wq, &rwk->work);
+> +	}
+> +}
+
+[snip]
+
+> +static void __exit rpmon_qmi_drv_exit(void)
+> +{
+> +	rpmon_qmi_del_server();
+> +
+> +	qmi_handle_release(&rpqmi->qmi);
+> +
+> +	platform_driver_unregister(&rpmon_qmi_drv);
+> +}
+> +module_exit(rpmon_qmi_drv_exit);
+> +
+> +MODULE_AUTHOR("Wang Wenhu");
+
+Please add email address above.
+
+> +MODULE_DESCRIPTION("Subsystem Monitor via QMI platform driver");
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> +MODULE_LICENSE("GPL v2");
 > 
-> Because even if it's Easter weekend, those threads are not coming back
-> to life ;)
-> 
-> You do say in that old patch that we can't just share the signal
-> state, but I wonder how true that is. Sharing it with a TASK_ZOMBIE
-> doesn't seem all that problematic to me. The only thing that can do is
-> getting reaped by a later wait.
-> 
-> That said, I actually am starting to think that maybe execve() should
-> just try to reap those threads instead, and avoid the whole issue that
-> way. Basically my "option (2)" thing.
-> 
-> Sure, that's basically stealing them from the parent, but 'execve()'
-> really is special wrt threads, and the parent still has the execve()
-> thread itself. And it's not so different from SIGKILL, which also
-> forcibly breaks off any ptracer etc without anybody being able to say
-> anything about it.
-> 
->                 Linus
-> 
+
+thanks.
+-- 
+~Randy
+
