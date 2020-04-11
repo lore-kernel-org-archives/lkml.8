@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2453DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E1C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01D1214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DA920787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646489;
-	bh=gYdxsnJ50hEKocvMFUM901yBYLzh3YGfPiYu/8Zj+BE=;
+	s=default; t=1586646493;
+	bh=SSgEN5OqU2ouBLggR017Qb9oCwekzXh1EMKxQQoZ8MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+iL//UqZPRbmGuq+hHQ+8VgKzmM77bktklAeCSd3n9nM7Cfdl+T59C1p6yOOApbC
-	 7Yt+zSOE51POkbPB/JHcrUE9wHWqhLFqHGtunQWTBX68LOWKNzKPNlbHtTfu1bfjSD
-	 oMTUfPpbCsVK4Y2P7epaByor8LRanuVw+gCKLJD4=
+	b=zQGIKhUMccCYnSL/JbWwSwWT/xD1XEN/+jcqNqEM/rayJXdQV6wFCHnU/zpAvUA8P
+	 iBJTqHnBYWFM1NBprUeAYOEZnWYL0+n11q00z/WOLF9sR1hcp/Z7GCgK42BgeXHt12
+	 oX+cM/d5QRYTcnIeq7SDMnISmrtVM10zf2nFlqUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgDKXIG (ORCPT
+        id S1728863AbgDKXIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbgDKXHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:52 -0400
+        id S1728792AbgDKXH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 288F6214D8;
-        Sat, 11 Apr 2020 23:07:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BDDA20708;
+        Sat, 11 Apr 2020 23:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646472;
-        bh=gYdxsnJ50hEKocvMFUM901yBYLzh3YGfPiYu/8Zj+BE=;
+        s=default; t=1586646480;
+        bh=SSgEN5OqU2ouBLggR017Qb9oCwekzXh1EMKxQQoZ8MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gez2/S86hrIvUn5d05U/YTNxx5/Trghcs5fsOGy0kbgM3fkZDuWROOT0M+kGfsAOO
-         LmLlfjukt13AQWmz0us5htEn/vt7EAqhSRUR2RRB99LFPSPb/LtAiWINFIpaIyvbMz
-         v6EdoOWiByYt2yidy2dmn5RlmndnQ7kzDYvT9BLQ=
+        b=kRBQVeQDInXKJXLxXyRMz1Og3fswxGFwXxl3syCXNXoVKrKajf6RhmpboC3nzoHsN
+         hW5dV627VMEbBBQIRzmRcQf1EGVElVl3/sgndRvIdH2vBQeh710hX2aurUbz1yhovd
+         djkz6iiDssRVfkXZ6fqcFEHn2IGds/o5h6Wmt63g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 039/121] drm/panel: simple: fix osd070t1718_19ts sync drive edge
-Date:   Sat, 11 Apr 2020 19:05:44 -0400
-Message-Id: <20200411230706.23855-39-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 045/121] sh_eth: check sh_eth_cpu_data::cexcr when dumping registers
+Date:   Sat, 11 Apr 2020 19:05:50 -0400
+Message-Id: <20200411230706.23855-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,40 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit fb0629eeeedb6622c16da1aa76a4520daf9a46e2 ]
+[ Upstream commit f75ca32403dbf91e20c275719aab705401b9e718 ]
 
-The panel datasheet says that the panel samples at falling edge, but
-does not say anything about h/v sync signals. Testing shows that if the
-sync signals are driven on falling edge, the picture on the panel will
-be slightly shifted right.
+When adding the sh_eth_cpu_data::cexcr flag I forgot to add the flag
+check to  __sh_eth_get_regs(), causing the non-existing RX packet counter
+registers to be considered for dumping on  the R7S72100 SoC (the register
+offset sanity check has the final say here)...
 
-Setting sync drive edge to the same as data drive edge fixes this issue.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191114093950.4101-4-tomi.valkeinen@ti.com
+Fixes: 4c1d45850d5 ("sh_eth: add sh_eth_cpu_data::cexcr flag")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Tested-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 72f69709f3493..df2c7392463b5 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2431,7 +2431,8 @@ static const struct panel_desc osddisplays_osd070t1718_19ts = {
- 		.height = 91,
- 	},
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
--	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-+		DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
- 	.connector_type = DRM_MODE_CONNECTOR_DPI,
- };
- 
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 37e7cd0177b84..eb6c52318ea25 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -2194,8 +2194,10 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
+ 	add_reg(FRECR);
+ 	add_reg(TSFRCR);
+ 	add_reg(TLFRCR);
+-	add_reg(CERCR);
+-	add_reg(CEECR);
++	if (cd->cexcr) {
++		add_reg(CERCR);
++		add_reg(CEECR);
++	}
+ 	add_reg(MAFCR);
+ 	if (cd->rtrate)
+ 		add_reg(RTRATE);
 -- 
 2.20.1
 
