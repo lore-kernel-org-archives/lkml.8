@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5850FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592DDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2733C21924
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320A52166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646852;
-	bh=Gs9gV0T5JmCcdrBT2Z6oU0AYlf9e1hsG3yby/+UBH3Y=;
+	s=default; t=1586646856;
+	bh=2OdZ3JfjRylc9rYSG0ohjEloDXrkW0YDQ8XREtiJ5qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLgDG124t6tJ/kL68UKvGnG/ryMVrNTPDbL9B7+FWJSSFJEmBtbqRz4YHKeFFFWdm
-	 DRdy/cAmcQj+yH3D+xMgcVIakfM902Cbd+RZrwfrTN322Ly3Pb5dckNT2Ixf/xSsBN
-	 k7JCDteWyj7wC6i9JvavK/42UibkgFZjMxgtY/ME=
+	b=YAoZ8slJoyVD7Nkj5WcIOOq6ZTYLU+zu42Mtu09QRRUxMvEFrfs4oSXRyCRcjX1LC
+	 kDT8QzDmcMM+GUTIDX7NDxD5mv3k3JFKa1OPFasxgpm/7tQiUj6CMd/DLOiizKFPV1
+	 LLiFHVGStkyowf5iabE32PbzrpX2sh0Sr8frOfGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbgDKXOJ (ORCPT
+        id S1730697AbgDKXOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730663AbgDKXOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:06 -0400
+        id S1730297AbgDKXOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB98820708;
-        Sat, 11 Apr 2020 23:14:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1217B216FD;
+        Sat, 11 Apr 2020 23:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646846;
-        bh=Gs9gV0T5JmCcdrBT2Z6oU0AYlf9e1hsG3yby/+UBH3Y=;
+        s=default; t=1586646850;
+        bh=2OdZ3JfjRylc9rYSG0ohjEloDXrkW0YDQ8XREtiJ5qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xm1zUjridEKkLLjq8i11HHMGdkZKfGWC/qAoU7ICnCiZf4/yYNGudzJleCFfBnE6t
-         EMPM87qD7z/qcqToOdiS29dGNpNiGceX2USgGskXL3O2lzOsc61Y5Axe8oEWFiOV5k
-         Gi2LX6swPA8rfNAEnOo8beHwJopjYG84l+Jjz7xA=
+        b=eMwNXXJQjpgix47tJ4NSw9JVxUlFhQtcbGrQlVw0+/C6yiUHht1W0J0+1vXsRippX
+         JEJj7/JUgwEkjvzaZvAwuXulv6WGmEJScrHoiAqCg2SDhmCWjGBCKsp37kDjDMYFs1
+         hfqucwSM35bACKXXI05gSyGHPLvxktlw6ZU8Szbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Etienne Carriere <etienne.carriere@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 33/37] dmaengine: stm32-dma: use reset controller only at probe time
-Date:   Sat, 11 Apr 2020 19:13:22 -0400
-Message-Id: <20200411231327.26550-33-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 36/37] ext4: avoid ENOSPC when avoiding to reuse recently deleted inodes
+Date:   Sat, 11 Apr 2020 19:13:25 -0400
+Message-Id: <20200411231327.26550-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -62,58 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 8cf1e0fc50fcc25021567bb2755580504c57c83a ]
+[ Upstream commit d05466b27b19af8e148376590ed54d289b607f0a ]
 
-Remove reset controller reference from device instance since it is
-used only at probe time.
+When ext4 is running on a filesystem without a journal, it tries not to
+reuse recently deleted inodes to provide better chances for filesystem
+recovery in case of crash. However this logic forbids reuse of freed
+inodes for up to 5 minutes and especially for filesystems with smaller
+number of inodes can lead to ENOSPC errors returned when allocating new
+inodes.
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Link: https://lore.kernel.org/r/20200129153628.29329-3-amelie.delaunay@st.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fix the problem by allowing to reuse recently deleted inode if there's
+no other inode free in the scanned range.
+
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200318121317.31941-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/stm32-dma.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/ext4/ialloc.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 32192e98159b2..02172997a184d 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -177,7 +177,6 @@ struct stm32_dma_device {
- 	struct dma_device ddev;
- 	void __iomem *base;
- 	struct clk *clk;
--	struct reset_control *rst;
- 	bool mem2mem;
- 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
- };
-@@ -1034,6 +1033,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	struct dma_device *dd;
- 	const struct of_device_id *match;
- 	struct resource *res;
-+	struct reset_control *rst;
- 	int i, ret;
+diff --git a/fs/ext4/ialloc.c b/fs/ext4/ialloc.c
+index 2a480c0ef1bc1..0f92276b795d6 100644
+--- a/fs/ext4/ialloc.c
++++ b/fs/ext4/ialloc.c
+@@ -722,21 +722,34 @@ static int recently_deleted(struct super_block *sb, ext4_group_t group, int ino)
+ static int find_inode_bit(struct super_block *sb, ext4_group_t group,
+ 			  struct buffer_head *bitmap, unsigned long *ino)
+ {
++	bool check_recently_deleted = EXT4_SB(sb)->s_journal == NULL;
++	unsigned long recently_deleted_ino = EXT4_INODES_PER_GROUP(sb);
++
+ next:
+ 	*ino = ext4_find_next_zero_bit((unsigned long *)
+ 				       bitmap->b_data,
+ 				       EXT4_INODES_PER_GROUP(sb), *ino);
+ 	if (*ino >= EXT4_INODES_PER_GROUP(sb))
+-		return 0;
++		goto not_found;
  
- 	match = of_match_device(stm32_dma_of_match, &pdev->dev);
-@@ -1062,11 +1062,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
- 						"st,mem2mem");
- 
--	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
--	if (!IS_ERR(dmadev->rst)) {
--		reset_control_assert(dmadev->rst);
-+	rst = devm_reset_control_get(&pdev->dev, NULL);
-+	if (!IS_ERR(rst)) {
-+		reset_control_assert(rst);
- 		udelay(2);
--		reset_control_deassert(dmadev->rst);
-+		reset_control_deassert(rst);
+-	if ((EXT4_SB(sb)->s_journal == NULL) &&
+-	    recently_deleted(sb, group, *ino)) {
++	if (check_recently_deleted && recently_deleted(sb, group, *ino)) {
++		recently_deleted_ino = *ino;
+ 		*ino = *ino + 1;
+ 		if (*ino < EXT4_INODES_PER_GROUP(sb))
+ 			goto next;
+-		return 0;
++		goto not_found;
  	}
+-
++	return 1;
++not_found:
++	if (recently_deleted_ino >= EXT4_INODES_PER_GROUP(sb))
++		return 0;
++	/*
++	 * Not reusing recently deleted inodes is mostly a preference. We don't
++	 * want to report ENOSPC or skew allocation patterns because of that.
++	 * So return even recently deleted inode if we could find better in the
++	 * given range.
++	 */
++	*ino = recently_deleted_ino;
+ 	return 1;
+ }
  
- 	dma_cap_set(DMA_SLAVE, dd->cap_mask);
 -- 
 2.20.1
 
