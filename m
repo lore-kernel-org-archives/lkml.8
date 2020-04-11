@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2243C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D86C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E7E21835
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6453020757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646602;
-	bh=o6LxklEs3CFqmUorRxPG7hw5z/Wv2HackpuNmTleWZ0=;
+	s=default; t=1586646608;
+	bh=LA4NasPLEH07jBaTOyAUcxp3FfacFWcVB0VMW+UNloE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYuTUqBiKvF0CLvRwuKxRAfsP2FVwNiG0JCj8db738w0CMu+ybin5KxMXSGyAqRVc
-	 OADYKCwNYkaFXE+9WnVwTVMTFfGqoh4o+gaA2lKtFTIuHlZYEJz7MODhcyDZV8Jcvd
-	 6Dr+kEp4bE3L4rm1P4PlAkTOlAm4ZeMTmvmSJzLw=
+	b=l0joaEksbBdZ3u+qxETCKMV8Cs4VttuSenYnxImGWQH3bBb5Uzf5dUNZChWvWIjSi
+	 QnqzOot/PbegBf9uViW5F4jcrUh9oX5aOtH+rlZ1/Zbca2QtNku8aYB366GelByY3b
+	 pyBlqxQmgR7MjjlZApE3JzVUVo7zthqKk0n9MS2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgDKXKA (ORCPT
+        id S1729428AbgDKXKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgDKXJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:58 -0400
+        id S1728940AbgDKXKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64D620757;
-        Sat, 11 Apr 2020 23:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DEA920757;
+        Sat, 11 Apr 2020 23:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646598;
-        bh=o6LxklEs3CFqmUorRxPG7hw5z/Wv2HackpuNmTleWZ0=;
+        s=default; t=1586646601;
+        bh=LA4NasPLEH07jBaTOyAUcxp3FfacFWcVB0VMW+UNloE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJciSYHYlPysVbPW/iExEvsdIj54jKAQqFXat0D4/V71TrjcJ8lTMyjGYFv+LgQ0m
-         I1RPXqISWJrjMS98uV5vmMGNYhNHpqcnB0n+8uz1bIscCb1HD/dKlus0Uv+/pllYTS
-         MNl38oqpgMbo/98ysfa1sGyu3pwFgXko7poV951o=
+        b=dD2ITDVtu7PXpN0zfzHPhlgMMQFMirNFxomgho1iu/QDlMnIT7NhcoCHl6SaigD7G
+         cE8pTsGQPTbX74tOI+fm6WLVChfd+EhPCPBSqGvC9cH139n0kz4iX6PbIuRVlh/4dT
+         ea4YPMSXQQMkfCXQPTI3/8VuTA9DzXxrVSFiau4Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 012/108] drm/amd/display: Explicitly disable triplebuffer flips
-Date:   Sat, 11 Apr 2020 19:08:07 -0400
-Message-Id: <20200411230943.24951-12-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 014/108] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
+Date:   Sat, 11 Apr 2020 19:08:09 -0400
+Message-Id: <20200411230943.24951-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -62,48 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 2d673560b7b83f8fe4163610f35c51b4d095525c ]
+[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
 
-[Why]
-This is enabled by default on Renoir but there's userspace/API support
-to actually make use of this.
+All accesses to id.state must be done under the spinlock.
 
-Since we're not passing this down through surface updates, let's
-explicitly disable this for now.
-
-This fixes "dcn20_program_front_end_for_ctx" warnings associated with
-incorrect/unexpected programming sequences performed while this is
-enabled.
-
-[How]
-Disable it at the topmost level in DM in case anyone tries to flip this
-to enabled for any of the other ASICs like Navi10/14.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/core/cm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 360c87ba45956..1b54744b1ba07 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2391,6 +2391,9 @@ static int amdgpu_dm_initialize_drm_device(struct amdgpu_device *adev)
- 	if (adev->asic_type != CHIP_CARRIZO && adev->asic_type != CHIP_STONEY)
- 		dm->dc->debug.disable_stutter = amdgpu_pp_feature_mask & PP_STUTTER_MODE ? false : true;
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 319e4b4ae6398..2c4d925041d09 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1809,8 +1809,12 @@ static void cm_dup_req_handler(struct cm_work *work,
+ 			counter[CM_REQ_COUNTER]);
  
-+	/* No userspace support. */
-+	dm->dc->debug.disable_tri_buf = true;
-+
- 	return 0;
- fail:
- 	kfree(aencoder);
+ 	/* Quick state check to discard duplicate REQs. */
+-	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
++	spin_lock_irq(&cm_id_priv->lock);
++	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
++		spin_unlock_irq(&cm_id_priv->lock);
+ 		return;
++	}
++	spin_unlock_irq(&cm_id_priv->lock);
+ 
+ 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
+ 	if (ret)
 -- 
 2.20.1
 
