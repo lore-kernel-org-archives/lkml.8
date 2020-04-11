@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE549C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F7CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD57720644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F3720644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607949;
-	bh=D7XvoFat6Y1aaR78hihBtrrJf1Mq8fezeVUfL892XaA=;
+	s=default; t=1586607954;
+	bh=Mlp4dDH4817TWo87N825RTd3ZoZFTS3zh2EnLg9Wzlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k4bJf+pQRtEgMM5L/yaLIg9Dzw3/G8qn8XnCCQa6ePLDIrvi8WUXbSCYsAMt6SGF3
-	 NPN3tsHAPCCthb6JPxPhfIDqoCHIjgceRhdi/jBkon+0RqD3WL+A8Fr0wJ0W1CKfaK
-	 hB/ZJBdi9uBKr7Kr+CIN2zvWpVbEBy+y7WrlNt7o=
+	b=wH6/vB1byQD+n0aC4i1P8LglyteKfBF/POxveK0U0Hs4cQE5+qtyXfKeRYQU71J3J
+	 DYjmH4CFs//MOPgvR8GF4JR5D8YO/451ga9btvhYnGioCpTIwvXnA6e6q24RmanihU
+	 NkTEJj4p2HhE9NpOCFEF/8m+niIR82G9ConyoK3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgDKMZs (ORCPT
+        id S1727025AbgDKMQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50588 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727173AbgDKMQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:20 -0400
+        id S1727932AbgDKMQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E3E2084D;
-        Sat, 11 Apr 2020 12:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5070020787;
+        Sat, 11 Apr 2020 12:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607380;
-        bh=D7XvoFat6Y1aaR78hihBtrrJf1Mq8fezeVUfL892XaA=;
+        s=default; t=1586607363;
+        bh=Mlp4dDH4817TWo87N825RTd3ZoZFTS3zh2EnLg9Wzlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GAkJCynojTPYGelPuoeqZBh9VnpaYMF8B61Sh8rA5tbqHbo98Xp6ZQk5NXiS1waow
-         dVjA1GNRPxXjjXbboRf1r5kUgV6aDTSIB+B+dLZci17KvSVM0eyfVbyaznmwTmLu3t
-         ns+3ZLvODaaujbKvnuxTJaZ+1xWUf+QEyj7oi+SY=
+        b=HNfNqBCJkmLq444Hj20QG8xQ53aZh+cq/OOdvA0gHySnFmJOsxYQOD3SZelEaMPh1
+         +UoRonGSn+3db4ehFH8fjZ+A1QOD0QVEcXzrTqEF3y+WFT815KGY8zLL78O+0JQ8tZ
+         5dL7tNZFL9cntXJ6XTIOgcgO/YrIzCLE0xAFKCug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 49/54] clk: qcom: rcg: Return failure for RCG update
-Date:   Sat, 11 Apr 2020 14:09:31 +0200
-Message-Id: <20200411115513.623424955@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 4.19 43/54] ceph: canonicalize server path in place
+Date:   Sat, 11 Apr 2020 14:09:25 +0200
+Message-Id: <20200411115512.886093392@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -60,33 +62,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 21ea4b62e1f3dc258001a68da98c9663a9dbd6c7 upstream.
+commit b27a939e8376a3f1ed09b9c33ef44d20f18ec3d0 upstream.
 
-In case of update config failure, return -EBUSY, so that consumers could
-handle the failure gracefully.
+syzbot reported that 4fbc0c711b24 ("ceph: remove the extra slashes in
+the server path") had caused a regression where an allocation could be
+done under a spinlock -- compare_mount_options() is called by sget_fc()
+with sb_lock held.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Link: https://lkml.kernel.org/r/1557339895-21952-2-git-send-email-tdas@codeaurora.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+We don't really need the supplied server path, so canonicalize it
+in place and compare it directly.  To make this work, the leading
+slash is kept around and the logic in ceph_real_mount() to skip it
+is restored.  CEPH_MSG_CLIENT_SESSION now reports the same (i.e.
+canonicalized) path, with the leading slash of course.
+
+Fixes: 4fbc0c711b24 ("ceph: remove the extra slashes in the server path")
+Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/clk/qcom/clk-rcg2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/super.c |  118 ++++++++++++--------------------------------------------
+ fs/ceph/super.h |    2 
+ 2 files changed, 28 insertions(+), 92 deletions(-)
 
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -105,7 +105,7 @@ static int update_config(struct clk_rcg2
- 	}
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -205,6 +205,26 @@ static match_table_t fsopt_tokens = {
+ 	{-1, NULL}
+ };
  
- 	WARN(1, "%s: rcg didn't update its configuration.", name);
--	return 0;
-+	return -EBUSY;
++/*
++ * Remove adjacent slashes and then the trailing slash, unless it is
++ * the only remaining character.
++ *
++ * E.g. "//dir1////dir2///" --> "/dir1/dir2", "///" --> "/".
++ */
++static void canonicalize_path(char *path)
++{
++	int i, j = 0;
++
++	for (i = 0; path[i] != '\0'; i++) {
++		if (path[i] != '/' || j < 1 || path[j - 1] != '/')
++			path[j++] = path[i];
++	}
++
++	if (j > 1 && path[j - 1] == '/')
++		j--;
++	path[j] = '\0';
++}
++
+ static int parse_fsopt_token(char *c, void *private)
+ {
+ 	struct ceph_mount_options *fsopt = private;
+@@ -398,73 +418,6 @@ static int strcmp_null(const char *s1, c
+ 	return strcmp(s1, s2);
  }
  
- static int clk_rcg2_set_parent(struct clk_hw *hw, u8 index)
+-/**
+- * path_remove_extra_slash - Remove the extra slashes in the server path
+- * @server_path: the server path and could be NULL
+- *
+- * Return NULL if the path is NULL or only consists of "/", or a string
+- * without any extra slashes including the leading slash(es) and the
+- * slash(es) at the end of the server path, such as:
+- * "//dir1////dir2///" --> "dir1/dir2"
+- */
+-static char *path_remove_extra_slash(const char *server_path)
+-{
+-	const char *path = server_path;
+-	const char *cur, *end;
+-	char *buf, *p;
+-	int len;
+-
+-	/* if the server path is omitted */
+-	if (!path)
+-		return NULL;
+-
+-	/* remove all the leading slashes */
+-	while (*path == '/')
+-		path++;
+-
+-	/* if the server path only consists of slashes */
+-	if (*path == '\0')
+-		return NULL;
+-
+-	len = strlen(path);
+-
+-	buf = kmalloc(len + 1, GFP_KERNEL);
+-	if (!buf)
+-		return ERR_PTR(-ENOMEM);
+-
+-	end = path + len;
+-	p = buf;
+-	do {
+-		cur = strchr(path, '/');
+-		if (!cur)
+-			cur = end;
+-
+-		len = cur - path;
+-
+-		/* including one '/' */
+-		if (cur != end)
+-			len += 1;
+-
+-		memcpy(p, path, len);
+-		p += len;
+-
+-		while (cur <= end && *cur == '/')
+-			cur++;
+-		path = cur;
+-	} while (path < end);
+-
+-	*p = '\0';
+-
+-	/*
+-	 * remove the last slash if there has and just to make sure that
+-	 * we will get something like "dir1/dir2"
+-	 */
+-	if (*(--p) == '/')
+-		*p = '\0';
+-
+-	return buf;
+-}
+-
+ static int compare_mount_options(struct ceph_mount_options *new_fsopt,
+ 				 struct ceph_options *new_opt,
+ 				 struct ceph_fs_client *fsc)
+@@ -472,7 +425,6 @@ static int compare_mount_options(struct
+ 	struct ceph_mount_options *fsopt1 = new_fsopt;
+ 	struct ceph_mount_options *fsopt2 = fsc->mount_options;
+ 	int ofs = offsetof(struct ceph_mount_options, snapdir_name);
+-	char *p1, *p2;
+ 	int ret;
+ 
+ 	ret = memcmp(fsopt1, fsopt2, ofs);
+@@ -482,21 +434,12 @@ static int compare_mount_options(struct
+ 	ret = strcmp_null(fsopt1->snapdir_name, fsopt2->snapdir_name);
+ 	if (ret)
+ 		return ret;
++
+ 	ret = strcmp_null(fsopt1->mds_namespace, fsopt2->mds_namespace);
+ 	if (ret)
+ 		return ret;
+ 
+-	p1 = path_remove_extra_slash(fsopt1->server_path);
+-	if (IS_ERR(p1))
+-		return PTR_ERR(p1);
+-	p2 = path_remove_extra_slash(fsopt2->server_path);
+-	if (IS_ERR(p2)) {
+-		kfree(p1);
+-		return PTR_ERR(p2);
+-	}
+-	ret = strcmp_null(p1, p2);
+-	kfree(p1);
+-	kfree(p2);
++	ret = strcmp_null(fsopt1->server_path, fsopt2->server_path);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -564,6 +507,8 @@ static int parse_mount_options(struct ce
+ 			err = -ENOMEM;
+ 			goto out;
+ 		}
++
++		canonicalize_path(fsopt->server_path);
+ 	} else {
+ 		dev_name_end = dev_name + strlen(dev_name);
+ 	}
+@@ -990,7 +935,9 @@ static struct dentry *ceph_real_mount(st
+ 	mutex_lock(&fsc->client->mount_mutex);
+ 
+ 	if (!fsc->sb->s_root) {
+-		const char *path, *p;
++		const char *path = fsc->mount_options->server_path ?
++				     fsc->mount_options->server_path + 1 : "";
++
+ 		err = __ceph_open_session(fsc->client, started);
+ 		if (err < 0)
+ 			goto out;
+@@ -1002,16 +949,6 @@ static struct dentry *ceph_real_mount(st
+ 				goto out;
+ 		}
+ 
+-		p = path_remove_extra_slash(fsc->mount_options->server_path);
+-		if (IS_ERR(p)) {
+-			err = PTR_ERR(p);
+-			goto out;
+-		}
+-		/* if the server path is omitted or just consists of '/' */
+-		if (!p)
+-			path = "";
+-		else
+-			path = p;
+ 		dout("mount opening path '%s'\n", path);
+ 
+ 		err = ceph_fs_debugfs_init(fsc);
+@@ -1019,7 +956,6 @@ static struct dentry *ceph_real_mount(st
+ 			goto out;
+ 
+ 		root = open_root_dentry(fsc, path, started);
+-		kfree(p);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto out;
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -86,7 +86,7 @@ struct ceph_mount_options {
+ 
+ 	char *snapdir_name;   /* default ".snap" */
+ 	char *mds_namespace;  /* default NULL */
+-	char *server_path;    /* default  "/" */
++	char *server_path;    /* default NULL (means "/") */
+ 	char *fscache_uniq;   /* default NULL */
+ };
+ 
 
 
