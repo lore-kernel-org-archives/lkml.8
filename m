@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F75C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF7BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103FB2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A320E206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607906;
-	bh=rsMivg6zxnUZe5+q19pH3VNg+un8uCnbdFiR+2ak1+Y=;
+	s=default; t=1586607910;
+	bh=7UERCu65CgP0U500+F+o3KO4ii49B6mhq0xWCr9GZ+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tkxgbl/mUL/6MFaMjn1Z7PkHcnaqOdj3/po2jeh0vXxzFg5YWrz18VVX2U/aa1u6l
-	 3S1pej9tzzxC4A+fr0RDOV4QHBNf1aezId2i/wuHBy80Jy2zEh0SK7DlyLO2RXIRJp
-	 yjYie/X54BUZc1Zh65aRzOiv8LOE2f5+11FwTzjU=
+	b=ZCr8iSipunekPyeL9Jp1XGdKXwCHEt9i0BrILJJtelcvyGCxEePMMRaZAQV4VVkBO
+	 7qvID+y4Oqoo2RxizEdtz6a0OljLflQLsdGpJDD0MTampdcIiGQEhBms0qZs+3WxMs
+	 jGCog7iU6L4cwlCfqWQ8BKxFM2Z2GoHratp/TG6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgDKMQ7 (ORCPT
+        id S1728452AbgDKMZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51262 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbgDKMQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:51 -0400
+        id S1728337AbgDKMQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80A8721744;
-        Sat, 11 Apr 2020 12:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBAD22173E;
+        Sat, 11 Apr 2020 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607412;
-        bh=rsMivg6zxnUZe5+q19pH3VNg+un8uCnbdFiR+2ak1+Y=;
+        s=default; t=1586607419;
+        bh=7UERCu65CgP0U500+F+o3KO4ii49B6mhq0xWCr9GZ+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KsGAoHzejQYUx8wyGlKMadxQFBVxi7zRcqCw7iRoj6DgNKRC90uN8D7BWMARu49/+
-         KVIt6pw34kpgFb4+XXnf7WIXh6DPZl3Jy8y45nFy3QclDXGCj5pZa09f1FPFNV9G4G
-         eyfGIB7EaAaaxJHUSSuCd6VDtDTfhzjpdABhbbTU=
+        b=1b5mkGqP2lY+mol2FczUVlFrWRaFy18aCYQKYsY5dsd6bnTWlMgsS2pzlNT7ySK2K
+         mtxP8gucIjSZQiuyVc/35PEbGKqlKEo+h6ftL/WJrTV+DzurafHbWtFhv1ATlMa9rb
+         YZPymndxd6vUq7KGzKab9k24PgfZ8HH8zjXg+Iys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 5.4 01/41] net: phy: realtek: fix handling of RTL8105e-integrated PHY
-Date:   Sat, 11 Apr 2020 14:09:10 +0200
-Message-Id: <20200411115504.231402605@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jason Wang <jasowang@redhat.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 12/41] tun: Dont put_page() for all negative return values from XDP program
+Date:   Sat, 11 Apr 2020 14:09:21 +0200
+Message-Id: <20200411115504.966396550@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,41 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-[ No applicable upstream commit ]
+[ Upstream commit bee348907d19d654e8524d3a946dcd25b693aa7e ]
 
-After the referenced fix it turned out that one particular RTL8168
-chip version (RTL8105e) does not work on 5.4 because no dedicated PHY
-driver exists. Adding this PHY driver was done for fixing a different
-issue for versions from 5.5 already. I re-send the same change for 5.4
-because the commit message differs.
+When an XDP program is installed, tun_build_skb() grabs a reference to
+the current page fragment page if the program returns XDP_REDIRECT or
+XDP_TX. However, since tun_xdp_act() passes through negative return
+values from the XDP program, it is possible to trigger the error path by
+mistake and accidentally drop a reference to the fragments page without
+taking one, leading to a spurious free. This is believed to be the cause
+of some KASAN use-after-free reports from syzbot [1], although without a
+reproducer it is not possible to confirm whether this patch fixes the
+problem.
 
-Fixes: 2e8c339b4946 ("r8169: fix PHY driver check on platforms w/o module softdeps")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Ensure that we only drop a reference to the fragments page if the XDP
+transmit or redirect operations actually fail.
+
+[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+CC: Eric Dumazet <edumazet@google.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/phy/realtek.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/tun.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -457,6 +457,15 @@ static struct phy_driver realtek_drvs[]
- 		.read_page	= rtl821x_read_page,
- 		.write_page	= rtl821x_write_page,
- 	}, {
-+		PHY_ID_MATCH_MODEL(0x001cc880),
-+		.name		= "RTL8208 Fast Ethernet",
-+		.read_mmd	= genphy_read_mmd_unsupported,
-+		.write_mmd	= genphy_write_mmd_unsupported,
-+		.suspend	= genphy_suspend,
-+		.resume		= genphy_resume,
-+		.read_page	= rtl821x_read_page,
-+		.write_page	= rtl821x_write_page,
-+	}, {
- 		PHY_ID_MATCH_EXACT(0x001cc910),
- 		.name		= "RTL8211 Gigabit Ethernet",
- 		.config_aneg	= rtl8211_config_aneg,
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(str
+ 			alloc_frag->offset += buflen;
+ 		}
+ 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
+-		if (err < 0)
+-			goto err_xdp;
++		if (err < 0) {
++			if (act == XDP_REDIRECT || act == XDP_TX)
++				put_page(alloc_frag->page);
++			goto out;
++		}
++
+ 		if (err == XDP_REDIRECT)
+ 			xdp_do_flush_map();
+ 		if (err != XDP_PASS)
+@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(str
+ 
+ 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+ 
+-err_xdp:
+-	put_page(alloc_frag->page);
+ out:
+ 	rcu_read_unlock();
+ 	local_bh_enable();
 
 
