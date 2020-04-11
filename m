@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2161CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D655C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8072084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EF02084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607443;
-	bh=oDOR3nIjgOc1MJbGlBKDQMZunaN6N06rFE3HEbc8H3g=;
+	s=default; t=1586607447;
+	bh=cxaqw+gj13L48qPCR+g9Lk8enKGNLTboZwEzcZD5KLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvZ8x0/c1To9mc/p+bcWUnxEzwCJ6mkeovZ1WvV1spniLLO8vbAmKJ/fPw8n2P1Sy
-	 btUZlLkXdjQ3Ag3EqyPU8v5pzuI01P8sBFps5rIPeG+1NGxbJSD3+eNKeol+eU1fUQ
-	 9SgMzwAW6nkqhIa1NUvGFxIUY9qOGSoHa3ZatDnQ=
+	b=EnFEVsXUBcbiKtNC0y4TdMaEGKnFiSAi9ZE2gWLvWof8IrSwralhPBsC2r4CTHtRb
+	 zHh40jMwWILVudu37eJc6ghj/DYucXacedYyUcahcWamoKV8dA1ppEEVf1FNO+MwQo
+	 DnJdadlIIzZ6QBptzFv9Q/2Iobwes/Rl/XH8Bg4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgDKMRU (ORCPT
+        id S1727826AbgDKMRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51954 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgDKMRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:18 -0400
+        id S1727092AbgDKMRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE6520787;
-        Sat, 11 Apr 2020 12:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB67A20644;
+        Sat, 11 Apr 2020 12:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607438;
-        bh=oDOR3nIjgOc1MJbGlBKDQMZunaN6N06rFE3HEbc8H3g=;
+        s=default; t=1586607443;
+        bh=cxaqw+gj13L48qPCR+g9Lk8enKGNLTboZwEzcZD5KLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0euV8sRDp40v6TIl/0E403/TZZKhk0/uooXcatH2a5GygAhU+LaiAAZpsXf3xkDne
-         09Wo3S1OP2+uVVaUUwrkcG+W/P25th9NTo86jat8rEkIuJ29D60tnMiuavdi6NhgnK
-         YchVJNiIyLSmYzlrWIL1N2Lgy0Tc6IrIkijfizb0=
+        b=KqKiTU8cW1D3eJW6H+qmxqfdWXv2JxM2+D6wzN2VFdj7gNTHVsMJ+Bm/n/Z3QQKCI
+         zJp1SqgMdOGhNfwtfyYRffm/BMsM4CIuKsSvBsikVxFI6aMWMMAnOI2cw5QvQapE3D
+         iWPdbDkLTi/XA/r0Z4dZJoiXSGx3O4e+j492JAQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herat Ramani <herat@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 02/41] cxgb4: fix MPS index overwrite when setting MAC address
-Date:   Sat, 11 Apr 2020 14:09:11 +0200
-Message-Id: <20200411115504.288266729@linuxfoundation.org>
+        stable@vger.kernel.org,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 21/41] hwrng: imx-rngc - fix an error path
+Date:   Sat, 11 Apr 2020 14:09:30 +0200
+Message-Id: <20200411115505.564083016@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -60,42 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herat Ramani <herat@chelsio.com>
+From: Martin Kaiser <martin@kaiser.cx>
 
-[ Upstream commit 41aa8561ca3fc5748391f08cc5f3e561923da52c ]
+commit 47a1f8e8b3637ff5f7806587883d7d94068d9ee8 upstream.
 
-cxgb4_update_mac_filt() earlier requests firmware to add a new MAC
-address into MPS TCAM. The MPS TCAM index returned by firmware is
-stored in pi->xact_addr_filt. However, the saved MPS TCAM index gets
-overwritten again with the return value of cxgb4_update_mac_filt(),
-which is wrong.
+Make sure that the rngc interrupt is masked if the rngc self test fails.
+Self test failure means that probe fails as well. Interrupts should be
+masked in this case, regardless of the error.
 
-When trying to update to another MAC address later, the wrong MPS TCAM
-index is sent to firmware, which causes firmware to return error,
-because it's not the same MPS TCAM index that firmware had sent
-earlier to driver.
-
-So, fix by removing the wrong overwrite being done after call to
-cxgb4_update_mac_filt().
-
-Fixes: 3f8cfd0d95e6 ("cxgb4/cxgb4vf: Program hash region for {t4/t4vf}_change_mac()")
-Signed-off-by: Herat Ramani <herat@chelsio.com>
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Fixes: 1d5449445bd0 ("hwrng: mx-rngc - add a driver for Freescale RNGC")
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c |    1 -
- 1 file changed, 1 deletion(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -3032,7 +3032,6 @@ static int cxgb_set_mac_addr(struct net_
- 		return ret;
+---
+ drivers/char/hw_random/imx-rngc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/char/hw_random/imx-rngc.c
++++ b/drivers/char/hw_random/imx-rngc.c
+@@ -105,8 +105,10 @@ static int imx_rngc_self_test(struct imx
+ 		return -ETIMEDOUT;
+ 	}
  
- 	memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
--	pi->xact_addr_filt = ret;
+-	if (rngc->err_reg != 0)
++	if (rngc->err_reg != 0) {
++		imx_rngc_irq_mask_clear(rngc);
+ 		return -EIO;
++	}
+ 
  	return 0;
  }
- 
 
 
