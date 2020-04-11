@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D850C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AE5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F8B217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCA2216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646623;
-	bh=MWpLAvZyJRrYn5ZnqL48jiIVByF7JkVVIj1AX7DmTvU=;
+	s=default; t=1586646625;
+	bh=LQ4h+thA4Q0WQ90awzjA8B/VB9vG17MgHA+KOwlQRvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4bmR1wrCbaEKWrLmlkY84eUVHIPyewog3q+XfI+rKQyI/VOUjZTH100ddQlagf9f
-	 JZH52MGgAIZF8XaKW3S73FOFWTxaS26YKRICZbFhYNXYBmDxDrolrK+B92QiQNUTxf
-	 MWqFZAl8HA6rWDOJyESTI4C0khxYWYVMib4zUROs=
+	b=VVtXRf2ZlbEXW6xBHBrVOrQZQQN6Suk09pfd11De2BA90Z5oPrmLQiC9D9VYhbHMF
+	 9wHgeff3J6IckUM7R6FI1gZxwG67ZH3A07jCx4h9yNbmnnDAaBC+lf7ifzVWZXql1T
+	 +gA/sguWsp2a8otx3z02o7lmjW8caCKP/nr0at60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgDKXKU (ORCPT
+        id S1729545AbgDKXKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48524 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729516AbgDKXKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:17 -0400
+        id S1726955AbgDKXKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6718C20757;
-        Sat, 11 Apr 2020 23:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E61D720787;
+        Sat, 11 Apr 2020 23:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646618;
-        bh=MWpLAvZyJRrYn5ZnqL48jiIVByF7JkVVIj1AX7DmTvU=;
+        s=default; t=1586646620;
+        bh=LQ4h+thA4Q0WQ90awzjA8B/VB9vG17MgHA+KOwlQRvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdNgMsUr2pdU0pV6L713hwYbdZ3W2eBytYmhdO6s54P1FY9cZNDsWmAiKdhCchSlK
-         FFE6bdR23QWx+mzUYYPS1F0bCH7cwVUXzckloIjxWrvgWhB4kHGqe9aYrRQ6sywe0p
-         3mG58eKyVWFdCBi9kZH7nTjJfUEtYw8Yh5Zd+QJg=
+        b=TzQms8z4uELmLyQsaWe11BS2XQQ2AnBizoFoPWxUb1YLSnE9/oqflZJ4Inw2RNwpa
+         EosudnCTJnPsqNAggXiJgppth07SkkdbwF4qoZ5wut10tiUP0WB9BlVHDy2a9ifT2I
+         Hq/mg6Lt/NDhSsbmpAzuJWL6SaHHX9LKHLMMF3H8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 028/108] net: rmnet: add missing module alias
-Date:   Sat, 11 Apr 2020 19:08:23 -0400
-Message-Id: <20200411230943.24951-28-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 030/108] IB/mlx5: Fix missing congestion control debugfs on rep rdma device
+Date:   Sat, 11 Apr 2020 19:08:25 -0400
+Message-Id: <20200411230943.24951-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,35 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit eed22a0685d651fc531bc63f215bb2a71d4b98e5 ]
+[ Upstream commit 79db784e794b6e7b7fb9b1dd464a34e4c0c039af ]
 
-In the current rmnet code, there is no module alias.
-So, RTNL couldn't load rmnet module automatically.
+Cited commit missed to include low level congestion control related
+debugfs stage initialization.  This resulted in missing debugfs entries
+for cc_params of a RDMA device.
 
-Test commands:
-    ip link add dummy0 type dummy
-    modprobe -rv rmnet
-    ip link add rmnet0 link dummy0 type rmnet  mux_id 1
+Add them back.
 
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b5ca15ad7e61 ("IB/mlx5: Add proper representors support")
+Link: https://lore.kernel.org/r/20200227125407.99803-1-leon@kernel.org
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Mark Bloch <markb@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/mlx5/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index fbf4cbcf1a654..d846a0ccea8f0 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -475,4 +475,5 @@ static void __exit rmnet_exit(void)
- 
- module_init(rmnet_init)
- module_exit(rmnet_exit)
-+MODULE_ALIAS_RTNL_LINK("rmnet");
- MODULE_LICENSE("GPL v2");
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index 0a160fd1383ae..e18f8e7029046 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -6833,6 +6833,9 @@ const struct mlx5_ib_profile uplink_rep_profile = {
+ 	STAGE_CREATE(MLX5_IB_STAGE_COUNTERS,
+ 		     mlx5_ib_stage_counters_init,
+ 		     mlx5_ib_stage_counters_cleanup),
++	STAGE_CREATE(MLX5_IB_STAGE_CONG_DEBUGFS,
++		     mlx5_ib_stage_cong_debugfs_init,
++		     mlx5_ib_stage_cong_debugfs_cleanup),
+ 	STAGE_CREATE(MLX5_IB_STAGE_UAR,
+ 		     mlx5_ib_stage_uar_init,
+ 		     mlx5_ib_stage_uar_cleanup),
 -- 
 2.20.1
 
