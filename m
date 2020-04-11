@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10E6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA138C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDB5206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AB2206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648556;
-	bh=0zPH6Ys+rPLn/GIkqJXc2F2AzUqF//RQNCHgMd6Yf8w=;
+	s=default; t=1586648564;
+	bh=6cpDHra3VK6YBdwU4Vw65HnX8418eynO67K/MYj2dL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tmRfsLgH1QTngYHFlwwJWRZvFuTrbU0p4ks3E4I0sxdo7BUVOEGaHj3JYNIvjnGVf
-	 I13q4UHU6RgbjfrKGuOn6M0CoxqGZKPNyrb7AbVqaTkiWvloM8Tj/xCLuf1DlKOOgj
-	 dUKPh90cJUUIvOJVzrbHnaCWGSeQS5hiIt6kokrs=
+	b=SIOrbjFGykPL6ZUD8rhQDat7BhaeSMvyv+TB8ZVSclaA5zaROsywi4Hsk8wNkeeuX
+	 0cF+sb75YwqNYd4iQF1pt3ZNeGcFP9Ln17/jxMILisQB/r4Fg42nQbfDXs3FCW7Y5l
+	 PhLWf5jnfjliRuVL2RL+cBBa0MR0jt4KGHVdAdXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbgDKXmf (ORCPT
+        id S1731039AbgDKXmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42128 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbgDKXGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:39 -0400
+        id S1728448AbgDKXGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F9BB217D8;
-        Sat, 11 Apr 2020 23:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778CE20708;
+        Sat, 11 Apr 2020 23:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646398;
-        bh=0zPH6Ys+rPLn/GIkqJXc2F2AzUqF//RQNCHgMd6Yf8w=;
+        s=default; t=1586646395;
+        bh=6cpDHra3VK6YBdwU4Vw65HnX8418eynO67K/MYj2dL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iVFFAyMfnA9krts8wsEazS1NeULUpVQgqN9mWee5byyuLpYfQbNqa7wKXlUg6KExC
-         b38F1Ygcl7fNb/0x9o72uyI4Dvjk12l9S3oT16KfpnVeV0IftBbvWE2SXPLJy2427O
-         iniVzeenzRDUvJIP8Iwty9x/QQUPxYKxy4K5BFgk=
+        b=FCXt9MjY4o+fWS4tV0bA6y70SKXbAFi/Er5Q02iw7uChoupCDMbFD6mO9yzNa9CsM
+         s/bwiH3KeLH2f00Q1+iS3bxV7SEdc4pSSFzz6tEU3H8Rw66RespzqZmj8HLngLmqqx
+         ULWoAzx1SOZJatFqvPAPxPGIvqt6wXAi4ImZC5Ew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Garry <john.garry@huawei.com>, Wei Xu <xuwei5@hisilicon.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 136/149] bus: hisi_lpc: Fixup IO ports addresses to avoid use-after-free in host removal
-Date:   Sat, 11 Apr 2020 19:03:33 -0400
-Message-Id: <20200411230347.22371-136-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 133/149] ARM: shmobile: Enable ARM_GLOBAL_TIMER on Cortex-A9 MPCore SoCs
+Date:   Sat, 11 Apr 2020 19:03:30 -0400
+Message-Id: <20200411230347.22371-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -58,146 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a6dd255bdd7d00bbdbf78ba00bde9fc64f86c3a7 ]
+[ Upstream commit 408324a3c5383716939eea8096a0f999a0665f7e ]
 
-Some released ACPI FW for Huawei boards describes incorrect the port IO
-address range for child devices, in that it tells us the IO port max range
-is 0x3fff for each child device, which is not correct. The address range
-should be [e4:e8) or similar. With this incorrect upper range, the child
-device IO port resources overlap.
+SH-Mobile AG5 and R-Car H1 SoCs are based on the Cortex-A9 MPCore, which
+includes a global timer.
 
-As such, the kernel thinks that the LPC host serial device is a child of
-the IPMI device:
+Enable the ARM global timer on these SoCs, which will be used for:
+  - the scheduler clock, improving scheduler accuracy from 10 ms to 3 or
+    4 ns,
+  - delay loops, allowing removal of calls to shmobile_init_delay() from
+    the corresponding machine vectors.
 
-root@(none)$ more /proc/ioports
-[...]
-00ffc0e3-00ffffff : hisi-lpc-ipmi.0.auto
-  00ffc0e3-00ffc0e3 : ipmi_si
-  00ffc0e4-00ffc0e4 : ipmi_si
-  00ffc0e5-00ffc0e5 : ipmi_si
-  00ffc2f7-00ffffff : serial8250.1.auto
-    00ffc2f7-00ffc2fe : serial
-root@(none)$
+Note that when using an old DTB lacking the global timer, the kernel
+will still work.  However, loops-per-jiffies will no longer be preset,
+and the delay loop will need to be calibrated during boot.
 
-They should both be siblings. Note that these are logical PIO addresses,
-which have a direct mapping from the FW IO port ranges.
-
-This shows up as a real issue when we enable CONFIG_KASAN and
-CONFIG_DEBUG_TEST_DRIVER_REMOVE - we see use-after-free warnings in the
-host removal path:
-
-==================================================================
-BUG: KASAN: use-after-free in release_resource+0x38/0xc8
-Read of size 8 at addr ffff0026accdbc38 by task swapper/0/1
-
-CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc6-00001-g68e186e77b5c-dirty #1593
-Hardware name: Huawei Taishan 2180 /D03, BIOS Hisilicon D03 IT20 Nemo 2.0 RC0 03/30/2018
-Call trace:
-dump_backtrace+0x0/0x290
-show_stack+0x14/0x20
-dump_stack+0xf0/0x14c
-print_address_description.isra.9+0x6c/0x3b8
-__kasan_report+0x12c/0x23c
-kasan_report+0xc/0x18
-__asan_load8+0x94/0xb8
-release_resource+0x38/0xc8
-platform_device_del.part.10+0x80/0xe0
-platform_device_unregister+0x20/0x38
-hisi_lpc_acpi_remove_subdev+0x10/0x20
-device_for_each_child+0xc8/0x128
-hisi_lpc_acpi_remove+0x4c/0xa8
-hisi_lpc_remove+0xbc/0xc0
-platform_drv_remove+0x3c/0x68
-really_probe+0x174/0x548
-driver_probe_device+0x7c/0x148
-device_driver_attach+0x94/0xa0
-__driver_attach+0xa4/0x110
-bus_for_each_dev+0xe8/0x158
-driver_attach+0x30/0x40
-bus_add_driver+0x234/0x2f0
-driver_register+0xbc/0x1d0
-__platform_driver_register+0x7c/0x88
-hisi_lpc_driver_init+0x18/0x20
-do_one_initcall+0xb4/0x258
-kernel_init_freeable+0x248/0x2c0
-kernel_init+0x10/0x118
-ret_from_fork+0x10/0x1c
-
-...
-
-The issue here is that the kernel created an incorrect parent-child
-resource dependency between two devices, and references the false parent
-node when deleting the second child device, when it had been deleted
-already.
-
-Fix up the child device resources from FW to create proper IO port
-resource relationships for broken FW.
-
-With this, the IO port layout looks more healthy:
-
-root@(none)$ more /proc/ioports
-[...]
-00ffc0e3-00ffc0e7 : hisi-lpc-ipmi.0.auto
-  00ffc0e3-00ffc0e3 : ipmi_si
-  00ffc0e4-00ffc0e4 : ipmi_si
-  00ffc0e5-00ffc0e5 : ipmi_si
-00ffc2f7-00ffc2ff : serial8250.1.auto
-  00ffc2f7-00ffc2fe : serial
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-5-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/hisi_lpc.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ arch/arm/mach-shmobile/setup-r8a7779.c | 1 -
+ arch/arm/mach-shmobile/setup-sh73a0.c  | 1 -
+ drivers/soc/renesas/Kconfig            | 2 ++
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-index 8101df901830e..378f5d62a9912 100644
---- a/drivers/bus/hisi_lpc.c
-+++ b/drivers/bus/hisi_lpc.c
-@@ -357,6 +357,26 @@ static int hisi_lpc_acpi_xlat_io_res(struct acpi_device *adev,
- 	return 0;
- }
- 
-+/*
-+ * Released firmware describes the IO port max address as 0x3fff, which is
-+ * the max host bus address. Fixup to a proper range. This will probably
-+ * never be fixed in firmware.
-+ */
-+static void hisi_lpc_acpi_fixup_child_resource(struct device *hostdev,
-+					       struct resource *r)
-+{
-+	if (r->end != 0x3fff)
-+		return;
-+
-+	if (r->start == 0xe4)
-+		r->end = 0xe4 + 0x04 - 1;
-+	else if (r->start == 0x2f8)
-+		r->end = 0x2f8 + 0x08 - 1;
-+	else
-+		dev_warn(hostdev, "unrecognised resource %pR to fixup, ignoring\n",
-+			 r);
-+}
-+
- /*
-  * hisi_lpc_acpi_set_io_res - set the resources for a child
-  * @child: the device node to be updated the I/O resource
-@@ -418,8 +438,11 @@ static int hisi_lpc_acpi_set_io_res(struct device *child,
- 		return -ENOMEM;
- 	}
- 	count = 0;
--	list_for_each_entry(rentry, &resource_list, node)
--		resources[count++] = *rentry->res;
-+	list_for_each_entry(rentry, &resource_list, node) {
-+		resources[count] = *rentry->res;
-+		hisi_lpc_acpi_fixup_child_resource(hostdev, &resources[count]);
-+		count++;
-+	}
- 
- 	acpi_dev_free_resource_list(&resource_list);
- 
+diff --git a/arch/arm/mach-shmobile/setup-r8a7779.c b/arch/arm/mach-shmobile/setup-r8a7779.c
+index b13ec9088ce53..86406e3f9b22e 100644
+--- a/arch/arm/mach-shmobile/setup-r8a7779.c
++++ b/arch/arm/mach-shmobile/setup-r8a7779.c
+@@ -72,7 +72,6 @@ static const char *const r8a7779_compat_dt[] __initconst = {
+ DT_MACHINE_START(R8A7779_DT, "Generic R8A7779 (Flattened Device Tree)")
+ 	.smp		= smp_ops(r8a7779_smp_ops),
+ 	.map_io		= r8a7779_map_io,
+-	.init_early	= shmobile_init_delay,
+ 	.init_irq	= r8a7779_init_irq_dt,
+ 	.init_late	= shmobile_init_late,
+ 	.dt_compat	= r8a7779_compat_dt,
+diff --git a/arch/arm/mach-shmobile/setup-sh73a0.c b/arch/arm/mach-shmobile/setup-sh73a0.c
+index cc08aa7522447..eb4a62fa42895 100644
+--- a/arch/arm/mach-shmobile/setup-sh73a0.c
++++ b/arch/arm/mach-shmobile/setup-sh73a0.c
+@@ -56,7 +56,6 @@ static const char *const sh73a0_boards_compat_dt[] __initconst = {
+ DT_MACHINE_START(SH73A0_DT, "Generic SH73A0 (Flattened Device Tree)")
+ 	.smp		= smp_ops(sh73a0_smp_ops),
+ 	.map_io		= sh73a0_map_io,
+-	.init_early	= shmobile_init_delay,
+ 	.init_machine	= sh73a0_generic_init,
+ 	.init_late	= shmobile_init_late,
+ 	.dt_compat	= sh73a0_boards_compat_dt,
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index ba2b8b51d2d98..de5cfe3fddd33 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -116,6 +116,7 @@ config ARCH_R8A7779
+ 	bool "R-Car H1 (R8A77790)"
+ 	select ARCH_RCAR_GEN1
+ 	select ARM_ERRATA_754322
++	select ARM_GLOBAL_TIMER
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select SYSC_R8A7779
+@@ -163,6 +164,7 @@ config ARCH_SH73A0
+ 	bool "SH-Mobile AG5 (R8A73A00)"
+ 	select ARCH_RMOBILE
+ 	select ARM_ERRATA_754322
++	select ARM_GLOBAL_TIMER
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select RENESAS_INTC_IRQPIN
 -- 
 2.20.1
 
