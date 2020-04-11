@@ -2,54 +2,51 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39921C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7429C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C7A206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72AC206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647955;
-	bh=SgzdHlPA0YNVJ4tnWzeOsi3XQodzjcdy9mwjJz+LEZ0=;
+	s=default; t=1586647964;
+	bh=feWiSaDs4TCqbLvcliEgFp07dy9mV1+go9/DXaD0w8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjzs3b2k9uc+ZI+ijrviUpxFaKEwL0R8/rh5gXQkFLqQDccuAy/velk0cELcG2n33
-	 DyZ2lPuVJ9c/tDo5M5lSxy8ZCORU/9487y0S3O39qj9JztO19iKgSwFKe3eaIcHw4j
-	 NuG3yNP0Z6pXkrrxnjMc9AvyxLyUqzWuM7PGCbV4=
+	b=DwWktaGZIPZCYLqAu/nWCP/cvMAHdu0OY3zC+LGPnEchKVpGYMlocIsx+JN08f/5Z
+	 Mf5IzjtlB3Tjl49kBfnZjMcCWE4RyBOP3T44fHPhaZV2/P/3ZCBt74gSfw0L3ajfal
+	 2jamPn5tquvyvtmG7Cjez3l0fkkOcEpRFvpuCvfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgDKXKE (ORCPT
+        id S1729712AbgDKXcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48110 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbgDKXKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:03 -0400
+        id S1729393AbgDKXJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0D05217D8;
-        Sat, 11 Apr 2020 23:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4563320787;
+        Sat, 11 Apr 2020 23:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646603;
-        bh=SgzdHlPA0YNVJ4tnWzeOsi3XQodzjcdy9mwjJz+LEZ0=;
+        s=default; t=1586646600;
+        bh=feWiSaDs4TCqbLvcliEgFp07dy9mV1+go9/DXaD0w8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rXGf1sMGHSo7VVu7rogBCpR3KSMPaeUbCRqFwcYPvWYQRjgvzw7ZqPZd5CwMrORK
-         J26/z6g0s2gV5ezPfVl1FebLh2vEicNor01+l3JBIx9zNgt7cjFV3Zt7MmxBrUIfiR
-         GA9I96Nmq8O5G//iNLtbX0TuZkKY+tt+Zxfo+Z2Y=
+        b=RkEkOyBu5Xe9nAVsmkTVkjZ3TIsEplzBlQqDBV5zqaz/xgRBhbhJTLnIt/v4JmTmm
+         8oufQyXyQFt7bsWCKJ6qg4EVXgNzg50zJ28pRCDigMNHhddo4GIAhC+CQywUCdEOgi
+         3pk2EWPjrGjAbS39GcFOi6py5gZj6sfpByR1/gKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Wenbo Zhang <ethercflow@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 016/108] libbpf: Ignore incompatible types with matching name during CO-RE relocation
-Date:   Sat, 11 Apr 2020 19:08:11 -0400
-Message-Id: <20200411230943.24951-16-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 013/108] RDMA/bnxt_re: Fix lifetimes in bnxt_re_task
+Date:   Sat, 11 Apr 2020 19:08:08 -0400
+Message-Id: <20200411230943.24951-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -62,43 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit d121e1d34b72c4975ff0340901d926c0aaf98174 ]
+[ Upstream commit 8a6c61704746d3a1e004e054504ae8d98ed95697 ]
 
-When finding target type candidates, ignore forward declarations, functions,
-and other named types of incompatible kind. Not doing this can cause false
-errors.  See [0] for one such case (due to struct pt_regs forward
-declaration).
+A work queue cannot just rely on the ib_device not being freed, it must
+hold a kref on the memory so that the BNXT_RE_FLAG_IBDEV_REGISTERED check
+works.
 
-  [0] https://github.com/iovisor/bcc/pull/2806#issuecomment-598543645
-
-Fixes: ddc7c3042614 ("libbpf: implement BPF CO-RE offset relocation algorithm")
-Reported-by: Wenbo Zhang <ethercflow@gmail.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/20200313172336.1879637-3-andriin@fb.com
+Fixes: 1ac5a4047975 ("RDMA/bnxt_re: Add bnxt_re RoCE driver")
+Link: https://lore.kernel.org/r/1584117207-2664-3-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/bnxt_re/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index b6403712c2f4c..5f3a8b3a54ad7 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -2534,6 +2534,10 @@ static struct ids_vec *bpf_core_find_cands(const struct btf *local_btf,
- 		if (str_is_empty(targ_name))
- 			continue;
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index 27e2df44d043d..cf51f2606877c 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -1584,6 +1584,7 @@ static void bnxt_re_task(struct work_struct *work)
+ 	smp_mb__before_atomic();
+ 	atomic_dec(&rdev->sched_count);
+ exit:
++	put_device(&rdev->ibdev.dev);
+ 	kfree(re_work);
+ }
  
-+		t = skip_mods_and_typedefs(targ_btf, i, NULL);
-+		if (!btf_is_composite(t) && !btf_is_array(t))
-+			continue;
-+
- 		targ_essent_len = bpf_core_essential_name_len(targ_name);
- 		if (targ_essent_len != local_essent_len)
- 			continue;
+@@ -1660,6 +1661,7 @@ static int bnxt_re_netdev_event(struct notifier_block *notifier,
+ 		/* Allocate for the deferred task */
+ 		re_work = kzalloc(sizeof(*re_work), GFP_ATOMIC);
+ 		if (re_work) {
++			get_device(&rdev->ibdev.dev);
+ 			re_work->rdev = rdev;
+ 			re_work->event = event;
+ 			re_work->vlan_dev = (real_dev == netdev ?
 -- 
 2.20.1
 
