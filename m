@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE61C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281B6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64EDF206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0543206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647240;
-	bh=bLBnbysrKfsk8Dar8PPtGfq5wiM7ssyB9QACtB20Xl0=;
+	s=default; t=1586647246;
+	bh=EWXMfcj2AErFXZpY0Y+BNQHUB3PSxEtKAiTtFrekj4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ljin9GGAm2VwpsRbB8L3h10ikAWqJrflhTwIqv91XVg1huyHOWZ8UwIqk3DMolC7g
-	 CnZrGl7JFctj8IVHLE1r1aIp/kNX7Vnj3gVKeHi3KHZLRdSiMd/x5RT4SdMd2vk6jk
-	 DY1NRU9uNlof+GN5OBtrZgYDT3M3SecJWZWcBTMY=
+	b=akI9/xYv6W8ef44yNH73tun3dikOAHWbAbv9JnypHBxs5YgHmMmgkmHdR+7MYuVG7
+	 1ogQuHLUO3qqaPyMCQx0lORG2tQRolTrwxe6BsBlK+y66pRYkBdsBcx+9Q448ewamO
+	 wDoDtH9lnFgsIdLmjlMHw1esCyTmzhKfCTdglRBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbgDKXUi (ORCPT
+        id S1729992AbgDKXNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54986 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbgDKXNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:39 -0400
+        id S1730054AbgDKXNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBB7E21BE5;
-        Sat, 11 Apr 2020 23:13:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0B2E20708;
+        Sat, 11 Apr 2020 23:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646819;
-        bh=bLBnbysrKfsk8Dar8PPtGfq5wiM7ssyB9QACtB20Xl0=;
+        s=default; t=1586646798;
+        bh=EWXMfcj2AErFXZpY0Y+BNQHUB3PSxEtKAiTtFrekj4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7xzPEKcL3M+pHE99AWi8HxIXD7tP6T3iXUXKIoM3bEGeNGxlAnVxlcEcJfTx1vlm
-         /TxBBhb5YL5FqjVqa4Fd1PSU2lidOzdE49xJXKh/rwpXdl50EW1jJ1bYK/PSggM4VV
-         9CYkEoAq5vLLmMZt9ex+bN8XO1nFNbBYX9Z82n/g=
+        b=tIsQDPutreA5a6DqvHPNnNzjZduQawkgjm6J99dQecOrURiRf8V/1mZHyrCzyrW77
+         J5A3DH1fjSa7hAtk4srpaUdCesdGf/TI4rhBVUrxy0Mhu2+P0bbnIXOwbvYgY+mABf
+         lCsjsTmk/eY8MlN4F1Smf5VUklcA5/Uo1GUH3si8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Ganapathi Bhat <ganapathi.gbhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/37] mwifiex: set needed_headroom, not hard_header_len
-Date:   Sat, 11 Apr 2020 19:12:59 -0400
-Message-Id: <20200411231327.26550-10-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 61/66] rtc: cmos: Use spin_lock_irqsave() in cmos_interrupt()
+Date:   Sat, 11 Apr 2020 19:11:58 -0400
+Message-Id: <20200411231203.25933-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
-References: <20200411231327.26550-1-sashal@kernel.org>
+In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
+References: <20200411231203.25933-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,54 +61,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-[ Upstream commit 9454f7a895b822dd8fb4588fc55fda7c96728869 ]
+[ Upstream commit 66e4f4a9cc389b277e187c115a285fad2cba5485 ]
 
-hard_header_len provides limitations for things like AF_PACKET, such
-that we don't allow transmitting packets smaller than this.
+cmos_interrupt() isn't always called from hardirq context, so
+we must use spin_lock_irqsave() & co.
 
-needed_headroom provides a suggested minimum headroom for SKBs, so that
-we can trivally add our headers to the front.
+================================
+WARNING: inconsistent lock state
+5.6.0-rc2-CI-CI_DRM_7981+ #1 Tainted: G     U
+--------------------------------
+inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+rtcwake/4315 [HC0[0]:SC0[0]:HE1:SE1] takes:
+ffffffff82635198 (rtc_lock){?...}, at: cmos_interrupt+0x18/0x100
+{IN-HARDIRQ-W} state was registered at:
+  lock_acquire+0xa7/0x1c0
+  _raw_spin_lock+0x2a/0x40
+  cmos_interrupt+0x18/0x100
+  rtc_handler+0x75/0xc0
+  acpi_ev_fixed_event_detect+0xf9/0x132
+  acpi_ev_sci_xrupt_handler+0xb/0x28
+  acpi_irq+0x13/0x30
+  __handle_irq_event_percpu+0x41/0x2c0
+  handle_irq_event_percpu+0x2b/0x70
+  handle_irq_event+0x2f/0x50
+  handle_fasteoi_irq+0x8e/0x150
+  do_IRQ+0x7e/0x160
+  ret_from_intr+0x0/0x35
+  mwait_idle+0x7e/0x200
+  do_idle+0x1bb/0x260
+  cpu_startup_entry+0x14/0x20
+  start_secondary+0x15f/0x1b0
+  secondary_startup_64+0xa4/0xb0
+irq event stamp: 42003
+hardirqs last  enabled at (42003): [<ffffffff81a36567>] _raw_spin_unlock_irqrestore+0x47/0x60
+hardirqs last disabled at (42002): [<ffffffff81a362ed>] _raw_spin_lock_irqsave+0xd/0x50
+softirqs last  enabled at (41848): [<ffffffff81e00385>] __do_softirq+0x385/0x47f
+softirqs last disabled at (41841): [<ffffffff810bab3a>] irq_exit+0xba/0xc0
 
-The latter is the correct field to use in this case, while the former
-mostly just prevents sending small AF_PACKET frames.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-In any case, mwifiex already does its own bounce buffering [1] if we
-don't have enough headroom, so hints (not hard limits) are all that are
-needed.
+       CPU0
+       ----
+  lock(rtc_lock);
+  <Interrupt>
+    lock(rtc_lock);
 
-This is the essentially the same bug (and fix) that brcmfmac had, fixed
-in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
-additional header space").
+ *** DEADLOCK ***
 
-[1] mwifiex_hard_start_xmit():
-	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
-	[...]
-		/* Insufficient skb headroom - allocate a new skb */
+6 locks held by rtcwake/4315:
+ #0: ffff888175dc9408 (sb_writers#5){.+.+}, at: vfs_write+0x1a4/0x1d0
+ #1: ffff88817406ca80 (&of->mutex){+.+.}, at: kernfs_fop_write+0xdd/0x1b0
+ #2: ffff888179be85e0 (kn->count#236){.+.+}, at: kernfs_fop_write+0xe6/0x1b0
+ #3: ffffffff82641e00 (system_transition_mutex){+.+.}, at: pm_suspend+0xb3/0x3b0
+ #4: ffffffff826b3ee0 (acpi_scan_lock){+.+.}, at: acpi_suspend_begin+0x47/0x80
+ #5: ffff888178fc3960 (&dev->mutex){....}, at: device_resume+0x92/0x1c0
 
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+stack backtrace:
+CPU: 3 PID: 4315 Comm: rtcwake Tainted: G     U            5.6.0-rc2-CI-CI_DRM_7981+ #1
+Hardware name: Google Soraka/Soraka, BIOS MrChromebox-4.10 08/25/2019
+Call Trace:
+ dump_stack+0x71/0x9b
+ mark_lock+0x49a/0x500
+ ? print_shortest_lock_dependencies+0x200/0x200
+ __lock_acquire+0x6d4/0x15d0
+ ? __lock_acquire+0x460/0x15d0
+ lock_acquire+0xa7/0x1c0
+ ? cmos_interrupt+0x18/0x100
+ _raw_spin_lock+0x2a/0x40
+ ? cmos_interrupt+0x18/0x100
+ cmos_interrupt+0x18/0x100
+ cmos_resume+0x1fd/0x290
+ ? __acpi_pm_set_device_wakeup+0x24/0x100
+ pnp_bus_resume+0x5e/0x90
+ ? pnp_bus_suspend+0x10/0x10
+ dpm_run_callback+0x64/0x280
+ device_resume+0xd4/0x1c0
+ ? dpm_watchdog_set+0x60/0x60
+ dpm_resume+0x106/0x410
+ ? dpm_resume_early+0x38c/0x3e0
+ dpm_resume_end+0x8/0x10
+ suspend_devices_and_enter+0x16f/0xbe0
+ ? rcu_read_lock_sched_held+0x4d/0x80
+ pm_suspend+0x344/0x3b0
+ state_store+0x78/0xe0
+ kernfs_fop_write+0x112/0x1b0
+ vfs_write+0xb9/0x1d0
+ ksys_write+0x9f/0xe0
+ do_syscall_64+0x4f/0x220
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7ff934307154
+Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8d 05 b1 07 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
+RSP: 002b:00007ffe2647c168 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007ff934307154
+RDX: 0000000000000004 RSI: 000055de3ec4e5a0 RDI: 000000000000000a
+RBP: 000055de3ec4e5a0 R08: 000055de3ec4c5e0 R09: 00007ff9349f3740
+R10: 000055de3ec4a010 R11: 0000000000000246 R12: 000055de3ec4c500
+R13: 0000000000000004 R14: 00007ff9345df2a0 R15: 00007ff9345de760
+
+Fixes: c6d3a278cc12 ("rtc: cmos: acknowledge ACPI driven wake alarms upon resume")
+Fixes: 311ee9c151ad ("rtc: cmos: allow using ACPI for RTC alarm instead of HPET")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://lore.kernel.org/r/20200221144739.11746-1-ville.syrjala@linux.intel.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-cmos.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 5e8e34a08b2d6..638e1fa64eea1 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -3007,7 +3007,7 @@ struct wireless_dev *mwifiex_add_virtual_intf(struct wiphy *wiphy,
+diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+index 0fa94d9e8d44d..3c3ee2b92b413 100644
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -653,10 +653,11 @@ static struct cmos_rtc	cmos_rtc;
  
- 	dev->flags |= IFF_BROADCAST | IFF_MULTICAST;
- 	dev->watchdog_timeo = MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT;
--	dev->hard_header_len += MWIFIEX_MIN_DATA_HEADER_LEN;
-+	dev->needed_headroom = MWIFIEX_MIN_DATA_HEADER_LEN;
- 	dev->ethtool_ops = &mwifiex_ethtool_ops;
+ static irqreturn_t cmos_interrupt(int irq, void *p)
+ {
++	unsigned long	flags;
+ 	u8		irqstat;
+ 	u8		rtc_control;
  
- 	mdev_priv = netdev_priv(dev);
+-	spin_lock(&rtc_lock);
++	spin_lock_irqsave(&rtc_lock, flags);
+ 
+ 	/* When the HPET interrupt handler calls us, the interrupt
+ 	 * status is passed as arg1 instead of the irq number.  But
+@@ -690,7 +691,7 @@ static irqreturn_t cmos_interrupt(int irq, void *p)
+ 			hpet_mask_rtc_irq_bit(RTC_AIE);
+ 		CMOS_READ(RTC_INTR_FLAGS);
+ 	}
+-	spin_unlock(&rtc_lock);
++	spin_unlock_irqrestore(&rtc_lock, flags);
+ 
+ 	if (is_intr(irqstat)) {
+ 		rtc_update_irq(p, 1, irqstat);
 -- 
 2.20.1
 
