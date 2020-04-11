@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732B8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C51C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440F820CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2776020CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646813;
-	bh=XF+uZhWMSbOURxQFBO8GMourxyfjCr7V8E8GKH8MksE=;
+	s=default; t=1586646815;
+	bh=tGOQQ9djfq9Q6LbI8RPsPUKkrC6zjvSHm/Qh17ZVSTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hLnhPgob0CXwj9i3NcknHiMKgF86HTsxZORGV40nO/onbEkaYczkw+4ug7QoNQWc
-	 fRQgTnZmHMG9uFgDGJzEUtwi3Qyl09O3MBNLH1pGOqjNb8ou9XVSCB3p1DY2JoZNj/
-	 NRumMV8b3gV37Lx4nk6lcwd3SxVb6hJ5bw6ESZys=
+	b=D4Ko364kVZXhe4vAP0/GWz/o+JIsp2v3ar8UUmX4xilY/1zShMCkJxaL/uCp5+g8f
+	 92zq9rthSy38uOM79ebxLCP4u6hxKA0eqrZrEFIKZ+4OTLHF3Rg5P2mQOueRtRCs3N
+	 LiMKU/iuPsbSpY0d0Pwu/KLbnWYD6kreyU9fGo+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgDKXNb (ORCPT
+        id S1729198AbgDKXNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbgDKXNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:13 -0400
+        id S1730370AbgDKXNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE92420787;
-        Sat, 11 Apr 2020 23:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17741216FD;
+        Sat, 11 Apr 2020 23:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646793;
-        bh=XF+uZhWMSbOURxQFBO8GMourxyfjCr7V8E8GKH8MksE=;
+        s=default; t=1586646796;
+        bh=tGOQQ9djfq9Q6LbI8RPsPUKkrC6zjvSHm/Qh17ZVSTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VL5bYnBQRGnSQlkZUG0QrUSCnqFOWuzTriezGajxGDAiQ4+YZAWgIWVcrH0wYv8pa
-         jlqLET9kSKnyukZgPY0xeC183c82eJYGgxugd4R6ZhwBJzp541EqMXrvaahlGN9F9G
-         L31QIjReWp4Nb0VvrOJ+VySHPfP/h0pYqG6EwpjA=
+        b=gk4xj1xI6X0TVfCM+43J8sMsHHDq8PBQgSYn4pCMeO3s4e+Q29lzTALRs0WLTthMC
+         w7XqN/+Vz+qG66Ysqa7HMOYjWy76d96ytME3AuOy9HZQ9F3+JKrfAw5hXLOtmwtxmc
+         dWyOmWx7BSj9wAxoW6u7QjQRK8U4uIFEHdzo1+xQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Himanshu Madhani <hmadhani@marvell.com>,
+Cc:     Can Guo <cang@codeaurora.org>, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 57/66] scsi: qla2xxx: Add fixes for mailbox command
-Date:   Sat, 11 Apr 2020 19:11:54 -0400
-Message-Id: <20200411231203.25933-57-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 59/66] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Sat, 11 Apr 2020 19:11:56 -0400
+Message-Id: <20200411231203.25933-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,47 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 345f574dac85276d1471492c6e90c57e3f90a4f3 ]
+[ Upstream commit c63d6099a7959ecc919b2549dc6b71f53521f819 ]
 
-This patch fixes:
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-- qla2x00_issue_iocb_timeout will now return if chip is down
-
-- only check for sp->qpair in abort handling
-
-Link: https://lore.kernel.org/r/20200212214436.25532-24-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index bef9faea5eeeb..0def2f7a8af28 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -1366,6 +1366,9 @@ qla2x00_issue_iocb_timeout(scsi_qla_host_t *vha, void *buffer,
- 	mbx_cmd_t	mc;
- 	mbx_cmd_t	*mcp = &mc;
- 
-+	if (qla2x00_chip_is_down(vha))
-+		return QLA_INVALID_COMMAND;
-+
- 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x1038,
- 	    "Entered %s.\n", __func__);
- 
-@@ -1436,7 +1439,7 @@ qla2x00_abort_command(srb_t *sp)
- 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x103b,
- 	    "Entered %s.\n", __func__);
- 
--	if (vha->flags.qpairs_available && sp->qpair)
-+	if (sp->qpair)
- 		req = sp->qpair->req;
- 	else
- 		req = vha->req;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index b3dee24917a86..d91209ba18c86 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1563,6 +1563,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 -- 
 2.20.1
 
