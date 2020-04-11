@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D8FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B5DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC942084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842A720692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607514;
-	bh=cnfW//iFPTjHMwCTSZLNmYBO4X0mI7EXj0oDE+xuzDY=;
+	s=default; t=1586607518;
+	bh=TbektKIgaerYCMWhEVnLN4HE7XH2Tyju6LGW1nFAOAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmmwYxKl4ALEslYuQ2aHE1AmqClxtX5Q6MBazXUqDqIX9RTt7jasEkGiH91mlNkWd
-	 zdsrXA4tPbruoBLOH9EBsgQ+t612KxAGSHYU9+d3jBP2HZKIo8Iz5xqCAjjLCsGmby
-	 +768OTk5e/QF1z1WFzIP65IO1rkeJdTdxpMDT6Iw=
+	b=uMEl2QFwK4Un7XdXW/DYrQPvOdN/lsf9EMD4+g7LT2qxsmgWY0zWA6Vo0kZFG2SMj
+	 SWsgVx0ZxvSH7sXUmqmO7YDJ0rHjag9lzDxdpwSNxnSCeTmhRa5HzV8M73TVQ6BGI4
+	 bL1u+u3P2iZSl+BWcANL7GqJv2QtwraCUsK5Ga5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgDKMSc (ORCPT
+        id S1728640AbgDKMSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbgDKMS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:26 -0400
+        id S1728637AbgDKMSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6006220673;
-        Sat, 11 Apr 2020 12:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7743C20644;
+        Sat, 11 Apr 2020 12:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607505;
-        bh=cnfW//iFPTjHMwCTSZLNmYBO4X0mI7EXj0oDE+xuzDY=;
+        s=default; t=1586607512;
+        bh=TbektKIgaerYCMWhEVnLN4HE7XH2Tyju6LGW1nFAOAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8xWH84QxGxfCgo72P+XhhzAwuygmZNfzcLYu7UZdqnt9vbdIIxy6j+x+1SEFaPY4
-         lVDRNyDP16+dpKjH32sDC6qoSpkfWQHuMR7MHUcZoCnSnujHn4ne1apSLDzFL8hGCu
-         fDzLXYz+PWzXCMBdywOS6Ac+hAPK/NnYNHQI+JVI=
+        b=BwZjrzXixptJuZTNR+ZoShMXmCXSgqFVp5QgRCLHpZh0Yq89+3guqoNiBnpf7WZbP
+         knLbXaS3UBNiQHTcL9YewdOzip85fDGYY+I2hHgXLnFeFKQjqfp9U1W0+kzDVwChWi
+         5mDH94wJwkq9qH/PYJ5bLkYKmR55XB8dNFLId3H8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>
-Subject: [PATCH 5.4 40/41] drm/i915: Fix ref->mutex deadlock in i915_active_wait()
-Date:   Sat, 11 Apr 2020 14:09:49 +0200
-Message-Id: <20200411115507.029644194@linuxfoundation.org>
+        stable@vger.kernel.org, Herat Ramani <herat@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 01/44] cxgb4: fix MPS index overwrite when setting MAC address
+Date:   Sat, 11 Apr 2020 14:09:21 +0200
+Message-Id: <20200411115457.049224792@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
-References: <20200411115504.124035693@linuxfoundation.org>
+In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
+References: <20200411115456.934174282@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,147 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+From: Herat Ramani <herat@chelsio.com>
 
-The following deadlock exists in i915_active_wait() due to a double lock
-on ref->mutex (call chain listed in order from top to bottom):
- i915_active_wait();
- mutex_lock_interruptible(&ref->mutex); <-- ref->mutex first acquired
- i915_active_request_retire();
- node_retire();
- active_retire();
- mutex_lock_nested(&ref->mutex, SINGLE_DEPTH_NESTING); <-- DEADLOCK
+[ Upstream commit 41aa8561ca3fc5748391f08cc5f3e561923da52c ]
 
-Fix the deadlock by skipping the second ref->mutex lock when
-active_retire() is called through i915_active_request_retire().
+cxgb4_update_mac_filt() earlier requests firmware to add a new MAC
+address into MPS TCAM. The MPS TCAM index returned by firmware is
+stored in pi->xact_addr_filt. However, the saved MPS TCAM index gets
+overwritten again with the return value of cxgb4_update_mac_filt(),
+which is wrong.
 
-Note that this bug only affects 5.4 and has since been fixed in 5.5.
-Normally, a backport of the fix from 5.5 would be in order, but the
-patch set that fixes this deadlock involves massive changes that are
-neither feasible nor desirable for backporting [1][2][3]. Therefore,
-this small patch was made to address the deadlock specifically for 5.4.
+When trying to update to another MAC address later, the wrong MPS TCAM
+index is sent to firmware, which causes firmware to return error,
+because it's not the same MPS TCAM index that firmware had sent
+earlier to driver.
 
-[1] 274cbf20fd10 ("drm/i915: Push the i915_active.retire into a worker")
-[2] 093b92287363 ("drm/i915: Split i915_active.mutex into an irq-safe spinlock for the rbtree")
-[3] 750bde2fd4ff ("drm/i915: Serialise with remote retirement")
+So, fix by removing the wrong overwrite being done after call to
+cxgb4_update_mac_filt().
 
-Fixes: 12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
-Cc: <stable@vger.kernel.org> # 5.4.x
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+Fixes: 3f8cfd0d95e6 ("cxgb4/cxgb4vf: Program hash region for {t4/t4vf}_change_mac()")
+Signed-off-by: Herat Ramani <herat@chelsio.com>
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/i915/i915_active.c |   29 +++++++++++++++++++----------
- drivers/gpu/drm/i915/i915_active.h |    4 ++--
- 2 files changed, 21 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/i915_active.c
-+++ b/drivers/gpu/drm/i915/i915_active.c
-@@ -121,7 +121,7 @@ static inline void debug_active_assert(s
- #endif
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -3110,7 +3110,6 @@ static int cxgb_set_mac_addr(struct net_
+ 		return ret;
  
- static void
--__active_retire(struct i915_active *ref)
-+__active_retire(struct i915_active *ref, bool lock)
- {
- 	struct active_node *it, *n;
- 	struct rb_root root;
-@@ -138,7 +138,8 @@ __active_retire(struct i915_active *ref)
- 		retire = true;
- 	}
- 
--	mutex_unlock(&ref->mutex);
-+	if (likely(lock))
-+		mutex_unlock(&ref->mutex);
- 	if (!retire)
- 		return;
- 
-@@ -153,21 +154,28 @@ __active_retire(struct i915_active *ref)
- }
- 
- static void
--active_retire(struct i915_active *ref)
-+active_retire(struct i915_active *ref, bool lock)
- {
- 	GEM_BUG_ON(!atomic_read(&ref->count));
- 	if (atomic_add_unless(&ref->count, -1, 1))
- 		return;
- 
- 	/* One active may be flushed from inside the acquire of another */
--	mutex_lock_nested(&ref->mutex, SINGLE_DEPTH_NESTING);
--	__active_retire(ref);
-+	if (likely(lock))
-+		mutex_lock_nested(&ref->mutex, SINGLE_DEPTH_NESTING);
-+	__active_retire(ref, lock);
- }
- 
- static void
- node_retire(struct i915_active_request *base, struct i915_request *rq)
- {
--	active_retire(node_from_active(base)->ref);
-+	active_retire(node_from_active(base)->ref, true);
-+}
-+
-+static void
-+node_retire_nolock(struct i915_active_request *base, struct i915_request *rq)
-+{
-+	active_retire(node_from_active(base)->ref, false);
- }
- 
- static struct i915_active_request *
-@@ -364,7 +372,7 @@ int i915_active_acquire(struct i915_acti
- void i915_active_release(struct i915_active *ref)
- {
- 	debug_active_assert(ref);
--	active_retire(ref);
-+	active_retire(ref, true);
- }
- 
- static void __active_ungrab(struct i915_active *ref)
-@@ -391,7 +399,7 @@ void i915_active_ungrab(struct i915_acti
- {
- 	GEM_BUG_ON(!test_bit(I915_ACTIVE_GRAB_BIT, &ref->flags));
- 
--	active_retire(ref);
-+	active_retire(ref, true);
- 	__active_ungrab(ref);
- }
- 
-@@ -421,12 +429,13 @@ int i915_active_wait(struct i915_active
- 			break;
- 		}
- 
--		err = i915_active_request_retire(&it->base, BKL(ref));
-+		err = i915_active_request_retire(&it->base, BKL(ref),
-+						 node_retire_nolock);
- 		if (err)
- 			break;
- 	}
- 
--	__active_retire(ref);
-+	__active_retire(ref, true);
- 	if (err)
- 		return err;
- 
---- a/drivers/gpu/drm/i915/i915_active.h
-+++ b/drivers/gpu/drm/i915/i915_active.h
-@@ -309,7 +309,7 @@ i915_active_request_isset(const struct i
-  */
- static inline int __must_check
- i915_active_request_retire(struct i915_active_request *active,
--			   struct mutex *mutex)
-+			   struct mutex *mutex, i915_active_retire_fn retire)
- {
- 	struct i915_request *request;
- 	long ret;
-@@ -327,7 +327,7 @@ i915_active_request_retire(struct i915_a
- 	list_del_init(&active->link);
- 	RCU_INIT_POINTER(active->request, NULL);
- 
--	active->retire(active, request);
-+	retire(active, request);
- 
+ 	memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
+-	pi->xact_addr_filt = ret;
  	return 0;
  }
+ 
 
 
