@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDBDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11350C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45682051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE562051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648174;
-	bh=qCa1GzfdGwFKk9X9humIXd6q1+OihmcS9vny16uEqFo=;
+	s=default; t=1586648177;
+	bh=EHKM173hDAEkxmP/uNv4sY3k5Xn+LR2ptxQZRGg5XFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEPMoOPQ3vpm81HEv3zOllW3h6nn2dIKpoy63MXAMy6eQLpJhELwvQJCBPayX34ke
-	 DWsWarScR60375mTX3QF/gy4xCwSu/9qoDyK0jxqWNVlPDfY4e2V7R+VQmoacifosF
-	 3cufLHQOq/J+cGPODGMEPN4kky1gEf8c23sAkj/U=
+	b=Z7XreYChebxkJlhi+/FO8DGfx1hzE2Ejsm0/3o3+r2CZmMiXLTnUbSEb8xSQFoU+A
+	 X4nK03oTJrwK2YAo/TgrE3qPw+GwMXdDpeY0uYOy7ERMOIED5FS5bvnsU9ZIcarufD
+	 pQzirkQfdg6VNULRRi+pLaBaLy+++ADsvqaYrNkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgDKXIq (ORCPT
+        id S1729371AbgDKXgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45900 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728972AbgDKXIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:41 -0400
+        id S1729001AbgDKXIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D6A620CC7;
-        Sat, 11 Apr 2020 23:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4909021D79;
+        Sat, 11 Apr 2020 23:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646521;
-        bh=qCa1GzfdGwFKk9X9humIXd6q1+OihmcS9vny16uEqFo=;
+        s=default; t=1586646526;
+        bh=EHKM173hDAEkxmP/uNv4sY3k5Xn+LR2ptxQZRGg5XFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+egMDenuGjJ+01DWMTy3YFbSNv1KVjM7MLnKKjr+kUDwj9uPvHiTSVHCoLW/E/Og
-         Bx95pHDXpZ3Zm28fNyAhZLyfMIiaIyaAY2GZ4PxFiGys2C5ajq5D56yubVujk11XJr
-         uHnUDvx9duuvQtX87BCSNXjls0Z49i745moZIThQ=
+        b=NMIkAP4To63Y3mEPwWIYRnczeX9CZp/92UI08feZtfSWHxhdI6Fccxqm2uFqkg8Zk
+         ANkOh1/0noP+6KTpBlgFSLDgWhpKUTw1OrGqW/H6koJXYRiED9NA4gKhZVGUpUhSIF
+         4wEmBmAmuBCT0h4Ckmg5IRNM1e8ANamRMkO3fCnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 077/121] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Date:   Sat, 11 Apr 2020 19:06:22 -0400
-Message-Id: <20200411230706.23855-77-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 081/121] tty: serial: qcom_geni_serial: No need to stop tx/rx on UART shutdown
+Date:   Sat, 11 Apr 2020 19:06:26 -0400
+Message-Id: <20200411230706.23855-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,100 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 10a98cb16d80be3595fdb165fad898bb28b8b6d2 ]
+[ Upstream commit e83766334f96b3396a71c7baa3b0b53dfd5190cd ]
 
-Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-during do_exit().  That can confuse things.  In particular, if BSD
-process accounting is enabled, then do_exit() writes data to an
-accounting file.  If that file has FS_SYNC_FL set, then this write
-occurs synchronously and can misbehave if PF_MEMALLOC is set.
+On a board using qcom_geni_serial I found that I could no longer
+interact with kdb if I got a crash after the "agetty" running on the
+same serial port was killed.  This meant that various classes of
+crashes that happened at reboot time were undebuggable.
 
-For example, if the accounting file is located on an XFS filesystem,
-then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
-doesn't get written when it should.  Or if the accounting file is
-located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
-in ext4_write_inode() is triggered and the inode doesn't get written.
+Reading through the code, I couldn't figure out why qcom_geni_serial
+felt the need to run so much code at port shutdown time.  All we need
+to do is disable the interrupt.
 
-Fix this in xfsaild() by using the helper functions to save and restore
-PF_MEMALLOC.
+After I make this change then a hardcoded kgdb_breakpoint in some late
+shutdown code now allows me to interact with the debugger.  I also
+could freely close / re-open the port without problems.
 
-This can be reproduced as follows in the kvm-xfstests test appliance
-modified to add the 'acct' Debian package, and with kvm-xfstests's
-recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
-
-        mkfs.xfs -f /dev/vdb
-        mount /vdb
-        touch /vdb/file
-        chattr +S /vdb/file
-        accton /vdb/file
-        mkfs.xfs -f /dev/vdc
-        mount /vdc
-        umount /vdc
-
-It causes:
-	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
-	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
-	[...]
-	Call Trace:
-	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
-	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
-	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
-	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
-	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
-	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
-	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
-	 generic_write_sync include/linux/fs.h:2867 [inline]
-	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
-	 call_write_iter include/linux/fs.h:1901 [inline]
-	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-	 do_acct_process+0x122/0x170 kernel/acct.c:522
-	 slow_acct_process kernel/acct.c:581 [inline]
-	 acct_process+0x1d4/0x27c kernel/acct.c:607
-	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-	 kthread+0xf1/0x140 kernel/kthread.c:257
-	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
-
-This bug was originally reported by syzbot at
-https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
-
-Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_ail.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/qcom_geni_serial.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 00cc5b8734be8..3bc570c90ad97 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -529,8 +529,9 @@ xfsaild(
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index ebace5ad175ca..7a6fa4ab780f7 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -846,17 +846,11 @@ static void get_tx_fifo_size(struct qcom_geni_serial_port *port)
+ 
+ static void qcom_geni_serial_shutdown(struct uart_port *uport)
  {
- 	struct xfs_ail	*ailp = data;
- 	long		tout = 0;	/* milliseconds */
-+	unsigned int	noreclaim_flag;
+-	unsigned long flags;
+-
+ 	/* Stop the console before stopping the current tx */
+ 	if (uart_console(uport))
+ 		console_stop(uport->cons);
  
--	current->flags |= PF_MEMALLOC;
-+	noreclaim_flag = memalloc_noreclaim_save();
- 	set_freezable();
- 
- 	while (1) {
-@@ -601,6 +602,7 @@ xfsaild(
- 		tout = xfsaild_push(ailp);
- 	}
- 
-+	memalloc_noreclaim_restore(noreclaim_flag);
- 	return 0;
+ 	disable_irq(uport->irq);
+-	spin_lock_irqsave(&uport->lock, flags);
+-	qcom_geni_serial_stop_tx(uport);
+-	qcom_geni_serial_stop_rx(uport);
+-	spin_unlock_irqrestore(&uport->lock, flags);
  }
  
+ static int qcom_geni_serial_port_setup(struct uart_port *uport)
 -- 
 2.20.1
 
