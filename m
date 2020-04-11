@@ -2,94 +2,107 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F17C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B284C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C654206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648618;
-	bh=vkkBVzW/sRQX6NVpM58Zt+UhlaswQDSkXRNwMThHjj4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/szEFaBqlZIXcvpJyHFReZSpfBDAldHo4HuRhEJ6jza/NnZEy2xt6OHlga5Tgx9R
-	 HsjBLQl08cazgS9JpmbAa3vpy6Wg+N5Lbd+NmP8d9sHSbwVopJUURKABl+wfmQRItm
-	 WoXPMG2adz4trB3p3n3Kvy21kHSUeDo/a07FuO2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 40610206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlIWOHkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbgDKXng (ORCPT
+        id S1729904AbgDKXnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgDKXGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C1C6217D8;
-        Sat, 11 Apr 2020 23:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646378;
-        bh=vkkBVzW/sRQX6NVpM58Zt+UhlaswQDSkXRNwMThHjj4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abKp1SR72Rn+z1P+EY7C0Y1ecCBSKjUbWx6ihXlnHvi4jgjGp8UYTux2a6cB60ECy
-         rdm9W+LKckN/yW+Xx907hWz5G4i1fm5lFEswwtG10LPMSi/ipmz9D3stl97jL7zzGb
-         UrAQCS6DjwqpkU4iqTDnEWjg72vBAYdkJ7yLAC4M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 119/149] ASoC: stm32: spdifrx: fix regmap status check
-Date:   Sat, 11 Apr 2020 19:03:16 -0400
-Message-Id: <20200411230347.22371-119-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
-References: <20200411230347.22371-1-sashal@kernel.org>
+        Sat, 11 Apr 2020 19:43:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43255 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgDKXGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i10so6262387wrv.10;
+        Sat, 11 Apr 2020 16:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=WYRSJTfq6AnurzwIFdVL9Jv0SE1zF9pQuRzb6RhgZuk=;
+        b=KlIWOHkTCXXMdpeMalRuRMYkdxAPQ51jMafiNH86Jsp+MJFF2TeOSdH9N56mVr2X4c
+         KdcSljz2a4kMfFIIKd4dSeUzJsyGyXrHo7qd3KhK25A07pm0bJuamtBDEfF3G1PscP7h
+         claD39bvS68+B0QYkW4ExHy9Td57ELdFndormLHrIoCDe6i30pUUnlT/MLWgVVx7Yd0r
+         TsvRQ7uHX8L63cbtv2eykRWpfbbGGUsTqaHMXyYHr61VI2QvvIoXLUt7oHVeP5LGONfR
+         jTPc+AX2Rw8rhGvleozRR3hILjLD9G4lZy4C4oN3hFLNfVfWgcgUNroLFTvkYNZhcp+l
+         QhDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WYRSJTfq6AnurzwIFdVL9Jv0SE1zF9pQuRzb6RhgZuk=;
+        b=suAzNJI1dKaRA5m58jwymmp7aCoiRGHr53fxZrye8tC3XlmZZDK1bJrbTR9NVEugu7
+         Fh2GcCM8Kb6wQKzebHdpxgaxSwq1uA/BshFAXJQ2XpuZkUht/jYqd9NUZ0ddpS6rCihA
+         J1bkndLJgQmvOQhgURyoYIlTygr75z+K0SuSf3Wdw1w6aL2x1DAPeZXZ98RuV6nK43hD
+         QXZCDI1Z8OHRZHo2dEsiKdvM8Xjv0/fNCWWz/CqY6UumIhBHxu4mr3YaHNfvjPjucmFb
+         LvoiDknWklPLXy93jz9l5xdYL88ZqN489t1mqwg4uCP8tfnd5jiELsenz49R17x5PQL3
+         Ed9Q==
+X-Gm-Message-State: AGi0PuZejKft9lLrZQC/X+tYqrNVsFKBrB/m/NIG6gHTXdNfUPe6vr7d
+        QTfV26BuZ9rkkNST8FjaUa3oY3kX
+X-Google-Smtp-Source: APiQypJJHKyGKUnZi4/Ak8rryO6toHMb7XkAjXNdF6Arn2qP9DgVgxHrE3lxEwayvgHUOFZYufwuKA==
+X-Received: by 2002:a5d:6503:: with SMTP id x3mr3775368wru.153.1586646376028;
+        Sat, 11 Apr 2020 16:06:16 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id k133sm8992741wma.0.2020.04.11.16.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 16:06:15 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] io_uring: remove obsolete @mm_fault
+Date:   Sun, 12 Apr 2020 02:05:01 +0300
+Message-Id: <805c435030f6f4e4332f57a252b901125c5423d0.1586645520.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1586645520.git.asml.silence@gmail.com>
+References: <cover.1586645520.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+If io_submit_sqes() can't grab an mm, it fails and exits right away.
+There is no need to track the fact of the failure. Remove @mm_fault.
 
-[ Upstream commit a168dae5ea14283e8992d5282237bb0d6a3e1c06 ]
-
-Release resources when exiting on error.
-
-Fixes: 1a5c0b28fc56 ("ASoC: stm32: spdifrx: manage identification registers")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20200318144125.9163-2-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- sound/soc/stm/stm32_spdifrx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/io_uring.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index 3769d9ce5dbef..e6e75897cce83 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -1009,6 +1009,8 @@ static int stm32_spdifrx_probe(struct platform_device *pdev)
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index be65eda059ac..343899915465 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -5816,7 +5816,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 	struct io_submit_state state, *statep = NULL;
+ 	struct io_kiocb *link = NULL;
+ 	int i, submitted = 0;
+-	bool mm_fault = false;
  
- 	if (idr == SPDIFRX_IPIDR_NUMBER) {
- 		ret = regmap_read(spdifrx->regmap, STM32_SPDIFRX_VERR, &ver);
-+		if (ret)
-+			goto error;
+ 	/* if we have a backlog and couldn't flush it all, return BUSY */
+ 	if (test_bit(0, &ctx->sq_check_overflow)) {
+@@ -5870,8 +5869,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 		}
  
- 		dev_dbg(&pdev->dev, "SPDIFRX version: %lu.%lu registered\n",
- 			FIELD_GET(SPDIFRX_VERR_MAJ_MASK, ver),
+ 		if (io_op_defs[req->opcode].needs_mm && !*mm) {
+-			mm_fault = mm_fault || !mmget_not_zero(ctx->sqo_mm);
+-			if (unlikely(mm_fault)) {
++			if (unlikely(!mmget_not_zero(ctx->sqo_mm))) {
+ 				err = -EFAULT;
+ 				goto fail_req;
+ 			}
 -- 
-2.20.1
+2.24.0
 
