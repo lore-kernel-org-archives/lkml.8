@@ -2,128 +2,118 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC94C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4559C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3845212CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A909120857
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FqvciLnY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DseFGZDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgDKJRL (ORCPT
+        id S1725966AbgDKJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 05:17:11 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:46138 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgDKJRL (ORCPT
+        Sat, 11 Apr 2020 05:20:27 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23469 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725900AbgDKJU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 05:17:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=v99Py2O0+MBHwgVQ/kvvKOXcuOYbcOVt8mAGyw3i4Tc=; b=FqvciLnYpg0v2BVGpjcS8Lwrb
-        fZ11tbBxmcHXtRBjPQyg6xVsKorqGIrHwa2YkbfMaMcn5wMqRwIQydIxFRbbHCDqOykqKJ2EBkGjV
-        l2jkNl7I6mhdBSzNraotNDn7pbJbUiYh8X4QvUlnMBz6bBiD5Cnks8tpmxrrGRxArPiDJL2xOYP/+
-        qtppDkyyQXhMGapeeLZ39wtu7LGZgUbQxBEF7OQ1nmlcAhRUXljMPMq/7qLRC7ie6G+LBXjZRO0vB
-        OvoLouNz3imMq4M6jgU2Zfjaf9MqevP68NPhqRe3ZdKsD/TZ3KfDEibPGJGZ6eNkWu71c8vz5CP7F
-        9goLAiqSw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:44436)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jNCGA-0006Pl-LN; Sat, 11 Apr 2020 10:17:06 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jNCG9-0004vE-5I; Sat, 11 Apr 2020 10:17:05 +0100
-Date:   Sat, 11 Apr 2020 10:17:05 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] net: phy: marvell: Fix pause frame negotiation
-Message-ID: <20200411091705.GG25745@shell.armlinux.org.uk>
-References: <20200408214326.934440-1-clemens.gruber@pqgruber.com>
- <20200410174304.22f812fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Sat, 11 Apr 2020 05:20:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586596827; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=m64rlGIY/ze74hM+6TJxI24Fs9sSBQEMm8EnQhf5+Gs=;
+ b=DseFGZDVKeLKQbyMLjK9d0Oh15b/EKcDQy1gmuQqxhNSpOGroBmWRSaR2M/lO7ZZsPCdb7Kt
+ rO3cpvqAL1421nBCyhxgB+K6veJ5ENrTINW1h94dXruZ8WHk75UGv1nagV3sd9OrzQmrRaGE
+ uBOQ3oxpUwyxIza4tpmE1Ib3R4M=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e918bce.7fea463b8b58-smtp-out-n03;
+ Sat, 11 Apr 2020 09:20:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AAD9CC4478F; Sat, 11 Apr 2020 09:20:13 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01845C433CB;
+        Sat, 11 Apr 2020 09:20:12 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410174304.22f812fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 11 Apr 2020 14:50:12 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH 0/2] iommu/arm-smmu: Allow client devices to select direct
+ mapping
+In-Reply-To: <20200409233124.GW199755@google.com>
+References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
+ <7761534cdb4f1891d993e73931894a63@codeaurora.org>
+ <20200409233124.GW199755@google.com>
+Message-ID: <6714ba4f73f6518e5f2f427a0bcc6c53@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 05:43:04PM -0700, Jakub Kicinski wrote:
-> On Wed,  8 Apr 2020 23:43:26 +0200 Clemens Gruber wrote:
-> > The negotiation of flow control / pause frame modes was broken since
-> > commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
-> > genphy_read_lpa()") moved the setting of phydev->duplex below the
-> > phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
-> > function, phydev->pause was no longer set.
-> > 
-> > Fix it by moving the parsing of the status variable before the blocks
-> > dealing with the pause frames.
-> > 
-> > Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
-> > Cc: stable@vger.kernel.org # v5.6+
-> 
-> nit: please don't CC stable on networking patches
-> 
-> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> > ---
-> >  drivers/net/phy/marvell.c | 44 +++++++++++++++++++--------------------
-> >  1 file changed, 22 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-> > index 4714ca0e0d4b..02cde4c0668c 100644
-> > --- a/drivers/net/phy/marvell.c
-> > +++ b/drivers/net/phy/marvell.c
-> > @@ -1263,6 +1263,28 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
-> >  	int lpa;
-> >  	int err;
-> >  
-> > +	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
-> > +		return 0;
-> 
-> If we return early here won't we miss updating the advertising bits?
-> We will no longer call e.g. fiber_lpa_mod_linkmode_lpa_t().
-> 
-> Perhaps extracting info from status should be moved to a helper so we
-> can return early without affecting the rest of the flow?
-> 
-> Is my understanding correct?  Russell?
+Hi Matthias,
 
-You are correct - and yes, there is also a problem here.
+On 2020-04-10 05:01, Matthias Kaehlcke wrote:
+> On Tue, Feb 04, 2020 at 11:12:17PM +0530, Sai Prakash Ranjan wrote:
+>> Hello Robin, Will
+>> 
+>> On 2020-01-22 17:18, Sai Prakash Ranjan wrote:
+>> > This series allows drm devices to set a default identity
+>> > mapping using iommu_request_dm_for_dev(). First patch is
+>> > a cleanup to support other SoCs to call into QCOM specific
+>> > implementation and preparation for second patch.
+>> > Second patch sets the default identity domain for drm devices.
+>> >
+>> > Jordan Crouse (1):
+>> >   iommu/arm-smmu: Allow client devices to select direct mapping
+>> >
+>> > Sai Prakash Ranjan (1):
+>> >   iommu: arm-smmu-impl: Convert to a generic reset implementation
+>> >
+>> >  drivers/iommu/arm-smmu-impl.c |  8 +++--
+>> >  drivers/iommu/arm-smmu-qcom.c | 55 +++++++++++++++++++++++++++++++++--
+>> >  drivers/iommu/arm-smmu.c      |  3 ++
+>> >  drivers/iommu/arm-smmu.h      |  5 ++++
+>> >  4 files changed, 65 insertions(+), 6 deletions(-)
+>> 
+>> Any review comments?
+> 
+> Ping
+> 
+> What is the status of this series, is it ready to land or are any 
+> changes
+> needed?
+> 
 
-It is not clear whether the resolved bit is set before or after the
-link status reports that link is up - however, the resolved bit
-indicates whether the speed and duplex are valid.
+I am wondering the same :)
 
-What I've done elsewhere is if the resolved bit is not set, then we
-force phydev->link to be false, so we don't attempt to process a
-link-up status until we can read the link parameters.  I think that's
-what needs to happen here, i.o.w.:
-
-	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
-		phydev->link = 0;
-		return 0;
-	}
-
-especially as we're not reading the LPA.
+Thanks,
+Sai
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
