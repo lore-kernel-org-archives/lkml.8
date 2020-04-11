@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2580EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5152C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F001420787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7562084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607676;
-	bh=x+E2xz4xkcBrixnVfWase73ISMftFL+eb6NjsKnyOLY=;
+	s=default; t=1586607678;
+	bh=m5Gkj+8u3/l7u+H2or206oc1FkzBRI/snDPOHpvqDi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y9dK2s7EdpQ9phC/RFHCvf9DjaR9XiWOD0lXrhIesNBCPJOS04U+BbmK3QAQOE18B
-	 XZDBpPbR6JmvTSgvUTpPzeleg6uzt9tY8axAO9rEbnZ01kXWBkAGZbU9T+Mg0Xb7L8
-	 exEAgUOK3+R5r5kMA2DBdA6y9zt6FsOnC+aW+dKo=
+	b=EqY0sv6ZpZVCuDxDXlkfOwSwDfdJtPFnykFX1Embm8IdJ7Yr+fycZJZ6Sfn20hchV
+	 NF1WNda1qdlaxk7qfOZKkCQU8mObT6G2Ey83dMm410z7BGSPvlCtIwBGZ8blfDu3N/
+	 Zpn46diBYDdYOCx0uDirQJ/3IWi5BbvJ5Kwsi4k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgDKMVO (ORCPT
+        id S1728889AbgDKMVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729128AbgDKMVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:08 -0400
+        id S1728874AbgDKMVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0688920644;
-        Sat, 11 Apr 2020 12:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3F42137B;
+        Sat, 11 Apr 2020 12:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607668;
-        bh=x+E2xz4xkcBrixnVfWase73ISMftFL+eb6NjsKnyOLY=;
+        s=default; t=1586607670;
+        bh=m5Gkj+8u3/l7u+H2or206oc1FkzBRI/snDPOHpvqDi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBcj8zV4lnVKPlnC9lt7I2wSyYyfo5YKEtA1Jcf/MMI8yvO9wG4+2P+2ul6CSG9sY
-         Ji1RDRZMWDaTu84VZcjsqBIljjyG0M9qcnIUNN1zN52jKiWGS5g2fTfarh4WNXBMeR
-         GQO7tiB64gikjW/US9LpuSL0p5ajC5OD72IMn8fg=
+        b=ZFHhJ0FFaO4GCJ72x9lAcZgXSRsEjNEYbJSjuWhbf08ws/tNIKKY8f0075SsNRANo
+         zcfWz/x3jPmFgTb1Ibd+Mtl2ZhI7cr8IJ10GKQv0LkkHcyuxWu4NdJznD+ApnwGAf6
+         uZnH+8lpntCsYJT9ZnxrUkbXJ8C8Mzf4itwf4p1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.6 27/38] IB/hfi1: Fix memory leaks in sysfs registration and unregistration
-Date:   Sat, 11 Apr 2020 14:10:04 +0200
-Message-Id: <20200411115502.719828124@linuxfoundation.org>
+Subject: [PATCH 5.6 28/38] IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
+Date:   Sat, 11 Apr 2020 14:10:05 +0200
+Message-Id: <20200411115502.774913011@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -62,81 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Alex Vesker <valex@mellanox.com>
 
-commit 5c15abc4328ad696fa61e2f3604918ed0c207755 upstream.
+commit 41e684ef3f37ce6e5eac3fb5b9c7c1853f4b0447 upstream.
 
-When the hfi1 driver is unloaded, kmemleak will report the following
-issue:
+Until now the flex parser capability was used in ib_query_device() to
+indicate tunnel_offloads_caps support for mpls_over_gre/mpls_over_udp.
 
-unreferenced object 0xffff8888461a4c08 (size 8):
-comm "kworker/0:0", pid 5, jiffies 4298601264 (age 2047.134s)
-hex dump (first 8 bytes):
-73 64 6d 61 30 00 ff ff sdma0...
-backtrace:
-[<00000000311a6ef5>] kvasprintf+0x62/0xd0
-[<00000000ade94d9f>] kobject_set_name_vargs+0x1c/0x90
-[<0000000060657dbb>] kobject_init_and_add+0x5d/0xb0
-[<00000000346fe72b>] 0xffffffffa0c5ecba
-[<000000006cfc5819>] 0xffffffffa0c866b9
-[<0000000031c65580>] 0xffffffffa0c38e87
-[<00000000e9739b3f>] local_pci_probe+0x41/0x80
-[<000000006c69911d>] work_for_cpu_fn+0x16/0x20
-[<00000000601267b5>] process_one_work+0x171/0x380
-[<0000000049a0eefa>] worker_thread+0x1d1/0x3f0
-[<00000000909cf2b9>] kthread+0xf8/0x130
-[<0000000058f5f874>] ret_from_fork+0x35/0x40
+Newer devices and firmware will have configurations with the flexparser
+but without mpls support.
 
-This patch fixes the issue by:
+Testing for the flex parser capability was a mistake, the tunnel_stateless
+capability was intended for detecting mpls and was introduced at the same
+time as the flex parser capability.
 
-- Releasing dd->per_sdma[i].kobject in hfi1_unregister_sysfs().
-  - This will fix the memory leak.
+Otherwise userspace will be incorrectly informed that a future device
+supports MPLS when it does not.
 
-- Calling kobject_put() to unwind operations only for those entries in
-   dd->per_sdma[] whose operations have succeeded (including the current
-   one that has just failed) in hfi1_verbs_register_sysfs().
-
-Cc: <stable@vger.kernel.org>
-Fixes: 0cb2aa690c7e ("IB/hfi1: Add sysfs interface for affinity setup")
-Link: https://lore.kernel.org/r/20200326163807.21129.27371.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Link: https://lore.kernel.org/r/20200305123841.196086-1-leon@kernel.org
+Cc: <stable@vger.kernel.org> # 4.17
+Fixes: e818e255a58d ("IB/mlx5: Expose MPLS related tunneling offloads")
+Signed-off-by: Alex Vesker <valex@mellanox.com>
+Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/sysfs.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/main.c |    6 ++----
+ include/linux/mlx5/mlx5_ifc.h     |    6 +++++-
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/sysfs.c
-+++ b/drivers/infiniband/hw/hfi1/sysfs.c
-@@ -856,8 +856,13 @@ int hfi1_verbs_register_sysfs(struct hfi
- 
- 	return 0;
- bail:
--	for (i = 0; i < dd->num_sdma; i++)
--		kobject_del(&dd->per_sdma[i].kobj);
-+	/*
-+	 * The function kobject_put() will call kobject_del() if the kobject
-+	 * has been added successfully. The sysfs files created under the
-+	 * kobject directory will also be removed during the process.
-+	 */
-+	for (; i >= 0; i--)
-+		kobject_put(&dd->per_sdma[i].kobj);
- 
- 	return ret;
- }
-@@ -870,6 +875,10 @@ void hfi1_verbs_unregister_sysfs(struct
- 	struct hfi1_pportdata *ppd;
- 	int i;
- 
-+	/* Unwind operations in hfi1_verbs_register_sysfs() */
-+	for (i = 0; i < dd->num_sdma; i++)
-+		kobject_put(&dd->per_sdma[i].kobj);
-+
- 	for (i = 0; i < dd->num_pports; i++) {
- 		ppd = &dd->pport[i];
- 
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -1192,12 +1192,10 @@ static int mlx5_ib_query_device(struct i
+ 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_gre))
+ 			resp.tunnel_offloads_caps |=
+ 				MLX5_IB_TUNNELED_OFFLOADS_GRE;
+-		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
+-		    MLX5_FLEX_PROTO_CW_MPLS_GRE)
++		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_gre))
+ 			resp.tunnel_offloads_caps |=
+ 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE;
+-		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
+-		    MLX5_FLEX_PROTO_CW_MPLS_UDP)
++		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_udp))
+ 			resp.tunnel_offloads_caps |=
+ 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
+ 	}
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -875,7 +875,11 @@ struct mlx5_ifc_per_protocol_networking_
+ 	u8         swp_csum[0x1];
+ 	u8         swp_lso[0x1];
+ 	u8         cqe_checksum_full[0x1];
+-	u8         reserved_at_24[0x5];
++	u8         tunnel_stateless_geneve_tx[0x1];
++	u8         tunnel_stateless_mpls_over_udp[0x1];
++	u8         tunnel_stateless_mpls_over_gre[0x1];
++	u8         tunnel_stateless_vxlan_gpe[0x1];
++	u8         tunnel_stateless_ipv4_over_vxlan[0x1];
+ 	u8         tunnel_stateless_ip_over_ip[0x1];
+ 	u8         reserved_at_2a[0x6];
+ 	u8         max_vxlan_udp_ports[0x8];
 
 
