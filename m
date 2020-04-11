@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25ADC352B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18868C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9002B20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CF320787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647681;
-	bh=TVJfLv/jblYu0boOcX26C0/mhfs97NSG7e1wKppCgFI=;
+	s=default; t=1586647689;
+	bh=QtqcqNrh8gSI5otoesP8d0n0ilG3XoCr6525kSbeVKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpBpslefE+AxKYrP3BeTgfOhrs7lnTTPP0S+yIJ2f0LYn+xVT+CMdjydGMVDOdwoC
-	 PAEvsW4AUS6+4QUDlLPo4kiu/722cH12sv2pNT5Ca8iSIOLTFlyLcVkUGvxJa1tnUV
-	 pzAhcmvLc8EdXOiFyFYIGKYnFSg1NcsG4Acb7Mr0=
+	b=ainWHisKldwlRK/RdeM78lmjExUahgygnTQj81bAXLGEe06n+z9vFpu1RDRLDgmc0
+	 uqy+vZb766JuDF9zZrFON20XK4vvLAFWjuJW2bIrtjs+vbMNE/xTurC+GCxwf5gUHC
+	 /FpaoFp7EFOvSeDbQveOs6Wh10SqClQQ7pY4N8tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgDKX2A (ORCPT
+        id S1730400AbgDKX2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51190 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729927AbgDKXLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:31 -0400
+        id S1727302AbgDKXL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03EE62173E;
-        Sat, 11 Apr 2020 23:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 657C420CC7;
+        Sat, 11 Apr 2020 23:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646691;
-        bh=TVJfLv/jblYu0boOcX26C0/mhfs97NSG7e1wKppCgFI=;
+        s=default; t=1586646688;
+        bh=QtqcqNrh8gSI5otoesP8d0n0ilG3XoCr6525kSbeVKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxPIcJ6dxG4rfFufTko0rpw+QqT38dgvdMCgJQphVvLUPM2IWBsQoUbImTFnxsZ0B
-         IXXy5SHukuHB+q5jBK2eDvVSTpDOPvXBOo/dGLEGNF4aUAe1bIqWEIEUkm4u3BwnVO
-         /B7/J9p5hnU5hFvdCt0eMQyPCSHMQ5RTeBZegPvE=
+        b=dqmaARHB3ZsvkAQcAYZFLXpv0LL0FRWbgdV7hVA4o84nRKHz6JFCquoITnFbSKqqF
+         OewC3al/ofiwiyJTZF/73Df4jADCAQAYkDAKMC0LTivZ/2jze4MCahPcFzmVbvc5dE
+         /OOIpn+qK7r3yax7MZ7Q6Tdm9gKY8XKNX5IPBKpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 086/108] ASoC: Intel: Skylake: Enable codec wakeup during chip init
-Date:   Sat, 11 Apr 2020 19:09:21 -0400
-Message-Id: <20200411230943.24951-86-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 083/108] netfilter: nf_tables: silence a RCU-list warning in nft_table_lookup()
+Date:   Sat, 11 Apr 2020 19:09:18 -0400
+Message-Id: <20200411230943.24951-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,43 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cezary Rojewski <cezary.rojewski@intel.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit e603f11d5df8997d104ab405ff27640b90baffaa ]
+[ Upstream commit 0a6a9515fe390976cd762c52d8d4f446d7a14285 ]
 
-Follow the recommendation set by hda_intel.c and enable HDMI/DP codec
-wakeup during bus initialization procedure. Disable wakeup once init
-completes.
+It is safe to traverse &net->nft.tables with &net->nft.commit_mutex
+held using list_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false
+positive,
 
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200305145314.32579-4-cezary.rojewski@intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+WARNING: suspicious RCU usage
+net/netfilter/nf_tables_api.c:523 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by iptables/1384:
+ #0: ffffffff9745c4a8 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x25/0x60 [nf_tables]
+
+Call Trace:
+ dump_stack+0xa1/0xea
+ lockdep_rcu_suspicious+0x103/0x10d
+ nft_table_lookup.part.0+0x116/0x120 [nf_tables]
+ nf_tables_newtable+0x12c/0x7d0 [nf_tables]
+ nfnetlink_rcv_batch+0x559/0x1190 [nfnetlink]
+ nfnetlink_rcv+0x1da/0x210 [nfnetlink]
+ netlink_unicast+0x306/0x460
+ netlink_sendmsg+0x44b/0x770
+ ____sys_sendmsg+0x46b/0x4a0
+ ___sys_sendmsg+0x138/0x1a0
+ __sys_sendmsg+0xb6/0x130
+ __x64_sys_sendmsg+0x48/0x50
+ do_syscall_64+0x69/0xf4
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/skylake/skl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/netfilter/nf_tables_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
-index 141dbbf975acd..9ef9651c4dfe1 100644
---- a/sound/soc/intel/skylake/skl.c
-+++ b/sound/soc/intel/skylake/skl.c
-@@ -129,6 +129,7 @@ static int skl_init_chip(struct hdac_bus *bus, bool full_reset)
- 	struct hdac_ext_link *hlink;
- 	int ret;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 068daff41f6e6..e94326cc853c2 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -456,7 +456,8 @@ static struct nft_table *nft_table_lookup(const struct net *net,
+ 	if (nla == NULL)
+ 		return ERR_PTR(-EINVAL);
  
-+	snd_hdac_set_codec_wakeup(bus, true);
- 	skl_enable_miscbdcge(bus->dev, false);
- 	ret = snd_hdac_bus_init_chip(bus, full_reset);
- 
-@@ -137,6 +138,7 @@ static int skl_init_chip(struct hdac_bus *bus, bool full_reset)
- 		writel(0, hlink->ml_addr + AZX_REG_ML_LOSIDV);
- 
- 	skl_enable_miscbdcge(bus->dev, true);
-+	snd_hdac_set_codec_wakeup(bus, false);
- 
- 	return ret;
- }
+-	list_for_each_entry_rcu(table, &net->nft.tables, list) {
++	list_for_each_entry_rcu(table, &net->nft.tables, list,
++				lockdep_is_held(&net->nft.commit_mutex)) {
+ 		if (!nla_strcmp(nla, table->name) &&
+ 		    table->family == family &&
+ 		    nft_active_genmask(table, genmask))
 -- 
 2.20.1
 
