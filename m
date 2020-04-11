@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4228C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013A4C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C52215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F7020787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646958;
-	bh=kWhqS6PRCwpLgVe5t7lJXrCy5B5JTSxtre3T0XaC0Oc=;
+	s=default; t=1586646966;
+	bh=244CPijNvFYW4unfwjJZrgrnOFjl/BaqhMVnhLiLE8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=djOh32J82OPrFfQ46/iq8jwnmInSHDr/12e3Qfq1O4SH9l7c37rK3aCPzZnTY0zXN
-	 B8XMjNAz+ZBEZOO+nZYyTfea7Ym/ZQd0hU0eHS8jVBcLHlbK9RRNGAW/o/iu+Phnxn
-	 EyTS+91j34BeknqMvQvRbYlf6tr7oDQeYNMOSxpU=
+	b=WbjkpV4bxfeKwFKxxHeoLuZGfBTZB6xovuFGICGaCf9lFHeR03G0oYRMNtaw3tdzt
+	 hxKpZyFjTOdYokyVA60hflhQni7uWpmIkzkBFMaBkaL52lMxjTa0RjTXPwf3GVQ3kn
+	 MOsnDPPrSdj/LgOXNyN/cBkO4rVgYqxKGkwqwoV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730899AbgDKXOz (ORCPT
+        id S1730104AbgDKXQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56872 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:16:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730145AbgDKXOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:50 -0400
+        id S1730890AbgDKXOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642A820CC7;
-        Sat, 11 Apr 2020 23:14:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 146A521775;
+        Sat, 11 Apr 2020 23:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646891;
-        bh=kWhqS6PRCwpLgVe5t7lJXrCy5B5JTSxtre3T0XaC0Oc=;
+        s=default; t=1586646894;
+        bh=244CPijNvFYW4unfwjJZrgrnOFjl/BaqhMVnhLiLE8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHAOkSEQy7Y/ogwBIdHSUUmzgV8q7LMS557+ueXU2uJNoweMaeZb9XVNJ+ZW52oiO
-         uPdhQSlsPMiKRIxYxMQWcMESDjIGQ5fsQyy8z2dfcIJiE8j6mBAjZU8eQIXILZBS6k
-         C8PCkuEiOrX7RqqdOcvK7kbpNXIvGJqvZQZyMiOI=
+        b=ftmcc1rFVY0hrPmCChNUDHaKDG7sPpO+0lMSVeGmp2lHeL3KHb8inCasfaszyLgBP
+         s4/wKdEO3QDjqPYKPZ9hf8/GEEbR9pNLHFgmaO96O1E0oNMwzqLNotiUuzi206PBwM
+         51KpoOtbcg+8zLdTepJ4AkMkozLjwKvxdxG/NjlU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 03/16] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
-Date:   Sat, 11 Apr 2020 19:14:33 -0400
-Message-Id: <20200411231447.27182-3-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/16] Bluetooth: Fix calculation of SCO handle for packet processing
+Date:   Sat, 11 Apr 2020 19:14:36 -0400
+Message-Id: <20200411231447.27182-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
 References: <20200411231447.27182-1-sashal@kernel.org>
@@ -59,39 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
+[ Upstream commit debdedf2eb5a2d9777cabff40900772be13cd9f9 ]
 
-All accesses to id.state must be done under the spinlock.
+When processing SCO packets, the handle is wrongly assumed as 16-bit
+value. The actual size is 12-bits and the other 4-bits are used for
+packet flags.
 
-Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
-Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index 53c622c99ee40..7bf98d72a4559 100644
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -1544,8 +1544,12 @@ static void cm_dup_req_handler(struct cm_work *work,
- 			counter[CM_REQ_COUNTER]);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 4bce3ef2c392a..119a86a4c24e2 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4324,13 +4324,16 @@ static void hci_scodata_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	struct hci_sco_hdr *hdr = (void *) skb->data;
+ 	struct hci_conn *conn;
+-	__u16 handle;
++	__u16 handle, flags;
  
- 	/* Quick state check to discard duplicate REQs. */
--	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
-+	spin_lock_irq(&cm_id_priv->lock);
-+	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
-+		spin_unlock_irq(&cm_id_priv->lock);
- 		return;
-+	}
-+	spin_unlock_irq(&cm_id_priv->lock);
+ 	skb_pull(skb, HCI_SCO_HDR_SIZE);
  
- 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
- 	if (ret)
+ 	handle = __le16_to_cpu(hdr->handle);
++	flags  = hci_flags(handle);
++	handle = hci_handle(handle);
+ 
+-	BT_DBG("%s len %d handle 0x%4.4x", hdev->name, skb->len, handle);
++	BT_DBG("%s len %d handle 0x%4.4x flags 0x%4.4x", hdev->name, skb->len,
++	       handle, flags);
+ 
+ 	hdev->stat.sco_rx++;
+ 
 -- 
 2.20.1
 
