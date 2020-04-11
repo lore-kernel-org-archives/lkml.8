@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B9AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A702BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE40206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810AD20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607632;
-	bh=zl6dEku4PXUVnXqBlgEnAQo+bXF7mPhIBPgiQ12HFHk=;
+	s=default; t=1586607634;
+	bh=3sS5jXXx6ZF2Le/23RlQPKycIQN78NGDCBu/YWwXf7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L01oA3Wink5aY5BsNkAKzofDnUTA/wrNRzXWFzDGy5Qm3/o+G+PCBryvv0ZXlJucy
-	 5no4xCc0W5SDumcDV52SQzz9n5ksywe7/ONHej1d5TeWpgQBlZOtrVklkD88a909yS
-	 Du8n+RvGfyp8jdP2BbUd5icBgpxiXOniHJ/0GMNI=
+	b=DfwNVNH9boBtzjuZxypzPxvWptkFGVZe4A5AIs0aMnMqUxMG+TSUhK9PRQqDwdrU7
+	 FX/+9WtegYLvsjEZ/x1I9UVsfHxRhwVpN1M6P3BUFXUwS4xgxp8yUQuMb31Mt5QON/
+	 CIJkY9TV9nEvnBIejtmsTvGjUPNe0lhRlJNvXWGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgDKMUa (ORCPT
+        id S1729031AbgDKMUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56464 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbgDKMU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:29 -0400
+        id S1728755AbgDKMUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0833206A1;
-        Sat, 11 Apr 2020 12:20:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2876B214D8;
+        Sat, 11 Apr 2020 12:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607629;
-        bh=zl6dEku4PXUVnXqBlgEnAQo+bXF7mPhIBPgiQ12HFHk=;
+        s=default; t=1586607631;
+        bh=3sS5jXXx6ZF2Le/23RlQPKycIQN78NGDCBu/YWwXf7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m48pl1uPs/IiEQBIAeDvWB221GsZ6e9hLWMQg8J7NkdVzzWT4Fq6XSKa63k5PGFUU
-         Eg7ScP7T/wrszkId52J/zTUW/+ys2/Dl9JRpNHKS1+o3XcMo21Ke1bLoDmEdpCwQps
-         10ievmbKNaDFx9U3TqyQ4WmkHtLYl+wXFKshtGNM=
+        b=X+XssYxXkJ8WziwQmuwHcwIFQArFjB0JndZsPPtmVv8Dc3ntud1aOWVSsX9x78BWb
+         cC5Ly2ZBsXdUr4VG8Oc/EMx9787PUPv7KTAynkdiqssi+hsWxZwwQr5RPTGlME8XHr
+         F5J5rLToYwUFMh8WTyHHv20YbA7w/fcfhgFj1+oA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 12/38] mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
-Date:   Sat, 11 Apr 2020 14:09:49 +0200
-Message-Id: <20200411115500.616148374@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 5.6 13/38] r8169: change back SG and TSO to be disabled by default
+Date:   Sat, 11 Apr 2020 14:09:50 +0200
+Message-Id: <20200411115500.723791266@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -61,42 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit ccfc569347f870830e7c7cf854679a06cf9c45b5 ]
+[ Upstream commit 95099c569a9fdbe186a27447dfa8a5a0562d4b7f ]
 
-The handler for FLOW_ACTION_VLAN_MANGLE ends by returning whatever the
-lower-level function that it calls returns. If there are more actions lined
-up after this action, those are never offloaded. Fix by only bailing out
-when the called function returns an error.
+There has been a number of reports that using SG/TSO on different chip
+versions results in tx timeouts. However for a lot of people SG/TSO
+works fine. Therefore disable both features by default, but allow users
+to enable them. Use at own risk!
 
-Fixes: a150201a70da ("mlxsw: spectrum: Add support for vlan modify TC action")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 93681cd7d94f ("r8169: enable HW csum and TSO")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/realtek/r8169_main.c |   34 ++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-@@ -123,9 +123,12 @@ static int mlxsw_sp_flower_parse_actions
- 			u8 prio = act->vlan.prio;
- 			u16 vid = act->vlan.vid;
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -5549,12 +5549,10 @@ static int rtl_init_one(struct pci_dev *
  
--			return mlxsw_sp_acl_rulei_act_vlan(mlxsw_sp, rulei,
--							   act->id, vid,
--							   proto, prio, extack);
-+			err = mlxsw_sp_acl_rulei_act_vlan(mlxsw_sp, rulei,
-+							  act->id, vid,
-+							  proto, prio, extack);
-+			if (err)
-+				return err;
-+			break;
- 			}
- 		default:
- 			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
+ 	netif_napi_add(dev, &tp->napi, rtl8169_poll, NAPI_POLL_WEIGHT);
+ 
+-	dev->features |= NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+-		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
+-		NETIF_F_HW_VLAN_CTAG_RX;
+-	dev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+-		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
+-		NETIF_F_HW_VLAN_CTAG_RX;
++	dev->features |= NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
++			 NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
++	dev->hw_features = NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
++			   NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
+ 	dev->vlan_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+ 		NETIF_F_HIGHDMA;
+ 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+@@ -5572,25 +5570,25 @@ static int rtl_init_one(struct pci_dev *
+ 		dev->hw_features &= ~NETIF_F_HW_VLAN_CTAG_RX;
+ 
+ 	if (rtl_chip_supports_csum_v2(tp)) {
+-		dev->hw_features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
+-		dev->features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
++		dev->hw_features |= NETIF_F_IPV6_CSUM;
++		dev->features |= NETIF_F_IPV6_CSUM;
++	}
++
++	/* There has been a number of reports that using SG/TSO results in
++	 * tx timeouts. However for a lot of people SG/TSO works fine.
++	 * Therefore disable both features by default, but allow users to
++	 * enable them. Use at own risk!
++	 */
++	if (rtl_chip_supports_csum_v2(tp)) {
++		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO | NETIF_F_TSO6;
+ 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V2;
+ 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V2;
+ 	} else {
++		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO;
+ 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V1;
+ 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V1;
+ 	}
+ 
+-	/* RTL8168e-vl and one RTL8168c variant are known to have a
+-	 * HW issue with TSO.
+-	 */
+-	if (tp->mac_version == RTL_GIGA_MAC_VER_34 ||
+-	    tp->mac_version == RTL_GIGA_MAC_VER_22) {
+-		dev->vlan_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-		dev->hw_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-		dev->features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-	}
+-
+ 	dev->hw_features |= NETIF_F_RXALL;
+ 	dev->hw_features |= NETIF_F_RXFCS;
+ 
 
 
