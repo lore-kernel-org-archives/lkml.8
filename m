@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA18C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB9CC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B9120769
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67DB20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647054;
-	bh=xyPGC8d3ARutzQCLS9J1OiD8t1M1/B+LRfv/dx8xgXI=;
+	s=default; t=1586647063;
+	bh=Zhv+cRx2WA2GztV9QdKZuLqQQY8YPE/WPzTnMAw2gEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONYwg2/pZgzZ5mmb4O9ApqEEegMl9jGjjBy1K7EGfwdU1LbGRybsmvjfcow6UQE7Y
-	 1pPAEeWmFvNnRUNJqWh8I8cZLtp0kyZrmafSkNEFnKxC9Pa5uQOYhIRLChcXKOrx50
-	 /7xzwbm2DwpRKBrQTRcEoOXaZnrbXXvtyR9xoab4=
+	b=KVo78y5SEBHzFU9Ab96CJ+QpKSt8ic+eZ/StetDwgxI/ZgFyAb4tnC3EjfnY3tmZl
+	 08oeS+gBlq3oXVxbMBGZ4Yf6WTq6C6b7Z9bsOukaUSKmbdMOx592i8jNjIvh7b+5uo
+	 wGiGCSHrHK+K12WUkTJd9kvnYoAh7TitCO5rcVbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730878AbgDKXRd (ORCPT
+        id S1730366AbgDKXO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgDKXO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:29 -0400
+        id S1729799AbgDKXOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751232084D;
-        Sat, 11 Apr 2020 23:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401682084D;
+        Sat, 11 Apr 2020 23:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646869;
-        bh=xyPGC8d3ARutzQCLS9J1OiD8t1M1/B+LRfv/dx8xgXI=;
+        s=default; t=1586646861;
+        bh=Zhv+cRx2WA2GztV9QdKZuLqQQY8YPE/WPzTnMAw2gEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VabjerICAdvoIuXBhfO76lZ5PDoXPVGBLuXAtwMvRz0vyEuI3LXKlSB3O71t3YghO
-         5QmHWYqQMs8BSxkLJRQgph911YWjVVwgHj7yfJ7rMZWjjIXcGaJTbeIFWkA5ZK3WmS
-         qlvUDdMZ/bUoFFvGRtigZa19i3Fr/Fkj4NhUlYX0=
+        b=R4YZ/OxAMoDq+WVPEaLUJN+W1inDWPq2DbZO04Jr6Oa4h+QDGLWNFJuJ+sfSufeFL
+         V16pVG7jqzO823BR2UlZqlKUoVKlCZUF8f8yTTbwNocjXIPSgVR0K8aS45Ejq6W5Vk
+         h+tUkdMkUGVW+4dW58ZIaqqMK8dgMlCLr0CR42VQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Ganapathi Bhat <ganapathi.gbhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/26] net: intel: e1000e: fix possible sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
-Date:   Sat, 11 Apr 2020 19:14:00 -0400
-Message-Id: <20200411231413.26911-13-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 06/26] mwifiex: set needed_headroom, not hard_header_len
+Date:   Sat, 11 Apr 2020 19:13:53 -0400
+Message-Id: <20200411231413.26911-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231413.26911-1-sashal@kernel.org>
 References: <20200411231413.26911-1-sashal@kernel.org>
@@ -61,79 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 2e05f756c7099c8991142382648a37b0d4c85943 ]
+[ Upstream commit 9454f7a895b822dd8fb4588fc55fda7c96728869 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+hard_header_len provides limitations for things like AF_PACKET, such
+that we don't allow transmitting packets smaller than this.
 
-drivers/net/ethernet/intel/e1000e/mac.c, 1366:
-	usleep_range in e1000e_get_hw_semaphore
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
-	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
-	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
-drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
-	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
-	e1000e_update_phy_stats in e1000e_update_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
-	e1000e_update_stats in e1000e_get_stats64
-drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
-	spin_lock in e1000e_get_stats64
+needed_headroom provides a suggested minimum headroom for SKBs, so that
+we can trivally add our headers to the front.
 
-drivers/net/ethernet/intel/e1000e/mac.c, 1384:
-	usleep_range in e1000e_get_hw_semaphore
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
-	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
-	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
-drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
-	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
-	e1000e_update_phy_stats in e1000e_update_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
-	e1000e_update_stats in e1000e_get_stats64
-drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
-	spin_lock in e1000e_get_stats64
+The latter is the correct field to use in this case, while the former
+mostly just prevents sending small AF_PACKET frames.
 
-(FUNC_PTR) means a function pointer is called.
+In any case, mwifiex already does its own bounce buffering [1] if we
+don't have enough headroom, so hints (not hard limits) are all that are
+needed.
 
-To fix these bugs, usleep_range() is replaced with udelay().
+This is the essentially the same bug (and fix) that brcmfmac had, fixed
+in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
+additional header space").
 
-These bugs are found by a static analysis tool STCheck written by myself.
+[1] mwifiex_hard_start_xmit():
+	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
+	[...]
+		/* Insufficient skb headroom - allocate a new skb */
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
-index 5bdc3a2d4fd70..0fc9f49844632 100644
---- a/drivers/net/ethernet/intel/e1000e/mac.c
-+++ b/drivers/net/ethernet/intel/e1000e/mac.c
-@@ -1381,7 +1381,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
- 		if (!(swsm & E1000_SWSM_SMBI))
- 			break;
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 94901b0041cec..4c705cacd8813 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -2992,7 +2992,7 @@ struct wireless_dev *mwifiex_add_virtual_intf(struct wiphy *wiphy,
  
--		usleep_range(50, 100);
-+		udelay(100);
- 		i++;
- 	}
+ 	dev->flags |= IFF_BROADCAST | IFF_MULTICAST;
+ 	dev->watchdog_timeo = MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT;
+-	dev->hard_header_len += MWIFIEX_MIN_DATA_HEADER_LEN;
++	dev->needed_headroom = MWIFIEX_MIN_DATA_HEADER_LEN;
+ 	dev->ethtool_ops = &mwifiex_ethtool_ops;
  
-@@ -1399,7 +1399,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
- 		if (er32(SWSM) & E1000_SWSM_SWESMBI)
- 			break;
- 
--		usleep_range(50, 100);
-+		udelay(100);
- 	}
- 
- 	if (i == timeout) {
+ 	mdev_priv = netdev_priv(dev);
 -- 
 2.20.1
 
