@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97607C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41201C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670FC2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101DC2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647536;
-	bh=W7VnBqQ9i2QUugSwTZtkTKCZP7hS8z2gJQJI/uzXQ54=;
+	s=default; t=1586647542;
+	bh=HfXVT+D10oZb1Gh6vS78q48PrcluJgAc1F/pWrQh+rI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvLd87/Zvcli9CKgEG9465EeqQHXoYseukYrQND+RjYS023Bubql3WmgbKfNORDic
-	 WEfTsG+zM7nL3YoslpzCUAjpQ3f6f0Z8al+leeGvzLM2Kn+lLVx3GWBudV1iX9if2v
-	 UgrH5e/RIMtzNNP3ijQx+44fy2FbPcEpZzeav6sk=
+	b=oYniKTLd8HS3BpnT3mrYY4OSPHWFroTBqocBNqFXIIYJE2IWLR7vapqa2wt2XwQbN
+	 B/MXaVkXoDafIzOXCxfIghOUaQx1P9d7DUe9+CNufIxUvpzyljg40YCQuaD1y4X9yU
+	 OJxNCzZTgK2zOy0SfiOBvyQqorsFsD1eT3kx3cuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbgDKXMM (ORCPT
+        id S1730758AbgDKXZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52056 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730075AbgDKXMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:09 -0400
+        id S1730087AbgDKXML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5024F216FD;
-        Sat, 11 Apr 2020 23:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1E8A20CC7;
+        Sat, 11 Apr 2020 23:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646729;
-        bh=W7VnBqQ9i2QUugSwTZtkTKCZP7hS8z2gJQJI/uzXQ54=;
+        s=default; t=1586646731;
+        bh=HfXVT+D10oZb1Gh6vS78q48PrcluJgAc1F/pWrQh+rI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GE0sDsLoyt9e1PXHjXnqoCPzbYVbqpMhb5MklXFd/wnsq6aY52/+yJJdxuUj42I9K
-         1Vtzxr3QWBiTEJL34hdjlf0IBpWaBweUtxMVHChl7xlvdmorbbDY+sWgXm1NT4Fmu0
-         s2XocGSe/N+k9FuGoGdMiwFeGw14ar3bzA6nZRmw=
+        b=ntS438l+n3zQ5hA8UI8ujFY/KTU4sSa6sVDH88BlpKpPYlYXB9BdH+yTFw8r9SmTc
+         sqozJT65CENxtyPHVAQaabx32drk80XDglpKo+Bur40ZDqvxAKclN+UCEFzZHqZGQ+
+         z7nNp3kciDcp1+zmoaKh72FDUccaNeKtRMuSc7cU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haibo Chen <haibo.chen@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/66] mmc: sdhci: do not enable card detect interrupt for gpio cd type
-Date:   Sat, 11 Apr 2020 19:11:01 -0400
-Message-Id: <20200411231203.25933-4-sashal@kernel.org>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/66] net: phy: mscc: accept all RGMII species in vsc85xx_mac_if_set
+Date:   Sat, 11 Apr 2020 19:11:03 -0400
+Message-Id: <20200411231203.25933-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -61,40 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit e65bb38824711559844ba932132f417bc5a355e2 ]
+[ Upstream commit da206d65f2b293274f8082a26da4e43a1610da54 ]
 
-Except SDHCI_QUIRK_BROKEN_CARD_DETECTION and MMC_CAP_NONREMOVABLE,
-we also do not need to handle controller native card detect interrupt
-for gpio cd type.
-If we wrong enabled the card detect interrupt for gpio case, it will
-cause a lot of unexpected card detect interrupts during data transfer
-which should not happen.
+The helper for configuring the pinout of the MII side of the PHY should
+do so irrespective of whether RGMII delays are used or not. So accept
+the ID, TXID and RXID variants as well, not just the no-delay RGMII
+variant.
 
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/1582100563-20555-2-git-send-email-haibo.chen@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/mscc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 5a7fd89a8f2b1..499a3d2a8e315 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -133,7 +133,7 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
- 	u32 present;
- 
- 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
--	    !mmc_card_is_removable(host->mmc))
-+	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
- 		return;
- 
- 	if (enable) {
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 36647b70b9a36..1ff03d5cb6a64 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -470,6 +470,9 @@ static int vsc85xx_mac_if_set(struct phy_device *phydev,
+ 	reg_val = phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
+ 	reg_val &= ~(MAC_IF_SELECTION_MASK);
+ 	switch (interface) {
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		reg_val |= (MAC_IF_SELECTION_RGMII << MAC_IF_SELECTION_POS);
+ 		break;
 -- 
 2.20.1
 
