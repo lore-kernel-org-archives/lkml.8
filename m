@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_NONE,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3CDC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A554C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F738206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3598120709
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648443;
-	bh=bzCuW902nz0mB4MhiJs3S5FEoSQDKiLAcYzvLglFqcI=;
+	s=default; t=1586648449;
+	bh=s9qANytsOfkyFxVEfILbbK+MZLjEYum/Vx6saCO1g3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xA4mqhsscpSb8b+zxPy7kMTDaQVTypHn6hMpCSCoM2Sc5oQ58k6o8zAwaYgxC/pfd
-	 kFibOmAM8CaWZpijY8M8ZlpbUg0P0pIkUwxLLHamwtoCPS/ChZV1KQ0iXjYt4sEl8+
-	 ux1NYNt/Gz//t8j8cnt6o3db74wSJB1dlQaUiBFg=
+	b=qv2yJk0hYsvQVhlpY6e0GjKdxerK+2vjK3ccWUYikODD+BXB8C+q6iSmlyMCeIxwx
+	 lmGRl6onJqSjCln8PmzvXBa63o6CQpvXpEtIrhuBgej8fM1RhkB3jSyHDGKV4HcOlh
+	 AM/xgyAGiQzwhXFqREUJuGpCiq7pnkR3t2unrl7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbgDKXkl (ORCPT
+        id S1731010AbgDKXkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43074 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgDKXHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:19 -0400
+        id S1728606AbgDKXHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2883F20787;
-        Sat, 11 Apr 2020 23:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F19F720708;
+        Sat, 11 Apr 2020 23:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646439;
-        bh=bzCuW902nz0mB4MhiJs3S5FEoSQDKiLAcYzvLglFqcI=;
+        s=default; t=1586646437;
+        bh=s9qANytsOfkyFxVEfILbbK+MZLjEYum/Vx6saCO1g3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fvudUei5jgZC7Bbypwy3kOtgNUL7RI2eg6FFGSFntBguWcdD9gfGHmg7aDwM7rh/H
-         4jKIw98dP2DkTTOzisb9x3WP4A+TCvK2XrHhQ8OLbye/PNVdlbbyy6NLRZXwv5y+fU
-         s5TllrMmHuGDLgaea0s5pobwe/ywiYsnlotJnKl4=
+        b=b6SAiB4nu3PXh451RAPIEvLeDwXFUUzaoJB3W4yQH5eAt4z24YsviP5LHwV5NWxKq
+         Itq3EHPcn4BWGDHZk9k4/ewCNwgZpjwZ7gmYl1Gs92FCru4m4TxznCzb8roGcCI2V5
+         sGcyo9XDy08FpxKo2WbH5eRbZiKg5jQMFPH4ZH1o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 011/121] tools/power/x86/intel-speed-select: Fix mailbox usage for CLOS_PM_QOS_CONFIG
-Date:   Sat, 11 Apr 2020 19:05:16 -0400
-Message-Id: <20200411230706.23855-11-sashal@kernel.org>
+Cc:     Shannon Nelson <snelson@pensando.io>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 009/121] ionic: check for NULL structs on teardown
+Date:   Sat, 11 Apr 2020 19:05:14 -0400
+Message-Id: <20200411230706.23855-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,40 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit 8ddbda76245f5d10e00020db34455404019efc91 ]
+[ Upstream commit a4674f34711b96b65bdc4d54eca88d2fd123bbc6 ]
 
-Even for the products using MMIO, this message needs to be sent via
-mail box. The previous fix done for this didn't properly address this.
-That fix simply removed sending command via MMIO, but still didn't
-trigger sending via mailbox.
+Make sure the queue structs exist before trying to tear
+them down to make for safer error recovery.
 
-Add additional condition to check for CLOS_PM_QOS_CONFIG, when MMIO
-is supported on a platform.
-
-Fixes: cd0e63706549 (tools/power/x86/intel-speed-select: Use mailbox for CLOS_PM_QOS_CONFIG)
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 0f3154e6bcb3 ("ionic: Add Tx and Rx handling")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/ethernet/pensando/ionic/ionic_lif.c   | 26 ++++++++++---------
+ .../net/ethernet/pensando/ionic/ionic_main.c  |  7 ++++-
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 944183f9ed5a3..f7ad1c65c86e0 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -571,7 +571,8 @@ int isst_send_mbox_command(unsigned int cpu, unsigned char command,
- 		"mbox_send: cpu:%d command:%x sub_command:%x parameter:%x req_data:%x\n",
- 		cpu, command, sub_command, parameter, req_data);
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index ef82587133696..f3b164e4585eb 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -318,19 +318,21 @@ static void ionic_qcqs_free(struct ionic_lif *lif)
+ 		lif->adminqcq = NULL;
+ 	}
  
--	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS) {
-+	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS &&
-+	    sub_command != CLOS_PM_QOS_CONFIG) {
- 		unsigned int value;
- 		int write = 0;
- 		int clos_id, core_id, ret = 0;
+-	for (i = 0; i < lif->nxqs; i++)
+-		if (lif->rxqcqs[i].stats)
+-			devm_kfree(dev, lif->rxqcqs[i].stats);
+-
+-	devm_kfree(dev, lif->rxqcqs);
+-	lif->rxqcqs = NULL;
+-
+-	for (i = 0; i < lif->nxqs; i++)
+-		if (lif->txqcqs[i].stats)
+-			devm_kfree(dev, lif->txqcqs[i].stats);
++	if (lif->rxqcqs) {
++		for (i = 0; i < lif->nxqs; i++)
++			if (lif->rxqcqs[i].stats)
++				devm_kfree(dev, lif->rxqcqs[i].stats);
++		devm_kfree(dev, lif->rxqcqs);
++		lif->rxqcqs = NULL;
++	}
+ 
+-	devm_kfree(dev, lif->txqcqs);
+-	lif->txqcqs = NULL;
++	if (lif->txqcqs) {
++		for (i = 0; i < lif->nxqs; i++)
++			if (lif->txqcqs[i].stats)
++				devm_kfree(dev, lif->txqcqs[i].stats);
++		devm_kfree(dev, lif->txqcqs);
++		lif->txqcqs = NULL;
++	}
+ }
+ 
+ static void ionic_link_qcq_interrupts(struct ionic_qcq *src_qcq,
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+index 3590ea7fd88a3..ab30448176c26 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+@@ -236,11 +236,16 @@ static void ionic_adminq_cb(struct ionic_queue *q,
+ 
+ static int ionic_adminq_post(struct ionic_lif *lif, struct ionic_admin_ctx *ctx)
+ {
+-	struct ionic_queue *adminq = &lif->adminqcq->q;
++	struct ionic_queue *adminq;
+ 	int err = 0;
+ 
+ 	WARN_ON(in_interrupt());
+ 
++	if (!lif->adminqcq)
++		return -EIO;
++
++	adminq = &lif->adminqcq->q;
++
+ 	spin_lock(&lif->adminq_lock);
+ 	if (!ionic_q_has_space(adminq, 1)) {
+ 		err = -ENOSPC;
 -- 
 2.20.1
 
