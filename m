@@ -2,193 +2,176 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D29C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B23C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40EF32084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="B8LBw+bg"
+	by mail.kernel.org (Postfix) with ESMTP id A3F082084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgDKKjV (ORCPT
+        id S1726124AbgDKKn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 06:39:21 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17839 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725951AbgDKKjV (ORCPT
+        Sat, 11 Apr 2020 06:43:58 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:40009 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgDKKn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 06:39:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586601527; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=lzZcGW+bXHWKANrCQa49/ZBG2WrGf9dGLmB4x9kQOwkRNefLCA6/Y2UMSsDZzgup3PoxNFtwSJ6Tc62BRyJRElfQOusFO1N2uOjrenByWhuVpjyAZO0X0TToUYjjNlRc+pvLFePomp8RxLtAs1gzZlLBSjvdd3daPsQbN3WbMfM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586601527; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=Mypne8A1cTcF5GvVy15gPad+0lCGhkQScQLoXBT/4Qc=; 
-        b=NzfE38YS1HCwfZoaOZLcLCaqrd/JbHv65cOcIngDIqht5DdQPe52MYK65961bn7Am0y/xeMoYf4p7omQvPG7KjnUsBXnxcUC9ujNXGXk/cAFghThPMbk68/BF8+eqB4TaNp01qVN+oweeexn00M+dfYfXssnWcC+iv/la4b0kOE=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586601527;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=Mypne8A1cTcF5GvVy15gPad+0lCGhkQScQLoXBT/4Qc=;
-        b=B8LBw+bgZypoavTuc8+QA0maEQY8nJaK9ilaAAyifNFiatYzFVHMALgd0ZU6iAQR
-        IsCFKAmjc2WYW4lPX6c+QqdxIxJJ/avBxtYTxoxgzr/PyZ55uDQuP7q7CMdaxdAcuBV
-        B93iby1AF8PUdRjqUtbHBRtBAg8oeDeaSkrCSoI8=
-Received: from [26.26.26.1] (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
-        with SMTPS id 158660152546126.46526605852671; Sat, 11 Apr 2020 18:38:45 +0800 (CST)
-Date:   Sat, 11 Apr 2020 18:38:40 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAKcpw6XU=vwGMwMBJk-Rsg--8CqEis39DEAJRMboP=2aYd5r8g@mail.gmail.com>
-References: <1586401829-22242-1-git-send-email-yangtiezhu@loongson.cn> <CAKcpw6XywbOs-rh5ko0uz9vLz9nkgrJ0LiRTSkQQaU9dZbg7oQ@mail.gmail.com> <20200409150923.5b224361@flygoat-x1e> <alpine.LFD.2.21.2004091540450.596385@eddie.linux-mips.org> <7A98E39B-EDCF-496D-9525-0160A368361B@flygoat.com> <CAKcpw6XU=vwGMwMBJk-Rsg--8CqEis39DEAJRMboP=2aYd5r8g@mail.gmail.com>
+        Sat, 11 Apr 2020 06:43:57 -0400
+Received: from kb-xps (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id AD555200008;
+        Sat, 11 Apr 2020 10:43:54 +0000 (UTC)
+Date:   Sat, 11 Apr 2020 12:43:53 +0200
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200411104353.GB161090@kb-xps>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
+ <20200409222115.GT75430@dtor-ws>
+ <20200409223907.GW3628@piout.net>
+ <20200409234623.GU75430@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] MIPS: Limit check_bugs32() under CONFIG_32BIT
-To:     YunQiang Su <wzssyqa@gmail.com>
-CC:     "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <7B731159-084D-46D0-BB04-8E5705496C33@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409234623.GU75430@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
-:37:24, YunQiang Su <wzssyqa@gmail=2Ecom> =E5=86=99=E5=88=B0:
->Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom> =E4=BA=8E2020=E5=B9=B44=E6=9C=
-=889=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8811:47=E5=86=99=E9=81=93=
-=EF=BC=9A
->>
->>
->>
->> =E4=BA=8E 2020=E5=B9=B44=E6=9C=889=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=8811:07:46, "Maciej W=2E Rozycki"
-><macro@linux-mips=2Eorg> =E5=86=99=E5=88=B0:
->> >On Thu, 9 Apr 2020, Jiaxun Yang wrote:
->> >
->> >> > > There is no need to build and call check_bugs32() under
->> >> > > CONFIG_64BIT, just limit it under CONFIG_32BIT=2E
->> >> >
->> >> > Since 32bit is subset of 64bit, and due to the code, I think
->that
->> >the
->> >> > initial purpose
->> >> > of check_bugs32() is also willing to run even with CONFIG_64BIT=2E
->> >> >
->> >> > For example, if we have a CPU which is 64bit, and work well on
->> >64bit
->> >> > mode, while has a bug only on 32bit mode, check_bugs32 should be
->> >used
->> >> > here=2E
->> >> >
->> >> > Loongson's 3A 1000 is the example, I cannot support FP32 mode
->well=2E
->> >>
->> >> In this case bugs32 only contains a workaround for MIPS34K, which
->is
->> >a
->> >> MIPS32 processor=2E It's safe to do so=2E
->> >
->> > This is because commit c65a5480ff29 ("[MIPS] Fix potential latency
->> >problem due to non-atomic cpu_wait=2E") moved the other generic
->> >workaround
->> >elsewhere=2E
->> >
->> > The intent has been since historical commit 450ad16ba0ab ("Get rid
->of
->> >arch/mips64/kernel=2E  9116 lines of code gone=2E") that `check_bugs32=
-'
->is
->> >for
->> >generic errata affecting both 32-bit and 64-bit operation (e=2Eg=2E
->32-bit
->> >instructions, which naturally may occur in both cases) and
->> >`check_bugs64'
->> >is for errata affecting 64-bit operation only (e=2Eg=2E 64-bit
->> >instructions)=2E
->> >
->> >But currently it appears we have no generic errata handled, as
->surely a
->> >
->> >34K erratum cannot affect 64-bit operation=2E  So I think such a
->change
->> >makes sense in principle (if a generic erratum appears in the future
->we
->> >
->> >can add a third category, which includes workarounds that are always
->> >applied), but I think it has to be made in a cleaner way=2E
->> >
->> >Specifically `check_errata' has to be renamed to `check_errata32',
->some
->> >
->> >commentary added as to the intent, and last but not least a proper
->> >change
->> >description added that not only repeats what the change does (and
->what
->> >everyone sees regardless), but actually justifies why the change is
->> >made=2E
->> >Saying: "There is no need[=2E=2E=2E]" does not tell us *why* there is =
-no
->> >need=2E
->> >
->> >> But my suggestion is if you're going to clean-up bugs and
->workarounds
->> >> you'd better establish a file for silicon bugs and provide Kconfig
->> >> options to enable & disable them=2E Manage bug dependencies by
->Kconfig
->> >> will be easier=2E
->> >
->> > Why is using Kconfig supposed to be better?  Several configurations
->> >support multiple processor types (e=2Eg=2E swappable CPU daugthercards
->or
->> >FPGA
->> >soft-cores) and having to list CPU types across platforms as CPUs
->are
->> >added is going to be a maintenance nightmare=2E  Whereas having
->> >workarounds
->> >or panics associated with run-time determination of the actual CPU
->type
->> >
->> >guarantees they will trigger where necessary=2E  The use of `init'
->> >sections
->> >assures the reclaim of memory for use after bootstrap=2E
->>
->> Actually I meant let bug checks depends on Kconfig's CPU selection=2E
->>
+On Thu, Apr 09, 2020 at 04:46:23PM -0700, Dmitry Torokhov wrote:
+> On Fri, Apr 10, 2020 at 12:39:07AM +0200, Alexandre Belloni wrote:
+> > Hi Dmitry,
+> >
+> > On 09/04/2020 15:21:15-0700, Dmitry Torokhov wrote:
+> > > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> > > > Add dt binding for the counter variant of the rotary encoder driver.
+> > > >
+> > > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > > ---
+> > > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+> > > >  1 file changed, 67 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..a59f7c1faf0c
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > > @@ -0,0 +1,67 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Rotary Encoder Counter
+> > > > +
+> > > > +maintainers:
+> > > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > > +
+> > > > +description:
+> > > > +  Registers a Rotary encoder connected through a counter device.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: rotary-encoder-counter
+> > >
+> > > I wonder if a separate driver is really needed. The original driver be
+> > > taught to use counter device when available?
+> > >
+> >
+> > By the original driver, do you mean drivers/input/misc/rotary_encoder.c
+> > that is using gpios ?
 >
->I don't think this is a good idea=2E Since the routine is executed single
->time,
->so it is not performance critical=2E
->And Kconfig for per-cpu is bad for the future if we want to try to
->archive
->single kernel image=2E
+> Yes.
+>
 
-You can only select one kind of CPU one time,
-according to our current design=2E
-e=2Eg=2E MIPS32R2 (Indicating MIPS32R2 IP Cores from MIPS company),
-Ingenic Xburst, Loongson64, R4000=2E
+Well, it could be the case if the counter device could provide such a
+way to signal interrupts.
 
-We won't create a new entry for a kind of CPU unless
-the difference is significant=2E
-But when that happens, filtering out unnecessary code on certain
-platforms can be beneficial=2E
+> >
+> > > > +
+> > > > +  counter:
+> > > > +    description: Phandle for the counter device providing rotary position.
+> > > > +
+> > > > +  linux-axis:
+> > > > +    description: The input subsystem axis to map to this rotary encoder.
+> > > > +    type: boolean
+> > > > +
+> > > > +  qdec-mode:
+> > > > +    description: |
+> > > > +      Quadrature decoder function to set in the counter device.
+> > > > +      3: x1-PHA
+> > > > +      4: x1-PHB
+> > > > +      5: x2-PHA
+> > > > +      6: x2-PHB
+> > > > +      7: x4-PHA and PHB
+> > >
+> > > Is it really property of the rotary encoder itself or property of the
+> > > counter device?
+> > >
+> >
+> > The mode the quadrature decoder has to be put in depends on both the
+> > rotary encoder and the qdec.
+>
+> OK.
+>
+> >
+> > > > +
+> > > > +  steps:
+> > > > +    description: Number of steps in a full turnaround of the encoder.
+> > > > +      Only relevant for absolute axis. Defaults to 24 which is a typical
+> > > > +      value for such devices.
+> > > > +
+> > > > +  relative-axis:
+> > > > +    description: Register a relative axis rather than an absolute one.
+> > > > +    type: boolean
+> > > > +
+> > > > +  rollover:
+> > > > +    description: Automatic rollover when the rotary value becomes greater
+> > > > +      than the specified steps or smaller than 0. For absolute axis only.
+> > > > +    type: boolean
+> > > > +
+> > > > +  poll-interval:
+> > > > +    description: Poll interval at which the position is read from the counter
+> > > > +      device (default 500ms).
+> > >
+> > > Is there a way found counters to signal an interrupt?
+> > >
+> >
+> > For some counters, there are interrupts available, this is not trivial
+> > with the counter that is the target of this work but this is on the TODO
+> > list. Of course, this will also require adding a bit more to the
+> > in-kernel counter API to allow registering a callback that would be
+> > called when an interrupt happens.
+>
+> Should it be a callback, or can counter create an irqchip so that users
+> do not need to know how exactly it is wired up?
+>
 
-Thanks
+Maybe for some of them yes but for others the polling is still required.
 
---=20
-Jiaxun Yang
+> Thanks.
+>
+> --
+> Dmitry
+
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
