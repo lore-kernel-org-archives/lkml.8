@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006E1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D532C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BD420787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339DE2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647973;
-	bh=z9rtLhZlzhiOGVZoMMk3LzerzSTwqB0GfVjTvbMw2gI=;
+	s=default; t=1586647979;
+	bh=6zXeoIfrsYRRSY4bSjH13CfgkYQwnWYqWQUm4Aw2Y/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VMhcU/Mcq9yDybUoOiWaHznb8HZ8a/GqJDp4XnbhcLLWqXVK9VpQUzmjssbF4+ov/
-	 HmlITL2KeILnPhEJT9XIr46oYUhioxJXlN0Y3RrLEtEa0AinpL25M80pfJjMNO6/CI
-	 WIz3vQ8SH27YeZ7QksuC1PHXQrK5h/JF1zUS3a2Q=
+	b=tlBybeER3/1lkDdsdMUCYScrvDj7x+3wJQIpHd8WJ8G8/HOSBzjxwpC/ANiAXDwxe
+	 epaXdMYXad4wWTRN4xXn9PI2GtbVdVShyZIIAMucO/mcCxShSzU44SX4IE3wAkdmU9
+	 ByccdO8CGtc9NIHtzrb6/fGfxsTGXkbzyhVRTOng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgDKXcv (ORCPT
+        id S1729646AbgDKXc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:32:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbgDKXJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:57 -0400
+        id S1728288AbgDKXJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF623215A4;
-        Sat, 11 Apr 2020 23:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97DA82173E;
+        Sat, 11 Apr 2020 23:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646597;
-        bh=z9rtLhZlzhiOGVZoMMk3LzerzSTwqB0GfVjTvbMw2gI=;
+        s=default; t=1586646596;
+        bh=6zXeoIfrsYRRSY4bSjH13CfgkYQwnWYqWQUm4Aw2Y/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOXh0legb/7gX3v3+VUqtVMEvjOLTXzh884Tfou0vXXbWU2X0gwZfgh6ZbsE733/w
-         /3l5Hhtn0r4UiHwRbKoG+kQrNWd5z5Fk+E51ECRcZNTrFXCZW4S9LEpPbUrds2QhUt
-         mZdNsJevaziFu82amsH1ZsDdEKVIQDeoBmlsRp+w=
+        b=npX+bOBmOTqCB8co3rzALVWqqLFwdoW8nuaKjoMbqi+4rra0Du9PX28+UFYBv2Xhi
+         sc/L/vd2m4/kCYrDW7EQ08UyvJeagke2bfKBuqDgUYDCDL+JKPN6QzZYb91eGhVAXl
+         ZYRFmchkAEXvYjN2epD7KfNGA/H+yJZXggFLEqao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonid Maksymchuk <leonmaxx@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 011/108] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
-Date:   Sat, 11 Apr 2020 19:08:06 -0400
-Message-Id: <20200411230943.24951-11-sashal@kernel.org>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 010/108] net: phy: mscc: accept all RGMII species in vsc85xx_mac_if_set
+Date:   Sat, 11 Apr 2020 19:08:05 -0400
+Message-Id: <20200411230943.24951-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,39 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonid Maksymchuk <leonmaxx@gmail.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit edeee341fd6c1099de357c517af215bee2c6f766 ]
+[ Upstream commit da206d65f2b293274f8082a26da4e43a1610da54 ]
 
-Function fan_boost_mode_store returns 0 if store is successful,
-this leads to infinite loop after any write to it's sysfs entry:
+The helper for configuring the pinout of the MII side of the PHY should
+do so irrespective of whether RGMII delays are used or not. So accept
+the ID, TXID and RXID variants as well, not just the no-delay RGMII
+variant.
 
-# echo 0 >/sys/devices/platform/asus-nb-wmi/fan_boost_mode
-
-This command never ends, one CPU core is at 100% utilization.
-This patch fixes this by returning size of written data.
-
-Fixes: b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/mscc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 982f0cc8270ce..977b813cc0fa9 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1712,7 +1712,7 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- 	asus->fan_boost_mode = new_mode;
- 	fan_boost_mode_write(asus);
- 
--	return result;
-+	return count;
- }
- 
- // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 2339b9381d216..05d7c5cd9a308 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -816,6 +816,9 @@ static int vsc85xx_mac_if_set(struct phy_device *phydev,
+ 	reg_val = phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
+ 	reg_val &= ~(MAC_IF_SELECTION_MASK);
+ 	switch (interface) {
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		reg_val |= (MAC_IF_SELECTION_RGMII << MAC_IF_SELECTION_POS);
+ 		break;
 -- 
 2.20.1
 
