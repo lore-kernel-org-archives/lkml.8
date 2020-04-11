@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662DFC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F75C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3756620644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103FB2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607903;
-	bh=zl6dEku4PXUVnXqBlgEnAQo+bXF7mPhIBPgiQ12HFHk=;
+	s=default; t=1586607906;
+	bh=rsMivg6zxnUZe5+q19pH3VNg+un8uCnbdFiR+2ak1+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uujqUOHPkaeESslTOobTv4UTVuy4Vq8zsiN+T7LmZg5oddWHUVp/S+99qMum0BHs0
-	 L5r3qS6QzEufkrN+nAtzXTwhbPGJ6+/gVNkZWaZXWGUSGBqCnI2yB/HduSMQ3kgfwd
-	 4KnVVzsvSlUzRpdnWOr4qHdLGHCJom3XgP/nGYKI=
+	b=tkxgbl/mUL/6MFaMjn1Z7PkHcnaqOdj3/po2jeh0vXxzFg5YWrz18VVX2U/aa1u6l
+	 3S1pej9tzzxC4A+fr0RDOV4QHBNf1aezId2i/wuHBy80Jy2zEh0SK7DlyLO2RXIRJp
+	 yjYie/X54BUZc1Zh65aRzOiv8LOE2f5+11FwTzjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDKMRF (ORCPT
+        id S1728338AbgDKMQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbgDKMRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:01 -0400
+        id S1727051AbgDKMQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C55720644;
-        Sat, 11 Apr 2020 12:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80A8721744;
+        Sat, 11 Apr 2020 12:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607421;
-        bh=zl6dEku4PXUVnXqBlgEnAQo+bXF7mPhIBPgiQ12HFHk=;
+        s=default; t=1586607412;
+        bh=rsMivg6zxnUZe5+q19pH3VNg+un8uCnbdFiR+2ak1+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fbtj0SpqpLH4BhrxdFHv2CmwOIVtn+Qmae3DJ8maXsnjktB67P1Axuff25QBD5fqU
-         MFieZkc9ioeBlrVPaH/I5DpZavB20CFIKia+vHYY8pLDCe0xPv588Ag0aV8stpTsvn
-         lJsoj2jzg8Rj8Q812GJGNHu+GfMGat1svCltUmAU=
+        b=KsGAoHzejQYUx8wyGlKMadxQFBVxi7zRcqCw7iRoj6DgNKRC90uN8D7BWMARu49/+
+         KVIt6pw34kpgFb4+XXnf7WIXh6DPZl3Jy8y45nFy3QclDXGCj5pZa09f1FPFNV9G4G
+         eyfGIB7EaAaaxJHUSSuCd6VDtDTfhzjpdABhbbTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 13/41] mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
-Date:   Sat, 11 Apr 2020 14:09:22 +0200
-Message-Id: <20200411115505.036796995@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 5.4 01/41] net: phy: realtek: fix handling of RTL8105e-integrated PHY
+Date:   Sat, 11 Apr 2020 14:09:10 +0200
+Message-Id: <20200411115504.231402605@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,42 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit ccfc569347f870830e7c7cf854679a06cf9c45b5 ]
+[ No applicable upstream commit ]
 
-The handler for FLOW_ACTION_VLAN_MANGLE ends by returning whatever the
-lower-level function that it calls returns. If there are more actions lined
-up after this action, those are never offloaded. Fix by only bailing out
-when the called function returns an error.
+After the referenced fix it turned out that one particular RTL8168
+chip version (RTL8105e) does not work on 5.4 because no dedicated PHY
+driver exists. Adding this PHY driver was done for fixing a different
+issue for versions from 5.5 already. I re-send the same change for 5.4
+because the commit message differs.
 
-Fixes: a150201a70da ("mlxsw: spectrum: Add support for vlan modify TC action")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2e8c339b4946 ("r8169: fix PHY driver check on platforms w/o module softdeps")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-@@ -123,9 +123,12 @@ static int mlxsw_sp_flower_parse_actions
- 			u8 prio = act->vlan.prio;
- 			u16 vid = act->vlan.vid;
- 
--			return mlxsw_sp_acl_rulei_act_vlan(mlxsw_sp, rulei,
--							   act->id, vid,
--							   proto, prio, extack);
-+			err = mlxsw_sp_acl_rulei_act_vlan(mlxsw_sp, rulei,
-+							  act->id, vid,
-+							  proto, prio, extack);
-+			if (err)
-+				return err;
-+			break;
- 			}
- 		default:
- 			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
+---
+ drivers/net/phy/realtek.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -457,6 +457,15 @@ static struct phy_driver realtek_drvs[]
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
+ 	}, {
++		PHY_ID_MATCH_MODEL(0x001cc880),
++		.name		= "RTL8208 Fast Ethernet",
++		.read_mmd	= genphy_read_mmd_unsupported,
++		.write_mmd	= genphy_write_mmd_unsupported,
++		.suspend	= genphy_suspend,
++		.resume		= genphy_resume,
++		.read_page	= rtl821x_read_page,
++		.write_page	= rtl821x_write_page,
++	}, {
+ 		PHY_ID_MATCH_EXACT(0x001cc910),
+ 		.name		= "RTL8211 Gigabit Ethernet",
+ 		.config_aneg	= rtl8211_config_aneg,
 
 
