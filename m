@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B819C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A68C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5AC20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A8020CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646446;
-	bh=1pVOCMCEVPxh4yJmQWbxZpQ34McUxLlzYHjsDA4Nuxs=;
+	s=default; t=1586646448;
+	bh=/YCEcyxO/t3IInKr0Mko1EsnK20R6iE+X3adiZf4rVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mwhc/oiOYu6db+VU1n4eDvix6xSNKmj0PiMtdD2DsVWl27gtjCR8vSHfdprjd4Yhi
-	 5gfz6fdVyybWDWzRW1n6AhT7rYZ+Bt6JiHxZez+FYZm1veu12+OmHSNBh/5oNcpq2l
-	 I8Rr6GfdhPcZSM9oe8gywH5Sn+jZtlwC9JPnWtkA=
+	b=O2ANrqB6OAH3CbsbYQShDp+DLMXAKUvx8D0TwFJ+RAcUM7AjQcfKep/kG3skGMxCU
+	 +t3ci+roaluX2zjIr/8y0AfXCRgRYcXS94kR+Tws7bJb0GC70fwO43/+rAIpDBz7Jn
+	 OdUt91m1qXncV37009aUpWCTQQSPFMMYJvTTdZ0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgDKXHY (ORCPT
+        id S1728653AbgDKXH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43154 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgDKXHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:22 -0400
+        id S1728642AbgDKXHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A1D20708;
-        Sat, 11 Apr 2020 23:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16F320708;
+        Sat, 11 Apr 2020 23:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646442;
-        bh=1pVOCMCEVPxh4yJmQWbxZpQ34McUxLlzYHjsDA4Nuxs=;
+        s=default; t=1586646444;
+        bh=/YCEcyxO/t3IInKr0Mko1EsnK20R6iE+X3adiZf4rVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FyPh+wsKV/Q0M9cHgkWwvu6MAHKU7rzyG6u26W7dX4s36nmC3eZvOcw6pGQqEYp5H
-         pFQ1cyvuemtVS6nL79CT5xWqMUn/Ed1sE/noVXacqwx0IBFQm1DqHI/ZzzDX2tWzPS
-         vja69CAwk+n+l3zLB2M+pRqD0+dcDO8XGVOLHerY=
+        b=KDURxYkw1GsfmhfW6EKbK0G7jLMK1DLI+l7/8i/DvRfPWBKH5KbC5w7VSU8lJ4P9F
+         uzdkxprwkjuekYmfl6ebe/PLgC8oLhspa1rOlj2zl2uFF1bGnj5rNKUhxXYoRZfTJ3
+         1iyof3AgOXP6EfRejA6aeYxu8Kzr3SwBaf/12LKc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 013/121] drm/amd/display: Explicitly disable triplebuffer flips
-Date:   Sat, 11 Apr 2020 19:05:18 -0400
-Message-Id: <20200411230706.23855-13-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 015/121] RDMA/bnxt_re: Fix lifetimes in bnxt_re_task
+Date:   Sat, 11 Apr 2020 19:05:20 -0400
+Message-Id: <20200411230706.23855-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -62,48 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 2d673560b7b83f8fe4163610f35c51b4d095525c ]
+[ Upstream commit 8a6c61704746d3a1e004e054504ae8d98ed95697 ]
 
-[Why]
-This is enabled by default on Renoir but there's userspace/API support
-to actually make use of this.
+A work queue cannot just rely on the ib_device not being freed, it must
+hold a kref on the memory so that the BNXT_RE_FLAG_IBDEV_REGISTERED check
+works.
 
-Since we're not passing this down through surface updates, let's
-explicitly disable this for now.
-
-This fixes "dcn20_program_front_end_for_ctx" warnings associated with
-incorrect/unexpected programming sequences performed while this is
-enabled.
-
-[How]
-Disable it at the topmost level in DM in case anyone tries to flip this
-to enabled for any of the other ASICs like Navi10/14.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 1ac5a4047975 ("RDMA/bnxt_re: Add bnxt_re RoCE driver")
+Link: https://lore.kernel.org/r/1584117207-2664-3-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/bnxt_re/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 803e59d974111..fb1efdde7a49d 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2481,6 +2481,9 @@ static int amdgpu_dm_initialize_drm_device(struct amdgpu_device *adev)
- 	if (adev->asic_type != CHIP_CARRIZO && adev->asic_type != CHIP_STONEY)
- 		dm->dc->debug.disable_stutter = amdgpu_pp_feature_mask & PP_STUTTER_MODE ? false : true;
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index e7e8a0f494640..bc561340b9ad1 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -1604,6 +1604,7 @@ static void bnxt_re_task(struct work_struct *work)
+ 	smp_mb__before_atomic();
+ 	atomic_dec(&rdev->sched_count);
+ exit:
++	put_device(&rdev->ibdev.dev);
+ 	kfree(re_work);
+ }
  
-+	/* No userspace support. */
-+	dm->dc->debug.disable_tri_buf = true;
-+
- 	return 0;
- fail:
- 	kfree(aencoder);
+@@ -1680,6 +1681,7 @@ static int bnxt_re_netdev_event(struct notifier_block *notifier,
+ 		/* Allocate for the deferred task */
+ 		re_work = kzalloc(sizeof(*re_work), GFP_ATOMIC);
+ 		if (re_work) {
++			get_device(&rdev->ibdev.dev);
+ 			re_work->rdev = rdev;
+ 			re_work->event = event;
+ 			re_work->vlan_dev = (real_dev == netdev ?
 -- 
 2.20.1
 
