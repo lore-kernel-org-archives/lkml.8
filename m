@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0F5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646E6C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCC0206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CF6206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647828;
-	bh=OHh8W/rYjJG0JGWwMu+RIa89RX1bDKCXWFbkIySu1qI=;
+	s=default; t=1586647832;
+	bh=PKD20W0zqGHCtHxkmyIqExkny9+8SxyE/zHYatc8Ap4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ytr8zx9duaAOMySJ/d8cDgXT/uOStYofVHTOTmK3emfrFYC541rHDF5jCOIXKR4Ih
-	 fZ7K2wwk/Pu87pfv+ED+th/OUkR0fdhuh51pzCZerQoIb9IuKh1VS8vPV/B2BKvD7b
-	 qLdVpcSBdnt+/olA/xn8xePGUkz6jU4pbiyNmHXU=
+	b=zyppcFoTD+MYtiJCz3Bc8/uy9/nYY6xxs8KIjFd2843u7XcT7eKchUji5MUXo0+Oo
+	 zy42GGXa5ZTfBuCNGZ0rpPXIXKXcs7c+pFNraTAsF0+1dr/IgSGpDJ+ITOYdLTHxoO
+	 abrih4uafR124aZQ/ZLQtxZ7tBgCdk2uHPfi70w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgDKXKh (ORCPT
+        id S1730568AbgDKXaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48992 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbgDKXK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:29 -0400
+        id S1729636AbgDKXKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75FA720757;
-        Sat, 11 Apr 2020 23:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C172166E;
+        Sat, 11 Apr 2020 23:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646629;
-        bh=OHh8W/rYjJG0JGWwMu+RIa89RX1bDKCXWFbkIySu1qI=;
+        s=default; t=1586646636;
+        bh=PKD20W0zqGHCtHxkmyIqExkny9+8SxyE/zHYatc8Ap4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yWJAoejoK0bttPvj1d5uJIB3Yh/qfqbZN0sfX5KujFU9x7udn3rh6Q1j4fUTdCVDn
-         rPqXnSGCaMmFbcrR9nLTnUfV/K9lFbEQ0eOmqxlXtCRlC+4r+zNT7cnOJGYTkZwzMG
-         z1dRoDiIRaU48VQfCDRZ6v6IlnWIlz/zUD/3V7ok=
+        b=KH3Q8Y3311EQD4ydnkpZBd/ZPunO6+l9l0ZxDrlfP+trPZGueIfBtRNAYeFcQoIsS
+         2QxkSdR4MXS4qcMSJHpykILUZ3zbIeDEIUrqRU40Zx60sMnImfL7nXpl7Dk6jqYave
+         xVFaysX+VK4s6aZ15PaIhOOmz7pBZLwNeTcEQnO0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 037/108] net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278
-Date:   Sat, 11 Apr 2020 19:08:32 -0400
-Message-Id: <20200411230943.24951-37-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 043/108] mt76: fix handling full tx queues in mt76_dma_tx_queue_skb_raw
+Date:   Sat, 11 Apr 2020 19:08:38 -0400
+Message-Id: <20200411230943.24951-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,47 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ]
+[ Upstream commit 93eaec7625f13cffb593b471405b017c7e64d4ee ]
 
-Either port 5 or port 8 can be used on a 7278 device, make sure that
-port 5 also gets configured properly for 2Gb/sec in that case.
+Fixes a theoretical issue where it could potentially overwrite an existing
+descriptor entry (and leaking its skb)
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c      | 3 +++
- drivers/net/dsa/bcm_sf2_regs.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/net/wireless/mediatek/mt76/dma.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 46dc913da852d..d4e804184c545 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -602,6 +602,9 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
- 	if (state->duplex == DUPLEX_FULL)
- 		reg |= DUPLX_MODE;
+diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+index 6249a46c19762..026d996612fbe 100644
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -261,10 +261,13 @@ mt76_dma_tx_queue_skb_raw(struct mt76_dev *dev, enum mt76_txq_id qid,
+ 	struct mt76_queue_buf buf;
+ 	dma_addr_t addr;
  
-+	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
-+		reg |= GMIIP_SPEED_UP_2G;
++	if (q->queued + 1 >= q->ndesc - 1)
++		goto error;
 +
- 	core_writel(priv, reg, offset);
+ 	addr = dma_map_single(dev->dev, skb->data, skb->len,
+ 			      DMA_TO_DEVICE);
+ 	if (unlikely(dma_mapping_error(dev->dev, addr)))
+-		return -ENOMEM;
++		goto error;
+ 
+ 	buf.addr = addr;
+ 	buf.len = skb->len;
+@@ -275,6 +278,10 @@ mt76_dma_tx_queue_skb_raw(struct mt76_dev *dev, enum mt76_txq_id qid,
+ 	spin_unlock_bh(&q->lock);
+ 
+ 	return 0;
++
++error:
++	dev_kfree_skb(skb);
++	return -ENOMEM;
  }
  
-diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
-index d8a5e6269c0ef..7844781763359 100644
---- a/drivers/net/dsa/bcm_sf2_regs.h
-+++ b/drivers/net/dsa/bcm_sf2_regs.h
-@@ -178,6 +178,7 @@ enum bcm_sf2_reg_offs {
- #define  RXFLOW_CNTL			(1 << 4)
- #define  TXFLOW_CNTL			(1 << 5)
- #define  SW_OVERRIDE			(1 << 6)
-+#define  GMIIP_SPEED_UP_2G		(1 << 7)
- 
- #define CORE_WATCHDOG_CTRL		0x001e4
- #define  SOFTWARE_RESET			(1 << 7)
+ static int
 -- 
 2.20.1
 
