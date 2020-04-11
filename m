@@ -2,273 +2,302 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DA2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3E9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9229E2063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0E32063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607866;
-	bh=s81TSmpTOG4bhU/ILdyEKeh6e3ZwxH9byRcniPoQtmY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=oeLhx+GmAvUgEvP6p+zf5MYpCU/jy8ZLLioP1gQMmNThGuva68BkxnjwGYKH57Z/I
-	 cPC/CtVODgMJwpruyTGw3TWBkwOsAXLF0l8BHMRPwSV5x5oegD/eOiH73rs+4j7ZiJ
-	 7mEr9c4rjwgKLrvlpVeEqV85gp83iTdzV8rmw2aw=
+	s=default; t=1586607871;
+	bh=vT0TO2WRAGjMHECXb2QcGOuPQJ7opmnHxCc9cnrI1uk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TjHdvNJMQLE8RJc6kgRHiRP2+QXHkOK7JMO7/1VdiBBXIwAtAjeth+oi9cKr4GWvz
+	 2S2rrmoFBf6unAruDZB/oL0jpzP2s+NLZN9peBNo7DRT668jvi/WJsdpHfObnr7hTF
+	 ZWvHDOTRoeUb/RPz+QAFpiMtPGEyjUXfBq+NiTU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgDKMYY (ORCPT
+        id S1728511AbgDKMRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbgDKMSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:07 -0400
+        id S1728478AbgDKMRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46DF720673;
-        Sat, 11 Apr 2020 12:18:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBF520787;
+        Sat, 11 Apr 2020 12:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607486;
-        bh=s81TSmpTOG4bhU/ILdyEKeh6e3ZwxH9byRcniPoQtmY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=osthnl/vm5LV187+s0UM9gWwxVjSV7dpLLsaPSVGybQ5QA/JVrjxyxsEh22eg4zOk
-         GNMT5VQh6wTrMvsbm4xdVUdjaGvZrvCVIuP1ljKPtB5XljisJ5GKleuoeV0riOmLhq
-         YmJA99MWEWtC3LMhcQovOOjGBqyCbH6CO4pQWl5U=
+        s=default; t=1586607467;
+        bh=vT0TO2WRAGjMHECXb2QcGOuPQJ7opmnHxCc9cnrI1uk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y3M9Nh6LsSS+SdcHDqvCgDcgr3ODRn5eScw/HFpuwoxfPjnz0FobcoHdMkh/tvQZl
+         bFefV4lld4MuflSYO+GFdac33GRJdecF1DCuluhxivnS6RfTaXu0BMjCg1vVW64P4h
+         mtuj8ttr1bz/EJUwWXbyKLKneBqzvciCVjcQLaF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 00/41] 5.4.32-rc1 review
-Date:   Sat, 11 Apr 2020 14:09:09 +0200
-Message-Id: <20200411115504.124035693@linuxfoundation.org>
+        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 5.4 30/41] ceph: remove the extra slashes in the server path
+Date:   Sat, 11 Apr 2020 14:09:39 +0200
+Message-Id: <20200411115506.223253682@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
+In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
+References: <20200411115504.124035693@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.32-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.32-rc1
-X-KernelTest-Deadline: 2020-04-13T11:55+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.32 release.
-There are 41 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Xiubo Li <xiubli@redhat.com>
 
-Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
-Anything received after that time might be too late.
+commit 4fbc0c711b2464ee1551850b85002faae0b775d5 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.32-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
+It's possible to pass the mount helper a server path that has more
+than one contiguous slash character. For example:
 
-thanks,
+  $ mount -t ceph 192.168.195.165:40176:/// /mnt/cephfs/
 
-greg k-h
+In the MDS server side the extra slashes of the server path will be
+treated as snap dir, and then we can get the following debug logs:
 
--------------
-Pseudo-Shortlog of commits:
+  ceph:  mount opening path //
+  ceph:  open_root_inode opening '//'
+  ceph:  fill_trace 0000000059b8a3bc is_dentry 0 is_target 1
+  ceph:  alloc_inode 00000000dc4ca00b
+  ceph:  get_inode created new inode 00000000dc4ca00b 1.ffffffffffffffff ino 1
+  ceph:  get_inode on 1=1.ffffffffffffffff got 00000000dc4ca00b
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.32-rc1
+And then when creating any new file or directory under the mount
+point, we can hit the following BUG_ON in ceph_fill_trace():
 
-Lu Baolu <baolu.lu@linux.intel.com>
-    iommu/vt-d: Allow devices with RMRRs to use identity domain
+  BUG_ON(ceph_snap(dir) != dvino.snap);
 
-Sultan Alsawaf <sultan@kerneltoast.com>
-    drm/i915: Fix ref->mutex deadlock in i915_active_wait()
+Have the client ignore the extra slashes in the server path when
+mounting. This will also canonicalize the path, so that identical mounts
+can be consilidated.
 
-Qiujun Huang <hqjagain@gmail.com>
-    fbcon: fix null-ptr-deref in fbcon_switch
+1) "//mydir1///mydir//"
+2) "/mydir1/mydir"
+3) "/mydir1/mydir/"
 
-Bart Van Assche <bvanassche@acm.org>
-    blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+Regardless of the internal treatment of these paths, the kernel still
+stores the original string including the leading '/' for presentation
+to userland.
 
-Avihai Horon <avihaih@mellanox.com>
-    RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+URL: https://tracker.ceph.com/issues/42771
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/ceph/super.c |  120 +++++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 101 insertions(+), 19 deletions(-)
 
-Qiujun Huang <hqjagain@gmail.com>
-    Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-
-Bernard Metzler <bmt@zurich.ibm.com>
-    RDMA/siw: Fix passive connection establishment
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    RDMA/cma: Teach lockdep about the order of rtnl and lock
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    RDMA/ucma: Put a lock around every call to the rdma_cm layer
-
-Christian Borntraeger <borntraeger@de.ibm.com>
-    include/uapi/linux/swab.h: fix userspace breakage, use __BITS_PER_LONG for swap
-
-Ilya Dryomov <idryomov@gmail.com>
-    ceph: canonicalize server path in place
-
-Xiubo Li <xiubli@redhat.com>
-    ceph: remove the extra slashes in the server path
-
-Arnd Bergmann <arnd@arndb.de>
-    ARM: imx: only select ARM_ERRATA_814220 for ARMv7-A
-
-Anson Huang <Anson.Huang@nxp.com>
-    ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D
-
-Alex Vesker <valex@mellanox.com>
-    IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/hfi1: Fix memory leaks in sysfs registration and unregistration
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
-
-Paul Cercueil <paul@crapouillou.net>
-    ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
-
-Hans de Goede <hdegoede@redhat.com>
-    platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
-
-Hans de Goede <hdegoede@redhat.com>
-    ACPI: PM: Add acpi_[un]register_wakeup_handler()
-
-Martin Kaiser <martin@kaiser.cx>
-    hwrng: imx-rngc - fix an error path
-
-David Ahern <dsahern@kernel.org>
-    tools/accounting/getdelays.c: fix netlink attribute length
-
-Kees Cook <keescook@chromium.org>
-    slub: improve bit diffusion for freelist ptr obfuscation
-
-Yury Norov <yury.norov@gmail.com>
-    uapi: rename ext2_swab() to swab() and share globally in swab.h
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    usb: dwc3: gadget: Wrap around when skip TRBs
-
-Jason A. Donenfeld <Jason@zx2c4.com>
-    random: always use batched entropy for get_random_u{32,64}
-
-Sven Schnelle <svens@linux.ibm.com>
-    s390: prevent leaking kernel address in BEAR
-
-Heiner Kallweit <hkallweit1@gmail.com>
-    r8169: change back SG and TSO to be disabled by default
-
-Petr Machata <petrm@mellanox.com>
-    mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
-
-Will Deacon <will@kernel.org>
-    tun: Don't put_page() for all negative return values from XDP program
-
-Richard Palethorpe <rpalethorpe@suse.com>
-    slcan: Don't transmit uninitialized stack data in padding
-
-Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-    net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    net_sched: fix a missing refcnt in tcindex_init()
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    net_sched: add a temporary refcnt for struct tcindex_data
-
-Oleksij Rempel <linux@rempel-privat.de>
-    net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-
-Chuanhong Guo <gch981213@gmail.com>
-    net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
-
-Jarod Wilson <jarod@redhat.com>
-    ipv6: don't auto-add link-local address to lag ports
-
-Herat Ramani <herat@chelsio.com>
-    cxgb4: fix MPS index overwrite when setting MAC address
-
-Heiner Kallweit <hkallweit1@gmail.com>
-    net: phy: realtek: fix handling of RTL8105e-integrated PHY
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm/mach-imx/Kconfig                          |   2 +
- arch/s390/include/asm/lowcore.h                    |   4 +-
- arch/s390/include/asm/processor.h                  |   1 +
- arch/s390/include/asm/setup.h                      |   7 +
- arch/s390/kernel/asm-offsets.c                     |   2 +
- arch/s390/kernel/entry.S                           |  65 +++++----
- arch/s390/kernel/process.c                         |   1 +
- arch/s390/kernel/setup.c                           |   3 +
- arch/s390/kernel/smp.c                             |   2 +
- arch/s390/mm/vmem.c                                |   4 +
- block/blk-mq.c                                     |   8 ++
- drivers/acpi/sleep.c                               |   4 +
- drivers/acpi/sleep.h                               |   1 +
- drivers/acpi/wakeup.c                              |  81 ++++++++++++
- drivers/char/hw_random/imx-rngc.c                  |   4 +-
- drivers/char/random.c                              |  20 +--
- drivers/gpu/drm/i915/i915_active.c                 |  29 +++--
- drivers/gpu/drm/i915/i915_active.h                 |   4 +-
- drivers/infiniband/core/cma.c                      |  14 ++
- drivers/infiniband/core/ucma.c                     |  49 ++++++-
- drivers/infiniband/hw/hfi1/sysfs.c                 |  26 +++-
- drivers/infiniband/hw/mlx5/main.c                  |   6 +-
- drivers/infiniband/sw/siw/siw_cm.c                 | 145 +++++----------------
- drivers/iommu/intel-iommu.c                        |  15 +--
- drivers/net/can/slcan.c                            |   4 +-
- drivers/net/dsa/bcm_sf2.c                          |   9 +-
- drivers/net/dsa/mt7530.c                           |   3 +
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c    |   1 -
- .../net/ethernet/mellanox/mlxsw/spectrum_flower.c  |   9 +-
- drivers/net/ethernet/realtek/r8169_main.c          |  34 +++--
- .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |   2 +-
- drivers/net/phy/micrel.c                           |   7 +
- drivers/net/phy/realtek.c                          |   9 ++
- drivers/net/tun.c                                  |  10 +-
- drivers/platform/x86/intel_int0002_vgpio.c         |  10 ++
- drivers/usb/dwc3/gadget.c                          |   2 +-
- drivers/video/fbdev/core/fbcon.c                   |   3 +
- fs/ceph/super.c                                    |  56 +++++---
- fs/ceph/super.h                                    |   2 +-
- include/linux/acpi.h                               |   5 +
- include/linux/mlx5/mlx5_ifc.h                      |   6 +-
- include/linux/swab.h                               |   1 +
- include/uapi/linux/swab.h                          |  10 ++
- lib/find_bit.c                                     |  16 +--
- mm/slub.c                                          |   2 +-
- net/bluetooth/rfcomm/tty.c                         |   4 +-
- net/ipv6/addrconf.c                                |   4 +
- net/sched/cls_tcindex.c                            |  45 ++++++-
- sound/soc/jz4740/jz4740-i2s.c                      |   2 +-
- tools/accounting/getdelays.c                       |   2 +-
- 51 files changed, 481 insertions(+), 278 deletions(-)
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -106,7 +106,6 @@ static int ceph_statfs(struct dentry *de
+ 	return 0;
+ }
+ 
+-
+ static int ceph_sync_fs(struct super_block *sb, int wait)
+ {
+ 	struct ceph_fs_client *fsc = ceph_sb_to_client(sb);
+@@ -430,6 +429,73 @@ static int strcmp_null(const char *s1, c
+ 	return strcmp(s1, s2);
+ }
+ 
++/**
++ * path_remove_extra_slash - Remove the extra slashes in the server path
++ * @server_path: the server path and could be NULL
++ *
++ * Return NULL if the path is NULL or only consists of "/", or a string
++ * without any extra slashes including the leading slash(es) and the
++ * slash(es) at the end of the server path, such as:
++ * "//dir1////dir2///" --> "dir1/dir2"
++ */
++static char *path_remove_extra_slash(const char *server_path)
++{
++	const char *path = server_path;
++	const char *cur, *end;
++	char *buf, *p;
++	int len;
++
++	/* if the server path is omitted */
++	if (!path)
++		return NULL;
++
++	/* remove all the leading slashes */
++	while (*path == '/')
++		path++;
++
++	/* if the server path only consists of slashes */
++	if (*path == '\0')
++		return NULL;
++
++	len = strlen(path);
++
++	buf = kmalloc(len + 1, GFP_KERNEL);
++	if (!buf)
++		return ERR_PTR(-ENOMEM);
++
++	end = path + len;
++	p = buf;
++	do {
++		cur = strchr(path, '/');
++		if (!cur)
++			cur = end;
++
++		len = cur - path;
++
++		/* including one '/' */
++		if (cur != end)
++			len += 1;
++
++		memcpy(p, path, len);
++		p += len;
++
++		while (cur <= end && *cur == '/')
++			cur++;
++		path = cur;
++	} while (path < end);
++
++	*p = '\0';
++
++	/*
++	 * remove the last slash if there has and just to make sure that
++	 * we will get something like "dir1/dir2"
++	 */
++	if (*(--p) == '/')
++		*p = '\0';
++
++	return buf;
++}
++
+ static int compare_mount_options(struct ceph_mount_options *new_fsopt,
+ 				 struct ceph_options *new_opt,
+ 				 struct ceph_fs_client *fsc)
+@@ -437,6 +503,7 @@ static int compare_mount_options(struct
+ 	struct ceph_mount_options *fsopt1 = new_fsopt;
+ 	struct ceph_mount_options *fsopt2 = fsc->mount_options;
+ 	int ofs = offsetof(struct ceph_mount_options, snapdir_name);
++	char *p1, *p2;
+ 	int ret;
+ 
+ 	ret = memcmp(fsopt1, fsopt2, ofs);
+@@ -449,9 +516,21 @@ static int compare_mount_options(struct
+ 	ret = strcmp_null(fsopt1->mds_namespace, fsopt2->mds_namespace);
+ 	if (ret)
+ 		return ret;
+-	ret = strcmp_null(fsopt1->server_path, fsopt2->server_path);
++
++	p1 = path_remove_extra_slash(fsopt1->server_path);
++	if (IS_ERR(p1))
++		return PTR_ERR(p1);
++	p2 = path_remove_extra_slash(fsopt2->server_path);
++	if (IS_ERR(p2)) {
++		kfree(p1);
++		return PTR_ERR(p2);
++	}
++	ret = strcmp_null(p1, p2);
++	kfree(p1);
++	kfree(p2);
+ 	if (ret)
+ 		return ret;
++
+ 	ret = strcmp_null(fsopt1->fscache_uniq, fsopt2->fscache_uniq);
+ 	if (ret)
+ 		return ret;
+@@ -507,12 +586,14 @@ static int parse_mount_options(struct ce
+ 	 */
+ 	dev_name_end = strchr(dev_name, '/');
+ 	if (dev_name_end) {
+-		if (strlen(dev_name_end) > 1) {
+-			fsopt->server_path = kstrdup(dev_name_end, GFP_KERNEL);
+-			if (!fsopt->server_path) {
+-				err = -ENOMEM;
+-				goto out;
+-			}
++		/*
++		 * The server_path will include the whole chars from userland
++		 * including the leading '/'.
++		 */
++		fsopt->server_path = kstrdup(dev_name_end, GFP_KERNEL);
++		if (!fsopt->server_path) {
++			err = -ENOMEM;
++			goto out;
+ 		}
+ 	} else {
+ 		dev_name_end = dev_name + strlen(dev_name);
+@@ -842,7 +923,6 @@ static void destroy_caches(void)
+ 	ceph_fscache_unregister();
+ }
+ 
+-
+ /*
+  * ceph_umount_begin - initiate forced umount.  Tear down down the
+  * mount, skipping steps that may hang while waiting for server(s).
+@@ -929,9 +1009,6 @@ out:
+ 	return root;
+ }
+ 
+-
+-
+-
+ /*
+  * mount: join the ceph cluster, and open root directory.
+  */
+@@ -945,7 +1022,7 @@ static struct dentry *ceph_real_mount(st
+ 	mutex_lock(&fsc->client->mount_mutex);
+ 
+ 	if (!fsc->sb->s_root) {
+-		const char *path;
++		const char *path, *p;
+ 		err = __ceph_open_session(fsc->client, started);
+ 		if (err < 0)
+ 			goto out;
+@@ -957,17 +1034,22 @@ static struct dentry *ceph_real_mount(st
+ 				goto out;
+ 		}
+ 
+-		if (!fsc->mount_options->server_path) {
+-			path = "";
+-			dout("mount opening path \\t\n");
+-		} else {
+-			path = fsc->mount_options->server_path + 1;
+-			dout("mount opening path %s\n", path);
++		p = path_remove_extra_slash(fsc->mount_options->server_path);
++		if (IS_ERR(p)) {
++			err = PTR_ERR(p);
++			goto out;
+ 		}
++		/* if the server path is omitted or just consists of '/' */
++		if (!p)
++			path = "";
++		else
++			path = p;
++		dout("mount opening path '%s'\n", path);
+ 
+ 		ceph_fs_debugfs_init(fsc);
+ 
+ 		root = open_root_dentry(fsc, path, started);
++		kfree(p);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto out;
 
 
