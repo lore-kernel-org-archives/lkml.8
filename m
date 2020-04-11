@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAE8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D56C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2386320787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B834214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607133;
-	bh=NQXrLC0KTEjBGdK77trgtG9U7efQxanUvgTDpB2Li9I=;
+	s=default; t=1586607135;
+	bh=07I6Bw/G51yx+YqzTzZ37w7TB15uW1/mpGnuPKZHymY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NixiTsp/JgKT89oaH701kqH56sG1Lubpx7XbvKOygg5RJEXeEfMlazn+PnAgpjiCb
-	 rx6FEzhtFAzmu4RJeajA3iJyDbc6XmmcVEqsBq62X7AiLOExAVjHHh4drS3ncadSJT
-	 SI6cgvH3nLiOrzZ0wiuEt/A24bBUdrnaOlQEYjTo=
+	b=Bs8iPv3RYHj8Z+Z83laABb4ZXSEZYpzexhPUPWVFBYiIQ6NzNREQVDEx8jobP/N1+
+	 02BH6i5R6X0XGJbcVh8jU1XYmzqijjtEgVsGjoBQITuQIUsv3MQ1E7gjxXNryY38ii
+	 s153v8oEF9hFgluavxwXpiIQGZsAKfsp7SKKKUsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgDKMML (ORCPT
+        id S1727186AbgDKMMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44426 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgDKMMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:01 -0400
+        id S1727119AbgDKMMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C541214D8;
-        Sat, 11 Apr 2020 12:12:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2749021744;
+        Sat, 11 Apr 2020 12:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607121;
-        bh=NQXrLC0KTEjBGdK77trgtG9U7efQxanUvgTDpB2Li9I=;
+        s=default; t=1586607126;
+        bh=07I6Bw/G51yx+YqzTzZ37w7TB15uW1/mpGnuPKZHymY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qTQh4JVL7KJcf2RdMg1tnKuEMPs2bubvyrCB766WM6fpf0PQWegfYyqRDOvF83ufK
-         +b/sjJQKmm8Ckuuukh/+Q5QYTEcbi1UIBp55Kz/ADGiLMjk9Yc+WnoNls49fA9hb85
-         kaUwaM1L7jKT5LCn3RPGDC+piFhUnP8iyqH+3QpU=
+        b=v/y8JDnFhSuAyfEERCgm9Bp0CO1IsdMBqBgYmySoJ/jS/1GMO5NdlCh+08SJ0z66B
+         KGXFTKQovGiv8nemPLGoA6aDWPdZrvk4kgepmhxhC7czrI9Lvg9jsJ9JawbcxyOdkW
+         5+UiqQLsjxCnd7ny9iUqTlt1XxLDlkihLz+nE3S4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 16/32] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
-Date:   Sat, 11 Apr 2020 14:08:55 +0200
-Message-Id: <20200411115420.414555683@linuxfoundation.org>
+Subject: [PATCH 4.9 18/32] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+Date:   Sat, 11 Apr 2020 14:08:57 +0200
+Message-Id: <20200411115420.726560940@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -60,35 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
+[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
 
-Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
-entries") cleared the unused mac address entries, but introduced an
-out-of bounds mac address register programming bug -- After setting
-the secondary unicast mac addresses, the "reg" value has reached
-netdev_uc_count() + 1, thus we should only clear address entries
-if (addr < perfect_addr_number)
+After the power-down bit is cleared, the chip internally triggers a
+global reset. According to the KSZ9031 documentation, we have to wait at
+least 1ms for the reset to finish.
 
-Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+If the chip is accessed during reset, read will return 0xffff, while
+write will be ignored. Depending on the system performance and MDIO bus
+speed, we may or may not run in to this issue.
+
+This bug was discovered on an iMX6QP system with KSZ9031 PHY and
+attached PHY interrupt line. If IRQ was used, the link status update was
+lost. In polling mode, the link status update was always correct.
+
+The investigation showed, that during a read-modify-write access, the
+read returned 0xffff (while the chip was still in reset) and
+corresponding write hit the chip _after_ reset and triggered (due to the
+0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
+resulting in the next write being lost due to the new reset cycle.
+
+This patch fixes the issue by adding a 1...2 ms sleep after the
+genphy_resume().
+
+Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/micrel.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -214,7 +214,7 @@ static void dwmac1000_set_filter(struct
- 			reg++;
- 		}
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -28,6 +28,7 @@
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
  
--		while (reg <= perfect_addr_number) {
-+		while (reg < perfect_addr_number) {
- 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
- 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
- 			reg++;
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -728,6 +729,12 @@ static int kszphy_resume(struct phy_devi
+ {
+ 	genphy_resume(phydev);
+ 
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
++
+ 	/* Enable PHY Interrupts */
+ 	if (phy_interrupt_is_valid(phydev)) {
+ 		phydev->interrupts = PHY_INTERRUPT_ENABLED;
 
 
