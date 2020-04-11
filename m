@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF918C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B71AC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86312084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4139820692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607332;
-	bh=0H/UmwArp6YOgWVzCo6khowge+q28SjPJwBk/7GX74E=;
+	s=default; t=1586607336;
+	bh=+E7nHQNtNavTflFgXsFcr/2lLc/xEjcHb705tglUxoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6LOpglOWQqmBa3HsVnpEQELOhW0Agq5g9QK3f7tpZgTNtr6AJA0m1XuZ/RRoNqVr
-	 XDiX8eWHqzNM3Y/wmSfgI7HdYBxYHr9pHb6tKDB57LoKaXugSYyPAAJmPe9rKidaE0
-	 XUKktKKAQzpuysvsbvL9nmnzsr5NIj91ftXBOJJU=
+	b=xR8bMIa8MUijDuL+BPDY9ly+e51f1jgIH9YtNB8gNK9GBGStD92ZF4/arR/yEYQpx
+	 k+dlaVXajGtzP6w4pRy2tgXD0wk24Ni/0rWVMHBXJVPmCgKZCDiGQ03D9o4LuqxyUX
+	 owA2w7UCyaEkIgEMdoGbrcWtnIbAMrrTRnRWLhQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgDKMPb (ORCPT
+        id S1728129AbgDKMPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49382 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgDKMP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:27 -0400
+        id S1726913AbgDKMPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9C021775;
-        Sat, 11 Apr 2020 12:15:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2E6721556;
+        Sat, 11 Apr 2020 12:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607327;
-        bh=0H/UmwArp6YOgWVzCo6khowge+q28SjPJwBk/7GX74E=;
+        s=default; t=1586607332;
+        bh=+E7nHQNtNavTflFgXsFcr/2lLc/xEjcHb705tglUxoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YdLguhMCBYWTOatZ4M2SC5ZJKwH0LrJrqGD89aEEioHqVMZUf9MKYlSJJjRxNDnz5
-         4O8tT9/NUWf6bmyUKvAkX87VlvrxgFWBNvezChALEHBCywIHEHS8ypDqwzFp+1h1nA
-         ySBrNRDELn/tkRCB353ZOt+tc71Fv9/0OgtP3X2k=
+        b=04t5qJfME0yLvwhhhiHK5Qqs//CWLKgnrx0JzKyINE+mth5nks9Zj6f65OvVuPZnD
+         EdLv92+lxJbPHSAkDZWQZfVC5C1FSjrQUTjyK32Y9/3xIf7NXeDwMLx1PYN8cxm8Rd
+         Dvz6JPl43+072AS5MXLvBPrmBZktXFILAI2Jaxeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 29/54] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
-Date:   Sat, 11 Apr 2020 14:09:11 +0200
-Message-Id: <20200411115511.409766817@linuxfoundation.org>
+Subject: [PATCH 4.19 31/54] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+Date:   Sat, 11 Apr 2020 14:09:13 +0200
+Message-Id: <20200411115511.571968882@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -60,53 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
+[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
 
-We were registering our slave MDIO bus with OF and doing so with
-assigning the newly created slave_mii_bus of_node to the master MDIO bus
-controller node. This is a bad thing to do for a number of reasons:
+After the power-down bit is cleared, the chip internally triggers a
+global reset. According to the KSZ9031 documentation, we have to wait at
+least 1ms for the reset to finish.
 
-- we are completely lying about the slave MII bus is arranged and yet we
-  still want to control which MDIO devices it probes. It was attempted
-  before to play tricks with the bus_mask to perform that:
-  https://www.spinics.net/lists/netdev/msg429420.html but the approach
-  was rightfully rejected
+If the chip is accessed during reset, read will return 0xffff, while
+write will be ignored. Depending on the system performance and MDIO bus
+speed, we may or may not run in to this issue.
 
-- the device_node reference counting is messed up and we are effectively
-  doing a double probe on the devices we already probed using the
-  master, this messes up all resources reference counts (such as clocks)
+This bug was discovered on an iMX6QP system with KSZ9031 PHY and
+attached PHY interrupt line. If IRQ was used, the link status update was
+lost. In polling mode, the link status update was always correct.
 
-The proper fix for this as indicated by David in his reply to the
-thread above is to use a platform data style registration so as to
-control exactly which devices we probe:
-https://www.spinics.net/lists/netdev/msg430083.html
+The investigation showed, that during a read-modify-write access, the
+read returned 0xffff (while the chip was still in reset) and
+corresponding write hit the chip _after_ reset and triggered (due to the
+0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
+resulting in the next write being lost due to the new reset cycle.
 
-By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
-as intended, and all the PHY addresses that must be redirected towards
-our slave MDIO bus is happening while other addresses get redirected
-towards the master MDIO bus.
+This patch fixes the issue by adding a 1...2 ms sleep after the
+genphy_resume().
 
-Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/micrel.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -461,7 +461,7 @@ static int bcm_sf2_mdio_register(struct
- 	priv->slave_mii_bus->parent = ds->dev->parent;
- 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -29,6 +29,7 @@
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
  
--	err = of_mdiobus_register(priv->slave_mii_bus, dn);
-+	err = mdiobus_register(priv->slave_mii_bus);
- 	if (err && dn)
- 		of_node_put(dn);
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -738,6 +739,12 @@ static int kszphy_resume(struct phy_devi
  
+ 	genphy_resume(phydev);
+ 
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
++
+ 	ret = kszphy_config_reset(phydev);
+ 	if (ret)
+ 		return ret;
 
 
