@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CAEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE38C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B227B20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C383720787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607666;
-	bh=Gyo4FcHB+GmANgx3d6jPyXphyJzi9LJvFzuTYajNRTk=;
+	s=default; t=1586607669;
+	bh=ohEtPDNa21lPmwh4R3ce1rem5fhciGz8dc0mnmgu/Kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0fmVrQQuW0gED57JUgWcMWE10FN1Sh0e5RNkQe78pTOPZVLODHUDLpUn52nnzLXc
-	 NAiOq5VWvlYDxWmKB6tIomZiWZhEdvqNJRxR0DQXEw03kdEM5Nzt4cw7LDcZtJnfQl
-	 Oa2fhJ3UJgBeXvis62bf7LgO1e09zMWLFAB9vrUk=
+	b=ih9pTVhJUELO7hG9H4KTsoS7pxgb0qpfS+fNEaT21RVlItDcSK/bHuZh355b0p8jh
+	 wAkM1EgRXnuWqiCi0T6py+gBXOXUpod0GEG+UCxH57a586C4KWWQOeFSRurTFPTgca
+	 Dehuc5bw+LpENdq/X++A1Meov9iCsQOAH3QdvXGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgDKMVF (ORCPT
+        id S1729127AbgDKMVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbgDKMU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:58 -0400
+        id S1728000AbgDKMVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43AEF20787;
-        Sat, 11 Apr 2020 12:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E2D20644;
+        Sat, 11 Apr 2020 12:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607658;
-        bh=Gyo4FcHB+GmANgx3d6jPyXphyJzi9LJvFzuTYajNRTk=;
+        s=default; t=1586607661;
+        bh=ohEtPDNa21lPmwh4R3ce1rem5fhciGz8dc0mnmgu/Kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWqifwR9cePikuBzo4kz9x3TFkXqmKy5HbWh1o8zVVYZL0s+/l71w8kTEP+spooen
-         KAbHWXzBrN/cZ2hlD4NkEttH771L76qOhiY+SjomN1uAbZkTyPXu7Z2CDnC0Y47YgR
-         GvI6ePgrGlJ2KQ9Q66jEBzpdyV0ZKUrnc9lcEoNI=
+        b=Nv6oYnrn7ufvRVJvPO7Wjaxma7CoXUCnzLrKkt4PSL0tgCkG6HiS+cFPFj9Sns47c
+         X9rZFChxRKpakXSfeRRtzEJNCPnZnlaWO1jNBviDnbaV5+EmiLY2Qc0ors0Maewpy5
+         1HStdm77g259YRAsG4/NT9KawlVHH+YzvdzvaON4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.6 23/38] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
-Date:   Sat, 11 Apr 2020 14:10:00 +0200
-Message-Id: <20200411115502.161228377@linuxfoundation.org>
+        stable@vger.kernel.org, Jonghwan Choi <charlie.jh@kakaocorp.com>,
+        Dan Murphy <dmurphy@ti.com>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 24/38] ASoC: tas2562: Fixed incorrect amp_level setting.
+Date:   Sat, 11 Apr 2020 14:10:01 +0200
+Message-Id: <20200411115502.387383878@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -60,68 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jonghwan Choi <charlie.jh@kakaocorp.com>
 
-commit 767191db8220db29f78c031f4d27375173c336d5 upstream.
+commit eedf8a126629bf9db8ad3a2a5dc9dc1798fb2302 upstream.
 
-The Power Management Events (PMEs) the INT0002 driver listens for get
-signalled by the Power Management Controller (PMC) using the same IRQ
-as used for the ACPI SCI.
+According to the tas2562 datasheet,the bits[5:1] represents the amp_level value.
+So to set the amp_level value correctly,the shift value should be set to 1.
 
-Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
-waking up the system") the SCI triggering, without there being a wakeup
-cause recognized by the ACPI sleep code, will no longer wakeup the system.
-
-This breaks PMEs / wakeups signalled to the INT0002 driver, the system
-never leaves the s2idle_loop() now.
-
-Use acpi_register_wakeup_handler() to register a function which checks
-the GPE0a_STS register for a PME and trigger a wakeup when a PME has
-been signalled.
-
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Jonghwan Choi <charlie.jh@kakaocorp.com>
+Acked-by: Dan Murphy <dmurphy@ti.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200319140043.GA6688@jhbirdchoi-MS-7B79
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_int0002_vgpio.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/soc/codecs/tas2562.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -127,6 +127,14 @@ static irqreturn_t int0002_irq(int irq,
- 	return IRQ_HANDLED;
- }
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -409,7 +409,7 @@ static const struct snd_kcontrol_new vse
+ 			1, 1);
  
-+static bool int0002_check_wake(void *data)
-+{
-+	u32 gpe_sts_reg;
-+
-+	gpe_sts_reg = inl(GPE0A_STS_PORT);
-+	return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
-+}
-+
- static struct irq_chip int0002_byt_irqchip = {
- 	.name			= DRV_NAME,
- 	.irq_ack		= int0002_irq_ack,
-@@ -220,6 +228,7 @@ static int int0002_probe(struct platform
- 		return ret;
- 	}
- 
-+	acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
- 	device_init_wakeup(dev, true);
- 	return 0;
- }
-@@ -227,6 +236,7 @@ static int int0002_probe(struct platform
- static int int0002_remove(struct platform_device *pdev)
- {
- 	device_init_wakeup(&pdev->dev, false);
-+	acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
- 	return 0;
- }
+ static const struct snd_kcontrol_new tas2562_snd_controls[] = {
+-	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
++	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 1, 0x1c, 0,
+ 		       tas2562_dac_tlv),
+ };
  
 
 
