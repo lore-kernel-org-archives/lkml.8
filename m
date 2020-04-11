@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2004FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CDA20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B6720708
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646643;
-	bh=iir4ia2z/AOluTWFDVeTzVpMBJS5j6/hFvhzHHABHYc=;
+	s=default; t=1586646647;
+	bh=Wzja1lnSxcvyujKbql1QcN7eEshT9Y47jqXMe56SKFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TroWIDcHl96bpdspeKJ1Gs3kNGcySwR4O/zL17rhLaiSJA6pMPth2yS+g8KCYmkg1
-	 JFPyLu15nkqlRYEHzuhTWeKzAA+pxkkA5ug+9V2MvRNQOjm9HQA3anMw63SU5qcJRR
-	 qQgWQIXANKURRY/3AmraTy2WO7jzsw4mUa6nAFKo=
+	b=O1wHDFDVXiPwDgaAr+GtQ3V3y++/+gAlkXSw0iGp6VyFgR/AjU7fqESh/vF0AZzR7
+	 8WiCFeyZVRo47NzI5jt/V4KAA/0Zc7gASy4/zXz7AmlSceck1DTZOJZcp+IPQICxHh
+	 9xxbTgxjZV7ouKADeSRQNYyRGN4MVMzSE3af1Ahc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgDKXKl (ORCPT
+        id S1729131AbgDKXKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbgDKXKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:39 -0400
+        id S1728541AbgDKXKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD39215A4;
-        Sat, 11 Apr 2020 23:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70ACE217D8;
+        Sat, 11 Apr 2020 23:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646639;
-        bh=iir4ia2z/AOluTWFDVeTzVpMBJS5j6/hFvhzHHABHYc=;
+        s=default; t=1586646642;
+        bh=Wzja1lnSxcvyujKbql1QcN7eEshT9Y47jqXMe56SKFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2OAJaEMVZp7qoL2y5QO4NJyb156NxSupbW+FebaenjtEveYmNe0yOwLcYKHk6Enfv
-         QHrt0MY1u8c5Dk2V21YSUXEO0Lgb5HPcnWnR/A86L+S6ZFtA3zruOqrNm/9F0KkI89
-         Ypyz+4iS8f+hggSIWBDbXAlXMA76YAZWYyybu1e0=
+        b=YhYEx8q4EQRPT7At9LPAe690cc9l07nlEm2ji3ukbk4rK8ODI6isaWlaizHMgrW5s
+         oXMgtJSITHBloSDwVU8LPXXF80XvnqQDP05xgeqMSuyLpoRhYY9+bJjXfVPENvcowP
+         sO/qKIRiF64Nj+jStt3fwtHzHjaeRnAvFr75yuao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamal Heib <kamalheib1@gmail.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 046/108] RDMA/siw: Fix setting active_mtu attribute
-Date:   Sat, 11 Apr 2020 19:08:41 -0400
-Message-Id: <20200411230943.24951-46-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 048/108] drm/omap: fix possible object reference leak
+Date:   Sat, 11 Apr 2020 19:08:43 -0400
+Message-Id: <20200411230943.24951-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,45 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit beb205dd67aaa4315dedf5c40b47c6e9dee5a469 ]
+[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
 
-Make sure to set the active_mtu attribute to avoid report the following
-invalid value:
+The call to of_find_matching_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-$ ibv_devinfo -d siw0 | grep active_mtu
-			active_mtu:		invalid MTU (0)
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
 
-Fixes: 303ae1cdfdf7 ("rdma/siw: application interface")
-Link: https://lore.kernel.org/r/20200205081354.30438-1-kamalheib1@gmail.com
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Reviewed-by: Gal Pressman <galpress@amazon.com>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
-index 1b1a40db529c6..73442bd57dbe8 100644
---- a/drivers/infiniband/sw/siw/siw_verbs.c
-+++ b/drivers/infiniband/sw/siw/siw_verbs.c
-@@ -200,12 +200,12 @@ int siw_query_port(struct ib_device *base_dev, u8 port,
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+index 31502857f013d..ce67891eedd46 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+@@ -192,7 +192,7 @@ static int __init omapdss_boot_init(void)
+ 	dss = of_find_matching_node(NULL, omapdss_of_match);
  
- 	memset(attr, 0, sizeof(*attr));
+ 	if (dss == NULL || !of_device_is_available(dss))
+-		return 0;
++		goto put_node;
  
--	attr->active_mtu = attr->max_mtu;
- 	attr->active_speed = 2;
- 	attr->active_width = 2;
- 	attr->gid_tbl_len = 1;
- 	attr->max_msg_sz = -1;
- 	attr->max_mtu = ib_mtu_int_to_enum(sdev->netdev->mtu);
-+	attr->active_mtu = ib_mtu_int_to_enum(sdev->netdev->mtu);
- 	attr->phys_state = sdev->state == IB_PORT_ACTIVE ?
- 		IB_PORT_PHYS_STATE_LINK_UP : IB_PORT_PHYS_STATE_DISABLED;
- 	attr->pkey_tbl_len = 1;
+ 	omapdss_walk_device(dss, true);
+ 
+@@ -217,6 +217,8 @@ static int __init omapdss_boot_init(void)
+ 		kfree(n);
+ 	}
+ 
++put_node:
++	of_node_put(dss);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
