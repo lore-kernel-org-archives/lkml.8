@@ -2,52 +2,54 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67FAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45520C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D129206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201C120787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648917;
-	bh=y2WP1ZoPLBwcLxa4xv2pNeLO6sX+XIwR+YpQ2dz3WOc=;
+	s=default; t=1586648920;
+	bh=Mvjhobz+DXzJktaggh18G1wXgXOKTa61f7XmrSc+Y7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJspJScECvSS98nQpTvDJzss4Ealv+f6NyntGIV0iyFD1SlXQ03uzkom51a57aVLW
-	 DTFAULE7WP0j5j+I5gWQZMIfUFU+8uohgPULO9r2MxfP6V85vBEZT9uSlKgX90XOhU
-	 tcBKe8BJx1uZ3AiByvoIHXEI/QIQSLtF+jVursJY=
+	b=ZepvtK71Zy1tYw7v98EjgXci6kLvkXgUKYswQH4Q6/vWnIKDcvmju+4bg7Xc5mSW6
+	 sz49TDjwAdB5JldfZFtG3ofBtSAwQH1Ot83SQcAJn1Bhv0h+DLn6rxHwq8VKTUeSJc
+	 Xdn30zfdyz2pA6GzdkOe4jeTonZ++oICNtWppMU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgDKXEe (ORCPT
+        id S1726915AbgDKXsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37978 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbgDKXEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:33 -0400
+        id S1727257AbgDKXEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A54EF20CC7;
-        Sat, 11 Apr 2020 23:04:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE7821841;
+        Sat, 11 Apr 2020 23:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646273;
-        bh=y2WP1ZoPLBwcLxa4xv2pNeLO6sX+XIwR+YpQ2dz3WOc=;
+        s=default; t=1586646275;
+        bh=Mvjhobz+DXzJktaggh18G1wXgXOKTa61f7XmrSc+Y7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jB873pT2z3i69UbRW9sLHMS0mlNCMODSNdd8gSP+dHCnDRR0ZdMKxV9XOarZMzy30
-         DtUMDy5CUcVYf4QHqcsD7KEMxR6WL+bLNEGrsjpZD91Afx26dVRztqTi+QuYWUhZUv
-         7N/Aanb4wECv+eg83SJWJSPFzMRxT6z+1uG0HpRc=
+        b=DNQPttzUC5BsWD7nImNlzHRnT7vG1fH3tDYXfUjRMpVVTCWMDKEGi1BSnKotG8bCs
+         6vJSo0f8zAeNcDd67yGnnXnMkrbrrJwIQ8/2O/wCWHob6fOFuqEgcg43ibD+0tkdfs
+         lSq9wPiglQU6jzoC4UqAki4Y3Wtde0nVoBgo8Aik=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 037/149] Bluetooth: Fix calculation of SCO handle for packet processing
-Date:   Sat, 11 Apr 2020 19:01:54 -0400
-Message-Id: <20200411230347.22371-37-sashal@kernel.org>
+Cc:     Eric Bernstein <eric.bernstein@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 039/149] drm/amd/display: Fix default logger mask definition
+Date:   Sat, 11 Apr 2020 19:01:56 -0400
+Message-Id: <20200411230347.22371-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,44 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Eric Bernstein <eric.bernstein@amd.com>
 
-[ Upstream commit debdedf2eb5a2d9777cabff40900772be13cd9f9 ]
+[ Upstream commit ccb6af1e25830e5601b6beacc698390f0245316f ]
 
-When processing SCO packets, the handle is wrongly assumed as 16-bit
-value. The actual size is 12-bits and the other 4-bits are used for
-packet flags.
+[Why]
+Logger mask was updated to uint64_t, however default mask definition was
+not updated for unsigned long long
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+[How]
+Update DC_DEFAULT_LOG_MASK to support uint64_t type
+
+Signed-off-by: Eric Bernstein <eric.bernstein@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../drm/amd/display/include/logger_types.h    | 63 ++++++++++---------
+ 1 file changed, 32 insertions(+), 31 deletions(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index cbbc34a006d16..28b0ed6b10f66 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4387,13 +4387,16 @@ static void hci_scodata_packet(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct hci_sco_hdr *hdr = (void *) skb->data;
- 	struct hci_conn *conn;
--	__u16 handle;
-+	__u16 handle, flags;
+diff --git a/drivers/gpu/drm/amd/display/include/logger_types.h b/drivers/gpu/drm/amd/display/include/logger_types.h
+index 89a7092670193..d66f9d8eefb49 100644
+--- a/drivers/gpu/drm/amd/display/include/logger_types.h
++++ b/drivers/gpu/drm/amd/display/include/logger_types.h
+@@ -124,36 +124,37 @@ enum dc_log_type {
+ #define DC_MIN_LOG_MASK ((1 << LOG_ERROR) | \
+ 		(1 << LOG_DETECTION_EDID_PARSER))
  
- 	skb_pull(skb, HCI_SCO_HDR_SIZE);
+-#define DC_DEFAULT_LOG_MASK ((1 << LOG_ERROR) | \
+-		(1 << LOG_WARNING) | \
+-		(1 << LOG_EVENT_MODE_SET) | \
+-		(1 << LOG_EVENT_DETECTION) | \
+-		(1 << LOG_EVENT_LINK_TRAINING) | \
+-		(1 << LOG_EVENT_LINK_LOSS) | \
+-		(1 << LOG_EVENT_UNDERFLOW) | \
+-		(1 << LOG_RESOURCE) | \
+-		(1 << LOG_FEATURE_OVERRIDE) | \
+-		(1 << LOG_DETECTION_EDID_PARSER) | \
+-		(1 << LOG_DC) | \
+-		(1 << LOG_HW_HOTPLUG) | \
+-		(1 << LOG_HW_SET_MODE) | \
+-		(1 << LOG_HW_RESUME_S3) | \
+-		(1 << LOG_HW_HPD_IRQ) | \
+-		(1 << LOG_SYNC) | \
+-		(1 << LOG_BANDWIDTH_VALIDATION) | \
+-		(1 << LOG_MST) | \
+-		(1 << LOG_DETECTION_DP_CAPS) | \
+-		(1 << LOG_BACKLIGHT)) | \
+-		(1 << LOG_I2C_AUX) | \
+-		(1 << LOG_IF_TRACE) | \
+-		(1 << LOG_DTN) /* | \
+-		(1 << LOG_DEBUG) | \
+-		(1 << LOG_BIOS) | \
+-		(1 << LOG_SURFACE) | \
+-		(1 << LOG_SCALER) | \
+-		(1 << LOG_DML) | \
+-		(1 << LOG_HW_LINK_TRAINING) | \
+-		(1 << LOG_HW_AUDIO)| \
+-		(1 << LOG_BANDWIDTH_CALCS)*/
++#define DC_DEFAULT_LOG_MASK ((1ULL << LOG_ERROR) | \
++		(1ULL << LOG_WARNING) | \
++		(1ULL << LOG_EVENT_MODE_SET) | \
++		(1ULL << LOG_EVENT_DETECTION) | \
++		(1ULL << LOG_EVENT_LINK_TRAINING) | \
++		(1ULL << LOG_EVENT_LINK_LOSS) | \
++		(1ULL << LOG_EVENT_UNDERFLOW) | \
++		(1ULL << LOG_RESOURCE) | \
++		(1ULL << LOG_FEATURE_OVERRIDE) | \
++		(1ULL << LOG_DETECTION_EDID_PARSER) | \
++		(1ULL << LOG_DC) | \
++		(1ULL << LOG_HW_HOTPLUG) | \
++		(1ULL << LOG_HW_SET_MODE) | \
++		(1ULL << LOG_HW_RESUME_S3) | \
++		(1ULL << LOG_HW_HPD_IRQ) | \
++		(1ULL << LOG_SYNC) | \
++		(1ULL << LOG_BANDWIDTH_VALIDATION) | \
++		(1ULL << LOG_MST) | \
++		(1ULL << LOG_DETECTION_DP_CAPS) | \
++		(1ULL << LOG_BACKLIGHT)) | \
++		(1ULL << LOG_I2C_AUX) | \
++		(1ULL << LOG_IF_TRACE) | \
++		(1ULL << LOG_HDMI_FRL) | \
++		(1ULL << LOG_DTN) /* | \
++		(1ULL << LOG_DEBUG) | \
++		(1ULL << LOG_BIOS) | \
++		(1ULL << LOG_SURFACE) | \
++		(1ULL << LOG_SCALER) | \
++		(1ULL << LOG_DML) | \
++		(1ULL << LOG_HW_LINK_TRAINING) | \
++		(1ULL << LOG_HW_AUDIO)| \
++		(1ULL << LOG_BANDWIDTH_CALCS)*/
  
- 	handle = __le16_to_cpu(hdr->handle);
-+	flags  = hci_flags(handle);
-+	handle = hci_handle(handle);
- 
--	BT_DBG("%s len %d handle 0x%4.4x", hdev->name, skb->len, handle);
-+	BT_DBG("%s len %d handle 0x%4.4x flags 0x%4.4x", hdev->name, skb->len,
-+	       handle, flags);
- 
- 	hdev->stat.sco_rx++;
- 
+ #endif /* __DAL_LOGGER_TYPES_H__ */
 -- 
 2.20.1
 
