@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD0BC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7669520692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B56720787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607411;
-	bh=Eobpd9rfyW8Qda/LHzk612GzKUUTgzhzbdaqq0G/zYM=;
+	s=default; t=1586607415;
+	bh=TT64A1W14aMx+C6Ty9ZtW4tzFoenHFEPHktA6n1JgQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqmT4/S3bUsgF9x3XzGJDerwjpB4qsR0EaypVqvUXJtuhvk6tViNWnU2BJh+JaVB7
-	 tCtPFi/DutDyK68ynRbfQxWonPvylbePka2afCE5H/I+7knMxXGiDv6j4AQMfLOq/R
-	 Ym1bmILbkjdu4NYj/3okB0lI6iBu1eUDiVR9VIrM=
+	b=Aav9CQdmHzrX9ZnNEroLoz7vM4Du0Q0GfiBpXLMnMoZIqrDyWs3/FHMZIT3lpA49N
+	 1NM4LiIoX9R2spaZESCdmxOeKMPdObPpTTwyV5F2P5uZ3PRQXlTvl3OrsnkoxAn7LO
+	 /Uw9yDrgLLU6jXh1RBmAHC8Bni715TQye63SBO6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgDKMQt (ORCPT
+        id S1728309AbgDKMQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728290AbgDKMQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:46 -0400
+        id S1728119AbgDKMQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD68020692;
-        Sat, 11 Apr 2020 12:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BF8A21655;
+        Sat, 11 Apr 2020 12:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607407;
-        bh=Eobpd9rfyW8Qda/LHzk612GzKUUTgzhzbdaqq0G/zYM=;
+        s=default; t=1586607409;
+        bh=TT64A1W14aMx+C6Ty9ZtW4tzFoenHFEPHktA6n1JgQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWwjG30LFsx7k1Ltz53Ti0EoqnbQ+2bzCb9HP/mVDNjCEX2iX6NVzO4DxI8uizTWF
-         BXM9MGeKjqLLACZlvyb6xFnyCLicebo+AuhAq49eO9IyTaas5kyDdOABljYQBrlcLm
-         sLkqHsQ74PMdkMOFvXQK6xQP50vW49wtEgS0vUZk=
+        b=c2WNqxr7oMCIsG5THAXNBXVd4MosXPKldZmSV8XHgtEyZPeNS3HKgfj2iBQoFzNc2
+         LEucWQBYxUNhHI2OWNsvAA7euxvn5IVZxwOnlsp+CRMH5UBglJu4j06P+qzmM7fWbh
+         QtavXNzxsbs63mP8JiGTkpIYx1HErBzXRT2f8ejU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 25/54] bitops: protect variables in set_mask_bits() macro
-Date:   Sat, 11 Apr 2020 14:09:07 +0200
-Message-Id: <20200411115511.029870714@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 4.19 16/54] misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
+Date:   Sat, 11 Apr 2020 14:08:58 +0200
+Message-Id: <20200411115510.027666182@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -59,50 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 18127429a854e7607b859484880b8e26cee9ddab upstream.
+commit b2ba9225e0313b1de631a44b7b48c109032bffec upstream.
 
-Unprotected naming of local variables within the set_mask_bits() can easily
-lead to using the wrong scope.
+commit e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
+uses module parameter 'irqtype' in pci_endpoint_test_set_irq()
+to check if IRQ vectors of a particular type (MSI or MSI-X or
+LEGACY) is already allocated. However with multi-function devices,
+'irqtype' will not correctly reflect the IRQ type of the PCI device.
 
-Noticed this when "set_mask_bits(&foo->bar, 0, mask)" behaved as no-op.
+Fix it here by adding 'irqtype' for each PCI device to show the
+IRQ type of a particular PCI device.
 
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Fixes: 00a1a053ebe5 ("ext4: atomically set inode->i_flags in ext4_set_inode_flags()")
-Cc: Theodore Ts'o <tytso@mit.edu>
+Fixes: e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitops.h |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/misc/pci_endpoint_test.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -236,17 +236,17 @@ static __always_inline void __assign_bit
- #ifdef __KERNEL__
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -104,6 +104,7 @@ struct pci_endpoint_test {
+ 	struct completion irq_raised;
+ 	int		last_irq;
+ 	int		num_irqs;
++	int		irq_type;
+ 	/* mutex to protect the ioctls */
+ 	struct mutex	mutex;
+ 	struct miscdevice miscdev;
+@@ -163,6 +164,7 @@ static void pci_endpoint_test_free_irq_v
+ 	struct pci_dev *pdev = test->pdev;
  
- #ifndef set_mask_bits
--#define set_mask_bits(ptr, _mask, _bits)	\
-+#define set_mask_bits(ptr, mask, bits)	\
- ({								\
--	const typeof(*ptr) mask = (_mask), bits = (_bits);	\
--	typeof(*ptr) old, new;					\
-+	const typeof(*(ptr)) mask__ = (mask), bits__ = (bits);	\
-+	typeof(*(ptr)) old__, new__;				\
- 								\
- 	do {							\
--		old = READ_ONCE(*ptr);			\
--		new = (old & ~mask) | bits;			\
--	} while (cmpxchg(ptr, old, new) != old);		\
-+		old__ = READ_ONCE(*(ptr));			\
-+		new__ = (old__ & ~mask__) | bits__;		\
-+	} while (cmpxchg(ptr, old__, new__) != old__);		\
- 								\
--	new;							\
-+	new__;							\
- })
- #endif
+ 	pci_free_irq_vectors(pdev);
++	test->irq_type = IRQ_TYPE_UNDEFINED;
+ }
  
+ static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+@@ -197,6 +199,8 @@ static bool pci_endpoint_test_alloc_irq_
+ 		irq = 0;
+ 		res = false;
+ 	}
++
++	test->irq_type = type;
+ 	test->num_irqs = irq;
+ 
+ 	return res;
+@@ -336,6 +340,7 @@ static bool pci_endpoint_test_copy(struc
+ 	dma_addr_t orig_dst_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	int irq_type = test->irq_type;
+ 	u32 src_crc32;
+ 	u32 dst_crc32;
+ 
+@@ -432,6 +437,7 @@ static bool pci_endpoint_test_write(stru
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	int irq_type = test->irq_type;
+ 	u32 crc32;
+ 
+ 	if (size > SIZE_MAX - alignment)
+@@ -500,6 +506,7 @@ static bool pci_endpoint_test_read(struc
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	int irq_type = test->irq_type;
+ 	u32 crc32;
+ 
+ 	if (size > SIZE_MAX - alignment)
+@@ -561,7 +568,7 @@ static bool pci_endpoint_test_set_irq(st
+ 		return false;
+ 	}
+ 
+-	if (irq_type == req_irq_type)
++	if (test->irq_type == req_irq_type)
+ 		return true;
+ 
+ 	pci_endpoint_test_release_irq(test);
+@@ -573,12 +580,10 @@ static bool pci_endpoint_test_set_irq(st
+ 	if (!pci_endpoint_test_request_irq(test))
+ 		goto err;
+ 
+-	irq_type = req_irq_type;
+ 	return true;
+ 
+ err:
+ 	pci_endpoint_test_free_irq_vectors(test);
+-	irq_type = IRQ_TYPE_UNDEFINED;
+ 	return false;
+ }
+ 
+@@ -655,6 +660,7 @@ static int pci_endpoint_test_probe(struc
+ 	test->test_reg_bar = 0;
+ 	test->alignment = 0;
+ 	test->pdev = pdev;
++	test->irq_type = IRQ_TYPE_UNDEFINED;
+ 
+ 	if (no_msi)
+ 		irq_type = IRQ_TYPE_LEGACY;
 
 
