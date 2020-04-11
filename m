@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA52AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF918C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BCF21556
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86312084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607329;
-	bh=bUKIwhqr/I1zZj3MIfidzAKGc3BlyDNM+bhRPyedYz8=;
+	s=default; t=1586607332;
+	bh=0H/UmwArp6YOgWVzCo6khowge+q28SjPJwBk/7GX74E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S2IT1yerDVNMxytTKg12CEwp88ap6AE6NUx4+sr0rvwhb3XCDqAOLduVZlK13j2rX
-	 Yl76X8/svfOFzAT9Gfr/3b9fOMjUXaBrroIps9X3R7Ws1nughiaBZZIHd0uOUfM6K7
-	 bNa1VIckGQBHYGf6e0rP6o/ZbBQsy3QAdz647KVU=
+	b=d6LOpglOWQqmBa3HsVnpEQELOhW0Agq5g9QK3f7tpZgTNtr6AJA0m1XuZ/RRoNqVr
+	 XDiX8eWHqzNM3Y/wmSfgI7HdYBxYHr9pHb6tKDB57LoKaXugSYyPAAJmPe9rKidaE0
+	 XUKktKKAQzpuysvsbvL9nmnzsr5NIj91ftXBOJJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgDKMP1 (ORCPT
+        id S1727652AbgDKMPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:15:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbgDKMPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:25 -0400
+        id S1726913AbgDKMP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B29C21655;
-        Sat, 11 Apr 2020 12:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9C021775;
+        Sat, 11 Apr 2020 12:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607325;
-        bh=bUKIwhqr/I1zZj3MIfidzAKGc3BlyDNM+bhRPyedYz8=;
+        s=default; t=1586607327;
+        bh=0H/UmwArp6YOgWVzCo6khowge+q28SjPJwBk/7GX74E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjyakbU3x04TquuqK0aPptmvK9v2A++njv3YTnZ+/U9p3X3t5O+3eeTsBv+WSwQGm
-         jiq9YJl75nYCGk74lWztaoh7jlkrQM+vFk/zetlJFgC0CDHAQnJtX/OV1wusP2M0kK
-         typbdsFF6I0fSCJlDsZjo9YtFS5+PrOoQooJBXpc=
+        b=YdLguhMCBYWTOatZ4M2SC5ZJKwH0LrJrqGD89aEEioHqVMZUf9MKYlSJJjRxNDnz5
+         4O8tT9/NUWf6bmyUKvAkX87VlvrxgFWBNvezChALEHBCywIHEHS8ypDqwzFp+1h1nA
+         ySBrNRDELn/tkRCB353ZOt+tc71Fv9/0OgtP3X2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Levi <moshele@mellanox.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        netdev@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 28/54] ipv6: dont auto-add link-local address to lag ports
-Date:   Sat, 11 Apr 2020 14:09:10 +0200
-Message-Id: <20200411115511.324846089@linuxfoundation.org>
+Subject: [PATCH 4.19 29/54] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
+Date:   Sat, 11 Apr 2020 14:09:11 +0200
+Message-Id: <20200411115511.409766817@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -62,91 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 744fdc8233f6aa9582ce08a51ca06e59796a3196 ]
+[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
 
-Bonding slave and team port devices should not have link-local addresses
-automatically added to them, as it can interfere with openvswitch being
-able to properly add tc ingress.
+We were registering our slave MDIO bus with OF and doing so with
+assigning the newly created slave_mii_bus of_node to the master MDIO bus
+controller node. This is a bad thing to do for a number of reasons:
 
-Basic reproducer, courtesy of Marcelo:
+- we are completely lying about the slave MII bus is arranged and yet we
+  still want to control which MDIO devices it probes. It was attempted
+  before to play tricks with the bus_mask to perform that:
+  https://www.spinics.net/lists/netdev/msg429420.html but the approach
+  was rightfully rejected
 
-$ ip link add name bond0 type bond
-$ ip link set dev ens2f0np0 master bond0
-$ ip link set dev ens2f1np2 master bond0
-$ ip link set dev bond0 up
-$ ip a s
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
-group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-11: bond0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc
-noqueue state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link
-       valid_lft forever preferred_lft forever
+- the device_node reference counting is messed up and we are effectively
+  doing a double probe on the devices we already probed using the
+  master, this messes up all resources reference counts (such as clocks)
 
-(above trimmed to relevant entries, obviously)
+The proper fix for this as indicated by David in his reply to the
+thread above is to use a platform data style registration so as to
+control exactly which devices we probe:
+https://www.spinics.net/lists/netdev/msg430083.html
 
-$ sysctl net.ipv6.conf.ens2f0np0.addr_gen_mode=0
-net.ipv6.conf.ens2f0np0.addr_gen_mode = 0
-$ sysctl net.ipv6.conf.ens2f1np2.addr_gen_mode=0
-net.ipv6.conf.ens2f1np2.addr_gen_mode = 0
+By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
+as intended, and all the PHY addresses that must be redirected towards
+our slave MDIO bus is happening while other addresses get redirected
+towards the master MDIO bus.
 
-$ ip a l ens2f0np0
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-$ ip a l ens2f1np2
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-
-Looks like addrconf_sysctl_addr_gen_mode() bypasses the original "is
-this a slave interface?" check added by commit c2edacf80e15, and
-results in an address getting added, while w/the proposed patch added,
-no address gets added. This simply adds the same gating check to another
-code path, and thus should prevent the same devices from erroneously
-obtaining an ipv6 link-local address.
-
-Fixes: d35a00b8e33d ("net/ipv6: allow sysctl to change link-local address generation mode")
-Reported-by: Moshe Levi <moshele@mellanox.com>
-CC: Stephen Hemminger <stephen@networkplumber.org>
-CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/dsa/bcm_sf2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -3241,6 +3241,10 @@ static void addrconf_addr_gen(struct ine
- 	if (netif_is_l3_master(idev->dev))
- 		return;
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -461,7 +461,7 @@ static int bcm_sf2_mdio_register(struct
+ 	priv->slave_mii_bus->parent = ds->dev->parent;
+ 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
  
-+	/* no link local addresses on devices flagged as slaves */
-+	if (idev->dev->flags & IFF_SLAVE)
-+		return;
-+
- 	ipv6_addr_set(&addr, htonl(0xFE800000), 0, 0, 0);
+-	err = of_mdiobus_register(priv->slave_mii_bus, dn);
++	err = mdiobus_register(priv->slave_mii_bus);
+ 	if (err && dn)
+ 		of_node_put(dn);
  
- 	switch (idev->cnf.addr_gen_mode) {
 
 
