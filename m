@@ -2,118 +2,116 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7630DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19717C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431792087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586602765;
-	bh=xk5Kskag+XVsBHxWNEZ7J/RewiRmLUecphBYR2cj9yo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bQfQ3OT8S/8b5/L6Pt+GWe/MO/j3Xt7/QWdcTA3gJKZIQT30p8PuIIV+pzLbIxlbR
-	 jhrAGcP8becFA7+qq4kLGLlhLBeewTnU1jddlMnk93Ti47FsNOLtnOu1OGsDRnPmqT
-	 cXtBFjjsUn3lDsWcioukd9qG77JNNDdWJt3NNius=
+	by mail.kernel.org (Postfix) with ESMTP id EEB6B20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgDKK7X (ORCPT
+        id S1726155AbgDKLHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 06:59:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgDKK7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 06:59:23 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29EB920732;
-        Sat, 11 Apr 2020 10:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586602763;
-        bh=xk5Kskag+XVsBHxWNEZ7J/RewiRmLUecphBYR2cj9yo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=F8XpckS2+wv/5IBH2mA0/TmqmYb5fbc9QUpEpizKARVx9lzVjoMYoF+UvF/96kpR2
-         jiU+pbzEU8VUJyjaAcApFTjRnlLB8kKPvsXLRvb/c64dVwpApQAxvx89C8vlbswjAF
-         rLQXPMVcju7hvUXs/Dm/dcDmxPtqKWb7dh/5Y+gg=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jNDr7-002MZc-Bt; Sat, 11 Apr 2020 11:59:21 +0100
-Date:   Sat, 11 Apr 2020 11:59:19 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] irqchip/sifive-plic: Fix maximum priority threshold
- value
-Message-ID: <20200411115919.32fc0455@why>
-In-Reply-To: <20200403014609.71831-1-atish.patra@wdc.com>
-References: <20200403014609.71831-1-atish.patra@wdc.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 Apr 2020 07:07:51 -0400
+Received: from smtprelay0231.hostedemail.com ([216.40.44.231]:41940 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725951AbgDKLHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 07:07:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 0D25D181D337B;
+        Sat, 11 Apr 2020 11:07:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: force52_270ea654bb131
+X-Filterd-Recvd-Size: 3427
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 11 Apr 2020 11:07:48 +0000 (UTC)
+Message-ID: <d40b2b993d8e9764c5e7f6fd3f8ca037a9520b6e.camel@perches.com>
+Subject: Re: [PATCH] crypto: marvell/octeontx - Add missing '\n' in log
+ messages
+From:   Joe Perches <joe@perches.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        lbartosik@marvell.com, colin.king@canonical.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Date:   Sat, 11 Apr 2020 04:05:43 -0700
+In-Reply-To: <20200411104458.21526-1-christophe.jaillet@wanadoo.fr>
+References: <20200411104458.21526-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: atish.patra@wdc.com, linux-kernel@vger.kernel.org, anup@brainfault.org, jason@lakedaemon.net, linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 Apr 2020 18:46:09 -0700
-Atish Patra <atish.patra@wdc.com> wrote:
-
-> As per the PLIC specification, maximum priority threshold value is 0x7
-> not 0xF. Even though it doesn't cause any error in qemu/hifive unleashed,
-> there may be some implementation which checks the upper bound resulting in
-> an illegal access.
+On Sat, 2020-04-11 at 12:44 +0200, Christophe JAILLET wrote:
+> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
 > 
-> Fixes: ccbe80bad571 (irqchip/sifive-plic: Enable/Disable external
-> 		     interrupts upon cpu online/offline)
+> While at it, I've introduced a few pr_cont that looked logical to me.
 
-Small nit: please write the "Fixes:" tag as documented in
-process/submitting-patches.rst:
+Hi again Christophe.
 
-Fixes: ccbe80bad571 ("irqchip/sifive-plic: Enable/Disable external interrupts upon cpu online/offline")
+> diff --git a/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c b/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
+[]
+> @@ -629,15 +629,15 @@ static void print_dbg_info(struct device *dev,
+>  				pr_debug("Slot%d: %s", j, engs_info);
+>  				bitmap_to_arr32(mask, engs->bmap,
+>  						eng_grps->engs_num);
+> -				pr_debug("Mask:  %8.8x %8.8x %8.8x %8.8x",
+> -					 mask[3], mask[2], mask[1], mask[0]);
+> +				pr_cont(" Mask: %8.8x %8.8x %8.8x %8.8x\n",
+> +					mask[3], mask[2], mask[1], mask[0]);
 
-(with quotes, and on a single line), as it otherwise breaks with the
-lore-scrapping tooling which a bunch of us are now using.
+Unfortunately, a pr_debug cannot reasonably be followed by pr_cont.
 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  drivers/irqchip/irq-sifive-plic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> index c34fb3ae0ff8..d0a71febdadc 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -56,7 +56,7 @@
->  #define     CONTEXT_THRESHOLD		0x00
->  #define     CONTEXT_CLAIM		0x04
->  
-> -#define	PLIC_DISABLE_THRESHOLD		0xf
-> +#define	PLIC_DISABLE_THRESHOLD		0x7
->  #define	PLIC_ENABLE_THRESHOLD		0
->  
->  struct plic_priv {
+pr_debug is conditionally compiled and if CONFIG_DYNAMIC_DEBUG
+is enabled, conditionally emitted.
 
-Queued for post -rc1.
+pr_cont is not conditionally compiled and is always emitted.
 
-Thanks,
+So this is fine as is (or with terminating newlines added)
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> @@ -1147,8 +1147,9 @@ static int delete_engine_group(struct device *dev,
+>  		for (i = 0; i < OTX_CPT_MAX_ENGINE_GROUPS; i++) {
+>  			if (eng_grp->g->grp[i].mirror.is_ena &&
+>  			    eng_grp->g->grp[i].mirror.idx == eng_grp->idx)
+> -				dev_err(dev, "engine_group%d", i);
+> +				pr_cont(" engine_group%d", i);
+>  		}
+> +		pr_cont("\n");
+>  		return -EINVAL;
+>  	}
+
+This one is probably reasonable, but I suggest that "engine_group%d"
+is a bit redundant and this might be better as something like:
+
+diff --git a/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c b/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
+index d04baa3..a6bb6c7 100644
+--- a/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
++++ b/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
+@@ -1142,13 +1143,14 @@ static int delete_engine_group(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	if (eng_grp->mirror.ref_count) {
+-		dev_err(dev, "Can't delete engine_group%d as it is used by:",
++		dev_err(dev, "Can't delete engine_group%d as it is used by engine_group(s):",
+ 			eng_grp->idx);
+ 		for (i = 0; i < OTX_CPT_MAX_ENGINE_GROUPS; i++) {
+ 			if (eng_grp->g->grp[i].mirror.is_ena &&
+ 			    eng_grp->g->grp[i].mirror.idx == eng_grp->idx)
+-				dev_err(dev, "engine_group%d", i);
++				pr_cont(dev, " %d", i);
+ 		}
++		pr_cont("\n");
+ 		return -EINVAL;
+ 	}
+ 
+
