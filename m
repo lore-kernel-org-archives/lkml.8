@@ -2,105 +2,160 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D1FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08826C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAF82082D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60432082D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586571029;
-	bh=MVZeCBaeFj9XOKurdEfteBiPqF9xwPkxkHqXXdFsTmM=;
+	s=default; t=1586571190;
+	bh=YgaDIcJ5xzL8CSiHnhaJpN1YTHxXZE4mV6g69AnHIx0=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=i142tircO8i3fLJIo9TdeAk01Aa2ME0DXrM8aCzenxRn89fC0ywZVbDLtZKGl/hxe
-	 7+qt4HUQr4X1PrmKD49fN7jO+lSa/xVE3hNTUqEtAXv2q3RUGf4vgxNr3BgVEozIA4
-	 hMznuatS1n4CBHZkSemi3bVe6d+IDPt+U6vjaJu0=
+	b=luBMbEtlReXC8a3+qUwQsQ92x4dlu1nVYaQTW6U6NcrCNTA8AoRBkNrWJ9yqFOARl
+	 Nkc3oD8pg9VdZz6yyX0QujgJxw1TuUjQECQm32tfvPin0tDgbekq5bvYNWT5PAw3iT
+	 dTtVoq4wUtbzonvmhsWACm/081fra9PsWUjmmeBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgDKCK1 (ORCPT
+        id S1726834AbgDKCNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45416 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 22:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgDKCK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:10:27 -0400
+        id S1726678AbgDKCNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:13:08 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54DD92078E;
-        Sat, 11 Apr 2020 02:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02A92078E;
+        Sat, 11 Apr 2020 02:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586571027;
-        bh=MVZeCBaeFj9XOKurdEfteBiPqF9xwPkxkHqXXdFsTmM=;
+        s=default; t=1586571188;
+        bh=YgaDIcJ5xzL8CSiHnhaJpN1YTHxXZE4mV6g69AnHIx0=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Lc2Rz+M3mIlm6bIM9mTDzvxfb6Gozq5W06V1nX10dSvD6r6URkbJuQ88lUvUrzXJO
-         /FwpXbZ+CRAkaqbALCOPq/AlnxyH5K5BbG/DPuv02LSWIVXTw2h4g4CWVW4Q6v6gSO
-         IgoHrkkJ/gMSIbr/9Pb3Lx9H440PX57svoy1KkJs=
+        b=vj0F8V1OiL4EYeKy/c6xUGDiz2Aeipk/uYW1PLLcfJWzOlLdSzg47sxjhJlvgXvz0
+         tOQIg04fzd2zupngGMFTLULKjV7SfVMkhLheQMYTZZSpDfzrQdzoRd5a3z/mGAmdCg
+         wbjfzN4OL6rEVD37s/VeW1qbfNCuHjV31sHqTRcc=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAFd5g46JHKmrEbYeL_Yu8djPHr-6QwidumLKtdYoYOwC_ALpaQ@mail.gmail.com>
-References: <20200408035637.110858-1-sboyd@kernel.org> <CAFd5g46JHKmrEbYeL_Yu8djPHr-6QwidumLKtdYoYOwC_ALpaQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC] clk: gate: Add some kunit test suites
+In-Reply-To: <1586298209-4589-2-git-send-email-wcheng@codeaurora.org>
+References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org> <1586298209-4589-2-git-send-email-wcheng@codeaurora.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 10 Apr 2020 19:10:26 -0700
-Message-ID: <158657102650.199533.18319832135089303080@swboyd.mtv.corp.google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org, Wesley Cheng <wcheng@codeaurora.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Fri, 10 Apr 2020 19:13:07 -0700
+Message-ID: <158657118788.199533.6157625397469536329@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2020-04-09 13:09:03)
-> On Tue, Apr 7, 2020 at 8:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Test various parts of the clk gate implementation with the kunit testing
-> > framework.
-> >
-> > Cc: Brendan Higgins <brendanhiggins@google.com>
-> > Cc: <kunit-dev@googlegroups.com>
-> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
->=20
-> One very minor nit below, other than that this looks great! I couldn't
-> have done a better job myself.
->=20
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
->=20
-> > ---
-> >
-> > This patch is on top of this series[1] that allows the clk
-> > framework to be selected by Kconfig language.
-> >
-> > [1] https://lore.kernel.org/r/20200405025123.154688-1-sboyd@kernel.org
-> >
-> >  drivers/clk/Kconfig         |   8 +
-> >  drivers/clk/Makefile        |   1 +
-> >  drivers/clk/clk-gate-test.c | 481 ++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 490 insertions(+)
-> >  create mode 100644 drivers/clk/clk-gate-test.c
-> >
-> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > index 6ea0631e3956..66193673bcdf 100644
-> > --- a/drivers/clk/Kconfig
-> > +++ b/drivers/clk/Kconfig
-> > @@ -377,4 +377,12 @@ source "drivers/clk/ti/Kconfig"
-> >  source "drivers/clk/uniphier/Kconfig"
-> >  source "drivers/clk/zynqmp/Kconfig"
-> >
-> > +# Kunit test cases
->=20
-> Minor nit: Elsewhere you use KUnit.
->=20
-> I wasn't going to say anything because so many people go with the
-> "Kunit" capitalization (and actually I kind of prefer it), but you
-> should at least be consistent within your patch.
+Quoting Wesley Cheng (2020-04-07 15:23:26)
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml b=
+/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+> new file mode 100644
+> index 0000000..7292e27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,usb-hs-7nm.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Synopsys 7nm High-Speed USB PHY
+> +
+> +maintainers:
+> +  - Wesley Cheng <wcheng@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm Hi-Speed 7nm USB PHY
 
-Ok I will go with Kunit. Thanks!
+High?
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,usb-snps-hs-7nm-phy
+> +      - qcom,sm8150-usb-hs-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: rpmhcc ref clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +
+> +  resets:
+> +    items:
+> +      - description: PHY core reset
+> +
+> +  vdda-pll-supply:
+> +    description: phandle to the regulator VDD supply node.
+> +
+> +  vdda18-supply:
+> +    description: phandle to the regulator 1.8V supply node.
+> +
+> +  vdda33-supply:
+> +    description: phandle to the regulator 3.3V supply node.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - vdda-pll-supply
+> +  - vdda18-supply
+> +  - vdda33-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+> +    usb_1_hsphy: phy@88e2000 {
+
+Is the label necessary? Best to drop it if not.
+
+> +        compatible =3D "qcom,sm8150-usb-hs-phy";
+> +        reg =3D <0 0x088e2000 0 0x400>;
+> +        status =3D "disabled";
+
+I think we can leave out status in examples.
+
+> +        #phy-cells =3D <0>;
+> +
+> +        clocks =3D <&rpmhcc RPMH_CXO_CLK>;
+> +        clock-names =3D "ref";
+> +
+> +        resets =3D <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> +    };
+> +...
+> \ No newline at end of file
+
+Why no newline at end of file?
+
+> --=20
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
