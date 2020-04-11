@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0A7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1C6C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50D42084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C509721556
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607569;
-	bh=G/fsmouMPqeGL+ojewb25nKuHbsV2AApGz5o0aVaTkg=;
+	s=default; t=1586607571;
+	bh=9VJsLzw6WQVDD3O/6pkEdJQA2rnG1UciyKn9E9/Lk50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEvB9AMjEnbWxOaYgP97Dz2B2usDH7lNWYGtbWhySRybx3Ra62WW6yl43RSTFqORr
-	 Sig9S50qJA6baV82eot0VR3pO9YApXM1+A1qCma5/RnrDHQnulxHgVT2F4BKzu/6A2
-	 IEQlGtWXWkDdzfQyE9ZPWH0KMol/s2vaf63HlvBs=
+	b=hjUSHViPB4P6Jj15Rwl1lvz0OMx1KQstAfPJk4zrUQQMg+9uSehWJoBPSGM2074lw
+	 9pm+5Yd2ipdGWyzcrP9kkgJDVJUEmlODfFBSCPQf+RQnhUIL/MMmYxBMkz2E2d4dmZ
+	 6iT6cYeT2YnjlT6+U723iZYlXsuZq+/JvalSaCMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgDKMT2 (ORCPT
+        id S1728563AbgDKMTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgDKMTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:25 -0400
+        id S1728534AbgDKMT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F9202084D;
-        Sat, 11 Apr 2020 12:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1AB220644;
+        Sat, 11 Apr 2020 12:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607565;
-        bh=G/fsmouMPqeGL+ojewb25nKuHbsV2AApGz5o0aVaTkg=;
+        s=default; t=1586607568;
+        bh=9VJsLzw6WQVDD3O/6pkEdJQA2rnG1UciyKn9E9/Lk50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=heQzgtpS8dR14ArPZsboeNfH/SX9e8XBn2vfLBrKrbIDtN8+2wJDScblRXBvsmNo+
-         UCcMtz2IiLJlYnIVeL27/cYBjmTOLGKMfEXVbDTEUtiEhsTkefVNXwzqYhN/Z+FwzQ
-         uPmThnLwwbFxAWsEq+DfYF+be3nOiiau+g4sI21k=
+        b=A0sArldAla1Btw4N4qWSC14qkF28FE2mm5EJ/btbL8bOzeRo09KnsVmJ+ZlipDrol
+         zrR7N8T7IicK0K7shM3Z5NzsuYSUUG0bWZvMR2klecsgKYuvudxQ6vn6HzxlQ2J06j
+         AAsNoQSckYwKyO/YPS+lBfKYwpZttxedO5JVeMkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 5.5 30/44] driver core: Reevaluate dev->links.need_for_probe as suppliers are added
-Date:   Sat, 11 Apr 2020 14:09:50 +0200
-Message-Id: <20200411115459.715810444@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        John Donnelly <john.p.donnelly@oracle.com>
+Subject: [PATCH 5.5 31/44] iommu/vt-d: Allow devices with RMRRs to use identity domain
+Date:   Sat, 11 Apr 2020 14:09:51 +0200
+Message-Id: <20200411115459.984976335@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -58,66 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-commit 1745d299af5b373abad08fa29bff0d31dc6aff21 upstream.
+commit 9235cb13d7d17baba0b3a9277381258361e95c16 upstream.
 
-A previous patch 03324507e66c ("driver core: Allow
-fwnode_operations.add_links to differentiate errors") forgot to update
-all call sites to fwnode_operations.add_links. This patch fixes that.
+Since commit ea2447f700cab ("intel-iommu: Prevent devices with
+RMRRs from being placed into SI Domain"), the Intel IOMMU driver
+doesn't allow any devices with RMRR locked to use the identity
+domain. This was added to to fix the issue where the RMRR info
+for devices being placed in and out of the identity domain gets
+lost. This identity maps all RMRRs when setting up the identity
+domain, so that devices with RMRRs could also use it.
 
-Legend:
--> Denotes RHS is an optional/potential supplier for LHS
-=> Denotes RHS is a mandatory supplier for LHS
-
-Example:
-
-Device A => Device X
-Device A -> Device Y
-
-Before this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is left marked as waiting for mandatory suppliers
-
-Step 4 is wrong since all mandatory suppliers of Device A have been
-added.
-
-After this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is no longer considered as waiting for mandatory suppliers
-
-This is the correct behavior.
-
-Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: John Donnelly <john.p.donnelly@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/core.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c |   15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -523,9 +523,13 @@ static void device_link_add_missing_supp
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -2767,10 +2767,8 @@ static int __init si_domain_init(int hw)
+ 	}
  
- 	mutex_lock(&wfs_lock);
- 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
--				 links.needs_suppliers)
--		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-+				 links.needs_suppliers) {
-+		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-+		if (!ret)
- 			list_del_init(&dev->links.needs_suppliers);
-+		else if (ret != -ENODEV)
-+			dev->links.need_for_probe = false;
-+	}
- 	mutex_unlock(&wfs_lock);
- }
+ 	/*
+-	 * Normally we use DMA domains for devices which have RMRRs. But we
+-	 * loose this requirement for graphic and usb devices. Identity map
+-	 * the RMRRs for graphic and USB devices so that they could use the
+-	 * si_domain.
++	 * Identity map the RMRRs so that devices with RMRRs could also use
++	 * the si_domain.
+ 	 */
+ 	for_each_rmrr_units(rmrr) {
+ 		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
+@@ -2778,9 +2776,6 @@ static int __init si_domain_init(int hw)
+ 			unsigned long long start = rmrr->base_address;
+ 			unsigned long long end = rmrr->end_address;
  
+-			if (device_is_rmrr_locked(dev))
+-				continue;
+-
+ 			if (WARN_ON(end < start ||
+ 				    end >> agaw_to_width(si_domain->agaw)))
+ 				continue;
+@@ -2919,9 +2914,6 @@ static int device_def_domain_type(struct
+ 	if (dev_is_pci(dev)) {
+ 		struct pci_dev *pdev = to_pci_dev(dev);
+ 
+-		if (device_is_rmrr_locked(dev))
+-			return IOMMU_DOMAIN_DMA;
+-
+ 		/*
+ 		 * Prevent any device marked as untrusted from getting
+ 		 * placed into the statically identity mapping domain.
+@@ -2959,9 +2951,6 @@ static int device_def_domain_type(struct
+ 				return IOMMU_DOMAIN_DMA;
+ 		} else if (pci_pcie_type(pdev) == PCI_EXP_TYPE_PCI_BRIDGE)
+ 			return IOMMU_DOMAIN_DMA;
+-	} else {
+-		if (device_has_rmrr(dev))
+-			return IOMMU_DOMAIN_DMA;
+ 	}
+ 
+ 	return (iommu_identity_mapping & IDENTMAP_ALL) ?
 
 
