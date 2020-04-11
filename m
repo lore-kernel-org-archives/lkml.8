@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434A2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D71C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141F820644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6C4206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608145;
-	bh=GDBkdFyQwNJy3s7hikLvymUoDDGW7i4bveuG7EFg1oA=;
+	s=default; t=1586608152;
+	bh=TPs/zfXxgu5n1ahCUyC/YvqGIa4uQRBW16J8baoC9fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3N1rtXOG7NBcK+9mog8COtSkTMLj8LS5w0RvzdA8pxK5fFTTdehjHQGaNIwn8LIW
-	 FMP5Ow8l2/kR4Mnd090DRtJSVj9g8KcNgHxppdBXVDLw0hooues/4O+1ZC37VbhhjB
-	 NwguNQppvTMNK8OO3OnIHGvxLMU+2Piqcj7kftGY=
+	b=QkLuynq/00AcvQ/gsZua4+iQhLHNjt+ipd9DEeVD4EVPdHaGW7eKGjjqfW0mjnM7L
+	 r7Ds8QDS/a3YSacuwiAZtqhR8mgV1Xfqu0ktMhf5+Ae+2NEwvD6ecGG7iifS/4Stmp
+	 GQc28wBM52y9BiqaLnDu9Q/z1hxk53pMeJYtC2MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgDKM3D (ORCPT
+        id S1727998AbgDKM3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:29:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgDKMLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:33 -0400
+        id S1726945AbgDKMLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4E2215A4;
-        Sat, 11 Apr 2020 12:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033AA214D8;
+        Sat, 11 Apr 2020 12:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607092;
-        bh=GDBkdFyQwNJy3s7hikLvymUoDDGW7i4bveuG7EFg1oA=;
+        s=default; t=1586607085;
+        bh=TPs/zfXxgu5n1ahCUyC/YvqGIa4uQRBW16J8baoC9fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2IGMiB6iPrXY87/YrTqVhpZ8W20afLAL8TzHXSTSoBEiu9DsbPoJQ0r6XXhDg35yh
-         UCt8r4Ogc89QOW0yNz7cRPrLyvkjb2bVea4n3BhWbBFc2zJW1AxMZ+WiUSQgx5flsq
-         wKjIcn8eXZ9LuXzETpmUsWP4xWLoN1CrR8F/X+4s=
+        b=RX/2iTbL6PzCNVjAcGHwARTN5Rr218HkQmOLh3FE6jan2h7j8IKpZYJqDtb/A+SQE
+         xQ21c01+yGKIBO6g9TEpU7mKc+a2lgrgE+jpib6h9qpwXbRfo5bG0OD+TlcHQ107PN
+         IT5dFzE+bLpJ8evKLL1dLBchTXl2atbbcNiLBJN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net
-Subject: [PATCH 4.4 18/29] slcan: Dont transmit uninitialized stack data in padding
-Date:   Sat, 11 Apr 2020 14:08:48 +0200
-Message-Id: <20200411115411.003822206@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH 4.4 15/29] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Sat, 11 Apr 2020 14:08:45 +0200
+Message-Id: <20200411115410.319586680@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -61,51 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
+commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
 
-struct can_frame contains some padding which is not explicitly zeroed in
-slc_bump. This uninitialized data will then be transmitted if the stack
-initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-This commit just zeroes the whole struct including the padding.
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: security@kernel.org
-Cc: wg@grandegger.com
-Cc: mkl@pengutronix.de
-Cc: davem@davemloft.net
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/can/slcan.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -147,7 +147,7 @@ static void slc_bump(struct slcan *sl)
- 	u32 tmpid;
- 	char *cmd = sl->rbuff;
+---
+ kernel/padata.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -640,8 +640,8 @@ int padata_set_cpumask(struct padata_ins
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
--	cf.can_id = 0;
-+	memset(&cf, 0, sizeof(cf));
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
  
- 	switch (*cmd) {
- 	case 'r':
-@@ -186,8 +186,6 @@ static void slc_bump(struct slcan *sl)
- 	else
- 		return;
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -659,8 +659,8 @@ int padata_set_cpumask(struct padata_ins
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
  
--	*(u64 *) (&cf.data) = 0; /* clear payload */
--
- 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
- 	if (!(cf.can_id & CAN_RTR_FLAG)) {
- 		for (i = 0; i < cf.can_dlc; i++) {
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
+ }
 
 
