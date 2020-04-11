@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32255C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8482C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED25420692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E23020644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607986;
-	bh=kAelhKrokBNwiSayjrVn6O8LFsp7iYmL/GbKG+EWX30=;
+	s=default; t=1586607993;
+	bh=ahnO/rxbB/H772jXNspVE7nYinZbfSmB9UHzxhNjUf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzzkUKApPSLbTXxqOT08Dvg+kV+YgGWvxlVxsU/B5r95n38vQD99TANrq7E8kPpFj
-	 DGl/+jl45o4XWFvcvumyjoQR1DuxAsQ7r2v+KLp2e05moez0uMDufLDqPTogxYCWtO
-	 NRAeNuyGfWYYGjDvnwxvcDp140lMc0pf1km4AtxU=
+	b=E9RO0ws6rxYOSuFafbvUByIdKiwa1qTZHnIg+ZSzuOtGuDyM9Hmb5TbrEszgsJc7w
+	 3YVlBo+OIYSAitYxzVchaUuVY3fmQXk4Xs6dHAWAXjep378JQ9akd4nqP7htKje8WG
+	 RB7U/E2dZLNMu9ZcmgYuFOHdLV8um6XMVMAss8c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgDKM0Y (ORCPT
+        id S1728237AbgDKM0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbgDKMP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:29 -0400
+        id S1728096AbgDKMPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 723432084D;
-        Sat, 11 Apr 2020 12:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35600214D8;
+        Sat, 11 Apr 2020 12:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607329;
-        bh=kAelhKrokBNwiSayjrVn6O8LFsp7iYmL/GbKG+EWX30=;
+        s=default; t=1586607322;
+        bh=ahnO/rxbB/H772jXNspVE7nYinZbfSmB9UHzxhNjUf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1opqegF4PkCQBbd1SJsyltKAlgKRrRqbqmqbxEWiJEkimvQ3EbQlIB2BWU4cOUv18
-         RBORzq8NALWCchjdBfdI97g5WdPjXahDyVC436yYMxP1XZT09gn+4K6X0eiG9l6SG/
-         sLODub0T+jn1Y9O8YqOd1PhG/SOT2iEqz0dmsAbc=
+        b=dMqVSiQ8TJmuRxJ1S5eXGuOBmgTMW24XyqlCEvNHZ8C5UxTazyg2NIcgC7xNNgQIi
+         Ydw0jixeB0Z7X+lLsu2EJCW8d8ws3xQBl+yredA0l9RkMcMxO7SZYI6SULNLDy//Ve
+         n4vZFbVEkIsvEZBm6qn7AfKq+V166AtivVgHGVYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 30/54] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-Date:   Sat, 11 Apr 2020 14:09:12 +0200
-Message-Id: <20200411115511.497493490@linuxfoundation.org>
+        stable@vger.kernel.org, Entropy Moe <3ntr0py1337@gmail.com>,
+        syzbot+b055b1a6b2b958707a21@syzkaller.appspotmail.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 27/54] mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
+Date:   Sat, 11 Apr 2020 14:09:09 +0200
+Message-Id: <20200411115511.222614451@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -60,48 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
+commit aa9f7d5172fac9bf1f09e678c35e287a40a7b7dd upstream.
 
-When the bcm_sf2 was converted into a proper platform device driver and
-used the new dsa_register_switch() interface, we would still be parsing
-the legacy DSA node that contained all the port information since the
-platform firmware has intentionally maintained backward and forward
-compatibility to client programs. Ensure that we do parse the correct
-node, which is "ports" per the revised DSA binding.
+Using an empty (malformed) nodelist that is not caught during mount option
+parsing leads to a stack-out-of-bounds access.
 
-Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The option string that was used was: "mpol=prefer:,".  However,
+MPOL_PREFERRED requires a single node number, which is not being provided
+here.
+
+Add a check that 'nodes' is not empty after parsing for MPOL_PREFERRED's
+nodeid.
+
+Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+Reported-by: Entropy Moe <3ntr0py1337@gmail.com>
+Reported-by: syzbot+b055b1a6b2b958707a21@syzkaller.appspotmail.com
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: syzbot+b055b1a6b2b958707a21@syzkaller.appspotmail.com
+Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+Link: http://lkml.kernel.org/r/89526377-7eb6-b662-e1d8-4430928abde9@infradead.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/bcm_sf2.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1014,6 +1014,7 @@ static int bcm_sf2_sw_probe(struct platf
- 	const struct bcm_sf2_of_data *data;
- 	struct b53_platform_data *pdata;
- 	struct dsa_switch_ops *ops;
-+	struct device_node *ports;
- 	struct bcm_sf2_priv *priv;
- 	struct b53_device *dev;
- 	struct dsa_switch *ds;
-@@ -1077,7 +1078,11 @@ static int bcm_sf2_sw_probe(struct platf
- 	set_bit(0, priv->cfp.used);
- 	set_bit(0, priv->cfp.unique);
- 
--	bcm_sf2_identify_ports(priv, dn->child);
-+	ports = of_find_node_by_name(dn, "ports");
-+	if (ports) {
-+		bcm_sf2_identify_ports(priv, ports);
-+		of_node_put(ports);
-+	}
- 
- 	priv->irq0 = irq_of_parse_and_map(dn, 0);
- 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+---
+ mm/mempolicy.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2832,7 +2832,9 @@ int mpol_parse_str(char *str, struct mem
+ 	switch (mode) {
+ 	case MPOL_PREFERRED:
+ 		/*
+-		 * Insist on a nodelist of one node only
++		 * Insist on a nodelist of one node only, although later
++		 * we use first_node(nodes) to grab a single node, so here
++		 * nodelist (or nodes) cannot be empty.
+ 		 */
+ 		if (nodelist) {
+ 			char *rest = nodelist;
+@@ -2840,6 +2842,8 @@ int mpol_parse_str(char *str, struct mem
+ 				rest++;
+ 			if (*rest)
+ 				goto out;
++			if (nodes_empty(nodes))
++				goto out;
+ 		}
+ 		break;
+ 	case MPOL_INTERLEAVE:
 
 
