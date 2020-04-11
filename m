@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A0DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBBCC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCC5206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A8420787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GW+/vmRN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UNiShD7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgDKB3e (ORCPT
+        id S1726819AbgDKB3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 21:29:34 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52974 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgDKB3e (ORCPT
+        Fri, 10 Apr 2020 21:29:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44219 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgDKB3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 21:29:34 -0400
-Received: by mail-pj1-f67.google.com with SMTP id ng8so1397361pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 18:29:33 -0700 (PDT)
+        Fri, 10 Apr 2020 21:29:52 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so1206013plr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 18:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=jjYLKh9SotG0YtERlH9bytRNUj0Elct+prFzmtVxREo=;
-        b=GW+/vmRNntb92CWhFIBWUecdvoGXMm6YrEN1iqYZtDMGkJ49tVRIB1slxM+BJeyVfV
-         +xuGD965x3wSdTf+3t8yIRIWQe3Wsx0WP/hfBfoovLdSJFm6X/xCj+wfpk9dlz2XSI/Z
-         +KB++MoNQX1cHGbkASro0MgITL/J5PNihPiRrK+fJgAlSxgmJk16IhqYi4nHgVhfqaND
-         EeRVTXjh9e7w5Q7RpmQDotl1z34P05+8M6dQ2u6FqPre99509jKhOb8YzP0HgholBBXI
-         Jx16vnM0on7TZxW9md5IxS3gUv8wX/HOmRRQ97jMzbF5voNLZL1uC0IPVtsyk7xjKT13
-         /A+Q==
+        bh=oViI8SklfCpZEbbYlFvgdpzM6/kZH9ALRRalOuYsvgM=;
+        b=UNiShD7wlrWrXzBNeCBUu2DcSXJtHq7Z0Y8/MbsvAvNfpVWxNN7VvKLAuR31RGhV31
+         LEOiAQi3VF/qJssY+mxdRur0UBNn39b9pLsPV87xF1fdZAvudU3b0CZ2rnInopThwfyR
+         0XyuuwJblsOtu+P+1AbiEW7/c1NwHvY+NZM2Yfy140kEFWTiqkSKfSbdXm9/RHxRv2dT
+         aSrwEV2ox1H3Oz/URa8lu4yUXLj3AURT7dyuFqOEpYrfMklx44SQAiIFR6yGKCAs06K0
+         aC2AR5lgaz9SoZn9OzR3ZhLbqpuDjsRS1k5vUFBhYBtLPbOJ3BqPH9S5MlQeBTE1ux+9
+         OfeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jjYLKh9SotG0YtERlH9bytRNUj0Elct+prFzmtVxREo=;
-        b=uk2zdvOaCurSat6qVK/4OssTSXQ7hBEhqat/Oh7KtuM15svqr/XajUnruGmpbLoZPU
-         Iq0Nk0f663TKvdc+rm8S2GfaG3K5bDEYbM2YuuRZfQZO0oBAV1GFE9BOUErg8uorYq2S
-         jF6+6Zukast7iUakB17i8yKvIf7ogN9JBgd0YYfZHB2EJrVoCaf8pSXWdJwGawafZMUl
-         ynfEjq304yQ5zDSarwAXjYrThgvsid0Jf//2V8jcsmCflHUqxG/rglqphjtloQVDpLCg
-         AEH2D3ODKkLyPR2N11cIWqOuk0nLhiC4Ky6ob0zSpBNYm/BJgluzyd9iDsvjBYxtj8bj
-         LxZA==
-X-Gm-Message-State: AGi0PuYGHbKZ1ShRWLkwYhj0oy18ioX0C7Gp01ywslu3faFSLgMXmRr2
-        vhItd/j2lbSpXpS9dh0wmhPxcw==
-X-Google-Smtp-Source: APiQypIQLhZvVNf+E+zRbulkesaX5wgMjA4fNlnHIAiRrCty7EwiCQPbiGtO00aszYz0p9cR8hTNBg==
-X-Received: by 2002:a17:902:8ec7:: with SMTP id x7mr7155503plo.3.1586568573216;
-        Fri, 10 Apr 2020 18:29:33 -0700 (PDT)
+        bh=oViI8SklfCpZEbbYlFvgdpzM6/kZH9ALRRalOuYsvgM=;
+        b=oTXMxVw7jF28aMPBBsiL+Xv9y086lEMNnLWSQMR+y53fl+OXIsQwYRH1XC3tfY7DJ1
+         dUbsYaGrlZmV4XB4Ih/WZqt8wgRHjOck/deGqwwxFw/ktPBQWTnJ+928LvVS+E/wLE/A
+         mVffcWgBSjuM4qy4rqJfZKHeYhgeG2YKxGeB6ekw376weUuanPDR68nnSCJgX0MWmX9i
+         2WnirHBVeQqVhUGwaq/7RoIwKVNQqIBUy04fvWB9/s+3OgIIK10sneEWbbX3QB1lVxfw
+         lz2WqUTM2JGjQ0wasd52bVSsIqIssqnt+76Qfh+5IiazMPVkgMYthg7RF0/WLP6fTt8T
+         H1iw==
+X-Gm-Message-State: AGi0PuYpaR4QjKDrFOOC6FIY4AOoZNL66uSYO12rMKQwH1u9DWY4eOcb
+        rYWFaluz1yq84bkCD7QL7XLL3A==
+X-Google-Smtp-Source: APiQypIXEXPs9ksy3YjzBn7ixpo5mSMrugBfNzjkDJTpNfz4i3ihrt5TAUeFr8YSL7/BbVFVdh0/LA==
+X-Received: by 2002:a17:90a:6c22:: with SMTP id x31mr8469537pjj.124.1586568591685;
+        Fri, 10 Apr 2020 18:29:51 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d84sm2859696pfd.197.2020.04.10.18.29.31
+        by smtp.gmail.com with ESMTPSA id s62sm2575561pgb.94.2020.04.10.18.29.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 18:29:32 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 18:29:42 -0700
+        Fri, 10 Apr 2020 18:29:51 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 18:30:01 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Clement Leger <cleger@kalray.eu>
 Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
@@ -66,14 +66,15 @@ Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
         linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] remoteproc: add rproc_coredump_set_elf_info
-Message-ID: <20200411012942.GF576963@builder.lan>
+Subject: Re: [PATCH 2/2] remoteproc: use rproc_coredump_set_elf_info in
+ drivers
+Message-ID: <20200411013001.GG576963@builder.lan>
 References: <20200410102433.2672-1-cleger@kalray.eu>
- <20200410102433.2672-2-cleger@kalray.eu>
+ <20200410102433.2672-3-cleger@kalray.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200410102433.2672-2-cleger@kalray.eu>
+In-Reply-To: <20200410102433.2672-3-cleger@kalray.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,117 +82,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri 10 Apr 03:24 PDT 2020, Clement Leger wrote:
 
-> This function allows drivers to correctly setup the coredump output
-> elf information.
+> Modify drivers which are using remoteproc coredump functionnality to use
+> rproc_coredump_set_elf_info in order to create correct elf coredump
+> format.
 > 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+> Signed-off-by: Clement Leger <cleger@kalray.eu>
 > ---
->  drivers/remoteproc/remoteproc_core.c       | 32 ++++++++++++++++++++--
->  drivers/remoteproc/remoteproc_elf_loader.c |  3 --
->  include/linux/remoteproc.h                 |  2 ++
->  3 files changed, 32 insertions(+), 5 deletions(-)
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 1 +
+>  drivers/remoteproc/qcom_q6v5_mss.c  | 3 +++
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 1 +
+>  drivers/remoteproc/qcom_wcnss.c     | 1 +
+>  drivers/remoteproc/stm32_rproc.c    | 1 +
+>  5 files changed, 7 insertions(+)
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index a9ac1d01e09b..382443bab583 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1562,6 +1562,28 @@ int rproc_coredump_add_custom_segment(struct rproc *rproc,
->  }
->  EXPORT_SYMBOL(rproc_coredump_add_custom_segment);
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index 2b01f2282062..8c3bd0954a13 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -423,6 +423,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+>  		return -ENOMEM;
+>  	}
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
 >  
-> +/**
-> + * rproc_coredump_set_elf_info() - set coredump elf information
-> + * @rproc:	handle of a remote processor
-> + * @class:	elf class for coredump elf file
-> + * @size:	elf machine for coredump elf file
-> + *
-> + * Set elf information which will be used for coredump elf file.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 machine)
-> +{
-> +	if (class != ELFCLASS64 && class != ELFCLASS32)
-> +		return -EINVAL;
-> +
-> +	rproc->elf_class = class;
-> +	rproc->elf_machine = machine;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(rproc_coredump_set_elf_info);
-> +
->  /**
->   * rproc_coredump() - perform coredump
->   * @rproc:	rproc handle
-> @@ -1584,6 +1606,11 @@ static void rproc_coredump(struct rproc *rproc)
->  	if (list_empty(&rproc->dump_segments))
->  		return;
->  
-> +	if (class == ELFCLASSNONE) {
-> +		dev_err(&rproc->dev, "Elf class is not set\n");
-> +		return;
-> +	}
-> +
->  	data_size = elf_size_of_hdr(class);
->  	list_for_each_entry(segment, &rproc->dump_segments, node) {
->  		data_size += elf_size_of_phdr(class) + segment->size;
-> @@ -1602,7 +1629,7 @@ static void rproc_coredump(struct rproc *rproc)
->  	elf_hdr_init_ident(ehdr, class);
->  
->  	elf_hdr_set_e_type(class, ehdr, ET_CORE);
-> -	elf_hdr_set_e_machine(class, ehdr, EM_NONE);
-> +	elf_hdr_set_e_machine(class, ehdr, rproc->elf_machine);
->  	elf_hdr_set_e_version(class, ehdr, EV_CURRENT);
->  	elf_hdr_set_e_entry(class, ehdr, rproc->bootaddr);
->  	elf_hdr_set_e_phoff(class, ehdr, elf_size_of_hdr(class));
-> @@ -2043,7 +2070,8 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  	rproc->name = name;
->  	rproc->priv = &rproc[1];
->  	rproc->auto_boot = true;
-> -	rproc->elf_class = ELFCLASS32;
-> +	rproc->elf_class = ELFCLASSNONE;
-> +	rproc->elf_machine = EM_NONE;
->  
->  	device_initialize(&rproc->dev);
->  	rproc->dev.parent = dev;
-> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-> index 16e2c496fd45..4869fb7d8fe4 100644
-> --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> @@ -248,9 +248,6 @@ int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
->  			memset(ptr + filesz, 0, memsz - filesz);
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 03ffc6db4c68..5a7ff1092362 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -1355,6 +1355,8 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
+>  		return ret;
 >  	}
 >  
-> -	if (ret == 0)
-> -		rproc->elf_class = class;
-> -
->  	return ret;
->  }
->  EXPORT_SYMBOL(rproc_elf_load_segments);
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index ed127b2d35ca..d67eb5a40476 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -515,6 +515,7 @@ struct rproc {
->  	struct list_head dump_segments;
->  	int nb_vdev;
->  	u8 elf_class;
-> +	u16 elf_machine;
->  };
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+> +
+>  	ehdr = (struct elf32_hdr *)fw->data;
+>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+>  	qproc->dump_complete_mask = 0;
+> @@ -1632,6 +1634,7 @@ static int q6v5_probe(struct platform_device *pdev)
+>  	}
 >  
->  /**
-> @@ -619,6 +620,7 @@ int rproc_coredump_add_custom_segment(struct rproc *rproc,
->  						     struct rproc_dump_segment *segment,
->  						     void *dest),
->  				      void *priv);
-> +int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 machine);
+>  	rproc->auto_boot = false;
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
 >  
->  static inline struct rproc_vdev *vdev_to_rvdev(struct virtio_device *vdev)
->  {
+>  	qproc = (struct q6v5 *)rproc->priv;
+>  	qproc->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index a41860d2243a..991f57e8e55b 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -390,6 +390,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	rproc->auto_boot = desc->auto_boot;
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+> index 0c7afd038f0d..5d65e1a9329a 100644
+> --- a/drivers/remoteproc/qcom_wcnss.c
+> +++ b/drivers/remoteproc/qcom_wcnss.c
+> @@ -480,6 +480,7 @@ static int wcnss_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+>  		return -ENOMEM;
+>  	}
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  
+>  	wcnss = (struct qcom_wcnss *)rproc->priv;
+>  	wcnss->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> index 6a66dbf2df40..0f9d02ca4f5a 100644
+> --- a/drivers/remoteproc/stm32_rproc.c
+> +++ b/drivers/remoteproc/stm32_rproc.c
+> @@ -625,6 +625,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>  	if (!rproc)
+>  		return -ENOMEM;
+>  
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  	rproc->has_iommu = false;
+>  	ddata = rproc->priv;
+>  	ddata->workqueue = create_workqueue(dev_name(dev));
 > -- 
 > 2.17.1
 > 
