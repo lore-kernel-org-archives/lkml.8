@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4138C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF07AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914A020692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A5720787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607553;
-	bh=IsHu1Q2jQ/y3A3ru+z2NHMuipfGeub4vJR0w79s8IMI=;
+	s=default; t=1586607555;
+	bh=FZXFlRXzKlaa2+RbF7IY7IsWEhyI/PtTcq1Hj+DqqiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=si6jIW9dEA4itDPB74e8M0RQ0G9BrrZ0uNWNcHv32+A5LDUql0LeuQLARsH8Dl7lK
-	 Zd5hC9nSI6YfXWRicutbIEOmll9XrEtz12nA0E6KIhd7TUeHiJki0Lfy5T8JGxmOZh
-	 5rz9IJGEwn6YKN3oJywrUuivbiyAM0jDyqEb1WdA=
+	b=FYt+ha6BnW0UTQaQwzBQLI/Nmmnj0rqwKvMvttpTKhs7gYC3sw3rEv2BucLEupJag
+	 7GymWNuLydSB8VzrOwT2BVPO3u1UhhB9/rT6uNdsWGIJbRihnlXC50EFBu6WdpHYb3
+	 f9Md16XvBpo9+bGs7+CmWsQ+VwFqu6tossQcR+r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgDKMTL (ORCPT
+        id S1727876AbgDKMTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54346 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:19:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgDKMTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:07 -0400
+        id S1728742AbgDKMTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E0FD20644;
-        Sat, 11 Apr 2020 12:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA63A20644;
+        Sat, 11 Apr 2020 12:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607546;
-        bh=IsHu1Q2jQ/y3A3ru+z2NHMuipfGeub4vJR0w79s8IMI=;
+        s=default; t=1586607551;
+        bh=FZXFlRXzKlaa2+RbF7IY7IsWEhyI/PtTcq1Hj+DqqiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z/4DX0WUTypUJGtanPI7uHPbMrzRIen2lzG1JazHHJuwGbp7JtgTOBlin+r6V6alC
-         J++8fUeWKFsGhWE/uMy3FCiSnUf/bREtVnPsqP9yGbiK1AXU+Naq2ESgn/HlY6wShn
-         u1oFMDqgtQ0ZdSKvZW1RS8oyj9QrgMqPAS2ThVk4=
+        b=JZWUCXl6QUv7z7dk7fzG9TtaorJJnYcGrwegTOxUDuA9iWA2XUztJ6bM4uBhLu1C+
+         0IK33nqIMrlC2Cz46nUoB0mfI54OBoipVb5o9PjEeCdVoqBbB76h2yyJ3h79EaCw+i
+         GGhT/NKuj6q7mRUXGa4EbdW/WBynT2R3VQMjI5rM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 05/44] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-Date:   Sat, 11 Apr 2020 14:09:25 +0200
-Message-Id: <20200411115457.320502993@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 24/44] RDMA/cma: Teach lockdep about the order of rtnl and lock
+Date:   Sat, 11 Apr 2020 14:09:44 +0200
+Message-Id: <20200411115459.203079812@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -62,41 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuanhong Guo <gch981213@gmail.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
+commit 32ac9e4399b12d3e54d312a0e0e30ed5cd19bd4e upstream.
 
-The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-and a phy-handle isn't always available.
-Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-connected to switch port 5 and setup mt7530 according to phy address
-of 2nd gmac node, causing null pointer dereferencing when phy-handle
-isn't defined in dts.
-This commit fix this setup code by checking return value of
-of_parse_phandle before using it.
+This lock ordering only happens when bonding is enabled and a certain
+bonding related event fires. However, since it can happen this is a global
+restriction on lock ordering.
 
-Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: René van Dorst <opensource@vdorst.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Teach lockdep about the order directly and unconditionally so bugs here
+are found quickly.
+
+See https://syzkaller.appspot.com/bug?extid=55de90ab5f44172b0c90
+
+Link: https://lore.kernel.org/r/20200227203651.GA27185@ziepe.ca
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/mt7530.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1355,6 +1355,9 @@ mt7530_setup(struct dsa_switch *ds)
- 				continue;
+---
+ drivers/infiniband/core/cma.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -4746,6 +4746,19 @@ static int __init cma_init(void)
+ {
+ 	int ret;
  
- 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
-+			if (!phy_node)
-+				continue;
++	/*
++	 * There is a rare lock ordering dependency in cma_netdev_callback()
++	 * that only happens when bonding is enabled. Teach lockdep that rtnl
++	 * must never be nested under lock so it can find these without having
++	 * to test with bonding.
++	 */
++	if (IS_ENABLED(CONFIG_LOCKDEP)) {
++		rtnl_lock();
++		mutex_lock(&lock);
++		mutex_unlock(&lock);
++		rtnl_unlock();
++	}
 +
- 			if (phy_node->parent == priv->dev->of_node->parent) {
- 				ret = of_get_phy_mode(mac_np, &interface);
- 				if (ret && ret != -ENODEV)
+ 	cma_wq = alloc_ordered_workqueue("rdma_cm", WQ_MEM_RECLAIM);
+ 	if (!cma_wq)
+ 		return -ENOMEM;
 
 
