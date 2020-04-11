@@ -2,132 +2,131 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BB6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74997C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477D720769
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA12206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586647287;
+	bh=GvIy7VMOBVjJCLIBOncPcXpcMFRxp+6HGu4EVePeFhw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=g/0C6Msk6YEQrW8yE84tpkUxB2nXsBQzLD7KKM+MCy5JJWEyUkkzy2N+6c7LKzZjj
+	 usT4pg4K579PojgNQi9UTlR/aybTyYMfr93M5WicXadvrVBHwptiliGXkT/8Xmzi5+
+	 A2GTI6nWtUOFbI1yP0oj9lnub6OeBnvJxK59A1BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbgDKXVX (ORCPT
+        id S1730862AbgDKXVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:21:23 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40013 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730168AbgDKXVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:21:20 -0400
-Received: by mail-pj1-f68.google.com with SMTP id kx8so2257819pjb.5;
-        Sat, 11 Apr 2020 16:21:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=OnEdTEw0ywKO3uB4jy60eHyGZ2CxASOjH3gei6SJ2NA=;
-        b=CLW4WlEqBrfZv5Svthez2gKoMv7rr2oU91bLRK+SFKK+PvJ4f+a8sB5XvTvZRk4v4W
-         HdqChL8Qg9UcHZJdy0C9zEQB7xAtzPtev97WkZM5f5yqhrf3y4YEa9Hvvw4g4c58gHDK
-         MQzx2/GzjGogdL6HNXAlu3qBL8rjcoPK5exFUZc/KCH91kgrKFKjIgGNIFSyxFcT9OQ5
-         NSX1pbN0jZXaCcNnUr7Y3IqsNOfuzvPX6ZUN5I9jCpSuK3JJNIHD8df4SprwzJrFy1cM
-         NGyKHK3aLwwu2r4iS2swRPmlOgmSooY6cCvuXw596REi2pU1mZR3lGH1aZVy7ibrWDg1
-         PGZw==
-X-Gm-Message-State: AGi0PuYeEbcplONJeWF7FWttgub8C+sO7IgBH5QnjScMhHDjyhMxnpgB
-        aa9GLRDWEqBxawo7Eqd2E6s=
-X-Google-Smtp-Source: APiQypLHqz4km5FIo2c058vEcQtuJ+/nXQ2X5Otv+2Z17DtjYXioxzZtjN80ODAcjm06XLNBW3C4EQ==
-X-Received: by 2002:a17:902:ba14:: with SMTP id j20mr10464925pls.69.1586647279530;
-        Sat, 11 Apr 2020 16:21:19 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:c9fa:49a8:1701:9c75? ([2601:647:4000:d7:c9fa:49a8:1701:9c75])
-        by smtp.gmail.com with ESMTPSA id e7sm5117580pfj.97.2020.04.11.16.21.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 16:21:18 -0700 (PDT)
-Subject: Re: [RFC v2 5/5] block: revert back to synchronous request_queue
- removal
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
-        Ming Lei <ming.lei@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, yu kuai <yukuai3@huawei.com>,
-        linux-block@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200409214530.2413-1-mcgrof@kernel.org>
- <20200409214530.2413-6-mcgrof@kernel.org>
- <161e938d-929b-1fdb-ba77-56b839c14b5b@acm.org>
- <20200410143412.GK11244@42.do-not-panic.com>
- <CAB=NE6VfQH3duMGneJnzEnXzAJ1TDYn26WhQCy8X1Mb_T6esgQ@mail.gmail.com>
- <CAB=NE6XfdgB82ncZUkLpdYvDDdyVvVUd8nUmRCb8LbOQ213QoA@mail.gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <64c9212d-aaa3-d172-0ab9-0fc0e25a019a@acm.org>
-Date:   Sat, 11 Apr 2020 16:21:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Apr 2020 19:21:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730435AbgDKXN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:28 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 178BA20708;
+        Sat, 11 Apr 2020 23:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646808;
+        bh=GvIy7VMOBVjJCLIBOncPcXpcMFRxp+6HGu4EVePeFhw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KY3E4MXuXrGwblTSDU90EWh0aeuN0PDUVHNbFnsQNk/9DWaOgFCAFkktqOy30mSv9
+         XFB5b1tQPIDq1RuFiOjqkZt//ODrZa1ytS8IXNWkCSouLcZBGam2BklFSf8jEtQHft
+         qtzyDO0rXCe8oLXViu0Gp62WtILezhbUGZwnKYqw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/37] net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
+Date:   Sat, 11 Apr 2020 19:12:50 -0400
+Message-Id: <20200411231327.26550-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAB=NE6XfdgB82ncZUkLpdYvDDdyVvVUd8nUmRCb8LbOQ213QoA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-10 14:27, Luis Chamberlain wrote:
-> On Fri, Apr 10, 2020 at 2:50 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->>
->> On Fri, Apr 10, 2020 at 8:34 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
->>> On Thu, Apr 09, 2020 at 08:12:21PM -0700, Bart Van Assche wrote:
->>>> Please add a might_sleep() call in blk_put_queue() since with this patch
->>>> applied it is no longer allowed to call blk_put_queue() from atomic context.
->>>
->>> Sure thing.
->>
->> On second though, I don't think blk_put_queue() would be the right
->> place for might_sleep(), given we really only care about the *last*
->> refcount decrement to 0. So I'll move it to blk_release_queue().
->> Granted, at that point we are too late, and we'd get a splat about
->> this issue *iff* we really sleep. So yeah, I do suppose that forcing
->> this check there still makes sense.
-> 
-> I'll add might_sleep() to both blk_release_queue() *and* blk_cleanup_queue().
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-Since there is already an unconditional mutex_lock() call in
-blk_cleanup_queue(), do we really need to add a might_sleep() call in
-blk_cleanup_queue()?
+[ Upstream commit 63b903dfebdea92aa92ad337d8451a6fbfeabf9d ]
 
-Thanks,
+As far as I understood from the Kconfig help text, this build rule is
+used to rebuild the driver firmware, which runs on an old m68k-based
+chip. So, you need m68k tools for the firmware rebuild.
 
-Bart.
+wanxl.c is a PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+So, you cannot enable CONFIG_WANXL_BUILD_FIRMWARE for ARCH=m68k. In other
+words, ifeq ($(ARCH),m68k) is false here.
+
+I am keeping the dead code for now, but rebuilding the firmware requires
+'as68k' and 'ld68k', which I do not have in hand.
+
+Instead, the kernel.org m68k GCC [1] successfully built it.
+
+Allowing a user to pass in CROSS_COMPILE_M68K= is handier.
+
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wan/Kconfig  |  2 +-
+ drivers/net/wan/Makefile | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index 4e9fe75d70675..21190dfbabb16 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -199,7 +199,7 @@ config WANXL_BUILD_FIRMWARE
+ 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
+ 	help
+ 	  Allows you to rebuild firmware run by the QUICC processor.
+-	  It requires as68k, ld68k and hexdump programs.
++	  It requires m68k toolchains and hexdump programs.
+ 
+ 	  You should never need this option, say N.
+ 
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 9532e69fda878..c21b7345b50b1 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -41,17 +41,17 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+ 
+ ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
+ ifeq ($(ARCH),m68k)
+-  AS68K = $(AS)
+-  LD68K = $(LD)
++  M68KAS = $(AS)
++  M68KLD = $(LD)
+ else
+-  AS68K = as68k
+-  LD68K = ld68k
++  M68KAS = $(CROSS_COMPILE_M68K)as
++  M68KLD = $(CROSS_COMPILE_M68K)ld
+ endif
+ 
+ quiet_cmd_build_wanxlfw = BLD FW  $@
+       cmd_build_wanxlfw = \
+-	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
+-	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
++	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
++	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
+ 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
+ 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
+ 
+-- 
+2.20.1
+
