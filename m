@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F522C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8CDC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10067214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BD720CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646350;
-	bh=tiG4R9B0XK469qNjh5qexrTHfyt8hJ7k2PoELGRgtgo=;
+	s=default; t=1586646352;
+	bh=dYxTGFLO18XEoHMGcD97ucFQmH0G9hApwYyAukMl4HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PjckHWA979NBniL2A+ctfXMgtc/5cav/oEjOmdL3eLmTRyJzrx5wdOyBOypkuu8yZ
-	 HlBlSUlVj4Cqs8l5Qq0uSx51NjaYwV3SbPFKoiw5k/Km+LsGnVE857yzLjUftTGvfJ
-	 PskQy41yTXFLpG4nYfld0ydEXxY1jQCeb0iOGnFY=
+	b=EaV/iBjd5BzyC9XhQu1hjowLJmmrRz519/fwXxXKmznHwmPeSSrhgqvhV55WAP6QV
+	 AB4pKt8Kd/aMXgm2yWZnX7hKJ2cJjRocIL7zw1IOS2Nzf6BK++TQiABD0o6rjOgrwm
+	 qQ9gX9anYamGX2219x8+fPSynNYRriMy8ts3Qd7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgDKXFr (ORCPT
+        id S1728122AbgDKXFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40300 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgDKXFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:46 -0400
+        id S1728085AbgDKXFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28B4F20708;
-        Sat, 11 Apr 2020 23:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA6F6215A4;
+        Sat, 11 Apr 2020 23:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646346;
-        bh=tiG4R9B0XK469qNjh5qexrTHfyt8hJ7k2PoELGRgtgo=;
+        s=default; t=1586646348;
+        bh=dYxTGFLO18XEoHMGcD97ucFQmH0G9hApwYyAukMl4HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFRzsD59bDUAR2iefkXxHNDkbpMZ/8yQSLkAKaEfdFdgAFTxsHsvOuI52NkwRfUDz
-         5QqCFICq03BHV/NcJjEciuVEYNub34r5GQuMNJ/NP2BmFwy4W9E1csR4aeJ8NJMrD0
-         J1joiYKWl+GWLvLAOZTdRFOItj78ToCpcFmfWxGM=
+        b=k8X1ZrRIvT1vHL4B8GEM4qpLjtJ6w4V8wtQ4zRENaFXxwjRsPlGq1PHYzR6FO9jax
+         TKizTUAtjkfJVVED9aVstkP6XJTRe9Vw8l7UqEyzUxzMeV+rCrq9gvYkHeNvCD0B7l
+         belEGjj8S/0YgIVcCHdzgHkVNP+mr710YntQGYu4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 094/149] RDMA/siw: Fix passive connection establishment
-Date:   Sat, 11 Apr 2020 19:02:51 -0400
-Message-Id: <20200411230347.22371-94-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 096/149] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat, 11 Apr 2020 19:02:53 -0400
+Message-Id: <20200411230347.22371-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,203 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 33fb27fd54465c74cbffba6315b2f043e90cec4c ]
+[ Upstream commit 71811cac8532b2387b3414f7cd8fe9e497482864 ]
 
-Holding the rtnl_lock while iterating a devices interface address list
-potentially causes deadlocks with the cma_netdev_callback. While this was
-implemented to limit the scope of a wildcard listen to addresses of the
-current device only, a better solution limits the scope of the socket to
-the device. This completely avoiding locking, and also results in
-significant code simplification.
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-Fixes: c421651fa229 ("RDMA/siw: Add missing rtnl_lock around access to ifa")
-Link: https://lore.kernel.org/r/20200228173534.26815-1-bmt@zurich.ibm.com
-Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_cm.c | 137 +++++++----------------------
- 1 file changed, 31 insertions(+), 106 deletions(-)
+ net/bluetooth/rfcomm/tty.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
-index c5651a96b1964..559e5fd3bad8b 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1769,14 +1769,23 @@ int siw_reject(struct iw_cm_id *id, const void *pdata, u8 pd_len)
- 	return 0;
- }
- 
--static int siw_listen_address(struct iw_cm_id *id, int backlog,
--			      struct sockaddr *laddr, int addr_family)
-+/*
-+ * siw_create_listen - Create resources for a listener's IWCM ID @id
-+ *
-+ * Starts listen on the socket address id->local_addr.
-+ *
-+ */
-+int siw_create_listen(struct iw_cm_id *id, int backlog)
- {
- 	struct socket *s;
- 	struct siw_cep *cep = NULL;
- 	struct siw_device *sdev = to_siw_dev(id->device);
-+	int addr_family = id->local_addr.ss_family;
- 	int rv = 0, s_val;
- 
-+	if (addr_family != AF_INET && addr_family != AF_INET6)
-+		return -EAFNOSUPPORT;
-+
- 	rv = sock_create(addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (rv < 0)
- 		return rv;
-@@ -1791,9 +1800,25 @@ static int siw_listen_address(struct iw_cm_id *id, int backlog,
- 		siw_dbg(id->device, "setsockopt error: %d\n", rv);
- 		goto error;
- 	}
--	rv = s->ops->bind(s, laddr, addr_family == AF_INET ?
--				    sizeof(struct sockaddr_in) :
--				    sizeof(struct sockaddr_in6));
-+	if (addr_family == AF_INET) {
-+		struct sockaddr_in *laddr = &to_sockaddr_in(id->local_addr);
-+
-+		/* For wildcard addr, limit binding to current device only */
-+		if (ipv4_is_zeronet(laddr->sin_addr.s_addr))
-+			s->sk->sk_bound_dev_if = sdev->netdev->ifindex;
-+
-+		rv = s->ops->bind(s, (struct sockaddr *)laddr,
-+				  sizeof(struct sockaddr_in));
-+	} else {
-+		struct sockaddr_in6 *laddr = &to_sockaddr_in6(id->local_addr);
-+
-+		/* For wildcard addr, limit binding to current device only */
-+		if (ipv6_addr_any(&laddr->sin6_addr))
-+			s->sk->sk_bound_dev_if = sdev->netdev->ifindex;
-+
-+		rv = s->ops->bind(s, (struct sockaddr *)laddr,
-+				  sizeof(struct sockaddr_in6));
-+	}
- 	if (rv) {
- 		siw_dbg(id->device, "socket bind error: %d\n", rv);
- 		goto error;
-@@ -1852,7 +1877,7 @@ static int siw_listen_address(struct iw_cm_id *id, int backlog,
- 	list_add_tail(&cep->listenq, (struct list_head *)id->provider_data);
- 	cep->state = SIW_EPSTATE_LISTENING;
- 
--	siw_dbg(id->device, "Listen at laddr %pISp\n", laddr);
-+	siw_dbg(id->device, "Listen at laddr %pISp\n", &id->local_addr);
- 
- 	return 0;
- 
-@@ -1910,106 +1935,6 @@ static void siw_drop_listeners(struct iw_cm_id *id)
- 	}
- }
- 
--/*
-- * siw_create_listen - Create resources for a listener's IWCM ID @id
-- *
-- * Listens on the socket address id->local_addr.
-- *
-- * If the listener's @id provides a specific local IP address, at most one
-- * listening socket is created and associated with @id.
-- *
-- * If the listener's @id provides the wildcard (zero) local IP address,
-- * a separate listen is performed for each local IP address of the device
-- * by creating a listening socket and binding to that local IP address.
-- *
-- */
--int siw_create_listen(struct iw_cm_id *id, int backlog)
--{
--	struct net_device *dev = to_siw_dev(id->device)->netdev;
--	int rv = 0, listeners = 0;
--
--	siw_dbg(id->device, "backlog %d\n", backlog);
--
--	/*
--	 * For each attached address of the interface, create a
--	 * listening socket, if id->local_addr is the wildcard
--	 * IP address or matches the IP address.
--	 */
--	if (id->local_addr.ss_family == AF_INET) {
--		struct in_device *in_dev = in_dev_get(dev);
--		struct sockaddr_in s_laddr;
--		const struct in_ifaddr *ifa;
--
--		if (!in_dev) {
--			rv = -ENODEV;
--			goto out;
+diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+index 0c7d31c6c18cc..a58584949a955 100644
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
+ 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+-		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
++		if (dlc)
+ 			return -EBUSY;
 -		}
--		memcpy(&s_laddr, &id->local_addr, sizeof(s_laddr));
--
--		siw_dbg(id->device, "laddr %pISp\n", &s_laddr);
--
--		rtnl_lock();
--		in_dev_for_each_ifa_rtnl(ifa, in_dev) {
--			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
--			    s_laddr.sin_addr.s_addr == ifa->ifa_address) {
--				s_laddr.sin_addr.s_addr = ifa->ifa_address;
--
--				rv = siw_listen_address(id, backlog,
--						(struct sockaddr *)&s_laddr,
--						AF_INET);
--				if (!rv)
--					listeners++;
--			}
--		}
--		rtnl_unlock();
--		in_dev_put(in_dev);
--	} else if (id->local_addr.ss_family == AF_INET6) {
--		struct inet6_dev *in6_dev = in6_dev_get(dev);
--		struct inet6_ifaddr *ifp;
--		struct sockaddr_in6 *s_laddr = &to_sockaddr_in6(id->local_addr);
--
--		if (!in6_dev) {
--			rv = -ENODEV;
--			goto out;
--		}
--		siw_dbg(id->device, "laddr %pISp\n", &s_laddr);
--
--		rtnl_lock();
--		list_for_each_entry(ifp, &in6_dev->addr_list, if_list) {
--			if (ifp->flags & (IFA_F_TENTATIVE | IFA_F_DEPRECATED))
--				continue;
--			if (ipv6_addr_any(&s_laddr->sin6_addr) ||
--			    ipv6_addr_equal(&s_laddr->sin6_addr, &ifp->addr)) {
--				struct sockaddr_in6 bind_addr  = {
--					.sin6_family = AF_INET6,
--					.sin6_port = s_laddr->sin6_port,
--					.sin6_flowinfo = 0,
--					.sin6_addr = ifp->addr,
--					.sin6_scope_id = dev->ifindex };
--
--				rv = siw_listen_address(id, backlog,
--						(struct sockaddr *)&bind_addr,
--						AF_INET6);
--				if (!rv)
--					listeners++;
--			}
--		}
--		rtnl_unlock();
--		in6_dev_put(in6_dev);
--	} else {
--		rv = -EAFNOSUPPORT;
--	}
--out:
--	if (listeners)
--		rv = 0;
--	else if (!rv)
--		rv = -EINVAL;
--
--	siw_dbg(id->device, "%s\n", rv ? "FAIL" : "OK");
--
--	return rv;
--}
--
- int siw_destroy_listen(struct iw_cm_id *id)
- {
- 	if (!id->provider_data) {
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+ 		if (!dlc)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
