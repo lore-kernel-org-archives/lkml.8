@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6DEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89BAC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3D320644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20EF2137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607351;
-	bh=eDlxJIK+ajyAnrucoaBRW3ShFGqsrmf8FtcH3vNKYgc=;
+	s=default; t=1586607352;
+	bh=4+TtjYr36O5SbE+Sa5S/2ejVsVC84drhWt7x+7rn2KI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoRN5Euq3I/G9D3q7PnX+uYzKr7D2xfiKhhxgM/iHccFn8Wm/WMF2J/WAIltu6I3J
-	 1q/ppWCgAO++EpfOyOfoboBAalJRGIx8pLC8TbZfoHSRxEsbj2kvj598sWRvMiYnBh
-	 iIM/Y3hf5gRe7uhnO/De5pFLuEjOni+rFtpkGLnc=
+	b=nkiB+W+XtTZ81I9j0McVDavdTG4i9UaspQqcHlYoLDVWHG73BhxIqnZI0PZWkbtEw
+	 FWQL5tHSUBUGV6o5FLS3LST42rXhN40NSI9Rd1yKtVIjPQs7iYxagfmzKrXbZh+1v7
+	 asuoUvV1svDHwPZlMBZk+B3fwB2JxBYu5sF8lX4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgDKMPu (ORCPT
+        id S1728201AbgDKMPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 11 Apr 2020 08:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728184AbgDKMPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:46 -0400
+        id S1727238AbgDKMPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 686D820644;
-        Sat, 11 Apr 2020 12:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD74120644;
+        Sat, 11 Apr 2020 12:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607346;
-        bh=eDlxJIK+ajyAnrucoaBRW3ShFGqsrmf8FtcH3vNKYgc=;
+        s=default; t=1586607349;
+        bh=4+TtjYr36O5SbE+Sa5S/2ejVsVC84drhWt7x+7rn2KI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MabmURGBp/Mz2S0P6QWurpIWiOYQHg8GxL/9r+NuavWUIGXoF3D1KRUzrBf/tOt97
-         UgLoex0fGKsb7Q7+3vpkYXsq/S/KuGv3USz6iJW/wbam2qJhG8FA7xKA5nw/FQT4td
-         JP/mhoR6z9WUWHy3v1/vGxk82JSMd0Ue7UXxQXmg=
+        b=CtZTyPkfFdYNZHRFcz/9NKVg99l9pmVFAx5JKqmUCJoq1hjXeDJ9jO0QLqBKg1VzP
+         5J812BTt6Ho31L/m4qGz+bKewpkCsgnL3IpaRfVdNSqBlSe5bc0iMfoUvCdWe791Ws
+         NjLsIjWlwDp6SXhQ+7t5dshSIN5NOjFsA4cA/T94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.19 36/54] usb: dwc3: gadget: Wrap around when skip TRBs
-Date:   Sat, 11 Apr 2020 14:09:18 +0200
-Message-Id: <20200411115512.087843119@linuxfoundation.org>
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        David Ahern <dsahern@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Shailabh Nagar <nagar@watson.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 37/54] tools/accounting/getdelays.c: fix netlink attribute length
+Date:   Sat, 11 Apr 2020 14:09:19 +0200
+Message-Id: <20200411115512.207596545@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -59,34 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: David Ahern <dsahern@kernel.org>
 
-commit 2dedea035ae82c5af0595637a6eda4655532b21e upstream.
+commit 4054ab64e29bb05b3dfe758fff3c38a74ba753bb upstream.
 
-When skipping TRBs, we need to account for wrapping around the ring
-buffer and not modifying some invalid TRBs. Without this fix, dwc3 won't
-be able to check for available TRBs.
+A recent change to the netlink code: 6e237d099fac ("netlink: Relax attr
+validation for fixed length types") logs a warning when programs send
+messages with invalid attributes (e.g., wrong length for a u32).  Yafang
+reported this error message for tools/accounting/getdelays.c.
 
-Cc: stable <stable@vger.kernel.org>
-Fixes: 7746a8dfb3f9 ("usb: dwc3: gadget: extract dwc3_gadget_ep_skip_trbs()")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+send_cmd() is wrongly adding 1 to the attribute length.  As noted in
+include/uapi/linux/netlink.h nla_len should be NLA_HDRLEN + payload
+length, so drop the +1.
+
+Fixes: 9e06d3f9f6b1 ("per task delay accounting taskstats interface: documentation fix")
+Reported-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Yafang Shao <laoar.shao@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Shailabh Nagar <nagar@watson.ibm.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200327173111.63922-1-dsahern@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    2 +-
+ tools/accounting/getdelays.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1369,7 +1369,7 @@ static void dwc3_gadget_ep_skip_trbs(str
- 	for (i = 0; i < req->num_trbs; i++) {
- 		struct dwc3_trb *trb;
+--- a/tools/accounting/getdelays.c
++++ b/tools/accounting/getdelays.c
+@@ -136,7 +136,7 @@ static int send_cmd(int sd, __u16 nlmsg_
+ 	msg.g.version = 0x1;
+ 	na = (struct nlattr *) GENLMSG_DATA(&msg);
+ 	na->nla_type = nla_type;
+-	na->nla_len = nla_len + 1 + NLA_HDRLEN;
++	na->nla_len = nla_len + NLA_HDRLEN;
+ 	memcpy(NLA_DATA(na), nla_data, nla_len);
+ 	msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
  
--		trb = req->trb + i;
-+		trb = &dep->trb_pool[dep->trb_dequeue];
- 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
- 		dwc3_ep_inc_deq(dep);
- 	}
 
 
