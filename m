@@ -2,53 +2,55 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F058CC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E63C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B1020692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5372120644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607260;
-	bh=KJ6sRbv1chySN6yp+1UruY8GwiqBm3pvJ/VFblOSj6k=;
+	s=default; t=1586607263;
+	bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MTv/A7vXFC06U16S6elKd2rm0q4lDeHpCzqQXRRi95Sg2lb06JHAKy8xxChFEECs1
-	 3LpYZTc1lvUK5y2Xr0FwKsXF7cl9EsShycYICA3QEfxvg+SoW7g9ecyQQbn0A4Vi3j
-	 IicKbKRhvwgPx3bfYgJxRGfas+iLTdhCaOUxOKhI=
+	b=BwiZJKrj3D41hvfiDAUWTyD+WgQm1pV3zQmCOmYejprYzudZlAPF1Jywfmzs5asBP
+	 mFcv2GqBnPhYalXNY4x/5QakpShvt+U1ZXOqUEN06WRC4FfKn6ryqwbdqmcygo6HF/
+	 OhQJBKFRyDNtYVmVuA5lAEBLLlk6IW0MoAAF3wPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgDKMOS (ORCPT
+        id S1727917AbgDKMOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47574 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbgDKMOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:15 -0400
+        id S1727191AbgDKMOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8001E21556;
-        Sat, 11 Apr 2020 12:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4DE620787;
+        Sat, 11 Apr 2020 12:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607255;
-        bh=KJ6sRbv1chySN6yp+1UruY8GwiqBm3pvJ/VFblOSj6k=;
+        s=default; t=1586607257;
+        bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eri0kOzNpWaHWI89qBFIZFmOVX/aZKHd6Ja77aXaVLq4kfmZmkwMJA0FivgB8TWwr
-         Y7hyXq33vh5/txO44g3zQzYHf9o6CX5/FtRL4E780RlMD8SXVXJmud2WLplBozC3RW
-         iBWZwnODfCXVhkFMXscNWL+kSDCKyX75UTxmYHRY=
+        b=2XkE/AlDiIsaVjljswxFm3RbVwQ8iMcgywa9hunQKb7uqPj0J9OYVxNMHTNjqHJDZ
+         phTcY24RMdAGs+oNT21xn3uewPCIUUeQ0Sg6xriCKSm/9IsTtOBsrIMrbgMpfTgdBo
+         3UztAiTfFZ9ZtXXsO6WBKnwsH5hWJYnOkXD0a5m0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Meng <meng.a.jin@nokia-sbell.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 04/38] sctp: fix possibly using a bad saddr with a given dst
-Date:   Sat, 11 Apr 2020 14:08:48 +0200
-Message-Id: <20200411115438.236519246@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/38] drm/bochs: downgrade pci_request_region failure from error to warning
+Date:   Sat, 11 Apr 2020 14:08:49 +0200
+Message-Id: <20200411115438.431429906@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -61,187 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit 582eea230536a6f104097dd46205822005d5fe3a ]
+[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
 
-Under certain circumstances, depending on the order of addresses on the
-interfaces, it could be that sctp_v[46]_get_dst() would return a dst
-with a mismatched struct flowi.
+Shutdown of firmware framebuffer has a bunch of problems.  Because
+of this the framebuffer region might still be reserved even after
+drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 
-For example, if when walking through the bind addresses and the first
-one is not a match, it saves the dst as a fallback (added in
-410f03831c07), but not the flowi. Then if the next one is also not a
-match, the previous dst will be returned but with the flowi information
-for the 2nd address, which is wrong.
+Don't consider pci_request_region() failure for the framebuffer
+region as fatal error to workaround this issue.
 
-The fix is to use a locally stored flowi that can be used for such
-attempts, and copy it to the parameter only in case it is a possible
-match, together with the corresponding dst entry.
-
-The patch updates IPv6 code mostly just to be in sync. Even though the issue
-is also present there, it fallback is not expected to work with IPv6.
-
-Fixes: 410f03831c07 ("sctp: add routing output fallback")
-Reported-by: Jin Meng <meng.a.jin@nokia-sbell.com>
-Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Tested-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/ipv6.c     |   20 ++++++++++++++------
- net/sctp/protocol.c |   28 +++++++++++++++++++---------
- 2 files changed, 33 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/sctp/ipv6.c
-+++ b/net/sctp/ipv6.c
-@@ -235,7 +235,8 @@ static void sctp_v6_get_dst(struct sctp_
- {
- 	struct sctp_association *asoc = t->asoc;
- 	struct dst_entry *dst = NULL;
--	struct flowi6 *fl6 = &fl->u.ip6;
-+	struct flowi _fl;
-+	struct flowi6 *fl6 = &_fl.u.ip6;
- 	struct sctp_bind_addr *bp;
- 	struct ipv6_pinfo *np = inet6_sk(sk);
- 	struct sctp_sockaddr_entry *laddr;
-@@ -245,7 +246,7 @@ static void sctp_v6_get_dst(struct sctp_
- 	enum sctp_scope scope;
- 	__u8 matchlen = 0;
- 
--	memset(fl6, 0, sizeof(struct flowi6));
-+	memset(&_fl, 0, sizeof(_fl));
- 	fl6->daddr = daddr->v6.sin6_addr;
- 	fl6->fl6_dport = daddr->v6.sin6_port;
- 	fl6->flowi6_proto = IPPROTO_SCTP;
-@@ -271,8 +272,11 @@ static void sctp_v6_get_dst(struct sctp_
- 	rcu_read_unlock();
- 
- 	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
--	if (!asoc || saddr)
-+	if (!asoc || saddr) {
-+		t->dst = dst;
-+		memcpy(fl, &_fl, sizeof(_fl));
- 		goto out;
-+	}
- 
- 	bp = &asoc->base.bind_addr;
- 	scope = sctp_scope(daddr);
-@@ -295,6 +299,8 @@ static void sctp_v6_get_dst(struct sctp_
- 			if ((laddr->a.sa.sa_family == AF_INET6) &&
- 			    (sctp_v6_cmp_addr(&dst_saddr, &laddr->a))) {
- 				rcu_read_unlock();
-+				t->dst = dst;
-+				memcpy(fl, &_fl, sizeof(_fl));
- 				goto out;
- 			}
- 		}
-@@ -333,6 +339,8 @@ static void sctp_v6_get_dst(struct sctp_
- 			if (!IS_ERR_OR_NULL(dst))
- 				dst_release(dst);
- 			dst = bdst;
-+			t->dst = dst;
-+			memcpy(fl, &_fl, sizeof(_fl));
- 			break;
- 		}
- 
-@@ -346,6 +354,8 @@ static void sctp_v6_get_dst(struct sctp_
- 			dst_release(dst);
- 		dst = bdst;
- 		matchlen = bmatchlen;
-+		t->dst = dst;
-+		memcpy(fl, &_fl, sizeof(_fl));
- 	}
- 	rcu_read_unlock();
- 
-@@ -354,14 +364,12 @@ out:
- 		struct rt6_info *rt;
- 
- 		rt = (struct rt6_info *)dst;
--		t->dst = dst;
- 		t->dst_cookie = rt6_get_cookie(rt);
- 		pr_debug("rt6_dst:%pI6/%d rt6_src:%pI6\n",
- 			 &rt->rt6i_dst.addr, rt->rt6i_dst.plen,
--			 &fl6->saddr);
-+			 &fl->u.ip6.saddr);
- 	} else {
- 		t->dst = NULL;
--
- 		pr_debug("no route\n");
- 	}
- }
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -435,14 +435,15 @@ static void sctp_v4_get_dst(struct sctp_
- {
- 	struct sctp_association *asoc = t->asoc;
- 	struct rtable *rt;
--	struct flowi4 *fl4 = &fl->u.ip4;
-+	struct flowi _fl;
-+	struct flowi4 *fl4 = &_fl.u.ip4;
- 	struct sctp_bind_addr *bp;
- 	struct sctp_sockaddr_entry *laddr;
- 	struct dst_entry *dst = NULL;
- 	union sctp_addr *daddr = &t->ipaddr;
- 	union sctp_addr dst_saddr;
- 
--	memset(fl4, 0x0, sizeof(struct flowi4));
-+	memset(&_fl, 0x0, sizeof(_fl));
- 	fl4->daddr  = daddr->v4.sin_addr.s_addr;
- 	fl4->fl4_dport = daddr->v4.sin_port;
- 	fl4->flowi4_proto = IPPROTO_SCTP;
-@@ -460,8 +461,11 @@ static void sctp_v4_get_dst(struct sctp_
- 		 &fl4->saddr);
- 
- 	rt = ip_route_output_key(sock_net(sk), fl4);
--	if (!IS_ERR(rt))
-+	if (!IS_ERR(rt)) {
- 		dst = &rt->dst;
-+		t->dst = dst;
-+		memcpy(fl, &_fl, sizeof(_fl));
-+	}
- 
- 	/* If there is no association or if a source address is passed, no
- 	 * more validation is required.
-@@ -524,27 +528,33 @@ static void sctp_v4_get_dst(struct sctp_
- 		odev = __ip_dev_find(sock_net(sk), laddr->a.v4.sin_addr.s_addr,
- 				     false);
- 		if (!odev || odev->ifindex != fl4->flowi4_oif) {
--			if (!dst)
-+			if (!dst) {
- 				dst = &rt->dst;
--			else
-+				t->dst = dst;
-+				memcpy(fl, &_fl, sizeof(_fl));
-+			} else {
- 				dst_release(&rt->dst);
-+			}
- 			continue;
- 		}
- 
- 		dst_release(dst);
- 		dst = &rt->dst;
-+		t->dst = dst;
-+		memcpy(fl, &_fl, sizeof(_fl));
- 		break;
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index a39b0343c197d..401c218567af9 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -97,10 +97,8 @@ int bochs_hw_init(struct drm_device *dev, uint32_t flags)
+ 		size = min(size, mem);
  	}
  
- out_unlock:
- 	rcu_read_unlock();
- out:
--	t->dst = dst;
--	if (dst)
-+	if (dst) {
- 		pr_debug("rt_dst:%pI4, rt_src:%pI4\n",
--			 &fl4->daddr, &fl4->saddr);
--	else
-+			 &fl->u.ip4.daddr, &fl->u.ip4.saddr);
-+	} else {
-+		t->dst = NULL;
- 		pr_debug("no route\n");
-+	}
- }
+-	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
+-		DRM_ERROR("Cannot request framebuffer\n");
+-		return -EBUSY;
+-	}
++	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
++		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
  
- /* For v4, the source address is cached in the route entry(dst). So no need
+ 	bochs->fb_map = ioremap(addr, size);
+ 	if (bochs->fb_map == NULL) {
+-- 
+2.20.1
+
 
 
