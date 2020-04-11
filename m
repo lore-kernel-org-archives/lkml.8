@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FB2C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B6720708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C602421841
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646647;
-	bh=Wzja1lnSxcvyujKbql1QcN7eEshT9Y47jqXMe56SKFg=;
+	s=default; t=1586646649;
+	bh=ro+UH2pzJ7jq/JsdwUicZ4oGUsoHLMDJ0rgOv9Z7+UQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O1wHDFDVXiPwDgaAr+GtQ3V3y++/+gAlkXSw0iGp6VyFgR/AjU7fqESh/vF0AZzR7
-	 8WiCFeyZVRo47NzI5jt/V4KAA/0Zc7gASy4/zXz7AmlSceck1DTZOJZcp+IPQICxHh
-	 9xxbTgxjZV7ouKADeSRQNYyRGN4MVMzSE3af1Ahc=
+	b=ETM5XEque1Hgev3rBBiTf2MCblomFv7REjhVQ0IoZBINBEfKvF9TGXJ6VXTDI5JHj
+	 n+lZHwU8DzyIiSxPa1lOpLLIm/7n1PmKWx5LQ2iz8p9Fu9PdmxgT43CMl1uJMgdCnu
+	 KFY5TcpP9/qFzLNp9BXBIGEV0EgH8ZJoTp3aqCVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgDKXKp (ORCPT
+        id S1729685AbgDKXKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbgDKXKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:42 -0400
+        id S1728541AbgDKXKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70ACE217D8;
-        Sat, 11 Apr 2020 23:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC73215A4;
+        Sat, 11 Apr 2020 23:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646642;
-        bh=Wzja1lnSxcvyujKbql1QcN7eEshT9Y47jqXMe56SKFg=;
+        s=default; t=1586646646;
+        bh=ro+UH2pzJ7jq/JsdwUicZ4oGUsoHLMDJ0rgOv9Z7+UQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhYEx8q4EQRPT7At9LPAe690cc9l07nlEm2ji3ukbk4rK8ODI6isaWlaizHMgrW5s
-         oXMgtJSITHBloSDwVU8LPXXF80XvnqQDP05xgeqMSuyLpoRhYY9+bJjXfVPENvcowP
-         sO/qKIRiF64Nj+jStt3fwtHzHjaeRnAvFr75yuao=
+        b=YPKQHlTkanqc8H7u7KoBkHaUbAt4gkY/fQd0jgB5OUn23wE9oAdT9zMKGRiceK3aA
+         oU/eU0mm4ex9FiUVmeFP22dZ7EuW4qYIAz2IqaqlEnhIDblomapcuS+MtquAu9Ujio
+         1r52EnnmB/WmcmW9GQLLUgsw4S6IYRDTmulqlJHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+Cc:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 048/108] drm/omap: fix possible object reference leak
-Date:   Sat, 11 Apr 2020 19:08:43 -0400
-Message-Id: <20200411230943.24951-48-sashal@kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 051/108] drm/stm: ltdc: check crtc state before enabling LIE
+Date:   Sat, 11 Apr 2020 19:08:46 -0400
+Message-Id: <20200411230943.24951-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -66,58 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Yannick Fertre <yannick.fertre@st.com>
 
-[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
+[ Upstream commit a6bd58c51ac43083f3977057a7ad668def55812f ]
 
-The call to of_find_matching_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Following investigations of a hardware bug, the LIE interrupt
+can occur while the display controller is not activated.
+LIE interrupt (vblank) don't have to be set if the CRTC is not
+enabled.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1579601650-7055-1-git-send-email-yannick.fertre@st.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/stm/ltdc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-index 31502857f013d..ce67891eedd46 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-@@ -192,7 +192,7 @@ static int __init omapdss_boot_init(void)
- 	dss = of_find_matching_node(NULL, omapdss_of_match);
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 3ab4fbf8eb0d1..2526dfb77401c 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -653,9 +653,14 @@ static const struct drm_crtc_helper_funcs ltdc_crtc_helper_funcs = {
+ static int ltdc_crtc_enable_vblank(struct drm_crtc *crtc)
+ {
+ 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
++	struct drm_crtc_state *state = crtc->state;
  
- 	if (dss == NULL || !of_device_is_available(dss))
--		return 0;
-+		goto put_node;
+ 	DRM_DEBUG_DRIVER("\n");
+-	reg_set(ldev->regs, LTDC_IER, IER_LIE);
++
++	if (state->enable)
++		reg_set(ldev->regs, LTDC_IER, IER_LIE);
++	else
++		return -EPERM;
  
- 	omapdss_walk_device(dss, true);
- 
-@@ -217,6 +217,8 @@ static int __init omapdss_boot_init(void)
- 		kfree(n);
- 	}
- 
-+put_node:
-+	of_node_put(dss);
  	return 0;
  }
- 
 -- 
 2.20.1
 
