@@ -2,62 +2,51 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ED7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D23C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4789720644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F3420692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607958;
-	bh=GJbNefvUwMlJrQducROtdksojVFFnS7Ma6pcTY09hLU=;
+	s=default; t=1586607973;
+	bh=C36/UM24Ib+reJOzn3QAWtdjKAstIRHb1g+mYTY2dwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=duEMNHQtWLVebPyBSTP+dVN0RKzjNan/LjFlNWJc1W2ISXWwL8wwco6uvtA/MDcYv
-	 UmrIglPMjdsvIUERItCssQNXPwbrbZOh5P14d62SO2ibCJq3tTIR9Xb+ZRVT3xpMr/
-	 ZoluEopsefXzpcNn6Exh51bpJVhtJ9V0zMtjhA74=
+	b=fVItmayVYFWZMNNTvrJ8j2g086DtbZmSjnIl1Hw1p6ryeyGY8gZGCnFbRedb1GzLJ
+	 s3I0PDTeajsdH5RkyCSvwJ7PoFEOno8i5bfkXd+VM8kb3/vhZmSBowJq2EHFbw78lL
+	 wh9595zkW/XG8Is3GY27VbqunmgjKeiXr2ShrKQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgDKMZ4 (ORCPT
+        id S1728177AbgDKMPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgDKMQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:06 -0400
+        id S1728121AbgDKMPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8904621775;
-        Sat, 11 Apr 2020 12:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C87214D8;
+        Sat, 11 Apr 2020 12:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607366;
-        bh=GJbNefvUwMlJrQducROtdksojVFFnS7Ma6pcTY09hLU=;
+        s=default; t=1586607342;
+        bh=C36/UM24Ib+reJOzn3QAWtdjKAstIRHb1g+mYTY2dwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M5dgroqk8VQcAY8VR0F2FAlGSoxDqfCxc5U0RFA7PEUo/34WWQuPQ+9GZd641Umo+
-         hSDR6fa4Ko6CgGgjrOr8tQPUqgODLpDzzGiau6PaGnkD3AnN53Ok98zeRjd2mV18Lb
-         u8CcYpu9+pVoJLCEmbZ5oboWi+VdLccL+QCTLbLM=
+        b=UVV+mIrcOxj+/QIYK01u8JbVF35HLVf/FARkkuLZImWsWExgTmumm02bmUIw5WMec
+         w5lRySby5+dTfVi+nZrZmNtY8tigG3whDh+w/RQSbV4fSA2k3KXeXPb20mHlz6JAKG
+         LK7BLOZWN0yOlD6cd/4ZG0SAywg8hCTBXzTmWUck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com,
-        syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com,
-        syzbot+4b628fcc748474003457@syzkaller.appspotmail.com,
-        syzbot+29ee8f76017ce6cf03da@syzkaller.appspotmail.com,
-        syzbot+6956235342b7317ec564@syzkaller.appspotmail.com,
-        syzbot+b358909d8d01556b790b@syzkaller.appspotmail.com,
-        syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com,
-        syzbot+8458d13b13562abf6b77@syzkaller.appspotmail.com,
-        syzbot+bd034f3fdc0402e942ed@syzkaller.appspotmail.com,
-        syzbot+c92378b32760a4eef756@syzkaller.appspotmail.com,
-        syzbot+68b44a1597636e0b342c@syzkaller.appspotmail.com,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 44/54] RDMA/ucma: Put a lock around every call to the rdma_cm layer
-Date:   Sat, 11 Apr 2020 14:09:26 +0200
-Message-Id: <20200411115513.031279873@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 35/54] random: always use batched entropy for get_random_u{32,64}
+Date:   Sat, 11 Apr 2020 14:09:17 +0200
+Message-Id: <20200411115511.985292690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -70,280 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Jason A. Donenfeld <Jason@zx2c4.com>
 
-commit 7c11910783a1ea17e88777552ef146cace607b3c upstream.
+commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
 
-The rdma_cm must be used single threaded.
+It turns out that RDRAND is pretty slow. Comparing these two
+constructions:
 
-This appears to be a bug in the design, as it does have lots of locking
-that seems like it should allow concurrency. However, when it is all said
-and done every single place that uses the cma_exch() scheme is broken, and
-all the unlocked reads from the ucma of the cm_id data are wrong too.
+  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
+    arch_get_random_long(&ret);
 
-syzkaller has been finding endless bugs related to this.
+and
 
-Fixing this in any elegant way is some enormous amount of work. Take a
-very big hammer and put a mutex around everything to do with the
-ucma_context at the top of every syscall.
+  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
+  extract_crng((u8 *)buf);
 
-Fixes: 75216638572f ("RDMA/cma: Export rdma cm interface to userspace")
-Link: https://lore.kernel.org/r/20200218210432.GA31966@ziepe.ca
-Reported-by: syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com
-Reported-by: syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com
-Reported-by: syzbot+4b628fcc748474003457@syzkaller.appspotmail.com
-Reported-by: syzbot+29ee8f76017ce6cf03da@syzkaller.appspotmail.com
-Reported-by: syzbot+6956235342b7317ec564@syzkaller.appspotmail.com
-Reported-by: syzbot+b358909d8d01556b790b@syzkaller.appspotmail.com
-Reported-by: syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com
-Reported-by: syzbot+8458d13b13562abf6b77@syzkaller.appspotmail.com
-Reported-by: syzbot+bd034f3fdc0402e942ed@syzkaller.appspotmail.com
-Reported-by: syzbot+c92378b32760a4eef756@syzkaller.appspotmail.com
-Reported-by: syzbot+68b44a1597636e0b342c@syzkaller.appspotmail.com
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+it amortizes out to 352 cycles per long for the top one and 107 cycles
+per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
+
+And importantly, the top one has the drawback of not benefiting from the
+real rng, whereas the bottom one has all the nice benefits of using our
+own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
+beyond what it was originally intended for when it was introduced as
+get_random_{int,long} back in the md5 monstrosity era), it seems like it
+might be a good thing to strengthen its posture a tiny bit. Doing this
+should only be stronger and not any weaker because that pool is already
+initialized with a bunch of rdrand data (when available). This way, we
+get the benefits of the hardware rng as well as our own rng.
+
+Another benefit of this is that we no longer hit pitfalls of the recent
+stream of AMD bugs in RDRAND. One often used code pattern for various
+things is:
+
+  do {
+  	val = get_random_u32();
+  } while (hash_table_contains_key(val));
+
+That recent AMD bug rendered that pattern useless, whereas we're really
+very certain that chacha20 output will give pretty distributed numbers,
+no matter what.
+
+So, this simplification seems better both from a security perspective
+and from a performance perspective.
+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/ucma.c |   49 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+ drivers/char/random.c |   20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
---- a/drivers/infiniband/core/ucma.c
-+++ b/drivers/infiniband/core/ucma.c
-@@ -89,6 +89,7 @@ struct ucma_context {
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2280,11 +2280,11 @@ struct batched_entropy {
  
- 	struct ucma_file	*file;
- 	struct rdma_cm_id	*cm_id;
-+	struct mutex		mutex;
- 	u64			uid;
+ /*
+  * Get a random word for internal kernel use only. The quality of the random
+- * number is either as good as RDRAND or as good as /dev/urandom, with the
+- * goal of being quite fast and not depleting entropy. In order to ensure
++ * number is good as /dev/urandom, but there is no backtrack protection, with
++ * the goal of being quite fast and not depleting entropy. In order to ensure
+  * that the randomness provided by this function is okay, the function
+- * wait_for_random_bytes() should be called and return 0 at least once
+- * at any point prior.
++ * wait_for_random_bytes() should be called and return 0 at least once at any
++ * point prior.
+  */
+ static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
+ 	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
+@@ -2297,15 +2297,6 @@ u64 get_random_u64(void)
+ 	struct batched_entropy *batch;
+ 	static void *previous;
  
- 	struct list_head	list;
-@@ -215,6 +216,7 @@ static struct ucma_context *ucma_alloc_c
- 	init_completion(&ctx->comp);
- 	INIT_LIST_HEAD(&ctx->mc_list);
- 	ctx->file = file;
-+	mutex_init(&ctx->mutex);
- 
- 	mutex_lock(&mut);
- 	ctx->id = idr_alloc(&ctx_idr, ctx, 0, 0, GFP_KERNEL);
-@@ -596,6 +598,7 @@ static int ucma_free_ctx(struct ucma_con
- 	}
- 
- 	events_reported = ctx->events_reported;
-+	mutex_destroy(&ctx->mutex);
- 	kfree(ctx);
- 	return events_reported;
- }
-@@ -665,7 +668,10 @@ static ssize_t ucma_bind_ip(struct ucma_
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_bind_addr(ctx->cm_id, (struct sockaddr *) &cmd.addr);
-+	mutex_unlock(&ctx->mutex);
-+
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -688,7 +694,9 @@ static ssize_t ucma_bind(struct ucma_fil
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_bind_addr(ctx->cm_id, (struct sockaddr *) &cmd.addr);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -712,8 +720,10 @@ static ssize_t ucma_resolve_ip(struct uc
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_resolve_addr(ctx->cm_id, (struct sockaddr *) &cmd.src_addr,
- 				(struct sockaddr *) &cmd.dst_addr, cmd.timeout_ms);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -738,8 +748,10 @@ static ssize_t ucma_resolve_addr(struct
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_resolve_addr(ctx->cm_id, (struct sockaddr *) &cmd.src_addr,
- 				(struct sockaddr *) &cmd.dst_addr, cmd.timeout_ms);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -759,7 +771,9 @@ static ssize_t ucma_resolve_route(struct
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_resolve_route(ctx->cm_id, cmd.timeout_ms);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -848,6 +862,7 @@ static ssize_t ucma_query_route(struct u
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	memset(&resp, 0, sizeof resp);
- 	addr = (struct sockaddr *) &ctx->cm_id->route.addr.src_addr;
- 	memcpy(&resp.src_addr, addr, addr->sa_family == AF_INET ?
-@@ -871,6 +886,7 @@ static ssize_t ucma_query_route(struct u
- 		ucma_copy_iw_route(&resp, &ctx->cm_id->route);
- 
- out:
-+	mutex_unlock(&ctx->mutex);
- 	if (copy_to_user(u64_to_user_ptr(cmd.response),
- 			 &resp, sizeof(resp)))
- 		ret = -EFAULT;
-@@ -1022,6 +1038,7 @@ static ssize_t ucma_query(struct ucma_fi
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	switch (cmd.option) {
- 	case RDMA_USER_CM_QUERY_ADDR:
- 		ret = ucma_query_addr(ctx, response, out_len);
-@@ -1036,6 +1053,7 @@ static ssize_t ucma_query(struct ucma_fi
- 		ret = -ENOSYS;
- 		break;
- 	}
-+	mutex_unlock(&ctx->mutex);
- 
- 	ucma_put_ctx(ctx);
- 	return ret;
-@@ -1076,7 +1094,9 @@ static ssize_t ucma_connect(struct ucma_
- 		return PTR_ERR(ctx);
- 
- 	ucma_copy_conn_param(ctx->cm_id, &conn_param, &cmd.conn_param);
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_connect(ctx->cm_id, &conn_param);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -1097,7 +1117,9 @@ static ssize_t ucma_listen(struct ucma_f
- 
- 	ctx->backlog = cmd.backlog > 0 && cmd.backlog < max_backlog ?
- 		       cmd.backlog : max_backlog;
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_listen(ctx->cm_id, ctx->backlog);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -1120,13 +1142,17 @@ static ssize_t ucma_accept(struct ucma_f
- 	if (cmd.conn_param.valid) {
- 		ucma_copy_conn_param(ctx->cm_id, &conn_param, &cmd.conn_param);
- 		mutex_lock(&file->mut);
-+		mutex_lock(&ctx->mutex);
- 		ret = __rdma_accept(ctx->cm_id, &conn_param, NULL);
-+		mutex_unlock(&ctx->mutex);
- 		if (!ret)
- 			ctx->uid = cmd.uid;
- 		mutex_unlock(&file->mut);
--	} else
-+	} else {
-+		mutex_lock(&ctx->mutex);
- 		ret = __rdma_accept(ctx->cm_id, NULL, NULL);
+-#if BITS_PER_LONG == 64
+-	if (arch_get_random_long((unsigned long *)&ret))
+-		return ret;
+-#else
+-	if (arch_get_random_long((unsigned long *)&ret) &&
+-	    arch_get_random_long((unsigned long *)&ret + 1))
+-	    return ret;
+-#endif
 -
-+		mutex_unlock(&ctx->mutex);
-+	}
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -1145,7 +1171,9 @@ static ssize_t ucma_reject(struct ucma_f
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
+ 	warn_unseeded_randomness(&previous);
  
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_reject(ctx->cm_id, cmd.private_data, cmd.private_data_len);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -1164,7 +1192,9 @@ static ssize_t ucma_disconnect(struct uc
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
+ 	batch = raw_cpu_ptr(&batched_entropy_u64);
+@@ -2330,9 +2321,6 @@ u32 get_random_u32(void)
+ 	struct batched_entropy *batch;
+ 	static void *previous;
  
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_disconnect(ctx->cm_id);
-+	mutex_unlock(&ctx->mutex);
- 	ucma_put_ctx(ctx);
- 	return ret;
- }
-@@ -1195,7 +1225,9 @@ static ssize_t ucma_init_qp_attr(struct
- 	resp.qp_attr_mask = 0;
- 	memset(&qp_attr, 0, sizeof qp_attr);
- 	qp_attr.qp_state = cmd.qp_state;
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_init_qp_attr(ctx->cm_id, &qp_attr, &resp.qp_attr_mask);
-+	mutex_unlock(&ctx->mutex);
- 	if (ret)
- 		goto out;
+-	if (arch_get_random_int(&ret))
+-		return ret;
+-
+ 	warn_unseeded_randomness(&previous);
  
-@@ -1274,9 +1306,13 @@ static int ucma_set_ib_path(struct ucma_
- 		struct sa_path_rec opa;
- 
- 		sa_convert_path_ib_to_opa(&opa, &sa_path);
-+		mutex_lock(&ctx->mutex);
- 		ret = rdma_set_ib_path(ctx->cm_id, &opa);
-+		mutex_unlock(&ctx->mutex);
- 	} else {
-+		mutex_lock(&ctx->mutex);
- 		ret = rdma_set_ib_path(ctx->cm_id, &sa_path);
-+		mutex_unlock(&ctx->mutex);
- 	}
- 	if (ret)
- 		return ret;
-@@ -1309,7 +1345,9 @@ static int ucma_set_option_level(struct
- 
- 	switch (level) {
- 	case RDMA_OPTION_ID:
-+		mutex_lock(&ctx->mutex);
- 		ret = ucma_set_option_id(ctx, optname, optval, optlen);
-+		mutex_unlock(&ctx->mutex);
- 		break;
- 	case RDMA_OPTION_IB:
- 		ret = ucma_set_option_ib(ctx, optname, optval, optlen);
-@@ -1369,8 +1407,10 @@ static ssize_t ucma_notify(struct ucma_f
- 	if (IS_ERR(ctx))
- 		return PTR_ERR(ctx);
- 
-+	mutex_lock(&ctx->mutex);
- 	if (ctx->cm_id->device)
- 		ret = rdma_notify(ctx->cm_id, (enum ib_event_type)cmd.event);
-+	mutex_unlock(&ctx->mutex);
- 
- 	ucma_put_ctx(ctx);
- 	return ret;
-@@ -1413,8 +1453,10 @@ static ssize_t ucma_process_join(struct
- 	mc->join_state = join_state;
- 	mc->uid = cmd->uid;
- 	memcpy(&mc->addr, addr, cmd->addr_size);
-+	mutex_lock(&ctx->mutex);
- 	ret = rdma_join_multicast(ctx->cm_id, (struct sockaddr *)&mc->addr,
- 				  join_state, mc);
-+	mutex_unlock(&ctx->mutex);
- 	if (ret)
- 		goto err2;
- 
-@@ -1518,7 +1560,10 @@ static ssize_t ucma_leave_multicast(stru
- 		goto out;
- 	}
- 
-+	mutex_lock(&mc->ctx->mutex);
- 	rdma_leave_multicast(mc->ctx->cm_id, (struct sockaddr *) &mc->addr);
-+	mutex_unlock(&mc->ctx->mutex);
-+
- 	mutex_lock(&mc->ctx->file->mut);
- 	ucma_cleanup_mc_events(mc);
- 	list_del(&mc->list);
+ 	batch = raw_cpu_ptr(&batched_entropy_u32);
 
 
