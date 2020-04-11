@@ -2,75 +2,92 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94E7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55667C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AE720787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3A920769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JpZPZ5IJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgDKW2e (ORCPT
+        id S1726822AbgDKWfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 18:28:34 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:39485 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbgDKW2e (ORCPT
+        Sat, 11 Apr 2020 18:35:00 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38254 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgDKWe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 18:28:34 -0400
-Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id B113558B984;
-        Sun, 12 Apr 2020 08:28:30 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jNOc1-0005AG-Az; Sun, 12 Apr 2020 08:28:29 +1000
-Date:   Sun, 12 Apr 2020 08:28:29 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-fsdevel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-unionfs@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH] ovl: skip overlayfs superblocks at global sync
-Message-ID: <20200411222829.GO10737@dread.disaster.area>
-References: <158642098777.5635.10501704178160375549.stgit@buzz>
+        Sat, 11 Apr 2020 18:34:59 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f20so6263613wmh.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 15:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=XTdhg+Xlf5WPZXZz0XSsY6zvLdLYzEpOReg3X3kD96s=;
+        b=JpZPZ5IJaM6K9R8SqSPXG0qjQfqrwlkbzbZZRg+FRlF+C+xU5GZNWXJIuJjaMVjvsH
+         WOmjPIa1UTU0gYkdITU0E91PWY2iqfSD3OCc0sRJOH53X6dgyk/nnS+ubn5oMIkBP4Ef
+         wjRUmkDWldZPFhHGJw++v2MKpYpolwfx3SDEL75DY9Sg9zCmG8ITuKyvcWyDOo6w+TbB
+         uEOIm9N59Kp5eueUtfhc/c085zbWjQP9uLYQeqM7tBG6cULZx5EE56zjVVROlWNxzjNt
+         X54RVEx/HGh3owKuNAoLOU0ihXq7+DyCkriblVSHtjjS1RD8Uev1Eyz6FLns7U34cZcI
+         vEZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=XTdhg+Xlf5WPZXZz0XSsY6zvLdLYzEpOReg3X3kD96s=;
+        b=nUebI/Q4YG7yomvborjbxuROPBC3k+4wMH7NcWQOTs8Trve3ajSUA1Qov+QrsX5Te3
+         XCMm4tIjP08bMAxQjfexvjvvI9Krwg4l4MTrCdvZZnt8B908elnO1emAe34vzLSkApVf
+         2zVLUTg9y95EzjnTINpO0lzDhhnc5kTG/rJeEX7Zk7+c+4Xhm+KxqeXrBVVmZBZKtEjh
+         64HeTbYetY252M+eorK6qgk8d0UYogUJD9Iujragk7FjIIOoxYeOiCNGi2Y/Yf7A+I0o
+         7tLHHyRwI8+JeeAG3uzGZFywUIYNo2mXrm73auO+fLmkiyiF12Bsi3tr4XG+Z/It4Tib
+         SiRA==
+X-Gm-Message-State: AGi0Pub4YJBe6w7tOgt37kerI3tuApqieUf4hJnzC1xPZ3Wn5R3nTVbN
+        WzoseKmC0a6E37uV+5Kcxrl9wA==
+X-Google-Smtp-Source: APiQypLX5XnwJtkOI7FJ21vIuZMoYF8VfN0lscJ3iVpl8y6O/opkC8sIkWHHFQs0s3CaoWUAM16DZQ==
+X-Received: by 2002:a1c:7308:: with SMTP id d8mr12144840wmb.31.1586644498242;
+        Sat, 11 Apr 2020 15:34:58 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id s24sm7127097wmj.28.2020.04.11.15.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 15:34:57 -0700 (PDT)
+References: <20200411170356.1578031-1-martin.blumenstingl@googlemail.com> <20200411170356.1578031-3-martin.blumenstingl@googlemail.com> <1jlfn2szqp.fsf@starbuckisacylon.baylibre.com> <CAFBinCDut=qY9f8BTwRrHC6zKMGK4DEqXFnd8BxN6S2OatXrWg@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v1 2/2] pinctrl: meson: wire up the gpio_chip's set_config callback
+In-reply-to: <CAFBinCDut=qY9f8BTwRrHC6zKMGK4DEqXFnd8BxN6S2OatXrWg@mail.gmail.com>
+Date:   Sun, 12 Apr 2020 00:34:56 +0200
+Message-ID: <1jk12ltzvz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158642098777.5635.10501704178160375549.stgit@buzz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=7-415B0cAAAA:8 a=haEqjSr0uQTM00mUMRMA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 11:29:47AM +0300, Konstantin Khlebnikov wrote:
-> Stacked filesystems like overlayfs has no own writeback, but they have to
-> forward syncfs() requests to backend for keeping data integrity.
-> 
-> During global sync() each overlayfs instance calls method ->sync_fs()
-> for backend although it itself is in global list of superblocks too.
-> As a result one syscall sync() could write one superblock several times
-> and send multiple disk barriers.
-> 
-> This patch adds flag SB_I_SKIP_SYNC into sb->sb_iflags to avoid that.
 
-Why wouldn't you just remove the ->sync_fs method from overlay?
+On Sat 11 Apr 2020 at 22:53, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-I mean, if you don't need the filesystem to do anything special for
-one specific data integrity sync_fs call, you don't need it for any
-of them, yes?
+>
+>> There is an example of that in meson-gx-libretech-pc.dtsi with the phy
+>> irq pin.
+> I'm still hoping that pinctrl-meson will gain interrupt support one
+> day, then the driver will (hopefully) take care of that :-)
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+I don't see why it should. If the meson gpio driver was able to provide
+an irq related to gpio, I don't think it should do more than that.
+
+In most case the gpio will be an input, yes, but nothing says it must.
+
+>
+>
+> Martin
+
