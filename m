@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FE3C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4982C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DF3206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D31F20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647369;
-	bh=k+HtzTIFd+fXXiVKekcLzGuQPzWQbVWRP6oOPwdIAbQ=;
+	s=default; t=1586647373;
+	bh=Nor3LFQx5gasX/TffxXutfOivoR3WUsiFJPiv1MKceg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWyb7Sg+GdrNap5mIhJSo90Ty4E1k0HrETPNsKcmol4nu6uAJyjqWhyRbBD+W33Nn
-	 xLsXxLiwMUMz7vXHQ6mhrftMHdh4a+mqHX8AIGCr//yylXnKqzw/8lPRsz5anm5xEk
-	 fcrWAT5TAKHUlobNhTmznCdfKp2dDtumApfzyd/c=
+	b=QeDNHyW0b+khcDTgR7N74kOWRgIX3nOrG2X76lvrdcsS6jd86lZtX+JR5i8sudk3H
+	 UTtSlBm5yG+4Cwz1NtacVk8nrPGyW/9nLDfbKbpo95dwnc1Q9olaoQK2Ye7z0M5O+Q
+	 GCIRCByNZfqRh4XxLHNrrQ2VtTL72erxjavGBXfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgDKXNR (ORCPT
+        id S1729800AbgDKXWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbgDKXNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:01 -0400
+        id S1730368AbgDKXNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEFB21835;
-        Sat, 11 Apr 2020 23:13:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D2B20708;
+        Sat, 11 Apr 2020 23:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646781;
-        bh=k+HtzTIFd+fXXiVKekcLzGuQPzWQbVWRP6oOPwdIAbQ=;
+        s=default; t=1586646794;
+        bh=Nor3LFQx5gasX/TffxXutfOivoR3WUsiFJPiv1MKceg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BgfqJaGO0yLAy0xanJPbZ4R74e97JrdCnDRpPgZmNvNg0ODMQ6T4jflDrkkzuUEsx
-         REcMJjswK1s3RaGeV9qCGY18Kcf8CmlY/pcq7+qNHOAccX7oVp/eeKJJi9EqADwqNO
-         ISX7q3o+3vwpNnxKSgIRZQ6vMqn/0LYAb1YqVYIw=
+        b=vxKlm8zRYOcG8MJaHfEWDNPVmuVtuds7byNvMxGib2HRQSEATTfCZDHNI+TFju0m8
+         n/0UIyUwhrLZnB+Wr1dfwqJPtbfXY6bmj6iq7YxP3O0De2LxQhqulZZxlZxjHuVgrd
+         3vvyrNY8GQ/4JCYXnC4r9+MCrVgoXWoIBcVtynco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Machek <pavel@denx.de>, Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 47/66] drm/msm: fix leaks if initialization fails
-Date:   Sat, 11 Apr 2020 19:11:44 -0400
-Message-Id: <20200411231203.25933-47-sashal@kernel.org>
+Cc:     Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 58/66] scsi: qla2xxx: Fix control flags for login/logout IOCB
+Date:   Sat, 11 Apr 2020 19:11:55 -0400
+Message-Id: <20200411231203.25933-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,36 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Machek <pavel@denx.de>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-[ Upstream commit 66be340f827554cb1c8a1ed7dea97920b4085af2 ]
+[ Upstream commit 419ae5fe73e50084fa794934fb62fab34f564b7c ]
 
-We should free resources in unlikely case of allocation failure.
+This patch fixes control flag options for login/logout IOCB.
 
-Signed-off-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Link: https://lore.kernel.org/r/20200212214436.25532-23-hmadhani@marvell.com
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_iocb.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 6f81de85fb860..01524009dede8 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -495,8 +495,10 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
- 	if (!dev->dma_parms) {
- 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
- 					      GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		if (!dev->dma_parms) {
-+			ret = -ENOMEM;
-+			goto err_msm_uninit;
-+		}
- 	}
- 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
+index 7e47321e003c8..f07aa045f3f93 100644
+--- a/drivers/scsi/qla2xxx/qla_iocb.c
++++ b/drivers/scsi/qla2xxx/qla_iocb.c
+@@ -2224,6 +2224,8 @@ qla24xx_login_iocb(srb_t *sp, struct logio_entry_24xx *logio)
+ 	struct srb_iocb *lio = &sp->u.iocb_cmd;
  
+ 	logio->entry_type = LOGINOUT_PORT_IOCB_TYPE;
++	logio->control_flags = cpu_to_le16(LCF_COMMAND_PLOGI);
++
+ 	if (lio->u.logio.flags & SRB_LOGIN_PRLI_ONLY) {
+ 		logio->control_flags = cpu_to_le16(LCF_COMMAND_PRLI);
+ 	} else {
+@@ -2663,7 +2665,6 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+ 	sp->fcport = fcport;
+ 
+ 	elsio->timeout = qla2x00_els_dcmd2_iocb_timeout;
+-	init_completion(&elsio->u.els_plogi.comp);
+ 	if (wait)
+ 		sp->flags = SRB_WAKEUP_ON_COMP;
+ 
+@@ -2673,7 +2674,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+ 	elsio->u.els_plogi.tx_size = elsio->u.els_plogi.rx_size = DMA_POOL_SIZE;
+ 
+ 	ptr = elsio->u.els_plogi.els_plogi_pyld =
+-	    dma_alloc_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
++	    dma_alloc_coherent(&ha->pdev->dev, elsio->u.els_plogi.tx_size,
+ 		&elsio->u.els_plogi.els_plogi_pyld_dma, GFP_KERNEL);
+ 	ptr_dma = elsio->u.els_plogi.els_plogi_pyld_dma;
+ 
+@@ -2683,7 +2684,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+ 	}
+ 
+ 	resp_ptr = elsio->u.els_plogi.els_resp_pyld =
+-	    dma_alloc_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
++	    dma_alloc_coherent(&ha->pdev->dev, elsio->u.els_plogi.rx_size,
+ 		&elsio->u.els_plogi.els_resp_pyld_dma, GFP_KERNEL);
+ 
+ 	if (!elsio->u.els_plogi.els_resp_pyld) {
+@@ -2707,6 +2708,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+ 	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
+ 	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
+ 
++	init_completion(&elsio->u.els_plogi.comp);
+ 	rval = qla2x00_start_sp(sp);
+ 	if (rval != QLA_SUCCESS) {
+ 		rval = QLA_FUNCTION_FAILED;
 -- 
 2.20.1
 
