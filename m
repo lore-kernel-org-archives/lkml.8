@@ -2,87 +2,227 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10CEC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E44C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB20720857
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74DC2137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sB43eeK+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aaUnopzd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgDKHoq (ORCPT
+        id S1726185AbgDKHqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:44:46 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:61810 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726178AbgDKHon (ORCPT
+        Sat, 11 Apr 2020 03:46:40 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:56962 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgDKHqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:44:43 -0400
-X-UUID: ac2d969db3de4dee952271d4b6244625-20200411
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=VL/uIEJeOh4V+RzzjIL7SOp5c2Ln6Wq9deMdt7EQdfo=;
-        b=sB43eeK+G0tuhcF5a8a8QM2WBi7iA64YFUJIh4BzIoMkbbmUOFQjSZGk1D+L9+nzcpb+ZJsxGQ/xn5eT1lZFR1l7CBt9m8aH+JWKiUKJrJGwxES+AsV4Sn1YM5T+KNienUyLoerC2V9Ra8a94rqQU+3ZsHN0n4jzMtmkA2ZT9s0=;
-X-UUID: ac2d969db3de4dee952271d4b6244625-20200411
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1165974946; Sat, 11 Apr 2020 15:44:28 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 11 Apr
- 2020 15:44:25 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Sat, 11 Apr 2020 15:44:22 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Sat, 11 Apr 2020 03:46:38 -0400
+Received: by mail-pg1-f202.google.com with SMTP id 71so1684230pgg.23
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=yOxiCW0isZEaHIJFpWjXqFOzFywpzj8dLyjA3GIE96w=;
+        b=aaUnopzdDTRJV+cjRXrIpEEGuXlkFqsEBC8cR23USCiau8Nx9kYoggAXZxwYNXRFZv
+         soNcYuf5pbWjQFhoZJWlYIw+1DMfkZ0j9fRM4u8WeU0Khijpo/2c8CPHuL5dPT2ElWqd
+         LImnKf6Nlcl+q+lPfxbr2+udjvdOU9Ua4cEz88yLKsm0T7AlE/miI8VWg8K43bHAdezr
+         dss5Dh1MuOjAX416k9Dsm8FicOuEJNW/Gx59ON1JwZJ/W+398xm6V4muxU3H1nRUrBVy
+         WFmZtOd2r92yhrDM3RGPBCDrDQLKgQKG3kvgS9TAgn7q3jPebA0t444+nanKU/vMKcGX
+         6/2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=yOxiCW0isZEaHIJFpWjXqFOzFywpzj8dLyjA3GIE96w=;
+        b=BOhnb9N48lbrIsPvBoMH66VjCa+4gq2ukNdeUmSuubHCZr/nul558pY724XdzXernu
+         aktnVkm+sbI48BJotlp532VTzud6zxqhLM+nApAKS66tWKh63WmX2NejciignA20MItx
+         P/WoUH0kGHe8cEB/qMoM/uyvfig9EAXXyfeuejuSkNMGOnZHNV98L7ja94UHod3mWSFZ
+         c81JzLeppqnptI+fmAHmBkrzGsk13V4PfyHUr5olx14LQoqPGeit8mF0HVajG/8lL9De
+         mdZB30Mpz11fLo2Is8oqaoKVb48oUc64W7VhX2Sd7USXC/ICoVEJKa1v2ZO/OOhB9BfM
+         V3PQ==
+X-Gm-Message-State: AGi0PuavnvKykWPaLxh9qC0Mzx4J9UZQDixXc8CL/fnag4j+kDzkF32d
+        S48l5SaXvy4EDTrOl5pUAxFEOh/f244l
+X-Google-Smtp-Source: APiQypJol+oijd/s0c00Dcu9CWbs7k7Dh80PRNHTzkcuFOCj9s0+Vqc24YvdVt9By36epwGCnhusOQHLkG3z
+X-Received: by 2002:a17:90a:c708:: with SMTP id o8mr8506314pjt.190.1586591195829;
+ Sat, 11 Apr 2020 00:46:35 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 00:46:27 -0700
+Message-Id: <20200411074631.9486-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH v8 0/4] perf tools: add support for libpfm4
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v6 0/4] Config mipi tx current and impedance
-Date:   Sat, 11 Apr 2020 15:44:04 +0800
-Message-ID: <20200411074408.38090-1-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: F06F78ACE077B8F53AD26555B0EACD516F8A1379DB458BC6BF1268D245B0AFD52000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2hhbmdlcyBzaW5jZSB2NToNCiAtIHJlbW92ZSBtZW1zZXQoKQ0KIC0gYWRkIHJldHVybiB0byBy
-ZW1vdmUgImVsc2UiDQoNCkNoYW5nZXMgc2luY2UgdjQ6DQogLSBhZGQgUmV2aWV3ZWQtYnk6DQog
-LSBtb3ZlIHRoZSBnZXQgdGhlIGNhbGlicmF0aW9uIGRhdGEgY29kZSB0byBwcm9iZS4NCg0KQ2hh
-bmdlcyBzaW5jZSB2MzoNCiAtIHJlZmluZSBkcml2ZS1zdHJlbmd0aC1taWNyb2FtcCBhcyBmcm9t
-IDMwMDAgdG8gNjAwMC4NCg0KQ2hhbmdlcyBzaW5jZSB2MjoNCiAtIGZpeCB0aGUgdGl0bGUgb2Yg
-Y29tbWl0IG1lc3NhZ2UuDQogLSByZW5hbWUgbWlwaXR4LWN1cnJlbnQtZHJpdmUgdG8gZHJpdmUt
-c3RyZW5ndGgtbWljcm9hbXANCg0KQ2hhbmdlcyBzaW5jZSB2MToNCiAtIGZpeCBjb2Rpbmcgc3R5
-bGUuDQogLSBjaGFuZ2UgbXRrX21pcGlfdHhfY29uZmlnX2NhbGlicmF0aW9uX2RhdGEoKSB0byB2
-b2lkDQoNCkppdGFvIFNoaSAoNCk6DQogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBtZWRpYXRlazog
-YWRkIHByb3BlcnR5IHRvIGNvbnRyb2wgbWlwaSB0eCBkcml2ZQ0KICAgIGN1cnJlbnQNCiAgZHQt
-YmluZGluZ3M6IGRpc3BsYXk6IG1lZGlhdGVrOiBnZXQgbWlwaXR4IGNhbGlicmF0aW9uIGRhdGEg
-ZnJvbSBudm1lbQ0KICBkcm0vbWVkaWF0ZWs6IGFkZCB0aGUgbWlwaXR4IGRyaXZpbmcgY29udHJv
-bA0KICBkcm0vbWVkaWF0ZWs6IGNvbmZpZyBtaXBpdHggaW1wZWRhbmNlIHdpdGggY2FsaWJyYXRp
-b24gZGF0YQ0KDQogLi4uL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICAgICAg
-IHwgMTAgKysrKw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5jICAgICAg
-ICB8IDU0ICsrKysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X21pcGlfdHguaCAgICAgICAgfCAgNCArKw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-bXQ4MTgzX21pcGlfdHguYyB8IDI4ICsrKysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDk2IGlu
-c2VydGlvbnMoKykNCg0KLS0gDQoyLjIxLjANCg==
+This patch links perf with the libpfm4 library if it is available
+and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+contains hardware event tables for all processors supported by
+perf_events. It is a helper library that helps convert from a
+symbolic event name to the event encoding required by the
+underlying kernel interface. This library is open-source and
+available from: http://perfmon2.sf.net.
+    
+With this patch, it is possible to specify full hardware events
+by name. Hardware filters are also supported. Events must be
+specified via the --pfm-events and not -e option. Both options
+are active at the same time and it is possible to mix and match:
+    
+$ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+    
+v8 addresses review comments from jolsa@redhat.com.
+   Breaks the patch into 4, adds a test and moves the libpfm code into its
+   own file. perf list encoding tries to be closer to existing:
+...
+skx pfm-events
+  UNHALTED_CORE_CYCLES
+    [Count core clock cycles whenever the clock signal on the specific ...
+  UNHALTED_REFERENCE_CYCLES
+    [Unhalted reference cycles]
+  INSTRUCTION_RETIRED
+    [Number of instructions at retirement]
+  INSTRUCTIONS_RETIRED
+    [This is an alias for INSTRUCTION_RETIRED]
+  BRANCH_INSTRUCTIONS_RETIRED
+    [Count branch instructions at retirement. Specifically, this event ...
+  MISPREDICTED_BRANCH_RETIRED
+    [Count mispredicted branch instructions at retirement. ...
+  BACLEARS
+    [Branch re-steered]
+      BACLEARS:ANY
+        [Number of front-end re-steers due to BPU misprediction]
+  BR_INST_RETIRED
+    [Branch instructions retired (Precise Event)]
+      BR_INST_RETIRED:CONDITIONAL
+        [Counts all taken and not taken macro conditional branch ...
+...
+  and supports --long-desc/-v:
+...
+  BACLEARS
+    [Branch re-steered]
+      Code  : 0xe6
+      BACLEARS:ANY
+        [Number of front-end re-steers due to BPU misprediction]
+        Umask : 0x01 : PMU: [default] 
+      Modif : PMU: [e] : edge level (may require counter-mask >= 1) ...
+      Modif : PMU: [i] : invert (boolean)
+      Modif : PMU: [c] : counter-mask in range [0-255] (integer)
+      Modif : PMU: [t] : measure any thread (boolean)
+      Modif : PMU: [intx] : monitor only inside transactional memory ...
+      Modif : PMU: [intxcp] : do not count occurrences inside aborted ...
+      Modif : perf_event: [u] : monitor at user level (boolean)
+      Modif : perf_event: [k] : monitor at kernel level (boolean)
+      Modif : perf_event: [period] : sampling period (integer)
+      Modif : perf_event: [freq] : sampling frequency (Hz) (integer)
+      Modif : perf_event: [excl] : exclusive access (boolean)
+      Modif : perf_event: [mg] : monitor guest execution (boolean)
+      Modif : perf_event: [mh] : monitor host execution (boolean)
+      Modif : perf_event: [cpu] : CPU to program (integer)
+      Modif : perf_event: [pinned] : pin event to counters (boolean)
+  BR_INST_RETIRED
+    [Branch instructions retired (Precise Event)]
+      Code  : 0xc4
+      BR_INST_RETIRED:CONDITIONAL
+        [Counts all taken and not taken macro conditional branch ...
+        Umask : 0x01 : PMU: [precise]
+
+v7 rebases and adds fallback code for libpfm4 events.
+   The fallback code is to force user only priv level in case the
+   perf_event_open() syscall failed for permissions reason.
+   the fallback forces a user privilege level restriction on the event
+   string, so depending on the syntax either u or :u is needed.
+    
+   But libpfm4 can use a : or . as the separator, so simply searching
+   for ':' vs. '/' is not good enough to determine the syntax needed.
+   Therefore, this patch introduces a new evsel boolean field to mark
+   events coming from  libpfm4. The field is then used to adjust the
+   fallback string.
+v6 was a rebase.
+v5 was a rebase.
+v4 was a rebase on
+   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+   branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+   missed in v3.
+v3 is against acme/perf/core and removes a diagnostic warning.
+v2 of this patch makes the --pfm-events man page documentation
+   conditional on libpfm4 behing configured. It tidies some of the
+   documentation and adds the feature test missed in the v1 patch.
+
+Ian Rogers (1):
+  perf doc: allow ASCIIDOC_EXTRA to be an argument
+
+Stephane Eranian (3):
+  tools feature: add support for detecting libpfm4
+  perf pmu: add perf_pmu__find_by_type helper
+  perf tools: add support for libpfm4
+
+ tools/build/Makefile.feature             |   6 +-
+ tools/build/feature/Makefile             |   6 +-
+ tools/build/feature/test-libpfm4.c       |   9 +
+ tools/perf/Documentation/Makefile        |   4 +-
+ tools/perf/Documentation/perf-record.txt |  11 +
+ tools/perf/Documentation/perf-stat.txt   |  10 +
+ tools/perf/Documentation/perf-top.txt    |  11 +
+ tools/perf/Makefile.config               |  12 +
+ tools/perf/Makefile.perf                 |   6 +-
+ tools/perf/builtin-list.c                |  14 +-
+ tools/perf/builtin-record.c              |  13 ++
+ tools/perf/builtin-stat.c                |  13 ++
+ tools/perf/builtin-top.c                 |  13 ++
+ tools/perf/tests/Build                   |   1 +
+ tools/perf/tests/builtin-test.c          |   9 +
+ tools/perf/tests/pfm.c                   | 206 +++++++++++++++++
+ tools/perf/tests/tests.h                 |   3 +
+ tools/perf/util/Build                    |   2 +
+ tools/perf/util/evsel.c                  |   6 +
+ tools/perf/util/evsel.h                  |   3 +
+ tools/perf/util/parse-events.c           |  37 ++-
+ tools/perf/util/parse-events.h           |   5 +
+ tools/perf/util/pfm.c                    | 272 +++++++++++++++++++++++
+ tools/perf/util/pfm.h                    |  19 ++
+ tools/perf/util/pmu.c                    |  11 +
+ tools/perf/util/pmu.h                    |   1 +
+ 26 files changed, 687 insertions(+), 16 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
+ create mode 100644 tools/perf/tests/pfm.c
+ create mode 100644 tools/perf/util/pfm.c
+ create mode 100644 tools/perf/util/pfm.h
+
+-- 
+2.26.0.110.g2183baf09c-goog
 
