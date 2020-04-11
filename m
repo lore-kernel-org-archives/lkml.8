@@ -2,102 +2,95 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67225C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1DFC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404E8206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC152084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586607928;
+	bh=hi+zWpZ15/J0UethXBgv6Fw/PL1m8lME2EuADHsMWsI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bqb+fcrFMHp7LuuBrqAX1Smg3LmGc9MZKwRporAwO6vLfaxhmThO2QJG5jB2EWFze
+	 3C469NNRM8SZFYYUIJd3DwLhTlCxcTuNhVJ+FPKaThTXPiNeUGtnqqEWnP4dfsaGaE
+	 MpW/M5mGbjypMOH8z9EpsBhDMsVH3empjz+8Xl6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDKMQr (ORCPT
+        id S1726984AbgDKMQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:13152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726794AbgDKMQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:43 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2AAC2DD93474802C528B;
-        Sat, 11 Apr 2020 20:16:30 +0800 (CST)
-Received: from huawei.com (10.151.151.243) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sat, 11 Apr 2020
- 20:16:20 +0800
-From:   Dongjiu Geng <gengdongjiu@huawei.com>
-To:     <maz@kernel.org>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>
-CC:     <zhengxiang9@huawei.com>, <tanxiaofei@huawei.com>,
-        <gengdongjiu@huawei.com>, <linuxarm@huawei.com>
-Subject: [PATCH] KVM: handle the right RAS SEA(Synchronous External Abort) type
-Date:   Sat, 11 Apr 2020 20:17:40 +0800
-Message-ID: <20200411121740.37615-1-gengdongjiu@huawei.com>
-X-Mailer: git-send-email 2.18.0.huawei.25
+        Sat, 11 Apr 2020 08:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726933AbgDKMQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32FE120644;
+        Sat, 11 Apr 2020 12:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586607392;
+        bh=hi+zWpZ15/J0UethXBgv6Fw/PL1m8lME2EuADHsMWsI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nbNTOa77RdG+/kkiwZmQOnF8N4AQ9qrxpqBg+ILn+q4TaRvhTPYTHCB3sQdtYg0Ri
+         /ft15yIht14LeXdSTMZy2wt3A9UmzMpJTHNk3aCgdXt44mnmI+vPvOtqRf6wFyyIUm
+         AoEYK6LgD07js23ywbFu7ksIPq60ipbG9GjgJod4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 54/54] drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
+Date:   Sat, 11 Apr 2020 14:09:36 +0200
+Message-Id: <20200411115513.995604050@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
+References: <20200411115508.284500414@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.151.151.243]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the RAS Extension is implemented, b0b011000, 0b011100,
-0b011101, 0b011110, and 0b011111, are not used and reserved
-to the DFSC[5:0] of ESR_ELx, but the code still checks these
-unused bits, so remove them.
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-If the handling of guest ras data error fails, it should
-inject data instead of SError to let the guest recover as
-much as possible.
+commit a4c30a4861c54af78c4eb8b7855524c1a96d9f80 upstream.
 
-CC: Xiang Zheng <zhengxiang9@huawei.com>
-CC: Xiaofei Tan <tanxiaofei@huawei.com>
-CC: James Morse <james.morse@arm.com>
-Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+When parsing the reply of a DP_REMOTE_DPCD_READ DPCD command the
+result is wrong due to a missing idx increment.
+
+This was never noticed since DP_REMOTE_DPCD_READ is currently not
+used, but if you enable it, then it is all wrong.
+
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/e72ddac2-1dc0-100a-d816-9ac98ac009dd@xs4all.nl
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
-Abort DFSC of ESR_EL2, below web site[1] has clarified:
-"When the RAS Extension is implemented, 0b011000, 0b011100, 0b011101, 0b011110, and 0b011111, are reserved."
+ drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-[1]: https://developer.arm.com/docs/ddi0595/b/aarch64-system-registers/esr_el2
----
- arch/arm64/include/asm/kvm_emulate.h | 5 -----
- virt/kvm/arm/mmu.c                   | 2 +-
- 2 files changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-index a30b4eec7cb4..857fbc79d678 100644
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -380,11 +380,6 @@ static __always_inline bool kvm_vcpu_dabt_isextabt(const struct kvm_vcpu *vcpu)
- 	case FSC_SEA_TTW1:
- 	case FSC_SEA_TTW2:
- 	case FSC_SEA_TTW3:
--	case FSC_SECC:
--	case FSC_SECC_TTW0:
--	case FSC_SECC_TTW1:
--	case FSC_SECC_TTW2:
--	case FSC_SECC_TTW3:
- 		return true;
- 	default:
- 		return false;
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index e3b9ee268823..3c7972ed7fc5 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1926,7 +1926,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 			return 1;
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -439,6 +439,7 @@ static bool drm_dp_sideband_parse_remote
+ 	if (idx > raw->curlen)
+ 		goto fail_len;
+ 	repmsg->u.remote_dpcd_read_ack.num_bytes = raw->msg[idx];
++	idx++;
+ 	if (idx > raw->curlen)
+ 		goto fail_len;
  
- 		if (unlikely(!is_iabt)) {
--			kvm_inject_vabt(vcpu);
-+			kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
- 			return 1;
- 		}
- 	}
--- 
-2.18.0.huawei.25
+
 
