@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82347C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4318C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C317206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79650206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648416;
-	bh=h08k/XGB9YiKKAdTyYQIrzIjmYkhYs7ZSTs9y0CzzVs=;
+	s=default; t=1586648423;
+	bh=glmim1U2Pn1aiJKmWgmH+Jnaz+lewHVnmLqSProYp6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3yMoqQRj5Mz3/jdng6QoOzknYnduA6igDiPgSqFZ0xOGyRP3VCZbnfMzN+i/KhOF
-	 yfqN4wZYx9omC5k8JYJZlllV/bh9ue4QCVrZbBut/Eup7IVdIzPfRrzB81jFfCsS9t
-	 ui6iN3CDT3mI1VcAnKjQF91GgaactDkuTzOLYO0c=
+	b=PzxHInDrQkIbFB9d14inqkifal9+uiYZLI7v4TIQvMbInttinw3vPkjgkSF4oO+bD
+	 5YFs/8LSRF2l45ncES4EBKEDvYcVhg6jQamM/nirqVtX4A8b8vRlSrUSTsDjAc2++V
+	 IKvlGbWfLeGBVEkEXsSREVyFSnJe/q7xTUf66mu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgDKXkO (ORCPT
+        id S1730597AbgDKXkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbgDKXH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:28 -0400
+        id S1728647AbgDKXH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE7FF20787;
-        Sat, 11 Apr 2020 23:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C116B20CC7;
+        Sat, 11 Apr 2020 23:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646447;
-        bh=h08k/XGB9YiKKAdTyYQIrzIjmYkhYs7ZSTs9y0CzzVs=;
+        s=default; t=1586646445;
+        bh=glmim1U2Pn1aiJKmWgmH+Jnaz+lewHVnmLqSProYp6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N/835YQ1eNIDhLkRpzm8i108HL7ND/KuyET/gCOxgrgvJKcUgkxWN6aq0OP1l7Fui
-         Fhj1zJT0iIgTH2yq9ne1CA/VwxErlG32O9+N6Z/38QQsQhsCEjnL5VWqRWvvyckMpq
-         HQGlSumYC82iCqDERcec3WpLUxVEqmgVpS9LUEWQ=
+        b=vKD2TMQDN1jP1tMr/q3FHHzd6KGnXHwXRMFYod5TbixQ66FdVTGkMYqqEBbp8iXli
+         6aWYOxjq1dXbLrnuSfcyPN6HpmfMOrkJOEhXhwFgI/DZv4BN9pmtgB7LAk5/AKlj+R
+         VbbaWbLF6h6cJ1+TRFHCjVT7fnFhmK+wWE6rNPtE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 018/121] selftests/bpf: Fix test_progs's parsing of test numbers
-Date:   Sat, 11 Apr 2020 19:05:23 -0400
-Message-Id: <20200411230706.23855-18-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 016/121] RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
+Date:   Sat, 11 Apr 2020 19:05:21 -0400
+Message-Id: <20200411230706.23855-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -62,62 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit fc32490bff855a539d253c8a52c5a1ba51d1325a ]
+[ Upstream commit e8dc4e885c459343970b25acd9320fe9ee5492e7 ]
 
-When specifying disjoint set of tests, test_progs doesn't set skipped test's
-array elements to false. This leads to spurious execution of tests that should
-have been skipped. Fix it by explicitly initializing them to false.
+xa_alloc_cyclic() is a SMP release to be paired with some later acquire
+during xa_load() as part of cm_acquire_id().
 
-Fixes: 3a516a0a3a7b ("selftests/bpf: add sub-tests support for test_progs")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/20200314013932.4035712-2-andriin@fb.com
+As such, xa_alloc_cyclic() must be done after the cm_id is fully
+initialized, in particular, it absolutely must be after the
+refcount_set(), otherwise the refcount_inc() in cm_acquire_id() may not
+see the set.
+
+As there are several cases where a reader will be able to use the
+id.local_id after cm_acquire_id in the IB_CM_IDLE state there needs to be
+an unfortunate split into a NULL allocate and a finalizing xa_store.
+
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-2-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/infiniband/core/cm.c | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 7fa7d08a8104d..849c1e8b8e3dc 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -361,7 +361,7 @@ static int libbpf_print_fn(enum libbpf_print_level level,
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 4decc1d4cc997..1c7984bae7ab2 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -571,18 +571,6 @@ static int cm_init_av_by_path(struct sa_path_rec *path,
+ 	return 0;
+ }
  
- int parse_num_list(const char *s, struct test_selector *sel)
- {
--	int i, set_len = 0, num, start = 0, end = -1;
-+	int i, set_len = 0, new_len, num, start = 0, end = -1;
- 	bool *set = NULL, *tmp, parsing_end = false;
- 	char *next;
- 
-@@ -396,18 +396,19 @@ int parse_num_list(const char *s, struct test_selector *sel)
- 			return -EINVAL;
- 
- 		if (end + 1 > set_len) {
--			set_len = end + 1;
--			tmp = realloc(set, set_len);
-+			new_len = end + 1;
-+			tmp = realloc(set, new_len);
- 			if (!tmp) {
- 				free(set);
- 				return -ENOMEM;
- 			}
-+			for (i = set_len; i < start; i++)
-+				tmp[i] = false;
- 			set = tmp;
-+			set_len = new_len;
- 		}
--		for (i = start; i <= end; i++) {
-+		for (i = start; i <= end; i++)
- 			set[i] = true;
--		}
+-static int cm_alloc_id(struct cm_id_private *cm_id_priv)
+-{
+-	int err;
+-	u32 id;
 -
- 	}
+-	err = xa_alloc_cyclic_irq(&cm.local_id_table, &id, cm_id_priv,
+-			xa_limit_32b, &cm.local_id_next, GFP_KERNEL);
+-
+-	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
+-	return err;
+-}
+-
+ static u32 cm_local_id(__be32 local_id)
+ {
+ 	return (__force u32) (local_id ^ cm.random_id_operand);
+@@ -836,6 +824,7 @@ struct ib_cm_id *ib_create_cm_id(struct ib_device *device,
+ 				 void *context)
+ {
+ 	struct cm_id_private *cm_id_priv;
++	u32 id;
+ 	int ret;
  
- 	if (!set)
+ 	cm_id_priv = kzalloc(sizeof *cm_id_priv, GFP_KERNEL);
+@@ -847,9 +836,6 @@ struct ib_cm_id *ib_create_cm_id(struct ib_device *device,
+ 	cm_id_priv->id.cm_handler = cm_handler;
+ 	cm_id_priv->id.context = context;
+ 	cm_id_priv->id.remote_cm_qpn = 1;
+-	ret = cm_alloc_id(cm_id_priv);
+-	if (ret)
+-		goto error;
+ 
+ 	spin_lock_init(&cm_id_priv->lock);
+ 	init_completion(&cm_id_priv->comp);
+@@ -858,11 +844,20 @@ struct ib_cm_id *ib_create_cm_id(struct ib_device *device,
+ 	INIT_LIST_HEAD(&cm_id_priv->altr_list);
+ 	atomic_set(&cm_id_priv->work_count, -1);
+ 	refcount_set(&cm_id_priv->refcount, 1);
++
++	ret = xa_alloc_cyclic_irq(&cm.local_id_table, &id, NULL, xa_limit_32b,
++				  &cm.local_id_next, GFP_KERNEL);
++	if (ret)
++		goto error;
++	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
++	xa_store_irq(&cm.local_id_table, cm_local_id(cm_id_priv->id.local_id),
++		     cm_id_priv, GFP_KERNEL);
++
+ 	return &cm_id_priv->id;
+ 
+ error:
+ 	kfree(cm_id_priv);
+-	return ERR_PTR(-ENOMEM);
++	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL(ib_create_cm_id);
+ 
 -- 
 2.20.1
 
