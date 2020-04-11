@@ -2,175 +2,196 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202B7C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B60C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE50120857
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6D420857
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/weE0Lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgDKHhD convert rfc822-to-8bit (ORCPT
+        id S1726070AbgDKHhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:37:03 -0400
-Received: from poy.remlab.net ([94.23.215.26]:53062 "EHLO
-        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgDKHhD (ORCPT
+        Sat, 11 Apr 2020 03:37:39 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36653 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgDKHhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:37:03 -0400
-Received: from basile.remlab.net (87-92-31-51.bb.dnainternet.fi [87.92.31.51])
-        (Authenticated sender: remi)
-        by ns207790.ip-94-23-215.eu (Postfix) with ESMTPSA id 8CC435FD38;
-        Sat, 11 Apr 2020 09:37:00 +0200 (CEST)
-From:   =?ISO-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
-To:     Vito Caputo <vcaputo@pengaru.com>
-Cc:     netdev@vger.kernel.org, courmisch@gmail.com, davem@davemloft.net,
-        kuba@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: kernel BUG at net/phonet/socket.c:LINE!
-Date:   Sat, 11 Apr 2020 10:36:59 +0300
-Message-ID: <1806223.auBmcZeozp@basile.remlab.net>
-Organization: Remlab
-In-Reply-To: <20200411004320.py2cashe4edsjdzp@shells.gnugeneration.com>
-References: <00000000000062b41d05a2ea82b0@google.com> <20200411004320.py2cashe4edsjdzp@shells.gnugeneration.com>
+        Sat, 11 Apr 2020 03:37:38 -0400
+Received: by mail-qk1-f194.google.com with SMTP id l25so4413053qkk.3;
+        Sat, 11 Apr 2020 00:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=34SXotHCFig2XW0ZT/0v7PT2JbF8G1bKxwbaFq/YqAQ=;
+        b=g/weE0LkjlpFsKMBKmX7qwvx/jDIL5lJ2WQyIXEhvcDHopKETqPVuFAS6a/zxrWzrr
+         Qq7VnjI4B8KFyFIP2HJqtHkeCmYwRy/btGBDYzGNMCgzII2eJQb7f94XOORaAba03HqI
+         V0M/BAWYWXdNHKfDLaFGcpzPUYoAioUQceBLocZofdJkJWfCm71NrsMFfq9B3E0pCE8o
+         t6wcqyNDiN04bBD0pralL3tEmVdR4VYt+egNMgVXckcjI71tz25DzgKk7Af+3hPATmFy
+         whky3H4LCOtcqW6c8m+eF81XzQBZt1+WrQuW7nkxUcVl+x0fhPjMRpB5rjG9teEybIxj
+         jnMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=34SXotHCFig2XW0ZT/0v7PT2JbF8G1bKxwbaFq/YqAQ=;
+        b=T8x1lVS+75/NyQ/5pr2TTrDVqsX89aB4Uo0Cb4Q5hq7rYGp8/xCoTfjBREs1RauqHZ
+         cg7Y0yzlHSy99jrfDjwhKEIw+dUEsoiCop3yMeYsyACWYBa03e9ewsqRqT6YlQqyUelM
+         344MSMkeFZhccPH5nC8SYq3khTdqxtYgSMSzbs8/AGwBEM7Th37CwvghTM4wq3/O+9T8
+         ngEjun7zfTH6Yyq8N4wpe2ve9MkMoR5JUCfk2ttU9OWelcaDr1keRPOTnJEMULSwPOHS
+         sdjRSCESASNmGpjztwJnDY27btipX7dSJi+oHQWII0rPRy1vAt5yMOmL/P9Sx07+ryHo
+         DQVg==
+X-Gm-Message-State: AGi0Publr3xOWCGTziCY+wIo2ACdcMUK8XVwjRBhv6xDvzp58lreV0KQ
+        sXBMO3IoNmkkoujwKn6IOFyP1XiV7EW+//zoxW7zRw==
+X-Google-Smtp-Source: APiQypKElt8bZ5XyFAjlDmMCD2pAfkCb45r/Mib5vH182COutzFcyLr40lTWSXh14XH6dEFiHoXFZ9bcJEZbCBrx8rE=
+X-Received: by 2002:a37:702:: with SMTP id 2mr7472285qkh.134.1586590656249;
+ Sat, 11 Apr 2020 00:37:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+References: <1586401829-22242-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAKcpw6XywbOs-rh5ko0uz9vLz9nkgrJ0LiRTSkQQaU9dZbg7oQ@mail.gmail.com>
+ <20200409150923.5b224361@flygoat-x1e> <alpine.LFD.2.21.2004091540450.596385@eddie.linux-mips.org>
+ <7A98E39B-EDCF-496D-9525-0160A368361B@flygoat.com>
+In-Reply-To: <7A98E39B-EDCF-496D-9525-0160A368361B@flygoat.com>
+From:   YunQiang Su <wzssyqa@gmail.com>
+Date:   Sat, 11 Apr 2020 15:37:24 +0800
+Message-ID: <CAKcpw6XU=vwGMwMBJk-Rsg--8CqEis39DEAJRMboP=2aYd5r8g@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Limit check_bugs32() under CONFIG_32BIT
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi,
+Jiaxun Yang <jiaxun.yang@flygoat.com> =E4=BA=8E2020=E5=B9=B44=E6=9C=889=E6=
+=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8811:47=E5=86=99=E9=81=93=EF=BC=9A
+>
+>
+>
+> =E4=BA=8E 2020=E5=B9=B44=E6=9C=889=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+1:07:46, "Maciej W. Rozycki" <macro@linux-mips.org> =E5=86=99=E5=88=B0:
+> >On Thu, 9 Apr 2020, Jiaxun Yang wrote:
+> >
+> >> > > There is no need to build and call check_bugs32() under
+> >> > > CONFIG_64BIT, just limit it under CONFIG_32BIT.
+> >> >
+> >> > Since 32bit is subset of 64bit, and due to the code, I think that
+> >the
+> >> > initial purpose
+> >> > of check_bugs32() is also willing to run even with CONFIG_64BIT.
+> >> >
+> >> > For example, if we have a CPU which is 64bit, and work well on
+> >64bit
+> >> > mode, while has a bug only on 32bit mode, check_bugs32 should be
+> >used
+> >> > here.
+> >> >
+> >> > Loongson's 3A 1000 is the example, I cannot support FP32 mode well.
+> >>
+> >> In this case bugs32 only contains a workaround for MIPS34K, which is
+> >a
+> >> MIPS32 processor. It's safe to do so.
+> >
+> > This is because commit c65a5480ff29 ("[MIPS] Fix potential latency
+> >problem due to non-atomic cpu_wait.") moved the other generic
+> >workaround
+> >elsewhere.
+> >
+> > The intent has been since historical commit 450ad16ba0ab ("Get rid of
+> >arch/mips64/kernel.  9116 lines of code gone.") that `check_bugs32' is
+> >for
+> >generic errata affecting both 32-bit and 64-bit operation (e.g. 32-bit
+> >instructions, which naturally may occur in both cases) and
+> >`check_bugs64'
+> >is for errata affecting 64-bit operation only (e.g. 64-bit
+> >instructions).
+> >
+> >But currently it appears we have no generic errata handled, as surely a
+> >
+> >34K erratum cannot affect 64-bit operation.  So I think such a change
+> >makes sense in principle (if a generic erratum appears in the future we
+> >
+> >can add a third category, which includes workarounds that are always
+> >applied), but I think it has to be made in a cleaner way.
+> >
+> >Specifically `check_errata' has to be renamed to `check_errata32', some
+> >
+> >commentary added as to the intent, and last but not least a proper
+> >change
+> >description added that not only repeats what the change does (and what
+> >everyone sees regardless), but actually justifies why the change is
+> >made.
+> >Saying: "There is no need[...]" does not tell us *why* there is no
+> >need.
+> >
+> >> But my suggestion is if you're going to clean-up bugs and workarounds
+> >> you'd better establish a file for silicon bugs and provide Kconfig
+> >> options to enable & disable them. Manage bug dependencies by Kconfig
+> >> will be easier.
+> >
+> > Why is using Kconfig supposed to be better?  Several configurations
+> >support multiple processor types (e.g. swappable CPU daugthercards or
+> >FPGA
+> >soft-cores) and having to list CPU types across platforms as CPUs are
+> >added is going to be a maintenance nightmare.  Whereas having
+> >workarounds
+> >or panics associated with run-time determination of the actual CPU type
+> >
+> >guarantees they will trigger where necessary.  The use of `init'
+> >sections
+> >assures the reclaim of memory for use after bootstrap.
+>
+> Actually I meant let bug checks depends on Kconfig's CPU selection.
+>
 
-Le lauantaina 11. huhtikuuta 2020, 3.43.20 EEST Vito Caputo a écrit :
-> I stared a bit at the code surrounding this report, and maybe someone more
-> familiar with the network stack can clear something up for me real quick:
-> > RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
-> 
-> net/phonet/socket.c:
-> 202 static int pn_socket_autobind(struct socket *sock)
-> 203 {
-> 204         struct sockaddr_pn sa;
-> 205         int err;
-> 206
-> 207         memset(&sa, 0, sizeof(sa));
-> 208         sa.spn_family = AF_PHONET;
-> 209         err = pn_socket_bind(sock, (struct sockaddr *)&sa,
-> 210                                 sizeof(struct sockaddr_pn));
-> 211         if (err != -EINVAL)
-> 212                 return err;
-> 213         BUG_ON(!pn_port(pn_sk(sock->sk)->sobject));
-> 214         return 0; /* socket was already bound */
-> 215 }
-> 
-> line 213 is the BUG_ON for !sock->sk->sobject, a phonet-specific member:
-> 
-> include/net/phonet/phonet.h:
->  23 struct pn_sock {
->  24         struct sock     sk;
->  25         u16             sobject;
->  26         u16             dobject;
->  27         u8              resource;
->  28 };
-> 
-> pn_socket_autobind() expects that to be non-null whenever pn_socket_bind()
-> returns -EINVAL, which seems odd, but the comment claims it's already bound,
-> let's look at pn_socket_bind():
-> 
-> net/phonet/socket.c:
-> 156 static int pn_socket_bind(struct socket *sock, struct sockaddr *addr,
-> int len) 157 {
-> 158         struct sock *sk = sock->sk;
-> 159         struct pn_sock *pn = pn_sk(sk);
-> 160         struct sockaddr_pn *spn = (struct sockaddr_pn *)addr;
-> 161         int err;
-> 162         u16 handle;
-> 163         u8 saddr;
-> 164
-> 165         if (sk->sk_prot->bind)
-> 166                 return sk->sk_prot->bind(sk, addr, len);
-> 167
-> 168         if (len < sizeof(struct sockaddr_pn))
-> 169                 return -EINVAL;
-> 170         if (spn->spn_family != AF_PHONET)
-> 171                 return -EAFNOSUPPORT;
-> 172
-> 173         handle = pn_sockaddr_get_object((struct sockaddr_pn *)addr);
-> 174         saddr = pn_addr(handle);
-> 175         if (saddr && phonet_address_lookup(sock_net(sk), saddr))
-> 176                 return -EADDRNOTAVAIL;
-> 177
-> 178         lock_sock(sk);
-> 179         if (sk->sk_state != TCP_CLOSE || pn_port(pn->sobject)) {
-> 180                 err = -EINVAL; /* attempt to rebind */
-> 181                 goto out;
-> 182         }
-> 183         WARN_ON(sk_hashed(sk));
-> 184         mutex_lock(&port_mutex);
-> 185         err = sk->sk_prot->get_port(sk, pn_port(handle));
-> 186         if (err)
-> 187                 goto out_port;
-> 188
-> 189         /* get_port() sets the port, bind() sets the address if
-> applicable */ 190         pn->sobject = pn_object(saddr,
-> pn_port(pn->sobject));
-> 191         pn->resource = spn->spn_resource;
-> 192
-> 193         /* Enable RX on the socket */
-> 194         err = sk->sk_prot->hash(sk);
-> 195 out_port:
-> 196         mutex_unlock(&port_mutex);
-> 197 out:
-> 198         release_sock(sk);
-> 199         return err;
-> 200 }
-> 
-> 
-> The first return branch in there simply hands off the bind to and
-> indirection sk->sk_prot->bind() if present.  This smells ripe for breaking
-> the assumptions of that BUG_ON().
+I don't think this is a good idea. Since the routine is executed single tim=
+e,
+so it is not performance critical.
+And Kconfig for per-cpu is bad for the future if we want to try to archive
+single kernel image.
 
-I believe that this is in line with the design of the socket stack within the 
-Linux kernel. 'struct proto_ops' carries the protocol family operations, then 
-'struct proto' carries the protocol operations.
-
-Admittedly, Phonet only had one datagram and one stream protocol ever written, 
-as the hardware development ceased. So in practice, there is a 1:1 mapping 
-between the two, and sk_prot.bind is always NULL.
-
-> I'm assuming there's no point for such an indirection if not to enable a
-> potentially non-phonet-ops hook, otherwise we'd just be do the bind.
-
-In my understanding, that's *not* what sk_prot is for, no. It's rather meant 
-to specialize the socket calls on a per-protocol basis.
-
-For instance, UDP and UDP-Lite share their address family 'struct proto_ops' 
-(either inet_dgram_ops or inet6_dgram_ops) but they have different 
-'struct proto'.
-
-> If not, isn't this plain recursive?  Color me confused.  Will other bind()
-> implementations return -EINVAL when already bound with sobject set? no.
-
-As far as I can find, there are no cases where the bind pointer would not be 
-NULL in upstream kernel. This can only happen if an out-of-tree module defines 
-its own protocol within the Phonet family.
-
-> Furthermore, -EINVAL is also returned when len < sizeof(struct sockaddr_pn),
-> maybe the rebind case should return -EADDRINUSE instead of -EINVAL?
-
-bind() semantics require returning EINVAL if the socket address size is, well, 
-invalid.
-
-If we are to distinguish the two error scenarii, then it's the rebind  case 
-that needs a different error, but EINVAL is consistent with INET.
-
-> I must be missing some things.
-
--- 
-Rémi Denis-Courmont
-Tapiolan uusi kaupunki, Uudenmaan tasavalta
+> It's guaranteed that you can only select one kind of CPU one time,
+> to prevent the overhead of checking bugs on irrelevant processors.
+>
+> And we still have to check PRID/CPUTYPE during boot to enable
+> proper workarounds, because the Kconfig options are telling about the pos=
+sibility,
+> which means a processor potentially has some kinds of bug.
+>
+> In this case, M34K's errata should depends on or selected by
+> CPU_MIPS32_R2 in Kconfig.
+>
+> So there won't be any nightmare, but only reduced code :-)
+>
+> Probably we can build-up a general framework for checks & workarounds,
+> and display affected bugs in /proc/cpuinfo?
+> That's my personal thought.
+>
+> Thanks.
+>
+> >
+> >OTOH I agree splitting off errata handling to a separate file may make
+> >sense for structural reasons; we have it already for `check_bugs64'.
+> >
+> >  Maciej
+>
+> --
+> Jiaxun Yang
 
 
 
+--=20
+YunQiang Su
