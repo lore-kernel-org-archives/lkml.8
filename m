@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CD9C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1487C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E340B20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF3920769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647126;
-	bh=kz4aik7AaZKvs4fI9Ltirklw5+Y51jzFfOY+3UvPsGU=;
+	s=default; t=1586647136;
+	bh=9jgHXDBXge+Uelg55uiGNqGFcvm6tM5OrdSs/Qi7XPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a0crfjmRlrc1/3jac64fXLisU5iprmy+eb9vX7ncj76CDHZaoKESrJszNuiFnYWZM
-	 kiIqLSYr2J8Q2y9RiHkK1h+3iPvy9mhBFSJcosHTOgssLkkXydBCHZqr4t/L7JcqnY
-	 IpKTx7PPcNhZaRINKoYAs2rHKQuZmVWjOp2jQpyM=
+	b=EKj0QoaxIXLVeoz9pdpS6fXFpda96S3fkLy5xlyHqHplwZykhdxtOL2qo4fG5z4h7
+	 O5dKg5MwHwALJOeS3Y01+eb6pFukLoxxQbd9t18+FPYt3Rf3pTIlbIofNQ/Rph5bPJ
+	 t1kM1tSC91fMgQXwDorDAf6l4MGsnoaMywhKHP+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgDKXSo (ORCPT
+        id S1730644AbgDKXOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730657AbgDKXOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:04 -0400
+        id S1729132AbgDKXN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9991821973;
-        Sat, 11 Apr 2020 23:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDD021744;
+        Sat, 11 Apr 2020 23:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646844;
-        bh=kz4aik7AaZKvs4fI9Ltirklw5+Y51jzFfOY+3UvPsGU=;
+        s=default; t=1586646837;
+        bh=9jgHXDBXge+Uelg55uiGNqGFcvm6tM5OrdSs/Qi7XPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=No0Cvf9WCy0EAw/+8fNtYJDIISZ/hnlLuV3IEGzbiLCCPCjE7eCdfdpfGhh7/SCCv
-         yOlEHX2x8LuNd4BJuguh7m0s65QNQHxwHBoGFt19MBzCiVcWbruflg4KX8JCXvkSJI
-         fzIWCoiC1sBg/uboh0Ok15N83wZK1A+7DTQXYFeg=
+        b=fRGNfe1vUBL1lpjdSNbxIhmD2i7z5MWhye0MtGfczFPZ1snM2pc8FZgCCCfHWtUoA
+         n4RpuJD86AB5akjL9QqZlr0SY6OxK8y46T6vbpbX8x+jkQ6fu3SKkrPCL2nx6coSS3
+         Dy+FRzapme1PK2JJyifRLw6DWab3JtkF648ylezI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 31/37] ASoC: Intel: Skylake: Enable codec wakeup during chip init
-Date:   Sat, 11 Apr 2020 19:13:20 -0400
-Message-Id: <20200411231327.26550-31-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 25/37] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat, 11 Apr 2020 19:13:14 -0400
+Message-Id: <20200411231327.26550-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -60,39 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cezary Rojewski <cezary.rojewski@intel.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit e603f11d5df8997d104ab405ff27640b90baffaa ]
+[ Upstream commit 71811cac8532b2387b3414f7cd8fe9e497482864 ]
 
-Follow the recommendation set by hda_intel.c and enable HDMI/DP codec
-wakeup during bus initialization procedure. Disable wakeup once init
-completes.
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200305145314.32579-4-cezary.rojewski@intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/skylake/skl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/bluetooth/rfcomm/tty.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
-index a0bef63b8fb11..7fb4df78ecb35 100644
---- a/sound/soc/intel/skylake/skl.c
-+++ b/sound/soc/intel/skylake/skl.c
-@@ -103,9 +103,11 @@ static int skl_init_chip(struct hdac_bus *bus, bool full_reset)
- {
- 	int ret;
- 
-+	snd_hdac_set_codec_wakeup(bus, true);
- 	skl_enable_miscbdcge(bus->dev, false);
- 	ret = snd_hdac_bus_init_chip(bus, full_reset);
- 	skl_enable_miscbdcge(bus->dev, true);
-+	snd_hdac_set_codec_wakeup(bus, false);
- 
- 	return ret;
- }
+diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+index 5f3074cb6b4db..b6f26ec9e90cd 100644
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
+ 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+-		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
++		if (dlc)
+ 			return -EBUSY;
+-		}
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+ 		if (!dlc)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
