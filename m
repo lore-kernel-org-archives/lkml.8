@@ -1,67 +1,77 @@
 Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=DEAR_FRIEND,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E3CC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9949DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE70120857
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77ECC2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgDKHVN convert rfc822-to-8bit (ORCPT
+        id S1726124AbgDKHaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:21:13 -0400
-Received: from unallocated-static.datacentres.rogers.com ([72.142.144.38]:49203
-        "EHLO smartermail2" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725877AbgDKHVM (ORCPT
+        Sat, 11 Apr 2020 03:30:10 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:40043 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgDKHaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:21:12 -0400
-X-Greylist: delayed 6163 seconds by postgrey-1.27 at vger.kernel.org; Sat, 11 Apr 2020 03:21:12 EDT
-Received: from coris.com (UnknownHost [103.207.36.17]) by smartermail2 with SMTP;
-   Thu, 9 Apr 2020 10:50:44 -0400
-Reply-To: kentpace@sina.com
-From:   Kent Pace <kentpace@coris.com>
-To:     linux-kernel@vger.kernel.org
-Subject: Urgent!!!!! Please read
-Date:   09 Apr 2020 07:50:40 -0700
-Message-ID: <20200409075040.4BB6896A84661BBD@coris.com>
+        Sat, 11 Apr 2020 03:30:09 -0400
+Received: from localhost.localdomain ([93.22.135.18])
+        by mwinf5d37 with ME
+        id RKW6220070Pz5GD03KW6Eh; Sat, 11 Apr 2020 09:30:08 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Apr 2020 09:30:08 +0200
+X-ME-IP: 93.22.135.18
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     elder@kernel.org, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] soc: qcom: ipa: Add a missing '\n' in a log message
+Date:   Sat, 11 Apr 2020 09:30:04 +0200
+Message-Id: <20200411073004.8404-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Friend,
+Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
 
+Fixes: a646d6ec9098 ("soc: qcom: ipa: modem and microcontroller")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/ipa/ipa_modem.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-There is something very important I need to discuss with you.  I 
-am writing  this letter in tears and fear. In tears because I 
-will soon depart and in fear because I don't really know if you 
-will do this faithfully.
-
-
-I am COVID-19  patient and the doctor has already confirmed I may 
-not last for the next 7 days.
-
-I have substantial amount of money deposited in a security vault 
-around your country. It is in trunk boxes and once  I receive 
-your response and see your readiness to claim the money 
-immediately, I will forward the needed documents and the contact 
-of the security vault where the consignment is deposited,
-I am not asking you to give me anything but I want you to help 
-people that has been infected with this deadly virus with 60% of 
-the money and 40% should be for you and your family.
-
-I will disclose exact amount in the boxes as soon as I 
-receive your response.
-
-
-Regards
+diff --git a/drivers/net/ipa/ipa_modem.c b/drivers/net/ipa/ipa_modem.c
+index 55c9329a4b1d..ed10818dd99f 100644
+--- a/drivers/net/ipa/ipa_modem.c
++++ b/drivers/net/ipa/ipa_modem.c
+@@ -297,14 +297,13 @@ static void ipa_modem_crashed(struct ipa *ipa)
+ 
+ 	ret = ipa_endpoint_modem_exception_reset_all(ipa);
+ 	if (ret)
+-		dev_err(dev, "error %d resetting exception endpoint",
+-			ret);
++		dev_err(dev, "error %d resetting exception endpoint\n", ret);
+ 
+ 	ipa_endpoint_modem_pause_all(ipa, false);
+ 
+ 	ret = ipa_modem_stop(ipa);
+ 	if (ret)
+-		dev_err(dev, "error %d stopping modem", ret);
++		dev_err(dev, "error %d stopping modem\n", ret);
+ 
+ 	/* Now prepare for the next modem boot */
+ 	ret = ipa_mem_zero_modem(ipa);
+-- 
+2.20.1
 
