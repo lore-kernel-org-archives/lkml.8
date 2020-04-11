@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C00C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F4C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6092173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A32021744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607207;
-	bh=1qgwLKUC+YvoDSNa1hxeng6qS2w1FMUiVSiNGKdEzuk=;
+	s=default; t=1586607209;
+	bh=KgQI/IEdw7z0FxlePfn7h13qgfWjmrpXaevxOhYSAlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4UAhbNGBkVPzzYqAPbIjGWxoslDk0HUR6fJiP5Lz1O1tGJ4epk3wWzyKhGWagf1w
-	 v45bT2GmVaYI05pecT84eEC5o9l65cFp6vsqcobw3h3/ork4WnzjGpNZwhyd6FEDvq
-	 MG/pUsTmLSNi0fPsVe9yG4/8LCUerLEu7A4Sv11E=
+	b=NAOr2NfClBvbopQAXie7MlHKrGUdXrqpxZ3HHSuUX8niqoi2gqgn78QwD2ZOkgquw
+	 ELyfrY48bRiQKXUKXwkLejaGJ6418g9924CrCAku2TNRNCb7HHQGmztc/ByMdOnzfr
+	 rODnLEfoI2bYzTSKo4dF//KDZHL+aMrkFFcGN4f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgDKMNZ (ORCPT
+        id S1727782AbgDKMNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgDKMNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:23 -0400
+        id S1727757AbgDKMNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDE421744;
-        Sat, 11 Apr 2020 12:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 501AE2173E;
+        Sat, 11 Apr 2020 12:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607204;
-        bh=1qgwLKUC+YvoDSNa1hxeng6qS2w1FMUiVSiNGKdEzuk=;
+        s=default; t=1586607201;
+        bh=KgQI/IEdw7z0FxlePfn7h13qgfWjmrpXaevxOhYSAlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DH8SnowycqDIwc4VvquQLrKEJeDPb+LEfgShdV6P9Pz8zOZFKs7CxVYkES9hwjpCU
-         rpViUgfh3uw5pWbGQTTm0eMAA2wyOwfeb7CXqCxvvKsATJfdxCD5KpXLwdAP/GiGJi
-         o2i8v1hxd5V94dqg7nz7TTzMPFaT+6017Dl8V31I=
+        b=VyfYb+YYS/Wu2MGop3/EqDwt8f/CnP3ZyKPz2Y/yDLLjkQatLWXEJ9svp38KrMJP/
+         1tZNahDvEtz3hqjDruOhSPaVgyukp+694OLiCPz4+qEOvKTwnSM+vzafNEHX6JpWz5
+         VbE/mc0lduML7Vgc49AD00GCtZTCZvp3DorfJOCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 17/38] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-Date:   Sat, 11 Apr 2020 14:09:01 +0200
-Message-Id: <20200411115439.658166481@linuxfoundation.org>
+Subject: [PATCH 4.14 16/38] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Sat, 11 Apr 2020 14:09:00 +0200
+Message-Id: <20200411115439.585127343@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -61,63 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-After the power-down bit is cleared, the chip internally triggers a
-global reset. According to the KSZ9031 documentation, we have to wait at
-least 1ms for the reset to finish.
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-If the chip is accessed during reset, read will return 0xffff, while
-write will be ignored. Depending on the system performance and MDIO bus
-speed, we may or may not run in to this issue.
-
-This bug was discovered on an iMX6QP system with KSZ9031 PHY and
-attached PHY interrupt line. If IRQ was used, the link status update was
-lost. In polling mode, the link status update was always correct.
-
-The investigation showed, that during a read-modify-write access, the
-read returned 0xffff (while the chip was still in reset) and
-corresponding write hit the chip _after_ reset and triggered (due to the
-0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
-resulting in the next write being lost due to the new reset cycle.
-
-This patch fixes the issue by adding a 1...2 ms sleep after the
-genphy_resume().
-
-Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/micrel.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/dsa/bcm_sf2.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -29,6 +29,7 @@
- #include <linux/micrel_phy.h>
- #include <linux/of.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1112,6 +1112,7 @@ static int bcm_sf2_sw_probe(struct platf
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1174,7 +1175,11 @@ static int bcm_sf2_sw_probe(struct platf
+ 	 */
+ 	set_bit(0, priv->cfp.used);
  
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
-@@ -727,6 +728,12 @@ static int kszphy_resume(struct phy_devi
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
  
- 	genphy_resume(phydev);
- 
-+	/* After switching from power-down to normal mode, an internal global
-+	 * reset is automatically generated. Wait a minimum of 1 ms before
-+	 * read/write access to the PHY registers.
-+	 */
-+	usleep_range(1000, 2000);
-+
- 	ret = kszphy_config_reset(phydev);
- 	if (ret)
- 		return ret;
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
 
 
