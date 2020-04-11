@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA73BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695C7C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49E52051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B432051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648244;
-	bh=Vd95vQOwscdWE6+Vi7H8ELtfYUnIdEjwXMsOTm5pwDE=;
+	s=default; t=1586648249;
+	bh=xQAW1GitvLQh6XJsKowD5jHl7RZkVULVUj2zrP3ZgkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjegzc5lFe2pdOCwntlKhZ/WagOA3CvQ1YjiwFrj9aiSHuZr3E1QMHHzjATBDjR08
-	 k9nKzdEsiixKIpo6/IJltTIrykb+XJ1upkosCmIg4nSI9DipmZWhVF/a/5KEGI0MgT
-	 xs+lRJVFXwA9s7Os1moesduDjrYNou9PCytYvJR8=
+	b=HG4isNu3O4d0EhbQa/euROOwzsrqU6nqbH3EpE4PBmbR146wgVNb2GXrhueH4npM4
+	 f/XF7XD4OKWkTEaCJHXvY1/AOsvhEXsep2Z9sTRJlE7xV3m5ltgHQSWU2oARs55eiS
+	 DzI2meSUqX0LMANYl9XGH4E1aG3WKmJGQ0H8sle0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgDKXhX (ORCPT
+        id S1728296AbgDKXIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45258 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgDKXIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:24 -0400
+        id S1727250AbgDKXIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AAA21835;
-        Sat, 11 Apr 2020 23:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B27216FD;
+        Sat, 11 Apr 2020 23:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646504;
-        bh=Vd95vQOwscdWE6+Vi7H8ELtfYUnIdEjwXMsOTm5pwDE=;
+        s=default; t=1586646489;
+        bh=xQAW1GitvLQh6XJsKowD5jHl7RZkVULVUj2zrP3ZgkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geGnlvOihA26tUr3YyRDnCjcpI1pMjJO8sh167bZ1dCBkjNnNrnWKq+rlnnKt0/os
-         BONuEjykE0Ee8I7yiYXwgCdUe2RCLqtAEEhMxQuEz2XmLKfRw0VrFrGB1DBbDIlv9e
-         od9aw8zTSfCBkPYArYq6wD6DpglYhQNnVlYKok38=
+        b=R6qZeSzE5lAGR6+GP1oIpsgcd0xVoIkU427iQbSYRHp5y3+z1ZQ2hCCRmUAWmcma+
+         7nTA3jdHl6I6pWHTsijwyeheCOosXdUXwVAc+XXZhLPDTeDS8x3jdQNmqmdZ6I40uY
+         Wltn3j/Zv9FbBuVEP1Loqsd0lYR3Z5ResHzD2KC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 064/121] scsi: lpfc: Fix RQ buffer leakage when no IOCBs available
-Date:   Sat, 11 Apr 2020 19:06:09 -0400
-Message-Id: <20200411230706.23855-64-sashal@kernel.org>
+Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 053/121] crypto: tcrypt - fix printed skcipher [a]sync mode
+Date:   Sat, 11 Apr 2020 19:05:58 -0400
+Message-Id: <20200411230706.23855-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,56 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-[ Upstream commit 39c4f1a965a9244c3ba60695e8ff8da065ec6ac4 ]
+[ Upstream commit 8e3b7fd7ea554ccb1bdc596bfbcdaf56f7ab017c ]
 
-The driver is occasionally seeing the following SLI Port error, requiring
-reset and reinit:
+When running tcrypt skcipher speed tests, logs contain things like:
+testing speed of async ecb(des3_ede) (ecb(des3_ede-generic)) encryption
+or:
+testing speed of async ecb(aes) (ecb(aes-ce)) encryption
 
- Port Status Event: ... error 1=0x52004a01, error 2=0x218
+The algorithm implementations are sync, not async.
+Fix this inaccuracy.
 
-The failure means an RQ timeout. That is, the adapter had received
-asynchronous receive frames, ran out of buffer slots to place the frames,
-and the driver did not replenish the buffer slots before a timeout
-occurred. The driver should not be so slow in replenishing buffers that a
-timeout can occur.
-
-When the driver received all the frames of a sequence, it allocates an IOCB
-to put the frames in. In a situation where there was no IOCB available for
-the frame of a sequence, the RQ buffer corresponding to the first frame of
-the sequence was not returned to the FW. Eventually, with enough traffic
-encountering the situation, the timeout occurred.
-
-Fix by releasing the buffer back to firmware whenever there is no IOCB for
-the first frame.
-
-[mkp: typo]
-
-Link: https://lore.kernel.org/r/20200128002312.16346-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7166e589da5b6 ("crypto: tcrypt - Use skcipher")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ crypto/tcrypt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 625c046ac4efa..6d0496980d4e8 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -17941,6 +17941,10 @@ lpfc_prep_seq(struct lpfc_vport *vport, struct hbq_dmabuf *seq_dmabuf)
- 			list_add_tail(&iocbq->list, &first_iocbq->list);
- 		}
+diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+index f42f486e90e8a..ba0b7702f2e91 100644
+--- a/crypto/tcrypt.c
++++ b/crypto/tcrypt.c
+@@ -1514,8 +1514,8 @@ static void test_skcipher_speed(const char *algo, int enc, unsigned int secs,
+ 		return;
  	}
-+	/* Free the sequence's header buffer */
-+	if (!first_iocbq)
-+		lpfc_in_buf_free(vport->phba, &seq_dmabuf->dbuf);
-+
- 	return first_iocbq;
- }
  
+-	pr_info("\ntesting speed of async %s (%s) %s\n", algo,
+-			get_driver_name(crypto_skcipher, tfm), e);
++	pr_info("\ntesting speed of %s %s (%s) %s\n", async ? "async" : "sync",
++		algo, get_driver_name(crypto_skcipher, tfm), e);
+ 
+ 	req = skcipher_request_alloc(tfm, GFP_KERNEL);
+ 	if (!req) {
 -- 
 2.20.1
 
