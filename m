@@ -2,436 +2,230 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFB7C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0280AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B890B206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAE22082D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Tk8q2srF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TEcpsJVb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AfK1WVnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgDKBAG (ORCPT
+        id S1726789AbgDKBBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 21:00:06 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:60986 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726648AbgDKBAF (ORCPT
+        Fri, 10 Apr 2020 21:01:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40918 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgDKBBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 21:00:05 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B42564049F;
-        Sat, 11 Apr 2020 01:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1586566805; bh=sBz39E51gbnEbRWNxcNPLe16ntkqEknSnhTCz2v4OfA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=Tk8q2srFqKN230kWkTf6vjh65uKvnYDw689I/TGdxomlZIN5iHxsgieNTiyibtXOV
-         li+ecNns6TP/gfu/503tirZgmGjPDxAMxJZhCUZ+gcmnIB1hKXqupbcG8Io4e8Fld9
-         pgyZx4cefNltSxyQBt/lbo+9doDbWhuEiCCZpuSMTUqHIFA93Jw6/7ZBaQSNIcIZF9
-         61DJcnsXEbjWFOJ59bFMW46wOXYqF6Ehr6wOft1pwaDnXQhPt6ftJ1uWcASvaJSEhe
-         H94ZjqzYKj9N3z27exsUwmTPMKlwNAmQp1CYl0XJ7XgWLVWkWu0HhMqSY1HPB9vsJr
-         ZfhSH7ilsaqZA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 3C3F3A006B;
-        Sat, 11 Apr 2020 01:00:03 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 10 Apr 2020 17:59:50 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 10 Apr 2020 17:59:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=amzQLUPJiXW8ftHd2vTfZfvwVvWwQppXIPte24L7K2/yE1eJMDHZPv75ibS2JijGJgTxQa6VXpvhCx5yYd0COwhzyCWFtWEcP1S+V9AWBmr+goqo6+fd9Q6/UizrfQqJ13K6egkUukmXeSVT2wycAceoFob157WaSqtHn0+n6y85EpFqi3GbskqJMgYAin3KQADLtUuAX5nFJ8J/sAzHhSlv0EKbtnv3tbFZeVWWAFb+Xdnl1Nq3oT3uJ4XK8IlGLlOxYnSeFSzyWFmoa2Tq0bwANu96Al2Y1pQJ/YA/a8VKO9T18j4zSBGTxk1e2TuRWihEwoA8bOfeBDAqOTIV0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBz39E51gbnEbRWNxcNPLe16ntkqEknSnhTCz2v4OfA=;
- b=SbaDxJJ84It0sj2TgVkDPHlCRy0oCOSTRJq0HsCWGEzrRRcBwVIcbzSZFAiRDaAcqm++vpsGUWej6/s7E+d+QJPgV5BOyBRnAK/LB6pHrIQFfwDKnPoJdVjTUhGLW+/dGTxYnBkYTpFv0oSymR12hQPybhMATMDb5dV5+Yf8buLcHDSFos/H1RzIJWggso2cMENQ9CZJfwFdlU28WJ5KL5F+8LNBInvmH0Qelww1fQapmMutzJqmDxSXWrxnxNL4dB739TcSz15aqUQQCkyNDxZqjZ2ozeM0zyOJ4H9y4gdVVgJYCx280c+g3T/g5YE8TljHCOa7mMnHVryLBLHsLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBz39E51gbnEbRWNxcNPLe16ntkqEknSnhTCz2v4OfA=;
- b=TEcpsJVbPpcBqzJIVBuuGHw7g5jBQgd02YXH3yvngm/uqJtBj9/PEtos3vbN6+zlW4ajDe3s+NcVjCtbAt68ryKJyWd9I6JZGuEn6NcC8tCOHyQiaMYpG9RADFeSAi/KXomL6B2XGAP3hvOjzXxRShtdUVajslX9+dqCz+SAvEA=
-Received: from BYAPR12MB2710.namprd12.prod.outlook.com (2603:10b6:a03:68::11)
- by BYAPR12MB2727.namprd12.prod.outlook.com (2603:10b6:a03:71::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Sat, 11 Apr
- 2020 00:59:47 +0000
-Received: from BYAPR12MB2710.namprd12.prod.outlook.com
- ([fe80::1d05:9263:557d:e8a6]) by BYAPR12MB2710.namprd12.prod.outlook.com
- ([fe80::1d05:9263:557d:e8a6%3]) with mapi id 15.20.2900.015; Sat, 11 Apr 2020
- 00:59:47 +0000
-From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To:     Michael Grzeschik <mgr@pengutronix.de>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-CC:     Alan Stern <stern@rowland.harvard.edu>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc
- request is queued too late
-Thread-Topic: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc
- request is queued too late
-Thread-Index: AQHVmKSAwOKFEHeaw0mottJUNN0pEqeIevUAgABCiACAAII+gIAAPESAgAEc0ACAAIVuAIDmOjMAgAEfnQCAAV5tAIAAMTkA
-Date:   Sat, 11 Apr 2020 00:59:47 +0000
-Message-ID: <295ff41f-f287-e2c8-7c33-1c225e9b76b5@synopsys.com>
-References: <Pine.LNX.4.44L0.1911131036340.1558-100000@iolanthe.rowland.org>
- <587b0adf-b71d-6fde-407b-46089ed5d695@synopsys.com>
- <20191114121422.qtvyom6nytzwoy2e@pengutronix.de>
- <6d4b87c8-5aca-18cb-81db-a8d2fd4bd86e@synopsys.com>
- <20200409075958.GA19563@pengutronix.de>
- <431d2faa-b073-287c-62ec-557d7d021c48@synopsys.com>
- <20200410220336.GB19563@pengutronix.de>
-In-Reply-To: <20200410220336.GB19563@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thinhn@synopsys.com; 
-x-originating-ip: [149.117.7.22]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 64abc784-ce5f-4447-e82e-08d7ddb3a16c
-x-ms-traffictypediagnostic: BYAPR12MB2727:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB27278D142289E8DD4886F808AADF0@BYAPR12MB2727.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03706074BC
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2710.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(396003)(366004)(346002)(39860400002)(136003)(4326008)(8936002)(81156014)(6486002)(186003)(54906003)(316002)(31696002)(110136005)(6506007)(26005)(86362001)(2616005)(2906002)(71200400001)(31686004)(64756008)(30864003)(5660300002)(6512007)(66946007)(66476007)(8676002)(66446008)(36756003)(66556008)(76116006)(478600001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1L5RsSpEQWLdAxZJOqK3WOHoB+cKbQXBiZ7y44Gqf0BYEbORoGA6RQtHJtuWm1r8KSOhCkihiPMug0hAcNs5DOyUByErezvzx/VqVg0zN4+QOpzUS+z87JJaf8h9P/O6hjo6yZ/4Pjf3Z5DYm97ut2v3Ps+0Ne0JXq2jofmEEyd4SksacM1w6OADQ7c8rHgLcPLygUSpdS4qOHEx1zWa7DMZcvoQf3l3x/q4CuLPgW4fra5QDLGISMpCI2YoYbaku1unCe7HdLz/Fm784rc9xj4v6spGvxxxl1ktNLjr1+MSXUntaM9Ugb0rVeYNocAgTGNbMDKuqzp0HPQpXyylwzSGMQiiVoUhI60pIx1sjbx1wnYJD6SD+BjXrMlzWYN3da0cYJ+oHZdBG9i9MNrYXBgXG30BS6O2V686ftnlkGL4+ycTYTNbbIBtI8qXWs5U
-x-ms-exchange-antispam-messagedata: F8nVPOzs3UkeMBTgvhMqBFapjMEOnyidPJO3dccIki4GBIgzYdDLV9yQ2UCzSA+Jv8s/2wxQj2/+mu1raOF81mIx+MAv7khW2Hks5G/VQQojJi3NBMzZ9rcnkNyk0LMU6AAFuFOqglH24SitY5vTUg==
-Content-Type: text/plain; charset="iso-8859-15"
-Content-ID: <2FB54D9C2B37EA41B19298295B270C6C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Apr 2020 21:01:34 -0400
+Received: by mail-pl1-f196.google.com with SMTP id h11so1194522plk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 18:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JnweRSJzbFA/HZJs3MpjVTk2omd0xC4ncUbfKrlGFuw=;
+        b=AfK1WVnxwG7uZsgDtL5AKGrzGbqbYwkb8OQZXU/szpAPWTNX6mXt+fKCDUlEzTSfiU
+         mLTrYajKIcfrWwHNlBUDmjK+Se8AzofhAE6/K6QCFv+rXvBaAUetqsAw3Hb1ILyYwV0J
+         x8IwGn2qVx0vwZJQubgBtUcJCxVwk/filqEKSGbYjn9yHHdxJRKAvpdjHNd++IC48jPK
+         1iZ44mTgC9JT79eoM1jiZ84QDPlHHVaiVXmzMcMRF/W7t0BiihsGiPGztaQR8p0t+UEM
+         5VFMARXC+qvLvhXpjtvErOQUPmh1STEAp24Ci59/RVXQBOtHvzuOxwgeEPXQCL8Vy48P
+         QkYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JnweRSJzbFA/HZJs3MpjVTk2omd0xC4ncUbfKrlGFuw=;
+        b=A7FQz1N7y6SZUAaSW8QHOZf/Zi29DXLK69vc8jZ8U2kfdGsNyvDjySU7srccwTW/8L
+         l9VtnteqjaQ+alUwns4M50lSPiXzGuMQ1ZJgmsvae+6SUbVzdoZANkl43u/otNPBSvNx
+         tHMzdRZDqLMN/m2Andv48HeHV7VJU6AJwTR3i6DiYttkFoq0ILeVEvhLzgRU8mXWosfb
+         tmEcYmXJ9BxT2jF9DFZJnVAIOMXgHUwGrAKFssAD3WE2by8WF2scAvO6U071lKMy5ui+
+         wevSPOFyTY8nDD8QKivUevJOpPvwKfCzHPZYemZVkX2Cp+uxmrSVpKaIeHhZpXP7ADu4
+         yHmg==
+X-Gm-Message-State: AGi0PuZQot9qHG9OvSrs/lEwQ+2a1COjOTWK/73d1d6Zwms9ff09i5tO
+        j4E4XFKFv6Gspx4fpmeZz6njwQ==
+X-Google-Smtp-Source: APiQypJdhHrHpSQZULqAtlQ5+75We8n8BQ7hLwWMFPX17WGan0vJQ+38ci68Rc0D56ubTYTUgx+RnQ==
+X-Received: by 2002:a17:902:8b87:: with SMTP id ay7mr7208355plb.281.1586566894101;
+        Fri, 10 Apr 2020 18:01:34 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i190sm823811pfc.119.2020.04.10.18.01.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 18:01:33 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 18:01:43 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org
+Subject: Re: [PATCH v4 1/2] clk: qcom: gcc: Add USB3 PIPE clock and GDSC for
+ SM8150
+Message-ID: <20200411010143.GF20625@builder.lan>
+References: <1586566362-21450-1-git-send-email-wcheng@codeaurora.org>
+ <1586566362-21450-2-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64abc784-ce5f-4447-e82e-08d7ddb3a16c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2020 00:59:47.1529
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oB3QxfsxU22ZPBhBO49JuMY3NLySFEgt+3hk/omQPdH1hr9tigIBSY/GOJC0JGb8xMuuExPGEnCZxgDzB/ZAnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2727
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586566362-21450-2-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri 10 Apr 17:52 PDT 2020, Wesley Cheng wrote:
 
-Michael Grzeschik wrote:
-> On Fri, Apr 10, 2020 at 01:09:23AM +0000, Thinh Nguyen wrote:
->> Hi,
->>
->> Michael Grzeschik wrote:
->>> On Thu, Nov 14, 2019 at 08:11:56PM +0000, Thinh Nguyen wrote:
->>>> Michael Olbrich wrote:
->>>>> On Wed, Nov 13, 2019 at 07:14:59PM +0000, Thinh Nguyen wrote:
->>>>>> Alan Stern wrote:
->>>>>>> On Wed, 13 Nov 2019, Michael Olbrich wrote:
->>>>>>>> On Wed, Nov 13, 2019 at 03:55:01AM +0000, Thinh Nguyen wrote:
->>>>>>>>> Michael Olbrich wrote:
->>>>>>>>>> Currently, most gadget drivers handle isoc transfers on a best
->>>>>>>>>> effort
->>>>>>>>>> bases: If the request queue runs empty, then there will simply
->>>>>>>>>> be gaps in
->>>>>>>>>> the isoc data stream.
->>>>>>>>>>
->>>>>>>>>> The UVC gadget depends on this behaviour. It simply provides
->>>>>>>>>> new requests
->>>>>>>>>> when video frames are available and assumes that they are sent
->>>>>>>>>> as soon as
->>>>>>>>>> possible.
->>>>>>>>>>
->>>>>>>>>> The dwc3 gadget currently works differently: It assumes that
->>>>>>>>>> there is a
->>>>>>>>>> contiguous stream of requests without any gaps. If a request is
->>>>>>>>>> too late,
->>>>>>>>>> then it is dropped by the hardware.
->>>>>>>>>> For the UVC gadget this means that a live stream stops after
->>>>>>>>>> the first
->>>>>>>>>> frame because all following requests are late.
->>>>>>>>> Can you explain little more how UVC gadget fails?
->>>>>>>>> dwc3 controller expects a steady stream of data otherwise it
->>>>>>>>> will result
->>>>>>>>> in missed_isoc status, and it should be fine as long as new
->>>>>>>>> requests are
->>>>>>>>> queued. The controller doesn't just drop the request unless
->>>>>>>>> there's some
->>>>>>>>> other failure.
->>>>>>>> UVC (with a live stream) does not fill the complete bandwidth=20
->>>>>>>> of an
->>>>>>>> isochronous endpoint. Let's assume for the example that one video
->>>>>>>> frame
->>>>>>>> fills 3 requests. Because it is a live stream, there will be a
->>>>>>>> gap between
->>>>>>>> video frames. This is unavoidable, especially for compressed
->>>>>>>> video. So the
->>>>>>>> UVC gadget will have requests for the frame numbers 1 2 3 5 6 7 9
->>>>>>>> 10 11 13 14
->>>>>>>> 15 and so on.
->>>>>>>> The dwc3 hardware tries to send those with frame numbers 1 2 3 4
->>>>>>>> 5 6 7 8 9
->>>>>>>> 10 11 12. So except for the fist few requests, all are late and
->>>>>>>> result in a
->>>>>>>> missed_isoc. I tried to just ignore the missed_isoc but that did
->>>>>>>> not work
->>>>>>>> for me. I only received the first frame at the other end.
->>>>>>>> Maybe I missing something here, i don't have access to the=20
->>>>>>>> hardware
->>>>>>>> documentation, so I can only guess from the existing driver.
->>>>>> The reason I asked is because your patch doesn't seem to address the
->>>>>> actual issue.
->>>>>>
->>>>>> For the 2 checks you do here
->>>>>> 1. There are currently no requests queued in the hardware
->>>>>> 2. The current frame number provided by DSTS does not match the=20
->>>>>> frame
->>>>>> =A0 =A0=A0=A0 number returned by the last transfer.
->>>>>>
->>>>>> For #1, it's already done in the dwc3 driver. (check
->>>>>> dwc3_gadget_endpoint_transfer_in_progress())
->>>>> But that's only after a isoc_missed occurred. What exactly does that
->>>>> mean?
->>>>> Was the request transferred or not? My tests suggest that it was not
->>>>> transferred, so I wanted to catch this before it happens.
->>>>
->>>> Missed_isoc status means that the controller did not move all the data
->>>> in an interval.
->>>
->>> I read in some Processor documentation that in case the host tries to
->>> fetch data from the client and no active TRB (HWO=3D1) is available the
->>> XferInProgress Interrupt will be produced, with the missed status set.
->>> This is done because the hardware will produce zero length packets
->>> on its own, to keep the stream running.
->>
->> The controller only generates XferInProgress if it had processed a TRB
->> (with specific control bits). For IN direction, if the controller is
->> starved of TRB, it will send a ZLP if the host requests for data.
->
-> Which control bits are those? ISOC-First, Chain and Last bits?
->
-> I see the Scatter-Gather preparation is using these pattern.
+> This adds the USB3 PIPE clock and GDSC structures, so
+> that the USB driver can vote for these resources to be
+> enabled/disabled when required.  Both are needed for SS
+> and HS USB paths to operate properly.  The GDSC will
+> allow the USB system to be brought out of reset, while
+> the PIPE clock is needed for data transactions between
+> the PHY and controller.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
-The IOC bit. You can check the programming guide for more detail on how=20
-to setup the TRBs, but what we have in dwc3 is fine.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 
->
->>>>>> For #2, it's unlikely that DSTS current frame number will match
->>>>>> with the
->>>>>> XferNotReady's frame number. So this check doesn't mean much.
->>>>> The frame number is also updated for each "Transfer In Progress"
->>>>> interrupt.
->>>>> If they match, then there a new request can still be queued
->>>>> successfully.
->>>>> Without this I got unnecessary stop/start transfers in the middle=20
->>>>> of a
->>>>> video frame. But maybe something else was wrong here. I'd need to
->>>>> recheck.
->>>>
->>>> The reason they may not match is 1) the frame_number is only updated
->>>> after the software handles the XferInProgress interrupt. Depends on
->>>> system latency, that value may not be updated at the time that we=20
->>>> check
->>>> the frame_number.
->>>> 2) This check doesn't work if the service interval is greater than 1
->>>> uframe. That is, it doesn't have to match exactly the time to be
->>>> consider not late. Though, the second reason can easily be fixed.
->>>
->>> In the empty trb case, after the Hardware has send enough zero packets
->>> this
->>> active transfer has to be stopped with endtransfer cmd. Because every
->>> next
->>> update transfer on that active transfer will likely lead to further
->>> missed
->>> transfers, as the newly updated trb will be handled to late anyway.
->>
->> The controller is expecting the function driver to feed TRBs to the
->> controller for every interval. If it's late, then the controller will
->> consider that data "missed_isoc".
->>
->> In your case, the UVC driver seems to queue requests to the controller
->> driver as if it is bulk requests, and the UVC expects those data to go
->> out at the time it queues. To achieve what UVC needs, then you may want
->> to issue END_TRANSFER command before the next burst of data. This way,
->> the controller can restart the isoc endpoint and not consider the next
->> video frame data late. There are some corner cases that you need to
->> watch out for. If you're going for this route, we can look further.
->
-> Right, for now the drivers is doing:
->
-> - Strart Transfer (with the right frame number) once.
->
-> - Update Transfer On every ep_queue with the corresponding TRB
-> =A0setting CHN =3D 0, IOC =3D 1, First-ISOC =3D 1
->
-> - End Transfer is somehow not handled right for this case.
->
-> See my first comment. I think dwc3_prepare_one_trb_sg does the proper=20
-> chain
-> handling already.
->
->> Also, you'd need provide a way for the UVC to communicate to the dwc3 to
->> let it know to expect the next burst of data.
->
-> Can the UVC not just enqueue one big sg-request, which will represent=20
-> one burst
-> and not one TRB. Also that is=A0 what the SG code already seem to handle=
-=20
-> right.
+Stephen, let me know when you take this patch and I'll take the dts one.
 
-Do you need SG? What size does video class driver setup its isoc URB? If=20
-it's superspeed, max is 48K, and depending on the type of platform=20
-you're running UVC on, you can setup a single 48K buffer per request if=20
-you want to do that. However, it's probably not a good idea since many=20
-host controllers can't even handle even close to 48K/uframe.
+Regards,
+Bjorn
 
-What I was saying is if UVC knows when to wait for the next video data,=20
-it can tell dwc3 to stop the isoc endpoint before queuing the next video=20
-data in a set of requests. If UVC doesn't know that, then it needs to=20
-tell dwc3 to change its handling of isoc requests.
-
->
->>> The odd thing here is, that I don't see the refered XferInProgress
->>> Interrupts with the missed event, when the started_list is empty.
->>
->> See my first comment.
->>
->>>
->>> But this would be the only case to fall into this condition and=20
->>> handle it
->>> properly. Like alredy assumed in the following code:
->>>
->>> static void dwc3_gadget_endpoint_transfer_in_progress(struct dwc3_ep
->>> *dep,
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 const struct dwc3_event_depevt *ev=
-ent)
->>> {
->>> ...
->>>
->>> =A0=A0=A0=A0=A0=A0 if (event->status & DEPEVT_STATUS_MISSED_ISOC) {
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D -EXDEV;
->>>
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (list_empty(&dep->started=
-_list))
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 stop=
- =3D true;
->>> =A0=A0=A0=A0=A0=A0 }
->>>
->>> ...
->>>
->>> =A0=A0=A0=A0=A0=A0 if (stop)
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dwc3_stop_active_transfer(de=
-p, true, true);
->>> ...
->>> }
->>>
->>> In fact I did sometimes see these XferInProgress Interrupts on empty
->>> trb queue
->>> after I stoped the tansfer when the started_list was empty right after
->>> ep_cleanup_completed_requests has moved all trbs out of the queue.
->>>
->>> These Interrupts appeared right after the ENDTRANSFER cmd was send.
->>> (But I
->>> could no verify this every time)
->>
->> If END_TRANSFER command completes, then you should not see
->> XferInProgress event. The next event should ber XferNotReady.
->
-> Right. This also stops, after the Command Complete Interrupt arrives.
->
->>> Anyways in that case these Interrupts are not useful anymore, as I
->>> already
->>> implied the same stop, with ENDTRANSFER after we know that there are
->>> no other
->>> trbs in the chain.
->>>
->>
->> Just curious, do you know if there's a reason for UVC to behave this
->> way? Seems like what it's trying to do is more for bulk. Maybe it wants
->> bandwidth priority perhaps?
->
-> I don't know, probably it was more likely for USB 2.0 controllers to=20
-> be handled
-> this way.
->
-> As mentioned the current uvc code is also working when we add this=20
-> changes.
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index ec357f64f319..a5dc44f2e9d8 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -2629,6 +2629,9 @@ static void=20
-> dwc3_gadget_endpoint_transfer_in_progress(struct dwc3_ep *dep,
->
-> =A0=A0=A0=A0=A0=A0 dwc3_gadget_ep_cleanup_completed_requests(dep, event, =
-status);
->
-> +=A0=A0=A0=A0=A0=A0 if (list_empty(&dep->started_list))
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 stop =3D true;
+> ---
+>  drivers/clk/qcom/gcc-sm8150.c               | 52 +++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sm8150.h |  4 +++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+> index 2087721..ef98fdc 100644
+> --- a/drivers/clk/qcom/gcc-sm8150.c
+> +++ b/drivers/clk/qcom/gcc-sm8150.c
+> @@ -21,6 +21,7 @@
+>  #include "clk-rcg.h"
+>  #include "clk-regmap.h"
+>  #include "reset.h"
+> +#include "gdsc.h"
+>  
+>  enum {
+>  	P_BI_TCXO,
+> @@ -3171,6 +3172,18 @@ enum {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
+> +	.halt_check = BRANCH_HALT_SKIP,
+> +	.clkr = {
+> +		.enable_reg = 0xf058,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_usb3_prim_phy_pipe_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-
-You should check the pending list too and either drop them or prepare=20
-those requests (maybe too late). This happens when there's no available=20
-TRB but UVC queues more requests.
-Also, make sure this change only applies for isoc.
-
-This may work. Just keep in mind that the timing parameter of the=20
-XferNotReady will be expired by the time the UVC queues the next isoc=20
-request. (Maybe that's why you tried to check for the current frame=20
-number via DSTS instead in your first patch?).
-With the new changes in Felipe testing/next branch, this may be ok.
-
-
-> =A0=A0=A0=A0=A0=A0 if (stop)
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dwc3_stop_active_transfer(dep,=
- true, true);
-> =A0=A0=A0=A0=A0=A0 else if (dwc3_gadget_ep_should_continue(dep))
->
-> diff --git a/drivers/usb/gadget/function/uvc_video.c=20
-> b/drivers/usb/gadget/function/uvc_video.c
-> index da6ba8ba4bca..a3dac5d91aae 100644
-> --- a/drivers/usb/gadget/function/uvc_video.c
-> +++ b/drivers/usb/gadget/function/uvc_video.c
-> @@ -183,6 +183,7 @@ uvc_video_complete(struct usb_ep *ep, struct=20
-> usb_request *req)
->
-> =A0=A0=A0=A0=A0=A0 switch (req->status) {
-> =A0=A0=A0=A0=A0=A0 case 0:
-> +=A0=A0=A0=A0=A0=A0 case -EXDEV: /* we ignore missed transfers */
-
-Any time you see missed_isoc, you have data dropped. May want to check=20
-to see what's going on.
-
-> break;
->
-> =A0=A0=A0=A0=A0=A0 case -ESHUTDOWN:=A0=A0=A0=A0=A0=A0=A0 /* disconnect fr=
-om host. */
->
->
-
-BR,
-Thinh
+>  static struct clk_branch gcc_usb3_sec_clkref_clk = {
+>  	.halt_reg = 0x8c028,
+>  	.halt_check = BRANCH_HALT,
+> @@ -3218,6 +3231,18 @@ enum {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
+> +	.halt_check = BRANCH_HALT_SKIP,
+> +	.clkr = {
+> +		.enable_reg = 0x10058,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_usb3_sec_phy_pipe_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  /*
+>   * Clock ON depends on external parent 'config noc', so cant poll
+>   * delay and also mark as crtitical for video boot
+> @@ -3292,6 +3317,24 @@ enum {
+>  	},
+>  };
+>  
+> +static struct gdsc usb30_prim_gdsc = {
+> +		.gdscr = 0xf004,
+> +		.pd = {
+> +			.name = "usb30_prim_gdsc",
+> +		},
+> +		.pwrsts = PWRSTS_OFF_ON,
+> +		.flags = POLL_CFG_GDSCR,
+> +};
+> +
+> +static struct gdsc usb30_sec_gdsc = {
+> +		.gdscr = 0x10004,
+> +		.pd = {
+> +			.name = "usb30_sec_gdsc",
+> +		},
+> +		.pwrsts = PWRSTS_OFF_ON,
+> +		.flags = POLL_CFG_GDSCR,
+> +};
+> +
+>  static struct clk_regmap *gcc_sm8150_clocks[] = {
+>  	[GCC_AGGRE_NOC_PCIE_TBU_CLK] = &gcc_aggre_noc_pcie_tbu_clk.clkr,
+>  	[GCC_AGGRE_UFS_CARD_AXI_CLK] = &gcc_aggre_ufs_card_axi_clk.clkr,
+> @@ -3480,10 +3523,12 @@ enum {
+>  	[GCC_USB3_PRIM_PHY_AUX_CLK] = &gcc_usb3_prim_phy_aux_clk.clkr,
+>  	[GCC_USB3_PRIM_PHY_AUX_CLK_SRC] = &gcc_usb3_prim_phy_aux_clk_src.clkr,
+>  	[GCC_USB3_PRIM_PHY_COM_AUX_CLK] = &gcc_usb3_prim_phy_com_aux_clk.clkr,
+> +	[GCC_USB3_PRIM_PHY_PIPE_CLK] = &gcc_usb3_prim_phy_pipe_clk.clkr,
+>  	[GCC_USB3_SEC_CLKREF_CLK] = &gcc_usb3_sec_clkref_clk.clkr,
+>  	[GCC_USB3_SEC_PHY_AUX_CLK] = &gcc_usb3_sec_phy_aux_clk.clkr,
+>  	[GCC_USB3_SEC_PHY_AUX_CLK_SRC] = &gcc_usb3_sec_phy_aux_clk_src.clkr,
+>  	[GCC_USB3_SEC_PHY_COM_AUX_CLK] = &gcc_usb3_sec_phy_com_aux_clk.clkr,
+> +	[GCC_USB3_SEC_PHY_PIPE_CLK] = &gcc_usb3_sec_phy_pipe_clk.clkr,
+>  	[GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
+>  	[GCC_VIDEO_AXI0_CLK] = &gcc_video_axi0_clk.clkr,
+>  	[GCC_VIDEO_AXI1_CLK] = &gcc_video_axi1_clk.clkr,
+> @@ -3527,6 +3572,11 @@ enum {
+>  	[GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
+>  };
+>  
+> +static struct gdsc *gcc_sm8150_gdscs[] = {
+> +	[USB30_PRIM_GDSC] = &usb30_prim_gdsc,
+> +	[USB30_SEC_GDSC] = &usb30_sec_gdsc,
+> +};
+> +
+>  static const struct regmap_config gcc_sm8150_regmap_config = {
+>  	.reg_bits	= 32,
+>  	.reg_stride	= 4,
+> @@ -3541,6 +3591,8 @@ enum {
+>  	.num_clks = ARRAY_SIZE(gcc_sm8150_clocks),
+>  	.resets = gcc_sm8150_resets,
+>  	.num_resets = ARRAY_SIZE(gcc_sm8150_resets),
+> +	.gdscs = gcc_sm8150_gdscs,
+> +	.num_gdscs = ARRAY_SIZE(gcc_sm8150_gdscs),
+>  };
+>  
+>  static const struct of_device_id gcc_sm8150_match_table[] = {
+> diff --git a/include/dt-bindings/clock/qcom,gcc-sm8150.h b/include/dt-bindings/clock/qcom,gcc-sm8150.h
+> index 90d60ef..3e1a918 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-sm8150.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-sm8150.h
+> @@ -240,4 +240,8 @@
+>  #define GCC_USB30_SEC_BCR					27
+>  #define GCC_USB_PHY_CFG_AHB2PHY_BCR				28
+>  
+> +/* GCC GDSCRs */
+> +#define USB30_PRIM_GDSC                     4
+> +#define USB30_SEC_GDSC						5
+> +
+>  #endif
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
