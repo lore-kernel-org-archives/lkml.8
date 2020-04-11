@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6647C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96F3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BE6206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8BB215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648729;
-	bh=h7bIQ/J1z0zSTp+AbT7/HkqsVIeJEoQSgkH8AnSejOY=;
+	s=default; t=1586648734;
+	bh=vqZt/R4WXAM/m2lpLTkGB8OPfcd/fgDe3x/TvWkAJI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0XEEAdVPIq3tWkLGPH9SL5G+qUkJ3seWLt3vCNKfZnGlAa9qk5TQbLgR86cdWkKr
-	 IQD2gLchzs/eMNWRSkoa78W6UHa51pC93crb4st2R6g8ljeclQPADcchmt1aNf7wWF
-	 q70kR/bEayxk6LBktQCAoB9f/YBBNdMYB8eEQjrw=
+	b=LHjrb3UdsMrZtBpYsdTYSQYex2G043MANzLpEQ2V/9Vc6YCt8gVl7lX1qkfxf8rm4
+	 OSYPAfGpZ760kwHCt7dmtm/GXx0RKtweC6GnrUVGA2+sLqnosYMW2cGE7AtAWn5Mz0
+	 LUZCkBrWIvh5KZYtzv3/YiIkpaYxb6VZvt8VANY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbgDKXp1 (ORCPT
+        id S1727960AbgDKXpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:45:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgDKXFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:40 -0400
+        id S1728014AbgDKXFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 752ED21835;
-        Sat, 11 Apr 2020 23:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA5321835;
+        Sat, 11 Apr 2020 23:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646340;
-        bh=h7bIQ/J1z0zSTp+AbT7/HkqsVIeJEoQSgkH8AnSejOY=;
+        s=default; t=1586646336;
+        bh=vqZt/R4WXAM/m2lpLTkGB8OPfcd/fgDe3x/TvWkAJI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2Mj35PGBSocNb+b0gR22ZVmTE/dfktY8u1kX6lPTQLrttWaq3EKN1aeIXAB0WZ1Q
-         6POKmV6N4PRREodFCW4jw574U5K6l0+NzWlc4Ec7q+N3P/R33B++cR+Wgj/yEWkMVd
-         E39pz0Uc7eehKvkgGx+Pxa0CKnF4bL5ixn8yvwtk=
+        b=dZxz3G+1mrP0QRxDcqahmApXHOjb9XST9olYPfpOnJkn7N579v5sYlUedC8IKwk/m
+         suro5/46KtZSxbnS454sKGH3MVux0K6his1YXiM72RkYJZA3DEWoQcz28OqtfIIch3
+         gbJmqvx+9SU9cCKk8Z7B6hHvJ/KH+syMZwmcUDe4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yong Zhao <Yong.Zhao@amd.com>,
+Cc:     Aric Cyr <aric.cyr@amd.com>,
+        Joshua Aberback <Joshua.Aberback@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 090/149] drm/amdkfd: Fix a memory leak in queue creation error handling
-Date:   Sat, 11 Apr 2020 19:02:47 -0400
-Message-Id: <20200411230347.22371-90-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 087/149] drm/amd/display: dal_ddc_i2c_payloads_create can fail causing panic
+Date:   Sat, 11 Apr 2020 19:02:44 -0400
+Message-Id: <20200411230347.22371-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,35 +63,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhao <Yong.Zhao@amd.com>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit 66f28b9a169855367d6e3ef71001969a8bffb19b ]
+[ Upstream commit 6a6c4a4d459ecacc9013c45dcbf2bc9747fdbdbd ]
 
-When the queue creation failed, some resources were not freed. Fix it.
+[Why]
+Since the i2c payload allocation can fail need to check return codes
 
-Signed-off-by: Yong Zhao <Yong.Zhao@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+[How]
+Clean up i2c payload allocations and check for errors
+
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Joshua Aberback <Joshua.Aberback@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../gpu/drm/amd/display/dc/core/dc_link_ddc.c | 52 +++++++++----------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c
-index 31fcd1b51f00f..4f7927b661ff4 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process_queue_manager.c
-@@ -328,6 +328,9 @@ int pqm_create_queue(struct process_queue_manager *pqm,
- 	return retval;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
+index a49c10d5df26b..2d0524f677c7c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
+@@ -126,22 +126,16 @@ struct aux_payloads {
+ 	struct vector payloads;
+ };
  
- err_create_queue:
-+	uninit_queue(q);
-+	if (kq)
-+		kernel_queue_uninit(kq, false);
- 	kfree(pqn);
- err_allocate_pqn:
- 	/* check if queues list is empty unregister process from device */
+-static struct i2c_payloads *dal_ddc_i2c_payloads_create(struct dc_context *ctx, uint32_t count)
++static bool dal_ddc_i2c_payloads_create(
++		struct dc_context *ctx,
++		struct i2c_payloads *payloads,
++		uint32_t count)
+ {
+-	struct i2c_payloads *payloads;
+-
+-	payloads = kzalloc(sizeof(struct i2c_payloads), GFP_KERNEL);
+-
+-	if (!payloads)
+-		return NULL;
+-
+ 	if (dal_vector_construct(
+ 		&payloads->payloads, ctx, count, sizeof(struct i2c_payload)))
+-		return payloads;
+-
+-	kfree(payloads);
+-	return NULL;
++		return true;
+ 
++	return false;
+ }
+ 
+ static struct i2c_payload *dal_ddc_i2c_payloads_get(struct i2c_payloads *p)
+@@ -154,14 +148,12 @@ static uint32_t dal_ddc_i2c_payloads_get_count(struct i2c_payloads *p)
+ 	return p->payloads.count;
+ }
+ 
+-static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads **p)
++static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads *p)
+ {
+-	if (!p || !*p)
++	if (!p)
+ 		return;
+-	dal_vector_destruct(&(*p)->payloads);
+-	kfree(*p);
+-	*p = NULL;
+ 
++	dal_vector_destruct(&p->payloads);
+ }
+ 
+ #define DDC_MIN(a, b) (((a) < (b)) ? (a) : (b))
+@@ -524,9 +516,13 @@ bool dal_ddc_service_query_ddc_data(
+ 
+ 	uint32_t payloads_num = write_payloads + read_payloads;
+ 
++
+ 	if (write_size > EDID_SEGMENT_SIZE || read_size > EDID_SEGMENT_SIZE)
+ 		return false;
+ 
++	if (!payloads_num)
++		return false;
++
+ 	/*TODO: len of payload data for i2c and aux is uint8!!!!,
+ 	 *  but we want to read 256 over i2c!!!!*/
+ 	if (dal_ddc_service_is_in_aux_transaction_mode(ddc)) {
+@@ -557,23 +553,25 @@ bool dal_ddc_service_query_ddc_data(
+ 			ret = dal_ddc_submit_aux_command(ddc, &payload);
+ 		}
+ 	} else {
+-		struct i2c_payloads *payloads =
+-			dal_ddc_i2c_payloads_create(ddc->ctx, payloads_num);
++		struct i2c_command command = {0};
++		struct i2c_payloads payloads;
++
++		if (!dal_ddc_i2c_payloads_create(ddc->ctx, &payloads, payloads_num))
++			return false;
+ 
+-		struct i2c_command command = {
+-			.payloads = dal_ddc_i2c_payloads_get(payloads),
+-			.number_of_payloads = 0,
+-			.engine = DDC_I2C_COMMAND_ENGINE,
+-			.speed = ddc->ctx->dc->caps.i2c_speed_in_khz };
++		command.payloads = dal_ddc_i2c_payloads_get(&payloads);
++		command.number_of_payloads = 0;
++		command.engine = DDC_I2C_COMMAND_ENGINE;
++		command.speed = ddc->ctx->dc->caps.i2c_speed_in_khz;
+ 
+ 		dal_ddc_i2c_payloads_add(
+-			payloads, address, write_size, write_buf, true);
++			&payloads, address, write_size, write_buf, true);
+ 
+ 		dal_ddc_i2c_payloads_add(
+-			payloads, address, read_size, read_buf, false);
++			&payloads, address, read_size, read_buf, false);
+ 
+ 		command.number_of_payloads =
+-			dal_ddc_i2c_payloads_get_count(payloads);
++			dal_ddc_i2c_payloads_get_count(&payloads);
+ 
+ 		ret = dm_helpers_submit_i2c(
+ 				ddc->ctx,
 -- 
 2.20.1
 
