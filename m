@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410D2C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350FCC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1207520644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E77D20644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648959;
-	bh=Bwt6G+LEc6pB7T3aA5OOwdJPfPsV/lVCeaKTk/v1nuY=;
+	s=default; t=1586648963;
+	bh=UtqJJfKM7fpX/qy2Rl6r2Z1tPkK90rlDbrkhz5ErUJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3t7E/cfSqNozUGWLZpuK4Qe7fS0jQz+RZKn9zihfNZKQR0Lh2wk59eIh8C36/oV9
-	 8I/wCrYq+LRrXfG+A2uAa9xSf7ZSyE9lg9c/AdtirfbcegMJK7PlSARkPHlJjn9vkI
-	 ta9WBcwX4TQxSuBrzB5czQ/mZK843b3C4hhydEKg=
+	b=gGtdTBTW4MPkvvevA6aMOC1XbSQ2Tif5w4YI/u0sJbjJn6dXheiFKfuQef0Od4yHS
+	 vPLwwL5WPhItwbJL+0Sb9Y7ndub6xeAygXNQpDeqwaYrefzwhbBFwGqbtazMq3hIhm
+	 m4LQ5qxWDG3YHzVmQkjChNNTSbThHGhCVbL+AHUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgDKXtQ (ORCPT
+        id S1727164AbgDKXE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbgDKXE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Apr 2020 19:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727072AbgDKXES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A317321744;
-        Sat, 11 Apr 2020 23:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BBF621775;
+        Sat, 11 Apr 2020 23:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646267;
-        bh=Bwt6G+LEc6pB7T3aA5OOwdJPfPsV/lVCeaKTk/v1nuY=;
+        s=default; t=1586646258;
+        bh=UtqJJfKM7fpX/qy2Rl6r2Z1tPkK90rlDbrkhz5ErUJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKhCTfydvYi4Cy79qfgOtm/WpLQp2/E8q/WdGrED6COLvMs9RAh5lVgrGcEs628SS
-         px4tmfvkNuLCrD40eKCXRoi+XAv2m1psMxzzZqrJot3fXqyhEedqiPDazLwzneKEld
-         luWiKCaqUEQuwJu7HYmUijQU0ehVgjFGsGjbRAwk=
+        b=0+xppoDsk8MtAtc6b2bvzo6nOA4guiCjV5xGwhnNyDahVAgq/JpCK1Xu6G3nRvUgK
+         QStkj6t1NXu8L1JBoWTzLjmjaRnuRavMiTdDYvUv2yMRazeSz3/4ctv5fnWg7xxOBR
+         mvpSmoAdItmj6tkyEJ1qiV9jSqq6bv0enDRHEmbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yibo Zhao <yiboz@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 032/149] ath10k: fix not registering airtime of 11a station with WMM disable
-Date:   Sat, 11 Apr 2020 19:01:49 -0400
-Message-Id: <20200411230347.22371-32-sashal@kernel.org>
+Cc:     Bodong Wang <bodong@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 024/149] net/mlx5: E-Switch, Hold mutex when querying drop counter in legacy mode
+Date:   Sat, 11 Apr 2020 19:01:41 -0400
+Message-Id: <20200411230347.22371-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,43 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yibo Zhao <yiboz@codeaurora.org>
+From: Bodong Wang <bodong@mellanox.com>
 
-[ Upstream commit f9680c75d187f2d5b9288c02f7a432041d4447b4 ]
+[ Upstream commit 14c844cbf3503076de6e2e48d575216f1600b19f ]
 
-The tid of 11a station with WMM disable reported by FW is 0x10 in
-tx completion. The tid 16 is mapped to a NULL txq since buffer
-MMPDU capbility is not supported. Then 11a station's airtime will
-not be registered due to NULL txq check. As a results, airtime of
-11a station keeps unchanged in debugfs system.
+Consider scenario below, CPU 1 is at risk to query already destroyed
+drop counters. Need to apply the same state mutex when disabling vport.
 
-Mask the tid along with IEEE80211_QOS_CTL_TID_MASK to make it in
-the valid range.
++-------------------------------+-------------------------------------+
+| CPU 0                         | CPU 1                               |
++-------------------------------+-------------------------------------+
+| mlx5_device_disable_sriov     | mlx5e_get_vf_stats                  |
+| mlx5_eswitch_disable          | mlx5_eswitch_get_vport_stats        |
+| esw_disable_vport             | mlx5_eswitch_query_vport_drop_stats |
+| mlx5_fc_destroy(drop_counter) | mlx5_fc_query(drop_counter)         |
++-------------------------------+-------------------------------------+
 
-Hardwares tested : QCA9984
-Firmwares tested : 10.4-3.10-00047
-
-Signed-off-by: Yibo Zhao <yiboz@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: b8a0dbe3a90b ("net/mlx5e: E-switch, Add steering drop counters")
+Signed-off-by: Bodong Wang <bodong@mellanox.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/htt_rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
-index 38a5814cf345d..f883f2a724dd9 100644
---- a/drivers/net/wireless/ath/ath10k/htt_rx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
-@@ -2744,7 +2744,8 @@ static void ath10k_htt_rx_tx_compl_ind(struct ath10k *ar,
- 			continue;
- 		}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index e49acd0c5da5c..b9451f25f22cf 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2600,9 +2600,13 @@ static int mlx5_eswitch_query_vport_drop_stats(struct mlx5_core_dev *dev,
+ 	u64 bytes = 0;
+ 	int err = 0;
  
--		tid = FIELD_GET(HTT_TX_PPDU_DUR_INFO0_TID_MASK, info0);
-+		tid = FIELD_GET(HTT_TX_PPDU_DUR_INFO0_TID_MASK, info0) &
-+						IEEE80211_QOS_CTL_TID_MASK;
- 		tx_duration = __le32_to_cpu(ppdu_dur->tx_duration);
+-	if (!vport->enabled || esw->mode != MLX5_ESWITCH_LEGACY)
++	if (esw->mode != MLX5_ESWITCH_LEGACY)
+ 		return 0;
  
- 		ieee80211_sta_register_airtime(peer->sta, tid, tx_duration, 0);
++	mutex_lock(&esw->state_lock);
++	if (!vport->enabled)
++		goto unlock;
++
+ 	if (vport->egress.legacy.drop_counter)
+ 		mlx5_fc_query(dev, vport->egress.legacy.drop_counter,
+ 			      &stats->rx_dropped, &bytes);
+@@ -2613,20 +2617,22 @@ static int mlx5_eswitch_query_vport_drop_stats(struct mlx5_core_dev *dev,
+ 
+ 	if (!MLX5_CAP_GEN(dev, receive_discard_vport_down) &&
+ 	    !MLX5_CAP_GEN(dev, transmit_discard_vport_down))
+-		return 0;
++		goto unlock;
+ 
+ 	err = mlx5_query_vport_down_stats(dev, vport->vport, 1,
+ 					  &rx_discard_vport_down,
+ 					  &tx_discard_vport_down);
+ 	if (err)
+-		return err;
++		goto unlock;
+ 
+ 	if (MLX5_CAP_GEN(dev, receive_discard_vport_down))
+ 		stats->rx_dropped += rx_discard_vport_down;
+ 	if (MLX5_CAP_GEN(dev, transmit_discard_vport_down))
+ 		stats->tx_dropped += tx_discard_vport_down;
+ 
+-	return 0;
++unlock:
++	mutex_unlock(&esw->state_lock);
++	return err;
+ }
+ 
+ int mlx5_eswitch_get_vport_stats(struct mlx5_eswitch *esw,
 -- 
 2.20.1
 
