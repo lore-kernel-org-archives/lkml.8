@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312C0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11546C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B6E20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE46920757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646975;
-	bh=ubpQATfYyxL8AKlKJGzsJ02nU16+ocrs/OQAMKyR6ZE=;
+	s=default; t=1586646986;
+	bh=Nw/dfC0EA+MH0y6lhM7T8r0En1aJj2wCuKFC2emzcNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ouZlavtv2IUA18/Km0bx97FOthonVkMxt1AnP1XNZRZYnLtd/daJsHUVfM3NUG0kV
-	 s1P6d+uZxoWyR4T34MkPnTdKYCUQFz+/b6DutuuXSilYAmlm8qCeU+7PuF4J5HsPtV
-	 wKyhYwIDWu0uOPAz5tq0Cq4ov3cnerlrx15/y56o=
+	b=j24EWP73sdU3KTA60Edr2ZvJNrs+0oRvvpPD5SyNKypbCVN9jMEd4igFXvyCJ4TBK
+	 L4kuRCUpUQz1F/xLeH2ajlHPQE/hiHyQm6ki+jg585+minK3KEE7DmuFdrbKPRs1Hs
+	 gpaOgcLGSSZ/Eg3O0n93kAUado0E18yEJg+Nkquo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgDKXQM (ORCPT
+        id S1730873AbgDKXQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56896 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgDKXOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:52 -0400
+        id S1730427AbgDKXOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F9B3216FD;
-        Sat, 11 Apr 2020 23:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2894420CC7;
+        Sat, 11 Apr 2020 23:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646892;
-        bh=ubpQATfYyxL8AKlKJGzsJ02nU16+ocrs/OQAMKyR6ZE=;
+        s=default; t=1586646885;
+        bh=Nw/dfC0EA+MH0y6lhM7T8r0En1aJj2wCuKFC2emzcNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DxOaVbZjhVbht9HUU8Z9IUBTy5aj9DsxKvcowc326Mwn5ucm3bDteOcziCaFocw+Z
-         Ch2ZoxWkzfVxG69vif/0Pp8CDdMu8SBBVaqP3v/VnfgirsLoRbEWqPV6DH1YDmTOVB
-         iwE+0YVBLTDVGIv2pvg/WVFbiTU+reunjELEbchU=
+        b=f6wB5ZxluzlAdVPg0kjPkTdAyvDjYnNenhKWqR7jxm6PpCnviZW8bzbUgvzv+yEqw
+         voKjyzMCy6A1rvs97nFP5xojfRqHBB8Y8SuF1YILY3hGxwMWaiAKtqaRgzDsPVFfX4
+         uj+dxTYF823EYFhvRZ1QbyobSeX8Tha/SM6/M6VI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Ganapathi Bhat <ganapathi.gbhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/16] mwifiex: set needed_headroom, not hard_header_len
-Date:   Sat, 11 Apr 2020 19:14:34 -0400
-Message-Id: <20200411231447.27182-4-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 26/26] svcrdma: Fix leak of transport addresses
+Date:   Sat, 11 Apr 2020 19:14:13 -0400
+Message-Id: <20200411231413.26911-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
-References: <20200411231447.27182-1-sashal@kernel.org>
+In-Reply-To: <20200411231413.26911-1-sashal@kernel.org>
+References: <20200411231413.26911-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,54 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 9454f7a895b822dd8fb4588fc55fda7c96728869 ]
+[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
 
-hard_header_len provides limitations for things like AF_PACKET, such
-that we don't allow transmitting packets smaller than this.
+Kernel memory leak detected:
 
-needed_headroom provides a suggested minimum headroom for SKBs, so that
-we can trivally add our headers to the front.
+unreferenced object 0xffff888849cdf480 (size 8):
+  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
+  hex dump (first 8 bytes):
+    30 00 cd 49 88 88 ff ff                          0..I....
+  backtrace:
+    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
+    [<00000000a2724354>] kstrdup+0x2b/0x43
+    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
+    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
+    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
+    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
+    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
+    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
+    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
+    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
+    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
+    [<000000005205fb78>] kthread+0xf6/0xfb
+    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
 
-The latter is the correct field to use in this case, while the former
-mostly just prevents sending small AF_PACKET frames.
+Introduce a call to xprt_rdma_free_addresses() similar to the way
+that the TCP backchannel releases a transport's peer address
+strings.
 
-In any case, mwifiex already does its own bounce buffering [1] if we
-don't have enough headroom, so hints (not hard limits) are all that are
-needed.
-
-This is the essentially the same bug (and fix) that brcmfmac had, fixed
-in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
-additional header space").
-
-[1] mwifiex_hard_start_xmit():
-	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
-	[...]
-		/* Insufficient skb headroom - allocate a new skb */
-
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mwifiex/cfg80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mwifiex/cfg80211.c b/drivers/net/wireless/mwifiex/cfg80211.c
-index c6c2d3304dba7..4f4af48fc3fc6 100644
---- a/drivers/net/wireless/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/mwifiex/cfg80211.c
-@@ -2755,7 +2755,7 @@ struct wireless_dev *mwifiex_add_virtual_intf(struct wiphy *wiphy,
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 6035c5a380a6b..b3d48c6243c80 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -277,6 +277,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
+ {
+ 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
  
- 	dev->flags |= IFF_BROADCAST | IFF_MULTICAST;
- 	dev->watchdog_timeo = MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT;
--	dev->hard_header_len += MWIFIEX_MIN_DATA_HEADER_LEN;
-+	dev->needed_headroom = MWIFIEX_MIN_DATA_HEADER_LEN;
- 	dev->ethtool_ops = &mwifiex_ethtool_ops;
- 
- 	mdev_priv = netdev_priv(dev);
++	xprt_rdma_free_addresses(xprt);
+ 	xprt_free(xprt);
+ 	module_put(THIS_MODULE);
+ }
 -- 
 2.20.1
 
