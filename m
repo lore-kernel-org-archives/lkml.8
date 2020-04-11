@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D34C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A99C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606FD2083E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4924E2083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgDKGsK (ORCPT
+        id S1726108AbgDKGsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 02:48:10 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:28082 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgDKGsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 02:48:10 -0400
-Received: from [192.168.42.210] ([93.22.135.18])
-        by mwinf5d37 with ME
-        id RJo72200G0Pz5GD03Jo84W; Sat, 11 Apr 2020 08:48:09 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 11 Apr 2020 08:48:09 +0200
-X-ME-IP: 93.22.135.18
+        Sat, 11 Apr 2020 02:48:14 -0400
+Received: from ciao.gmane.io ([159.69.161.202]:58640 "EHLO ciao.gmane.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbgDKGsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 02:48:13 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+        (envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
+        id 1jN9w4-000Izf-H6
+        for linux-kernel@vger.kernel.org; Sat, 11 Apr 2020 08:48:12 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
  message
-To:     Joe Perches <joe@perches.com>, apw@canonical.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Newsgroups: gmane.linux.kernel,gmane.linux.kernel.janitors
+Date:   Sat, 11 Apr 2020 08:48:07 +0200
+Message-ID: <215f2a43-6677-04cd-f376-bd7cd051b626@wanadoo.fr>
 References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
  <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
  <6e52383e-100d-b016-32c2-6fb54938b6fe@wanadoo.fr>
  <c9fd4bc75812fed4799c2fb87b452b809a7e9a7a.camel@perches.com>
  <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <215f2a43-6677-04cd-f376-bd7cd051b626@wanadoo.fr>
-Date:   Sat, 11 Apr 2020 08:48:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
 Content-Language: en-US
+Cc:     kernel-janitors@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200411064807.J29Wz5awQT1aUl4M5oAYey9wouctPAL7aRjAlE2xDVQ@z>
 
 Le 10/04/2020 à 21:53, Joe Perches a écrit :
 > On Fri, 2020-04-10 at 12:46 -0700, Joe Perches wrote:
@@ -123,4 +119,5 @@ This fixes the use case for  drivers/usb/phy/phy-jz4770.c
 is missing line 691.
 
 CJ
+
 
