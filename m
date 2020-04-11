@@ -4,61 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5358DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE71C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2D3206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF872051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648255;
-	bh=T6vLV0I9Z44mhyDrMafziRQiy2e9aQq8OQOLsX3aPN4=;
+	s=default; t=1586648261;
+	bh=hxSLI/Wp+FzU1WI/4USn63xVTDunb7/+FM/8EFyhj7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5UtX/8gZ7Z+VZUJaNyAPHHONetEbxF6yGpBWDNOSieGLMUBXqnKjkgQRMEnLMmoM
-	 yvWvl8HFz4SN+gpaFid0BMCTCcqTwaoLme5vi9LAFll2RrwFDZSPHQU2VnfMQOrbCf
-	 Whhxivp8rEXikRyHHr4iLlzWqdANd8OHlqLauVUE=
+	b=S97m2oDxZTZVEWho6TcZk+YYsPzXIB461qPU6WHSH7f9NoRTG/5bTMsvd1lAFj0X3
+	 T2M1ZNuU3uM1oZKrqhO4j1cfP6AVL1wu+9UluJu2qSKaUoawm9wxEfQE0lvzAFWIhz
+	 e7ZIeAQoS330PTLb4e4RluNhcAV8LUxfnhPl4yio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgDKXhd (ORCPT
+        id S1730442AbgDKXhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45036 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbgDKXIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:19 -0400
+        id S1728881AbgDKXIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876F92173E;
-        Sat, 11 Apr 2020 23:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37ADA215A4;
+        Sat, 11 Apr 2020 23:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646499;
-        bh=T6vLV0I9Z44mhyDrMafziRQiy2e9aQq8OQOLsX3aPN4=;
+        s=default; t=1586646497;
+        bh=hxSLI/Wp+FzU1WI/4USn63xVTDunb7/+FM/8EFyhj7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uyl9USwkiHAVKc/mfeHSakT5dfci9dGkzQuAuVg5PBlEKjJOhyw58Xj5JtDQO08iw
-         kXjq+8dSbuZFmwsM/OinpZnjbHv8P/2hCCUq3sYWpOG6HJ3n7aVeEnUmark0i3KCFj
-         FKoM70qevpy27XWIIQDGzBxfP6wK7zAn7k0y2TkA=
+        b=wCs9K7bbA7dmFsIgvLqUPFkpe6Q7aCFeJ1gEzjSBWkcmNBOJ67lGfoGjvI1XxCkE0
+         R+qDwZoHwyj9Id1c6Cm6CVvg1fjXLA3h09HG4y+dDWeIG0W+Cg9UZCOy+PFohkGfZa
+         cbGi1JM4Qov9o7JREj5mx10qExpk0FqdHeNIF7SY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Rosin <peda@axentia.se>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+Cc:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 060/121] fbdev: potential information leak in do_fb_ioctl()
-Date:   Sat, 11 Apr 2020 19:06:05 -0400
-Message-Id: <20200411230706.23855-60-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 059/121] drm/stm: ltdc: check crtc state before enabling LIE
+Date:   Sat, 11 Apr 2020 19:06:04 -0400
+Message-Id: <20200411230706.23855-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -71,48 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yannick Fertre <yannick.fertre@st.com>
 
-[ Upstream commit d3d19d6fc5736a798b118971935ce274f7deaa82 ]
+[ Upstream commit a6bd58c51ac43083f3977057a7ad668def55812f ]
 
-The "fix" struct has a 2 byte hole after ->ywrapstep and the
-"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
-on the compiler.  The solution is just to replace the assignment with an
-memcpy().
+Following investigations of a hardware bug, the LIE interrupt
+can occur while the display controller is not activated.
+LIE interrupt (vblank) don't have to be set if the CRTC is not
+enabled.
 
-Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200113100132.ixpaymordi24n3av@kili.mountain
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1579601650-7055-1-git-send-email-yannick.fertre@st.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/stm/ltdc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 6f6fc785b5453..28158e21672ad 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1110,7 +1110,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
- 		break;
- 	case FBIOGET_FSCREENINFO:
- 		lock_fb_info(info);
--		fix = info->fix;
-+		memcpy(&fix, &info->fix, sizeof(fix));
- 		if (info->flags & FBINFO_HIDE_SMEM_START)
- 			fix.smem_start = 0;
- 		unlock_fb_info(info);
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 5b51298921cf1..cf899cff7610a 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -654,9 +654,14 @@ static const struct drm_crtc_helper_funcs ltdc_crtc_helper_funcs = {
+ static int ltdc_crtc_enable_vblank(struct drm_crtc *crtc)
+ {
+ 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
++	struct drm_crtc_state *state = crtc->state;
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+-	reg_set(ldev->regs, LTDC_IER, IER_LIE);
++
++	if (state->enable)
++		reg_set(ldev->regs, LTDC_IER, IER_LIE);
++	else
++		return -EPERM;
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
