@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B930C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E1EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520E320CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E834420787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646940;
-	bh=Ddv9SF++LpKiw+2zYXDKW5JRkO4JX8S6DIl7nFsv+Ok=;
+	s=default; t=1586646948;
+	bh=9wRjtKjXDlNoxXDQBfztyD8MN5JnlfsPkQJPXVV889U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiM6VHQNDMes4TeU3Lk4loiapKKuQYJyBmDaDvq+bJESqq8V6wcryADrhbwIl6TWQ
-	 c1vfKZzcLO7RhoYmNN7ek6cEHkm3BYSnSUlpgwtR4PCTGOB1H5LY+bNObyPHdoLph0
-	 GDVqs6mjKM3UB0IZuvUay/57BarjS7Kx1z6ffH94=
+	b=bugRjMBAGgEd7LjKSHNdDvgbbhhQ9cDs3wVLOAdWGo+apSv7uJjRe6SmKgoF1wpaB
+	 fas1QYxw+aNnJ8ppb0BROq4EjjEm9qRM7GmlW9C8KvQAj72svSPI+EFXHIOU50IBKH
+	 W5Oid+uwqD9u8c669x2KNmV6YjXzviBr+yEbfQQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgDKXPf (ORCPT
+        id S1730913AbgDKXO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730937AbgDKXPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:15:02 -0400
+        id S1730883AbgDKXOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B7F215A4;
-        Sat, 11 Apr 2020 23:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B7DD216FD;
+        Sat, 11 Apr 2020 23:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646902;
-        bh=Ddv9SF++LpKiw+2zYXDKW5JRkO4JX8S6DIl7nFsv+Ok=;
+        s=default; t=1586646889;
+        bh=9wRjtKjXDlNoxXDQBfztyD8MN5JnlfsPkQJPXVV889U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z16b8RWIIaPkfXbp/xv1aAJIW2m+JisZkHkRbTEtwMgSGTlOBdQsolC2SwMSh/RZa
-         d7Rwlk17X+bge0lDnp2QHqb9hnurSZ81m92oU9ylWHFgfmIua2QziJSt2YstTl/Pm9
-         V0bSInNzcLqBIbiDr0poTIwepn8VIgY/uf+UAb6Y=
+        b=Wjr6/NH1lyT3l0eKBD44bs0ZSb5oj8ZQCgy/pHjUIjN1hfNR04whoMRWCuLKVI84/
+         YBDzMPTLppz/lRlSZJD0Rq+m6v8pmNVraMZ8DTLrG4hgh9WX6RnzDe4EAH1a0oCz1k
+         mRUrtgATbSKv9s7XU71wBZ7WVE6cC9RtcvoUGALk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/16] scsi: lpfc: Fix RQ buffer leakage when no IOCBs available
-Date:   Sat, 11 Apr 2020 19:14:42 -0400
-Message-Id: <20200411231447.27182-12-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/16] serial: 8250_omap: Fix sleeping function called from invalid context during probe
+Date:   Sat, 11 Apr 2020 19:14:32 -0400
+Message-Id: <20200411231447.27182-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
 References: <20200411231447.27182-1-sashal@kernel.org>
@@ -60,55 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 39c4f1a965a9244c3ba60695e8ff8da065ec6ac4 ]
+[ Upstream commit 4ce35a3617c0ac758c61122b2218b6c8c9ac9398 ]
 
-The driver is occasionally seeing the following SLI Port error, requiring
-reset and reinit:
+When booting j721e the following bug is printed:
 
- Port Status Event: ... error 1=0x52004a01, error 2=0x218
+[    1.154821] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+[    1.154827] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 12, name: kworker/0:1
+[    1.154832] 3 locks held by kworker/0:1/12:
+[    1.154836]  #0: ffff000840030728 ((wq_completion)events){+.+.}, at: process_one_work+0x1d4/0x6e8
+[    1.154852]  #1: ffff80001214fdd8 (deferred_probe_work){+.+.}, at: process_one_work+0x1d4/0x6e8
+[    1.154860]  #2: ffff00084060b170 (&dev->mutex){....}, at: __device_attach+0x38/0x138
+[    1.154872] irq event stamp: 63096
+[    1.154881] hardirqs last  enabled at (63095): [<ffff800010b74318>] _raw_spin_unlock_irqrestore+0x70/0x78
+[    1.154887] hardirqs last disabled at (63096): [<ffff800010b740d8>] _raw_spin_lock_irqsave+0x28/0x80
+[    1.154893] softirqs last  enabled at (62254): [<ffff800010080c88>] _stext+0x488/0x564
+[    1.154899] softirqs last disabled at (62247): [<ffff8000100fdb3c>] irq_exit+0x114/0x140
+[    1.154906] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc6-next-20200318-00094-g45e4089b0bd3 #221
+[    1.154911] Hardware name: Texas Instruments K3 J721E SoC (DT)
+[    1.154917] Workqueue: events deferred_probe_work_func
+[    1.154923] Call trace:
+[    1.154928]  dump_backtrace+0x0/0x190
+[    1.154933]  show_stack+0x14/0x20
+[    1.154940]  dump_stack+0xe0/0x148
+[    1.154946]  ___might_sleep+0x150/0x1f0
+[    1.154952]  __might_sleep+0x4c/0x80
+[    1.154957]  wait_for_completion_timeout+0x40/0x140
+[    1.154964]  ti_sci_set_device_state+0xa0/0x158
+[    1.154969]  ti_sci_cmd_get_device_exclusive+0x14/0x20
+[    1.154977]  ti_sci_dev_start+0x34/0x50
+[    1.154984]  genpd_runtime_resume+0x78/0x1f8
+[    1.154991]  __rpm_callback+0x3c/0x140
+[    1.154996]  rpm_callback+0x20/0x80
+[    1.155001]  rpm_resume+0x568/0x758
+[    1.155007]  __pm_runtime_resume+0x44/0xb0
+[    1.155013]  omap8250_probe+0x2b4/0x508
+[    1.155019]  platform_drv_probe+0x50/0xa0
+[    1.155023]  really_probe+0xd4/0x318
+[    1.155028]  driver_probe_device+0x54/0xe8
+[    1.155033]  __device_attach_driver+0x80/0xb8
+[    1.155039]  bus_for_each_drv+0x74/0xc0
+[    1.155044]  __device_attach+0xdc/0x138
+[    1.155049]  device_initial_probe+0x10/0x18
+[    1.155053]  bus_probe_device+0x98/0xa0
+[    1.155058]  deferred_probe_work_func+0x74/0xb0
+[    1.155063]  process_one_work+0x280/0x6e8
+[    1.155068]  worker_thread+0x48/0x430
+[    1.155073]  kthread+0x108/0x138
+[    1.155079]  ret_from_fork+0x10/0x18
 
-The failure means an RQ timeout. That is, the adapter had received
-asynchronous receive frames, ran out of buffer slots to place the frames,
-and the driver did not replenish the buffer slots before a timeout
-occurred. The driver should not be so slow in replenishing buffers that a
-timeout can occur.
+To fix the bug we need to first call pm_runtime_enable() prior to any
+pm_runtime calls.
 
-When the driver received all the frames of a sequence, it allocates an IOCB
-to put the frames in. In a situation where there was no IOCB available for
-the frame of a sequence, the RQ buffer corresponding to the first frame of
-the sequence was not returned to the FW. Eventually, with enough traffic
-encountering the situation, the timeout occurred.
-
-Fix by releasing the buffer back to firmware whenever there is no IOCB for
-the first frame.
-
-[mkp: typo]
-
-Link: https://lore.kernel.org/r/20200128002312.16346-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20200320125200.6772-1-peter.ujfalusi@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/8250/8250_omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 065fdc17bbfbb..0b2c6e0f0de59 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -15443,6 +15443,10 @@ lpfc_prep_seq(struct lpfc_vport *vport, struct hbq_dmabuf *seq_dmabuf)
- 			list_add_tail(&iocbq->list, &first_iocbq->list);
- 		}
- 	}
-+	/* Free the sequence's header buffer */
-+	if (!first_iocbq)
-+		lpfc_in_buf_free(vport->phba, &seq_dmabuf->dbuf);
-+
- 	return first_iocbq;
- }
+diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+index c4383573cf668..0377b35d62b80 100644
+--- a/drivers/tty/serial/8250/8250_omap.c
++++ b/drivers/tty/serial/8250/8250_omap.c
+@@ -1188,11 +1188,11 @@ static int omap8250_probe(struct platform_device *pdev)
+ 	spin_lock_init(&priv->rx_dma_lock);
+ 
+ 	device_init_wakeup(&pdev->dev, true);
++	pm_runtime_enable(&pdev->dev);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
+ 
+ 	pm_runtime_irq_safe(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
  
 -- 
 2.20.1
