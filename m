@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B147C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D7BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1783F2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230EE20674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647461;
-	bh=Tm+Gv3r0kwh9oKuspeovhFX4K2Ys3zHo2UE/OiVpUFs=;
+	s=default; t=1586647468;
+	bh=z0pLiWMtwtP9re4V79keU8DeAYWfXZce/BJRoWRU/nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nfq9wYWqb7B22AK5IDbR4LCJiGqyNCP/8m8AZKxqsvHBEjqtdNpF+jcRSqcnbkfHJ
-	 nlMpDqJ7iWjhU3puG+aj/6Z/cIMB6jwKx3dTosBiqAE85rO2Pr5XyDcPh7hfoJUPOM
-	 NdwSWr+ifASuX8+MwR0JVoHGuKw4/vmHsA/Q70dg=
+	b=IC5nNP55tNz2ey2fySOYTTmSeGbKbixm1rgtWYg9+Zy0hghD6gamRNN4cA9uXUKd0
+	 kHu7YOYHTdgFn7zzsN8hi6bKjWJv75P2KTP0Uux5FH/irrJHwEVowyd7nVxYnGnlCl
+	 XOrtfoFwb/Uj60KHe/3rAvWJ0+7I0PQffpG8X684=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730909AbgDKXYT (ORCPT
+        id S1730917AbgDKXY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52886 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbgDKXMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:37 -0400
+        id S1730191AbgDKXMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 968B920708;
-        Sat, 11 Apr 2020 23:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F07C20708;
+        Sat, 11 Apr 2020 23:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646757;
-        bh=Tm+Gv3r0kwh9oKuspeovhFX4K2Ys3zHo2UE/OiVpUFs=;
+        s=default; t=1586646754;
+        bh=z0pLiWMtwtP9re4V79keU8DeAYWfXZce/BJRoWRU/nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+uAg4NbiVLIRKpe57qM7/Ev306OZc+B8Leo+4jJFJbm6ZhcIzjdjch0HcIWiu0W8
-         ccaAK3R+bsMdxahXuMpu2FAEBYqmDoHgPpm6FF2OqidK8tgYXiRGG/X7+c3aKzyAbV
-         M+vMXBRPkhbAChj/bvFSwffAFldd+ETCx/RuYC0U=
+        b=pAB5yzvtpMUuDN5wytV57zBYRThu31YazItlq/q6kTjxvWaIXOps+f+NvtWCD7v/T
+         Un83JSbNJlYmUQqIt0GNf5W3kLM6cHYgRhBC1SImn7TR3CSHTfiwL2E6bfd5yf8NB0
+         BHEujqYqHh1iuLRAvsol6B+xSmAeaje8MiRRQmZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/66] sh_eth: check sh_eth_cpu_data::cexcr when dumping registers
-Date:   Sat, 11 Apr 2020 19:11:25 -0400
-Message-Id: <20200411231203.25933-28-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/66] net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278
+Date:   Sat, 11 Apr 2020 19:11:23 -0400
+Message-Id: <20200411231203.25933-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -61,41 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit f75ca32403dbf91e20c275719aab705401b9e718 ]
+[ Upstream commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ]
 
-When adding the sh_eth_cpu_data::cexcr flag I forgot to add the flag
-check to  __sh_eth_get_regs(), causing the non-existing RX packet counter
-registers to be considered for dumping on  the R7S72100 SoC (the register
-offset sanity check has the final say here)...
+Either port 5 or port 8 can be used on a 7278 device, make sure that
+port 5 also gets configured properly for 2Gb/sec in that case.
 
-Fixes: 4c1d45850d5 ("sh_eth: add sh_eth_cpu_data::cexcr flag")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Tested-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/dsa/bcm_sf2.c      | 3 +++
+ drivers/net/dsa/bcm_sf2_regs.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 9e735b52b85fb..7d3207d2d6d6d 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -2174,8 +2174,10 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
- 	add_reg(FRECR);
- 	add_reg(TSFRCR);
- 	add_reg(TLFRCR);
--	add_reg(CERCR);
--	add_reg(CEECR);
-+	if (cd->cexcr) {
-+		add_reg(CERCR);
-+		add_reg(CEECR);
-+	}
- 	add_reg(MAFCR);
- 	if (cd->rtrate)
- 		add_reg(RTRATE);
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 8c69789fbe094..a5a83955a7cff 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -599,6 +599,9 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
+ 	if (state->duplex == DUPLEX_FULL)
+ 		reg |= DUPLX_MODE;
+ 
++	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
++		reg |= GMIIP_SPEED_UP_2G;
++
+ 	core_writel(priv, reg, offset);
+ }
+ 
+diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
+index 0a1e530d52b72..c389702f07ccf 100644
+--- a/drivers/net/dsa/bcm_sf2_regs.h
++++ b/drivers/net/dsa/bcm_sf2_regs.h
+@@ -182,6 +182,7 @@ enum bcm_sf2_reg_offs {
+ #define  RXFLOW_CNTL			(1 << 4)
+ #define  TXFLOW_CNTL			(1 << 5)
+ #define  SW_OVERRIDE			(1 << 6)
++#define  GMIIP_SPEED_UP_2G		(1 << 7)
+ 
+ #define CORE_WATCHDOG_CTRL		0x001e4
+ #define  SOFTWARE_RESET			(1 << 7)
 -- 
 2.20.1
 
