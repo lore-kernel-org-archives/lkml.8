@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5407C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED96C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B619C2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73252166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607111;
-	bh=MmvJFYQiUuoxCAfLFMHbzJ4bdL7Mc7UdVF9VMoB1uOA=;
+	s=default; t=1586607114;
+	bh=X2BENBbLy6MCfSpp22+T3ekykdiJL3kEpY4A+B45mYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cADGiplIye1O3Kg5gXFnxZ4MKTEK12egzhLKAumym994z9Btv0JXnTemmxhD+Lqe0
-	 +/0aEjq2c+ygPHPn7uOMGuw+JVdBdKYe0LYleZDN1UwiajAHyj6W9DtpDHtADUP3Qb
-	 OlphpmsNZDrrx8kN3yky82Gj7eu0rAOb9/wLsIlg=
+	b=BJ5vPqPdjlUgmy1MitizNvGQ+1GHa7RmK5p2+sGNmyn+99pQt+YWzKiWOZOk8UeyQ
+	 IdANSI+0QnjQ5HCHlxdhjyqLFWK94YxJUD0PPqDBOhZICQm1XKX+vX6LYzKdN2FPyx
+	 NUX6KkSspB4/Rcy+9n/3bt/GFHx3D8s8rmrxjseg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgDKMLu (ORCPT
+        id S1726702AbgDKMLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43966 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgDKMLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:45 -0400
+        id S1727050AbgDKMLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B89821D6C;
-        Sat, 11 Apr 2020 12:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 379B9216FD;
+        Sat, 11 Apr 2020 12:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607104;
-        bh=MmvJFYQiUuoxCAfLFMHbzJ4bdL7Mc7UdVF9VMoB1uOA=;
+        s=default; t=1586607109;
+        bh=X2BENBbLy6MCfSpp22+T3ekykdiJL3kEpY4A+B45mYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBIRoC3GAMbjNlWtPnjIBuvOHlflW2bya2IXrPvnfHBnvN9EQHEhzQPElINn1sMKD
-         zKVuoYmastJg4X96+0RufgvlROHUzQYJLJUsBC6Nhcz/dYL0ItLLAPg41UfufZ9H6W
-         zGe1n9Aus74k6pqvDpAUg/y++CTzL0QTaWGfT4+w=
+        b=NRaP1VJ/1YTW7lzKcp5kN7ig45WW1z6IeYjq1RJK4LARDNqg3avLvcc0wWBkMQYs4
+         h8ETxQ95hpxqHtS+2rQS3A8h8kUyv3EStF4XJA0/3DbMcrlfj6M0GLAGTHOpwmEjzU
+         dFvd+V7e4UWcwQWuRfqfrskfgNvkMxaXO8ZZu9/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.9 01/32] l2tp: ensure sessions are freed after their PPPOL2TP socket
-Date:   Sat, 11 Apr 2020 14:08:40 +0200
-Message-Id: <20200411115418.843920874@linuxfoundation.org>
+        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.9 11/32] coresight: do not use the BIT() macro in the UAPI header
+Date:   Sat, 11 Apr 2020 14:08:50 +0200
+Message-Id: <20200411115419.838338654@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,51 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Eugene Syromiatnikov <esyr@redhat.com>
 
-commit cdd10c9627496ad25c87ce6394e29752253c69d3 upstream.
+commit 9b6eaaf3db5e5888df7bca7fed7752a90f7fd871 upstream.
 
-If l2tp_tunnel_delete() or l2tp_tunnel_closeall() deletes a session
-right after pppol2tp_release() orphaned its socket, then the 'sock'
-variable of the pppol2tp_session_close() callback is NULL. Yet the
-session is still used by pppol2tp_release().
+The BIT() macro definition is not available for the UAPI headers
+(moreover, it can be defined differently in the user space); replace
+its usage with the _BITUL() macro that is defined in <linux/const.h>.
 
-Therefore we need to take an extra reference in any case, to prevent
-l2tp_tunnel_delete() or l2tp_tunnel_closeall() from freeing the session.
-
-Since the pppol2tp_session_close() callback is only set if the session
-is associated to a PPPOL2TP socket and that both l2tp_tunnel_delete()
-and l2tp_tunnel_closeall() hold the PPPOL2TP socket before calling
-pppol2tp_session_close(), we're sure that pppol2tp_session_close() and
-pppol2tp_session_destruct() are paired and called in the right order.
-So the reference taken by the former will be released by the later.
-
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 237483aa5cf4 ("coresight: stm: adding driver for CoreSight STM component")
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20200324042213.GA10452@asgard.redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/l2tp/l2tp_ppp.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/uapi/linux/coresight-stm.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -437,11 +437,11 @@ static void pppol2tp_session_close(struc
+--- a/include/uapi/linux/coresight-stm.h
++++ b/include/uapi/linux/coresight-stm.h
+@@ -1,8 +1,10 @@
+ #ifndef __UAPI_CORESIGHT_STM_H_
+ #define __UAPI_CORESIGHT_STM_H_
  
- 	BUG_ON(session->magic != L2TP_SESSION_MAGIC);
- 
--	if (sock) {
-+	if (sock)
- 		inet_shutdown(sock, SEND_SHUTDOWN);
--		/* Don't let the session go away before our socket does */
--		l2tp_session_inc_refcount(session);
--	}
+-#define STM_FLAG_TIMESTAMPED   BIT(3)
+-#define STM_FLAG_GUARANTEED    BIT(7)
++#include <linux/const.h>
 +
-+	/* Don't let the session go away before our socket does */
-+	l2tp_session_inc_refcount(session);
- }
++#define STM_FLAG_TIMESTAMPED   _BITUL(3)
++#define STM_FLAG_GUARANTEED    _BITUL(7)
  
- /* Really kill the session socket. (Called from sock_put() if
+ /*
+  * The CoreSight STM supports guaranteed and invariant timing
 
 
