@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F63C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A8DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2A02137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE90F20692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607287;
-	bh=FIQyZpGeWjGjICZFpF4bFafvr3BU4jUe3KlA1RozA18=;
+	s=default; t=1586607289;
+	bh=OhKMepbltkwnbMW3Ulpy8K75ap6qNdgFKnn2ttYTemQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJZqvz5P3/xhl8IcUrIYJjlQmJ3NlG1isCt5UCxz+rcNAPcalEDz+l9TUVZscLI/P
-	 bl81wQz3wL8pn4vWkOSPi6U7ogFKmAQ/dXUv+ZPf6kbBv57LGWrM3EadgPdpc38eqG
-	 rEfewQ9rHlU7/CkLbE0cx1bdlOPiEfCwGcpknqzQ=
+	b=dUFl1pes+LCpSGWu8i/wnYbaM831ULtfHGz0TieO/vmBi0+eQqBC63B6bSiG5aUG4
+	 lnCI7IXspLok0+ZGyG2vbiQPcpbjtICOOUoW7u7Hkh6buQ9QpUC4dT3BzqvH+FxpK7
+	 poxvAwDDVXHCH9ZkSEHTZ06qDNkaW83dRLBzg+Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgDKMOp (ORCPT
+        id S1728028AbgDKMOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48248 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbgDKMOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:43 -0400
+        id S1726953AbgDKMOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 817BD20692;
-        Sat, 11 Apr 2020 12:14:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEC0620692;
+        Sat, 11 Apr 2020 12:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607284;
-        bh=FIQyZpGeWjGjICZFpF4bFafvr3BU4jUe3KlA1RozA18=;
+        s=default; t=1586607286;
+        bh=OhKMepbltkwnbMW3Ulpy8K75ap6qNdgFKnn2ttYTemQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XBjzNiaSdhvyhLSNEyA9y8sFBUW7SOmNm3QZFfiPryKhNOkfydLc4yBZ9+Pp/dy4d
-         8eYDIXbqujFdcMvH+eoN1m4+QxiJEpbvHPWvVefZntu6Ltd47AuWuChTkDsAn1MWlu
-         q869xzlPZrslEKNtDIUanUvffkBUw1sTVBZVZIE8=
+        b=NrzC91qEl7cLL/a2YzQfqJ4mFWSu7MjpM0aizBVkFE19II1Ey46BqqO30GMS8Ujc5
+         Cravxr+z3YHDdy/FklMQruCfdVhNDOjVb/PsMSjieMR4AwZSWyfk0ELsujDNZ8biZC
+         EK8ygUUlbUg64Fo/K52358GMH/8ZR23mBe15JBlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/54] tools/power turbostat: Fix missing SYS_LPI counter on some Chromebooks
-Date:   Sat, 11 Apr 2020 14:08:53 +0200
-Message-Id: <20200411115509.374022389@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Robert Beckett <bob.beckett@collabora.com>
+Subject: [PATCH 4.19 12/54] drm/etnaviv: replace MMU flush marker with flush sequence
+Date:   Sat, 11 Apr 2020 14:08:54 +0200
+Message-Id: <20200411115509.463222109@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -59,83 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 1f81c5efc020314b2db30d77efe228b7e117750d ]
+commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream.
 
-Some Chromebook BIOS' do not export an ACPI LPIT, which is how
-Linux finds the residency counter for CPU and SYSTEM low power states,
-that is exports in /sys/devices/system/cpu/cpuidle/*residency_us
+If a MMU is shared between multiple GPUs, all of them need to flush their
+TLBs, so a single marker that gets reset on the first flush won't do.
+Replace the flush marker with a sequence number, so that it's possible to
+check if the TLB is in sync with the current page table state for each GPU.
 
-When these sysfs attributes are missing, check the debugfs attrubte
-from the pmc_core driver, which accesses the same counter value.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c |   10 ++++++----
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h    |    1 +
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c    |    6 +++---
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.h    |    2 +-
+ 4 files changed, 11 insertions(+), 8 deletions(-)
 
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -299,6 +299,10 @@ int *irqs_per_cpu;		/* indexed by cpu_nu
+--- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+@@ -311,6 +311,8 @@ void etnaviv_buffer_queue(struct etnaviv
+ 	u32 return_target, return_dwords;
+ 	u32 link_target, link_dwords;
+ 	bool switch_context = gpu->exec_state != exec_state;
++	unsigned int new_flush_seq = READ_ONCE(gpu->mmu->flush_seq);
++	bool need_flush = gpu->flush_seq != new_flush_seq;
  
- void setup_all_buffers(void);
+ 	lockdep_assert_held(&gpu->lock);
  
-+char *sys_lpi_file;
-+char *sys_lpi_file_sysfs = "/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us";
-+char *sys_lpi_file_debugfs = "/sys/kernel/debug/pmc_core/slp_s0_residency_usec";
-+
- int cpu_is_not_present(int cpu)
- {
- 	return !CPU_ISSET_S(cpu, cpu_present_setsize, cpu_present_set);
-@@ -2844,8 +2848,6 @@ int snapshot_gfx_mhz(void)
-  *
-  * record snapshot of
-  * /sys/devices/system/cpu/cpuidle/low_power_idle_cpu_residency_us
-- *
-- * return 1 if config change requires a restart, else return 0
-  */
- int snapshot_cpu_lpi_us(void)
- {
-@@ -2865,17 +2867,14 @@ int snapshot_cpu_lpi_us(void)
- /*
-  * snapshot_sys_lpi()
-  *
-- * record snapshot of
-- * /sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us
-- *
-- * return 1 if config change requires a restart, else return 0
-+ * record snapshot of sys_lpi_file
-  */
- int snapshot_sys_lpi_us(void)
- {
- 	FILE *fp;
- 	int retval;
+@@ -325,14 +327,14 @@ void etnaviv_buffer_queue(struct etnaviv
+ 	 * need to append a mmu flush load state, followed by a new
+ 	 * link to this buffer - a total of four additional words.
+ 	 */
+-	if (gpu->mmu->need_flush || switch_context) {
++	if (need_flush || switch_context) {
+ 		u32 target, extra_dwords;
  
--	fp = fopen_or_die("/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us", "r");
-+	fp = fopen_or_die(sys_lpi_file, "r");
+ 		/* link command */
+ 		extra_dwords = 1;
  
- 	retval = fscanf(fp, "%lld", &cpuidle_cur_sys_lpi_us);
- 	if (retval != 1)
-@@ -4743,10 +4742,16 @@ void process_cpuid()
- 	else
- 		BIC_NOT_PRESENT(BIC_CPU_LPI);
+ 		/* flush command */
+-		if (gpu->mmu->need_flush) {
++		if (need_flush) {
+ 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1)
+ 				extra_dwords += 1;
+ 			else
+@@ -345,7 +347,7 @@ void etnaviv_buffer_queue(struct etnaviv
  
--	if (!access("/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us", R_OK))
-+	if (!access(sys_lpi_file_sysfs, R_OK)) {
-+		sys_lpi_file = sys_lpi_file_sysfs;
- 		BIC_PRESENT(BIC_SYS_LPI);
--	else
-+	} else if (!access(sys_lpi_file_debugfs, R_OK)) {
-+		sys_lpi_file = sys_lpi_file_debugfs;
-+		BIC_PRESENT(BIC_SYS_LPI);
-+	} else {
-+		sys_lpi_file_sysfs = NULL;
- 		BIC_NOT_PRESENT(BIC_SYS_LPI);
-+	}
+ 		target = etnaviv_buffer_reserve(gpu, buffer, extra_dwords);
  
- 	if (!quiet)
- 		decode_misc_feature_control();
+-		if (gpu->mmu->need_flush) {
++		if (need_flush) {
+ 			/* Add the MMU flush */
+ 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1) {
+ 				CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_MMU,
+@@ -365,7 +367,7 @@ void etnaviv_buffer_queue(struct etnaviv
+ 					SYNC_RECIPIENT_PE);
+ 			}
+ 
+-			gpu->mmu->need_flush = false;
++			gpu->flush_seq = new_flush_seq;
+ 		}
+ 
+ 		if (switch_context) {
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+@@ -139,6 +139,7 @@ struct etnaviv_gpu {
+ 
+ 	struct etnaviv_iommu *mmu;
+ 	struct etnaviv_cmdbuf_suballoc *cmdbuf_suballoc;
++	unsigned int flush_seq;
+ 
+ 	/* Power Control: */
+ 	struct clk *clk_bus;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+@@ -261,7 +261,7 @@ int etnaviv_iommu_map_gem(struct etnaviv
+ 	}
+ 
+ 	list_add_tail(&mapping->mmu_node, &mmu->mappings);
+-	mmu->need_flush = true;
++	mmu->flush_seq++;
+ unlock:
+ 	mutex_unlock(&mmu->lock);
+ 
+@@ -280,7 +280,7 @@ void etnaviv_iommu_unmap_gem(struct etna
+ 		etnaviv_iommu_remove_mapping(mmu, mapping);
+ 
+ 	list_del(&mapping->mmu_node);
+-	mmu->need_flush = true;
++	mmu->flush_seq++;
+ 	mutex_unlock(&mmu->lock);
+ }
+ 
+@@ -357,7 +357,7 @@ int etnaviv_iommu_get_suballoc_va(struct
+ 			mutex_unlock(&mmu->lock);
+ 			return ret;
+ 		}
+-		gpu->mmu->need_flush = true;
++		mmu->flush_seq++;
+ 		mutex_unlock(&mmu->lock);
+ 
+ 		*iova = (u32)vram_node->start;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
++++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
+@@ -48,7 +48,7 @@ struct etnaviv_iommu {
+ 	struct mutex lock;
+ 	struct list_head mappings;
+ 	struct drm_mm mm;
+-	bool need_flush;
++	unsigned int flush_seq;
+ };
+ 
+ struct etnaviv_gem_object;
 
 
