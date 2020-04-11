@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4D5C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBB6C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4E52051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FBE21775
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648087;
-	bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
+	s=default; t=1586648088;
+	bh=ORdiuhU2dCCpWV3CRgYE5CPAYMKh4bXPE412c+Clh64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xojE5z+MqjfGDZ+tdzJYsLWWrTmjKGiDrjKKEzcVclK/blNcXVq+TsG70kFqxMZps
-	 RkyezaBIl63lU9gsPuAnmWKNc814UeSLesfzHcByPtJZtvnvDD/eiXal9BM/FUVVOH
-	 b3JRksd1wiUZ/0S3AfCb8x/xSJpOTfCSHVvHHNQ4=
+	b=zPrhZPq37E3KQ40LChjxjHEdCprg1wWebDzAhxuzcySkweoFvOgWX48rD8PR3DhyA
+	 GsVG5ZJPKg/XYycEW30XGHW7D36XUFHvfQdwpZHYiqmEiCf+dzH5+G6GJEZDguvbD8
+	 DgYz/q9Z+fDDlXHn8zNcRqDzMB34+Hc1+NFBb5nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbgDKXJO (ORCPT
+        id S1729527AbgDKXeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729132AbgDKXJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:10 -0400
+        id S1729151AbgDKXJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06AD020787;
-        Sat, 11 Apr 2020 23:09:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE5A1217D8;
+        Sat, 11 Apr 2020 23:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646550;
-        bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
+        s=default; t=1586646555;
+        bh=ORdiuhU2dCCpWV3CRgYE5CPAYMKh4bXPE412c+Clh64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=riGlpz6tKtUpfJSYKkfW0PMVhBRX1tPMm6ldywOiC0KrsZlCGSiwB+aGR8s2Xgt/G
-         vRTsCc42ZBttBItDMTh39xSUwCELgiYvXrk2ZLgTCarfON7RpVwFvsCn+JRQWfXQ5P
-         Q24afZ8fWPuNt6uYnVolkRwXO1d+bSpDXcaAP200=
+        b=RqnI/5bdbMeenQfw7a33DXRi2f02VYgmGXwPZFra9umL3umLazi75EfgllSMSNb4v
+         C8j7tmaQOplK9/Z3aNSDdqzDleNbSwhPQDwNPVSBmtdhCrCo4VGVD4Kpy7wuhsdzVl
+         BtmX8HsjVYhjxXxgimQcM+oz6VD7wvfG0RJE1qgg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Daly <pdaly@codeaurora.org>,
-        "Isaac J . Manjarres" <isaacm@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 101/121] of: of_reserved_mem: Increase limit on number of reserved regions
-Date:   Sat, 11 Apr 2020 19:06:46 -0400
-Message-Id: <20200411230706.23855-101-sashal@kernel.org>
+Cc:     Joe Carnuccio <joe.carnuccio@cavium.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 105/121] scsi: qla2xxx: Fix qla2x00_echo_test() based on ISP type
+Date:   Sat, 11 Apr 2020 19:06:50 -0400
+Message-Id: <20200411230706.23855-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,42 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Daly <pdaly@codeaurora.org>
+From: Joe Carnuccio <joe.carnuccio@cavium.com>
 
-[ Upstream commit 632c99084052aef1c9dcfe43d2720306026d6d21 ]
+[ Upstream commit 83cfd3dc002fc730387a1ec5fa0d4097cc31ee9f ]
 
-Certain SoCs need to support a large amount of reserved memory
-regions. For example, Qualcomm's SM8150 SoC requires that 20
-regions of memory be reserved for a variety of reasons (e.g.
-loading a peripheral subsystem's firmware image into a
-particular space).
+Ths patch fixes MBX in-direction for setting right bits for
+qla2x00_echo_test()
 
-When adding more reserved memory regions to cater to different
-usecases, the remaining number of reserved memory regions--12
-to be exact--becomes too small. Thus, double the existing
-limit of reserved memory regions.
-
-Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200212214436.25532-19-hmadhani@marvell.com
+Signed-off-by: Joe Carnuccio <joe.carnuccio@cavium.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/of_reserved_mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 6bd610ee2cd73..1a84bc0d5fa80 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -22,7 +22,7 @@
- #include <linux/slab.h>
- #include <linux/memblock.h>
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index f0846ce0c4da4..0e8426e1e1149 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -5173,10 +5173,11 @@ qla2x00_echo_test(scsi_qla_host_t *vha, struct msg_echo_lb *mreq,
+ 		mcp->out_mb |= MBX_2;
  
--#define MAX_RESERVED_REGIONS	32
-+#define MAX_RESERVED_REGIONS	64
- static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
- static int reserved_mem_count;
+ 	mcp->in_mb = MBX_0;
+-	if (IS_QLA24XX_TYPE(ha) || IS_QLA25XX(ha) ||
+-	    IS_CNA_CAPABLE(ha) || IS_QLA2031(ha))
++	if (IS_CNA_CAPABLE(ha) || IS_QLA24XX_TYPE(ha) || IS_QLA25XX(ha) ||
++	    IS_QLA2031(ha) || IS_QLA27XX(ha) || IS_QLA28XX(ha))
+ 		mcp->in_mb |= MBX_1;
+-	if (IS_CNA_CAPABLE(ha) || IS_QLA2031(ha))
++	if (IS_CNA_CAPABLE(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha) ||
++	    IS_QLA28XX(ha))
+ 		mcp->in_mb |= MBX_3;
  
+ 	mcp->tov = MBX_TOV_SECONDS;
 -- 
 2.20.1
 
