@@ -2,61 +2,57 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4D5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9A4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156292137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922C02137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607034;
-	bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+	s=default; t=1586607039;
+	bh=j6WLdnM+vDOgzwjNOl0Wp0iHgW1fh1z8mov5TytIjm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNQDohTfFMsgRgdR7+FfIFTSWrkjjdljbV3onShEC+xDCILw/xM+Cq5f5Z8UerSH5
-	 LD21vrGE6vwdjLlBtgVoKSK0DItuRn+TWGCWA8Jwbw+2P9AzzNUwKLjYDrqzuyWjp5
-	 NFOLuVzLRqU2w3RQnmcoQL7XYZYKacKEcxy4bkUs=
+	b=N/IQ2MBnU+sies+rtLet+NxbjKwUCV4nAiz4Vo9/myTlqaDaGdJYnsysh02T0rex5
+	 0agp9QNCxCpSjtPPbjn2b6FJLYnrRWTMQcOsshQDKBzGp83Dtfog4H+vKfF9eq31IY
+	 EZ+uS9W9KjgbdpwQvKqEm6eCwIzygzHIybFbp7i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgDKMKc (ORCPT
+        id S1726560AbgDKMKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgDKMKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:10:31 -0400
+        id S1726091AbgDKMKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:10:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B3920787;
-        Sat, 11 Apr 2020 12:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB982084D;
+        Sat, 11 Apr 2020 12:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607032;
-        bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+        s=default; t=1586607034;
+        bh=j6WLdnM+vDOgzwjNOl0Wp0iHgW1fh1z8mov5TytIjm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ByvFS0TIdXMCynKQHuvsl62c//RRHnvKeq7yy21soY8XcbL5lSTrN0NI+UqACfpHW
-         ehy76KvyDV/UbJs07HzSl3flgUSOEEvFe0ef43ecpEnIfHnHwogdfLPkd2jvdTCdad
-         0xVf8gRejpYUJpmW7KjdhCA3kc9qGDTqPpLe4b7s=
+        b=JvdZHsnOIG7r++4ZEnB8OFujMz997/YIQwaQHJhNV3HjyjuXDGHqimkH475WGaB9K
+         VJaWwOXuMHKzAPZC9N5E7gH5KE0pq3PMSwj87oUzPR7XsoKKKyy7Qo4m4rerBFsUJk
+         GMC8dUwet4gtOSl9SpK0KPJeKtQo9eiHspJ4mRy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/29] drm/bochs: downgrade pci_request_region failure from error to warning
-Date:   Sat, 11 Apr 2020 14:08:31 +0200
-Message-Id: <20200411115407.899569207@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Feng <fgao@ikuai8.com>,
+        Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.4 10/29] l2tp: Refactor the codes with existing macros instead of literal number
+Date:   Sat, 11 Apr 2020 14:08:40 +0200
+Message-Id: <20200411115409.384010341@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,45 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Gao Feng <fgao@ikuai8.com>
 
-[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
+commit 54c151d9ed1321e6e623c80ffe42cd2eb1571744 upstream.
 
-Shutdown of firmware framebuffer has a bunch of problems.  Because
-of this the framebuffer region might still be reserved even after
-drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
+Use PPP_ALLSTATIONS, PPP_UI, and SEND_SHUTDOWN instead of 0xff,
+0x03, and 2 separately.
 
-Don't consider pci_request_region() failure for the framebuffer
-region as fatal error to workaround this issue.
-
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gao Feng <fgao@ikuai8.com>
+Acked-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/l2tp/l2tp_ppp.c |   20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-index a39b0343c197d..401c218567af9 100644
---- a/drivers/gpu/drm/bochs/bochs_hw.c
-+++ b/drivers/gpu/drm/bochs/bochs_hw.c
-@@ -97,10 +97,8 @@ int bochs_hw_init(struct drm_device *dev, uint32_t flags)
- 		size = min(size, mem);
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -177,7 +177,7 @@ static int pppol2tp_recv_payload_hook(st
+ 	if (!pskb_may_pull(skb, 2))
+ 		return 1;
+ 
+-	if ((skb->data[0] == 0xff) && (skb->data[1] == 0x03))
++	if ((skb->data[0] == PPP_ALLSTATIONS) && (skb->data[1] == PPP_UI))
+ 		skb_pull(skb, 2);
+ 
+ 	return 0;
+@@ -297,7 +297,6 @@ static void pppol2tp_session_sock_put(st
+ static int pppol2tp_sendmsg(struct socket *sock, struct msghdr *m,
+ 			    size_t total_len)
+ {
+-	static const unsigned char ppph[2] = { 0xff, 0x03 };
+ 	struct sock *sk = sock->sk;
+ 	struct sk_buff *skb;
+ 	int error;
+@@ -327,7 +326,7 @@ static int pppol2tp_sendmsg(struct socke
+ 	error = -ENOMEM;
+ 	skb = sock_wmalloc(sk, NET_SKB_PAD + sizeof(struct iphdr) +
+ 			   uhlen + session->hdr_len +
+-			   sizeof(ppph) + total_len,
++			   2 + total_len, /* 2 bytes for PPP_ALLSTATIONS & PPP_UI */
+ 			   0, GFP_KERNEL);
+ 	if (!skb)
+ 		goto error_put_sess_tun;
+@@ -340,8 +339,8 @@ static int pppol2tp_sendmsg(struct socke
+ 	skb_reserve(skb, uhlen);
+ 
+ 	/* Add PPP header */
+-	skb->data[0] = ppph[0];
+-	skb->data[1] = ppph[1];
++	skb->data[0] = PPP_ALLSTATIONS;
++	skb->data[1] = PPP_UI;
+ 	skb_put(skb, 2);
+ 
+ 	/* Copy user data into skb */
+@@ -384,7 +383,6 @@ error:
+  */
+ static int pppol2tp_xmit(struct ppp_channel *chan, struct sk_buff *skb)
+ {
+-	static const u8 ppph[2] = { 0xff, 0x03 };
+ 	struct sock *sk = (struct sock *) chan->private;
+ 	struct sock *sk_tun;
+ 	struct l2tp_session *session;
+@@ -413,14 +411,14 @@ static int pppol2tp_xmit(struct ppp_chan
+ 		   sizeof(struct iphdr) + /* IP header */
+ 		   uhlen +		/* UDP header (if L2TP_ENCAPTYPE_UDP) */
+ 		   session->hdr_len +	/* L2TP header */
+-		   sizeof(ppph);	/* PPP header */
++		   2;			/* 2 bytes for PPP_ALLSTATIONS & PPP_UI */
+ 	if (skb_cow_head(skb, headroom))
+ 		goto abort_put_sess_tun;
+ 
+ 	/* Setup PPP header */
+-	__skb_push(skb, sizeof(ppph));
+-	skb->data[0] = ppph[0];
+-	skb->data[1] = ppph[1];
++	__skb_push(skb, 2);
++	skb->data[0] = PPP_ALLSTATIONS;
++	skb->data[1] = PPP_UI;
+ 
+ 	local_bh_disable();
+ 	l2tp_xmit_skb(session, skb, session->hdr_len);
+@@ -455,7 +453,7 @@ static void pppol2tp_session_close(struc
+ 	BUG_ON(session->magic != L2TP_SESSION_MAGIC);
+ 
+ 	if (sock) {
+-		inet_shutdown(sock, 2);
++		inet_shutdown(sock, SEND_SHUTDOWN);
+ 		/* Don't let the session go away before our socket does */
+ 		l2tp_session_inc_refcount(session);
  	}
- 
--	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
--		DRM_ERROR("Cannot request framebuffer\n");
--		return -EBUSY;
--	}
-+	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
-+		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
- 
- 	bochs->fb_map = ioremap(addr, size);
- 	if (bochs->fb_map == NULL) {
--- 
-2.20.1
-
 
 
