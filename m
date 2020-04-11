@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB725C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCEBC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A129B21744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C93214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607120;
-	bh=N6vnlwzfy981sr4ZKV+FhqXf2JGvNBnllb4Y0XzO7jE=;
+	s=default; t=1586607123;
+	bh=pt0sCxf/SfWbDygnN5dOYqPQK+jJWPkkZA75lgKelHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b4ScnIiug+NS532BrRXM3nhIosBTxz75p1fb3e7YpWAdGS4/VvXY11mzLaxPpdbxu
-	 8Bxx3nzOXNhOhghchn0F0OGoSQsifBGyLevMZX3HJiqkNHwR/mEyUTki3/ZAoGtHPG
-	 DLdSYk2jEbWlPTDqaJ56FWDe7MVUk1tSORzDIeQE=
+	b=sJMItrSxffGi0hoDNgk2r63KzselfaA3U/6VB487BngPlq7kO+Vr+3wjVJdsBKs1h
+	 NblIntLy9lNkhA8S2S8lNDPeuxouLD0WFav3UwaX3W/OZDRhLI63btpUITjApv6qRG
+	 bJIA49NNNdcbjF7gTfkDziHiV8EP9MlCnMO9URpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgDKML6 (ORCPT
+        id S1727116AbgDKMMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727081AbgDKMLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:54 -0400
+        id S1727092AbgDKML5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2CE20787;
-        Sat, 11 Apr 2020 12:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7171F21655;
+        Sat, 11 Apr 2020 12:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607114;
-        bh=N6vnlwzfy981sr4ZKV+FhqXf2JGvNBnllb4Y0XzO7jE=;
+        s=default; t=1586607116;
+        bh=pt0sCxf/SfWbDygnN5dOYqPQK+jJWPkkZA75lgKelHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Th7b7lFbhYMGZjRVsWY70uxIHpzKQ8DDo3SyHZG/KV+jV4aCOMWA5vvgX4TOEfMMJ
-         VdJjqTRL/8dcEZm/JbTCV0nHe6M+QG0x9Jo333n6LIeHHnZ1bMDprHzm2MnkwFqmL1
-         /DGjMFMVVWV4zO2aEGQtwAO47QA0BLZtKHf03Ddo=
+        b=qudoRYK31zdb9R9/zoH8vYmyLu5J4Qe4ZxzF38we2FkIYsYSEq5tMkLkq36/i4O3D
+         V8bAm+KNqM0UMapZ+nSAqHKfWzERFGj57ASiqlceqDTGKpC2jY1xXiWIjm/pJ/RYuT
+         eh+4uZZB6Hb0P4PNx7g8zypxPiiU0Mbyr5Upo408=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 4.9 13/32] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Sat, 11 Apr 2020 14:08:52 +0200
-Message-Id: <20200411115420.038161644@linuxfoundation.org>
+        stable@vger.kernel.org, Entropy Moe <3ntr0py1337@gmail.com>,
+        syzbot+b055b1a6b2b958707a21@syzkaller.appspotmail.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 14/32] mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
+Date:   Sat, 11 Apr 2020 14:08:53 +0200
+Message-Id: <20200411115420.163650460@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -62,67 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
+commit aa9f7d5172fac9bf1f09e678c35e287a40a7b7dd upstream.
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+Using an empty (malformed) nodelist that is not caught during mount option
+parsing leads to a stack-out-of-bounds access.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+The option string that was used was: "mpol=prefer:,".  However,
+MPOL_PREFERRED requires a single node number, which is not being provided
+here.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+Add a check that 'nodes' is not empty after parsing for MPOL_PREFERRED's
+nodeid.
 
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+Reported-by: Entropy Moe <3ntr0py1337@gmail.com>
+Reported-by: syzbot+b055b1a6b2b958707a21@syzkaller.appspotmail.com
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: syzbot+b055b1a6b2b958707a21@syzkaller.appspotmail.com
+Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+Link: http://lkml.kernel.org/r/89526377-7eb6-b662-e1d8-4430928abde9@infradead.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/padata.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/mempolicy.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -614,8 +614,8 @@ int padata_set_cpumask(struct padata_ins
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
- 
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -633,8 +633,8 @@ int padata_set_cpumask(struct padata_ins
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2768,7 +2768,9 @@ int mpol_parse_str(char *str, struct mem
+ 	switch (mode) {
+ 	case MPOL_PREFERRED:
+ 		/*
+-		 * Insist on a nodelist of one node only
++		 * Insist on a nodelist of one node only, although later
++		 * we use first_node(nodes) to grab a single node, so here
++		 * nodelist (or nodes) cannot be empty.
+ 		 */
+ 		if (nodelist) {
+ 			char *rest = nodelist;
+@@ -2776,6 +2778,8 @@ int mpol_parse_str(char *str, struct mem
+ 				rest++;
+ 			if (*rest)
+ 				goto out;
++			if (nodes_empty(nodes))
++				goto out;
+ 		}
+ 		break;
+ 	case MPOL_INTERLEAVE:
 
 
