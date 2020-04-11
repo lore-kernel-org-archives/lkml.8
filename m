@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A55C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2032C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE86215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16D22166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607185;
-	bh=Ze3Solw7zeQMxLzSuBF1iYBKIpVumy97S5Ml9Xe/vYY=;
+	s=default; t=1586607189;
+	bh=F9zWQd2jUav99i7WpgX0wAIAKO1D8AJfTK99j8NdM/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILFMdtBbjTQZzkl2DocOJezaV8A/PhvLIrWLu04zJ+2iUR0MZSG0Qx8FWlc/sl2hN
-	 cD01dh2auyLqdOUySC4sSFz5wbUs1KEPJyUqvVlu3eFFKk5TxonOZEcf2TBh07OYJT
-	 F/wz/qCbqU41rfz6TXgx1ArwsG8k55LgWkARk938=
+	b=lHk1XccQa2qBwnHPwnIlF7gIrys5sMfbIzDlWMEwYpc793JDCjk2rp+ApUJu/EGbE
+	 v/Agt9lL/L6Ll+kpAJC0iSnzEij1LkrDmWmRs1prPw0YNZV+b6hEpt68pSAyePMQEN
+	 30FHzQXsdDg5tZEWxPonC980Jsy806bUdSzA+cxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgDKMND (ORCPT
+        id S1727628AbgDKMNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgDKMM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:57 -0400
+        id S1727519AbgDKMNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9C52137B;
-        Sat, 11 Apr 2020 12:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E8C32137B;
+        Sat, 11 Apr 2020 12:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607177;
-        bh=Ze3Solw7zeQMxLzSuBF1iYBKIpVumy97S5Ml9Xe/vYY=;
+        s=default; t=1586607184;
+        bh=F9zWQd2jUav99i7WpgX0wAIAKO1D8AJfTK99j8NdM/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E5OlzSTZ0S8KXbz14OburP92qW+oSVHLiaM9CERkKjsv0hOQWklmEpPl1ewLs3AVQ
-         4BGSFG4Uj3qeiARwC3hCminQ8RqzJJPLNXgCuUDFtVcAX/uVHVF2DhMnMzAHzTnndj
-         a95aVmy7+tz5lLvvHeAxqLHFI0r3cdIjrvREbUcg=
+        b=UaT8wrCP1AnI/mfThrQvfH9EAZKGQdvVKnJniv998KM2eODZYNQNR8FiaGvCsBwIY
+         Mz2ASOodxUJtcU7Ei9q6uMBbSqlY3W63hxZNGHNes9rU5NdxecGw5hK19ZB2PlgBsr
+         nODmMa1fWH5NAWQ+9DxapEzt2PYzje0GMiVneiy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 31/32] usb: dwc3: dont set gadget->is_otg flag
-Date:   Sat, 11 Apr 2020 14:09:10 +0200
-Message-Id: <20200411115422.811567810@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 01/38] ipv4: fix a RCU-list lock in fib_triestat_seq_show
+Date:   Sat, 11 Apr 2020 14:08:45 +0200
+Message-Id: <20200411115437.924272181@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
-References: <20200411115418.455500023@linuxfoundation.org>
+In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
+References: <20200411115437.795556138@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,55 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Qian Cai <cai@lca.pw>
 
-commit c09b73cfac2a9317f1104169045c519c6021aa1d upstream.
+[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
 
-This reverts
-commit 6a4290cc28be1 ("usb: dwc3: gadget: set the OTG flag in dwc3 gadget driver.")
+fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
+tb_hlist) without rcu_read_lock() will trigger a warning,
 
-We don't yet support any of the OTG mechanisms (HNP/SRP/ADP)
-and are not setting gadget->otg_caps, so don't set gadget->is_otg
-flag.
+ net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
 
-If we do then we end up publishing a OTG1.0 descriptor in
-the gadget descriptor which causes device enumeration to fail
-if we are connected to a host with CONFIG_USB_OTG enabled.
+ other info that might help us debug this:
 
-Host side log without this patch
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by proc01/115277:
+  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
 
-[   96.720453] usb 1-1: new high-speed USB device number 2 using xhci-hcd
-[   96.901391] usb 1-1: Dual-Role OTG device on non-HNP port
-[   96.907552] usb 1-1: set a_alt_hnp_support failed: -32
-[   97.060447] usb 1-1: new high-speed USB device number 3 using xhci-hcd
-[   97.241378] usb 1-1: Dual-Role OTG device on non-HNP port
-[   97.247536] usb 1-1: set a_alt_hnp_support failed: -32
-[   97.253606] usb usb1-port1: attempt power cycle
-[   97.960449] usb 1-1: new high-speed USB device number 4 using xhci-hcd
-[   98.141383] usb 1-1: Dual-Role OTG device on non-HNP port
-[   98.147540] usb 1-1: set a_alt_hnp_support failed: -32
-[   98.300453] usb 1-1: new high-speed USB device number 5 using xhci-hcd
-[   98.481391] usb 1-1: Dual-Role OTG device on non-HNP port
-[   98.487545] usb 1-1: set a_alt_hnp_support failed: -32
-[   98.493532] usb usb1-port1: unable to enumerate USB device
+ Call Trace:
+  dump_stack+0xf4/0x164 (unreliable)
+  lockdep_rcu_suspicious+0x140/0x164
+  fib_triestat_seq_show+0x750/0x880
+  seq_read+0x1a0/0x670
+  proc_reg_read+0x10c/0x1b0
+  __vfs_read+0x3c/0x70
+  vfs_read+0xac/0x170
+  ksys_read+0x7c/0x140
+  system_call+0x5c/0x68
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fix it by adding a pair of rcu_read_lock/unlock() and use
+cond_resched_rcu() to avoid the situation where walking of a large
+number of items  may prevent scheduling for a long time.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/dwc3/gadget.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/ipv4/fib_trie.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2996,7 +2996,6 @@ int dwc3_gadget_init(struct dwc3 *dwc)
- 	dwc->gadget.speed		= USB_SPEED_UNKNOWN;
- 	dwc->gadget.sg_supported	= true;
- 	dwc->gadget.name		= "dwc3-gadget";
--	dwc->gadget.is_otg		= dwc->dr_mode == USB_DR_MODE_OTG;
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -2319,6 +2319,7 @@ static int fib_triestat_seq_show(struct
+ 		   " %zd bytes, size of tnode: %zd bytes.\n",
+ 		   LEAF_SIZE, TNODE_SIZE(0));
  
- 	/*
- 	 * FIXME We might be setting max_speed to <SUPER, however versions
++	rcu_read_lock();
+ 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
+ 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
+ 		struct fib_table *tb;
+@@ -2338,7 +2339,9 @@ static int fib_triestat_seq_show(struct
+ 			trie_show_usage(seq, t->stats);
+ #endif
+ 		}
++		cond_resched_rcu();
+ 	}
++	rcu_read_unlock();
+ 
+ 	return 0;
+ }
 
 
