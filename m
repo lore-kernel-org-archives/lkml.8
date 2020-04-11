@@ -2,315 +2,105 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56644C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BAAC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C79214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3762215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607321;
-	bh=j/cy1nKKtIDwc3ocqVeRMV42mH+iKyjdLPHPxG+dviA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UITEw9Zt1fMmAAePeZ6ORlJTp4N/8IDGsOUDeFUkWFvyrP23urkAP22S8UUpJRCs8
-	 MMx9nUVoErY3X8WiJI4Xs0kC/uK2zqymfND/t52xfCQFBo15TlaEDdIK6Z+FZOIelX
-	 HG8LK+E6E492LVu4xx/IkO1gnx1fqwntlZLbnk+w=
+	s=default; t=1586607324;
+	bh=psWo3vxO9dOfTYyyLQHvRQ4yWnK9O3yBuNjwQZxqUww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wQPcNHdqAnDxpuhdm8MRc0zgpYYCG7Jki0KAqXRstPQIFGysXJJGbB036Bx9EaYAB
+	 5kIAoT9RmUJYWiP+FAMTybU1ZPkhACZ7H5lcs7J4jVZrpTMpNuHsa5XDY31zOaz3MM
+	 eNGtwBXgeWpobryI3YHALX0BGgk2ypwNN8iSZPUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgDKMPT (ORCPT
+        id S1726178AbgDKMPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbgDKMPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:16 -0400
+        id S1727709AbgDKMPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB3F020644;
-        Sat, 11 Apr 2020 12:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C13222084D;
+        Sat, 11 Apr 2020 12:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607315;
-        bh=j/cy1nKKtIDwc3ocqVeRMV42mH+iKyjdLPHPxG+dviA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2gohe8ABI0APvbFXimivvzfqzULxgx/oK2Kr0+i+asK21cbyKXZzcHCJvhXuPWjqn
-         nnmoCK2vD75zXpk+xc5f7sTu6nxeMzuRNSwF9J4FFAmTH5ieuwxz3QD5pZy05ZbW99
-         69Vq1y9WvMVN+dIcH1wCdGBXHskhfPixDll0sI+Q=
+        s=default; t=1586607320;
+        bh=psWo3vxO9dOfTYyyLQHvRQ4yWnK9O3yBuNjwQZxqUww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ouCIqxZ5/3NGQjkgsyG9ovSsW5DPt61EYMoZcO7DxqBej5fz8GUa7bTx5HRzyybE+
+         IimS6dZbpVD3tVnStQBROmxeM6+6mpakVM968x2cPVkwXnRkWmIa2plLeAYGQqL4Am
+         Gk2nMoSRMvrENrv+gCWe1l++6Fpy6us2ryhOrSq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 00/54] 4.19.115-rc1 review
-Date:   Sat, 11 Apr 2020 14:08:42 +0200
-Message-Id: <20200411115508.284500414@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Protsenko <semen.protsenko@linaro.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 26/54] include/linux/notifier.h: SRCU: fix ctags
+Date:   Sat, 11 Apr 2020 14:09:08 +0200
+Message-Id: <20200411115511.146571362@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
+In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
+References: <20200411115508.284500414@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.115-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.115-rc1
-X-KernelTest-Deadline: 2020-04-13T11:55+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.19.115 release.
-There are 54 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.115-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.19.115-rc1
-
-Hans Verkuil <hans.verkuil@cisco.com>
-    drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
-
-Roger Quadros <rogerq@ti.com>
-    usb: dwc3: don't set gadget->is_otg flag
-
-Chris Lew <clew@codeaurora.org>
-    rpmsg: glink: Remove chunk size word align warning
-
-Arun KS <arunks@codeaurora.org>
-    arm64: Fix size of __early_cpu_boot_status
-
-Rob Clark <robdclark@chromium.org>
-    drm/msm: stop abusing dma_map/unmap for cache
-
-Taniya Das <tdas@codeaurora.org>
-    clk: qcom: rcg: Return failure for RCG update
-
-Qiujun Huang <hqjagain@gmail.com>
-    fbcon: fix null-ptr-deref in fbcon_switch
-
-Avihai Horon <avihaih@mellanox.com>
-    RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
-
-Qiujun Huang <hqjagain@gmail.com>
-    Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    RDMA/cma: Teach lockdep about the order of rtnl and lock
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    RDMA/ucma: Put a lock around every call to the rdma_cm layer
-
-Ilya Dryomov <idryomov@gmail.com>
-    ceph: canonicalize server path in place
-
-Xiubo Li <xiubli@redhat.com>
-    ceph: remove the extra slashes in the server path
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/hfi1: Fix memory leaks in sysfs registration and unregistration
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
-
-Paul Cercueil <paul@crapouillou.net>
-    ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
-
-Martin Kaiser <martin@kaiser.cx>
-    hwrng: imx-rngc - fix an error path
-
-David Ahern <dsahern@kernel.org>
-    tools/accounting/getdelays.c: fix netlink attribute length
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    usb: dwc3: gadget: Wrap around when skip TRBs
-
-Jason A. Donenfeld <Jason@zx2c4.com>
-    random: always use batched entropy for get_random_u{32,64}
-
-Petr Machata <petrm@mellanox.com>
-    mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
-
-Richard Palethorpe <rpalethorpe@suse.com>
-    slcan: Don't transmit uninitialized stack data in padding
-
-Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-    net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
-
-Oleksij Rempel <o.rempel@pengutronix.de>
-    net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
-
-Jarod Wilson <jarod@redhat.com>
-    ipv6: don't auto-add link-local address to lag ports
-
-Randy Dunlap <rdunlap@infradead.org>
-    mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
-
-Sam Protsenko <semen.protsenko@linaro.org>
-    include/linux/notifier.h: SRCU: fix ctags
-
-Miklos Szeredi <mszeredi@redhat.com>
-    bitops: protect variables in set_mask_bits() macro
-
-Daniel Jordan <daniel.m.jordan@oracle.com>
-    padata: always acquire cpu_hotplug_lock before pinst->lock
-
-Amritha Nambiar <amritha.nambiar@intel.com>
-    net: Fix Tx hash bound checking
-
-David Howells <dhowells@redhat.com>
-    rxrpc: Fix sendmsg(MSG_WAITALL) handling
-
-Geoffrey Allott <geoffrey@allott.email>
-    ALSA: hda/ca0132 - Add Recon3Di quirk to handle integrated sound on EVGA X99 Classified motherboard
-
-Hans de Goede <hdegoede@redhat.com>
-    power: supply: axp288_charger: Add special handling for HP Pavilion x2 10
-
-Hans de Goede <hdegoede@redhat.com>
-    extcon: axp288: Add wakeup support
-
-Alexander Usyskin <alexander.usyskin@intel.com>
-    mei: me: add cedar fork device ids
-
-Eugene Syromiatnikov <esyr@redhat.com>
-    coresight: do not use the BIT() macro in the UAPI header
-
-Kishon Vijay Abraham I <kishon@ti.com>
-    misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
-
-Kishon Vijay Abraham I <kishon@ti.com>
-    misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
-
-YueHaibing <yuehaibing@huawei.com>
-    misc: rtsx: set correct pcr_ops for rts522A
-
-Sean Young <sean@mess.org>
-    media: rc: IR signal for Panasonic air conditioner too long
-
-Lucas Stach <l.stach@pengutronix.de>
-    drm/etnaviv: replace MMU flush marker with flush sequence
-
-Len Brown <len.brown@intel.com>
-    tools/power turbostat: Fix missing SYS_LPI counter on some Chromebooks
-
-Len Brown <len.brown@intel.com>
-    tools/power turbostat: Fix gcc build warnings
-
-James Zhu <James.Zhu@amd.com>
-    drm/amdgpu: fix typo for vcn1 idle check
-
-Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-    initramfs: restore default compression behavior
-
-Gerd Hoffmann <kraxel@redhat.com>
-    drm/bochs: downgrade pci_request_region failure from error to warning
-
-Mario Kleiner <mario.kleiner.de@gmail.com>
-    drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
-
-Prabhath Sajeepa <psajeepa@purestorage.com>
-    nvme-rdma: Avoid double freeing of async event data
-
-Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-    sctp: fix possibly using a bad saddr with a given dst
-
-Qiujun Huang <hqjagain@gmail.com>
-    sctp: fix refcount bug in sctp_wfree
-
-William Dauchy <w.dauchy@criteo.com>
-    net, ip_tunnel: fix interface lookup with no key
-
-Qian Cai <cai@lca.pw>
-    ipv4: fix a RCU-list lock in fib_triestat_seq_show
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arm64/kernel/head.S                           |  2 +-
- drivers/char/hw_random/imx-rngc.c                  |  4 +-
- drivers/char/random.c                              | 20 ++------
- drivers/clk/qcom/clk-rcg2.c                        |  2 +-
- drivers/extcon/extcon-axp288.c                     | 32 ++++++++++++
- drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c              |  2 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c   | 11 +++++
- drivers/gpu/drm/bochs/bochs_hw.c                   |  6 +--
- drivers/gpu/drm/drm_dp_mst_topology.c              |  1 +
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c           | 10 ++--
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h              |  1 +
- drivers/gpu/drm/etnaviv/etnaviv_mmu.c              |  6 +--
- drivers/gpu/drm/etnaviv/etnaviv_mmu.h              |  2 +-
- drivers/gpu/drm/msm/msm_gem.c                      |  4 +-
- drivers/infiniband/core/cma.c                      | 14 ++++++
- drivers/infiniband/core/ucma.c                     | 49 ++++++++++++++++++-
- drivers/infiniband/hw/hfi1/sysfs.c                 | 26 +++++++---
- drivers/media/rc/lirc_dev.c                        |  2 +-
- drivers/misc/cardreader/rts5227.c                  |  1 +
- drivers/misc/mei/hw-me-regs.h                      |  2 +
- drivers/misc/mei/pci-me.c                          |  2 +
- drivers/misc/pci_endpoint_test.c                   | 14 ++++--
- drivers/net/can/slcan.c                            |  4 +-
- drivers/net/dsa/bcm_sf2.c                          |  9 +++-
- .../net/ethernet/mellanox/mlxsw/spectrum_flower.c  |  8 +--
- .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |  2 +-
- drivers/net/phy/micrel.c                           |  7 +++
- drivers/nvme/host/rdma.c                           |  8 +--
- drivers/power/supply/axp288_charger.c              | 57 +++++++++++++++++++++-
- drivers/rpmsg/qcom_glink_native.c                  |  3 --
- drivers/usb/dwc3/gadget.c                          |  3 +-
- drivers/video/fbdev/core/fbcon.c                   |  3 ++
- fs/ceph/super.c                                    | 56 +++++++++++++--------
- fs/ceph/super.h                                    |  2 +-
- include/linux/bitops.h                             | 14 +++---
- include/linux/notifier.h                           |  3 +-
- include/uapi/linux/coresight-stm.h                 |  6 ++-
- kernel/padata.c                                    |  4 +-
- mm/mempolicy.c                                     |  6 ++-
- net/bluetooth/rfcomm/tty.c                         |  4 +-
- net/core/dev.c                                     |  2 +
- net/ipv4/fib_trie.c                                |  3 ++
- net/ipv4/ip_tunnel.c                               |  6 +--
- net/ipv6/addrconf.c                                |  4 ++
- net/rxrpc/sendmsg.c                                |  4 +-
- net/sctp/ipv6.c                                    | 20 +++++---
- net/sctp/protocol.c                                | 28 +++++++----
- net/sctp/socket.c                                  | 31 +++++++++---
- sound/pci/hda/patch_ca0132.c                       |  1 +
- sound/soc/jz4740/jz4740-i2s.c                      |  2 +-
- tools/accounting/getdelays.c                       |  2 +-
- tools/power/x86/turbostat/turbostat.c              | 27 +++++-----
- usr/Kconfig                                        | 22 ++++-----
- 54 files changed, 409 insertions(+), 159 deletions(-)
+From: Sam Protsenko <semen.protsenko@linaro.org>
+
+commit 94e297c50b529f5d01cfd1dbc808d61e95180ab7 upstream.
+
+ctags indexing ("make tags" command) throws this warning:
+
+    ctags: Warning: include/linux/notifier.h:125:
+    null expansion of name pattern "\1"
+
+This is the result of DEFINE_PER_CPU() macro expansion.  Fix that by
+getting rid of line break.
+
+Similar fix was already done in commit 25528213fe9f ("tags: Fix
+DEFINE_PER_CPU expansions"), but this one probably wasn't noticed.
+
+Link: http://lkml.kernel.org/r/20181030202808.28027-1-semen.protsenko@linaro.org
+Fixes: 9c80172b902d ("kernel/SRCU: provide a static initializer")
+Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/linux/notifier.h |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/include/linux/notifier.h
++++ b/include/linux/notifier.h
+@@ -122,8 +122,7 @@ extern void srcu_init_notifier_head(stru
+ 
+ #ifdef CONFIG_TREE_SRCU
+ #define _SRCU_NOTIFIER_HEAD(name, mod)				\
+-	static DEFINE_PER_CPU(struct srcu_data,			\
+-			name##_head_srcu_data);			\
++	static DEFINE_PER_CPU(struct srcu_data, name##_head_srcu_data); \
+ 	mod struct srcu_notifier_head name =			\
+ 			SRCU_NOTIFIER_INIT(name, name##_head_srcu_data)
+ 
 
 
