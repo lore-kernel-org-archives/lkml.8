@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252A1C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02C6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FBE21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EE3214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607158;
-	bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
+	s=default; t=1586607161;
+	bh=xzhvwRAq+oWnVwbnHw9vQWW4I6JixS6yMNMOPycY3Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jq3EyvkZPs9/hKdN+odVIGFT1o4glypeckZHuWXhDbhn8edwVZIMjujMncRWQXqSq
-	 sOaCQN7PIPEuLOkdrqEzAUFYMIC0tCwuKt69aIHsVsvQQACcGKpYO4RBVVvHTpnkM6
-	 OqtILKs8jR2Kpo11Y8AgsuUSSTftp67HyzdR5HZI=
+	b=130bxKqukIR/fDMQBVvXTb9oVil3mSLxg5obJZG+VeMpCiHm22tqEmu7SzcRnJCoC
+	 iLz4vrqwUCDpJRlZlea4veQ5rATeGQa9ohqXzt0h1BAav7ASsZqVwETz2OyujvQVSR
+	 TYKyChknYSmE4z5LaLVr3m+XFc3nHD4X3eO9c+KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgDKMMg (ORCPT
+        id S1727362AbgDKMMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727310AbgDKMMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:34 -0400
+        id S1727327AbgDKMMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2379214D8;
-        Sat, 11 Apr 2020 12:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 530FE20787;
+        Sat, 11 Apr 2020 12:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607153;
-        bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
+        s=default; t=1586607155;
+        bh=xzhvwRAq+oWnVwbnHw9vQWW4I6JixS6yMNMOPycY3Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QooQc8KhOOYMTcJ1ZlcvX/BC9leoMXwrSwOrse968ZJBuDQ/g4rer9yAf6lgQK9gb
-         3KgOCBsqZ7gX3bnLkWZTZH2Q7vRVQGPREnnX7dLFHsqKg8mmpgv2lxvC13ck4FP0jg
-         sdBqGajfjh0kcX4QWy3yZ3uKFGbGhzsu6fYN9Ftg=
+        b=AgX92/RduRUAIBFe98c7VNBuVPBYKkiQDaHH/TzjX2Z2E9VkEZW1bBdV2tPMPnplS
+         KXe1Zz/BADjOK+2Tml0FXqExJtM/qjlkdJjnI5AblnpT4Hq2ggKNeBaqBL0undDL+w
+         +P150ePD98fkS9978+D/FnYOkEfF37t5QhF1sABQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 05/32] net, ip_tunnel: fix interface lookup with no key
-Date:   Sat, 11 Apr 2020 14:08:44 +0200
-Message-Id: <20200411115419.260941079@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 06/32] sctp: fix refcount bug in sctp_wfree
+Date:   Sat, 11 Apr 2020 14:08:45 +0200
+Message-Id: <20200411115419.383050247@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -60,54 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Dauchy <w.dauchy@criteo.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 25629fdaff2ff509dd0b3f5ff93d70a75e79e0a1 ]
+[ Upstream commit 5c3e82fe159622e46e91458c1a6509c321a62820 ]
 
-when creating a new ipip interface with no local/remote configuration,
-the lookup is done with TUNNEL_NO_KEY flag, making it impossible to
-match the new interface (only possible match being fallback or metada
-case interface); e.g: `ip link add tunl1 type ipip dev eth0`
+We should iterate over the datamsgs to move
+all chunks(skbs) to newsk.
 
-To fix this case, adding a flag check before the key comparison so we
-permit to match an interface with no local/remote config; it also avoids
-breaking possible userland tools relying on TUNNEL_NO_KEY flag and
-uninitialised key.
+The following case cause the bug:
+for the trouble SKB, it was in outq->transmitted list
 
-context being on my side, I'm creating an extra ipip interface attached
-to the physical one, and moving it to a dedicated namespace.
+sctp_outq_sack
+        sctp_check_transmitted
+                SKB was moved to outq->sacked list
+        then throw away the sack queue
+                SKB was deleted from outq->sacked
+(but it was held by datamsg at sctp_datamsg_to_asoc
+So, sctp_wfree was not called here)
 
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Signed-off-by: William Dauchy <w.dauchy@criteo.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+then migrate happened
+
+        sctp_for_each_tx_datachunk(
+        sctp_clear_owner_w);
+        sctp_assoc_migrate();
+        sctp_for_each_tx_datachunk(
+        sctp_set_owner_w);
+SKB was not in the outq, and was not changed to newsk
+
+finally
+
+__sctp_outq_teardown
+        sctp_chunk_put (for another skb)
+                sctp_datamsg_put
+                        __kfree_skb(msg->frag_list)
+                                sctp_wfree (for SKB)
+	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
+
+Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <mleitner@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_tunnel.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ net/sctp/socket.c |   31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -155,11 +155,8 @@ struct ip_tunnel *ip_tunnel_lookup(struc
- 			cand = t;
- 	}
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -173,29 +173,44 @@ static void sctp_clear_owner_w(struct sc
+ 	skb_orphan(chunk->skb);
+ }
  
--	if (flags & TUNNEL_NO_KEY)
--		goto skip_key_lookup;
--
- 	hlist_for_each_entry_rcu(t, head, hash_node) {
--		if (t->parms.i_key != key ||
-+		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
- 		    t->parms.iph.saddr != 0 ||
- 		    t->parms.iph.daddr != 0 ||
- 		    !(t->dev->flags & IFF_UP))
-@@ -171,7 +168,6 @@ struct ip_tunnel *ip_tunnel_lookup(struc
- 			cand = t;
- 	}
++#define traverse_and_process()	\
++do {				\
++	msg = chunk->msg;	\
++	if (msg == prev_msg)	\
++		continue;	\
++	list_for_each_entry(c, &msg->chunks, frag_list) {	\
++		if ((clear && asoc->base.sk == c->skb->sk) ||	\
++		    (!clear && asoc->base.sk != c->skb->sk))	\
++			cb(c);	\
++	}			\
++	prev_msg = msg;		\
++} while (0)
++
+ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
++				       bool clear,
+ 				       void (*cb)(struct sctp_chunk *))
  
--skip_key_lookup:
- 	if (cand)
- 		return cand;
+ {
++	struct sctp_datamsg *msg, *prev_msg = NULL;
+ 	struct sctp_outq *q = &asoc->outqueue;
++	struct sctp_chunk *chunk, *c;
+ 	struct sctp_transport *t;
+-	struct sctp_chunk *chunk;
  
+ 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
+ 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+-			cb(chunk);
++			traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->out_chunk_list, list)
+-		cb(chunk);
++		traverse_and_process();
+ }
+ 
+ /* Verify that this is a valid address. */
+@@ -7878,9 +7893,9 @@ static void sctp_sock_migrate(struct soc
+ 	 * paths won't try to lock it and then oldsk.
+ 	 */
+ 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
+-	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
++	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
+ 	sctp_assoc_migrate(assoc, newsk);
+-	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
++	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
+ 
+ 	/* If the association on the newsk is already closed before accept()
+ 	 * is called, set RCV_SHUTDOWN flag.
 
 
