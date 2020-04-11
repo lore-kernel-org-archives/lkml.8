@@ -2,111 +2,259 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B26C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC86C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A15D21841
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646386;
-	bh=lQRj8VNsJOOF8DfDzvqCyTjDoXlEsrTKzjTgMDofYVU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mnggou/ARYZSH/N9Z0YGFiqJ9VNjIA6E+9hRlNx5odX2KnZ9KTxYca9VKwWqPVBno
-	 JRvYjr4VhT9CQS3Glu2zlAUI/DH9f5EESNLybmxT7OawnDtJsl7OmgiUu8yQWasFCu
-	 F7hJX+qV13eYxLZppnR9cJCAyY0FhPwAd5MG3u1o=
+	by mail.kernel.org (Postfix) with ESMTP id EBACF20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIP5I5qj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgDKXGX (ORCPT
+        id S1728412AbgDKXG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbgDKXGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFD01217D8;
-        Sat, 11 Apr 2020 23:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646382;
-        bh=lQRj8VNsJOOF8DfDzvqCyTjDoXlEsrTKzjTgMDofYVU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ss50w1BBIaukK5GKVrVjjvnmnbl4Zvxrvbiuno1FS00iVNoIcUGKNK3dBs7eMqa52
-         TN+8jdFfqA45Af5Xd7KARNaC9qJlB3dRAcQK/rgQMkWURODCP8I64SAiNCtYB/fFLK
-         BKPKm4Qy/pZvET7soumPxutpxxVHWJRxfN6iKrVU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 123/149] scsi: qla2xxx: fix FW resource count values
-Date:   Sat, 11 Apr 2020 19:03:20 -0400
-Message-Id: <20200411230347.22371-123-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
-References: <20200411230347.22371-1-sashal@kernel.org>
+        Sat, 11 Apr 2020 19:06:27 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54601 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgDKXGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so5968026wmb.4;
+        Sat, 11 Apr 2020 16:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=hzqK+SI1g1DiPgUbeXNICnK2Y3grd5OZcA1bbrAzQy0=;
+        b=EIP5I5qjwusmpZsLSJYCpSqReJvKdiUOoopTnZRQ1E1mwDqSlrPGhFzhHTDAkK448c
+         2rjwUKAlY3c3J8FwkXNosUPhZ8mOisnZqDq3v1neh0zpmKFT7VV2hXgaPCDHK7sEx4f1
+         IZD6jb9t+TPUJFSOcDs0+2jYzge6ViOFahprESMFAj0fQI3E4lQHwlFN8TByx4CmcGtB
+         +jAXBwhMQhYXnM+xO1Ee/KkDEuhrvzQfQIDNyuC1Oz/ioMkDd8c08SjSrammkt2Ignai
+         ABlLRcJ5aZHqFykFDTSCyZcuFFZOKv4GXOVXgf7jfdwo7Xyg3yIdMOKVw9pqfT4uU/kq
+         wG+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hzqK+SI1g1DiPgUbeXNICnK2Y3grd5OZcA1bbrAzQy0=;
+        b=WOz786AjIQfpQzTo6mMq61zVR5YGe5Ef2Jh4BDPF+ih8rybK1Oey1seflA9oMG8hSM
+         i7Ly91HRiAu5xwHABqaWQutWs/BBQbSfcHnBcaKY4WwlCYOplirsiIPEZjQf37dGcuOo
+         JkS2Q4j7Bu+8Dj9hlAIULTygvuyCULEEMw7Cm1U9iv8B1jahP0ztqvQgezFIqqHDxkbs
+         lxFjkecvfdYvhTwUdmYOP6LRDiUQPkfFsfywM9FnkKExyIGSAH6WpksVstLOUvj1/Pyh
+         YsVeCk93iukAR2Sv9q8KwCZQ2n8OsjRIdRUoZ1kcHhTB1uoex9E3Oy9XSdCDbIJ2kKoF
+         dPaQ==
+X-Gm-Message-State: AGi0Pubjzxg9kdtgiWCJ44OmZlSihHlm+D/DlKWyvtYhmm7MKYHeOULE
+        KDrEQwAUXoKH+rBR8trfxnM=
+X-Google-Smtp-Source: APiQypLB26qNkI5+PyvL5Jhf9reuG5n1nsrMylag7uIbwz0iZKHVwE9GsCRKLF74yQF2aFXsrRAWOg==
+X-Received: by 2002:a1c:bb08:: with SMTP id l8mr12621315wmf.168.1586646383014;
+        Sat, 11 Apr 2020 16:06:23 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id k133sm8992741wma.0.2020.04.11.16.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 16:06:22 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5/5] io_uring: move all request init code in one place
+Date:   Sun, 12 Apr 2020 02:05:05 +0300
+Message-Id: <7c1f30a035acaae3f61ac9b0e25bb179f2d3b0f6.1586645520.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1586645520.git.asml.silence@gmail.com>
+References: <cover.1586645520.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+Requests initialisation is scattered across several functions, namely
+io_init_req(), io_submit_sqes(), io_submit_sqe(). Put it
+in io_init_req() for better data locality and code clarity.
 
-[ Upstream commit ce1ee122e0f048fc67c1259489f0802a28049bfd ]
-
-This patch fixes issue where current and original exchanges count
-were swapped for intiator and targets.
-
-Also fix IOCB count for current and original which were swapped.
-
-Link: https://lore.kernel.org/r/20200226224022.24518-9-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- drivers/scsi/qla2xxx/qla_dfs.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ fs/io_uring.c | 104 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 52 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_dfs.c b/drivers/scsi/qla2xxx/qla_dfs.c
-index 0a6fb359f4d5e..e62b2115235e1 100644
---- a/drivers/scsi/qla2xxx/qla_dfs.c
-+++ b/drivers/scsi/qla2xxx/qla_dfs.c
-@@ -134,11 +134,11 @@ qla_dfs_fw_resource_cnt_show(struct seq_file *s, void *unused)
- 	} else {
- 		seq_puts(s, "FW Resource count\n\n");
- 		seq_printf(s, "Original TGT exchg count[%d]\n", mb[1]);
--		seq_printf(s, "current TGT exchg count[%d]\n", mb[2]);
--		seq_printf(s, "original Initiator Exchange count[%d]\n", mb[3]);
--		seq_printf(s, "Current Initiator Exchange count[%d]\n", mb[6]);
--		seq_printf(s, "Original IOCB count[%d]\n", mb[7]);
--		seq_printf(s, "Current IOCB count[%d]\n", mb[10]);
-+		seq_printf(s, "Current TGT exchg count[%d]\n", mb[2]);
-+		seq_printf(s, "Current Initiator Exchange count[%d]\n", mb[3]);
-+		seq_printf(s, "Original Initiator Exchange count[%d]\n", mb[6]);
-+		seq_printf(s, "Current IOCB count[%d]\n", mb[7]);
-+		seq_printf(s, "Original IOCB count[%d]\n", mb[10]);
- 		seq_printf(s, "MAX VP count[%d]\n", mb[11]);
- 		seq_printf(s, "MAX FCF count[%d]\n", mb[12]);
- 		seq_printf(s, "Current free pageable XCB buffer cnt[%d]\n",
-@@ -149,7 +149,6 @@ qla_dfs_fw_resource_cnt_show(struct seq_file *s, void *unused)
- 		    mb[22]);
- 		seq_printf(s, "Original Target fast XCB buffer cnt[%d]\n",
- 		    mb[23]);
--
- 	}
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 9118a0210e0a..f593a37665f3 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -5605,44 +5605,11 @@ static inline void io_queue_link_head(struct io_kiocb *req)
+ 		io_queue_sqe(req, NULL);
+ }
  
- 	return 0;
+-#define SQE_VALID_FLAGS	(IOSQE_FIXED_FILE|IOSQE_IO_DRAIN|IOSQE_IO_LINK|	\
+-				IOSQE_IO_HARDLINK | IOSQE_ASYNC | \
+-				IOSQE_BUFFER_SELECT)
+-
+ static int io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 			  struct io_submit_state *state, struct io_kiocb **link)
+ {
+ 	struct io_ring_ctx *ctx = req->ctx;
+-	unsigned int sqe_flags;
+-	int ret, id, fd;
+-
+-	sqe_flags = READ_ONCE(sqe->flags);
+-
+-	/* enforce forwards compatibility on users */
+-	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
+-		return -EINVAL;
+-
+-	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
+-	    !io_op_defs[req->opcode].buffer_select)
+-		return -EOPNOTSUPP;
+-
+-	id = READ_ONCE(sqe->personality);
+-	if (id) {
+-		req->work.creds = idr_find(&ctx->personality_idr, id);
+-		if (unlikely(!req->work.creds))
+-			return -EINVAL;
+-		get_cred(req->work.creds);
+-	}
+-
+-	/* same numerical values with corresponding REQ_F_*, safe to copy */
+-	req->flags |= sqe_flags & (IOSQE_IO_DRAIN | IOSQE_IO_HARDLINK |
+-					IOSQE_ASYNC | IOSQE_FIXED_FILE |
+-					IOSQE_BUFFER_SELECT | IOSQE_IO_LINK);
+-
+-	fd = READ_ONCE(sqe->fd);
+-	ret = io_req_set_file(state, req, fd, sqe_flags);
+-	if (unlikely(ret))
+-		return ret;
++	int ret;
+ 
+ 	/*
+ 	 * If we already have a head request, queue this one for async
+@@ -5661,7 +5628,7 @@ static int io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 		 * next after the link request. The last one is done via
+ 		 * drain_next flag to persist the effect across calls.
+ 		 */
+-		if (sqe_flags & IOSQE_IO_DRAIN) {
++		if (req->flags & REQ_F_IO_DRAIN) {
+ 			head->flags |= REQ_F_IO_DRAIN;
+ 			ctx->drain_next = 1;
+ 		}
+@@ -5678,16 +5645,16 @@ static int io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 		list_add_tail(&req->link_list, &head->link_list);
+ 
+ 		/* last request of a link, enqueue the link */
+-		if (!(sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK))) {
++		if (!(req->flags & (REQ_F_LINK | REQ_F_HARDLINK))) {
+ 			io_queue_link_head(head);
+ 			*link = NULL;
+ 		}
+ 	} else {
+ 		if (unlikely(ctx->drain_next)) {
+ 			req->flags |= REQ_F_IO_DRAIN;
+-			req->ctx->drain_next = 0;
++			ctx->drain_next = 0;
+ 		}
+-		if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
++		if (req->flags & (REQ_F_LINK | REQ_F_HARDLINK)) {
+ 			req->flags |= REQ_F_LINK_HEAD;
+ 			INIT_LIST_HEAD(&req->link_list);
+ 
+@@ -5777,9 +5744,17 @@ static inline void io_consume_sqe(struct io_ring_ctx *ctx)
+ 	ctx->cached_sq_head++;
+ }
+ 
+-static void io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
+-			const struct io_uring_sqe *sqe)
++#define SQE_VALID_FLAGS	(IOSQE_FIXED_FILE|IOSQE_IO_DRAIN|IOSQE_IO_LINK|	\
++				IOSQE_IO_HARDLINK | IOSQE_ASYNC | \
++				IOSQE_BUFFER_SELECT)
++
++static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
++		       const struct io_uring_sqe *sqe,
++		       struct io_submit_state *state, bool async)
+ {
++	unsigned int sqe_flags;
++	int id, fd;
++
+ 	/*
+ 	 * All io need record the previous position, if LINK vs DARIN,
+ 	 * it can be used to mark the position of the first IO in the
+@@ -5796,7 +5771,42 @@ static void io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	refcount_set(&req->refs, 2);
+ 	req->task = NULL;
+ 	req->result = 0;
++	req->needs_fixed_file = async;
+ 	INIT_IO_WORK(&req->work, io_wq_submit_work);
++
++	if (unlikely(req->opcode >= IORING_OP_LAST))
++		return -EINVAL;
++
++	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
++		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
++			return -EFAULT;
++		use_mm(ctx->sqo_mm);
++	}
++
++	sqe_flags = READ_ONCE(sqe->flags);
++	/* enforce forwards compatibility on users */
++	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
++		return -EINVAL;
++
++	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
++	    !io_op_defs[req->opcode].buffer_select)
++		return -EOPNOTSUPP;
++
++	id = READ_ONCE(sqe->personality);
++	if (id) {
++		req->work.creds = idr_find(&ctx->personality_idr, id);
++		if (unlikely(!req->work.creds))
++			return -EINVAL;
++		get_cred(req->work.creds);
++	}
++
++	/* same numerical values with corresponding REQ_F_*, safe to copy */
++	req->flags |= sqe_flags & (IOSQE_IO_DRAIN | IOSQE_IO_HARDLINK |
++					IOSQE_ASYNC | IOSQE_FIXED_FILE |
++					IOSQE_BUFFER_SELECT | IOSQE_IO_LINK);
++
++	fd = READ_ONCE(sqe->fd);
++	return io_req_set_file(state, req, fd, sqe_flags);
+ }
+ 
+ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+@@ -5844,28 +5854,18 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 			break;
+ 		}
+ 
+-		io_init_req(ctx, req, sqe);
++		err = io_init_req(ctx, req, sqe, statep, async);
+ 		io_consume_sqe(ctx);
+ 		/* will complete beyond this point, count as submitted */
+ 		submitted++;
+ 
+-		if (unlikely(req->opcode >= IORING_OP_LAST)) {
+-			err = -EINVAL;
++		if (unlikely(err)) {
+ fail_req:
+ 			io_cqring_add_event(req, err);
+ 			io_double_put_req(req);
+ 			break;
+ 		}
+ 
+-		if (io_op_defs[req->opcode].needs_mm && !current->mm) {
+-			if (unlikely(!mmget_not_zero(ctx->sqo_mm))) {
+-				err = -EFAULT;
+-				goto fail_req;
+-			}
+-			use_mm(ctx->sqo_mm);
+-		}
+-
+-		req->needs_fixed_file = async;
+ 		trace_io_uring_submit_sqe(ctx, req->opcode, req->user_data,
+ 						true, async);
+ 		err = io_submit_sqe(req, sqe, statep, &link);
 -- 
-2.20.1
+2.24.0
 
