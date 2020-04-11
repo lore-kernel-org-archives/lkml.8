@@ -2,122 +2,140 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CB4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 20:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D950BC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 20:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7249620708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 20:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A6220708
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 20:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l3DJLYM9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbZ2uvxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgDKUcV (ORCPT
+        id S1726791AbgDKUhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 16:32:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41638 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgDKUcV (ORCPT
+        Sat, 11 Apr 2020 16:37:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43582 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgDKUhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 16:32:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=E2e+YYhaC2wd0AmTXzvFYru0B8SxNJ2IKpZtWqZz3sI=; b=l3DJLYM9iZAjntrH22/R0S21gI
-        IM+X+ViFE8ICxDOL9amy75/03oE1FZ1F3Qu/evXw0HN/0wVQVnfupCmV3UAOQuWF+p8ROZW4N0iog
-        mIbK1SuwvBniz/4Jit/a+1NcjTczdkviveZnAKNVPhGva7y3NCfN73DBRxlTQIrdYT/ImckJe53WQ
-        L81Am5oRRPcxTWnLQJuWp/9h74PdEti1eWk65LcFFXQwJ2wFBc6hY+PVR1HpDOiEKrv407aFy/CI7
-        LveZYL+W4sRb0byixWEKWDaQTa7Xvj6d4CXTtTo+QsPAAV0xsSJDSOGJMSDyEfqD7KDGRfvU8dpMo
-        UOuRJEkQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jNMnc-00065k-V8; Sat, 11 Apr 2020 20:32:20 +0000
-Date:   Sat, 11 Apr 2020 13:32:20 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Sat, 11 Apr 2020 16:37:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x26so1415556pgc.10;
+        Sat, 11 Apr 2020 13:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=df4em9i2uK+PyHKsxP6R3Hsd+P6zFpAIGrnoxLWQMlQ=;
+        b=bbZ2uvxkep4OlG9D6/QsGu+ZboZqxtB9uXWrvM8s+vUaKOK4Bi31nzHgkqD1IkcyeJ
+         Jc5a6L+dv/dw8IEBcyJLsb4A6MJO8FA8BusSz7FYPOrOfR7cgNZluhbgijm4Fi3dm40v
+         u8Rn+aqiNX0R5jVr2eCJVqgIEttu0UVD6hJ41Sx+aynMBWZGuejbDgn48wbdzo+4v7bj
+         4K6CkmAbv0X41GUt6NKkqsXOYfo36OX+hYMCWwrpNsYxz71nJyv8VWoFTh6O74YxGJp6
+         6Zn6OASDKLtZse91JGf53S+TPOw4rkAlcZqgtKxsG/mdYw9HA7gwhyrclgZCwOdTuqOJ
+         2Urg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=df4em9i2uK+PyHKsxP6R3Hsd+P6zFpAIGrnoxLWQMlQ=;
+        b=O8p9wJuXP1+PzOjvMSMET+7julHABuj1mj6rgUgyRWtj2mZLbp/4gUaR+9ngLKy9Tv
+         acdFMhVgMnRbfLB9L/99OXsMjDPLFsjobsUuQTswydZ4egB7n1aoG98N35LHqzPFqszO
+         Wzd2ZkzLXAVzusKUXJ+Exu9X1FWZbxLuZ5sseEEoF7/vE8A84/tFdKH8teZgV8aS8qtr
+         jsuc/9dKtp/5tkO5GnYCsscEQ67achPwSd2rZjTHMJrj2FD1od8UooFu3DipuKhy9d2f
+         vjRStV9Ae0LAW25s0MQsxP1yCMfhZq+pam2fooT4DPGAt7Tgqyh18z3wHR8sV0H2I7DP
+         I9eQ==
+X-Gm-Message-State: AGi0PubAs2rLmrgLfk43h0cMwYxDcYNXdVV8KYnmXAXaz2LNAZePUfgl
+        ZQ20UFDzLHutBKgAPQzYyEDxWdd2
+X-Google-Smtp-Source: APiQypJSlFsCH9mp7SEUwyjrCmuza5Zpx2qbSlc8zD3eCr3nNjFTTrqKYHCtk3TIvrBIP4rB8hjzog==
+X-Received: by 2002:a62:8f0c:: with SMTP id n12mr10926468pfd.226.1586637453603;
+        Sat, 11 Apr 2020 13:37:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k63sm1658970pjb.6.2020.04.11.13.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 13:37:33 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/29] 4.4.219-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Rename page_offset() to page_pos()
-Message-ID: <20200411203220.GG21484@bombadil.infradead.org>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200411115407.651296755@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <3d0f752c-7e6f-2044-1abf-859a3a3ee6b1@roeck-us.net>
+Date:   Sat, 11 Apr 2020 13:37:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 4/11/20 5:08 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.219 release.
+> There are 29 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+> Anything received after that time might be too late.
+> 
 
-We've had some trouble recently with page_offset() being confusingly
-named.  To minimise conflicts, I automatically generated these two rename
-patches just now so you can merge it right before -rc1.  I included
-the coccinelle scripts in the commit messages so you can generate the
-patches yourself if you'd rather do that.
+Build results:
+	total: 169 pass: 169 fail: 0
+Qemu test results:
+	total: 335 pass: 335 fail: 0
 
-The following changes since commit b032227c62939b5481bcd45442b36dfa263f4a7c:
-
-  Merge tag 'nios2-v5.7-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2 (2020-04-11 11:38:44 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/willy/linux-dax.git tags/page_pos
-
-for you to fetch changes up to d80f6dd912904b261010b14928b8ba89d8dd88bd:
-
-  fs: Rename page_file_offset() to page_file_pos() (2020-04-11 16:17:34 -0400)
-
-----------------------------------------------------------------
-Rename page_offset to page_pos
-
-----------------------------------------------------------------
-Matthew Wilcox (Oracle) (2):
-      fs: Rename page_offset() to page_pos()
-      fs: Rename page_file_offset() to page_file_pos()
-
- fs/9p/vfs_addr.c        |  4 ++--
- fs/afs/dir.c            |  2 +-
- fs/btrfs/compression.c  |  8 ++++----
- fs/btrfs/disk-io.c      |  4 ++--
- fs/btrfs/extent_io.c    | 28 ++++++++++++++--------------
- fs/btrfs/file-item.c    |  4 ++--
- fs/btrfs/inode.c        | 22 +++++++++++-----------
- fs/btrfs/ioctl.c        |  6 +++---
- fs/btrfs/relocation.c   |  2 +-
- fs/buffer.c             |  2 +-
- fs/ceph/addr.c          | 26 +++++++++++++-------------
- fs/cifs/cifssmb.c       |  2 +-
- fs/cifs/file.c          |  8 ++++----
- fs/erofs/zdata.c        |  2 +-
- fs/ext2/dir.c           |  6 +++---
- fs/ext4/inode.c         |  2 +-
- fs/f2fs/file.c          |  2 +-
- fs/fuse/file.c          | 10 +++++-----
- fs/gfs2/file.c          |  4 ++--
- fs/hostfs/hostfs_kern.c |  4 ++--
- fs/iomap/buffered-io.c  | 22 +++++++++++-----------
- fs/iomap/seek.c         |  4 ++--
- fs/isofs/compress.c     |  2 +-
- fs/minix/dir.c          |  6 +++---
- fs/nfs/file.c           |  4 ++--
- fs/nfs/write.c          |  6 +++---
- fs/nilfs2/dir.c         |  4 ++--
- fs/nilfs2/file.c        |  2 +-
- fs/nilfs2/page.c        |  2 +-
- fs/ocfs2/aops.c         |  6 +++---
- fs/ocfs2/mmap.c         |  4 ++--
- fs/orangefs/inode.c     | 48 ++++++++++++++++++++++++------------------------
- fs/romfs/super.c        |  2 +-
- fs/sysv/dir.c           |  6 +++---
- fs/ubifs/file.c         |  2 +-
- fs/ufs/dir.c            |  6 +++---
- fs/vboxsf/file.c        |  4 ++--
- fs/xfs/xfs_aops.c       |  2 +-
- include/linux/pagemap.h |  4 ++--
- mm/page_io.c            |  4 ++--
- 40 files changed, 144 insertions(+), 144 deletions(-)
-
-
+Guenter
