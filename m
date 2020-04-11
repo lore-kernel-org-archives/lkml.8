@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB830C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C261BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781AD2137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9910521655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607087;
-	bh=MesyVyOKCevRf+2TnmIg4GCFkNmuAs9DzQo/LPs8jfg=;
+	s=default; t=1586607090;
+	bh=gt2WKiufchFE5e1vYX3WwsYBoQbKwoRO9oS3qxTrq3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uY36pyKO7izdgMT/cypWaOm/v0pLZhcc+RO2lAkOrLzfOk1HH0kdG6ooGsOBmUDVZ
-	 ASnlq7HIlkHCsrb5iuVzyAbCxyWYe/3JhVBAjqXDT9QKLdDwiX7liWs8A3YUeqO0AU
-	 j2GA47NEGmr8OK61wnDew37ucgaE3V6BBGJr7aNo=
+	b=JBC6CwVOqA6jJVGEKxS6/TahQ0FrL8fWhCD/br7ruFyKXd/HCWVeywnmPEs/G/5Gs
+	 Em0JdoLFAab/iULNaJivi1W5VCzaIatveDlm/J+vzmx2lTVzfU3giEjbJE4VgtwIQK
+	 qL2/cJ8NT/kJEKvp4YpDpYYPmVLi+WP1FbBJkZFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgDKMLZ (ORCPT
+        id S1726317AbgDKML2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43328 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgDKMLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:21 -0400
+        id S1726936AbgDKMLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3346E20787;
-        Sat, 11 Apr 2020 12:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 934222137B;
+        Sat, 11 Apr 2020 12:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607080;
-        bh=MesyVyOKCevRf+2TnmIg4GCFkNmuAs9DzQo/LPs8jfg=;
+        s=default; t=1586607083;
+        bh=gt2WKiufchFE5e1vYX3WwsYBoQbKwoRO9oS3qxTrq3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tlxn/cIGHJwETNGG3tF4Nflkdvxs7BZU08TIog3246WfnsMgpkaASgrRzCWZ54A+c
-         hqVWJ84XbInLtwUHdBsIBL0lGwxuGFzW0ulZP+0/3W78Mh1r3xohRfu6vDN0pKoi3x
-         3o2J86VbfPmdqGogZ6kry2gOdcG3FzSfHcM6HfnY=
+        b=XLC+W3tB3xqqzEebSdEEOcd45Ry2mhX5IiGry92zZBESCIZf2QwHCDvtMRj9OFTvh
+         gOQoQmfj8wK0s2ePIQOYvPSjTsQuBP4MGbY9kQnREHb/g1HrChnKykkxQxOjYbTrhG
+         6pIzs4gVG8DrYD44SNAQO94yl5VUmdJ19CEKXVak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 29/29] drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
-Date:   Sat, 11 Apr 2020 14:08:59 +0200
-Message-Id: <20200411115412.719714953@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Krzysztof Opasiak <kopasiak90@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH 4.4 14/29] usb: gadget: printer: Drop unused device qualifier descriptor
+Date:   Sat, 11 Apr 2020 14:08:44 +0200
+Message-Id: <20200411115410.071781017@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -61,36 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Krzysztof Opasiak <k.opasiak@samsung.com>
 
-commit a4c30a4861c54af78c4eb8b7855524c1a96d9f80 upstream.
+commit e5a89162161d498170e7e39e6cfd2f71458c2b00 upstream.
 
-When parsing the reply of a DP_REMOTE_DPCD_READ DPCD command the
-result is wrong due to a missing idx increment.
+This descriptor is never used. Currently device qualifier
+descriptor is generated by compossite code, so no need to
+keep it in function file.
 
-This was never noticed since DP_REMOTE_DPCD_READ is currently not
-used, but if you enable it, then it is all wrong.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/e72ddac2-1dc0-100a-d816-9ac98ac009dd@xs4all.nl
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Krzysztof Opasiak <k.opasiak@samsung.com>
+Signed-off-by: Krzysztof Opasiak <kopasiak90@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <natechancellor@gmail.com>
+Cc: kbuild test robot <lkp@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/function/f_printer.c |    8 --------
+ 1 file changed, 8 deletions(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -431,6 +431,7 @@ static bool drm_dp_sideband_parse_remote
- 	if (idx > raw->curlen)
- 		goto fail_len;
- 	repmsg->u.remote_dpcd_read_ack.num_bytes = raw->msg[idx];
-+	idx++;
- 	if (idx > raw->curlen)
- 		goto fail_len;
+--- a/drivers/usb/gadget/function/f_printer.c
++++ b/drivers/usb/gadget/function/f_printer.c
+@@ -161,14 +161,6 @@ static struct usb_endpoint_descriptor hs
+ 	.wMaxPacketSize =	cpu_to_le16(512)
+ };
  
+-static struct usb_qualifier_descriptor dev_qualifier = {
+-	.bLength =		sizeof(dev_qualifier),
+-	.bDescriptorType =	USB_DT_DEVICE_QUALIFIER,
+-	.bcdUSB =		cpu_to_le16(0x0200),
+-	.bDeviceClass =		USB_CLASS_PRINTER,
+-	.bNumConfigurations =	1
+-};
+-
+ static struct usb_descriptor_header *hs_printer_function[] = {
+ 	(struct usb_descriptor_header *) &intf_desc,
+ 	(struct usb_descriptor_header *) &hs_ep_in_desc,
 
 
