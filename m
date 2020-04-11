@@ -2,190 +2,132 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D879C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2DBC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38ACF2078E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150102078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgDKFwe convert rfc822-to-8bit (ORCPT
+        id S1725945AbgDKF4j convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 01:52:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40189 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgDKFwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 01:52:33 -0400
-IronPort-SDR: 9/8Mo6zMwPxfP7Yb9gkWxCoo8wOK2dYosR+1YYnvIp6cH4NYl0jOM5xH8NQ0YTjd8hKP2gJ+dD
- J2DpDL1Li8ww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 22:52:33 -0700
-IronPort-SDR: D9S4NmhTY9He0vCHWlIIHDwfxarPdFygWdKBlgYxYMAyjMca3hoZdN6fUp+96mF+lgTf32YNKh
- C3aiBL+vOCkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,368,1580803200"; 
-   d="scan'208";a="287382593"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Apr 2020 22:52:33 -0700
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 10 Apr 2020 22:52:33 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 10 Apr 2020 22:52:32 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Sat, 11 Apr 2020 13:52:23 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-Thread-Topic: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-Thread-Index: AQHWAEUdkW8K+/kg/06c7098DvJyv6hlyxcAgA2TZEA=
-Date:   Sat, 11 Apr 2020 05:52:22 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A22AD8E@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
- <20200402135700.0da30021@w520.home>
-In-Reply-To: <20200402135700.0da30021@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
+        Sat, 11 Apr 2020 01:56:39 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:34536 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgDKF4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 01:56:39 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 7699ECED16;
+        Sat, 11 Apr 2020 08:06:13 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2 1/1] Bluetooth: btrtl: Add support for RTL8761B
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <bb48d88a-3b4f-dfa6-bbed-777a76d072ed@gmail.com>
+Date:   Sat, 11 Apr 2020 07:56:37 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, icenowy@aosc.io
 Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+Message-Id: <3E2F3893-FA3E-4C58-AD0C-879C7A3DD30E@holtmann.org>
+References: <20200410145420.108868-1-sztsian@gmail.com>
+ <20200410145420.108868-2-sztsian@gmail.com>
+ <5CD9EBAA-44A6-4DFF-870E-4F862FB7A60E@holtmann.org>
+ <bb48d88a-3b4f-dfa6-bbed-777a76d072ed@gmail.com>
+To:     Zamir SUN <sztsian@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Hi Zamir,
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, April 3, 2020 3:57 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
+>>> Add new compatible device RTL8761B.
+>>> 
+>>> Signed-off-by: Ziqian SUN (Zamir) <sztsian@gmail.com>
+>>> ---
+>>> drivers/bluetooth/btrtl.c | 10 +++++++++-
+>>> 1 file changed, 9 insertions(+), 1 deletion(-)
+>> can you also please include the content of /sys/kernel/debug/usb/devices for this device in the commit message.
+>> And if you run btmon before plugging it in, I like to see what LE Features of Bluetooth 5.0 this dongle really offers.
 > 
-> On Sun, 22 Mar 2020 05:32:03 -0700
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> Hi Marcel,
 > 
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > VFIO_TYPE1_NESTING_IOMMU is an IOMMU type which is backed by
-[...]
-> > +/**
-> > + * Unbind specific gpasid, caller of this function requires hold
-> > + * vfio_iommu->lock
-> > + */
-> > +static long vfio_iommu_type1_do_guest_unbind(struct vfio_iommu *iommu,
-> > +				struct iommu_gpasid_bind_data *gbind_data)
-> > +{
-> > +	return vfio_iommu_for_each_dev(iommu,
-> > +				vfio_unbind_gpasid_fn, gbind_data);
-> > +}
-> > +
-> > +static long vfio_iommu_type1_bind_gpasid(struct vfio_iommu *iommu,
-> > +				struct iommu_gpasid_bind_data *gbind_data)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	mutex_lock(&iommu->lock);
-> > +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
-> > +		ret = -EINVAL;
-> > +		goto out_unlock;
-> > +	}
-> > +
-> > +	ret = vfio_iommu_for_each_dev(iommu,
-> > +			vfio_bind_gpasid_fn, gbind_data);
-> > +	/*
-> > +	 * If bind failed, it may not be a total failure. Some devices
-> > +	 * within the iommu group may have bind successfully. Although
-> > +	 * we don't enable pasid capability for non-singletion iommu
-> > +	 * groups, a unbind operation would be helpful to ensure no
-> > +	 * partial binding for an iommu group.
+> I think you want this section
 > 
-> Where was the non-singleton group restriction done, I missed that.
+>        Supported settings: 0x0001bfff
+>          Powered
+>          Connectable
+>          Fast Connectable
+>          Discoverable
+>          Bondable
+>          Link Security
+>          Secure Simple Pairing
+>          BR/EDR
+>          High Speed
+>          Low Energy
+>          Advertising
+>          Secure Connections
+>          Debug Keys
+>          Privacy
+>          Static Address
+>          PHY Configuration
 > 
-> > +	 */
-> > +	if (ret)
-> > +		/*
-> > +		 * Undo all binds that already succeeded, no need to
-> > +		 * check the return value here since some device within
-> > +		 * the group has no successful bind when coming to this
-> > +		 * place switch.
-> > +		 */
-> > +		vfio_iommu_type1_do_guest_unbind(iommu, gbind_data);
+> Full log of btmon is available here, with the mac address masked http://fars.ee/Lu85
 > 
-> However, the for_each_dev function stops when the callback function
-> returns error, are we just assuming we stop at the same device as we
-> faulted on the first time and that we traverse the same set of devices
-> the second time?  It seems strange to me that unbind should be able to
-> fail.
+> I'll send a v3 to include the usb info in the commit message shortly.
 
-I think the code needs enhancement. Although one group per container
-and one device per group is the most typical and desired case, but
-the code here loops domains, groups, devices. It should be able to
-unwind prior bind when the loop failed for a device. So I plan to do
-below change for bind path.
+This hardware is funny. Before the firmware patching it says this:
 
-list_for_each_entry(domain, &iommu->domain_list, next) {
-	list_for_each_entry(group, &domain->group_list, next) {
-		/*
-		  * if bind failed on a certain device, should unbind prior successful
-		  * bind iommu_group_for_each_dev() should be modified to take two
-		  * callbacks, one for forward loop and one for reverse loop when failure
-		  * happened. "return_upon_failure" indicates whether return upon failure
-		  * during forward loop or not. If yes, iommu_group_for_each_dev() should
-		  * unwind the prior bind in this iommu group before return.
-		  */
-		ret = iommu_group_for_each_dev(iommu_group, bind_gpasid_fn,
-					unbind_gpasid_fn, data, return_upon_failure);
-		if (ret)
-			break;
-	}
-	if (ret) {
-		/* unwind bindings with prior groups */
-		list_for_each_entry_continue_reverse(group,
-							&domain->group_list, next) {
-			iommu_group_for_each_dev(iommu_group, unbind_gpasid_fn,
-						NULL, data, ignore_intermediate_failure);
-		}
-		break;
-	}
-}
+< HCI Command: Read Local Version In.. (0x04|0x0001) plen 0
+> HCI Event: Command Complete (0x0e) plen 12
+      Read Local Version Information (0x04|0x0001) ncmd 2
+        Status: Success (0x00)
+        HCI version: Bluetooth 5.1 (0x0a) - Revision 11 (0x000b)
+        LMP version: Bluetooth 5.1 (0x0a) - Subversion 34657 (0x8761)
+        Manufacturer: Realtek Semiconductor Corporation (93)
 
-if (ret) {
-	/* unwind bindings with prior domains */
-	list_for_each_entry_continue_reverse(domain, &iommu->domain_list, next) {
-		iommu_group_for_each_dev(iommu_group, unbind_gpasid_fn,
-						NULL, data, ignore_intermediate_failure);
-		}
-	}
-}
+And after the firmware patching it downgrades to Bluetooth 5.0 standard:
 
-return ret;
+< HCI Command: Read Local Version... (0x04|0x0001) plen 0
+> HCI Event: Command Complete (0x0e) plen 12
+      Read Local Version Information (0x04|0x0001) ncmd 2
+        Status: Success (0x00)
+        HCI version: Bluetooth 5.0 (0x09) - Revision 55448 (0xd898)
+        LMP version: Bluetooth 5.0 (0x09) - Subversion 50044 (0xc37c)
+        Manufacturer: Realtek Semiconductor Corporation (93)
 
-Regards,
-Yi Liu
+Anyway, I was after these LE Features:
+
+< HCI Command: LE Read Local Suppo.. (0x08|0x0003) plen 0
+> HCI Event: Command Complete (0x0e) plen 12
+      LE Read Local Supported Features (0x08|0x0003) ncmd 2
+        Status: Success (0x00)
+        Features: 0xfd 0x5f 0x00 0x00 0x00 0x00 0x00 0x00
+          LE Encryption
+          Extended Reject Indication
+          Slave-initiated Features Exchange
+          LE Ping
+          LE Data Packet Length Extension
+          LL Privacy
+          Extended Scanner Filter Policies
+          LE 2M PHY
+          Stable Modulation Index - Transmitter
+          Stable Modulation Index - Receiver
+          LE Coded PHY
+          LE Extended Advertising
+          Channel Selection Algorithm #2
+
+This seems to be a genuine USB dongle with Bluetooth 5.0 features.
+
+Regards
+
+Marcel
+
