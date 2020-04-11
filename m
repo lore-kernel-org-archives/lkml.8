@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132ADC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD99CC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AE820936
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61A6206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648851;
-	bh=eh/ou1/U945hSJW2laNb5oYQ4EspKnZ3Qontij5MsmE=;
+	s=default; t=1586648855;
+	bh=Lk0FH0lxVXv++fPdDN7OxF8LF0M1mPpDYUBrXDZkqfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ed07MlZO3/V0xS2A9RFCAnqjydrHKidf7FqwteFlfCosVhT16Octdnwai8sdpWDw8
-	 kVrQVgaNqfXp9+c8uW+2Wep810vRqDy7PbULpx284nuwbxcxx6gKylCzncHIANv4B1
-	 3rTn1ckgTU7ImOgOAum781kCeKP0Snn4CTSQGKZM=
+	b=FlefPrvCp4Ha70urtjP8bg9mu7QGno+XF0zY26ZgM4q4wdWVMxl+0ySRiiB3jFWRD
+	 82mr/3U6WzhXjamwhPUXE8CJTBpnIyRMIslwJXym/Yz5k1D/eMOaKhE1M0Ay7GJxYh
+	 toqwKNy/t3JjmG/JstJS1aNQbDOayZBCFKlS0JVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgDKXFA (ORCPT
+        id S1728985AbgDKXre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727526AbgDKXEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:51 -0400
+        id S1727674AbgDKXFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DABC4214D8;
-        Sat, 11 Apr 2020 23:04:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80DD220CC7;
+        Sat, 11 Apr 2020 23:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646291;
-        bh=eh/ou1/U945hSJW2laNb5oYQ4EspKnZ3Qontij5MsmE=;
+        s=default; t=1586646300;
+        bh=Lk0FH0lxVXv++fPdDN7OxF8LF0M1mPpDYUBrXDZkqfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdL8jhN1TXvCZBCjs9eUa8KeIj5QadX3ELaeYLixQMkEi71DGnEx3iyBDk5oxMnFh
-         LFZc33Rj6qUM0/Y+K8e7UBzg+f4FgpRTGWpH3d/IVOaCJOjihhEKSnpxtLcwO8krcf
-         zf14iCFHo1fBEy3H5bGFdjn/sjora5r+AyO7xg4M=
+        b=idn9TOqDzkIbn8CuZe4T8TSMCscU4OnWzG7DCzlfut9H+oIcvFeff55JlZcLgSSbY
+         AWnCiYwBLkx6qwRkrn6vu7a6EXjRhva1Nuz3qQd/s2rR6MfKsAPZLBzAgIC7boIA/Q
+         eDRI7+wGyRGVT4U3zgQbjKGAn5B7ukQP84YQnwLo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 052/149] net: intel: e1000e: fix possible sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
-Date:   Sat, 11 Apr 2020 19:02:09 -0400
-Message-Id: <20200411230347.22371-52-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 059/149] drm/sun4i: dsi: Use NULL to signify "no panel"
+Date:   Sat, 11 Apr 2020 19:02:16 -0400
+Message-Id: <20200411230347.22371-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,79 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Samuel Holland <samuel@sholland.org>
 
-[ Upstream commit 2e05f756c7099c8991142382648a37b0d4c85943 ]
+[ Upstream commit 0e4e3fb4901d19f49e5c0a582f383b10dda8d1c5 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+The continued use of an ERR_PTR to signify "no panel" outside of
+sun6i_dsi_attach is confusing because it is a double negative. Because
+the connector always reports itself as connected, there is also the
+possibility of sending an ERR_PTR to drm_panel_get_modes(), which would
+crash.
 
-drivers/net/ethernet/intel/e1000e/mac.c, 1366:
-	usleep_range in e1000e_get_hw_semaphore
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
-	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
-	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
-drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
-	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
-	e1000e_update_phy_stats in e1000e_update_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
-	e1000e_update_stats in e1000e_get_stats64
-drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
-	spin_lock in e1000e_get_stats64
+Solve both of these by only storing the panel pointer if it is valid.
 
-drivers/net/ethernet/intel/e1000e/mac.c, 1384:
-	usleep_range in e1000e_get_hw_semaphore
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
-	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
-	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
-drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
-	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
-	e1000e_update_phy_stats in e1000e_update_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
-	e1000e_update_stats in e1000e_get_stats64
-drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
-	spin_lock in e1000e_get_stats64
-
-(FUNC_PTR) means a function pointer is called.
-
-To fix these bugs, usleep_range() is replaced with udelay().
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 133add5b5ad4 ("drm/sun4i: Add Allwinner A31 MIPI-DSI controller support")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200211072858.30784-2-samuel@sholland.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
-index e531976f8a677..51512a73fdd07 100644
---- a/drivers/net/ethernet/intel/e1000e/mac.c
-+++ b/drivers/net/ethernet/intel/e1000e/mac.c
-@@ -1363,7 +1363,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
- 		if (!(swsm & E1000_SWSM_SMBI))
- 			break;
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index a75fcb1131724..9bd3c97ff3e68 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -749,7 +749,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
+ 	phy_configure(dsi->dphy, &opts);
+ 	phy_power_on(dsi->dphy);
  
--		usleep_range(50, 100);
-+		udelay(100);
- 		i++;
+-	if (!IS_ERR(dsi->panel))
++	if (dsi->panel)
+ 		drm_panel_prepare(dsi->panel);
+ 
+ 	/*
+@@ -764,7 +764,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
+ 	 * ordering on the panels I've tested it with, so I guess this
+ 	 * will do for now, until that IP is better understood.
+ 	 */
+-	if (!IS_ERR(dsi->panel))
++	if (dsi->panel)
+ 		drm_panel_enable(dsi->panel);
+ 
+ 	sun6i_dsi_start(dsi, DSI_START_HSC);
+@@ -780,7 +780,7 @@ static void sun6i_dsi_encoder_disable(struct drm_encoder *encoder)
+ 
+ 	DRM_DEBUG_DRIVER("Disabling DSI output\n");
+ 
+-	if (!IS_ERR(dsi->panel)) {
++	if (dsi->panel) {
+ 		drm_panel_disable(dsi->panel);
+ 		drm_panel_unprepare(dsi->panel);
  	}
+@@ -942,11 +942,13 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
+ 			    struct mipi_dsi_device *device)
+ {
+ 	struct sun6i_dsi *dsi = host_to_sun6i_dsi(host);
++	struct drm_panel *panel = of_drm_find_panel(device->dev.of_node);
  
-@@ -1381,7 +1381,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
- 		if (er32(SWSM) & E1000_SWSM_SWESMBI)
- 			break;
++	if (IS_ERR(panel))
++		return PTR_ERR(panel);
++
++	dsi->panel = panel;
+ 	dsi->device = device;
+-	dsi->panel = of_drm_find_panel(device->dev.of_node);
+-	if (IS_ERR(dsi->panel))
+-		return PTR_ERR(dsi->panel);
  
--		usleep_range(50, 100);
-+		udelay(100);
- 	}
+ 	dev_info(host->dev, "Attached device %s\n", device->name);
  
- 	if (i == timeout) {
 -- 
 2.20.1
 
