@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF51C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF0DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FF4206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16581206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647197;
-	bh=UB/WITbOLLqRVaT2oRzPuCdxNSA2y2uAPXWX9G1M8XM=;
+	s=default; t=1586647203;
+	bh=wCpQ8gm0sYk2mszJ/8N2yP6Z76FACLRdGKZjehOh2L4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3+AZCALbP5ZuFlfawSjLjuTRzywMmdomqdragL/zOVihf8txcTvErc9ZkEjXEk+A
-	 vBq2ZJ+MQqzt1eGfo8GpcVEAfjFEavY61o858XiHXpr7y0+P/FdBZLlSA/6/8xKpae
-	 a+12v7/qAuUN2f+1H2w/aJyNfvZH3FtIV2EXY774=
+	b=GUCGB/Qsxr7lrxOo2edtk5arge0CIHR3uuFZFEXx0so1n0/ewpeacQ/dqkJIv/QqO
+	 L+sn/kTGoSMVfX0uPv6zRcmhWmvFz/G4Q2i1Nkyo/CJmJDkNAs7xzydH0PrIXqaqxU
+	 pKtsRabnDzxY77z88KpIu9K8IPELdFPQ0to0LT0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgDKXTz (ORCPT
+        id S1730602AbgDKXUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbgDKXNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:50 -0400
+        id S1730557AbgDKXNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FD29215A4;
-        Sat, 11 Apr 2020 23:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 897C421744;
+        Sat, 11 Apr 2020 23:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646830;
-        bh=UB/WITbOLLqRVaT2oRzPuCdxNSA2y2uAPXWX9G1M8XM=;
+        s=default; t=1586646826;
+        bh=wCpQ8gm0sYk2mszJ/8N2yP6Z76FACLRdGKZjehOh2L4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kUP2Bs2lz5xI4iVlUGa7jy2ey3CX4LAAurqtHDoo2ItPJr6KhgTUdqiIzwcLBkHf3
-         kxhvfaK/bQKks8UvMCI5x3o3udDw3FpNPsb+UhPa8+70NRc/yKh1Ua25d0v3vJw46n
-         /Wn3i/IJCWvPanpjGm30zF8OT48+XV1SqXzDIEB0=
+        b=f+F14a2Vb9i9XtIBzdoBu9YJ4djAeEDqm37fxxGu+EECg0t+9OmVGqrmNTJBNHNXy
+         fU5yzK+g0TBqtSJPD/o5vte0+OtH8B1j4hRiOe+Gb7Qni1XfiBRcqkmZ2BlVWs02dx
+         aKMH/0l8j8gAKTWedwESU+4q2J4LAlHq0XtG5Bns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 20/37] crypto: tcrypt - fix printed skcipher [a]sync mode
-Date:   Sat, 11 Apr 2020 19:13:09 -0400
-Message-Id: <20200411231327.26550-20-sashal@kernel.org>
+Cc:     Alain Michaud <alainm@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/37] Bluetooth: guard against controllers sending zero'd events
+Date:   Sat, 11 Apr 2020 19:13:05 -0400
+Message-Id: <20200411231327.26550-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Alain Michaud <alainm@chromium.org>
 
-[ Upstream commit 8e3b7fd7ea554ccb1bdc596bfbcdaf56f7ab017c ]
+[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
 
-When running tcrypt skcipher speed tests, logs contain things like:
-testing speed of async ecb(des3_ede) (ecb(des3_ede-generic)) encryption
-or:
-testing speed of async ecb(aes) (ecb(aes-ce)) encryption
+Some controllers have been observed to send zero'd events under some
+conditions.  This change guards against this condition as well as adding
+a trace to facilitate diagnosability of this condition.
 
-The algorithm implementations are sync, not async.
-Fix this inaccuracy.
-
-Fixes: 7166e589da5b6 ("crypto: tcrypt - Use skcipher")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Alain Michaud <alainm@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/tcrypt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/bluetooth/hci_event.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
-index f7affe7cf0b47..9d9a9f5f2b9be 100644
---- a/crypto/tcrypt.c
-+++ b/crypto/tcrypt.c
-@@ -883,8 +883,8 @@ static void test_skcipher_speed(const char *algo, int enc, unsigned int secs,
- 		return;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 363dc85bbc5c9..5049258d8c50d 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5249,6 +5249,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 	u8 status = 0, event = hdr->evt, req_evt = 0;
+ 	u16 opcode = HCI_OP_NOP;
+ 
++	if (!event) {
++		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
++		goto done;
++	}
++
+ 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
+ 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
+ 		opcode = __le16_to_cpu(cmd_hdr->opcode);
+@@ -5460,6 +5465,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 		req_complete_skb(hdev, status, opcode, orig_skb);
  	}
  
--	pr_info("\ntesting speed of async %s (%s) %s\n", algo,
--			get_driver_name(crypto_skcipher, tfm), e);
-+	pr_info("\ntesting speed of %s %s (%s) %s\n", async ? "async" : "sync",
-+		algo, get_driver_name(crypto_skcipher, tfm), e);
- 
- 	req = skcipher_request_alloc(tfm, GFP_KERNEL);
- 	if (!req) {
++done:
+ 	kfree_skb(orig_skb);
+ 	kfree_skb(skb);
+ 	hdev->stat.evt_rx++;
 -- 
 2.20.1
 
