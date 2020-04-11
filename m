@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E97AC352B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19979C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF23420CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E180E20CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646361;
-	bh=ymIorrYieqsCNqFIdMm/hvn6WBU04UNSBOfIym/fxmI=;
+	s=default; t=1586646362;
+	bh=+lFFMlwyVy2Dn2wL/Yyf/vR4wmq5UAv5dX6mWo9UFgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdZndNt3T34gv04TiOyWsMK7/xJCO4vfz629NVSbZH+wiipuS3TcBnIVVIxJEuLgw
-	 t0Z26pqEdG/VUi/FhQ1MneHyEiB//bn+VNSyFkLs5t48NvBrfBEYvrSX6k2ubZ2nFS
-	 FKtXXb5ciRYcCNBxDoipEtq7ZaE7RacEE03pxfhQ=
+	b=TPzxU4kvPazvjHiRUJ1wg2pTPdb830Vk+DEKs8Z1RkSmGSjrFvYxpQxYwZloWw0Jq
+	 +UGz/5YEDW8fdA+i2e3t0dF8JNMzbjSbQ46kSMn9XAwLh9gtDV+XmATn3l1+F840rD
+	 GLJik3w3MZYvthXc48KTlKoq4I4IvswN9lB8U434=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgDKXF7 (ORCPT
+        id S1728221AbgDKXGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40678 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:06:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgDKXFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:55 -0400
+        id S1728085AbgDKXFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 091FC20787;
-        Sat, 11 Apr 2020 23:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D44BA21775;
+        Sat, 11 Apr 2020 23:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646355;
-        bh=ymIorrYieqsCNqFIdMm/hvn6WBU04UNSBOfIym/fxmI=;
+        s=default; t=1586646354;
+        bh=+lFFMlwyVy2Dn2wL/Yyf/vR4wmq5UAv5dX6mWo9UFgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Sgn1oSNzA7FCZRYo2YPSv5qJVu8XW6qWA8j91cRbt4DAnaNhNy84aORcvNZFap7u
-         +Iymi4p1dAj3/U/ijP+twemvU7er2yZQYsAiLZ6Zn60keneJzQ2T9yqdIg9MZG6qjR
-         nugSof5I3it8nYRhbF3YdBPJQ9UiQg7Zi5mmqZfE=
+        b=eETl8qcB7x9TwhdcGjdXwNY5OY1rvcrzQa33cSYHfDNQYAUq192118AyKhGW50UNz
+         /Sh+9xLL2H7jPI6xHfMMS/0m8uEfr/CzEu+QbP2gAP/rMVKSsKUxVtN+PeDMRkZgFn
+         lbWp6XhrISn+EfXP2JmeXAwUAOjMcr64OpPMoVnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 102/149] selftests: KVM: s390: fix early guest crash
-Date:   Sat, 11 Apr 2020 19:02:59 -0400
-Message-Id: <20200411230347.22371-102-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 101/149] tty: serial: qcom_geni_serial: No need to stop tx/rx on UART shutdown
+Date:   Sat, 11 Apr 2020 19:02:58 -0400
+Message-Id: <20200411230347.22371-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,64 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 41cbed5b07b5f6ca4ae567059ae7f0ffad1fd454 ]
+[ Upstream commit e83766334f96b3396a71c7baa3b0b53dfd5190cd ]
 
-The guest crashes very early due to changes in the control registers
-used by dynamic address translation. Let us use different registers
-that will not crash the guest.
+On a board using qcom_geni_serial I found that I could no longer
+interact with kdb if I got a crash after the "agetty" running on the
+same serial port was killed.  This meant that various classes of
+crashes that happened at reboot time were undebuggable.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reading through the code, I couldn't figure out why qcom_geni_serial
+felt the need to run so much code at port shutdown time.  All we need
+to do is disable the interrupt.
+
+After I make this change then a hardcoded kgdb_breakpoint in some late
+shutdown code now allows me to interact with the debugger.  I also
+could freely close / re-open the port without problems.
+
+Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/s390x/resets.c | 27 +++++++++++-----------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/tty/serial/qcom_geni_serial.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/s390x/resets.c b/tools/testing/selftests/kvm/s390x/resets.c
-index 1485bc6c8999f..cbb343ad5d424 100644
---- a/tools/testing/selftests/kvm/s390x/resets.c
-+++ b/tools/testing/selftests/kvm/s390x/resets.c
-@@ -23,25 +23,24 @@ struct kvm_run *run;
- struct kvm_sync_regs *regs;
- static uint64_t regs_null[16];
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 0bd1684cabb39..043c6141f661e 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -818,17 +818,11 @@ static void get_tx_fifo_size(struct qcom_geni_serial_port *port)
  
--static uint64_t crs[16] = { 0x40000ULL,
--			    0x42000ULL,
--			    0, 0, 0, 0, 0,
--			    0x43000ULL,
--			    0, 0, 0, 0, 0,
--			    0x44000ULL,
--			    0, 0
--};
--
- static void guest_code_initial(void)
+ static void qcom_geni_serial_shutdown(struct uart_port *uport)
  {
--	/* Round toward 0 */
--	uint32_t fpc = 0x11;
-+	/* set several CRs to "safe" value */
-+	unsigned long cr2_59 = 0x10;	/* enable guarded storage */
-+	unsigned long cr8_63 = 0x1;	/* monitor mask = 1 */
-+	unsigned long cr10 = 1;		/* PER START */
-+	unsigned long cr11 = -1;	/* PER END */
-+
+-	unsigned long flags;
+-
+ 	/* Stop the console before stopping the current tx */
+ 	if (uart_console(uport))
+ 		console_stop(uport->cons);
  
- 	/* Dirty registers */
- 	asm volatile (
--		"	lctlg	0,15,%0\n"
--		"	sfpc	%1\n"
--		: : "Q" (crs), "d" (fpc));
-+		"	lghi	2,0x11\n"	/* Round toward 0 */
-+		"	sfpc	2\n"		/* set fpc to !=0 */
-+		"	lctlg	2,2,%0\n"
-+		"	lctlg	8,8,%1\n"
-+		"	lctlg	10,10,%2\n"
-+		"	lctlg	11,11,%3\n"
-+		: : "m" (cr2_59), "m" (cr8_63), "m" (cr10), "m" (cr11) : "2");
- 	GUEST_SYNC(0);
+ 	disable_irq(uport->irq);
+-	spin_lock_irqsave(&uport->lock, flags);
+-	qcom_geni_serial_stop_tx(uport);
+-	qcom_geni_serial_stop_rx(uport);
+-	spin_unlock_irqrestore(&uport->lock, flags);
  }
  
+ static int qcom_geni_serial_port_setup(struct uart_port *uport)
 -- 
 2.20.1
 
