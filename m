@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AE5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB75C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCA2216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3E1216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646625;
-	bh=LQ4h+thA4Q0WQ90awzjA8B/VB9vG17MgHA+KOwlQRvo=;
+	s=default; t=1586646629;
+	bh=RrlhpunANxPIE9UFw2a1ywTz5q95Q+l+tT/okGgtOFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VVtXRf2ZlbEXW6xBHBrVOrQZQQN6Suk09pfd11De2BA90Z5oPrmLQiC9D9VYhbHMF
-	 9wHgeff3J6IckUM7R6FI1gZxwG67ZH3A07jCx4h9yNbmnnDAaBC+lf7ifzVWZXql1T
-	 +gA/sguWsp2a8otx3z02o7lmjW8caCKP/nr0at60=
+	b=GPxRe9avIAvFytP6HN+97GA0N92JPLkBTIY3bXc2knE/nBmO4IxX+I8bSnxCmvMyZ
+	 Fok2aUHaMNJRyp8c9C7PkjQ+DT0asPPONvmS7UrTG2j3eACfwHuBTQ7wP7QW+Y6Zk5
+	 Mna4bYLliv4ZFQlYISOd/sLWSf4usM/11MD0H/1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgDKXKX (ORCPT
+        id S1727053AbgDKXK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48650 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgDKXKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:21 -0400
+        id S1727896AbgDKXKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E61D720787;
-        Sat, 11 Apr 2020 23:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8C2E20787;
+        Sat, 11 Apr 2020 23:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646620;
-        bh=LQ4h+thA4Q0WQ90awzjA8B/VB9vG17MgHA+KOwlQRvo=;
+        s=default; t=1586646625;
+        bh=RrlhpunANxPIE9UFw2a1ywTz5q95Q+l+tT/okGgtOFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzQms8z4uELmLyQsaWe11BS2XQQ2AnBizoFoPWxUb1YLSnE9/oqflZJ4Inw2RNwpa
-         EosudnCTJnPsqNAggXiJgppth07SkkdbwF4qoZ5wut10tiUP0WB9BlVHDy2a9ifT2I
-         Hq/mg6Lt/NDhSsbmpAzuJWL6SaHHX9LKHLMMF3H8=
+        b=cG9SiPuxMfxMu9ChGimaxkED0QRT7LM6AURiIRcKRr/ihLPPStwxZUoS4QJ/5ZOLO
+         /EOvRoJwvz3uGkznOXhBVv+jg5YqP+q7nupX4YrHQLhxqJ4MyBdznBZDNBY0UkJzMB
+         ZuzfSYoZIxNuZLknTgeOo/8pGTxm9TM/uZKXJVD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 030/108] IB/mlx5: Fix missing congestion control debugfs on rep rdma device
-Date:   Sat, 11 Apr 2020 19:08:25 -0400
-Message-Id: <20200411230943.24951-30-sashal@kernel.org>
+Cc:     Guangbin Huang <huangguangbin2@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 034/108] net: hns3: modify an unsuitable print when setting unknown duplex to fibre
+Date:   Sat, 11 Apr 2020 19:08:29 -0400
+Message-Id: <20200411230943.24951-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,41 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Guangbin Huang <huangguangbin2@huawei.com>
 
-[ Upstream commit 79db784e794b6e7b7fb9b1dd464a34e4c0c039af ]
+[ Upstream commit 2d3db26d78805c9e06e26def0081c76e9bb0b7d6 ]
 
-Cited commit missed to include low level congestion control related
-debugfs stage initialization.  This resulted in missing debugfs entries
-for cc_params of a RDMA device.
+Currently, if device is in link down status and user uses
+'ethtool -s' command to set speed but not specify duplex
+mode, the duplex mode passed from ethtool to driver is
+unknown value(255), and the fibre port will identify this
+value as half duplex mode and print "only copper port
+supports half duplex!". This message is confusing.
 
-Add them back.
+So for fibre port, only the setting duplex is half, prints
+error and returns.
 
-Fixes: b5ca15ad7e61 ("IB/mlx5: Add proper representors support")
-Link: https://lore.kernel.org/r/20200227125407.99803-1-leon@kernel.org
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index 0a160fd1383ae..e18f8e7029046 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -6833,6 +6833,9 @@ const struct mlx5_ib_profile uplink_rep_profile = {
- 	STAGE_CREATE(MLX5_IB_STAGE_COUNTERS,
- 		     mlx5_ib_stage_counters_init,
- 		     mlx5_ib_stage_counters_cleanup),
-+	STAGE_CREATE(MLX5_IB_STAGE_CONG_DEBUGFS,
-+		     mlx5_ib_stage_cong_debugfs_init,
-+		     mlx5_ib_stage_cong_debugfs_cleanup),
- 	STAGE_CREATE(MLX5_IB_STAGE_UAR,
- 		     mlx5_ib_stage_uar_init,
- 		     mlx5_ib_stage_uar_cleanup),
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 52c9d204fe3d9..a1f62e079f15a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -737,7 +737,7 @@ static int hns3_check_ksettings_param(const struct net_device *netdev,
+ 	if (ops->get_media_type)
+ 		ops->get_media_type(handle, &media_type, &module_type);
+ 
+-	if (cmd->base.duplex != DUPLEX_FULL &&
++	if (cmd->base.duplex == DUPLEX_HALF &&
+ 	    media_type != HNAE3_MEDIA_TYPE_COPPER) {
+ 		netdev_err(netdev,
+ 			   "only copper port supports half duplex!");
 -- 
 2.20.1
 
