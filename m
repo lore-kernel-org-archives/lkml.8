@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7429C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006E1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72AC206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BD420787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647964;
-	bh=feWiSaDs4TCqbLvcliEgFp07dy9mV1+go9/DXaD0w8c=;
+	s=default; t=1586647973;
+	bh=z9rtLhZlzhiOGVZoMMk3LzerzSTwqB0GfVjTvbMw2gI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DwWktaGZIPZCYLqAu/nWCP/cvMAHdu0OY3zC+LGPnEchKVpGYMlocIsx+JN08f/5Z
-	 Mf5IzjtlB3Tjl49kBfnZjMcCWE4RyBOP3T44fHPhaZV2/P/3ZCBt74gSfw0L3ajfal
-	 2jamPn5tquvyvtmG7Cjez3l0fkkOcEpRFvpuCvfw=
+	b=VMhcU/Mcq9yDybUoOiWaHznb8HZ8a/GqJDp4XnbhcLLWqXVK9VpQUzmjssbF4+ov/
+	 HmlITL2KeILnPhEJT9XIr46oYUhioxJXlN0Y3RrLEtEa0AinpL25M80pfJjMNO6/CI
+	 WIz3vQ8SH27YeZ7QksuC1PHXQrK5h/JF1zUS3a2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgDKXcm (ORCPT
+        id S1729831AbgDKXcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:32:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47970 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbgDKXJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:59 -0400
+        id S1727273AbgDKXJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4563320787;
-        Sat, 11 Apr 2020 23:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF623215A4;
+        Sat, 11 Apr 2020 23:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646600;
-        bh=feWiSaDs4TCqbLvcliEgFp07dy9mV1+go9/DXaD0w8c=;
+        s=default; t=1586646597;
+        bh=z9rtLhZlzhiOGVZoMMk3LzerzSTwqB0GfVjTvbMw2gI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RkEkOyBu5Xe9nAVsmkTVkjZ3TIsEplzBlQqDBV5zqaz/xgRBhbhJTLnIt/v4JmTmm
-         8oufQyXyQFt7bsWCKJ6qg4EVXgNzg50zJ28pRCDigMNHhddo4GIAhC+CQywUCdEOgi
-         3pk2EWPjrGjAbS39GcFOi6py5gZj6sfpByR1/gKs=
+        b=wOXh0legb/7gX3v3+VUqtVMEvjOLTXzh884Tfou0vXXbWU2X0gwZfgh6ZbsE733/w
+         /3l5Hhtn0r4UiHwRbKoG+kQrNWd5z5Fk+E51ECRcZNTrFXCZW4S9LEpPbUrds2QhUt
+         mZdNsJevaziFu82amsH1ZsDdEKVIQDeoBmlsRp+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 013/108] RDMA/bnxt_re: Fix lifetimes in bnxt_re_task
-Date:   Sat, 11 Apr 2020 19:08:08 -0400
-Message-Id: <20200411230943.24951-13-sashal@kernel.org>
+Cc:     Leonid Maksymchuk <leonmaxx@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 011/108] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
+Date:   Sat, 11 Apr 2020 19:08:06 -0400
+Message-Id: <20200411230943.24951-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Leonid Maksymchuk <leonmaxx@gmail.com>
 
-[ Upstream commit 8a6c61704746d3a1e004e054504ae8d98ed95697 ]
+[ Upstream commit edeee341fd6c1099de357c517af215bee2c6f766 ]
 
-A work queue cannot just rely on the ib_device not being freed, it must
-hold a kref on the memory so that the BNXT_RE_FLAG_IBDEV_REGISTERED check
-works.
+Function fan_boost_mode_store returns 0 if store is successful,
+this leads to infinite loop after any write to it's sysfs entry:
 
-Fixes: 1ac5a4047975 ("RDMA/bnxt_re: Add bnxt_re RoCE driver")
-Link: https://lore.kernel.org/r/1584117207-2664-3-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+# echo 0 >/sys/devices/platform/asus-nb-wmi/fan_boost_mode
+
+This command never ends, one CPU core is at 100% utilization.
+This patch fixes this by returning size of written data.
+
+Fixes: b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
+Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 27e2df44d043d..cf51f2606877c 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -1584,6 +1584,7 @@ static void bnxt_re_task(struct work_struct *work)
- 	smp_mb__before_atomic();
- 	atomic_dec(&rdev->sched_count);
- exit:
-+	put_device(&rdev->ibdev.dev);
- 	kfree(re_work);
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 982f0cc8270ce..977b813cc0fa9 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1712,7 +1712,7 @@ static ssize_t fan_boost_mode_store(struct device *dev,
+ 	asus->fan_boost_mode = new_mode;
+ 	fan_boost_mode_write(asus);
+ 
+-	return result;
++	return count;
  }
  
-@@ -1660,6 +1661,7 @@ static int bnxt_re_netdev_event(struct notifier_block *notifier,
- 		/* Allocate for the deferred task */
- 		re_work = kzalloc(sizeof(*re_work), GFP_ATOMIC);
- 		if (re_work) {
-+			get_device(&rdev->ibdev.dev);
- 			re_work->rdev = rdev;
- 			re_work->event = event;
- 			re_work->vlan_dev = (real_dev == netdev ?
+ // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
 -- 
 2.20.1
 
