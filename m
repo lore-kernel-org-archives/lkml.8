@@ -2,200 +2,101 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AB5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6C7C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F4120936
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A35hXGIH"
+	by mail.kernel.org (Postfix) with ESMTP id 3DCBC206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586648611;
+	bh=4PfxH9l0qhbWx1emsduO6XYhYTrttNMwv+o5Jv1Bmp0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DbVFlWARzXqF+QyJ8uutlNHK9vBWXvclJxhWEyagFZJH/+IkR/o5T9b3aJAer3/FH
+	 7xQdjWbpvJfIABWZG1ECMby98tu7CV4QkFg05ezbQST+Hnn5EaOTg0V+GnMH2NQ0LX
+	 pCJLj2EqoHHJ1g27SnFZGw8viG9Cdd6XJUC7Twq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgDKXnT (ORCPT
+        id S1731046AbgDKXn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:43:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33019 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbgDKXGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:21 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a25so6323148wrd.0;
-        Sat, 11 Apr 2020 16:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=UAPPdZgmNKOCKDm/C5wWEA99bGYuEuYYzhgzenpdA08=;
-        b=A35hXGIH6duuun1CFP5LbsmnNUMFYmzusYtQ9MwfWVkHV1gvKiMzjPG2tmnL68VnHO
-         rpj+TiTa777dj9VDrpVE0m7zGKd76kGaP5EBMJK5r2m6LEiVfGTDZmbs6vhujvmMyWbk
-         rfwDN8U5e5wncueBpGX+IgZMfIH5GL33UL0acjdvrNxmH+H6bITfZc9gzDs5GTkwMHXE
-         fqmWDOxR3YOk5wohk3SVFglGy6FkIrTUifDk82oFeGNM0bziNV8obb9EzXBufTWOMP5g
-         ARtR3gQItQYRI+kFLklNaqVcxBwEYQ71sTQvSxaROsOyA+fiFpGR2NL7hj5HOq3XTY82
-         SC8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UAPPdZgmNKOCKDm/C5wWEA99bGYuEuYYzhgzenpdA08=;
-        b=ho3jAcJJ/BVMtVkecT0ozxlNvj2U1HI+f6lif0DT0ORZlR0DxrDlv5NSeqiCw8rJH2
-         0ctB6Dkrw0HuDDRMk/WdQC3uZAha4obpYrzBFcFEhqUzSitZSI2nlQaIOF4BXSsJZx/w
-         mu0HNH0M4a2wbZg3t8ws2JB2tD5tyw8eFXzg8wShooMAPtXiPbetzUkve98MrvNK50iC
-         lU9YFsUvYq44OmYaoOYm3jOuYUhdLXKwQY1KPt5TI1y7cQIAlaJfkSXAmqG1XdP5yek3
-         U91VeKWc3xPqNvDJsUbfl0+abH0jTqZ1dfJy0bmdWMLwhPc3Ot5wrBz+Jtl/a+qMCLoR
-         pUSA==
-X-Gm-Message-State: AGi0PuZgIAvcPusenJlewel02GjVgipzhtfmDxarXzDQWF09h9dJT9+c
-        mqiLGZQbCAQ8eL1L8OOr4D0=
-X-Google-Smtp-Source: APiQypIpl6R1I8xZA5yVhJgKZ8/GQTRobKXLBwELJmnjh3MRl2CZa4juQNgDAILFYYF7/V1v8futzg==
-X-Received: by 2002:adf:fdc1:: with SMTP id i1mr1666174wrs.158.1586646379981;
-        Sat, 11 Apr 2020 16:06:19 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id k133sm8992741wma.0.2020.04.11.16.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 16:06:19 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] io_uring: DRY early submission req fail code
-Date:   Sun, 12 Apr 2020 02:05:03 +0300
-Message-Id: <4eadf5c0ce4adc93426d84d94e88d12f0f89d60a.1586645520.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1586645520.git.asml.silence@gmail.com>
-References: <cover.1586645520.git.asml.silence@gmail.com>
+        Sat, 11 Apr 2020 19:43:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728323AbgDKXGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A54218AC;
+        Sat, 11 Apr 2020 23:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646379;
+        bh=4PfxH9l0qhbWx1emsduO6XYhYTrttNMwv+o5Jv1Bmp0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1JOj4JL7Pez/zPcRTdUZtwALtyXDptOQWjBZ3WX5SwdJ81B5pYh23xuD65xC0aYEA
+         H9gy0bKpRg7OmDm5nBkUNJhtJlQA7k5dn6XXTOzO1vCyypkBTYrb8+XbFKDU1OyAjZ
+         4IPNmkZ/DEh0Mwg1swbL/Yr6yHw8f8TqtAenPkHs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 120/149] ASoC: Intel: Skylake: Enable codec wakeup during chip init
+Date:   Sat, 11 Apr 2020 19:03:17 -0400
+Message-Id: <20200411230347.22371-120-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having only one place for cleaning up a request after a link assembly/
-submission failure will play handy in the future. At least it allows
-to remove duplicated cleanup sequence.
+From: Cezary Rojewski <cezary.rojewski@intel.com>
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+[ Upstream commit e603f11d5df8997d104ab405ff27640b90baffaa ]
+
+Follow the recommendation set by hda_intel.c and enable HDMI/DP codec
+wakeup during bus initialization procedure. Disable wakeup once init
+completes.
+
+Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200305145314.32579-4-cezary.rojewski@intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 50 +++++++++++++++++++-------------------------------
- 1 file changed, 19 insertions(+), 31 deletions(-)
+ sound/soc/intel/skylake/skl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 27868ec328b8..90b806e4022a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5606,7 +5606,7 @@ static inline void io_queue_link_head(struct io_kiocb *req)
- 				IOSQE_IO_HARDLINK | IOSQE_ASYNC | \
- 				IOSQE_BUFFER_SELECT)
+diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
+index f755ca2484cff..0f3f291c223e2 100644
+--- a/sound/soc/intel/skylake/skl.c
++++ b/sound/soc/intel/skylake/skl.c
+@@ -130,6 +130,7 @@ static int skl_init_chip(struct hdac_bus *bus, bool full_reset)
+ 	struct hdac_ext_link *hlink;
+ 	int ret;
  
--static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
-+static int io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			  struct io_submit_state *state, struct io_kiocb **link)
- {
- 	struct io_ring_ctx *ctx = req->ctx;
-@@ -5616,24 +5616,18 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	sqe_flags = READ_ONCE(sqe->flags);
++	snd_hdac_set_codec_wakeup(bus, true);
+ 	skl_enable_miscbdcge(bus->dev, false);
+ 	ret = snd_hdac_bus_init_chip(bus, full_reset);
  
- 	/* enforce forwards compatibility on users */
--	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS)) {
--		ret = -EINVAL;
--		goto err_req;
--	}
-+	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
-+		return -EINVAL;
+@@ -138,6 +139,7 @@ static int skl_init_chip(struct hdac_bus *bus, bool full_reset)
+ 		writel(0, hlink->ml_addr + AZX_REG_ML_LOSIDV);
  
- 	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
--	    !io_op_defs[req->opcode].buffer_select) {
--		ret = -EOPNOTSUPP;
--		goto err_req;
--	}
-+	    !io_op_defs[req->opcode].buffer_select)
-+		return -EOPNOTSUPP;
+ 	skl_enable_miscbdcge(bus->dev, true);
++	snd_hdac_set_codec_wakeup(bus, false);
  
- 	id = READ_ONCE(sqe->personality);
- 	if (id) {
- 		req->work.creds = idr_find(&ctx->personality_idr, id);
--		if (unlikely(!req->work.creds)) {
--			ret = -EINVAL;
--			goto err_req;
--		}
-+		if (unlikely(!req->work.creds))
-+			return -EINVAL;
- 		get_cred(req->work.creds);
- 	}
- 
-@@ -5644,12 +5638,8 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 
- 	fd = READ_ONCE(sqe->fd);
- 	ret = io_req_set_file(state, req, fd, sqe_flags);
--	if (unlikely(ret)) {
--err_req:
--		io_cqring_add_event(req, ret);
--		io_double_put_req(req);
--		return false;
--	}
-+	if (unlikely(ret))
-+		return ret;
- 
- 	/*
- 	 * If we already have a head request, queue this one for async
-@@ -5672,16 +5662,14 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			head->flags |= REQ_F_IO_DRAIN;
- 			ctx->drain_next = 1;
- 		}
--		if (io_alloc_async_ctx(req)) {
--			ret = -EAGAIN;
--			goto err_req;
--		}
-+		if (io_alloc_async_ctx(req))
-+			return -EAGAIN;
- 
- 		ret = io_req_defer_prep(req, sqe);
- 		if (ret) {
- 			/* fail even hard links since we don't submit */
- 			head->flags |= REQ_F_FAIL_LINK;
--			goto err_req;
-+			return ret;
- 		}
- 		trace_io_uring_link(ctx, req, head);
- 		list_add_tail(&req->link_list, &head->link_list);
-@@ -5700,10 +5688,9 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			req->flags |= REQ_F_LINK;
- 			INIT_LIST_HEAD(&req->link_list);
- 
--			if (io_alloc_async_ctx(req)) {
--				ret = -EAGAIN;
--				goto err_req;
--			}
-+			if (io_alloc_async_ctx(req))
-+				return -EAGAIN;
-+
- 			ret = io_req_defer_prep(req, sqe);
- 			if (ret)
- 				req->flags |= REQ_F_FAIL_LINK;
-@@ -5713,7 +5700,7 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 		}
- 	}
- 
--	return true;
-+	return 0;
+ 	return ret;
  }
- 
- /*
-@@ -5878,8 +5865,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		req->needs_fixed_file = async;
- 		trace_io_uring_submit_sqe(ctx, req->opcode, req->user_data,
- 						true, async);
--		if (!io_submit_sqe(req, sqe, statep, &link))
--			break;
-+		err = io_submit_sqe(req, sqe, statep, &link);
-+		if (err)
-+			goto fail_req;
- 	}
- 
- 	if (unlikely(submitted != nr)) {
 -- 
-2.24.0
+2.20.1
 
