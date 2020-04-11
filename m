@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284C1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22362C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE9E20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF47C215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647663;
-	bh=Oz8l4a2+DuHtBPXpl9y0K8v+0yx9MzbKD4iUyuOn2i4=;
+	s=default; t=1586647671;
+	bh=MqyD9zdeR5UXFjZcJaSPxPiJeyorcEhYhdepL/MsS2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcXZyNU9NYF9qYmSTI1pUIC9stt5BY8kg+KkhVwH0hBmQ7Ju+sRNKfadk2Jsrf3mN
-	 GIuNSMaUrI3uIPE4OxuXSJlAwKpvg+7F+WT3e9PEnFfu0Vnc8Sz+BD1nJ980DoDO58
-	 Kr3iI6mY76vTi3ImAAA/zpqW10X+qVzKfDAlVQgY=
+	b=DVs6CKRMf51G2/YK/B3tLaBgctMLYMXP9K2JcueWcS5EPQ+raysEeC73PZq25DC6/
+	 ku6tXh+9OaApmMpDHcWlA3SHes4r0+t4FFxHMrEhuxyBj1r2JqMxpTx+E6q1zHR22g
+	 YA/KOO0Vtc9SezFqHtGU02AxmdTIXITlhVPpZY+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgDKX1k (ORCPT
+        id S1729947AbgDKXLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbgDKXLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:43 -0400
+        id S1729897AbgDKXL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6342173E;
-        Sat, 11 Apr 2020 23:11:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E45E20708;
+        Sat, 11 Apr 2020 23:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646704;
-        bh=Oz8l4a2+DuHtBPXpl9y0K8v+0yx9MzbKD4iUyuOn2i4=;
+        s=default; t=1586646685;
+        bh=MqyD9zdeR5UXFjZcJaSPxPiJeyorcEhYhdepL/MsS2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbnHuQrP9PA23Et/z1q6vFvBDR0x9/JLUc9xuDbCkZT+hucK5D1rBb3nSUmFiGDFq
-         Xt6X285SUYNKnz+lpLmvtVvFQTnIz/E3cb0c/9WOgDcV1Su0fLFJ135Gzwl+xsn0AT
-         8C+7mubO2dkvUssLZqprqSl1x1TSXKhDZ3fA616o=
+        b=PDeo6mSHy1iICcVqUC8UIzh4/+YUmn7/TQL8wL0Wcm3cazjdo967ZgW1Rq3o2ElHS
+         MYz3j4dg4V2BYdnYpw6otM/K14jYTsxEttEC0JBX6qlYeTEpwsGj825YbDkwMmB4tk
+         9GDDjRjJNaJAmwcgkDSMkc96bE3CFfgA1ujdDjCs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Michael Srba <Michael.Srba@seznam.cz>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 096/108] arm64: dts: qcom: msm8916-samsung-a2015: Reserve Samsung firmware memory
-Date:   Sat, 11 Apr 2020 19:09:31 -0400
-Message-Id: <20200411230943.24951-96-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 081/108] xfs: prohibit fs freezing when using empty transactions
+Date:   Sat, 11 Apr 2020 19:09:16 -0400
+Message-Id: <20200411230943.24951-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,64 +59,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 8f4a7a00c1019df72cda3002643fb5823ef39183 ]
+[ Upstream commit 27fb5a72f50aa770dd38b0478c07acacef97e3e7 ]
 
-At the moment, writing large amounts of data to the eMMC causes the device
-to freeze. The symptoms vary, sometimes the device reboots immediately,
-but usually it will just get stuck.
+I noticed that fsfreeze can take a very long time to freeze an XFS if
+there happens to be a GETFSMAP caller running in the background.  I also
+happened to notice the following in dmesg:
 
-It turns out that the issue is not actually related to the eMMC:
-Apparently, Samsung has made some modifications to the TrustZone firmware.
-These require additional memory which is reserved at 0x85500000-0x86000000.
-The downstream kernel describes this memory reservation as:
+------------[ cut here ]------------
+WARNING: CPU: 2 PID: 43492 at fs/xfs/xfs_super.c:853 xfs_quiesce_attr+0x83/0x90 [xfs]
+Modules linked in: xfs libcrc32c ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 ip_set_hash_ip ip_set_hash_net xt_tcpudp xt_set ip_set_hash_mac ip_set nfnetlink ip6table_filter ip6_tables bfq iptable_filter sch_fq_codel ip_tables x_tables nfsv4 af_packet [last unloaded: xfs]
+CPU: 2 PID: 43492 Comm: xfs_io Not tainted 5.6.0-rc4-djw #rc4
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:xfs_quiesce_attr+0x83/0x90 [xfs]
+Code: 7c 07 00 00 85 c0 75 22 48 89 df 5b e9 96 c1 00 00 48 c7 c6 b0 2d 38 a0 48 89 df e8 57 64 ff ff 8b 83 7c 07 00 00 85 c0 74 de <0f> 0b 48 89 df 5b e9 72 c1 00 00 66 90 0f 1f 44 00 00 41 55 41 54
+RSP: 0018:ffffc900030f3e28 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: ffff88802ac54000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81e4a6f0 RDI: 00000000ffffffff
+RBP: ffff88807859f070 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000010 R12: 0000000000000000
+R13: ffff88807859f388 R14: ffff88807859f4b8 R15: ffff88807859f5e8
+FS:  00007fad1c6c0fc0(0000) GS:ffff88807e000000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0c7d237000 CR3: 0000000077f01003 CR4: 00000000001606a0
+Call Trace:
+ xfs_fs_freeze+0x25/0x40 [xfs]
+ freeze_super+0xc8/0x180
+ do_vfs_ioctl+0x70b/0x750
+ ? __fget_files+0x135/0x210
+ ksys_ioctl+0x3a/0xb0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x50/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-/* Additionally Reserved 6MB for TIMA and Increased the TZ app size
- * by 2MB [total 8 MB ]
- */
+These two things appear to be related.  The assertion trips when another
+thread initiates a fsmap request (which uses an empty transaction) after
+the freezer waited for m_active_trans to hit zero but before the the
+freezer executes the WARN_ON just prior to calling xfs_log_quiesce.
 
-This suggests that it is used for additional TZ apps, although the extra
-memory is actually 11 MB instead of the 8 MB mentioned in the comment.
+The lengthy delays in freezing happen because the freezer calls
+xfs_wait_buftarg to clean out the buffer lru list.  Meanwhile, the
+GETFSMAP caller is continuing to grab and release buffers, which means
+that it can take a very long time for the buffer lru list to empty out.
 
-Writing to the protected memory causes the kernel to crash or freeze.
-In our case, writing to the eMMC causes the disk cache to fill
-the available RAM, until the kernel eventually crashes
-when attempting to use the reserved memory.
+We fix both of these races by calling sb_start_write to obtain freeze
+protection while using empty transactions for GETFSMAP and for metadata
+scrubbing.  The other two users occur during mount, during which time we
+cannot fs freeze.
 
-Add the additional memory as reserved-memory to fix this problem.
-
-Fixes: 1329c1ab0730 ("arm64: dts: qcom: Add device tree for Samsung Galaxy A3U/A5U")
-Reported-by: Michael Srba <Michael.Srba@seznam.cz>
-Tested-by: Michael Srba <Michael.Srba@seznam.cz> # a3u
-Tested-by: Stephan Gerhold <stephan@gerhold.net> # a5u
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20191231112511.83342-1-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/xfs/scrub/scrub.c | 9 +++++++++
+ fs/xfs/xfs_fsmap.c   | 9 +++++++++
+ fs/xfs/xfs_trans.c   | 5 +++++
+ 3 files changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index e675ff48fdd24..0cc5c5be0c21e 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -14,6 +14,14 @@
- 		stdout-path = "serial0";
- 	};
- 
-+	reserved-memory {
-+		/* Additional memory used by Samsung firmware modifications */
-+		tz-apps@85500000 {
-+			reg = <0x0 0x85500000 0x0 0xb00000>;
-+			no-map;
-+		};
-+	};
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 15c8c5f3f688d..720bef5779989 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -167,6 +167,7 @@ xchk_teardown(
+ 			xfs_irele(sc->ip);
+ 		sc->ip = NULL;
+ 	}
++	sb_end_write(sc->mp->m_super);
+ 	if (sc->flags & XCHK_REAPING_DISABLED)
+ 		xchk_start_reaping(sc);
+ 	if (sc->flags & XCHK_HAS_QUOTAOFFLOCK) {
+@@ -489,6 +490,14 @@ xfs_scrub_metadata(
+ 	sc.ops = &meta_scrub_ops[sm->sm_type];
+ 	sc.sick_mask = xchk_health_mask_for_scrub_type(sm->sm_type);
+ retry_op:
++	/*
++	 * If freeze runs concurrently with a scrub, the freeze can be delayed
++	 * indefinitely as we walk the filesystem and iterate over metadata
++	 * buffers.  Freeze quiesces the log (which waits for the buffer LRU to
++	 * be emptied) and that won't happen while checking is running.
++	 */
++	sb_start_write(mp->m_super);
 +
- 	soc {
- 		sdhci@7824000 {
- 			status = "okay";
+ 	/* Set up for the operation. */
+ 	error = sc.ops->setup(&sc, ip);
+ 	if (error)
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index d082143feb5ab..c13754e119be1 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -895,6 +895,14 @@ xfs_getfsmap(
+ 	info.format_arg = arg;
+ 	info.head = head;
+ 
++	/*
++	 * If fsmap runs concurrently with a scrub, the freeze can be delayed
++	 * indefinitely as we walk the rmapbt and iterate over metadata
++	 * buffers.  Freeze quiesces the log (which waits for the buffer LRU to
++	 * be emptied) and that won't happen while we're reading buffers.
++	 */
++	sb_start_write(mp->m_super);
++
+ 	/* For each device we support... */
+ 	for (i = 0; i < XFS_GETFSMAP_DEVS; i++) {
+ 		/* Is this device within the range the user asked for? */
+@@ -934,6 +942,7 @@ xfs_getfsmap(
+ 
+ 	if (tp)
+ 		xfs_trans_cancel(tp);
++	sb_end_write(mp->m_super);
+ 	head->fmh_oflags = FMH_OF_DEV_T;
+ 	return error;
+ }
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index f4795fdb7389c..b32a66452d441 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -306,6 +306,11 @@ xfs_trans_alloc(
+  *
+  * Note the zero-length reservation; this transaction MUST be cancelled
+  * without any dirty data.
++ *
++ * Callers should obtain freeze protection to avoid two conflicts with fs
++ * freezing: (1) having active transactions trip the m_active_trans ASSERTs;
++ * and (2) grabbing buffers at the same time that freeze is trying to drain
++ * the buffer LRU list.
+  */
+ int
+ xfs_trans_alloc_empty(
 -- 
 2.20.1
 
