@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8FCC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB725C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894342166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A129B21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607117;
-	bh=D9BT4LnQiZVTSEBlj7I5RanesxFX/AwNwPbKZ9CyOBQ=;
+	s=default; t=1586607120;
+	bh=N6vnlwzfy981sr4ZKV+FhqXf2JGvNBnllb4Y0XzO7jE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGpneRhupMT9YWbVRCVAT/mihiX4qD3ocu8SlmHkPG7uvyr69iPIcAqMsbVsKRONz
-	 dkUBxPD/OU7loLazoVkEbgiPdLw/JZHV3SwOMf75tflp0OmLv+w7PXkbPGKMYi27Pe
-	 x8Fa/rRtY22SvbHP7V7bfLwEbyd+VDd/wNJyaf6Q=
+	b=b4ScnIiug+NS532BrRXM3nhIosBTxz75p1fb3e7YpWAdGS4/VvXY11mzLaxPpdbxu
+	 8Bxx3nzOXNhOhghchn0F0OGoSQsifBGyLevMZX3HJiqkNHwR/mEyUTki3/ZAoGtHPG
+	 DLdSYk2jEbWlPTDqaJ56FWDe7MVUk1tSORzDIeQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgDKMLy (ORCPT
+        id S1727103AbgDKML6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727045AbgDKMLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:48 -0400
+        id S1727081AbgDKMLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AE220787;
-        Sat, 11 Apr 2020 12:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2CE20787;
+        Sat, 11 Apr 2020 12:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607107;
-        bh=D9BT4LnQiZVTSEBlj7I5RanesxFX/AwNwPbKZ9CyOBQ=;
+        s=default; t=1586607114;
+        bh=N6vnlwzfy981sr4ZKV+FhqXf2JGvNBnllb4Y0XzO7jE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1X1Aw+3Qa5Kxez0drEXdQ+dQ7rMJQl5QFJ/legVS29BTcXTVBJfRYTQRvaGD5HXN
-         lqaWZHyJDBVhXxnC8fIPKoTlVdafOgXNRfBIG6RrtVa2KVCBoOG7H3x+WN/+8tSV0R
-         nz+RDwsqwtX2mShCUcFVt7bo7hVviSLBH8c7LJ5I=
+        b=Th7b7lFbhYMGZjRVsWY70uxIHpzKQ8DDo3SyHZG/KV+jV4aCOMWA5vvgX4TOEfMMJ
+         VdJjqTRL/8dcEZm/JbTCV0nHe6M+QG0x9Jo333n6LIeHHnZ1bMDprHzm2MnkwFqmL1
+         /DGjMFMVVWV4zO2aEGQtwAO47QA0BLZtKHf03Ddo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.9 10/32] blk-mq: Allow blocking queue tag iter callbacks
-Date:   Sat, 11 Apr 2020 14:08:49 +0200
-Message-Id: <20200411115419.774992055@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH 4.9 13/32] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Sat, 11 Apr 2020 14:08:52 +0200
+Message-Id: <20200411115420.038161644@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -61,58 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-commit 530ca2c9bd6949c72c9b5cfc330cb3dbccaa3f5b upstream.
+commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
 
-A recent commit runs tag iterator callbacks under the rcu read lock,
-but existing callbacks do not satisfy the non-blocking requirement.
-The commit intended to prevent an iterator from accessing a queue that's
-being modified. This patch fixes the original issue by taking a queue
-reference instead of reading it, which allows callbacks to make blocking
-calls.
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-Fixes: f5bbbbe4d6357 ("blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter")
-Acked-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq-tag.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ kernel/padata.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -338,16 +338,11 @@ void blk_mq_queue_tag_busy_iter(struct r
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -614,8 +614,8 @@ int padata_set_cpumask(struct padata_ins
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
- 	/*
- 	 * __blk_mq_update_nr_hw_queues will update the nr_hw_queues and
--	 * queue_hw_ctx after freeze the queue. So we could use q_usage_counter
--	 * to avoid race with it. __blk_mq_update_nr_hw_queues will users
--	 * synchronize_rcu to ensure all of the users go out of the critical
--	 * section below and see zeroed q_usage_counter.
-+	 * queue_hw_ctx after freeze the queue, so we use q_usage_counter
-+	 * to avoid race with it.
- 	 */
--	rcu_read_lock();
--	if (percpu_ref_is_zero(&q->q_usage_counter)) {
--		rcu_read_unlock();
-+	if (!percpu_ref_tryget(&q->q_usage_counter))
- 		return;
--	}
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
  
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		struct blk_mq_tags *tags = hctx->tags;
-@@ -363,7 +358,7 @@ void blk_mq_queue_tag_busy_iter(struct r
- 			bt_for_each(hctx, &tags->breserved_tags, fn, priv, true);
- 		bt_for_each(hctx, &tags->bitmap_tags, fn, priv, false);
- 	}
--	rcu_read_unlock();
-+	blk_queue_exit(q);
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -633,8 +633,8 @@ int padata_set_cpumask(struct padata_ins
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ 
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
  }
- 
- static unsigned int bt_unused_tags(const struct sbitmap_queue *bt)
 
 
