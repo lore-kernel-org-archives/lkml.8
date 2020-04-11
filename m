@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7438C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3B6C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D8B20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6522051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648183;
-	bh=O/oSIj0PHg1hJp4kdXI7JgHv0gx8BXVJWRIK6IXpnNA=;
+	s=default; t=1586648189;
+	bh=F3GZCkfuTpePzhtk5oZ3eLfLVs1Pby/rMwXEm7QXV5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZnEbHthv0qIPRbVHqg4WtPZzY7z6BsowSEVqOJnsUdt+PyqAt3+fBFtueOlgGoAr0
-	 KdljJo2OesMyloH0hvbvuSILifSnDe0UN7LGmbuRKbGNtp5rPqTVKrCG4YuwlIFBR+
-	 tcdRDUy3iStU/NK00GSRdS1IARONzzGk1gmftRn8=
+	b=wwNj70TqJLpx6djv+dMHYh6/dXdRhJorxgRBHN/j+rx5nsU71AZh2m6FbL2DBN2Hq
+	 atbVQP6ePCSAjcRccdE4AbM5BGRmC7X9arfp7gTQPzphWNAVkObgWkx2fNohyf3k0f
+	 KAV8dCtLYhyghHe8rGP5lNtjoXNwcUAABsEeLsbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbgDKXgW (ORCPT
+        id S1728978AbgDKXIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:36:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbgDKXIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:44 -0400
+        id S1728222AbgDKXIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F090020708;
-        Sat, 11 Apr 2020 23:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC54E20CC7;
+        Sat, 11 Apr 2020 23:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646523;
-        bh=O/oSIj0PHg1hJp4kdXI7JgHv0gx8BXVJWRIK6IXpnNA=;
+        s=default; t=1586646505;
+        bh=F3GZCkfuTpePzhtk5oZ3eLfLVs1Pby/rMwXEm7QXV5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rVp24xOPxS4OjZSnFIcaTcj5yXkWiRzvu/F++KAcQbOcqIgMI8bosghSKSTBGh6ZS
-         lc8/cHE4oEWtEn2+moxmlH6piVNADZ3Opc7I5u0WKmkFmxQOyoqYLai3d+XRvYXVmp
-         lKdO2/cda3A/+GwocZwytemHQk0uHsaehTgMBXco=
+        b=My7ogXZzeB4z9OrSxHN/KmarlfT3kMYbS2a5CDilz7XKRtxekcANidyieJ1vTCdQk
+         QSP0blSDdHT2deY4ozT9d4sCUk8ZJ1OUsB3qRaPIqxnBuTZ42duP+Cs9DfEJH3zgcB
+         VVyXo5WMfB/lN481xzo2TAWp1gNhmAQv0qEfNZEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagar Biradar <Sagar.Biradar@microchip.com>,
-        Balsundar P <balsundar.p@microsemi.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 079/121] scsi: aacraid: Disabling TM path and only processing IOP reset
-Date:   Sat, 11 Apr 2020 19:06:24 -0400
-Message-Id: <20200411230706.23855-79-sashal@kernel.org>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 065/121] rsi: fix null pointer dereference during rsi_shutdown()
+Date:   Sat, 11 Apr 2020 19:06:10 -0400
+Message-Id: <20200411230706.23855-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,124 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagar Biradar <Sagar.Biradar@microchip.com>
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
 
-[ Upstream commit bef18d308a2215eff8c3411a23d7f34604ce56c3 ]
+[ Upstream commit 16bbc3eb83728c03138191a5d23d84d38175fa26 ]
 
-Fixes the occasional adapter panic when sg_reset is issued with -d, -t, -b
-and -H flags.  Removal of command type HBA_IU_TYPE_SCSI_TM_REQ in
-aac_hba_send since iu_type, request_id and fib_flags are not populated.
-Device and target reset handlers are made to send TMF commands only when
-reset_state is 0.
+Appearently the hw pointer can be NULL while the module is loaded and
+in that case rsi_shutdown() crashes due to the unconditional dereference.
 
-Link: https://lore.kernel.org/r/1581553771-25796-1-git-send-email-Sagar.Biradar@microchip.com
-Reviewed-by: Sagar Biradar <Sagar.Biradar@microchip.com>
-Signed-off-by: Sagar Biradar <Sagar.Biradar@microchip.com>
-Signed-off-by: Balsundar P <balsundar.p@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/aacraid/commsup.c |  2 +-
- drivers/scsi/aacraid/linit.c   | 34 +++++++++++++++++++++++++---------
- 2 files changed, 26 insertions(+), 10 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index 5a8a999606ea3..5118bee865b39 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -729,7 +729,7 @@ int aac_hba_send(u8 command, struct fib *fibptr, fib_callback callback,
- 		hbacmd->request_id =
- 			cpu_to_le32((((u32)(fibptr - dev->fibs)) << 2) + 1);
- 		fibptr->flags |= FIB_CONTEXT_FLAG_SCSI_CMD;
--	} else if (command != HBA_IU_TYPE_SCSI_TM_REQ)
-+	} else
- 		return -EINVAL;
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index 1bebba4e85273..5d6143a551877 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -1468,12 +1468,15 @@ static void rsi_shutdown(struct device *dev)
+ 	struct rsi_91x_sdiodev *sdev =
+ 		(struct rsi_91x_sdiodev *)adapter->rsi_dev;
+ 	struct ieee80211_hw *hw = adapter->hw;
+-	struct cfg80211_wowlan *wowlan = hw->wiphy->wowlan_config;
  
+ 	rsi_dbg(ERR_ZONE, "SDIO Bus shutdown =====>\n");
  
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index ee6bc2f9b80ad..9130e038c45fb 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -731,7 +731,11 @@ static int aac_eh_abort(struct scsi_cmnd* cmd)
- 		status = aac_hba_send(HBA_IU_TYPE_SCSI_TM_REQ, fib,
- 				  (fib_callback) aac_hba_callback,
- 				  (void *) cmd);
--
-+		if (status != -EINPROGRESS) {
-+			aac_fib_complete(fib);
-+			aac_fib_free(fib);
-+			return ret;
-+		}
- 		/* Wait up to 15 secs for completion */
- 		for (count = 0; count < 15; ++count) {
- 			if (cmd->SCp.sent_command) {
-@@ -910,11 +914,11 @@ static int aac_eh_dev_reset(struct scsi_cmnd *cmd)
- 
- 	info = &aac->hba_map[bus][cid];
- 
--	if (info->devtype != AAC_DEVTYPE_NATIVE_RAW &&
--	    info->reset_state > 0)
-+	if (!(info->devtype == AAC_DEVTYPE_NATIVE_RAW &&
-+	 !(info->reset_state > 0)))
- 		return FAILED;
- 
--	pr_err("%s: Host adapter reset request. SCSI hang ?\n",
-+	pr_err("%s: Host device reset request. SCSI hang ?\n",
- 	       AAC_DRIVERNAME);
- 
- 	fib = aac_fib_alloc(aac);
-@@ -929,7 +933,12 @@ static int aac_eh_dev_reset(struct scsi_cmnd *cmd)
- 	status = aac_hba_send(command, fib,
- 			      (fib_callback) aac_tmf_callback,
- 			      (void *) info);
--
-+	if (status != -EINPROGRESS) {
-+		info->reset_state = 0;
-+		aac_fib_complete(fib);
-+		aac_fib_free(fib);
-+		return ret;
-+	}
- 	/* Wait up to 15 seconds for completion */
- 	for (count = 0; count < 15; ++count) {
- 		if (info->reset_state == 0) {
-@@ -968,11 +977,11 @@ static int aac_eh_target_reset(struct scsi_cmnd *cmd)
- 
- 	info = &aac->hba_map[bus][cid];
- 
--	if (info->devtype != AAC_DEVTYPE_NATIVE_RAW &&
--	    info->reset_state > 0)
-+	if (!(info->devtype == AAC_DEVTYPE_NATIVE_RAW &&
-+	 !(info->reset_state > 0)))
- 		return FAILED;
- 
--	pr_err("%s: Host adapter reset request. SCSI hang ?\n",
-+	pr_err("%s: Host target reset request. SCSI hang ?\n",
- 	       AAC_DRIVERNAME);
- 
- 	fib = aac_fib_alloc(aac);
-@@ -989,6 +998,13 @@ static int aac_eh_target_reset(struct scsi_cmnd *cmd)
- 			      (fib_callback) aac_tmf_callback,
- 			      (void *) info);
- 
-+	if (status != -EINPROGRESS) {
-+		info->reset_state = 0;
-+		aac_fib_complete(fib);
-+		aac_fib_free(fib);
-+		return ret;
-+	}
+-	if (rsi_config_wowlan(adapter, wowlan))
+-		rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
++	if (hw) {
++		struct cfg80211_wowlan *wowlan = hw->wiphy->wowlan_config;
 +
- 	/* Wait up to 15 seconds for completion */
- 	for (count = 0; count < 15; ++count) {
- 		if (info->reset_state <= 0) {
-@@ -1041,7 +1057,7 @@ static int aac_eh_bus_reset(struct scsi_cmnd* cmd)
- 		}
- 	}
++		if (rsi_config_wowlan(adapter, wowlan))
++			rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
++	}
  
--	pr_err("%s: Host adapter reset request. SCSI hang ?\n", AAC_DRIVERNAME);
-+	pr_err("%s: Host bus reset request. SCSI hang ?\n", AAC_DRIVERNAME);
- 
- 	/*
- 	 * Check the health of the controller
+ 	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
+ 	    adapter->priv->bt_adapter) {
 -- 
 2.20.1
 
