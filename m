@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3725DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1526C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E0F20692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01D720673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607386;
-	bh=zCkvkTQCkcQDa2WlhjVa5LsJRvCTWWWgZ54hpuWZ54A=;
+	s=default; t=1586607391;
+	bh=dpfyoqYK+cIid3t/XNrCEQrJnEpFdEWoOdbgFnCpj9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pj5KAqtvKpm/zEBI6vbQn+aVqLnxXrQeKkBy8tLxI8+A106Bse9lnlefd/wVQeKU7
-	 eGrl5SB6FOALdEHjtWzajUnAc2jXET2vBCiAW3cEYUUcbK5WJb7WgGKItXKmlUnJDr
-	 25w+Q8YpekzDgpM8FNzyN+FmUquPH+YGBCC/fyPI=
+	b=ufkW8X8mV4NkK2XWsq5ngOvy6gW8J6+ZjkxcTMACT0HksqAAq4D7SR9x2dsrXlQT8
+	 9GTtPKBLrLvp1+iSebL4tSSmBWdGZHU7im6aYh1/Mc4njEkNR14y2+nZ5DxRxmf+8Y
+	 UtbSHbCmJC890i6K1KWJ9+oV1+aU+q0To1f9t7ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgDKMQY (ORCPT
+        id S1728255AbgDKMQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbgDKMQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:18 -0400
+        id S1728230AbgDKMQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B423220692;
-        Sat, 11 Apr 2020 12:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB62620644;
+        Sat, 11 Apr 2020 12:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607378;
-        bh=zCkvkTQCkcQDa2WlhjVa5LsJRvCTWWWgZ54hpuWZ54A=;
+        s=default; t=1586607385;
+        bh=dpfyoqYK+cIid3t/XNrCEQrJnEpFdEWoOdbgFnCpj9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzUaV2ygrOftZEDlek+B7/4bHB5bDJd51t6A8ZQEr8AXVFNJDIIT3cdyS1Yjd6gad
-         gyzq64W59NmYY0VPq3U0S30lZHw8B37ghxBDK5maSMQc1c1nUcxID11+k8g39bh6JS
-         XFdvWJtCBYwP9zkLbggLud8l3mxOeq7g8aVOMEWM=
+        b=ueH+lVx8n4v5MHMBRB8+uwjseSy7LSwMm0PwViGH6YBdUEztiGo9KztJJh5qOy7rw
+         9a9GBkPvaeGKOsU19PKDGZhr5jwLvzlQBob53sZy3FQiu8+8ntB7CyV9RK784fn0Zj
+         YC6yXBvo7GIwuHnQXaepRpabJzbz/yJ30fAmzu+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+732528bae351682f1f27@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 4.19 48/54] fbcon: fix null-ptr-deref in fbcon_switch
-Date:   Sat, 11 Apr 2020 14:09:30 +0200
-Message-Id: <20200411115513.529862176@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 51/54] arm64: Fix size of __early_cpu_boot_status
+Date:   Sat, 11 Apr 2020 14:09:33 +0200
+Message-Id: <20200411115513.777221979@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -62,58 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Arun KS <arunks@codeaurora.org>
 
-commit b139f8b00db4a8ea75a4174346eafa48041aa489 upstream.
+commit 61cf61d81e326163ce1557ceccfca76e11d0e57c upstream.
 
-Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
+__early_cpu_boot_status is of type long. Use quad
+assembler directive to allocate proper size.
 
-syzkaller report: https://lkml.org/lkml/2020/3/27/403
-general protection fault, probably for non-canonical address
-0xdffffc000000006c: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
-RIP: 0010:fbcon_switch+0x28f/0x1740
-drivers/video/fbdev/core/fbcon.c:2260
-
-Call Trace:
-redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
-vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
-fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
-visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
-do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
-do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
-do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
-fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
-do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
-register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
-dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
-usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
-
-accessing vc_cons[logo_shown].d->vc_top causes the bug.
-
-Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200329085647.25133-1-hqjagain@gmail.com
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Arun KS <arunks@codeaurora.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbcon.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/kernel/head.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1243,6 +1243,9 @@ finished:
- 	if (!con_is_bound(&fb_con))
- 		fbcon_exit();
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -667,7 +667,7 @@ ENTRY(__boot_cpu_mode)
+  * with MMU turned off.
+  */
+ ENTRY(__early_cpu_boot_status)
+-	.long 	0
++	.quad 	0
  
-+	if (vc->vc_num == logo_shown)
-+		logo_shown = FBCON_LOGO_CANSHOW;
-+
- 	return;
- }
+ 	.popsection
  
 
 
