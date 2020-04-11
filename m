@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB98C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4138C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759D7214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914A020692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607548;
-	bh=Or4Wyj8G7lBylczIfcUvXgxxcqlhFGadGh2+Le/CxVg=;
+	s=default; t=1586607553;
+	bh=IsHu1Q2jQ/y3A3ru+z2NHMuipfGeub4vJR0w79s8IMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fruelHHsZd+XoFA+MXsgkTtwnu4fypgoPtQ9aiQCyK4q9cptkhcFF/MFs25yBVF7Z
-	 59S8OsCheWTog2CjKV0245YOLuDAX+DroSE4NYfAkE/FeVZRn0VpS3L8yi83SsY9uc
-	 bg1Oc7DlApEuIEWD2UEsMwlw6lOIT5pqF/yFV85U=
+	b=si6jIW9dEA4itDPB74e8M0RQ0G9BrrZ0uNWNcHv32+A5LDUql0LeuQLARsH8Dl7lK
+	 Zd5hC9nSI6YfXWRicutbIEOmll9XrEtz12nA0E6KIhd7TUeHiJki0Lfy5T8JGxmOZh
+	 5rz9IJGEwn6YKN3oJywrUuivbiyAM0jDyqEb1WdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgDKMTG (ORCPT
+        id S1728266AbgDKMTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:19:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbgDKMTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:04 -0400
+        id S1728150AbgDKMTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3C0820673;
-        Sat, 11 Apr 2020 12:19:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E0FD20644;
+        Sat, 11 Apr 2020 12:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607544;
-        bh=Or4Wyj8G7lBylczIfcUvXgxxcqlhFGadGh2+Le/CxVg=;
+        s=default; t=1586607546;
+        bh=IsHu1Q2jQ/y3A3ru+z2NHMuipfGeub4vJR0w79s8IMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCcW7Rzrk2arWq1WK7HlNdgHUAx5OoPUroMHo1XrRx+QEHwG3yHTcwmlzQwT8Uv8K
-         R/yskl7r0mmQVVBxQJAbkRdLsz4BmjYBSpzCw2vEmb0lGp81cUpyGlQp6sopPJtOFp
-         TTmfdcbljgykpUc24qTi75q+RQR1bLvIfNrXRc2Y=
+        b=z/4DX0WUTypUJGtanPI7uHPbMrzRIen2lzG1JazHHJuwGbp7JtgTOBlin+r6V6alC
+         J++8fUeWKFsGhWE/uMy3FCiSnUf/bREtVnPsqP9yGbiK1AXU+Naq2ESgn/HlY6wShn
+         u1oFMDqgtQ0ZdSKvZW1RS8oyj9QrgMqPAS2ThVk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Hou Tao <houtao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.5 22/44] ubi: fastmap: Free unused fastmap anchor peb during detach
-Date:   Sat, 11 Apr 2020 14:09:42 +0200
-Message-Id: <20200411115458.869741885@linuxfoundation.org>
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 05/44] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+Date:   Sat, 11 Apr 2020 14:09:25 +0200
+Message-Id: <20200411115457.320502993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -62,65 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Chuanhong Guo <gch981213@gmail.com>
 
-commit c16f39d14a7e0ec59881fbdb22ae494907534384 upstream.
+[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
 
-When CONFIG_MTD_UBI_FASTMAP is enabled, fm_anchor will be assigned
-a free PEB during ubi_wl_init() or ubi_update_fastmap(). However
-if fastmap is not used or disabled on the MTD device, ubi_wl_entry
-related with the PEB will not be freed during detach.
+The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+and a phy-handle isn't always available.
+Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+connected to switch port 5 and setup mt7530 according to phy address
+of 2nd gmac node, causing null pointer dereferencing when phy-handle
+isn't defined in dts.
+This commit fix this setup code by checking return value of
+of_parse_phandle before using it.
 
-So Fix it by freeing the unused fastmap anchor during detach.
-
-Fixes: f9c34bb52997 ("ubi: Fix producing anchor PEBs")
-Reported-by: syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: René van Dorst <opensource@vdorst.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mtd/ubi/fastmap-wl.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/dsa/mt7530.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/mtd/ubi/fastmap-wl.c
-+++ b/drivers/mtd/ubi/fastmap-wl.c
-@@ -39,6 +39,13 @@ static struct ubi_wl_entry *find_anchor_
- 	return victim;
- }
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1355,6 +1355,9 @@ mt7530_setup(struct dsa_switch *ds)
+ 				continue;
  
-+static inline void return_unused_peb(struct ubi_device *ubi,
-+				     struct ubi_wl_entry *e)
-+{
-+	wl_tree_add(e, &ubi->free);
-+	ubi->free_count++;
-+}
+ 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
++			if (!phy_node)
++				continue;
 +
- /**
-  * return_unused_pool_pebs - returns unused PEB to the free tree.
-  * @ubi: UBI device description object
-@@ -52,8 +59,7 @@ static void return_unused_pool_pebs(stru
- 
- 	for (i = pool->used; i < pool->size; i++) {
- 		e = ubi->lookuptbl[pool->pebs[i]];
--		wl_tree_add(e, &ubi->free);
--		ubi->free_count++;
-+		return_unused_peb(ubi, e);
- 	}
- }
- 
-@@ -361,6 +367,11 @@ static void ubi_fastmap_close(struct ubi
- 	return_unused_pool_pebs(ubi, &ubi->fm_pool);
- 	return_unused_pool_pebs(ubi, &ubi->fm_wl_pool);
- 
-+	if (ubi->fm_anchor) {
-+		return_unused_peb(ubi, ubi->fm_anchor);
-+		ubi->fm_anchor = NULL;
-+	}
-+
- 	if (ubi->fm) {
- 		for (i = 0; i < ubi->fm->used_blocks; i++)
- 			kfree(ubi->fm->e[i]);
+ 			if (phy_node->parent == priv->dev->of_node->parent) {
+ 				ret = of_get_phy_mode(mac_np, &interface);
+ 				if (ret && ret != -ENODEV)
 
 
