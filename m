@@ -2,118 +2,133 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922ADC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480B0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6580C20708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="PHQmoASm"
+	by mail.kernel.org (Postfix) with ESMTP id 199792173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586646234;
+	bh=Ds5d6mbcNE5ooMS1fI36i38LDyi8Sdz16h6ABBRH0bo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KhaY52jCSvTsPcPesKOA2H9/lCfnNGeJ73UnEzi+uXD5xFwZ6yGPd48JwGp4gTZTg
+	 R8UI/194UAZcmcSn3vfUHIUQvoNvEBvKlpDEmclDzQ3qkJhH9v037IhBM4f7Ug0rK+
+	 Vfih69jsLbFbIiM8WwRPflHTeVZ0UEP98BTjFyrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgDKWyE (ORCPT
+        id S1726875AbgDKXDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 18:54:04 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34300 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgDKWyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 18:54:04 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s29so1529847edc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 15:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nDoR7MPIZ0+UUjjouT8/iWH3LcwGrhQgihvzyqzRNGQ=;
-        b=PHQmoASmZM1OUhZeppjw00AbiQw/QXc293IIO0lqpH8/odmnWcu8n+H26Y8XxezF5K
-         t5UPPSPm56yRfv5e2FeetYzLaWtV3K+m4JmmKZ4XSAHlO6P7lEePVwucbuYr3mv0nEJz
-         vubUUZ9mp/UNWDXEUMDp5KxT9Fv03QCbxQtyrnj8KWSjqrnb8lgUCI5IMPhxGa4PgtDo
-         cNpbCbe64oSJl7wyKADWtt4zBbbr1539jwOFObOmYUTYyh7Ott+TeySlb9HdK+U2v816
-         gBb0z5xXBGiAgCO+XPUN0PYCVGu8uog2ufHu7PZNDwXf2wUYZ3pjULQMxUrV7csE9s2g
-         hqcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nDoR7MPIZ0+UUjjouT8/iWH3LcwGrhQgihvzyqzRNGQ=;
-        b=Ef+4oWjteUFzbLl231dW6Sdg/wtlhFyKYPwXBG/NvyeZd0n4xDkLRZD5gXD+2wbrUo
-         JFWRrA4t2QvfdnnEuoUrfJvJD/OIZLuYEowhsEzn8QQUmSxtarBk83pkPX9dhDtrf92h
-         M/mPhq3VdD0cBl6X1LTYEO9vQL98lPwP3qLEs2AFwBbav1CmCRkn8CfskGhr+aPu1I/6
-         Opcs/YRLkFEQuoxrTDuO38mN94tv6Dir7NFb6+0AfPlFMnjwxX17mFWqNOy2pEt3ZRLU
-         VCAWGfwy526CqQ5igLn6+wffIRuSzOzLmAPOMXJymFLfaWULGnqd8CnS+IIgcKsPK86N
-         d27Q==
-X-Gm-Message-State: AGi0PuYJuqjU/fi0PwPLAM1REpWebh4f8r2aWzV3OsEezzTwEPVaf7ju
-        oE0Z4EI6T8kl0aIBhCwHr0Ntuu2JxOa8EzQ/edBmpQ==
-X-Google-Smtp-Source: APiQypIR0ywLETIZ5z0ZHHvh3nP6YVmecVELlCDEPz+SUBLD+je5yymmncBzfHsVz8clXk2t9cvgaEC9Z15ShKlm6Cc=
-X-Received: by 2002:a17:906:4301:: with SMTP id j1mr9880009ejm.46.1586645642328;
- Sat, 11 Apr 2020 15:54:02 -0700 (PDT)
+        Sat, 11 Apr 2020 19:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbgDKXDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:03:50 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C806214D8;
+        Sat, 11 Apr 2020 23:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646230;
+        bh=Ds5d6mbcNE5ooMS1fI36i38LDyi8Sdz16h6ABBRH0bo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W66cf66M41eB5eAKruhsvyNl52XkGs2gb+WFsMzDt8/4d9yBLqP6OLVGG6AEjzHzl
+         nXvTav1K35mYtC1uGprREQ6eUWJseBg6VwR5VTJJI9FeAGWF5L6k206TiWqp6NLxd/
+         TWRARA/xmimAFKe4Ib3mufQPhl9Ao3Prtr+ED8V0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 002/149] net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
+Date:   Sat, 11 Apr 2020 19:01:19 -0400
+Message-Id: <20200411230347.22371-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200410113913.14430-1-colin.king@canonical.com>
-In-Reply-To: <20200410113913.14430-1-colin.king@canonical.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sat, 11 Apr 2020 19:53:51 -0300
-Message-ID: <CAAEAJfCQaCCoShLPTA+EWUhMXdF6bKAxcOCj2SR5nPXMmk7LQg@mail.gmail.com>
-Subject: Re: [PATCH] media: mantis: remove redundant assignment to variable err
-To:     Colin King <colin.king@canonical.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-Thanks for your patch!
+[ Upstream commit 63b903dfebdea92aa92ad337d8451a6fbfeabf9d ]
 
-On Fri, 10 Apr 2020 at 08:39, Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The variable err is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
->
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/media/pci/mantis/hopper_vp3028.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/media/pci/mantis/hopper_vp3028.c b/drivers/media/pci/mantis/hopper_vp3028.c
-> index 37bd386f3ed8..ce1e8737b14b 100644
-> --- a/drivers/media/pci/mantis/hopper_vp3028.c
-> +++ b/drivers/media/pci/mantis/hopper_vp3028.c
-> @@ -33,7 +33,7 @@ static int vp3028_frontend_init(struct mantis_pci *mantis, struct dvb_frontend *
->  {
->         struct i2c_adapter *adapter     = &mantis->adapter;
->         struct mantis_hwconfig *config  = mantis->hwconfig;
-> -       int err = 0;
-> +       int err;
->
->         mantis_gpio_set_bits(mantis, config->reset, 0);
->         msleep(100);
+As far as I understood from the Kconfig help text, this build rule is
+used to rebuild the driver firmware, which runs on an old m68k-based
+chip. So, you need m68k tools for the firmware rebuild.
 
-There's a redundant err assignment right below here,
-which you can also get rid of:
+wanxl.c is a PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+So, you cannot enable CONFIG_WANXL_BUILD_FIRMWARE for ARCH=m68k. In other
+words, ifeq ($(ARCH),m68k) is false here.
 
--       err = mantis_frontend_power(mantis, POWER_ON);
-+       mantis_frontend_power(mantis, POWER_ON);
+I am keeping the dead code for now, but rebuilding the firmware requires
+'as68k' and 'ld68k', which I do not have in hand.
 
-I can't test this, but calling mantis_frontend_power twice
-is possibly redundant.
+Instead, the kernel.org m68k GCC [1] successfully built it.
 
-Also, what's the gain from this cleanup? The driver is super
-old, and it seems any modern compiler would be oblivious
-of the redundant assignment.
+Allowing a user to pass in CROSS_COMPILE_M68K= is handier.
 
-Thanks!
-Ezequiel
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wan/Kconfig  |  2 +-
+ drivers/net/wan/Makefile | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index 4530840e15efb..dbc0e3f7a3e2d 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -200,7 +200,7 @@ config WANXL_BUILD_FIRMWARE
+ 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
+ 	help
+ 	  Allows you to rebuild firmware run by the QUICC processor.
+-	  It requires as68k, ld68k and hexdump programs.
++	  It requires m68k toolchains and hexdump programs.
+ 
+ 	  You should never need this option, say N.
+ 
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 701f5d2fe3b61..995277c657a1e 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -40,17 +40,17 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+ 
+ ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
+ ifeq ($(ARCH),m68k)
+-  AS68K = $(AS)
+-  LD68K = $(LD)
++  M68KAS = $(AS)
++  M68KLD = $(LD)
+ else
+-  AS68K = as68k
+-  LD68K = ld68k
++  M68KAS = $(CROSS_COMPILE_M68K)as
++  M68KLD = $(CROSS_COMPILE_M68K)ld
+ endif
+ 
+ quiet_cmd_build_wanxlfw = BLD FW  $@
+       cmd_build_wanxlfw = \
+-	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
+-	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
++	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
++	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
+ 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
+ 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
+ 
+-- 
+2.20.1
+
