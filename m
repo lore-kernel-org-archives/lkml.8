@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7645C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0CBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6FC20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA23820674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647473;
-	bh=4F7wGe9hnHUeR9pi+tWOA0vvkJV04IP+zIRnhTwgI6M=;
+	s=default; t=1586647476;
+	bh=OYH0GOfzv52sgdkW1xPluMzRw105E+xGBysI2/DHsCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rv9Vaup+1mLg03/cB5e1xv+Z9tYVOq6ex7oUqrdxWjCjdISOXVQcFxOLyOefWYS9k
-	 CCzuvTLnCimqqGt0LmNW9zJurt7K6pWvB+RszOZOWNA3bKJU225A8LUIHe0DKBIzpF
-	 EOC2lExTJcoWJJft8uGTEqmgkpd9FENosHDz5WdA=
+	b=UEDotkjpL5CgTfOizlWUEPCL+Qb8VyEKFo1C99e4RUdwzZZFtIGqsONnv5j6LYw8z
+	 aEYhgSGVFXEnKdn91mG5kLRwcgPDJvh53eD5sxcKlqyVMOgOcmrA6hIt0unpbUGNMz
+	 deLlgzzsuaW9qapL2v1mEhigTYHx0d5K3F6BYcdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgDKXMd (ORCPT
+        id S1730923AbgDKXYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52260 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbgDKXMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:17 -0400
+        id S1729430AbgDKXMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 324B620757;
-        Sat, 11 Apr 2020 23:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0ADA20757;
+        Sat, 11 Apr 2020 23:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646737;
-        bh=4F7wGe9hnHUeR9pi+tWOA0vvkJV04IP+zIRnhTwgI6M=;
+        s=default; t=1586646753;
+        bh=OYH0GOfzv52sgdkW1xPluMzRw105E+xGBysI2/DHsCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MXNnYlaoeh6afMgW4KnDzj4fTPCIAp9Lzif2Nu9GM/JyU2IydsCCru15ysh+dgR+j
-         gOK5G6UqHnt10BEFc322M9lvTo3ME+s9V8ENskfYAitk+foHNAPesOp8DSgW1GUV96
-         CaqxlCSJIBrsYSfryXaip44dKISgBcYqEl+3/Qp4=
+        b=0m/55QXyCP3qvNqEPzYgLd+w56RyNo/m0czfItkoo+CImSTCXyKb5XSi1KN+GwBNO
+         7wNu3jJeju8iFNYF57/WLIC243F73Emu4nEPBVq7c0n+JRDfJn31aT3LpfxFPEaVm2
+         J/QnOA8k/DR2WW+4AXmV00oQEsnkGRGUEDubZOSM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/66] ath10k: use kzalloc to read for ath10k_sdio_hif_diag_read
-Date:   Sat, 11 Apr 2020 19:11:08 -0400
-Message-Id: <20200411231203.25933-11-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/66] net: intel: e1000e: fix possible sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
+Date:   Sat, 11 Apr 2020 19:11:22 -0400
+Message-Id: <20200411231203.25933-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,141 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Gong <wgong@codeaurora.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 402f2992b4d62760cce7c689ff216ea3bf4d6e8a ]
+[ Upstream commit 2e05f756c7099c8991142382648a37b0d4c85943 ]
 
-When use command to read values, it crashed.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-command:
-dd if=/sys/kernel/debug/ieee80211/phy0/ath10k/mem_value count=1 bs=4 skip=$((0x100233))
+drivers/net/ethernet/intel/e1000e/mac.c, 1366:
+	usleep_range in e1000e_get_hw_semaphore
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
+drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+	e1000e_update_phy_stats in e1000e_update_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+	e1000e_update_stats in e1000e_get_stats64
+drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+	spin_lock in e1000e_get_stats64
 
-It will call to ath10k_sdio_hif_diag_read with address = 0x4008cc and buf_len = 4.
+drivers/net/ethernet/intel/e1000e/mac.c, 1384:
+	usleep_range in e1000e_get_hw_semaphore
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
+drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+	e1000e_update_phy_stats in e1000e_update_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+	e1000e_update_stats in e1000e_get_stats64
+drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+	spin_lock in e1000e_get_stats64
 
-Then system crash:
-[ 1786.013258] Unable to handle kernel paging request at virtual address ffffffc00bd45000
-[ 1786.013273] Mem abort info:
-[ 1786.013281]   ESR = 0x96000045
-[ 1786.013291]   Exception class = DABT (current EL), IL = 32 bits
-[ 1786.013299]   SET = 0, FnV = 0
-[ 1786.013307]   EA = 0, S1PTW = 0
-[ 1786.013314] Data abort info:
-[ 1786.013322]   ISV = 0, ISS = 0x00000045
-[ 1786.013330]   CM = 0, WnR = 1
-[ 1786.013342] swapper pgtable: 4k pages, 39-bit VAs, pgdp = 000000008542a60e
-[ 1786.013350] [ffffffc00bd45000] pgd=0000000000000000, pud=0000000000000000
-[ 1786.013368] Internal error: Oops: 96000045 [#1] PREEMPT SMP
-[ 1786.013609] Process swapper/0 (pid: 0, stack limit = 0x0000000084b153c6)
-[ 1786.013623] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.19.86 #137
-[ 1786.013631] Hardware name: MediaTek krane sku176 board (DT)
-[ 1786.013643] pstate: 80000085 (Nzcv daIf -PAN -UAO)
-[ 1786.013662] pc : __memcpy+0x94/0x180
-[ 1786.013678] lr : swiotlb_tbl_unmap_single+0x84/0x150
-[ 1786.013686] sp : ffffff8008003c60
-[ 1786.013694] x29: ffffff8008003c90 x28: ffffffae96411f80
-[ 1786.013708] x27: ffffffae960d2018 x26: ffffff8019a4b9a8
-[ 1786.013721] x25: 0000000000000000 x24: 0000000000000001
-[ 1786.013734] x23: ffffffae96567000 x22: 00000000000051d4
-[ 1786.013747] x21: 0000000000000000 x20: 00000000fe6e9000
-[ 1786.013760] x19: 0000000000000004 x18: 0000000000000020
-[ 1786.013773] x17: 0000000000000001 x16: 0000000000000000
-[ 1786.013787] x15: 00000000ffffffff x14: 00000000000044c0
-[ 1786.013800] x13: 0000000000365ba4 x12: 0000000000000000
-[ 1786.013813] x11: 0000000000000001 x10: 00000037be6e9000
-[ 1786.013826] x9 : ffffffc940000000 x8 : 000000000bd45000
-[ 1786.013839] x7 : 0000000000000000 x6 : ffffffc00bd45000
-[ 1786.013852] x5 : 0000000000000000 x4 : 0000000000000000
-[ 1786.013865] x3 : 0000000000000c00 x2 : 0000000000000004
-[ 1786.013878] x1 : fffffff7be6e9004 x0 : ffffffc00bd45000
-[ 1786.013891] Call trace:
-[ 1786.013903]  __memcpy+0x94/0x180
-[ 1786.013914]  unmap_single+0x6c/0x84
-[ 1786.013925]  swiotlb_unmap_sg_attrs+0x54/0x80
-[ 1786.013938]  __swiotlb_unmap_sg_attrs+0x8c/0xa4
-[ 1786.013952]  msdc_unprepare_data+0x6c/0x84
-[ 1786.013963]  msdc_request_done+0x58/0x84
-[ 1786.013974]  msdc_data_xfer_done+0x1a0/0x1c8
-[ 1786.013985]  msdc_irq+0x12c/0x17c
-[ 1786.013996]  __handle_irq_event_percpu+0xe4/0x250
-[ 1786.014006]  handle_irq_event_percpu+0x28/0x68
-[ 1786.014015]  handle_irq_event+0x48/0x78
-[ 1786.014026]  handle_fasteoi_irq+0xd0/0x1a0
-[ 1786.014039]  __handle_domain_irq+0x84/0xc4
-[ 1786.014050]  gic_handle_irq+0x124/0x1a4
-[ 1786.014059]  el1_irq+0xb0/0x128
-[ 1786.014072]  cpuidle_enter_state+0x298/0x328
-[ 1786.014082]  cpuidle_enter+0x30/0x40
-[ 1786.014094]  do_idle+0x190/0x268
-[ 1786.014104]  cpu_startup_entry+0x24/0x28
-[ 1786.014116]  rest_init+0xd4/0xe0
-[ 1786.014126]  start_kernel+0x30c/0x38c
-[ 1786.014139] Code: f8408423 f80084c3 36100062 b8404423 (b80044c3)
-[ 1786.014150] ---[ end trace 3b02ddb698ea69ee ]---
-[ 1786.015415] Kernel panic - not syncing: Fatal exception in interrupt
-[ 1786.015433] SMP: stopping secondary CPUs
-[ 1786.015447] Kernel Offset: 0x2e8d200000 from 0xffffff8008000000
-[ 1786.015458] CPU features: 0x0,2188200c
-[ 1786.015466] Memory Limit: none
+(FUNC_PTR) means a function pointer is called.
 
-For sdio chip, it need the memory which is kmalloc, if it is
-vmalloc from ath10k_mem_value_read, then it have a memory error.
-kzalloc of ath10k_sdio_hif_diag_read32 is the correct type, so
-add kzalloc in ath10k_sdio_hif_diag_read to replace the buffer
-which is vmalloc from ath10k_mem_value_read.
+To fix these bugs, usleep_range() is replaced with udelay().
 
-This patch only effect sdio chip.
+These bugs are found by a static analysis tool STCheck written by myself.
 
-Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00029.
-
-Signed-off-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index 0ecaba824fb28..0cdaecb0e28a9 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -1567,23 +1567,33 @@ static int ath10k_sdio_hif_diag_read(struct ath10k *ar, u32 address, void *buf,
- 				     size_t buf_len)
- {
- 	int ret;
-+	void *mem;
-+
-+	mem = kzalloc(buf_len, GFP_KERNEL);
-+	if (!mem)
-+		return -ENOMEM;
+diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
+index 4abd55d646c55..356fd19ed8b68 100644
+--- a/drivers/net/ethernet/intel/e1000e/mac.c
++++ b/drivers/net/ethernet/intel/e1000e/mac.c
+@@ -1363,7 +1363,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
+ 		if (!(swsm & E1000_SWSM_SMBI))
+ 			break;
  
- 	/* set window register to start read cycle */
- 	ret = ath10k_sdio_write32(ar, MBOX_WINDOW_READ_ADDR_ADDRESS, address);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to set mbox window read address: %d", ret);
--		return ret;
-+		goto out;
+-		usleep_range(50, 100);
++		udelay(100);
+ 		i++;
  	}
  
- 	/* read the data */
--	ret = ath10k_sdio_read(ar, MBOX_WINDOW_DATA_ADDRESS, buf, buf_len);
-+	ret = ath10k_sdio_read(ar, MBOX_WINDOW_DATA_ADDRESS, mem, buf_len);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to read from mbox window data address: %d\n",
- 			    ret);
--		return ret;
-+		goto out;
+@@ -1381,7 +1381,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
+ 		if (er32(SWSM) & E1000_SWSM_SWESMBI)
+ 			break;
+ 
+-		usleep_range(50, 100);
++		udelay(100);
  	}
  
--	return 0;
-+	memcpy(buf, mem, buf_len);
-+
-+out:
-+	kfree(mem);
-+
-+	return ret;
- }
- 
- static int ath10k_sdio_hif_diag_read32(struct ath10k *ar, u32 address,
+ 	if (i == timeout) {
 -- 
 2.20.1
 
