@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F659C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4929520787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CBB20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607528;
-	bh=xuFnOJOoVHorTFsfewHSh2fdOKGQFyi/uvrV9BMGnyM=;
+	s=default; t=1586607531;
+	bh=B3GBhkh1zFQdO+Yd14yu8K4EowbDYm982dglZ62IBU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N96Ds/yR2nUjaAvahaaf6R8PKN7nOe5rpU2NIsNUR2JcPR0MKeljVxSPHaZg1jR7D
-	 eR0X1BfRtl1oyvMSn575c0txqjCqEQFEgeHa5W6yzv8bqpdtLWJXCMuVnnF2uz/X7v
-	 +tODXI4ux/iQUiU+imC7+pJeDg9ZDf3H7WpF9xLA=
+	b=Y8LAgDzaBEP8utyPGDc9dGP11GwjWCuH2Smo5PVhl3Twj4HoWrx6t2pUoJZocvl24
+	 TXAign5KsgDiMsv72m8I7DFLMf3RbXcea+NleWUQ6dxBTKubOnBzmaGQUwcZCQz9R/
+	 fud5XMDGfDF2U7IvfHnWMcpHFRcL/UxFBQCQDjW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgDKMSq (ORCPT
+        id S1728674AbgDKMSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgDKMSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:43 -0400
+        id S1728637AbgDKMSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C3520692;
-        Sat, 11 Apr 2020 12:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B278620692;
+        Sat, 11 Apr 2020 12:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607522;
-        bh=xuFnOJOoVHorTFsfewHSh2fdOKGQFyi/uvrV9BMGnyM=;
+        s=default; t=1586607525;
+        bh=B3GBhkh1zFQdO+Yd14yu8K4EowbDYm982dglZ62IBU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xs2+S8m4RDRwFUq/nPgXBn0bcVMm66bnxOYZB6f/hiEK0ocSGjHlCuKxrOBBuiA7p
-         fOk/u5vq8ot93q/bf95yRJ/27OBzvrwHUOFb6/bZEXI9IRyhlEJE+vh2t27xOaVo3e
-         W86V+to59bN1zKIk06Mze8+5b8SQhXzBAi/aSj8c=
+        b=C0xcQIkxfFst6fbC/WNRNAbVA5Cvhh4bsbVYJtfHefoB0JVtaRs3xOCQYNMJC+Qjc
+         3TEWDmp/v8qbgGNWwqLy5/p5tS9qipS3uvKZv4FJKXV1cjOOkv2xUmiRpJpVRFzg8C
+         EuX97sciz/j2DpdcHtY8ImygJCI3C8U/LKVS6g9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 5.5 13/44] r8169: change back SG and TSO to be disabled by default
-Date:   Sat, 11 Apr 2020 14:09:33 +0200
-Message-Id: <20200411115458.038704448@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 14/44] cxgb4: free MQPRIO resources in shutdown path
+Date:   Sat, 11 Apr 2020 14:09:34 +0200
+Message-Id: <20200411115458.100740804@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -58,78 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 95099c569a9fdbe186a27447dfa8a5a0562d4b7f ]
+[ Upstream commit cef8dac96bc108633f5090bb3a9988d734dc1ee0 ]
 
-There has been a number of reports that using SG/TSO on different chip
-versions results in tx timeouts. However for a lot of people SG/TSO
-works fine. Therefore disable both features by default, but allow users
-to enable them. Use at own risk!
+Perform missing MQPRIO resource cleanup in PCI shutdown path. Also,
+fix MQPRIO MSIX bitmap leak in resource cleanup.
 
-Fixes: 93681cd7d94f ("r8169: enable HW csum and TSO")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Fixes: b1396c2bd675 ("cxgb4: parse and configure TC-MQPRIO offload")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169_main.c |   34 ++++++++++++++----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c      |    4 +++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c |   23 +++++++++++++++++++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h |    1 
+ 3 files changed, 28 insertions(+)
 
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -6934,12 +6934,10 @@ static int rtl_init_one(struct pci_dev *
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -6651,6 +6651,10 @@ static void shutdown_one(struct pci_dev
+ 			if (adapter->port[i]->reg_state == NETREG_REGISTERED)
+ 				cxgb_close(adapter->port[i]);
  
- 	netif_napi_add(dev, &tp->napi, rtl8169_poll, NAPI_POLL_WEIGHT);
- 
--	dev->features |= NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
--		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
--		NETIF_F_HW_VLAN_CTAG_RX;
--	dev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
--		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
--		NETIF_F_HW_VLAN_CTAG_RX;
-+	dev->features |= NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
-+			 NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
-+	dev->hw_features = NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
-+			   NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
- 	dev->vlan_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
- 		NETIF_F_HIGHDMA;
- 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
-@@ -6957,25 +6955,25 @@ static int rtl_init_one(struct pci_dev *
- 		dev->hw_features &= ~NETIF_F_HW_VLAN_CTAG_RX;
- 
- 	if (rtl_chip_supports_csum_v2(tp)) {
--		dev->hw_features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
--		dev->features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
-+		dev->hw_features |= NETIF_F_IPV6_CSUM;
-+		dev->features |= NETIF_F_IPV6_CSUM;
-+	}
++		rtnl_lock();
++		cxgb4_mqprio_stop_offload(adapter);
++		rtnl_unlock();
 +
-+	/* There has been a number of reports that using SG/TSO results in
-+	 * tx timeouts. However for a lot of people SG/TSO works fine.
-+	 * Therefore disable both features by default, but allow users to
-+	 * enable them. Use at own risk!
-+	 */
-+	if (rtl_chip_supports_csum_v2(tp)) {
-+		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO | NETIF_F_TSO6;
- 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V2;
- 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V2;
- 	} else {
-+		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO;
- 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V1;
- 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V1;
- 	}
+ 		if (is_uld(adapter)) {
+ 			detach_ulds(adapter);
+ 			t4_uld_clean_up(adapter);
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
+@@ -301,6 +301,7 @@ static void cxgb4_mqprio_free_hw_resourc
+ 			cxgb4_clear_msix_aff(eorxq->msix->vec,
+ 					     eorxq->msix->aff_mask);
+ 			free_irq(eorxq->msix->vec, &eorxq->rspq);
++			cxgb4_free_msix_idx_in_bmap(adap, eorxq->msix->idx);
+ 		}
  
--	/* RTL8168e-vl and one RTL8168c variant are known to have a
--	 * HW issue with TSO.
--	 */
--	if (tp->mac_version == RTL_GIGA_MAC_VER_34 ||
--	    tp->mac_version == RTL_GIGA_MAC_VER_22) {
--		dev->vlan_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
--		dev->hw_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
--		dev->features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
--	}
--
- 	dev->hw_features |= NETIF_F_RXALL;
- 	dev->hw_features |= NETIF_F_RXFCS;
+ 		free_rspq_fl(adap, &eorxq->rspq, &eorxq->fl);
+@@ -611,6 +612,28 @@ out:
+ 	return ret;
+ }
  
++void cxgb4_mqprio_stop_offload(struct adapter *adap)
++{
++	struct cxgb4_tc_port_mqprio *tc_port_mqprio;
++	struct net_device *dev;
++	u8 i;
++
++	if (!adap->tc_mqprio || !adap->tc_mqprio->port_mqprio)
++		return;
++
++	for_each_port(adap, i) {
++		dev = adap->port[i];
++		if (!dev)
++			continue;
++
++		tc_port_mqprio = &adap->tc_mqprio->port_mqprio[i];
++		if (!tc_port_mqprio->mqprio.qopt.num_tc)
++			continue;
++
++		cxgb4_mqprio_disable_offload(dev);
++	}
++}
++
+ int cxgb4_init_tc_mqprio(struct adapter *adap)
+ {
+ 	struct cxgb4_tc_port_mqprio *tc_port_mqprio, *port_mqprio;
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
+@@ -38,6 +38,7 @@ struct cxgb4_tc_mqprio {
+ 
+ int cxgb4_setup_tc_mqprio(struct net_device *dev,
+ 			  struct tc_mqprio_qopt_offload *mqprio);
++void cxgb4_mqprio_stop_offload(struct adapter *adap);
+ int cxgb4_init_tc_mqprio(struct adapter *adap);
+ void cxgb4_cleanup_tc_mqprio(struct adapter *adap);
+ #endif /* __CXGB4_TC_MQPRIO_H__ */
 
 
