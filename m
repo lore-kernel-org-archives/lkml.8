@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACF3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CD9C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95DF20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E340B20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647115;
-	bh=hFHx6RqkUyo6iXHb3PvAoIlELuZY+iXvlUN9yOBwKZU=;
+	s=default; t=1586647126;
+	bh=kz4aik7AaZKvs4fI9Ltirklw5+Y51jzFfOY+3UvPsGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FXZGneV5weVTdbpav3MAjh7xEjv37+/9C13feRpuovLq4pa7GlfT2hHcz+3S4AC2F
-	 16nWL+2z9qPYGRHeqEALhkheU+jnuc1Ii3/6m1isoEu0coUyFI3pG6AsHEgLqIFpp3
-	 2Gp2DBZKriGSa2nnBXqQO8sc2ALtBREGV3hdDy8I=
+	b=a0crfjmRlrc1/3jac64fXLisU5iprmy+eb9vX7ncj76CDHZaoKESrJszNuiFnYWZM
+	 kiIqLSYr2J8Q2y9RiHkK1h+3iPvy9mhBFSJcosHTOgssLkkXydBCHZqr4t/L7JcqnY
+	 IpKTx7PPcNhZaRINKoYAs2rHKQuZmVWjOp2jQpyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgDKXSe (ORCPT
+        id S1730803AbgDKXSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbgDKXOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:08 -0400
+        id S1730657AbgDKXOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A17621744;
-        Sat, 11 Apr 2020 23:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9991821973;
+        Sat, 11 Apr 2020 23:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646848;
-        bh=hFHx6RqkUyo6iXHb3PvAoIlELuZY+iXvlUN9yOBwKZU=;
+        s=default; t=1586646844;
+        bh=kz4aik7AaZKvs4fI9Ltirklw5+Y51jzFfOY+3UvPsGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SpJ5EB6SyS68xvPahWfcs3BKDNC4v5pp9RsH+2ihakzMsq0RjdnrO/Fky8yUQDLBH
-         vnfdbRm25BW9+eLSWvNi1rVeHD/keJm5l2hcDPO2GEEfLhwtxxGPoXTKDBNbLstBHl
-         iuA1TODlpbgLmYADse4OzkcjKnMajpz02KUhuWck=
+        b=No0Cvf9WCy0EAw/+8fNtYJDIISZ/hnlLuV3IEGzbiLCCPCjE7eCdfdpfGhh7/SCCv
+         yOlEHX2x8LuNd4BJuguh7m0s65QNQHxwHBoGFt19MBzCiVcWbruflg4KX8JCXvkSJI
+         fzIWCoiC1sBg/uboh0Ok15N83wZK1A+7DTQXYFeg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Can Guo <cang@codeaurora.org>, Hongwu Su <hongwus@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 34/37] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
-Date:   Sat, 11 Apr 2020 19:13:23 -0400
-Message-Id: <20200411231327.26550-34-sashal@kernel.org>
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 31/37] ASoC: Intel: Skylake: Enable codec wakeup during chip init
+Date:   Sat, 11 Apr 2020 19:13:20 -0400
+Message-Id: <20200411231327.26550-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -64,45 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
 
-[ Upstream commit c63d6099a7959ecc919b2549dc6b71f53521f819 ]
+[ Upstream commit e603f11d5df8997d104ab405ff27640b90baffaa ]
 
-The async version of ufshcd_hold(async == true), which is only called in
-queuecommand path as for now, is expected to work in atomic context, thus
-it should not sleep or schedule out. When it runs into the condition that
-clocks are ON but link is still in hibern8 state, it should bail out
-without flushing the clock ungate work.
+Follow the recommendation set by hda_intel.c and enable HDMI/DP codec
+wakeup during bus initialization procedure. Disable wakeup once init
+completes.
 
-Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
-Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200305145314.32579-4-cezary.rojewski@intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/intel/skylake/skl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index c350453246952..6dbdddffa0b31 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1448,6 +1448,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
- 		 */
- 		if (ufshcd_can_hibern8_during_gating(hba) &&
- 		    ufshcd_is_link_hibern8(hba)) {
-+			if (async) {
-+				rc = -EAGAIN;
-+				hba->clk_gating.active_reqs--;
-+				break;
-+			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
- 			flush_work(&hba->clk_gating.ungate_work);
- 			spin_lock_irqsave(hba->host->host_lock, flags);
+diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
+index a0bef63b8fb11..7fb4df78ecb35 100644
+--- a/sound/soc/intel/skylake/skl.c
++++ b/sound/soc/intel/skylake/skl.c
+@@ -103,9 +103,11 @@ static int skl_init_chip(struct hdac_bus *bus, bool full_reset)
+ {
+ 	int ret;
+ 
++	snd_hdac_set_codec_wakeup(bus, true);
+ 	skl_enable_miscbdcge(bus->dev, false);
+ 	ret = snd_hdac_bus_init_chip(bus, full_reset);
+ 	skl_enable_miscbdcge(bus->dev, true);
++	snd_hdac_set_codec_wakeup(bus, false);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
