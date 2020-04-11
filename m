@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7A2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBA0C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9E020787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AE720787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607375;
-	bh=67LXw2T1Q5Xxds2H0TR+DgKNBIZV5hKGpkb0wzIGYdc=;
+	s=default; t=1586607378;
+	bh=OXrUAv0/FY58TjlFjtpfH64vsFzsN8sjKqjIdSfBOnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yU6AEUQ/TwthzAvw2X7rCRRZ+hdfJU7s8hP3VHrLEqItEWVBwGyex42bK3ewR3k5X
-	 nHiRaEqW4z7VCUyRc9rqS+f+lLt/Bnz4NPH27/Aoz8UxtEtUlpRZBeEgDM9FWe5W8M
-	 Cf0Wlx64eKojH5+Np4kpP7rielkwCxFfjVNvwZN8=
+	b=FmxjUKptX1TmOYUh7NqecepaeCUbM8Wgfn7Idyt/tudbYPuL+6RVgpfno1y04ufBB
+	 LyYUys8wAgzPNWFED1zrWZjhJ8aAVcCzeNkAxYC2XdmrlxH8KGNGbljMXAHadY/Jhg
+	 9eoG/FZswMyFQsMWDXweglYinuUirVNoqHa+JG5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgDKMQN (ORCPT
+        id S1727461AbgDKMQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50334 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbgDKMQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:09 -0400
+        id S1728240AbgDKMQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2D221744;
-        Sat, 11 Apr 2020 12:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77FA420692;
+        Sat, 11 Apr 2020 12:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607368;
-        bh=67LXw2T1Q5Xxds2H0TR+DgKNBIZV5hKGpkb0wzIGYdc=;
+        s=default; t=1586607370;
+        bh=OXrUAv0/FY58TjlFjtpfH64vsFzsN8sjKqjIdSfBOnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBSvZBrCIXzDMorzfeumYRBHmlFZESkLAj/kf5r25ouRrwgm+AWALTEmzXBP5BFt/
-         1spgwxP6vNHGQUySuWGf2DIlWaBep+l37kzDDoKodXRPrhNljt36YeRIaldIKUeN0L
-         4u4XfDiSgHftiz8lOx5voUKYkG6XYfQn/OqOlUUU=
+        b=jVsacNOsdtGUJDxl8QPQI4yUAGYa4tbjxSGkPJ9antULGA93XhHnag4aBv4XbJlJT
+         6U9maXOBqiI1QjA0DgBESzt9BCoVtXpj6FBCOdcoPmOgIOf2CaMhOK+zsb9zVa1Ajo
+         zjqsSRiucNdpp0fmad0xOcS/rrEYFCNJ1yD4Gtnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 45/54] RDMA/cma: Teach lockdep about the order of rtnl and lock
-Date:   Sat, 11 Apr 2020 14:09:27 +0200
-Message-Id: <20200411115513.221115209@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 4.19 19/54] extcon: axp288: Add wakeup support
+Date:   Sat, 11 Apr 2020 14:09:01 +0200
+Message-Id: <20200411115510.401693544@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -58,48 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 32ac9e4399b12d3e54d312a0e0e30ed5cd19bd4e upstream.
+commit 9c94553099efb2ba873cbdddfd416a8a09d0e5f1 upstream.
 
-This lock ordering only happens when bonding is enabled and a certain
-bonding related event fires. However, since it can happen this is a global
-restriction on lock ordering.
+On devices with an AXP288, we need to wakeup from suspend when a charger
+is plugged in, so that we can do charger-type detection and so that the
+axp288-charger driver, which listens for our extcon events, can configure
+the input-current-limit accordingly.
 
-Teach lockdep about the order directly and unconditionally so bugs here
-are found quickly.
-
-See https://syzkaller.appspot.com/bug?extid=55de90ab5f44172b0c90
-
-Link: https://lore.kernel.org/r/20200227203651.GA27185@ziepe.ca
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/extcon/extcon-axp288.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4635,6 +4635,19 @@ static int __init cma_init(void)
- {
- 	int ret;
+--- a/drivers/extcon/extcon-axp288.c
++++ b/drivers/extcon/extcon-axp288.c
+@@ -428,9 +428,40 @@ static int axp288_extcon_probe(struct pl
+ 	/* Start charger cable type detection */
+ 	axp288_extcon_enable(info);
  
-+	/*
-+	 * There is a rare lock ordering dependency in cma_netdev_callback()
-+	 * that only happens when bonding is enabled. Teach lockdep that rtnl
-+	 * must never be nested under lock so it can find these without having
-+	 * to test with bonding.
-+	 */
-+	if (IS_ENABLED(CONFIG_LOCKDEP)) {
-+		rtnl_lock();
-+		mutex_lock(&lock);
-+		mutex_unlock(&lock);
-+		rtnl_unlock();
-+	}
++	device_init_wakeup(dev, true);
++	platform_set_drvdata(pdev, info);
 +
- 	cma_wq = alloc_ordered_workqueue("rdma_cm", WQ_MEM_RECLAIM);
- 	if (!cma_wq)
- 		return -ENOMEM;
++	return 0;
++}
++
++static int __maybe_unused axp288_extcon_suspend(struct device *dev)
++{
++	struct axp288_extcon_info *info = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(info->irq[VBUS_RISING_IRQ]);
++
+ 	return 0;
+ }
+ 
++static int __maybe_unused axp288_extcon_resume(struct device *dev)
++{
++	struct axp288_extcon_info *info = dev_get_drvdata(dev);
++
++	/*
++	 * Wakeup when a charger is connected to do charger-type
++	 * connection and generate an extcon event which makes the
++	 * axp288 charger driver set the input current limit.
++	 */
++	if (device_may_wakeup(dev))
++		disable_irq_wake(info->irq[VBUS_RISING_IRQ]);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(axp288_extcon_pm_ops, axp288_extcon_suspend,
++			 axp288_extcon_resume);
++
+ static const struct platform_device_id axp288_extcon_table[] = {
+ 	{ .name = "axp288_extcon" },
+ 	{},
+@@ -442,6 +473,7 @@ static struct platform_driver axp288_ext
+ 	.id_table = axp288_extcon_table,
+ 	.driver = {
+ 		.name = "axp288_extcon",
++		.pm = &axp288_extcon_pm_ops,
+ 	},
+ };
+ 
 
 
