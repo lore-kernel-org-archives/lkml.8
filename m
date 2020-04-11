@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82561C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B170AC3815B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA06206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89207206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648567;
-	bh=YwOEWJys0ZVCDYmhC/244uFd8fv9w4ppVjzDJ/nl4ZA=;
+	s=default; t=1586648572;
+	bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HH5c68GzU0VC/BzGw1pp3JrTmlEXlX5DdQTsGJc5d+3uWZsqkNOp3XYI0cKBDvp7B
-	 BuzB0KNdFSOqlh4Gy89QsYqbbPaZuFUoq5DWqbi67dOSFTaX2HfQd2Qv5kHlryLA3o
-	 v0euU8RRzuAFig9Wyd5oLI8U+pSwMzW8QPNrtF6k=
+	b=1Viike5Kq8ay4KhtVXjnofLpQpGyNa0anVqVb0oXAb7amv0PmBOAY80EypmBkdSsi
+	 Tu8shpltj6kcyZhP9ruymMT97kJoFOr/MIGuAF8t0SuztF09bHr9vUdIa0UrOimp+i
+	 5fbph+Rrdc2FkZDrs/uL2pL5pCVHrjFjrCw//7cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731031AbgDKXmm (ORCPT
+        id S1728440AbgDKXGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:06:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbgDKXGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:36 -0400
+        id S1727273AbgDKXGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D0821D79;
-        Sat, 11 Apr 2020 23:06:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBED21744;
+        Sat, 11 Apr 2020 23:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646396;
-        bh=YwOEWJys0ZVCDYmhC/244uFd8fv9w4ppVjzDJ/nl4ZA=;
+        s=default; t=1586646385;
+        bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NO15dSQmtHhTlmmU+3Cd7c4Eq8Y6Nk3BHDhfbZEICIq08tfBC00jsjwaPJ1mfd2H4
-         bS2P0tZvfMGB5GvunmA2ldZV/HN+Mg1wKyJFvH2keIeBrS3jo73yiyJB/mVinU8DDW
-         39VL2+sB52rJfZRSDJHZ1pcrFbevBYLbqvgbu7Lc=
+        b=Dj+MXXl3tEVDbBM9atZ+l4MXuS1bs6JQXof0uUsgsPMFbxqsDJh8FevQ/cP62ia0y
+         pw78lT6C8gZDv0O1wn7Sv2dJJWLjGrIH/aXcRbxIjgbdTULL7rIC5h+MDqTSG/2eoA
+         9/LZvlw2XifzxVjYJ01wqwBNIjtUD321sGnT5/vI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Michael Srba <Michael.Srba@seznam.cz>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 134/149] arm64: dts: qcom: msm8916-samsung-a2015: Reserve Samsung firmware memory
-Date:   Sat, 11 Apr 2020 19:03:31 -0400
-Message-Id: <20200411230347.22371-134-sashal@kernel.org>
+Cc:     Etienne Carriere <etienne.carriere@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 125/149] dmaengine: stm32-dma: use reset controller only at probe time
+Date:   Sat, 11 Apr 2020 19:03:22 -0400
+Message-Id: <20200411230347.22371-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,64 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Etienne Carriere <etienne.carriere@st.com>
 
-[ Upstream commit 8f4a7a00c1019df72cda3002643fb5823ef39183 ]
+[ Upstream commit 8cf1e0fc50fcc25021567bb2755580504c57c83a ]
 
-At the moment, writing large amounts of data to the eMMC causes the device
-to freeze. The symptoms vary, sometimes the device reboots immediately,
-but usually it will just get stuck.
+Remove reset controller reference from device instance since it is
+used only at probe time.
 
-It turns out that the issue is not actually related to the eMMC:
-Apparently, Samsung has made some modifications to the TrustZone firmware.
-These require additional memory which is reserved at 0x85500000-0x86000000.
-The downstream kernel describes this memory reservation as:
-
-/* Additionally Reserved 6MB for TIMA and Increased the TZ app size
- * by 2MB [total 8 MB ]
- */
-
-This suggests that it is used for additional TZ apps, although the extra
-memory is actually 11 MB instead of the 8 MB mentioned in the comment.
-
-Writing to the protected memory causes the kernel to crash or freeze.
-In our case, writing to the eMMC causes the disk cache to fill
-the available RAM, until the kernel eventually crashes
-when attempting to use the reserved memory.
-
-Add the additional memory as reserved-memory to fix this problem.
-
-Fixes: 1329c1ab0730 ("arm64: dts: qcom: Add device tree for Samsung Galaxy A3U/A5U")
-Reported-by: Michael Srba <Michael.Srba@seznam.cz>
-Tested-by: Michael Srba <Michael.Srba@seznam.cz> # a3u
-Tested-by: Stephan Gerhold <stephan@gerhold.net> # a5u
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20191231112511.83342-1-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/20200129153628.29329-3-amelie.delaunay@st.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dma/stm32-dma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index bd1eb3eeca53f..43c5e0f882f14 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -15,6 +15,14 @@
- 		stdout-path = "serial0";
- 	};
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 5989b08935211..ff34a10fc8d89 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -207,7 +207,6 @@ struct stm32_dma_device {
+ 	struct dma_device ddev;
+ 	void __iomem *base;
+ 	struct clk *clk;
+-	struct reset_control *rst;
+ 	bool mem2mem;
+ 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
+ };
+@@ -1275,6 +1274,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	struct dma_device *dd;
+ 	const struct of_device_id *match;
+ 	struct resource *res;
++	struct reset_control *rst;
+ 	int i, ret;
  
-+	reserved-memory {
-+		/* Additional memory used by Samsung firmware modifications */
-+		tz-apps@85500000 {
-+			reg = <0x0 0x85500000 0x0 0xb00000>;
-+			no-map;
-+		};
-+	};
-+
- 	soc {
- 		sdhci@7824000 {
- 			status = "okay";
+ 	match = of_match_device(stm32_dma_of_match, &pdev->dev);
+@@ -1309,11 +1309,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
+ 						"st,mem2mem");
+ 
+-	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
+-	if (!IS_ERR(dmadev->rst)) {
+-		reset_control_assert(dmadev->rst);
++	rst = devm_reset_control_get(&pdev->dev, NULL);
++	if (!IS_ERR(rst)) {
++		reset_control_assert(rst);
+ 		udelay(2);
+-		reset_control_deassert(dmadev->rst);
++		reset_control_deassert(rst);
+ 	}
+ 
+ 	dma_cap_set(DMA_SLAVE, dd->cap_mask);
 -- 
 2.20.1
 
