@@ -2,54 +2,51 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF89C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00960C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926B120769
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11622051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647489;
-	bh=Sg+AeYwlWAaR4CNzrnLx9RnsqgcJVfc9GzSfFoFeZyA=;
+	s=default; t=1586647493;
+	bh=4mKEhK51gM1N5fc6QfhQWUi5yHTul4dwyuvmSusVWvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FamX8GRoIVBWspf6ugILo+ObqaEO68F2mChwRobClFkOij81vAZLnl1lu1xlo/AEj
-	 HfV47FbvXZYLd60VoHj6D2axnWJfkovpiLpMWXjY/mUP/GhzCLLCJxjv109iBSNhkO
-	 kMvdKH0E9/oBmiA/5RbEtkPkCwgAsp3j+V2WqPgk=
+	b=VBGmjtYO2CD7SNII1e4wB16fScwJGObjfVguC5dYcm01kElM19c8WQ0YhTZDAj4VV
+	 6nvr4iS3SeZ5Mq/ecq3Xe6WSaukU3+gwVsS6EaRtcFhmMTx57Qi88qt/w/T6L4xCpw
+	 JAt7+aUBi1eGjBE9IOxjimpUuXmrEQQcC5WyPXek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730947AbgDKXYr (ORCPT
+        id S1730164AbgDKXM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgDKXM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:28 -0400
+        id S1729701AbgDKXMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0158F20708;
-        Sat, 11 Apr 2020 23:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB676216FD;
+        Sat, 11 Apr 2020 23:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646747;
-        bh=Sg+AeYwlWAaR4CNzrnLx9RnsqgcJVfc9GzSfFoFeZyA=;
+        s=default; t=1586646732;
+        bh=4mKEhK51gM1N5fc6QfhQWUi5yHTul4dwyuvmSusVWvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElxkJ1ckrbbUP4EJJUcGbvopkr0g+YHfjm8L0g5YyRKb3JQOM8s4n4zNyWh67Q/6S
-         WUlKybre0jRyQB83HEkvCom139Mfj/Nt47PiMZNahu890DcUZXrLKqEeqHsXuqRqvZ
-         YA3bBlMqAOUyU+B7wa1kF/RDEomJegQNYbL6o1jc=
+        b=lqvLAXk88Pw/jYFhErKQ7Le7tvtpYkoqxquA7nKIgSlBQvTHYbq22EtgG56TlqbRT
+         7CTnQPQ1PcDMpda+BoDarDLIDs8VaxsQq5mVtbRelLgA/f5X7vHH3flJFGG8APx1NY
+         4qyO6Nyrmn2ouFSR5vdpHFdvWQZjqNyIaKIJbyPY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Bernstein <eric.bernstein@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 20/66] drm/amd/display: Fix default logger mask definition
-Date:   Sat, 11 Apr 2020 19:11:17 -0400
-Message-Id: <20200411231203.25933-20-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/66] RDMA/bnxt_re: Fix lifetimes in bnxt_re_task
+Date:   Sat, 11 Apr 2020 19:11:04 -0400
+Message-Id: <20200411231203.25933-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -62,99 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Bernstein <eric.bernstein@amd.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit ccb6af1e25830e5601b6beacc698390f0245316f ]
+[ Upstream commit 8a6c61704746d3a1e004e054504ae8d98ed95697 ]
 
-[Why]
-Logger mask was updated to uint64_t, however default mask definition was
-not updated for unsigned long long
+A work queue cannot just rely on the ib_device not being freed, it must
+hold a kref on the memory so that the BNXT_RE_FLAG_IBDEV_REGISTERED check
+works.
 
-[How]
-Update DC_DEFAULT_LOG_MASK to support uint64_t type
-
-Signed-off-by: Eric Bernstein <eric.bernstein@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 1ac5a4047975 ("RDMA/bnxt_re: Add bnxt_re RoCE driver")
+Link: https://lore.kernel.org/r/1584117207-2664-3-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/include/logger_types.h    | 63 ++++++++++---------
- 1 file changed, 32 insertions(+), 31 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/include/logger_types.h b/drivers/gpu/drm/amd/display/include/logger_types.h
-index ad3695e67b76f..dbc5a4d6d2e3f 100644
---- a/drivers/gpu/drm/amd/display/include/logger_types.h
-+++ b/drivers/gpu/drm/amd/display/include/logger_types.h
-@@ -106,36 +106,37 @@ enum dc_log_type {
- #define DC_MIN_LOG_MASK ((1 << LOG_ERROR) | \
- 		(1 << LOG_DETECTION_EDID_PARSER))
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index 589b0d4677d52..75fe489a70b0c 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -1505,6 +1505,7 @@ static void bnxt_re_task(struct work_struct *work)
+ 	smp_mb__before_atomic();
+ 	atomic_dec(&rdev->sched_count);
+ exit:
++	put_device(&rdev->ibdev.dev);
+ 	kfree(re_work);
+ }
  
--#define DC_DEFAULT_LOG_MASK ((1 << LOG_ERROR) | \
--		(1 << LOG_WARNING) | \
--		(1 << LOG_EVENT_MODE_SET) | \
--		(1 << LOG_EVENT_DETECTION) | \
--		(1 << LOG_EVENT_LINK_TRAINING) | \
--		(1 << LOG_EVENT_LINK_LOSS) | \
--		(1 << LOG_EVENT_UNDERFLOW) | \
--		(1 << LOG_RESOURCE) | \
--		(1 << LOG_FEATURE_OVERRIDE) | \
--		(1 << LOG_DETECTION_EDID_PARSER) | \
--		(1 << LOG_DC) | \
--		(1 << LOG_HW_HOTPLUG) | \
--		(1 << LOG_HW_SET_MODE) | \
--		(1 << LOG_HW_RESUME_S3) | \
--		(1 << LOG_HW_HPD_IRQ) | \
--		(1 << LOG_SYNC) | \
--		(1 << LOG_BANDWIDTH_VALIDATION) | \
--		(1 << LOG_MST) | \
--		(1 << LOG_DETECTION_DP_CAPS) | \
--		(1 << LOG_BACKLIGHT)) | \
--		(1 << LOG_I2C_AUX) | \
--		(1 << LOG_IF_TRACE) | \
--		(1 << LOG_DTN) /* | \
--		(1 << LOG_DEBUG) | \
--		(1 << LOG_BIOS) | \
--		(1 << LOG_SURFACE) | \
--		(1 << LOG_SCALER) | \
--		(1 << LOG_DML) | \
--		(1 << LOG_HW_LINK_TRAINING) | \
--		(1 << LOG_HW_AUDIO)| \
--		(1 << LOG_BANDWIDTH_CALCS)*/
-+#define DC_DEFAULT_LOG_MASK ((1ULL << LOG_ERROR) | \
-+		(1ULL << LOG_WARNING) | \
-+		(1ULL << LOG_EVENT_MODE_SET) | \
-+		(1ULL << LOG_EVENT_DETECTION) | \
-+		(1ULL << LOG_EVENT_LINK_TRAINING) | \
-+		(1ULL << LOG_EVENT_LINK_LOSS) | \
-+		(1ULL << LOG_EVENT_UNDERFLOW) | \
-+		(1ULL << LOG_RESOURCE) | \
-+		(1ULL << LOG_FEATURE_OVERRIDE) | \
-+		(1ULL << LOG_DETECTION_EDID_PARSER) | \
-+		(1ULL << LOG_DC) | \
-+		(1ULL << LOG_HW_HOTPLUG) | \
-+		(1ULL << LOG_HW_SET_MODE) | \
-+		(1ULL << LOG_HW_RESUME_S3) | \
-+		(1ULL << LOG_HW_HPD_IRQ) | \
-+		(1ULL << LOG_SYNC) | \
-+		(1ULL << LOG_BANDWIDTH_VALIDATION) | \
-+		(1ULL << LOG_MST) | \
-+		(1ULL << LOG_DETECTION_DP_CAPS) | \
-+		(1ULL << LOG_BACKLIGHT)) | \
-+		(1ULL << LOG_I2C_AUX) | \
-+		(1ULL << LOG_IF_TRACE) | \
-+		(1ULL << LOG_HDMI_FRL) | \
-+		(1ULL << LOG_DTN) /* | \
-+		(1ULL << LOG_DEBUG) | \
-+		(1ULL << LOG_BIOS) | \
-+		(1ULL << LOG_SURFACE) | \
-+		(1ULL << LOG_SCALER) | \
-+		(1ULL << LOG_DML) | \
-+		(1ULL << LOG_HW_LINK_TRAINING) | \
-+		(1ULL << LOG_HW_AUDIO)| \
-+		(1ULL << LOG_BANDWIDTH_CALCS)*/
- 
- #endif /* __DAL_LOGGER_TYPES_H__ */
+@@ -1581,6 +1582,7 @@ static int bnxt_re_netdev_event(struct notifier_block *notifier,
+ 		/* Allocate for the deferred task */
+ 		re_work = kzalloc(sizeof(*re_work), GFP_ATOMIC);
+ 		if (re_work) {
++			get_device(&rdev->ibdev.dev);
+ 			re_work->rdev = rdev;
+ 			re_work->event = event;
+ 			re_work->vlan_dev = (real_dev == netdev ?
 -- 
 2.20.1
 
