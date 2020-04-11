@@ -2,51 +2,52 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93DDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3741C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A343F2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3BC2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647650;
-	bh=ItIerm0IvevocM6ZWbkjcXQ/Hlr+P9DsYTmiUBPKb5A=;
+	s=default; t=1586647656;
+	bh=wOm6rMiOMk63monrsQgu+88dDlJcauWZEKzEvhYOGQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLibVf7gI9rur4e2/L3XYZXOlmGo9Tb+4W1mWgldOR2/i+ba6XTPwGtj8cHZKE5PS
-	 bZ8Wlli0Ce6gLCBug6bp5tN7eS720Vbw6GTzJzY19Cz0xaM2oZYjhUpoZkGP6oqNPV
-	 MCxKgqNkBpT8dsuQvJmFp0iNLP9+qABbMPwjUrng=
+	b=yFuWG50X1yfEvek7agczLTd4vvQbco3fKljVEiqnz8NP/6o5aTaceRgwRLmXp4lYz
+	 NYhxp1lPB7KfD3XD4kBE9TkACpDw+aQxP9JwUGX7eNOPykl4bpEXEe8FnIVKLiBSpL
+	 WxZrtgxQrV3qv6025y/ukhnUwSApvf75BOMiKytM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgDKX12 (ORCPT
+        id S1729989AbgDKXLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgDKXLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:48 -0400
+        id S1729933AbgDKXLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E295920708;
-        Sat, 11 Apr 2020 23:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C48920708;
+        Sat, 11 Apr 2020 23:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646708;
-        bh=ItIerm0IvevocM6ZWbkjcXQ/Hlr+P9DsYTmiUBPKb5A=;
+        s=default; t=1586646692;
+        bh=wOm6rMiOMk63monrsQgu+88dDlJcauWZEKzEvhYOGQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1eLUf7gih4x1YOPNZU7TEIvQA6EnJtERThHQCUuGh7A16L/SZk9DHx/y3XtAxfuh
-         r0bKsAjPY2yUBhIUIFf5yotzS/j1JWQKWoogX61Kk4tr/+eu8s0db8PjnIn6cbRijE
-         9nfCoBOQJY9gZzjQ0JE+oYswmr5bzOW9snkREchI=
+        b=Z/IZwAjHBYxzxAZ9I/GQKSYj1gx/HU26X7bzR8eOhU2CnkBcTuoaKGzPiIehG40EI
+         fs75X5J3SuJETQcic1VBLy2TG77tb6enFSzvoxoBOrrGsfKQZfPGIKmDBwn5hqzUmz
+         kowJJHwAM7Ll75R7xQf5y7jzBS+h+taIqK6+QMoE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, Jan Kara <jack@suse.cz>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 100/108] powerpc/book3s64: Fix error handling in mm_iommu_do_alloc()
-Date:   Sat, 11 Apr 2020 19:09:35 -0400
-Message-Id: <20200411230943.24951-100-sashal@kernel.org>
+Cc:     Michael Hernandez <mhernandez@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 087/108] scsi: qla2xxx: Return appropriate failure through BSG Interface
+Date:   Sat, 11 Apr 2020 19:09:22 -0400
+Message-Id: <20200411230943.24951-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,86 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Michael Hernandez <mhernandez@marvell.com>
 
-[ Upstream commit c4b78169e3667413184c9a20e11b5832288a109f ]
+[ Upstream commit 1b81e7f3019d632a707e07927e946ffbbc102910 ]
 
-The last jump to free_exit in mm_iommu_do_alloc() happens after page
-pointers in struct mm_iommu_table_group_mem_t were already converted to
-physical addresses. Thus calling put_page() on these physical addresses
-will likely crash.
+This patch ensures flash updates API calls return possible failure
+status through BSG interface to the application.
 
-This moves the loop which calculates the pageshift and converts page
-struct pointers to physical addresses later after the point when
-we cannot fail; thus eliminating the need to convert pointers back.
-
-Fixes: eb9d7a62c386 ("powerpc/mm_iommu: Fix potential deadlock")
-Reported-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191223060351.26359-1-aik@ozlabs.ru
+Link: https://lore.kernel.org/r/20200226224022.24518-7-hmadhani@marvell.com
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Michael Hernandez <mhernandez@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/iommu_api.c | 39 +++++++++++++++-------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+ drivers/scsi/qla2xxx/qla_bsg.c |  9 +++++++--
+ drivers/scsi/qla2xxx/qla_sup.c | 13 ++++++++-----
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
-index 56cc845205779..ef164851738b8 100644
---- a/arch/powerpc/mm/book3s64/iommu_api.c
-+++ b/arch/powerpc/mm/book3s64/iommu_api.c
-@@ -121,24 +121,6 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
- 		goto free_exit;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index cbaf178fc9796..f06e499796976 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -1505,10 +1505,15 @@ qla2x00_update_optrom(struct bsg_job *bsg_job)
+ 	    bsg_job->request_payload.sg_cnt, ha->optrom_buffer,
+ 	    ha->optrom_region_size);
  
--	pageshift = PAGE_SHIFT;
--	for (i = 0; i < entries; ++i) {
--		struct page *page = mem->hpages[i];
--
--		/*
--		 * Allow to use larger than 64k IOMMU pages. Only do that
--		 * if we are backed by hugetlb.
--		 */
--		if ((mem->pageshift > PAGE_SHIFT) && PageHuge(page))
--			pageshift = page_shift(compound_head(page));
--		mem->pageshift = min(mem->pageshift, pageshift);
--		/*
--		 * We don't need struct page reference any more, switch
--		 * to physical address.
--		 */
--		mem->hpas[i] = page_to_pfn(page) << PAGE_SHIFT;
--	}
--
- good_exit:
- 	atomic64_set(&mem->mapped, 1);
- 	mem->used = 1;
-@@ -158,6 +140,27 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
- 		}
- 	}
+-	ha->isp_ops->write_optrom(vha, ha->optrom_buffer,
++	rval = ha->isp_ops->write_optrom(vha, ha->optrom_buffer,
+ 	    ha->optrom_region_start, ha->optrom_region_size);
  
-+	if (mem->dev_hpa == MM_IOMMU_TABLE_INVALID_HPA) {
-+		/*
-+		 * Allow to use larger than 64k IOMMU pages. Only do that
-+		 * if we are backed by hugetlb. Skip device memory as it is not
-+		 * backed with page structs.
-+		 */
-+		pageshift = PAGE_SHIFT;
-+		for (i = 0; i < entries; ++i) {
-+			struct page *page = mem->hpages[i];
-+
-+			if ((mem->pageshift > PAGE_SHIFT) && PageHuge(page))
-+				pageshift = page_shift(compound_head(page));
-+			mem->pageshift = min(mem->pageshift, pageshift);
-+			/*
-+			 * We don't need struct page reference any more, switch
-+			 * to physical address.
-+			 */
-+			mem->hpas[i] = page_to_pfn(page) << PAGE_SHIFT;
-+		}
+-	bsg_reply->result = DID_OK;
++	if (rval) {
++		bsg_reply->result = -EINVAL;
++		rval = -EINVAL;
++	} else {
++		bsg_reply->result = DID_OK;
 +	}
-+
- 	list_add_rcu(&mem->next, &mm->context.iommu_group_mem_list);
+ 	vfree(ha->optrom_buffer);
+ 	ha->optrom_buffer = NULL;
+ 	ha->optrom_state = QLA_SWAITING;
+diff --git a/drivers/scsi/qla2xxx/qla_sup.c b/drivers/scsi/qla2xxx/qla_sup.c
+index bbe90354f49b0..07f0d8669806d 100644
+--- a/drivers/scsi/qla2xxx/qla_sup.c
++++ b/drivers/scsi/qla2xxx/qla_sup.c
+@@ -2686,7 +2686,7 @@ qla28xx_write_flash_data(scsi_qla_host_t *vha, uint32_t *dwptr, uint32_t faddr,
+ 	uint32_t sec_mask, rest_addr, fdata;
+ 	void *optrom = NULL;
+ 	dma_addr_t optrom_dma;
+-	int rval;
++	int rval, ret;
+ 	struct secure_flash_update_block *sfub;
+ 	dma_addr_t sfub_dma;
+ 	uint32_t offset = faddr << 2;
+@@ -2942,11 +2942,12 @@ qla28xx_write_flash_data(scsi_qla_host_t *vha, uint32_t *dwptr, uint32_t faddr,
+ write_protect:
+ 	ql_log(ql_log_warn + ql_dbg_verbose, vha, 0x7095,
+ 	    "Protect flash...\n");
+-	rval = qla24xx_protect_flash(vha);
+-	if (rval) {
++	ret = qla24xx_protect_flash(vha);
++	if (ret) {
+ 		qla81xx_fac_semaphore_access(vha, FAC_SEMAPHORE_UNLOCK);
+ 		ql_log(ql_log_warn, vha, 0x7099,
+ 		    "Failed protect flash\n");
++		rval = QLA_COMMAND_ERROR;
+ 	}
  
- 	mutex_unlock(&mem_list_mutex);
+ 	if (reset_to_rom == true) {
+@@ -2954,10 +2955,12 @@ qla28xx_write_flash_data(scsi_qla_host_t *vha, uint32_t *dwptr, uint32_t faddr,
+ 		set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+ 		qla2xxx_wake_dpc(vha);
+ 
+-		rval = qla2x00_wait_for_hba_online(vha);
+-		if (rval != QLA_SUCCESS)
++		ret = qla2x00_wait_for_hba_online(vha);
++		if (ret != QLA_SUCCESS) {
+ 			ql_log(ql_log_warn, vha, 0xffff,
+ 			    "Adapter did not come out of reset\n");
++			rval = QLA_COMMAND_ERROR;
++		}
+ 	}
+ 
+ done:
 -- 
 2.20.1
 
