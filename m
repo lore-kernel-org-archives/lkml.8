@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE556C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5869DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9550C218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA2921655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607068;
-	bh=DX7Y/bTjcDckIPhehW9XWnDnMdMo6W/bQggp6rDI8+U=;
+	s=default; t=1586607071;
+	bh=lNTvev1ynm4GTeHYKUBo21kiveX5swSgmd0QLan0xXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9U+Cc2G2Ma2dnS/SvCT4Kq10tw/b93esH9loGLMUfmhuWoX/k9EqAHbK6I7Q3hjH
-	 owbKCP65Cd5D7eP1a82ZIcY2klfE0uh9w/pns3YRFN6wUty13MBAIt4OqI3KaODHl7
-	 vWSD4GgPv2NjpeZR9IAapJmSCw/cE4Ek4FuXfFS0=
+	b=ZyFkI6ucTN0S8xo4YQ/JZEBPC0SkF/+tKFa7eDB85Z0e4HTHDHq8Dm6Bu8SkvHr3G
+	 iS6AStqK+d9y+5oiyJLhmYG6D5R8cl+i1dOzjm6lp+ztfN0yuV7pGPvmrxHEXPmxIM
+	 XR0itgufHZHM/jFQcMtKgPaKnrc3ojPtBTLAwUKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgDKMLG (ORCPT
+        id S1726875AbgDKMLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgDKMLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:04 -0400
+        id S1726861AbgDKMLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C50521655;
-        Sat, 11 Apr 2020 12:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A535B20787;
+        Sat, 11 Apr 2020 12:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607063;
-        bh=DX7Y/bTjcDckIPhehW9XWnDnMdMo6W/bQggp6rDI8+U=;
+        s=default; t=1586607066;
+        bh=lNTvev1ynm4GTeHYKUBo21kiveX5swSgmd0QLan0xXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/Rb44oZRiop+ksQVKq5NYzYSSolZnNm63xeD+zlsGYK+kkE9E6iU29yKV2oSUrxS
-         5TSh+aPzvr8CYa6wDqM5nkJO1ux/TslUBMlx5FbMWXbA0jE7sGfR0RiofLT2U0NwsM
-         DVgHDESLnEMihvLXtzyNJ9w+yDhEB2yOE0pnfYG0=
+        b=HTUXbOEy88TjkX60Vh0aAJgIRmB6Eg2V51hYrN/B5soOfIhYeW3nKoivbB6Xb3xMi
+         EZuF7V48Biw11OM2GQsdUL3gyG88EFtjIvqchJEsZ0zbl0LFgpdXaovXgJfweWW44d
+         UoJFh/GS5jl2djeus2TcteV+Wriz38lG78k93I3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        stable@vger.kernel.org, Liam Shepherd <liam@dancer.es>,
         Ross Lagerwall <ross.lagerwall@citrix.com>,
         Juergen Gross <jgross@suse.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Nobuhiro Iwamatsu (CIP)" <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 22/29] xen-netfront: Fix mismatched rtnl_unlock
-Date:   Sat, 11 Apr 2020 14:08:52 +0200
-Message-Id: <20200411115411.523635527@linuxfoundation.org>
+Subject: [PATCH 4.4 23/29] xen-netfront: Update features after registering netdev
+Date:   Sat, 11 Apr 2020 14:08:53 +0200
+Message-Id: <20200411115411.643981759@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -65,10 +64,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-commit cb257783c2927b73614b20f915a91ff78aa6f3e8 upstream.
+commit 45c8184c1bed1ca8a7f02918552063a00b909bf5 upstream.
+
+Update the features after calling register_netdev() otherwise the
+device features are not set up correctly and it not possible to change
+the MTU of the device. After this change, the features reported by
+ethtool match the device's features before the commit which introduced
+the issue and it is possible to change the device's MTU.
 
 Fixes: f599c64fdf7d ("xen-netfront: Fix race between device setup and open")
-Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Reported-by: Liam Shepherd <liam@dancer.es>
 Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
 Reviewed-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
@@ -76,27 +81,32 @@ Signed-off-by: Nobuhiro Iwamatsu (CIP) <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/xen-netfront.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/xen-netfront.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 --- a/drivers/net/xen-netfront.c
 +++ b/drivers/net/xen-netfront.c
-@@ -1835,7 +1835,7 @@ static int talk_to_netback(struct xenbus
- 	err = xen_net_read_mac(dev, info->netdev->dev_addr);
- 	if (err) {
- 		xenbus_dev_fatal(dev, err, "parsing %s/mac", dev->nodename);
--		goto out;
-+		goto out_unlocked;
+@@ -1982,10 +1982,6 @@ static int xennet_connect(struct net_dev
+ 	/* talk_to_netback() sets the correct number of queues */
+ 	num_queues = dev->real_num_tx_queues;
+ 
+-	rtnl_lock();
+-	netdev_update_features(dev);
+-	rtnl_unlock();
+-
+ 	if (dev->reg_state == NETREG_UNINITIALIZED) {
+ 		err = register_netdev(dev);
+ 		if (err) {
+@@ -1995,6 +1991,10 @@ static int xennet_connect(struct net_dev
+ 		}
  	}
  
- 	rtnl_lock();
-@@ -1950,6 +1950,7 @@ abort_transaction_no_dev_fatal:
- 	xennet_destroy_queues(info);
-  out:
- 	rtnl_unlock();
-+out_unlocked:
- 	device_unregister(&dev->dev);
- 	return err;
- }
++	rtnl_lock();
++	netdev_update_features(dev);
++	rtnl_unlock();
++
+ 	/*
+ 	 * All public and private state should now be sane.  Get
+ 	 * ready to start sending and receiving packets and give the driver
 
 
