@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269AAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF916C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7FC20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C924B206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607850;
-	bh=VrMPaKFm6ypDIqYIXp1tYQR4zQFtrc/XT4gLeSmT1Jg=;
+	s=default; t=1586607854;
+	bh=lOVJgWNnz0yKKL4/eQnryAahX/eDEPiacWZDON4qHfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sefK4lyXB06ptveoihsa57Ijk+vH6wzyEfwStcOcCxYyp7IMSD3iT5p/crVGoOwFg
-	 5WLfSzPfkOEZLyQbkkTrillwVNbH5QR8tqUcOXkeYCUO6PLHN7MWi8gw1cJsJ5C3+s
-	 d+iAp9GrZPtXcAuxSh4cyR/f95EQCGNzXrBj7O2E=
+	b=Uu33av2AN3nl2stxpbfmUvySxhpnDMfmtqy/+sJPJn7p62nMUl+pJlZYSsrEu6DFw
+	 7cpRVmDqlKPjGrrSHBmnWzTf42Cpgx/xazuyvawyNhMiNBO1SJtFsNDr0M8/+WrxhS
+	 Ro29L7RCs6c5tC9QoxqUkUJ4Iw4pd/6i+biIZgvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgDKMYI (ORCPT
+        id S1728915AbgDKMYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53474 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbgDKMSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:30 -0400
+        id S1728615AbgDKMSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16B3B20692;
-        Sat, 11 Apr 2020 12:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F04AA20644;
+        Sat, 11 Apr 2020 12:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607510;
-        bh=VrMPaKFm6ypDIqYIXp1tYQR4zQFtrc/XT4gLeSmT1Jg=;
+        s=default; t=1586607503;
+        bh=lOVJgWNnz0yKKL4/eQnryAahX/eDEPiacWZDON4qHfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVswl3HL+i7BbvzuCAL1cSUH0ymk/ckh61OSpuBilQ8St6m9iGh+Ey9iqJ6yC8X/D
-         cIKlznHSnNBv20y9Vl248QUB0t/OoFLtij4uXBl5lxMIbCFh8/UCxR1M9xDyNLd91c
-         zJRldZgJfe+VWyEu9iTu6wmuABUUGshS7xYbq7+I=
+        b=XpMY7i+PAfszn+Yp2pADg1DeyVtAopGU0LBh/+NV0zDl2nmXgKRqIgDg/qRirppyy
+         +sF5jbbxt2oT63XeDEZTUJyMJYM976dME6sw2TZd9OIS07xg1fkhpF8MkaIYrz+nI/
+         uI9YqmoOow8I89qrs7VtETw8CfJFRF2YLeTJ0S1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Joe Perches <joe@perches.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 32/41] include/uapi/linux/swab.h: fix userspace breakage, use __BITS_PER_LONG for swap
-Date:   Sat, 11 Apr 2020 14:09:41 +0200
-Message-Id: <20200411115506.424699070@linuxfoundation.org>
+        syzbot+732528bae351682f1f27@syzkaller.appspotmail.com,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.4 39/41] fbcon: fix null-ptr-deref in fbcon_switch
+Date:   Sat, 11 Apr 2020 14:09:48 +0200
+Message-Id: <20200411115506.922339261@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -67,71 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 467d12f5c7842896d2de3ced74e4147ee29e97c8 upstream.
+commit b139f8b00db4a8ea75a4174346eafa48041aa489 upstream.
 
-QEMU has a funny new build error message when I use the upstream kernel
-headers:
+Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
 
-      CC      block/file-posix.o
-    In file included from /home/cborntra/REPOS/qemu/include/qemu/timer.h:4,
-                     from /home/cborntra/REPOS/qemu/include/qemu/timed-average.h:29,
-                     from /home/cborntra/REPOS/qemu/include/block/accounting.h:28,
-                     from /home/cborntra/REPOS/qemu/include/block/block_int.h:27,
-                     from /home/cborntra/REPOS/qemu/block/file-posix.c:30:
-    /usr/include/linux/swab.h: In function `__swab':
-    /home/cborntra/REPOS/qemu/include/qemu/bitops.h:20:34: error: "sizeof" is not defined, evaluates to 0 [-Werror=undef]
-       20 | #define BITS_PER_LONG           (sizeof (unsigned long) * BITS_PER_BYTE)
-          |                                  ^~~~~~
-    /home/cborntra/REPOS/qemu/include/qemu/bitops.h:20:41: error: missing binary operator before token "("
-       20 | #define BITS_PER_LONG           (sizeof (unsigned long) * BITS_PER_BYTE)
-          |                                         ^
-    cc1: all warnings being treated as errors
-    make: *** [/home/cborntra/REPOS/qemu/rules.mak:69: block/file-posix.o] Error 1
-    rm tests/qemu-iotests/socket_scm_helper.o
+syzkaller report: https://lkml.org/lkml/2020/3/27/403
+general protection fault, probably for non-canonical address
+0xdffffc000000006c: 0000 [#1] SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
+RIP: 0010:fbcon_switch+0x28f/0x1740
+drivers/video/fbdev/core/fbcon.c:2260
 
-This was triggered by commit d5767057c9a ("uapi: rename ext2_swab() to
-swab() and share globally in swab.h").  That patch is doing
+Call Trace:
+redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
+vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
+fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
+visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
+do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
+do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
+do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
+fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
+do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
+register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
+dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
+usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
 
-  #include <asm/bitsperlong.h>
+accessing vc_cons[logo_shown].d->vc_top causes the bug.
 
-but it uses BITS_PER_LONG.
-
-The kernel file asm/bitsperlong.h provide only __BITS_PER_LONG.
-
-Let us use the __ variant in swap.h
-
-Link: http://lkml.kernel.org/r/20200213142147.17604-1-borntraeger@de.ibm.com
-Fixes: d5767057c9a ("uapi: rename ext2_swab() to swab() and share globally in swab.h")
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Joe Perches <joe@perches.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: Torsten Hilbrich <torsten.hilbrich@secunet.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200329085647.25133-1-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/swab.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/core/fbcon.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/uapi/linux/swab.h
-+++ b/include/uapi/linux/swab.h
-@@ -135,9 +135,9 @@ static inline __attribute_const__ __u32
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -1276,6 +1276,9 @@ finished:
+ 	if (!con_is_bound(&fb_con))
+ 		fbcon_exit();
  
- static __always_inline unsigned long __swab(const unsigned long y)
- {
--#if BITS_PER_LONG == 64
-+#if __BITS_PER_LONG == 64
- 	return __swab64(y);
--#else /* BITS_PER_LONG == 32 */
-+#else /* __BITS_PER_LONG == 32 */
- 	return __swab32(y);
- #endif
++	if (vc->vc_num == logo_shown)
++		logo_shown = FBCON_LOGO_CANSHOW;
++
+ 	return;
  }
+ 
 
 
