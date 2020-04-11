@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20EDC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D0B214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071E6217D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646330;
-	bh=uSXxiFyn4tN2CFMVJAlyPAMjWvtdHAhR53BsM0858i0=;
+	s=default; t=1586646335;
+	bh=9UiT+54dkE2BzQLulbKxri8KD5FKEpDi5HFaU1OOVk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sZX01tC1MaJBddwGLpX0QYOf0ZCGhgz6w2Od7dGG5q8bHqnXX+X1pZ4j+Mxuptqd/
-	 XTAtX91VVci/uowoVe9ueSSMp5t8zmJxMpQGOpYLe5N9BU4i48o4uNShP0jytVfIrG
-	 9YSlv04J0dFAx5WhD2OrN5JJNlGQfkAXayGBoMe4=
+	b=v4XUE0k2zZe2Ugow8E/RVpiAdw4CjoTvScZsVimQCFt1vxu2tE9/gDA5I7dIT58jO
+	 wGgicSC+A3YiqLU18ffEuNa+d2XyOq6PQT5hbVoMksF8HJlY5u9E61QBhd19m5LG1I
+	 7CU5cpcOICS1E8BTKp0ZdbdefF3Ck0DSelX/0lqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgDKXF2 (ORCPT
+        id S1728010AbgDKXFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgDKXFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:25 -0400
+        id S1727991AbgDKXFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C96B2173E;
-        Sat, 11 Apr 2020 23:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3105120708;
+        Sat, 11 Apr 2020 23:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646325;
-        bh=uSXxiFyn4tN2CFMVJAlyPAMjWvtdHAhR53BsM0858i0=;
+        s=default; t=1586646329;
+        bh=9UiT+54dkE2BzQLulbKxri8KD5FKEpDi5HFaU1OOVk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qCaXCc0b5Kpj/6yhMDFNyp9zes9RKmUN4CE8ORXZbrJ0u2KmM5R73NRV0ys5jOfpE
-         BcZjRc4serUbW7kh4l5bnQ5QqX4fJJ0MJK/Zts7MNAKAc90NnBGkGh9p91dXnS2F4E
-         d0QR9eiMmLsxr7Sz1lGQcqS2NgrLVoRVzUIB9jHQ=
+        b=M/3gLdKI+o5Czm0yxwtvQblkEMXMuOLVHdcThahf+jEqOJ5xhUNhHiedGPmgDGq9R
+         VtLdMqSZ21Eci6a+fec8KgIigKS5VY8Hb2KVWGjRIEB0EZYvxQcH5BhHLmWrM6u2Dq
+         sSzgKsyBMa3SutiXhj0UiplN6ANbf37/HURoqqk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karthikeyan Periyasamy <periyasa@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 078/149] ath11k: fix warn-on in disassociation
-Date:   Sat, 11 Apr 2020 19:02:35 -0400
-Message-Id: <20200411230347.22371-78-sashal@kernel.org>
+Cc:     Yixian Liu <liuyixian@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 082/149] RDMA/hns: Add the workqueue framework for flush cqe handler
+Date:   Sat, 11 Apr 2020 19:02:39 -0400
+Message-Id: <20200411230347.22371-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,192 +60,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karthikeyan Periyasamy <periyasa@codeaurora.org>
+From: Yixian Liu <liuyixian@huawei.com>
 
-[ Upstream commit 79c080dbe35baaa1d46b241047a9dde745fc12eb ]
+[ Upstream commit ffd541d45726341c1830ff595fd7352b6d1cfbcd ]
 
-In multi AP VAP scenario, when user bring down the interfaces. mac80211 mark
-the interface down for the duplicated VAP and removed from the
-local->interfaces list. ath11k_mac_get_arvif() is dependent on
-ieee80211_iterate_active_interfaces_atomic() API to find the vdev id
-in a given radio. In disassociation path, ath11k_mac_get_arvif() not
-able to find the given vdev id since that VAP is removed from the
-local->interfaces list. since sta_state callback throws error, mac80211 log
-the below WARN_ON_ONCE message.
+HiP08 RoCE hardware lacks ability(a known hardware problem) to flush
+outstanding WQEs if QP state gets into errored mode for some reason.  To
+overcome this hardware problem and as a workaround, when QP is detected to
+be in errored state during various legs like post send, post receive etc
+[1], flush needs to be performed from the driver.
 
-Fixed it by storing the allocated_vdev_map in each radio structure to maintain
-the created vdev id bits. so that we can directly mask this against the given
-vdev_id to find out the ar from the vdev_id.
+The earlier patch[1] sent to solve the hardware limitation explained in
+the cover-letter had a bug in the software flushing leg. It acquired mutex
+while modifying QP state to errored state and while conveying it to the
+hardware using the mailbox. This caused leg to sleep while holding
+spin-lock and caused crash.
 
-WARN LOG:
+Suggested Solution:
+we have proposed to defer the flushing of the QP in the Errored state
+using the workqueue to get around with the limitation of our hardware.
 
-WARNING: at net/mac80211/sta_info.c:1008
-CPU: 2 PID: 2135 Comm: hostapd Not tainted #1
-Hardware name: Qualcomm Technologies, Inc. IPQ807x/AP-HK01-C1 (DT)
-task: ffffffc03a43d800 ti: ffffffc03a43d800 task.ti: ffffffc03a43d800
-PC is at sta_set_sinfo+0x9dc/0xad4 [mac80211]
-LR is at sta_set_sinfo+0x9cc/0xad4 [mac80211]
-pc : [<ffffffbffce2a008>] lr : [<ffffffbffce29ff8>] pstate: 20000145
-sp : ffffffc02cedb5f0
-x29: ffffffc02cedb5f0 x28: ffffffc03a43d800
-x27: 0000000000000014 x26: 0000000000000001
-x25: ffffffc02cfc4000 x24: ffffffc036905508
-x23: 0000000000000012 x22: ffffffc02cedb670
-x21: ffffffc03bc64880 x20: ffffffc036904f80
-x19: ffffffc02ae31000 x18: 00000000b019f3a1
-x17: 0000000057f30331 x16: 00000000d8d1998e
-x15: 0000000000000066 x14: 393a35383a36343a
-x13: 6337203a6e6f6974 x12: 6174732065746169
-x11: 636f737361736964 x10: 206f742064656c69
-x9 : 6146203a31696669 x8 : 6337203a6e6f6974
-x7 : 6174732065746169 x6 : ffffffc0008c33f6
-x5 : 0000000000000000 x4 : 0000000000000000
-x3 : 0000000000000000 x2 : 00000000ffffff92
-x1 : 0000000000000000 x0 : ffffffbffcea1091
----[ end trace 63c4b1c527345d5a ]---
-Call trace:
-[<ffffffbffce2a008>] sta_set_sinfo+0x9dc/0xad4 [mac80211]
-[<ffffffbffce2a2c4>] __sta_info_flush+0xec/0x130 [mac80211]
-[<ffffffbffce3dc48>] ieee80211_nan_func_match+0x1a34/0x23e4 [mac80211]
-[<ffffffbffcde03e0>] __cfg80211_stop_ap+0x60/0xf0 [cfg80211]
-[<ffffffbffcdb6d08>] __cfg80211_leave+0x110/0x150 [cfg80211]
-[<ffffffbffcdb6d78>] cfg80211_leave+0x30/0x48 [cfg80211]
-[<ffffffbffcdb6fbc>] cfg80211_init_wdev+0x22c/0x808 [cfg80211]
-[<ffffffc0000afe28>] notifier_call_chain+0x50/0x84
-[<ffffffc0000afefc>] raw_notifier_call_chain+0x14/0x1c
-[<ffffffc0004ae94c>] call_netdevice_notifiers_info+0x5c/0x6c
-[<ffffffc0004ae96c>] call_netdevice_notifiers+0x10/0x18
-[<ffffffc0004aea80>] __dev_close_many+0x54/0xc0
-[<ffffffc0004aeb50>] dev_close_many+0x64/0xdc
-[<ffffffc0004b0b70>] rollback_registered_many+0x138/0x2f4
-[<ffffffc0004b0d4c>] rollback_registered+0x20/0x34
-[<ffffffc0004b34b4>] unregister_netdevice_queue+0x68/0xa8
-[<ffffffbffce3870c>] ieee80211_if_remove+0x84/0xc0 [mac80211]
-[<ffffffbffce3e588>] ieee80211_nan_func_match+0x2374/0x23e4 [mac80211]
-[<ffffffbffcdc29e8>] cfg80211_wext_giwscan+0x1000/0x1140 [cfg80211]
-[<ffffffbffcb2a87c>] backport_genlmsg_multicast_allns+0x158/0x1b4 [compat]
-[<ffffffc0004e0944>] genl_family_rcv_msg+0x258/0x2c0
-[<ffffffc0004e09f4>] genl_rcv_msg+0x48/0x6c
-[<ffffffc0004dfb50>] netlink_rcv_skb+0x5c/0xc4
-[<ffffffc0004e06d8>] genl_rcv+0x34/0x48
-[<ffffffc0004df570>] netlink_unicast+0x12c/0x1e0
-[<ffffffc0004df9a4>] netlink_sendmsg+0x2bc/0x2dc
-[<ffffffc00049a540>] sock_sendmsg+0x18/0x2c
-[<ffffffc00049ab94>] ___sys_sendmsg+0x1bc/0x248
-[<ffffffc00049ba24>] __sys_sendmsg+0x40/0x68
-[<ffffffc00049ba5c>] SyS_sendmsg+0x10/0x20
-[<ffffffc000085db0>] el0_svc_naked+0x24/0x28
+This patch adds the framework of the workqueue and the flush handler
+function.
 
-Signed-off-by: Karthikeyan Periyasamy <periyasa@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[1] https://patchwork.kernel.org/patch/10534271/
+
+Link: https://lore.kernel.org/r/1580983005-13899-2-git-send-email-liuyixian@huawei.com
+Signed-off-by: Yixian Liu <liuyixian@huawei.com>
+Reviewed-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath11k/core.c |  1 +
- drivers/net/wireless/ath/ath11k/core.h |  1 +
- drivers/net/wireless/ath/ath11k/mac.c  | 18 +++++++++++-------
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_device.h | 20 ++++++-----
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  |  3 +-
+ drivers/infiniband/hw/hns/hns_roce_qp.c     | 37 +++++++++++++++++++++
+ 3 files changed, 49 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index 9e823056e6735..6a30601a12e8c 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -607,6 +607,7 @@ void ath11k_core_halt(struct ath11k *ar)
- 	lockdep_assert_held(&ar->conf_mutex);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index a7c4ff975c289..a089d47354391 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -641,6 +641,15 @@ struct hns_roce_rinl_buf {
+ 	u32			 wqe_cnt;
+ };
  
- 	ar->num_created_vdevs = 0;
-+	ar->allocated_vdev_map = 0;
- 
- 	ath11k_mac_scan_finish(ar);
- 	ath11k_mac_peer_cleanup_all(ar);
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index 25cdcf71d0c48..987f62bdb9ca3 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -486,6 +486,7 @@ struct ath11k {
- 	int max_num_peers;
- 	u32 num_started_vdevs;
- 	u32 num_created_vdevs;
-+	unsigned long long allocated_vdev_map;
- 
- 	struct idr txmgmt_idr;
- 	/* protects txmgmt_idr data */
-diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-index 6640662f5ede0..78f20ba47b37e 100644
---- a/drivers/net/wireless/ath/ath11k/mac.c
-+++ b/drivers/net/wireless/ath/ath11k/mac.c
-@@ -369,8 +369,10 @@ struct ath11k_vif *ath11k_mac_get_arvif(struct ath11k *ar, u32 vdev_id)
- 						   flags,
- 						   ath11k_get_arvif_iter,
- 						   &arvif_iter);
--	if (!arvif_iter.arvif)
-+	if (!arvif_iter.arvif) {
-+		ath11k_warn(ar->ab, "No VIF found for vdev %d\n", vdev_id);
- 		return NULL;
-+	}
- 
- 	return arvif_iter.arvif;
- }
-@@ -398,14 +400,12 @@ struct ath11k *ath11k_mac_get_ar_by_vdev_id(struct ath11k_base *ab, u32 vdev_id)
- {
- 	int i;
- 	struct ath11k_pdev *pdev;
--	struct ath11k_vif *arvif;
- 
- 	for (i = 0; i < ab->num_radios; i++) {
- 		pdev = rcu_dereference(ab->pdevs_active[i]);
- 		if (pdev && pdev->ar) {
--			arvif = ath11k_mac_get_arvif(pdev->ar, vdev_id);
--			if (arvif)
--				return arvif->ar;
-+			if (pdev->ar->allocated_vdev_map & (1LL << vdev_id))
-+				return pdev->ar;
- 		}
- 	}
- 
-@@ -3874,6 +3874,7 @@ static int ath11k_mac_op_start(struct ieee80211_hw *hw)
- 	ar->num_started_vdevs = 0;
- 	ar->num_created_vdevs = 0;
- 	ar->num_peers = 0;
-+	ar->allocated_vdev_map = 0;
- 
- 	/* Configure monitor status ring with default rx_filter to get rx status
- 	 * such as rssi, rx_duration.
-@@ -4112,8 +4113,9 @@ static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
- 	}
- 
- 	ar->num_created_vdevs++;
--
-+	ar->allocated_vdev_map |= 1LL << arvif->vdev_id;
- 	ab->free_vdev_map &= ~(1LL << arvif->vdev_id);
++struct hns_roce_work {
++	struct hns_roce_dev *hr_dev;
++	struct work_struct work;
++	u32 qpn;
++	u32 cqn;
++	int event_type;
++	int sub_type;
++};
 +
- 	spin_lock_bh(&ar->data_lock);
- 	list_add(&arvif->list, &ar->arvifs);
- 	spin_unlock_bh(&ar->data_lock);
-@@ -4227,6 +4229,7 @@ static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
- err_vdev_del:
- 	ath11k_wmi_vdev_delete(ar, arvif->vdev_id);
- 	ar->num_created_vdevs--;
-+	ar->allocated_vdev_map &= ~(1LL << arvif->vdev_id);
- 	ab->free_vdev_map |= 1LL << arvif->vdev_id;
- 	spin_lock_bh(&ar->data_lock);
- 	list_del(&arvif->list);
-@@ -4263,7 +4266,6 @@ static void ath11k_mac_op_remove_interface(struct ieee80211_hw *hw,
- 	ath11k_dbg(ab, ATH11K_DBG_MAC, "mac remove interface (vdev %d)\n",
- 		   arvif->vdev_id);
+ struct hns_roce_qp {
+ 	struct ib_qp		ibqp;
+ 	struct hns_roce_buf	hr_buf;
+@@ -684,6 +693,7 @@ struct hns_roce_qp {
+ 	struct hns_roce_sge	sge;
+ 	u32			next_sge;
  
--	ab->free_vdev_map |= 1LL << (arvif->vdev_id);
- 	spin_lock_bh(&ar->data_lock);
- 	list_del(&arvif->list);
- 	spin_unlock_bh(&ar->data_lock);
-@@ -4281,6 +4283,8 @@ static void ath11k_mac_op_remove_interface(struct ieee80211_hw *hw,
- 			    arvif->vdev_id, ret);
++	struct hns_roce_work	flush_work;
+ 	struct hns_roce_rinl_buf rq_inl_buf;
+ 	struct list_head	node;		/* all qps are on a list */
+ 	struct list_head	rq_node;	/* all recv qps are on a list */
+@@ -906,15 +916,6 @@ struct hns_roce_caps {
+ 	u16		default_ceq_arm_st;
+ };
  
- 	ar->num_created_vdevs--;
-+	ar->allocated_vdev_map &= ~(1LL << arvif->vdev_id);
-+	ab->free_vdev_map |= 1LL << (arvif->vdev_id);
+-struct hns_roce_work {
+-	struct hns_roce_dev *hr_dev;
+-	struct work_struct work;
+-	u32 qpn;
+-	u32 cqn;
+-	int event_type;
+-	int sub_type;
+-};
+-
+ struct hns_roce_dfx_hw {
+ 	int (*query_cqc_info)(struct hns_roce_dev *hr_dev, u32 cqn,
+ 			      int *buffer);
+@@ -1237,6 +1238,7 @@ struct ib_qp *hns_roce_create_qp(struct ib_pd *ib_pd,
+ 				 struct ib_udata *udata);
+ int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
+ 		       int attr_mask, struct ib_udata *udata);
++void init_flush_work(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp);
+ void *get_recv_wqe(struct hns_roce_qp *hr_qp, int n);
+ void *get_send_wqe(struct hns_roce_qp *hr_qp, int n);
+ void *get_send_extend_sge(struct hns_roce_qp *hr_qp, int n);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 12c4cd8e9378c..950c604a6fcb4 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -6292,8 +6292,7 @@ static int hns_roce_v2_init_eq_table(struct hns_roce_dev *hr_dev)
+ 		goto err_request_irq_fail;
+ 	}
  
- 	ath11k_peer_cleanup(ar, arvif->vdev_id);
+-	hr_dev->irq_workq =
+-		create_singlethread_workqueue("hns_roce_irq_workqueue");
++	hr_dev->irq_workq = alloc_ordered_workqueue("hns_roce_irq_workq", 0);
+ 	if (!hr_dev->irq_workq) {
+ 		dev_err(dev, "Create irq workqueue failed!\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index 3257ad11be482..dab73140c5c29 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -43,6 +43,43 @@
  
+ #define SQP_NUM				(2 * HNS_ROCE_MAX_PORTS)
+ 
++static void flush_work_handle(struct work_struct *work)
++{
++	struct hns_roce_work *flush_work = container_of(work,
++					struct hns_roce_work, work);
++	struct hns_roce_qp *hr_qp = container_of(flush_work,
++					struct hns_roce_qp, flush_work);
++	struct device *dev = flush_work->hr_dev->dev;
++	struct ib_qp_attr attr;
++	int attr_mask;
++	int ret;
++
++	attr_mask = IB_QP_STATE;
++	attr.qp_state = IB_QPS_ERR;
++
++	ret = hns_roce_modify_qp(&hr_qp->ibqp, &attr, attr_mask, NULL);
++	if (ret)
++		dev_err(dev, "Modify QP to error state failed(%d) during CQE flush\n",
++			ret);
++
++	/*
++	 * make sure we signal QP destroy leg that flush QP was completed
++	 * so that it can safely proceed ahead now and destroy QP
++	 */
++	if (atomic_dec_and_test(&hr_qp->refcount))
++		complete(&hr_qp->free);
++}
++
++void init_flush_work(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
++{
++	struct hns_roce_work *flush_work = &hr_qp->flush_work;
++
++	flush_work->hr_dev = hr_dev;
++	INIT_WORK(&flush_work->work, flush_work_handle);
++	atomic_inc(&hr_qp->refcount);
++	queue_work(hr_dev->irq_workq, &flush_work->work);
++}
++
+ void hns_roce_qp_event(struct hns_roce_dev *hr_dev, u32 qpn, int event_type)
+ {
+ 	struct device *dev = hr_dev->dev;
 -- 
 2.20.1
 
