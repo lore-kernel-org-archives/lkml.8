@@ -8,66 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B245FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AD0C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B3F2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5D221744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8orfjhL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fbgzlwyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgDKAU2 (ORCPT
+        id S1726949AbgDKAUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 20:20:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42377 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgDKAUW (ORCPT
+        Fri, 10 Apr 2020 20:20:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45010 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgDKAUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 20:20:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j2so4044273wrs.9;
-        Fri, 10 Apr 2020 17:20:22 -0700 (PDT)
+        Fri, 10 Apr 2020 20:20:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c15so4025674wro.11;
+        Fri, 10 Apr 2020 17:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=O9b/dTxnP3pkeLImyemjxWnk87nyS0C4fdjH2jH+qHw=;
-        b=r8orfjhLMG/0hza2PWsZbyXhxiI18aYNRYCiWCP3avl3+kWwYhU6WIynlaL32lngM8
-         rwvIPYHj8nGKDnBUMPFH5PeuVdQVH0K/kuEqF4p8vxsVa6nFUbPfTCq/cZTSxACqkTDa
-         MKxV00rU2M47GA8geQ5cgHQ11cP9RB9p8onGYJn5jKUNoesoVDKo/MuIMIxu5X8WMT7Z
-         0kmT929SWRrhJXPLNkvTe5t/MrS0n51PXLy8XCXNoKyWb3EDxPpoDsMgFy7xc4AE98LD
-         6phlWSo/2v+AL4Tkmery3vBqxs1zCsUacH4QYL8fmEAknchGfGZqQj9NnTua8eKI3hhh
-         DSrA==
+        bh=evS1Gd0mYBhXTAjCV3dzUcM/sTYhBLIlQOkalJ0AkMA=;
+        b=FbgzlwynoTQPwao9PAPWW39jzj/Gzj1N394UpRJZ9TvXyJIxAU7+4rmoMaf8fFLE2r
+         RcQg667B2vZGgXiY7F7cOasoi786I/UqhvdCVDa7ALXNae63/kQMStGL0URM90FPMoSa
+         DJ1K0kNkDsGKPBhxEzFQKO3MqDjwFLAVJCsWYoUj6HCiMX1t40JcAQ8N4Y+VX7QOxzWy
+         6I4qnvklmwEe7+xnjnkWsqxPzKwxng8L+eJQiQKOw0qYEDrskuPZW2wO43TUOG39a9MZ
+         CggT5hiqZx81ok2WmPvig0OWjlA6Fr+El15Hxb/N5w+O35E2EFp9nobnyhe1dhGC85iw
+         AAgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=O9b/dTxnP3pkeLImyemjxWnk87nyS0C4fdjH2jH+qHw=;
-        b=gTbNDVm/4t4K/18/vllUmRcK6zyUAqz4Ukd3jsnHYymGuHekmARIftE1AQouwwAo6Y
-         G/ec+armXkHyo8t4D7BgancRqnm2hyE/k9GJlsYfJXCsW8DkuMJO0s3Euj9uFz/t+xpy
-         8MIXxSap8nRoapwAaGspczl7LSW1LcJ54XoN3MqsNkvw+ldnqhP8U30QZ7NwqdMGtAqL
-         2oNPR3vba5FigiEHjNko1ObA2TkoF0BZdO/bcbx5LSXgacX+V7LyEy/Kere+UwrxN9lv
-         kLHy++u2eeCeIxX/qh/hJpA0a6DwL4c8Um4LSfiyaakZ9dA6DPEgAoKIIvUK6ysBg7lZ
-         B6lg==
-X-Gm-Message-State: AGi0PubozMdL5RwUatTDZ4n9N6IbmaDLuazCu/6k/F+m4YsGSTm4C12v
-        GTWavYWpAJlWIKh9eYEeMoFk+Y2Cfjus
-X-Google-Smtp-Source: APiQypIja6lxbNGo6M+D5FXZavVLgNGpXfZDMZy5KKEVg59S4vkiTctDAOl6HJz1UyArTsPqoEUTpA==
-X-Received: by 2002:a5d:4290:: with SMTP id k16mr6810714wrq.406.1586564421205;
-        Fri, 10 Apr 2020 17:20:21 -0700 (PDT)
+        bh=evS1Gd0mYBhXTAjCV3dzUcM/sTYhBLIlQOkalJ0AkMA=;
+        b=icEOEpsH0GZrtL61Ohy7hBnHkH2fcllia8XPWhHjrGJquBDBdfh5FKIHB69MZ+JXdg
+         339Qgg6XpYW4atcP11D5Mk6r32K13wpv0KFeBvhnw8UCzigyDx+D4YkCmcl31dLQtltu
+         Ypes4Uz/J1MemmJhQqGPQdKlZbulW0EvN8HOo7fjXUGyWkjAm/sEC8EtsY4kIxNzqpvq
+         YFPyWMnJcWR4YYE5I2cm22irUXDpY1cDuRjIchx6xcV0p4aQM1lZBwp774rnU76x4k1w
+         C5sqd4dlNXwHrM1aP1WCvwJrs3mGOmnN67KEEo2z9x6XqFaPrENy0IQyCych92EIeio7
+         j/FQ==
+X-Gm-Message-State: AGi0PuYLyz0liSPt45OoiQfFu8thSQI5mM5OoGXKwivMDcaqP9DuXU0z
+        CFx5m2xwjw/h+ku0TxhceEUMMLJa9jaY
+X-Google-Smtp-Source: APiQypL9+Y3FnS59lypT6b279qCBb89m8eNsC0cDe/afDwiChzijzhfuMVss+6+KaUKZ2JovWOY2RA==
+X-Received: by 2002:adf:f790:: with SMTP id q16mr6690593wrp.94.1586564422500;
+        Fri, 10 Apr 2020 17:20:22 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-14-153.as13285.net. [2.102.14.153])
-        by smtp.gmail.com with ESMTPSA id b191sm5091594wmd.39.2020.04.10.17.20.20
+        by smtp.gmail.com with ESMTPSA id b191sm5091594wmd.39.2020.04.10.17.20.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 17:20:20 -0700 (PDT)
+        Fri, 10 Apr 2020 17:20:22 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     boqun.feng@gmail.com,
-        QLogic-Storage-Upstream@qlogic.com (supporter:BROADCOM BNX2FC 10
-        GIGABIT FCOE DRIVER), "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org (open list:BROADCOM BNX2FC 10 GIGABIT FCOE
-        DRIVER)
-Subject: [PATCH 7/9] scsi: bnx2fc: Add missing annotation for bnx2fc_abts_cleanup()
-Date:   Sat, 11 Apr 2020 01:19:31 +0100
-Message-Id: <20200411001933.10072-8-jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend,
+        aka swsusp))
+Subject: [PATCH 8/9] power: wakeup: Add missing annotation for wakeup_sources_stats_seq_start() and wakeup_sources_stats_seq_stop()
+Date:   Sat, 11 Apr 2020 01:19:32 +0100
+Message-Id: <20200411001933.10072-9-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200411001933.10072-1-jbi.octave@gmail.com>
 References: <0/9>
@@ -79,31 +78,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at bnx2fc_abts_cleanup()
+Sparse reports warnings at wakeup_sources_stats_seq_start()
+	and wakeup_sources_stats_seq_stop()
 
-warning: context imbalance in bnx2fc_abts_cleanup() - unexpected unlock
+warning: context imbalance in wakeup_sources_stats_seq_start()
+	- wrong count at exit
+context imbalance in wakeup_sources_stats_seq_stop()
+	- unexpected unlock
 
-The root cause is the missing annotation at bnx2fc_abts_cleanup()
+The root cause is the missing annotation at
+wakeup_sources_stats_seq_start() and wakeup_sources_stats_seq_stop()
 
-Add the missing  __must_hold(&tgt->tgt_lock) annotation
+Add the missing  __acquires(&wakeup_srcu) annotation
+Add the missing __releases(&wakeup_srcu) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/scsi/bnx2fc/bnx2fc_io.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/power/wakeup.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
-index 4c8122a82322..b45f40db9379 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_io.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
-@@ -1081,6 +1081,7 @@ int bnx2fc_eh_device_reset(struct scsi_cmnd *sc_cmd)
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 27f3e60608e5..41ce086d8f57 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -1092,6 +1092,7 @@ static int print_wakeup_source_stats(struct seq_file *m,
+ 
+ static void *wakeup_sources_stats_seq_start(struct seq_file *m,
+ 					loff_t *pos)
++	__acquires(&wakeup_srcu)
+ {
+ 	struct wakeup_source *ws;
+ 	loff_t n = *pos;
+@@ -1132,6 +1133,7 @@ static void *wakeup_sources_stats_seq_next(struct seq_file *m,
  }
  
- static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
-+	__must_hold(&tgt->tgt_lock)
+ static void wakeup_sources_stats_seq_stop(struct seq_file *m, void *v)
++	__releases(&wakeup_srcu)
  {
- 	struct bnx2fc_rport *tgt = io_req->tgt;
- 	unsigned int time_left;
+ 	int *srcuidx = m->private;
+ 
 -- 
 2.24.1
 
