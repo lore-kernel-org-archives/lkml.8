@@ -2,84 +2,108 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14685C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 08:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C39C20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aZOzCafi"
+	by mail.kernel.org (Postfix) with ESMTP id D711E2078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 08:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgDKH6P (ORCPT
+        id S1726069AbgDKH7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:58:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42536 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgDKH6P (ORCPT
+        Sat, 11 Apr 2020 03:59:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:55836 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgDKH7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:58:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g6so1970174pgs.9
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=EehHYzmjydlDblKb5eenxnncMIMEQFB8m6zXlNX8Y54=;
-        b=aZOzCafixFqiLR84tkgtkDDcAPF2VhN/8KTpJpvBhQkAt3tqIuQeq3btfm0BOQf6BV
-         eKQ4/LK2/Qt/TNcRgHuoHaqNfLZymEp0Z9XJhJPlCYI+bNCQqEQdkHXEJOaVSsIsz/h1
-         Q8CqhE5SIYjJl5e7oBcgN3ow7vDkp79ABjVmLjvZlPO3jEklv4EOjTq9ggsg+3EmbvL5
-         L4UiCiakywz9K4phwwtKxC/unC67/5/kZZM1IV4GwIhRuFTOgGCpVmwCXFA9jGa4UhiN
-         hUPT8bcFh6b4azbPjUaaa5EWM/x/ePtQY9QcKHVrVkTyjCZVJI8qAp4rR1uv1101us9h
-         RSZg==
+        Sat, 11 Apr 2020 03:59:11 -0400
+Received: by mail-io1-f69.google.com with SMTP id k5so4342944ioa.22
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:59:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=EehHYzmjydlDblKb5eenxnncMIMEQFB8m6zXlNX8Y54=;
-        b=FoR3M7fWGe92It2qb9UkTDjqAIaBANkxgLkfpdLB41nzGxLS4n0bJTVzPlBaB5R8dd
-         6dQxXQv7hPoDjGIk7Md9S0STtNYXytt/Pit3s+60Zhh5E85I2SJ4i9Z40ddLh7GrTh1a
-         gSZ995Jt3l6q03oD3xpuowHYkipm+N4GBaZ/dQS6apyR+UzouO2MofgVNkcCBjhp76yD
-         ALGV1bZDdUg/6wZ80Qkk2blKshsFQp+OHkfBhq6EKAZyTYe0hvymQyyslpmAYstRpgs+
-         eQFJ4kJrpU2+SZ1S7kF3RXtLN34kUO1BRQiogdUZ7XBtky3RUo6j1S3GEFEAUKX9XJ2v
-         R/SQ==
-X-Gm-Message-State: AGi0PuYKMuhWdps/bAGyDWZ34JW3ofbx9X/GvRwr2A5n3WxZk5Nt46NE
-        qkBRjr13gYaGcNUQ7A7Qi2Y3EA==
-X-Google-Smtp-Source: APiQypIxO3Mmi+Q1QMMfto2TPeI5ZK2HS9RSIig+k3sWeHIpq8UjI+qQbNqphhKRzlrq2DFvyP4Z1w==
-X-Received: by 2002:aa7:99d1:: with SMTP id v17mr9279712pfi.165.1586591893917;
-        Sat, 11 Apr 2020 00:58:13 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id p188sm3501495pfg.184.2020.04.11.00.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 00:58:13 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 00:58:12 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Ethon Paul <ethp@qq.com>
-cc:     akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/slub: Fix a typo in comment
- "disambiguiation"->"disambiguation"
-In-Reply-To: <20200411002247.14468-1-ethp@qq.com>
-Message-ID: <alpine.DEB.2.21.2004110058030.165229@chino.kir.corp.google.com>
-References: <20200411002247.14468-1-ethp@qq.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nooiccf0bvg2ymiBh4FJBdl7+CwejWp6PZyhC8b5zR0=;
+        b=pwfcQRZRG/lrxMA0OQPzJGfcHzo2QZwhkNCT77Ovx0NOGf5C21T3hboas4zQ1ldbhL
+         HqNmceKInYyL32QFFn979IzwThoB+fUjDTj0qk2Om780rn5+GJCZ/4pFiW7eMri2j5At
+         0M7VbRPCLCewZ2GYnvTbHJNDzZRcRykCYl153c+bxDlGwO8JYbhwZgoEA9qZg3fwQqMN
+         d5VOwQsphn1/7NEJDYU8SHNbIF6hJ3vuiHhCOltNeJvAHSqmpov5koAx2pzxdnokfbEo
+         tTi6SwYVlGD1+1Vte1Attxne2PEAOEyhTqJrmkyrXdA79ZAaOtZjkyeTd6l7pyNEzuYJ
+         fF7g==
+X-Gm-Message-State: AGi0PuYD7vt7NyMrUn58m4Y2RzIJNjkdMEJ3T168htcHQRmFW2qC/lAF
+        Eanmt965/38AFwPFGRttyaZ3PC3LERT3B2PbnznfTCQnML4O
+X-Google-Smtp-Source: APiQypIGZsDNN5KpYHm+DmbsaBnPSsgcQ0r43bNVyREYjZiuSYffVtRMd6kPz/kB1nIGxqn5/mWHX6GHHxtivpB4hcn0PCmug5Ig
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a92:89c7:: with SMTP id w68mr9058219ilk.233.1586591949675;
+ Sat, 11 Apr 2020 00:59:09 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 00:59:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000090655b05a2ff399a@google.com>
+Subject: memory leak in drm_vma_node_allow
+From:   syzbot <syzbot+04639d98c75c52e41b8a@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, syzkaller-bugs@googlegroups.com,
+        tzimmermann@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Apr 2020, Ethon Paul wrote:
+Hello,
 
-> There is a typo in comment, fix it.
-> 
-> Signed-off-by: Ethon Paul <ethp@qq.com>
+syzbot found the following crash on:
 
-Acked-by: David Rientjes <rientjes@google.com>
+HEAD commit:    7e634208 Merge tag 'acpi-5.7-rc1-2' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=156ec43be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d7f19fdf7ef2f5a4
+dashboard link: https://syzkaller.appspot.com/bug?extid=04639d98c75c52e41b8a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=121898ede00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+04639d98c75c52e41b8a@syzkaller.appspotmail.com
+
+2020/04/07 05:10:47 executed programs: 23
+2020/04/07 05:10:53 executed programs: 35
+2020/04/07 05:11:00 executed programs: 46
+2020/04/07 05:11:06 executed programs: 62
+BUG: memory leak
+unreferenced object 0xffff888104682080 (size 64):
+  comm "syz-executor.5", pid 8616, jiffies 4294946318 (age 15.290s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 da bd 03 81 88 ff ff  ................
+  backtrace:
+    [<00000000cac525e9>] kmalloc include/linux/slab.h:555 [inline]
+    [<00000000cac525e9>] drm_vma_node_allow+0x32/0x120 drivers/gpu/drm/drm_vma_manager.c:274
+    [<00000000ab055b7c>] drm_gem_handle_create_tail+0xd8/0x250 drivers/gpu/drm/drm_gem.c:403
+    [<00000000d1e67364>] vgem_gem_create drivers/gpu/drm/vgem/vgem_drv.c:198 [inline]
+    [<00000000d1e67364>] vgem_gem_dumb_create+0x73/0x100 drivers/gpu/drm/vgem/vgem_drv.c:218
+    [<00000000dd87232b>] drm_mode_create_dumb+0xbe/0xf0 drivers/gpu/drm/drm_dumb_buffers.c:94
+    [<00000000d7ff7e08>] drm_ioctl_kernel+0xcb/0x130 drivers/gpu/drm/drm_ioctl.c:787
+    [<0000000080a20f26>] drm_ioctl+0x25c/0x420 drivers/gpu/drm/drm_ioctl.c:887
+    [<00000000d53a93ee>] vfs_ioctl fs/ioctl.c:47 [inline]
+    [<00000000d53a93ee>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:763
+    [<00000000c5492a67>] __do_sys_ioctl fs/ioctl.c:772 [inline]
+    [<00000000c5492a67>] __se_sys_ioctl fs/ioctl.c:770 [inline]
+    [<00000000c5492a67>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:770
+    [<00000000becf688f>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<0000000050094727>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
