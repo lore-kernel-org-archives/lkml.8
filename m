@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000DFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9617C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD84B20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57B5214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607690;
-	bh=ac9LB+mggSg1L55NuykFTX4QFSdgB8uLvduZC4UzgWg=;
+	s=default; t=1586607693;
+	bh=SLxe7vui/sy4bL9CxI8nH4037eviKppUqHtZ57BTB3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fvw7knJpsfH4V1goISzb7WxD3MmKyBMq9nMPHqb8qRbrGS0pCGeMh50jbIUbICRKP
-	 2K9ExawAA8JlTaxBE3QSvRbe8b/ZaB7x04Lsgn3P+F7CNHvulA1kXwhP3XGfnSQ75z
-	 dp8dkIvaQrilIV8y+PrZ4mtv2XqkPpSI7fUAW/G0=
+	b=rR9C8hXzz6vglqoDuxsyz0ZhOsZHb4e7old3gg0nNPCVG6z7wryA6Lad/Lhop3KDW
+	 kQmXiYSG6QfCr50AeIKHnT5ABSfbAppTum8KHT6sF2oaa7Sj99Ct+uzDUhGklvH9FV
+	 N5JRpe4mOHkmvlblea9dDKam+i9CUuPsrD8qte5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgDKMV2 (ORCPT
+        id S1728460AbgDKMVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728438AbgDKMVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:22 -0400
+        id S1728961AbgDKMV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951CF2084D;
-        Sat, 11 Apr 2020 12:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A324214D8;
+        Sat, 11 Apr 2020 12:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607683;
-        bh=ac9LB+mggSg1L55NuykFTX4QFSdgB8uLvduZC4UzgWg=;
+        s=default; t=1586607685;
+        bh=SLxe7vui/sy4bL9CxI8nH4037eviKppUqHtZ57BTB3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qptXVOpFPpoxU6HMTRP5JVlcGRNVM5rXCGzZgHUHvVvzSKOUNlJmh4XCV/vuAqRxi
-         OZH233y8n+aq/U2ZOeNQvY+bKaofRQnqVr+AkPr5rkRquWTLiFENIoNR5bUKhLQB2O
-         LZa7nzy8WqZXu7zEK+FOYch8+nhhufGfORXtoxrk=
+        b=h9UidwObZsgQsuQAJG2WfghUCmFy+3ZqsNfW2JN3DqYSUhHuae9ODN06Yi0AiqdQ8
+         zhiwDc1ZJvStxE2g/3jmjCW7NoZ2YIPz5TKw2PeMiVPyIqxx8vBySVJ6SgRFXk1zYC
+         pkmja5U4sVXvzjYBPl/TtwYP6VfcwZCp7qH0kvro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 06/38] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-Date:   Sat, 11 Apr 2020 14:09:43 +0200
-Message-Id: <20200411115500.067229418@linuxfoundation.org>
+Subject: [PATCH 5.6 07/38] net_sched: add a temporary refcnt for struct tcindex_data
+Date:   Sat, 11 Apr 2020 14:09:44 +0200
+Message-Id: <20200411115500.140451725@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -61,63 +65,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
+[ Upstream commit 304e024216a802a7dc8ba75d36de82fa136bbf3e ]
 
-After the power-down bit is cleared, the chip internally triggers a
-global reset. According to the KSZ9031 documentation, we have to wait at
-least 1ms for the reset to finish.
+Although we intentionally use an ordered workqueue for all tc
+filter works, the ordering is not guaranteed by RCU work,
+given that tcf_queue_work() is esstenially a call_rcu().
 
-If the chip is accessed during reset, read will return 0xffff, while
-write will be ignored. Depending on the system performance and MDIO bus
-speed, we may or may not run in to this issue.
+This problem is demostrated by Thomas:
 
-This bug was discovered on an iMX6QP system with KSZ9031 PHY and
-attached PHY interrupt line. If IRQ was used, the link status update was
-lost. In polling mode, the link status update was always correct.
+  CPU 0:
+    tcf_queue_work()
+      tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
 
-The investigation showed, that during a read-modify-write access, the
-read returned 0xffff (while the chip was still in reset) and
-corresponding write hit the chip _after_ reset and triggered (due to the
-0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
-resulting in the next write being lost due to the new reset cycle.
+  -> Migration to CPU 1
 
-This patch fixes the issue by adding a 1...2 ms sleep after the
-genphy_resume().
+  CPU 1:
+     tcf_queue_work(&p->rwork, tcindex_destroy_work);
 
-Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+so the 2nd work could be queued before the 1st one, which leads
+to a free-after-free.
+
+Enforcing this order in RCU work is hard as it requires to change
+RCU code too. Fortunately we can workaround this problem in tcindex
+filter by taking a temporary refcnt, we only refcnt it right before
+we begin to destroy it. This simplifies the code a lot as a full
+refcnt requires much more changes in tcindex_set_parms().
+
+Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
+Fixes: 3d210534cc93 ("net_sched: fix a race condition in tcindex_destroy()")
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/micrel.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ net/sched/cls_tcindex.c |   44 ++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -25,6 +25,7 @@
- #include <linux/micrel_phy.h>
- #include <linux/of.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -11,6 +11,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/errno.h>
+ #include <linux/slab.h>
++#include <linux/refcount.h>
+ #include <net/act_api.h>
+ #include <net/netlink.h>
+ #include <net/pkt_cls.h>
+@@ -26,9 +27,12 @@
+ #define DEFAULT_HASH_SIZE	64	/* optimized for diffserv */
  
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
-@@ -902,6 +903,12 @@ static int kszphy_resume(struct phy_devi
  
- 	genphy_resume(phydev);
- 
-+	/* After switching from power-down to normal mode, an internal global
-+	 * reset is automatically generated. Wait a minimum of 1 ms before
-+	 * read/write access to the PHY registers.
-+	 */
-+	usleep_range(1000, 2000);
++struct tcindex_data;
 +
- 	ret = kszphy_config_reset(phydev);
- 	if (ret)
- 		return ret;
+ struct tcindex_filter_result {
+ 	struct tcf_exts		exts;
+ 	struct tcf_result	res;
++	struct tcindex_data	*p;
+ 	struct rcu_work		rwork;
+ };
+ 
+@@ -49,6 +53,7 @@ struct tcindex_data {
+ 	u32 hash;		/* hash table size; 0 if undefined */
+ 	u32 alloc_hash;		/* allocated size */
+ 	u32 fall_through;	/* 0: only classify if explicit match */
++	refcount_t refcnt;	/* a temporary refcnt for perfect hash */
+ 	struct rcu_work rwork;
+ };
+ 
+@@ -57,6 +62,20 @@ static inline int tcindex_filter_is_set(
+ 	return tcf_exts_has_actions(&r->exts) || r->res.classid;
+ }
+ 
++static void tcindex_data_get(struct tcindex_data *p)
++{
++	refcount_inc(&p->refcnt);
++}
++
++static void tcindex_data_put(struct tcindex_data *p)
++{
++	if (refcount_dec_and_test(&p->refcnt)) {
++		kfree(p->perfect);
++		kfree(p->h);
++		kfree(p);
++	}
++}
++
+ static struct tcindex_filter_result *tcindex_lookup(struct tcindex_data *p,
+ 						    u16 key)
+ {
+@@ -141,6 +160,7 @@ static void __tcindex_destroy_rexts(stru
+ {
+ 	tcf_exts_destroy(&r->exts);
+ 	tcf_exts_put_net(&r->exts);
++	tcindex_data_put(r->p);
+ }
+ 
+ static void tcindex_destroy_rexts_work(struct work_struct *work)
+@@ -212,6 +232,8 @@ found:
+ 		else
+ 			__tcindex_destroy_fexts(f);
+ 	} else {
++		tcindex_data_get(p);
++
+ 		if (tcf_exts_get_net(&r->exts))
+ 			tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+ 		else
+@@ -228,9 +250,7 @@ static void tcindex_destroy_work(struct
+ 					      struct tcindex_data,
+ 					      rwork);
+ 
+-	kfree(p->perfect);
+-	kfree(p->h);
+-	kfree(p);
++	tcindex_data_put(p);
+ }
+ 
+ static inline int
+@@ -248,9 +268,11 @@ static const struct nla_policy tcindex_p
+ };
+ 
+ static int tcindex_filter_result_init(struct tcindex_filter_result *r,
++				      struct tcindex_data *p,
+ 				      struct net *net)
+ {
+ 	memset(r, 0, sizeof(*r));
++	r->p = p;
+ 	return tcf_exts_init(&r->exts, net, TCA_TCINDEX_ACT,
+ 			     TCA_TCINDEX_POLICE);
+ }
+@@ -290,6 +312,7 @@ static int tcindex_alloc_perfect_hash(st
+ 				    TCA_TCINDEX_ACT, TCA_TCINDEX_POLICE);
+ 		if (err < 0)
+ 			goto errout;
++		cp->perfect[i].p = cp;
+ 	}
+ 
+ 	return 0;
+@@ -334,6 +357,7 @@ tcindex_set_parms(struct net *net, struc
+ 	cp->alloc_hash = p->alloc_hash;
+ 	cp->fall_through = p->fall_through;
+ 	cp->tp = tp;
++	refcount_set(&cp->refcnt, 1); /* Paired with tcindex_destroy_work() */
+ 
+ 	if (tb[TCA_TCINDEX_HASH])
+ 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
+@@ -366,7 +390,7 @@ tcindex_set_parms(struct net *net, struc
+ 	}
+ 	cp->h = p->h;
+ 
+-	err = tcindex_filter_result_init(&new_filter_result, net);
++	err = tcindex_filter_result_init(&new_filter_result, cp, net);
+ 	if (err < 0)
+ 		goto errout_alloc;
+ 	if (old_r)
+@@ -434,7 +458,7 @@ tcindex_set_parms(struct net *net, struc
+ 			goto errout_alloc;
+ 		f->key = handle;
+ 		f->next = NULL;
+-		err = tcindex_filter_result_init(&f->result, net);
++		err = tcindex_filter_result_init(&f->result, cp, net);
+ 		if (err < 0) {
+ 			kfree(f);
+ 			goto errout_alloc;
+@@ -447,7 +471,7 @@ tcindex_set_parms(struct net *net, struc
+ 	}
+ 
+ 	if (old_r && old_r != r) {
+-		err = tcindex_filter_result_init(old_r, net);
++		err = tcindex_filter_result_init(old_r, cp, net);
+ 		if (err < 0) {
+ 			kfree(f);
+ 			goto errout_alloc;
+@@ -571,6 +595,14 @@ static void tcindex_destroy(struct tcf_p
+ 		for (i = 0; i < p->hash; i++) {
+ 			struct tcindex_filter_result *r = p->perfect + i;
+ 
++			/* tcf_queue_work() does not guarantee the ordering we
++			 * want, so we have to take this refcnt temporarily to
++			 * ensure 'p' is freed after all tcindex_filter_result
++			 * here. Imperfect hash does not need this, because it
++			 * uses linked lists rather than an array.
++			 */
++			tcindex_data_get(p);
++
+ 			tcf_unbind_filter(tp, &r->res);
+ 			if (tcf_exts_get_net(&r->exts))
+ 				tcf_queue_work(&r->rwork,
 
 
