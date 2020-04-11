@@ -2,140 +2,106 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A4EC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4030BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC672145D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnbmybcn"
+	by mail.kernel.org (Postfix) with ESMTP id 1E82E2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgDKSWR (ORCPT
+        id S1726701AbgDKS2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 14:22:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43302 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgDKSWP (ORCPT
+        Sat, 11 Apr 2020 14:28:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55420 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgDKS2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 14:22:15 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h25so4938457lja.10;
-        Sat, 11 Apr 2020 11:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aKI8/vIrSeNG/JRzRpmvFSBgWCKAHHoTosK6sbG966M=;
-        b=qnbmybcnWU1cTq0pEE3TbtoTGHbYWV5wuLQww7nzU/DFnE/YG0wvQJicC/eWaXF5dL
-         zxVrm4dc7x24SwRjNYbEZ0TerfJYo+ITAkywudGWEXr58UiBC1RA/Hp8Pmufe0TJVGfo
-         jY9WVgx1yIw18urvjbDBqR2Y1/x7hWu9aeCF8dPFN/U7x/X6PCV9G8OxQUx7WJlGvBCf
-         FH2IquWLSX0vh8k0wj3ULqfFBbObpl09cEMEStzblYhkEKihlBDe8jK3TmBzGJPlsZYq
-         pEVx8Gt42lTVKNSU7JQlzSvVqkK2gqSL8ibTMvqVX3unMfAN9TY0HBdQWj1wIib3Vpmr
-         xr+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aKI8/vIrSeNG/JRzRpmvFSBgWCKAHHoTosK6sbG966M=;
-        b=JuMmaV/jhtiKM/LWF9I40OJwy8yolrH2tjFNqZ6EDSHbpPeqwWv3FoHc/DoPjHw6Md
-         dzW2MzT+ZZc0yOkmt3k+8LAUcW9Khw9UnIUMke6GXiG/oMeC7S05QYyWX5VIxN+dfJPD
-         WnKs7jUyR6ods9fj+qcwzDmDuV2dFKhiTiDaViKlNsk1fnCqiOUnLgbTx9DWH43FfbJM
-         LZ7Pt0hBbe83CflswO0y+OBYiYJdvZ1/SIsrArAfl7TIRhrzp9mgRUPK16qQBGCCkaiH
-         cpHNhget1CjU6EkBnM+wWovNR5i7O1vbYOHH+GeygkJFHPnH6R4CbeOawPyJOErFnP7w
-         QOGw==
-X-Gm-Message-State: AGi0PublKeAHxbeyqaBwT1MjInjePUtQn9UcJ5ZtnJcDcEDg5YXGdjgG
-        bjaC+9/XYtvvJ+zb8445BcG4AqPT0KzcFQ==
-X-Google-Smtp-Source: APiQypKfE9VcQ0FI3X3f55LKexDyh5lk8u2PE5/y8Zxy9zaiyXu99AnS8sU0XyuFHM14mVpHPx82VA==
-X-Received: by 2002:a2e:8017:: with SMTP id j23mr5967997ljg.271.1586629331207;
-        Sat, 11 Apr 2020 11:22:11 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id o16sm3889971ljp.53.2020.04.11.11.22.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 11:22:10 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Daniele Debernardi <drebrez@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH v2 4/5] ARM: dts: qcom: msm8974-klte: Add sdhci1 node
-Date:   Sat, 11 Apr 2020 21:21:21 +0300
-Message-Id: <20200411182122.2677248-5-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411182122.2677248-1-iskren.chernev@gmail.com>
-References: <20200411182122.2677248-1-iskren.chernev@gmail.com>
+        Sat, 11 Apr 2020 14:28:15 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 15EB81C6385; Sat, 11 Apr 2020 20:28:14 +0200 (CEST)
+Date:   Sat, 11 Apr 2020 20:28:13 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4.19 03/54] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200411182813.GA18221@duo.ucw.cz>
+References: <20200411115508.284500414@linuxfoundation.org>
+ <20200411115508.593027768@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+In-Reply-To: <20200411115508.593027768@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Debernardi <drebrez@gmail.com>
 
-This introduces the eMMC sdhci node and its pinctrl state
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
----
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+Hi!
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 752ab9e99a8c..42fc18804021 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -152,6 +152,9 @@ pma8084_l19: l19 {
- 					pma8084_l20: l20 {
- 						regulator-min-microvolt = <2950000>;
- 						regulator-max-microvolt = <2950000>;
-+
-+						regulator-allow-set-load;
-+						regulator-system-load = <200000>;
- 					};
- 
- 					pma8084_l21: l21 {
-@@ -240,6 +243,35 @@ volume-up {
- 			debounce-interval = <15>;
- 		};
- 	};
-+
-+	pinctrl@fd510000 {
-+		sdhc1_pin_a: sdhc1-pin-active {
-+			clk {
-+				pins = "sdc1_clk";
-+				drive-strength = <4>;
-+				bias-disable;
-+			};
-+
-+			cmd-data {
-+				pins = "sdc1_cmd", "sdc1_data";
-+				drive-strength = <4>;
-+				bias-pull-up;
-+			};
-+		};
-+	};
-+
-+	sdhci@f9824900 {
-+		status = "ok";
-+
-+		vmmc-supply = <&pma8084_l20>;
-+		vqmmc-supply = <&pma8084_s4>;
-+
-+		bus-width = <8>;
-+		non-removable;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdhc1_pin_a>;
-+	};
- };
- 
- &spmi_bus {
--- 
-2.26.0
+> The following case cause the bug:
+> for the trouble SKB, it was in outq->transmitted list
 
+Ok... but this is one hell of "interesting" code.
+
+> --- a/net/sctp/socket.c
+> +++ b/net/sctp/socket.c
+> @@ -165,29 +165,44 @@ static void sctp_clear_owner_w(struct sc
+>  	skb_orphan(chunk->skb);
+>  }
+> =20
+> +#define traverse_and_process()	\
+> +do {				\
+> +	msg =3D chunk->msg;	\
+> +	if (msg =3D=3D prev_msg)	\
+> +		continue;	\
+> +	list_for_each_entry(c, &msg->chunks, frag_list) {	\
+> +		if ((clear && asoc->base.sk =3D=3D c->skb->sk) ||	\
+> +		    (!clear && asoc->base.sk !=3D c->skb->sk))	\
+> +			cb(c);	\
+> +	}			\
+> +	prev_msg =3D msg;		\
+> +} while (0)
+
+Should this be function?
+
+Do you see how it does "continue"? But the do {} while(0) wrapper eats
+the continue. "break" would be more clear here, but they are really
+equivalent due to way this macro is used.
+
+It is just very, very confusing.
+
+Best regards,
+								Pavel
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXpIMPQAKCRAw5/Bqldv6
+8nGRAJ9i+7V6V7ICNl35CSsTotQAtMT4QACeP2kjyhviB509AsRsg+Jcj713Q1A=
+=8Hn4
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
