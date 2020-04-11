@@ -2,72 +2,83 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B59C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D8520757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A13820757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgDKQaR (ORCPT
+        id S1726673AbgDKQhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:30:17 -0400
-Received: from smtprelay0157.hostedemail.com ([216.40.44.157]:51378 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726069AbgDKQaR (ORCPT
+        Sat, 11 Apr 2020 12:37:40 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58749 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgDKQhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:30:17 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 4C7DB49960C;
-        Sat, 11 Apr 2020 16:30:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: grain43_59ae7ef96930e
-X-Filterd-Recvd-Size: 1570
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 11 Apr 2020 16:30:16 +0000 (UTC)
-Message-ID: <ba7b958fda7c42e10fded7b158e892e2dfb06494.camel@perches.com>
-Subject: [trivial PATCH] um virtio: Neaten vu_err macro definition
-From:   Joe Perches <joe@perches.com>
-To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     Erel Geron <erelx.geron@intel.com>, linux-um@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sat, 11 Apr 2020 09:28:08 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 11 Apr 2020 12:37:39 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jNJ8T-0006E1-Cn; Sat, 11 Apr 2020 18:37:37 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jNJ8S-00075M-LL; Sat, 11 Apr 2020 18:37:36 +0200
+Date:   Sat, 11 Apr 2020 18:37:36 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
+Message-ID: <20200411163736.mcxk5ujzjy5mzjib@pengutronix.de>
+References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Defining a macro with ... and __VA_ARGS__ (without ##) can cause
-compilation errors if a macro use does not have additional args.
+Hello,
 
-Add ## to __VA_ARGS__ in the macro definition.
+On Sat, Apr 11, 2020 at 05:35:28PM +0200, Christophe JAILLET wrote:
+> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
+> 
+> Fixes: 3ad1f3a33286 ("pwm: Implement some checks for lowlevel drivers")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/pwm/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 9973c442b455..bca04965bfe6 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -537,7 +537,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+>  
+>  	if (!state->enabled && s2.enabled && s2.duty_cycle > 0)
+>  		dev_warn(chip->dev,
+> -			 "requested disabled, but yielded enabled with duty > 0");
+> +			 "requested disabled, but yielded enabled with duty > 0\n");
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- arch/um/drivers/virtio_uml.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
-index be54d3..351aee5 100644
---- a/arch/um/drivers/virtio_uml.c
-+++ b/arch/um/drivers/virtio_uml.c
-@@ -74,7 +74,7 @@ struct virtio_uml_vq_info {
- 
- extern unsigned long long physmem_size, highmem;
- 
--#define vu_err(vu_dev, ...)	dev_err(&(vu_dev)->pdev->dev, __VA_ARGS__)
-+#define vu_err(vu_dev, ...)	dev_err(&(vu_dev)->pdev->dev, ##__VA_ARGS__)
- 
- /* Vhost-user protocol */
- 
+Thanks,
+Uwe
 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
