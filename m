@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB03C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B56720787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD12620692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607415;
-	bh=TT64A1W14aMx+C6Ty9ZtW4tzFoenHFEPHktA6n1JgQ0=;
+	s=default; t=1586607418;
+	bh=H5wRBl9usrRxdoGd6XIwiwpgDi0f0gC2vbxAzrEVrZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aav9CQdmHzrX9ZnNEroLoz7vM4Du0Q0GfiBpXLMnMoZIqrDyWs3/FHMZIT3lpA49N
-	 1NM4LiIoX9R2spaZESCdmxOeKMPdObPpTTwyV5F2P5uZ3PRQXlTvl3OrsnkoxAn7LO
-	 /Uw9yDrgLLU6jXh1RBmAHC8Bni715TQye63SBO6c=
+	b=2Ajtz2+j7eJz3ImWbXhjKg7QQOCqM0ECLoIR0iUEZYu4V7WWqdv3UfIcy/zmoVoAG
+	 iMr+Nr+u7u7IBtuNpcdCc25AWhOUH1ywQsa7snLbtkyqHvzS2XXY4XIQfUNKdmjnCF
+	 GNIWFxf71991E0h9PFNWD8OyfN+AOUxv5ZOcZWeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgDKMQx (ORCPT
+        id S1728321AbgDKMQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51172 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbgDKMQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:50 -0400
+        id S1726777AbgDKMQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BF8A21655;
-        Sat, 11 Apr 2020 12:16:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E709620692;
+        Sat, 11 Apr 2020 12:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607409;
-        bh=TT64A1W14aMx+C6Ty9ZtW4tzFoenHFEPHktA6n1JgQ0=;
+        s=default; t=1586607414;
+        bh=H5wRBl9usrRxdoGd6XIwiwpgDi0f0gC2vbxAzrEVrZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c2WNqxr7oMCIsG5THAXNBXVd4MosXPKldZmSV8XHgtEyZPeNS3HKgfj2iBQoFzNc2
-         LEucWQBYxUNhHI2OWNsvAA7euxvn5IVZxwOnlsp+CRMH5UBglJu4j06P+qzmM7fWbh
-         QtavXNzxsbs63mP8JiGTkpIYx1HErBzXRT2f8ejU=
+        b=UoOEEFbeCIIFowrIRdduIHcJppbK0RA0HNNlsfq/2IpyxuXjx4uZc/vjl/E29FVKs
+         dnt8l5Ek9AIHXJvoJb/sYn712vm0DlVTubl2SLyL0+3ynQINo8ymWCS91+zrF2mNKI
+         Lk6Y3eWSybwAhOYXtGBsLGY4pt0AtzObjAI5hHqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 4.19 16/54] misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
-Date:   Sat, 11 Apr 2020 14:08:58 +0200
-Message-Id: <20200411115510.027666182@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 10/41] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+Date:   Sat, 11 Apr 2020 14:09:19 +0200
+Message-Id: <20200411115504.829363202@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
-References: <20200411115508.284500414@linuxfoundation.org>
+In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
+References: <20200411115504.124035693@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,109 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-commit b2ba9225e0313b1de631a44b7b48c109032bffec upstream.
+[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
 
-commit e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
-uses module parameter 'irqtype' in pci_endpoint_test_set_irq()
-to check if IRQ vectors of a particular type (MSI or MSI-X or
-LEGACY) is already allocated. However with multi-function devices,
-'irqtype' will not correctly reflect the IRQ type of the PCI device.
+Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
+entries") cleared the unused mac address entries, but introduced an
+out-of bounds mac address register programming bug -- After setting
+the secondary unicast mac addresses, the "reg" value has reached
+netdev_uc_count() + 1, thus we should only clear address entries
+if (addr < perfect_addr_number)
 
-Fix it here by adding 'irqtype' for each PCI device to show the
-IRQ type of a particular PCI device.
-
-Fixes: e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.19+
+Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/misc/pci_endpoint_test.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -104,6 +104,7 @@ struct pci_endpoint_test {
- 	struct completion irq_raised;
- 	int		last_irq;
- 	int		num_irqs;
-+	int		irq_type;
- 	/* mutex to protect the ioctls */
- 	struct mutex	mutex;
- 	struct miscdevice miscdev;
-@@ -163,6 +164,7 @@ static void pci_endpoint_test_free_irq_v
- 	struct pci_dev *pdev = test->pdev;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -209,7 +209,7 @@ static void dwmac1000_set_filter(struct
+ 			reg++;
+ 		}
  
- 	pci_free_irq_vectors(pdev);
-+	test->irq_type = IRQ_TYPE_UNDEFINED;
- }
- 
- static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
-@@ -197,6 +199,8 @@ static bool pci_endpoint_test_alloc_irq_
- 		irq = 0;
- 		res = false;
- 	}
-+
-+	test->irq_type = type;
- 	test->num_irqs = irq;
- 
- 	return res;
-@@ -336,6 +340,7 @@ static bool pci_endpoint_test_copy(struc
- 	dma_addr_t orig_dst_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 src_crc32;
- 	u32 dst_crc32;
- 
-@@ -432,6 +437,7 @@ static bool pci_endpoint_test_write(stru
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 crc32;
- 
- 	if (size > SIZE_MAX - alignment)
-@@ -500,6 +506,7 @@ static bool pci_endpoint_test_read(struc
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 crc32;
- 
- 	if (size > SIZE_MAX - alignment)
-@@ -561,7 +568,7 @@ static bool pci_endpoint_test_set_irq(st
- 		return false;
- 	}
- 
--	if (irq_type == req_irq_type)
-+	if (test->irq_type == req_irq_type)
- 		return true;
- 
- 	pci_endpoint_test_release_irq(test);
-@@ -573,12 +580,10 @@ static bool pci_endpoint_test_set_irq(st
- 	if (!pci_endpoint_test_request_irq(test))
- 		goto err;
- 
--	irq_type = req_irq_type;
- 	return true;
- 
- err:
- 	pci_endpoint_test_free_irq_vectors(test);
--	irq_type = IRQ_TYPE_UNDEFINED;
- 	return false;
- }
- 
-@@ -655,6 +660,7 @@ static int pci_endpoint_test_probe(struc
- 	test->test_reg_bar = 0;
- 	test->alignment = 0;
- 	test->pdev = pdev;
-+	test->irq_type = IRQ_TYPE_UNDEFINED;
- 
- 	if (no_msi)
- 		irq_type = IRQ_TYPE_LEGACY;
+-		while (reg <= perfect_addr_number) {
++		while (reg < perfect_addr_number) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
 
 
