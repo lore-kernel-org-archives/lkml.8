@@ -2,122 +2,173 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A51C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B562C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5AD12078E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpDd2Pph"
+	by mail.kernel.org (Postfix) with ESMTP id 5CB652078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgDKQEL (ORCPT
+        id S1726678AbgDKQEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:04:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38340 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgDKQEK (ORCPT
+        Sat, 11 Apr 2020 12:04:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55230 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgDKQEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:04:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y25so133950pfn.5;
-        Sat, 11 Apr 2020 09:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=uH/uW4uuwVc/sUawxiLaFcYoWaZecblOcPGAeVmrbRA=;
-        b=bpDd2PphtMcSemGxsrV2MW+BLa4JF/TZ9SPOkaI7IE8DsUJNM8Kugv5GA2SSkjKynG
-         M5PGUpytCyWBwp2GtTY/kdyooJF5UKajhfg5+GJgysfUrG5v9pdv9bmHfiY21C+tRDA8
-         H6QOu7cfT7F+ZDCCkZOJ68BuQy4yZy1M7jFcIXf+UuXeo24MdCYOH13d/ERfUYY7rDCn
-         lVsl56il3TN6e7ma+5n1yZKve/huDJRF0+m7ZYNPApriP5n2RBxS4tQDuDDPU+XUwpGX
-         PSqMjlsJRf2AzZAdOpzahXVHH+I6ai1+WEHk5YO1BvjwB6Lzg2aP4rbZFH9mBclETUut
-         US5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=uH/uW4uuwVc/sUawxiLaFcYoWaZecblOcPGAeVmrbRA=;
-        b=es1piTxgJB/h0NYtWFqTWiEVVaftAo2YPXHIVUbN7p8PLrBwY+U+MrIzcB6oR++4p5
-         53M2LDaO+H5ykNSstbkRSqUyUcja8/WYYOUQZivTgxJ2BEngN5Un0AXAonxTi1RSqNw3
-         NC4LvJz1DzpUNv2bUhDR/ZpC7wFXG+ZGLQ+bMkzu+VqUfiEeEfbxEebw8Wo3hy8AxVxQ
-         mRsjZO5nhGpU7oJwAtqPRyLN+j9m/9dUJe+xUrrjUmPoX3BYSgX8S133RXmU3DeE6c0z
-         2zmZn1GFJfJSMTrh680bVtJAT21MXan4LS4/oZjkAMF71IbOPtxTeMV8/XLrBJbRr3GF
-         npLg==
-X-Gm-Message-State: AGi0PuZu/UEXWHSw7W0Tno0wfHX6emu2L/+dRZKvP6tlUmglyUMv9QuK
-        vTS9oMSpBr9aZoMnU4Z+64c=
-X-Google-Smtp-Source: APiQypLdNiYiF+7hS+5k0UH+NUie1b5tew65NkXTnDcayarF6ShrqWloGrmA4pOce85bpSbWi3Slvg==
-X-Received: by 2002:a62:1946:: with SMTP id 67mr10618076pfz.0.1586621050221;
-        Sat, 11 Apr 2020 09:04:10 -0700 (PDT)
-Received: from localhost ([183.82.183.27])
-        by smtp.gmail.com with ESMTPSA id nl7sm4661950pjb.36.2020.04.11.09.04.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Apr 2020 09:04:09 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 21:34:07 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH 0/3] Remove setup_percpu_irq() & remove_percpu_irq
-Message-ID: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
+        Sat, 11 Apr 2020 12:04:15 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jNIc6-0007Wc-Hq; Sat, 11 Apr 2020 18:04:10 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 310751C0481;
+        Sat, 11 Apr 2020 18:04:10 +0200 (CEST)
+Date:   Sat, 11 Apr 2020 16:04:09 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/split_lock: Provide handle_guest_split_lock()
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200410115516.978037132@linutronix.de>
+References: <20200410115516.978037132@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Message-ID: <158662104983.28353.13272730251943920504.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the x86/urgent branch of tip:
 
-While doing the removal of setup_irq(), it was observed that
-setup_percpu_irq() also can be removed similarly by replacing it w/
-request_percpu_irq(), which does allocate memory. In the initial
-setup_irq() removal cover letters [1], it was mentioned that
-setup_percpu_irq() is untouched.
+Commit-ID:     d7e94dbdac1a40924626b0efc7ff530c8baf5e4a
+Gitweb:        https://git.kernel.org/tip/d7e94dbdac1a40924626b0efc7ff530c8baf5e4a
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 10 Apr 2020 13:54:00 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Sat, 11 Apr 2020 16:39:30 +02:00
 
-After removing setup_irq(), it does not look good to let live
-setup_percpu_irq(), especially since it being a low hanging fruit. Hence
-replace setup_percpu_irq() by it's allocator equivalent.
-request_percpu_irq() cannot be used since all the users need to pass
-IRQF_TIMER flag, which it would not allow. Thus it's variant,
-__request_percpu_irq() is used.
+x86/split_lock: Provide handle_guest_split_lock()
 
-In addition to removing setup_percpu_irq() definition,
-remove_percpu_irq(), unused, is also removed.
+Without at least minimal handling for split lock detection induced #AC,
+VMX will just run into the same problem as the VMWare hypervisor, which
+was reported by Kenneth.
 
-It seems setup_percpu_irq() is used only by MIPS (even the one outside
-MIPS arch dir, i.e. the clocksource driver). The series has been build
-tested, though i would have loved to do a qemu test as well, i do not
-see a qemu machine type that can test the changes done here (in malta
-machine, in which clocksource changes are getting built, the changes
-done here are not being runtime tested).
+It will inject the #AC blindly into the guest whether the guest is
+prepared or not.
 
-Regards
-afzal
+Provide a function for guest mode which acts depending on the host
+SLD mode. If mode == sld_warn, treat it like user space, i.e. emit a
+warning, disable SLD and mark the task accordingly. Otherwise force
+SIGBUS.
 
-[1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
+ [ bp: Add a !CPU_SUP_INTEL stub for handle_guest_split_lock(). ]
 
-afzal mohammed (3):
-  MIPS: Replace setup_percpu_irq() by request_percpu_irq() variant
-  clocksource/drivers/mips-gic-timer: Replace setup_percpu_irq() by
-    request_percpu_irq() variant
-  genirq: Remove setup_percpu_irq() and remove_percpu_irq()
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lkml.kernel.org/r/20200410115516.978037132@linutronix.de
+Link: https://lkml.kernel.org/r/20200402123258.895628824@linutronix.de
+---
+ arch/x86/include/asm/cpu.h  |  6 ++++++
+ arch/x86/kernel/cpu/intel.c | 33 ++++++++++++++++++++++++++++-----
+ 2 files changed, 34 insertions(+), 5 deletions(-)
 
- arch/mips/include/asm/cevt-r4k.h     |  1 -
- arch/mips/kernel/cevt-r4k.c          | 11 --------
- arch/mips/sgi-ip27/ip27-timer.c      | 13 ++++-----
- arch/mips/sgi-ip30/ip30-timer.c      |  6 ++--
- drivers/clocksource/mips-gic-timer.c | 10 ++-----
- include/linux/irq.h                  |  2 --
- kernel/irq/manage.c                  | 42 ----------------------------
- 7 files changed, 10 insertions(+), 75 deletions(-)
-
--- 
-2.18.0
-
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index ff6f3ca..dd17c2d 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -44,6 +44,7 @@ unsigned int x86_stepping(unsigned int sig);
+ extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+ extern void switch_to_sld(unsigned long tifn);
+ extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
++extern bool handle_guest_split_lock(unsigned long ip);
+ #else
+ static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+ static inline void switch_to_sld(unsigned long tifn) {}
+@@ -51,5 +52,10 @@ static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+ {
+ 	return false;
+ }
++
++static inline bool handle_guest_split_lock(unsigned long ip)
++{
++	return false;
++}
+ #endif
+ #endif /* _ASM_X86_CPU_H */
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 9a26e97..bf08d45 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -21,6 +21,7 @@
+ #include <asm/elf.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/cmdline.h>
++#include <asm/traps.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <linux/topology.h>
+@@ -1066,13 +1067,10 @@ static void split_lock_init(void)
+ 	split_lock_verify_msr(sld_state != sld_off);
+ }
+ 
+-bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++static void split_lock_warn(unsigned long ip)
+ {
+-	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+-		return false;
+-
+ 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+-			    current->comm, current->pid, regs->ip);
++			    current->comm, current->pid, ip);
+ 
+ 	/*
+ 	 * Disable the split lock detection for this task so it can make
+@@ -1081,6 +1079,31 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+ 	 */
+ 	sld_update_msr(false);
+ 	set_tsk_thread_flag(current, TIF_SLD);
++}
++
++bool handle_guest_split_lock(unsigned long ip)
++{
++	if (sld_state == sld_warn) {
++		split_lock_warn(ip);
++		return true;
++	}
++
++	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
++		     current->comm, current->pid,
++		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
++
++	current->thread.error_code = 0;
++	current->thread.trap_nr = X86_TRAP_AC;
++	force_sig_fault(SIGBUS, BUS_ADRALN, NULL);
++	return false;
++}
++EXPORT_SYMBOL_GPL(handle_guest_split_lock);
++
++bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++{
++	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
++		return false;
++	split_lock_warn(regs->ip);
+ 	return true;
+ }
+ 
