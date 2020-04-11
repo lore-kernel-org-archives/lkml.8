@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511BEC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AFBC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B73420692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74B520787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607628;
-	bh=EmfY0OTG7JZDE8KriKilKrAHF7WbXWBGs5/1e/lrTow=;
+	s=default; t=1586607630;
+	bh=KHHMwlUXQPyIsuBKNs5unVDwjd4W0sEXnD9GFZGIhkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FnMjeHQJPap0O+OPXc1uDKd19mtSpPbMOK8eEZDjF4v8HHzE0Mk9b8dU2+Znl2i7E
-	 YDyAIfQt1S4BRv9FEBtFWIs1UfjhApwYt43hBqC+jfajQND3ke50gMleVHY6Vdlmh6
-	 qeZZJTi6jE7p2Wzo4hoa9MDnif2BWutflgwC9a7o=
+	b=uemCxZL6qlTcgqNAxwJqgy17Qd0uflhgm5Zp6kVnXRvnzyUpIiJ8mzBkAx2CwrcEP
+	 ENycCyAesTqi75YRUM6pv/3VG5qfgRNss1Gu4InN+idi/bdQLzhv35GwhGk53Jyj5R
+	 5zyOrK2hSIUjLi0+yvgj8DBJUXCSKPseX3HVBqn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgDKMUZ (ORCPT
+        id S1729015AbgDKMU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727608AbgDKMUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:24 -0400
+        id S1727608AbgDKMU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E818B206A1;
-        Sat, 11 Apr 2020 12:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B50920644;
+        Sat, 11 Apr 2020 12:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607624;
-        bh=EmfY0OTG7JZDE8KriKilKrAHF7WbXWBGs5/1e/lrTow=;
+        s=default; t=1586607626;
+        bh=KHHMwlUXQPyIsuBKNs5unVDwjd4W0sEXnD9GFZGIhkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6aLCaqP9wyEb2aRC3zIo1S0A8K0m8J8q9kdgAO98c+AD65pkF8B+VWrBHFxWdbpk
-         wJFk77sS/oh8vrVBkVFm3RArqis+V1flLstiIoYPIezgdqoJ2sn9r/OmCPEF7bMON/
-         L/blNwEVAoTJQ7aRZS9ODM8KoSQjGa0Du+Yow8yY=
+        b=aC9QcyMnok7n7MNLS3hYiDptqBResqZSncC4c3JmknkTUhQLutoqylBYsh01jCqG8
+         KKbFF1s3xEBHrYuNo0ZBR173JLhp8onuZYC9+9E8W20rDId8VUYUag3XhLaIfy/3zx
+         Zp7su3j8PKfuJcunviugJ56p+UUdgB8blZWHs/sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net
-Subject: [PATCH 5.6 10/38] slcan: Dont transmit uninitialized stack data in padding
-Date:   Sat, 11 Apr 2020 14:09:47 +0200
-Message-Id: <20200411115500.480070777@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jason Wang <jasowang@redhat.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 5.6 11/38] tun: Dont put_page() for all negative return values from XDP program
+Date:   Sat, 11 Apr 2020 14:09:48 +0200
+Message-Id: <20200411115500.547343594@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -61,51 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
+[ Upstream commit bee348907d19d654e8524d3a946dcd25b693aa7e ]
 
-struct can_frame contains some padding which is not explicitly zeroed in
-slc_bump. This uninitialized data will then be transmitted if the stack
-initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
+When an XDP program is installed, tun_build_skb() grabs a reference to
+the current page fragment page if the program returns XDP_REDIRECT or
+XDP_TX. However, since tun_xdp_act() passes through negative return
+values from the XDP program, it is possible to trigger the error path by
+mistake and accidentally drop a reference to the fragments page without
+taking one, leading to a spurious free. This is believed to be the cause
+of some KASAN use-after-free reports from syzbot [1], although without a
+reproducer it is not possible to confirm whether this patch fixes the
+problem.
 
-This commit just zeroes the whole struct including the padding.
+Ensure that we only drop a reference to the fragments page if the XDP
+transmit or redirect operations actually fail.
 
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: security@kernel.org
-Cc: wg@grandegger.com
-Cc: mkl@pengutronix.de
-Cc: davem@davemloft.net
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+CC: Eric Dumazet <edumazet@google.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/tun.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -148,7 +148,7 @@ static void slc_bump(struct slcan *sl)
- 	u32 tmpid;
- 	char *cmd = sl->rbuff;
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(str
+ 			alloc_frag->offset += buflen;
+ 		}
+ 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
+-		if (err < 0)
+-			goto err_xdp;
++		if (err < 0) {
++			if (act == XDP_REDIRECT || act == XDP_TX)
++				put_page(alloc_frag->page);
++			goto out;
++		}
++
+ 		if (err == XDP_REDIRECT)
+ 			xdp_do_flush();
+ 		if (err != XDP_PASS)
+@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(str
  
--	cf.can_id = 0;
-+	memset(&cf, 0, sizeof(cf));
+ 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
  
- 	switch (*cmd) {
- 	case 'r':
-@@ -187,8 +187,6 @@ static void slc_bump(struct slcan *sl)
- 	else
- 		return;
- 
--	*(u64 *) (&cf.data) = 0; /* clear payload */
--
- 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
- 	if (!(cf.can_id & CAN_RTR_FLAG)) {
- 		for (i = 0; i < cf.can_dlc; i++) {
+-err_xdp:
+-	put_page(alloc_frag->page);
+ out:
+ 	rcu_read_unlock();
+ 	local_bh_enable();
 
 
