@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED96C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8FCC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73252166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894342166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607114;
-	bh=X2BENBbLy6MCfSpp22+T3ekykdiJL3kEpY4A+B45mYk=;
+	s=default; t=1586607117;
+	bh=D9BT4LnQiZVTSEBlj7I5RanesxFX/AwNwPbKZ9CyOBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJ5vPqPdjlUgmy1MitizNvGQ+1GHa7RmK5p2+sGNmyn+99pQt+YWzKiWOZOk8UeyQ
-	 IdANSI+0QnjQ5HCHlxdhjyqLFWK94YxJUD0PPqDBOhZICQm1XKX+vX6LYzKdN2FPyx
-	 NUX6KkSspB4/Rcy+9n/3bt/GFHx3D8s8rmrxjseg=
+	b=TGpneRhupMT9YWbVRCVAT/mihiX4qD3ocu8SlmHkPG7uvyr69iPIcAqMsbVsKRONz
+	 dkUBxPD/OU7loLazoVkEbgiPdLw/JZHV3SwOMf75tflp0OmLv+w7PXkbPGKMYi27Pe
+	 x8Fa/rRtY22SvbHP7V7bfLwEbyd+VDd/wNJyaf6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgDKMLx (ORCPT
+        id S1727083AbgDKMLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgDKMLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:49 -0400
+        id S1727045AbgDKMLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379B9216FD;
-        Sat, 11 Apr 2020 12:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3AE220787;
+        Sat, 11 Apr 2020 12:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607109;
-        bh=X2BENBbLy6MCfSpp22+T3ekykdiJL3kEpY4A+B45mYk=;
+        s=default; t=1586607107;
+        bh=D9BT4LnQiZVTSEBlj7I5RanesxFX/AwNwPbKZ9CyOBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRaP1VJ/1YTW7lzKcp5kN7ig45WW1z6IeYjq1RJK4LARDNqg3avLvcc0wWBkMQYs4
-         h8ETxQ95hpxqHtS+2rQS3A8h8kUyv3EStF4XJA0/3DbMcrlfj6M0GLAGTHOpwmEjzU
-         dFvd+V7e4UWcwQWuRfqfrskfgNvkMxaXO8ZZu9/w=
+        b=R1X1Aw+3Qa5Kxez0drEXdQ+dQ7rMJQl5QFJ/legVS29BTcXTVBJfRYTQRvaGD5HXN
+         lqaWZHyJDBVhXxnC8fIPKoTlVdafOgXNRfBIG6RrtVa2KVCBoOG7H3x+WN/+8tSV0R
+         nz+RDwsqwtX2mShCUcFVt7bo7hVviSLBH8c7LJ5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.9 11/32] coresight: do not use the BIT() macro in the UAPI header
-Date:   Sat, 11 Apr 2020 14:08:50 +0200
-Message-Id: <20200411115419.838338654@linuxfoundation.org>
+        stable@vger.kernel.org, Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.9 10/32] blk-mq: Allow blocking queue tag iter callbacks
+Date:   Sat, 11 Apr 2020 14:08:49 +0200
+Message-Id: <20200411115419.774992055@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -59,39 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugene Syromiatnikov <esyr@redhat.com>
+From: Keith Busch <keith.busch@intel.com>
 
-commit 9b6eaaf3db5e5888df7bca7fed7752a90f7fd871 upstream.
+commit 530ca2c9bd6949c72c9b5cfc330cb3dbccaa3f5b upstream.
 
-The BIT() macro definition is not available for the UAPI headers
-(moreover, it can be defined differently in the user space); replace
-its usage with the _BITUL() macro that is defined in <linux/const.h>.
+A recent commit runs tag iterator callbacks under the rcu read lock,
+but existing callbacks do not satisfy the non-blocking requirement.
+The commit intended to prevent an iterator from accessing a queue that's
+being modified. This patch fixes the original issue by taking a queue
+reference instead of reading it, which allows callbacks to make blocking
+calls.
 
-Fixes: 237483aa5cf4 ("coresight: stm: adding driver for CoreSight STM component")
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200324042213.GA10452@asgard.redhat.com
+Fixes: f5bbbbe4d6357 ("blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter")
+Acked-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/coresight-stm.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ block/blk-mq-tag.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/include/uapi/linux/coresight-stm.h
-+++ b/include/uapi/linux/coresight-stm.h
-@@ -1,8 +1,10 @@
- #ifndef __UAPI_CORESIGHT_STM_H_
- #define __UAPI_CORESIGHT_STM_H_
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -338,16 +338,11 @@ void blk_mq_queue_tag_busy_iter(struct r
  
--#define STM_FLAG_TIMESTAMPED   BIT(3)
--#define STM_FLAG_GUARANTEED    BIT(7)
-+#include <linux/const.h>
-+
-+#define STM_FLAG_TIMESTAMPED   _BITUL(3)
-+#define STM_FLAG_GUARANTEED    _BITUL(7)
+ 	/*
+ 	 * __blk_mq_update_nr_hw_queues will update the nr_hw_queues and
+-	 * queue_hw_ctx after freeze the queue. So we could use q_usage_counter
+-	 * to avoid race with it. __blk_mq_update_nr_hw_queues will users
+-	 * synchronize_rcu to ensure all of the users go out of the critical
+-	 * section below and see zeroed q_usage_counter.
++	 * queue_hw_ctx after freeze the queue, so we use q_usage_counter
++	 * to avoid race with it.
+ 	 */
+-	rcu_read_lock();
+-	if (percpu_ref_is_zero(&q->q_usage_counter)) {
+-		rcu_read_unlock();
++	if (!percpu_ref_tryget(&q->q_usage_counter))
+ 		return;
+-	}
  
- /*
-  * The CoreSight STM supports guaranteed and invariant timing
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		struct blk_mq_tags *tags = hctx->tags;
+@@ -363,7 +358,7 @@ void blk_mq_queue_tag_busy_iter(struct r
+ 			bt_for_each(hctx, &tags->breserved_tags, fn, priv, true);
+ 		bt_for_each(hctx, &tags->bitmap_tags, fn, priv, false);
+ 	}
+-	rcu_read_unlock();
++	blk_queue_exit(q);
+ }
+ 
+ static unsigned int bt_unused_tags(const struct sbitmap_queue *bt)
 
 
