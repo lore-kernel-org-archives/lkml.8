@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CFDC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DDE206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF9B20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647183;
-	bh=tAFtt0FP/YHelhbw3CZCB6T7kYIbsqFYoxocjmhIj58=;
+	s=default; t=1586647187;
+	bh=nU2lBQdXFq/PwgMdWlj3MWrtOBKp5uayA8jjATclXyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qce4UqA2OCqAeyDxgASv6IeKGE+W/tsMm1EyjZpMS2rZtpDBjEW9/UJRjxyegndOc
-	 3liEtR9PAFmOcqO7y+AqLUqbl35xTOKRTLT5MyVj2d9AQtv4Dfxl9TkHnEeMmj1gQt
-	 FpWOFC5IwrJI3Edqkqy4Lnq5m2mmS9U6K4fADA3E=
+	b=pm7h8lhdMsUTxRfgai8vYvrfp2Cnn7BTxzDfridLHRcOKM32XHIjl6ehG2VtgbywC
+	 DFlPb6UjCZhLhw0R1bHG++Ud5872R7hgclCvR2IKNCo+DWw3DUqkJMqAw31UAVdp16
+	 ONOGdCcL1/WjHtW8vd2dCPGFhZ3HdKlJcDwaXNVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgDKXTl (ORCPT
+        id S1730598AbgDKXNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55250 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbgDKXNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:53 -0400
+        id S1730544AbgDKXNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6F7E20CC7;
-        Sat, 11 Apr 2020 23:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AECC215A4;
+        Sat, 11 Apr 2020 23:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646833;
-        bh=tAFtt0FP/YHelhbw3CZCB6T7kYIbsqFYoxocjmhIj58=;
+        s=default; t=1586646824;
+        bh=nU2lBQdXFq/PwgMdWlj3MWrtOBKp5uayA8jjATclXyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUWWGWa9WHNG74UO8qZ2fWAJm0uBiyBwT6rMnLeQxYWUw+m7FrqzdqXjOG3xSGCq7
-         yRtKxWN2UkYbhVd4m2pY3BgdzxtndxMlGoEobyfbzTDsfLO6wGcYJh37onF9Mqltc3
-         cpNZS4zEJozhgOI0aADeamjuAqKrW6enp8gfAJkw=
+        b=YSb8s7rFuXUoRuz9OroWuGV3sSBVriLiCkqVCzG6bdvnYVMQVFhdxQ6AcpU8b74U/
+         7LvMD8OlYE9PmVTh/jnwVn7mBwtC12l5JOsErep4lspzHRHwSrJBHRSTxafhTavdcw
+         Jks+OLgxZARUZTfCOhSu1opbzNsfYWavUbKBr6Ns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, linux-audit@redhat.com
-Subject: [PATCH AUTOSEL 4.14 22/37] audit: CONFIG_CHANGE don't log internal bookkeeping as an event
-Date:   Sat, 11 Apr 2020 19:13:11 -0400
-Message-Id: <20200411231327.26550-22-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/37] Bluetooth: Fix calculation of SCO handle for packet processing
+Date:   Sat, 11 Apr 2020 19:13:03 -0400
+Message-Id: <20200411231327.26550-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -58,46 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Grubb <sgrubb@redhat.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit 70b3eeed49e8190d97139806f6fbaf8964306cdb ]
+[ Upstream commit debdedf2eb5a2d9777cabff40900772be13cd9f9 ]
 
-Common Criteria calls out for any action that modifies the audit trail to
-be recorded. That usually is interpreted to mean insertion or removal of
-rules. It is not required to log modification of the inode information
-since the watch is still in effect. Additionally, if the rule is a never
-rule and the underlying file is one they do not want events for, they
-get an event for this bookkeeping update against their wishes.
+When processing SCO packets, the handle is wrongly assumed as 16-bit
+value. The actual size is 12-bits and the other 4-bits are used for
+packet flags.
 
-Since no device/inode info is logged at insertion and no device/inode
-information is logged on update, there is nothing meaningful being
-communicated to the admin by the CONFIG_CHANGE updated_rules event. One
-can assume that the rule was not "modified" because it is still watching
-the intended target. If the device or inode cannot be resolved, then
-audit_panic is called which is sufficient.
-
-The correct resolution is to drop logging config_update events since
-the watch is still in effect but just on another unknown inode.
-
-Signed-off-by: Steve Grubb <sgrubb@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit_watch.c | 2 --
- 1 file changed, 2 deletions(-)
+ net/bluetooth/hci_core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-index 35f1d706bd5b4..ac87820cc0825 100644
---- a/kernel/audit_watch.c
-+++ b/kernel/audit_watch.c
-@@ -316,8 +316,6 @@ static void audit_update_watch(struct audit_parent *parent,
- 			if (oentry->rule.exe)
- 				audit_remove_mark(oentry->rule.exe);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index ff80a9d41ce17..18a676900e5b0 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4078,13 +4078,16 @@ static void hci_scodata_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	struct hci_sco_hdr *hdr = (void *) skb->data;
+ 	struct hci_conn *conn;
+-	__u16 handle;
++	__u16 handle, flags;
  
--			audit_watch_log_rule_change(r, owatch, "updated_rules");
--
- 			call_rcu(&oentry->rcu, audit_free_rule_rcu);
- 		}
+ 	skb_pull(skb, HCI_SCO_HDR_SIZE);
+ 
+ 	handle = __le16_to_cpu(hdr->handle);
++	flags  = hci_flags(handle);
++	handle = hci_handle(handle);
+ 
+-	BT_DBG("%s len %d handle 0x%4.4x", hdev->name, skb->len, handle);
++	BT_DBG("%s len %d handle 0x%4.4x flags 0x%4.4x", hdev->name, skb->len,
++	       handle, flags);
+ 
+ 	hdev->stat.sco_rx++;
  
 -- 
 2.20.1
