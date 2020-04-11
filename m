@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59B8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A55C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B604820732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FE120732
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608157;
-	bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
+	s=default; t=1586608168;
+	bh=Lq+c0hsqiUVZu7vthld/EVB7dfPYmMTCezE13xmjMxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tsi2w+MozpPC1/dSb8dSjwsL8weUqxv5TUtaucKQDLkxBJEzHxqmuJ7IH2Wncm/g5
-	 k3avloEUAKwcleyoq0uK6FwPeVF/emBQb/N4wfC4MQhYTfrRZTdUddcSav9QsVD/iZ
-	 zGTC6XuaDCaU1j+VenEWC/y+j+B1qcIyANIk32pY=
+	b=lD9/x2Aj8XxELXVvgPtoz572APCtJqdtVv3nxGqju7rIhlv/Iqf3pN3hwxbUI2/IY
+	 JZ6V1Iky7oO2fV+YTm3WAFRC/B5XTKhEUTk1bmI0HrRM9t1sle+t/niNiBq2QRvGbj
+	 XSEd9grmt26Ff3Eld5b61oHvpSeeekEDqS41Zdxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgDKM3Q (ORCPT
+        id S1726734AbgDKMKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgDKMLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:14 -0400
+        id S1726715AbgDKMKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:10:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2CC6215A4;
-        Sat, 11 Apr 2020 12:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A0B42084D;
+        Sat, 11 Apr 2020 12:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607073;
-        bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
+        s=default; t=1586607046;
+        bh=Lq+c0hsqiUVZu7vthld/EVB7dfPYmMTCezE13xmjMxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmsAfVC9yREbaPCFETivkAC1UAjVpy/+lGXX/BjMMmSjzB4Hwj8LGLfVNQK0og01W
-         g7GAzviEAVG34E8+OidQuVPRSTyZuxLXozHwxmZ4/yBCAwqIc6UMxJ52Yp8vbSiIw/
-         aEnY69dMth4WIBAa3m33T5X7MQGHV3VehAoxHmE8=
+        b=vbNNlrpRROXFUKWVnsCve8ghTQVG1FPONMsRuHeRobC0Fkb+05PaVv0sk1UNk+L5g
+         1FLzDl13tVf5CIUbljHpwi1zLl3spvrK1AYeS6wV2rvcqeIV1ixu4jC7qrVuPrCjTr
+         8Z8E2oPbfesbn0q2yIEMbHAYTwH7FuaQX4lcoMOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.4 26/29] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sat, 11 Apr 2020 14:08:56 +0200
-Message-Id: <20200411115412.206046292@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Turnbull <phil.turnbull@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.4 05/29] l2tp: Correctly return -EBADF from pppol2tp_getname.
+Date:   Sat, 11 Apr 2020 14:08:35 +0200
+Message-Id: <20200411115408.341698005@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -62,36 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: phil.turnbull@oracle.com <phil.turnbull@oracle.com>
 
-commit 71811cac8532b2387b3414f7cd8fe9e497482864 upstream.
+commit 4ac36a4adaf80013a60013d6f829f5863d5d0e05 upstream.
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+If 'tunnel' is NULL we should return -EBADF but the 'end_put_sess' path
+unconditionally sets 'error' back to zero. Rework the error path so it
+more closely matches pppol2tp_sendmsg.
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: fd558d186df2 ("l2tp: Split pppol2tp patch into separate l2tp and ppp parts")
+Signed-off-by: Phil Turnbull <phil.turnbull@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/rfcomm/tty.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/l2tp/l2tp_ppp.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
- 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
--		else if (dlc) {
--			rfcomm_dlc_put(dlc);
-+		if (dlc)
- 			return -EBUSY;
--		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
- 		if (!dlc)
- 			return -ENOMEM;
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -889,10 +889,8 @@ static int pppol2tp_getname(struct socke
+ 
+ 	pls = l2tp_session_priv(session);
+ 	tunnel = l2tp_sock_to_tunnel(pls->tunnel_sock);
+-	if (tunnel == NULL) {
+-		error = -EBADF;
++	if (tunnel == NULL)
+ 		goto end_put_sess;
+-	}
+ 
+ 	inet = inet_sk(tunnel->sock);
+ 	if ((tunnel->version == 2) && (tunnel->sock->sk_family == AF_INET)) {
+@@ -970,12 +968,11 @@ static int pppol2tp_getname(struct socke
+ 	}
+ 
+ 	*usockaddr_len = len;
++	error = 0;
+ 
+ 	sock_put(pls->tunnel_sock);
+ end_put_sess:
+ 	sock_put(sk);
+-	error = 0;
+-
+ end:
+ 	return error;
+ }
 
 
