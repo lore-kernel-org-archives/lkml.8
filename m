@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91546C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F70C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5E620644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA8320644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607740;
-	bh=datS3IKUZA9bgjNevrozUDfBcVDSvmpXzGjOJIW+x4A=;
+	s=default; t=1586607748;
+	bh=sZNG7zph7/w0mKXrXaRvWNUrnikRbDELWru8OvLv/v4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vkprSpWbT2Y3aKGScnMO1KeCevUXDGuyx460NAiDcKErsf7/mqU2dtLdGYC1CCSU
-	 SU4YGqi4TDFtxBPMXH1wzJ8ONAYVjcINK2GTWBRewLqfkzDaP4OBgqseG9e6sUlmqp
-	 euTc4YUxOL+7V9bF64swiRCsPKGmG+tcj2AXypAc=
+	b=mgG8eiEjWYLC/LmDWiURNXC0GqvvFY6L+7pVjYrpRn++TIxW1X5bOOACEHjFvd41r
+	 bpeQu33TBWvLrzc86F0Lzul3mKON98g2F5hkJtZNd2OEaV8r2GCNCnQWccQ06Cn0+u
+	 8o6VxDODcc0uqTLJPZ1EemqdSMMGQX++hiDdghyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgDKMWS (ORCPT
+        id S1728195AbgDKMW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57758 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgDKMV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:28 -0400
+        id S1728015AbgDKMVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7243820644;
-        Sat, 11 Apr 2020 12:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24E8D20644;
+        Sat, 11 Apr 2020 12:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607687;
-        bh=datS3IKUZA9bgjNevrozUDfBcVDSvmpXzGjOJIW+x4A=;
+        s=default; t=1586607680;
+        bh=sZNG7zph7/w0mKXrXaRvWNUrnikRbDELWru8OvLv/v4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M31vO071URnDQyCs4bae2rQbCVSGfZQvqO1Ko+8v+s825Ejv9euU2nahwQ6pNbgSY
-         gL+CNeFIk6nss+C0ff/unzHtqd4JpBDskykvXLM3be2+Sh8e+4kDUhYpbdwx8Gd5uF
-         OwVZJvv4AKns9dOQprrbIIryhPdZMzDCp3cMhaI0=
+        b=AvUSLuzii7hXrPg1BSMT5AZ/VsPp4zitJI0WseT2U97Yy2jWf2YPWEDgOj0TrLr6Q
+         ksKWqzXFN6SzhjhRIDctjNuHGjCCQC2yC2vvaF/NC69eHgN2j+yCmnY6uXHW8gQth5
+         e96N7VrPbiEWTTyOS18CE643mPTUyPzMqjlpiIrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 08/38] net_sched: fix a missing refcnt in tcindex_init()
-Date:   Sat, 11 Apr 2020 14:09:45 +0200
-Message-Id: <20200411115500.208523742@linuxfoundation.org>
+Subject: [PATCH 5.6 05/38] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+Date:   Sat, 11 Apr 2020 14:09:42 +0200
+Message-Id: <20200411115459.998115250@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -64,35 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Chuanhong Guo <gch981213@gmail.com>
 
-[ Upstream commit a8eab6d35e22f4f21471f16147be79529cd6aaf7 ]
+[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
 
-The initial refcnt of struct tcindex_data should be 1,
-it is clear that I forgot to set it to 1 in tcindex_init().
-This leads to a dec-after-zero warning.
+The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+and a phy-handle isn't always available.
+Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+connected to switch port 5 and setup mt7530 according to phy address
+of 2nd gmac node, causing null pointer dereferencing when phy-handle
+isn't defined in dts.
+This commit fix this setup code by checking return value of
+of_parse_phandle before using it.
 
-Reported-by: syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com
-Fixes: 304e024216a8 ("net_sched: add a temporary refcnt for struct tcindex_data")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: René van Dorst <opensource@vdorst.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/mt7530.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -151,6 +151,7 @@ static int tcindex_init(struct tcf_proto
- 	p->mask = 0xffff;
- 	p->hash = DEFAULT_HASH_SIZE;
- 	p->fall_through = 1;
-+	refcount_set(&p->refcnt, 1); /* Paired with tcindex_destroy_work() */
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1356,6 +1356,9 @@ mt7530_setup(struct dsa_switch *ds)
+ 				continue;
  
- 	rcu_assign_pointer(tp->root, p);
- 	return 0;
+ 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
++			if (!phy_node)
++				continue;
++
+ 			if (phy_node->parent == priv->dev->of_node->parent) {
+ 				ret = of_get_phy_mode(mac_np, &interface);
+ 				if (ret && ret != -ENODEV)
 
 
