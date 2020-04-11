@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A302C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A076FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534B620692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E7520692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608100;
-	bh=diEr7A/c7XyOdFew0NybRDLs5jmL2IXikHJnlUi9OuY=;
+	s=default; t=1586608102;
+	bh=U39eJ5wTP9xAp1R1HEYgjXXVeuDHZ1woSRLnA78R++w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvoSvsTkClsoXUu6Nhc7N38KFSbj10dbUZeQfMW6mUfvmQk2WY+bjwCkb5P9ojcCu
-	 vgNh2ExTowx+LWBrykzLfNV2JJytNjU4/hBYa+kDFAgmNNtTtPELKcOUmwepA3hPY1
-	 uJCpJKuVx6cm4xaEszhcWxEvDDvpKvuki4OYpOzE=
+	b=kv8edUzmE9pAHm6YqzUVCdCogT9obY31nzCPNMpOxv5Pd9WuLFjn1Dqt3JlWoqCh/
+	 HKXsDmmqKoO2PbZ7AYdO91EYCL2kZZBgp5QMNcQP6z0k6QsfML7etT2z+u83HSWv5T
+	 M8Hytktyn2lw0OVJnCD2e52WYCexu+Jvh/itkF9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgDKMMo (ORCPT
+        id S1726997AbgDKM2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727327AbgDKMMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:41 -0400
+        id S1727427AbgDKMMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B15421655;
-        Sat, 11 Apr 2020 12:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4599F21775;
+        Sat, 11 Apr 2020 12:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607160;
-        bh=diEr7A/c7XyOdFew0NybRDLs5jmL2IXikHJnlUi9OuY=;
+        s=default; t=1586607172;
+        bh=U39eJ5wTP9xAp1R1HEYgjXXVeuDHZ1woSRLnA78R++w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ckh2yYNz7v6E1q4Fu0SOqvQE9WhS9k6JfKBtBpg0GwdvRVfFRDGg8wnzJM2MBEXep
-         aXD/2CCLbXNbGGC961GuOk+Ud6ZGQih64BnbLLpMCiC/7thurFZHJQdE0OpqXisdC/
-         jT1WOQSYDaIbki0uxoPkfg5X2ICvSXZAHrAu6ipE=
+        b=tjQJz8JWej3xb//OGbF3MQp3K2RaHP6YgVPDg1PvGZV+hyDb4Qlj0SHHU4kPvnRx8
+         6DqZobWEN2vrxEgOl8eLkHWsxApcDSO/sQJK+KqdJiX+7zy5liZ24mNe6xbzcCjL9t
+         giaCtoFZnVDf41ha4nS3e93I6cwFc2IL9F1ofeVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH 4.9 08/32] drm/etnaviv: replace MMU flush marker with flush sequence
-Date:   Sat, 11 Apr 2020 14:08:47 +0200
-Message-Id: <20200411115419.616038972@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 29/32] drm/msm: stop abusing dma_map/unmap for cache
+Date:   Sat, 11 Apr 2020 14:09:08 +0200
+Message-Id: <20200411115422.593651374@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -61,135 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Rob Clark <robdclark@chromium.org>
 
-commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream.
+commit 0036bc73ccbe7e600a3468bf8e8879b122252274 upstream.
 
-If a MMU is shared between multiple GPUs, all of them need to flush their
-TLBs, so a single marker that gets reset on the first flush won't do.
-Replace the flush marker with a sequence number, so that it's possible to
-check if the TLB is in sync with the current page table state for each GPU.
+Recently splats like this started showing up:
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
+   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+   Workqueue: msm msm_gem_free_work [msm]
+   pstate: 80c00005 (Nzcv daif +PAN +UAO)
+   pc : __iommu_dma_unmap+0xb8/0xc0
+   lr : __iommu_dma_unmap+0x54/0xc0
+   sp : ffff0000119abce0
+   x29: ffff0000119abce0 x28: 0000000000000000
+   x27: ffff8001f9946648 x26: ffff8001ec271068
+   x25: 0000000000000000 x24: ffff8001ea3580a8
+   x23: ffff8001f95ba010 x22: ffff80018e83ba88
+   x21: ffff8001e548f000 x20: fffffffffffff000
+   x19: 0000000000001000 x18: 00000000c00001fe
+   x17: 0000000000000000 x16: 0000000000000000
+   x15: ffff000015b70068 x14: 0000000000000005
+   x13: 0003142cc1be1768 x12: 0000000000000001
+   x11: ffff8001f6de9100 x10: 0000000000000009
+   x9 : ffff000015b78000 x8 : 0000000000000000
+   x7 : 0000000000000001 x6 : fffffffffffff000
+   x5 : 0000000000000fff x4 : ffff00001065dbc8
+   x3 : 000000000000000d x2 : 0000000000001000
+   x1 : fffffffffffff000 x0 : 0000000000000000
+   Call trace:
+    __iommu_dma_unmap+0xb8/0xc0
+    iommu_dma_unmap_sg+0x98/0xb8
+    put_pages+0x5c/0xf0 [msm]
+    msm_gem_free_work+0x10c/0x150 [msm]
+    process_one_work+0x1e0/0x330
+    worker_thread+0x40/0x438
+    kthread+0x12c/0x130
+    ret_from_fork+0x10/0x18
+   ---[ end trace afc0dc5ab81a06bf ]---
+
+Not quite sure what triggered that, but we really shouldn't be abusing
+dma_{map,unmap}_sg() for cache maint.
+
+Cc: Stephen Boyd <sboyd@kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c |   10 ++++++----
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c    |    2 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h    |    1 +
- drivers/gpu/drm/etnaviv/etnaviv_mmu.c    |    6 +++---
- drivers/gpu/drm/etnaviv/etnaviv_mmu.h    |    2 +-
- 5 files changed, 12 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -257,6 +257,8 @@ void etnaviv_buffer_queue(struct etnaviv
- 	unsigned int waitlink_offset = buffer->user_size - 16;
- 	u32 return_target, return_dwords;
- 	u32 link_target, link_dwords;
-+	unsigned int new_flush_seq = READ_ONCE(gpu->mmu->flush_seq);
-+	bool need_flush = gpu->flush_seq != new_flush_seq;
- 
- 	if (drm_debug & DRM_UT_DRIVER)
- 		etnaviv_buffer_dump(gpu, buffer, 0, 0x50);
-@@ -269,14 +271,14 @@ void etnaviv_buffer_queue(struct etnaviv
- 	 * need to append a mmu flush load state, followed by a new
- 	 * link to this buffer - a total of four additional words.
- 	 */
--	if (gpu->mmu->need_flush || gpu->switch_context) {
-+	if (need_flush || gpu->switch_context) {
- 		u32 target, extra_dwords;
- 
- 		/* link command */
- 		extra_dwords = 1;
- 
- 		/* flush command */
--		if (gpu->mmu->need_flush) {
-+		if (need_flush) {
- 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1)
- 				extra_dwords += 1;
- 			else
-@@ -289,7 +291,7 @@ void etnaviv_buffer_queue(struct etnaviv
- 
- 		target = etnaviv_buffer_reserve(gpu, buffer, extra_dwords);
- 
--		if (gpu->mmu->need_flush) {
-+		if (need_flush) {
- 			/* Add the MMU flush */
- 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1) {
- 				CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_MMU,
-@@ -309,7 +311,7 @@ void etnaviv_buffer_queue(struct etnaviv
- 					SYNC_RECIPIENT_PE);
- 			}
- 
--			gpu->mmu->need_flush = false;
-+			gpu->flush_seq = new_flush_seq;
- 		}
- 
- 		if (gpu->switch_context) {
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1313,7 +1313,7 @@ int etnaviv_gpu_submit(struct etnaviv_gp
- 	gpu->active_fence = submit->fence;
- 
- 	if (gpu->lastctx != cmdbuf->ctx) {
--		gpu->mmu->need_flush = true;
-+		gpu->mmu->flush_seq++;
- 		gpu->switch_context = true;
- 		gpu->lastctx = cmdbuf->ctx;
- 	}
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -135,6 +135,7 @@ struct etnaviv_gpu {
- 	int irq;
- 
- 	struct etnaviv_iommu *mmu;
-+	unsigned int flush_seq;
- 
- 	/* Power Control: */
- 	struct clk *clk_bus;
---- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-@@ -134,7 +134,7 @@ static int etnaviv_iommu_find_iova(struc
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -106,7 +106,7 @@ static struct page **get_pages(struct dr
+ 		 * because display controller, GPU, etc. are not coherent:
  		 */
- 		if (mmu->last_iova) {
- 			mmu->last_iova = 0;
--			mmu->need_flush = true;
-+			mmu->flush_seq++;
- 			continue;
- 		}
- 
-@@ -197,7 +197,7 @@ static int etnaviv_iommu_find_iova(struc
- 		 * associated commit requesting this mapping, and retry the
- 		 * allocation one more time.
- 		 */
--		mmu->need_flush = true;
-+		mmu->flush_seq++;
+ 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
++			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+ 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
  	}
  
- 	return ret;
-@@ -354,7 +354,7 @@ u32 etnaviv_iommu_get_cmdbuf_va(struct e
- 		 * that the FE MMU prefetch won't load invalid entries.
- 		 */
- 		mmu->last_iova = buf->vram_node.start + buf->size + SZ_64K;
--		gpu->mmu->need_flush = true;
-+		mmu->flush_seq++;
- 		mutex_unlock(&mmu->lock);
+@@ -124,7 +124,7 @@ static void put_pages(struct drm_gem_obj
+ 			 * GPU, etc. are not coherent:
+ 			 */
+ 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
++				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+ 					     msm_obj->sgt->nents,
+ 					     DMA_BIDIRECTIONAL);
  
- 		return (u32)buf->vram_node.start;
---- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-@@ -44,7 +44,7 @@ struct etnaviv_iommu {
- 	struct list_head mappings;
- 	struct drm_mm mm;
- 	u32 last_iova;
--	bool need_flush;
-+	unsigned int flush_seq;
- };
- 
- struct etnaviv_gem_object;
 
 
