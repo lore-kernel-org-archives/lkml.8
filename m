@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA03C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0971C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1701A218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8171E2192A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646778;
-	bh=SEjjAxhYtlEasn8TNgdMDhJjvDb3li6yLyOzpg9ulos=;
+	s=default; t=1586646779;
+	bh=iKwlITql0bHVR1UsefBSbwLC2B0Q0vMnkEtGaAcNIjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=un5JqE3CJazxme/6xGMRgHYOYx7SM7rEj67VANVeC5RDtqBNJmgbYynn7mDARZvfN
-	 1ZC8nOmAuUnkXmc1f6+lkBMuW8+FkhRXdedpI4gghnifPGSXNYWA5GqZjUrcD5yIQ9
-	 r8tsy/9kp7Jw61W0igCSDr9/pchDVDQ0P4721UA8=
+	b=c+ppCm/9RcpADmUtNHjd1u0ua5eGMlrcxCjbvSXYYKr3u5/lTWj7Y/YPoySgW/D/A
+	 ab7cvGsSAQwt6dt0Jc9iViiKzxv8/HbMat5vhFuUCWI1mr5ryKuj65GAu1P86O0DnT
+	 M534IJXCFKE9Q3MV/Kdh6ovsT0Jh9ydmgq5/xpgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgDKXM4 (ORCPT
+        id S1730301AbgDKXM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52708 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbgDKXMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:31 -0400
+        id S1730200AbgDKXMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3CD120CC7;
-        Sat, 11 Apr 2020 23:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F3020757;
+        Sat, 11 Apr 2020 23:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646751;
-        bh=SEjjAxhYtlEasn8TNgdMDhJjvDb3li6yLyOzpg9ulos=;
+        s=default; t=1586646756;
+        bh=iKwlITql0bHVR1UsefBSbwLC2B0Q0vMnkEtGaAcNIjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f58YXIadyhFG764Ml3bEPIXm6TX4byYdxT4btUcldFMJyL8EC4jkMWz1/bppSR8VC
-         jgQUXRFvGPhIS+SwQ2kjr6PoqjA8+kqMwh41X9ApViKPASvnUtbdHRFJYYoa7oc+tI
-         KuWM99ZkVAsmfCexH7I2q1m9eEdBk8AfZ1afCinM=
+        b=p5QEDk6Q0wjiLWG1K7cOC0JrLlGDFdwBvdXYwgomB2hnnkULM7SsF1JUnSFd1jW7b
+         /PPQquiMqMpm8sLoCwqP8F3wLW6eYXSh7uhOGotI/vE7qOeeiO4uWD/5JtoKzxaSIT
+         hqgeKwbBGD+OmoABiK9yQQ66T9cJyWo7pq94wKec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/66] crypto: chelsio - Endianess bug in create_authenc_wr
-Date:   Sat, 11 Apr 2020 19:11:20 -0400
-Message-Id: <20200411231203.25933-23-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/66] sh_eth: check sh_eth_cpu_data::no_tx_cntrs when dumping registers
+Date:   Sat, 11 Apr 2020 19:11:24 -0400
+Message-Id: <20200411231203.25933-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,70 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit ff462ddfd95b915345c3c7c037c3bfafdc58bae7 ]
+[ Upstream commit 6eaeedc1aa27a423bd89043705eca39215015bb3 ]
 
-kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
-                - sizeof(chcr_req->key_ctx);
-can't possibly be endian-safe.  Look: ->key_ctx_hdr is __be32.  And
-KEY_CONTEXT_CTX_LEN_V is "shift up by 24 bits".  On little-endian hosts it
-sees
-	b0 b1 b2 b3
-in memory, inteprets that into b0 + (b1 << 8) + (b2 << 16) + (b3 << 24),
-shifts up by 24, resulting in b0 << 24, does ntohl (byteswap on l-e),
-gets b0 and shifts that up by 4.  So we get b0 * 16 - sizeof(...).
+When adding the sh_eth_cpu_data::no_tx_cntrs flag I forgot to add the
+flag check to  __sh_eth_get_regs(), causing the non-existing TX counter
+registers to be considered for dumping on the R7S72100 SoC (the register
+offset sanity check has the final say here)...
 
-Sounds reasonable, but on b-e we get
-b3 + (b2 << 8) + (b1 << 16) + (b0 << 24), shift up by 24,
-yielding b3 << 24, do ntohl (no-op on b-e) and then shift up by 4.
-Resulting in b3 << 28 - sizeof(...), i.e. slightly under b3 * 256M.
-
-Then we increase it some more and pass to alloc_skb() as size.
-Somehow I doubt that we really want a quarter-gigabyte skb allocation
-here...
-
-Note that when you are building those values in
-#define  FILL_KEY_CTX_HDR(ck_size, mk_size, d_ck, opad, ctx_len) \
-                htonl(KEY_CONTEXT_VALID_V(1) | \
-                      KEY_CONTEXT_CK_SIZE_V((ck_size)) | \
-                      KEY_CONTEXT_MK_SIZE_V(mk_size) | \
-                      KEY_CONTEXT_DUAL_CK_V((d_ck)) | \
-                      KEY_CONTEXT_OPAD_PRESENT_V((opad)) | \
-                      KEY_CONTEXT_SALT_PRESENT_V(1) | \
-                      KEY_CONTEXT_CTX_LEN_V((ctx_len)))
-ctx_len ends up in the first octet (i.e. b0 in the above), which
-matches the current behaviour on l-e.  If that's the intent, this
-thing should've been
-        kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
-                - sizeof(chcr_req->key_ctx);
-instead - fetch after ntohl() we get (b0 << 24) + (b1 << 16) + (b2 << 8) + b3,
-shift it down by 24 (b0), resuling in b0 * 16 - sizeof(...) both on l-e and
-on b-e.
-
-PS: when sparse warns you about endianness problems, it might be worth checking
-if there really is something wrong.  And I don't mean "slap __force cast on it"...
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: ce9134dff6d9 ("sh_eth: add sh_eth_cpu_data::no_tx_cntrs flag")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Tested-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index c435f89f34e37..8b68ccc137c53 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -2298,7 +2298,7 @@ static struct sk_buff *create_authenc_wr(struct aead_request *req,
- 	dnents += MIN_AUTH_SG; // For IV
- 
- 	dst_size = get_space_for_phys_dsgl(dnents);
--	kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
-+	kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
- 		- sizeof(chcr_req->key_ctx);
- 	transhdr_len = CIPHER_TRANSHDR_SIZE(kctx_len, dst_size);
- 	reqctx->imm = (transhdr_len + assoclen + IV + req->cryptlen) <
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 441643670ac0e..9e735b52b85fb 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -2164,10 +2164,12 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
+ 		add_reg(BCULR);
+ 	add_reg(MAHR);
+ 	add_reg(MALR);
+-	add_reg(TROCR);
+-	add_reg(CDCR);
+-	add_reg(LCCR);
+-	add_reg(CNDCR);
++	if (!cd->no_tx_cntrs) {
++		add_reg(TROCR);
++		add_reg(CDCR);
++		add_reg(LCCR);
++		add_reg(CNDCR);
++	}
+ 	add_reg(CEFCR);
+ 	add_reg(FRECR);
+ 	add_reg(TSFRCR);
 -- 
 2.20.1
 
