@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A80DC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEE2C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A88A2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1559B2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647938;
-	bh=hC0tRT7s7FAtnQHhA5C5oJkGKpQ3PjHd2+By1rljjAw=;
+	s=default; t=1586647943;
+	bh=V8BCmqsWcg9DM/6hQQ/v3RBg1t9vH6T1JIenRWlxN1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHyE32zJHplO6Z5HroMU31wMifBcZtBIqGNePiOOmhpx1LX0d3lZaQm+OWa8XDfBg
-	 yzAoQnIwYBihIUH+Q0zm3kF7mYLOWvgC8/3yaNI0rHYprt2O+QvNYBsttXwGHwwIvg
-	 EaxP+8ciCbr2x2fDGYxSU86rcJD7XE31dQpPHn7k=
+	b=Jy7tJ4XDJedr33J6sUxgs+qrlFwCZy4JsbNk1DJVBoZddxjrLiTvXMocsxbUc5fZo
+	 NtoPCIkm6LNC5Fns8f9Xgsnu/PEVTX6XPrAK+dIlz+FbqX5V0TzbJ4ICHTXfUqgh1h
+	 ho36YqK/YDC8R2VgvDjB+9WWuSxLK/aGIKE1HBdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgDKXcQ (ORCPT
+        id S1729050AbgDKXKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48286 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbgDKXKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:10 -0400
+        id S1727620AbgDKXKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D37621835;
-        Sat, 11 Apr 2020 23:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 800EA2173E;
+        Sat, 11 Apr 2020 23:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646610;
-        bh=hC0tRT7s7FAtnQHhA5C5oJkGKpQ3PjHd2+By1rljjAw=;
+        s=default; t=1586646602;
+        bh=V8BCmqsWcg9DM/6hQQ/v3RBg1t9vH6T1JIenRWlxN1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzUQOozYlHq2OUGDkaSJHbNtnFWYcJdBCHQ90gzXokwXpseCu8ysEwheyjVaeSSW1
-         qWQuS74L3iJdcv1FyP+3BBRN0O2ioUz2jD+m3CNcx2UVwaHuzS/M3htP3x14CiTmO3
-         re24u89Kdkhn8R/l4+IFtrUc48j9O2ohO+ETv1I4=
+        b=Je/EHCC/ZVgNvTzDPIWhOWyUnvNfjOXCid3VrNESgYXBEVK2lzrNkps8vtnjM12Dj
+         RD7VUHeR7zVOORTpjW1S024LzumFV2zCRYwvLpSQxl+diLBUGhQQWRvmZhJ/C3tfEQ
+         vUmP+vl4NPURUKg/e7z+wfnTtAj1HcsBiGzaZCLI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 022/108] drm/tegra: dc: Release PM and RGB output when client's registration fails
-Date:   Sat, 11 Apr 2020 19:08:17 -0400
-Message-Id: <20200411230943.24951-22-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 015/108] selftests/bpf: Fix test_progs's parsing of test numbers
+Date:   Sat, 11 Apr 2020 19:08:10 -0400
+Message-Id: <20200411230943.24951-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,42 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 0411ea89a689531e1829fdf8af3747646c02c721 ]
+[ Upstream commit fc32490bff855a539d253c8a52c5a1ba51d1325a ]
 
-Runtime PM and RGB output need to be released when host1x client
-registration fails. The releasing is missed in the code, let's correct it.
+When specifying disjoint set of tests, test_progs doesn't set skipped test's
+array elements to false. This leads to spurious execution of tests that should
+have been skipped. Fix it by explicitly initializing them to false.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 3a516a0a3a7b ("selftests/bpf: add sub-tests support for test_progs")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/20200314013932.4035712-2-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_progs.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index fbf57bc3cdaba..6dbbd238f60be 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -2496,10 +2496,16 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
- 			err);
--		return err;
-+		goto disable_pm;
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index 3bf18364c67c9..751be17980a91 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -361,7 +361,7 @@ static int libbpf_print_fn(enum libbpf_print_level level,
+ 
+ int parse_num_list(const char *s, struct test_selector *sel)
+ {
+-	int i, set_len = 0, num, start = 0, end = -1;
++	int i, set_len = 0, new_len, num, start = 0, end = -1;
+ 	bool *set = NULL, *tmp, parsing_end = false;
+ 	char *next;
+ 
+@@ -396,18 +396,19 @@ int parse_num_list(const char *s, struct test_selector *sel)
+ 			return -EINVAL;
+ 
+ 		if (end + 1 > set_len) {
+-			set_len = end + 1;
+-			tmp = realloc(set, set_len);
++			new_len = end + 1;
++			tmp = realloc(set, new_len);
+ 			if (!tmp) {
+ 				free(set);
+ 				return -ENOMEM;
+ 			}
++			for (i = set_len; i < start; i++)
++				tmp[i] = false;
+ 			set = tmp;
++			set_len = new_len;
+ 		}
+-		for (i = start; i <= end; i++) {
++		for (i = start; i <= end; i++)
+ 			set[i] = true;
+-		}
+-
  	}
  
- 	return 0;
-+
-+disable_pm:
-+	pm_runtime_disable(&pdev->dev);
-+	tegra_dc_rgb_remove(dc);
-+
-+	return err;
- }
- 
- static int tegra_dc_remove(struct platform_device *pdev)
+ 	if (!set)
 -- 
 2.20.1
 
