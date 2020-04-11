@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF5AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B819C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42A120CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5AC20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646443;
-	bh=Xa8XY9xeIv+I6U6BatoPV/MfhAyhOXvj4mnF/TaDUDg=;
+	s=default; t=1586646446;
+	bh=1pVOCMCEVPxh4yJmQWbxZpQ34McUxLlzYHjsDA4Nuxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fx7NMIaHbOzpD19kgjnUTtLA+UiAaLkil+mC0VRUB5RwTm9n2QAeTmuLmSNQngKct
-	 9l/Td+4SbkKnHgKsBnNU+Uwlw90ThTYIQG2+un2jbIOcPsUlhiRWwO0e0GX6h8xdQv
-	 kOJesgfx5Oy891V2KhgtzZvDWTN7gygvBEDXPmJI=
+	b=mwhc/oiOYu6db+VU1n4eDvix6xSNKmj0PiMtdD2DsVWl27gtjCR8vSHfdprjd4Yhi
+	 5gfz6fdVyybWDWzRW1n6AhT7rYZ+Bt6JiHxZez+FYZm1veu12+OmHSNBh/5oNcpq2l
+	 I8Rr6GfdhPcZSM9oe8gywH5Sn+jZtlwC9JPnWtkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgDKXHU (ORCPT
+        id S1727922AbgDKXHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43042 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgDKXHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:18 -0400
+        id S1728617AbgDKXHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A5A20CC7;
-        Sat, 11 Apr 2020 23:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A1D20708;
+        Sat, 11 Apr 2020 23:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646438;
-        bh=Xa8XY9xeIv+I6U6BatoPV/MfhAyhOXvj4mnF/TaDUDg=;
+        s=default; t=1586646442;
+        bh=1pVOCMCEVPxh4yJmQWbxZpQ34McUxLlzYHjsDA4Nuxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2JM6BZIzifewHjM8I8oT13/jc6LRXI4nIhWq+UQ/2dk7uAK0XpBZ8eSYPcFNTipn
-         /eNrspSLlWTRa5GrDBsy/2jdTBlcuklZr4lJ8Sz0Y1ReT2lbfcJmCq7YXdymy+gpXl
-         q9luqZE6EZffbAr9RJe4rMGZng0Pn8LVEWjZyQFo=
+        b=FyPh+wsKV/Q0M9cHgkWwvu6MAHKU7rzyG6u26W7dX4s36nmC3eZvOcw6pGQqEYp5H
+         pFQ1cyvuemtVS6nL79CT5xWqMUn/Ed1sE/noVXacqwx0IBFQm1DqHI/ZzzDX2tWzPS
+         vja69CAwk+n+l3zLB2M+pRqD0+dcDO8XGVOLHerY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 010/121] net: phy: mscc: accept all RGMII species in vsc85xx_mac_if_set
-Date:   Sat, 11 Apr 2020 19:05:15 -0400
-Message-Id: <20200411230706.23855-10-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 013/121] drm/amd/display: Explicitly disable triplebuffer flips
+Date:   Sat, 11 Apr 2020 19:05:18 -0400
+Message-Id: <20200411230706.23855-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,37 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit da206d65f2b293274f8082a26da4e43a1610da54 ]
+[ Upstream commit 2d673560b7b83f8fe4163610f35c51b4d095525c ]
 
-The helper for configuring the pinout of the MII side of the PHY should
-do so irrespective of whether RGMII delays are used or not. So accept
-the ID, TXID and RXID variants as well, not just the no-delay RGMII
-variant.
+[Why]
+This is enabled by default on Renoir but there's userspace/API support
+to actually make use of this.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since we're not passing this down through surface updates, let's
+explicitly disable this for now.
+
+This fixes "dcn20_program_front_end_for_ctx" warnings associated with
+incorrect/unexpected programming sequences performed while this is
+enabled.
+
+[How]
+Disable it at the topmost level in DM in case anyone tries to flip this
+to enabled for any of the other ASICs like Navi10/14.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mscc.c | 3 +++
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index 3e38d15a67c64..411c9af3ebc89 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -824,6 +824,9 @@ static int vsc85xx_mac_if_set(struct phy_device *phydev,
- 	reg_val = phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
- 	reg_val &= ~(MAC_IF_SELECTION_MASK);
- 	switch (interface) {
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
- 	case PHY_INTERFACE_MODE_RGMII:
- 		reg_val |= (MAC_IF_SELECTION_RGMII << MAC_IF_SELECTION_POS);
- 		break;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 803e59d974111..fb1efdde7a49d 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2481,6 +2481,9 @@ static int amdgpu_dm_initialize_drm_device(struct amdgpu_device *adev)
+ 	if (adev->asic_type != CHIP_CARRIZO && adev->asic_type != CHIP_STONEY)
+ 		dm->dc->debug.disable_stutter = amdgpu_pp_feature_mask & PP_STUTTER_MODE ? false : true;
+ 
++	/* No userspace support. */
++	dm->dc->debug.disable_tri_buf = true;
++
+ 	return 0;
+ fail:
+ 	kfree(aencoder);
 -- 
 2.20.1
 
