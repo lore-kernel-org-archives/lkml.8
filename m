@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D71C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59B8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6C4206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B604820732
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608152;
-	bh=TPs/zfXxgu5n1ahCUyC/YvqGIa4uQRBW16J8baoC9fM=;
+	s=default; t=1586608157;
+	bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkLuynq/00AcvQ/gsZua4+iQhLHNjt+ipd9DEeVD4EVPdHaGW7eKGjjqfW0mjnM7L
-	 r7Ds8QDS/a3YSacuwiAZtqhR8mgV1Xfqu0ktMhf5+Ae+2NEwvD6ecGG7iifS/4Stmp
-	 GQc28wBM52y9BiqaLnDu9Q/z1hxk53pMeJYtC2MQ=
+	b=Tsi2w+MozpPC1/dSb8dSjwsL8weUqxv5TUtaucKQDLkxBJEzHxqmuJ7IH2Wncm/g5
+	 k3avloEUAKwcleyoq0uK6FwPeVF/emBQb/N4wfC4MQhYTfrRZTdUddcSav9QsVD/iZ
+	 zGTC6XuaDCaU1j+VenEWC/y+j+B1qcIyANIk32pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgDKM3L (ORCPT
+        id S1726245AbgDKM3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43478 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbgDKMLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:25 -0400
+        id S1726892AbgDKMLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 033AA214D8;
-        Sat, 11 Apr 2020 12:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2CC6215A4;
+        Sat, 11 Apr 2020 12:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607085;
-        bh=TPs/zfXxgu5n1ahCUyC/YvqGIa4uQRBW16J8baoC9fM=;
+        s=default; t=1586607073;
+        bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RX/2iTbL6PzCNVjAcGHwARTN5Rr218HkQmOLh3FE6jan2h7j8IKpZYJqDtb/A+SQE
-         xQ21c01+yGKIBO6g9TEpU7mKc+a2lgrgE+jpib6h9qpwXbRfo5bG0OD+TlcHQ107PN
-         IT5dFzE+bLpJ8evKLL1dLBchTXl2atbbcNiLBJN0=
+        b=MmsAfVC9yREbaPCFETivkAC1UAjVpy/+lGXX/BjMMmSjzB4Hwj8LGLfVNQK0og01W
+         g7GAzviEAVG34E8+OidQuVPRSTyZuxLXozHwxmZ4/yBCAwqIc6UMxJ52Yp8vbSiIw/
+         aEnY69dMth4WIBAa3m33T5X7MQGHV3VehAoxHmE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 4.4 15/29] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Sat, 11 Apr 2020 14:08:45 +0200
-Message-Id: <20200411115410.319586680@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.4 26/29] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat, 11 Apr 2020 14:08:56 +0200
+Message-Id: <20200411115412.206046292@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -62,67 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
+commit 71811cac8532b2387b3414f7cd8fe9e497482864 upstream.
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/padata.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/bluetooth/rfcomm/tty.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -640,8 +640,8 @@ int padata_set_cpumask(struct padata_ins
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
- 
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -659,8 +659,8 @@ int padata_set_cpumask(struct padata_ins
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
+ 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+-		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
++		if (dlc)
+ 			return -EBUSY;
+-		}
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+ 		if (!dlc)
+ 			return -ENOMEM;
 
 
