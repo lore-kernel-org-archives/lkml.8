@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26C9C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E65CC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC49421841
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0841020787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646781;
-	bh=JnXgGQEI6Qb8T++El9GTkbdnyZzU7UvTWxz3mVjZfMA=;
+	s=default; t=1586646792;
+	bh=IvlAPJhpYEn2ikijRvMCZL3uzCia8LH0darRJog/0FA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnQJV3j4ycCbci8vZC45WZ532a3OScqfwV3pcxKFyDectOf8L+D8f4dR0TnONwHyS
-	 hbJ4vxXPY/jL6sc0+B1d+JZDvYR56syfiJZIorM4BzijFThrEbb71W1qF5VaGWHxEU
-	 Da5SMN9WaA4AUehQvpUQsDdXIOpm36bvoymCVMl0=
+	b=1eupSGPI4EvAz0NxglKFVMZB+odyorYw2NMijhDEtSRCXuv1oPhqS8AfdmwKjvH0E
+	 jEg1ZFkZw1KVAJwuVY7YFHuo8GCpr6003jPB/Od9dxZX5GiI5kGh0prQ1Q37ukWWUF
+	 NiYfbqHhF0CuOBjWjtCXa2tHnri4bYpEuqsCNt80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgDKXNA (ORCPT
+        id S1730354AbgDKXNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52958 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730221AbgDKXMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:39 -0400
+        id S1730272AbgDKXMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2DE20787;
-        Sat, 11 Apr 2020 23:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D5DA21835;
+        Sat, 11 Apr 2020 23:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646759;
-        bh=JnXgGQEI6Qb8T++El9GTkbdnyZzU7UvTWxz3mVjZfMA=;
+        s=default; t=1586646774;
+        bh=IvlAPJhpYEn2ikijRvMCZL3uzCia8LH0darRJog/0FA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NQRXeEUNktOaadmKBbxt147pKW+HTJTilIiG/gijtAi2gQkNOwDK4Npqh0lOkOQ8T
-         5VN1Xo4jp8PU5y+6hGItk7Olxjop9QVNUCVHXOZyKnz5fZIs+QVXZo/TIwoANXAoin
-         ePOt5NhRd/ELmHnf85z7A6sINyEE4SYaCHH2w2QI=
+        b=gE2+f3FyaKfWUHyNItEXT2w0miSCkLaULwWmc0qtImKmNvX68TWogngKNz62Qrrnc
+         hI9H2jSQNp93n7Jcbo0Y9VYM5sEM8cMLk+6xvLTMz6o9WLc6G6T8Cf7wG0wEf4Zb0j
+         yIgrdEXdx1c3MyXVjoXbJus0GO7mgrmNI7GCf6lk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 30/66] drm/sun4i: dsi: Use NULL to signify "no panel"
-Date:   Sat, 11 Apr 2020 19:11:27 -0400
-Message-Id: <20200411231203.25933-30-sashal@kernel.org>
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 41/66] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat, 11 Apr 2020 19:11:38 -0400
+Message-Id: <20200411231203.25933-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -61,75 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 0e4e3fb4901d19f49e5c0a582f383b10dda8d1c5 ]
+[ Upstream commit 71811cac8532b2387b3414f7cd8fe9e497482864 ]
 
-The continued use of an ERR_PTR to signify "no panel" outside of
-sun6i_dsi_attach is confusing because it is a double negative. Because
-the connector always reports itself as connected, there is also the
-possibility of sending an ERR_PTR to drm_panel_get_modes(), which would
-crash.
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-Solve both of these by only storing the panel pointer if it is valid.
-
-Fixes: 133add5b5ad4 ("drm/sun4i: Add Allwinner A31 MIPI-DSI controller support")
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200211072858.30784-2-samuel@sholland.org
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ net/bluetooth/rfcomm/tty.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 79eb11cd185d1..bc9454a562877 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -642,7 +642,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
- 	sun6i_dphy_init(dsi->dphy, device->lanes);
- 	sun6i_dphy_power_on(dsi->dphy, device->lanes);
- 
--	if (!IS_ERR(dsi->panel))
-+	if (dsi->panel)
- 		drm_panel_prepare(dsi->panel);
- 
- 	/*
-@@ -657,7 +657,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
- 	 * ordering on the panels I've tested it with, so I guess this
- 	 * will do for now, until that IP is better understood.
- 	 */
--	if (!IS_ERR(dsi->panel))
-+	if (dsi->panel)
- 		drm_panel_enable(dsi->panel);
- 
- 	sun6i_dsi_start(dsi, DSI_START_HSC);
-@@ -673,7 +673,7 @@ static void sun6i_dsi_encoder_disable(struct drm_encoder *encoder)
- 
- 	DRM_DEBUG_DRIVER("Disabling DSI output\n");
- 
--	if (!IS_ERR(dsi->panel)) {
-+	if (dsi->panel) {
- 		drm_panel_disable(dsi->panel);
- 		drm_panel_unprepare(dsi->panel);
- 	}
-@@ -835,11 +835,13 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
- 			    struct mipi_dsi_device *device)
- {
- 	struct sun6i_dsi *dsi = host_to_sun6i_dsi(host);
-+	struct drm_panel *panel = of_drm_find_panel(device->dev.of_node);
- 
-+	if (IS_ERR(panel))
-+		return PTR_ERR(panel);
-+
-+	dsi->panel = panel;
- 	dsi->device = device;
--	dsi->panel = of_drm_find_panel(device->dev.of_node);
--	if (IS_ERR(dsi->panel))
--		return PTR_ERR(dsi->panel);
- 
- 	dev_info(host->dev, "Attached device %s\n", device->name);
- 
+diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+index 5e44d842cc5d0..cf0ccd05329c7 100644
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
+ 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+-		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
++		if (dlc)
+ 			return -EBUSY;
+-		}
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+ 		if (!dlc)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
