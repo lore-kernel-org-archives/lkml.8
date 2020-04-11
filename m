@@ -2,88 +2,191 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E1CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230A0C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E543820708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE902078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:56:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="usElmaln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDKDpH (ORCPT
+        id S1726691AbgDKD4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 23:45:07 -0400
-Received: from smtprelay0018.hostedemail.com ([216.40.44.18]:40692 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726659AbgDKDpH (ORCPT
+        Fri, 10 Apr 2020 23:56:24 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21267 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726678AbgDKD4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 23:45:07 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 1D1A1182CCCD0;
-        Sat, 11 Apr 2020 03:45:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: talk45_669e7c599bf44
-X-Filterd-Recvd-Size: 2138
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 11 Apr 2020 03:45:05 +0000 (UTC)
-Message-ID: <78e966cacffbab8c43be6a02aa3f5af2478917d0.camel@perches.com>
-Subject: Re: [PATCH] drm/hisilicon: Code refactoring for hibmc_drv_vdac
-From:   Joe Perches <joe@perches.com>
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, tzimmermann@suse.de,
-        kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-Date:   Fri, 10 Apr 2020 20:43:02 -0700
-In-Reply-To: <1586573387-42003-1-git-send-email-tiantao6@hisilicon.com>
-References: <1586573387-42003-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 10 Apr 2020 23:56:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586577384; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=oalPl2CS9AIelSHim6uYF/0X3b0FIeVCWAC33NxRrxg=; b=usElmalndwxY9dJdLbhiBTtZAh1P4O+ByA+1/F43+tCI3w8RCHvWY7p+zKUxEijWYU0pFbeL
+ j8q4Lmv0kHeYBh5n1li9t1WXGz6hhV8yWvBZoTYbV003KW8BnsTnOrfzyZIe4UNPLL/7b8FU
+ rLluKXApi8YZqXQZvaBGEZRxLMU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e913fe8.7fcf59aa63e8-smtp-out-n04;
+ Sat, 11 Apr 2020 03:56:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E77E9C433BA; Sat, 11 Apr 2020 03:56:23 +0000 (UTC)
+Received: from [10.110.2.190] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7259CC433CB;
+        Sat, 11 Apr 2020 03:56:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7259CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org
+References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
+ <1586298209-4589-2-git-send-email-wcheng@codeaurora.org>
+ <158657118788.199533.6157625397469536329@swboyd.mtv.corp.google.com>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <6ee1a80b-e19d-072d-ad50-37af65853e3e@codeaurora.org>
+Date:   Fri, 10 Apr 2020 20:56:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <158657118788.199533.6157625397469536329@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-04-11 at 10:49 +0800, Tian Tao wrote:
-> code refactoring for hibmc_drv_vdac.c, no actual function changes.
-
-Seems sensible.
-
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-[]
-> @@ -109,13 +83,6 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
->  	struct drm_connector *connector;
->  	int ret;
->  
-> -	connector = hibmc_connector_init(priv);
-> -	if (IS_ERR(connector)) {
-> -		DRM_ERROR("failed to create connector: %ld\n",
-> -			  PTR_ERR(connector));
-> -		return PTR_ERR(connector);
-> -	}
-> -
->  	encoder = devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
->  	if (!encoder) {
->  		DRM_ERROR("failed to alloc memory when init encoder\n");
-
-The alloc error messages could be removed.
-
-> @@ -131,6 +98,21 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
->  	}
->  
->  	drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
-> +
-> +	connector = devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);
-> +	if (!connector) {
-> +		DRM_ERROR("failed to alloc memory when init connector\n");
-
-and here.
 
 
+On 4/10/2020 7:13 PM, Stephen Boyd wrote:
+> Quoting Wesley Cheng (2020-04-07 15:23:26)
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+>> new file mode 100644
+>> index 0000000..7292e27
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+>> @@ -0,0 +1,76 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/phy/qcom,usb-hs-7nm.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Qualcomm Synopsys 7nm High-Speed USB PHY
+>> +
+>> +maintainers:
+>> +  - Wesley Cheng <wcheng@codeaurora.org>
+>> +
+>> +description: |
+>> +  Qualcomm Hi-Speed 7nm USB PHY
+> 
+> High?
+> 
+
+Hi Stephen,
+
+Will fix it.
+
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,usb-snps-hs-7nm-phy
+>> +      - qcom,sm8150-usb-hs-phy
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  "#phy-cells":
+>> +    const: 0
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: rpmhcc ref clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ref
+>> +
+>> +  resets:
+>> +    items:
+>> +      - description: PHY core reset
+>> +
+>> +  vdda-pll-supply:
+>> +    description: phandle to the regulator VDD supply node.
+>> +
+>> +  vdda18-supply:
+>> +    description: phandle to the regulator 1.8V supply node.
+>> +
+>> +  vdda33-supply:
+>> +    description: phandle to the regulator 3.3V supply node.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - "#phy-cells"
+>> +  - clocks
+>> +  - clock-names
+>> +  - resets
+>> +  - vdda-pll-supply
+>> +  - vdda18-supply
+>> +  - vdda33-supply
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,rpmh.h>
+>> +    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+>> +    usb_1_hsphy: phy@88e2000 {
+> 
+> Is the label necessary? Best to drop it if not.
+> 
+
+I'll drop the label.
+
+>> +        compatible = "qcom,sm8150-usb-hs-phy";
+>> +        reg = <0 0x088e2000 0 0x400>;
+>> +        status = "disabled";
+> 
+> I think we can leave out status in examples.
+> 
+
+Will do.
+
+>> +        #phy-cells = <0>;
+>> +
+>> +        clocks = <&rpmhcc RPMH_CXO_CLK>;
+>> +        clock-names = "ref";
+>> +
+>> +        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+>> +    };
+>> +...
+>> \ No newline at end of file
+> 
+> Why no newline at end of file?
+> 
+
+Got it, I'll add a newline.
+
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
