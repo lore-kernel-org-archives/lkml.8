@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6088EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0689C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352E4216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8727E21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646725;
-	bh=QlHYEWGn7a3elbcxUrFdddKG91fI9pOgb+Q8z/TN5D8=;
+	s=default; t=1586646727;
+	bh=OJRD4C3zZ1IDMuXPLzqK8LYCMCINXvhKrfiO6f2riJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swCkmUPc1im3m/TlRzsXpPqEoJwoC/jJUhe3kF/UpvebX+kp13XB7ysBQJh7Q8jBf
-	 PcjAsb1o0UNGSdEmDZBHYewhFPR4eoyv7rzN9uXbV9wKd4Pw6dH/mZF13N4WxTFumi
-	 VXUyjIFbv1RCBKdBbQUflpp5R49l4YnnERHo70aI=
+	b=uuT5M7VlfJOH+T+Ldyf1ujuu2o8SDDsYOzUJG+JLroSdzqgjpAoVSfgvahrcWj4AP
+	 xAbdVfQfPyND5mzgVICmgzywLU/LULwcprn55cBz6xhOccuS+qX/j7oPyDXZOaAN+Y
+	 zO4WadLSjewTqM5162OhJtuCP5hrbd6AOfHlcPII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgDKXMC (ORCPT
+        id S1729245AbgDKXMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51512 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729998AbgDKXLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:48 -0400
+        id S1730009AbgDKXLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D341F2173E;
-        Sat, 11 Apr 2020 23:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ABAD2173E;
+        Sat, 11 Apr 2020 23:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646707;
-        bh=QlHYEWGn7a3elbcxUrFdddKG91fI9pOgb+Q8z/TN5D8=;
+        s=default; t=1586646712;
+        bh=OJRD4C3zZ1IDMuXPLzqK8LYCMCINXvhKrfiO6f2riJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F41oMMAyhgLyiNPxOMPtFPo4DZ8dujRbgei9zGgdVTMHSrjWj2SSVHJw6P97cDQsz
-         1fu4laxC9RmKWNL9OqyA1pGjf3FrxwiR2csCpf9iR8nNhktqTzADBOLBmnqwS5pwKj
-         GtgBMUxTwHFLH5neoKezlzvvKhruS5/hRB03XJXo=
+        b=iszrDYlO4XavTDRvaQtW/5dIsGsdzrQ9acsI5JPrcj3lxnA0S+W5hlVZ20JQO/y3E
+         ZEmrnboxLTS5YwHbzu7fZi2R/Qx5PYkfA/7X3Cnp86QUhxrBJD9Q9CXQifTFnM0A3C
+         t+xRebeynZDzPy0mb3tX3L05x33PwbNQzeO4RlW4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 099/108] rtc: cmos: Use spin_lock_irqsave() in cmos_interrupt()
-Date:   Sat, 11 Apr 2020 19:09:34 -0400
-Message-Id: <20200411230943.24951-99-sashal@kernel.org>
+Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
+        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 103/108] ext4: check for non-zero journal inum in ext4_calculate_overhead
+Date:   Sat, 11 Apr 2020 19:09:38 -0400
+Message-Id: <20200411230943.24951-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,142 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-[ Upstream commit 66e4f4a9cc389b277e187c115a285fad2cba5485 ]
+[ Upstream commit f1eec3b0d0a849996ebee733b053efa71803dad5 ]
 
-cmos_interrupt() isn't always called from hardirq context, so
-we must use spin_lock_irqsave() & co.
+While calculating overhead for internal journal, also check
+that j_inum shouldn't be 0. Otherwise we get below error with
+xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
 
-================================
-WARNING: inconsistent lock state
-5.6.0-rc2-CI-CI_DRM_7981+ #1 Tainted: G     U
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-rtcwake/4315 [HC0[0]:SC0[0]:HE1:SE1] takes:
-ffffffff82635198 (rtc_lock){?...}, at: cmos_interrupt+0x18/0x100
-{IN-HARDIRQ-W} state was registered at:
-  lock_acquire+0xa7/0x1c0
-  _raw_spin_lock+0x2a/0x40
-  cmos_interrupt+0x18/0x100
-  rtc_handler+0x75/0xc0
-  acpi_ev_fixed_event_detect+0xf9/0x132
-  acpi_ev_sci_xrupt_handler+0xb/0x28
-  acpi_irq+0x13/0x30
-  __handle_irq_event_percpu+0x41/0x2c0
-  handle_irq_event_percpu+0x2b/0x70
-  handle_irq_event+0x2f/0x50
-  handle_fasteoi_irq+0x8e/0x150
-  do_IRQ+0x7e/0x160
-  ret_from_intr+0x0/0x35
-  mwait_idle+0x7e/0x200
-  do_idle+0x1bb/0x260
-  cpu_startup_entry+0x14/0x20
-  start_secondary+0x15f/0x1b0
-  secondary_startup_64+0xa4/0xb0
-irq event stamp: 42003
-hardirqs last  enabled at (42003): [<ffffffff81a36567>] _raw_spin_unlock_irqrestore+0x47/0x60
-hardirqs last disabled at (42002): [<ffffffff81a362ed>] _raw_spin_lock_irqsave+0xd/0x50
-softirqs last  enabled at (41848): [<ffffffff81e00385>] __do_softirq+0x385/0x47f
-softirqs last disabled at (41841): [<ffffffff810bab3a>] irq_exit+0xba/0xc0
+It could be simply reproduced with loop device with an external journal
+and marking blockdev as RO before mounting.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(rtc_lock);
-  <Interrupt>
-    lock(rtc_lock);
-
- *** DEADLOCK ***
-
-6 locks held by rtcwake/4315:
- #0: ffff888175dc9408 (sb_writers#5){.+.+}, at: vfs_write+0x1a4/0x1d0
- #1: ffff88817406ca80 (&of->mutex){+.+.}, at: kernfs_fop_write+0xdd/0x1b0
- #2: ffff888179be85e0 (kn->count#236){.+.+}, at: kernfs_fop_write+0xe6/0x1b0
- #3: ffffffff82641e00 (system_transition_mutex){+.+.}, at: pm_suspend+0xb3/0x3b0
- #4: ffffffff826b3ee0 (acpi_scan_lock){+.+.}, at: acpi_suspend_begin+0x47/0x80
- #5: ffff888178fc3960 (&dev->mutex){....}, at: device_resume+0x92/0x1c0
-
-stack backtrace:
-CPU: 3 PID: 4315 Comm: rtcwake Tainted: G     U            5.6.0-rc2-CI-CI_DRM_7981+ #1
-Hardware name: Google Soraka/Soraka, BIOS MrChromebox-4.10 08/25/2019
+[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
+------------[ cut here ]------------
+generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
+WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
+CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
+NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
+<...>
+NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
+LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
+<...>
 Call Trace:
- dump_stack+0x71/0x9b
- mark_lock+0x49a/0x500
- ? print_shortest_lock_dependencies+0x200/0x200
- __lock_acquire+0x6d4/0x15d0
- ? __lock_acquire+0x460/0x15d0
- lock_acquire+0xa7/0x1c0
- ? cmos_interrupt+0x18/0x100
- _raw_spin_lock+0x2a/0x40
- ? cmos_interrupt+0x18/0x100
- cmos_interrupt+0x18/0x100
- cmos_resume+0x1fd/0x290
- ? __acpi_pm_set_device_wakeup+0x24/0x100
- pnp_bus_resume+0x5e/0x90
- ? pnp_bus_suspend+0x10/0x10
- dpm_run_callback+0x64/0x280
- device_resume+0xd4/0x1c0
- ? dpm_watchdog_set+0x60/0x60
- dpm_resume+0x106/0x410
- ? dpm_resume_early+0x38c/0x3e0
- dpm_resume_end+0x8/0x10
- suspend_devices_and_enter+0x16f/0xbe0
- ? rcu_read_lock_sched_held+0x4d/0x80
- pm_suspend+0x344/0x3b0
- state_store+0x78/0xe0
- kernfs_fop_write+0x112/0x1b0
- vfs_write+0xb9/0x1d0
- ksys_write+0x9f/0xe0
- do_syscall_64+0x4f/0x220
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7ff934307154
-Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8d 05 b1 07 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
-RSP: 002b:00007ffe2647c168 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007ff934307154
-RDX: 0000000000000004 RSI: 000055de3ec4e5a0 RDI: 000000000000000a
-RBP: 000055de3ec4e5a0 R08: 000055de3ec4c5e0 R09: 00007ff9349f3740
-R10: 000055de3ec4a010 R11: 0000000000000246 R12: 000055de3ec4c500
-R13: 0000000000000004 R14: 00007ff9345df2a0 R15: 00007ff9345de760
+generic_make_request_checks+0x6b0/0x7d0 (unreliable)
+generic_make_request+0x3c/0x420
+submit_bio+0xd8/0x200
+submit_bh_wbc+0x1e8/0x250
+__sync_dirty_buffer+0xd0/0x210
+ext4_commit_super+0x310/0x420 [ext4]
+__ext4_error+0xa4/0x1e0 [ext4]
+__ext4_iget+0x388/0xe10 [ext4]
+ext4_get_journal_inode+0x40/0x150 [ext4]
+ext4_calculate_overhead+0x5a8/0x610 [ext4]
+ext4_fill_super+0x3188/0x3260 [ext4]
+mount_bdev+0x778/0x8f0
+ext4_mount+0x28/0x50 [ext4]
+mount_fs+0x74/0x230
+vfs_kern_mount.part.6+0x6c/0x250
+do_mount+0x2fc/0x1280
+sys_mount+0x158/0x180
+system_call+0x5c/0x70
+EXT4-fs (pmem1p2): no journal found
+EXT4-fs (pmem1p2): can't get journal size
+EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
 
-Fixes: c6d3a278cc12 ("rtc: cmos: acknowledge ACPI driven wake alarms upon resume")
-Fixes: 311ee9c151ad ("rtc: cmos: allow using ACPI for RTC alarm instead of HPET")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://lore.kernel.org/r/20200221144739.11746-1-ville.syrjala@linux.intel.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
+Reported-by: Harish Sriram <harish@linux.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-cmos.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/ext4/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index cb28bbdc9e17f..ecbe89b039ee6 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -649,10 +649,11 @@ static struct cmos_rtc	cmos_rtc;
- 
- static irqreturn_t cmos_interrupt(int irq, void *p)
- {
-+	unsigned long	flags;
- 	u8		irqstat;
- 	u8		rtc_control;
- 
--	spin_lock(&rtc_lock);
-+	spin_lock_irqsave(&rtc_lock, flags);
- 
- 	/* When the HPET interrupt handler calls us, the interrupt
- 	 * status is passed as arg1 instead of the irq number.  But
-@@ -686,7 +687,7 @@ static irqreturn_t cmos_interrupt(int irq, void *p)
- 			hpet_mask_rtc_irq_bit(RTC_AIE);
- 		CMOS_READ(RTC_INTR_FLAGS);
- 	}
--	spin_unlock(&rtc_lock);
-+	spin_unlock_irqrestore(&rtc_lock, flags);
- 
- 	if (is_intr(irqstat)) {
- 		rtc_update_irq(p, 1, irqstat);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 8bd806a03a90c..ce730d8e08685 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3561,7 +3561,8 @@ int ext4_calculate_overhead(struct super_block *sb)
+ 	 */
+ 	if (sbi->s_journal && !sbi->journal_bdev)
+ 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
+-	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
++	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
++		/* j_inum for internal journal is non-zero */
+ 		j_inode = ext4_get_journal_inode(sb, j_inum);
+ 		if (j_inode) {
+ 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
 -- 
 2.20.1
 
