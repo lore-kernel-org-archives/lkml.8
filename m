@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34031C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DB8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040A620644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E3C2137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607404;
-	bh=xacCaSjYPsHBVqZkGGRHnwwdd/qhSoItzvcjxjYZf0E=;
+	s=default; t=1586607406;
+	bh=zqqPdjzMKrT6Dsh6rmrY0HhxAfJoVgJZbT7J3DgNKKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZNzGkcQvLN//EsCtRYEtUpURBUgjosCK/svuNmgqPwISN/P5ugme7IdvPpP6m3R+
-	 xo2l4bOF0g6ENNTfYfXc7vnEscZuYWS/s9pneXFfT6dT0uvUZkabq1+KRzasWlnEWn
-	 qkUzouiJ18OVndKRSdiPVtSywU2Ry+n96bIkkmB4=
+	b=Wg5MX+v4IKabKDNyVS7kJZvjqF5hQWv0v+GHg9Getw+gFCpPNDwhkzOfrhmnPBM2l
+	 VQ1yUmsA8OtCI67urm/2hryPxWmRWFsrLScgckLQEYfQpcDQ/2fiuQa+yuJwtZH/no
+	 /SD5O15Q2JzNQrt3ezM5lRzr6WVeWfZ2iieHLcV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgDKMQl (ORCPT
+        id S1727969AbgDKMQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgDKMQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:37 -0400
+        id S1728277AbgDKMQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CAC220644;
-        Sat, 11 Apr 2020 12:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35EC20644;
+        Sat, 11 Apr 2020 12:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607397;
-        bh=xacCaSjYPsHBVqZkGGRHnwwdd/qhSoItzvcjxjYZf0E=;
+        s=default; t=1586607402;
+        bh=zqqPdjzMKrT6Dsh6rmrY0HhxAfJoVgJZbT7J3DgNKKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KpICZ0XdtQ7y4TXTA6cvpmnz/Uojx9w4E8iAfU8mCQSX4RjJj9IbHtZI+UqKhMKbA
-         VTHgIEYHXt+iF6y+udDXzVZFojorzkKJ9hpQhh+zNyEv4xW9hFeX+CloBAaUNOK2DW
-         +K8PfGlcS2PoDbL0y2k8jCWXMgqVrRJOrs66n+Io=
+        b=aUW9hxMtamTf2BgSL8a2OQoOw93nnt9RvTaVhm4mnBdLmCKvq1ddZm8eicIS3uq/h
+         yZcbLmhCjN3tYLNTAiK828BsKESavLQyV/h51rweEysYmEKShlNXJD5Qu0XeW9xQDy
+         NJd7UQqJzJHLFXYE82C93By3eiUqpGWU6n8cOOM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geoffrey Allott <geoffrey@allott.email>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 21/54] ALSA: hda/ca0132 - Add Recon3Di quirk to handle integrated sound on EVGA X99 Classified motherboard
-Date:   Sat, 11 Apr 2020 14:09:03 +0200
-Message-Id: <20200411115510.609102571@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 23/54] net: Fix Tx hash bound checking
+Date:   Sat, 11 Apr 2020 14:09:05 +0200
+Message-Id: <20200411115510.815232090@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -59,40 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoffrey Allott <geoffrey@allott.email>
+From: Amritha Nambiar <amritha.nambiar@intel.com>
 
-commit e9097e47e349b747dee50f935216de0ffb662962 upstream.
+commit 6e11d1578fba8d09d03a286740ffcf336d53928c upstream.
 
-I have a system which has an EVGA X99 Classified motherboard. The pin
-assignments for the HD Audio controller are not correct under Linux.
-Windows 10 works fine and informs me that it's using the Recon3Di
-driver, and on Linux, `cat
-/sys/class/sound/card0/device/subsystem_{vendor,device}` yields
+Fixes the lower and upper bounds when there are multiple TCs and
+traffic is on the the same TC on the same device.
 
-0x3842
-0x1038
+The lower bound is represented by 'qoffset' and the upper limit for
+hash value is 'qcount + qoffset'. This gives a clean Rx to Tx queue
+mapping when there are multiple TCs, as the queue indices for upper TCs
+will be offset by 'qoffset'.
 
-This patch adds a corresponding entry to the quirk list.
+v2: Fixed commit description based on comments.
 
-Signed-off-by: Geoffrey Allott <geoffrey@allott.email>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/a6cd56b678c00ce2db3685e4278919f2584f8244.camel@allott.email
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 1b837d489e06 ("net: Revoke export for __skb_tx_hash, update it to just be static skb_tx_hash")
+Fixes: eadec877ce9c ("net: Add support for subordinate traffic classes to netdev_pick_tx")
+Signed-off-by: Amritha Nambiar <amritha.nambiar@intel.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_ca0132.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/dev.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -1069,6 +1069,7 @@ static const struct snd_pci_quirk ca0132
- 	SND_PCI_QUIRK(0x1458, 0xA016, "Recon3Di", QUIRK_R3DI),
- 	SND_PCI_QUIRK(0x1458, 0xA026, "Gigabyte G1.Sniper Z97", QUIRK_R3DI),
- 	SND_PCI_QUIRK(0x1458, 0xA036, "Gigabyte GA-Z170X-Gaming 7", QUIRK_R3DI),
-+	SND_PCI_QUIRK(0x3842, 0x1038, "EVGA X99 Classified", QUIRK_R3DI),
- 	SND_PCI_QUIRK(0x1102, 0x0013, "Recon3D", QUIRK_R3D),
- 	{}
- };
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2854,6 +2854,8 @@ static u16 skb_tx_hash(const struct net_
+ 
+ 	if (skb_rx_queue_recorded(skb)) {
+ 		hash = skb_get_rx_queue(skb);
++		if (hash >= qoffset)
++			hash -= qoffset;
+ 		while (unlikely(hash >= qcount))
+ 			hash -= qcount;
+ 		return hash + qoffset;
 
 
