@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51352C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1686CC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C251206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81D3206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648889;
-	bh=8ptZVCFTIZ8LNWVXi9vx8vE/lsQ5Q5Q54zsB+Abm2dQ=;
+	s=default; t=1586648892;
+	bh=9V1+2+tpoFSGqbjR8KTBols0eFkDrZeatBM40643OrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MsEBxTF8P4dlMZFOFyZbvwRHjeZGhqIokt1kWmDDh1aNY1VQ36JGd3Pk2IBTHIvBi
-	 TzMSBRpCxEw+WMHxMl4bDunquyXC/bMgZhPgDWxDYIYSDaUUL7hkGfzFpbrgHwC+lt
-	 AVG7QznHMSPb53GhBZr/rbtQpzpo4fXcwVFhs3sI=
+	b=U49DizVN7ZRKBPSVBBH2sLAReAz/UVBDBqeKGxvb5Ta0qn/ARx9a2aStx3m084psZ
+	 ADv7FtT2k+nqXsCxbTJ6MUMC8EdYzut3XLpScieomr4GhedUlrIhsZlCOXiapZl0qM
+	 tEYJNXR0fmACp2Bs8/1aRuYgErDwim/KhBCd+Q+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgDKXsH (ORCPT
+        id S1727435AbgDKXEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:48:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38380 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727455AbgDKXEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:47 -0400
+        id S1727300AbgDKXEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 612DB21841;
-        Sat, 11 Apr 2020 23:04:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE6C20787;
+        Sat, 11 Apr 2020 23:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646287;
-        bh=8ptZVCFTIZ8LNWVXi9vx8vE/lsQ5Q5Q54zsB+Abm2dQ=;
+        s=default; t=1586646278;
+        bh=9V1+2+tpoFSGqbjR8KTBols0eFkDrZeatBM40643OrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ACVPDwtsuZxv7EoBS8YtnI0lP2FMhSe0r+2py+qOzQSmw58GMRODk1l8gn6zXXalO
-         1RXyUimcs9Vt8Xu2FsMaKe5tv0adVUU3OTo/oCgdzYq95cNhL3zObF1481n4uQfguP
-         lnn+jwi0WsAKC7ge+UZPiuPODLDLXmcsFFACDLhI=
+        b=0GhlKBM+nbdwx9O66qMhodHc7M5HWqeslJcEOFRD5Y/ilcBpN+4afB38C8Sxnn8vy
+         hLZDq1kgPSGqkv+vQ85NJR5+ap3fOAu1GFRjU8WA+YNEo8cwzOnLXHtMjLVF7xbY4V
+         rnNh1NMx6VHqygSlLKgxeylP2pITpU7EF8Y5+gRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 048/149] crypto: chelsio - Endianess bug in create_authenc_wr
-Date:   Sat, 11 Apr 2020 19:02:05 -0400
-Message-Id: <20200411230347.22371-48-sashal@kernel.org>
+Cc:     Alain Michaud <alainm@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 041/149] Bluetooth: guard against controllers sending zero'd events
+Date:   Sat, 11 Apr 2020 19:01:58 -0400
+Message-Id: <20200411230347.22371-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -59,70 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Alain Michaud <alainm@chromium.org>
 
-[ Upstream commit ff462ddfd95b915345c3c7c037c3bfafdc58bae7 ]
+[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
 
-kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
-                - sizeof(chcr_req->key_ctx);
-can't possibly be endian-safe.  Look: ->key_ctx_hdr is __be32.  And
-KEY_CONTEXT_CTX_LEN_V is "shift up by 24 bits".  On little-endian hosts it
-sees
-	b0 b1 b2 b3
-in memory, inteprets that into b0 + (b1 << 8) + (b2 << 16) + (b3 << 24),
-shifts up by 24, resulting in b0 << 24, does ntohl (byteswap on l-e),
-gets b0 and shifts that up by 4.  So we get b0 * 16 - sizeof(...).
+Some controllers have been observed to send zero'd events under some
+conditions.  This change guards against this condition as well as adding
+a trace to facilitate diagnosability of this condition.
 
-Sounds reasonable, but on b-e we get
-b3 + (b2 << 8) + (b1 << 16) + (b0 << 24), shift up by 24,
-yielding b3 << 24, do ntohl (no-op on b-e) and then shift up by 4.
-Resulting in b3 << 28 - sizeof(...), i.e. slightly under b3 * 256M.
-
-Then we increase it some more and pass to alloc_skb() as size.
-Somehow I doubt that we really want a quarter-gigabyte skb allocation
-here...
-
-Note that when you are building those values in
-#define  FILL_KEY_CTX_HDR(ck_size, mk_size, d_ck, opad, ctx_len) \
-                htonl(KEY_CONTEXT_VALID_V(1) | \
-                      KEY_CONTEXT_CK_SIZE_V((ck_size)) | \
-                      KEY_CONTEXT_MK_SIZE_V(mk_size) | \
-                      KEY_CONTEXT_DUAL_CK_V((d_ck)) | \
-                      KEY_CONTEXT_OPAD_PRESENT_V((opad)) | \
-                      KEY_CONTEXT_SALT_PRESENT_V(1) | \
-                      KEY_CONTEXT_CTX_LEN_V((ctx_len)))
-ctx_len ends up in the first octet (i.e. b0 in the above), which
-matches the current behaviour on l-e.  If that's the intent, this
-thing should've been
-        kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
-                - sizeof(chcr_req->key_ctx);
-instead - fetch after ntohl() we get (b0 << 24) + (b1 << 16) + (b2 << 8) + b3,
-shift it down by 24 (b0), resuling in b0 * 16 - sizeof(...) both on l-e and
-on b-e.
-
-PS: when sparse warns you about endianness problems, it might be worth checking
-if there really is something wrong.  And I don't mean "slap __force cast on it"...
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Alain Michaud <alainm@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hci_event.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index b4b9b22125d17..ad18124d0acb1 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -2351,7 +2351,7 @@ static struct sk_buff *create_authenc_wr(struct aead_request *req,
- 	snents = sg_nents_xlen(req->src, req->assoclen + req->cryptlen,
- 			       CHCR_SRC_SG_SIZE, 0);
- 	dst_size = get_space_for_phys_dsgl(dnents);
--	kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
-+	kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
- 		- sizeof(chcr_req->key_ctx);
- 	transhdr_len = CIPHER_TRANSHDR_SIZE(kctx_len, dst_size);
- 	reqctx->imm = (transhdr_len + req->assoclen + req->cryptlen) <
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 6ddc4a74a5e42..673351800ed3e 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5858,6 +5858,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 	u8 status = 0, event = hdr->evt, req_evt = 0;
+ 	u16 opcode = HCI_OP_NOP;
+ 
++	if (!event) {
++		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
++		goto done;
++	}
++
+ 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
+ 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
+ 		opcode = __le16_to_cpu(cmd_hdr->opcode);
+@@ -6069,6 +6074,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 		req_complete_skb(hdev, status, opcode, orig_skb);
+ 	}
+ 
++done:
+ 	kfree_skb(orig_skb);
+ 	kfree_skb(skb);
+ 	hdev->stat.evt_rx++;
 -- 
 2.20.1
 
