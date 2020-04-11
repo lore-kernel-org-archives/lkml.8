@@ -2,110 +2,110 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D23DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270C0C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051A420B1F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0054A20B1F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586587154;
+	bh=HWHJPILduYQ1xyphNec7DOITk86Vn5G/w09Haiir/sA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y27eES29Zz3wUZdCI3BXhUUWkyxkKAeCF/w0B5wHHl/zvUiIveWIuO06bjV08NBLa
+	 1jYRqkoQJ5mV0ZW5ee+iSjO2Vy9EN0iybdwLPTu2i8RxUxDcisGlIV2qut9UAjJJ24
+	 9bLVQx2X5Hg7yKzZeF/xASKHG7nAAsBms6nNWRvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgDKGiQ (ORCPT
+        id S1726037AbgDKGjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 02:38:16 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:24987 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgDKGiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 02:38:16 -0400
-Received: from localhost.localdomain ([93.22.135.18])
-        by mwinf5d37 with ME
-        id RJeD220060Pz5GD03JeDNh; Sat, 11 Apr 2020 08:38:14 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 11 Apr 2020 08:38:14 +0200
-X-ME-IP: 93.22.135.18
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org, paul@crapouillou.net
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] usb: phy: jz4770: Add a missing '\n' in a log message
-Date:   Sat, 11 Apr 2020 08:38:11 +0200
-Message-Id: <20200411063811.6767-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sat, 11 Apr 2020 02:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgDKGjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 02:39:12 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E308220B1F;
+        Sat, 11 Apr 2020 06:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586587152;
+        bh=HWHJPILduYQ1xyphNec7DOITk86Vn5G/w09Haiir/sA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2bxSJTfwvDlWdTGtWjUGaQVjdIAW3wlH2dnhCg+UsVP+/XJVPW+UQSV2VyMX7vDB5
+         U5cSy1RBE+wsMLEQlxLCJ8QVLSPWC0KMZC5pEVGpJnkggl2weuJFfnDVNvsFouSrTj
+         EdTCPYGwoEujo/7RJXpC8G/wsKU6a/EB3niZFn+E=
+Received: by mail-io1-f53.google.com with SMTP id f19so3860394iog.5;
+        Fri, 10 Apr 2020 23:39:11 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZd4R8iQjmVAsnO9idJeGqqbHwulcmwPiRbeHL7pbrDzXtCRxNA
+        ebmGyPPJe4p9VWb3UvMhyc8ftDjY0rZRjh5vvZU=
+X-Google-Smtp-Source: APiQypIMmf7iuMrn+v96ksMmp4R4knwgBE9EtdO4mm3/ygCFmgX4pZmQEx0xIgsOg3CvkN2fbHC6a6RymqdyTVY+flk=
+X-Received: by 2002:a02:7785:: with SMTP id g127mr7528307jac.134.1586587151371;
+ Fri, 10 Apr 2020 23:39:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
+ <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com> <aee6c7cc-24c7-2822-47d5-1e05413a8024@oracle.com>
+In-Reply-To: <aee6c7cc-24c7-2822-47d5-1e05413a8024@oracle.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 11 Apr 2020 08:39:00 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFF3gR+LyE1VbLuwnRA3CzQtF90mv7rpw9x2RcyugO1JA@mail.gmail.com>
+Message-ID: <CAMj1kXFF3gR+LyE1VbLuwnRA3CzQtF90mv7rpw9x2RcyugO1JA@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub/arm64: Enable __efistub_global define in
+ .data section
+To:     Victor Erminpour <victor.erminpour@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
+On Sat, 11 Apr 2020 at 00:12, Victor Erminpour
+<victor.erminpour@oracle.com> wrote:
+>
+>
+>
+> On 4/10/20 1:09 AM, Ard Biesheuvel wrote:
+> > On Thu, 9 Apr 2020 at 23:44, Victor Erminpour
+> > <victor.erminpour@oracle.com> wrote:
+> >>
+> >> Enable the __efistub_global define to place variables in the
+> >> .data section for both CONFIG_ARM and CONFIG_ARM64.
+> >>
+> >> This places the EFIstub sys_table variable and other EFIstub
+> >> static variables in the .data section for both CONFIG_ARM and
+> >> CONFIG_ARM64.
+> >>
+> >
+> > What does that achieve?
+>
+> Hi Ard,
+>
+> Without placing these global variables in .data, I get the
+> following errors when booting an ARM64 EFI system:
+>
+> EFI stub: ERROR: Exit boot services failed.
+> EFI stub: ERROR: Failed to update FDT and exit boot services
+>
 
-Fixes: 541368b46b82 ("usb: phy: Add driver for the Ingenic JZ4770 USB transceiver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/usb/phy/phy-jz4770.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Which boot loader are you using? Does this involve shim?
 
-diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
-index 3ea1f5b9bcf8..8f62dc2a90ff 100644
---- a/drivers/usb/phy/phy-jz4770.c
-+++ b/drivers/usb/phy/phy-jz4770.c
-@@ -125,13 +125,13 @@ static int jz4770_phy_init(struct usb_phy *phy)
- 
- 	err = regulator_enable(priv->vcc_supply);
- 	if (err) {
--		dev_err(priv->dev, "Unable to enable VCC: %d", err);
-+		dev_err(priv->dev, "Unable to enable VCC: %d\n", err);
- 		return err;
- 	}
- 
- 	err = clk_prepare_enable(priv->clk);
- 	if (err) {
--		dev_err(priv->dev, "Unable to start clock: %d", err);
-+		dev_err(priv->dev, "Unable to start clock: %d\n", err);
- 		return err;
- 	}
- 
-@@ -191,7 +191,7 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
--		dev_err(dev, "Failed to map registers");
-+		dev_err(dev, "Failed to map registers\n");
- 		return PTR_ERR(priv->base);
- 	}
- 
-@@ -199,7 +199,7 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk)) {
- 		err = PTR_ERR(priv->clk);
- 		if (err != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get clock");
-+			dev_err(dev, "Failed to get clock\n");
- 		return err;
- 	}
- 
-@@ -207,14 +207,14 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->vcc_supply)) {
- 		err = PTR_ERR(priv->vcc_supply);
- 		if (err != -EPROBE_DEFER)
--			dev_err(dev, "failed to get regulator");
-+			dev_err(dev, "Failed to get regulator\n");
- 		return err;
- 	}
- 
- 	err = usb_add_phy(&priv->phy, USB_PHY_TYPE_USB2);
- 	if (err) {
- 		if (err != -EPROBE_DEFER)
--			dev_err(dev, "Unable to register PHY");
-+			dev_err(dev, "Unable to register PHY\n");
- 		return err;
- 	}
- 
--- 
-2.20.1
+Also, does it help if you add 'efi=no_disable_early_pci_dma'?
 
+
+>
+> I know that the ARM64 linker script is supposed to put the
+> .init.bss into the .init.data section, but I don't think this
+> is happening for all systems.
+>
+> Having it explicitly enabled for CONFIG_ARM64 worked for me.
+>
+
+OK, thanks for the report. However, we will be removing
+__efistub_global entirely during the next cycle, so this is not the
+right fix.
