@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11834C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72282C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB3A20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4206A214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607596;
-	bh=xppe7L99I5fyzlcJPPlSvogip0y4o8EV2liitqiwtA4=;
+	s=default; t=1586607600;
+	bh=RBwdeau2UXjuzCvH96Qfxh/rR+Du1Zjk34A0ZOmqfvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cTnUfXocT+wzmjRE9QworwuNtgVGVxgKHPGd9mZ4XS9rN6QPCs72wJyW1iy0C7Yu5
-	 qn6g1Jdn7nNivlZQo9qjYaBF62GHOHj2LePx92guU9UHt+WPuy0cum+OrFjytZ4g4a
-	 kK42cIkfOaJ03gQVfTgjk5e3GLTv3HpbCLTCZeS8=
+	b=EKWOtYxqunUjXGKpNR4xwl1zCYLYOOD5J/C5xlSNIhka8DfES8uSlS3lVp2KYHCNb
+	 wn94o1+2CGBuzVTONip7y0O9xHKQTvtMEfDZIcKFypSX5ngVupwPn+HykR6yUeciYx
+	 n47Ai5ZfbfAgvbYZCNtWwhob3u8YqOqJvqsrzpxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgDKMTz (ORCPT
+        id S1728904AbgDKMT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbgDKMTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:53 -0400
+        id S1728891AbgDKMTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CFD820787;
-        Sat, 11 Apr 2020 12:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2D282084D;
+        Sat, 11 Apr 2020 12:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607592;
-        bh=xppe7L99I5fyzlcJPPlSvogip0y4o8EV2liitqiwtA4=;
+        s=default; t=1586607595;
+        bh=RBwdeau2UXjuzCvH96Qfxh/rR+Du1Zjk34A0ZOmqfvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KNqNzImdn+u6iMEfHUMsnKmTEqw7ekYrlGjW4aRc1UbDw/NUFQFoOyj7PoqUJS0ay
-         JGdJW7KPsd2D1cmxKjvE/acdR5/PfvMSlhIAjoPFsj/te67H6nnsWmyaS6tVkaFy1I
-         cuhpArCSqCHDxpGQWNlxTeoS24bv7NLavpbOSQsI=
+        b=0UDnRc0q2SObP9ncGW2G3zUeFWcjERk+Xlppk2xHXAU4HVlGDEz0w5xYZJLaxw4Uz
+         QqlJ2qeDUjQukte6o0cyx/lXD22Z9qinQCUvUeSCWM/RFcV2ynyUr78NN2eGVE6Krp
+         8DNRYe2N63dIkOpk5JJ7tijKHiOI6LkrldsbkM60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 40/44] IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
-Date:   Sat, 11 Apr 2020 14:10:00 +0200
-Message-Id: <20200411115500.804691427@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Christian Eggers <ceggers@arri.de>
+Subject: [PATCH 5.5 41/44] ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D
+Date:   Sat, 11 Apr 2020 14:10:01 +0200
+Message-Id: <20200411115500.892167067@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -61,68 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Vesker <valex@mellanox.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-commit 41e684ef3f37ce6e5eac3fb5b9c7c1853f4b0447 upstream.
+commit 4562fa4c86c92a2df635fe0697c9e06379738741 upstream.
 
-Until now the flex parser capability was used in ib_query_device() to
-indicate tunnel_offloads_caps support for mpls_over_gre/mpls_over_udp.
+ARM_ERRATA_814220 has below description:
 
-Newer devices and firmware will have configurations with the flexparser
-but without mpls support.
+The v7 ARM states that all cache and branch predictor maintenance
+operations that do not specify an address execute, relative to
+each other, in program order.
+However, because of this erratum, an L2 set/way cache maintenance
+operation can overtake an L1 set/way cache maintenance operation.
+This ERRATA only affected the Cortex-A7 and present in r0p2, r0p3,
+r0p4, r0p5.
 
-Testing for the flex parser capability was a mistake, the tunnel_stateless
-capability was intended for detecting mpls and was introduced at the same
-time as the flex parser capability.
+i.MX6UL and i.MX7D have Cortex-A7 r0p5 inside, need to enable
+ARM_ERRATA_814220 for proper workaround.
 
-Otherwise userspace will be incorrectly informed that a future device
-supports MPLS when it does not.
-
-Link: https://lore.kernel.org/r/20200305123841.196086-1-leon@kernel.org
-Cc: <stable@vger.kernel.org> # 4.17
-Fixes: e818e255a58d ("IB/mlx5: Expose MPLS related tunneling offloads")
-Signed-off-by: Alex Vesker <valex@mellanox.com>
-Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Christian Eggers <ceggers@arri.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/main.c |    6 ++----
- include/linux/mlx5/mlx5_ifc.h     |    6 +++++-
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ arch/arm/mach-imx/Kconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -1175,12 +1175,10 @@ static int mlx5_ib_query_device(struct i
- 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_gre))
- 			resp.tunnel_offloads_caps |=
- 				MLX5_IB_TUNNELED_OFFLOADS_GRE;
--		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
--		    MLX5_FLEX_PROTO_CW_MPLS_GRE)
-+		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_gre))
- 			resp.tunnel_offloads_caps |=
- 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE;
--		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
--		    MLX5_FLEX_PROTO_CW_MPLS_UDP)
-+		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_udp))
- 			resp.tunnel_offloads_caps |=
- 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
- 	}
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@ -857,7 +857,11 @@ struct mlx5_ifc_per_protocol_networking_
- 	u8         swp_csum[0x1];
- 	u8         swp_lso[0x1];
- 	u8         cqe_checksum_full[0x1];
--	u8         reserved_at_24[0x5];
-+	u8         tunnel_stateless_geneve_tx[0x1];
-+	u8         tunnel_stateless_mpls_over_udp[0x1];
-+	u8         tunnel_stateless_mpls_over_gre[0x1];
-+	u8         tunnel_stateless_vxlan_gpe[0x1];
-+	u8         tunnel_stateless_ipv4_over_vxlan[0x1];
- 	u8         tunnel_stateless_ip_over_ip[0x1];
- 	u8         reserved_at_2a[0x6];
- 	u8         max_vxlan_udp_ports[0x8];
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -520,6 +520,7 @@ config SOC_IMX6UL
+ 	bool "i.MX6 UltraLite support"
+ 	select PINCTRL_IMX6UL
+ 	select SOC_IMX6
++	select ARM_ERRATA_814220
+ 
+ 	help
+ 	  This enables support for Freescale i.MX6 UltraLite processor.
+@@ -556,6 +557,7 @@ config SOC_IMX7D
+ 	select PINCTRL_IMX7D
+ 	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
+ 	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
++	select ARM_ERRATA_814220
+ 	help
+ 		This enables support for Freescale i.MX7 Dual processor.
+ 
 
 
