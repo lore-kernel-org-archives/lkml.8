@@ -2,111 +2,82 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB1BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081A1C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE277206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="kXVfw/kF"
+	by mail.kernel.org (Postfix) with ESMTP id D6A64216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgDKHOT (ORCPT
+        id S1725959AbgDKHU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:14:19 -0400
-Received: from mail-il1-f171.google.com ([209.85.166.171]:36408 "EHLO
-        mail-il1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgDKHOS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:14:18 -0400
-Received: by mail-il1-f171.google.com with SMTP id p13so3811083ilp.3
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:14:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Fa9OKlPgIZsak2scOJMVIYdvh3KbHmtnaJtoH8ECQUs=;
-        b=kXVfw/kF5eBaxzDv2RdRg4ZFnoDgQgTMISSlNx2qkoB9vyyQ9HYivF0/+IsZqQVx/i
-         pCRxwTu6cQLwcwoS5sD56tZV+q47fcJTgnhr8rH5Iyw03kBTPikug6pcRbRy7ztC05pc
-         G/VIGgCTNaRx6JGhShZ8sGcHHJs0dogWNHIEQKA8dYwjd3IITvZ5XOyYxLlQriZA/1ey
-         Lq5p7IaFjCwtGNNEuk+gxR7S+abV0tBSwj3VKkPT7ykjVW5B4mzSIpxfBWxpqNqIjhIw
-         wpS5UExRpyto6Xmj+OT47kJcxinSBkwNxlz8+QY8OfUlKrN/obcumn+D19H5yD4/fwya
-         PtYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Fa9OKlPgIZsak2scOJMVIYdvh3KbHmtnaJtoH8ECQUs=;
-        b=c3gDhipcEiVack44papN1C7puH1MepMRcPYyMS+rbmHRyhKpZ3Y70JW8cDhkk0wFtr
-         QZ45I/oR3RSDQT/t1BM2XkSYAkpu0ry587AkJvvwikeqtLVJzxKC5EjJeswc9lkET40d
-         NlU91Vvs2BCT5lq6drmGHrmtmaTW/q4W9xzr7VWqlSZW/9Esw0uEtgi95fDrGYIZUg92
-         lWZBAeZYqCbiKKmK5Ej+NlQW3CwmZA6EBx9M0mid/Km0QLesb+z59AEzqXWuedy/qJoq
-         Eni5xdaIaqRrKHTjl5VIGdvpzdIjlnvCY9k5UQJ5OuJkeYh9dAj9gm4gUfplgl2Fwquw
-         BBNQ==
-X-Gm-Message-State: AGi0PubzmeDD3Oq74sEGcoc+9zh8/GZLGyQUYSJhNG7gBHqRocKri1WU
-        f1xXWHf3m+e1ptZTQDXikEALq/QEUMA+0gA6d0umeGbFMVzxjg==
-X-Google-Smtp-Source: APiQypJ8bBwlpWCEOAaP7pQmusztAtregiRXSth7aeBUBAsSi6NeAou1FzNCIAbLTy4fkplT61U92IwOnEzRYHaEo2M=
-X-Received: by 2002:a92:250e:: with SMTP id l14mr8544680ill.201.1586589256485;
- Sat, 11 Apr 2020 00:14:16 -0700 (PDT)
+        Sat, 11 Apr 2020 03:20:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:52955 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgDKHU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 03:20:56 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4505168BFE; Sat, 11 Apr 2020 09:20:52 +0200 (CEST)
+Date:   Sat, 11 Apr 2020 09:20:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
+ zsmalloc
+Message-ID: <20200411072052.GA31242@lst.de>
+References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-11-hch@lst.de> <20200409160826.GC247701@google.com> <20200409165030.GG20713@hirez.programming.kicks-ass.net> <20200409170813.GD247701@google.com> <20200410023845.GA2354@jagdpanzerIV.localdomain> <20200410231136.GA101325@google.com>
 MIME-Version: 1.0
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Sat, 11 Apr 2020 03:13:40 -0400
-Message-ID: <CABV8kRzzs5ktyJTrs+m1uY3QY1v+XS5NrOUB+H4CuhfRS_vvdw@mail.gmail.com>
-Subject: ptrace and SIGNAL_UNKILLABLE
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Jamie Iles <jamie.iles@oracle.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410231136.GA101325@google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+Hi Minchan,
 
-I was seeing some unexpected hangs when ptracing
-a buggy container init, that I didn't see when just running
-it regularly. Some investigation pointed me to commit
+On Fri, Apr 10, 2020 at 04:11:36PM -0700, Minchan Kim wrote:
+> It doesn't mean we couldn't use zsmalloc as module any longer. It means
+> we couldn't use zsmalloc as module with pgtable mapping whcih was little
+> bit faster on microbenchmark in some architecutre(However, I usually temped
+> to remove it since it had several problems). However, we could still use
+> zsmalloc as module as copy way instead of pgtable mapping. Thus, if someone
+> really want to rollback the feature, they should provide reasonable reason
+> why it doesn't work for them. "A little fast" wouldn't be enough to exports
+> deep internal to the module.
 
-[eb61b5911] signal: don't remove SIGNAL_UNKILLABLE for traced tasks
+do you have any data how much faster it is on arm (and does that include
+arm64 as well)?  Besides the exports which were my prime concern,
+zsmalloc with pgtable mappings also is the only user of map_kernel_range
+outside of vmalloc.c, if it really is another code base for tiny
+improvements we could mark map_kernel_range or in fact remove it entirely
+and open code it in the remaining callers.
 
-In particular, consider a container init that just segfaults:
-
-segv.c:
-int main(void) {
-    return *((int*)-1);
-}
-
-$ gcc -o segv segv.c
-unshare -p -U -r -f ./segv
-Segmentation fault
-$ strace -f unshare -p -U -r -f ./segv
-[hangs]
-
-The reason this hangs is that above commit prevents ptrace'd
-tasks from having their SIGNAL_UNKILLABLE flag removed,
-so when the SIGSEGV gets generated, that flag does not get
-unset. When strace re-injects the SIGSEGV, it simply gets
-ignored, the process re-enters user space and the whole
-ordeal starts over.
-
-I considered sending a patch that updates that code-path
-to only preserve SIGNAL_UNKILLABLE for SIGTRAP
-signals, but I figured that may yet be insufficient as well.
-
-I think a proper solution would probably refactor the signal
-code to allow the call side to decide whether or not to clear
-this flag (such that ptrace could elect not to, but otherwise
-the process is undisturbed), but I'm not familiar enough with
-the code to attempt a patch for that.
-
-If this is what's supposed to happen, or it is infeasible to
-correct it, it would be useful to have a ptrace option that
-can be set, to nevertheless make the injected signal final.
-At the moment, I can't think of a good way to inject such a
-signal.
-
-Thanks,
-Keno
+(unmap_kernel_range is a different story, it has a bunch of callers,
+and most look odd)
