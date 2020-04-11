@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A831C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761EFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F11420769
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A04215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647409;
-	bh=PQqtnbp5qUAkfc8PiIsECN0aQG6tr/+c68pEp+7GFyA=;
+	s=default; t=1586647416;
+	bh=qatoofgB5RrvttR39Yh97SfdZun7nyvSZh5sTNU+DiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uu43TPbHW37S9RbVM60s3eRLKbPYeIdQs+eEARAxIgNO/WX9M7Rl1W+nTv6j6c/3
-	 mbcm2f3fyy2ByGvMsDYWOHmhzL7Nw7574szzr6loomaNTcPwnCxZKpXDbjlLxMgzBc
-	 /moyBV7CvTU8tUj3YEEKvHp4kB9xFyYXtTulVOGE=
+	b=diMqAujKHPBjXQxfMcPkFfvS5h0KrrNeAxca39lGPBKxoD+d+L6GJSq36hbHHBhCL
+	 bctiKx6Pc+uweAH/7LAZQ5QVvotsLt09Rqqfm6gbCRlEM5M685cyIvU5hmqDbI/PAY
+	 FOKe0ZF/5vsujevqaUjVZa8yzVGhGF2Zgnv7wjFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbgDKXX1 (ORCPT
+        id S1730607AbgDKXXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729288AbgDKXM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:57 -0400
+        id S1730292AbgDKXM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 136712166E;
-        Sat, 11 Apr 2020 23:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62BB20708;
+        Sat, 11 Apr 2020 23:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646777;
-        bh=PQqtnbp5qUAkfc8PiIsECN0aQG6tr/+c68pEp+7GFyA=;
+        s=default; t=1586646776;
+        bh=qatoofgB5RrvttR39Yh97SfdZun7nyvSZh5sTNU+DiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2X4+s4K61EZuxNYU/VJYZQ5XrNbl2uv3vJH9QFv7E6oo8+FifBBSYT4pE0Mqb2Ik
-         zJycWU4FppHAFQaa4eWZqaZWQGMtFPMHl/Vw+bcTFgbPdcaHdy7/VzZzNxZa6v2UUR
-         uku21wXMvGbqyyj+n5NXHzXGYDwgUWeD/IJAhNBI=
+        b=1V86hcAqW+S2ED/MbJpL5q0lwyv4x4wyKZr8azHTswkBQ6uC+RD81Py5RhRO207oi
+         hU1YH0I/AgLKkOCK6te1TITMVlixhobZ7MvAU+LnqNJ7EYK7CJaKvbf6ozA9xl7FJR
+         T929VtbAnSFIZdpJyBxTvHvF6pgD9WtIQwwTYFH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagar Biradar <Sagar.Biradar@microchip.com>,
-        Balsundar P <balsundar.p@microsemi.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 44/66] scsi: aacraid: Disabling TM path and only processing IOP reset
-Date:   Sat, 11 Apr 2020 19:11:41 -0400
-Message-Id: <20200411231203.25933-44-sashal@kernel.org>
+Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 43/66] ath10k: start recovery process when read int status fail for sdio
+Date:   Sat, 11 Apr 2020 19:11:40 -0400
+Message-Id: <20200411231203.25933-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -60,124 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagar Biradar <Sagar.Biradar@microchip.com>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit bef18d308a2215eff8c3411a23d7f34604ce56c3 ]
+[ Upstream commit 37b7ecb75627699e96750db1e0c5ac56224245df ]
 
-Fixes the occasional adapter panic when sg_reset is issued with -d, -t, -b
-and -H flags.  Removal of command type HBA_IU_TYPE_SCSI_TM_REQ in
-aac_hba_send since iu_type, request_id and fib_flags are not populated.
-Device and target reset handlers are made to send TMF commands only when
-reset_state is 0.
+When running simulate crash stress test, it happened
+"failed to read from address 0x800: -110".
 
-Link: https://lore.kernel.org/r/1581553771-25796-1-git-send-email-Sagar.Biradar@microchip.com
-Reviewed-by: Sagar Biradar <Sagar.Biradar@microchip.com>
-Signed-off-by: Sagar Biradar <Sagar.Biradar@microchip.com>
-Signed-off-by: Balsundar P <balsundar.p@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Test steps:
+1. Run command continuous
+echo soft > /sys/kernel/debug/ieee80211/phy0/ath10k/simulate_fw_crash
+
+2. error happened and it did not begin recovery for long time.
+[74377.334846] ath10k_sdio mmc1:0001:1: simulating soft firmware crash
+[74378.378217] ath10k_sdio mmc1:0001:1: failed to read from address 0x800: -110
+[74378.378371] ath10k_sdio mmc1:0001:1: failed to process pending SDIO interrupts: -110
+
+It has sdio errors since it can not read MBOX_HOST_INT_STATUS_ADDRESS,
+then it has to do recovery process to recovery ath10k.
+
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00042.
+
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/aacraid/commsup.c |  2 +-
- drivers/scsi/aacraid/linit.c   | 34 +++++++++++++++++++++++++---------
- 2 files changed, 26 insertions(+), 10 deletions(-)
+ drivers/net/wireless/ath/ath10k/sdio.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index b7588de4484e5..4cb6ee6e1212e 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -743,7 +743,7 @@ int aac_hba_send(u8 command, struct fib *fibptr, fib_callback callback,
- 		hbacmd->request_id =
- 			cpu_to_le32((((u32)(fibptr - dev->fibs)) << 2) + 1);
- 		fibptr->flags |= FIB_CONTEXT_FLAG_SCSI_CMD;
--	} else if (command != HBA_IU_TYPE_SCSI_TM_REQ)
-+	} else
- 		return -EINVAL;
- 
- 
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index 1046947064a0b..0142547aaadd2 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -736,7 +736,11 @@ static int aac_eh_abort(struct scsi_cmnd* cmd)
- 		status = aac_hba_send(HBA_IU_TYPE_SCSI_TM_REQ, fib,
- 				  (fib_callback) aac_hba_callback,
- 				  (void *) cmd);
--
-+		if (status != -EINPROGRESS) {
-+			aac_fib_complete(fib);
-+			aac_fib_free(fib);
-+			return ret;
-+		}
- 		/* Wait up to 15 secs for completion */
- 		for (count = 0; count < 15; ++count) {
- 			if (cmd->SCp.sent_command) {
-@@ -915,11 +919,11 @@ static int aac_eh_dev_reset(struct scsi_cmnd *cmd)
- 
- 	info = &aac->hba_map[bus][cid];
- 
--	if (info->devtype != AAC_DEVTYPE_NATIVE_RAW &&
--	    info->reset_state > 0)
-+	if (!(info->devtype == AAC_DEVTYPE_NATIVE_RAW &&
-+	 !(info->reset_state > 0)))
- 		return FAILED;
- 
--	pr_err("%s: Host adapter reset request. SCSI hang ?\n",
-+	pr_err("%s: Host device reset request. SCSI hang ?\n",
- 	       AAC_DRIVERNAME);
- 
- 	fib = aac_fib_alloc(aac);
-@@ -934,7 +938,12 @@ static int aac_eh_dev_reset(struct scsi_cmnd *cmd)
- 	status = aac_hba_send(command, fib,
- 			      (fib_callback) aac_tmf_callback,
- 			      (void *) info);
--
-+	if (status != -EINPROGRESS) {
-+		info->reset_state = 0;
-+		aac_fib_complete(fib);
-+		aac_fib_free(fib);
-+		return ret;
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index 0cdaecb0e28a9..1606bd71f3834 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -915,8 +915,11 @@ static int ath10k_sdio_mbox_read_int_status(struct ath10k *ar,
+ 	 */
+ 	ret = ath10k_sdio_read(ar, MBOX_HOST_INT_STATUS_ADDRESS,
+ 			       irq_proc_reg, sizeof(*irq_proc_reg));
+-	if (ret)
++	if (ret) {
++		queue_work(ar->workqueue, &ar->restart_work);
++		ath10k_warn(ar, "read int status fail, start recovery\n");
+ 		goto out;
 +	}
- 	/* Wait up to 15 seconds for completion */
- 	for (count = 0; count < 15; ++count) {
- 		if (info->reset_state == 0) {
-@@ -973,11 +982,11 @@ static int aac_eh_target_reset(struct scsi_cmnd *cmd)
  
- 	info = &aac->hba_map[bus][cid];
- 
--	if (info->devtype != AAC_DEVTYPE_NATIVE_RAW &&
--	    info->reset_state > 0)
-+	if (!(info->devtype == AAC_DEVTYPE_NATIVE_RAW &&
-+	 !(info->reset_state > 0)))
- 		return FAILED;
- 
--	pr_err("%s: Host adapter reset request. SCSI hang ?\n",
-+	pr_err("%s: Host target reset request. SCSI hang ?\n",
- 	       AAC_DRIVERNAME);
- 
- 	fib = aac_fib_alloc(aac);
-@@ -994,6 +1003,13 @@ static int aac_eh_target_reset(struct scsi_cmnd *cmd)
- 			      (fib_callback) aac_tmf_callback,
- 			      (void *) info);
- 
-+	if (status != -EINPROGRESS) {
-+		info->reset_state = 0;
-+		aac_fib_complete(fib);
-+		aac_fib_free(fib);
-+		return ret;
-+	}
-+
- 	/* Wait up to 15 seconds for completion */
- 	for (count = 0; count < 15; ++count) {
- 		if (info->reset_state <= 0) {
-@@ -1046,7 +1062,7 @@ static int aac_eh_bus_reset(struct scsi_cmnd* cmd)
- 		}
- 	}
- 
--	pr_err("%s: Host adapter reset request. SCSI hang ?\n", AAC_DRIVERNAME);
-+	pr_err("%s: Host bus reset request. SCSI hang ?\n", AAC_DRIVERNAME);
- 
- 	/*
- 	 * Check the health of the controller
+ 	/* Update only those registers that are enabled */
+ 	*host_int_status = irq_proc_reg->host_int_status &
 -- 
 2.20.1
 
