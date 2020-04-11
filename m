@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21696C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70BEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09172084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9565920644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607681;
-	bh=Or4Wyj8G7lBylczIfcUvXgxxcqlhFGadGh2+Le/CxVg=;
+	s=default; t=1586607686;
+	bh=r6Cz7tXqvWMM41FcH1w8UekDGqn7bcSLJ/soebx9cR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDDmcRfzFtWTp0u5Ix5tM6xFi07ovIM30ZSO8J86bLBvTbLgRBZGIZZU0FDqAN1cl
-	 xIFaPZG2cpjsEnv9eDeItynCerziKCmL+2pOzL5xHfNl4Gn8A9PT3N5mwZs6p8bPqc
-	 4Gh8x8PZ/ZceSA81o6NqMcnh1fQ1b9T9di1YGEL0=
+	b=tvk8822hZHYTPChEeemoFC8EHO9y2y7j81gs3gQj+oVbMdYElfOGxV+GYCJFObB8z
+	 NHaTHkFy1rHuiwvOD/OsqjgxPjuo5eKY/5LUA8+yXFW4bLy3qFjLtmN5b5+aV7UVk5
+	 mjamnnzXI3wD//ObefqpQPKmgWmkHOwhHHoB0A6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgDKMVT (ORCPT
+        id S1728958AbgDKMVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57402 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgDKMVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:13 -0400
+        id S1728949AbgDKMVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D346D20644;
-        Sat, 11 Apr 2020 12:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD120214D8;
+        Sat, 11 Apr 2020 12:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607673;
-        bh=Or4Wyj8G7lBylczIfcUvXgxxcqlhFGadGh2+Le/CxVg=;
+        s=default; t=1586607678;
+        bh=r6Cz7tXqvWMM41FcH1w8UekDGqn7bcSLJ/soebx9cR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQXZJcJrbNhEJikXNzhwI3rOp6ocVJW6jPhyJMjpY2ybMRN6ePHWwJ3iIfOIfnpp6
-         7g5RF4MGhFsgoCr2F5njEIs5aUwFOQnTSR6ay1ilCrbCv5i13VnHpiOtKYtLtj2NN0
-         vU06vwfW+dTIBvYJg+Ect5521tovY1B8fYjmyVjw=
+        b=LDYHGMcPClXWM1aeJi2B0bOdgfzxV0AhkBBPh4dD0F0rdZ2diojYyzOGj/5EXIkL/
+         v8C5CuLlCFYBH2rfoeCbyCFlfRZ7ggl+pAAYvcaR+0rrxue7919VqdHepPhSwAgiQP
+         M7SCkgBsBDZzrSu4jytqXKFLZm0JTDAkwGuW77KU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Hou Tao <houtao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.6 29/38] ubi: fastmap: Free unused fastmap anchor peb during detach
-Date:   Sat, 11 Apr 2020 14:10:06 +0200
-Message-Id: <20200411115502.888317353@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 04/38] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Sat, 11 Apr 2020 14:09:41 +0200
+Message-Id: <20200411115459.715904176@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -62,65 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit c16f39d14a7e0ec59881fbdb22ae494907534384 upstream.
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-When CONFIG_MTD_UBI_FASTMAP is enabled, fm_anchor will be assigned
-a free PEB during ubi_wl_init() or ubi_update_fastmap(). However
-if fastmap is not used or disabled on the MTD device, ubi_wl_entry
-related with the PEB will not be freed during detach.
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-So Fix it by freeing the unused fastmap anchor during detach.
-
-Fixes: f9c34bb52997 ("ubi: Fix producing anchor PEBs")
-Reported-by: syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mtd/ubi/fastmap-wl.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/dsa/bcm_sf2.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/ubi/fastmap-wl.c
-+++ b/drivers/mtd/ubi/fastmap-wl.c
-@@ -39,6 +39,13 @@ static struct ubi_wl_entry *find_anchor_
- 	return victim;
- }
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1069,6 +1069,7 @@ static int bcm_sf2_sw_probe(struct platf
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1136,7 +1137,11 @@ static int bcm_sf2_sw_probe(struct platf
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
  
-+static inline void return_unused_peb(struct ubi_device *ubi,
-+				     struct ubi_wl_entry *e)
-+{
-+	wl_tree_add(e, &ubi->free);
-+	ubi->free_count++;
-+}
-+
- /**
-  * return_unused_pool_pebs - returns unused PEB to the free tree.
-  * @ubi: UBI device description object
-@@ -52,8 +59,7 @@ static void return_unused_pool_pebs(stru
- 
- 	for (i = pool->used; i < pool->size; i++) {
- 		e = ubi->lookuptbl[pool->pebs[i]];
--		wl_tree_add(e, &ubi->free);
--		ubi->free_count++;
-+		return_unused_peb(ubi, e);
- 	}
- }
- 
-@@ -361,6 +367,11 @@ static void ubi_fastmap_close(struct ubi
- 	return_unused_pool_pebs(ubi, &ubi->fm_pool);
- 	return_unused_pool_pebs(ubi, &ubi->fm_wl_pool);
- 
-+	if (ubi->fm_anchor) {
-+		return_unused_peb(ubi, ubi->fm_anchor);
-+		ubi->fm_anchor = NULL;
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
 +	}
-+
- 	if (ubi->fm) {
- 		for (i = 0; i < ubi->fm->used_blocks; i++)
- 			kfree(ubi->fm->e[i]);
+ 
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
 
 
