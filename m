@@ -2,140 +2,248 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B02FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E292075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3329E2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lXfwEK6t"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fo891R1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDKRfK (ORCPT
+        id S1726715AbgDKRhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 13:35:10 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34474 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgDKRfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 13:35:10 -0400
-Received: from zn.tnic (p200300EC2F1EE200B53534244D96C31E.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:e200:b535:3424:4d96:c31e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6FF401EC0C50;
-        Sat, 11 Apr 2020 19:35:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586626509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=tITpXAEx0ZKBxrGmf7qRgeBQo5VORL0f/hlXJ7f6wlY=;
-        b=lXfwEK6tpAvogvK08CzhUk18RhPgc4bf31WSPpPGihBfqj7p1woHl+SjSfJYSQq1TNfqjX
-        93NZz9vz6cMvuQ5PC+o8RNh1K+LWrIw/nOz0CHsgOm+9m3easHVSCjfGpvQJ5TJXzKngQm
-        VR2UNFA8qiZWsCaapTt+JMhPi4I1LBY=
-Date:   Sat, 11 Apr 2020 19:35:04 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Don Fry <pcnet32@frontier.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Einon <mark.einon@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        David Dillow <dave@thedillows.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Andreas Larsson <andreas@gaisler.com>,
-        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
-Message-ID: <20200411173504.GA11128@zn.tnic>
-References: <20200224085311.460338-1-leon@kernel.org>
- <20200224085311.460338-4-leon@kernel.org>
- <20200411155623.GA22175@zn.tnic>
- <20200411161156.GA200683@unreal>
+        Sat, 11 Apr 2020 13:37:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38451 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgDKRhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 13:37:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so5064295wrp.5
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 10:37:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e61/lw3LcPWdbUCePtXNS18yHZNyuLTCED3Qz5AQidg=;
+        b=fo891R1f8nlqYAqA8l8VK8vyKEIAbj0uutXxo2yqmAziMQ4EasyxDP0RH2zuwmycTv
+         1/zdC4dh2uTWTSFiA3OYD+H+3AcTI9B4wXcU3zyo5TB1DLwzUkgbFYBjtFUJYBfbRTX0
+         Kl7QGTjPk/2/tZCzVJ3WHPxoWILa/WP8uciYw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e61/lw3LcPWdbUCePtXNS18yHZNyuLTCED3Qz5AQidg=;
+        b=l+qnovSgzhjvJpRvuUXbirzeqarhW5Ri6XWZ5NymHbjfPFg7ivpURehRw/R71IJRa9
+         bPWgsTfPLrmwRawukhppiINbAFKrgDuwv2E4jAIGjKS7dQF7n28fL8balPSsicmOGhXQ
+         IcCPc1BaDtwICjR6+gUIYbrHUFpLZqcx4YEX7Pd9EYNPtU4QW/5GnnhcKOCetXukYaZT
+         Ppi877x99RWla2jytxJ/5TgxTKOOqvD3e/Yg7nudTaNroXIWhtseH66JzgYapPlyCNZs
+         FcURfoILkgG7x9SjNr8FRc05MAgedsEikTVDCyd4s7UAyO4VrQv/OFFC2gc2ar8EnB0H
+         ICRw==
+X-Gm-Message-State: AGi0PuZv+PNkBWADjxi1Mewx5zL9aMqwDcO6MEQBu3xL2/aro4wiAJk5
+        2SSb0DPuxJ5ehakewAxtcavqeQ==
+X-Google-Smtp-Source: APiQypJKcfFoAB4ZvmjtYh9c4vCgpnCENg82oBpK/7cK65AgJOlLHsrjbhBs+fXwU9o2uMCaSQe0Zg==
+X-Received: by 2002:adf:8543:: with SMTP id 61mr10006419wrh.243.1586626634449;
+        Sat, 11 Apr 2020 10:37:14 -0700 (PDT)
+Received: from tfiga.c.googlers.com.com (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id x8sm8618512wrn.27.2020.04.11.10.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 10:37:13 -0700 (PDT)
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     linux-media@vger.kernel.org
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        "jacopo mondi" <jacopo@jmondi.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH] media: staging: ipu3: Fix stale list entries on parameter queue failure
+Date:   Sat, 11 Apr 2020 17:37:10 +0000
+Message-Id: <20200411173710.226247-1-tfiga@chromium.org>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200411161156.GA200683@unreal>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 07:11:56PM +0300, Leon Romanovsky wrote:
-> Probably, this is the right change, but I have a feeling that the right
-> solution will be inside headers itself. It is a little bit strange that
-> both very common kernel headers like module.h and vermagic.h are location
-> dependant.
+When queuing parameters fails, current code bails out without deleting
+the corresponding vb2 buffer from the driver buffer list, but the buffer
+is returned to vb2. This leads to stale list entries and a crash when
+the driver stops streaming:
 
-Judging by how only a couple of net drivers include vermagic.h directly,
-doh, of course:
+[  224.935561] ipu3-imgu 0000:00:05.0: set parameters failed.
+[  224.998932] ipu3-imgu 0000:00:05.0: set parameters failed.
+[  225.064430] ipu3-imgu 0000:00:05.0: set parameters failed.
+[  225.128534] ipu3-imgu 0000:00:05.0: set parameters failed.
+[  225.194945] ipu3-imgu 0000:00:05.0: set parameters failed.
+[  225.360363] ------------[ cut here ]------------
+[  225.360372] WARNING: CPU: 0 PID: 6704 at
+drivers/media/common/videobuf2/videobuf2-core.c:927
+vb2_buffer_done+0x20f/0x21a [videobuf2_common]
+[  225.360374] Modules linked in: snd_seq_dummy snd_seq snd_seq_device
+veth bridge stp llc tun nf_nat_tftp nf_conntrack_tftp nf_nat_ftp
+nf_conntrack_ftp esp6 ah6 ip6t_REJECT ip6t_ipv6header cmac rfcomm uinput
+ipu3_imgu(C) ipu3_cio2 iova videobuf2_v4l2 videobuf2_common
+videobuf2_dma_sg videobuf2_memops ov13858 ov5670 v4l2_fwnode dw9714
+acpi_als xt_MASQUERADE fuse iio_trig_sysfs cros_ec_sensors_ring
+cros_ec_light_prox cros_ec_sensors cros_ec_sensors_core
+industrialio_triggered_buffer kfifo_buf industrialio
+cros_ec_sensorsupport cdc_ether btusb btrtl btintel btbcm usbnet
+bluetooth ecdh_generic ecc hid_google_hammer iwlmvm iwl7000_mac80211
+r8152 mii lzo_rle lzo_compress iwlwifi zram cfg80211 joydev
+[  225.360400] CPU: 0 PID: 6704 Comm: CameraDeviceOps Tainted: G
+C        5.4.30 #5
+[  225.360402] Hardware name: HP Soraka/Soraka, BIOS
+Google_Soraka.10431.106.0 12/03/2019
+[  225.360405] RIP: 0010:vb2_buffer_done+0x20f/0x21a [videobuf2_common]
+[  225.360408] Code: 5e 41 5f 5d e9 e0 16 5a d4 41 8b 55 08 48 c7 c7 8f
+8b 5c c0 48 c7 c6 36 9a 5c c0 44 89 f9 31 c0 e8 a5 1c 5b d4 e9 53 fe ff
+ff <0f> 0b eb a3 e8 12 d7 43 d4 eb 97 0f 1f 44 00 00 55 48 89 e5 41 56
+[  225.360410] RSP: 0018:ffff9468ab32fba8 EFLAGS: 00010297
+[  225.360412] RAX: ffff8aa7a51577a8 RBX: dead000000000122 RCX:
+ffff8aa7a51577a8
+[  225.360414] RDX: 0000000000000000 RSI: 0000000000000006 RDI:
+ffff8aa7a5157400
+[  225.360416] RBP: ffff9468ab32fbd8 R08: ffff8aa64e47e600 R09:
+0000000000000000
+[  225.360418] R10: 0000000000000000 R11: ffffffffc06036e6 R12:
+dead000000000100
+[  225.360420] R13: ffff8aa7820f1940 R14: ffff8aa7a51577a8 R15:
+0000000000000006
+[  225.360422] FS:  00007c1146ffd700(0000) GS:ffff8aa7baa00000(0000)
+knlGS:0000000000000000
+[  225.360424] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  225.360426] CR2: 00007aea3473a000 CR3: 00000000537d6004 CR4:
+00000000003606f0
+[  225.360427] Call Trace:
+[  225.360434]  imgu_return_all_buffers+0x6f/0x8e [ipu3_imgu]
+[  225.360438]  imgu_vb2_stop_streaming+0xd6/0xf0 [ipu3_imgu]
+[  225.360441]  __vb2_queue_cancel+0x33/0x22d [videobuf2_common]
+[  225.360443]  vb2_core_streamoff+0x16/0x78 [videobuf2_common]
+[  225.360448]  __video_do_ioctl+0x33d/0x42a
+[  225.360452]  video_usercopy+0x34a/0x615
+[  225.360455]  ? video_ioctl2+0x16/0x16
+[  225.360458]  v4l2_ioctl+0x46/0x53
+[  225.360462]  do_vfs_ioctl+0x50a/0x787
+[  225.360465]  ksys_ioctl+0x58/0x83
+[  225.360468]  __x64_sys_ioctl+0x1a/0x1e
+[  225.360470]  do_syscall_64+0x54/0x68
+[  225.360474]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  225.360476] RIP: 0033:0x7c118030f497
+[  225.360479] Code: 8a 66 90 48 8b 05 d1 d9 2b 00 64 c7 00 26 00 00 00
+48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 d9 2b 00 f7 d8 64 89 01 48
+[  225.360480] RSP: 002b:00007c1146ffa5a8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[  225.360483] RAX: ffffffffffffffda RBX: 00007c1140010018 RCX:
+00007c118030f497
+[  225.360484] RDX: 00007c114001019c RSI: 0000000040045613 RDI:
+000000000000004c
+[  225.360486] RBP: 00007c1146ffa700 R08: 00007c1140010048 R09:
+0000000000000000
+[  225.360488] R10: 0000000000000000 R11: 0000000000000246 R12:
+00007c11400101b0
+[  225.360489] R13: 00007c1140010200 R14: 00007c1140010048 R15:
+0000000000000001
+[  225.360492] ---[ end trace 73625ecfbd1c930e ]---
+[  225.360498] general protection fault: 0000 [#1] PREEMPT SMP PTI
+[  225.360501] CPU: 0 PID: 6704 Comm: CameraDeviceOps Tainted: G
+WC        5.4.30 #5
+[  225.360502] Hardware name: HP Soraka/Soraka, BIOS
+Google_Soraka.10431.106.0 12/03/2019
+[  225.360505] RIP: 0010:imgu_return_all_buffers+0x52/0x8e [ipu3_imgu]
+[  225.360507] Code: d4 49 8b 85 70 0a 00 00 49 81 c5 70 0a 00 00 49 39
+c5 74 3b 49 bc 00 01 00 00 00 00 ad de 49 8d 5c 24 22 4c 8b 30 48 8b 48
+08 <49> 89 4e 08 4c 89 31 4c 89 20 48 89 58 08 48 8d b8 58 fc ff ff 44
+[  225.360509] RSP: 0018:ffff9468ab32fbe8 EFLAGS: 00010293
+[  225.360511] RAX: ffff8aa7a51577a8 RBX: dead000000000122 RCX:
+dead000000000122
+[  225.360512] RDX: 0000000000000000 RSI: 0000000000000006 RDI:
+ffff8aa7a5157400
+[  225.360514] RBP: ffff9468ab32fc18 R08: ffff8aa64e47e600 R09:
+0000000000000000
+[  225.360515] R10: 0000000000000000 R11: ffffffffc06036e6 R12:
+dead000000000100
+[  225.360517] R13: ffff8aa7820f1940 R14: dead000000000100 R15:
+0000000000000006
+[  225.360519] FS:  00007c1146ffd700(0000) GS:ffff8aa7baa00000(0000)
+knlGS:0000000000000000
+[  225.360521] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  225.360523] CR2: 00007aea3473a000 CR3: 00000000537d6004 CR4:
+00000000003606f0
+[  225.360525] Call Trace:
+[  225.360528]  imgu_vb2_stop_streaming+0xd6/0xf0 [ipu3_imgu]
+[  225.360531]  __vb2_queue_cancel+0x33/0x22d [videobuf2_common]
+[  225.360534]  vb2_core_streamoff+0x16/0x78 [videobuf2_common]
+[  225.360537]  __video_do_ioctl+0x33d/0x42a
+[  225.360540]  video_usercopy+0x34a/0x615
+[  225.360542]  ? video_ioctl2+0x16/0x16
+[  225.360546]  v4l2_ioctl+0x46/0x53
+[  225.360548]  do_vfs_ioctl+0x50a/0x787
+[  225.360551]  ksys_ioctl+0x58/0x83
+[  225.360554]  __x64_sys_ioctl+0x1a/0x1e
+[  225.360556]  do_syscall_64+0x54/0x68
+[  225.360559]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  225.360561] RIP: 0033:0x7c118030f497
+[  225.360563] Code: 8a 66 90 48 8b 05 d1 d9 2b 00 64 c7 00 26 00 00 00
+48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 d9 2b 00 f7 d8 64 89 01 48
+[  225.360565] RSP: 002b:00007c1146ffa5a8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[  225.360567] RAX: ffffffffffffffda RBX: 00007c1140010018 RCX:
+00007c118030f497
+[  225.360569] RDX: 00007c114001019c RSI: 0000000040045613 RDI:
+000000000000004c
+[  225.360570] RBP: 00007c1146ffa700 R08: 00007c1140010048 R09:
+0000000000000000
+[  225.360572] R10: 0000000000000000 R11: 0000000000000246 R12:
+00007c11400101b0
+[  225.360574] R13: 00007c1140010200 R14: 00007c1140010048 R15:
+0000000000000001
+[  225.360576] Modules linked in: snd_seq_dummy snd_seq snd_seq_device
+veth bridge stp llc tun nf_nat_tftp nf_conntrack_tftp nf_nat_ftp
+nf_conntrack_ftp esp6 ah6 ip6t_REJECT ip6t_ipv6header cmac rfcomm uinput
+ipu3_imgu(C) ipu3_cio2 iova videobuf2_v4l2 videobuf2_common
+videobuf2_dma_sg videobuf2_memops ov13858 ov567
 
-diff --git a/drivers/net/ethernet/3com/3c509.c b/drivers/net/ethernet/3com/3c509.c
-index b762176a1406..139d0120f511 100644
---- a/drivers/net/ethernet/3com/3c509.c
-+++ b/drivers/net/ethernet/3com/3c509.c
-@@ -85,7 +85,6 @@
- #include <linux/device.h>
- #include <linux/eisa.h>
- #include <linux/bitops.h>
--#include <linux/vermagic.h>
- 
- #include <linux/uaccess.h>
- #include <asm/io.h>
-diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
-index 90312fcd6319..47b4215bb93b 100644
---- a/drivers/net/ethernet/3com/3c515.c
-+++ b/drivers/net/ethernet/3com/3c515.c
-@@ -22,7 +22,6 @@
- 
- */
- 
--#include <linux/vermagic.h>
- #define DRV_NAME		"3c515"
- 
- #define CORKSCREW 1
+Fix this by moving the list_del() call just below the list_first_entry()
+call when the buffer no longer needs to be in the list.
 
+Fixes: 8ecc7c9da013 ("media: staging/intel-ipu3: parameter buffer refactoring")
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 ---
+ drivers/staging/media/ipu3/ipu3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Drivers include
-
-#include <linux/module.h>
-
-which includes
-
-#include <asm/module.h>
-
-which defines the arch-specific MODULE_ARCH_VERMAGIC.
-
-Why did you need to include vermagic.h directly? i386 builds fine with
-the vermagic.h includes removed or was it some other arches which needed
-it?
-
-Thx.
-
+diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
+index 4d53aad31483..7a1d1881483b 100644
+--- a/drivers/staging/media/ipu3/ipu3.c
++++ b/drivers/staging/media/ipu3/ipu3.c
+@@ -261,6 +261,7 @@ int imgu_queue_buffers(struct imgu_device *imgu, bool initial, unsigned int pipe
+ 
+ 			ivb = list_first_entry(&imgu_pipe->nodes[node].buffers,
+ 					       struct imgu_vb2_buffer, list);
++			list_del(&ivb->list);
+ 			vb = &ivb->vbb.vb2_buf;
+ 			r = imgu_css_set_parameters(&imgu->css, pipe,
+ 						    vb2_plane_vaddr(vb, 0));
+@@ -274,7 +275,6 @@ int imgu_queue_buffers(struct imgu_device *imgu, bool initial, unsigned int pipe
+ 			vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
+ 			dev_dbg(&imgu->pci_dev->dev,
+ 				"queue user parameters %d to css.", vb->index);
+-			list_del(&ivb->list);
+ 		} else if (imgu_pipe->queue_enabled[node]) {
+ 			struct imgu_css_buffer *buf =
+ 				imgu_queue_getbuf(imgu, node, pipe);
 -- 
-Regards/Gruss,
-    Boris.
+2.26.0.110.g2183baf09c-goog
 
-https://people.kernel.org/tglx/notes-about-netiquette
