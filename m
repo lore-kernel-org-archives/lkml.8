@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A2FC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB85C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F952217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C5720644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607720;
-	bh=G/fsmouMPqeGL+ojewb25nKuHbsV2AApGz5o0aVaTkg=;
+	s=default; t=1586607723;
+	bh=5kmeVb3JsbP9BSQn+tvarIabMWLZFhEF1PjsFRMoLIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KKO7tz7oYmi6yRQ7XWxJDSVDrJ8SvWhOwqk8pogf4AJqz4EvKQMxaXRH1GhSOMC9R
-	 8OqwdWsmEQjFu4Knqku7iz+ciTMeWQlYLblddhNpo+pirH+wVaJIwBBAnlA0OYzuz9
-	 PY8jICEhtFElNGgHofeNG3JQwKIEYL0+fBGhRY7A=
+	b=GvqKv8ReH9T1Drb1wTh+iSetPECX4rWFIxy8v2b4MSmGjEf/uWATZUy1XkAZB557/
+	 XnnkY7e7wRmYDwN7n7gV5wipTlR8xEdeM1GPK7LCqNjpyP4Moyeuceuga3Twd87NbM
+	 D6Jyhk+4DlJGR6mUqWvYus2JZJZm+WjlGVlFXjSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgDKMVz (ORCPT
+        id S1729203AbgDKMVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58304 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbgDKMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:52 -0400
+        id S1729190AbgDKMVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20DD20644;
-        Sat, 11 Apr 2020 12:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7ED20692;
+        Sat, 11 Apr 2020 12:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607712;
-        bh=G/fsmouMPqeGL+ojewb25nKuHbsV2AApGz5o0aVaTkg=;
+        s=default; t=1586607705;
+        bh=5kmeVb3JsbP9BSQn+tvarIabMWLZFhEF1PjsFRMoLIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M/I2ip3EA3M4B+SXx+GTrcQZVW7/LprBoO11nv5YfyCbg6yktv4nTWO3THRp/mMmK
-         F9QRzEu1b2n+eo3oqRmlvKnEpV2s5MRlivSHGNmj2c8TF67bQdliT/LHiBPcr6El+S
-         Uq7Vt0N5H1LJtvFpk13osbcRDFvkQOg773lwL0/Q=
+        b=IqkVhj3s2ulBun4rkkFQjvwC+6MlzHyXs+sK7w0uJ+luGT0Zam/ek2oncGPHeePq+
+         jT74jkmpAb4RbJ7ivP/bIImmVv3wsRD+qfogDCGwhNmU3npinMAU+zLvO0qdroQ+mi
+         +oCpemO/51DkhajM1o+w6I0j+eJcY+javzeQkR/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 5.6 38/38] driver core: Reevaluate dev->links.need_for_probe as suppliers are added
-Date:   Sat, 11 Apr 2020 14:10:15 +0200
-Message-Id: <20200411115503.533001557@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.6 35/38] blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+Date:   Sat, 11 Apr 2020 14:10:12 +0200
+Message-Id: <20200411115503.336821591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -58,66 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 1745d299af5b373abad08fa29bff0d31dc6aff21 upstream.
+commit 6e66b49392419f3fe134e1be583323ef75da1e4b upstream.
 
-A previous patch 03324507e66c ("driver core: Allow
-fwnode_operations.add_links to differentiate errors") forgot to update
-all call sites to fwnode_operations.add_links. This patch fixes that.
+blk_mq_map_queues() and multiple .map_queues() implementations expect that
+set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the number of hardware
+queues. Hence set .nr_queues before calling these functions. This patch
+fixes the following kernel warning:
 
-Legend:
--> Denotes RHS is an optional/potential supplier for LHS
-=> Denotes RHS is a mandatory supplier for LHS
+WARNING: CPU: 0 PID: 2501 at include/linux/cpumask.h:137
+Call Trace:
+ blk_mq_run_hw_queue+0x19d/0x350 block/blk-mq.c:1508
+ blk_mq_run_hw_queues+0x112/0x1a0 block/blk-mq.c:1525
+ blk_mq_requeue_work+0x502/0x780 block/blk-mq.c:775
+ process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+ kthread+0x361/0x430 kernel/kthread.c:255
 
-Example:
-
-Device A => Device X
-Device A -> Device Y
-
-Before this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is left marked as waiting for mandatory suppliers
-
-Step 4 is wrong since all mandatory suppliers of Device A have been
-added.
-
-After this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is no longer considered as waiting for mandatory suppliers
-
-This is the correct behavior.
-
-Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
+Fixes: ed76e329d74a ("blk-mq: abstract out queue map") # v5.0
+Reported-by: syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/core.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ block/blk-mq.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -523,9 +523,13 @@ static void device_link_add_missing_supp
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3023,6 +3023,14 @@ static int blk_mq_alloc_rq_maps(struct b
  
- 	mutex_lock(&wfs_lock);
- 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
--				 links.needs_suppliers)
--		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-+				 links.needs_suppliers) {
-+		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-+		if (!ret)
- 			list_del_init(&dev->links.needs_suppliers);
-+		else if (ret != -ENODEV)
-+			dev->links.need_for_probe = false;
-+	}
- 	mutex_unlock(&wfs_lock);
- }
+ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
+ {
++	/*
++	 * blk_mq_map_queues() and multiple .map_queues() implementations
++	 * expect that set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the
++	 * number of hardware queues.
++	 */
++	if (set->nr_maps == 1)
++		set->map[HCTX_TYPE_DEFAULT].nr_queues = set->nr_hw_queues;
++
+ 	if (set->ops->map_queues && !is_kdump_kernel()) {
+ 		int i;
  
 
 
