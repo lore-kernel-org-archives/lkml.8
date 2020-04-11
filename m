@@ -2,53 +2,62 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3E0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80129C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5A920787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB6120644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607814;
-	bh=c23UkYVsFZ4nUcoUxIyofAFnV0Q+OY8d9mDK8UqYR34=;
+	s=default; t=1586607824;
+	bh=7yGJFcolgmwcxqxKCI4kgj3glSFDqggc9AflDB3xpq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MAlXWtI705VMvReR2vos0KQ/u/lig0R0rt5rwiuGxM3koYLMvqz5jyYodiJh0vJRB
-	 /wxQ+c1p3SOTMMKwMSJkjSBH0uQv7Ay6WGCWNvcY+S0tcW/it6vHFp8QmeqRwhMo3l
-	 lvGLdjm88mv580452VGjeN7WFa1RZSaCDwyOgLTE=
+	b=q7D6vgswO5GJ7MkdibuPTNHPXpRhSzqG4mvkK5qOnl093tne5Bh+7RRCKDn/X8M7K
+	 fA9YbkDJ4JVwwVdqHxzAYdFuGkHGzL6Rl6GAfRJydIbuNm8qlL0BF4wEOg9dCvRwJD
+	 AzIRcLPeZo9CAW3h7GHYZ6FUtnU4F5CRhrYtb/CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgDKMTV (ORCPT
+        id S1728417AbgDKMXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54674 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728278AbgDKMTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:18 -0400
+        id S1728256AbgDKMTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2243220644;
-        Sat, 11 Apr 2020 12:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7D921556;
+        Sat, 11 Apr 2020 12:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607558;
-        bh=c23UkYVsFZ4nUcoUxIyofAFnV0Q+OY8d9mDK8UqYR34=;
+        s=default; t=1586607549;
+        bh=7yGJFcolgmwcxqxKCI4kgj3glSFDqggc9AflDB3xpq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WoTPmKms57ZZJnV3mHaYEBSr1dw1WeIXUIJTDUqmaZJXdjieLFZXhTR4g8E4ihlAe
-         ekAcbKoCYUzEfTfXa1lHGEtqYT7MEneRN0GNgaETu4Md0T4ompm+2LE1xniPV1Wqev
-         J8S9c7+njTKKZ372O8l7zyJQ/z4XbtLhCI0vh8HI=
+        b=vz2Uar/bpuVvnwytaSxxprhft28hV0bEcqgKlfEjBQ4FyOO/srG9cbnVNNxGq4tXr
+         sDfer4Dy9+GI6GUewf7MH8ZvwEcdQXCeup8XtvZF1fcNP+rsG2giYQ5TJR6tzuYBs6
+         Tkpuvqw79h7g4MrT6NV4QDHwDW6z5ZPxAgH7Kprw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avihai Horon <avihaih@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org,
+        syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com,
+        syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com,
+        syzbot+4b628fcc748474003457@syzkaller.appspotmail.com,
+        syzbot+29ee8f76017ce6cf03da@syzkaller.appspotmail.com,
+        syzbot+6956235342b7317ec564@syzkaller.appspotmail.com,
+        syzbot+b358909d8d01556b790b@syzkaller.appspotmail.com,
+        syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com,
+        syzbot+8458d13b13562abf6b77@syzkaller.appspotmail.com,
+        syzbot+bd034f3fdc0402e942ed@syzkaller.appspotmail.com,
+        syzbot+c92378b32760a4eef756@syzkaller.appspotmail.com,
+        syzbot+68b44a1597636e0b342c@syzkaller.appspotmail.com,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 27/44] RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
-Date:   Sat, 11 Apr 2020 14:09:47 +0200
-Message-Id: <20200411115459.434449295@linuxfoundation.org>
+Subject: [PATCH 5.5 23/44] RDMA/ucma: Put a lock around every call to the rdma_cm layer
+Date:   Sat, 11 Apr 2020 14:09:43 +0200
+Message-Id: <20200411115458.936992035@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -61,96 +70,280 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Avihai Horon <avihaih@mellanox.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 987914ab841e2ec281a35b54348ab109b4c0bb4e upstream.
+commit 7c11910783a1ea17e88777552ef146cace607b3c upstream.
 
-After a successful allocation of path_rec, num_paths is set to 1, but any
-error after such allocation will leave num_paths uncleared.
+The rdma_cm must be used single threaded.
 
-This causes to de-referencing a NULL pointer later on. Hence, num_paths
-needs to be set back to 0 if such an error occurs.
+This appears to be a bug in the design, as it does have lots of locking
+that seems like it should allow concurrency. However, when it is all said
+and done every single place that uses the cma_exch() scheme is broken, and
+all the unlocked reads from the ucma of the cm_id data are wrong too.
 
-The following crash from syzkaller revealed it.
+syzkaller has been finding endless bugs related to this.
 
-  kasan: CONFIG_KASAN_INLINE enabled
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-  CPU: 0 PID: 357 Comm: syz-executor060 Not tainted 4.18.0+ #311
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-  rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-  RIP: 0010:ib_copy_path_rec_to_user+0x94/0x3e0
-  Code: f1 f1 f1 f1 c7 40 0c 00 00 f4 f4 65 48 8b 04 25 28 00 00 00 48 89
-  45 c8 31 c0 e8 d7 60 24 ff 48 8d 7b 4c 48 89 f8 48 c1 e8 03 <42> 0f b6
-  14 30 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
-  RSP: 0018:ffff88006586f980 EFLAGS: 00010207
-  RAX: 0000000000000009 RBX: 0000000000000000 RCX: 1ffff1000d5fe475
-  RDX: ffff8800621e17c0 RSI: ffffffff820d45f9 RDI: 000000000000004c
-  RBP: ffff88006586fa50 R08: ffffed000cb0df73 R09: ffffed000cb0df72
-  R10: ffff88006586fa70 R11: ffffed000cb0df73 R12: 1ffff1000cb0df30
-  R13: ffff88006586fae8 R14: dffffc0000000000 R15: ffff88006aff2200
-  FS: 00000000016fc880(0000) GS:ffff88006d000000(0000)
-  knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000020000040 CR3: 0000000063fec000 CR4: 00000000000006b0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-  ? ib_copy_path_rec_from_user+0xcc0/0xcc0
-  ? __mutex_unlock_slowpath+0xfc/0x670
-  ? wait_for_completion+0x3b0/0x3b0
-  ? ucma_query_route+0x818/0xc60
-  ucma_query_route+0x818/0xc60
-  ? ucma_listen+0x1b0/0x1b0
-  ? sched_clock_cpu+0x18/0x1d0
-  ? sched_clock_cpu+0x18/0x1d0
-  ? ucma_listen+0x1b0/0x1b0
-  ? ucma_write+0x292/0x460
-  ucma_write+0x292/0x460
-  ? ucma_close_id+0x60/0x60
-  ? sched_clock_cpu+0x18/0x1d0
-  ? sched_clock_cpu+0x18/0x1d0
-  __vfs_write+0xf7/0x620
-  ? ucma_close_id+0x60/0x60
-  ? kernel_read+0x110/0x110
-  ? time_hardirqs_on+0x19/0x580
-  ? lock_acquire+0x18b/0x3a0
-  ? finish_task_switch+0xf3/0x5d0
-  ? _raw_spin_unlock_irq+0x29/0x40
-  ? _raw_spin_unlock_irq+0x29/0x40
-  ? finish_task_switch+0x1be/0x5d0
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? security_file_permission+0x172/0x1e0
-  vfs_write+0x192/0x460
-  ksys_write+0xc6/0x1a0
-  ? __ia32_sys_read+0xb0/0xb0
-  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-  ? do_syscall_64+0x1d/0x470
-  do_syscall_64+0x9e/0x470
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Fixing this in any elegant way is some enormous amount of work. Take a
+very big hammer and put a mutex around everything to do with the
+ucma_context at the top of every syscall.
 
-Fixes: 3c86aa70bf67 ("RDMA/cm: Add RDMA CM support for IBoE devices")
-Link: https://lore.kernel.org/r/20200318101741.47211-1-leon@kernel.org
-Signed-off-by: Avihai Horon <avihaih@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes: 75216638572f ("RDMA/cma: Export rdma cm interface to userspace")
+Link: https://lore.kernel.org/r/20200218210432.GA31966@ziepe.ca
+Reported-by: syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com
+Reported-by: syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com
+Reported-by: syzbot+4b628fcc748474003457@syzkaller.appspotmail.com
+Reported-by: syzbot+29ee8f76017ce6cf03da@syzkaller.appspotmail.com
+Reported-by: syzbot+6956235342b7317ec564@syzkaller.appspotmail.com
+Reported-by: syzbot+b358909d8d01556b790b@syzkaller.appspotmail.com
+Reported-by: syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com
+Reported-by: syzbot+8458d13b13562abf6b77@syzkaller.appspotmail.com
+Reported-by: syzbot+bd034f3fdc0402e942ed@syzkaller.appspotmail.com
+Reported-by: syzbot+c92378b32760a4eef756@syzkaller.appspotmail.com
+Reported-by: syzbot+68b44a1597636e0b342c@syzkaller.appspotmail.com
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/core/ucma.c |   49 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2938,6 +2938,7 @@ static int cma_resolve_iboe_route(struct
- err2:
- 	kfree(route->path_rec);
- 	route->path_rec = NULL;
-+	route->num_paths = 0;
- err1:
- 	kfree(work);
+--- a/drivers/infiniband/core/ucma.c
++++ b/drivers/infiniband/core/ucma.c
+@@ -91,6 +91,7 @@ struct ucma_context {
+ 
+ 	struct ucma_file	*file;
+ 	struct rdma_cm_id	*cm_id;
++	struct mutex		mutex;
+ 	u64			uid;
+ 
+ 	struct list_head	list;
+@@ -216,6 +217,7 @@ static struct ucma_context *ucma_alloc_c
+ 	init_completion(&ctx->comp);
+ 	INIT_LIST_HEAD(&ctx->mc_list);
+ 	ctx->file = file;
++	mutex_init(&ctx->mutex);
+ 
+ 	if (xa_alloc(&ctx_table, &ctx->id, ctx, xa_limit_32b, GFP_KERNEL))
+ 		goto error;
+@@ -589,6 +591,7 @@ static int ucma_free_ctx(struct ucma_con
+ 	}
+ 
+ 	events_reported = ctx->events_reported;
++	mutex_destroy(&ctx->mutex);
+ 	kfree(ctx);
+ 	return events_reported;
+ }
+@@ -658,7 +661,10 @@ static ssize_t ucma_bind_ip(struct ucma_
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_bind_addr(ctx->cm_id, (struct sockaddr *) &cmd.addr);
++	mutex_unlock(&ctx->mutex);
++
+ 	ucma_put_ctx(ctx);
  	return ret;
+ }
+@@ -681,7 +687,9 @@ static ssize_t ucma_bind(struct ucma_fil
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_bind_addr(ctx->cm_id, (struct sockaddr *) &cmd.addr);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -705,8 +713,10 @@ static ssize_t ucma_resolve_ip(struct uc
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_resolve_addr(ctx->cm_id, (struct sockaddr *) &cmd.src_addr,
+ 				(struct sockaddr *) &cmd.dst_addr, cmd.timeout_ms);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -731,8 +741,10 @@ static ssize_t ucma_resolve_addr(struct
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_resolve_addr(ctx->cm_id, (struct sockaddr *) &cmd.src_addr,
+ 				(struct sockaddr *) &cmd.dst_addr, cmd.timeout_ms);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -752,7 +764,9 @@ static ssize_t ucma_resolve_route(struct
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_resolve_route(ctx->cm_id, cmd.timeout_ms);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -841,6 +855,7 @@ static ssize_t ucma_query_route(struct u
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	memset(&resp, 0, sizeof resp);
+ 	addr = (struct sockaddr *) &ctx->cm_id->route.addr.src_addr;
+ 	memcpy(&resp.src_addr, addr, addr->sa_family == AF_INET ?
+@@ -864,6 +879,7 @@ static ssize_t ucma_query_route(struct u
+ 		ucma_copy_iw_route(&resp, &ctx->cm_id->route);
+ 
+ out:
++	mutex_unlock(&ctx->mutex);
+ 	if (copy_to_user(u64_to_user_ptr(cmd.response),
+ 			 &resp, sizeof(resp)))
+ 		ret = -EFAULT;
+@@ -1014,6 +1030,7 @@ static ssize_t ucma_query(struct ucma_fi
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	switch (cmd.option) {
+ 	case RDMA_USER_CM_QUERY_ADDR:
+ 		ret = ucma_query_addr(ctx, response, out_len);
+@@ -1028,6 +1045,7 @@ static ssize_t ucma_query(struct ucma_fi
+ 		ret = -ENOSYS;
+ 		break;
+ 	}
++	mutex_unlock(&ctx->mutex);
+ 
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+@@ -1068,7 +1086,9 @@ static ssize_t ucma_connect(struct ucma_
+ 		return PTR_ERR(ctx);
+ 
+ 	ucma_copy_conn_param(ctx->cm_id, &conn_param, &cmd.conn_param);
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_connect(ctx->cm_id, &conn_param);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1089,7 +1109,9 @@ static ssize_t ucma_listen(struct ucma_f
+ 
+ 	ctx->backlog = cmd.backlog > 0 && cmd.backlog < max_backlog ?
+ 		       cmd.backlog : max_backlog;
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_listen(ctx->cm_id, ctx->backlog);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1112,13 +1134,17 @@ static ssize_t ucma_accept(struct ucma_f
+ 	if (cmd.conn_param.valid) {
+ 		ucma_copy_conn_param(ctx->cm_id, &conn_param, &cmd.conn_param);
+ 		mutex_lock(&file->mut);
++		mutex_lock(&ctx->mutex);
+ 		ret = __rdma_accept(ctx->cm_id, &conn_param, NULL);
++		mutex_unlock(&ctx->mutex);
+ 		if (!ret)
+ 			ctx->uid = cmd.uid;
+ 		mutex_unlock(&file->mut);
+-	} else
++	} else {
++		mutex_lock(&ctx->mutex);
+ 		ret = __rdma_accept(ctx->cm_id, NULL, NULL);
+-
++		mutex_unlock(&ctx->mutex);
++	}
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1137,7 +1163,9 @@ static ssize_t ucma_reject(struct ucma_f
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_reject(ctx->cm_id, cmd.private_data, cmd.private_data_len);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1156,7 +1184,9 @@ static ssize_t ucma_disconnect(struct uc
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_disconnect(ctx->cm_id);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1187,7 +1217,9 @@ static ssize_t ucma_init_qp_attr(struct
+ 	resp.qp_attr_mask = 0;
+ 	memset(&qp_attr, 0, sizeof qp_attr);
+ 	qp_attr.qp_state = cmd.qp_state;
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_init_qp_attr(ctx->cm_id, &qp_attr, &resp.qp_attr_mask);
++	mutex_unlock(&ctx->mutex);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1273,9 +1305,13 @@ static int ucma_set_ib_path(struct ucma_
+ 		struct sa_path_rec opa;
+ 
+ 		sa_convert_path_ib_to_opa(&opa, &sa_path);
++		mutex_lock(&ctx->mutex);
+ 		ret = rdma_set_ib_path(ctx->cm_id, &opa);
++		mutex_unlock(&ctx->mutex);
+ 	} else {
++		mutex_lock(&ctx->mutex);
+ 		ret = rdma_set_ib_path(ctx->cm_id, &sa_path);
++		mutex_unlock(&ctx->mutex);
+ 	}
+ 	if (ret)
+ 		return ret;
+@@ -1308,7 +1344,9 @@ static int ucma_set_option_level(struct
+ 
+ 	switch (level) {
+ 	case RDMA_OPTION_ID:
++		mutex_lock(&ctx->mutex);
+ 		ret = ucma_set_option_id(ctx, optname, optval, optlen);
++		mutex_unlock(&ctx->mutex);
+ 		break;
+ 	case RDMA_OPTION_IB:
+ 		ret = ucma_set_option_ib(ctx, optname, optval, optlen);
+@@ -1368,8 +1406,10 @@ static ssize_t ucma_notify(struct ucma_f
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	if (ctx->cm_id->device)
+ 		ret = rdma_notify(ctx->cm_id, (enum ib_event_type)cmd.event);
++	mutex_unlock(&ctx->mutex);
+ 
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+@@ -1412,8 +1452,10 @@ static ssize_t ucma_process_join(struct
+ 	mc->join_state = join_state;
+ 	mc->uid = cmd->uid;
+ 	memcpy(&mc->addr, addr, cmd->addr_size);
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_join_multicast(ctx->cm_id, (struct sockaddr *)&mc->addr,
+ 				  join_state, mc);
++	mutex_unlock(&ctx->mutex);
+ 	if (ret)
+ 		goto err2;
+ 
+@@ -1513,7 +1555,10 @@ static ssize_t ucma_leave_multicast(stru
+ 		goto out;
+ 	}
+ 
++	mutex_lock(&mc->ctx->mutex);
+ 	rdma_leave_multicast(mc->ctx->cm_id, (struct sockaddr *) &mc->addr);
++	mutex_unlock(&mc->ctx->mutex);
++
+ 	mutex_lock(&mc->ctx->file->mut);
+ 	ucma_cleanup_mc_events(mc);
+ 	list_del(&mc->list);
 
 
