@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47639C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F659C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5862084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4929520787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607526;
-	bh=r6Cz7tXqvWMM41FcH1w8UekDGqn7bcSLJ/soebx9cR8=;
+	s=default; t=1586607528;
+	bh=xuFnOJOoVHorTFsfewHSh2fdOKGQFyi/uvrV9BMGnyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mr4BKfjtLtnpGtGJYf8vp4jiqZ2M9o3JRMVmzS0647ar5yxTGin1nJw/VZ7ya2MjK
-	 5lRL01RlTMK3VJtUzoHkHxh1rro0DCnp52pZBk79SnXfPrGXAUPFWreNZnEK0Y1w26
-	 +T83gD+286oucCkJ65Zx6/BHn9wNPGXHQEOmzJ3Q=
+	b=N96Ds/yR2nUjaAvahaaf6R8PKN7nOe5rpU2NIsNUR2JcPR0MKeljVxSPHaZg1jR7D
+	 eR0X1BfRtl1oyvMSn575c0txqjCqEQFEgeHa5W6yzv8bqpdtLWJXCMuVnnF2uz/X7v
+	 +tODXI4ux/iQUiU+imC7+pJeDg9ZDf3H7WpF9xLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgDKMSo (ORCPT
+        id S1728664AbgDKMSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53742 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbgDKMSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:40 -0400
+        id S1728000AbgDKMSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FB420692;
-        Sat, 11 Apr 2020 12:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49C3520692;
+        Sat, 11 Apr 2020 12:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607520;
-        bh=r6Cz7tXqvWMM41FcH1w8UekDGqn7bcSLJ/soebx9cR8=;
+        s=default; t=1586607522;
+        bh=xuFnOJOoVHorTFsfewHSh2fdOKGQFyi/uvrV9BMGnyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i31oQDNIWZ3CNrdxHPs8203QKb3jjI9HueL2eumqf/TssylOS/+Ur4EwFRwVrGddq
-         q8YfR/olpOP4QHzNB06LG5bm/064lo+gzrNzVFIlDi56grigsK1ST//8fzhWJIQJX+
-         klC4HwcJRx2fXdI+bSujxIO77RfG/kZHyKJFYnDk=
+        b=xs2+S8m4RDRwFUq/nPgXBn0bcVMm66bnxOYZB6f/hiEK0ocSGjHlCuKxrOBBuiA7p
+         fOk/u5vq8ot93q/bf95yRJ/27OBzvrwHUOFb6/bZEXI9IRyhlEJE+vh2t27xOaVo3e
+         W86V+to59bN1zKIk06Mze8+5b8SQhXzBAi/aSj8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 04/44] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-Date:   Sat, 11 Apr 2020 14:09:24 +0200
-Message-Id: <20200411115457.263566921@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 5.5 13/44] r8169: change back SG and TSO to be disabled by default
+Date:   Sat, 11 Apr 2020 14:09:33 +0200
+Message-Id: <20200411115458.038704448@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -60,48 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
+[ Upstream commit 95099c569a9fdbe186a27447dfa8a5a0562d4b7f ]
 
-When the bcm_sf2 was converted into a proper platform device driver and
-used the new dsa_register_switch() interface, we would still be parsing
-the legacy DSA node that contained all the port information since the
-platform firmware has intentionally maintained backward and forward
-compatibility to client programs. Ensure that we do parse the correct
-node, which is "ports" per the revised DSA binding.
+There has been a number of reports that using SG/TSO on different chip
+versions results in tx timeouts. However for a lot of people SG/TSO
+works fine. Therefore disable both features by default, but allow users
+to enable them. Use at own risk!
 
-Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 93681cd7d94f ("r8169: enable HW csum and TSO")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/realtek/r8169_main.c |   34 ++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1069,6 +1069,7 @@ static int bcm_sf2_sw_probe(struct platf
- 	const struct bcm_sf2_of_data *data;
- 	struct b53_platform_data *pdata;
- 	struct dsa_switch_ops *ops;
-+	struct device_node *ports;
- 	struct bcm_sf2_priv *priv;
- 	struct b53_device *dev;
- 	struct dsa_switch *ds;
-@@ -1136,7 +1137,11 @@ static int bcm_sf2_sw_probe(struct platf
- 	set_bit(0, priv->cfp.used);
- 	set_bit(0, priv->cfp.unique);
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -6934,12 +6934,10 @@ static int rtl_init_one(struct pci_dev *
  
--	bcm_sf2_identify_ports(priv, dn->child);
-+	ports = of_find_node_by_name(dn, "ports");
-+	if (ports) {
-+		bcm_sf2_identify_ports(priv, ports);
-+		of_node_put(ports);
+ 	netif_napi_add(dev, &tp->napi, rtl8169_poll, NAPI_POLL_WEIGHT);
+ 
+-	dev->features |= NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+-		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
+-		NETIF_F_HW_VLAN_CTAG_RX;
+-	dev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+-		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
+-		NETIF_F_HW_VLAN_CTAG_RX;
++	dev->features |= NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
++			 NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
++	dev->hw_features = NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
++			   NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
+ 	dev->vlan_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+ 		NETIF_F_HIGHDMA;
+ 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+@@ -6957,25 +6955,25 @@ static int rtl_init_one(struct pci_dev *
+ 		dev->hw_features &= ~NETIF_F_HW_VLAN_CTAG_RX;
+ 
+ 	if (rtl_chip_supports_csum_v2(tp)) {
+-		dev->hw_features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
+-		dev->features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
++		dev->hw_features |= NETIF_F_IPV6_CSUM;
++		dev->features |= NETIF_F_IPV6_CSUM;
 +	}
++
++	/* There has been a number of reports that using SG/TSO results in
++	 * tx timeouts. However for a lot of people SG/TSO works fine.
++	 * Therefore disable both features by default, but allow users to
++	 * enable them. Use at own risk!
++	 */
++	if (rtl_chip_supports_csum_v2(tp)) {
++		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO | NETIF_F_TSO6;
+ 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V2;
+ 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V2;
+ 	} else {
++		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO;
+ 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V1;
+ 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V1;
+ 	}
  
- 	priv->irq0 = irq_of_parse_and_map(dn, 0);
- 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+-	/* RTL8168e-vl and one RTL8168c variant are known to have a
+-	 * HW issue with TSO.
+-	 */
+-	if (tp->mac_version == RTL_GIGA_MAC_VER_34 ||
+-	    tp->mac_version == RTL_GIGA_MAC_VER_22) {
+-		dev->vlan_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-		dev->hw_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-		dev->features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-	}
+-
+ 	dev->hw_features |= NETIF_F_RXALL;
+ 	dev->hw_features |= NETIF_F_RXFCS;
+ 
 
 
