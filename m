@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0469BC352B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA73BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1502051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49E52051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648235;
-	bh=FfamKzqmR4LfhcqSTESZFmZZwbrdUr1VXq7zFKsE2JM=;
+	s=default; t=1586648244;
+	bh=Vd95vQOwscdWE6+Vi7H8ELtfYUnIdEjwXMsOTm5pwDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V2eoUjRQDLbFIasp7xxgN+btNN47sirU18h6+6H6BBlbMQ5FBSYEZZoGv+3KiX0xA
-	 mNbgggISRkeHa2TbVIbo+/ypnjxA7BbRolXHHswT7HadrkC5TZqycDdG6Ar+mFCM9R
-	 r57qSimj5zrTUFI2Zw2eScYCumeM32iBOuXtYJNQ=
+	b=gjegzc5lFe2pdOCwntlKhZ/WagOA3CvQ1YjiwFrj9aiSHuZr3E1QMHHzjATBDjR08
+	 k9nKzdEsiixKIpo6/IJltTIrykb+XJ1upkosCmIg4nSI9DipmZWhVF/a/5KEGI0MgT
+	 xs+lRJVFXwA9s7Os1moesduDjrYNou9PCytYvJR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbgDKXhN (ORCPT
+        id S1728935AbgDKXhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:37:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgDKXI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:28 -0400
+        id S1728905AbgDKXIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352B8215A4;
-        Sat, 11 Apr 2020 23:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AAA21835;
+        Sat, 11 Apr 2020 23:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646508;
-        bh=FfamKzqmR4LfhcqSTESZFmZZwbrdUr1VXq7zFKsE2JM=;
+        s=default; t=1586646504;
+        bh=Vd95vQOwscdWE6+Vi7H8ELtfYUnIdEjwXMsOTm5pwDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DO7namsLkkF6U4osujMphNGkBKYClv7l0HbqJHpB7jGEPWEWA3YxZVQQJ7PSFvGT8
-         r1XR86bJggnj0JZT/oFJpD6Bl7PKc/Vhk0p2K+MjvibM9QiYSeXn5WMZgz7WZ1nlvF
-         sHCw6JCFFlqv5k0xbhPS+YoIES7P/xtKNquyT0hQ=
+        b=geGnlvOihA26tUr3YyRDnCjcpI1pMjJO8sh167bZ1dCBkjNnNrnWKq+rlnnKt0/os
+         BONuEjykE0Ee8I7yiYXwgCdUe2RCLqtAEEhMxQuEz2XmLKfRw0VrFrGB1DBbDIlv9e
+         od9aw8zTSfCBkPYArYq6wD6DpglYhQNnVlYKok38=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yixian Liu <liuyixian@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 067/121] RDMA/hns: Add the workqueue framework for flush cqe handler
-Date:   Sat, 11 Apr 2020 19:06:12 -0400
-Message-Id: <20200411230706.23855-67-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 064/121] scsi: lpfc: Fix RQ buffer leakage when no IOCBs available
+Date:   Sat, 11 Apr 2020 19:06:09 -0400
+Message-Id: <20200411230706.23855-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,156 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yixian Liu <liuyixian@huawei.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit ffd541d45726341c1830ff595fd7352b6d1cfbcd ]
+[ Upstream commit 39c4f1a965a9244c3ba60695e8ff8da065ec6ac4 ]
 
-HiP08 RoCE hardware lacks ability(a known hardware problem) to flush
-outstanding WQEs if QP state gets into errored mode for some reason.  To
-overcome this hardware problem and as a workaround, when QP is detected to
-be in errored state during various legs like post send, post receive etc
-[1], flush needs to be performed from the driver.
+The driver is occasionally seeing the following SLI Port error, requiring
+reset and reinit:
 
-The earlier patch[1] sent to solve the hardware limitation explained in
-the cover-letter had a bug in the software flushing leg. It acquired mutex
-while modifying QP state to errored state and while conveying it to the
-hardware using the mailbox. This caused leg to sleep while holding
-spin-lock and caused crash.
+ Port Status Event: ... error 1=0x52004a01, error 2=0x218
 
-Suggested Solution:
-we have proposed to defer the flushing of the QP in the Errored state
-using the workqueue to get around with the limitation of our hardware.
+The failure means an RQ timeout. That is, the adapter had received
+asynchronous receive frames, ran out of buffer slots to place the frames,
+and the driver did not replenish the buffer slots before a timeout
+occurred. The driver should not be so slow in replenishing buffers that a
+timeout can occur.
 
-This patch adds the framework of the workqueue and the flush handler
-function.
+When the driver received all the frames of a sequence, it allocates an IOCB
+to put the frames in. In a situation where there was no IOCB available for
+the frame of a sequence, the RQ buffer corresponding to the first frame of
+the sequence was not returned to the FW. Eventually, with enough traffic
+encountering the situation, the timeout occurred.
 
-[1] https://patchwork.kernel.org/patch/10534271/
+Fix by releasing the buffer back to firmware whenever there is no IOCB for
+the first frame.
 
-Link: https://lore.kernel.org/r/1580983005-13899-2-git-send-email-liuyixian@huawei.com
-Signed-off-by: Yixian Liu <liuyixian@huawei.com>
-Reviewed-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[mkp: typo]
+
+Link: https://lore.kernel.org/r/20200128002312.16346-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_device.h | 20 ++++++-----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  |  3 +-
- drivers/infiniband/hw/hns/hns_roce_qp.c     | 37 +++++++++++++++++++++
- 3 files changed, 49 insertions(+), 11 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 416341ada1723..424362760a2fc 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -637,6 +637,15 @@ struct hns_roce_rinl_buf {
- 	u32			 wqe_cnt;
- };
- 
-+struct hns_roce_work {
-+	struct hns_roce_dev *hr_dev;
-+	struct work_struct work;
-+	u32 qpn;
-+	u32 cqn;
-+	int event_type;
-+	int sub_type;
-+};
-+
- struct hns_roce_qp {
- 	struct ib_qp		ibqp;
- 	struct hns_roce_buf	hr_buf;
-@@ -680,6 +689,7 @@ struct hns_roce_qp {
- 	struct hns_roce_sge	sge;
- 	u32			next_sge;
- 
-+	struct hns_roce_work	flush_work;
- 	struct hns_roce_rinl_buf rq_inl_buf;
- };
- 
-@@ -896,15 +906,6 @@ struct hns_roce_caps {
- 	u64		flags;
- };
- 
--struct hns_roce_work {
--	struct hns_roce_dev *hr_dev;
--	struct work_struct work;
--	u32 qpn;
--	u32 cqn;
--	int event_type;
--	int sub_type;
--};
--
- struct hns_roce_dfx_hw {
- 	int (*query_cqc_info)(struct hns_roce_dev *hr_dev, u32 cqn,
- 			      int *buffer);
-@@ -1219,6 +1220,7 @@ struct ib_qp *hns_roce_create_qp(struct ib_pd *ib_pd,
- 				 struct ib_udata *udata);
- int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
- 		       int attr_mask, struct ib_udata *udata);
-+void init_flush_work(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp);
- void *get_recv_wqe(struct hns_roce_qp *hr_qp, int n);
- void *get_send_wqe(struct hns_roce_qp *hr_qp, int n);
- void *get_send_extend_sge(struct hns_roce_qp *hr_qp, int n);
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 87186446dffb9..c17e1b7f412a0 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -5968,8 +5968,7 @@ static int hns_roce_v2_init_eq_table(struct hns_roce_dev *hr_dev)
- 		goto err_request_irq_fail;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 625c046ac4efa..6d0496980d4e8 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -17941,6 +17941,10 @@ lpfc_prep_seq(struct lpfc_vport *vport, struct hbq_dmabuf *seq_dmabuf)
+ 			list_add_tail(&iocbq->list, &first_iocbq->list);
+ 		}
  	}
++	/* Free the sequence's header buffer */
++	if (!first_iocbq)
++		lpfc_in_buf_free(vport->phba, &seq_dmabuf->dbuf);
++
+ 	return first_iocbq;
+ }
  
--	hr_dev->irq_workq =
--		create_singlethread_workqueue("hns_roce_irq_workqueue");
-+	hr_dev->irq_workq = alloc_ordered_workqueue("hns_roce_irq_workq", 0);
- 	if (!hr_dev->irq_workq) {
- 		dev_err(dev, "Create irq workqueue failed!\n");
- 		ret = -ENOMEM;
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index a6565b6748014..88ccfa37069ba 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -43,6 +43,43 @@
- 
- #define SQP_NUM				(2 * HNS_ROCE_MAX_PORTS)
- 
-+static void flush_work_handle(struct work_struct *work)
-+{
-+	struct hns_roce_work *flush_work = container_of(work,
-+					struct hns_roce_work, work);
-+	struct hns_roce_qp *hr_qp = container_of(flush_work,
-+					struct hns_roce_qp, flush_work);
-+	struct device *dev = flush_work->hr_dev->dev;
-+	struct ib_qp_attr attr;
-+	int attr_mask;
-+	int ret;
-+
-+	attr_mask = IB_QP_STATE;
-+	attr.qp_state = IB_QPS_ERR;
-+
-+	ret = hns_roce_modify_qp(&hr_qp->ibqp, &attr, attr_mask, NULL);
-+	if (ret)
-+		dev_err(dev, "Modify QP to error state failed(%d) during CQE flush\n",
-+			ret);
-+
-+	/*
-+	 * make sure we signal QP destroy leg that flush QP was completed
-+	 * so that it can safely proceed ahead now and destroy QP
-+	 */
-+	if (atomic_dec_and_test(&hr_qp->refcount))
-+		complete(&hr_qp->free);
-+}
-+
-+void init_flush_work(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
-+{
-+	struct hns_roce_work *flush_work = &hr_qp->flush_work;
-+
-+	flush_work->hr_dev = hr_dev;
-+	INIT_WORK(&flush_work->work, flush_work_handle);
-+	atomic_inc(&hr_qp->refcount);
-+	queue_work(hr_dev->irq_workq, &flush_work->work);
-+}
-+
- void hns_roce_qp_event(struct hns_roce_dev *hr_dev, u32 qpn, int event_type)
- {
- 	struct device *dev = hr_dev->dev;
 -- 
 2.20.1
 
