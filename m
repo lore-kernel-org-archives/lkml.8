@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADE5C38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEA2C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B1C21D7D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AD32166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646343;
-	bh=43dPpnebO2RnaPqUJ2m9OtgsPWit1vaBHjJNvfsHAZ8=;
+	s=default; t=1586646348;
+	bh=DdOrStogyBn3qrKrdJtlOEpR6sizzEzYXH79mucax5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AD9mUFFLxbRTlRyrXYon54kdjmXzgBB3JPf5190QZ0+SRbjmPsH41nrrS86nqiFSC
-	 D2lXnawWQrTpQLaAhcwzclgGeH+4D3h+YcRy9mLq4AL1yPJCLpFCG+YCco1WIwEYL0
-	 Hsm0m0+MJXWbSWpUa1qynXtY/+ZKN6TPIeRrz3/w=
+	b=FPdOxu/4H7eG54CzC5w+GXkZ8JHfvzI7T1MYu902ZdsxkMDZv9G8HJmPyVY2sH2Gt
+	 R67B3vjLWP4RFjYrmXOOYLXCFMzlHI1aG8nDa6RrGk0cmoOGY6mFbHCPqJvsF6jMJJ
+	 WtSAIxtZWaKiNafuEz+cFlbZIoOabI6cipiAveWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgDKXFl (ORCPT
+        id S1726659AbgDKXFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726991AbgDKXFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:39 -0400
+        id S1728061AbgDKXFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 267AD20708;
-        Sat, 11 Apr 2020 23:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E03EA21D7E;
+        Sat, 11 Apr 2020 23:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646339;
-        bh=43dPpnebO2RnaPqUJ2m9OtgsPWit1vaBHjJNvfsHAZ8=;
+        s=default; t=1586646344;
+        bh=DdOrStogyBn3qrKrdJtlOEpR6sizzEzYXH79mucax5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVE+NLKAdugdRLmq1dCKL2saVBL5IXM3plfdaMhaHeOhzCTC6M1b3dcf4kZUP8GnN
-         6FEMMMhIB5Up4G8PdI03ral6uL6SiW5mhU0fEcY0zRPVjQceW9lEiNTEVasRVNHIHc
-         4Rxgl7LnlwLkcbLrtn0iPKs9BWZc2w0gZGbug72w=
+        b=O6oETVtUjsF3xFmdDMElHyJo+1toUzhMQw78TOIIJGJGjnq25Vob9Gz7o4jShWvu5
+         71pnu5dwhLEuC7X66k8bDXfzoYKJUxJk9XZv0X4l/cHdz057uK58WuG4FhMc1D+qea
+         xVM2PI4TwAyKyI1gaZqQiPg3wrUVrqhKqn2FWIk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 089/149] drm/omap: dss: Cleanup DSS ports on initialisation failure
-Date:   Sat, 11 Apr 2020 19:02:46 -0400
-Message-Id: <20200411230347.22371-89-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 093/149] xfs: fix an undefined behaviour in _da3_path_shift
+Date:   Sat, 11 Apr 2020 19:02:50 -0400
+Message-Id: <20200411230347.22371-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -63,120 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 2a0a3ae17d36fa86dcf7c8e8d7b7f056ebd6c064 ]
+[ Upstream commit 4982bff1ace1196843f55536fcd4cc119738fe39 ]
 
-When the DSS initialises its output DPI and SDI ports, failures don't
-clean up previous successfully initialised ports. This can lead to
-resource leak or memory corruption. Fix it.
+In xfs_da3_path_shift() "blk" can be assigned to state->path.blk[-1] if
+state->path.active is 1 (which is a valid state) when it tries to add an
+entry to a single dir leaf block and then to shift forward to see if
+there's a sibling block that would be a better place to put the new
+entry. This causes a UBSAN warning given negative array indices are
+undefined behavior in C. In practice the warning is entirely harmless
+given that "blk" is never dereferenced in this case, but it is still
+better to fix up the warning and slightly improve the code.
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200226112514.12455-22-laurent.pinchart@ideasonboard.com
+ UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
+ index -1 is out of range for type 'xfs_da_state_blk_t [5]'
+ Call trace:
+  dump_backtrace+0x0/0x2c8
+  show_stack+0x20/0x2c
+  dump_stack+0xe8/0x150
+  __ubsan_handle_out_of_bounds+0xe4/0xfc
+  xfs_da3_path_shift+0x860/0x86c [xfs]
+  xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
+  xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
+  xfs_dir_createname+0x348/0x38c [xfs]
+  xfs_create+0x6b0/0x8b4 [xfs]
+  xfs_generic_create+0x12c/0x1f8 [xfs]
+  xfs_vn_mknod+0x3c/0x4c [xfs]
+  xfs_vn_create+0x34/0x44 [xfs]
+  do_last+0xd4c/0x10c8
+  path_openat+0xbc/0x2f4
+  do_filp_open+0x74/0xf4
+  do_sys_openat2+0x98/0x180
+  __arm64_sys_openat+0xf8/0x170
+  do_el0_svc+0x170/0x240
+  el0_sync_handler+0x150/0x250
+  el0_sync+0x164/0x180
+
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/dss.c | 43 +++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
+ fs/xfs/libxfs/xfs_da_btree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c b/drivers/gpu/drm/omapdrm/dss/dss.c
-index 225ec808b01a9..67b92b5d8dd76 100644
---- a/drivers/gpu/drm/omapdrm/dss/dss.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dss.c
-@@ -1151,46 +1151,38 @@ static const struct dss_features dra7xx_dss_feats = {
- 	.has_lcd_clk_src	=	true,
- };
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 875e04f82541f..e864c3d47f60a 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -1986,7 +1986,8 @@ xfs_da3_path_shift(
+ 	ASSERT(path != NULL);
+ 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
+ 	level = (path->active-1) - 1;	/* skip bottom layer in path */
+-	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
++	for (; level >= 0; level--) {
++		blk = &path->blk[level];
+ 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
+ 					   blk->bp->b_addr);
  
--static int dss_init_ports(struct dss_device *dss)
-+static void __dss_uninit_ports(struct dss_device *dss, unsigned int num_ports)
- {
- 	struct platform_device *pdev = dss->pdev;
- 	struct device_node *parent = pdev->dev.of_node;
- 	struct device_node *port;
- 	unsigned int i;
--	int r;
- 
--	for (i = 0; i < dss->feat->num_ports; i++) {
-+	for (i = 0; i < num_ports; i++) {
- 		port = of_graph_get_port_by_id(parent, i);
- 		if (!port)
- 			continue;
- 
- 		switch (dss->feat->ports[i]) {
- 		case OMAP_DISPLAY_TYPE_DPI:
--			r = dpi_init_port(dss, pdev, port, dss->feat->model);
--			if (r)
--				return r;
-+			dpi_uninit_port(port);
- 			break;
--
- 		case OMAP_DISPLAY_TYPE_SDI:
--			r = sdi_init_port(dss, pdev, port);
--			if (r)
--				return r;
-+			sdi_uninit_port(port);
- 			break;
--
- 		default:
- 			break;
- 		}
- 	}
--
--	return 0;
- }
- 
--static void dss_uninit_ports(struct dss_device *dss)
-+static int dss_init_ports(struct dss_device *dss)
- {
- 	struct platform_device *pdev = dss->pdev;
- 	struct device_node *parent = pdev->dev.of_node;
- 	struct device_node *port;
--	int i;
-+	unsigned int i;
-+	int r;
- 
- 	for (i = 0; i < dss->feat->num_ports; i++) {
- 		port = of_graph_get_port_by_id(parent, i);
-@@ -1199,15 +1191,32 @@ static void dss_uninit_ports(struct dss_device *dss)
- 
- 		switch (dss->feat->ports[i]) {
- 		case OMAP_DISPLAY_TYPE_DPI:
--			dpi_uninit_port(port);
-+			r = dpi_init_port(dss, pdev, port, dss->feat->model);
-+			if (r)
-+				goto error;
- 			break;
-+
- 		case OMAP_DISPLAY_TYPE_SDI:
--			sdi_uninit_port(port);
-+			r = sdi_init_port(dss, pdev, port);
-+			if (r)
-+				goto error;
- 			break;
-+
- 		default:
- 			break;
- 		}
- 	}
-+
-+	return 0;
-+
-+error:
-+	__dss_uninit_ports(dss, i);
-+	return r;
-+}
-+
-+static void dss_uninit_ports(struct dss_device *dss)
-+{
-+	__dss_uninit_ports(dss, dss->feat->num_ports);
- }
- 
- static int dss_video_pll_probe(struct dss_device *dss)
 -- 
 2.20.1
 
