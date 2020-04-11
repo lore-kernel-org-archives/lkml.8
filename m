@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB362C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D8FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE832084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC942084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607512;
-	bh=hQq4/2IUwhKsfKjyetL5rzpycBjCErULnw/zE+/xxdU=;
+	s=default; t=1586607514;
+	bh=cnfW//iFPTjHMwCTSZLNmYBO4X0mI7EXj0oDE+xuzDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdIzFuKgM5pQDwDsG67PCUABSRqz+hR0+MI8+E1scp0rg948WGGo+Ys1VUxuRf/2t
-	 +W5ERXhnOVJCU4HBqfij5YZIQLEKoap6zpIJrZWIgipmo0n53z+pyYou8xox9pJUw6
-	 dfWVkes7f7ALWnqnzex2Z1L5GlJEGNcc18qq85FU=
+	b=qmmwYxKl4ALEslYuQ2aHE1AmqClxtX5Q6MBazXUqDqIX9RTt7jasEkGiH91mlNkWd
+	 zdsrXA4tPbruoBLOH9EBsgQ+t612KxAGSHYU9+d3jBP2HZKIo8Iz5xqCAjjLCsGmby
+	 +768OTk5e/QF1z1WFzIP65IO1rkeJdTdxpMDT6Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgDKMSa (ORCPT
+        id S1728638AbgDKMSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728215AbgDKMS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:28 -0400
+        id S1728005AbgDKMS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4DDF20644;
-        Sat, 11 Apr 2020 12:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6006220673;
+        Sat, 11 Apr 2020 12:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607508;
-        bh=hQq4/2IUwhKsfKjyetL5rzpycBjCErULnw/zE+/xxdU=;
+        s=default; t=1586607505;
+        bh=cnfW//iFPTjHMwCTSZLNmYBO4X0mI7EXj0oDE+xuzDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHn4BmV1MqcUMWsa98PiJBHarQKgdeiYU8BCLkpv/tMqOFEhEGaAN937MnXFi0IDU
-         Jjmi/+p+OXAqHUjETu+SZ8SYrrsZf7EXruMiZSKkMlKENQP7wEzRV6yHLPXioGJAkA
-         NLl+PAEkKHy7xfq2mXV3UHpAtaqFJsMe4MgAvyZk=
+        b=k8xWH84QxGxfCgo72P+XhhzAwuygmZNfzcLYu7UZdqnt9vbdIIxy6j+x+1SEFaPY4
+         lVDRNyDP16+dpKjH32sDC6qoSpkfWQHuMR7MHUcZoCnSnujHn4ne1apSLDzFL8hGCu
+         fDzLXYz+PWzXCMBdywOS6Ac+hAPK/NnYNHQI+JVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        John Donnelly <john.p.donnelly@oracle.com>
-Subject: [PATCH 5.4 41/41] iommu/vt-d: Allow devices with RMRRs to use identity domain
-Date:   Sat, 11 Apr 2020 14:09:50 +0200
-Message-Id: <20200411115507.145593561@linuxfoundation.org>
+        Sultan Alsawaf <sultan@kerneltoast.com>
+Subject: [PATCH 5.4 40/41] drm/i915: Fix ref->mutex deadlock in i915_active_wait()
+Date:   Sat, 11 Apr 2020 14:09:49 +0200
+Message-Id: <20200411115507.029644194@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -61,72 +58,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-commit 9235cb13d7d17baba0b3a9277381258361e95c16 upstream.
+The following deadlock exists in i915_active_wait() due to a double lock
+on ref->mutex (call chain listed in order from top to bottom):
+ i915_active_wait();
+ mutex_lock_interruptible(&ref->mutex); <-- ref->mutex first acquired
+ i915_active_request_retire();
+ node_retire();
+ active_retire();
+ mutex_lock_nested(&ref->mutex, SINGLE_DEPTH_NESTING); <-- DEADLOCK
 
-Since commit ea2447f700cab ("intel-iommu: Prevent devices with
-RMRRs from being placed into SI Domain"), the Intel IOMMU driver
-doesn't allow any devices with RMRR locked to use the identity
-domain. This was added to to fix the issue where the RMRR info
-for devices being placed in and out of the identity domain gets
-lost. This identity maps all RMRRs when setting up the identity
-domain, so that devices with RMRRs could also use it.
+Fix the deadlock by skipping the second ref->mutex lock when
+active_retire() is called through i915_active_request_retire().
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: John Donnelly <john.p.donnelly@oracle.com>
+Note that this bug only affects 5.4 and has since been fixed in 5.5.
+Normally, a backport of the fix from 5.5 would be in order, but the
+patch set that fixes this deadlock involves massive changes that are
+neither feasible nor desirable for backporting [1][2][3]. Therefore,
+this small patch was made to address the deadlock specifically for 5.4.
+
+[1] 274cbf20fd10 ("drm/i915: Push the i915_active.retire into a worker")
+[2] 093b92287363 ("drm/i915: Split i915_active.mutex into an irq-safe spinlock for the rbtree")
+[3] 750bde2fd4ff ("drm/i915: Serialise with remote retirement")
+
+Fixes: 12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
+Cc: <stable@vger.kernel.org> # 5.4.x
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |   15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/i915/i915_active.c |   29 +++++++++++++++++++----------
+ drivers/gpu/drm/i915/i915_active.h |    4 ++--
+ 2 files changed, 21 insertions(+), 12 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2762,10 +2762,8 @@ static int __init si_domain_init(int hw)
+--- a/drivers/gpu/drm/i915/i915_active.c
++++ b/drivers/gpu/drm/i915/i915_active.c
+@@ -121,7 +121,7 @@ static inline void debug_active_assert(s
+ #endif
+ 
+ static void
+-__active_retire(struct i915_active *ref)
++__active_retire(struct i915_active *ref, bool lock)
+ {
+ 	struct active_node *it, *n;
+ 	struct rb_root root;
+@@ -138,7 +138,8 @@ __active_retire(struct i915_active *ref)
+ 		retire = true;
  	}
  
- 	/*
--	 * Normally we use DMA domains for devices which have RMRRs. But we
--	 * loose this requirement for graphic and usb devices. Identity map
--	 * the RMRRs for graphic and USB devices so that they could use the
--	 * si_domain.
-+	 * Identity map the RMRRs so that devices with RMRRs could also use
-+	 * the si_domain.
- 	 */
- 	for_each_rmrr_units(rmrr) {
- 		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
-@@ -2773,9 +2771,6 @@ static int __init si_domain_init(int hw)
- 			unsigned long long start = rmrr->base_address;
- 			unsigned long long end = rmrr->end_address;
+-	mutex_unlock(&ref->mutex);
++	if (likely(lock))
++		mutex_unlock(&ref->mutex);
+ 	if (!retire)
+ 		return;
  
--			if (device_is_rmrr_locked(dev))
--				continue;
--
- 			if (WARN_ON(end < start ||
- 				    end >> agaw_to_width(si_domain->agaw)))
- 				continue;
-@@ -2914,9 +2909,6 @@ static int device_def_domain_type(struct
- 	if (dev_is_pci(dev)) {
- 		struct pci_dev *pdev = to_pci_dev(dev);
+@@ -153,21 +154,28 @@ __active_retire(struct i915_active *ref)
+ }
  
--		if (device_is_rmrr_locked(dev))
--			return IOMMU_DOMAIN_DMA;
--
- 		/*
- 		 * Prevent any device marked as untrusted from getting
- 		 * placed into the statically identity mapping domain.
-@@ -2954,9 +2946,6 @@ static int device_def_domain_type(struct
- 				return IOMMU_DOMAIN_DMA;
- 		} else if (pci_pcie_type(pdev) == PCI_EXP_TYPE_PCI_BRIDGE)
- 			return IOMMU_DOMAIN_DMA;
--	} else {
--		if (device_has_rmrr(dev))
--			return IOMMU_DOMAIN_DMA;
+ static void
+-active_retire(struct i915_active *ref)
++active_retire(struct i915_active *ref, bool lock)
+ {
+ 	GEM_BUG_ON(!atomic_read(&ref->count));
+ 	if (atomic_add_unless(&ref->count, -1, 1))
+ 		return;
+ 
+ 	/* One active may be flushed from inside the acquire of another */
+-	mutex_lock_nested(&ref->mutex, SINGLE_DEPTH_NESTING);
+-	__active_retire(ref);
++	if (likely(lock))
++		mutex_lock_nested(&ref->mutex, SINGLE_DEPTH_NESTING);
++	__active_retire(ref, lock);
+ }
+ 
+ static void
+ node_retire(struct i915_active_request *base, struct i915_request *rq)
+ {
+-	active_retire(node_from_active(base)->ref);
++	active_retire(node_from_active(base)->ref, true);
++}
++
++static void
++node_retire_nolock(struct i915_active_request *base, struct i915_request *rq)
++{
++	active_retire(node_from_active(base)->ref, false);
+ }
+ 
+ static struct i915_active_request *
+@@ -364,7 +372,7 @@ int i915_active_acquire(struct i915_acti
+ void i915_active_release(struct i915_active *ref)
+ {
+ 	debug_active_assert(ref);
+-	active_retire(ref);
++	active_retire(ref, true);
+ }
+ 
+ static void __active_ungrab(struct i915_active *ref)
+@@ -391,7 +399,7 @@ void i915_active_ungrab(struct i915_acti
+ {
+ 	GEM_BUG_ON(!test_bit(I915_ACTIVE_GRAB_BIT, &ref->flags));
+ 
+-	active_retire(ref);
++	active_retire(ref, true);
+ 	__active_ungrab(ref);
+ }
+ 
+@@ -421,12 +429,13 @@ int i915_active_wait(struct i915_active
+ 			break;
+ 		}
+ 
+-		err = i915_active_request_retire(&it->base, BKL(ref));
++		err = i915_active_request_retire(&it->base, BKL(ref),
++						 node_retire_nolock);
+ 		if (err)
+ 			break;
  	}
  
- 	return (iommu_identity_mapping & IDENTMAP_ALL) ?
+-	__active_retire(ref);
++	__active_retire(ref, true);
+ 	if (err)
+ 		return err;
+ 
+--- a/drivers/gpu/drm/i915/i915_active.h
++++ b/drivers/gpu/drm/i915/i915_active.h
+@@ -309,7 +309,7 @@ i915_active_request_isset(const struct i
+  */
+ static inline int __must_check
+ i915_active_request_retire(struct i915_active_request *active,
+-			   struct mutex *mutex)
++			   struct mutex *mutex, i915_active_retire_fn retire)
+ {
+ 	struct i915_request *request;
+ 	long ret;
+@@ -327,7 +327,7 @@ i915_active_request_retire(struct i915_a
+ 	list_del_init(&active->link);
+ 	RCU_INIT_POINTER(active->request, NULL);
+ 
+-	active->retire(active, request);
++	retire(active, request);
+ 
+ 	return 0;
+ }
 
 
