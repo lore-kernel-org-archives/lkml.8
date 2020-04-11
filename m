@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F7DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C11C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEFB218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E50215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646251;
-	bh=WC5mlF3RZoMAhnfZdMrvYguSUQNy45NeVegxFt7B9y0=;
+	s=default; t=1586646256;
+	bh=XlDL9/obX38EZGmMCq4P4RUovdf1i/YmOm2y0WYDwfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xi/yx1RHYmZw10KuDIQX0K89AmWuT9g7sE9XQ9eWgRCw/A4kIpM14JAkEou1exBj7
-	 MrVUn3Kri0CttPc9g+JNqkt/xyROTOxaEz8lYytRhNrEewOHdNVb6NFXdeB/cP3P2s
-	 t2/dMJbbBFgvZzN8LKGzIFOrdPcn/KmvHIKC8iK4=
+	b=CPgon4sg2EGpyB9s1vXQAQYq6yaTxFHy8N+lQNocwE8wTCgIp/RY4IGhn4UEN7rDl
+	 rAgErabBtIuSe5aI6duhCHQBhC24yQqmfXxeM/D6O77AG4YSNdTIuOpDXli7Kv+MuS
+	 iO7RMiFdb2TwQxEpqO4vmWITrY34SEuxJn3wBOwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgDKXEI (ORCPT
+        id S1727051AbgDKXEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgDKXEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:02 -0400
+        id S1726997AbgDKXEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D76420CC7;
-        Sat, 11 Apr 2020 23:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B9B218AC;
+        Sat, 11 Apr 2020 23:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646242;
-        bh=WC5mlF3RZoMAhnfZdMrvYguSUQNy45NeVegxFt7B9y0=;
+        s=default; t=1586646244;
+        bh=XlDL9/obX38EZGmMCq4P4RUovdf1i/YmOm2y0WYDwfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CuLcr9ru8vvy7xQ0ctNJ7xXUoROelR0az9lKCpEpzbos0Z88VeWwyha4mRj59Unbg
-         D95gCFTQEUD0hQbO4qGmzXSpUt9Fy1NeqS8Bpel4JAYjOshv/50lvtz7RBLKE1lig6
-         YjcDzL5WpliwoXW73PHDNgFeNi6DIBeKVgpzVcec=
+        b=pc+wYlZOptEovpeBPPfXYKil7XfsSlJSlYPUdL2/VXlIchdr5i7mZcKl2x7etGkUT
+         fN3gJowd010s+Mp97a9xaa6bX8juEflBtdp6lx5JA4J7o22XpXLpSr6M/EFJxxj1W1
+         a6edW9B44Gcx+X5z37gK6NcLxOnjr7xaYWYMQEyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 011/149] ionic: check for NULL structs on teardown
-Date:   Sat, 11 Apr 2020 19:01:28 -0400
-Message-Id: <20200411230347.22371-11-sashal@kernel.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 013/149] tools/power/x86/intel-speed-select: Fix mailbox usage for CLOS_PM_QOS_CONFIG
+Date:   Sat, 11 Apr 2020 19:01:30 -0400
+Message-Id: <20200411230347.22371-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -59,82 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit a4674f34711b96b65bdc4d54eca88d2fd123bbc6 ]
+[ Upstream commit 8ddbda76245f5d10e00020db34455404019efc91 ]
 
-Make sure the queue structs exist before trying to tear
-them down to make for safer error recovery.
+Even for the products using MMIO, this message needs to be sent via
+mail box. The previous fix done for this didn't properly address this.
+That fix simply removed sending command via MMIO, but still didn't
+trigger sending via mailbox.
 
-Fixes: 0f3154e6bcb3 ("ionic: Add Tx and Rx handling")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add additional condition to check for CLOS_PM_QOS_CONFIG, when MMIO
+is supported on a platform.
+
+Fixes: cd0e63706549 (tools/power/x86/intel-speed-select: Use mailbox for CLOS_PM_QOS_CONFIG)
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/pensando/ionic/ionic_lif.c   | 26 ++++++++++---------
- .../net/ethernet/pensando/ionic/ionic_main.c  |  7 ++++-
- 2 files changed, 20 insertions(+), 13 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 938e19ee0bcd2..1a569d9b0c3a0 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -318,19 +318,21 @@ static void ionic_qcqs_free(struct ionic_lif *lif)
- 		lif->adminqcq = NULL;
- 	}
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 2b2b8167c65be..6a973e7832228 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -571,7 +571,8 @@ int isst_send_mbox_command(unsigned int cpu, unsigned char command,
+ 		"mbox_send: cpu:%d command:%x sub_command:%x parameter:%x req_data:%x\n",
+ 		cpu, command, sub_command, parameter, req_data);
  
--	for (i = 0; i < lif->nxqs; i++)
--		if (lif->rxqcqs[i].stats)
--			devm_kfree(dev, lif->rxqcqs[i].stats);
--
--	devm_kfree(dev, lif->rxqcqs);
--	lif->rxqcqs = NULL;
--
--	for (i = 0; i < lif->nxqs; i++)
--		if (lif->txqcqs[i].stats)
--			devm_kfree(dev, lif->txqcqs[i].stats);
-+	if (lif->rxqcqs) {
-+		for (i = 0; i < lif->nxqs; i++)
-+			if (lif->rxqcqs[i].stats)
-+				devm_kfree(dev, lif->rxqcqs[i].stats);
-+		devm_kfree(dev, lif->rxqcqs);
-+		lif->rxqcqs = NULL;
-+	}
- 
--	devm_kfree(dev, lif->txqcqs);
--	lif->txqcqs = NULL;
-+	if (lif->txqcqs) {
-+		for (i = 0; i < lif->nxqs; i++)
-+			if (lif->txqcqs[i].stats)
-+				devm_kfree(dev, lif->txqcqs[i].stats);
-+		devm_kfree(dev, lif->txqcqs);
-+		lif->txqcqs = NULL;
-+	}
- }
- 
- static void ionic_link_qcq_interrupts(struct ionic_qcq *src_qcq,
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index a8e3fb73b4650..ee690f8f381ca 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -240,11 +240,16 @@ static void ionic_adminq_cb(struct ionic_queue *q,
- 
- static int ionic_adminq_post(struct ionic_lif *lif, struct ionic_admin_ctx *ctx)
- {
--	struct ionic_queue *adminq = &lif->adminqcq->q;
-+	struct ionic_queue *adminq;
- 	int err = 0;
- 
- 	WARN_ON(in_interrupt());
- 
-+	if (!lif->adminqcq)
-+		return -EIO;
-+
-+	adminq = &lif->adminqcq->q;
-+
- 	spin_lock(&lif->adminq_lock);
- 	if (!ionic_q_has_space(adminq, 1)) {
- 		err = -ENOSPC;
+-	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS) {
++	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS &&
++	    sub_command != CLOS_PM_QOS_CONFIG) {
+ 		unsigned int value;
+ 		int write = 0;
+ 		int clos_id, core_id, ret = 0;
 -- 
 2.20.1
 
