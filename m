@@ -2,248 +2,97 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B02FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEF8C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3329E2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CE120708
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:54:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fo891R1f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b="mkGurfY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgDKRhR (ORCPT
+        id S1726687AbgDKRyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 13:37:17 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38451 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgDKRhR (ORCPT
+        Sat, 11 Apr 2020 13:54:22 -0400
+Received: from smtp-outgoing.laposte.net ([160.92.124.99]:48455 "EHLO
+        smtp-outgoing.laposte.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgDKRyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 13:37:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k11so5064295wrp.5
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 10:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e61/lw3LcPWdbUCePtXNS18yHZNyuLTCED3Qz5AQidg=;
-        b=fo891R1f8nlqYAqA8l8VK8vyKEIAbj0uutXxo2yqmAziMQ4EasyxDP0RH2zuwmycTv
-         1/zdC4dh2uTWTSFiA3OYD+H+3AcTI9B4wXcU3zyo5TB1DLwzUkgbFYBjtFUJYBfbRTX0
-         Kl7QGTjPk/2/tZCzVJ3WHPxoWILa/WP8uciYw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e61/lw3LcPWdbUCePtXNS18yHZNyuLTCED3Qz5AQidg=;
-        b=l+qnovSgzhjvJpRvuUXbirzeqarhW5Ri6XWZ5NymHbjfPFg7ivpURehRw/R71IJRa9
-         bPWgsTfPLrmwRawukhppiINbAFKrgDuwv2E4jAIGjKS7dQF7n28fL8balPSsicmOGhXQ
-         IcCPc1BaDtwICjR6+gUIYbrHUFpLZqcx4YEX7Pd9EYNPtU4QW/5GnnhcKOCetXukYaZT
-         Ppi877x99RWla2jytxJ/5TgxTKOOqvD3e/Yg7nudTaNroXIWhtseH66JzgYapPlyCNZs
-         FcURfoILkgG7x9SjNr8FRc05MAgedsEikTVDCyd4s7UAyO4VrQv/OFFC2gc2ar8EnB0H
-         ICRw==
-X-Gm-Message-State: AGi0PuZv+PNkBWADjxi1Mewx5zL9aMqwDcO6MEQBu3xL2/aro4wiAJk5
-        2SSb0DPuxJ5ehakewAxtcavqeQ==
-X-Google-Smtp-Source: APiQypJKcfFoAB4ZvmjtYh9c4vCgpnCENg82oBpK/7cK65AgJOlLHsrjbhBs+fXwU9o2uMCaSQe0Zg==
-X-Received: by 2002:adf:8543:: with SMTP id 61mr10006419wrh.243.1586626634449;
-        Sat, 11 Apr 2020 10:37:14 -0700 (PDT)
-Received: from tfiga.c.googlers.com.com (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id x8sm8618512wrn.27.2020.04.11.10.37.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 10:37:13 -0700 (PDT)
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     linux-media@vger.kernel.org
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        "jacopo mondi" <jacopo@jmondi.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH] media: staging: ipu3: Fix stale list entries on parameter queue failure
-Date:   Sat, 11 Apr 2020 17:37:10 +0000
-Message-Id: <20200411173710.226247-1-tfiga@chromium.org>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+        Sat, 11 Apr 2020 13:54:22 -0400
+Received: from outgoing-mail.laposte.net (localhost.localdomain [127.0.0.1])
+        by mlpnf0114.laposte.net (SMTP Server) with ESMTP id 4902SC4TF8z1GBw0;
+        Sat, 11 Apr 2020 19:48:59 +0200 (CEST)
+X-mail-filterd: 0.4.0.2
+X-mail-filterd: 0.4.0.2
+X-lpn-spamrating: 36
+X-lpn-spamlevel: not-spam
+X-lpn-spamcause: OK, (-100)(0000)gggruggvucftvghtrhhoucdtuddrgeduhedrvdeggdduvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecunfetrffquffvgfdpqfgfvfdpggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepgghinhgtvghnthcuufhtvghhlhoruceovhhinhgtvghnthdrshhtvghhlhgvsehlrghpohhsthgvrdhnvghtqeenucffohhmrghinhepsggrnhgrnhgrqdhpihdrohhrghenucfkphepkeekrdduvddurddugeelrdegleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehrohhmuhgrlhgurdgsvghrghgvrhhivgdpihhnvghtpeekkedruddvuddrudegledrgeelpdhmrghilhhfrhhomhepvhhinhgtvghnthdrshhtvghhlhgvsehlrghpohhsthgvrdhnvghtpdhrtghpthhtohepihgtvghnohifhiesrghoshgtrdhiohdprhgtphhtthhopeifvghnshestghsihgvrdhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhinhgtvghnthdrshhtvghhlhgvsehlrghpohhsthgvrdhnvghtpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfr
+ hgruggvrggurdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-lpn-mailing: LEGIT
+Received: from romuald.bergerie (unknown [88.121.149.49])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mlpnf0114.laposte.net (SMTP Server) with ESMTPSA id 4902SC0h0Vz1GBvc;
+        Sat, 11 Apr 2020 19:48:59 +0200 (CEST)
+Received: from radicelle.bergerie (radicelle.bergerie [192.168.124.12])
+        by romuald.bergerie (Postfix) with ESMTPS id A70DA37FE060;
+        Sat, 11 Apr 2020 19:48:58 +0200 (CEST)
+Received: from vincent by radicelle.bergerie with local (Exim 4.93)
+        (envelope-from <vincent@radicelle.bergerie>)
+        id 1jNKFW-000152-BQ; Sat, 11 Apr 2020 19:48:58 +0200
+From:   =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: Fix led polarity
+Date:   Sat, 11 Apr 2020 19:48:43 +0200
+Message-Id: <20200411174843.4112-1-vincent.stehle@laposte.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=laposte.net; s=lpn-wlmd; t=1586627661; bh=AcBvHLPmHFu6rApjMG0R0hlig2Vi1pp7NLIlCkMKiWA=; h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding; b=mkGurfY1d9S6Ue4dAGWSFzQaZ9AH9SCCZ7y+AaZ0FyFPrAW8riNXdW29a/efqbxqpoURABDJM8Gesxckd5O6JBAaSHcDUPDY+GMqrOc4ShfKjza7S1N+y+PH/Xa2mGE6vb8Kklc2PYSrlgczw5fKjqWJt6NepjjkoxrckpKaJiURqwP5++zCk+2krAzYupfE19bXhPiuqFyzQA8QjoE/osdQMRVLjpzKGmIPMPhvmBumq7wEVEkMRNQmA/ryTPMIB8CcLVbW2RbkSynN5D95eQ8Z/vwUisjjEixgC0C0vm87RdDkf3pCgP0dxrz8R3C1hqo/+vwNOdpGQAebquPpRQ==;
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When queuing parameters fails, current code bails out without deleting
-the corresponding vb2 buffer from the driver buffer list, but the buffer
-is returned to vb2. This leads to stale list entries and a crash when
-the driver stops streaming:
+The PWR-LED on the bananapi m2 zero board is on when gpio PL10 is low.
+This has been verified on a board and in the schematics [1].
 
-[  224.935561] ipu3-imgu 0000:00:05.0: set parameters failed.
-[  224.998932] ipu3-imgu 0000:00:05.0: set parameters failed.
-[  225.064430] ipu3-imgu 0000:00:05.0: set parameters failed.
-[  225.128534] ipu3-imgu 0000:00:05.0: set parameters failed.
-[  225.194945] ipu3-imgu 0000:00:05.0: set parameters failed.
-[  225.360363] ------------[ cut here ]------------
-[  225.360372] WARNING: CPU: 0 PID: 6704 at
-drivers/media/common/videobuf2/videobuf2-core.c:927
-vb2_buffer_done+0x20f/0x21a [videobuf2_common]
-[  225.360374] Modules linked in: snd_seq_dummy snd_seq snd_seq_device
-veth bridge stp llc tun nf_nat_tftp nf_conntrack_tftp nf_nat_ftp
-nf_conntrack_ftp esp6 ah6 ip6t_REJECT ip6t_ipv6header cmac rfcomm uinput
-ipu3_imgu(C) ipu3_cio2 iova videobuf2_v4l2 videobuf2_common
-videobuf2_dma_sg videobuf2_memops ov13858 ov5670 v4l2_fwnode dw9714
-acpi_als xt_MASQUERADE fuse iio_trig_sysfs cros_ec_sensors_ring
-cros_ec_light_prox cros_ec_sensors cros_ec_sensors_core
-industrialio_triggered_buffer kfifo_buf industrialio
-cros_ec_sensorsupport cdc_ether btusb btrtl btintel btbcm usbnet
-bluetooth ecdh_generic ecc hid_google_hammer iwlmvm iwl7000_mac80211
-r8152 mii lzo_rle lzo_compress iwlwifi zram cfg80211 joydev
-[  225.360400] CPU: 0 PID: 6704 Comm: CameraDeviceOps Tainted: G
-C        5.4.30 #5
-[  225.360402] Hardware name: HP Soraka/Soraka, BIOS
-Google_Soraka.10431.106.0 12/03/2019
-[  225.360405] RIP: 0010:vb2_buffer_done+0x20f/0x21a [videobuf2_common]
-[  225.360408] Code: 5e 41 5f 5d e9 e0 16 5a d4 41 8b 55 08 48 c7 c7 8f
-8b 5c c0 48 c7 c6 36 9a 5c c0 44 89 f9 31 c0 e8 a5 1c 5b d4 e9 53 fe ff
-ff <0f> 0b eb a3 e8 12 d7 43 d4 eb 97 0f 1f 44 00 00 55 48 89 e5 41 56
-[  225.360410] RSP: 0018:ffff9468ab32fba8 EFLAGS: 00010297
-[  225.360412] RAX: ffff8aa7a51577a8 RBX: dead000000000122 RCX:
-ffff8aa7a51577a8
-[  225.360414] RDX: 0000000000000000 RSI: 0000000000000006 RDI:
-ffff8aa7a5157400
-[  225.360416] RBP: ffff9468ab32fbd8 R08: ffff8aa64e47e600 R09:
-0000000000000000
-[  225.360418] R10: 0000000000000000 R11: ffffffffc06036e6 R12:
-dead000000000100
-[  225.360420] R13: ffff8aa7820f1940 R14: ffff8aa7a51577a8 R15:
-0000000000000006
-[  225.360422] FS:  00007c1146ffd700(0000) GS:ffff8aa7baa00000(0000)
-knlGS:0000000000000000
-[  225.360424] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  225.360426] CR2: 00007aea3473a000 CR3: 00000000537d6004 CR4:
-00000000003606f0
-[  225.360427] Call Trace:
-[  225.360434]  imgu_return_all_buffers+0x6f/0x8e [ipu3_imgu]
-[  225.360438]  imgu_vb2_stop_streaming+0xd6/0xf0 [ipu3_imgu]
-[  225.360441]  __vb2_queue_cancel+0x33/0x22d [videobuf2_common]
-[  225.360443]  vb2_core_streamoff+0x16/0x78 [videobuf2_common]
-[  225.360448]  __video_do_ioctl+0x33d/0x42a
-[  225.360452]  video_usercopy+0x34a/0x615
-[  225.360455]  ? video_ioctl2+0x16/0x16
-[  225.360458]  v4l2_ioctl+0x46/0x53
-[  225.360462]  do_vfs_ioctl+0x50a/0x787
-[  225.360465]  ksys_ioctl+0x58/0x83
-[  225.360468]  __x64_sys_ioctl+0x1a/0x1e
-[  225.360470]  do_syscall_64+0x54/0x68
-[  225.360474]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  225.360476] RIP: 0033:0x7c118030f497
-[  225.360479] Code: 8a 66 90 48 8b 05 d1 d9 2b 00 64 c7 00 26 00 00 00
-48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f
-05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 d9 2b 00 f7 d8 64 89 01 48
-[  225.360480] RSP: 002b:00007c1146ffa5a8 EFLAGS: 00000246 ORIG_RAX:
-0000000000000010
-[  225.360483] RAX: ffffffffffffffda RBX: 00007c1140010018 RCX:
-00007c118030f497
-[  225.360484] RDX: 00007c114001019c RSI: 0000000040045613 RDI:
-000000000000004c
-[  225.360486] RBP: 00007c1146ffa700 R08: 00007c1140010048 R09:
-0000000000000000
-[  225.360488] R10: 0000000000000000 R11: 0000000000000246 R12:
-00007c11400101b0
-[  225.360489] R13: 00007c1140010200 R14: 00007c1140010048 R15:
-0000000000000001
-[  225.360492] ---[ end trace 73625ecfbd1c930e ]---
-[  225.360498] general protection fault: 0000 [#1] PREEMPT SMP PTI
-[  225.360501] CPU: 0 PID: 6704 Comm: CameraDeviceOps Tainted: G
-WC        5.4.30 #5
-[  225.360502] Hardware name: HP Soraka/Soraka, BIOS
-Google_Soraka.10431.106.0 12/03/2019
-[  225.360505] RIP: 0010:imgu_return_all_buffers+0x52/0x8e [ipu3_imgu]
-[  225.360507] Code: d4 49 8b 85 70 0a 00 00 49 81 c5 70 0a 00 00 49 39
-c5 74 3b 49 bc 00 01 00 00 00 00 ad de 49 8d 5c 24 22 4c 8b 30 48 8b 48
-08 <49> 89 4e 08 4c 89 31 4c 89 20 48 89 58 08 48 8d b8 58 fc ff ff 44
-[  225.360509] RSP: 0018:ffff9468ab32fbe8 EFLAGS: 00010293
-[  225.360511] RAX: ffff8aa7a51577a8 RBX: dead000000000122 RCX:
-dead000000000122
-[  225.360512] RDX: 0000000000000000 RSI: 0000000000000006 RDI:
-ffff8aa7a5157400
-[  225.360514] RBP: ffff9468ab32fc18 R08: ffff8aa64e47e600 R09:
-0000000000000000
-[  225.360515] R10: 0000000000000000 R11: ffffffffc06036e6 R12:
-dead000000000100
-[  225.360517] R13: ffff8aa7820f1940 R14: dead000000000100 R15:
-0000000000000006
-[  225.360519] FS:  00007c1146ffd700(0000) GS:ffff8aa7baa00000(0000)
-knlGS:0000000000000000
-[  225.360521] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  225.360523] CR2: 00007aea3473a000 CR3: 00000000537d6004 CR4:
-00000000003606f0
-[  225.360525] Call Trace:
-[  225.360528]  imgu_vb2_stop_streaming+0xd6/0xf0 [ipu3_imgu]
-[  225.360531]  __vb2_queue_cancel+0x33/0x22d [videobuf2_common]
-[  225.360534]  vb2_core_streamoff+0x16/0x78 [videobuf2_common]
-[  225.360537]  __video_do_ioctl+0x33d/0x42a
-[  225.360540]  video_usercopy+0x34a/0x615
-[  225.360542]  ? video_ioctl2+0x16/0x16
-[  225.360546]  v4l2_ioctl+0x46/0x53
-[  225.360548]  do_vfs_ioctl+0x50a/0x787
-[  225.360551]  ksys_ioctl+0x58/0x83
-[  225.360554]  __x64_sys_ioctl+0x1a/0x1e
-[  225.360556]  do_syscall_64+0x54/0x68
-[  225.360559]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  225.360561] RIP: 0033:0x7c118030f497
-[  225.360563] Code: 8a 66 90 48 8b 05 d1 d9 2b 00 64 c7 00 26 00 00 00
-48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f
-05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 d9 2b 00 f7 d8 64 89 01 48
-[  225.360565] RSP: 002b:00007c1146ffa5a8 EFLAGS: 00000246 ORIG_RAX:
-0000000000000010
-[  225.360567] RAX: ffffffffffffffda RBX: 00007c1140010018 RCX:
-00007c118030f497
-[  225.360569] RDX: 00007c114001019c RSI: 0000000040045613 RDI:
-000000000000004c
-[  225.360570] RBP: 00007c1146ffa700 R08: 00007c1140010048 R09:
-0000000000000000
-[  225.360572] R10: 0000000000000000 R11: 0000000000000246 R12:
-00007c11400101b0
-[  225.360574] R13: 00007c1140010200 R14: 00007c1140010048 R15:
-0000000000000001
-[  225.360576] Modules linked in: snd_seq_dummy snd_seq snd_seq_device
-veth bridge stp llc tun nf_nat_tftp nf_conntrack_tftp nf_nat_ftp
-nf_conntrack_ftp esp6 ah6 ip6t_REJECT ip6t_ipv6header cmac rfcomm uinput
-ipu3_imgu(C) ipu3_cio2 iova videobuf2_v4l2 videobuf2_common
-videobuf2_dma_sg videobuf2_memops ov13858 ov567
+[1]: http://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO#Documents
 
-Fix this by moving the list_del() call just below the list_first_entry()
-call when the buffer no longer needs to be in the list.
-
-Fixes: 8ecc7c9da013 ("media: staging/intel-ipu3: parameter buffer refactoring")
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+Fixes: 8b8061fcbfae ("ARM: dts: sun8i: h2+: add support for Banana Pi M2 =
+Zero board")
+Signed-off-by: Vincent Stehl=C3=A9 <vincent.stehle@laposte.net>
+Cc: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/staging/media/ipu3/ipu3.c | 2 +-
+ arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
-index 4d53aad31483..7a1d1881483b 100644
---- a/drivers/staging/media/ipu3/ipu3.c
-+++ b/drivers/staging/media/ipu3/ipu3.c
-@@ -261,6 +261,7 @@ int imgu_queue_buffers(struct imgu_device *imgu, bool initial, unsigned int pipe
- 
- 			ivb = list_first_entry(&imgu_pipe->nodes[node].buffers,
- 					       struct imgu_vb2_buffer, list);
-+			list_del(&ivb->list);
- 			vb = &ivb->vbb.vb2_buf;
- 			r = imgu_css_set_parameters(&imgu->css, pipe,
- 						    vb2_plane_vaddr(vb, 0));
-@@ -274,7 +275,6 @@ int imgu_queue_buffers(struct imgu_device *imgu, bool initial, unsigned int pipe
- 			vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
- 			dev_dbg(&imgu->pci_dev->dev,
- 				"queue user parameters %d to css.", vb->index);
--			list_del(&ivb->list);
- 		} else if (imgu_pipe->queue_enabled[node]) {
- 			struct imgu_css_buffer *buf =
- 				imgu_queue_getbuf(imgu, node, pipe);
--- 
-2.26.0.110.g2183baf09c-goog
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/=
+arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index d277d043031b2..4c6704e4c57ec 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -31,7 +31,7 @@ leds {
+=20
+ 		pwr_led {
+ 			label =3D "bananapi-m2-zero:red:pwr";
+-			gpios =3D <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			gpios =3D <&r_pio 0 10 GPIO_ACTIVE_LOW>; /* PL10 */
+ 			default-state =3D "on";
+ 		};
+ 	};
+--=20
+2.25.1
 
