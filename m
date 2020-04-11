@@ -2,238 +2,379 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD31C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EC3C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E43B20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="XmkxPJ7s";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XRFMe2OQ"
+	by mail.kernel.org (Postfix) with ESMTP id AD20520673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:18:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586571494;
+	bh=F4poob0WyBleUatMOfOp9hcblndSqlr86sesj82DdD4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=HUG8xzZ6Vd205zK+ggvlGcl/yvjn9BKpqK1v50O9jgb1Cs0gwgr8YMZx7ZPaL3bF8
+	 aGi4wl1h+mR5mzc3XdYEDHkV7SXWU4PH5eu0TKv8cmXQg9d0o3c696RB9oTr4acNIV
+	 ZcTGo31HCB9XSGxGJwDIsixMwgQ7G0J+FKOHIR8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgDKCO1 (ORCPT
+        id S1726683AbgDKCSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:14:27 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:58531 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbgDKCO1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:14:27 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id AFAC35C00FD;
-        Fri, 10 Apr 2020 22:14:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 10 Apr 2020 22:14:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=j5pB8Ra39tC+eZN6i8d9UiFa/0
-        b8JKjS85bs3hoKRRw=; b=XmkxPJ7sPF0fK0xEGEqhjzass4zi8FLISvQujuHHvm
-        4RQBVh/vE4NFwdzeyf/YBJCtF2eIifTZTPSJCw7RmNlPj/U27f8I/4fPVRs0LjF3
-        cUqzWYfnoKKzUkbzHn4JlqbYyJsec/574xLlcH9TIyVnJpo+T7IfM/y2phTpagRw
-        KdG6Xyo+5dKsi04Nxa/Tey1KylnMMKWNsa9kV/8HgIS4dPgZmTNygf3UfYNOdar5
-        lvD1NTYHYg3l+HwQBJpBCob9ChD5mPKFsx9gajcX6WCgjSkoSbvGIgPo8V9IUc/t
-        V5qleoPpmMAa2fM8resWUIoyJ0O7y5glGfx6mtpubw6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=j5pB8Ra39tC+eZN6i
-        8d9UiFa/0b8JKjS85bs3hoKRRw=; b=XRFMe2OQczfMDsVD4f1OVQgfJz3yoDIof
-        b3XrW7k4TT2wjyNh8A9UsV1rcpUia6Zkbcsa7k3AOkZX3z1B4mSyAU+lolGIgNVj
-        R15bUgrbvDetwr2do2c1zIXqJ85BFiMcF+wMK5CaH8RgS0nuXCiDwdRtp9iz0/5/
-        vPBTUTDZW96EvkmXOZseXBtlNcnRmEME3OmOVGENBaOdXBPHfc+uZWaO2Bsh71ns
-        QbZWVMs+ohjgDKa4C0U9zxPPOg6TrmHiR7Gog5ekXwsOm6uUE6U4Z0nSu6p9l2WI
-        cIwh21xYk2G0NEblDXZZM4NJd2FTvhbSs9f0jfRaYb+FRYOaCcL6A==
-X-ME-Sender: <xms:ASiRXoMEK3RWnkv_EnCWJdQQZuPNnhj2TeIxEyEdwQzLoktbsu1NWQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvdefgdehudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehnughrvgifucfl
-    vghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomhgrihhnpehkvg
-    hrnhgvlhdrohhrghenucfkphepudegrddvrddutdekrddugeelnecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurd
-    gruh
-X-ME-Proxy: <xmx:ASiRXmGkvwxmM08FokquGazgmN-xRXc1ush9ykXloxMkHUM-BngaxA>
-    <xmx:ASiRXhn6SwYAO4eUblMsohb96P73BqPEe4YuKxlOvVuZaQQwt6cJ5g>
-    <xmx:ASiRXpeVWceYEVX3yAL8GJsVuq3BClaf4bCjXaKLS1a01o72SDVopA>
-    <xmx:AiiRXpc820gD4Lf7LpJbplPrApFsLAK3TBEKfD9ovkmnSFuVYBuoLQ>
-Received: from localhost.localdomain (ppp14-2-108-149.adl-apt-pir-bras32.tpg.internode.on.net [14.2.108.149])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 29B063060062;
-        Fri, 10 Apr 2020 22:14:21 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH v2] ARM: dts: aspeed: Change KCS nodes to v2 binding
-Date:   Sat, 11 Apr 2020 11:44:58 +0930
-Message-Id: <20200411021458.8837-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
+        Fri, 10 Apr 2020 22:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbgDKCSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:18:12 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF3420673;
+        Sat, 11 Apr 2020 02:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586571492;
+        bh=F4poob0WyBleUatMOfOp9hcblndSqlr86sesj82DdD4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=oYRObu+1pwNiOa/f2i/3dAsW18Y24DF6MvRStKCVRUGG7ZbBUVIUz7DgfcJhksbvF
+         4QCm+JQfSh7PN7mhJBcSvo+mSjxHtQ5i5g3LBN6gfGRKPIlPh33WvFFLHQvjsADCh4
+         jPnE9Eo1bTjn2Q2Q/rW4k5KO9RM/oo+6R64HHen0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1586298209-4589-3-git-send-email-wcheng@codeaurora.org>
+References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org> <1586298209-4589-3-git-send-email-wcheng@codeaurora.org>
+Subject: Re: [PATCH v3 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org, Wesley Cheng <wcheng@codeaurora.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Fri, 10 Apr 2020 19:18:11 -0700
+Message-ID: <158657149111.199533.2451403004745553390@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warnings for both g5 and g6 SoCs:
+Quoting Wesley Cheng (2020-04-07 15:23:27)
+> diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+> index e46824d..3158c14 100644
+> --- a/drivers/phy/qualcomm/Kconfig
+> +++ b/drivers/phy/qualcomm/Kconfig
+> @@ -85,6 +85,16 @@ config PHY_QCOM_USB_HS
+>           Support for the USB high-speed ULPI compliant phy on Qualcomm
+>           chipsets.
+> =20
+> +config PHY_QCOM_USB_SNPS_HS_7NM
+> +       tristate "Qualcomm 7nm USB HS PHY module"
+> +       depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> +       select GENERIC_PHY
+> +       help
+> +         Enable support for the USB high-speed SNPS phy on Qualcomm 7nm
+> +         chipsets.  This PHY has differences in the register map compared
+> +         to the 28nm variant.  The PHY is paired with a Synopsys DWC3 USB
+> +         controller on MSM SOCs.
 
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:388.19-393.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0)
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
-    arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
-    arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0)
+s/MSM/Qualcomm/?
 
-Cc: Haiyue Wang <haiyue.wang@linux.intel.com>
-Cc: Vijay Khemka <vijaykhemka@fb.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
-v1[1] was an out-of-date patch that used the old slave-reg property to define
-the device address in the LPC IO space. In v2 of the driver series[2] we agreed
-to make the property aspeed-specific on the back some quirks of the hardware.
+> +
+>  config PHY_QCOM_USB_HSIC
+>         tristate "Qualcomm USB HSIC ULPI PHY module"
+>         depends on USB_ULPI_BUS
+> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualc=
+omm/phy-qcom-snps-7nm.c
+> new file mode 100644
+> index 0000000..00a46cd
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> @@ -0,0 +1,294 @@
+[...]
+> +
+> +/**
+> + * struct qcom_snps_hsphy - structure holding snps hs phy attributes
 
-v2 of this patch updates the tiogapass dts to use the upstream
-'aspeed,lpc-io-reg' property instead of 'slave-reg'. I discovered the mismatch
-when I started to tidy up the various branches I have lying around for the
-ASPEED DT cleanups.
+snps hs phy attributes
 
-[1] https://lore.kernel.org/linux-arm-kernel/20200411013514.15950-1-andrew@aj.id.au/
-[2] https://lore.kernel.org/linux-arm-kernel/8aec8994bbe1186d257b0a712e13cf914c5ebe35.1576462051.git-series.andrew@aj.id.au/
+structure and holding are redundant.
 
- .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
- arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
- arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
- 3 files changed, 26 insertions(+), 25 deletions(-)
+> + *
+> + * @phy: generic phy
+> + * @base: iomapped memory space for qubs2 phy
+> + *
+> + * @cfg_ahb_clk: AHB2PHY interface clock
+> + * @ref_clk: phy reference clock
+> + * @iface_clk: phy interface clock
+> + * @phy_reset: phy reset control
+> + * @vregs: regulator supplies bulk data
+> +
+> + * @phy_initialized: if PHY has been initialized correctly
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index 6b88c7f26bf7..2d44d9ad4e40 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -113,13 +113,13 @@
- &kcs2 {
- 	// BMC KCS channel 2
- 	status = "okay";
--	kcs_addr = <0xca8>;
-+	aspeed,lpc-io-reg = <0xca8>;
- };
- 
- &kcs3 {
- 	// BMC KCS channel 3
- 	status = "okay";
--	kcs_addr = <0xca2>;
-+	aspeed,lpc-io-reg = <0xca2>;
- };
- 
- &gpio {
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 284face7de2c..de7fd80b022a 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -445,22 +445,22 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -474,10 +474,10 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 1ffc15177b79..f4113275a7f9 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -471,22 +471,23 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -500,10 +501,10 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
--- 
-2.20.1
+Please drop space between members in the kernel-doc.
 
+> + *
+> + */
+> +struct qcom_snps_hsphy {
+> +       struct phy *phy;
+> +       void __iomem *base;
+> +
+> +       struct clk *cfg_ahb_clk;
+> +       struct clk *ref_clk;
+> +       struct reset_control *phy_reset;
+> +       struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+> +
+> +       bool phy_initialized;
+> +};
+> +
+> +static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 of=
+fset,
+> +                                   u32 mask, u32 val)
+> +{
+> +       u32 reg;
+> +
+> +       reg =3D readl(base + offset);
+> +       reg &=3D ~mask;
+> +       reg |=3D val & mask;
+> +       writel(reg, base + offset);
+
+Make these relaxed?
+
+> +
+> +       /* Ensure above write is completed */
+> +       readl(base + offset);
+
+And this one too?
+
+> +}
+> +
+> +static int qcom_snps_hsphy_init(struct phy *phy)
+> +{
+> +       struct qcom_snps_hsphy *hsphy =3D phy_get_drvdata(phy);
+> +       int ret;
+> +
+> +       dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
+> +
+> +       /* turn on regulator supplies */
+
+These comments don't tell us anything besides what the code is doing so
+they don't seem useful.
+
+> +       ret =3D regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vr=
+egs);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* enable ahb interface clock to program phy */
+> +       ret =3D clk_prepare_enable(hsphy->cfg_ahb_clk);
+> +       if (ret) {
+> +               dev_err(&phy->dev, "failed to enable cfg ahb clock, %d\n"=
+, ret);
+> +               goto poweroff_phy;
+> +       }
+> +
+> +       /* Perform phy reset */
+> +       ret =3D reset_control_assert(hsphy->phy_reset);
+> +       if (ret) {
+> +               dev_err(&phy->dev, "failed to assert phy_reset, %d\n", re=
+t);
+> +               goto disable_ahb_clk;
+> +       }
+> +
+> +       /* 100 us delay to keep PHY in reset mode */
+> +       usleep_range(100, 150);
+> +
+> +       ret =3D reset_control_deassert(hsphy->phy_reset);
+> +       if (ret) {
+> +               dev_err(&phy->dev, "failed to de-assert phy_reset, %d\n",=
+ ret);
+> +               goto disable_ahb_clk;
+> +       }
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
+> +                                                       UTMI_PHY_CMN_CTRL=
+_OVERRIDE_EN,
+> +                                                       UTMI_PHY_CMN_CTRL=
+_OVERRIDE_EN);
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTR=
+L5,
+> +                                                       POR, POR);
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL_COMMON0,
+> +                                                       FSEL_MASK, 0);
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL_COMMON1,
+> +                                       PLLBTUNE, PLLBTUNE);
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_REFCLK_C=
+TRL,
+> +                                       REFCLK_SEL_DEFAULT, REFCLK_SEL_MA=
+SK);
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL_COMMON1,
+> +                                       VBUSVLDEXTSEL0, VBUSVLDEXTSEL0);
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL1,
+> +                                       VBUSVLDEXT0, VBUSVLDEXT0);
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL_COMMON2,
+> +                                       VREGBYPASS, VREGBYPASS);
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL2,
+> +                                       USB2_SUSPEND_N_SEL | USB2_SUSPEND=
+_N,
+> +                                       USB2_SUSPEND_N_SEL | USB2_SUSPEND=
+_N);
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTR=
+L0,
+> +                                       SLEEPM, SLEEPM);
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTR=
+L5,
+> +                                       POR, 0);
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_C=
+TRL2,
+> +                                       USB2_SUSPEND_N_SEL, 0);
+> +
+> +       qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
+> +                                       UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
+> +
+> +       hsphy->phy_initialized =3D true;
+> +
+> +       return 0;
+> +
+> +disable_ahb_clk:
+> +       clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +poweroff_phy:
+> +       regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
+> +
+> +       return ret;
+> +}
+> +
+> +static int qcom_snps_hsphy_exit(struct phy *phy)
+> +{
+> +       struct qcom_snps_hsphy *hsphy =3D phy_get_drvdata(phy);
+> +
+> +       reset_control_assert(hsphy->phy_reset);
+> +       clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +       regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
+> +       hsphy->phy_initialized =3D false;
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct phy_ops qcom_snps_hsphy_gen_ops =3D {
+> +       .init           =3D qcom_snps_hsphy_init,
+> +       .exit           =3D qcom_snps_hsphy_exit,
+> +       .owner          =3D THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id qcom_snps_hsphy_of_match_table[] =3D {
+> +       {
+> +               .compatible     =3D "qcom,sm8150-usb-hs-phy",
+> +       },
+> +       {
+> +               .compatible     =3D "qcom,usb-snps-hs-7nm-phy",
+> +       },
+> +       { },
+
+Can this be on one line?
+
+          { .compatible     =3D "qcom,sm8150-usb-hs-phy", },
+          { .compatible     =3D "qcom,usb-snps-hs-7nm-phy", },
+          { }
+
+Also drop comma on the last element so nothing can follow without
+causing compile error.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
+> +
+> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct qcom_snps_hsphy *hsphy;
+> +       struct phy_provider *phy_provider;
+> +       struct phy *generic_phy;
+> +       struct resource *res;
+> +       int ret, i;
+> +       int num;
+> +
+> +       hsphy =3D devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
+> +       if (!hsphy)
+> +               return -ENOMEM;
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       hsphy->base =3D devm_ioremap_resource(dev, res);
+
+devm_platform_ioremap_resource()?
+
+> +       if (IS_ERR(hsphy->base))
+> +               return PTR_ERR(hsphy->base);
+> +
+> +       hsphy->ref_clk =3D devm_clk_get(dev, "ref");
+> +       if (IS_ERR(hsphy->ref_clk)) {
+> +               ret =3D PTR_ERR(hsphy->ref_clk);
+> +               if (ret !=3D -EPROBE_DEFER)
+> +                       dev_err(dev, "failed to get ref clk, %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       hsphy->phy_reset =3D devm_reset_control_get_exclusive(&pdev->dev,=
+ NULL);
+> +       if (IS_ERR(hsphy->phy_reset)) {
+> +               dev_err(dev, "failed to get phy core reset\n");
+> +               return PTR_ERR(hsphy->phy_reset);
+> +       }
+> +
+> +       num =3D ARRAY_SIZE(hsphy->vregs);
+> +       for (i =3D 0; i < num; i++)
+> +               hsphy->vregs[i].supply =3D qcom_snps_hsphy_vreg_names[i];
+> +
+> +       ret =3D devm_regulator_bulk_get(dev, num, hsphy->vregs);
+> +       if (ret) {
+> +               if (ret !=3D -EPROBE_DEFER)
+> +                       dev_err(dev, "failed to get regulator supplies: %=
+d\n",
+> +                               ret);
+> +               return ret;
+> +       }
+> +
+> +       generic_phy =3D devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_o=
+ps);
+> +       if (IS_ERR(generic_phy)) {
+> +               ret =3D PTR_ERR(generic_phy);
+> +               dev_err(dev, "failed to create phy, %d\n", ret);
+> +               return ret;
+> +       }
+> +       hsphy->phy =3D generic_phy;
+> +
+> +       dev_set_drvdata(dev, hsphy);
+> +       phy_set_drvdata(generic_phy, hsphy);
+> +
+> +       phy_provider =3D devm_of_phy_provider_register(dev, of_phy_simple=
+_xlate);
+> +       if (!IS_ERR(phy_provider))
+> +               dev_info(dev, "Registered Qcom-SNPS HS phy\n");
+
+dev_dbg()? Or just remove it?
+
+> +
+> +       return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static struct platform_driver qcom_snps_hsphy_driver =3D {
+> +       .probe          =3D qcom_snps_hsphy_probe,
+> +       .driver =3D {
+> +               .name   =3D "qcom-snps-hs-7nm-phy",
+> +               .of_match_table =3D qcom_snps_hsphy_of_match_table,
+> +       },
+> +};
+> +
+> +module_platform_driver(qcom_snps_hsphy_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm 7nm USB HS PHY driver");
