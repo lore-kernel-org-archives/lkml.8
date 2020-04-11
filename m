@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E1EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9461AC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E834420787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C95420787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646948;
-	bh=9wRjtKjXDlNoxXDQBfztyD8MN5JnlfsPkQJPXVV889U=;
+	s=default; t=1586646952;
+	bh=dQ7ZxU3hLqS2NfTh7h/kFQlFdfi6uDi2d91ZALgqI0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bugRjMBAGgEd7LjKSHNdDvgbbhhQ9cDs3wVLOAdWGo+apSv7uJjRe6SmKgoF1wpaB
-	 fas1QYxw+aNnJ8ppb0BROq4EjjEm9qRM7GmlW9C8KvQAj72svSPI+EFXHIOU50IBKH
-	 W5Oid+uwqD9u8c669x2KNmV6YjXzviBr+yEbfQQ0=
+	b=GUQC9Pmv/dz2LNLfpsxVB9Yizl/82vBi7cWJ0PJKZtWCOigFaM0aQCOt++2YVSVFA
+	 Gy7BXVAK/s9wtoQIiycyw7FqdRVQ+uXCGL0HpnoyLR4fjqFFB7sJr680w8q2rIUAKL
+	 63rnxCHxelgFkNUt6vMxZ/wP6R1ZAD/Ix/G+UZ9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbgDKXO4 (ORCPT
+        id S1730614AbgDKXPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730883AbgDKXOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:50 -0400
+        id S1730904AbgDKXOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B7DD216FD;
-        Sat, 11 Apr 2020 23:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7C020CC7;
+        Sat, 11 Apr 2020 23:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646889;
-        bh=9wRjtKjXDlNoxXDQBfztyD8MN5JnlfsPkQJPXVV889U=;
+        s=default; t=1586646896;
+        bh=dQ7ZxU3hLqS2NfTh7h/kFQlFdfi6uDi2d91ZALgqI0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wjr6/NH1lyT3l0eKBD44bs0ZSb5oj8ZQCgy/pHjUIjN1hfNR04whoMRWCuLKVI84/
-         YBDzMPTLppz/lRlSZJD0Rq+m6v8pmNVraMZ8DTLrG4hgh9WX6RnzDe4EAH1a0oCz1k
-         mRUrtgATbSKv9s7XU71wBZ7WVE6cC9RtcvoUGALk=
+        b=IcASGq1/tU+Rlzfdh8RVdxYVd0ckNyBHf8AJsEMoe3VhYk3Qm/iG1ftiYaHLc7a7j
+         jLsREsDacGLAomQa4Zh8jE/Vu2XXupbDc1By/QSjVrkendt1H57HAEF2M1GCdbOwi8
+         4B9fNgoK0/PGYjWq6t7k53EJOO/rT0sHnTK45Zto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/16] serial: 8250_omap: Fix sleeping function called from invalid context during probe
-Date:   Sat, 11 Apr 2020 19:14:32 -0400
-Message-Id: <20200411231447.27182-2-sashal@kernel.org>
+Cc:     Alain Michaud <alainm@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/16] Bluetooth: guard against controllers sending zero'd events
+Date:   Sat, 11 Apr 2020 19:14:37 -0400
+Message-Id: <20200411231447.27182-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
 References: <20200411231447.27182-1-sashal@kernel.org>
@@ -60,85 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Alain Michaud <alainm@chromium.org>
 
-[ Upstream commit 4ce35a3617c0ac758c61122b2218b6c8c9ac9398 ]
+[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
 
-When booting j721e the following bug is printed:
+Some controllers have been observed to send zero'd events under some
+conditions.  This change guards against this condition as well as adding
+a trace to facilitate diagnosability of this condition.
 
-[    1.154821] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
-[    1.154827] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 12, name: kworker/0:1
-[    1.154832] 3 locks held by kworker/0:1/12:
-[    1.154836]  #0: ffff000840030728 ((wq_completion)events){+.+.}, at: process_one_work+0x1d4/0x6e8
-[    1.154852]  #1: ffff80001214fdd8 (deferred_probe_work){+.+.}, at: process_one_work+0x1d4/0x6e8
-[    1.154860]  #2: ffff00084060b170 (&dev->mutex){....}, at: __device_attach+0x38/0x138
-[    1.154872] irq event stamp: 63096
-[    1.154881] hardirqs last  enabled at (63095): [<ffff800010b74318>] _raw_spin_unlock_irqrestore+0x70/0x78
-[    1.154887] hardirqs last disabled at (63096): [<ffff800010b740d8>] _raw_spin_lock_irqsave+0x28/0x80
-[    1.154893] softirqs last  enabled at (62254): [<ffff800010080c88>] _stext+0x488/0x564
-[    1.154899] softirqs last disabled at (62247): [<ffff8000100fdb3c>] irq_exit+0x114/0x140
-[    1.154906] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc6-next-20200318-00094-g45e4089b0bd3 #221
-[    1.154911] Hardware name: Texas Instruments K3 J721E SoC (DT)
-[    1.154917] Workqueue: events deferred_probe_work_func
-[    1.154923] Call trace:
-[    1.154928]  dump_backtrace+0x0/0x190
-[    1.154933]  show_stack+0x14/0x20
-[    1.154940]  dump_stack+0xe0/0x148
-[    1.154946]  ___might_sleep+0x150/0x1f0
-[    1.154952]  __might_sleep+0x4c/0x80
-[    1.154957]  wait_for_completion_timeout+0x40/0x140
-[    1.154964]  ti_sci_set_device_state+0xa0/0x158
-[    1.154969]  ti_sci_cmd_get_device_exclusive+0x14/0x20
-[    1.154977]  ti_sci_dev_start+0x34/0x50
-[    1.154984]  genpd_runtime_resume+0x78/0x1f8
-[    1.154991]  __rpm_callback+0x3c/0x140
-[    1.154996]  rpm_callback+0x20/0x80
-[    1.155001]  rpm_resume+0x568/0x758
-[    1.155007]  __pm_runtime_resume+0x44/0xb0
-[    1.155013]  omap8250_probe+0x2b4/0x508
-[    1.155019]  platform_drv_probe+0x50/0xa0
-[    1.155023]  really_probe+0xd4/0x318
-[    1.155028]  driver_probe_device+0x54/0xe8
-[    1.155033]  __device_attach_driver+0x80/0xb8
-[    1.155039]  bus_for_each_drv+0x74/0xc0
-[    1.155044]  __device_attach+0xdc/0x138
-[    1.155049]  device_initial_probe+0x10/0x18
-[    1.155053]  bus_probe_device+0x98/0xa0
-[    1.155058]  deferred_probe_work_func+0x74/0xb0
-[    1.155063]  process_one_work+0x280/0x6e8
-[    1.155068]  worker_thread+0x48/0x430
-[    1.155073]  kthread+0x108/0x138
-[    1.155079]  ret_from_fork+0x10/0x18
-
-To fix the bug we need to first call pm_runtime_enable() prior to any
-pm_runtime calls.
-
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200320125200.6772-1-peter.ujfalusi@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alain Michaud <alainm@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hci_event.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index c4383573cf668..0377b35d62b80 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -1188,11 +1188,11 @@ static int omap8250_probe(struct platform_device *pdev)
- 	spin_lock_init(&priv->rx_dma_lock);
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 37fe2b158c2a7..2dc44fe4136f7 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5222,6 +5222,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 	u8 status = 0, event = hdr->evt, req_evt = 0;
+ 	u16 opcode = HCI_OP_NOP;
  
- 	device_init_wakeup(&pdev->dev, true);
-+	pm_runtime_enable(&pdev->dev);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
++	if (!event) {
++		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
++		goto done;
++	}
++
+ 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
+ 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
+ 		opcode = __le16_to_cpu(cmd_hdr->opcode);
+@@ -5433,6 +5438,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 		req_complete_skb(hdev, status, opcode, orig_skb);
+ 	}
  
- 	pm_runtime_irq_safe(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
++done:
+ 	kfree_skb(orig_skb);
+ 	kfree_skb(skb);
+ 	hdev->stat.evt_rx++;
 -- 
 2.20.1
 
