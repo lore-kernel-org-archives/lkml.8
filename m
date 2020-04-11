@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE321C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F81C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B899E206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACAA12051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647776;
-	bh=gxcoV2qpI5IWHpmQs+fyevwYN5HNxlyLXon5O6O47ZQ=;
+	s=default; t=1586647790;
+	bh=pUt5lpDgGxoy7XzYt9wec0y/SdJ1EdBeAIyJGVOl62I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/Y5IjhuMLWNXV3ZVwC0lDyzIm19W6PNp/GLp3jlIuLM/Fat6rKzEkxa/PhMJJ6M+
-	 wrKExh3c/4tg99AS3JjFHqGzmDCbytVUCmVos8TeHKwLcQb2yNVIpii0rTXlwUa2eI
-	 O7zz1ybR9HNric7GT8QyXxiL6C8jpuF3xTc5fFrg=
+	b=VoFgbVtQgo/K4/NCAMbXCyXC4LEPFZJnCf9EQHBZ8RnTyY64zjMq3IpC2titBGzQU
+	 V57DqXJa7HokgEmy6D3Cn7pIQhcdU4/DAmFlLceSbjpjB0WLnWZF7c2cCG7ztzconm
+	 sLn+RqDobeP380bfyGnU0s7eutQnY8ToiGy6pSQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbgDKX3f (ORCPT
+        id S1730176AbgDKX3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50174 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbgDKXLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:00 -0400
+        id S1729712AbgDKXKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 038A32192A;
-        Sat, 11 Apr 2020 23:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DAB22166E;
+        Sat, 11 Apr 2020 23:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646661;
-        bh=gxcoV2qpI5IWHpmQs+fyevwYN5HNxlyLXon5O6O47ZQ=;
+        s=default; t=1586646653;
+        bh=pUt5lpDgGxoy7XzYt9wec0y/SdJ1EdBeAIyJGVOl62I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKl3PKc0kchAvaYBJ1gjdx/i2Apl9VTFPV8pgEOtk5VrdzmGr0gGWf8mU0eaMqFUQ
-         MkhnWPc3x6giA8Sp/btfkxq0zxvkVn/KeN+nQmcWeDx/0wOljFtywrWixF/qinWX4l
-         e+gFoGSu2efIKX8UtBK0tZhwCW0RO0/gPB/E3lHg=
+        b=h2pDYOxwDQZAUAC/SgL3G+5QRquuWLzgzkjmwhivukAvTdgPc1ZB7X5zZ39R+fM7t
+         u3YQQllp5AGvKZPVoA7uU74BMfO7H7TeRkT45c1+NzBxu5YiDdrrYV9wr/K84R2/8h
+         cEYIpgCAiiomoarw0xJ7qqNdv6w6QAM1lpRO0+Kc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peikang Zhang <peikang.zhang@amd.com>, Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 062/108] drm/amd/display: System crashes when add_ptb_to_table() gets called
-Date:   Sat, 11 Apr 2020 19:08:57 -0400
-Message-Id: <20200411230943.24951-62-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 056/108] scsi: lpfc: Fix RQ buffer leakage when no IOCBs available
+Date:   Sat, 11 Apr 2020 19:08:51 -0400
+Message-Id: <20200411230943.24951-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -62,76 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peikang Zhang <peikang.zhang@amd.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 0062972b9d9f888d0273c6496769d02e8f509135 ]
+[ Upstream commit 39c4f1a965a9244c3ba60695e8ff8da065ec6ac4 ]
 
-[Why]
-Unused VMIDs were not evicted correctly
+The driver is occasionally seeing the following SLI Port error, requiring
+reset and reinit:
 
-[How]
-1. evict_vmids() logic was fixed;
-2. Added boundary check for add_ptb_to_table() and
-   clear_entry_from_vmid_table() to avoid crash caused by array out of
-   boundary;
-3. For mod_vmid_get_for_ptb(), vimd is changed from unsigned to signed
-   due to vimd is signed.
+ Port Status Event: ... error 1=0x52004a01, error 2=0x218
 
-Signed-off-by: Peikang Zhang <peikang.zhang@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The failure means an RQ timeout. That is, the adapter had received
+asynchronous receive frames, ran out of buffer slots to place the frames,
+and the driver did not replenish the buffer slots before a timeout
+occurred. The driver should not be so slow in replenishing buffers that a
+timeout can occur.
+
+When the driver received all the frames of a sequence, it allocates an IOCB
+to put the frames in. In a situation where there was no IOCB available for
+the frame of a sequence, the RQ buffer corresponding to the first frame of
+the sequence was not returned to the FW. Eventually, with enough traffic
+encountering the situation, the timeout occurred.
+
+Fix by releasing the buffer back to firmware whenever there is no IOCB for
+the first frame.
+
+[mkp: typo]
+
+Link: https://lore.kernel.org/r/20200128002312.16346-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/vmid/vmid.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/vmid/vmid.c b/drivers/gpu/drm/amd/display/modules/vmid/vmid.c
-index f0a153704f6e0..00f132f8ad55d 100644
---- a/drivers/gpu/drm/amd/display/modules/vmid/vmid.c
-+++ b/drivers/gpu/drm/amd/display/modules/vmid/vmid.c
-@@ -40,14 +40,18 @@ struct core_vmid {
- 
- static void add_ptb_to_table(struct core_vmid *core_vmid, unsigned int vmid, uint64_t ptb)
- {
--	core_vmid->ptb_assigned_to_vmid[vmid] = ptb;
--	core_vmid->num_vmids_available--;
-+	if (vmid < MAX_VMID) {
-+		core_vmid->ptb_assigned_to_vmid[vmid] = ptb;
-+		core_vmid->num_vmids_available--;
-+	}
- }
- 
- static void clear_entry_from_vmid_table(struct core_vmid *core_vmid, unsigned int vmid)
- {
--	core_vmid->ptb_assigned_to_vmid[vmid] = 0;
--	core_vmid->num_vmids_available++;
-+	if (vmid < MAX_VMID) {
-+		core_vmid->ptb_assigned_to_vmid[vmid] = 0;
-+		core_vmid->num_vmids_available++;
-+	}
- }
- 
- static void evict_vmids(struct core_vmid *core_vmid)
-@@ -57,7 +61,7 @@ static void evict_vmids(struct core_vmid *core_vmid)
- 
- 	// At this point any positions with value 0 are unused vmids, evict them
- 	for (i = 1; i < core_vmid->num_vmid; i++) {
--		if (ord & (1u << i))
-+		if (!(ord & (1u << i)))
- 			clear_entry_from_vmid_table(core_vmid, i);
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index e2cec1f6e659b..acd151f99c786 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -17711,6 +17711,10 @@ lpfc_prep_seq(struct lpfc_vport *vport, struct hbq_dmabuf *seq_dmabuf)
+ 			list_add_tail(&iocbq->list, &first_iocbq->list);
+ 		}
  	}
++	/* Free the sequence's header buffer */
++	if (!first_iocbq)
++		lpfc_in_buf_free(vport->phba, &seq_dmabuf->dbuf);
++
+ 	return first_iocbq;
  }
-@@ -91,7 +95,7 @@ static int get_next_available_vmid(struct core_vmid *core_vmid)
- uint8_t mod_vmid_get_for_ptb(struct mod_vmid *mod_vmid, uint64_t ptb)
- {
- 	struct core_vmid *core_vmid = MOD_VMID_TO_CORE(mod_vmid);
--	unsigned int vmid = 0;
-+	int vmid = 0;
  
- 	// Physical address gets vmid 0
- 	if (ptb == 0)
 -- 
 2.20.1
 
