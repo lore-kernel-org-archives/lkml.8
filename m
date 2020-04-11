@@ -2,201 +2,775 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A2BC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C764C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CE520753
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706AF20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgDKCcN (ORCPT
+        id S1726682AbgDKCkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:32:13 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:50172 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726648AbgDKCcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:32:12 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2kiLJFegGsmAA--.15S3;
-        Sat, 11 Apr 2020 10:32:04 +0800 (CST)
-Subject: Re: [PATCH v2] MIPS: Limit check_bugs32() to affected platform
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-References: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
- <c60f62cb-62e8-be13-f551-c9a13abc7f94@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <181cf95e-c5f6-3899-e8eb-3f8847ec86d9@loongson.cn>
-Date:   Sat, 11 Apr 2020 10:32:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <c60f62cb-62e8-be13-f551-c9a13abc7f94@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxf2kiLJFegGsmAA--.15S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFy5Xry3Cr43GrWftFy3XFb_yoWrWr1xpF
-        4Dtw4kXF4DuFyktFWFyr1kGrWYq34DGrZ0kryjgay8AF45XFs8GFn3Kr45Ar17ZrySga4r
-        ua9aqr1ftr42yaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-        6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
-        UI43ZEXa7VUbYhF7UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Fri, 10 Apr 2020 22:40:39 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:45158 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726650AbgDKCki (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:40:38 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 10 Apr 2020 19:40:38 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 10 Apr 2020 19:40:36 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 8A8D3215DA; Sat, 11 Apr 2020 08:10:34 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH] arm64: dts: ipq8074: Re-arrange dts nodes based on address
+Date:   Sat, 11 Apr 2020 08:10:30 +0530
+Message-Id: <1586572830-22727-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/11/2020 12:25 AM, Florian Fainelli wrote:
->
-> On 4/9/2020 8:20 PM, Tiezhu Yang wrote:
->> In the current code, check_bugs32() only handles MIPS32 CPU type CPU_34K,
->> it is better to build and call it on the affected platform.
->>
->> Move check_bugs32() to the new added 34k-bugs32.c to indicate the fact that
->> the code is specific to the 34k CPU, and also add CONFIG_CPU_34K_BUGS32 to
->> control whether or not check the bugs.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> This is not a whole lot of code, so moving this to a separate
-> translation unit seems a bit heavy handed, also file renames, albeit
-> tracked properly by git are always a challenge when doing back ports.
+This patch re-arranges ipq8074 device nodes based on node address
+followed by node names followed by node labels.
 
-Hi Florian,
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts | 112 ++++---
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi     | 474 +++++++++++++++---------------
+ 2 files changed, 292 insertions(+), 294 deletions(-)
 
-There exists the following three ways to do it, I'm fine either way,
-maybe the first way looks better. Let us wait for the MIPS maintainer
-to say what he prefer.
-
-Hi Thomas,
-
-What is your opinion?
-
-1 just use CONFIG_CPU_MIPS32_R2
-
-diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
-index d72dc6e..743604f 100644
---- a/arch/mips/include/asm/bugs.h
-+++ b/arch/mips/include/asm/bugs.h
-@@ -35,7 +35,9 @@ static inline void check_bugs(void)
-         unsigned int cpu = smp_processor_id();
-
-         cpu_data[cpu].udelay_val = loops_per_jiffy;
--       check_bugs32();
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+index 70be3f9..6754cb0 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
++++ b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+@@ -24,63 +24,61 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0x0 0x20000000>;
+ 	};
++};
 +
-+       if (IS_ENABLED(CONFIG_CPU_MIPS32_R2))
-+               check_bugs32();
-
-         if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
-                 check_bugs64();
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 6ab6b03..383500b 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -461,7 +461,8 @@ static inline void cpu_set_mt_per_tc_perf(struct 
-cpuinfo_mips *c)
-                 c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
-  }
-
--static inline void check_errata(void)
-+#ifdef CONFIG_CPU_MIPS32_R2
-+static inline void check_errata32(void)
-  {
-         struct cpuinfo_mips *c = &current_cpu_data;
-
-@@ -482,8 +483,9 @@ static inline void check_errata(void)
-
-  void __init check_bugs32(void)
-  {
--       check_errata();
-+       check_errata32();
-  }
-+#endif /* CONFIG_CPU_MIPS32_R2 */
-
-  /*
-   * Probe whether cpu has config register by trying to play with
-
-
-2 add CONFIG_CPU_34K_BUGS32
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797d7f1..e936e3c 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2605,6 +2605,10 @@ config CPU_R4X00_BUGS64
-         bool
-         default y if SYS_HAS_CPU_R4X00 && 64BIT && (TARGET_ISA_REV < 1)
-
-+config CPU_34K_BUGS32
-+       bool
-+       default y if CPU_MIPS32_R2
++&blsp1_i2c2 {
++	status = "ok";
++};
 +
-  config MIPS_ASID_SHIFT
-         int
-         default 6 if CPU_R3000 || CPU_TX39XX
-diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
-index d72dc6e..bbf843a 100644
---- a/arch/mips/include/asm/bugs.h
-+++ b/arch/mips/include/asm/bugs.h
-@@ -35,7 +35,9 @@ static inline void check_bugs(void)
-         unsigned int cpu = smp_processor_id();
-
-         cpu_data[cpu].udelay_val = loops_per_jiffy;
--       check_bugs32();
++&blsp1_spi1 {
++	status = "ok";
 +
-+       if (IS_ENABLED(CONFIG_CPU_34K_BUGS32))
-+               check_bugs32();
-
-         if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
-                 check_bugs64();
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 6ab6b03..670bc7c 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -461,7 +461,8 @@ static inline void cpu_set_mt_per_tc_perf(struct 
-cpuinfo_mips *c)
-                 c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
-  }
-
--static inline void check_errata(void)
-+#ifdef CONFIG_CPU_34K_BUGS32
-+static inline void check_errata32(void)
-  {
-         struct cpuinfo_mips *c = &current_cpu_data;
-
-@@ -482,8 +483,9 @@ static inline void check_errata(void)
-
-  void __init check_bugs32(void)
-  {
--       check_errata();
-+       check_errata32();
-  }
-+#endif /* CONFIG_CPU_34K_BUGS32 */
-
-  /*
-   * Probe whether cpu has config register by trying to play with
-
-
-3 add new 34k-bugs32.c and CONFIG_CPU_34K_BUGS32
-
-just as this v2 patch:
-https://lore.kernel.org/patchwork/patch/1222273/
-
-Thanks,
-
-Tiezhu Yang
++	m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&blsp1_uart3 {
++	status = "ok";
++};
++
++&blsp1_uart5 {
++	status = "ok";
++};
++
++&pcie0 {
++	status = "ok";
++	perst-gpio = <&tlmm 61 0x1>;
++};
++
++&pcie1 {
++	status = "ok";
++	perst-gpio = <&tlmm 58 0x1>;
++};
++
++&pcie_phy0 {
++	status = "ok";
++};
++
++&pcie_phy1 {
++	status = "ok";
++};
++
++&qpic_bam {
++	status = "ok";
++};
++
++&qpic_nand {
++	status = "ok";
+ 
+-	soc {
+-		serial@78b3000 {
+-			status = "ok";
+-		};
+-
+-		spi@78b5000 {
+-			status = "ok";
+-
+-			m25p80@0 {
+-				  #address-cells = <1>;
+-				  #size-cells = <1>;
+-				  compatible = "jedec,spi-nor";
+-				  reg = <0>;
+-				  spi-max-frequency = <50000000>;
+-			};
+-		};
+-
+-		serial@78b1000 {
+-			 status = "ok";
+-		};
+-
+-		i2c@78b6000 {
+-			 status = "ok";
+-		};
+-
+-		dma@7984000 {
+-			 status = "ok";
+-		};
+-
+-		nand@79b0000 {
+-			status = "ok";
+-
+-			nand@0 {
+-				reg = <0>;
+-				nand-ecc-strength = <4>;
+-				nand-ecc-step-size = <512>;
+-				nand-bus-width = <8>;
+-			};
+-		};
+-
+-		phy@86000 {
+-			status = "ok";
+-		};
+-
+-		phy@8e000 {
+-			status = "ok";
+-		};
+-
+-		pci@20000000 {
+-			status = "ok";
+-			perst-gpio = <&tlmm 58 0x1>;
+-		};
+-
+-		pci@10000000 {
+-			status = "ok";
+-			perst-gpio = <&tlmm 61 0x1>;
+-		};
++	nand@0 {
++		reg = <0>;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		nand-bus-width = <8>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 2b31823..5303821 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -10,15 +10,111 @@
+ 	model = "Qualcomm Technologies, Inc. IPQ8074";
+ 	compatible = "qcom,ipq8074";
+ 
++	clocks {
++		sleep_clk: sleep_clk {
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++			#clock-cells = <0>;
++		};
++
++		xo: xo {
++			compatible = "fixed-clock";
++			clock-frequency = <19200000>;
++			#clock-cells = <0>;
++		};
++	};
++
++	cpus {
++		#address-cells = <0x1>;
++		#size-cells = <0x0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0>;
++			next-level-cache = <&L2_0>;
++			enable-method = "psci";
++		};
++
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x1>;
++			next-level-cache = <&L2_0>;
++		};
++
++		CPU2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x2>;
++			next-level-cache = <&L2_0>;
++		};
++
++		CPU3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x3>;
++			next-level-cache = <&L2_0>;
++		};
++
++		L2_0: l2-cache {
++			compatible = "cache";
++			cache-level = <0x2>;
++		};
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
+ 	soc: soc {
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x1>;
+ 		ranges = <0 0 0 0xffffffff>;
+ 		compatible = "simple-bus";
+ 
++		pcie_phy0: phy@86000 {
++			compatible = "qcom,ipq8074-qmp-pcie-phy";
++			reg = <0x00086000 0x1000>;
++			#phy-cells = <0>;
++			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
++			clock-names = "pipe_clk";
++			clock-output-names = "pcie20_phy0_pipe_clk";
++
++			resets = <&gcc GCC_PCIE0_PHY_BCR>,
++				<&gcc GCC_PCIE0PHY_PHY_BCR>;
++			reset-names = "phy",
++				      "common";
++			status = "disabled";
++		};
++
++		pcie_phy1: phy@8e000 {
++			compatible = "qcom,ipq8074-qmp-pcie-phy";
++			reg = <0x0008e000 0x1000>;
++			#phy-cells = <0>;
++			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
++			clock-names = "pipe_clk";
++			clock-output-names = "pcie20_phy1_pipe_clk";
++
++			resets = <&gcc GCC_PCIE1_PHY_BCR>,
++				<&gcc GCC_PCIE1PHY_PHY_BCR>;
++			reset-names = "phy",
++				      "common";
++			status = "disabled";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq8074-pinctrl";
+-			reg = <0x1000000 0x300000>;
++			reg = <0x01000000 0x300000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			gpio-ranges = <&tlmm 0 0 70>;
+@@ -66,102 +162,16 @@
+ 			};
+ 		};
+ 
+-		intc: interrupt-controller@b000000 {
+-			compatible = "qcom,msm-qgic2";
+-			interrupt-controller;
+-			#interrupt-cells = <0x3>;
+-			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
+-		};
+-
+-		timer {
+-			compatible = "arm,armv8-timer";
+-			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+-		};
+-
+-		timer@b120000 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-			compatible = "arm,armv7-timer-mem";
+-			reg = <0xb120000 0x1000>;
+-			clock-frequency = <19200000>;
+-
+-			frame@b120000 {
+-				frame-number = <0>;
+-				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb121000 0x1000>,
+-				      <0xb122000 0x1000>;
+-			};
+-
+-			frame@b123000 {
+-				frame-number = <1>;
+-				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb123000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b124000 {
+-				frame-number = <2>;
+-				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb124000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b125000 {
+-				frame-number = <3>;
+-				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb125000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b126000 {
+-				frame-number = <4>;
+-				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb126000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b127000 {
+-				frame-number = <5>;
+-				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb127000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b128000 {
+-				frame-number = <6>;
+-				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb128000 0x1000>;
+-				status = "disabled";
+-			};
+-		};
+-
+ 		gcc: gcc@1800000 {
+ 			compatible = "qcom,gcc-ipq8074";
+-			reg = <0x1800000 0x80000>;
++			reg = <0x01800000 0x80000>;
+ 			#clock-cells = <0x1>;
+ 			#reset-cells = <0x1>;
+ 		};
+ 
+-		blsp1_uart5: serial@78b3000 {
+-			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x78b3000 0x200>;
+-			interrupts = <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&gcc GCC_BLSP1_UART5_APPS_CLK>,
+-				 <&gcc GCC_BLSP1_AHB_CLK>;
+-			clock-names = "core", "iface";
+-			pinctrl-0 = <&serial_4_pins>;
+-			pinctrl-names = "default";
+-			status = "disabled";
+-		};
+-
+ 		blsp_dma: dma@7884000 {
+ 			compatible = "qcom,bam-v1.7.0";
+-			reg = <0x7884000 0x2b000>;
++			reg = <0x07884000 0x2b000>;
+ 			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
+ 			clock-names = "bam_clk";
+@@ -171,7 +181,7 @@
+ 
+ 		blsp1_uart1: serial@78af000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x78af000 0x200>;
++			reg = <0x078af000 0x200>;
+ 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -181,7 +191,7 @@
+ 
+ 		blsp1_uart3: serial@78b1000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x78b1000 0x200>;
++			reg = <0x078b1000 0x200>;
+ 			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+ 				<&gcc GCC_BLSP1_AHB_CLK>;
+@@ -194,11 +204,23 @@
+ 			status = "disabled";
+ 		};
+ 
++		blsp1_uart5: serial@78b3000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x078b3000 0x200>;
++			interrupts = <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART5_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			pinctrl-0 = <&serial_4_pins>;
++			pinctrl-names = "default";
++			status = "disabled";
++		};
++
+ 		blsp1_spi1: spi@78b5000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0x78b5000 0x600>;
++			reg = <0x078b5000 0x600>;
+ 			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+ 			spi-max-frequency = <50000000>;
+ 			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
+@@ -215,7 +237,7 @@
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0x78b6000 0x600>;
++			reg = <0x078b6000 0x600>;
+ 			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
+@@ -232,7 +254,7 @@
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0x78b7000 0x600>;
++			reg = <0x078b7000 0x600>;
+ 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
+@@ -245,7 +267,7 @@
+ 
+ 		qpic_bam: dma@7984000 {
+ 			compatible = "qcom,bam-v1.7.0";
+-			reg = <0x7984000 0x1a000>;
++			reg = <0x07984000 0x1a000>;
+ 			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_QPIC_AHB_CLK>;
+ 			clock-names = "bam_clk";
+@@ -256,7 +278,7 @@
+ 
+ 		qpic_nand: nand@79b0000 {
+ 			compatible = "qcom,ipq8074-nand";
+-			reg = <0x79b0000 0x10000>;
++			reg = <0x079b0000 0x10000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			clocks = <&gcc GCC_QPIC_CLK>,
+@@ -272,104 +294,85 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pcie_phy0: phy@86000 {
+-			compatible = "qcom,ipq8074-qmp-pcie-phy";
+-			reg = <0x86000 0x1000>;
+-			#phy-cells = <0>;
+-			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+-			clock-names = "pipe_clk";
+-			clock-output-names = "pcie20_phy0_pipe_clk";
++		intc: interrupt-controller@b000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <0x3>;
++			reg = <0x0b000000 0x1000>, <0x0b002000 0x1000>;
++		};
+ 
+-			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+-				<&gcc GCC_PCIE0PHY_PHY_BCR>;
+-			reset-names = "phy",
+-				      "common";
+-			status = "disabled";
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		};
+ 
+-		pcie0: pci@20000000 {
+-			compatible = "qcom,pcie-ipq8074";
+-			reg =  <0x20000000 0xf1d
+-				0x20000f20 0xa8
+-				0x80000 0x2000
+-				0x20100000 0x1000>;
+-			reg-names = "dbi", "elbi", "parf", "config";
+-			device_type = "pci";
+-			linux,pci-domain = <0>;
+-			bus-range = <0x00 0xff>;
+-			num-lanes = <1>;
+-			#address-cells = <3>;
+-			#size-cells = <2>;
++		timer@b120000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			compatible = "arm,armv7-timer-mem";
++			reg = <0x0b120000 0x1000>;
++			clock-frequency = <19200000>;
+ 
+-			phys = <&pcie_phy0>;
+-			phy-names = "pciephy";
++			frame@b120000 {
++				frame-number = <0>;
++				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b121000 0x1000>,
++				      <0x0b122000 0x1000>;
++			};
+ 
+-			ranges = <0x81000000 0 0x20200000 0x20200000
+-				  0 0x100000   /* downstream I/O */
+-				  0x82000000 0 0x20300000 0x20300000
+-				  0 0xd00000>; /* non-prefetchable memory */
++			frame@b123000 {
++				frame-number = <1>;
++				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b123000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "msi";
+-			#interrupt-cells = <1>;
+-			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 75
+-					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 78
+-					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 79
+-					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 83
+-					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++			frame@b124000 {
++				frame-number = <2>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b124000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
+-				 <&gcc GCC_PCIE0_AXI_M_CLK>,
+-				 <&gcc GCC_PCIE0_AXI_S_CLK>,
+-				 <&gcc GCC_PCIE0_AHB_CLK>,
+-				 <&gcc GCC_PCIE0_AUX_CLK>;
++			frame@b125000 {
++				frame-number = <3>;
++				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b125000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			clock-names = "iface",
+-				      "axi_m",
+-				      "axi_s",
+-				      "ahb",
+-				      "aux";
+-			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
+-				 <&gcc GCC_PCIE0_SLEEP_ARES>,
+-				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
+-				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
+-				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
+-				 <&gcc GCC_PCIE0_AHB_ARES>,
+-				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>;
+-			reset-names = "pipe",
+-				      "sleep",
+-				      "sticky",
+-				      "axi_m",
+-				      "axi_s",
+-				      "ahb",
+-				      "axi_m_sticky";
+-			status = "disabled";
+-		};
++			frame@b126000 {
++				frame-number = <4>;
++				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b126000 0x1000>;
++				status = "disabled";
++			};
+ 
+-		pcie_phy1: phy@8e000 {
+-			compatible = "qcom,ipq8074-qmp-pcie-phy";
+-			reg = <0x8e000 0x1000>;
+-			#phy-cells = <0>;
+-			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+-			clock-names = "pipe_clk";
+-			clock-output-names = "pcie20_phy1_pipe_clk";
++			frame@b127000 {
++				frame-number = <5>;
++				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b127000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+-				<&gcc GCC_PCIE1PHY_PHY_BCR>;
+-			reset-names = "phy",
+-				      "common";
+-			status = "disabled";
++			frame@b128000 {
++				frame-number = <6>;
++				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b128000 0x1000>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		pcie1: pci@10000000 {
+ 			compatible = "qcom,pcie-ipq8074";
+ 			reg =  <0x10000000 0xf1d
+ 				0x10000f20 0xa8
+-				0x88000 0x2000
++				0x00088000 0x2000
+ 				0x10100000 0x1000>;
+ 			reg-names = "dbi", "elbi", "parf", "config";
+ 			device_type = "pci";
+@@ -426,71 +429,68 @@
+ 				      "axi_m_sticky";
+ 			status = "disabled";
+ 		};
+-	};
+-
+-	cpus {
+-		#address-cells = <0x1>;
+-		#size-cells = <0x0>;
+-
+-		CPU0: cpu@0 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			reg = <0x0>;
+-			next-level-cache = <&L2_0>;
+-			enable-method = "psci";
+-		};
+-
+-		CPU1: cpu@1 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+-			reg = <0x1>;
+-			next-level-cache = <&L2_0>;
+-		};
+ 
+-		CPU2: cpu@2 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+-			reg = <0x2>;
+-			next-level-cache = <&L2_0>;
+-		};
+-
+-		CPU3: cpu@3 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+-			reg = <0x3>;
+-			next-level-cache = <&L2_0>;
+-		};
++		pcie0: pci@20000000 {
++			compatible = "qcom,pcie-ipq8074";
++			reg =  <0x20000000 0xf1d
++				0x20000f20 0xa8
++				0x00080000 0x2000
++				0x20100000 0x1000>;
++			reg-names = "dbi", "elbi", "parf", "config";
++			device_type = "pci";
++			linux,pci-domain = <0>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
+ 
+-		L2_0: l2-cache {
+-			compatible = "cache";
+-			cache-level = <0x2>;
+-		};
+-	};
++			phys = <&pcie_phy0>;
++			phy-names = "pciephy";
+ 
+-	psci {
+-		compatible = "arm,psci-1.0";
+-		method = "smc";
+-	};
++			ranges = <0x81000000 0 0x20200000 0x20200000
++				  0 0x100000   /* downstream I/O */
++				  0x82000000 0 0x20300000 0x20300000
++				  0 0xd00000>; /* non-prefetchable memory */
+ 
+-	pmu {
+-		compatible = "arm,armv8-pmuv3";
+-		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+-	};
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 75
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 78
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 79
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 83
++					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
+-	clocks {
+-		sleep_clk: sleep_clk {
+-			compatible = "fixed-clock";
+-			clock-frequency = <32000>;
+-			#clock-cells = <0>;
+-		};
++			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
++				 <&gcc GCC_PCIE0_AXI_M_CLK>,
++				 <&gcc GCC_PCIE0_AXI_S_CLK>,
++				 <&gcc GCC_PCIE0_AHB_CLK>,
++				 <&gcc GCC_PCIE0_AUX_CLK>;
+ 
+-		xo: xo {
+-			compatible = "fixed-clock";
+-			clock-frequency = <19200000>;
+-			#clock-cells = <0>;
++			clock-names = "iface",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "aux";
++			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
++				 <&gcc GCC_PCIE0_SLEEP_ARES>,
++				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
++				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
++				 <&gcc GCC_PCIE0_AHB_ARES>,
++				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>;
++			reset-names = "pipe",
++				      "sleep",
++				      "sticky",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "axi_m_sticky";
++			status = "disabled";
+ 		};
+ 	};
+ };
+-- 
+2.7.4
 
