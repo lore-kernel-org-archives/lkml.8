@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21167C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EA4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86C52051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCCA2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648224;
-	bh=s4vRQIJwcxkL6l2FldF0HlhnWS37JsVCYYVOD5lTqjw=;
+	s=default; t=1586648225;
+	bh=gxcoV2qpI5IWHpmQs+fyevwYN5HNxlyLXon5O6O47ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3h0+jYStEH6yJ8Uu9VVvPKT/xBU+ehGSelwd365Bna6rmcbwiO2gypx6WIoWTzaz
-	 A2/agnGZnjio12RSEfyRhCf6ys8kr3+pdop2tSbq8ZhHdVbbOqc4UwzY9CayeNPRiA
-	 8BFqbGBOYhh/uNACPGE/2Qn6tmVhGjE/w/6ukgWk=
+	b=vb1kJnBfIVwzu5FkQRvJZ6pz8nR/8gwXpeCMYT5eO9KNPCqe9JSqpMGu4oq21ztle
+	 rcS9sET0CzH8Bzcs77Nicdff05bOf6sDKaYppZf0///2sTIPN0z9qOFzE7+V22p5Iv
+	 DBkfU1q1mtHjPjOTcaSVaeSsRMol+sMK3kPRG10Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgDKXhC (ORCPT
+        id S1730092AbgDKXhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:37:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbgDKXI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:29 -0400
+        id S1728942AbgDKXIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AAD021835;
-        Sat, 11 Apr 2020 23:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF1562166E;
+        Sat, 11 Apr 2020 23:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646509;
-        bh=s4vRQIJwcxkL6l2FldF0HlhnWS37JsVCYYVOD5lTqjw=;
+        s=default; t=1586646512;
+        bh=gxcoV2qpI5IWHpmQs+fyevwYN5HNxlyLXon5O6O47ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6QS8TvnS9OwRHruvz1jucCejeZVVfT5XzVdxONzKn2LYtJYnAWWo5ql/AFtcLaN1
-         +jVi3wxGev2iaa7PVd5Mqm5SLRZcro1D4hawq0outzVT5ggGJHYNmp7FR2WeolPolU
-         oGIzRZ38Mn8xlLFYt0ZnzKdAx2MjiRGUQwNeagVA=
+        b=AF516nSxJHM/4r8ew4EU+brXII/W5ZSZDWifrAmgx1cJ73GCl3yEP0DL8avSAlLse
+         G62TtlSM+Yvoxwn4MMrULiUkU31yWqQULwVTyjd6UvzHLggz9aZ1dNBNEcPHsHLvCN
+         RWNQTNVP/fkLO1DbT2q2+t/vMX39iVSCquEGeLlo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 068/121] mt76: mt7603: fix input validation issues for powersave-filtered frames
-Date:   Sat, 11 Apr 2020 19:06:13 -0400
-Message-Id: <20200411230706.23855-68-sashal@kernel.org>
+Cc:     Peikang Zhang <peikang.zhang@amd.com>, Aric Cyr <Aric.Cyr@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 070/121] drm/amd/display: System crashes when add_ptb_to_table() gets called
+Date:   Sat, 11 Apr 2020 19:06:15 -0400
+Message-Id: <20200411230706.23855-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,73 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Peikang Zhang <peikang.zhang@amd.com>
 
-[ Upstream commit d55aa5e17461b8b423adae376978032c4a10a1d8 ]
+[ Upstream commit 0062972b9d9f888d0273c6496769d02e8f509135 ]
 
-Before extracting the tid out of the packet, check if it was qos-data.
-Only accept tid values 0-7
-Also, avoid accepting the hardware queue as skb queue mapping, it could
-lead to an overrun. Instead, derive the hardware queue from the tid number,
-in order to avoid issues with packets being filtered multiple times.
-This also fixes a mismatch between hardware and software queue indexes.
+[Why]
+Unused VMIDs were not evicted correctly
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+[How]
+1. evict_vmids() logic was fixed;
+2. Added boundary check for add_ptb_to_table() and
+   clear_entry_from_vmid_table() to avoid crash caused by array out of
+   boundary;
+3. For mod_vmid_get_for_ptb(), vimd is changed from unsigned to signed
+   due to vimd is signed.
+
+Signed-off-by: Peikang Zhang <peikang.zhang@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/mediatek/mt76/mt7603/dma.c   | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/modules/vmid/vmid.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
-index a6ab73060aada..57428467fe967 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
-@@ -30,6 +30,16 @@ mt7603_init_tx_queue(struct mt7603_dev *dev, struct mt76_sw_queue *q,
- static void
- mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
+diff --git a/drivers/gpu/drm/amd/display/modules/vmid/vmid.c b/drivers/gpu/drm/amd/display/modules/vmid/vmid.c
+index f0a153704f6e0..00f132f8ad55d 100644
+--- a/drivers/gpu/drm/amd/display/modules/vmid/vmid.c
++++ b/drivers/gpu/drm/amd/display/modules/vmid/vmid.c
+@@ -40,14 +40,18 @@ struct core_vmid {
+ 
+ static void add_ptb_to_table(struct core_vmid *core_vmid, unsigned int vmid, uint64_t ptb)
  {
-+	static const u8 tid_to_ac[8] = {
-+		IEEE80211_AC_BE,
-+		IEEE80211_AC_BK,
-+		IEEE80211_AC_BK,
-+		IEEE80211_AC_BE,
-+		IEEE80211_AC_VI,
-+		IEEE80211_AC_VI,
-+		IEEE80211_AC_VO,
-+		IEEE80211_AC_VO
-+	};
- 	__le32 *txd = (__le32 *)skb->data;
- 	struct ieee80211_hdr *hdr;
- 	struct ieee80211_sta *sta;
-@@ -38,7 +48,7 @@ mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
- 	void *priv;
- 	int idx;
- 	u32 val;
--	u8 tid;
-+	u8 tid = 0;
+-	core_vmid->ptb_assigned_to_vmid[vmid] = ptb;
+-	core_vmid->num_vmids_available--;
++	if (vmid < MAX_VMID) {
++		core_vmid->ptb_assigned_to_vmid[vmid] = ptb;
++		core_vmid->num_vmids_available--;
++	}
+ }
  
- 	if (skb->len < MT_TXD_SIZE + sizeof(struct ieee80211_hdr))
- 		goto free;
-@@ -56,15 +66,16 @@ mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
+ static void clear_entry_from_vmid_table(struct core_vmid *core_vmid, unsigned int vmid)
+ {
+-	core_vmid->ptb_assigned_to_vmid[vmid] = 0;
+-	core_vmid->num_vmids_available++;
++	if (vmid < MAX_VMID) {
++		core_vmid->ptb_assigned_to_vmid[vmid] = 0;
++		core_vmid->num_vmids_available++;
++	}
+ }
  
- 	priv = msta = container_of(wcid, struct mt7603_sta, wcid);
- 	val = le32_to_cpu(txd[0]);
--	skb_set_queue_mapping(skb, FIELD_GET(MT_TXD0_Q_IDX, val));
--
- 	val &= ~(MT_TXD0_P_IDX | MT_TXD0_Q_IDX);
- 	val |= FIELD_PREP(MT_TXD0_Q_IDX, MT_TX_HW_QUEUE_MGMT);
- 	txd[0] = cpu_to_le32(val);
+ static void evict_vmids(struct core_vmid *core_vmid)
+@@ -57,7 +61,7 @@ static void evict_vmids(struct core_vmid *core_vmid)
  
- 	sta = container_of(priv, struct ieee80211_sta, drv_priv);
- 	hdr = (struct ieee80211_hdr *)&skb->data[MT_TXD_SIZE];
--	tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
-+	if (ieee80211_is_data_qos(hdr->frame_control))
-+		tid = *ieee80211_get_qos_ctl(hdr) &
-+		      IEEE80211_QOS_CTL_TAG1D_MASK;
-+	skb_set_queue_mapping(skb, tid_to_ac[tid]);
- 	ieee80211_sta_set_buffered(sta, tid, true);
+ 	// At this point any positions with value 0 are unused vmids, evict them
+ 	for (i = 1; i < core_vmid->num_vmid; i++) {
+-		if (ord & (1u << i))
++		if (!(ord & (1u << i)))
+ 			clear_entry_from_vmid_table(core_vmid, i);
+ 	}
+ }
+@@ -91,7 +95,7 @@ static int get_next_available_vmid(struct core_vmid *core_vmid)
+ uint8_t mod_vmid_get_for_ptb(struct mod_vmid *mod_vmid, uint64_t ptb)
+ {
+ 	struct core_vmid *core_vmid = MOD_VMID_TO_CORE(mod_vmid);
+-	unsigned int vmid = 0;
++	int vmid = 0;
  
- 	spin_lock_bh(&dev->ps_lock);
+ 	// Physical address gets vmid 0
+ 	if (ptb == 0)
 -- 
 2.20.1
 
