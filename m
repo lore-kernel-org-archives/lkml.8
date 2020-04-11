@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C43C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0CAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C126B20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B6E2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647572;
-	bh=Y5LWePaHASWCiZjJCBZWUr2U+BBt6RlSRUB2CiXjj7w=;
+	s=default; t=1586647577;
+	bh=6+bWPDXJPSzVT3DAvVk4z5aXpF04J4dNJSc3XKD31JY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuPLgQyPpm/QiIO5owGviSojhTkfVmiRy5bHRlafbkCT61bM9LrxYHN0x8k+w+qof
-	 3CRLIDMMOTLjb56A1IsbUCH89pPbQInR1qnmvsflGfJa0nLCFTZLbnfC7mQVmM1jv1
-	 b7j5EqjTl405r10QKf/5APHypDjwO1b5AWOCun+0=
+	b=HSgm7XtsYYDHA++eY8XBb4oGv4ZawPL7cPJ15Kq4Ua4jR0FeQjxG03D3gulbkMxcF
+	 qgYMP4GSav/J2HLKbqpcKLlY+ifz8ZKDIHZji6H1khL7dfT3m0FgfbBi/DlX6A0IHL
+	 gXzQy0PsAX5b5HszggvCNTTgOa/ulcYg4+qCOGaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgDKXL4 (ORCPT
+        id S1730779AbgDKX0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51328 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbgDKXLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:38 -0400
+        id S1730028AbgDKXLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08A3720CC7;
-        Sat, 11 Apr 2020 23:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FE31215A4;
+        Sat, 11 Apr 2020 23:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646698;
-        bh=Y5LWePaHASWCiZjJCBZWUr2U+BBt6RlSRUB2CiXjj7w=;
+        s=default; t=1586646715;
+        bh=6+bWPDXJPSzVT3DAvVk4z5aXpF04J4dNJSc3XKD31JY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1PNIvApM8vKg8Q+Fl70YgVyIvXy1DZtDfheZ8J2l3dc0rd+TB+G0F1HVsJzOpGxL
-         fyyxhlvk4jM2036ok3/swMBIPNDR3TEbzbr7kGYYBGbUQzdprDwjtbdsl9Db0KH7hI
-         onSgFdC/G4c4N9VAkfdXmrKASF60dzqzs5CtsHb8=
+        b=sqMtr8+5FPl6qpxoCi87vFlWTYlsBwHEQ68LtabgxoNK359OXtfKnbXEtEgsm2TaS
+         X6OiB5aLtCk8CljE3blbh0fFBIPEg0Vat4LKEoTbvBo+IRtCbKdvZTWxr4tKv/pnOW
+         IfCOAKewRcxf91cs9QmYXgLI4LYADNx0E/JoDrhQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 092/108] scsi: qla2xxx: Fix control flags for login/logout IOCB
-Date:   Sat, 11 Apr 2020 19:09:27 -0400
-Message-Id: <20200411230943.24951-92-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 106/108] svcrdma: Fix leak of transport addresses
+Date:   Sat, 11 Apr 2020 19:09:41 -0400
+Message-Id: <20200411230943.24951-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,67 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 419ae5fe73e50084fa794934fb62fab34f564b7c ]
+[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
 
-This patch fixes control flag options for login/logout IOCB.
+Kernel memory leak detected:
 
-Link: https://lore.kernel.org/r/20200212214436.25532-23-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+unreferenced object 0xffff888849cdf480 (size 8):
+  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
+  hex dump (first 8 bytes):
+    30 00 cd 49 88 88 ff ff                          0..I....
+  backtrace:
+    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
+    [<00000000a2724354>] kstrdup+0x2b/0x43
+    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
+    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
+    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
+    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
+    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
+    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
+    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
+    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
+    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
+    [<000000005205fb78>] kthread+0xf6/0xfb
+    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
+
+Introduce a call to xprt_rdma_free_addresses() similar to the way
+that the TCP backchannel releases a transport's peer address
+strings.
+
+Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_iocb.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index bdf1994251b9b..c1425037bfa25 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2362,6 +2362,8 @@ qla24xx_login_iocb(srb_t *sp, struct logio_entry_24xx *logio)
- 	struct srb_iocb *lio = &sp->u.iocb_cmd;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 908e78bb87c64..c4fb930779a92 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -250,6 +250,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
+ {
+ 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
  
- 	logio->entry_type = LOGINOUT_PORT_IOCB_TYPE;
-+	logio->control_flags = cpu_to_le16(LCF_COMMAND_PLOGI);
-+
- 	if (lio->u.logio.flags & SRB_LOGIN_PRLI_ONLY) {
- 		logio->control_flags = cpu_to_le16(LCF_COMMAND_PRLI);
- 	} else {
-@@ -2811,7 +2813,6 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	sp->fcport = fcport;
++	xprt_rdma_free_addresses(xprt);
+ 	xprt_free(xprt);
+ }
  
- 	elsio->timeout = qla2x00_els_dcmd2_iocb_timeout;
--	init_completion(&elsio->u.els_plogi.comp);
- 	if (wait)
- 		sp->flags = SRB_WAKEUP_ON_COMP;
- 
-@@ -2821,7 +2822,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	elsio->u.els_plogi.tx_size = elsio->u.els_plogi.rx_size = DMA_POOL_SIZE;
- 
- 	ptr = elsio->u.els_plogi.els_plogi_pyld =
--	    dma_alloc_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
-+	    dma_alloc_coherent(&ha->pdev->dev, elsio->u.els_plogi.tx_size,
- 		&elsio->u.els_plogi.els_plogi_pyld_dma, GFP_KERNEL);
- 
- 	if (!elsio->u.els_plogi.els_plogi_pyld) {
-@@ -2830,7 +2831,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	}
- 
- 	resp_ptr = elsio->u.els_plogi.els_resp_pyld =
--	    dma_alloc_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
-+	    dma_alloc_coherent(&ha->pdev->dev, elsio->u.els_plogi.rx_size,
- 		&elsio->u.els_plogi.els_resp_pyld_dma, GFP_KERNEL);
- 
- 	if (!elsio->u.els_plogi.els_resp_pyld) {
-@@ -2854,6 +2855,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
- 	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
- 
-+	init_completion(&elsio->u.els_plogi.comp);
- 	rval = qla2x00_start_sp(sp);
- 	if (rval != QLA_SUCCESS) {
- 		rval = QLA_FUNCTION_FAILED;
 -- 
 2.20.1
 
