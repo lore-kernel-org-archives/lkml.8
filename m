@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE38C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB57AC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C383720787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5584206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607669;
-	bh=ohEtPDNa21lPmwh4R3ce1rem5fhciGz8dc0mnmgu/Kw=;
+	s=default; t=1586607673;
+	bh=x8qWc3hLwwOsdjb5R6YsYTuGLj3zhF4WasWIQAL3D8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ih9pTVhJUELO7hG9H4KTsoS7pxgb0qpfS+fNEaT21RVlItDcSK/bHuZh355b0p8jh
-	 wAkM1EgRXnuWqiCi0T6py+gBXOXUpod0GEG+UCxH57a586C4KWWQOeFSRurTFPTgca
-	 Dehuc5bw+LpENdq/X++A1Meov9iCsQOAH3QdvXGk=
+	b=b4f2D86HB/wRJsQXsRwetVeqH7VizXDqnuHE9VhYlu2swAtJeHvX43Dg5VPE+SwrR
+	 gK0zv4g0WFuKEN7G4BTxhk69yHt+vJkCXmZEXxnXnmNMuVq48FtVknlvg6kSQSQqMG
+	 hBBnB9NC0sUhWdBeZpyFKSgSn3alrBsLo/zYC8mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgDKMVH (ORCPT
+        id S1728882AbgDKMVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgDKMVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:01 -0400
+        id S1729099AbgDKMVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E2D20644;
-        Sat, 11 Apr 2020 12:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C61206A1;
+        Sat, 11 Apr 2020 12:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607661;
-        bh=ohEtPDNa21lPmwh4R3ce1rem5fhciGz8dc0mnmgu/Kw=;
+        s=default; t=1586607666;
+        bh=x8qWc3hLwwOsdjb5R6YsYTuGLj3zhF4WasWIQAL3D8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nv6oYnrn7ufvRVJvPO7Wjaxma7CoXUCnzLrKkt4PSL0tgCkG6HiS+cFPFj9Sns47c
-         X9rZFChxRKpakXSfeRRtzEJNCPnZnlaWO1jNBviDnbaV5+EmiLY2Qc0ors0Maewpy5
-         1HStdm77g259YRAsG4/NT9KawlVHH+YzvdzvaON4=
+        b=mYDUr8Lr3CQDPANvjmgSUOyXK9h6NyBpIWBDH8oCoDA9t1oLlAlYM4WBdq/cB4xas
+         Xmx6kTpXpfKPj80r+H7FTi2/JIdnzVx5IIOmDQxfQN8dVCzRaY1Vw1ZQMGryHMC9Ar
+         AVIHQSo31mxceRVem5TXnzKKma6WUMDNGnBft6E4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonghwan Choi <charlie.jh@kakaocorp.com>,
-        Dan Murphy <dmurphy@ti.com>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 24/38] ASoC: tas2562: Fixed incorrect amp_level setting.
-Date:   Sat, 11 Apr 2020 14:10:01 +0200
-Message-Id: <20200411115502.387383878@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.6 26/38] IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
+Date:   Sat, 11 Apr 2020 14:10:03 +0200
+Message-Id: <20200411115502.655703558@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -59,34 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonghwan Choi <charlie.jh@kakaocorp.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit eedf8a126629bf9db8ad3a2a5dc9dc1798fb2302 upstream.
+commit dfb5394f804ed4fcea1fc925be275a38d66712ab upstream.
 
-According to the tas2562 datasheet,the bits[5:1] represents the amp_level value.
-So to set the amp_level value correctly,the shift value should be set to 1.
+When kobject_init_and_add() returns an error in the function
+hfi1_create_port_files(), the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-Signed-off-by: Jonghwan Choi <charlie.jh@kakaocorp.com>
-Acked-by: Dan Murphy <dmurphy@ti.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200319140043.GA6688@jhbirdchoi-MS-7B79
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails.
+
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326163813.21129.44280.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/tas2562.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/sysfs.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -409,7 +409,7 @@ static const struct snd_kcontrol_new vse
- 			1, 1);
+--- a/drivers/infiniband/hw/hfi1/sysfs.c
++++ b/drivers/infiniband/hw/hfi1/sysfs.c
+@@ -674,7 +674,11 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping sc2vl sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail;
++		/*
++		 * Based on the documentation for kobject_init_and_add(), the
++		 * caller should call kobject_put even if this call fails.
++		 */
++		goto bail_sc2vl;
+ 	}
+ 	kobject_uevent(&ppd->sc2vl_kobj, KOBJ_ADD);
  
- static const struct snd_kcontrol_new tas2562_snd_controls[] = {
--	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
-+	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 1, 0x1c, 0,
- 		       tas2562_dac_tlv),
- };
+@@ -684,7 +688,7 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping sl2sc sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail_sc2vl;
++		goto bail_sl2sc;
+ 	}
+ 	kobject_uevent(&ppd->sl2sc_kobj, KOBJ_ADD);
+ 
+@@ -694,7 +698,7 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping vl2mtu sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail_sl2sc;
++		goto bail_vl2mtu;
+ 	}
+ 	kobject_uevent(&ppd->vl2mtu_kobj, KOBJ_ADD);
+ 
+@@ -704,7 +708,7 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping Congestion Control sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail_vl2mtu;
++		goto bail_cc;
+ 	}
+ 
+ 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
+@@ -742,7 +746,6 @@ bail_sl2sc:
+ 	kobject_put(&ppd->sl2sc_kobj);
+ bail_sc2vl:
+ 	kobject_put(&ppd->sc2vl_kobj);
+-bail:
+ 	return ret;
+ }
  
 
 
