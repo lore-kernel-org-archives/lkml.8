@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DB8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0A8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E3C2137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8223820692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607406;
-	bh=zqqPdjzMKrT6Dsh6rmrY0HhxAfJoVgJZbT7J3DgNKKU=;
+	s=default; t=1586607410;
+	bh=nBp8M//Wwkue4wWaCuCCtoO0nyJNfejoIKWOMt6EWGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wg5MX+v4IKabKDNyVS7kJZvjqF5hQWv0v+GHg9Getw+gFCpPNDwhkzOfrhmnPBM2l
-	 VQ1yUmsA8OtCI67urm/2hryPxWmRWFsrLScgckLQEYfQpcDQ/2fiuQa+yuJwtZH/no
-	 /SD5O15Q2JzNQrt3ezM5lRzr6WVeWfZ2iieHLcV8=
+	b=Vc78yzWxmJNBUIWJ0fyvcxLaeg7DI9AFvmsfpJFwE45zpkosGXkKMAt36dIlNl+T8
+	 nqIkS6+D4ivodp4gD9iXIWBR+Kq3WGb+fJ6A3m3IJUUkHfQbwi7eJ+rdBj3odY89Nq
+	 amzKumRAKzP4dtTx4Iw0p00FivGKpTBrVU4jb33E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgDKMQp (ORCPT
+        id S1728298AbgDKMQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51018 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbgDKMQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:42 -0400
+        id S1726899AbgDKMQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35EC20644;
-        Sat, 11 Apr 2020 12:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46C2920644;
+        Sat, 11 Apr 2020 12:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607402;
-        bh=zqqPdjzMKrT6Dsh6rmrY0HhxAfJoVgJZbT7J3DgNKKU=;
+        s=default; t=1586607404;
+        bh=nBp8M//Wwkue4wWaCuCCtoO0nyJNfejoIKWOMt6EWGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUW9hxMtamTf2BgSL8a2OQoOw93nnt9RvTaVhm4mnBdLmCKvq1ddZm8eicIS3uq/h
-         yZcbLmhCjN3tYLNTAiK828BsKESavLQyV/h51rweEysYmEKShlNXJD5Qu0XeW9xQDy
-         NJd7UQqJzJHLFXYE82C93By3eiUqpGWU6n8cOOM8=
+        b=O7icK7Ib7lVZSe0+Kqjl0FMOa+zXDYCqx4r4nGd3PAf45c25Fi1uFTLWE53BrWoaq
+         N6/TivjyeTzvNPas2IQjP7faREsSVKkcMEysUY0sx9SQUWwzPVoX0ZND/WUYkvRXEK
+         P0Mi54RMTWDc/xiQLEtBm78SLf3URRauGGPx4/M4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 23/54] net: Fix Tx hash bound checking
-Date:   Sat, 11 Apr 2020 14:09:05 +0200
-Message-Id: <20200411115510.815232090@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH 4.19 24/54] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Sat, 11 Apr 2020 14:09:06 +0200
+Message-Id: <20200411115510.950406190@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -62,42 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amritha Nambiar <amritha.nambiar@intel.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-commit 6e11d1578fba8d09d03a286740ffcf336d53928c upstream.
+commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
 
-Fixes the lower and upper bounds when there are multiple TCs and
-traffic is on the the same TC on the same device.
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-The lower bound is represented by 'qoffset' and the upper limit for
-hash value is 'qcount + qoffset'. This gives a clean Rx to Tx queue
-mapping when there are multiple TCs, as the queue indices for upper TCs
-will be offset by 'qoffset'.
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-v2: Fixed commit description based on comments.
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
 
-Fixes: 1b837d489e06 ("net: Revoke export for __skb_tx_hash, update it to just be static skb_tx_hash")
-Fixes: eadec877ce9c ("net: Add support for subordinate traffic classes to netdev_pick_tx")
-Signed-off-by: Amritha Nambiar <amritha.nambiar@intel.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/dev.c |    2 ++
- 1 file changed, 2 insertions(+)
+ kernel/padata.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -2854,6 +2854,8 @@ static u16 skb_tx_hash(const struct net_
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -671,8 +671,8 @@ int padata_set_cpumask(struct padata_ins
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
- 	if (skb_rx_queue_recorded(skb)) {
- 		hash = skb_get_rx_queue(skb);
-+		if (hash >= qoffset)
-+			hash -= qoffset;
- 		while (unlikely(hash >= qcount))
- 			hash -= qcount;
- 		return hash + qoffset;
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
+ 
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -690,8 +690,8 @@ int padata_set_cpumask(struct padata_ins
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ 
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
+ }
 
 
