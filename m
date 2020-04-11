@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D23C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32255C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F3420692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED25420692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607973;
-	bh=C36/UM24Ib+reJOzn3QAWtdjKAstIRHb1g+mYTY2dwk=;
+	s=default; t=1586607986;
+	bh=kAelhKrokBNwiSayjrVn6O8LFsp7iYmL/GbKG+EWX30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVItmayVYFWZMNNTvrJ8j2g086DtbZmSjnIl1Hw1p6ryeyGY8gZGCnFbRedb1GzLJ
-	 s3I0PDTeajsdH5RkyCSvwJ7PoFEOno8i5bfkXd+VM8kb3/vhZmSBowJq2EHFbw78lL
-	 wh9595zkW/XG8Is3GY27VbqunmgjKeiXr2ShrKQI=
+	b=lzzkUKApPSLbTXxqOT08Dvg+kV+YgGWvxlVxsU/B5r95n38vQD99TANrq7E8kPpFj
+	 DGl/+jl45o4XWFvcvumyjoQR1DuxAsQ7r2v+KLp2e05moez0uMDufLDqPTogxYCWtO
+	 NRAeNuyGfWYYGjDvnwxvcDp140lMc0pf1km4AtxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgDKMPp (ORCPT
+        id S1727582AbgDKM0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:15:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbgDKMPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:42 -0400
+        id S1726185AbgDKMP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C87214D8;
-        Sat, 11 Apr 2020 12:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 723432084D;
+        Sat, 11 Apr 2020 12:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607342;
-        bh=C36/UM24Ib+reJOzn3QAWtdjKAstIRHb1g+mYTY2dwk=;
+        s=default; t=1586607329;
+        bh=kAelhKrokBNwiSayjrVn6O8LFsp7iYmL/GbKG+EWX30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVV+mIrcOxj+/QIYK01u8JbVF35HLVf/FARkkuLZImWsWExgTmumm02bmUIw5WMec
-         w5lRySby5+dTfVi+nZrZmNtY8tigG3whDh+w/RQSbV4fSA2k3KXeXPb20mHlz6JAKG
-         LK7BLOZWN0yOlD6cd/4ZG0SAywg8hCTBXzTmWUck=
+        b=1opqegF4PkCQBbd1SJsyltKAlgKRrRqbqmqbxEWiJEkimvQ3EbQlIB2BWU4cOUv18
+         RBORzq8NALWCchjdBfdI97g5WdPjXahDyVC436yYMxP1XZT09gn+4K6X0eiG9l6SG/
+         sLODub0T+jn1Y9O8YqOd1PhG/SOT2iEqz0dmsAbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 35/54] random: always use batched entropy for get_random_u{32,64}
-Date:   Sat, 11 Apr 2020 14:09:17 +0200
-Message-Id: <20200411115511.985292690@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 30/54] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Sat, 11 Apr 2020 14:09:12 +0200
+Message-Id: <20200411115511.497493490@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -59,102 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-It turns out that RDRAND is pretty slow. Comparing these two
-constructions:
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
-    arch_get_random_long(&ret);
-
-and
-
-  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
-  extract_crng((u8 *)buf);
-
-it amortizes out to 352 cycles per long for the top one and 107 cycles
-per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
-
-And importantly, the top one has the drawback of not benefiting from the
-real rng, whereas the bottom one has all the nice benefits of using our
-own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
-beyond what it was originally intended for when it was introduced as
-get_random_{int,long} back in the md5 monstrosity era), it seems like it
-might be a good thing to strengthen its posture a tiny bit. Doing this
-should only be stronger and not any weaker because that pool is already
-initialized with a bunch of rdrand data (when available). This way, we
-get the benefits of the hardware rng as well as our own rng.
-
-Another benefit of this is that we no longer hit pitfalls of the recent
-stream of AMD bugs in RDRAND. One often used code pattern for various
-things is:
-
-  do {
-  	val = get_random_u32();
-  } while (hash_table_contains_key(val));
-
-That recent AMD bug rendered that pattern useless, whereas we're really
-very certain that chacha20 output will give pretty distributed numbers,
-no matter what.
-
-So, this simplification seems better both from a security perspective
-and from a performance perspective.
-
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/char/random.c |   20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+ drivers/net/dsa/bcm_sf2.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2280,11 +2280,11 @@ struct batched_entropy {
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1014,6 +1014,7 @@ static int bcm_sf2_sw_probe(struct platf
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1077,7 +1078,11 @@ static int bcm_sf2_sw_probe(struct platf
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
  
- /*
-  * Get a random word for internal kernel use only. The quality of the random
-- * number is either as good as RDRAND or as good as /dev/urandom, with the
-- * goal of being quite fast and not depleting entropy. In order to ensure
-+ * number is good as /dev/urandom, but there is no backtrack protection, with
-+ * the goal of being quite fast and not depleting entropy. In order to ensure
-  * that the randomness provided by this function is okay, the function
-- * wait_for_random_bytes() should be called and return 0 at least once
-- * at any point prior.
-+ * wait_for_random_bytes() should be called and return 0 at least once at any
-+ * point prior.
-  */
- static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
- 	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
-@@ -2297,15 +2297,6 @@ u64 get_random_u64(void)
- 	struct batched_entropy *batch;
- 	static void *previous;
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
  
--#if BITS_PER_LONG == 64
--	if (arch_get_random_long((unsigned long *)&ret))
--		return ret;
--#else
--	if (arch_get_random_long((unsigned long *)&ret) &&
--	    arch_get_random_long((unsigned long *)&ret + 1))
--	    return ret;
--#endif
--
- 	warn_unseeded_randomness(&previous);
- 
- 	batch = raw_cpu_ptr(&batched_entropy_u64);
-@@ -2330,9 +2321,6 @@ u32 get_random_u32(void)
- 	struct batched_entropy *batch;
- 	static void *previous;
- 
--	if (arch_get_random_int(&ret))
--		return ret;
--
- 	warn_unseeded_randomness(&previous);
- 
- 	batch = raw_cpu_ptr(&batched_entropy_u32);
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
 
 
