@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C748C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B244C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D197F2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF99D206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607619;
-	bh=6aGlnK1MW0SGlCS6W+zlqMW7TuFhIRSPsZs1IRDKQZM=;
+	s=default; t=1586607622;
+	bh=eqKyBP6KGSbWlgXN+NoFwfaieYF4KVDs1nuqdXhxW4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kp3OVzzMzeAkhjQ1OQ5vPLIYDpOzDbnnGdv3eaHUqcl1tV8vPhYkHF+Aayd9/xzf1
-	 fRNZx7D1+DXZkecVklhHoehkdq/owWCKf3K3+M8ofKW1YrJUgyRoaoGa8Om4Wy2wcy
-	 TFoFPomOXqCrvRVqZ46Wd6hEpP15g27DVs2EabS0=
+	b=JoMvoIHoQHiBOWj5GMPV9jLwgAcwLOooutvVUsp4D3CtOdloar4CQ0yzJ4FO74REc
+	 520PeurHx0+rZXz+yPu1zXvc97LuOLVglMMEEyqyb9FAzIG8ZHf6lbLEN6hFtVgn/G
+	 h/3rNkpOeXoepsn3Xikk1er68TSkQkDRYIR6liNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgDKMUR (ORCPT
+        id S1728996AbgDKMUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56052 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbgDKMUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:14 -0400
+        id S1727091AbgDKMUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B4F3206A1;
-        Sat, 11 Apr 2020 12:20:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CC532084D;
+        Sat, 11 Apr 2020 12:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607614;
-        bh=6aGlnK1MW0SGlCS6W+zlqMW7TuFhIRSPsZs1IRDKQZM=;
+        s=default; t=1586607617;
+        bh=eqKyBP6KGSbWlgXN+NoFwfaieYF4KVDs1nuqdXhxW4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqkPgHJvQU7t714occK1cSRnGx1drZgI6nhThfmx6m8Z2xOIivAMHRZta4nNhB6zO
-         UO5HCk6nSHW9dREu7dwd1m2EZldO7NebQqiTmlnTjLZ1o5rGtZKwoKvZcyAZ3Ag0+p
-         C/08OaR/5Y3RnZ2D/HS2NnX5e9HFPkGxiddUdPho=
+        b=ar+SBzNfpIBp3sXRkGApN22e5dS5Fg61EaXZk0Q+hpoQ0aUi0v+UkHUy2AhKzcBWk
+         +4mZg+uFa2H2vi22uxa5XCXtnQtnvLRhi/m1Gxv4qAGVs2mMoDwI3kxERmHsyq5IAo
+         3voAWFaaybi4Jh+whm/viCFfcDkTFdm0cEgtzdpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 03/44] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
-Date:   Sat, 11 Apr 2020 14:09:23 +0200
-Message-Id: <20200411115457.209824015@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 5.5 44/44] ceph: canonicalize server path in place
+Date:   Sat, 11 Apr 2020 14:10:04 +0200
+Message-Id: <20200411115501.133434100@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -60,53 +62,231 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
+commit b27a939e8376a3f1ed09b9c33ef44d20f18ec3d0 upstream.
 
-We were registering our slave MDIO bus with OF and doing so with
-assigning the newly created slave_mii_bus of_node to the master MDIO bus
-controller node. This is a bad thing to do for a number of reasons:
+syzbot reported that 4fbc0c711b24 ("ceph: remove the extra slashes in
+the server path") had caused a regression where an allocation could be
+done under a spinlock -- compare_mount_options() is called by sget_fc()
+with sb_lock held.
 
-- we are completely lying about the slave MII bus is arranged and yet we
-  still want to control which MDIO devices it probes. It was attempted
-  before to play tricks with the bus_mask to perform that:
-  https://www.spinics.net/lists/netdev/msg429420.html but the approach
-  was rightfully rejected
+We don't really need the supplied server path, so canonicalize it
+in place and compare it directly.  To make this work, the leading
+slash is kept around and the logic in ceph_real_mount() to skip it
+is restored.  CEPH_MSG_CLIENT_SESSION now reports the same (i.e.
+canonicalized) path, with the leading slash of course.
 
-- the device_node reference counting is messed up and we are effectively
-  doing a double probe on the devices we already probed using the
-  master, this messes up all resources reference counts (such as clocks)
-
-The proper fix for this as indicated by David in his reply to the
-thread above is to use a platform data style registration so as to
-control exactly which devices we probe:
-https://www.spinics.net/lists/netdev/msg430083.html
-
-By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
-as intended, and all the PHY addresses that must be redirected towards
-our slave MDIO bus is happening while other addresses get redirected
-towards the master MDIO bus.
-
-Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4fbc0c711b24 ("ceph: remove the extra slashes in the server path")
+Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/bcm_sf2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -472,7 +472,7 @@ static int bcm_sf2_mdio_register(struct
- 	priv->slave_mii_bus->parent = ds->dev->parent;
- 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
+---
+ fs/ceph/super.c |  121 ++++++++++++--------------------------------------------
+ fs/ceph/super.h |    2 
+ 2 files changed, 29 insertions(+), 94 deletions(-)
+
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -209,6 +209,26 @@ struct ceph_parse_opts_ctx {
+ };
  
--	err = of_mdiobus_register(priv->slave_mii_bus, dn);
-+	err = mdiobus_register(priv->slave_mii_bus);
- 	if (err && dn)
- 		of_node_put(dn);
+ /*
++ * Remove adjacent slashes and then the trailing slash, unless it is
++ * the only remaining character.
++ *
++ * E.g. "//dir1////dir2///" --> "/dir1/dir2", "///" --> "/".
++ */
++static void canonicalize_path(char *path)
++{
++	int i, j = 0;
++
++	for (i = 0; path[i] != '\0'; i++) {
++		if (path[i] != '/' || j < 1 || path[j - 1] != '/')
++			path[j++] = path[i];
++	}
++
++	if (j > 1 && path[j - 1] == '/')
++		j--;
++	path[j] = '\0';
++}
++
++/*
+  * Parse the source parameter.  Distinguish the server list from the path.
+  *
+  * The source will look like:
+@@ -230,15 +250,16 @@ static int ceph_parse_source(struct fs_p
+ 
+ 	dev_name_end = strchr(dev_name, '/');
+ 	if (dev_name_end) {
+-		kfree(fsopt->server_path);
+-
+ 		/*
+ 		 * The server_path will include the whole chars from userland
+ 		 * including the leading '/'.
+ 		 */
++		kfree(fsopt->server_path);
+ 		fsopt->server_path = kstrdup(dev_name_end, GFP_KERNEL);
+ 		if (!fsopt->server_path)
+ 			return -ENOMEM;
++
++		canonicalize_path(fsopt->server_path);
+ 	} else {
+ 		dev_name_end = dev_name + strlen(dev_name);
+ 	}
+@@ -462,73 +483,6 @@ static int strcmp_null(const char *s1, c
+ 	return strcmp(s1, s2);
+ }
+ 
+-/**
+- * path_remove_extra_slash - Remove the extra slashes in the server path
+- * @server_path: the server path and could be NULL
+- *
+- * Return NULL if the path is NULL or only consists of "/", or a string
+- * without any extra slashes including the leading slash(es) and the
+- * slash(es) at the end of the server path, such as:
+- * "//dir1////dir2///" --> "dir1/dir2"
+- */
+-static char *path_remove_extra_slash(const char *server_path)
+-{
+-	const char *path = server_path;
+-	const char *cur, *end;
+-	char *buf, *p;
+-	int len;
+-
+-	/* if the server path is omitted */
+-	if (!path)
+-		return NULL;
+-
+-	/* remove all the leading slashes */
+-	while (*path == '/')
+-		path++;
+-
+-	/* if the server path only consists of slashes */
+-	if (*path == '\0')
+-		return NULL;
+-
+-	len = strlen(path);
+-
+-	buf = kmalloc(len + 1, GFP_KERNEL);
+-	if (!buf)
+-		return ERR_PTR(-ENOMEM);
+-
+-	end = path + len;
+-	p = buf;
+-	do {
+-		cur = strchr(path, '/');
+-		if (!cur)
+-			cur = end;
+-
+-		len = cur - path;
+-
+-		/* including one '/' */
+-		if (cur != end)
+-			len += 1;
+-
+-		memcpy(p, path, len);
+-		p += len;
+-
+-		while (cur <= end && *cur == '/')
+-			cur++;
+-		path = cur;
+-	} while (path < end);
+-
+-	*p = '\0';
+-
+-	/*
+-	 * remove the last slash if there has and just to make sure that
+-	 * we will get something like "dir1/dir2"
+-	 */
+-	if (*(--p) == '/')
+-		*p = '\0';
+-
+-	return buf;
+-}
+-
+ static int compare_mount_options(struct ceph_mount_options *new_fsopt,
+ 				 struct ceph_options *new_opt,
+ 				 struct ceph_fs_client *fsc)
+@@ -536,7 +490,6 @@ static int compare_mount_options(struct
+ 	struct ceph_mount_options *fsopt1 = new_fsopt;
+ 	struct ceph_mount_options *fsopt2 = fsc->mount_options;
+ 	int ofs = offsetof(struct ceph_mount_options, snapdir_name);
+-	char *p1, *p2;
+ 	int ret;
+ 
+ 	ret = memcmp(fsopt1, fsopt2, ofs);
+@@ -546,21 +499,12 @@ static int compare_mount_options(struct
+ 	ret = strcmp_null(fsopt1->snapdir_name, fsopt2->snapdir_name);
+ 	if (ret)
+ 		return ret;
++
+ 	ret = strcmp_null(fsopt1->mds_namespace, fsopt2->mds_namespace);
+ 	if (ret)
+ 		return ret;
+ 
+-	p1 = path_remove_extra_slash(fsopt1->server_path);
+-	if (IS_ERR(p1))
+-		return PTR_ERR(p1);
+-	p2 = path_remove_extra_slash(fsopt2->server_path);
+-	if (IS_ERR(p2)) {
+-		kfree(p1);
+-		return PTR_ERR(p2);
+-	}
+-	ret = strcmp_null(p1, p2);
+-	kfree(p1);
+-	kfree(p2);
++	ret = strcmp_null(fsopt1->server_path, fsopt2->server_path);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -962,7 +906,9 @@ static struct dentry *ceph_real_mount(st
+ 	mutex_lock(&fsc->client->mount_mutex);
+ 
+ 	if (!fsc->sb->s_root) {
+-		const char *path, *p;
++		const char *path = fsc->mount_options->server_path ?
++				     fsc->mount_options->server_path + 1 : "";
++
+ 		err = __ceph_open_session(fsc->client, started);
+ 		if (err < 0)
+ 			goto out;
+@@ -974,22 +920,11 @@ static struct dentry *ceph_real_mount(st
+ 				goto out;
+ 		}
+ 
+-		p = path_remove_extra_slash(fsc->mount_options->server_path);
+-		if (IS_ERR(p)) {
+-			err = PTR_ERR(p);
+-			goto out;
+-		}
+-		/* if the server path is omitted or just consists of '/' */
+-		if (!p)
+-			path = "";
+-		else
+-			path = p;
+ 		dout("mount opening path '%s'\n", path);
+ 
+ 		ceph_fs_debugfs_init(fsc);
+ 
+ 		root = open_root_dentry(fsc, path, started);
+-		kfree(p);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto out;
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -91,7 +91,7 @@ struct ceph_mount_options {
+ 
+ 	char *snapdir_name;   /* default ".snap" */
+ 	char *mds_namespace;  /* default NULL */
+-	char *server_path;    /* default  "/" */
++	char *server_path;    /* default NULL (means "/") */
+ 	char *fscache_uniq;   /* default NULL */
+ };
  
 
 
