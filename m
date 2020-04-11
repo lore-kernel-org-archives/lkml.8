@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9D1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5190C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3BC220709
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D672051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648303;
-	bh=rokA8e5ZKXZ+zUwH5JqfHUBB/2ZSp+Z4VP/vlGPSx6s=;
+	s=default; t=1586648312;
+	bh=l+NvAW4i6SqJnxFCeYKE32qkUMYaSQVhv8L2QiUdOok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0EjYz9Upz1umtjBvc6o/ecPEDJCcjHCBXpUsSBxUrn0wwmydZg0ntih1i7SVNhlVB
-	 E9h/n5wtFYdTg3xJSRP+binhapRGMdD7YenQlbkc472InLvLGbzn0Y7lHGWl2swACt
-	 EVtyorBpaUHg/dZee5DwH3S37bYoO1GXBm3jYVtA=
+	b=bfVO5bqERfce+W6P3LhMN6mFvJOd22mOESGDgCFtEwe8k5eW2ZLgjohMCDssoGj1E
+	 FgRAkWbWQUjW61YZb1MqXzq5I6xsGFwrX3XDSw1xHWgT232DglsGB+gbwACyfadqnP
+	 LSL099oaqChNjOV5L+xijnIM+JonbD6YOy4iigy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgDKXiV (ORCPT
+        id S1730907AbgDKXia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44486 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbgDKXIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:02 -0400
+        id S1727666AbgDKXH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3BEE216FD;
-        Sat, 11 Apr 2020 23:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3D7021835;
+        Sat, 11 Apr 2020 23:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646482;
-        bh=rokA8e5ZKXZ+zUwH5JqfHUBB/2ZSp+Z4VP/vlGPSx6s=;
+        s=default; t=1586646478;
+        bh=l+NvAW4i6SqJnxFCeYKE32qkUMYaSQVhv8L2QiUdOok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8ws/nKHjXpsLG4m37ePs8QKuYBfUEQ9j4RezT0W7gGOz8VYhue7y+tWM5NmyeBtD
-         MzIOzy8IXBZsEWOM4eeL0N0aqapmmDxIUrPkW7tu6skkMH2g5vOf7FAwDLHPTyCb2G
-         aHIbw+h0oYgPO38b5a+cMDpNIzmMAEKCZzqVW0xw=
+        b=IvHx0GrI9yXubApmj2XH0sYPJOqOjj0/9vXAEsz27woY1b89cXjDrMBKK6ajc+UOO
+         WVlFhx7AXvCNvcf74O9uLhHlR3ME8ron+zvtKFY8yySxPycCrSW0Xq61sH45E/c5VV
+         gYX7t9v+foVfFWGjJ986QLNGpR/1+KuXeM4KeI1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 047/121] ice: Fix implicit queue mapping mode in ice_vsi_get_qs
-Date:   Sat, 11 Apr 2020 19:05:52 -0400
-Message-Id: <20200411230706.23855-47-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 044/121] sh_eth: check sh_eth_cpu_data::no_tx_cntrs when dumping registers
+Date:   Sat, 11 Apr 2020 19:05:49 -0400
+Message-Id: <20200411230706.23855-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,73 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 39066dc549cf8a688f6e105a4e9f2a8abefbcebe ]
+[ Upstream commit 6eaeedc1aa27a423bd89043705eca39215015bb3 ]
 
-Currently in ice_vsi_get_qs() we set the mapping_mode for Tx and Rx to
-vsi->[tx|rx]_mapping_mode, but the problem is vsi->[tx|rx]_mapping_mode
-have not been set yet. This was working because ICE_VSI_MAP_CONTIG is
-defined to 0. Fix this by being explicit with our mapping mode by
-initializing the Tx and Rx structure's mapping_mode to
-ICE_VSI_MAP_CONTIG and then setting the vsi->[tx|rx]_mapping_mode to the
-[tx|rx]_qs_cfg.mapping_mode values.
+When adding the sh_eth_cpu_data::no_tx_cntrs flag I forgot to add the
+flag check to  __sh_eth_get_regs(), causing the non-existing TX counter
+registers to be considered for dumping on the R7S72100 SoC (the register
+offset sanity check has the final say here)...
 
-Also, only assign the vsi->[tx|rx]_mapping_mode when the queues are
-successfully mapped to the VSI. With this change there was no longer a
-need to initialize the ret variable to 0 so remove that.
-
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: ce9134dff6d9 ("sh_eth: add sh_eth_cpu_data::no_tx_cntrs flag")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Tested-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_lib.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index b43bb51f6067a..04ced528d88a2 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -433,7 +433,7 @@ static int ice_vsi_get_qs(struct ice_vsi *vsi)
- 		.scatter_count = ICE_MAX_SCATTER_TXQS,
- 		.vsi_map = vsi->txq_map,
- 		.vsi_map_offset = 0,
--		.mapping_mode = vsi->tx_mapping_mode
-+		.mapping_mode = ICE_VSI_MAP_CONTIG
- 	};
- 	struct ice_qs_cfg rx_qs_cfg = {
- 		.qs_mutex = &pf->avail_q_mutex,
-@@ -443,18 +443,21 @@ static int ice_vsi_get_qs(struct ice_vsi *vsi)
- 		.scatter_count = ICE_MAX_SCATTER_RXQS,
- 		.vsi_map = vsi->rxq_map,
- 		.vsi_map_offset = 0,
--		.mapping_mode = vsi->rx_mapping_mode
-+		.mapping_mode = ICE_VSI_MAP_CONTIG
- 	};
--	int ret = 0;
--
--	vsi->tx_mapping_mode = ICE_VSI_MAP_CONTIG;
--	vsi->rx_mapping_mode = ICE_VSI_MAP_CONTIG;
-+	int ret;
- 
- 	ret = __ice_vsi_get_qs(&tx_qs_cfg);
--	if (!ret)
--		ret = __ice_vsi_get_qs(&rx_qs_cfg);
-+	if (ret)
-+		return ret;
-+	vsi->tx_mapping_mode = tx_qs_cfg.mapping_mode;
- 
--	return ret;
-+	ret = __ice_vsi_get_qs(&rx_qs_cfg);
-+	if (ret)
-+		return ret;
-+	vsi->rx_mapping_mode = rx_qs_cfg.mapping_mode;
-+
-+	return 0;
- }
- 
- /**
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 3591285250e19..37e7cd0177b84 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -2184,10 +2184,12 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
+ 		add_reg(BCULR);
+ 	add_reg(MAHR);
+ 	add_reg(MALR);
+-	add_reg(TROCR);
+-	add_reg(CDCR);
+-	add_reg(LCCR);
+-	add_reg(CNDCR);
++	if (!cd->no_tx_cntrs) {
++		add_reg(TROCR);
++		add_reg(CDCR);
++		add_reg(LCCR);
++		add_reg(CNDCR);
++	}
+ 	add_reg(CEFCR);
+ 	add_reg(FRECR);
+ 	add_reg(TSFRCR);
 -- 
 2.20.1
 
