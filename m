@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794F1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABF5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478D5215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8A520708
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646714;
-	bh=BoqgN4G4H9vf10CyanVHUi3Ae3h0gWob0zne/M3o2x8=;
+	s=default; t=1586646723;
+	bh=S9W5pKRzZW7QaFWCeMpBQp2JqclXu0y6o6TP4of1WsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dS/zU66qNzvKnE/TAu/BVuqFtG0j9CpMpgkhFDTdTZuhEnCov+UQxOH1TIO3eaYS0
-	 E7+w4vBXCaHPhbcbQCt+4skIeY76TM4XHYNbPyG774VnFy5mYtVAXSso9YMYMTXVZP
-	 S7yLwCwibq+R+3b2I5UIACh6JrdHzTxGWbF32+R8=
+	b=YcnYNrFi6vvcf6qs2prS1Fh9iq5Qa+caBbJjcs79Dd3Z9xq6uxUzHjMnbpC4AB++L
+	 wD2XGpg5n2q3fRKU69TjoARbh3IxkRDY+S3DZS0WAmbGIeHO9Mh7RCvlrUwJCkcKvT
+	 vZY3ibwaGNHphfhwxb0UbsRRaKuDWAzF4W23+0qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgDKXLw (ORCPT
+        id S1730062AbgDKXMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51316 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbgDKXLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:37 -0400
+        id S1729618AbgDKXLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B092166E;
-        Sat, 11 Apr 2020 23:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5787D21841;
+        Sat, 11 Apr 2020 23:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646697;
-        bh=BoqgN4G4H9vf10CyanVHUi3Ae3h0gWob0zne/M3o2x8=;
+        s=default; t=1586646706;
+        bh=S9W5pKRzZW7QaFWCeMpBQp2JqclXu0y6o6TP4of1WsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwhykJ1mWFcgcSgNsk1qSViIqGysKk7LJcGLLgs6wrHRbIfhG8gB+JY/30QIXJLpx
-         ms4NHN7llHKpRv2DauRQa6nFQyc+6RHKKj5SDWn+5GqXpsN0XB/LPQ6colwkdGyz6o
-         1E2YtH3eFnfL6qLhOARyem0ngclXVG8YSFmGF9qk=
+        b=i+Z4qNTydk+sZikAn5sLohpFUDufLp/XbODKRWFOWykHGxUS8MxxjGQdAqIYjb2xj
+         Wvo2nOq8ALB4Nj/G9iEiHzohVeARR8yYsnw1PVzQT2OJv6lDXZGE65+53+lTRkUje+
+         qL8U7Mk+MfMUMVawahhsL+FaiKg5Ueq+ETAQ+e7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 091/108] scsi: qla2xxx: Add fixes for mailbox command
-Date:   Sat, 11 Apr 2020 19:09:26 -0400
-Message-Id: <20200411230943.24951-91-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, Tim <elatllat@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Dongjin Kim <tobetter@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 098/108] arm64: dts: g12-common: add parkmode_disable_ss_quirk on DWC3 controller
+Date:   Sat, 11 Apr 2020 19:09:33 -0400
+Message-Id: <20200411230943.24951-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,47 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 345f574dac85276d1471492c6e90c57e3f90a4f3 ]
+[ Upstream commit a81bcfb6ac20cdd2e8dec3da14c8bbe1d18f6321 ]
 
-This patch fixes:
+When high load on the DWC3 SuperSpeed port, the controller crashes with:
+[  221.141621] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+[  221.157631] xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
+[  221.157635] xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
+[  221.159901] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+[  221.159961] hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
+[  221.160076] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+[  221.165946] usb 2-1.1-port1: cannot reset (err = -22)
 
-- qla2x00_issue_iocb_timeout will now return if chip is down
+Setting the parkmode_disable_ss_quirk quirk fixes the issue.
 
-- only check for sp->qpair in abort handling
-
-Link: https://lore.kernel.org/r/20200212214436.25532-24-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Tim <elatllat@gmail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>
+CC: Dongjin Kim <tobetter@gmail.com>
+Link: https://lore.kernel.org/r/20200221091532.8142-4-narmstrong@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 1ef8907314e58..9011a26710374 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -1405,6 +1405,9 @@ qla2x00_issue_iocb_timeout(scsi_qla_host_t *vha, void *buffer,
- 	mbx_cmd_t	mc;
- 	mbx_cmd_t	*mcp = &mc;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index 0ee8a369c5474..e79fef042d974 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -2381,6 +2381,7 @@
+ 				dr_mode = "host";
+ 				snps,dis_u2_susphy_quirk;
+ 				snps,quirk-frame-length-adjustment;
++				snps,parkmode-disable-ss-quirk;
+ 			};
+ 		};
  
-+	if (qla2x00_chip_is_down(vha))
-+		return QLA_INVALID_COMMAND;
-+
- 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x1038,
- 	    "Entered %s.\n", __func__);
- 
-@@ -1475,7 +1478,7 @@ qla2x00_abort_command(srb_t *sp)
- 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x103b,
- 	    "Entered %s.\n", __func__);
- 
--	if (vha->flags.qpairs_available && sp->qpair)
-+	if (sp->qpair)
- 		req = sp->qpair->req;
- 	else
- 		req = vha->req;
 -- 
 2.20.1
 
