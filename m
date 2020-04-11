@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA218C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726A0C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856332051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B44020709
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648340;
-	bh=hCnvZ84boOgPb9HMfYgnBEhsYYC3gSCTcMowhsOYgMg=;
+	s=default; t=1586648342;
+	bh=T8J+MMG9EPBEQFUhl3aCaPbEQ5QEWJdKjSSl4hDp0I0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahOgWhk2a6RB4g81+khW/eJrCzOSpR9MShXK4X9xU1CA0CJVL4QAZOwl0jkSUxS/J
-	 QDRoJlDsIwHiUDmMlIc8dKgbCHi/WXR8WkYLRkdiU/dJbMjLdLWSac4MgFmxMOEMrw
-	 lvER8ZdTqniY5cJjEtuyqVDVClA0t4XVYaZBUa1M=
+	b=muh0LagahcgWC5ELnX4DDWNY3FAtDn4wEI8WhriSkqCrEBVpD5Kcp0y8O6NMjo/Gz
+	 BuHGXTsS+8Kre7AwwH//HyJ82LGohIkZhZyi00EPCVlR3MRG7VYkebAZ0us1A2PzE2
+	 5hk+mkL+1lqkbyZybyrKS7SG841saoM8BiWCy6lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730527AbgDKXi6 (ORCPT
+        id S1730939AbgDKXi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbgDKXHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:51 -0400
+        id S1727417AbgDKXHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 179C720787;
-        Sat, 11 Apr 2020 23:07:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9E4D20708;
+        Sat, 11 Apr 2020 23:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646471;
-        bh=hCnvZ84boOgPb9HMfYgnBEhsYYC3gSCTcMowhsOYgMg=;
+        s=default; t=1586646470;
+        bh=T8J+MMG9EPBEQFUhl3aCaPbEQ5QEWJdKjSSl4hDp0I0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0ap2TmABYbD1iVSHxQb2j8XkR2Y46r0527LcnOoW56yjN8kugPIfIWz1DIuaGiZY
-         VTPBayQzPuwT0mLnbpdGgRNU3DWr1a7W37WO1NIqfldUWIJRpFSlQakam2x0oYIASP
-         lOXsFpSUtBLf8TfLT7d9tFH/dCY/zuz/5RHtVXx4=
+        b=Js6Myz557ZFlzxMxpT+DUrbh647jkDU6jtsGhgdMI/wpSzv6oPcDF9RxiP3bS1tgA
+         /Oq1AJnqZsqOYDgFLFpdvk/3z4zN7ls2OikxY/yaTFk72m6wLNi4S5OfL0lwsIgdmO
+         +ww7h4eEJYsje0ZD3lkG1AGkY0zSjPOj2+oKYPnk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 038/121] crypto: chelsio - Endianess bug in create_authenc_wr
-Date:   Sat, 11 Apr 2020 19:05:43 -0400
-Message-Id: <20200411230706.23855-38-sashal@kernel.org>
+Cc:     Aric Cyr <aric.cyr@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 037/121] drm/amd/display: Only round InfoFrame refresh rates
+Date:   Sat, 11 Apr 2020 19:05:42 -0400
+Message-Id: <20200411230706.23855-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -59,70 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit ff462ddfd95b915345c3c7c037c3bfafdc58bae7 ]
+[ Upstream commit 3fc6376ed6f2f67bc9fb0c7a3cf07967d6aa6216 ]
 
-kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
-                - sizeof(chcr_req->key_ctx);
-can't possibly be endian-safe.  Look: ->key_ctx_hdr is __be32.  And
-KEY_CONTEXT_CTX_LEN_V is "shift up by 24 bits".  On little-endian hosts it
-sees
-	b0 b1 b2 b3
-in memory, inteprets that into b0 + (b1 << 8) + (b2 << 16) + (b3 << 24),
-shifts up by 24, resulting in b0 << 24, does ntohl (byteswap on l-e),
-gets b0 and shifts that up by 4.  So we get b0 * 16 - sizeof(...).
+[Why]
+When calculating nominal refresh rates, don't round.
+Only the VSIF needs to be rounded.
 
-Sounds reasonable, but on b-e we get
-b3 + (b2 << 8) + (b1 << 16) + (b0 << 24), shift up by 24,
-yielding b3 << 24, do ntohl (no-op on b-e) and then shift up by 4.
-Resulting in b3 << 28 - sizeof(...), i.e. slightly under b3 * 256M.
+[How]
+Revert rounding change for nominal and just round when forming the
+FreeSync VSIF.
 
-Then we increase it some more and pass to alloc_skb() as size.
-Somehow I doubt that we really want a quarter-gigabyte skb allocation
-here...
-
-Note that when you are building those values in
-#define  FILL_KEY_CTX_HDR(ck_size, mk_size, d_ck, opad, ctx_len) \
-                htonl(KEY_CONTEXT_VALID_V(1) | \
-                      KEY_CONTEXT_CK_SIZE_V((ck_size)) | \
-                      KEY_CONTEXT_MK_SIZE_V(mk_size) | \
-                      KEY_CONTEXT_DUAL_CK_V((d_ck)) | \
-                      KEY_CONTEXT_OPAD_PRESENT_V((opad)) | \
-                      KEY_CONTEXT_SALT_PRESENT_V(1) | \
-                      KEY_CONTEXT_CTX_LEN_V((ctx_len)))
-ctx_len ends up in the first octet (i.e. b0 in the above), which
-matches the current behaviour on l-e.  If that's the intent, this
-thing should've been
-        kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
-                - sizeof(chcr_req->key_ctx);
-instead - fetch after ntohl() we get (b0 << 24) + (b1 << 16) + (b2 << 8) + b3,
-shift it down by 24 (b0), resuling in b0 * 16 - sizeof(...) both on l-e and
-on b-e.
-
-PS: when sparse warns you about endianness problems, it might be worth checking
-if there really is something wrong.  And I don't mean "slap __force cast on it"...
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index d483eed030eee..722c5f65b66b3 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -2361,7 +2361,7 @@ static struct sk_buff *create_authenc_wr(struct aead_request *req,
- 	snents = sg_nents_xlen(req->src, req->assoclen + req->cryptlen,
- 			       CHCR_SRC_SG_SIZE, 0);
- 	dst_size = get_space_for_phys_dsgl(dnents);
--	kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
-+	kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
- 		- sizeof(chcr_req->key_ctx);
- 	transhdr_len = CIPHER_TRANSHDR_SIZE(kctx_len, dst_size);
- 	reqctx->imm = (transhdr_len + req->assoclen + req->cryptlen) <
+diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+index d9ea4ae690af6..592ad78f731fd 100644
+--- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
++++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+@@ -524,12 +524,12 @@ static void build_vrr_infopacket_data(const struct mod_vrr_params *vrr,
+ 		infopacket->sb[6] |= 0x04;
+ 
+ 	/* PB7 = FreeSync Minimum refresh rate (Hz) */
+-	infopacket->sb[7] = (unsigned char)(vrr->min_refresh_in_uhz / 1000000);
++	infopacket->sb[7] = (unsigned char)((vrr->min_refresh_in_uhz + 500000) / 1000000);
+ 
+ 	/* PB8 = FreeSync Maximum refresh rate (Hz)
+ 	 * Note: We should never go above the field rate of the mode timing set.
+ 	 */
+-	infopacket->sb[8] = (unsigned char)(vrr->max_refresh_in_uhz / 1000000);
++	infopacket->sb[8] = (unsigned char)((vrr->max_refresh_in_uhz + 500000) / 1000000);
+ 
+ 
+ 	//FreeSync HDR
+@@ -747,10 +747,6 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
+ 	nominal_field_rate_in_uhz =
+ 			mod_freesync_calc_nominal_field_rate(stream);
+ 
+-	/* Rounded to the nearest Hz */
+-	nominal_field_rate_in_uhz = 1000000ULL *
+-			div_u64(nominal_field_rate_in_uhz + 500000, 1000000);
+-
+ 	min_refresh_in_uhz = in_config->min_refresh_in_uhz;
+ 	max_refresh_in_uhz = in_config->max_refresh_in_uhz;
+ 
 -- 
 2.20.1
 
