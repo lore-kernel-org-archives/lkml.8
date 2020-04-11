@@ -2,143 +2,87 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98739C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2583C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6224F2145D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586621524;
-	bh=xGSrZYsmr8Rx4rTlJx8S0cahLkNk3/rISN1e36L5dfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RihWeVp5KxkFBk50IfwxtQTgGhmW+4dGbA7A8UwSsirauJQ1v/Gp3MsTj+n2U97cT
-	 45+Jpt4hWdxrmiWAG/Sjh6STzRc8S40wj9cuql12KRVUE7qbHF6P3MWaPP31vz1zYg
-	 eK/pBNUYNBOUx9J5Kf69v9z3BwAsvdEtuCrAz8PE=
+	by mail.kernel.org (Postfix) with ESMTP id 96A17206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:14:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E0NjrzbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgDKQMC (ORCPT
+        id S1726682AbgDKQOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgDKQMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:12:02 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 708232078E;
-        Sat, 11 Apr 2020 16:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586621522;
-        bh=xGSrZYsmr8Rx4rTlJx8S0cahLkNk3/rISN1e36L5dfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PJuvLC60UfUFZJ6c6uAbd2GfsMnVqppzNcrJkgGE26coDxnU244BVymNHyLFxVvh/
-         SGVBw4msc7PUOKxizlBOLa+Zn/nyY2mOeFWU/EoNXeoNDBtx/E+f2V7a03X+E0IQLE
-         zchs/QnkHPcr3mObpoAV1v4FVmYW1XFsrDBGjrbw=
-Date:   Sat, 11 Apr 2020 19:11:56 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Don Fry <pcnet32@frontier.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Einon <mark.einon@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        David Dillow <dave@thedillows.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Andreas Larsson <andreas@gaisler.com>,
-        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
-Message-ID: <20200411161156.GA200683@unreal>
-References: <20200224085311.460338-1-leon@kernel.org>
- <20200224085311.460338-4-leon@kernel.org>
- <20200411155623.GA22175@zn.tnic>
+        Sat, 11 Apr 2020 12:14:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgDKQOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 12:14:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4kLMPck/UQTFbc7P/dtGX9z+C5HE2yHjGcXQaPeD8UE=; b=E0NjrzbCb12cq87rjgyqkwADEW
+        WAHh8mUUwTfsCROLuFG0kbje7DyHccwxOL380SlXlKeGnNjF1bsciAybqAPEmO8A+J3X/1QtH19Xy
+        +53Ux1fcD5TfDsE20RWsl8RObPX1qW5c/K8rzmTk33ONfOLvRz5d9IxM2p2Mk2goeNMYjwze1O3GY
+        wsHu/ins6D7MCHyncSooKHUIilEp5z9YHm1zyBXzOE1V+Lb9jhS0nG2IcuDAzTWSwUQccjqgQR0Qa
+        hm8ooSvlQZJLMhV/HFq1p6r1rlkDX3/SDeHLpj5W2lvCoWJKUE7kUn1u3X1eAkHiiKTDk1FUnWZ8I
+        Q4A1BvHw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jNImG-0002LU-1t; Sat, 11 Apr 2020 16:14:40 +0000
+Date:   Sat, 11 Apr 2020 09:14:39 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>
+Cc:     darrick.wong@oracle.com, hch@infradead.org, jack@suse.cz,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, riteshh@linux.ibm.com,
+        syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Subject: Re: WARNING in iomap_apply
+Message-ID: <20200411161439.GE21484@bombadil.infradead.org>
+References: <00000000000048518b05a2fef23a@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200411155623.GA22175@zn.tnic>
+In-Reply-To: <00000000000048518b05a2fef23a@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 05:56:23PM +0200, Borislav Petkov wrote:
-> From: Borislav Petkov <bp@suse.de>
->
-> Change the include order so that MODULE_ARCH_VERMAGIC from the arch
-> header arch/x86/include/asm/module.h gets used instead of the fallback
-> from include/linux/vermagic.h and thus fix:
->
->   In file included from ./include/linux/module.h:30,
->                    from drivers/net/ethernet/3com/3c515.c:56:
->   ./arch/x86/include/asm/module.h:73: warning: "MODULE_ARCH_VERMAGIC" redefined
->      73 | # define MODULE_ARCH_VERMAGIC MODULE_PROC_FAMILY
->         |
->   In file included from drivers/net/ethernet/3com/3c515.c:25:
->   ./include/linux/vermagic.h:28: note: this is the location of the previous definition
->      28 | #define MODULE_ARCH_VERMAGIC ""
->         |
->
-> Fixes: 6bba2e89a88c ("net/3com: Delete driver and module versions from 3com drivers")
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> ---
->  drivers/net/ethernet/3com/3c515.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, Apr 11, 2020 at 12:39:13AM -0700, syzbot wrote:
+> The bug was bisected to:
+> 
+> commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
+> Author: Ritesh Harjani <riteshh@linux.ibm.com>
+> Date:   Fri Feb 28 09:26:58 2020 +0000
+> 
+>     ext4: move ext4_fiemap to use iomap framework
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
 
-Probably, this is the right change, but I have a feeling that the right
-solution will be inside headers itself. It is a little bit strange that
-both very common kernel headers like module.h and vermagic.h are location
-dependant.
+This is:
 
-Thanks
+        if (WARN_ON(iomap.length == 0))
+                return -EIO;
 
->
-> diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
-> index 90312fcd6319..cdceef891dbd 100644
-> --- a/drivers/net/ethernet/3com/3c515.c
-> +++ b/drivers/net/ethernet/3com/3c515.c
-> @@ -22,7 +22,6 @@
->
->  */
->
-> -#include <linux/vermagic.h>
->  #define DRV_NAME		"3c515"
->
->  #define CORKSCREW 1
-> @@ -67,6 +66,7 @@ static int max_interrupt_work = 20;
->  #include <linux/timer.h>
->  #include <linux/ethtool.h>
->  #include <linux/bitops.h>
-> +#include <linux/vermagic.h>
->
->  #include <linux/uaccess.h>
->  #include <asm/io.h>
-> --
-> 2.21.0
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+and the call trace contains ext4_fiemap() so the syzbot bisection looks
+correct.
+
+>  iomap_fiemap+0x184/0x2c0 fs/iomap/fiemap.c:88
+>  _ext4_fiemap+0x178/0x4f0 fs/ext4/extents.c:4860
+>  ovl_fiemap+0x13f/0x200 fs/overlayfs/inode.c:467
+>  ioctl_fiemap fs/ioctl.c:226 [inline]
+>  do_vfs_ioctl+0x8d7/0x12d0 fs/ioctl.c:715
