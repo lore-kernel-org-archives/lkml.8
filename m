@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CF3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BCBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CA520674
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E3120674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647509;
-	bh=6xvhjvjRyxtRjmwjRl/WGzQ7Jh+WHnRyJm8u5cqRRy0=;
+	s=default; t=1586647514;
+	bh=ooGB4pek4EOyiavcV3dXkkgC/qrB3ih9Ind03x4xuJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OjBpf4/4S40LVNY/vQstH8CK2HS3Ahuco/K368pcS/ECK5jDXaLS0LlhWCr66gqu1
-	 nQMZCvfBtL8mvEUI5VZI8TZHc1zKpoEo3vBqIUp7YhJANKiwnoz2tNapKdYd09mmAe
-	 sAvxlNqV9NTpVgWm9DB5cPXKmQ27dnRASNiXv5xA=
+	b=Dss79RU+dMjbEfnvBRhQA3HwDONyoRkX6Ov+iKfArWZG0ihy0NJdmObCJeH1eIbpP
+	 KlsFLx0mtwl7GSeUNtk1bt4riGxUzgLAnvMWjoCdp6HZvELOaB27Jg3mEEd05Y9jX5
+	 /RmQ0ZX1zi5f1/6pgepgQTMcgcL1LhiTT1wNQ/yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgDKXZI (ORCPT
+        id S1729761AbgDKXMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:25:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52362 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgDKXMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:20 -0400
+        id S1729699AbgDKXMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2B02216FD;
-        Sat, 11 Apr 2020 23:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF11C21973;
+        Sat, 11 Apr 2020 23:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646740;
-        bh=6xvhjvjRyxtRjmwjRl/WGzQ7Jh+WHnRyJm8u5cqRRy0=;
+        s=default; t=1586646726;
+        bh=ooGB4pek4EOyiavcV3dXkkgC/qrB3ih9Ind03x4xuJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pj+AZ5t5YpBDv5WfOPSJMfEWiK9gs8B3B4CZrjaGw8fWWBZ9R6u1qUSsL8ke+BFC5
-         YIoM59P63nuu4eSWrixVmKX0gCqZi2k07O96P4t9RYucr7V0iGnYLJG/RDAv+il2au
-         Du5F1t+g6oiauR1d05MwLpB0agyJFfEK4JriA1dA=
+        b=xuVMkovQs7UtBmU6Bn8XE9WcKVA7vzhCTOj70BQRNXoTa0ASKQuQxFnD2z9Oqxd1V
+         jhCu1Q7mIsU+6dGqZMfych9UmhDm1qd6d8Ul+rbmaoA5PLwv/keZmzBS6kCeZXZDq0
+         PiZKmgCxOtxkZlOEQP+kgefD9EdLr9TiuNmchCvA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/66] drm/tegra: dc: Release PM and RGB output when client's registration fails
-Date:   Sat, 11 Apr 2020 19:11:11 -0400
-Message-Id: <20200411231203.25933-14-sashal@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/66] net: phy: probe PHY drivers synchronously
+Date:   Sat, 11 Apr 2020 19:10:59 -0400
+Message-Id: <20200411231203.25933-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -60,42 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 0411ea89a689531e1829fdf8af3747646c02c721 ]
+[ Upstream commit 16983507742cbcaa5592af530872a82e82fb9c51 ]
 
-Runtime PM and RGB output need to be released when host1x client
-registration fails. The releasing is missed in the code, let's correct it.
+If we have scenarios like
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+mdiobus_register()
+	-> loads PHY driver module(s)
+	-> registers PHY driver(s)
+	-> may schedule async probe
+phydev = mdiobus_get_phy()
+<phydev action involving PHY driver>
+
+or
+
+phydev = phy_device_create()
+	-> loads PHY driver module
+	-> registers PHY driver
+	-> may schedule async probe
+<phydev action involving PHY driver>
+
+then we expect the PHY driver to be bound to the phydev when triggering
+the action. This may not be the case in case of asynchronous probing.
+Therefore ensure that PHY drivers are probed synchronously.
+
+Default still is sync probing, except async probing is explicitly
+requested. I saw some comments that the intention is to promote
+async probing for more parallelism in boot process and want to be
+prepared for the case that the default is changed to async probing.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 965088afcfade..923088626e1f4 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -2420,10 +2420,16 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
- 			err);
--		return err;
-+		goto disable_pm;
- 	}
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 302d183beb9e8..9ae121cb6dc11 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1939,6 +1939,7 @@ int phy_driver_register(struct phy_driver *new_driver, struct module *owner)
+ 	new_driver->mdiodrv.driver.probe = phy_probe;
+ 	new_driver->mdiodrv.driver.remove = phy_remove;
+ 	new_driver->mdiodrv.driver.owner = owner;
++	new_driver->mdiodrv.driver.probe_type = PROBE_FORCE_SYNCHRONOUS;
  
- 	return 0;
-+
-+disable_pm:
-+	pm_runtime_disable(&pdev->dev);
-+	tegra_dc_rgb_remove(dc);
-+
-+	return err;
- }
- 
- static int tegra_dc_remove(struct platform_device *pdev)
+ 	/* The following works around an issue where the PHY driver doesn't bind
+ 	 * to the device, resulting in the genphy driver being used instead of
 -- 
 2.20.1
 
