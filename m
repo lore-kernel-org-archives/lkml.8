@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3248EC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C748C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFD5215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D197F2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607615;
-	bh=7UERCu65CgP0U500+F+o3KO4ii49B6mhq0xWCr9GZ+0=;
+	s=default; t=1586607619;
+	bh=6aGlnK1MW0SGlCS6W+zlqMW7TuFhIRSPsZs1IRDKQZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1I3IH47DSPUQdOCCj+MIA3fsLfytDWW1+Osgma2ddUSQlWjidQg0zBWh/2EgZi84D
-	 XiaLA0uA9bXRFXTuBzuN7cE0DXGFEGxsaz2SC+UVubp3X6IXBCMk4jTNSCrmJOXYhz
-	 hZcxoEJmKo1YqsGPKCn7F97c+IyKKB9Kd6Hzkgtw=
+	b=Kp3OVzzMzeAkhjQ1OQ5vPLIYDpOzDbnnGdv3eaHUqcl1tV8vPhYkHF+Aayd9/xzf1
+	 fRNZx7D1+DXZkecVklhHoehkdq/owWCKf3K3+M8ofKW1YrJUgyRoaoGa8Om4Wy2wcy
+	 TFoFPomOXqCrvRVqZ46Wd6hEpP15g27DVs2EabS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgDKMUN (ORCPT
+        id S1728937AbgDKMUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:20:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbgDKMUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:09 -0400
+        id S1728588AbgDKMUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A41A214D8;
-        Sat, 11 Apr 2020 12:20:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4F3206A1;
+        Sat, 11 Apr 2020 12:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607609;
-        bh=7UERCu65CgP0U500+F+o3KO4ii49B6mhq0xWCr9GZ+0=;
+        s=default; t=1586607614;
+        bh=6aGlnK1MW0SGlCS6W+zlqMW7TuFhIRSPsZs1IRDKQZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYqDDmc36+m+IkTmtSo6TIogdUe9wvMCgPN+PSl/3bu+/OXqpSQHlVltT33RfbGWP
-         ktWi+VGYZuJMMjUuyac94nn+yTS28zfHzl2TBHrhUiLy6pu+HksJlURRHmZbNooKtH
-         28J7ZQHShkTmcZWcIu149cD74gY261HK1YxwiE5w=
+        b=xqkPgHJvQU7t714occK1cSRnGx1drZgI6nhThfmx6m8Z2xOIivAMHRZta4nNhB6zO
+         UO5HCk6nSHW9dREu7dwd1m2EZldO7NebQqiTmlnTjLZ1o5rGtZKwoKvZcyAZ3Ag0+p
+         C/08OaR/5Y3RnZ2D/HS2NnX5e9HFPkGxiddUdPho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jason Wang <jasowang@redhat.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 5.5 11/44] tun: Dont put_page() for all negative return values from XDP program
-Date:   Sat, 11 Apr 2020 14:09:31 +0200
-Message-Id: <20200411115457.834219673@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 03/44] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
+Date:   Sat, 11 Apr 2020 14:09:23 +0200
+Message-Id: <20200411115457.209824015@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -62,63 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit bee348907d19d654e8524d3a946dcd25b693aa7e ]
+[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
 
-When an XDP program is installed, tun_build_skb() grabs a reference to
-the current page fragment page if the program returns XDP_REDIRECT or
-XDP_TX. However, since tun_xdp_act() passes through negative return
-values from the XDP program, it is possible to trigger the error path by
-mistake and accidentally drop a reference to the fragments page without
-taking one, leading to a spurious free. This is believed to be the cause
-of some KASAN use-after-free reports from syzbot [1], although without a
-reproducer it is not possible to confirm whether this patch fixes the
-problem.
+We were registering our slave MDIO bus with OF and doing so with
+assigning the newly created slave_mii_bus of_node to the master MDIO bus
+controller node. This is a bad thing to do for a number of reasons:
 
-Ensure that we only drop a reference to the fragments page if the XDP
-transmit or redirect operations actually fail.
+- we are completely lying about the slave MII bus is arranged and yet we
+  still want to control which MDIO devices it probes. It was attempted
+  before to play tricks with the bus_mask to perform that:
+  https://www.spinics.net/lists/netdev/msg429420.html but the approach
+  was rightfully rejected
 
-[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+- the device_node reference counting is messed up and we are effectively
+  doing a double probe on the devices we already probed using the
+  master, this messes up all resources reference counts (such as clocks)
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-CC: Eric Dumazet <edumazet@google.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
-Signed-off-by: Will Deacon <will@kernel.org>
+The proper fix for this as indicated by David in his reply to the
+thread above is to use a platform data style registration so as to
+control exactly which devices we probe:
+https://www.spinics.net/lists/netdev/msg430083.html
+
+By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
+as intended, and all the PHY addresses that must be redirected towards
+our slave MDIO bus is happening while other addresses get redirected
+towards the master MDIO bus.
+
+Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/dsa/bcm_sf2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(str
- 			alloc_frag->offset += buflen;
- 		}
- 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
--		if (err < 0)
--			goto err_xdp;
-+		if (err < 0) {
-+			if (act == XDP_REDIRECT || act == XDP_TX)
-+				put_page(alloc_frag->page);
-+			goto out;
-+		}
-+
- 		if (err == XDP_REDIRECT)
- 			xdp_do_flush_map();
- 		if (err != XDP_PASS)
-@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(str
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -472,7 +472,7 @@ static int bcm_sf2_mdio_register(struct
+ 	priv->slave_mii_bus->parent = ds->dev->parent;
+ 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
  
- 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+-	err = of_mdiobus_register(priv->slave_mii_bus, dn);
++	err = mdiobus_register(priv->slave_mii_bus);
+ 	if (err && dn)
+ 		of_node_put(dn);
  
--err_xdp:
--	put_page(alloc_frag->page);
- out:
- 	rcu_read_unlock();
- 	local_bh_enable();
 
 
