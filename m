@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813EBC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F9C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57EA3214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AAE214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607230;
-	bh=GiJkc1e1xfErwk3IjOfHmnD535a/btlVEWZipOJPnWs=;
+	s=default; t=1586607232;
+	bh=9/F1HgN1yJlGKSkllksxsM4rLDTTAM51nN0ITD+mQ4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCB3sE1GwIvrxh1EpmTmOJXlQ/6n4WY1foTlNICY3Jc7YfEUhuLBJa0CdCkLa108X
-	 CwYIk3ypaxxUdib4ECpNUuoLl30nZhe/v8lQPCeWv4KCfFS6kO4VeTdGQP73X/tLMN
-	 EIYJeT+uaVuk86cKMiJ8lX2fr3FALJA6MQiFrO+g=
+	b=1Cpt4VS0T4mZiOd0P3tKzWt89pbQnCn87+6jXem6PJtduzGZbQkXYzdH1v1lF26fo
+	 /XdCrOVfNCcOfq0KjGZaDevWpkbQ8dT20WomVTwkDUmgndtdZUop6C6v1ktICf7wxG
+	 lPBnMdMKEr9wRMg/uEC0sG2dnODdNZDYvQnzeXiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDKMNs (ORCPT
+        id S1726836AbgDKMNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46774 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbgDKMNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:41 -0400
+        id S1726760AbgDKMNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B23C21D7B;
-        Sat, 11 Apr 2020 12:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB3520787;
+        Sat, 11 Apr 2020 12:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607221;
-        bh=GiJkc1e1xfErwk3IjOfHmnD535a/btlVEWZipOJPnWs=;
+        s=default; t=1586607228;
+        bh=9/F1HgN1yJlGKSkllksxsM4rLDTTAM51nN0ITD+mQ4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIx1hLOJZGBgo7jOP6iUJVERr0xrQyWVNS4t2Z/S/jGAwF06IkD8wk/RndCcdhvu2
-         YvzGDJGidMgYlxfSLwC1HyMiSqekBM9gKj5BwsIvShAZnyd+kderOvHLnIxEpxL/O8
-         tqxe3BD4HWCvoayZxNA7yGuZLhOXK7FX3u9TkshQ=
+        b=Wczh+E5m5JD0Mf20635jD5YrmDVwYFtZvfh5fOk/XOQdJ9aZ6k6/zsm3ooWZXfg49
+         0V9f+NuMxL7uLo1GEHRNFkmS+HiA/N7IM4YBS7ffm6YJsfRhA4B+S6dYTfJX7sNRLg
+         Dj4ejRj7XfKlGVmYiTdCtYXH398P6yT7ZDdWtxXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 23/38] hwrng: imx-rngc - fix an error path
-Date:   Sat, 11 Apr 2020 14:09:07 +0200
-Message-Id: <20200411115440.319425435@linuxfoundation.org>
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 26/38] IB/hfi1: Fix memory leaks in sysfs registration and unregistration
+Date:   Sat, 11 Apr 2020 14:09:10 +0200
+Message-Id: <20200411115440.545010044@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -61,38 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Kaiser <martin@kaiser.cx>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 47a1f8e8b3637ff5f7806587883d7d94068d9ee8 upstream.
+commit 5c15abc4328ad696fa61e2f3604918ed0c207755 upstream.
 
-Make sure that the rngc interrupt is masked if the rngc self test fails.
-Self test failure means that probe fails as well. Interrupts should be
-masked in this case, regardless of the error.
+When the hfi1 driver is unloaded, kmemleak will report the following
+issue:
 
-Cc: stable@vger.kernel.org
-Fixes: 1d5449445bd0 ("hwrng: mx-rngc - add a driver for Freescale RNGC")
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+unreferenced object 0xffff8888461a4c08 (size 8):
+comm "kworker/0:0", pid 5, jiffies 4298601264 (age 2047.134s)
+hex dump (first 8 bytes):
+73 64 6d 61 30 00 ff ff sdma0...
+backtrace:
+[<00000000311a6ef5>] kvasprintf+0x62/0xd0
+[<00000000ade94d9f>] kobject_set_name_vargs+0x1c/0x90
+[<0000000060657dbb>] kobject_init_and_add+0x5d/0xb0
+[<00000000346fe72b>] 0xffffffffa0c5ecba
+[<000000006cfc5819>] 0xffffffffa0c866b9
+[<0000000031c65580>] 0xffffffffa0c38e87
+[<00000000e9739b3f>] local_pci_probe+0x41/0x80
+[<000000006c69911d>] work_for_cpu_fn+0x16/0x20
+[<00000000601267b5>] process_one_work+0x171/0x380
+[<0000000049a0eefa>] worker_thread+0x1d1/0x3f0
+[<00000000909cf2b9>] kthread+0xf8/0x130
+[<0000000058f5f874>] ret_from_fork+0x35/0x40
+
+This patch fixes the issue by:
+
+- Releasing dd->per_sdma[i].kobject in hfi1_unregister_sysfs().
+  - This will fix the memory leak.
+
+- Calling kobject_put() to unwind operations only for those entries in
+   dd->per_sdma[] whose operations have succeeded (including the current
+   one that has just failed) in hfi1_verbs_register_sysfs().
+
+Cc: <stable@vger.kernel.org>
+Fixes: 0cb2aa690c7e ("IB/hfi1: Add sysfs interface for affinity setup")
+Link: https://lore.kernel.org/r/20200326163807.21129.27371.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hw_random/imx-rngc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/sysfs.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -110,8 +110,10 @@ static int imx_rngc_self_test(struct imx
- 		return -ETIMEDOUT;
- 	}
+--- a/drivers/infiniband/hw/hfi1/sysfs.c
++++ b/drivers/infiniband/hw/hfi1/sysfs.c
+@@ -861,8 +861,13 @@ bail:
+ 	for (i = 0; i < ARRAY_SIZE(hfi1_attributes); ++i)
+ 		device_remove_file(&dev->dev, hfi1_attributes[i]);
  
--	if (rngc->err_reg != 0)
-+	if (rngc->err_reg != 0) {
-+		imx_rngc_irq_mask_clear(rngc);
- 		return -EIO;
-+	}
+-	for (i = 0; i < dd->num_sdma; i++)
+-		kobject_del(&dd->per_sdma[i].kobj);
++	/*
++	 * The function kobject_put() will call kobject_del() if the kobject
++	 * has been added successfully. The sysfs files created under the
++	 * kobject directory will also be removed during the process.
++	 */
++	for (; i >= 0; i--)
++		kobject_put(&dd->per_sdma[i].kobj);
  
- 	return 0;
+ 	return ret;
  }
+@@ -875,6 +880,10 @@ void hfi1_verbs_unregister_sysfs(struct
+ 	struct hfi1_pportdata *ppd;
+ 	int i;
+ 
++	/* Unwind operations in hfi1_verbs_register_sysfs() */
++	for (i = 0; i < dd->num_sdma; i++)
++		kobject_put(&dd->per_sdma[i].kobj);
++
+ 	for (i = 0; i < dd->num_pports; i++) {
+ 		ppd = &dd->pport[i];
+ 
 
 
