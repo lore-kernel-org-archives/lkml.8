@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000B9C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4DFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE43821924
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E647216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646846;
-	bh=OglxkV4OqD8XJqgtsspXhh1MlkPcsBPThcnK8t0l2n0=;
+	s=default; t=1586646849;
+	bh=ZdMmlu8rq6FnZHNvz1fx4gohu8sKPOucgZZcA5ktuyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oxcl9YOLZFhRyJGmI/8h5NQERNB/9c6dUh4hTY5x6ebeRaHIYtONAZTcqGRh3XID7
-	 9kJMQuuA+4XGCuMiB95OtUpnFg4JsQtpxH1ZO/qUdgK1qwTRg29k6JjZ+t2C/09uLy
-	 h5i6fZrFdb7lomGgzwckVBkkJdzKh87RhFpU8sbs=
+	b=MRgg2ohVf+km18R5F9K92WP+33cWvuHHkiCjFkctvytZqcyfZlXzd5yL7qp5wsFD3
+	 LhG0FcWgPfX4s0EZH4rLwaRmkn8HlWSCsKhYxaqTSJ25sIt9pvrA1KS5Fhm+YsRjwU
+	 2YwPv+3LlD45PA/lGztUrdr+1VjHuDYX2u1w/et4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgDKXOE (ORCPT
+        id S1730670AbgDKXOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55514 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730638AbgDKXOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:02 -0400
+        id S1729121AbgDKXOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0EB6218AC;
-        Sat, 11 Apr 2020 23:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B981720CC7;
+        Sat, 11 Apr 2020 23:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646842;
-        bh=OglxkV4OqD8XJqgtsspXhh1MlkPcsBPThcnK8t0l2n0=;
+        s=default; t=1586646845;
+        bh=ZdMmlu8rq6FnZHNvz1fx4gohu8sKPOucgZZcA5ktuyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8Grs1bJHqPSQ49tSl5nTO65F9kU6IyBuvY3ntO6Ep+naI8WP8liP5dygkWVmUnp4
-         k2g+KTVcG8BpWit83sIsZhbKAU1qUly9ny6EP4AVsDnJ3RG/FUZvoHO4KUwLAzg3lW
-         DK43f6SvP1d+2hZylSkj8cLXtk7MWI81RgSC0J2U=
+        b=tYWgS0EsFnmmr5/0derzhgchageuw0Rcoz1xiwcAwkLQngGBiMTDurb8HSGygYYkd
+         Xh0X9OPc9xguE9oVC9ecG2HCWaAfjNEhhJDI1VMvlms7dDBnvCILRXQKHycJ0F0Cdl
+         8VHLIPMDhpoKFx6Ml2fLYccZQHCPj7Vc104ZuN2I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/37] brcmfmac: Fix driver crash on USB control transfer timeout
-Date:   Sat, 11 Apr 2020 19:13:18 -0400
-Message-Id: <20200411231327.26550-29-sashal@kernel.org>
+Cc:     Patrick Daly <pdaly@codeaurora.org>,
+        "Isaac J . Manjarres" <isaacm@codeaurora.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 32/37] of: of_reserved_mem: Increase limit on number of reserved regions
+Date:   Sat, 11 Apr 2020 19:13:21 -0400
+Message-Id: <20200411231327.26550-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -63,57 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raveendran Somu <raveendran.somu@cypress.com>
+From: Patrick Daly <pdaly@codeaurora.org>
 
-[ Upstream commit 93a5bfbc7cad8bf3dea81c9bc07761c1226a0860 ]
+[ Upstream commit 632c99084052aef1c9dcfe43d2720306026d6d21 ]
 
-When the control transfer gets timed out, the error status
-was returned without killing that urb, this leads to using
-the same urb. This issue causes the kernel crash as the same
-urb is sumbitted multiple times. The fix is to kill the
-urb for timeout transfer before returning error
+Certain SoCs need to support a large amount of reserved memory
+regions. For example, Qualcomm's SM8150 SoC requires that 20
+regions of memory be reserved for a variety of reasons (e.g.
+loading a peripheral subsystem's firmware image into a
+particular space).
 
-Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585124429-97371-2-git-send-email-chi-hsien.lin@cypress.com
+When adding more reserved memory regions to cater to different
+usecases, the remaining number of reserved memory regions--12
+to be exact--becomes too small. Thus, double the existing
+limit of reserved memory regions.
+
+Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/of/of_reserved_mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index 4ad830b7b1c98..bbac03c2accfa 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -339,11 +339,12 @@ static int brcmf_usb_tx_ctlpkt(struct device *dev, u8 *buf, u32 len)
- 		return err;
- 	}
- 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
--	clear_bit(0, &devinfo->ctl_op);
- 	if (!timeout) {
- 		brcmf_err("Txctl wait timed out\n");
-+		usb_kill_urb(devinfo->ctl_urb);
- 		err = -EIO;
- 	}
-+	clear_bit(0, &devinfo->ctl_op);
- 	return err;
- }
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 32771c2ced7bb..fd89159bf5162 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -25,7 +25,7 @@
+ #include <linux/sort.h>
+ #include <linux/slab.h>
  
-@@ -369,11 +370,12 @@ static int brcmf_usb_rx_ctlpkt(struct device *dev, u8 *buf, u32 len)
- 	}
- 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
- 	err = devinfo->ctl_urb_status;
--	clear_bit(0, &devinfo->ctl_op);
- 	if (!timeout) {
- 		brcmf_err("rxctl wait timed out\n");
-+		usb_kill_urb(devinfo->ctl_urb);
- 		err = -EIO;
- 	}
-+	clear_bit(0, &devinfo->ctl_op);
- 	if (!err)
- 		return devinfo->ctl_urb_actual_length;
- 	else
+-#define MAX_RESERVED_REGIONS	32
++#define MAX_RESERVED_REGIONS	64
+ static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+ static int reserved_mem_count;
+ 
 -- 
 2.20.1
 
