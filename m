@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90BEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBEBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6AE20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E127F20708
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646416;
-	bh=4IRxUWKeP87yrejOf2VUpCVZHo/hRx4FWZmxCxw92a0=;
+	s=default; t=1586646420;
+	bh=QMpWSEYlbZIG32XtIUzNXua+eaJnZCj/Xx6VQhjziUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QGW3yOk9XtZIJEEcMte5odzXN7Xajx9LNv8/Kak7T1q/lcjxWivMlYI0npnDrD9Ub
-	 Qwq0tnLU7hOq521sAa4QTpZpcQ39+bSLUIYT23vL0LeTraH50KWir7fxfpozB2ZfO1
-	 mgz1CM+3j3NTsnXkUHpG3SsyE3yfAxVxLXsfph+Y=
+	b=flt47VOKSSKXimDH39ZaGzA6ZWdJZnSTJwj4KZD2k7Wgpr7WS6vixdBVmg9BWgZR/
+	 /K4l3Nza1Bq8SdAar7/jvvZWaJ3wnkei6rVRv2RXqnPJkCI8Qnr25qax3fiMQ9HY+s
+	 gCmrattmBm4W5ptIjCCETffshofaEiMMg92vQP+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgDKXGy (ORCPT
+        id S1728558AbgDKXG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42282 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728503AbgDKXGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:46 -0400
+        id S1727191AbgDKXGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 982E820708;
-        Sat, 11 Apr 2020 23:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE8A20708;
+        Sat, 11 Apr 2020 23:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646406;
-        bh=4IRxUWKeP87yrejOf2VUpCVZHo/hRx4FWZmxCxw92a0=;
+        s=default; t=1586646415;
+        bh=QMpWSEYlbZIG32XtIUzNXua+eaJnZCj/Xx6VQhjziUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktNoL5GfGC1svBeJ59DSoUnBjBnl/lKHJ3t4DesygPAfzaGI9I0P2LmAGojwlaq9K
-         CFM2qO5MCzwDkq4Q133x01t9WaNyVY3Od3x3CaFF+wPGFjBFFRmBQ8KGg62FiVwP09
-         i4ZAuQ/7Xvy3nfhhjnjXFK2KeCLen/s49Nj17Swc=
+        b=Lxp1UIHKdO6wNUYJcEtkyRFpm4L+oYIb3TZlZvkVrXjPuMZJv5ku+eTMSiD9Odu5q
+         Hk1sEIYJStmqC/LdG+T6rWjjtkpOqi9aBHNnxKtOYzp85f/ycKryYTaP82HyUZfOXa
+         uEpedw8WEK5a1Dfd8mDhnMjD10WMTvuLdd761wWA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 142/149] nfsd: Don't add locks to closed or closing open stateids
-Date:   Sat, 11 Apr 2020 19:03:39 -0400
-Message-Id: <20200411230347.22371-142-sashal@kernel.org>
+Cc:     Mikel Rychliski <mikel@mikelr.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 149/149] PCI: Use ioremap(), not phys_to_virt() for platform ROM
+Date:   Sat, 11 Apr 2020 19:03:46 -0400
+Message-Id: <20200411230347.22371-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,211 +62,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Mikel Rychliski <mikel@mikelr.com>
 
-[ Upstream commit a451b12311aa8c96c6f6e01c783a86995dc3ec6b ]
+[ Upstream commit 72e0ef0e5f067fd991f702f0b2635d911d0cf208 ]
 
-In NFSv4, the lock stateids are tied to the lockowner, and the open stateid,
-so that the action of closing the file also results in either an automatic
-loss of the locks, or an error of the form NFS4ERR_LOCKS_HELD.
+On some EFI systems, the video BIOS is provided by the EFI firmware.  The
+boot stub code stores the physical address of the ROM image in pdev->rom.
+Currently we attempt to access this pointer using phys_to_virt(), which
+doesn't work with CONFIG_HIGHMEM.
 
-In practice this means we must not add new locks to the open stateid
-after the close process has been invoked. In fact doing so, can result
-in the following panic:
+On these systems, attempting to load the radeon module on a x86_32 kernel
+can result in the following:
 
- kernel BUG at lib/list_debug.c:51!
- invalid opcode: 0000 [#1] SMP NOPTI
- CPU: 2 PID: 1085 Comm: nfsd Not tainted 5.6.0-rc3+ #2
- Hardware name: VMware, Inc. VMware7,1/440BX Desktop Reference Platform, BIOS VMW71.00V.14410784.B64.1908150010 08/15/2019
- RIP: 0010:__list_del_entry_valid.cold+0x31/0x55
- Code: 1a 3d 9b e8 74 10 c2 ff 0f 0b 48 c7 c7 f0 1a 3d 9b e8 66 10 c2 ff 0f 0b 48 89 f2 48 89 fe 48 c7 c7 b0 1a 3d 9b e8 52 10 c2 ff <0f> 0b 48 89 fe 4c 89 c2 48 c7 c7 78 1a 3d 9b e8 3e 10 c2 ff 0f 0b
- RSP: 0018:ffffb296c1d47d90 EFLAGS: 00010246
- RAX: 0000000000000054 RBX: ffff8ba032456ec8 RCX: 0000000000000000
- RDX: 0000000000000000 RSI: ffff8ba039e99cc8 RDI: ffff8ba039e99cc8
- RBP: ffff8ba032456e60 R08: 0000000000000781 R09: 0000000000000003
- R10: 0000000000000000 R11: 0000000000000001 R12: ffff8ba009a4abe0
- R13: ffff8ba032456e8c R14: 0000000000000000 R15: ffff8ba00adb01d8
- FS:  0000000000000000(0000) GS:ffff8ba039e80000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007fb213f0b008 CR3: 00000001347de006 CR4: 00000000003606e0
- Call Trace:
-  release_lock_stateid+0x2b/0x80 [nfsd]
-  nfsd4_free_stateid+0x1e9/0x210 [nfsd]
-  nfsd4_proc_compound+0x414/0x700 [nfsd]
-  ? nfs4svc_decode_compoundargs+0x407/0x4c0 [nfsd]
-  nfsd_dispatch+0xc1/0x200 [nfsd]
-  svc_process_common+0x476/0x6f0 [sunrpc]
-  ? svc_sock_secure_port+0x12/0x30 [sunrpc]
-  ? svc_recv+0x313/0x9c0 [sunrpc]
-  ? nfsd_svc+0x2d0/0x2d0 [nfsd]
-  svc_process+0xd4/0x110 [sunrpc]
-  nfsd+0xe3/0x140 [nfsd]
-  kthread+0xf9/0x130
-  ? nfsd_destroy+0x50/0x50 [nfsd]
-  ? kthread_park+0x90/0x90
-  ret_from_fork+0x1f/0x40
+  BUG: unable to handle page fault for address: 3e8ed03c
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  *pde = 00000000
+  Oops: 0000 [#1] PREEMPT SMP
+  CPU: 0 PID: 317 Comm: systemd-udevd Not tainted 5.6.0-rc3-next-20200228 #2
+  Hardware name: Apple Computer, Inc. MacPro1,1/Mac-F4208DC8, BIOS     MP11.88Z.005C.B08.0707021221 07/02/07
+  EIP: radeon_get_bios+0x5ed/0xe50 [radeon]
+  Code: 00 00 84 c0 0f 85 12 fd ff ff c7 87 64 01 00 00 00 00 00 00 8b 47 08 8b 55 b0 e8 1e 83 e1 d6 85 c0 74 1a 8b 55 c0 85 d2 74 13 <80> 38 55 75 0e 80 78 01 aa 0f 84 a4 03 00 00 8d 74 26 00 68 dc 06
+  EAX: 3e8ed03c EBX: 00000000 ECX: 3e8ed03c EDX: 00010000
+  ESI: 00040000 EDI: eec04000 EBP: eef3fc60 ESP: eef3fbe0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+  CR0: 80050033 CR2: 3e8ed03c CR3: 2ec77000 CR4: 000006d0
+  Call Trace:
+   r520_init+0x26/0x240 [radeon]
+   radeon_device_init+0x533/0xa50 [radeon]
+   radeon_driver_load_kms+0x80/0x220 [radeon]
+   drm_dev_register+0xa7/0x180 [drm]
+   radeon_pci_probe+0x10f/0x1a0 [radeon]
+   pci_device_probe+0xd4/0x140
 
-The fix is to ensure that lock creation tests for whether or not the
-open stateid is unhashed, and to fail if that is the case.
+Fix the issue by updating all drivers which can access a platform provided
+ROM. Instead of calling the helper function pci_platform_rom() which uses
+phys_to_virt(), call ioremap() directly on the pdev->rom.
 
-Fixes: 659aefb68eca ("nfsd: Ensure we don't recognise lock stateids after freeing them")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+radeon_read_platform_bios() previously directly accessed an __iomem
+pointer. Avoid this by calling memcpy_fromio() instead of kmemdup().
+
+pci_platform_rom() now has no remaining callers, so remove it.
+
+Link: https://lore.kernel.org/r/20200319021623.5426-1-mikel@mikelr.com
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 73 ++++++++++++++++++++++++++-------------------
- 1 file changed, 43 insertions(+), 30 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c      | 31 +++++++++++--------
+ .../drm/nouveau/nvkm/subdev/bios/shadowpci.c  | 17 ++++++++--
+ drivers/gpu/drm/radeon/radeon_bios.c          | 30 +++++++++++-------
+ drivers/pci/rom.c                             | 17 ----------
+ include/linux/pci.h                           |  1 -
+ 5 files changed, 52 insertions(+), 44 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 65cfe9ab47be0..1ba4514be18d3 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -494,6 +494,8 @@ find_any_file(struct nfs4_file *f)
- {
- 	struct nfsd_file *ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+index 50dff69a0f6e3..b1172d93c99c3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+@@ -192,30 +192,35 @@ static bool amdgpu_read_bios_from_rom(struct amdgpu_device *adev)
  
-+	if (!f)
-+		return NULL;
- 	spin_lock(&f->fi_lock);
- 	ret = __nfs4_get_fd(f, O_RDWR);
- 	if (!ret) {
-@@ -1309,6 +1311,12 @@ static void nfs4_put_stateowner(struct nfs4_stateowner *sop)
- 	nfs4_free_stateowner(sop);
+ static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
+ {
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = adev->pdev->rom;
++	size_t romlen = adev->pdev->romlen;
++	void __iomem *bios;
+ 
+ 	adev->bios = NULL;
+ 
+-	bios = pci_platform_rom(adev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	adev->bios = kzalloc(size, GFP_KERNEL);
+-	if (adev->bios == NULL)
++	adev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!adev->bios)
+ 		return false;
+ 
+-	memcpy_fromio(adev->bios, bios, size);
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
+ 
+-	if (!check_atom_bios(adev->bios, size)) {
+-		kfree(adev->bios);
+-		return false;
+-	}
++	memcpy_fromio(adev->bios, bios, romlen);
++	iounmap(bios);
+ 
+-	adev->bios_size = size;
++	if (!check_atom_bios(adev->bios, romlen))
++		goto free_bios;
++
++	adev->bios_size = romlen;
+ 
+ 	return true;
++free_bios:
++	kfree(adev->bios);
++	return false;
  }
  
-+static bool
-+nfs4_ol_stateid_unhashed(const struct nfs4_ol_stateid *stp)
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+index 9b91da09dc5f8..8d9812a51ef63 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+@@ -101,9 +101,13 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	else
+ 		return ERR_PTR(-ENODEV);
+ 
++	if (!pdev->rom || pdev->romlen == 0)
++		return ERR_PTR(-ENODEV);
++
+ 	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
++		priv->size = pdev->romlen;
+ 		if (ret = -ENODEV,
+-		    (priv->rom = pci_platform_rom(pdev, &priv->size)))
++		    (priv->rom = ioremap(pdev->rom, pdev->romlen)))
+ 			return priv;
+ 		kfree(priv);
+ 	}
+@@ -111,11 +115,20 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	return ERR_PTR(ret);
+ }
+ 
++static void
++platform_fini(void *data)
 +{
-+	return list_empty(&stp->st_perfile);
++	struct priv *priv = data;
++
++	iounmap(priv->rom);
++	kfree(priv);
 +}
 +
- static bool unhash_ol_stateid(struct nfs4_ol_stateid *stp)
+ const struct nvbios_source
+ nvbios_platform = {
+ 	.name = "PLATFORM",
+ 	.init = platform_init,
+-	.fini = (void(*)(void *))kfree,
++	.fini = platform_fini,
+ 	.read = pcirom_read,
+ 	.rw = true,
+ };
+diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
+index c42f73fad3e31..bb29cf02974d1 100644
+--- a/drivers/gpu/drm/radeon/radeon_bios.c
++++ b/drivers/gpu/drm/radeon/radeon_bios.c
+@@ -108,25 +108,33 @@ static bool radeon_read_bios(struct radeon_device *rdev)
+ 
+ static bool radeon_read_platform_bios(struct radeon_device *rdev)
  {
- 	struct nfs4_file *fp = stp->st_stid.sc_file;
-@@ -1379,9 +1387,11 @@ static bool unhash_lock_stateid(struct nfs4_ol_stateid *stp)
- {
- 	lockdep_assert_held(&stp->st_stid.sc_client->cl_lock);
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = rdev->pdev->rom;
++	size_t romlen = rdev->pdev->romlen;
++	void __iomem *bios;
  
-+	if (!unhash_ol_stateid(stp))
-+		return false;
- 	list_del_init(&stp->st_locks);
- 	nfs4_unhash_stid(&stp->st_stid);
--	return unhash_ol_stateid(stp);
-+	return true;
- }
+ 	rdev->bios = NULL;
  
- static void release_lock_stateid(struct nfs4_ol_stateid *stp)
-@@ -1446,13 +1456,12 @@ static void release_open_stateid_locks(struct nfs4_ol_stateid *open_stp,
- static bool unhash_open_stateid(struct nfs4_ol_stateid *stp,
- 				struct list_head *reaplist)
- {
--	bool unhashed;
--
- 	lockdep_assert_held(&stp->st_stid.sc_client->cl_lock);
- 
--	unhashed = unhash_ol_stateid(stp);
-+	if (!unhash_ol_stateid(stp))
-+		return false;
- 	release_open_stateid_locks(stp, reaplist);
--	return unhashed;
-+	return true;
- }
- 
- static void release_open_stateid(struct nfs4_ol_stateid *stp)
-@@ -6393,21 +6402,21 @@ alloc_init_lock_stateowner(unsigned int strhashval, struct nfs4_client *clp,
- }
- 
- static struct nfs4_ol_stateid *
--find_lock_stateid(struct nfs4_lockowner *lo, struct nfs4_file *fp)
-+find_lock_stateid(const struct nfs4_lockowner *lo,
-+		  const struct nfs4_ol_stateid *ost)
- {
- 	struct nfs4_ol_stateid *lst;
--	struct nfs4_client *clp = lo->lo_owner.so_client;
- 
--	lockdep_assert_held(&clp->cl_lock);
-+	lockdep_assert_held(&ost->st_stid.sc_client->cl_lock);
- 
--	list_for_each_entry(lst, &lo->lo_owner.so_stateids, st_perstateowner) {
--		if (lst->st_stid.sc_type != NFS4_LOCK_STID)
--			continue;
--		if (lst->st_stid.sc_file == fp) {
--			refcount_inc(&lst->st_stid.sc_count);
--			return lst;
-+	/* If ost is not hashed, ost->st_locks will not be valid */
-+	if (!nfs4_ol_stateid_unhashed(ost))
-+		list_for_each_entry(lst, &ost->st_locks, st_locks) {
-+			if (lst->st_stateowner == &lo->lo_owner) {
-+				refcount_inc(&lst->st_stid.sc_count);
-+				return lst;
-+			}
- 		}
+-	bios = pci_platform_rom(rdev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
 -	}
- 	return NULL;
- }
  
-@@ -6423,11 +6432,11 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
- 	mutex_lock_nested(&stp->st_mutex, OPEN_STATEID_MUTEX);
- retry:
- 	spin_lock(&clp->cl_lock);
--	spin_lock(&fp->fi_lock);
--	retstp = find_lock_stateid(lo, fp);
-+	if (nfs4_ol_stateid_unhashed(open_stp))
-+		goto out_close;
-+	retstp = find_lock_stateid(lo, open_stp);
- 	if (retstp)
--		goto out_unlock;
--
-+		goto out_found;
- 	refcount_inc(&stp->st_stid.sc_count);
- 	stp->st_stid.sc_type = NFS4_LOCK_STID;
- 	stp->st_stateowner = nfs4_get_stateowner(&lo->lo_owner);
-@@ -6436,22 +6445,26 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
- 	stp->st_access_bmap = 0;
- 	stp->st_deny_bmap = open_stp->st_deny_bmap;
- 	stp->st_openstp = open_stp;
-+	spin_lock(&fp->fi_lock);
- 	list_add(&stp->st_locks, &open_stp->st_locks);
- 	list_add(&stp->st_perstateowner, &lo->lo_owner.so_stateids);
- 	list_add(&stp->st_perfile, &fp->fi_stateids);
--out_unlock:
- 	spin_unlock(&fp->fi_lock);
- 	spin_unlock(&clp->cl_lock);
--	if (retstp) {
--		if (nfsd4_lock_ol_stateid(retstp) != nfs_ok) {
--			nfs4_put_stid(&retstp->st_stid);
--			goto retry;
--		}
--		/* To keep mutex tracking happy */
--		mutex_unlock(&stp->st_mutex);
--		stp = retstp;
+-	if (size == 0 || bios[0] != 0x55 || bios[1] != 0xaa) {
++	rdev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!rdev->bios)
+ 		return false;
 -	}
- 	return stp;
-+out_found:
-+	spin_unlock(&clp->cl_lock);
-+	if (nfsd4_lock_ol_stateid(retstp) != nfs_ok) {
-+		nfs4_put_stid(&retstp->st_stid);
-+		goto retry;
-+	}
-+	/* To keep mutex tracking happy */
-+	mutex_unlock(&stp->st_mutex);
-+	return retstp;
-+out_close:
-+	spin_unlock(&clp->cl_lock);
-+	mutex_unlock(&stp->st_mutex);
-+	return NULL;
+-	rdev->bios = kmemdup(bios, size, GFP_KERNEL);
+-	if (rdev->bios == NULL) {
+-		return false;
+-	}
++
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
++
++	memcpy_fromio(rdev->bios, bios, romlen);
++	iounmap(bios);
++
++	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
++		goto free_bios;
+ 
+ 	return true;
++free_bios:
++	kfree(rdev->bios);
++	return false;
  }
  
- static struct nfs4_ol_stateid *
-@@ -6466,7 +6479,7 @@ find_or_create_lock_stateid(struct nfs4_lockowner *lo, struct nfs4_file *fi,
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
+index 137bf0cee897c..8fc9a4e911e3a 100644
+--- a/drivers/pci/rom.c
++++ b/drivers/pci/rom.c
+@@ -195,20 +195,3 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
+ 		pci_disable_rom(pdev);
+ }
+ EXPORT_SYMBOL(pci_unmap_rom);
+-
+-/**
+- * pci_platform_rom - provides a pointer to any ROM image provided by the
+- * platform
+- * @pdev: pointer to pci device struct
+- * @size: pointer to receive size of pci window over ROM
+- */
+-void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
+-{
+-	if (pdev->rom && pdev->romlen) {
+-		*size = pdev->romlen;
+-		return phys_to_virt((phys_addr_t)pdev->rom);
+-	}
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL(pci_platform_rom);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a541a9de5..7268dcf1f23e9 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1214,7 +1214,6 @@ int pci_enable_rom(struct pci_dev *pdev);
+ void pci_disable_rom(struct pci_dev *pdev);
+ void __iomem __must_check *pci_map_rom(struct pci_dev *pdev, size_t *size);
+ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom);
+-void __iomem __must_check *pci_platform_rom(struct pci_dev *pdev, size_t *size);
  
- 	*new = false;
- 	spin_lock(&clp->cl_lock);
--	lst = find_lock_stateid(lo, fi);
-+	lst = find_lock_stateid(lo, ost);
- 	spin_unlock(&clp->cl_lock);
- 	if (lst != NULL) {
- 		if (nfsd4_lock_ol_stateid(lst) == nfs_ok)
+ /* Power management related routines */
+ int pci_save_state(struct pci_dev *dev);
 -- 
 2.20.1
 
