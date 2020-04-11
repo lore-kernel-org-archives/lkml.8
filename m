@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC04C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21167C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A482051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86C52051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648215;
-	bh=43dPpnebO2RnaPqUJ2m9OtgsPWit1vaBHjJNvfsHAZ8=;
+	s=default; t=1586648224;
+	bh=s4vRQIJwcxkL6l2FldF0HlhnWS37JsVCYYVOD5lTqjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SIZpO9PtMpDdsdNyg/e/8sXzoAqiwjohCLH9iuDKqdzWIgE7vRhBPif1WHi7+pGEc
-	 Jw/+BfqnwWk4sBXIMq/X6OjiUzUD4fKRl/UP+VdoE1aqo+D3JvWPr2M5wpi+N55gLk
-	 0GjjWhu0rUpfo+krG9DfBra53vF74eZPiIlsOPhM=
+	b=u3h0+jYStEH6yJ8Uu9VVvPKT/xBU+ehGSelwd365Bna6rmcbwiO2gypx6WIoWTzaz
+	 A2/agnGZnjio12RSEfyRhCf6ys8kr3+pdop2tSbq8ZhHdVbbOqc4UwzY9CayeNPRiA
+	 8BFqbGBOYhh/uNACPGE/2Qn6tmVhGjE/w/6ukgWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgDKXgx (ORCPT
+        id S1730744AbgDKXhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727571AbgDKXId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:33 -0400
+        id S1727040AbgDKXI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AD2120CC7;
-        Sat, 11 Apr 2020 23:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AAD021835;
+        Sat, 11 Apr 2020 23:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646513;
-        bh=43dPpnebO2RnaPqUJ2m9OtgsPWit1vaBHjJNvfsHAZ8=;
+        s=default; t=1586646509;
+        bh=s4vRQIJwcxkL6l2FldF0HlhnWS37JsVCYYVOD5lTqjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1yJA0fk9XeWygY3OxvxKBChuHRi/QBn5oTWnfQbrYhEsw20Bdk3WyezLMljja219T
-         lHPW1zx38FVyQ5MJFWgm+v//RIm1rFVsJDW4g7lShyKIyDpCr1F+px2SPmlGmGETxS
-         85SfhWPUCqknn4ebfk9q3G/AUl9zW7ZqI0EYwbUI=
+        b=N6QS8TvnS9OwRHruvz1jucCejeZVVfT5XzVdxONzKn2LYtJYnAWWo5ql/AFtcLaN1
+         +jVi3wxGev2iaa7PVd5Mqm5SLRZcro1D4hawq0outzVT5ggGJHYNmp7FR2WeolPolU
+         oGIzRZ38Mn8xlLFYt0ZnzKdAx2MjiRGUQwNeagVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 071/121] drm/omap: dss: Cleanup DSS ports on initialisation failure
-Date:   Sat, 11 Apr 2020 19:06:16 -0400
-Message-Id: <20200411230706.23855-71-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 068/121] mt76: mt7603: fix input validation issues for powersave-filtered frames
+Date:   Sat, 11 Apr 2020 19:06:13 -0400
+Message-Id: <20200411230706.23855-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -63,120 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 2a0a3ae17d36fa86dcf7c8e8d7b7f056ebd6c064 ]
+[ Upstream commit d55aa5e17461b8b423adae376978032c4a10a1d8 ]
 
-When the DSS initialises its output DPI and SDI ports, failures don't
-clean up previous successfully initialised ports. This can lead to
-resource leak or memory corruption. Fix it.
+Before extracting the tid out of the packet, check if it was qos-data.
+Only accept tid values 0-7
+Also, avoid accepting the hardware queue as skb queue mapping, it could
+lead to an overrun. Instead, derive the hardware queue from the tid number,
+in order to avoid issues with packets being filtered multiple times.
+This also fixes a mismatch between hardware and software queue indexes.
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200226112514.12455-22-laurent.pinchart@ideasonboard.com
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/dss.c | 43 +++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
+ .../net/wireless/mediatek/mt76/mt7603/dma.c   | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c b/drivers/gpu/drm/omapdrm/dss/dss.c
-index 225ec808b01a9..67b92b5d8dd76 100644
---- a/drivers/gpu/drm/omapdrm/dss/dss.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dss.c
-@@ -1151,46 +1151,38 @@ static const struct dss_features dra7xx_dss_feats = {
- 	.has_lcd_clk_src	=	true,
- };
- 
--static int dss_init_ports(struct dss_device *dss)
-+static void __dss_uninit_ports(struct dss_device *dss, unsigned int num_ports)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
+index a6ab73060aada..57428467fe967 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
+@@ -30,6 +30,16 @@ mt7603_init_tx_queue(struct mt7603_dev *dev, struct mt76_sw_queue *q,
+ static void
+ mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
  {
- 	struct platform_device *pdev = dss->pdev;
- 	struct device_node *parent = pdev->dev.of_node;
- 	struct device_node *port;
- 	unsigned int i;
--	int r;
++	static const u8 tid_to_ac[8] = {
++		IEEE80211_AC_BE,
++		IEEE80211_AC_BK,
++		IEEE80211_AC_BK,
++		IEEE80211_AC_BE,
++		IEEE80211_AC_VI,
++		IEEE80211_AC_VI,
++		IEEE80211_AC_VO,
++		IEEE80211_AC_VO
++	};
+ 	__le32 *txd = (__le32 *)skb->data;
+ 	struct ieee80211_hdr *hdr;
+ 	struct ieee80211_sta *sta;
+@@ -38,7 +48,7 @@ mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
+ 	void *priv;
+ 	int idx;
+ 	u32 val;
+-	u8 tid;
++	u8 tid = 0;
  
--	for (i = 0; i < dss->feat->num_ports; i++) {
-+	for (i = 0; i < num_ports; i++) {
- 		port = of_graph_get_port_by_id(parent, i);
- 		if (!port)
- 			continue;
+ 	if (skb->len < MT_TXD_SIZE + sizeof(struct ieee80211_hdr))
+ 		goto free;
+@@ -56,15 +66,16 @@ mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
  
- 		switch (dss->feat->ports[i]) {
- 		case OMAP_DISPLAY_TYPE_DPI:
--			r = dpi_init_port(dss, pdev, port, dss->feat->model);
--			if (r)
--				return r;
-+			dpi_uninit_port(port);
- 			break;
+ 	priv = msta = container_of(wcid, struct mt7603_sta, wcid);
+ 	val = le32_to_cpu(txd[0]);
+-	skb_set_queue_mapping(skb, FIELD_GET(MT_TXD0_Q_IDX, val));
 -
- 		case OMAP_DISPLAY_TYPE_SDI:
--			r = sdi_init_port(dss, pdev, port);
--			if (r)
--				return r;
-+			sdi_uninit_port(port);
- 			break;
--
- 		default:
- 			break;
- 		}
- 	}
--
--	return 0;
- }
+ 	val &= ~(MT_TXD0_P_IDX | MT_TXD0_Q_IDX);
+ 	val |= FIELD_PREP(MT_TXD0_Q_IDX, MT_TX_HW_QUEUE_MGMT);
+ 	txd[0] = cpu_to_le32(val);
  
--static void dss_uninit_ports(struct dss_device *dss)
-+static int dss_init_ports(struct dss_device *dss)
- {
- 	struct platform_device *pdev = dss->pdev;
- 	struct device_node *parent = pdev->dev.of_node;
- 	struct device_node *port;
--	int i;
-+	unsigned int i;
-+	int r;
+ 	sta = container_of(priv, struct ieee80211_sta, drv_priv);
+ 	hdr = (struct ieee80211_hdr *)&skb->data[MT_TXD_SIZE];
+-	tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
++	if (ieee80211_is_data_qos(hdr->frame_control))
++		tid = *ieee80211_get_qos_ctl(hdr) &
++		      IEEE80211_QOS_CTL_TAG1D_MASK;
++	skb_set_queue_mapping(skb, tid_to_ac[tid]);
+ 	ieee80211_sta_set_buffered(sta, tid, true);
  
- 	for (i = 0; i < dss->feat->num_ports; i++) {
- 		port = of_graph_get_port_by_id(parent, i);
-@@ -1199,15 +1191,32 @@ static void dss_uninit_ports(struct dss_device *dss)
- 
- 		switch (dss->feat->ports[i]) {
- 		case OMAP_DISPLAY_TYPE_DPI:
--			dpi_uninit_port(port);
-+			r = dpi_init_port(dss, pdev, port, dss->feat->model);
-+			if (r)
-+				goto error;
- 			break;
-+
- 		case OMAP_DISPLAY_TYPE_SDI:
--			sdi_uninit_port(port);
-+			r = sdi_init_port(dss, pdev, port);
-+			if (r)
-+				goto error;
- 			break;
-+
- 		default:
- 			break;
- 		}
- 	}
-+
-+	return 0;
-+
-+error:
-+	__dss_uninit_ports(dss, i);
-+	return r;
-+}
-+
-+static void dss_uninit_ports(struct dss_device *dss)
-+{
-+	__dss_uninit_ports(dss, dss->feat->num_ports);
- }
- 
- static int dss_video_pll_probe(struct dss_device *dss)
+ 	spin_lock_bh(&dev->ps_lock);
 -- 
 2.20.1
 
