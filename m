@@ -2,71 +2,78 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D96C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAD5C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76C120787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC4920787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoKzjQNf"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="fDkiFm5W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oMAMVJr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgDKBes (ORCPT
+        id S1726864AbgDKBf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 21:34:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37227 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgDKBer (ORCPT
+        Fri, 10 Apr 2020 21:35:27 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:41405 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726641AbgDKBf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 21:34:47 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m16so1221772pls.4;
-        Fri, 10 Apr 2020 18:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gBHPPwCq78xfwPO4a6aoSvQF9RjVjmF6Ed9dcBshSdA=;
-        b=IoKzjQNfjHm+WfS+8cWjjtPOszNAMydpftTTJ+WeqX/GK1TgHMC40CMLZRFHHW0vPO
-         3zmK0cSW0lotU3q26Ng3vEL7FtGw0mIkieTR53J/iG8C1ge7CTUEpImvEGUaj0DKdT4l
-         RxpXgd/aArieIQZ5BVJkhC4qoR3g1gVHc+nK3lRFeusXKgZc+BllrSiaC/T8KHLkrXta
-         acfhBFUGJ0YJtABRz5qdobQyc3EiImZLdCkZigl9MZMrzp+Od1ebqLoXv4hJg5kSr2le
-         aRWKfu0PmFxN56HV1reSabJopufIXhCcaj0tPZbku/qtrpT/AjHdcVJjhgQCuNSFetDY
-         4F7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gBHPPwCq78xfwPO4a6aoSvQF9RjVjmF6Ed9dcBshSdA=;
-        b=di3iUPyHh9zCOz0fNKd3ZIoa0bGSX3mOezhwnOOOew3oZEaoy9XHo5rDFrZ8EHp/c+
-         o88fOIx87/mJHxBD58p7h11q0QB1qKHCdOWns6UKdcb/I53jQzgCYvWVASBTWzTtIw/1
-         nm/015Ao5cJNtSzVKw7eCLq3+JuWnnrJ2wzYDiKF/EjWhDf8c/czk1UvzR2tLs3yu2Uj
-         vCNeg6fDGXj6twvxvm+oqrLj9Zwu+Z0vvsm9s3oSlkzXTew0ZiK2JhqdkDIOiilVLivp
-         AwLDsweywO9uP35dufqOk4zzoDWDqdnPm+VvPh1Ns707cZ2/MPC4uox7a4RQTVVkAHqb
-         SIiA==
-X-Gm-Message-State: AGi0Puah8wVjTC1eoZ1PoPuJPN9sgMo2GX/1kC7Ck1GnLmrt5fyhrvMu
-        5DhlT1LWzUClehh7ES/4Jx0=
-X-Google-Smtp-Source: APiQypI77CljKvDt7/vaFIH1lureibakn9/s2eRumy5dVl7uiVKkCEWQzDFrIpRJ2mkurlPQLEdqhA==
-X-Received: by 2002:a17:90a:33c1:: with SMTP id n59mr8206521pjb.4.1586568887058;
-        Fri, 10 Apr 2020 18:34:47 -0700 (PDT)
-Received: from i7.zsun.org.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id mg20sm2808571pjb.12.2020.04.10.18.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 18:34:46 -0700 (PDT)
-From:   sztsian@gmail.com
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org
-Cc:     sztsian@gmail.com, linux-kernel@vger.kernel.org, icenowy@aosc.io
-Subject: [PATCH v3 1/1] Bluetooth: btrtl: Add support for RTL8761B
-Date:   Sat, 11 Apr 2020 09:34:27 +0800
-Message-Id: <20200411013427.152103-2-sztsian@gmail.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200411013427.152103-1-sztsian@gmail.com>
-References: <20200411013427.152103-1-sztsian@gmail.com>
+        Fri, 10 Apr 2020 21:35:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id E82B65C0101;
+        Fri, 10 Apr 2020 21:35:25 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 10 Apr 2020 21:35:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=lX5SGrlx6dPNxsuJN5NmbTk0p2
+        Mtpif3mvePdQ+RePg=; b=fDkiFm5WzcUikKeixJo5ASn6AULPPD9mIrtmfzYDyl
+        O0+NJ8BUM7srr96K9ZJz5bvnDSb/+PdyaeIqJOfn8FIWOPFzM2QLpdJhCjHhYodg
+        a2JtfnryubnZPlR1TCsCJpWrFPsdyOkb5wySaUiBLZKnAwixen6YqXZmM+SlOHoK
+        ywzhsbYlXA31yZyXLVmp95YH86BGilf9C/eVqxBu+JwqfBqDXQGld+EABGmBrD/l
+        W4tA8S8zOXuZrXzBCwiUQ3O+XY9vGD0uGbhfkTLEsq6ErkPSuX8skYsPfp6dEmnV
+        Cp5Awbio17LbN12670xx4cX2bXeVUbVw+/rNnQg9O8ig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lX5SGrlx6dPNxsuJN
+        5NmbTk0p2Mtpif3mvePdQ+RePg=; b=oMAMVJr9Mcrr9Itvy/kOZSdI1t8goQB8R
+        Jy45fP2X8qlCiaWP1Y8B+a86EhnxHfir1+xzLSeRCX5Ggpwk0jdG0zXC8oLD7XNa
+        QEt8fFenp/OJ5rGQpltTuC7dF7qZnp0zvlGJNbnvXIfGp22QizDThL17x/4C79bm
+        dY09Qy8QFr+y7upVHWIjWARtuRIsyl9MRU0cPcAjJFPNt7TUWAyHWqtmYu+pUJzA
+        9XYuduzgyBvG6FuQ63tranvfSHyzRq2ma0XDy8cL5//V+TVQlFWFL9YIEzSQcLLr
+        u/Ns7dfGPiucAXsz6Jp3ZDuPus+9+lp6zh0rex670jU+uppuV0oKQ==
+X-ME-Sender: <xms:0x6RXtpWYErjWA3RCTC3an9Nm4rjOzU3Sxm9SvkzO4nTNhsjglQhjg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvdefgdegfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehnughrvgifucfl
+    vghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedugedrvddrud
+    dtkedrudegleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:0x6RXtDNhKx7xsCIS_nKcZKYtOf6dw1Zowk7geYxJQeYWH5KaIkm6g>
+    <xmx:0x6RXmN2FrZtib9MQzUYRQS7Bx-dzwhW0kOOCfDMjVcb-93QcEzwVg>
+    <xmx:0x6RXsnc-1SLoW684WZiKWpkSQz04TLmi-Gj9MTfj00Z4MEuxjHM-Q>
+    <xmx:3R6RXtNuZJ681W7M1Uo85YksUUkbxhVrfWrb_cCIKvEOj9psWcWhGA>
+Received: from localhost.localdomain (ppp14-2-108-149.adl-apt-pir-bras32.tpg.internode.on.net [14.2.108.149])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7B4673280059;
+        Fri, 10 Apr 2020 21:35:08 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        Vijay Khemka <vijaykhemka@fb.com>
+Subject: [PATCH] ARM: dts: aspeed: Change KCS nodes to v2 binding
+Date:   Sat, 11 Apr 2020 11:05:14 +0930
+Message-Id: <20200411013514.15950-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,83 +81,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ziqian SUN (Zamir)" <sztsian@gmail.com>
+Fixes the following warnings for both g5 and g6 SoCs:
 
-Add new compatible device RTL8761B. RTL8761B is a USB Bluetooth device,
-with support of BLE and BR/EDR. The USB info is
+    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node has a unit name, but no reg property
+    arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: node has a unit name, but no reg property
+    arch/arm/boot/dts/aspeed-g5.dtsi:388.19-393.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0: node has a unit name, but no reg property
+    arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: node has a unit name, but no reg property
+    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0)
+    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
+    arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
+    arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0)
 
-T:  Bus=03 Lev=04 Prnt=04 Port=00 Cnt=01 Dev#= 29 Spd=12   MxCh= 0
-D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=0bda ProdID=8771 Rev= 2.00
-S:  Manufacturer=Realtek
-S:  Product=Bluetooth Radio
-S:  SerialNumber=XXXXXXXXXXXX
-C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-
-Signed-off-by: Ziqian SUN (Zamir) <sztsian@gmail.com>
+Cc: Haiyue Wang <haiyue.wang@linux.intel.com>
+Cc: Vijay Khemka <vijaykhemka@fb.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
+ 3 files changed, 26 insertions(+), 25 deletions(-)
 
-Changes since v2: Add USB info in commit message
-Changes since v1: Add the firmware info
-
- drivers/bluetooth/btrtl.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 67f4bc21e7c5..3a9afc905f24 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -130,12 +130,19 @@ static const struct id_table ic_id_table[] = {
- 	  .cfg_name = "rtl_bt/rtl8821c_config" },
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 6b88c7f26bf7..8b880003a838 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -113,13 +113,13 @@
+ &kcs2 {
+ 	// BMC KCS channel 2
+ 	status = "okay";
+-	kcs_addr = <0xca8>;
++	slave-reg = <0xca8>;
+ };
  
- 	/* 8761A */
--	{ IC_MATCH_FL_LMPSUBV, RTL_ROM_LMP_8761A, 0x0,
-+	{ IC_INFO(RTL_ROM_LMP_8761A, 0xa),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .fw_name  = "rtl_bt/rtl8761a_fw.bin",
- 	  .cfg_name = "rtl_bt/rtl8761a_config" },
+ &kcs3 {
+ 	// BMC KCS channel 3
+ 	status = "okay";
+-	kcs_addr = <0xca2>;
++	slave-reg = <0xca2>;
+ };
  
-+	/* 8761B */
-+	{ IC_INFO(RTL_ROM_LMP_8761A, 0xb),
-+	  .config_needed = false,
-+	  .has_rom_version = true,
-+	  .fw_name  = "rtl_bt/rtl8761b_fw.bin",
-+	  .cfg_name = "rtl_bt/rtl8761b_config" },
-+
- 	/* 8822C with UART interface */
- 	{ .match_flags = IC_MATCH_FL_LMPSUBV | IC_MATCH_FL_HCIREV |
- 			 IC_MATCH_FL_HCIBUS,
-@@ -267,6 +274,7 @@ static int rtlbt_parse_firmware(struct hci_dev *hdev,
- 		{ RTL_ROM_LMP_8723B, 9 },	/* 8723D */
- 		{ RTL_ROM_LMP_8821A, 10 },	/* 8821C */
- 		{ RTL_ROM_LMP_8822B, 13 },	/* 8822C */
-+		{ RTL_ROM_LMP_8761A, 14 },	/* 8761B */
- 	};
+ &gpio {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 284face7de2c..de7fd80b022a 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -445,22 +445,22 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x0 0x80>;
  
- 	min_size = sizeof(struct rtl_epatch_header) + sizeof(extension_sig) + 3;
+-					kcs1: kcs1@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs1: kcs@24 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <1>;
+ 						status = "disabled";
+ 					};
+-					kcs2: kcs2@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs2: kcs@28 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <2>;
+ 						status = "disabled";
+ 					};
+-					kcs3: kcs3@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs3: kcs@2c {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <3>;
+ 						status = "disabled";
+ 					};
+ 				};
+@@ -474,10 +474,10 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
+-					kcs4: kcs4@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs4: kcs@94 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <4>;
+ 						status = "disabled";
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
+index 1ffc15177b79..f4113275a7f9 100644
+--- a/arch/arm/boot/dts/aspeed-g6.dtsi
++++ b/arch/arm/boot/dts/aspeed-g6.dtsi
+@@ -471,22 +471,23 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x0 0x80>;
+ 
+-					kcs1: kcs1@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs1: kcs@24 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+ 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+ 						kcs_chan = <1>;
+ 						status = "disabled";
+ 					};
+-					kcs2: kcs2@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs2: kcs@28 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+ 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <2>;
+ 						status = "disabled";
+ 					};
+-					kcs3: kcs3@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs3: kcs@2c {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+ 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <3>;
+ 						status = "disabled";
+ 					};
+ 				};
+@@ -500,10 +501,10 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
+-					kcs4: kcs4@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs4: kcs@94 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+ 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <4>;
+ 						status = "disabled";
+ 					};
+ 
 -- 
-2.25.2
+2.20.1
 
