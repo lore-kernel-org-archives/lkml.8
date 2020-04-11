@@ -2,352 +2,151 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C50EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78207C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E160E20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:09:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B1e5M7Cj"
+	by mail.kernel.org (Postfix) with ESMTP id 4C22F20B1F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586628623;
+	bh=cR0eHiEhVEU/CYCz8ttOIHBrqvYs0p6ey3Uw55qOSGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yp04ybm9g1zv36FgI1WwbwhwjFHMGc8BanWlhQB2/b3cGJAYW/2chmOWR3HzcbsaO
+	 eQ8j0sZ717A6xg2b3QORl6OiPdAVjf5iFvEREXearP1nwgtXtksjj4f15Yo0x07YAL
+	 McsxjrLAIR8AEmS1F8in5xCjJVHUYtBVfgxSSxZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgDKSIN (ORCPT
+        id S1726773AbgDKSKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 14:08:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59516 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgDKSIM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 14:08:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=u/84xGw/Q1PMexLzxeCMxwY88KK2173IK237gwuPDlY=; b=B1e5M7CjdEzsAhLKy31VKMmEUi
-        NwNE85hie4Q1K592S+F47QPYjVv77ElN8ZzWZOY+OkHVvstHtVS9dHm0z9D5q3Xsa7PUUUNg1uAEu
-        SuIuSUNNipUWtzK1wnKGfRS0jmsV5vorUljCssFlc8e7TWw8wBl2/4EPl43YhoI5HffWmZXFKc7je
-        YiEyP+mP7BfhVWL/tNERYXvyVr5nEZ0Bkm0pVNIK5vAROVddMItaKT0UtfilvoWtOCL96M+8oYTlM
-        0pIYakxQQWjnQwvTg4jmisGW0QdQQcXmnBcAVhomIjEE5vPjwDDS9R/VxPdSrFHf8WAmF3vTxsJTI
-        Ua95Pzkw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jNKY7-0000hW-RZ; Sat, 11 Apr 2020 18:08:11 +0000
-Subject: Re: [PATCH 1/3] driver: rpmon: new driver Remote Processor Monitor
-To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200411095301.18780-1-wenhu.wang@vivo.com>
- <20200411095301.18780-2-wenhu.wang@vivo.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <64b5f77a-7bc1-ee43-0f83-1ff323e4ac51@infradead.org>
-Date:   Sat, 11 Apr 2020 11:08:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Apr 2020 14:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgDKSKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 14:10:21 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1AE420732;
+        Sat, 11 Apr 2020 18:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586628620;
+        bh=cR0eHiEhVEU/CYCz8ttOIHBrqvYs0p6ey3Uw55qOSGo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dcNVzinV8moP+fO5RfqQizJEQ1Fo5MA/EWcPhgl3anCgpKoqChGaQQMh6g6lxD8Zu
+         U4Uz5GI9QK6vrVpGwcn3HSXE+MfBDWSMFeD7yfpw5OsGv/2b1L7VjOahk8qLWPZWwn
+         jvyrMweq0NnBZhQyYqoGjPPwE0zfMs2kGVTNuapw=
+Date:   Sat, 11 Apr 2020 21:10:15 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Don Fry <pcnet32@frontier.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mark Einon <mark.einon@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        David Dillow <dave@thedillows.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Andreas Larsson <andreas@gaisler.com>,
+        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Jes Sorensen <jes@trained-monkey.org>,
+        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
+Message-ID: <20200411181015.GC200683@unreal>
+References: <20200224085311.460338-1-leon@kernel.org>
+ <20200224085311.460338-4-leon@kernel.org>
+ <20200411155623.GA22175@zn.tnic>
+ <20200411161156.GA200683@unreal>
+ <20200411173504.GA11128@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20200411095301.18780-2-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200411173504.GA11128@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi--
-
-On 4/11/20 2:52 AM, Wang Wenhu wrote:
-> RPMON is a driver framework. It supports remote processor monitor
-> from user level. The baisc components are a character device
-
-                       basic
-
-> with sysfs interfaces for user space communication and different
-> kinds of message drivers introduced modularly, which are used to
-> communicate with remote processors.
-> 
-> As for user space, one can get notifications of different events
-> of remote processors, like their registrations, through standard
-> file read operation of the file discriptors related to the exported
-
-                                  descriptors
-
-> character devices. Actions can also be taken into account via
-> standard write operations to the devices. Besides, the sysfs class
-> attributes could be accessed conveniently.
-> 
-> Message drivers act as engines to communicate with remote processors.
-> Currently RPMON_QMI is available which uses QMI infrastructures
-> on Qualcomm SoC Platforms.
-> 
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+On Sat, Apr 11, 2020 at 07:35:04PM +0200, Borislav Petkov wrote:
+> On Sat, Apr 11, 2020 at 07:11:56PM +0300, Leon Romanovsky wrote:
+> > Probably, this is the right change, but I have a feeling that the right
+> > solution will be inside headers itself. It is a little bit strange that
+> > both very common kernel headers like module.h and vermagic.h are location
+> > dependant.
+>
+> Judging by how only a couple of net drivers include vermagic.h directly,
+> doh, of course:
+>
+> diff --git a/drivers/net/ethernet/3com/3c509.c b/drivers/net/ethernet/3com/3c509.c
+> index b762176a1406..139d0120f511 100644
+> --- a/drivers/net/ethernet/3com/3c509.c
+> +++ b/drivers/net/ethernet/3com/3c509.c
+> @@ -85,7 +85,6 @@
+>  #include <linux/device.h>
+>  #include <linux/eisa.h>
+>  #include <linux/bitops.h>
+> -#include <linux/vermagic.h>
+>
+>  #include <linux/uaccess.h>
+>  #include <asm/io.h>
+> diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
+> index 90312fcd6319..47b4215bb93b 100644
+> --- a/drivers/net/ethernet/3com/3c515.c
+> +++ b/drivers/net/ethernet/3com/3c515.c
+> @@ -22,7 +22,6 @@
+>
+>  */
+>
+> -#include <linux/vermagic.h>
+>  #define DRV_NAME		"3c515"
+>
+>  #define CORKSCREW 1
+>
 > ---
->  drivers/Kconfig        |   2 +
->  drivers/Makefile       |   1 +
->  drivers/rpmon/Kconfig  |  26 +++
->  drivers/rpmon/Makefile |   1 +
->  drivers/rpmon/rpmon.c  | 505 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/rpmon.h  |  68 ++++++
->  6 files changed, 603 insertions(+)
->  create mode 100644 drivers/rpmon/Kconfig
->  create mode 100644 drivers/rpmon/Makefile
->  create mode 100644 drivers/rpmon/rpmon.c
->  create mode 100644 include/linux/rpmon.h
-> 
-> diff --git a/drivers/rpmon/Kconfig b/drivers/rpmon/Kconfig
-> new file mode 100644
-> index 000000000000..505d263e0867
-> --- /dev/null
-> +++ b/drivers/rpmon/Kconfig
-> @@ -0,0 +1,26 @@
-> +#
-> +# Remote Processor Monitor Drivers
-> +#
-> +menu "Remote Processor Monitor Drivers"
-> +
-> +config RPMON
-> +	tristate "Remote Processor Monitor Core Framework"
-> +	help
-> +	  RPMON is a driver framework. It supports remote processor monitor
-> +	  from user level. The baisc components are a character device
+>
+> Drivers include
+>
+> #include <linux/module.h>
+>
+> which includes
+>
+> #include <asm/module.h>
+>
+> which defines the arch-specific MODULE_ARCH_VERMAGIC.
+>
+> Why did you need to include vermagic.h directly? i386 builds fine with
+> the vermagic.h includes removed or was it some other arches which needed
+> it?
 
-	                       basic
+I want to think that it was an outcome of some 0-day kbuild report,
+but I am not sure about that anymore [1].
 
-> +	  with sysfs interfaces for user space communication and different
-> +	  kinds of message drivers introduced modularly, which are used to
-> +	  communicate with remote processors.
-> +
-> +	  As for user space, one can get notifications of different events
-> +	  of remote processors, like their registrations, through standard
-> +	  file read operation of the file discriptors related to the exported
+Thanks
 
-	                                  descriptors
+[1] https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/
 
-> +	  character devices. Actions can also be taken into account via
-> +	  standard write operations to the devices. Besides, the sysfs class
-> +	  attributes could be accessed conveniently.
-> +
-> +	  Message drivers act as engines to communicate with remote processors.
-> +	  Currently RPMON_QMI is available which uses QMI infrastructures
-> +	  on Qualcomm SoC Platforms.
-> +
-> +endmenu
-
-> diff --git a/drivers/rpmon/rpmon.c b/drivers/rpmon/rpmon.c
-> new file mode 100644
-> index 000000000000..65aab4de6733
-> --- /dev/null
-> +++ b/drivers/rpmon/rpmon.c
-> @@ -0,0 +1,505 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-> + * All rights reserved.
-> + *
-> + * RPMON: An implementation of remote processor monitor freamwork
-
-                                                           framework
-
-> + * for platforms that multi-processors exists. RPMON is implemented
-
-      confusing wording above ^^^^^^^^^^^^^^^^^
-
-> + * with chardev and sysfs class as interfaces to communicate with
-> + * the user level. It supports different communication interfaces
-> + * added modularly with remote processors. Currently QMI implementation
-> + * is available.
-> + *
-> + * RPMON could be used to detect the stabilities of remote processors,
-> + * collect any kinds of information you are interested with, take
-
-                                               interested in,
-
-> + * actions like connection status check, and so on. Enhancements can
-> + * be made upon current implementation.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/cdev.h>
-> +#include <linux/rpmon.h>
-> +
-> +#define RPMON_MAX_DEVICES	(1U << MINORBITS)
-> +#define RPMON_NAME			"rpmon"
-> +
-> +static int rpmon_major;
-> +static struct cdev *rpmon_cdev;
-> +static DEFINE_IDR(rpmon_idr);
-> +static const struct file_operations rpmon_fops;
-> +
-> +/* Protect idr accesses */
-> +static DEFINE_MUTEX(minor_lock);
-> +
-
-[snip]
-
-> +/**
-> + * rpmon_event_notify - trigger an notify event
-> + * @info:  RPMON device capabilities
-> + * @event: RPMON event to be triggered
-> + */
-> +void rpmon_event_notify(struct rpmon_info *info, u32 event)
-> +{
-> +	struct rpmon_device *rpmondev = info->rpmon_dev;
-> +
-> +	if (event >= RPMON_EVENT_MAX) {
-> +		pr_err("Error un-supported rpmon event %d", event);
-
-		              unsupported
-
-> +		return;
-> +	}
-> +
-> +	atomic_set(&rpmondev->event, RPMON_EVENT(event));
-> +	wake_up_interruptible(&rpmondev->wait);
-> +	kill_fasync(&rpmondev->async_queue, SIGIO, POLL_IN);
-> +}
-> +EXPORT_SYMBOL_GPL(rpmon_event_notify);
-
-[snip]
-
-> +/**
-> + * rpmon_register_device - register a new rpmon interface device
-> + * @owner:	module that creates the new device
-> + * @parent:	parent device
-> + * @info:	romon device capabilities
-
-		s/romon/rpmon/
-
-> + *
-> + * returns zero on success or a negative error code.
-
-use kernel-doc notation:
-
-    * return: zero on success or a negative error code.
-
-> + */
-> +int __rpmon_register_device(struct module *owner,
-> +			    struct device *parent,
-> +			    struct rpmon_info *info)
-> +{
-> +	struct rpmon_device *rpmondev;
-> +	int ret = 0;
-> +
-> +	if (!rpmon_class_registered)
-> +		return -EPROBE_DEFER;
-> +
-> +	if (!parent || !info || !info->name || !info->version)
-> +		return -EINVAL;
-> +
-> +	info->rpmon_dev = NULL;
-> +
-> +	rpmondev = kzalloc(sizeof(*rpmondev), GFP_KERNEL);
-> +	if (!rpmondev)
-> +		return -ENOMEM;
-> +
-> +	rpmondev->owner = owner;
-> +	rpmondev->info = info;
-> +	mutex_init(&rpmondev->info_lock);
-> +	init_waitqueue_head(&rpmondev->wait);
-> +	atomic_set(&rpmondev->event, 0);
-> +
-> +	ret = rpmon_get_minor(rpmondev);
-> +	if (ret) {
-> +		kfree(rpmondev);
-> +		return ret;
-> +	}
-> +
-> +	device_initialize(&rpmondev->dev);
-> +	rpmondev->dev.devt = MKDEV(rpmon_major, rpmondev->minor);
-> +	rpmondev->dev.class = &rpmon_class;
-> +	rpmondev->dev.parent = parent;
-> +	rpmondev->dev.release = rpmon_device_release;
-> +	dev_set_drvdata(&rpmondev->dev, rpmondev);
-> +
-> +	ret = dev_set_name(&rpmondev->dev, RPMON_NAME"%d", rpmondev->minor);
-> +	if (ret)
-> +		goto err_device_create;
-> +
-> +	ret = device_add(&rpmondev->dev);
-> +	if (ret)
-> +		goto err_device_create;
-> +
-> +	if (rpmondev->info->rpmon_dev_add_attrs) {
-> +		ret = rpmondev->info->rpmon_dev_add_attrs(rpmondev);
-> +		if (ret)
-> +			goto err_dev_add_attrs;
-> +	}
-> +
-> +	info->rpmon_dev = rpmondev;
-> +
-> +	return 0;
-> +
-> +err_dev_add_attrs:
-> +	device_del(&rpmondev->dev);
-> +err_device_create:
-> +	rpmon_free_minor(rpmondev);
-> +	put_device(&rpmondev->dev);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(__rpmon_register_device);
-
-[snip]
-
-> +module_exit(rpmon_exit);
-> +
-> +MODULE_AUTHOR("Wang Wenhu");
-
-Please add email address in the MODULE_AUTHOR() string.
-About 3/4 of all uses of MODULE_AUTHOR() do so.
-
-> +MODULE_DESCRIPTION("Remote Processor Monitor Core Framework");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/rpmon.h b/include/linux/rpmon.h
-> new file mode 100644
-> index 000000000000..40983a3b5655
-> --- /dev/null
-> +++ b/include/linux/rpmon.h
-> @@ -0,0 +1,68 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-> + * All rights reserved.
-> + */
-> +
-> +#ifndef RPMON_H
-> +#define RPMON_H
-> +
-> +#include <net/sock.h>
-> +
-> +/* RPMON action would be taken */
-> +enum rpmon_exec {
-> +	RPMON_EXEC_CHECK_CONN = 0,
-> +	RPMON_EXEC_MAX,
-> +};
-> +
-> +/* RPMON events that may be notified */
-> +enum rpmon_event {
-> +	RPMON_EVENT_CHKCONN_FAIL = 0,
-> +	RPMON_EVENT_REGISTER,
-> +	RPMON_EVENT_MAX,
-> +};
-> +
-> +#define RPMON_EVENT(x)	(0x1 << x)
-> +#define RPMON_ACTION(x)	(0x1 << x)
-
-Unless you are very sure that 'x' above is never more than a simple
-expression, you should put x in parentheses, like so:
-
-> +#define RPMON_EVENT(x)	(1 << (x))
-> +#define RPMON_ACTION(x)	(1 << (x))
-
-so that there cannot be any operator precedence problems.
-
-
-thanks.
--- 
-~Randy
-
+>
+> Thx.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
