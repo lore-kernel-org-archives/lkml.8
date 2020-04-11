@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F0BC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB417C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9C520709
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D0B2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648323;
-	bh=p38O/2mQNXuwn5pJCSLK7R5UGjaTsUKvp2Qd+A+zw3k=;
+	s=default; t=1586648331;
+	bh=DV5Siq9nxgXQLlufSKA5rpKeFOV7fcM+GMowbjG7CGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+deLihJ8U0om9coiC8390pFN+VrEdTX/Viuf3Nb5pitShwD1MYKDFWExgntyB2WJ
-	 IYdz9OORaT3Myvhqh+UH0aMfkZTKznoyBqWwcCobePChz0j/y6HuGS3S3wC000zKdS
-	 g22t2t6iz9ukD6GY2ITv6QusPFbVqHjv0bBNNG5g=
+	b=ac6hc2GLO+MqduFT2BfMoae9Xbe8q81jLD36WtAlLDp3FfzLtvOktrDBNbD0eU9F4
+	 Vby71jEPBbeQU73mz2YaefJz4ke+ObPomYBXNPYCVacEe7pPab1Kc3mrnQOq+GJBGL
+	 NTA0E4s+uRp/yqBe2Uv3YHv9M6zqnNmT+M9HBUbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbgDKXih (ORCPT
+        id S1729660AbgDKXiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44326 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbgDKXH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:57 -0400
+        id S1728773AbgDKXHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E24E5214D8;
-        Sat, 11 Apr 2020 23:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E62820708;
+        Sat, 11 Apr 2020 23:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646477;
-        bh=p38O/2mQNXuwn5pJCSLK7R5UGjaTsUKvp2Qd+A+zw3k=;
+        s=default; t=1586646475;
+        bh=DV5Siq9nxgXQLlufSKA5rpKeFOV7fcM+GMowbjG7CGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iDSob8zjF7avg7ciOJQJNzrwWGqnZSkYSDbt5qw1qi3T6Aj2iPuYGIChlVazXY4YR
-         A24olyVKOzdIEBmTq0lfwWzGnJtH1JRh+XvcIUrkvHbq2yYwNvcnu4I50bcNWlKIVx
-         fGpbGCEIelExEDujuQu1yLHIbLxb66vVFms7rDjI=
+        b=ssPTzC2ZDGXo1V3v0X2fA1PYAcId0e1N3eqq5tGzgA4R9u2Bs9n2DGdRK/Kv8jCyR
+         eZjhHHZ6Ull5t8dBR7K+KNs57OZUX5KWwoXInYxm4Za5BrkbnkeRjDyueqFuCSmHx8
+         UgZGhb2EmRSpOFcqFoNQZnW3JeV5Z/WMy3PT0kAw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 043/121] net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278
-Date:   Sat, 11 Apr 2020 19:05:48 -0400
-Message-Id: <20200411230706.23855-43-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 041/121] RDMA/rxe: Fix configuration of atomic queue pair attributes
+Date:   Sat, 11 Apr 2020 19:05:46 -0400
+Message-Id: <20200411230706.23855-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -59,47 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ]
+[ Upstream commit fb3063d31995cc4cf1d47a406bb61d6fb1b1d58d ]
 
-Either port 5 or port 8 can be used on a 7278 device, make sure that
-port 5 also gets configured properly for 2Gb/sec in that case.
+From the comment above the definition of the roundup_pow_of_two() macro:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+     The result is undefined when n == 0.
+
+Hence only pass positive values to roundup_pow_of_two(). This patch fixes
+the following UBSAN complaint:
+
+  UBSAN: Undefined behaviour in ./include/linux/log2.h:57:13
+  shift exponent 64 is too large for 64-bit type 'long unsigned int'
+  Call Trace:
+   dump_stack+0xa5/0xe6
+   ubsan_epilogue+0x9/0x26
+   __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
+   rxe_qp_from_attr.cold+0x37/0x5d [rdma_rxe]
+   rxe_modify_qp+0x59/0x70 [rdma_rxe]
+   _ib_modify_qp+0x5aa/0x7c0 [ib_core]
+   ib_modify_qp+0x3b/0x50 [ib_core]
+   cma_modify_qp_rtr+0x234/0x260 [rdma_cm]
+   __rdma_accept+0x1a7/0x650 [rdma_cm]
+   nvmet_rdma_cm_handler+0x1286/0x14cd [nvmet_rdma]
+   cma_cm_event_handler+0x6b/0x330 [rdma_cm]
+   cma_ib_req_handler+0xe60/0x22d0 [rdma_cm]
+   cm_process_work+0x30/0x140 [ib_cm]
+   cm_req_handler+0x11f4/0x1cd0 [ib_cm]
+   cm_work_handler+0xb8/0x344e [ib_cm]
+   process_one_work+0x569/0xb60
+   worker_thread+0x7a/0x5d0
+   kthread+0x1e6/0x210
+   ret_from_fork+0x24/0x30
+
+Link: https://lore.kernel.org/r/20200217205714.26937-1-bvanassche@acm.org
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c      | 3 +++
- drivers/net/dsa/bcm_sf2_regs.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/infiniband/sw/rxe/rxe_qp.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index b0f5280a83cb6..d9b003432e71b 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -615,6 +615,9 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
- 	if (state->duplex == DUPLEX_FULL)
- 		reg |= DUPLX_MODE;
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index e2c6d1cedf416..f85273883794b 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -592,15 +592,16 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
+ 	int err;
  
-+	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
-+		reg |= GMIIP_SPEED_UP_2G;
-+
- 	core_writel(priv, reg, offset);
- }
+ 	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
+-		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
++		int max_rd_atomic = attr->max_rd_atomic ?
++			roundup_pow_of_two(attr->max_rd_atomic) : 0;
  
-diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
-index d8a5e6269c0ef..7844781763359 100644
---- a/drivers/net/dsa/bcm_sf2_regs.h
-+++ b/drivers/net/dsa/bcm_sf2_regs.h
-@@ -178,6 +178,7 @@ enum bcm_sf2_reg_offs {
- #define  RXFLOW_CNTL			(1 << 4)
- #define  TXFLOW_CNTL			(1 << 5)
- #define  SW_OVERRIDE			(1 << 6)
-+#define  GMIIP_SPEED_UP_2G		(1 << 7)
+ 		qp->attr.max_rd_atomic = max_rd_atomic;
+ 		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
+ 	}
  
- #define CORE_WATCHDOG_CTRL		0x001e4
- #define  SOFTWARE_RESET			(1 << 7)
+ 	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
+-		int max_dest_rd_atomic =
+-			__roundup_pow_of_two(attr->max_dest_rd_atomic);
++		int max_dest_rd_atomic = attr->max_dest_rd_atomic ?
++			roundup_pow_of_two(attr->max_dest_rd_atomic) : 0;
+ 
+ 		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
+ 
 -- 
 2.20.1
 
