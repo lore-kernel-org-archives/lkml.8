@@ -2,103 +2,100 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D19EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A17C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF5620787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41663217D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647713;
-	bh=VJVMs1ty4aklYcknxXSyG4+HJQ94axF1UzhRTrFSIW4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ly9aCOlDz65MxCOxvPr+PlckORcvCqPpFN8dWzD/9EckR8EzeMbdqGdqljwKY5q32
-	 udrJIvmL2uGrQcln3U0X6ZOZjIYzrROa4zTmgVoabh0AvMEBT4Cr+8+u2bkCF7hvLy
-	 09SwvCOv+fBpDXrgQSJIsHfMYfFOKjwntZK18sbI=
+	s=default; t=1586647715;
+	bh=0XvcfMjmExThNxJ5Lf2Fhb+tyCIfM3N6i5bSIHAsSqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0Zx5TLXABzLq6TKJmk9BohADq6MQYXOhE8cEOFQFWiN7h43nq9Sqcfcsm8o9jQ2g3
+	 ozQ0mMlaq2oKqFZ7ey3H3wESHBRnTCiU9Rk4YZxw0Q0P6zu6Xa3KzysgtQaIFwr4Lq
+	 RLblWgwVtxLwUZvHrPq7w/Gc8ALa3c3M6jDNYWLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgDKX2b (ORCPT
+        id S1730515AbgDKX23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40494 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:28:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728821AbgDKX21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:28:27 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729875AbgDKXLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9276720787;
-        Sat, 11 Apr 2020 23:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD0B21D90;
+        Sat, 11 Apr 2020 23:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586647706;
-        bh=VJVMs1ty4aklYcknxXSyG4+HJQ94axF1UzhRTrFSIW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BNMeb6gh6oZRFmHIvDKwnglHNapVVyGPi3dcxR0Swnshxs6nODmwJMN02UuRHnVZL
-         EJtXrd+uaB/rM7humfEMsBIefc4aJGdzX6/BdcdUNLsWJqxWWdn2T0IK/Ke379Xlp4
-         7xouNBvYkutFYjAFMx/MbiTswjpVdlyUlo2Z+e2U=
-Date:   Sat, 11 Apr 2020 16:28:24 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: phy: marvell: Fix pause frame negotiation
-Message-ID: <20200411162824.59791b84@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
-References: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
+        s=default; t=1586646682;
+        bh=0XvcfMjmExThNxJ5Lf2Fhb+tyCIfM3N6i5bSIHAsSqI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n2ihgHXjjhQ7QmAmM0S97ePRXDo7JV+SlWRSkRlg+Tqm7+rizOFV2Vu8ejXSnwluu
+         teBP8Mq2JBjJq2ujL9P8LVy4Tqiaa+BvRegnWO3TZ142IL3AoZd2Xu67u1PSXnGaCu
+         U/jwC1UCbenRZekzjWnOyZwnaAXrN6KYe56xF+fI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 078/108] brcmfmac: Fix double freeing in the fmac usb data path
+Date:   Sat, 11 Apr 2020 19:09:13 -0400
+Message-Id: <20200411230943.24951-78-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
+References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Apr 2020 18:51:25 +0200 Clemens Gruber wrote:
-> The negotiation of flow control / pause frame modes was broken since
-> commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
-> genphy_read_lpa()") moved the setting of phydev->duplex below the
-> phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
-> function, phydev->pause was no longer set.
-> 
-> Fix it by moving the parsing of the status variable before the blocks
-> dealing with the pause frames.
-> 
-> As the Marvell 88E1510 datasheet does not specify the timing between the
-> link status and the "Speed and Duplex Resolved" bit, we have to force
-> the link down as long as the resolved bit is not set, to avoid reporting
-> link up before we even have valid Speed/Duplex.
-> 
-> Tested with a Marvell 88E1510 (RGMII to Copper/1000Base-T)
-> 
-> Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
-> Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> ---
-> Changes since v1:
-> - Force link to 0 if resolved bit is not set as suggested by Russell King
-> 
->  drivers/net/phy/marvell.c | 46 ++++++++++++++++++++-------------------
->  1 file changed, 24 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-> index 9a8badafea8a..561df5e33f65 100644
-> --- a/drivers/net/phy/marvell.c
-> +++ b/drivers/net/phy/marvell.c
-> @@ -1278,6 +1278,30 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
->  	int lpa;
->  	int err;
->  
-> +	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
-> +		phydev->link = 0;
-> +		return 0;
-> +	}
+From: Raveendran Somu <raveendran.somu@cypress.com>
 
-This doesn't address my comment, so was I wrong? What I was trying to
-say is that the function updates the established link info as well as
-autoneg advertising info. If the link is not resolved we can't read the
-link info, but we should still report the advertising modes. No?
+[ Upstream commit 78179869dc3f5c0059bbf5d931a2717f1ad97ecd ]
+
+When the brcmf_fws_process_skb() fails to get hanger slot for
+queuing the skb, it tries to free the skb.
+But the caller brcmf_netdev_start_xmit() of that funciton frees
+the packet on error return value.
+This causes the double freeing and which caused the kernel crash.
+
+Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585124429-97371-3-git-send-email-chi-hsien.lin@cypress.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+index 2bd892df83cc5..80cc45c9aa4a1 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+@@ -2145,8 +2145,7 @@ int brcmf_fws_process_skb(struct brcmf_if *ifp, struct sk_buff *skb)
+ 		brcmf_fws_enq(fws, BRCMF_FWS_SKBSTATE_DELAYED, fifo, skb);
+ 		brcmf_fws_schedule_deq(fws);
+ 	} else {
+-		bphy_err(drvr, "drop skb: no hanger slot\n");
+-		brcmf_txfinalize(ifp, skb, false);
++		bphy_err(drvr, "no hanger slot available\n");
+ 		rc = -ENOMEM;
+ 	}
+ 	brcmf_fws_unlock(fws);
+-- 
+2.20.1
+
