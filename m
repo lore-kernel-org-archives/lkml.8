@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68A0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4C3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5F2216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E0E2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607707;
-	bh=WAx9wpGx097PHlOi1iR1fM2hZ06Y9lST3LGU68w8ky4=;
+	s=default; t=1586607711;
+	bh=fWWgd++w5d5wM+5pDefxm+BxNOy2Hr3EQBKHzfzIztQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgV+wprr2sZiWveJTED277mdEXdBahENL8maNH+QA2pAo0mf3AudqUiHHYUJUndh+
-	 1J406Dfo1IoUBvvjgIPlISE1AfWS+w35+oOt6Xi2aFT15jV9aaPRsnWGQGXZUCfe2k
-	 UrrQWPtkkTahJqaOzdI13MC0ZcMuhI+Dn2M5yFxY=
+	b=B6/pJAYfSIaVnL0jEaKgZ1n4ujajfFT7vpR/YAM8WlfOznmlPeGukbAiFepy4o/Yo
+	 rVeh9zXUHs9TDOuhgOzHxNXps5DnrveesOD8p0+j0IVjvMV05+Zw5NkddjtEu1YPrS
+	 YK3UsJb/4OgJXViyhIEnjF8aE9e1iRoOYWAyzr1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgDKMVo (ORCPT
+        id S1729215AbgDKMVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58062 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbgDKMVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:43 -0400
+        id S1729194AbgDKMVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EC3120692;
-        Sat, 11 Apr 2020 12:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8635206A1;
+        Sat, 11 Apr 2020 12:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607702;
-        bh=WAx9wpGx097PHlOi1iR1fM2hZ06Y9lST3LGU68w8ky4=;
+        s=default; t=1586607707;
+        bh=fWWgd++w5d5wM+5pDefxm+BxNOy2Hr3EQBKHzfzIztQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hIDmAsGU8+9Fu+GH3lVYhTncQSTaLsRZcwpCMoleDe1KrDHyhbt2y6d9lUZESyHOh
-         1C7A+9umfeeCeGY40QNf81BGF9MgTZisOFgT5nd61TrKRl3Mzpu/T8UTgiOElT6AVI
-         5vJo4b6b41MxF/Le5n4z8JT84oiamaUcg5lSGfCc=
+        b=i585IPp7i9XpImHPd7j8BJSyxdqzsE1CORhG3ztd2cSnS3hl67PlDTAfhhEzrxPih
+         8Cf9fTSLmhvgs92s5JQ2QEZyHp9aKlEiip8pj6KPu1Xc2IyleYrylPhr1FwaqLI1bC
+         6kEfFNS5YUkPXkbTgZJiBoxn6aaaXctRCVIb1RQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avihai Horon <avihaih@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.6 34/38] RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
-Date:   Sat, 11 Apr 2020 14:10:11 +0200
-Message-Id: <20200411115503.275531544@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+732528bae351682f1f27@syzkaller.appspotmail.com,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.6 36/38] fbcon: fix null-ptr-deref in fbcon_switch
+Date:   Sat, 11 Apr 2020 14:10:13 +0200
+Message-Id: <20200411115503.399629661@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -61,96 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Avihai Horon <avihaih@mellanox.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 987914ab841e2ec281a35b54348ab109b4c0bb4e upstream.
+commit b139f8b00db4a8ea75a4174346eafa48041aa489 upstream.
 
-After a successful allocation of path_rec, num_paths is set to 1, but any
-error after such allocation will leave num_paths uncleared.
+Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
 
-This causes to de-referencing a NULL pointer later on. Hence, num_paths
-needs to be set back to 0 if such an error occurs.
+syzkaller report: https://lkml.org/lkml/2020/3/27/403
+general protection fault, probably for non-canonical address
+0xdffffc000000006c: 0000 [#1] SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
+RIP: 0010:fbcon_switch+0x28f/0x1740
+drivers/video/fbdev/core/fbcon.c:2260
 
-The following crash from syzkaller revealed it.
+Call Trace:
+redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
+vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
+fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
+visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
+do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
+do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
+do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
+fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
+do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
+register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
+dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
+usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
 
-  kasan: CONFIG_KASAN_INLINE enabled
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-  CPU: 0 PID: 357 Comm: syz-executor060 Not tainted 4.18.0+ #311
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-  rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-  RIP: 0010:ib_copy_path_rec_to_user+0x94/0x3e0
-  Code: f1 f1 f1 f1 c7 40 0c 00 00 f4 f4 65 48 8b 04 25 28 00 00 00 48 89
-  45 c8 31 c0 e8 d7 60 24 ff 48 8d 7b 4c 48 89 f8 48 c1 e8 03 <42> 0f b6
-  14 30 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
-  RSP: 0018:ffff88006586f980 EFLAGS: 00010207
-  RAX: 0000000000000009 RBX: 0000000000000000 RCX: 1ffff1000d5fe475
-  RDX: ffff8800621e17c0 RSI: ffffffff820d45f9 RDI: 000000000000004c
-  RBP: ffff88006586fa50 R08: ffffed000cb0df73 R09: ffffed000cb0df72
-  R10: ffff88006586fa70 R11: ffffed000cb0df73 R12: 1ffff1000cb0df30
-  R13: ffff88006586fae8 R14: dffffc0000000000 R15: ffff88006aff2200
-  FS: 00000000016fc880(0000) GS:ffff88006d000000(0000)
-  knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000020000040 CR3: 0000000063fec000 CR4: 00000000000006b0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-  ? ib_copy_path_rec_from_user+0xcc0/0xcc0
-  ? __mutex_unlock_slowpath+0xfc/0x670
-  ? wait_for_completion+0x3b0/0x3b0
-  ? ucma_query_route+0x818/0xc60
-  ucma_query_route+0x818/0xc60
-  ? ucma_listen+0x1b0/0x1b0
-  ? sched_clock_cpu+0x18/0x1d0
-  ? sched_clock_cpu+0x18/0x1d0
-  ? ucma_listen+0x1b0/0x1b0
-  ? ucma_write+0x292/0x460
-  ucma_write+0x292/0x460
-  ? ucma_close_id+0x60/0x60
-  ? sched_clock_cpu+0x18/0x1d0
-  ? sched_clock_cpu+0x18/0x1d0
-  __vfs_write+0xf7/0x620
-  ? ucma_close_id+0x60/0x60
-  ? kernel_read+0x110/0x110
-  ? time_hardirqs_on+0x19/0x580
-  ? lock_acquire+0x18b/0x3a0
-  ? finish_task_switch+0xf3/0x5d0
-  ? _raw_spin_unlock_irq+0x29/0x40
-  ? _raw_spin_unlock_irq+0x29/0x40
-  ? finish_task_switch+0x1be/0x5d0
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? security_file_permission+0x172/0x1e0
-  vfs_write+0x192/0x460
-  ksys_write+0xc6/0x1a0
-  ? __ia32_sys_read+0xb0/0xb0
-  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-  ? do_syscall_64+0x1d/0x470
-  do_syscall_64+0x9e/0x470
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+accessing vc_cons[logo_shown].d->vc_top causes the bug.
 
-Fixes: 3c86aa70bf67 ("RDMA/cm: Add RDMA CM support for IBoE devices")
-Link: https://lore.kernel.org/r/20200318101741.47211-1-leon@kernel.org
-Signed-off-by: Avihai Horon <avihaih@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200329085647.25133-1-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/core/fbcon.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2968,6 +2968,7 @@ static int cma_resolve_iboe_route(struct
- err2:
- 	kfree(route->path_rec);
- 	route->path_rec = NULL;
-+	route->num_paths = 0;
- err1:
- 	kfree(work);
- 	return ret;
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -1283,6 +1283,9 @@ finished:
+ 	if (!con_is_bound(&fb_con))
+ 		fbcon_exit();
+ 
++	if (vc->vc_num == logo_shown)
++		logo_shown = FBCON_LOGO_CANSHOW;
++
+ 	return;
+ }
+ 
 
 
