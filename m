@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30978C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA885C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D5420644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB6220644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608089;
-	bh=4xxN/LclMpdMStU1HXKQchgd+iyfOMPCUl1uogaTx9k=;
+	s=default; t=1586608093;
+	bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DM5qS4Ehv015fgriCnnP/7YkfGpEOoWRJ2qcBDJjgMLsRW6mXo9GfpB5MuPg+xHIG
-	 O2x8seYBV4WyTKFhe5AEWN5p25jn69ZcjEOQVaE9F9vQn7TOT5BlqJoVQMeFFRDZS5
-	 6OVQ7MPXhbkGfzPD3OManJHVIgugZe/CHXXG+piE=
+	b=n7HPK7DdzWYc8s9FI6v3Gw78Q6Y+vgOzwH2mjSS9cJAt5XYRZutoQd8AJ7YB6R+Xr
+	 WgSjNIreG99MJQQACkZll+TBog3vW12KUSI4xMpzyf7eqaRjboQjKScHS3EO6a+yC6
+	 8NplkcK+fUo+uq+8QoWuh9yDaFNwibbeZUBXaWNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgDKMNN (ORCPT
+        id S1727605AbgDKMNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45968 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727608AbgDKMNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:09 -0400
+        id S1726735AbgDKMNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 240BA21556;
-        Sat, 11 Apr 2020 12:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E173621556;
+        Sat, 11 Apr 2020 12:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607189;
-        bh=4xxN/LclMpdMStU1HXKQchgd+iyfOMPCUl1uogaTx9k=;
+        s=default; t=1586607182;
+        bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvpZRp3KkMTGWcI2MloNS0+X+xjy294AN7Qoq/zYvCuiOEiF2IsFJ1us9OexwS2+/
-         9GK5+3vv3D03r2G9BsnSoehnYOAuWj29GqkUZCUo5ba7vPiJmpJeErExHSIMZkn4x/
-         nfNVNKCXQtzy+G2gDyuQciWm2lJf11YFKvZNRL0o=
+        b=OX2ywap5V4jG4S/DnkqFTjTtylV3l7CanNzGtx1iy4rFRK84+0FfNim5Zu8RSgQ/L
+         Wo/p+crdu0aC+YbSLFWipW7RfuxyvuoZMCLT7b4dSDRqqbhRKrRP+9y2Hop2Y6UQAg
+         fV/2qBGHnwwfIn3br9xZCjgdeJvMecgnZrPue1k0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 4.14 11/38] misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
-Date:   Sat, 11 Apr 2020 14:08:55 +0200
-Message-Id: <20200411115439.110258519@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.9 26/32] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat, 11 Apr 2020 14:09:05 +0200
+Message-Id: <20200411115422.334652602@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
-References: <20200411115437.795556138@linuxfoundation.org>
+In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
+References: <20200411115418.455500023@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,38 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 6b443e5c80b67a7b8a85b33d052d655ef9064e90 upstream.
+commit 71811cac8532b2387b3414f7cd8fe9e497482864 upstream.
 
-Adding more than 10 pci-endpoint-test devices results in
-"kobject_add_internal failed for pci-endpoint-test.1 with -EEXIST, don't
-try to register things with the same name in the same directory". This
-is because commit 2c156ac71c6b ("misc: Add host side PCI driver for PCI
-test function device") limited the length of the "name" to 20 characters.
-Change the length of the name to 24 in order to support upto 10000
-pci-endpoint-test devices.
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.14+
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/pci_endpoint_test.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/rfcomm/tty.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -466,7 +466,7 @@ static int pci_endpoint_test_probe(struc
- 	int err;
- 	int irq = 0;
- 	int id;
--	char name[20];
-+	char name[24];
- 	enum pci_barno bar;
- 	void __iomem *base;
- 	struct device *dev = &pdev->dev;
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
+ 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+-		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
++		if (dlc)
+ 			return -EBUSY;
+-		}
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+ 		if (!dlc)
+ 			return -ENOMEM;
 
 
