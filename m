@@ -2,51 +2,54 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F59BC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECB820708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D2221841
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646472;
-	bh=MWpLAvZyJRrYn5ZnqL48jiIVByF7JkVVIj1AX7DmTvU=;
+	s=default; t=1586646478;
+	bh=gp1hTmekrKQ5jnlM2xi6A48oQqXWOVZwwmo8eo8OPTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blxcjymnt+0I95/OkXZ9TX2W8WzYdNM3p6E/d8LmCvUSWQFA2jgGMlvSySSazr3CQ
-	 VR85TdzDYBKqtZ2mqzzKJrCtNfSo6K7iHzoY4WNma6RyXr5pLJ37IeZs/9VmervCdQ
-	 7CwUZkA2Dj76ImJTGN9UXyYhwxRMZENJnfdCxoNk=
+	b=1/ts9ERNqDzMxTsS5XR6paYbLj9M+X2PSnZ0r4l1kLiapDcs0Z72KiAfagnZzAGi/
+	 x/jPQpw/n+wMkH9MAEdW2SQUVfrO4BIznXvc5JoBMrkQzoWWSK222+QAbD60ehDiGB
+	 E4CzbxFmZNfXpGx+HvpFk9Gzt6aBU+N062yYB4OM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgDKXHu (ORCPT
+        id S1728782AbgDKXHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:07:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:07:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbgDKXHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:44 -0400
+        id S1728212AbgDKXHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFBA021D91;
-        Sat, 11 Apr 2020 23:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D720620708;
+        Sat, 11 Apr 2020 23:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646464;
-        bh=MWpLAvZyJRrYn5ZnqL48jiIVByF7JkVVIj1AX7DmTvU=;
+        s=default; t=1586646465;
+        bh=gp1hTmekrKQ5jnlM2xi6A48oQqXWOVZwwmo8eo8OPTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1ne5eeBRelrCdhu1i2CrThnWSs4oIruz0zi4NK5+f0qF5So6+e5+sm/6K9vCF4kM
-         YH+Z1pm7BLvwGNU+Uwc2U/FTIig1J/7UTluED5vdJR0iOe//nsxP5Od/eCZ0a6344o
-         l9T2DUAUZMJxijD1vk4qEUwCQKeWKiicqaK+FGcU=
+        b=lJ0Yoten1ho2hkaLdcIE+XtPlrBOstGchPT3M8Q3KctO167xRAjTM9hvDrWWaiAto
+         bB6rUavkWTIzNX2l06wd1pScYIzVmsVS5QsquKl16XLdpPE7aBWwHlFEQRZg492Io4
+         BXQ8KOFuBuPg11nivElvnPE/cy+SjuE6NYFtQ20M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 032/121] net: rmnet: add missing module alias
-Date:   Sat, 11 Apr 2020 19:05:37 -0400
-Message-Id: <20200411230706.23855-32-sashal@kernel.org>
+Cc:     Eric Bernstein <eric.bernstein@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 033/121] drm/amd/display: Fix default logger mask definition
+Date:   Sat, 11 Apr 2020 19:05:38 -0400
+Message-Id: <20200411230706.23855-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -59,35 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Eric Bernstein <eric.bernstein@amd.com>
 
-[ Upstream commit eed22a0685d651fc531bc63f215bb2a71d4b98e5 ]
+[ Upstream commit ccb6af1e25830e5601b6beacc698390f0245316f ]
 
-In the current rmnet code, there is no module alias.
-So, RTNL couldn't load rmnet module automatically.
+[Why]
+Logger mask was updated to uint64_t, however default mask definition was
+not updated for unsigned long long
 
-Test commands:
-    ip link add dummy0 type dummy
-    modprobe -rv rmnet
-    ip link add rmnet0 link dummy0 type rmnet  mux_id 1
+[How]
+Update DC_DEFAULT_LOG_MASK to support uint64_t type
 
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Eric Bernstein <eric.bernstein@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../drm/amd/display/include/logger_types.h    | 63 ++++++++++---------
+ 1 file changed, 32 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index fbf4cbcf1a654..d846a0ccea8f0 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -475,4 +475,5 @@ static void __exit rmnet_exit(void)
+diff --git a/drivers/gpu/drm/amd/display/include/logger_types.h b/drivers/gpu/drm/amd/display/include/logger_types.h
+index 2b219cdb13ad4..e0fcc0ce677e7 100644
+--- a/drivers/gpu/drm/amd/display/include/logger_types.h
++++ b/drivers/gpu/drm/amd/display/include/logger_types.h
+@@ -130,36 +130,37 @@ enum dc_log_type {
+ #define DC_MIN_LOG_MASK ((1 << LOG_ERROR) | \
+ 		(1 << LOG_DETECTION_EDID_PARSER))
  
- module_init(rmnet_init)
- module_exit(rmnet_exit)
-+MODULE_ALIAS_RTNL_LINK("rmnet");
- MODULE_LICENSE("GPL v2");
+-#define DC_DEFAULT_LOG_MASK ((1 << LOG_ERROR) | \
+-		(1 << LOG_WARNING) | \
+-		(1 << LOG_EVENT_MODE_SET) | \
+-		(1 << LOG_EVENT_DETECTION) | \
+-		(1 << LOG_EVENT_LINK_TRAINING) | \
+-		(1 << LOG_EVENT_LINK_LOSS) | \
+-		(1 << LOG_EVENT_UNDERFLOW) | \
+-		(1 << LOG_RESOURCE) | \
+-		(1 << LOG_FEATURE_OVERRIDE) | \
+-		(1 << LOG_DETECTION_EDID_PARSER) | \
+-		(1 << LOG_DC) | \
+-		(1 << LOG_HW_HOTPLUG) | \
+-		(1 << LOG_HW_SET_MODE) | \
+-		(1 << LOG_HW_RESUME_S3) | \
+-		(1 << LOG_HW_HPD_IRQ) | \
+-		(1 << LOG_SYNC) | \
+-		(1 << LOG_BANDWIDTH_VALIDATION) | \
+-		(1 << LOG_MST) | \
+-		(1 << LOG_DETECTION_DP_CAPS) | \
+-		(1 << LOG_BACKLIGHT)) | \
+-		(1 << LOG_I2C_AUX) | \
+-		(1 << LOG_IF_TRACE) | \
+-		(1 << LOG_DTN) /* | \
+-		(1 << LOG_DEBUG) | \
+-		(1 << LOG_BIOS) | \
+-		(1 << LOG_SURFACE) | \
+-		(1 << LOG_SCALER) | \
+-		(1 << LOG_DML) | \
+-		(1 << LOG_HW_LINK_TRAINING) | \
+-		(1 << LOG_HW_AUDIO)| \
+-		(1 << LOG_BANDWIDTH_CALCS)*/
++#define DC_DEFAULT_LOG_MASK ((1ULL << LOG_ERROR) | \
++		(1ULL << LOG_WARNING) | \
++		(1ULL << LOG_EVENT_MODE_SET) | \
++		(1ULL << LOG_EVENT_DETECTION) | \
++		(1ULL << LOG_EVENT_LINK_TRAINING) | \
++		(1ULL << LOG_EVENT_LINK_LOSS) | \
++		(1ULL << LOG_EVENT_UNDERFLOW) | \
++		(1ULL << LOG_RESOURCE) | \
++		(1ULL << LOG_FEATURE_OVERRIDE) | \
++		(1ULL << LOG_DETECTION_EDID_PARSER) | \
++		(1ULL << LOG_DC) | \
++		(1ULL << LOG_HW_HOTPLUG) | \
++		(1ULL << LOG_HW_SET_MODE) | \
++		(1ULL << LOG_HW_RESUME_S3) | \
++		(1ULL << LOG_HW_HPD_IRQ) | \
++		(1ULL << LOG_SYNC) | \
++		(1ULL << LOG_BANDWIDTH_VALIDATION) | \
++		(1ULL << LOG_MST) | \
++		(1ULL << LOG_DETECTION_DP_CAPS) | \
++		(1ULL << LOG_BACKLIGHT)) | \
++		(1ULL << LOG_I2C_AUX) | \
++		(1ULL << LOG_IF_TRACE) | \
++		(1ULL << LOG_HDMI_FRL) | \
++		(1ULL << LOG_DTN) /* | \
++		(1ULL << LOG_DEBUG) | \
++		(1ULL << LOG_BIOS) | \
++		(1ULL << LOG_SURFACE) | \
++		(1ULL << LOG_SCALER) | \
++		(1ULL << LOG_DML) | \
++		(1ULL << LOG_HW_LINK_TRAINING) | \
++		(1ULL << LOG_HW_AUDIO)| \
++		(1ULL << LOG_BANDWIDTH_CALCS)*/
+ 
+ #endif /* __DAL_LOGGER_TYPES_H__ */
 -- 
 2.20.1
 
