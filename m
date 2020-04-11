@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC23C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C647BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94604206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93939206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648518;
-	bh=lkcVYuZ8aZGNDzJgqJ9ujOQLq/vDxx6c2sRpBHSuzyw=;
+	s=default; t=1586648526;
+	bh=uFeRP47vXTEoEuaRzJQknWLtUU6Ua3oYSHBDHgpJuts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SEQmzJ8h2cHaTryECPJu1SulorvGInpUwk2NIokUdkYt5TWVOanLVI3ePzucu8K+4
-	 HGzGSLsnsN/l5lXf9oBcaeErhmDtiXup3b4Iwio6P+WjGaj5InfYEKf7m0avgWyKpX
-	 euN4SSKN4QYLMSG8m/fxj8FY3g5fPwV82V4bCCgY=
+	b=g24PK0c+0LhOm+eiZ0wBMcSTZDeyCD80fSFDbVvEZYMbgTZY9XU965H3eitFzhusb
+	 FMdQfOrpB30beexMFe2abnH6q4rjXEKjsbNxA4GLydzdJhRDFaHA0ya+Xq6U76ymhJ
+	 F6lBvYpocvUdHb2zuDGPt5b47mz7jwoJPEXwcFP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbgDKXl4 (ORCPT
+        id S1727752AbgDKXmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42362 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727752AbgDKXGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:49 -0400
+        id S1728507AbgDKXGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0E9B21744;
-        Sat, 11 Apr 2020 23:06:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE46120CC7;
+        Sat, 11 Apr 2020 23:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646408;
-        bh=lkcVYuZ8aZGNDzJgqJ9ujOQLq/vDxx6c2sRpBHSuzyw=;
+        s=default; t=1586646407;
+        bh=uFeRP47vXTEoEuaRzJQknWLtUU6Ua3oYSHBDHgpJuts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kb9lHcs4ANv4/ZI+ZRsi24cVy44UlQ12BWAnTOPU/X9ef43nHT++RT14I2Urf8W0m
-         uBaR/MNr2ZXESMNDsDlDbsN1usd5FUViRd5yQfeJ56GvtmVERYMiC5e3PP0QdjQClS
-         8bnpCDbI/1xgV1skx8RHt7EITI0W/8S06s/kRF1Q=
+        b=Gu9EBF99rNFX9jBbGES6lSTlwn/BouZTczmGqUaqAT4cWsef3w7ovLk2682Dpjls7
+         mFQifs6Q6T54fHrXEPMj15bjYeRIUeULA2Ubzj0FFJzyU6pKT2jQ5+GBGZ7haBt5Ay
+         7kcJpm8BuWz1Tp/oTp7o0VTp9gIbqydvkChHya/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 144/149] ext4: check for non-zero journal inum in ext4_calculate_overhead
-Date:   Sat, 11 Apr 2020 19:03:41 -0400
-Message-Id: <20200411230347.22371-144-sashal@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 143/149] nvmem: fix memory leak in error path
+Date:   Sat, 11 Apr 2020 19:03:40 -0400
+Message-Id: <20200411230347.22371-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,75 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit f1eec3b0d0a849996ebee733b053efa71803dad5 ]
+[ Upstream commit f7d8d7dcd978382dd1dd36e240dcddbfa6697796 ]
 
-While calculating overhead for internal journal, also check
-that j_inum shouldn't be 0. Otherwise we get below error with
-xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
+We need to free the ida mapping and nvmem struct if the write-protect
+GPIO lookup fails.
 
-It could be simply reproduced with loop device with an external journal
-and marking blockdev as RO before mounting.
-
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
-NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
-<...>
-NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
-LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
-<...>
-Call Trace:
-generic_make_request_checks+0x6b0/0x7d0 (unreliable)
-generic_make_request+0x3c/0x420
-submit_bio+0xd8/0x200
-submit_bh_wbc+0x1e8/0x250
-__sync_dirty_buffer+0xd0/0x210
-ext4_commit_super+0x310/0x420 [ext4]
-__ext4_error+0xa4/0x1e0 [ext4]
-__ext4_iget+0x388/0xe10 [ext4]
-ext4_get_journal_inode+0x40/0x150 [ext4]
-ext4_calculate_overhead+0x5a8/0x610 [ext4]
-ext4_fill_super+0x3188/0x3260 [ext4]
-mount_bdev+0x778/0x8f0
-ext4_mount+0x28/0x50 [ext4]
-mount_fs+0x74/0x230
-vfs_kern_mount.part.6+0x6c/0x250
-do_mount+0x2fc/0x1280
-sys_mount+0x158/0x180
-system_call+0x5c/0x70
-EXT4-fs (pmem1p2): no journal found
-EXT4-fs (pmem1p2): can't get journal size
-EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
-
-Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200310132257.23358-7-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvmem/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 0c7c4adb664ec..d5b07c7a65435 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3609,7 +3609,8 @@ int ext4_calculate_overhead(struct super_block *sb)
- 	 */
- 	if (sbi->s_journal && !sbi->journal_bdev)
- 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
--	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
-+	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
-+		/* j_inum for internal journal is non-zero */
- 		j_inode = ext4_get_journal_inode(sb, j_inum);
- 		if (j_inode) {
- 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 5f1988498d752..415ed8c5583a3 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -353,8 +353,12 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+ 	else
+ 		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
+ 						    GPIOD_OUT_HIGH);
+-	if (IS_ERR(nvmem->wp_gpio))
+-		return ERR_CAST(nvmem->wp_gpio);
++	if (IS_ERR(nvmem->wp_gpio)) {
++		ida_simple_remove(&nvmem_ida, nvmem->id);
++		rval = PTR_ERR(nvmem->wp_gpio);
++		kfree(nvmem);
++		return ERR_PTR(rval);
++	}
+ 
+ 
+ 	kref_init(&nvmem->refcnt);
 -- 
 2.20.1
 
