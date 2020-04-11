@@ -5,79 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8074FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B245FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5884121744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B3F2166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ve00Ui45"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8orfjhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgDKAUZ (ORCPT
+        id S1726930AbgDKAU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 20:20:25 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35983 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgDKAUT (ORCPT
+        Fri, 10 Apr 2020 20:20:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42377 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbgDKAUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 20:20:19 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a201so4001464wme.1;
-        Fri, 10 Apr 2020 17:20:18 -0700 (PDT)
+        Fri, 10 Apr 2020 20:20:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j2so4044273wrs.9;
+        Fri, 10 Apr 2020 17:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WqLpUe/3+ebAsfSyEr8eWQGQOEEyLPgemLyG5SvrhHI=;
-        b=ve00Ui45sd+mRIObqi4fVxpgDL1FPby9VCzCj4up6kJluTET85j6C/jkaFTqIiYuT2
-         1GhQGH7Sx8HCdF86m+cAKpqG94WATIWwwv3oP5hGRWQBpkyyCQxLel51jzVSK6Nd2Zai
-         lxaMJxKAfk7aEH+J5TOxzxVln/e4UL90yec+A7WY7I/6rEvheZU6yvou3zB6uqQmyrZe
-         Zlj5M8US/WwEC2BcQddcpVluxzqwGbCNosji3FGUDXv48GI6Tr/w1FUlo+a/AZOT6kQl
-         EO2vgzMWWDQKe+G9BK1TqgJccORmQo6iJZpkHulI2Mkf2LTPpZQPheRN4exbUQCIM5lc
-         pUmQ==
+        bh=O9b/dTxnP3pkeLImyemjxWnk87nyS0C4fdjH2jH+qHw=;
+        b=r8orfjhLMG/0hza2PWsZbyXhxiI18aYNRYCiWCP3avl3+kWwYhU6WIynlaL32lngM8
+         rwvIPYHj8nGKDnBUMPFH5PeuVdQVH0K/kuEqF4p8vxsVa6nFUbPfTCq/cZTSxACqkTDa
+         MKxV00rU2M47GA8geQ5cgHQ11cP9RB9p8onGYJn5jKUNoesoVDKo/MuIMIxu5X8WMT7Z
+         0kmT929SWRrhJXPLNkvTe5t/MrS0n51PXLy8XCXNoKyWb3EDxPpoDsMgFy7xc4AE98LD
+         6phlWSo/2v+AL4Tkmery3vBqxs1zCsUacH4QYL8fmEAknchGfGZqQj9NnTua8eKI3hhh
+         DSrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WqLpUe/3+ebAsfSyEr8eWQGQOEEyLPgemLyG5SvrhHI=;
-        b=R8MACe4Zcce+OB2s1WOhn68taUezANBy0QkD5yknRpYWVjr2/VOGnGMtrX7QNnBKim
-         txBHmDMvbB7FfY4u5TiH8dT9ZQpOntVyF+ytFYZHe4/PZFODI0WhCjyaGC2G4hDkrZ5n
-         286n3mkdGVlYNEb4aPtZlZ9rzcuqoQX6iBhvzfY66+mNC1ogu8/e2mJVAs/Bx7eThAYV
-         D+dubES/InM9SRLgdWS1lEe18GB4RXWEs6Bo/2E+GZ0wFEhaL2g/I9Y1AuYbImoxjFKX
-         c0229AeDSmcvyNgOV2c1J6/3LNnzJrW70sNgZLNvjSi4uE8iAoE4bYeKsvqgx93Gss4X
-         /+UQ==
-X-Gm-Message-State: AGi0Pubw80t9+Pgzcck6RWFekHOVvfPazUBBV4ZIoUSGTzjWNwUw3YMw
-        ww41YqhkJBjD8qjoN+e5/zzlADmCXJMo
-X-Google-Smtp-Source: APiQypJTY6BBVpJIbEZoG4XC26odBRDzb6vOdpzxy/8sR/Td9iLmxzbhYDkcX8M+D2UiwGrPh8Pt7A==
-X-Received: by 2002:a1c:7ed7:: with SMTP id z206mr6958804wmc.64.1586564417420;
-        Fri, 10 Apr 2020 17:20:17 -0700 (PDT)
+        bh=O9b/dTxnP3pkeLImyemjxWnk87nyS0C4fdjH2jH+qHw=;
+        b=gTbNDVm/4t4K/18/vllUmRcK6zyUAqz4Ukd3jsnHYymGuHekmARIftE1AQouwwAo6Y
+         G/ec+armXkHyo8t4D7BgancRqnm2hyE/k9GJlsYfJXCsW8DkuMJO0s3Euj9uFz/t+xpy
+         8MIXxSap8nRoapwAaGspczl7LSW1LcJ54XoN3MqsNkvw+ldnqhP8U30QZ7NwqdMGtAqL
+         2oNPR3vba5FigiEHjNko1ObA2TkoF0BZdO/bcbx5LSXgacX+V7LyEy/Kere+UwrxN9lv
+         kLHy++u2eeCeIxX/qh/hJpA0a6DwL4c8Um4LSfiyaakZ9dA6DPEgAoKIIvUK6ysBg7lZ
+         B6lg==
+X-Gm-Message-State: AGi0PubozMdL5RwUatTDZ4n9N6IbmaDLuazCu/6k/F+m4YsGSTm4C12v
+        GTWavYWpAJlWIKh9eYEeMoFk+Y2Cfjus
+X-Google-Smtp-Source: APiQypIja6lxbNGo6M+D5FXZavVLgNGpXfZDMZy5KKEVg59S4vkiTctDAOl6HJz1UyArTsPqoEUTpA==
+X-Received: by 2002:a5d:4290:: with SMTP id k16mr6810714wrq.406.1586564421205;
+        Fri, 10 Apr 2020 17:20:21 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-14-153.as13285.net. [2.102.14.153])
-        by smtp.gmail.com with ESMTPSA id b191sm5091594wmd.39.2020.04.10.17.20.15
+        by smtp.gmail.com with ESMTPSA id b191sm5091594wmd.39.2020.04.10.17.20.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 17:20:16 -0700 (PDT)
+        Fri, 10 Apr 2020 17:20:20 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        brcm80211-dev-list.pdl@broadcom.com (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        brcm80211-dev-list@cypress.com (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
-Subject: [PATCH 5/9] mac80211: Add missing annotation for brcms_down()
-Date:   Sat, 11 Apr 2020 01:19:29 +0100
-Message-Id: <20200411001933.10072-6-jbi.octave@gmail.com>
+        QLogic-Storage-Upstream@qlogic.com (supporter:BROADCOM BNX2FC 10
+        GIGABIT FCOE DRIVER), "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org (open list:BROADCOM BNX2FC 10 GIGABIT FCOE
+        DRIVER)
+Subject: [PATCH 7/9] scsi: bnx2fc: Add missing annotation for bnx2fc_abts_cleanup()
+Date:   Sat, 11 Apr 2020 01:19:31 +0100
+Message-Id: <20200411001933.10072-8-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200411001933.10072-1-jbi.octave@gmail.com>
 References: <0/9>
@@ -89,30 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at brcms_down()
+Sparse reports a warning at bnx2fc_abts_cleanup()
 
-warning: context imbalance in brcms_down()
-	- unexpected unlock
-The root cause is the missing annotation at brcms_down()
-Add the missing __must_hold(&wl->lock) annotation
+warning: context imbalance in bnx2fc_abts_cleanup() - unexpected unlock
+
+The root cause is the missing annotation at bnx2fc_abts_cleanup()
+
+Add the missing  __must_hold(&tgt->tgt_lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c | 1 +
+ drivers/scsi/bnx2fc/bnx2fc_io.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-index c3dbeacea6ca..648efcbc819f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-@@ -1431,6 +1431,7 @@ int brcms_up(struct brcms_info *wl)
-  * precondition: perimeter lock has been acquired
-  */
- void brcms_down(struct brcms_info *wl)
-+	__must_hold(&wl->lock)
- {
- 	uint callbacks, ret_val = 0;
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
+index 4c8122a82322..b45f40db9379 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_io.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
+@@ -1081,6 +1081,7 @@ int bnx2fc_eh_device_reset(struct scsi_cmnd *sc_cmd)
+ }
  
+ static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
++	__must_hold(&tgt->tgt_lock)
+ {
+ 	struct bnx2fc_rport *tgt = io_req->tgt;
+ 	unsigned int time_left;
 -- 
 2.24.1
 
