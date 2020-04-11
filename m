@@ -2,141 +2,122 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5752DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0914C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AE32084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7751F2063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HANf0K7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgDKHjO (ORCPT
+        id S1726037AbgDKHoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:39:14 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:47522 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgDKHjO (ORCPT
+        Sat, 11 Apr 2020 03:44:38 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:37086 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725899AbgDKHoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:39:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id a15so4714083ild.14
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:39:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SR2YA+gRBOnmPYpzAYGHcg7N4JVcFTNfL3ArWCrn61U=;
-        b=hpr1ivNmGKip9PTWpUsDcH6hc7aYKREpdj48AyfTxksJ8SJoHh4MqC0F/QpcG3vv+3
-         IwvS/9AUdgdIjWU5rTjy6id3uSqOPumV3Et11Jc+fkZpZEOD7zSw0ckJ0nY+LfzwFlck
-         5I3Ugd+0hh90ntu5xSo/q2My5362TqbZ2kyRbj8RiMZDeFEsF7NKRmvoySKwkWRQlKBh
-         5h0ILYe3hAhaQxkR0ludDqnw/aZBrPAd1vauLffruRR+jwrME19PXcEHcaEYxzlBJz9X
-         vyMYsikt4SAWBQR472O5ibXWvZQddGODOlsD/wEsqf4U5qeCU/4QiSc16SQy0VYvKhJK
-         ry5Q==
-X-Gm-Message-State: AGi0PubMEuHR0gAmoInRh43aPjobBslr4D0BnRp41dBL+Th81JFXG/ef
-        qA53z2PolTdWkGdwMQUA3jRYQAalctVD/RasuWSnHeqq7b8X
-X-Google-Smtp-Source: APiQypI3tcC2+zogyWgZTHezJzC93BzR1M5g+tow2+klS5qw7OmdMte71Ullm0LN6WWRwCyJ7BJ2oWjjgBvPZcBv/jVJoZ7IzUDc
+        Sat, 11 Apr 2020 03:44:37 -0400
+X-UUID: ba456588f9db49a798718c0c55767750-20200411
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AHxhUn2kmmaiTpuNqyuJ91haPBs27z9l86TI6FY89lo=;
+        b=HANf0K7OwymCJmRC/RqCZPhcDTIdxnfUP1R+AltCBZ+zuN5FxTUZf1Jmq7SZPjEA64Zo7Cm6k0iEUn8EBIKXUwqgzRMevEGEe2dXimYWLCTinPY5dR0tTEszinZQr2Ky1efo4hfI5SOZBRm67ReyBFyIbpnhiWeE8oSeXfJmGKE=;
+X-UUID: ba456588f9db49a798718c0c55767750-20200411
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1950745472; Sat, 11 Apr 2020 15:44:28 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 11 Apr
+ 2020 15:44:28 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Sat, 11 Apr 2020 15:44:25 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Subject: [PATCH v6 3/4] drm/mediatek: add the mipitx driving control
+Date:   Sat, 11 Apr 2020 15:44:07 +0800
+Message-ID: <20200411074408.38090-4-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200411074408.38090-1-jitao.shi@mediatek.com>
+References: <20200411074408.38090-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9494:: with SMTP id v20mr7621253ioj.101.1586590753770;
- Sat, 11 Apr 2020 00:39:13 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 00:39:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048518b05a2fef23a@google.com>
-Subject: WARNING in iomap_apply
-From:   syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>
-To:     darrick.wong@oracle.com, hch@infradead.org, jack@suse.cz,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, riteshh@linux.ibm.com,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F585F1D0662B1E91FEA6FA77DF2A7867D88A48573C1192C85F33AC2D99FED72D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+QWRkIGEgcHJvcGVydHkgaW4gZGV2aWNlIHRyZWUgdG8gY29udHJvbCB0aGUgZHJpdmluZyBieSBk
+aWZmZXJlbnQNCmJvYXJkLg0KDQpSZXZpZXdlZC1ieTogQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5n
+Lmh1QGtlcm5lbC5vcmc+DQpSZXZpZXdlZC1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMu
+YmdnQGdtYWlsLmNvbT4NClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
+dGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5jICAg
+ICAgICB8IDE0ICsrKysrKysrKysrKysrDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19t
+aXBpX3R4LmggICAgICAgIHwgIDEgKw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4
+MTgzX21pcGlfdHguYyB8ICA3ICsrKysrKysNCiAzIGZpbGVzIGNoYW5nZWQsIDIyIGluc2VydGlv
+bnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90
+eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMNCmluZGV4IGU0ZDM0
+NDg0ZWNjOC4uZTMwMWFmNjQ4MDllIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19taXBpX3R4LmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlw
+aV90eC5jDQpAQCAtMTI1LDYgKzEyNSwyMCBAQCBzdGF0aWMgaW50IG10a19taXBpX3R4X3Byb2Jl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQor
+CXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgImRyaXZlLXN0cmVuZ3Ro
+LW1pY3JvYW1wIiwNCisJCQkJICAgJm1pcGlfdHgtPm1pcGl0eF9kcml2ZSk7DQorCS8qIElmIGNh
+bid0IGdldCB0aGUgIm1pcGlfdHgtPm1pcGl0eF9kcml2ZSIsIHNldCBpdCBkZWZhdWx0IDB4OCAq
+Lw0KKwlpZiAocmV0IDwgMCkNCisJCW1pcGlfdHgtPm1pcGl0eF9kcml2ZSA9IDQ2MDA7DQorDQor
+CS8qIGNoZWNrIHRoZSBtaXBpdHhfZHJpdmUgdmFsaWQgKi8NCisJaWYgKG1pcGlfdHgtPm1pcGl0
+eF9kcml2ZSA+IDYwMDAgfHwgbWlwaV90eC0+bWlwaXR4X2RyaXZlIDwgMzAwMCkgew0KKwkJZGV2
+X3dhcm4oZGV2LCAiZHJpdmUtc3RyZW5ndGgtbWljcm9hbXAgaXMgaW52YWxpZCAlZCwgbm90IGlu
+IDMwMDAgfiA2MDAwXG4iLA0KKwkJCSBtaXBpX3R4LT5taXBpdHhfZHJpdmUpOw0KKwkJbWlwaV90
+eC0+bWlwaXR4X2RyaXZlID0gY2xhbXBfdmFsKG1pcGlfdHgtPm1pcGl0eF9kcml2ZSwgMzAwMCwN
+CisJCQkJCQkgIDYwMDApOw0KKwl9DQorDQogCXJlZl9jbGtfbmFtZSA9IF9fY2xrX2dldF9uYW1l
+KHJlZl9jbGspOw0KIA0KIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyhkZXYtPm9mX25v
+ZGUsICJjbG9jay1vdXRwdXQtbmFtZXMiLA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfbWlwaV90eC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBp
+X3R4LmgNCmluZGV4IDQxM2YzNWQ4NjIxOS4uZWVhNDQzMjdmZTlmIDEwMDY0NA0KLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmgNCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfbWlwaV90eC5oDQpAQCAtMjcsNiArMjcsNyBAQCBzdHJ1Y3QgbXRrX21p
+cGlfdHggew0KIAlzdHJ1Y3QgZGV2aWNlICpkZXY7DQogCXZvaWQgX19pb21lbSAqcmVnczsNCiAJ
+dTMyIGRhdGFfcmF0ZTsNCisJdTMyIG1pcGl0eF9kcml2ZTsNCiAJY29uc3Qgc3RydWN0IG10a19t
+aXBpdHhfZGF0YSAqZHJpdmVyX2RhdGE7DQogCXN0cnVjdCBjbGtfaHcgcGxsX2h3Ow0KIAlzdHJ1
+Y3QgY2xrICpwbGw7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19t
+dDgxODNfbWlwaV90eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlw
+aV90eC5jDQppbmRleCA5MWYwOGEzNTFmZDAuLmU0Y2M5Njc3NTBjYiAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4MTgzX21pcGlfdHguYw0KKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlwaV90eC5jDQpAQCAtMTcsNiArMTcsOSBA
+QA0KICNkZWZpbmUgUkdfRFNJX0JHX0NPUkVfRU4JCUJJVCg3KQ0KICNkZWZpbmUgUkdfRFNJX1BB
+RF9USUVMX1NFTAkJQklUKDgpDQogDQorI2RlZmluZSBNSVBJVFhfVk9MVEFHRV9TRUwJMHgwMDEw
+DQorI2RlZmluZSBSR19EU0lfSFNUWF9MRE9fUkVGX1NFTAkJKDB4ZiA8PCA2KQ0KKw0KICNkZWZp
+bmUgTUlQSVRYX1BMTF9QV1IJCTB4MDAyOA0KICNkZWZpbmUgTUlQSVRYX1BMTF9DT04wCQkweDAw
+MmMNCiAjZGVmaW5lIE1JUElUWF9QTExfQ09OMQkJMHgwMDMwDQpAQCAtMTIzLDYgKzEyNiwxMCBA
+QCBzdGF0aWMgdm9pZCBtdGtfbWlwaV90eF9wb3dlcl9vbl9zaWduYWwoc3RydWN0IHBoeSAqcGh5
+KQ0KIAltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElUWF9EM19TV19DVExfRU4s
+IERTSV9TV19DVExfRU4pOw0KIAltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElU
+WF9DS19TV19DVExfRU4sIERTSV9TV19DVExfRU4pOw0KIA0KKwltdGtfbWlwaV90eF91cGRhdGVf
+Yml0cyhtaXBpX3R4LCBNSVBJVFhfVk9MVEFHRV9TRUwsDQorCQkJCVJHX0RTSV9IU1RYX0xET19S
+RUZfU0VMLA0KKwkJCQkobWlwaV90eC0+bWlwaXR4X2RyaXZlIC0gMzAwMCkgLyAyMDAgPDwgNik7
+DQorDQogCW10a19taXBpX3R4X3NldF9iaXRzKG1pcGlfdHgsIE1JUElUWF9DS19DS01PREVfRU4s
+IERTSV9DS19DS01PREVfRU4pOw0KIH0NCiANCi0tIA0KMi4yMS4wDQo=
 
-syzbot found the following crash on:
-
-HEAD commit:    7e634208 Merge tag 'acpi-5.7-rc1-2' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=127ebeb3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=12205d036cec317f
-dashboard link: https://syzkaller.appspot.com/bug?extid=77fa5bdb65cc39711820
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1196f257e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c336c7e00000
-
-The bug was bisected to:
-
-commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
-Author: Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri Feb 28 09:26:58 2020 +0000
-
-    ext4: move ext4_fiemap to use iomap framework
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
-Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7023 Comm: syz-executor296 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
-Code: ff e9 0e fd ff ff e8 23 30 96 ff 0f 0b e9 07 f7 ff ff e8 17 30 96 ff 0f 0b 49 c7 c4 fb ff ff ff e9 35 f9 ff ff e8 04 30 96 ff <0f> 0b 49 c7 c4 fb ff ff ff e9 22 f9 ff ff e8 f1 2f 96 ff 0f 0b e9
-RSP: 0018:ffffc90000f87968 EFLAGS: 00010293
-RAX: ffff8880a1b00480 RBX: ffffc90000f879c8 RCX: ffffffff81dcf934
-RDX: 0000000000000000 RSI: ffffffff81dd016c RDI: 0000000000000007
-RBP: 0000000000000000 R08: ffff8880a1b00480 R09: ffffed1015cc70fc
-R10: ffff8880ae6387db R11: ffffed1015cc70fb R12: 0000000000000000
-R13: ffff888085e716b8 R14: 0000000000000000 R15: ffffc90000f87b50
- iomap_fiemap+0x184/0x2c0 fs/iomap/fiemap.c:88
- _ext4_fiemap+0x178/0x4f0 fs/ext4/extents.c:4860
- ovl_fiemap+0x13f/0x200 fs/overlayfs/inode.c:467
- ioctl_fiemap fs/ioctl.c:226 [inline]
- do_vfs_ioctl+0x8d7/0x12d0 fs/ioctl.c:715
- ksys_ioctl+0xa3/0x180 fs/ioctl.c:761
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x440309
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff2dba7508 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440309
-RDX: 00000000200003c0 RSI: 00000000c020660b RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401b90
-R13: 0000000000401c20 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
