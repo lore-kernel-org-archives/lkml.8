@@ -2,72 +2,103 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7CAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C059C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658062083E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586571667;
-	bh=9FXFgoWgktV3YzcubxYjcxavPodS9HRGdrHbO04bwv0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=u9REakfQO3RTgca/J0HCfpZFspAOu5gX4i9e5NolSxeJzxfzbr4zRB8XAIBmIseKh
-	 4Nj4JBQhD6gYWmQjyy/XKLtEcXS4ViHnN1rAYxIpos2e8A3r91GFt8oQlTX3PU7pou
-	 gcujRK8lOCna4PJXaoYMMolJ9OmUd3uS6hsI2PUc=
+	by mail.kernel.org (Postfix) with ESMTP id 75E7C206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zFfH/Ijy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDKCVG (ORCPT
+        id S1726695AbgDKCVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgDKCVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:21:05 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC16D206A1;
-        Sat, 11 Apr 2020 02:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586571665;
-        bh=9FXFgoWgktV3YzcubxYjcxavPodS9HRGdrHbO04bwv0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=TFt33anl8qdBEz00Cs6WAqt2RGnbP4oHNDorno+yXiSJ+ouo92cimWPsnINvMnhDI
-         DvwwCOMxZ8GRdD/dAAimAuj+rLJ2MF0/BXl1qmE8OjyilWaW6UGEPZyp3IzIHezY3R
-         JAyQxn27YSwSnP5/vFSamEAyFDeH/JXHePp90Yv0=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 10 Apr 2020 22:21:48 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36946 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbgDKCVr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:21:47 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LeCO087819;
+        Fri, 10 Apr 2020 21:21:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586571700;
+        bh=nIXY7QAeXSv8f9XHkzJPsSyBosxDw+h4kY/edLG+RLk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zFfH/Ijy0vVIAU66wul/eHxMcqaa/j2W/sKnCWZm+5r+SIGuyCTiY4sH49KIi3dWk
+         qt+DIl0ua2SFyX1x5Cx4dtzaP2ieps9q+P2+73Af07bjwmhK1udIK1bGoL1VY+mH+W
+         kuBCMOyw6Oj4CFZ0ht9vXVWQMj9FVLXDEPaewKpM=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03B2LegC083286
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Apr 2020 21:21:40 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
+ Apr 2020 21:21:39 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 10 Apr 2020 21:21:40 -0500
+Received: from [10.250.133.142] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LVFq000372;
+        Fri, 10 Apr 2020 21:21:33 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
+ specific bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200327104727.4708-1-kishon@ti.com>
+ <20200327104727.4708-2-kishon@ti.com> <20200410163817.GA24330@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <86f6679d-1a5d-16fe-fe1a-f7ae8f46617a@ti.com>
+Date:   Sat, 11 Apr 2020 07:51:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200408020234.31764-1-zhang.lyra@gmail.com>
-References: <20200331104532.12698-1-chunyan.zhang@unisoc.com> <20200408020234.31764-1-zhang.lyra@gmail.com>
-Subject: Re: [PATCH] clk: sprd: don't gate uart console clock
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Date:   Fri, 10 Apr 2020 19:21:04 -0700
-Message-ID: <158657166498.199533.13770774815921736950@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200410163817.GA24330@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chunyan Zhang (2020-04-07 19:02:34)
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->=20
-> Don't gate uart1_eb which provides console clock, gating that clock would
-> make serial stop working if serial driver didn't enable that explicitly.
->=20
-> Fixes: 0e4b8a2349f3 ("clk: sprd: add clocks support for SC9863A")
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
 
-Applied to clk-fixes
+
+On 4/10/2020 10:08 PM, Rob Herring wrote:
+> On Fri, 27 Mar 2020 16:17:25 +0530, Kishon Vijay Abraham I wrote:
+>> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
+>> host mode as both these could be derived from "ranges" and "dma-ranges"
+>> property. "cdns,max-outbound-regions" property would still be required
+>> for EP mode.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+>>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+>>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+>>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+>>  5 files changed, 37 insertions(+), 11 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>>
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thank you Rob!
+
+Regards
+Kishon
