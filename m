@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4318C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F281C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79650206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CF9206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648423;
-	bh=glmim1U2Pn1aiJKmWgmH+Jnaz+lewHVnmLqSProYp6c=;
+	s=default; t=1586648432;
+	bh=+YDiGepaO4y8+wKyEMkFm3lHtg1QfBUwMTS32hogJK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PzxHInDrQkIbFB9d14inqkifal9+uiYZLI7v4TIQvMbInttinw3vPkjgkSF4oO+bD
-	 5YFs/8LSRF2l45ncES4EBKEDvYcVhg6jQamM/nirqVtX4A8b8vRlSrUSTsDjAc2++V
-	 IKvlGbWfLeGBVEkEXsSREVyFSnJe/q7xTUf66mu8=
+	b=yG30TR5mvQah8OUN2bVEwSGcITbFvnqlcKwCIx1qJJXASQGWAca9aI9ssCVe6pFY3
+	 jVAC5zPs1wZNWJt/ttPqH+r9LR4lPmB5p9LKiCzvLVMvJzjCvLpqsKWvlA2TOiJT1U
+	 uW+YIx0pdNwgsymb8amNQe7KqCa3etCKXacOVMLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgDKXkV (ORCPT
+        id S1730713AbgDKXka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43288 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:40:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbgDKXH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:26 -0400
+        id S1728637AbgDKXHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C116B20CC7;
-        Sat, 11 Apr 2020 23:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A565F20787;
+        Sat, 11 Apr 2020 23:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646445;
-        bh=glmim1U2Pn1aiJKmWgmH+Jnaz+lewHVnmLqSProYp6c=;
+        s=default; t=1586646443;
+        bh=+YDiGepaO4y8+wKyEMkFm3lHtg1QfBUwMTS32hogJK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKD2TMQDN1jP1tMr/q3FHHzd6KGnXHwXRMFYod5TbixQ66FdVTGkMYqqEBbp8iXli
-         6aWYOxjq1dXbLrnuSfcyPN6HpmfMOrkJOEhXhwFgI/DZv4BN9pmtgB7LAk5/AKlj+R
-         VbbaWbLF6h6cJ1+TRFHCjVT7fnFhmK+wWE6rNPtE=
+        b=tsFRl5RWkLYEP4hEj1qb+RrWXWtmlAK3ryT1XhI+cXjNI0KsOQfztZ9Be4pb87yz1
+         2PDXPs/17yIEwPHfU8HOZGob81it0BB7h5QGJEs/PuGfMHgrIlR/LcgGApRzSdcZpM
+         /qWjLvlCmFGg587/MMX5jW2Ckoh2a0Bu1WND7rVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 016/121] RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
-Date:   Sat, 11 Apr 2020 19:05:21 -0400
-Message-Id: <20200411230706.23855-16-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 014/121] HID: lg-g15: Do not fail the probe when we fail to disable F# emulation
+Date:   Sat, 11 Apr 2020 19:05:19 -0400
+Message-Id: <20200411230706.23855-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -59,94 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit e8dc4e885c459343970b25acd9320fe9ee5492e7 ]
+[ Upstream commit b8a75eaddae9410767c7d95a1c5f3a547aae7b81 ]
 
-xa_alloc_cyclic() is a SMP release to be paired with some later acquire
-during xa_load() as part of cm_acquire_id().
+By default the G1-G12 keys on the Logitech gaming keyboards send
+F1 - F12 when in "generic HID" mode.
 
-As such, xa_alloc_cyclic() must be done after the cm_id is fully
-initialized, in particular, it absolutely must be after the
-refcount_set(), otherwise the refcount_inc() in cm_acquire_id() may not
-see the set.
+The first thing the hid-lg-g15 driver does is disable this behavior.
 
-As there are several cases where a reader will be able to use the
-id.local_id after cm_acquire_id in the IB_CM_IDLE state there needs to be
-an unfortunate split into a NULL allocate and a finalizing xa_store.
+We have received a bugreport that this does not work when the keyboard
+is connected through an Aten KVM switch. Using a gaming keyboard with
+a KVM is a bit weird setup, but still we can try to fail a bit more
+gracefully here.
 
-Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
-Link: https://lore.kernel.org/r/20200310092545.251365-2-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+On the G510 keyboards the same USB-interface which is used for the gaming
+keys is also used for the media-keys. Before this commit we would call
+hid_hw_stop() on failure to disable the F# emulation and then exit the
+probe method with an error code.
+
+This not only causes us to not handle the gaming-keys, but this also
+breaks the media keys which is a regression compared to the situation
+when these keyboards where handled by the generic hidinput driver.
+
+This commit changes the error handling to clear the hiddev drvdata
+(to disable our .raw_event handler) and then returning from the probe
+method with success.
+
+The net result of this is that, when connected through a KVM, things
+work as well as they did before the hid-lg-g15 driver was introduced.
+
+Fixes: ad4203f5a243 ("HID: lg-g15: Add support for the G510 keyboards' gaming keys")
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1806321
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cm.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ drivers/hid/hid-lg-g15.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index 4decc1d4cc997..1c7984bae7ab2 100644
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -571,18 +571,6 @@ static int cm_init_av_by_path(struct sa_path_rec *path,
- 	return 0;
- }
+diff --git a/drivers/hid/hid-lg-g15.c b/drivers/hid/hid-lg-g15.c
+index 8a9268a5c66aa..ad4b5412a9f49 100644
+--- a/drivers/hid/hid-lg-g15.c
++++ b/drivers/hid/hid-lg-g15.c
+@@ -803,8 +803,10 @@ static int lg_g15_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	}
  
--static int cm_alloc_id(struct cm_id_private *cm_id_priv)
--{
--	int err;
--	u32 id;
--
--	err = xa_alloc_cyclic_irq(&cm.local_id_table, &id, cm_id_priv,
--			xa_limit_32b, &cm.local_id_next, GFP_KERNEL);
--
--	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
--	return err;
--}
--
- static u32 cm_local_id(__be32 local_id)
- {
- 	return (__force u32) (local_id ^ cm.random_id_operand);
-@@ -836,6 +824,7 @@ struct ib_cm_id *ib_create_cm_id(struct ib_device *device,
- 				 void *context)
- {
- 	struct cm_id_private *cm_id_priv;
-+	u32 id;
- 	int ret;
+ 	if (ret < 0) {
+-		hid_err(hdev, "Error disabling keyboard emulation for the G-keys\n");
+-		goto error_hw_stop;
++		hid_err(hdev, "Error %d disabling keyboard emulation for the G-keys, falling back to generic hid-input driver\n",
++			ret);
++		hid_set_drvdata(hdev, NULL);
++		return 0;
+ 	}
  
- 	cm_id_priv = kzalloc(sizeof *cm_id_priv, GFP_KERNEL);
-@@ -847,9 +836,6 @@ struct ib_cm_id *ib_create_cm_id(struct ib_device *device,
- 	cm_id_priv->id.cm_handler = cm_handler;
- 	cm_id_priv->id.context = context;
- 	cm_id_priv->id.remote_cm_qpn = 1;
--	ret = cm_alloc_id(cm_id_priv);
--	if (ret)
--		goto error;
- 
- 	spin_lock_init(&cm_id_priv->lock);
- 	init_completion(&cm_id_priv->comp);
-@@ -858,11 +844,20 @@ struct ib_cm_id *ib_create_cm_id(struct ib_device *device,
- 	INIT_LIST_HEAD(&cm_id_priv->altr_list);
- 	atomic_set(&cm_id_priv->work_count, -1);
- 	refcount_set(&cm_id_priv->refcount, 1);
-+
-+	ret = xa_alloc_cyclic_irq(&cm.local_id_table, &id, NULL, xa_limit_32b,
-+				  &cm.local_id_next, GFP_KERNEL);
-+	if (ret)
-+		goto error;
-+	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
-+	xa_store_irq(&cm.local_id_table, cm_local_id(cm_id_priv->id.local_id),
-+		     cm_id_priv, GFP_KERNEL);
-+
- 	return &cm_id_priv->id;
- 
- error:
- 	kfree(cm_id_priv);
--	return ERR_PTR(-ENOMEM);
-+	return ERR_PTR(ret);
- }
- EXPORT_SYMBOL(ib_create_cm_id);
- 
+ 	/* Get initial brightness levels */
 -- 
 2.20.1
 
