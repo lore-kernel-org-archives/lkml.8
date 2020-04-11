@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CFCC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E721C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A981A20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D1920857
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gN5THPgQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oL4DFCRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgDKHqs (ORCPT
+        id S1726741AbgDKHrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:46:48 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:52784 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgDKHqp (ORCPT
+        Sat, 11 Apr 2020 03:47:02 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:47144 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgDKHqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:46:45 -0400
-Received: by mail-vk1-f201.google.com with SMTP id y202so1802328vky.19
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:46:44 -0700 (PDT)
+        Sat, 11 Apr 2020 03:46:43 -0400
+Received: by mail-pg1-f202.google.com with SMTP id u187so3435493pgu.14
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:46:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=zcExPUIjugAT8xV6VI04RQsiRvISnNIvuUHEvy30OPQ=;
-        b=gN5THPgQ/fpJjbjdfm/DtZmGGZ/YxXeX5eHtxk0f3/rFbnOANFfeIoQnQSVI3UkfjQ
-         5Imq87vxYTgB9xn8E0IKF0ggj5+U2VjE6cgEy401TKWR2vPKi8QMZWixCcF5iwu9cnrH
-         KmXp1/1HTKK44jL7Dtj91zNzlPO2fi5SaUjLglV7VKi9PNFus0sk53zxMCJ+gx7wBG/T
-         dyh5RaZ2dyaOJBdQZ/9W24ViN+NG9JyL9ydWFrdETIfjH1qli5ELMdFtJ2a3S855sgGL
-         6o5kfULhnlDICCw1eOspbcssIour1zV+3Nkc1L2dvDRR2cvJls9sUK7th8kp44wXCalh
-         xqBA==
+        bh=AkAQBjWzUU3cZ8rKRxOD3TM368KdO9ukCYNqfogwqG0=;
+        b=oL4DFCReRM9ZjntXtsZLZQoVfPwo4U0OJ4TLLh+ap1Vu/k4k0wZ7YLKBS8in6hSwly
+         cTTceY+QSAzHBCsU36Le+3N6Pb1brdk3q7D1RBReu4JTn4G9zwRB2YgNBMG2mtoYdgDG
+         B/joXuAzouf8OWHe3HxlgVYCmLr69AxThFM4e4TDazs03im0KyMW4N8fVFGsKx52fcmv
+         ib10D/Ex/QXt/LTCAtgxFp1wgqPSXtQGFpkWg50Yk7yOFa7MyHr7SIPor5h2uwgvS5uh
+         OaJ60cxcPDAKfmyIAlIZKlfdMt3rD8trgdn4sZh4rKPN+211+vEnmAHY3G6QwZ4zEzMd
+         nt0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=zcExPUIjugAT8xV6VI04RQsiRvISnNIvuUHEvy30OPQ=;
-        b=quxbF6Qz3vd0KTBJaevHOZDyS993IpeyS2n9Kr6vUw0/4MwlypLa/wCRdHOFfvtKbR
-         FWvUUY2uzlsjnC1HGKTN7SMDKBPOZ0ban8gfNKFnyr+nFU+Oa82gEta+r0PDd8P9U624
-         3y9LdFV7ex0bW2L58Wjy1tjElWtQyEMs9D52hRFY3vjgrPegJmJE+L3wdIJYx9NQcUJ2
-         6JaBth33PQ/8xGcHNpACV4tiijmqW5yGqT/nELhjsE0c3xd9VKAkqUB7cerVdDWBuK0V
-         OFq7x5AX6EVPI8sIK2OsPf6LgSlB6KUdXBB+uVKQ+83ITQ+8pavbkBfK70hfpkEB0Yi8
-         FIHw==
-X-Gm-Message-State: AGi0PuYiisLk6ZejI0vUT2DAPc3rRJ7tTu4aVi01bI38qDdNRN7n0lGX
-        YpapdWHxt8R1ezZ/ewqgrsVoFeaQAbbG
-X-Google-Smtp-Source: APiQypImZSRUUORCHahNEP79ULeU/nb+UVUBKDbs/ut7gZYU6ovENqVB9DHRCzNRDbaHmMXWpz9QLadczaxA
-X-Received: by 2002:ab0:2248:: with SMTP id z8mr5770783uan.13.1586591203783;
- Sat, 11 Apr 2020 00:46:43 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 00:46:30 -0700
+        bh=AkAQBjWzUU3cZ8rKRxOD3TM368KdO9ukCYNqfogwqG0=;
+        b=Jm6Spz+fWFyGe/3GQ5IJaqYJOuorzimS2Y1ZAigPTFbu00qXQgFujNJT38QoN2GMlN
+         xG4MvMZANtGW9RPjx00zz6x5aIgGpMxGhGIhyf77EVicmOC/5WenPZJhAj5+XZHqohxM
+         h8Poq+dbonZRPZusb/COoawPE+CSHQNe4VsjhccZaDPYyOgH+qb8WVOG/XyrgfdR2shX
+         Jb1GfeqPjp1B3pW5RYqOlK29gXMMt40lJsN4t8g/xlyXyu+89D/ZNj1Fty6xjevBlSLz
+         IPJWnOSo0HQnlbFEFyPNBaiacrETXdgPnJIO23bPdqldfm8VDHOayc0X8YQdwsbLI3nX
+         895Q==
+X-Gm-Message-State: AGi0PubGzjNkW78/A7xaFt88RMWZcCkJoZ+OfRXVhfpYoAX6du7BSEcZ
+        fZZnKOIlDxJx6mVqQ//zDGVnSQM0sebx
+X-Google-Smtp-Source: APiQypJxsq2ZlA8bzhAUN0rO0Lqq/+xxCnedGFpdVIW2pp4IRi+ji1qhJCV8kX5A421vR5UzDRrFe8+vUG7O
+X-Received: by 2002:a63:7e58:: with SMTP id o24mr7894193pgn.3.1586591201104;
+ Sat, 11 Apr 2020 00:46:41 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 00:46:29 -0700
 In-Reply-To: <20200411074631.9486-1-irogers@google.com>
-Message-Id: <20200411074631.9486-4-irogers@google.com>
+Message-Id: <20200411074631.9486-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20200411074631.9486-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v8 3/4] perf pmu: add perf_pmu__find_by_type helper
+Subject: [PATCH v8 2/4] tools feature: add support for detecting libpfm4
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -96,50 +96,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephane Eranian <eranian@google.com>
 
-This is used by libpfm4 during event parsing to locate the pmu for an
-event.
+libpfm4 provides an alternate command line encoding of perf events.
 
 Signed-off-by: Stephane Eranian <eranian@google.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 11 +++++++++++
- tools/perf/util/pmu.h |  1 +
- 2 files changed, 12 insertions(+)
+ tools/build/Makefile.feature       | 6 ++++--
+ tools/build/feature/Makefile       | 6 +++++-
+ tools/build/feature/test-libpfm4.c | 9 +++++++++
+ 3 files changed, 18 insertions(+), 3 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ef6a63f3d386..5e918ca740c6 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -869,6 +869,17 @@ static struct perf_pmu *pmu_find(const char *name)
- 	return NULL;
- }
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 3e0c019ef297..0b651171476f 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -73,7 +73,8 @@ FEATURE_TESTS_BASIC :=                  \
+         libaio				\
+         libzstd				\
+         disassembler-four-args		\
+-        file-handle
++        file-handle			\
++        libpfm4
  
-+struct perf_pmu *perf_pmu__find_by_type(unsigned int type)
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -128,7 +129,8 @@ FEATURE_DISPLAY ?=              \
+          bpf			\
+          libaio			\
+          libzstd		\
+-         disassembler-four-args
++         disassembler-four-args	\
++         libpfm4
+ 
+ # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+ # If in the future we need per-feature checks/flags for features not
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 621f528f7822..a6eded94a36b 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -68,7 +68,8 @@ FILES=                                          \
+          test-llvm-version.bin			\
+          test-libaio.bin			\
+          test-libzstd.bin			\
+-         test-file-handle.bin
++         test-file-handle.bin			\
++         test-libpfm4.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -325,6 +326,9 @@ $(OUTPUT)test-libzstd.bin:
+ $(OUTPUT)test-file-handle.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libpfm4.bin:
++	$(BUILD) -lpfm
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
+new file mode 100644
+index 000000000000..af49b259459e
+--- /dev/null
++++ b/tools/build/feature/test-libpfm4.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/types.h>
++#include <perfmon/pfmlib.h>
++
++int main(void)
 +{
-+	struct perf_pmu *pmu;
-+
-+	list_for_each_entry(pmu, &pmus, list)
-+		if (pmu->type == type)
-+			return pmu;
-+
-+	return NULL;
++	pfm_initialize();
++	return 0;
 +}
-+
- struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
- {
- 	/*
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 5fb3f16828df..de3b868d912c 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -65,6 +65,7 @@ struct perf_pmu_alias {
- };
- 
- struct perf_pmu *perf_pmu__find(const char *name);
-+struct perf_pmu *perf_pmu__find_by_type(unsigned int type);
- int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
- 		     struct list_head *head_terms,
- 		     struct parse_events_error *error);
 -- 
 2.26.0.110.g2183baf09c-goog
 
