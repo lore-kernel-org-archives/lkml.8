@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63C3C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5CDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807C920769
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4428220769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647447;
-	bh=CFIANqrxL1DJje5qZheKGkKC3BfqPxUKulhBngfF9ZA=;
+	s=default; t=1586647455;
+	bh=ktRAk573+U/MMYz3+IF0v1Le1INiNFUcm/fx6LnVvME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DWodr1rJmchggI08/26m8Y3Vadn9QBgCMfizSGFUCud93M7LzojouFbekzI5HbGVq
-	 EJoEfNjXHN5vhPQ+4yiYzvTUqk/c9ZfCz/KDXWC91dX15DCRY8Lxdhgzbg5OfJfFeQ
-	 dIMy3Drr90SdQrS6OVnH/Lf1fDlvWbluXzpsAOuA=
+	b=vs7tFY8wsz89tpKLPn0DS0jZQuJ5PDy4dfD6bTuuX8JXuuiGynPzQ5T4llxaocqmx
+	 XhpZ6ZURvLlEb53iNlOzq9xUnwxcNd3saWQapu3lIXcNpXhXvOuDT2c6qj1L/Hey3Q
+	 fh9cTA07AzcLfyCB1K600H2bSCbM44vEDv61uzyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730863AbgDKXYF (ORCPT
+        id S1730886AbgDKXYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730233AbgDKXMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:41 -0400
+        id S1730217AbgDKXMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6185620CC7;
-        Sat, 11 Apr 2020 23:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE87F21835;
+        Sat, 11 Apr 2020 23:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646762;
-        bh=CFIANqrxL1DJje5qZheKGkKC3BfqPxUKulhBngfF9ZA=;
+        s=default; t=1586646758;
+        bh=ktRAk573+U/MMYz3+IF0v1Le1INiNFUcm/fx6LnVvME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zY3Cqht79sv2MpIIY4t46bPWv5q0GIb0loKi5Xa7ahnnetFiVnc3FsapUiXM3boGM
-         t1jz32VpLTN4j3ccvYsyLqfc8DjCXETmo9phq4leoIEnN85IngmDuUTmmGhqbou2Y0
-         zlNApe+zirin21Z7sUMG2/wLI50ETWEh1bgCYuYU=
+        b=MGV7CJ5W50NJ6wGbUxJh+KjqWXAibHtgr/7zPlkb1xe05A/JASi3aBpBkJU6BCF2n
+         6JveGy3eqTxtpxwjDy7jrySKe8+rqoQppM1uwoSATvdryFBJwf73tNY+s4XkbFs60b
+         W+qlOL/wovH5DkESD3KkublO9duqxup8uqFZSaJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 32/66] crypto: tcrypt - fix printed skcipher [a]sync mode
-Date:   Sat, 11 Apr 2020 19:11:29 -0400
-Message-Id: <20200411231203.25933-32-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/66] sh_eth: check sh_eth_cpu_data::no_xdfar when dumping registers
+Date:   Sat, 11 Apr 2020 19:11:26 -0400
+Message-Id: <20200411231203.25933-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 8e3b7fd7ea554ccb1bdc596bfbcdaf56f7ab017c ]
+[ Upstream commit 7bf47f609f7eaac4f7e9c407a85ad78997288a38 ]
 
-When running tcrypt skcipher speed tests, logs contain things like:
-testing speed of async ecb(des3_ede) (ecb(des3_ede-generic)) encryption
-or:
-testing speed of async ecb(aes) (ecb(aes-ce)) encryption
+When adding the sh_eth_cpu_data::no_xdfar flag I forgot to add the flag
+check to  __sh_eth_get_regs(), causing the non-existing RDFAR/TDFAR to be
+considered for dumping on the R-Car gen1/2 SoCs (the register offset check
+has the final say here)...
 
-The algorithm implementations are sync, not async.
-Fix this inaccuracy.
-
-Fixes: 7166e589da5b6 ("crypto: tcrypt - Use skcipher")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 4c1d45850d5 ("sh_eth: add sh_eth_cpu_data::cexcr flag")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Tested-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/tcrypt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
-index d332988eb8dea..f1618c745c180 100644
---- a/crypto/tcrypt.c
-+++ b/crypto/tcrypt.c
-@@ -1518,8 +1518,8 @@ static void test_skcipher_speed(const char *algo, int enc, unsigned int secs,
- 		return;
- 	}
- 
--	pr_info("\ntesting speed of async %s (%s) %s\n", algo,
--			get_driver_name(crypto_skcipher, tfm), e);
-+	pr_info("\ntesting speed of %s %s (%s) %s\n", async ? "async" : "sync",
-+		algo, get_driver_name(crypto_skcipher, tfm), e);
- 
- 	req = skcipher_request_alloc(tfm, GFP_KERNEL);
- 	if (!req) {
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 7d3207d2d6d6d..14e39a41d475d 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -2120,11 +2120,13 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
+ 	add_reg(EESR);
+ 	add_reg(EESIPR);
+ 	add_reg(TDLAR);
+-	add_reg(TDFAR);
++	if (!cd->no_xdfar)
++		add_reg(TDFAR);
+ 	add_reg(TDFXR);
+ 	add_reg(TDFFR);
+ 	add_reg(RDLAR);
+-	add_reg(RDFAR);
++	if (!cd->no_xdfar)
++		add_reg(RDFAR);
+ 	add_reg(RDFXR);
+ 	add_reg(RDFFR);
+ 	add_reg(TRSCER);
 -- 
 2.20.1
 
