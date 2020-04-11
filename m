@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9461AC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4228C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C95420787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C52215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646952;
-	bh=dQ7ZxU3hLqS2NfTh7h/kFQlFdfi6uDi2d91ZALgqI0w=;
+	s=default; t=1586646958;
+	bh=kWhqS6PRCwpLgVe5t7lJXrCy5B5JTSxtre3T0XaC0Oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUQC9Pmv/dz2LNLfpsxVB9Yizl/82vBi7cWJ0PJKZtWCOigFaM0aQCOt++2YVSVFA
-	 Gy7BXVAK/s9wtoQIiycyw7FqdRVQ+uXCGL0HpnoyLR4fjqFFB7sJr680w8q2rIUAKL
-	 63rnxCHxelgFkNUt6vMxZ/wP6R1ZAD/Ix/G+UZ9w=
+	b=djOh32J82OPrFfQ46/iq8jwnmInSHDr/12e3Qfq1O4SH9l7c37rK3aCPzZnTY0zXN
+	 B8XMjNAz+ZBEZOO+nZYyTfea7Ym/ZQd0hU0eHS8jVBcLHlbK9RRNGAW/o/iu+Phnxn
+	 EyTS+91j34BeknqMvQvRbYlf6tr7oDQeYNMOSxpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbgDKXPu (ORCPT
+        id S1730899AbgDKXOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730904AbgDKXOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Apr 2020 19:14:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730145AbgDKXOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E7C020CC7;
-        Sat, 11 Apr 2020 23:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 642A820CC7;
+        Sat, 11 Apr 2020 23:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646896;
-        bh=dQ7ZxU3hLqS2NfTh7h/kFQlFdfi6uDi2d91ZALgqI0w=;
+        s=default; t=1586646891;
+        bh=kWhqS6PRCwpLgVe5t7lJXrCy5B5JTSxtre3T0XaC0Oc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcASGq1/tU+Rlzfdh8RVdxYVd0ckNyBHf8AJsEMoe3VhYk3Qm/iG1ftiYaHLc7a7j
-         jLsREsDacGLAomQa4Zh8jE/Vu2XXupbDc1By/QSjVrkendt1H57HAEF2M1GCdbOwi8
-         4B9fNgoK0/PGYjWq6t7k53EJOO/rT0sHnTK45Zto=
+        b=HHAOkSEQy7Y/ogwBIdHSUUmzgV8q7LMS557+ueXU2uJNoweMaeZb9XVNJ+ZW52oiO
+         uPdhQSlsPMiKRIxYxMQWcMESDjIGQ5fsQyy8z2dfcIJiE8j6mBAjZU8eQIXILZBS6k
+         C8PCkuEiOrX7RqqdOcvK7kbpNXIvGJqvZQZyMiOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Michaud <alainm@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/16] Bluetooth: guard against controllers sending zero'd events
-Date:   Sat, 11 Apr 2020 19:14:37 -0400
-Message-Id: <20200411231447.27182-7-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/16] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
+Date:   Sat, 11 Apr 2020 19:14:33 -0400
+Message-Id: <20200411231447.27182-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
 References: <20200411231447.27182-1-sashal@kernel.org>
@@ -60,45 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Michaud <alainm@chromium.org>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
+[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
 
-Some controllers have been observed to send zero'd events under some
-conditions.  This change guards against this condition as well as adding
-a trace to facilitate diagnosability of this condition.
+All accesses to id.state must be done under the spinlock.
 
-Signed-off-by: Alain Michaud <alainm@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/infiniband/core/cm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 37fe2b158c2a7..2dc44fe4136f7 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5222,6 +5222,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 	u8 status = 0, event = hdr->evt, req_evt = 0;
- 	u16 opcode = HCI_OP_NOP;
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 53c622c99ee40..7bf98d72a4559 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1544,8 +1544,12 @@ static void cm_dup_req_handler(struct cm_work *work,
+ 			counter[CM_REQ_COUNTER]);
  
-+	if (!event) {
-+		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
-+		goto done;
+ 	/* Quick state check to discard duplicate REQs. */
+-	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
++	spin_lock_irq(&cm_id_priv->lock);
++	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
++		spin_unlock_irq(&cm_id_priv->lock);
+ 		return;
 +	}
-+
- 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
- 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
- 		opcode = __le16_to_cpu(cmd_hdr->opcode);
-@@ -5433,6 +5438,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 		req_complete_skb(hdev, status, opcode, orig_skb);
- 	}
++	spin_unlock_irq(&cm_id_priv->lock);
  
-+done:
- 	kfree_skb(orig_skb);
- 	kfree_skb(skb);
- 	hdev->stat.evt_rx++;
+ 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
+ 	if (ret)
 -- 
 2.20.1
 
