@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4982C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1E9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D31F20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0469F20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647373;
-	bh=Nor3LFQx5gasX/TffxXutfOivoR3WUsiFJPiv1MKceg=;
+	s=default; t=1586647381;
+	bh=0LJGZBnlKyTbrb6WTN4LcFXLTqTu1DZR3oWb3ykYops=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QeDNHyW0b+khcDTgR7N74kOWRgIX3nOrG2X76lvrdcsS6jd86lZtX+JR5i8sudk3H
-	 UTtSlBm5yG+4Cwz1NtacVk8nrPGyW/9nLDfbKbpo95dwnc1Q9olaoQK2Ye7z0M5O+Q
-	 GCIRCByNZfqRh4XxLHNrrQ2VtTL72erxjavGBXfU=
+	b=GTZ6Xe7UWJzXzqZDwFp6rAtRhpaKRHb2BAJaxgUXt74N3tQLPx3mZpjTR7ahDJNhI
+	 aFEIBBcpNijpu10cVn/FHmfkPwTC4N2dzO94tNt0dhEQ8NoIOz0cGMewZYrxkgjbHg
+	 TKilZDEYaNifwlaf9f1x7sXuWFdtsFS7wFDtujdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgDKXWw (ORCPT
+        id S1730344AbgDKXNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730368AbgDKXNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:14 -0400
+        id S1730261AbgDKXMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D2B20708;
-        Sat, 11 Apr 2020 23:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F4721841;
+        Sat, 11 Apr 2020 23:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646794;
-        bh=Nor3LFQx5gasX/TffxXutfOivoR3WUsiFJPiv1MKceg=;
+        s=default; t=1586646770;
+        bh=0LJGZBnlKyTbrb6WTN4LcFXLTqTu1DZR3oWb3ykYops=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxKlm8zRYOcG8MJaHfEWDNPVmuVtuds7byNvMxGib2HRQSEATTfCZDHNI+TFju0m8
-         n/0UIyUwhrLZnB+Wr1dfwqJPtbfXY6bmj6iq7YxP3O0De2LxQhqulZZxlZxjHuVgrd
-         3vvyrNY8GQ/4JCYXnC4r9+MCrVgoXWoIBcVtynco=
+        b=OWAGjjo9VeRo+PSg+1bXRl89IuTMDBIlmD2jYCzpgDxMAoOgC7QmD/k1Sm+MW+Ih1
+         K/U6XV5uqi4TIr0Pvabo5erHylGb7FH0V9YmbquCxtDaDPUqbYNEtpRd7Ts56rsRXa
+         fXBW0hCwjorjjpJV1xBP+t00pdO/g85d7QCUEMC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 58/66] scsi: qla2xxx: Fix control flags for login/logout IOCB
-Date:   Sat, 11 Apr 2020 19:11:55 -0400
-Message-Id: <20200411231203.25933-58-sashal@kernel.org>
+Cc:     Aric Cyr <aric.cyr@amd.com>,
+        Joshua Aberback <Joshua.Aberback@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 39/66] drm/amd/display: dal_ddc_i2c_payloads_create can fail causing panic
+Date:   Sat, 11 Apr 2020 19:11:36 -0400
+Message-Id: <20200411231203.25933-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,67 +63,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit 419ae5fe73e50084fa794934fb62fab34f564b7c ]
+[ Upstream commit 6a6c4a4d459ecacc9013c45dcbf2bc9747fdbdbd ]
 
-This patch fixes control flag options for login/logout IOCB.
+[Why]
+Since the i2c payload allocation can fail need to check return codes
 
-Link: https://lore.kernel.org/r/20200212214436.25532-23-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[How]
+Clean up i2c payload allocations and check for errors
+
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Joshua Aberback <Joshua.Aberback@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_iocb.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ .../gpu/drm/amd/display/dc/core/dc_link_ddc.c | 52 +++++++++----------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index 7e47321e003c8..f07aa045f3f93 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2224,6 +2224,8 @@ qla24xx_login_iocb(srb_t *sp, struct logio_entry_24xx *logio)
- 	struct srb_iocb *lio = &sp->u.iocb_cmd;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
+index 46c9cb47a96e5..145af3bb2dfcb 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
+@@ -127,22 +127,16 @@ struct aux_payloads {
+ 	struct vector payloads;
+ };
  
- 	logio->entry_type = LOGINOUT_PORT_IOCB_TYPE;
-+	logio->control_flags = cpu_to_le16(LCF_COMMAND_PLOGI);
+-static struct i2c_payloads *dal_ddc_i2c_payloads_create(struct dc_context *ctx, uint32_t count)
++static bool dal_ddc_i2c_payloads_create(
++		struct dc_context *ctx,
++		struct i2c_payloads *payloads,
++		uint32_t count)
+ {
+-	struct i2c_payloads *payloads;
+-
+-	payloads = kzalloc(sizeof(struct i2c_payloads), GFP_KERNEL);
+-
+-	if (!payloads)
+-		return NULL;
+-
+ 	if (dal_vector_construct(
+ 		&payloads->payloads, ctx, count, sizeof(struct i2c_payload)))
+-		return payloads;
+-
+-	kfree(payloads);
+-	return NULL;
++		return true;
+ 
++	return false;
+ }
+ 
+ static struct i2c_payload *dal_ddc_i2c_payloads_get(struct i2c_payloads *p)
+@@ -155,14 +149,12 @@ static uint32_t dal_ddc_i2c_payloads_get_count(struct i2c_payloads *p)
+ 	return p->payloads.count;
+ }
+ 
+-static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads **p)
++static void dal_ddc_i2c_payloads_destroy(struct i2c_payloads *p)
+ {
+-	if (!p || !*p)
++	if (!p)
+ 		return;
+-	dal_vector_destruct(&(*p)->payloads);
+-	kfree(*p);
+-	*p = NULL;
+ 
++	dal_vector_destruct(&p->payloads);
+ }
+ 
+ static struct aux_payloads *dal_ddc_aux_payloads_create(struct dc_context *ctx, uint32_t count)
+@@ -580,9 +572,13 @@ bool dal_ddc_service_query_ddc_data(
+ 
+ 	uint32_t payloads_num = write_payloads + read_payloads;
+ 
 +
- 	if (lio->u.logio.flags & SRB_LOGIN_PRLI_ONLY) {
- 		logio->control_flags = cpu_to_le16(LCF_COMMAND_PRLI);
+ 	if (write_size > EDID_SEGMENT_SIZE || read_size > EDID_SEGMENT_SIZE)
+ 		return false;
+ 
++	if (!payloads_num)
++		return false;
++
+ 	/*TODO: len of payload data for i2c and aux is uint8!!!!,
+ 	 *  but we want to read 256 over i2c!!!!*/
+ 	if (dal_ddc_service_is_in_aux_transaction_mode(ddc)) {
+@@ -613,23 +609,25 @@ bool dal_ddc_service_query_ddc_data(
+ 		dal_ddc_aux_payloads_destroy(&payloads);
+ 
  	} else {
-@@ -2663,7 +2665,6 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	sp->fcport = fcport;
+-		struct i2c_payloads *payloads =
+-			dal_ddc_i2c_payloads_create(ddc->ctx, payloads_num);
++		struct i2c_command command = {0};
++		struct i2c_payloads payloads;
  
- 	elsio->timeout = qla2x00_els_dcmd2_iocb_timeout;
--	init_completion(&elsio->u.els_plogi.comp);
- 	if (wait)
- 		sp->flags = SRB_WAKEUP_ON_COMP;
+-		struct i2c_command command = {
+-			.payloads = dal_ddc_i2c_payloads_get(payloads),
+-			.number_of_payloads = 0,
+-			.engine = DDC_I2C_COMMAND_ENGINE,
+-			.speed = ddc->ctx->dc->caps.i2c_speed_in_khz };
++		if (!dal_ddc_i2c_payloads_create(ddc->ctx, &payloads, payloads_num))
++			return false;
++
++		command.payloads = dal_ddc_i2c_payloads_get(&payloads);
++		command.number_of_payloads = 0;
++		command.engine = DDC_I2C_COMMAND_ENGINE;
++		command.speed = ddc->ctx->dc->caps.i2c_speed_in_khz;
  
-@@ -2673,7 +2674,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	elsio->u.els_plogi.tx_size = elsio->u.els_plogi.rx_size = DMA_POOL_SIZE;
+ 		dal_ddc_i2c_payloads_add(
+-			payloads, address, write_size, write_buf, true);
++			&payloads, address, write_size, write_buf, true);
  
- 	ptr = elsio->u.els_plogi.els_plogi_pyld =
--	    dma_alloc_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
-+	    dma_alloc_coherent(&ha->pdev->dev, elsio->u.els_plogi.tx_size,
- 		&elsio->u.els_plogi.els_plogi_pyld_dma, GFP_KERNEL);
- 	ptr_dma = elsio->u.els_plogi.els_plogi_pyld_dma;
+ 		dal_ddc_i2c_payloads_add(
+-			payloads, address, read_size, read_buf, false);
++			&payloads, address, read_size, read_buf, false);
  
-@@ -2683,7 +2684,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	}
+ 		command.number_of_payloads =
+-			dal_ddc_i2c_payloads_get_count(payloads);
++			dal_ddc_i2c_payloads_get_count(&payloads);
  
- 	resp_ptr = elsio->u.els_plogi.els_resp_pyld =
--	    dma_alloc_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
-+	    dma_alloc_coherent(&ha->pdev->dev, elsio->u.els_plogi.rx_size,
- 		&elsio->u.els_plogi.els_resp_pyld_dma, GFP_KERNEL);
- 
- 	if (!elsio->u.els_plogi.els_resp_pyld) {
-@@ -2707,6 +2708,7 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
- 	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
- 	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
- 
-+	init_completion(&elsio->u.els_plogi.comp);
- 	rval = qla2x00_start_sp(sp);
- 	if (rval != QLA_SUCCESS) {
- 		rval = QLA_FUNCTION_FAILED;
+ 		ret = dm_helpers_submit_i2c(
+ 				ddc->ctx,
 -- 
 2.20.1
 
