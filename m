@@ -2,92 +2,119 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B1EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6563C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B1B20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVgTaLad"
+	by mail.kernel.org (Postfix) with ESMTP id AC46E2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgDKV1D (ORCPT
+        id S1726793AbgDKViO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 17:27:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38194 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726182AbgDKV1D (ORCPT
+        Sat, 11 Apr 2020 17:38:14 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:49811 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgDKViO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 17:27:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586640422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=OQrsw5L6zYIgHHkl59IcfAMFT3R9AZwVHuHRpnA7cco=;
-        b=hVgTaLadI12oVM6CxoyKDXxJvzw2BjZcZU1KrJqHHJzHTFDYiXevUQUwdPmRbxBP1Bpdmf
-        fTkbUF1zQJl1V80GYMlMj9OCbJ3qpxs9Ke+mjkjZHsReS/ra/dmN98IeYG/qLrV5lof6Kv
-        tPAKlwklYl5g2Fl4igxTbgsgJXPpWTY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-rI7tbsEBOkK_ebbFkhdebw-1; Sat, 11 Apr 2020 17:26:58 -0400
-X-MC-Unique: rI7tbsEBOkK_ebbFkhdebw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D14613FC;
-        Sat, 11 Apr 2020 21:26:56 +0000 (UTC)
-Received: from localhost (ovpn-112-176.rdu2.redhat.com [10.10.112.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EA49CFDF6;
-        Sat, 11 Apr 2020 21:26:55 +0000 (UTC)
-From:   Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.9.218-rt141
-Date:   Sat, 11 Apr 2020 21:23:09 -0000
-Message-ID: <158664018976.267470.9190420949400202455@tagon>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@suse.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Sat, 11 Apr 2020 17:38:14 -0400
+Received: by mail-il1-f198.google.com with SMTP id r17so3182129ila.16
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 14:38:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=qVLd3Bd3uBVfJRLs8SbZxIzd9JmqnZ3Z/DLvPZ5BOss=;
+        b=SEza7BUjq1NotRL4yteIzVbwhg3zBjZ1K+ordZD4tUoRGKlqdyGK+QfltkCzYtrQGO
+         O4s02S6rLJVSo0fj7dVGtoqw4jkHhRUn5J6d/sElIRG37Sy2MEfpcomFvfZuotrORll+
+         KEw3gVMaSYnnocN/NQzQt5OPaIYGisrWJ0Sb140IychCoDichp2GVBuLeq9+9e9jj34Y
+         +CU/dz0izDgT+KZt3Yf1lJRmiD2ovVs4ZcFVv7dvlY9bh2vylbFwX1aq8bzfL5zKXMLq
+         NUWpgd6OHKq1TdVW4A9yYO9TVkpv27dUCuizeJwZb5S7ntRM4HVJYXPQBAv+dpdPEYcm
+         cEIQ==
+X-Gm-Message-State: AGi0PuZQvDdkRkMWI5+XGv3lHcMCP3PdVx2dV8ajBOAW2z4qGKOgCBo6
+        hn96f1ASWSFohZqPZ8uZTdY+9+IQ2cWKPQEuwvzcYOPl7eAu
+X-Google-Smtp-Source: APiQypKE0T7vpFvxOcOZvzhUT6OjWfzmqF/bePj9rviDb2ldU3gKgTG6RE46xsPctletAp6kcGWYAiCQogSANoSlVc30WUqilVoK
+MIME-Version: 1.0
+X-Received: by 2002:a5d:8347:: with SMTP id q7mr10163952ior.172.1586641092063;
+ Sat, 11 Apr 2020 14:38:12 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 14:38:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000adb83a05a30aaa04@google.com>
+Subject: WARNING: bad unlock balance in mptcp_shutdown
+From:   syzbot <syzbot+6ebb6d4830e8f8815623@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        mptcp@lists.01.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
+Hello,
 
-I'm pleased to announce the 4.9.218-rt141 stable release.
+syzbot found the following crash on:
 
-Note that this is a maintenance release only. It is just the application
-of the 4.9.218 stable release and no updates to the RT patchset.
+HEAD commit:    f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a5dbfbe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ebb6d4830e8f8815623
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-You can get this release via the git tree at:
+Unfortunately, I don't have any reproducer for this crash yet.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6ebb6d4830e8f8815623@syzkaller.appspotmail.com
 
-  branch: v4.9-rt
-  Head SHA1: ec9810c2b626cded51bb6fd0473f1e25f7ec60b8
+=====================================
+WARNING: bad unlock balance detected!
+5.6.0-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor.5/2215 is trying to release lock (sk_lock-AF_INET6) at:
+[<ffffffff87c5203b>] mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
+but there are no more locks to release!
 
-Or to build 4.9.218-rt141 directly, the following patches should be applied:
+other info that might help us debug this:
+1 lock held by syz-executor.5/2215:
+ #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
+ #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: release_sock+0x1b/0x1b0 net/core/sock.c:2974
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz
+stack backtrace:
+CPU: 0 PID: 2215 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __lock_release kernel/locking/lockdep.c:4633 [inline]
+ lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
+ sock_release_ownership include/net/sock.h:1539 [inline]
+ release_sock+0x177/0x1b0 net/core/sock.c:2984
+ mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
+ __sys_shutdown+0xf3/0x1a0 net/socket.c:2208
+ __do_sys_shutdown net/socket.c:2216 [inline]
+ __se_sys_shutdown net/socket.c:2214 [inline]
+ __x64_sys_shutdown+0x50/0x70 net/socket.c:2214
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c889
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fa67df32c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000030
+RAX: ffffffffffffffda RBX: 00007fa67df336d4 RCX: 000000000045c889
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000b5e R14: 00000000004cd960 R15: 000000000076bfac
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.9.218.xz
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/patch-4.9.218-rt141.patch.xz
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-You can also build from 4.9.217-rt140 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/incr/patch-4.9.217-rt140-rt141.patch.xz
-
-Enjoy!
-Clark
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
