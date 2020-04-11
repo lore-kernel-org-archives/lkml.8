@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E2BC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB774C352B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB3B20769
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CBB20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647069;
-	bh=v7GZfSNZgRButau43HQda17K+nXP11i/BnAXWtvacyM=;
+	s=default; t=1586647074;
+	bh=VvQd+tj3uTHlKY1SGES39RT8WMf9mUvSjdMBNaes3Fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mN1vkYgChexSto0ZD8eTkETJ03QLOM/LdQBQ15jekWvwUWMxYj00sU68GJ/C1qc7N
-	 JtEwIE7pmc1luOpg/PIkQ5Cgsyz2/0NT3cnxNG19cXqBT3/qPnYkWw7GIeCTAfeWnd
-	 3QeYi3q9vKXwDqFR8j+E9ZbojkOurzE6kkI7nA5s=
+	b=vezC+M7RPxhPQ/xNhBtxUO+vXwWjSsMCDwIFO5yyNYNwwbwWIsZWRjaIR80p3res/
+	 dqxT3sTF/7pdV1Qz92Sv1R5n/KNPcKScAUKf/x9RkZDHApn3nbWBbAgV+iHtKL1oNN
+	 mxk6b82KPGhRCyp3xN8xZcK91pa4hVDeP0yKK/Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbgDKXOZ (ORCPT
+        id S1730741AbgDKXOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730719AbgDKXOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:19 -0400
+        id S1730003AbgDKXOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24AA820708;
-        Sat, 11 Apr 2020 23:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64F92166E;
+        Sat, 11 Apr 2020 23:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646859;
-        bh=v7GZfSNZgRButau43HQda17K+nXP11i/BnAXWtvacyM=;
+        s=default; t=1586646857;
+        bh=VvQd+tj3uTHlKY1SGES39RT8WMf9mUvSjdMBNaes3Fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fau8rUEEWukBQ3E9PSeXLSr7GxMMIxLASX+5NTfAPAPB57xFn/ixTdEiJKp5ZlZeX
-         qUdAsxcjCqVesOEd6Fv1P/uDSdECWEDuV4KkRXCzObQpIQTwmHIY4QSl3/gSu66dhW
-         SlbGu3d3lWPkSwxSGZu+DNleVY56tzGRjlo7/9ds=
+        b=08ZwWWocyUyY1mF/eT8oNjLsG9wPvj32o7wkSV18vl+fNiRKU6Sb9t1EtSULatGs2
+         /qaw/nd+SfQ8L4MabM/ZnNsTXbdNJpBvLm+DyK6ONlqGbQdyJFFTxbq752Izw5jDf0
+         wRbm31+6MuuVtCWhcqMTFkJLYQnA0rwPfnIXUKSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/26] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
-Date:   Sat, 11 Apr 2020 19:13:52 -0400
-Message-Id: <20200411231413.26911-5-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/26] serial: 8250_omap: Fix sleeping function called from invalid context during probe
+Date:   Sat, 11 Apr 2020 19:13:50 -0400
+Message-Id: <20200411231413.26911-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231413.26911-1-sashal@kernel.org>
 References: <20200411231413.26911-1-sashal@kernel.org>
@@ -59,39 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
+[ Upstream commit 4ce35a3617c0ac758c61122b2218b6c8c9ac9398 ]
 
-All accesses to id.state must be done under the spinlock.
+When booting j721e the following bug is printed:
 
-Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
-Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[    1.154821] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+[    1.154827] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 12, name: kworker/0:1
+[    1.154832] 3 locks held by kworker/0:1/12:
+[    1.154836]  #0: ffff000840030728 ((wq_completion)events){+.+.}, at: process_one_work+0x1d4/0x6e8
+[    1.154852]  #1: ffff80001214fdd8 (deferred_probe_work){+.+.}, at: process_one_work+0x1d4/0x6e8
+[    1.154860]  #2: ffff00084060b170 (&dev->mutex){....}, at: __device_attach+0x38/0x138
+[    1.154872] irq event stamp: 63096
+[    1.154881] hardirqs last  enabled at (63095): [<ffff800010b74318>] _raw_spin_unlock_irqrestore+0x70/0x78
+[    1.154887] hardirqs last disabled at (63096): [<ffff800010b740d8>] _raw_spin_lock_irqsave+0x28/0x80
+[    1.154893] softirqs last  enabled at (62254): [<ffff800010080c88>] _stext+0x488/0x564
+[    1.154899] softirqs last disabled at (62247): [<ffff8000100fdb3c>] irq_exit+0x114/0x140
+[    1.154906] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc6-next-20200318-00094-g45e4089b0bd3 #221
+[    1.154911] Hardware name: Texas Instruments K3 J721E SoC (DT)
+[    1.154917] Workqueue: events deferred_probe_work_func
+[    1.154923] Call trace:
+[    1.154928]  dump_backtrace+0x0/0x190
+[    1.154933]  show_stack+0x14/0x20
+[    1.154940]  dump_stack+0xe0/0x148
+[    1.154946]  ___might_sleep+0x150/0x1f0
+[    1.154952]  __might_sleep+0x4c/0x80
+[    1.154957]  wait_for_completion_timeout+0x40/0x140
+[    1.154964]  ti_sci_set_device_state+0xa0/0x158
+[    1.154969]  ti_sci_cmd_get_device_exclusive+0x14/0x20
+[    1.154977]  ti_sci_dev_start+0x34/0x50
+[    1.154984]  genpd_runtime_resume+0x78/0x1f8
+[    1.154991]  __rpm_callback+0x3c/0x140
+[    1.154996]  rpm_callback+0x20/0x80
+[    1.155001]  rpm_resume+0x568/0x758
+[    1.155007]  __pm_runtime_resume+0x44/0xb0
+[    1.155013]  omap8250_probe+0x2b4/0x508
+[    1.155019]  platform_drv_probe+0x50/0xa0
+[    1.155023]  really_probe+0xd4/0x318
+[    1.155028]  driver_probe_device+0x54/0xe8
+[    1.155033]  __device_attach_driver+0x80/0xb8
+[    1.155039]  bus_for_each_drv+0x74/0xc0
+[    1.155044]  __device_attach+0xdc/0x138
+[    1.155049]  device_initial_probe+0x10/0x18
+[    1.155053]  bus_probe_device+0x98/0xa0
+[    1.155058]  deferred_probe_work_func+0x74/0xb0
+[    1.155063]  process_one_work+0x280/0x6e8
+[    1.155068]  worker_thread+0x48/0x430
+[    1.155073]  kthread+0x108/0x138
+[    1.155079]  ret_from_fork+0x10/0x18
+
+To fix the bug we need to first call pm_runtime_enable() prior to any
+pm_runtime calls.
+
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20200320125200.6772-1-peter.ujfalusi@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index 304429fd04ddb..c764a29c11323 100644
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -1544,8 +1544,12 @@ static void cm_dup_req_handler(struct cm_work *work,
- 			counter[CM_REQ_COUNTER]);
+diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+index a3adf21f9dcec..7d4680ef5307d 100644
+--- a/drivers/tty/serial/8250/8250_omap.c
++++ b/drivers/tty/serial/8250/8250_omap.c
+@@ -1194,11 +1194,11 @@ static int omap8250_probe(struct platform_device *pdev)
+ 	spin_lock_init(&priv->rx_dma_lock);
  
- 	/* Quick state check to discard duplicate REQs. */
--	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
-+	spin_lock_irq(&cm_id_priv->lock);
-+	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
-+		spin_unlock_irq(&cm_id_priv->lock);
- 		return;
-+	}
-+	spin_unlock_irq(&cm_id_priv->lock);
+ 	device_init_wakeup(&pdev->dev, true);
++	pm_runtime_enable(&pdev->dev);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
  
- 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
- 	if (ret)
+ 	pm_runtime_irq_safe(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 
 -- 
 2.20.1
 
