@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32846C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071E6217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DCE214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646335;
-	bh=9UiT+54dkE2BzQLulbKxri8KD5FKEpDi5HFaU1OOVk4=;
+	s=default; t=1586646337;
+	bh=F3GZCkfuTpePzhtk5oZ3eLfLVs1Pby/rMwXEm7QXV5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4XUE0k2zZe2Ugow8E/RVpiAdw4CjoTvScZsVimQCFt1vxu2tE9/gDA5I7dIT58jO
-	 wGgicSC+A3YiqLU18ffEuNa+d2XyOq6PQT5hbVoMksF8HJlY5u9E61QBhd19m5LG1I
-	 7CU5cpcOICS1E8BTKp0ZdbdefF3Ck0DSelX/0lqs=
+	b=k0dSTR6gpTa5h8s+8o3oIqDwBMTYnAoYFqxIdd+uTx/IQd1LLIBZuBBIHR63tNwOZ
+	 VVZhIhcTyWNu9/YvXfpubEX9YVLJFfSlbGSPf9DiQvBDV0A0l6lxQeSJoSyacsV1FI
+	 qi8tomQJ6lptD0iszl53RqTAn1BCf8RV3OeKq+Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgDKXFd (ORCPT
+        id S1727998AbgDKXFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbgDKXFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:30 -0400
+        id S1727960AbgDKXF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3105120708;
-        Sat, 11 Apr 2020 23:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6FB621775;
+        Sat, 11 Apr 2020 23:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646329;
-        bh=9UiT+54dkE2BzQLulbKxri8KD5FKEpDi5HFaU1OOVk4=;
+        s=default; t=1586646327;
+        bh=F3GZCkfuTpePzhtk5oZ3eLfLVs1Pby/rMwXEm7QXV5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M/3gLdKI+o5Czm0yxwtvQblkEMXMuOLVHdcThahf+jEqOJ5xhUNhHiedGPmgDGq9R
-         VtLdMqSZ21Eci6a+fec8KgIigKS5VY8Hb2KVWGjRIEB0EZYvxQcH5BhHLmWrM6u2Dq
-         sSzgKsyBMa3SutiXhj0UiplN6ANbf37/HURoqqk8=
+        b=yx9ZoW5XKlp3kQ9dr73o/7Zb1u7Cfv7k1X37Q0S86qAo1/r+El0RRmOknokJ151IR
+         v23xtAI8jBmNbhV2fCfo+3BJTSuKV29HX9B3SNMrmx/mKkCVauWxnmeGjdkvkPylxs
+         /eOqSzuY4c3BlfUUUOcHuIOZ84JjK4d15DsVWwbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yixian Liu <liuyixian@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 082/149] RDMA/hns: Add the workqueue framework for flush cqe handler
-Date:   Sat, 11 Apr 2020 19:02:39 -0400
-Message-Id: <20200411230347.22371-82-sashal@kernel.org>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 080/149] rsi: fix null pointer dereference during rsi_shutdown()
+Date:   Sat, 11 Apr 2020 19:02:37 -0400
+Message-Id: <20200411230347.22371-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,156 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yixian Liu <liuyixian@huawei.com>
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
 
-[ Upstream commit ffd541d45726341c1830ff595fd7352b6d1cfbcd ]
+[ Upstream commit 16bbc3eb83728c03138191a5d23d84d38175fa26 ]
 
-HiP08 RoCE hardware lacks ability(a known hardware problem) to flush
-outstanding WQEs if QP state gets into errored mode for some reason.  To
-overcome this hardware problem and as a workaround, when QP is detected to
-be in errored state during various legs like post send, post receive etc
-[1], flush needs to be performed from the driver.
+Appearently the hw pointer can be NULL while the module is loaded and
+in that case rsi_shutdown() crashes due to the unconditional dereference.
 
-The earlier patch[1] sent to solve the hardware limitation explained in
-the cover-letter had a bug in the software flushing leg. It acquired mutex
-while modifying QP state to errored state and while conveying it to the
-hardware using the mailbox. This caused leg to sleep while holding
-spin-lock and caused crash.
-
-Suggested Solution:
-we have proposed to defer the flushing of the QP in the Errored state
-using the workqueue to get around with the limitation of our hardware.
-
-This patch adds the framework of the workqueue and the flush handler
-function.
-
-[1] https://patchwork.kernel.org/patch/10534271/
-
-Link: https://lore.kernel.org/r/1580983005-13899-2-git-send-email-liuyixian@huawei.com
-Signed-off-by: Yixian Liu <liuyixian@huawei.com>
-Reviewed-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_device.h | 20 ++++++-----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  |  3 +-
- drivers/infiniband/hw/hns/hns_roce_qp.c     | 37 +++++++++++++++++++++
- 3 files changed, 49 insertions(+), 11 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index a7c4ff975c289..a089d47354391 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -641,6 +641,15 @@ struct hns_roce_rinl_buf {
- 	u32			 wqe_cnt;
- };
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index 1bebba4e85273..5d6143a551877 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -1468,12 +1468,15 @@ static void rsi_shutdown(struct device *dev)
+ 	struct rsi_91x_sdiodev *sdev =
+ 		(struct rsi_91x_sdiodev *)adapter->rsi_dev;
+ 	struct ieee80211_hw *hw = adapter->hw;
+-	struct cfg80211_wowlan *wowlan = hw->wiphy->wowlan_config;
  
-+struct hns_roce_work {
-+	struct hns_roce_dev *hr_dev;
-+	struct work_struct work;
-+	u32 qpn;
-+	u32 cqn;
-+	int event_type;
-+	int sub_type;
-+};
-+
- struct hns_roce_qp {
- 	struct ib_qp		ibqp;
- 	struct hns_roce_buf	hr_buf;
-@@ -684,6 +693,7 @@ struct hns_roce_qp {
- 	struct hns_roce_sge	sge;
- 	u32			next_sge;
+ 	rsi_dbg(ERR_ZONE, "SDIO Bus shutdown =====>\n");
  
-+	struct hns_roce_work	flush_work;
- 	struct hns_roce_rinl_buf rq_inl_buf;
- 	struct list_head	node;		/* all qps are on a list */
- 	struct list_head	rq_node;	/* all recv qps are on a list */
-@@ -906,15 +916,6 @@ struct hns_roce_caps {
- 	u16		default_ceq_arm_st;
- };
+-	if (rsi_config_wowlan(adapter, wowlan))
+-		rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
++	if (hw) {
++		struct cfg80211_wowlan *wowlan = hw->wiphy->wowlan_config;
++
++		if (rsi_config_wowlan(adapter, wowlan))
++			rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
++	}
  
--struct hns_roce_work {
--	struct hns_roce_dev *hr_dev;
--	struct work_struct work;
--	u32 qpn;
--	u32 cqn;
--	int event_type;
--	int sub_type;
--};
--
- struct hns_roce_dfx_hw {
- 	int (*query_cqc_info)(struct hns_roce_dev *hr_dev, u32 cqn,
- 			      int *buffer);
-@@ -1237,6 +1238,7 @@ struct ib_qp *hns_roce_create_qp(struct ib_pd *ib_pd,
- 				 struct ib_udata *udata);
- int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
- 		       int attr_mask, struct ib_udata *udata);
-+void init_flush_work(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp);
- void *get_recv_wqe(struct hns_roce_qp *hr_qp, int n);
- void *get_send_wqe(struct hns_roce_qp *hr_qp, int n);
- void *get_send_extend_sge(struct hns_roce_qp *hr_qp, int n);
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 12c4cd8e9378c..950c604a6fcb4 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -6292,8 +6292,7 @@ static int hns_roce_v2_init_eq_table(struct hns_roce_dev *hr_dev)
- 		goto err_request_irq_fail;
- 	}
- 
--	hr_dev->irq_workq =
--		create_singlethread_workqueue("hns_roce_irq_workqueue");
-+	hr_dev->irq_workq = alloc_ordered_workqueue("hns_roce_irq_workq", 0);
- 	if (!hr_dev->irq_workq) {
- 		dev_err(dev, "Create irq workqueue failed!\n");
- 		ret = -ENOMEM;
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index 3257ad11be482..dab73140c5c29 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -43,6 +43,43 @@
- 
- #define SQP_NUM				(2 * HNS_ROCE_MAX_PORTS)
- 
-+static void flush_work_handle(struct work_struct *work)
-+{
-+	struct hns_roce_work *flush_work = container_of(work,
-+					struct hns_roce_work, work);
-+	struct hns_roce_qp *hr_qp = container_of(flush_work,
-+					struct hns_roce_qp, flush_work);
-+	struct device *dev = flush_work->hr_dev->dev;
-+	struct ib_qp_attr attr;
-+	int attr_mask;
-+	int ret;
-+
-+	attr_mask = IB_QP_STATE;
-+	attr.qp_state = IB_QPS_ERR;
-+
-+	ret = hns_roce_modify_qp(&hr_qp->ibqp, &attr, attr_mask, NULL);
-+	if (ret)
-+		dev_err(dev, "Modify QP to error state failed(%d) during CQE flush\n",
-+			ret);
-+
-+	/*
-+	 * make sure we signal QP destroy leg that flush QP was completed
-+	 * so that it can safely proceed ahead now and destroy QP
-+	 */
-+	if (atomic_dec_and_test(&hr_qp->refcount))
-+		complete(&hr_qp->free);
-+}
-+
-+void init_flush_work(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
-+{
-+	struct hns_roce_work *flush_work = &hr_qp->flush_work;
-+
-+	flush_work->hr_dev = hr_dev;
-+	INIT_WORK(&flush_work->work, flush_work_handle);
-+	atomic_inc(&hr_qp->refcount);
-+	queue_work(hr_dev->irq_workq, &flush_work->work);
-+}
-+
- void hns_roce_qp_event(struct hns_roce_dev *hr_dev, u32 qpn, int event_type)
- {
- 	struct device *dev = hr_dev->dev;
+ 	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
+ 	    adapter->priv->bt_adapter) {
 -- 
 2.20.1
 
