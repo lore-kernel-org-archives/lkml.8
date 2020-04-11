@@ -2,54 +2,62 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F7CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ED7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F3720644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4789720644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607954;
-	bh=Mlp4dDH4817TWo87N825RTd3ZoZFTS3zh2EnLg9Wzlw=;
+	s=default; t=1586607958;
+	bh=GJbNefvUwMlJrQducROtdksojVFFnS7Ma6pcTY09hLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wH6/vB1byQD+n0aC4i1P8LglyteKfBF/POxveK0U0Hs4cQE5+qtyXfKeRYQU71J3J
-	 DYjmH4CFs//MOPgvR8GF4JR5D8YO/451ga9btvhYnGioCpTIwvXnA6e6q24RmanihU
-	 NkTEJj4p2HhE9NpOCFEF/8m+niIR82G9ConyoK3I=
+	b=duEMNHQtWLVebPyBSTP+dVN0RKzjNan/LjFlNWJc1W2ISXWwL8wwco6uvtA/MDcYv
+	 UmrIglPMjdsvIUERItCssQNXPwbrbZOh5P14d62SO2ibCJq3tTIR9Xb+ZRVT3xpMr/
+	 ZoluEopsefXzpcNn6Exh51bpJVhtJ9V0zMtjhA74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgDKMQI (ORCPT
+        id S1728661AbgDKMZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbgDKMQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:03 -0400
+        id S1727942AbgDKMQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5070020787;
-        Sat, 11 Apr 2020 12:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8904621775;
+        Sat, 11 Apr 2020 12:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607363;
-        bh=Mlp4dDH4817TWo87N825RTd3ZoZFTS3zh2EnLg9Wzlw=;
+        s=default; t=1586607366;
+        bh=GJbNefvUwMlJrQducROtdksojVFFnS7Ma6pcTY09hLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNfNqBCJkmLq444Hj20QG8xQ53aZh+cq/OOdvA0gHySnFmJOsxYQOD3SZelEaMPh1
-         +UoRonGSn+3db4ehFH8fjZ+A1QOD0QVEcXzrTqEF3y+WFT815KGY8zLL78O+0JQ8tZ
-         5dL7tNZFL9cntXJ6XTIOgcgO/YrIzCLE0xAFKCug=
+        b=M5dgroqk8VQcAY8VR0F2FAlGSoxDqfCxc5U0RFA7PEUo/34WWQuPQ+9GZd641Umo+
+         hSDR6fa4Ko6CgGgjrOr8tQPUqgODLpDzzGiau6PaGnkD3AnN53Ok98zeRjd2mV18Lb
+         u8CcYpu9+pVoJLCEmbZ5oboWi+VdLccL+QCTLbLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 4.19 43/54] ceph: canonicalize server path in place
-Date:   Sat, 11 Apr 2020 14:09:25 +0200
-Message-Id: <20200411115512.886093392@linuxfoundation.org>
+        syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com,
+        syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com,
+        syzbot+4b628fcc748474003457@syzkaller.appspotmail.com,
+        syzbot+29ee8f76017ce6cf03da@syzkaller.appspotmail.com,
+        syzbot+6956235342b7317ec564@syzkaller.appspotmail.com,
+        syzbot+b358909d8d01556b790b@syzkaller.appspotmail.com,
+        syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com,
+        syzbot+8458d13b13562abf6b77@syzkaller.appspotmail.com,
+        syzbot+bd034f3fdc0402e942ed@syzkaller.appspotmail.com,
+        syzbot+c92378b32760a4eef756@syzkaller.appspotmail.com,
+        syzbot+68b44a1597636e0b342c@syzkaller.appspotmail.com,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 44/54] RDMA/ucma: Put a lock around every call to the rdma_cm layer
+Date:   Sat, 11 Apr 2020 14:09:26 +0200
+Message-Id: <20200411115513.031279873@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -62,222 +70,280 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit b27a939e8376a3f1ed09b9c33ef44d20f18ec3d0 upstream.
+commit 7c11910783a1ea17e88777552ef146cace607b3c upstream.
 
-syzbot reported that 4fbc0c711b24 ("ceph: remove the extra slashes in
-the server path") had caused a regression where an allocation could be
-done under a spinlock -- compare_mount_options() is called by sget_fc()
-with sb_lock held.
+The rdma_cm must be used single threaded.
 
-We don't really need the supplied server path, so canonicalize it
-in place and compare it directly.  To make this work, the leading
-slash is kept around and the logic in ceph_real_mount() to skip it
-is restored.  CEPH_MSG_CLIENT_SESSION now reports the same (i.e.
-canonicalized) path, with the leading slash of course.
+This appears to be a bug in the design, as it does have lots of locking
+that seems like it should allow concurrency. However, when it is all said
+and done every single place that uses the cma_exch() scheme is broken, and
+all the unlocked reads from the ucma of the cm_id data are wrong too.
 
-Fixes: 4fbc0c711b24 ("ceph: remove the extra slashes in the server path")
-Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
+syzkaller has been finding endless bugs related to this.
+
+Fixing this in any elegant way is some enormous amount of work. Take a
+very big hammer and put a mutex around everything to do with the
+ucma_context at the top of every syscall.
+
+Fixes: 75216638572f ("RDMA/cma: Export rdma cm interface to userspace")
+Link: https://lore.kernel.org/r/20200218210432.GA31966@ziepe.ca
+Reported-by: syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com
+Reported-by: syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com
+Reported-by: syzbot+4b628fcc748474003457@syzkaller.appspotmail.com
+Reported-by: syzbot+29ee8f76017ce6cf03da@syzkaller.appspotmail.com
+Reported-by: syzbot+6956235342b7317ec564@syzkaller.appspotmail.com
+Reported-by: syzbot+b358909d8d01556b790b@syzkaller.appspotmail.com
+Reported-by: syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com
+Reported-by: syzbot+8458d13b13562abf6b77@syzkaller.appspotmail.com
+Reported-by: syzbot+bd034f3fdc0402e942ed@syzkaller.appspotmail.com
+Reported-by: syzbot+c92378b32760a4eef756@syzkaller.appspotmail.com
+Reported-by: syzbot+68b44a1597636e0b342c@syzkaller.appspotmail.com
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/ceph/super.c |  118 ++++++++++++--------------------------------------------
- fs/ceph/super.h |    2 
- 2 files changed, 28 insertions(+), 92 deletions(-)
 
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -205,6 +205,26 @@ static match_table_t fsopt_tokens = {
- 	{-1, NULL}
- };
+---
+ drivers/infiniband/core/ucma.c |   49 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
+
+--- a/drivers/infiniband/core/ucma.c
++++ b/drivers/infiniband/core/ucma.c
+@@ -89,6 +89,7 @@ struct ucma_context {
  
-+/*
-+ * Remove adjacent slashes and then the trailing slash, unless it is
-+ * the only remaining character.
-+ *
-+ * E.g. "//dir1////dir2///" --> "/dir1/dir2", "///" --> "/".
-+ */
-+static void canonicalize_path(char *path)
-+{
-+	int i, j = 0;
-+
-+	for (i = 0; path[i] != '\0'; i++) {
-+		if (path[i] != '/' || j < 1 || path[j - 1] != '/')
-+			path[j++] = path[i];
-+	}
-+
-+	if (j > 1 && path[j - 1] == '/')
-+		j--;
-+	path[j] = '\0';
-+}
-+
- static int parse_fsopt_token(char *c, void *private)
- {
- 	struct ceph_mount_options *fsopt = private;
-@@ -398,73 +418,6 @@ static int strcmp_null(const char *s1, c
- 	return strcmp(s1, s2);
- }
+ 	struct ucma_file	*file;
+ 	struct rdma_cm_id	*cm_id;
++	struct mutex		mutex;
+ 	u64			uid;
  
--/**
-- * path_remove_extra_slash - Remove the extra slashes in the server path
-- * @server_path: the server path and could be NULL
-- *
-- * Return NULL if the path is NULL or only consists of "/", or a string
-- * without any extra slashes including the leading slash(es) and the
-- * slash(es) at the end of the server path, such as:
-- * "//dir1////dir2///" --> "dir1/dir2"
-- */
--static char *path_remove_extra_slash(const char *server_path)
--{
--	const char *path = server_path;
--	const char *cur, *end;
--	char *buf, *p;
--	int len;
--
--	/* if the server path is omitted */
--	if (!path)
--		return NULL;
--
--	/* remove all the leading slashes */
--	while (*path == '/')
--		path++;
--
--	/* if the server path only consists of slashes */
--	if (*path == '\0')
--		return NULL;
--
--	len = strlen(path);
--
--	buf = kmalloc(len + 1, GFP_KERNEL);
--	if (!buf)
--		return ERR_PTR(-ENOMEM);
--
--	end = path + len;
--	p = buf;
--	do {
--		cur = strchr(path, '/');
--		if (!cur)
--			cur = end;
--
--		len = cur - path;
--
--		/* including one '/' */
--		if (cur != end)
--			len += 1;
--
--		memcpy(p, path, len);
--		p += len;
--
--		while (cur <= end && *cur == '/')
--			cur++;
--		path = cur;
--	} while (path < end);
--
--	*p = '\0';
--
--	/*
--	 * remove the last slash if there has and just to make sure that
--	 * we will get something like "dir1/dir2"
--	 */
--	if (*(--p) == '/')
--		*p = '\0';
--
--	return buf;
--}
--
- static int compare_mount_options(struct ceph_mount_options *new_fsopt,
- 				 struct ceph_options *new_opt,
- 				 struct ceph_fs_client *fsc)
-@@ -472,7 +425,6 @@ static int compare_mount_options(struct
- 	struct ceph_mount_options *fsopt1 = new_fsopt;
- 	struct ceph_mount_options *fsopt2 = fsc->mount_options;
- 	int ofs = offsetof(struct ceph_mount_options, snapdir_name);
--	char *p1, *p2;
- 	int ret;
+ 	struct list_head	list;
+@@ -215,6 +216,7 @@ static struct ucma_context *ucma_alloc_c
+ 	init_completion(&ctx->comp);
+ 	INIT_LIST_HEAD(&ctx->mc_list);
+ 	ctx->file = file;
++	mutex_init(&ctx->mutex);
  
- 	ret = memcmp(fsopt1, fsopt2, ofs);
-@@ -482,21 +434,12 @@ static int compare_mount_options(struct
- 	ret = strcmp_null(fsopt1->snapdir_name, fsopt2->snapdir_name);
- 	if (ret)
- 		return ret;
-+
- 	ret = strcmp_null(fsopt1->mds_namespace, fsopt2->mds_namespace);
- 	if (ret)
- 		return ret;
- 
--	p1 = path_remove_extra_slash(fsopt1->server_path);
--	if (IS_ERR(p1))
--		return PTR_ERR(p1);
--	p2 = path_remove_extra_slash(fsopt2->server_path);
--	if (IS_ERR(p2)) {
--		kfree(p1);
--		return PTR_ERR(p2);
--	}
--	ret = strcmp_null(p1, p2);
--	kfree(p1);
--	kfree(p2);
-+	ret = strcmp_null(fsopt1->server_path, fsopt2->server_path);
- 	if (ret)
- 		return ret;
- 
-@@ -564,6 +507,8 @@ static int parse_mount_options(struct ce
- 			err = -ENOMEM;
- 			goto out;
- 		}
-+
-+		canonicalize_path(fsopt->server_path);
- 	} else {
- 		dev_name_end = dev_name + strlen(dev_name);
+ 	mutex_lock(&mut);
+ 	ctx->id = idr_alloc(&ctx_idr, ctx, 0, 0, GFP_KERNEL);
+@@ -596,6 +598,7 @@ static int ucma_free_ctx(struct ucma_con
  	}
-@@ -990,7 +935,9 @@ static struct dentry *ceph_real_mount(st
- 	mutex_lock(&fsc->client->mount_mutex);
  
- 	if (!fsc->sb->s_root) {
--		const char *path, *p;
-+		const char *path = fsc->mount_options->server_path ?
-+				     fsc->mount_options->server_path + 1 : "";
+ 	events_reported = ctx->events_reported;
++	mutex_destroy(&ctx->mutex);
+ 	kfree(ctx);
+ 	return events_reported;
+ }
+@@ -665,7 +668,10 @@ static ssize_t ucma_bind_ip(struct ucma_
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_bind_addr(ctx->cm_id, (struct sockaddr *) &cmd.addr);
++	mutex_unlock(&ctx->mutex);
 +
- 		err = __ceph_open_session(fsc->client, started);
- 		if (err < 0)
- 			goto out;
-@@ -1002,16 +949,6 @@ static struct dentry *ceph_real_mount(st
- 				goto out;
- 		}
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -688,7 +694,9 @@ static ssize_t ucma_bind(struct ucma_fil
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
  
--		p = path_remove_extra_slash(fsc->mount_options->server_path);
--		if (IS_ERR(p)) {
--			err = PTR_ERR(p);
--			goto out;
--		}
--		/* if the server path is omitted or just consists of '/' */
--		if (!p)
--			path = "";
--		else
--			path = p;
- 		dout("mount opening path '%s'\n", path);
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_bind_addr(ctx->cm_id, (struct sockaddr *) &cmd.addr);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -712,8 +720,10 @@ static ssize_t ucma_resolve_ip(struct uc
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
  
- 		err = ceph_fs_debugfs_init(fsc);
-@@ -1019,7 +956,6 @@ static struct dentry *ceph_real_mount(st
- 			goto out;
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_resolve_addr(ctx->cm_id, (struct sockaddr *) &cmd.src_addr,
+ 				(struct sockaddr *) &cmd.dst_addr, cmd.timeout_ms);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -738,8 +748,10 @@ static ssize_t ucma_resolve_addr(struct
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
  
- 		root = open_root_dentry(fsc, path, started);
--		kfree(p);
- 		if (IS_ERR(root)) {
- 			err = PTR_ERR(root);
- 			goto out;
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -86,7 +86,7 @@ struct ceph_mount_options {
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_resolve_addr(ctx->cm_id, (struct sockaddr *) &cmd.src_addr,
+ 				(struct sockaddr *) &cmd.dst_addr, cmd.timeout_ms);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -759,7 +771,9 @@ static ssize_t ucma_resolve_route(struct
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
  
- 	char *snapdir_name;   /* default ".snap" */
- 	char *mds_namespace;  /* default NULL */
--	char *server_path;    /* default  "/" */
-+	char *server_path;    /* default NULL (means "/") */
- 	char *fscache_uniq;   /* default NULL */
- };
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_resolve_route(ctx->cm_id, cmd.timeout_ms);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -848,6 +862,7 @@ static ssize_t ucma_query_route(struct u
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
  
++	mutex_lock(&ctx->mutex);
+ 	memset(&resp, 0, sizeof resp);
+ 	addr = (struct sockaddr *) &ctx->cm_id->route.addr.src_addr;
+ 	memcpy(&resp.src_addr, addr, addr->sa_family == AF_INET ?
+@@ -871,6 +886,7 @@ static ssize_t ucma_query_route(struct u
+ 		ucma_copy_iw_route(&resp, &ctx->cm_id->route);
+ 
+ out:
++	mutex_unlock(&ctx->mutex);
+ 	if (copy_to_user(u64_to_user_ptr(cmd.response),
+ 			 &resp, sizeof(resp)))
+ 		ret = -EFAULT;
+@@ -1022,6 +1038,7 @@ static ssize_t ucma_query(struct ucma_fi
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	switch (cmd.option) {
+ 	case RDMA_USER_CM_QUERY_ADDR:
+ 		ret = ucma_query_addr(ctx, response, out_len);
+@@ -1036,6 +1053,7 @@ static ssize_t ucma_query(struct ucma_fi
+ 		ret = -ENOSYS;
+ 		break;
+ 	}
++	mutex_unlock(&ctx->mutex);
+ 
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+@@ -1076,7 +1094,9 @@ static ssize_t ucma_connect(struct ucma_
+ 		return PTR_ERR(ctx);
+ 
+ 	ucma_copy_conn_param(ctx->cm_id, &conn_param, &cmd.conn_param);
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_connect(ctx->cm_id, &conn_param);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1097,7 +1117,9 @@ static ssize_t ucma_listen(struct ucma_f
+ 
+ 	ctx->backlog = cmd.backlog > 0 && cmd.backlog < max_backlog ?
+ 		       cmd.backlog : max_backlog;
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_listen(ctx->cm_id, ctx->backlog);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1120,13 +1142,17 @@ static ssize_t ucma_accept(struct ucma_f
+ 	if (cmd.conn_param.valid) {
+ 		ucma_copy_conn_param(ctx->cm_id, &conn_param, &cmd.conn_param);
+ 		mutex_lock(&file->mut);
++		mutex_lock(&ctx->mutex);
+ 		ret = __rdma_accept(ctx->cm_id, &conn_param, NULL);
++		mutex_unlock(&ctx->mutex);
+ 		if (!ret)
+ 			ctx->uid = cmd.uid;
+ 		mutex_unlock(&file->mut);
+-	} else
++	} else {
++		mutex_lock(&ctx->mutex);
+ 		ret = __rdma_accept(ctx->cm_id, NULL, NULL);
+-
++		mutex_unlock(&ctx->mutex);
++	}
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1145,7 +1171,9 @@ static ssize_t ucma_reject(struct ucma_f
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_reject(ctx->cm_id, cmd.private_data, cmd.private_data_len);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1164,7 +1192,9 @@ static ssize_t ucma_disconnect(struct uc
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_disconnect(ctx->cm_id);
++	mutex_unlock(&ctx->mutex);
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+@@ -1195,7 +1225,9 @@ static ssize_t ucma_init_qp_attr(struct
+ 	resp.qp_attr_mask = 0;
+ 	memset(&qp_attr, 0, sizeof qp_attr);
+ 	qp_attr.qp_state = cmd.qp_state;
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_init_qp_attr(ctx->cm_id, &qp_attr, &resp.qp_attr_mask);
++	mutex_unlock(&ctx->mutex);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1274,9 +1306,13 @@ static int ucma_set_ib_path(struct ucma_
+ 		struct sa_path_rec opa;
+ 
+ 		sa_convert_path_ib_to_opa(&opa, &sa_path);
++		mutex_lock(&ctx->mutex);
+ 		ret = rdma_set_ib_path(ctx->cm_id, &opa);
++		mutex_unlock(&ctx->mutex);
+ 	} else {
++		mutex_lock(&ctx->mutex);
+ 		ret = rdma_set_ib_path(ctx->cm_id, &sa_path);
++		mutex_unlock(&ctx->mutex);
+ 	}
+ 	if (ret)
+ 		return ret;
+@@ -1309,7 +1345,9 @@ static int ucma_set_option_level(struct
+ 
+ 	switch (level) {
+ 	case RDMA_OPTION_ID:
++		mutex_lock(&ctx->mutex);
+ 		ret = ucma_set_option_id(ctx, optname, optval, optlen);
++		mutex_unlock(&ctx->mutex);
+ 		break;
+ 	case RDMA_OPTION_IB:
+ 		ret = ucma_set_option_ib(ctx, optname, optval, optlen);
+@@ -1369,8 +1407,10 @@ static ssize_t ucma_notify(struct ucma_f
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+ 
++	mutex_lock(&ctx->mutex);
+ 	if (ctx->cm_id->device)
+ 		ret = rdma_notify(ctx->cm_id, (enum ib_event_type)cmd.event);
++	mutex_unlock(&ctx->mutex);
+ 
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+@@ -1413,8 +1453,10 @@ static ssize_t ucma_process_join(struct
+ 	mc->join_state = join_state;
+ 	mc->uid = cmd->uid;
+ 	memcpy(&mc->addr, addr, cmd->addr_size);
++	mutex_lock(&ctx->mutex);
+ 	ret = rdma_join_multicast(ctx->cm_id, (struct sockaddr *)&mc->addr,
+ 				  join_state, mc);
++	mutex_unlock(&ctx->mutex);
+ 	if (ret)
+ 		goto err2;
+ 
+@@ -1518,7 +1560,10 @@ static ssize_t ucma_leave_multicast(stru
+ 		goto out;
+ 	}
+ 
++	mutex_lock(&mc->ctx->mutex);
+ 	rdma_leave_multicast(mc->ctx->cm_id, (struct sockaddr *) &mc->addr);
++	mutex_unlock(&mc->ctx->mutex);
++
+ 	mutex_lock(&mc->ctx->file->mut);
+ 	ucma_cleanup_mc_events(mc);
+ 	list_del(&mc->list);
 
 
