@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C593C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866E8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1390E21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555D5215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607101;
-	bh=n9rmmBrENhy6TDpT9Axt8H10o6yNclgku19ixyVaLpM=;
+	s=default; t=1586607104;
+	bh=wjsPonv04TDwjYRoFnqSJdDu9tOwOMFKJaUUT5iV0x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D75+xUl3SNDC5Lt3tB5ilmn7J4xmSfqvm9hD6h8jXd2P61wOXONEtpxYPUvDqN0/8
-	 +N6T7ak5Tf0O/FuSC4T/cmssiMLDy3OrX8SZw1Vw93i+rkNROTdIqG3WRs49ahnyTV
-	 2AuARV/s1tcP28ysNDNnsFzkI+MXk/4LoBrbZbsk=
+	b=R5s7diNL05tQaSCsl5C4FKNbv0OssmFs5sTLFzsA5AfePHnQFRWiXmpkzDBfjZvi9
+	 K3BdlgG1lnZLXs+X0R7RNgcFUbEjvNXBAgIZkG4eculy8c9y7qvVRL6kGLA0uuATRL
+	 DR7tEAeU4kGr9aYhVOiYtaUiR9z9Y/YOgelwzK+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgDKMLi (ORCPT
+        id S1727031AbgDKMLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbgDKMLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:34 -0400
+        id S1727014AbgDKMLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A029421D79;
-        Sat, 11 Apr 2020 12:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 103E3215A4;
+        Sat, 11 Apr 2020 12:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607095;
-        bh=n9rmmBrENhy6TDpT9Axt8H10o6yNclgku19ixyVaLpM=;
+        s=default; t=1586607097;
+        bh=wjsPonv04TDwjYRoFnqSJdDu9tOwOMFKJaUUT5iV0x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wWpTJG5rONBIpixT0aLmnilQ4l881bMFlulp2j3A+Utk944D7jlvOB4V2vo3WUHes
-         yf/dMDqTauICqcqYDLwQjYp93yqz6lGlxMvSL6ujT6fg6RNyPk53wJHCX2dw8mraLs
-         f28JoHF1c0HHQUD7XQYeQRrrz2DiOZdIUNa4GcnM=
+        b=ok/qvI/mn2079ro2kaIMv8x2T72dSme+C3wmCBPGJDbm2hsz8rYdEIYVvkK2+2BXI
+         GW5vAXLTYBby1q89BW6wPHIaTPARLD1o+WqZ2lX8U+Xjbw4x9vrzlttCBEww0BKc3n
+         B6e/JWQ+qj0Wo1V3mCuKD0rEnkQVEKnX4l78MrJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.4 19/29] random: always use batched entropy for get_random_u{32,64}
-Date:   Sat, 11 Apr 2020 14:08:49 +0200
-Message-Id: <20200411115411.092282795@linuxfoundation.org>
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        David Ahern <dsahern@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Shailabh Nagar <nagar@watson.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 20/29] tools/accounting/getdelays.c: fix netlink attribute length
+Date:   Sat, 11 Apr 2020 14:08:50 +0200
+Message-Id: <20200411115411.267967922@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -59,80 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: David Ahern <dsahern@kernel.org>
 
-commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
+commit 4054ab64e29bb05b3dfe758fff3c38a74ba753bb upstream.
 
-It turns out that RDRAND is pretty slow. Comparing these two
-constructions:
+A recent change to the netlink code: 6e237d099fac ("netlink: Relax attr
+validation for fixed length types") logs a warning when programs send
+messages with invalid attributes (e.g., wrong length for a u32).  Yafang
+reported this error message for tools/accounting/getdelays.c.
 
-  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
-    arch_get_random_long(&ret);
+send_cmd() is wrongly adding 1 to the attribute length.  As noted in
+include/uapi/linux/netlink.h nla_len should be NLA_HDRLEN + payload
+length, so drop the +1.
 
-and
-
-  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
-  extract_crng((u8 *)buf);
-
-it amortizes out to 352 cycles per long for the top one and 107 cycles
-per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
-
-And importantly, the top one has the drawback of not benefiting from the
-real rng, whereas the bottom one has all the nice benefits of using our
-own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
-beyond what it was originally intended for when it was introduced as
-get_random_{int,long} back in the md5 monstrosity era), it seems like it
-might be a good thing to strengthen its posture a tiny bit. Doing this
-should only be stronger and not any weaker because that pool is already
-initialized with a bunch of rdrand data (when available). This way, we
-get the benefits of the hardware rng as well as our own rng.
-
-Another benefit of this is that we no longer hit pitfalls of the recent
-stream of AMD bugs in RDRAND. One often used code pattern for various
-things is:
-
-  do {
-  	val = get_random_u32();
-  } while (hash_table_contains_key(val));
-
-That recent AMD bug rendered that pattern useless, whereas we're really
-very certain that chacha20 output will give pretty distributed numbers,
-no matter what.
-
-So, this simplification seems better both from a security perspective
-and from a performance perspective.
-
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 9e06d3f9f6b1 ("per task delay accounting taskstats interface: documentation fix")
+Reported-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Yafang Shao <laoar.shao@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Shailabh Nagar <nagar@watson.ibm.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200327173111.63922-1-dsahern@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/random.c |    6 ------
- 1 file changed, 6 deletions(-)
+ Documentation/accounting/getdelays.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -1824,9 +1824,6 @@ unsigned int get_random_int(void)
- 	__u32 *hash;
- 	unsigned int ret;
+--- a/Documentation/accounting/getdelays.c
++++ b/Documentation/accounting/getdelays.c
+@@ -135,7 +135,7 @@ static int send_cmd(int sd, __u16 nlmsg_
+ 	msg.g.version = 0x1;
+ 	na = (struct nlattr *) GENLMSG_DATA(&msg);
+ 	na->nla_type = nla_type;
+-	na->nla_len = nla_len + 1 + NLA_HDRLEN;
++	na->nla_len = nla_len + NLA_HDRLEN;
+ 	memcpy(NLA_DATA(na), nla_data, nla_len);
+ 	msg.n.nlmsg_len += NLMSG_ALIGN(na->nla_len);
  
--	if (arch_get_random_int(&ret))
--		return ret;
--
- 	hash = get_cpu_var(get_random_int_hash);
- 
- 	hash[0] += current->pid + jiffies + random_get_entropy();
-@@ -1846,9 +1843,6 @@ unsigned long get_random_long(void)
- 	__u32 *hash;
- 	unsigned long ret;
- 
--	if (arch_get_random_long(&ret))
--		return ret;
--
- 	hash = get_cpu_var(get_random_int_hash);
- 
- 	hash[0] += current->pid + jiffies + random_get_entropy();
 
 
