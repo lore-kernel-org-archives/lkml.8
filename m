@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAE5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0E6C352B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF47421835
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D0F21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646531;
-	bh=gS+SOyMmGhSQIgcbDhXLl7pJ3+Mv/SjIIVp6L2hA/WQ=;
+	s=default; t=1586646535;
+	bh=mfsdc27c9Is7lCM07MtzICt/uZCLGi1YiEvmZs5Pmx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8WwP8PvMhQzyAH1DsIZJoTX+Kv+tiSxSRE57tR//iFqi753uKW9NJ0VHAJcCKkv7
-	 GyC+kpuB2PMCKdJi3n3ncVTPmbSjCPneP7/3wvlnHcs+Uhfe1DsQwbOU8wmIKcTDRf
-	 ewDdaw6hCu/kFouXq2Z87YDbWSJXsiSrWhl95YgQ=
+	b=KEoeuc7MQ8lDgmBS0wO397hStxHrUp1knW4Vi+ZanT+KZSVplDkIF4W4ckwr0p1bw
+	 5qHAsn9rn35zzM/BszoIZKcdAiPHpi0qRFJAjVyjtzxR2p7EvvMl5qJpFBS9W7Y1kv
+	 5FhOgoYbuHfBcLmrz2NpqtYCJ6UTYHwx9hlwpA44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgDKXIt (ORCPT
+        id S1729022AbgDKXIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45972 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgDKXIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:44 -0400
+        id S1729006AbgDKXIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 273D8218AC;
-        Sat, 11 Apr 2020 23:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70B0E216FD;
+        Sat, 11 Apr 2020 23:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646524;
-        bh=gS+SOyMmGhSQIgcbDhXLl7pJ3+Mv/SjIIVp6L2hA/WQ=;
+        s=default; t=1586646527;
+        bh=mfsdc27c9Is7lCM07MtzICt/uZCLGi1YiEvmZs5Pmx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3AcBff9JEgWjAf/oEU5PLRJ4ZfGcHOhSZqb8wm9HS4ro6m9YageDb50vOa7rqL/D
-         FkJH6h7/WRH52+FdYYcLx/FXvpJ1tSZlh1RK7+mkZ/kkhk1NqSlSmSSoaUfFskwxPb
-         Ak1VVjBzMT2LwC/eD1q9d/zhcrEbnYalcqNepfEE=
+        b=IyGBOAzYqqZKhyCS92fRj+E7m0cV66QnbtB5rpr6Umn/yGEYP+9eVp3F7dPH5CHZT
+         Fdi5KkcKwRYieuvnFDTldkLvJ/fmCcA69YuS6Wm/MOFSZwD5UFmx3ea1fn5N8pscXU
+         QHVolO77i5viWNVq8E7LUtcaYR2gdk/3HY45ZolE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ewan D. Milne" <emilne@redhat.com>,
-        Bart van Assche <bvanassche@acm.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 080/121] scsi: core: avoid repetitive logging of device offline messages
-Date:   Sat, 11 Apr 2020 19:06:25 -0400
-Message-Id: <20200411230706.23855-80-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 082/121] RDMA/cm: Remove a race freeing timewait_info
+Date:   Sat, 11 Apr 2020 19:06:27 -0400
+Message-Id: <20200411230706.23855-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,70 +59,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ewan D. Milne" <emilne@redhat.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit b0962c53bde9a485c8ebc401fa1dbe821a76bc3e ]
+[ Upstream commit bede86a39d9dc3387ac00dcb8e1ac221676b2f25 ]
 
-Large queues of I/O to offline devices that are eventually submitted when
-devices are unblocked result in a many repeated "rejecting I/O to offline
-device" messages.  These messages can fill up the dmesg buffer in crash
-dumps so no useful prior messages remain.  In addition, if a serial console
-is used, the flood of messages can cause a hard lockup in the console code.
+When creating a cm_id during REQ the id immediately becomes visible to the
+other MAD handlers, and shortly after the state is moved to IB_CM_REQ_RCVD
 
-Introduce a flag indicating the message has already been logged for the
-device, and reset the flag when scsi_device_set_state() changes the device
-state.
+This allows cm_rej_handler() to run concurrently and free the work:
 
-Link: https://lore.kernel.org/r/20200311143930.20674-1-emilne@redhat.com
-Reviewed-by: Bart van Assche <bvanassche@acm.org>
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+        CPU 0                                CPU1
+ cm_req_handler()
+  ib_create_cm_id()
+  cm_match_req()
+    id_priv->state = IB_CM_REQ_RCVD
+                                       cm_rej_handler()
+                                         cm_acquire_id()
+                                         spin_lock(&id_priv->lock)
+                                         switch (id_priv->state)
+  					   case IB_CM_REQ_RCVD:
+                                            cm_reset_to_idle()
+                                             kfree(id_priv->timewait_info);
+   goto destroy
+  destroy:
+    kfree(id_priv->timewait_info);
+                                             id_priv->timewait_info = NULL
+
+Causing a double free or worse.
+
+Do not free the timewait_info without also holding the
+id_priv->lock. Simplify this entire flow by making the free unconditional
+during cm_destroy_id() and removing the confusing special case error
+unwind during creation of the timewait_info.
+
+This also fixes a leak of the timewait if cm_destroy_id() is called in
+IB_CM_ESTABLISHED with an XRC TGT QP. The state machine will be left in
+ESTABLISHED while it needed to transition through IB_CM_TIMEWAIT to
+release the timewait pointer.
+
+Also fix a leak of the timewait_info if the caller mis-uses the API and
+does ib_send_cm_reqs().
+
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-4-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_lib.c    | 8 ++++++--
- include/scsi/scsi_device.h | 3 +++
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/cm.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 3e7a45d0dacad..22bc288750f28 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1240,8 +1240,11 @@ scsi_prep_state_check(struct scsi_device *sdev, struct request *req)
- 		 * commands.  The device must be brought online
- 		 * before trying any recovery commands.
- 		 */
--		sdev_printk(KERN_ERR, sdev,
--			    "rejecting I/O to offline device\n");
-+		if (!sdev->offline_already) {
-+			sdev->offline_already = true;
-+			sdev_printk(KERN_ERR, sdev,
-+				    "rejecting I/O to offline device\n");
-+		}
- 		return BLK_STS_IOERR;
- 	case SDEV_DEL:
- 		/*
-@@ -2338,6 +2341,7 @@ scsi_device_set_state(struct scsi_device *sdev, enum scsi_device_state state)
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index f7afa1c75746b..4b00c6c83512d 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1066,14 +1066,22 @@ static void cm_destroy_id(struct ib_cm_id *cm_id, int err)
  		break;
- 
  	}
-+	sdev->offline_already = false;
- 	sdev->sdev_state = state;
+ 
+-	spin_lock_irq(&cm.lock);
++	spin_lock_irq(&cm_id_priv->lock);
++	spin_lock(&cm.lock);
++	/* Required for cleanup paths related cm_req_handler() */
++	if (cm_id_priv->timewait_info) {
++		cm_cleanup_timewait(cm_id_priv->timewait_info);
++		kfree(cm_id_priv->timewait_info);
++		cm_id_priv->timewait_info = NULL;
++	}
+ 	if (!list_empty(&cm_id_priv->altr_list) &&
+ 	    (!cm_id_priv->altr_send_port_not_ready))
+ 		list_del(&cm_id_priv->altr_list);
+ 	if (!list_empty(&cm_id_priv->prim_list) &&
+ 	    (!cm_id_priv->prim_send_port_not_ready))
+ 		list_del(&cm_id_priv->prim_list);
+-	spin_unlock_irq(&cm.lock);
++	spin_unlock(&cm.lock);
++	spin_unlock_irq(&cm_id_priv->lock);
+ 
+ 	cm_free_id(cm_id->local_id);
+ 	cm_deref_id(cm_id_priv);
+@@ -1390,7 +1398,7 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 	/* Verify that we're not in timewait. */
+ 	cm_id_priv = container_of(cm_id, struct cm_id_private, id);
+ 	spin_lock_irqsave(&cm_id_priv->lock, flags);
+-	if (cm_id->state != IB_CM_IDLE) {
++	if (cm_id->state != IB_CM_IDLE || WARN_ON(cm_id_priv->timewait_info)) {
+ 		spin_unlock_irqrestore(&cm_id_priv->lock, flags);
+ 		ret = -EINVAL;
+ 		goto out;
+@@ -1408,12 +1416,12 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 				 param->ppath_sgid_attr, &cm_id_priv->av,
+ 				 cm_id_priv);
+ 	if (ret)
+-		goto error1;
++		goto out;
+ 	if (param->alternate_path) {
+ 		ret = cm_init_av_by_path(param->alternate_path, NULL,
+ 					 &cm_id_priv->alt_av, cm_id_priv);
+ 		if (ret)
+-			goto error1;
++			goto out;
+ 	}
+ 	cm_id->service_id = param->service_id;
+ 	cm_id->service_mask = ~cpu_to_be64(0);
+@@ -1431,7 +1439,7 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 
+ 	ret = cm_alloc_msg(cm_id_priv, &cm_id_priv->msg);
+ 	if (ret)
+-		goto error1;
++		goto out;
+ 
+ 	req_msg = (struct cm_req_msg *) cm_id_priv->msg->mad;
+ 	cm_format_req(req_msg, cm_id_priv, param);
+@@ -1454,7 +1462,6 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
  	return 0;
  
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index 3ed836db53069..3812b93347247 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -203,6 +203,9 @@ struct scsi_device {
- 	unsigned unmap_limit_for_ws:1;	/* Use the UNMAP limit for WRITE SAME */
- 	unsigned rpm_autosuspend:1;	/* Enable runtime autosuspend at device
- 					 * creation time */
-+
-+	bool offline_already;		/* Device offline message logged */
-+
- 	atomic_t disk_events_disable_depth; /* disable depth for disk events */
+ error2:	cm_free_msg(cm_id_priv->msg);
+-error1:	kfree(cm_id_priv->timewait_info);
+ out:	return ret;
+ }
+ EXPORT_SYMBOL(ib_send_cm_req);
+@@ -1935,7 +1942,7 @@ static int cm_req_handler(struct cm_work *work)
+ 		pr_debug("%s: local_id %d, no listen_cm_id_priv\n", __func__,
+ 			 be32_to_cpu(cm_id->local_id));
+ 		ret = -EINVAL;
+-		goto free_timeinfo;
++		goto destroy;
+ 	}
  
- 	DECLARE_BITMAP(supported_events, SDEV_EVT_MAXBITS); /* supported events */
+ 	cm_id_priv->id.cm_handler = listen_cm_id_priv->id.cm_handler;
+@@ -2020,8 +2027,6 @@ static int cm_req_handler(struct cm_work *work)
+ rejected:
+ 	refcount_dec(&cm_id_priv->refcount);
+ 	cm_deref_id(listen_cm_id_priv);
+-free_timeinfo:
+-	kfree(cm_id_priv->timewait_info);
+ destroy:
+ 	ib_destroy_cm_id(cm_id);
+ 	return ret;
 -- 
 2.20.1
 
