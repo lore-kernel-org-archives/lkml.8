@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE71C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939E8C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF872051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6085C2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648261;
-	bh=hxSLI/Wp+FzU1WI/4USn63xVTDunb7/+FM/8EFyhj7o=;
+	s=default; t=1586648266;
+	bh=i2NOkvXgQjmy1war5M2N6tiGO8fYM47xu98GEOxJYLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S97m2oDxZTZVEWho6TcZk+YYsPzXIB461qPU6WHSH7f9NoRTG/5bTMsvd1lAFj0X3
-	 T2M1ZNuU3uM1oZKrqhO4j1cfP6AVL1wu+9UluJu2qSKaUoawm9wxEfQE0lvzAFWIhz
-	 e7ZIeAQoS330PTLb4e4RluNhcAV8LUxfnhPl4yio=
+	b=JG/p/APKNz6cyiqQmq1wtm+I4hIngau8P2SpxFjl9iggiDeXsGrXTW/LBCHJpuHWk
+	 pIdcv/oQDxuQNnczS0Uu+Gu2LhTzIGA6gCmHWWgMQ+pKrj6lP/p8yODLitm5GrSr5y
+	 JbRSzx0yYpx4oyfk6qixnlgLVrGBCsMw7v0Q2Rmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgDKXhj (ORCPT
+        id S1728976AbgDKXho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728881AbgDKXIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:16 -0400
+        id S1728865AbgDKXIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37ADA215A4;
-        Sat, 11 Apr 2020 23:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E36D214D8;
+        Sat, 11 Apr 2020 23:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646497;
-        bh=hxSLI/Wp+FzU1WI/4USn63xVTDunb7/+FM/8EFyhj7o=;
+        s=default; t=1586646492;
+        bh=i2NOkvXgQjmy1war5M2N6tiGO8fYM47xu98GEOxJYLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCs9K7bbA7dmFsIgvLqUPFkpe6Q7aCFeJ1gEzjSBWkcmNBOJ67lGfoGjvI1XxCkE0
-         R+qDwZoHwyj9Id1c6Cm6CVvg1fjXLA3h09HG4y+dDWeIG0W+Cg9UZCOy+PFohkGfZa
-         cbGi1JM4Qov9o7JREj5mx10qExpk0FqdHeNIF7SY=
+        b=HqaGo1OIXfRII1MFIEBLGgEcb57BhLi97+6QXUaFpsRHok/yloH4FlidMnq0eiiif
+         QAuB4dKU5NPWShnI3GHo4+1zdc+KB+2z9h72oFdPjsCP3tBoCEBN4LJYYpS7GD0lQP
+         YIS5KFYY60cpjOe02Mlyf2GKdWWbj3gods5d79yo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
+Cc:     Tzu-En Huang <tehuang@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 059/121] drm/stm: ltdc: check crtc state before enabling LIE
-Date:   Sat, 11 Apr 2020 19:06:04 -0400
-Message-Id: <20200411230706.23855-59-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 055/121] rtw88: 8822c: update power sequence to v16
+Date:   Sat, 11 Apr 2020 19:06:00 -0400
+Message-Id: <20200411230706.23855-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -63,44 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yannick Fertre <yannick.fertre@st.com>
+From: Tzu-En Huang <tehuang@realtek.com>
 
-[ Upstream commit a6bd58c51ac43083f3977057a7ad668def55812f ]
+[ Upstream commit 8299adec99b29f341f0ee4269f1ce70ca8508e78 ]
 
-Following investigations of a hardware bug, the LIE interrupt
-can occur while the display controller is not activated.
-LIE interrupt (vblank) don't have to be set if the CRTC is not
-enabled.
+Fix switching xtal mode leads to BT USB error issue.
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1579601650-7055-1-git-send-email-yannick.fertre@st.com
+Signed-off-by: Tzu-En Huang <tehuang@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/rtw8822c.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 5b51298921cf1..cf899cff7610a 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -654,9 +654,14 @@ static const struct drm_crtc_helper_funcs ltdc_crtc_helper_funcs = {
- static int ltdc_crtc_enable_vblank(struct drm_crtc *crtc)
- {
- 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-+	struct drm_crtc_state *state = crtc->state;
- 
- 	DRM_DEBUG_DRIVER("\n");
--	reg_set(ldev->regs, LTDC_IER, IER_LIE);
-+
-+	if (state->enable)
-+		reg_set(ldev->regs, LTDC_IER, IER_LIE);
-+	else
-+		return -EPERM;
- 
- 	return 0;
- }
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822c.c b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
+index 1740298368334..6087d86a60cc8 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8822c.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
+@@ -3544,6 +3544,11 @@ static struct rtw_pwr_seq_cmd trans_cardemu_to_act_8822c[] = {
+ 	 RTW_PWR_INTF_ALL_MSK,
+ 	 RTW_PWR_ADDR_MAC,
+ 	 RTW_PWR_CMD_WRITE, BIT(2), BIT(2)},
++	{0x1064,
++	 RTW_PWR_CUT_ALL_MSK,
++	 RTW_PWR_INTF_ALL_MSK,
++	 RTW_PWR_ADDR_MAC,
++	 RTW_PWR_CMD_WRITE, BIT(1), BIT(1)},
+ 	{0xFFFF,
+ 	 RTW_PWR_CUT_ALL_MSK,
+ 	 RTW_PWR_INTF_ALL_MSK,
 -- 
 2.20.1
 
