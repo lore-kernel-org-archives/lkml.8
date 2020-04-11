@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C92C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906D3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D075206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60EAA206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647872;
-	bh=ZXMzDijToI0Xp1tlWp3wP7ZbDdz7Yh1T+un0pHOH3tA=;
+	s=default; t=1586647883;
+	bh=Kizk2/Fv7hSjSy8fA563sh+njifOHYQfB2KVSk9Tlis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNiPvisMsn/lsN5/zj/+ZWNXwaXIhWtT5v4hsxSLblwMr5FT9Fu8CqI74uWaVvCfn
-	 qk9oyxtWyRqqfrx02zIPNcEldRqEIsFcrqFNbSECvhdaaoYDh61Z153XXAcgI4QMzK
-	 aq2bRiEpGDzNovGgETY7E1nPdjWR5pTHb5hWAHYI=
+	b=FfzxxjLZtpxhRKETme7UIoTcaZD11wcQaBdRUN9QS/R95iMqd2FNuMTfKCwLsp8y+
+	 nWfyjY6B2BNK/Ucgy5VE9GNocg5zCyu1wXPNFbudU8GOgifzg8z403ygokkfOSUo8U
+	 WgmYIhW53JJkNUYmLKhziTlpiFnGSmzPyIO9sxl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgDKXKY (ORCPT
+        id S1730349AbgDKXbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgDKXKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:23 -0400
+        id S1729516AbgDKXKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63A76216FD;
-        Sat, 11 Apr 2020 23:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 338F520757;
+        Sat, 11 Apr 2020 23:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646623;
-        bh=ZXMzDijToI0Xp1tlWp3wP7ZbDdz7Yh1T+un0pHOH3tA=;
+        s=default; t=1586646621;
+        bh=Kizk2/Fv7hSjSy8fA563sh+njifOHYQfB2KVSk9Tlis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHt2675JR0RR5xZqC7j3MU584QtfuGN1Ja8OTijfp2SHnxbJ5xH/Zvge04A7Mrb41
-         bwOF/uIZ/VomXvH3fQbcEVeIwjFhlaZElR7DY6vlLsZEhst5amZOf1Xd6U9FGXFjRM
-         pYYI3AUZdlb+0W0YE4/EXQcIp8f70VnHwlfjZBK8=
+        b=lLxMl5+9tqSI/eBf0hwSJBcZTPc+xy93rK62qSP89bvksaxbaWvrPeaGVXPDVb5ey
+         uIyday1nou8KC1E7M95tfzPNMAu9KO/cC59FOzJuFoAv0d/JVsm3uHu1TDS+WU4gTy
+         hIaliWC0x+iWjCgH57Nu2cqmO0KqbTD5EzMpq/co=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aric Cyr <aric.cyr@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 032/108] drm/amd/display: Only round InfoFrame refresh rates
-Date:   Sat, 11 Apr 2020 19:08:27 -0400
-Message-Id: <20200411230943.24951-32-sashal@kernel.org>
+Cc:     Alain Michaud <alainm@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 031/108] Bluetooth: guard against controllers sending zero'd events
+Date:   Sat, 11 Apr 2020 19:08:26 -0400
+Message-Id: <20200411230943.24951-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -62,58 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Alain Michaud <alainm@chromium.org>
 
-[ Upstream commit 3fc6376ed6f2f67bc9fb0c7a3cf07967d6aa6216 ]
+[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
 
-[Why]
-When calculating nominal refresh rates, don't round.
-Only the VSIF needs to be rounded.
+Some controllers have been observed to send zero'd events under some
+conditions.  This change guards against this condition as well as adding
+a trace to facilitate diagnosability of this condition.
 
-[How]
-Revert rounding change for nominal and just round when forming the
-FreeSync VSIF.
-
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alain Michaud <alainm@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ net/bluetooth/hci_event.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index 7d67cb2c61f04..37090384c2302 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -520,12 +520,12 @@ static void build_vrr_infopacket_data(const struct mod_vrr_params *vrr,
- 		infopacket->sb[6] |= 0x04;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index c1d3a303d97fb..34d312ae3c61d 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5833,6 +5833,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 	u8 status = 0, event = hdr->evt, req_evt = 0;
+ 	u16 opcode = HCI_OP_NOP;
  
- 	/* PB7 = FreeSync Minimum refresh rate (Hz) */
--	infopacket->sb[7] = (unsigned char)(vrr->min_refresh_in_uhz / 1000000);
-+	infopacket->sb[7] = (unsigned char)((vrr->min_refresh_in_uhz + 500000) / 1000000);
++	if (!event) {
++		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
++		goto done;
++	}
++
+ 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
+ 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
+ 		opcode = __le16_to_cpu(cmd_hdr->opcode);
+@@ -6044,6 +6049,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+ 		req_complete_skb(hdev, status, opcode, orig_skb);
+ 	}
  
- 	/* PB8 = FreeSync Maximum refresh rate (Hz)
- 	 * Note: We should never go above the field rate of the mode timing set.
- 	 */
--	infopacket->sb[8] = (unsigned char)(vrr->max_refresh_in_uhz / 1000000);
-+	infopacket->sb[8] = (unsigned char)((vrr->max_refresh_in_uhz + 500000) / 1000000);
- 
- 
- 	//FreeSync HDR
-@@ -743,10 +743,6 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 	nominal_field_rate_in_uhz =
- 			mod_freesync_calc_nominal_field_rate(stream);
- 
--	/* Rounded to the nearest Hz */
--	nominal_field_rate_in_uhz = 1000000ULL *
--			div_u64(nominal_field_rate_in_uhz + 500000, 1000000);
--
- 	min_refresh_in_uhz = in_config->min_refresh_in_uhz;
- 	max_refresh_in_uhz = in_config->max_refresh_in_uhz;
- 
++done:
+ 	kfree_skb(orig_skb);
+ 	kfree_skb(skb);
+ 	hdev->stat.evt_rx++;
 -- 
 2.20.1
 
