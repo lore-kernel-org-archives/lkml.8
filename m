@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0195AC352B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A224FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF31F21744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708B3217D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646794;
-	bh=agg1jRkFg+vwmbSWbEn9JEOCGyINNMhWS1tVFklRvgI=;
+	s=default; t=1586646798;
+	bh=b2E17N6aTsYMVgCIM98jjlmw7fqOMU7u9FlpIUd8M+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RH3Zl3+P2FIE8pYcNtaZOG0dsTQRef2rAbMcH7Cwiq51MZe311qh4HvfERXcTAtov
-	 BFIl8wn7iZ/Ua2Zpo8em34ciEZ+TTOjOjrQ1md7eime0fjIxPZ+i7fkbPjKpcXTD22
-	 x/n17xyjR59xBzAG+9DF5s33ydNL1fmH6HVtcyH4=
+	b=S4mQSN9oEWXenCAz+jlRJVNFsPl1mumip72cZfNlPqMNqNCqYpbq0K847rhVva33p
+	 eQuIuAQHAcHoCwDEqpsC7h3FS+rlce/GoaO6DxAdh3DB4pmKh6SNREErzVS/wFVhBj
+	 CwZl6YdMu10xf2T31748ZAP0wOARmnaNUpCCkGKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgDKXNN (ORCPT
+        id S1730369AbgDKXNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730280AbgDKXMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:55 -0400
+        id S1730303AbgDKXM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DCFA20787;
-        Sat, 11 Apr 2020 23:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3708221974;
+        Sat, 11 Apr 2020 23:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646775;
-        bh=agg1jRkFg+vwmbSWbEn9JEOCGyINNMhWS1tVFklRvgI=;
+        s=default; t=1586646778;
+        bh=b2E17N6aTsYMVgCIM98jjlmw7fqOMU7u9FlpIUd8M+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+SqjaSd0v7OWzsrMah7kfd18J88e5l3MHhDg8ov6YLZwlY/CWM/cSJuaTlBK2KGS
-         Uo0yfEHQXgxlX30zjywy2++ziPKOxvbsfbiW+prPCFx1GLGAPF+iyLnCxPh9yIeMdT
-         UmeFtSeYPjsqv+IVtl7mGnqr5Ej3g6Lv7INcCmV8=
+        b=ickRMxP+RsgevfBKDrBlS16zo8WWZlhOtnGK3MqIRhopteSmuY82fnfwS6361href
+         zHvdvezZu720TEkpVj9AClTU8Z+lgUw7tL/RZpAI0TGGQt11Ba92TG6vlRT1zSQhlq
+         bZdWiE5oNl4n9LQG+OWPltNQXiKLFzglmsgykvAw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 42/66] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Date:   Sat, 11 Apr 2020 19:11:39 -0400
-Message-Id: <20200411231203.25933-42-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 45/66] RDMA/cm: Remove a race freeing timewait_info
+Date:   Sat, 11 Apr 2020 19:11:42 -0400
+Message-Id: <20200411231203.25933-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -61,100 +59,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 10a98cb16d80be3595fdb165fad898bb28b8b6d2 ]
+[ Upstream commit bede86a39d9dc3387ac00dcb8e1ac221676b2f25 ]
 
-Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-during do_exit().  That can confuse things.  In particular, if BSD
-process accounting is enabled, then do_exit() writes data to an
-accounting file.  If that file has FS_SYNC_FL set, then this write
-occurs synchronously and can misbehave if PF_MEMALLOC is set.
+When creating a cm_id during REQ the id immediately becomes visible to the
+other MAD handlers, and shortly after the state is moved to IB_CM_REQ_RCVD
 
-For example, if the accounting file is located on an XFS filesystem,
-then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
-doesn't get written when it should.  Or if the accounting file is
-located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
-in ext4_write_inode() is triggered and the inode doesn't get written.
+This allows cm_rej_handler() to run concurrently and free the work:
 
-Fix this in xfsaild() by using the helper functions to save and restore
-PF_MEMALLOC.
+        CPU 0                                CPU1
+ cm_req_handler()
+  ib_create_cm_id()
+  cm_match_req()
+    id_priv->state = IB_CM_REQ_RCVD
+                                       cm_rej_handler()
+                                         cm_acquire_id()
+                                         spin_lock(&id_priv->lock)
+                                         switch (id_priv->state)
+  					   case IB_CM_REQ_RCVD:
+                                            cm_reset_to_idle()
+                                             kfree(id_priv->timewait_info);
+   goto destroy
+  destroy:
+    kfree(id_priv->timewait_info);
+                                             id_priv->timewait_info = NULL
 
-This can be reproduced as follows in the kvm-xfstests test appliance
-modified to add the 'acct' Debian package, and with kvm-xfstests's
-recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
+Causing a double free or worse.
 
-        mkfs.xfs -f /dev/vdb
-        mount /vdb
-        touch /vdb/file
-        chattr +S /vdb/file
-        accton /vdb/file
-        mkfs.xfs -f /dev/vdc
-        mount /vdc
-        umount /vdc
+Do not free the timewait_info without also holding the
+id_priv->lock. Simplify this entire flow by making the free unconditional
+during cm_destroy_id() and removing the confusing special case error
+unwind during creation of the timewait_info.
 
-It causes:
-	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
-	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
-	[...]
-	Call Trace:
-	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
-	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
-	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
-	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
-	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
-	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
-	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
-	 generic_write_sync include/linux/fs.h:2867 [inline]
-	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
-	 call_write_iter include/linux/fs.h:1901 [inline]
-	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-	 do_acct_process+0x122/0x170 kernel/acct.c:522
-	 slow_acct_process kernel/acct.c:581 [inline]
-	 acct_process+0x1d4/0x27c kernel/acct.c:607
-	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-	 kthread+0xf1/0x140 kernel/kthread.c:257
-	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+This also fixes a leak of the timewait if cm_destroy_id() is called in
+IB_CM_ESTABLISHED with an XRC TGT QP. The state machine will be left in
+ESTABLISHED while it needed to transition through IB_CM_TIMEWAIT to
+release the timewait pointer.
 
-This bug was originally reported by syzbot at
-https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+Also fix a leak of the timewait_info if the caller mis-uses the API and
+does ib_send_cm_reqs().
 
-Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-4-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_ail.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cm.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index d3a4e89bf4a0d..66f167aefd94f 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -520,8 +520,9 @@ xfsaild(
- {
- 	struct xfs_ail	*ailp = data;
- 	long		tout = 0;	/* milliseconds */
-+	unsigned int	noreclaim_flag;
- 
--	current->flags |= PF_MEMALLOC;
-+	noreclaim_flag = memalloc_noreclaim_save();
- 	set_freezable();
- 
- 	while (1) {
-@@ -592,6 +593,7 @@ xfsaild(
- 		tout = xfsaild_push(ailp);
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 7251068b6af0f..601a36e7f098c 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1100,14 +1100,22 @@ static void cm_destroy_id(struct ib_cm_id *cm_id, int err)
+ 		break;
  	}
  
-+	memalloc_noreclaim_restore(noreclaim_flag);
- 	return 0;
- }
+-	spin_lock_irq(&cm.lock);
++	spin_lock_irq(&cm_id_priv->lock);
++	spin_lock(&cm.lock);
++	/* Required for cleanup paths related cm_req_handler() */
++	if (cm_id_priv->timewait_info) {
++		cm_cleanup_timewait(cm_id_priv->timewait_info);
++		kfree(cm_id_priv->timewait_info);
++		cm_id_priv->timewait_info = NULL;
++	}
+ 	if (!list_empty(&cm_id_priv->altr_list) &&
+ 	    (!cm_id_priv->altr_send_port_not_ready))
+ 		list_del(&cm_id_priv->altr_list);
+ 	if (!list_empty(&cm_id_priv->prim_list) &&
+ 	    (!cm_id_priv->prim_send_port_not_ready))
+ 		list_del(&cm_id_priv->prim_list);
+-	spin_unlock_irq(&cm.lock);
++	spin_unlock(&cm.lock);
++	spin_unlock_irq(&cm_id_priv->lock);
  
+ 	cm_free_id(cm_id->local_id);
+ 	cm_deref_id(cm_id_priv);
+@@ -1424,7 +1432,7 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 	/* Verify that we're not in timewait. */
+ 	cm_id_priv = container_of(cm_id, struct cm_id_private, id);
+ 	spin_lock_irqsave(&cm_id_priv->lock, flags);
+-	if (cm_id->state != IB_CM_IDLE) {
++	if (cm_id->state != IB_CM_IDLE || WARN_ON(cm_id_priv->timewait_info)) {
+ 		spin_unlock_irqrestore(&cm_id_priv->lock, flags);
+ 		ret = -EINVAL;
+ 		goto out;
+@@ -1442,12 +1450,12 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 				 param->ppath_sgid_attr, &cm_id_priv->av,
+ 				 cm_id_priv);
+ 	if (ret)
+-		goto error1;
++		goto out;
+ 	if (param->alternate_path) {
+ 		ret = cm_init_av_by_path(param->alternate_path, NULL,
+ 					 &cm_id_priv->alt_av, cm_id_priv);
+ 		if (ret)
+-			goto error1;
++			goto out;
+ 	}
+ 	cm_id->service_id = param->service_id;
+ 	cm_id->service_mask = ~cpu_to_be64(0);
+@@ -1465,7 +1473,7 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 
+ 	ret = cm_alloc_msg(cm_id_priv, &cm_id_priv->msg);
+ 	if (ret)
+-		goto error1;
++		goto out;
+ 
+ 	req_msg = (struct cm_req_msg *) cm_id_priv->msg->mad;
+ 	cm_format_req(req_msg, cm_id_priv, param);
+@@ -1488,7 +1496,6 @@ int ib_send_cm_req(struct ib_cm_id *cm_id,
+ 	return 0;
+ 
+ error2:	cm_free_msg(cm_id_priv->msg);
+-error1:	kfree(cm_id_priv->timewait_info);
+ out:	return ret;
+ }
+ EXPORT_SYMBOL(ib_send_cm_req);
+@@ -1977,7 +1984,7 @@ static int cm_req_handler(struct cm_work *work)
+ 		pr_debug("%s: local_id %d, no listen_cm_id_priv\n", __func__,
+ 			 be32_to_cpu(cm_id->local_id));
+ 		ret = -EINVAL;
+-		goto free_timeinfo;
++		goto destroy;
+ 	}
+ 
+ 	cm_id_priv->id.cm_handler = listen_cm_id_priv->id.cm_handler;
+@@ -2061,8 +2068,6 @@ static int cm_req_handler(struct cm_work *work)
+ rejected:
+ 	atomic_dec(&cm_id_priv->refcount);
+ 	cm_deref_id(listen_cm_id_priv);
+-free_timeinfo:
+-	kfree(cm_id_priv->timewait_info);
+ destroy:
+ 	ib_destroy_cm_id(cm_id);
+ 	return ret;
 -- 
 2.20.1
 
