@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A68C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE6BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A8020CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB1B21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646448;
-	bh=/YCEcyxO/t3IInKr0Mko1EsnK20R6iE+X3adiZf4rVA=;
+	s=default; t=1586646452;
+	bh=rH4WRTa5PlCyvEaj6wcN65nVyw5uc5y3HjUjXAhYAd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2ANrqB6OAH3CbsbYQShDp+DLMXAKUvx8D0TwFJ+RAcUM7AjQcfKep/kG3skGMxCU
-	 +t3ci+roaluX2zjIr/8y0AfXCRgRYcXS94kR+Tws7bJb0GC70fwO43/+rAIpDBz7Jn
-	 OdUt91m1qXncV37009aUpWCTQQSPFMMYJvTTdZ0w=
+	b=KgTybMjeQ4ItAYSLdi+L2ZpL5+AoFSR8U8Yy4PCMLqTecjwwqz8TNMYfO7ibBhu0F
+	 qh6KenXU8tt0+nR52v5vVd1LzwFKrBO84dwqzbPWsMfXL80lf35xy+TVT43SryXctj
+	 ye6dPTgxAs/Kd9wEQCqvSfAK4HCWBOBEVzrsh9w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbgDKXH0 (ORCPT
+        id S1728660AbgDKXHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43248 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:07:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbgDKXHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:24 -0400
+        id S1728651AbgDKXH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B16F320708;
-        Sat, 11 Apr 2020 23:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE311216FD;
+        Sat, 11 Apr 2020 23:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646444;
-        bh=/YCEcyxO/t3IInKr0Mko1EsnK20R6iE+X3adiZf4rVA=;
+        s=default; t=1586646446;
+        bh=rH4WRTa5PlCyvEaj6wcN65nVyw5uc5y3HjUjXAhYAd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KDURxYkw1GsfmhfW6EKbK0G7jLMK1DLI+l7/8i/DvRfPWBKH5KbC5w7VSU8lJ4P9F
-         uzdkxprwkjuekYmfl6ebe/PLgC8oLhspa1rOlj2zl2uFF1bGnj5rNKUhxXYoRZfTJ3
-         1iyof3AgOXP6EfRejA6aeYxu8Kzr3SwBaf/12LKc=
+        b=pBBDZ14GEfvuCmdlo+f1tb0GMjhgTnx8We6kI25X8tn2/fCUHx87xr7JUF5deZuBK
+         QVj8BZF1LRKCGswPtyDd16Xa/v7v8KvKg5RaLxgGclVXe1vwVUd9cQwQMiyGw5i/YT
+         2e2pYuNNOHHKJXhnc1ACTFHEuGxphOjo3rbxqlIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 015/121] RDMA/bnxt_re: Fix lifetimes in bnxt_re_task
-Date:   Sat, 11 Apr 2020 19:05:20 -0400
-Message-Id: <20200411230706.23855-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 017/121] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
+Date:   Sat, 11 Apr 2020 19:05:22 -0400
+Message-Id: <20200411230706.23855-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,41 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 8a6c61704746d3a1e004e054504ae8d98ed95697 ]
+[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
 
-A work queue cannot just rely on the ib_device not being freed, it must
-hold a kref on the memory so that the BNXT_RE_FLAG_IBDEV_REGISTERED check
-works.
+All accesses to id.state must be done under the spinlock.
 
-Fixes: 1ac5a4047975 ("RDMA/bnxt_re: Add bnxt_re RoCE driver")
-Link: https://lore.kernel.org/r/1584117207-2664-3-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/core/cm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index e7e8a0f494640..bc561340b9ad1 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -1604,6 +1604,7 @@ static void bnxt_re_task(struct work_struct *work)
- 	smp_mb__before_atomic();
- 	atomic_dec(&rdev->sched_count);
- exit:
-+	put_device(&rdev->ibdev.dev);
- 	kfree(re_work);
- }
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 1c7984bae7ab2..f7afa1c75746b 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1770,8 +1770,12 @@ static void cm_dup_req_handler(struct cm_work *work,
+ 			counter[CM_REQ_COUNTER]);
  
-@@ -1680,6 +1681,7 @@ static int bnxt_re_netdev_event(struct notifier_block *notifier,
- 		/* Allocate for the deferred task */
- 		re_work = kzalloc(sizeof(*re_work), GFP_ATOMIC);
- 		if (re_work) {
-+			get_device(&rdev->ibdev.dev);
- 			re_work->rdev = rdev;
- 			re_work->event = event;
- 			re_work->vlan_dev = (real_dev == netdev ?
+ 	/* Quick state check to discard duplicate REQs. */
+-	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
++	spin_lock_irq(&cm_id_priv->lock);
++	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
++		spin_unlock_irq(&cm_id_priv->lock);
+ 		return;
++	}
++	spin_unlock_irq(&cm_id_priv->lock);
+ 
+ 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
+ 	if (ret)
 -- 
 2.20.1
 
