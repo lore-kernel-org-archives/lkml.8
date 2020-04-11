@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1732DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41C5C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D760820787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B8E20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607795;
-	bh=1RannAdkteMyghRDc+f5aLCgkJsdUpnGkmQK0GISlnA=;
+	s=default; t=1586607805;
+	bh=cxaqw+gj13L48qPCR+g9Lk8enKGNLTboZwEzcZD5KLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/+xjF/Iy0AWydTAOBjVk17lzMI9ZSaQ8J+UYBYjsAsyfYmlCtSf5/tAoI8i2DpMl
-	 DWBZ51WzDJhbVA59gUfMKAZr5uGbWnQVOblbwKvdvN7GgWbwQKvhJVDnN6jNeF9Z7L
-	 3UreBGISPs7KBH/YcXcM8wVp+8NPRwg746kAwwhk=
+	b=e7yGZ3vz3Wf4QxQAja21q76Wa53FlW9bPUHyvPPrSGyaBOkoRv6l/LLeP20JLyHQT
+	 w0PDSpUz9EeTPF3d7E3fH0WlpTYxT2zqD2VAmfUyRsMrrEKQaThlFDzk7HfueAV4O+
+	 EVuBnz6c8UbN+yTGUp8+o3nDMdzvauiE0Ljn8/nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgDKMXO (ORCPT
+        id S1728835AbgDKMTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:23:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbgDKMT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:57 -0400
+        id S1728529AbgDKMTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C83F2137B;
-        Sat, 11 Apr 2020 12:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CBB2137B;
+        Sat, 11 Apr 2020 12:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607597;
-        bh=1RannAdkteMyghRDc+f5aLCgkJsdUpnGkmQK0GISlnA=;
+        s=default; t=1586607575;
+        bh=cxaqw+gj13L48qPCR+g9Lk8enKGNLTboZwEzcZD5KLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qn5aHCPZ2zO0j6P7UgF/snn2clZVNuiqzcD0fAxIzhFKz01m4AukqzeqJ6gCBeQzy
-         4dQrKT1XdXGyKEpFbVYFKx0p+j0QjvFEBGVnH3tXMX1jiSn6LABAbve3w3wguxNAGa
-         ozdC9NxPZLB5yCahliukssnKZrcVCQF8kgeayAwQ=
+        b=tJQyV7Xc2RnT+ZuMKwpiG2666tQGO74/3b2K/EFSIp1NJ5R4QByHH0wQG+ZluouWn
+         MZBVe1QlPYnrB+IKK9BflSozHvR7ZWQOhRapao8JBXg00nw0bQFL81Z1Jp6Fq7GmYd
+         XVMQGpiecjh5+AyxZgN2dS4yAeomUnFqqZYOn9iM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Christian Eggers <ceggers@arri.de>
-Subject: [PATCH 5.5 42/44] ARM: imx: only select ARM_ERRATA_814220 for ARMv7-A
-Date:   Sat, 11 Apr 2020 14:10:02 +0200
-Message-Id: <20200411115500.960531720@linuxfoundation.org>
+        stable@vger.kernel.org,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 33/44] hwrng: imx-rngc - fix an error path
+Date:   Sat, 11 Apr 2020 14:09:53 +0200
+Message-Id: <20200411115500.131180652@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -60,40 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Martin Kaiser <martin@kaiser.cx>
 
-commit c74067a0f776c1d695a713a4388c3b6a094ee40a upstream.
+commit 47a1f8e8b3637ff5f7806587883d7d94068d9ee8 upstream.
 
-i.MX7D is supported for either the v7-A or the v7-M cores,
-but the latter causes a warning:
+Make sure that the rngc interrupt is masked if the rngc self test fails.
+Self test failure means that probe fails as well. Interrupts should be
+masked in this case, regardless of the error.
 
-WARNING: unmet direct dependencies detected for ARM_ERRATA_814220
-  Depends on [n]: CPU_V7 [=n]
-  Selected by [y]:
-  - SOC_IMX7D [=y] && ARCH_MXC [=y] && (ARCH_MULTI_V7 [=n] || ARM_SINGLE_ARMV7M [=y])
-
-Make the select statement conditional.
-
-Fixes: 4562fa4c86c9 ("ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Cc: Christian Eggers <ceggers@arri.de>
+Cc: stable@vger.kernel.org
+Fixes: 1d5449445bd0 ("hwrng: mx-rngc - add a driver for Freescale RNGC")
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/hw_random/imx-rngc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -557,7 +557,7 @@ config SOC_IMX7D
- 	select PINCTRL_IMX7D
- 	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
- 	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
--	select ARM_ERRATA_814220
-+	select ARM_ERRATA_814220 if ARCH_MULTI_V7
- 	help
- 		This enables support for Freescale i.MX7 Dual processor.
+--- a/drivers/char/hw_random/imx-rngc.c
++++ b/drivers/char/hw_random/imx-rngc.c
+@@ -105,8 +105,10 @@ static int imx_rngc_self_test(struct imx
+ 		return -ETIMEDOUT;
+ 	}
  
+-	if (rngc->err_reg != 0)
++	if (rngc->err_reg != 0) {
++		imx_rngc_irq_mask_clear(rngc);
+ 		return -EIO;
++	}
+ 
+ 	return 0;
+ }
 
 
