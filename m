@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC1BC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000B9C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA12C215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE43821924
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646841;
-	bh=TzM/SWg7N0SF+1EpVQxkbMiR46P25mK/oHaGpAH0d2Q=;
+	s=default; t=1586646846;
+	bh=OglxkV4OqD8XJqgtsspXhh1MlkPcsBPThcnK8t0l2n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ltl4uLcCNRRPqYm5JkBMDHTxdkeCj9JKI+YLhUGCXSEKvaDcH3VGGz7BUssaRgnPf
-	 fU0TgYJIvkyfxT+ntZSUsLK9u97lIA2xPDkAt7M4qBgSK4pp3bprZ4nj4T+MjcuWOA
-	 7vavpHksX1e42ySt5PBAB+pwDkAlw4r3M0Threvk=
+	b=Oxcl9YOLZFhRyJGmI/8h5NQERNB/9c6dUh4hTY5x6ebeRaHIYtONAZTcqGRh3XID7
+	 9kJMQuuA+4XGCuMiB95OtUpnFg4JsQtpxH1ZO/qUdgK1qwTRg29k6JjZ+t2C/09uLy
+	 h5i6fZrFdb7lomGgzwckVBkkJdzKh87RhFpU8sbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbgDKXN7 (ORCPT
+        id S1730234AbgDKXOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgDKXNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:52 -0400
+        id S1730638AbgDKXOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BAD720787;
-        Sat, 11 Apr 2020 23:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EB6218AC;
+        Sat, 11 Apr 2020 23:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646832;
-        bh=TzM/SWg7N0SF+1EpVQxkbMiR46P25mK/oHaGpAH0d2Q=;
+        s=default; t=1586646842;
+        bh=OglxkV4OqD8XJqgtsspXhh1MlkPcsBPThcnK8t0l2n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AZtKsjE1evxOUmTHTMz62TOp3iGeEPSQk+SHzGjh9s5kqkIUbeNbSsYh7obQGMdwx
-         Tq9NZyXRYAmhqr5QcwdWfw1nJ6eDGbxR/BZGXCNo711n1gW26CQR8XzMSdlI6SiFhp
-         88/v/oiPUZSMWMo1iMAL+k6B0JMX1Fv0TLe5aHRE=
+        b=Z8Grs1bJHqPSQ49tSl5nTO65F9kU6IyBuvY3ntO6Ep+naI8WP8liP5dygkWVmUnp4
+         k2g+KTVcG8BpWit83sIsZhbKAU1qUly9ny6EP4AVsDnJ3RG/FUZvoHO4KUwLAzg3lW
+         DK43f6SvP1d+2hZylSkj8cLXtk7MWI81RgSC0J2U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 21/37] drm/omap: fix possible object reference leak
-Date:   Sat, 11 Apr 2020 19:13:10 -0400
-Message-Id: <20200411231327.26550-21-sashal@kernel.org>
+Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 29/37] brcmfmac: Fix driver crash on USB control transfer timeout
+Date:   Sat, 11 Apr 2020 19:13:18 -0400
+Message-Id: <20200411231327.26550-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -66,58 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Raveendran Somu <raveendran.somu@cypress.com>
 
-[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
+[ Upstream commit 93a5bfbc7cad8bf3dea81c9bc07761c1226a0860 ]
 
-The call to of_find_matching_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When the control transfer gets timed out, the error status
+was returned without killing that urb, this leads to using
+the same urb. This issue causes the kernel crash as the same
+urb is sumbitted multiple times. The fix is to kill the
+urb for timeout transfer before returning error
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
+Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585124429-97371-2-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-index bf626acae2712..cd8e9b799b9a5 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-@@ -193,7 +193,7 @@ static int __init omapdss_boot_init(void)
- 	dss = of_find_matching_node(NULL, omapdss_of_match);
- 
- 	if (dss == NULL || !of_device_is_available(dss))
--		return 0;
-+		goto put_node;
- 
- 	omapdss_walk_device(dss, true);
- 
-@@ -218,6 +218,8 @@ static int __init omapdss_boot_init(void)
- 		kfree(n);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 4ad830b7b1c98..bbac03c2accfa 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -339,11 +339,12 @@ static int brcmf_usb_tx_ctlpkt(struct device *dev, u8 *buf, u32 len)
+ 		return err;
  	}
- 
-+put_node:
-+	of_node_put(dss);
- 	return 0;
+ 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
+-	clear_bit(0, &devinfo->ctl_op);
+ 	if (!timeout) {
+ 		brcmf_err("Txctl wait timed out\n");
++		usb_kill_urb(devinfo->ctl_urb);
+ 		err = -EIO;
+ 	}
++	clear_bit(0, &devinfo->ctl_op);
+ 	return err;
  }
  
+@@ -369,11 +370,12 @@ static int brcmf_usb_rx_ctlpkt(struct device *dev, u8 *buf, u32 len)
+ 	}
+ 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
+ 	err = devinfo->ctl_urb_status;
+-	clear_bit(0, &devinfo->ctl_op);
+ 	if (!timeout) {
+ 		brcmf_err("rxctl wait timed out\n");
++		usb_kill_urb(devinfo->ctl_urb);
+ 		err = -EIO;
+ 	}
++	clear_bit(0, &devinfo->ctl_op);
+ 	if (!err)
+ 		return devinfo->ctl_urb_actual_length;
+ 	else
 -- 
 2.20.1
 
