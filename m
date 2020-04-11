@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326ECC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E8AC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD0F21744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87C8214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646291;
-	bh=ybjTsOup/wVUgDeBclGS000nrzXwThoMwgWWbsl6W68=;
+	s=default; t=1586646292;
+	bh=AkaNifXui+usapZRPzwxcFjxfd8TaQuZOKjCKUXSmrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fZkCNqt4dB6fCk1rZ5iRhIEmrSOYIJYDl4i/hvcSpnqPd3HaDsCyOzye7hegXGVm4
-	 OIWgz+Y50mnoBRunbqYex1C8PB12PEz7jzJfAgvjqQNhg+GKhvVxWW3YEHgbMXzqQc
-	 TG5ZR/Z9f98xac78MBdxomwRiFI9ID/qXTcMNPPY=
+	b=yKuqq8VamIYY9ucLZVlOsJGIqHIXlBTZmosYQBGFVCteHg0smtp72lse8mzQHa0Ot
+	 FC+SymUIK4D2ZKyaiqf4h56eCHw4GyBd4VsV8WHStkfuEgXrhVt6L9IAeAd24NVrPC
+	 l47cgvjfURZC+KgbD8owndirliHm8OyWRBGe5oG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbgDKXEs (ORCPT
+        id S1727522AbgDKXEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbgDKXEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:44 -0400
+        id S1727474AbgDKXEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 833A920787;
-        Sat, 11 Apr 2020 23:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB6920CC7;
+        Sat, 11 Apr 2020 23:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646284;
-        bh=ybjTsOup/wVUgDeBclGS000nrzXwThoMwgWWbsl6W68=;
+        s=default; t=1586646288;
+        bh=AkaNifXui+usapZRPzwxcFjxfd8TaQuZOKjCKUXSmrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=poEKIaGEpTeQqq7O/++RYAVUSTdZQIvc5vFuCwkPdPBcBvNuyWkTdW3i+LbV/tdLT
-         kpy/kij53si78/sjtcGwQdV1PkS+zZq3tUrfLLwC+jRJKWgxIR8LEYF6t1/GQHZQAg
-         2J6iiDD15hRMbxrCYBtuL5O7q1yVByMftz3WCstk=
+        b=pHy+wqkjWmAVs+Ncu+/uK0ev4atFs9Qd45Gam9y0YGYRcQPtQ2PopSyagY+m6+w6s
+         EVwQm0H3OaPbrnVGIBEEDGT0fErdR0TtbFd2r38hud8AVlYLIsg76GYQMjZgk8HODn
+         2PIJ7x2K9rFKVBZNGg3RBiFX/hCoVfnzZwuaiyg4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aric Cyr <aric.cyr@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 046/149] drm/amd/display: Only round InfoFrame refresh rates
-Date:   Sat, 11 Apr 2020 19:02:03 -0400
-Message-Id: <20200411230347.22371-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 049/149] drm/panel: simple: fix osd070t1718_19ts sync drive edge
+Date:   Sat, 11 Apr 2020 19:02:06 -0400
+Message-Id: <20200411230347.22371-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -62,57 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit 3fc6376ed6f2f67bc9fb0c7a3cf07967d6aa6216 ]
+[ Upstream commit fb0629eeeedb6622c16da1aa76a4520daf9a46e2 ]
 
-[Why]
-When calculating nominal refresh rates, don't round.
-Only the VSIF needs to be rounded.
+The panel datasheet says that the panel samples at falling edge, but
+does not say anything about h/v sync signals. Testing shows that if the
+sync signals are driven on falling edge, the picture on the panel will
+be slightly shifted right.
 
-[How]
-Revert rounding change for nominal and just round when forming the
-FreeSync VSIF.
+Setting sync drive edge to the same as data drive edge fixes this issue.
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191114093950.4101-4-tomi.valkeinen@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index b9992ebf77a62..4e542826cd269 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -524,12 +524,12 @@ static void build_vrr_infopacket_data(const struct mod_vrr_params *vrr,
- 		infopacket->sb[6] |= 0x04;
- 
- 	/* PB7 = FreeSync Minimum refresh rate (Hz) */
--	infopacket->sb[7] = (unsigned char)(vrr->min_refresh_in_uhz / 1000000);
-+	infopacket->sb[7] = (unsigned char)((vrr->min_refresh_in_uhz + 500000) / 1000000);
- 
- 	/* PB8 = FreeSync Maximum refresh rate (Hz)
- 	 * Note: We should never go above the field rate of the mode timing set.
- 	 */
--	infopacket->sb[8] = (unsigned char)(vrr->max_refresh_in_uhz / 1000000);
-+	infopacket->sb[8] = (unsigned char)((vrr->max_refresh_in_uhz + 500000) / 1000000);
- 
- 
- 	//FreeSync HDR
-@@ -747,10 +747,6 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 	nominal_field_rate_in_uhz =
- 			mod_freesync_calc_nominal_field_rate(stream);
- 
--	/* Rounded to the nearest Hz */
--	nominal_field_rate_in_uhz = 1000000ULL *
--			div_u64(nominal_field_rate_in_uhz + 500000, 1000000);
--
- 	min_refresh_in_uhz = in_config->min_refresh_in_uhz;
- 	max_refresh_in_uhz = in_config->max_refresh_in_uhz;
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e14c14ac62b53..417bbe9984606 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2464,7 +2464,8 @@ static const struct panel_desc osddisplays_osd070t1718_19ts = {
+ 		.height = 91,
+ 	},
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+-	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
+ 	.connector_type = DRM_MODE_CONNECTOR_DPI,
+ };
  
 -- 
 2.20.1
