@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F81C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B594C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAA12051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E942051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647790;
-	bh=pUt5lpDgGxoy7XzYt9wec0y/SdJ1EdBeAIyJGVOl62I=;
+	s=default; t=1586647796;
+	bh=BQyUhYLxVbm1CRNQK4RpKC2r41B0RTNawJvv8aV8P5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VoFgbVtQgo/K4/NCAMbXCyXC4LEPFZJnCf9EQHBZ8RnTyY64zjMq3IpC2titBGzQU
-	 V57DqXJa7HokgEmy6D3Cn7pIQhcdU4/DAmFlLceSbjpjB0WLnWZF7c2cCG7ztzconm
-	 sLn+RqDobeP380bfyGnU0s7eutQnY8ToiGy6pSQM=
+	b=l2+U3LzXOQ7PaI3pwTSXkKzvUgXrtYyuBMe8wGRzogEopRwCRBnYrjmXn8vbarIr5
+	 RHLvmBXDsfKrfCakLwTMsnIYXDuwlDiNlK45Gib33U6fDFA4T+63PifFWK7r99jfe6
+	 /vgNtFLZXEQZQvGCnEPJwxP1qtZ5PPZfwSly4gHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgDKX3t (ORCPT
+        id S1729693AbgDKXKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729712AbgDKXKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:53 -0400
+        id S1729674AbgDKXKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DAB22166E;
-        Sat, 11 Apr 2020 23:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14ED02166E;
+        Sat, 11 Apr 2020 23:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646653;
-        bh=pUt5lpDgGxoy7XzYt9wec0y/SdJ1EdBeAIyJGVOl62I=;
+        s=default; t=1586646644;
+        bh=BQyUhYLxVbm1CRNQK4RpKC2r41B0RTNawJvv8aV8P5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h2pDYOxwDQZAUAC/SgL3G+5QRquuWLzgzkjmwhivukAvTdgPc1ZB7X5zZ39R+fM7t
-         u3YQQllp5AGvKZPVoA7uU74BMfO7H7TeRkT45c1+NzBxu5YiDdrrYV9wr/K84R2/8h
-         cEYIpgCAiiomoarw0xJ7qqNdv6w6QAM1lpRO0+Kc=
+        b=N5YO9015X8NHsZ8tuiTzgGlQCjVC/32/ffC+k+d7aguG34MOjx7evvCbh3/X6qQzG
+         vFg7Wo9lE064CWExQDiYN+SJM9mK048/G9fkk7novuq8NaNUG3qq7PjF2xSuZDr/Dl
+         +OiMqg6SZrPwZaHhe2LEO2wRCYIjeQqHweCadqns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 056/108] scsi: lpfc: Fix RQ buffer leakage when no IOCBs available
-Date:   Sat, 11 Apr 2020 19:08:51 -0400
-Message-Id: <20200411230943.24951-56-sashal@kernel.org>
+Cc:     Sergey Shatunov <me@prok.pw>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 050/108] Bluetooth: btusb: Add support for 13d3:3548 Realtek 8822CE device
+Date:   Sat, 11 Apr 2020 19:08:45 -0400
+Message-Id: <20200411230943.24951-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,56 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Sergey Shatunov <me@prok.pw>
 
-[ Upstream commit 39c4f1a965a9244c3ba60695e8ff8da065ec6ac4 ]
+[ Upstream commit eb3939e386ec8df6049697d388298590231ac79c ]
 
-The driver is occasionally seeing the following SLI Port error, requiring
-reset and reinit:
+The ASUS FX505DV laptop contains RTL8822CE device with an
+associated BT chip using a USB ID of 13d3:3548.
+This patch add fw download support for it.
 
- Port Status Event: ... error 1=0x52004a01, error 2=0x218
+T:  Bus=03 Lev=01 Prnt=01 Port=03 Cnt=03 Dev#=  4 Spd=12   MxCh= 0
+D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=13d3 ProdID=3548 Rev= 0.00
+S:  Manufacturer=Realtek
+S:  Product=Bluetooth Radio
+S:  SerialNumber=00e04c000001
+C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
 
-The failure means an RQ timeout. That is, the adapter had received
-asynchronous receive frames, ran out of buffer slots to place the frames,
-and the driver did not replenish the buffer slots before a timeout
-occurred. The driver should not be so slow in replenishing buffers that a
-timeout can occur.
-
-When the driver received all the frames of a sequence, it allocates an IOCB
-to put the frames in. In a situation where there was no IOCB available for
-the frame of a sequence, the RQ buffer corresponding to the first frame of
-the sequence was not returned to the FW. Eventually, with enough traffic
-encountering the situation, the timeout occurred.
-
-Fix by releasing the buffer back to firmware whenever there is no IOCB for
-the first frame.
-
-[mkp: typo]
-
-Link: https://lore.kernel.org/r/20200128002312.16346-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sergey Shatunov <me@prok.pw>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index e2cec1f6e659b..acd151f99c786 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -17711,6 +17711,10 @@ lpfc_prep_seq(struct lpfc_vport *vport, struct hbq_dmabuf *seq_dmabuf)
- 			list_add_tail(&iocbq->list, &first_iocbq->list);
- 		}
- 	}
-+	/* Free the sequence's header buffer */
-+	if (!first_iocbq)
-+		lpfc_in_buf_free(vport->phba, &seq_dmabuf->dbuf);
-+
- 	return first_iocbq;
- }
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 9c3b063e1a1f7..319ce819fc79f 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -386,6 +386,7 @@ static const struct usb_device_id blacklist_table[] = {
  
+ 	/* Additional Realtek 8822CE Bluetooth devices */
+ 	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
++	{ USB_DEVICE(0x13d3, 0x3548), .driver_info = BTUSB_REALTEK },
+ 
+ 	/* Silicon Wave based devices */
+ 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
 -- 
 2.20.1
 
