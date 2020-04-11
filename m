@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71908C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F149CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44ED8215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB264215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646996;
-	bh=9a2v6w0e3QakfuU8yIVQT+jWHIqEQ2Ba9x84WVQItS8=;
+	s=default; t=1586647000;
+	bh=r3rcW8UxOIXGqFfRKnVQDFiF74TQaFMEpm5Of950k9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwAJDWPIut98PoJ5duSL4pFHK/eEa7ZfItZcbYb3WaCKebh+M11g/sN3JgBY7bPG/
-	 8JWOMJIieVLtpk/anE7x1bgAf2BVbENraG0ca4uM1ef2S0QlUNUNDcbJfOucDLdXlp
-	 7pyPom0Su+tUTol6+RgF3Cp5CkuhcCDN0mNPidw8=
+	b=YKnb1F4c7ircPlfiLr6q4vOHSUaw7S3mDkTcWa/eLNYG6MltoqLuA46WH3y2lmtbu
+	 aoSX0+hRV3ikK+uLHd4U4vurfjSH2punUdd6xc1vEpxYSj1VA74bm/8Df02rUjqfSG
+	 2gNGSAjzBfYkmj22ppfPpFEYOGwHLd7rvPma5GG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbgDKXOm (ORCPT
+        id S1730345AbgDKXQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgDKXOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:33 -0400
+        id S1730835AbgDKXOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D4692166E;
-        Sat, 11 Apr 2020 23:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12D821744;
+        Sat, 11 Apr 2020 23:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646874;
-        bh=9a2v6w0e3QakfuU8yIVQT+jWHIqEQ2Ba9x84WVQItS8=;
+        s=default; t=1586646881;
+        bh=r3rcW8UxOIXGqFfRKnVQDFiF74TQaFMEpm5Of950k9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5zXPE7nITKmZrl/SLNEcQxZ7LFMGgPzZT6a8hMsS+pA+y+/zxPRJafGRxTdqxlMa
-         NIdYSB6gHFf0YOJcAkloZD9TpuxMLRBTOx9qU0LnaJcZ28JHSAbtYrPKYjDSvyBC8C
-         Ktt7FtrTXFpuOTyFrFNcg3a3UCuJmANCngBuJN4s=
+        b=m2a/CkCfcougFMj3zlEWB0nk9XLTZ2fkLxZZ1UZ+xrlgCv+vVPjlGBn6iRQ7ZkR+v
+         EaYxsz7Oj599EM0bleqbEs2/WizvXP5JzMS+CXJp4kkQfi6JWwYwLszfq4pbAuFhH6
+         mW6nAZwGD3BSrGD3WhcowmJ4GXiQ3wGSOwfy/eNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Shatunov <me@prok.pw>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 17/26] Bluetooth: btusb: Add support for 13d3:3548 Realtek 8822CE device
-Date:   Sat, 11 Apr 2020 19:14:04 -0400
-Message-Id: <20200411231413.26911-17-sashal@kernel.org>
+Cc:     Etienne Carriere <etienne.carriere@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 23/26] dmaengine: stm32-dma: use reset controller only at probe time
+Date:   Sat, 11 Apr 2020 19:14:10 -0400
+Message-Id: <20200411231413.26911-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231413.26911-1-sashal@kernel.org>
 References: <20200411231413.26911-1-sashal@kernel.org>
@@ -60,63 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Shatunov <me@prok.pw>
+From: Etienne Carriere <etienne.carriere@st.com>
 
-[ Upstream commit eb3939e386ec8df6049697d388298590231ac79c ]
+[ Upstream commit 8cf1e0fc50fcc25021567bb2755580504c57c83a ]
 
-The ASUS FX505DV laptop contains RTL8822CE device with an
-associated BT chip using a USB ID of 13d3:3548.
-This patch add fw download support for it.
+Remove reset controller reference from device instance since it is
+used only at probe time.
 
-T:  Bus=03 Lev=01 Prnt=01 Port=03 Cnt=03 Dev#=  4 Spd=12   MxCh= 0
-D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3548 Rev= 0.00
-S:  Manufacturer=Realtek
-S:  Product=Bluetooth Radio
-S:  SerialNumber=00e04c000001
-C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-
-Signed-off-by: Sergey Shatunov <me@prok.pw>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/20200129153628.29329-3-amelie.delaunay@st.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/stm32-dma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 4e3b24a0511ff..7ae86f676b518 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -364,6 +364,7 @@ static const struct usb_device_id blacklist_table[] = {
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index ae3f60be7759e..f0f82f466ec62 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -176,7 +176,6 @@ struct stm32_dma_device {
+ 	struct dma_device ddev;
+ 	void __iomem *base;
+ 	struct clk *clk;
+-	struct reset_control *rst;
+ 	bool mem2mem;
+ 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
+ };
+@@ -1006,6 +1005,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	struct dma_device *dd;
+ 	const struct of_device_id *match;
+ 	struct resource *res;
++	struct reset_control *rst;
+ 	int i, ret;
  
- 	/* Additional Realtek 8822CE Bluetooth devices */
- 	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
-+	{ USB_DEVICE(0x13d3, 0x3548), .driver_info = BTUSB_REALTEK },
+ 	match = of_match_device(stm32_dma_of_match, &pdev->dev);
+@@ -1034,11 +1034,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
+ 						"st,mem2mem");
  
- 	/* Silicon Wave based devices */
- 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
+-	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
+-	if (!IS_ERR(dmadev->rst)) {
+-		reset_control_assert(dmadev->rst);
++	rst = devm_reset_control_get(&pdev->dev, NULL);
++	if (!IS_ERR(rst)) {
++		reset_control_assert(rst);
+ 		udelay(2);
+-		reset_control_deassert(dmadev->rst);
++		reset_control_deassert(rst);
+ 	}
+ 
+ 	dma_cap_set(DMA_SLAVE, dd->cap_mask);
 -- 
 2.20.1
 
