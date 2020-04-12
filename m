@@ -2,138 +2,221 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F8AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4BFC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54080206B8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C73F20705
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgDLOS4 (ORCPT
+        id S1727077AbgDLOT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:18:56 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:57146 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgDLOS4 (ORCPT
+        Sun, 12 Apr 2020 10:19:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41446 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgDLOT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:18:56 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 835BC804A3;
-        Sun, 12 Apr 2020 16:18:49 +0200 (CEST)
-Date:   Sun, 12 Apr 2020 16:18:42 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Tian Tao <tiantao6@hisilicon.com>
-Cc:     puck.chen@hisilicon.com, airlied@linux.ie, daniel@ffwll.ch,
-        tzimmermann@suse.de, kraxel@redhat.com, alexander.deucher@amd.com,
-        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
-        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH] drm/hisilicon: Add the shutdown for hibmc_pci_driver
-Message-ID: <20200412141842.GA12313@ravnborg.org>
-References: <1586573370-41945-1-git-send-email-tiantao6@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Sun, 12 Apr 2020 10:19:29 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jNdSI-0001W3-EA; Sun, 12 Apr 2020 16:19:26 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id BF1E2100E35;
+        Sun, 12 Apr 2020 16:19:25 +0200 (CEST)
+Date:   Sun, 12 Apr 2020 14:18:37 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] locking/urgent for 5.7-rc1
+Message-ID: <158670111777.20085.1305752188791047060.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <1586573370-41945-1-git-send-email-tiantao6@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
-        a=e5mUnYsNAAAA:8 a=AGzG8Xd3EExtzCPMGWIA:9 a=CjuIK1q_8ugA:10
-        a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tian.
+Linus,
 
-On Sat, Apr 11, 2020 at 10:49:30AM +0800, Tian Tao wrote:
-> add the shutdown function to release the resource.
-> 
+please pull the latest locking/urgent branch from:
 
-Why it the release of the memory required in the shutdown method?
-The memory is allocated using devm_ioremap() which
-will let device management handle the release of the resources when
-he driver is released.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-urgent-2020-04-12
 
-The patch also introduces a pci_disable_device()
-The better approch would be to use pcim_enable_device()
-so you let the device management about releasing the
-resources.
+up to:  9a019db0b6be: locking/lockdep: Improve 'invalid wait context' splat
 
-	Sam
 
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index a6fd0c2..126d4f4 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -232,6 +232,21 @@ static int hibmc_hw_map(struct hibmc_drm_private *priv)
->  	return 0;
->  }
->  
-> +static void hibmc_hw_unmap(struct hibmc_drm_private *priv)
-> +{
-> +	struct drm_device *dev = priv->dev;
-> +
-> +	if (priv->mmio)	{
-> +		devm_iounmap(dev->dev, priv->mmio);
-> +		priv->mmio = NULL;
-> +	}
-> +
-> +	if (priv->fb_map) {
-> +		devm_iounmap(dev->dev, priv->fb_map);
-> +		priv->fb_map = NULL;
-> +	}
-> +}
-> +
->  static int hibmc_hw_init(struct hibmc_drm_private *priv)
->  {
->  	int ret;
-> @@ -258,6 +273,7 @@ static int hibmc_unload(struct drm_device *dev)
->  
->  	hibmc_kms_fini(priv);
->  	hibmc_mm_fini(priv);
-> +	hibmc_hw_unmap(priv);
->  	dev->dev_private = NULL;
->  	return 0;
->  }
-> @@ -374,6 +390,12 @@ static void hibmc_pci_remove(struct pci_dev *pdev)
->  	drm_dev_unregister(dev);
->  	hibmc_unload(dev);
->  	drm_dev_put(dev);
-> +	pci_disable_device(pdev);
-> +}
-> +
-> +static void hibmc_pci_shutdown(struct pci_dev *pdev)
-> +{
-> +	hibmc_pci_remove(pdev);
->  }
->  
->  static struct pci_device_id hibmc_pci_table[] = {
-> @@ -386,6 +408,7 @@ static struct pci_driver hibmc_pci_driver = {
->  	.id_table =	hibmc_pci_table,
->  	.probe =	hibmc_pci_probe,
->  	.remove =	hibmc_pci_remove,
-> +	.shutdown = hibmc_pci_shutdown,
->  	.driver.pm =    &hibmc_pm_ops,
->  };
->  
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Three small fixes/updates for the locking core code:
+
+ - Plug a task struct reference leak in the percpu rswem implementation.
+
+ - Document the refcount interaction with PID_MAX_LIMIT
+
+ - Improve the 'invalid wait context' data dump in lockdep so it contains
+   all information which is required to decode the problem
+
+
+Thanks,
+
+	tglx
+
+------------------>
+Jann Horn (1):
+      locking/refcount: Document interaction with PID_MAX_LIMIT
+
+Peter Zijlstra (1):
+      locking/lockdep: Improve 'invalid wait context' splat
+
+Qian Cai (1):
+      locking/percpu-rwsem: Fix a task_struct refcount
+
+
+ include/linux/refcount.h      | 23 ++++++++++++++-----
+ kernel/locking/lockdep.c      | 51 ++++++++++++++++++++++++++-----------------
+ kernel/locking/percpu-rwsem.c |  3 ++-
+ 3 files changed, 51 insertions(+), 26 deletions(-)
+
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 0ac50cf62d06..0e3ee25eb156 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -38,11 +38,24 @@
+  * atomic operations, then the count will continue to edge closer to 0. If it
+  * reaches a value of 1 before /any/ of the threads reset it to the saturated
+  * value, then a concurrent refcount_dec_and_test() may erroneously free the
+- * underlying object. Given the precise timing details involved with the
+- * round-robin scheduling of each thread manipulating the refcount and the need
+- * to hit the race multiple times in succession, there doesn't appear to be a
+- * practical avenue of attack even if using refcount_add() operations with
+- * larger increments.
++ * underlying object.
++ * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
++ * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
++ * With the current PID limit, if no batched refcounting operations are used and
++ * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
++ * operations, this makes it impossible for a saturated refcount to leave the
++ * saturation range, even if it is possible for multiple uses of the same
++ * refcount to nest in the context of a single task:
++ *
++ *     (UINT_MAX+1-REFCOUNT_SATURATED) / PID_MAX_LIMIT =
++ *     0x40000000 / 0x400000 = 0x100 = 256
++ *
++ * If hundreds of references are added/removed with a single refcounting
++ * operation, it may potentially be possible to leave the saturation range; but
++ * given the precise timing details involved with the round-robin scheduling of
++ * each thread manipulating the refcount and the need to hit the race multiple
++ * times in succession, there doesn't appear to be a practical avenue of attack
++ * even if using refcount_add() operations with larger increments.
+  *
+  * Memory ordering
+  * ===============
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 1511690e4de7..ac10db66cc63 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3952,10 +3952,36 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+ 	return ret;
+ }
+ 
++static inline short task_wait_context(struct task_struct *curr)
++{
++	/*
++	 * Set appropriate wait type for the context; for IRQs we have to take
++	 * into account force_irqthread as that is implied by PREEMPT_RT.
++	 */
++	if (curr->hardirq_context) {
++		/*
++		 * Check if force_irqthreads will run us threaded.
++		 */
++		if (curr->hardirq_threaded || curr->irq_config)
++			return LD_WAIT_CONFIG;
++
++		return LD_WAIT_SPIN;
++	} else if (curr->softirq_context) {
++		/*
++		 * Softirqs are always threaded.
++		 */
++		return LD_WAIT_CONFIG;
++	}
++
++	return LD_WAIT_MAX;
++}
++
+ static int
+ print_lock_invalid_wait_context(struct task_struct *curr,
+ 				struct held_lock *hlock)
+ {
++	short curr_inner;
++
+ 	if (!debug_locks_off())
+ 		return 0;
+ 	if (debug_locks_silent)
+@@ -3971,6 +3997,10 @@ print_lock_invalid_wait_context(struct task_struct *curr,
+ 	print_lock(hlock);
+ 
+ 	pr_warn("other info that might help us debug this:\n");
++
++	curr_inner = task_wait_context(curr);
++	pr_warn("context-{%d:%d}\n", curr_inner, curr_inner);
++
+ 	lockdep_print_held_locks(curr);
+ 
+ 	pr_warn("stack backtrace:\n");
+@@ -4017,26 +4047,7 @@ static int check_wait_context(struct task_struct *curr, struct held_lock *next)
+ 	}
+ 	depth++;
+ 
+-	/*
+-	 * Set appropriate wait type for the context; for IRQs we have to take
+-	 * into account force_irqthread as that is implied by PREEMPT_RT.
+-	 */
+-	if (curr->hardirq_context) {
+-		/*
+-		 * Check if force_irqthreads will run us threaded.
+-		 */
+-		if (curr->hardirq_threaded || curr->irq_config)
+-			curr_inner = LD_WAIT_CONFIG;
+-		else
+-			curr_inner = LD_WAIT_SPIN;
+-	} else if (curr->softirq_context) {
+-		/*
+-		 * Softirqs are always threaded.
+-		 */
+-		curr_inner = LD_WAIT_CONFIG;
+-	} else {
+-		curr_inner = LD_WAIT_MAX;
+-	}
++	curr_inner = task_wait_context(curr);
+ 
+ 	for (; depth < curr->lockdep_depth; depth++) {
+ 		struct held_lock *prev = curr->held_locks + depth;
+diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+index a008a1ba21a7..8bbafe3e5203 100644
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -118,14 +118,15 @@ static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
+ 				      unsigned int mode, int wake_flags,
+ 				      void *key)
+ {
+-	struct task_struct *p = get_task_struct(wq_entry->private);
+ 	bool reader = wq_entry->flags & WQ_FLAG_CUSTOM;
+ 	struct percpu_rw_semaphore *sem = key;
++	struct task_struct *p;
+ 
+ 	/* concurrent against percpu_down_write(), can get stolen */
+ 	if (!__percpu_rwsem_trylock(sem, reader))
+ 		return 1;
+ 
++	p = get_task_struct(wq_entry->private);
+ 	list_del_init(&wq_entry->entry);
+ 	smp_store_release(&wq_entry->private, NULL);
+ 
+
