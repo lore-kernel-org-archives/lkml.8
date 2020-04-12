@@ -6,91 +6,67 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC484C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547B6C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC8D2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B0D20739
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgDLIoP (ORCPT
+        id S1726879AbgDLIsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 04:44:15 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45958 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgDLIoP (ORCPT
+        Sun, 12 Apr 2020 04:48:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45520 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgDLIsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 04:44:15 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k133so4407121oih.12;
-        Sun, 12 Apr 2020 01:44:13 -0700 (PDT)
+        Sun, 12 Apr 2020 04:48:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 60so6169470otl.12;
+        Sun, 12 Apr 2020 01:48:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1nytNGtuyh7aPHGCTZBNdWfHVT4mdjiF/o3w2hwxlkw=;
-        b=n1iRatd+/D82s1VDGqN+JXB5oX9H/Ojv/SZ6QXJBUVW7R1iyMgStg++c0oUrtcaNPY
-         sVwQPidz07mcO2WcMO44tPsGkkgNdZnPq1LhPVpvXiDtbzuw9xLexHyEW9P8k7YX85cY
-         +obnujwUdQDhwCNIR1Pj2aB8to9PPW3zG6oXF/W/VxeLqS1x9aTFq8PsatbSp4qamtuW
-         Ii1noMkTGxXCQlv71A7UTvqXA4yn5OtnwaffzCaxoDhCMqyRGqmOwjAdwK4iAn6uniNM
-         Rw4vMs1xVN8aYQrjohyqZ7bLcJiJDhnE5O4yniy8AP3G5BcxRBDPD0sG8F1bz1SBnXtW
-         N03g==
-X-Gm-Message-State: AGi0PuZrxqPUONKgOokNT/luUjH3NQW1XKYj1pbaWdG/8Nu4fdUOJ0oj
-        GiU05XLP44b0Gg94q+MerIiNH3xyTFgdEmG50IxCqVE4
-X-Google-Smtp-Source: APiQypJmkPLTUaltcHqyClglyUvfg37fQ/CnHIR+vVpQZ5Yhaj8io+VwjGAN/TNE4a+YjxsSky6Xgvw1nnHGssq9k6g=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr8124950oig.153.1586681052851;
- Sun, 12 Apr 2020 01:44:12 -0700 (PDT)
+        bh=ryrnnmiWMOzX1gq6Vxt4jaTEpcF4x4xQMMv3P1wro3w=;
+        b=ap1+nQp4JovGSL47Qfgt0af2I3wW8FwjJosR61IAiZ24vFpJyPzEdcNgW4eUnw7SCm
+         nLlGknlNicfa7luVtRZtCrxBRamWdhpcwKUB0O1M5A1WwO2tVV7KFcnTv45yC3CGwg2g
+         2tZwyShL/IU+zlN1iM46HZXyM6D05Xneu9gza0xC6Km2VMGKMjqYzM4HfSakyksRYE0G
+         aaQNO3kr7l+WzILi2vhuiHidcx5bdIf2d5NA1SYCSkYU4RMspAwh1oYwj3gp9PTydgGO
+         JdtgJUipos5DGm8W61HINmXr8GmlNQlaIwLp97mPGhCljA8f4inwKjs/hoUdbt+2KSvf
+         NVXA==
+X-Gm-Message-State: AGi0PuZRTtiMuQKVXa1etbeYxgefFMxE31qvK5PGbqaLsv7/OCiXUsDt
+        zSb03SYWEj99Pnqq6DFQALJhQUi9i184Co3+SEa5iQ==
+X-Google-Smtp-Source: APiQypKUSpUCFnG9oCj6HKDhZzk/Ok0xScPFxCdPYcw8sr+YVgG8G9chaRdg2kv6rM3C9zCB+TMr5Bh/Z160sTLm4gA=
+X-Received: by 2002:a4a:95a9:: with SMTP id o38mr10287105ooi.76.1586681319036;
+ Sun, 12 Apr 2020 01:48:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200411230943.24951-1-sashal@kernel.org> <20200411230943.24951-95-sashal@kernel.org>
-In-Reply-To: <20200411230943.24951-95-sashal@kernel.org>
+References: <20200410122315.17523-1-colin.king@canonical.com>
+In-Reply-To: <20200410122315.17523-1-colin.king@canonical.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 12 Apr 2020 10:44:01 +0200
-Message-ID: <CAMuHMdVrp25m_SDKSC=ntNWxsumcw4JKvHNDeFZT_JnpfQmCxg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 095/108] ARM: shmobile: Enable
- ARM_GLOBAL_TIMER on Cortex-A9 MPCore SoCs
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Sun, 12 Apr 2020 10:48:27 +0200
+Message-ID: <CAMuHMdVCc34r0jHrn8GiJQCzvRSmUiZgN56D0c_KgSWN0e1W1g@mail.gmail.com>
+Subject: Re: [PATCH] spi: remove redundant assignment to variable ms
+To:     Colin King <colin.king@canonical.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
-
-On Sun, Apr 12, 2020 at 1:11 AM Sasha Levin <sashal@kernel.org> wrote:
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Apr 10, 2020 at 2:23 PM Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> [ Upstream commit 408324a3c5383716939eea8096a0f999a0665f7e ]
+> The variable ms is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.
 >
-> SH-Mobile AG5 and R-Car H1 SoCs are based on the Cortex-A9 MPCore, which
-> includes a global timer.
->
-> Enable the ARM global timer on these SoCs, which will be used for:
->   - the scheduler clock, improving scheduler accuracy from 10 ms to 3 or
->     4 ns,
->   - delay loops, allowing removal of calls to shmobile_init_delay() from
->     the corresponding machine vectors.
->
-> Note that when using an old DTB lacking the global timer, the kernel
-> will still work.  However, loops-per-jiffies will no longer be preset,
-> and the delay loop will need to be calibrated during boot.
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-I.e. to avoid this delay, this patch is best backported after backporting
-8443ffd1bbd5be74 ("ARM: dts: r8a7779: Add device node for ARM global timer"),
-df1a0aac0a533e6f ("ARM: dts: sh73a0: Add device node for ARM global timer").
-
-While the former has been backported to v5.[45]-stable, the latter hasn't,
-probably because it depends on
-61b58e3f6e518c51 ("ARM: dts: sh73a0: Rename twd clock to periph clock")
-
-So please backport the last two commits first.
-Thanks!
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Link: https://lore.kernel.org/r/20191211135222.26770-5-geert+renesas@glider.be
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
