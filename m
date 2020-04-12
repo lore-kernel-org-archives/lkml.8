@@ -6,61 +6,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35501C2BA2B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66671C2BB85
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A98206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFED206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgDLLYe (ORCPT
+        id S1727030AbgDLLYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:24:34 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:7349 "EHLO
+        Sun, 12 Apr 2020 07:24:37 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:7553 "EHLO
         m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgDLLYd (ORCPT
+        with ESMTP id S1727003AbgDLLYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:24:33 -0400
+        Sun, 12 Apr 2020 07:24:36 -0400
 Received: from ubuntu.localdomain (unknown [58.251.74.227])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id BFD174E1654;
-        Sun, 12 Apr 2020 19:24:28 +0800 (CST)
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 78AC34E160D;
+        Sun, 12 Apr 2020 19:24:33 +0800 (CST)
 From:   Wang Wenhu <wenhu.wang@vivo.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     rdunlap@infradead.org, kernel@vivo.com,
         Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH v2,1/3] driver: rpmon: new driver Remote Processor Monitor
-Date:   Sun, 12 Apr 2020 04:24:03 -0700
-Message-Id: <20200412112405.24116-2-wenhu.wang@vivo.com>
+Subject: [PATCH v2,3/3] driver: rpmon: add rpmon_qmi driver
+Date:   Sun, 12 Apr 2020 04:24:05 -0700
+Message-Id: <20200412112405.24116-4-wenhu.wang@vivo.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200412112405.24116-1-wenhu.wang@vivo.com>
 References: <20200411095301.18780-1-wenhu.wang@vivo.com>
  <20200412112405.24116-1-wenhu.wang@vivo.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVDTE1CQkJDTk5LT0pOWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6M1E6DBw4MTgrTxRPMSNRNDZM
-        GjUKFDlVSlVKTkNNTUJLTU1CSk9JVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlMWVdZCAFZQUpDQk1LNwY+
-X-HM-Tid: 0a716e2239929376kuwsbfd174e1654
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVPS0xCQkJCQklITEtNSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PE06HSo4ITgzNBQKCy4hIU4P
+        TDoaCjxVSlVKTkNNTUJLTUxIQ0xCVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUpPQk5JNwY+
+X-HM-Tid: 0a716e224bf89376kuws78ac34e160d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RPMON is a driver framework. It supports remote processor monitor
-from user level. The baisc components are a character device
-with sysfs interfaces for user space communication and different
-kinds of message drivers introduced modularly, which are used to
-communicate with remote processors.
+Implements a kind of communication routine for RPMON to communicate
+with remote processors through QMI infrastructure. RPMON_QMI itself
+is designed as a modular framework that would introduce different
+kind of message sets binding to different services.
 
-As for user space, one can get notifications of different events
-of remote processors, like their registrations, through standard
-file read operation of the file discriptors related to the exported
-character devices. Actions can also be taken into account via
-standard write operations to the devices. Besides, the sysfs class
-attributes could be accessed conveniently.
-
-Message drivers act as engines to communicate with remote processors.
-Currently RPMON_QMI is available which uses QMI infrastructures
-on Qualcomm SoC Platforms.
+RPMON_QMI creates a device of rpmon_device type for each remote
+processor endpoint. All the endpoint devices share an unique set
+of QMI suite.
 
 Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
@@ -68,89 +60,53 @@ Changes since v1:
  - Addressed review comments from Randy
 
 ---
- drivers/Kconfig        |   2 +
- drivers/Makefile       |   1 +
- drivers/rpmon/Kconfig  |  26 +++
- drivers/rpmon/Makefile |   1 +
- drivers/rpmon/rpmon.c  | 506 +++++++++++++++++++++++++++++++++++++++++
- include/linux/rpmon.h  |  68 ++++++
- 6 files changed, 604 insertions(+)
- create mode 100644 drivers/rpmon/Kconfig
- create mode 100644 drivers/rpmon/Makefile
- create mode 100644 drivers/rpmon/rpmon.c
- create mode 100644 include/linux/rpmon.h
+ drivers/rpmon/Kconfig     |  15 ++
+ drivers/rpmon/Makefile    |   1 +
+ drivers/rpmon/rpmon_qmi.c | 431 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 447 insertions(+)
+ create mode 100644 drivers/rpmon/rpmon_qmi.c
 
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index dcecc9f6e33f..40409d8a87b3 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -166,6 +166,8 @@ source "drivers/remoteproc/Kconfig"
- 
- source "drivers/rpmsg/Kconfig"
- 
-+source "drivers/rpmon/Kconfig"
-+
- source "drivers/soundwire/Kconfig"
- 
- source "drivers/soc/Kconfig"
-diff --git a/drivers/Makefile b/drivers/Makefile
-index c0cd1b9075e3..75d215cd9136 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -155,6 +155,7 @@ obj-$(CONFIG_MAILBOX)		+= mailbox/
- obj-$(CONFIG_HWSPINLOCK)	+= hwspinlock/
- obj-$(CONFIG_REMOTEPROC)	+= remoteproc/
- obj-$(CONFIG_RPMSG)		+= rpmsg/
-+obj-$(CONFIG_RPMON)		+= rpmon/
- obj-$(CONFIG_SOUNDWIRE)		+= soundwire/
- 
- # Virtualization drivers
 diff --git a/drivers/rpmon/Kconfig b/drivers/rpmon/Kconfig
-new file mode 100644
-index 000000000000..ad0e6d6561ca
---- /dev/null
+index 0b80236ad186..fc44d3e803c1 100644
+--- a/drivers/rpmon/Kconfig
 +++ b/drivers/rpmon/Kconfig
-@@ -0,0 +1,26 @@
-+#
-+# Remote Processor Monitor Drivers
-+#
-+menu "Remote Processor Monitor Drivers"
-+
-+config RPMON
-+	tristate "Remote Processor Monitor Core Framework"
+@@ -23,6 +23,21 @@ config RPMON
+ 	  Currently RPMON_QMI is available which uses QMI infrastructures
+ 	  on Qualcomm SoC Platforms.
+ 
++config RPMON_QMI
++	tristate "RPMON QMI Driver Engine"
++	select RPMON_QMI_MSG_V1
++	depends on RPMON
++	depends on QCOM_QMI_HELPERS
 +	help
-+	  RPMON is a driver framework. It supports remote processor monitor
-+	  from user level. The basic components are a character device
-+	  with sysfs interfaces for user space communication and different
-+	  kinds of message drivers introduced modularly, which are used to
-+	  communicate with remote processors.
++	  RPMON_QMI is used by RPMON to communicate with remote processors
++	  with QMI APIs if enabled. RPMON_QMI itself is designed as a modular
++	  framework that would introduce different kinds of message sets
++	  which may be updated for versions.
 +
-+	  As for user space, one can get notifications of different events
-+	  of remote processors, like their registrations, through standard
-+	  file read operation of the file descriptors related to the exported
-+	  character devices. Actions can also be taken into account via
-+	  standard write operations to the devices. Besides, the sysfs class
-+	  attributes could be accessed conveniently.
++	  RPMON_QMI creates a device of rpmon_device type for each remote
++	  processor endpoint. All the endpoint devices shares an unique set
++	  of QMI suite.
 +
-+	  Message drivers act as engines to communicate with remote processors.
-+	  Currently RPMON_QMI is available which uses QMI infrastructures
-+	  on Qualcomm SoC Platforms.
-+
-+endmenu
+ config RPMON_QMI_MSG_V1
+ 	tristate "RPMON QMI Message Version 1.0"
+ 	depends on RPMON
 diff --git a/drivers/rpmon/Makefile b/drivers/rpmon/Makefile
-new file mode 100644
-index 000000000000..b0f0ec4ecc30
---- /dev/null
+index 25f468a73a20..76d9525339d9 100644
+--- a/drivers/rpmon/Makefile
 +++ b/drivers/rpmon/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_RPMON) += rpmon.o
-diff --git a/drivers/rpmon/rpmon.c b/drivers/rpmon/rpmon.c
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_RPMON) += rpmon.o
++obj-$(CONFIG_RPMON_QMI) += rpmon_qmi.o
+ obj-$(CONFIG_RPMON_QMI_MSG_V1)	+= rpmon_qmi_msg_v1.o
+diff --git a/drivers/rpmon/rpmon_qmi.c b/drivers/rpmon/rpmon_qmi.c
 new file mode 100644
-index 000000000000..72262b010a68
+index 000000000000..fe3b48c23cb9
 --- /dev/null
-+++ b/drivers/rpmon/rpmon.c
-@@ -0,0 +1,506 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/drivers/rpmon/rpmon_qmi.c
+@@ -0,0 +1,431 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
 + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
@@ -162,574 +118,425 @@ index 000000000000..72262b010a68
 + * implemented with chardev and sysfs class, which act as interfaces
 + * to communicate with user level. It supports different communication
 + * interfaces added modularly to communicate with remote processors.
-+ * Currently QMI implementation, named RPMON_QMI, is available.
 + *
-+ * RPMON could be used to detect the stabilities of remote processors,
-+ * collect any kinds of information you are interested in, take
-+ * actions like connection status check, and so on. Enhancements
-+ * can be made upon current implementation.
++ * RPMON_QMI: Implements a kind of communication routine for RPMON
++ * to communicate with remote processors through QMI infrastructure.
++ * At least one set of RPMON_QMI_MSG should be available and RPMON_QMI
++ * initiates with the message set(s) to provide certain servicei(s)
++ * like stability checking of remote processors. Currently a set of
++ * messages, implemented by RPMON_QMI_MSG_V1 is available.
 + */
 +
 +#include <linux/module.h>
-+#include <linux/cdev.h>
 +#include <linux/rpmon.h>
++#include <linux/soc/qcom/qmi.h>
++#include <linux/of_platform.h>
++#include <linux/nospec.h>
++#include "rpmon_qmi.h"
 +
-+#define RPMON_MAX_DEVICES	(1U << MINORBITS)
-+#define RPMON_NAME			"rpmon"
++#define DRIVER_NAME "rpmon_qmi_drv"
 +
-+static int rpmon_major;
-+static struct cdev *rpmon_cdev;
-+static DEFINE_IDR(rpmon_idr);
-+static const struct file_operations rpmon_fops;
++/* Remote processor registered. */
++#define RP_REGISTERED		0x0001
 +
-+/* Protect idr accesses */
-+static DEFINE_MUTEX(minor_lock);
-+
-+static ssize_t name_show(struct device *dev,
-+			 struct device_attribute *attr, char *buf)
-+{
-+	struct rpmon_device *rpmondev = dev_get_drvdata(dev);
-+	int ret;
-+
-+	mutex_lock(&rpmondev->info_lock);
-+	if (!rpmondev->info) {
-+		ret = -EINVAL;
-+		dev_err(dev, "the device has been unregistered\n");
-+		goto out;
-+	}
-+
-+	ret = sprintf(buf, "%s\n", rpmondev->info->name);
-+
-+out:
-+	mutex_unlock(&rpmondev->info_lock);
-+	return ret;
-+}
-+static DEVICE_ATTR_RO(name);
-+
-+static ssize_t version_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct rpmon_device *rpmondev = dev_get_drvdata(dev);
-+	int ret;
-+
-+	mutex_lock(&rpmondev->info_lock);
-+	if (!rpmondev->info) {
-+		ret = -EINVAL;
-+		dev_err(dev, "the device has been unregistered\n");
-+		goto out;
-+	}
-+
-+	ret = sprintf(buf, "%s\n", rpmondev->info->version);
-+
-+out:
-+	mutex_unlock(&rpmondev->info_lock);
-+	return ret;
-+}
-+static DEVICE_ATTR_RO(version);
-+
-+static struct attribute *rpmon_attrs[] = {
-+	&dev_attr_name.attr,
-+	&dev_attr_version.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(rpmon);
-+
-+/* RPMON class infrastructure */
-+static struct class rpmon_class = {
-+	.name = RPMON_NAME,
-+	.dev_groups = rpmon_groups,
++/* work struct for message processing. */
++struct recv_work {
++	struct work_struct work;
++	struct sockaddr_qrtr sq;
++	void *msg;
 +};
 +
-+static bool rpmon_class_registered;
++/* Delayed work to take a reset action when a failure is detected. */
++struct exec_cb_work {
++	struct delayed_work		dwk;
++	struct rpmon_qmi_device *rdev;
++	u32			checks;
++};
 +
-+static int rpmon_get_minor(struct rpmon_device *rpmondev)
++struct rpmon_qmi_exec_fn {
++	int (*exec_call)(struct rpmon_qmi_device *rdev);
++};
++
++struct rpmon_qmi_cb_fn {
++	void (*callback)(struct work_struct *work);
++	u32 msg_len;
++};
++
++static DEFINE_MUTEX(rdev_list_lock);
++static LIST_HEAD(rdev_list);
++static struct rpmon_qmi *rpqmi;
++static struct workqueue_struct *rpqmi_wq;
++
++static void rpmon_qmi_register_req_cb(struct work_struct *work)
 +{
-+	int ret = -ENOMEM;
++	struct rpmon_register_req *req;
++	struct rpmon_qmi_device *rdev;
++	struct recv_work *rwk = container_of(work, struct recv_work, work);
 +
-+	mutex_lock(&minor_lock);
-+	ret = idr_alloc(&rpmon_idr, rpmondev, 0, RPMON_MAX_DEVICES, GFP_KERNEL);
-+	if (ret >= 0) {
-+		rpmondev->minor = ret;
-+		ret = 0;
-+	} else if (ret == -ENOSPC) {
-+		dev_err(&rpmondev->dev, "too many rpmon devices\n");
-+		ret = -EINVAL;
++	req = (struct rpmon_register_req *)rwk->msg;
++
++	mutex_lock(&rdev_list_lock);
++	list_for_each_entry(rdev, &rdev_list, list) {
++		if (strncmp(rdev->info->name, req->name, RP_NAME_LEN))
++			continue;
++
++		rdev->flag |= RP_REGISTERED;
++		memcpy(&rdev->addr, &rwk->sq, sizeof(rwk->sq));
++		if (req->timeout_valid)
++			rdev->timeout = req->timeout;
++		else
++			rdev->timeout = 5000;
++		rpmon_event_notify(rdev->info, RPMON_EVENT_REGISTER);
++		break;
 +	}
-+	mutex_unlock(&minor_lock);
-+	return ret;
++	mutex_unlock(&rdev_list_lock);
++
++	kfree(rwk->msg);
++	kfree(rwk);
 +}
 +
-+static void rpmon_free_minor(struct rpmon_device *rpmondev)
++void rpmon_qmi_conn_check_resp_cb(struct work_struct *work)
 +{
-+	mutex_lock(&minor_lock);
-+	idr_remove(&rpmon_idr, rpmondev->minor);
-+	mutex_unlock(&minor_lock);
++	struct rpmon_conn_check_resp *cc_resp;
++	struct rpmon_qmi_device *rdev;
++	struct sockaddr_qrtr *addr;
++	struct recv_work *rwk =
++			container_of(work, struct recv_work, work);
++
++	cc_resp = (struct rpmon_conn_check_resp *)rwk->msg;
++	mutex_lock(&rdev_list_lock);
++	list_for_each_entry(rdev, &rdev_list, list) {
++		addr = &rdev->addr;
++		if (addr->sq_node != rwk->sq.sq_node ||
++		    addr->sq_port != rwk->sq.sq_port)
++			continue;
++
++		if (!cc_resp->result.error)
++			atomic_inc(&rdev->reports);
++		break;
++	}
++	mutex_unlock(&rdev_list_lock);
++
++	kfree(rwk->msg);
++	kfree(rwk);
 +}
 +
 +/**
-+ * rpmon_event_notify - trigger an notify event
-+ * @info:  RPMON device capabilities
-+ * @event: RPMON event to be triggered
-+ */
-+void rpmon_event_notify(struct rpmon_info *info, u32 event)
-+{
-+	struct rpmon_device *rpmondev = info->rpmon_dev;
-+
-+	if (event >= RPMON_EVENT_MAX) {
-+		pr_err("Error unsupported rpmon event %d", event);
-+		return;
-+	}
-+
-+	atomic_set(&rpmondev->event, RPMON_EVENT(event));
-+	wake_up_interruptible(&rpmondev->wait);
-+	kill_fasync(&rpmondev->async_queue, SIGIO, POLL_IN);
-+}
-+EXPORT_SYMBOL_GPL(rpmon_event_notify);
-+
-+static int rpmon_open(struct inode *inode, struct file *filep)
-+{
-+	struct rpmon_device *rpmondev;
-+	int ret = 0;
-+
-+	mutex_lock(&minor_lock);
-+	rpmondev = idr_find(&rpmon_idr, iminor(inode));
-+	mutex_unlock(&minor_lock);
-+	if (!rpmondev) {
-+		ret = -ENODEV;
-+		goto err_out;
-+	}
-+
-+	get_device(&rpmondev->dev);
-+
-+	if (!try_module_get(rpmondev->owner)) {
-+		ret = -ENODEV;
-+		goto err_module_get;
-+	}
-+
-+	filep->private_data = rpmondev;
-+
-+	mutex_lock(&rpmondev->info_lock);
-+	if (!rpmondev->info) {
-+		mutex_unlock(&rpmondev->info_lock);
-+		ret = -EINVAL;
-+		goto err_module_get;
-+	}
-+
-+	if (rpmondev->info->open)
-+		ret = rpmondev->info->open(rpmondev->info, inode);
-+	mutex_unlock(&rpmondev->info_lock);
-+	if (ret)
-+		goto err_module_get;
-+
-+	return ret;
-+
-+err_module_get:
-+	put_device(&rpmondev->dev);
-+
-+err_out:
-+	return ret;
-+}
-+
-+static int rpmon_release(struct inode *inode, struct file *filep)
-+{
-+	struct rpmon_device *rpmondev = filep->private_data;
-+	int ret = 0;
-+
-+	mutex_lock(&rpmondev->info_lock);
-+	if (rpmondev->info && rpmondev->info->release)
-+		ret = rpmondev->info->release(rpmondev->info, inode);
-+	mutex_unlock(&rpmondev->info_lock);
-+
-+	module_put(rpmondev->owner);
-+	put_device(&rpmondev->dev);
-+	return ret;
-+}
-+
-+static __poll_t rpmon_poll(struct file *filep, poll_table *wait)
-+{
-+	struct rpmon_device *rpmondev = filep->private_data;
-+
-+	mutex_lock(&rpmondev->info_lock);
-+	if (!rpmondev->info) {
-+		mutex_unlock(&rpmondev->info_lock);
-+		return -EIO;
-+	}
-+	mutex_unlock(&rpmondev->info_lock);
-+
-+	poll_wait(filep, &rpmondev->wait, wait);
-+	if (!atomic_read(&rpmondev->event))
-+		return EPOLLIN | EPOLLRDNORM;
-+	return 0;
-+}
-+
-+static ssize_t rpmon_read(struct file *filep, char __user *buf,
-+			  size_t count, loff_t *ppos)
-+{
-+	struct rpmon_device *rpmondev = filep->private_data;
-+	DECLARE_WAITQUEUE(wait, current);
-+	ssize_t ret = 0;
-+	u32 event;
-+
-+	if (count != sizeof(u32))
-+		return -EINVAL;
-+
-+	add_wait_queue(&rpmondev->wait, &wait);
-+
-+	do {
-+		mutex_lock(&rpmondev->info_lock);
-+		if (!rpmondev->info) {
-+			ret = -EIO;
-+			mutex_unlock(&rpmondev->info_lock);
-+			break;
-+		}
-+		mutex_unlock(&rpmondev->info_lock);
-+
-+		set_current_state(TASK_INTERRUPTIBLE);
-+
-+		event = atomic_read(&rpmondev->event);
-+		if (event) {
-+			__set_current_state(TASK_RUNNING);
-+			if (copy_to_user(buf, &event, count))
-+				ret = -EFAULT;
-+			else {
-+				atomic_set(&rpmondev->event, 0);
-+				ret = count;
-+			}
-+			break;
-+		}
-+
-+		if (filep->f_flags & O_NONBLOCK) {
-+			ret = -EAGAIN;
-+			break;
-+		}
-+
-+		if (signal_pending(current)) {
-+			ret = -ERESTARTSYS;
-+			break;
-+		}
-+		schedule();
-+	} while (1);
-+
-+	__set_current_state(TASK_RUNNING);
-+	remove_wait_queue(&rpmondev->wait, &wait);
-+
-+	return ret;
-+}
-+
-+static ssize_t rpmon_write(struct file *filep, const char __user *buf,
-+			   size_t count, loff_t *ppos)
-+{
-+	struct rpmon_device *rpmondev = filep->private_data;
-+	ssize_t ret;
-+	u32 action;
-+
-+	if (count != sizeof(u32))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&action, buf, count))
-+		return -EFAULT;
-+
-+	mutex_lock(&rpmondev->info_lock);
-+	if (!rpmondev->info) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (!rpmondev->info->monitor) {
-+		ret = -ENOTSUPP;
-+		goto out;
-+	}
-+
-+	if (rpmondev->info->monitor)
-+		ret = rpmondev->info->monitor(rpmondev->info, action);
-+out:
-+	mutex_unlock(&rpmondev->info_lock);
-+	return ret ? ret : sizeof(u32);
-+}
-+
-+static const struct file_operations rpmon_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= rpmon_open,
-+	.read		= rpmon_read,
-+	.write		= rpmon_write,
-+	.poll		= rpmon_poll,
-+	.release	= rpmon_release,
-+};
-+
-+static int rpmon_major_init(void)
-+{
-+	static const char name[] = RPMON_NAME;
-+	struct cdev *cdev = NULL;
-+	dev_t rpmon_dev = 0;
-+	int ret;
-+
-+	ret = alloc_chrdev_region(&rpmon_dev, 0, RPMON_MAX_DEVICES, name);
-+	if (ret)
-+		goto out;
-+
-+	ret = -ENOMEM;
-+	cdev = cdev_alloc();
-+	if (!cdev)
-+		goto out_unregister;
-+
-+	cdev->owner = THIS_MODULE;
-+	cdev->ops = &rpmon_fops;
-+	kobject_set_name(&cdev->kobj, "%s", name);
-+
-+	ret = cdev_add(cdev, rpmon_dev, RPMON_MAX_DEVICES);
-+	if (ret)
-+		goto out_put;
-+
-+	rpmon_major = MAJOR(rpmon_dev);
-+	rpmon_cdev = cdev;
-+	return 0;
-+out_put:
-+	kobject_put(&cdev->kobj);
-+out_unregister:
-+	unregister_chrdev_region(rpmon_dev, RPMON_MAX_DEVICES);
-+out:
-+	return ret;
-+}
-+
-+
-+static void rpmon_major_cleanup(void)
-+{
-+	unregister_chrdev_region(MKDEV(rpmon_major, 0), RPMON_MAX_DEVICES);
-+	cdev_del(rpmon_cdev);
-+}
-+
-+static int init_rpmon_class(void)
-+{
-+	int ret;
-+
-+	/* Allocate and add char device to the system. */
-+	ret = rpmon_major_init();
-+	if (ret)
-+		goto exit;
-+
-+	ret = class_register(&rpmon_class);
-+	if (ret) {
-+		pr_err("class_register failed for rpmon\n");
-+		goto err_class_register;
-+	}
-+
-+	rpmon_class_registered = true;
-+
-+	return 0;
-+
-+err_class_register:
-+	rpmon_major_cleanup();
-+exit:
-+	return ret;
-+}
-+
-+static void release_rpmon_class(void)
-+{
-+	rpmon_class_registered = false;
-+	class_unregister(&rpmon_class);
-+	rpmon_major_cleanup();
-+}
-+
-+static void rpmon_device_release(struct device *dev)
-+{
-+	struct rpmon_device *rpmondev = dev_get_drvdata(dev);
-+
-+	kfree(rpmondev);
-+}
-+
-+/**
-+ * rpmon_register_device - register a new rpmon interface device
-+ * @owner:	module that creates the new device
-+ * @parent:	parent device
-+ * @info:	rpmon device capabilities
++ * rpmon_qmi_exec_cb_worker - callback worker for execution
++ * @work: work to been done
 + *
-+ * return:	zero on success or a negative error code.
++ * Called as worker handler by the single worker thread of rpmon_wq.
++ * The worker is scheduled after timeout ms duration since the execution.
 + */
-+int __rpmon_register_device(struct module *owner,
-+			    struct device *parent,
-+			    struct rpmon_info *info)
++static void rpmon_qmi_exec_cb_worker(struct work_struct *work)
 +{
-+	struct rpmon_device *rpmondev;
-+	int ret = 0;
++	struct delayed_work *dwk = to_delayed_work(work);
++	struct exec_cb_work *ewk =
++			container_of(dwk, struct exec_cb_work, dwk);
++	struct rpmon_qmi_device *rdev = ewk->rdev;
 +
-+	if (!rpmon_class_registered)
-+		return -EPROBE_DEFER;
++	mutex_lock(&rdev_list_lock);
++	if (ewk->checks <= atomic_read(&rdev->reports)) {
++		pr_debug("%s health check success", rdev->info->name);
++		goto out;
++	}
 +
-+	if (!parent || !info || !info->name || !info->version)
-+		return -EINVAL;
++	pr_err("subsystem %s failed to respond in time", rdev->info->name);
 +
-+	info->rpmon_dev = NULL;
++	rpmon_event_notify(rdev->info, RPMON_EVENT_CHKCONN_FAIL);
 +
-+	rpmondev = kzalloc(sizeof(*rpmondev), GFP_KERNEL);
-+	if (!rpmondev)
++out:
++	mutex_unlock(&rdev_list_lock);
++	kfree(ewk);
++}
++
++static struct rpmon_qmi_cb_fn rpmon_qmi_event_callbacks[] = {
++	{
++		.callback = rpmon_qmi_register_req_cb,
++		.msg_len = sizeof(struct rpmon_register_req),
++	},
++	{
++		.callback = rpmon_qmi_conn_check_resp_cb,
++		.msg_len = sizeof(struct rpmon_conn_check_resp),
++	},
++};
++
++/**
++ * rpmon_qmi_conn_check - send indication, initiate and queue callback work
++ * @rdev: device interface of specific remote processor to be checked
++ */
++static int rpmon_qmi_conn_check(struct rpmon_qmi_device *rdev)
++{
++	struct exec_cb_work *ewk;
++
++	mutex_lock(&rdev_list_lock);
++	if (!(rdev->flag & RP_REGISTERED)) {
++		pr_err("%s has not registered", rdev->info->name);
++		return -ENONET;
++	}
++
++	if (!__ratelimit(&rdev->ratelimit)) {
++		pr_err("%s rate-limited", rdev->info->name);
++		return 0;
++	}
++	mutex_unlock(&rdev_list_lock);
++
++	rdev->rqmi->sendmsg(rdev, NULL, 0);
++
++	ewk = kzalloc(sizeof(*ewk), GFP_KERNEL);
++	if (!ewk)
 +		return -ENOMEM;
 +
-+	rpmondev->owner = owner;
-+	rpmondev->info = info;
-+	mutex_init(&rpmondev->info_lock);
-+	init_waitqueue_head(&rpmondev->wait);
-+	atomic_set(&rpmondev->event, 0);
++	ewk->rdev = rdev;
++	ewk->checks = atomic_inc_return(&rdev->checks);
++	INIT_DELAYED_WORK(&ewk->dwk, rpmon_qmi_exec_cb_worker);
++	queue_delayed_work(rpqmi_wq,
++			   &ewk->dwk, msecs_to_jiffies(rdev->timeout));
 +
-+	ret = rpmon_get_minor(rpmondev);
-+	if (ret) {
-+		kfree(rpmondev);
++	return 0;
++}
++
++static struct rpmon_qmi_exec_fn rpmon_qmi_exec_calls[] = {
++	{.exec_call = rpmon_qmi_conn_check},
++};
++
++static int rpmon_qmi_monitor(struct rpmon_info *info, u32 event)
++{
++	struct rpmon_qmi_device *rdev = (struct rpmon_qmi_device *)info->priv;
++	int i, idx;
++
++	for (i = 0; i < RPMON_EXEC_MAX; i++) {
++		if (event & RPMON_ACTION(i)) {
++			if (i < ARRAY_SIZE(rpmon_qmi_exec_calls)) {
++				idx = array_index_nospec(i, ARRAY_SIZE(rpmon_qmi_exec_calls));
++				if (rpmon_qmi_exec_calls[idx].exec_call)
++					return rpmon_qmi_exec_calls[idx].exec_call(rdev);
++				else
++					return -ENOTSUPP;
++			} else
++				return -ENOPARAM;
++		}
++	}
++
++	return -EINVAL;
++}
++
++static int rpmon_qmi_drv_probe(struct platform_device *pdev)
++{
++	struct rpmon_info *info = pdev->dev.platform_data;
++	struct rpmon_qmi_device *rdev;
++	struct device_node *node = pdev->dev.of_node;
++	const char *name;
++	int ret = -ENODEV;
++
++	if (node) {
++		/* Allocate info for one device */
++		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
++		if (!info) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		if (!of_property_read_string(node, "linux,subsys", &name))
++			info->name = devm_kstrdup(&pdev->dev, name, GFP_KERNEL);
++		else
++			info->name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
++						       "%pOFn", node);
++		info->version = "devicetree";
++	}
++
++	if (!info || !info->name || !info->version) {
++		dev_dbg(&pdev->dev, "%s: err_info\n", __func__);
 +		return ret;
 +	}
 +
-+	device_initialize(&rpmondev->dev);
-+	rpmondev->dev.devt = MKDEV(rpmon_major, rpmondev->minor);
-+	rpmondev->dev.class = &rpmon_class;
-+	rpmondev->dev.parent = parent;
-+	rpmondev->dev.release = rpmon_device_release;
-+	dev_set_drvdata(&rpmondev->dev, rpmondev);
-+
-+	ret = dev_set_name(&rpmondev->dev, RPMON_NAME"%d", rpmondev->minor);
-+	if (ret)
-+		goto err_device_create;
-+
-+	ret = device_add(&rpmondev->dev);
-+	if (ret)
-+		goto err_device_create;
-+
-+	if (rpmondev->info->rpmon_dev_add_attrs) {
-+		ret = rpmondev->info->rpmon_dev_add_attrs(rpmondev);
-+		if (ret)
-+			goto err_dev_add_attrs;
++	/* Allocate device for qmi specific reference */
++	rdev = devm_kzalloc(&pdev->dev, sizeof(*rdev), GFP_KERNEL);
++	if (!rdev) {
++		ret = -ENOMEM;
++		goto err_info_free;
 +	}
 +
-+	info->rpmon_dev = rpmondev;
++	rdev->rqmi = rpqmi;
++	rdev->info = info;
++	info->priv = rdev;
++	info->monitor = rpmon_qmi_monitor;
++	platform_set_drvdata(pdev, rdev);
 +
-+	return 0;
++	ret = rpmon_register_device(&pdev->dev, info);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to register rpmon_qmi_device\n");
++		goto err_rdev_free;
++	}
 +
-+err_dev_add_attrs:
-+	device_del(&rpmondev->dev);
-+err_device_create:
-+	rpmon_free_minor(rpmondev);
-+	put_device(&rpmondev->dev);
++	mutex_lock(&rdev_list_lock);
++	list_add_tail(&rdev->list, &rdev_list);
++	mutex_unlock(&rdev_list_lock);
++
++	return ret;
++
++err_rdev_free:
++	devm_kfree(&pdev->dev, rdev);
++err_info_free:
++	devm_kfree(&pdev->dev, info);
++out:
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(__rpmon_register_device);
 +
-+/**
-+ * rpmon_unregister_device - unregister a rpmon interface device
-+ * @info:	rpmon device capabilities
-+ */
-+void rpmon_unregister_device(struct rpmon_info *info)
++static int rpmon_qmi_drv_remove(struct platform_device *pdev)
 +{
-+	struct rpmon_device *rpmondev;
++	struct rpmon_qmi_device *rdev = platform_get_drvdata(pdev);
 +
-+	if (!info || !info->rpmon_dev)
++	rpmon_unregister_device(rdev->info);
++
++	return 0;
++}
++static void rpmon_qmi_msg_callback(enum rpmon_qmi_msg_type type,
++			struct sockaddr_qrtr *sq,
++			const void *msg)
++{
++	struct recv_work *rwk;
++
++	if (type >= (sizeof(rpmon_qmi_event_callbacks) /
++		     sizeof(struct rpmon_qmi_cb_fn))) {
++		pr_err("Error non-supported message type.\n");
 +		return;
++	}
 +
-+	rpmondev = info->rpmon_dev;
++	if (rpmon_qmi_event_callbacks[type].callback) {
++		rwk = kzalloc(sizeof(*rwk), GFP_KERNEL);
++		if (!rwk) {
++			pr_err("Error to alloc recv_work");
++			return;
++		}
 +
-+	rpmon_free_minor(rpmondev);
++		INIT_WORK(&rwk->work, rpmon_qmi_event_callbacks[type].callback);
++		memcpy(&rwk->sq, sq, sizeof(*sq));
 +
-+	mutex_lock(&rpmondev->info_lock);
++		rwk->msg = kzalloc(rpmon_qmi_event_callbacks[type].msg_len,
++				   GFP_KERNEL);
++		if (!rwk->msg) {
++			pr_err("Error to alloc message of recv_work");
++			kfree(rwk);
++			return;
++		}
 +
-+	if (rpmondev->info->rpmon_dev_add_attrs)
-+		rpmondev->info->rpmon_dev_del_attrs(rpmondev);
-+
-+	rpmondev->info = NULL;
-+	mutex_unlock(&rpmondev->info_lock);
-+
-+	wake_up_interruptible(&rpmondev->wait);
-+	kill_fasync(&rpmondev->async_queue, SIGIO, POLL_IN);
-+
-+	device_unregister(&rpmondev->dev);
++		memcpy(rwk->msg, msg, rpmon_qmi_event_callbacks[type].msg_len);
++		queue_work(rpqmi_wq, &rwk->work);
++	}
 +}
-+EXPORT_SYMBOL_GPL(rpmon_unregister_device);
 +
-+static int __init rpmon_init(void)
++static const struct of_device_id rpmon_of_qmi_match[] = {
++	{ .compatible = "rpmon-qmi" },
++	{ /* Sentinel */ },
++};
++
++static struct platform_driver rpmon_qmi_drv = {
++	.probe = rpmon_qmi_drv_probe,
++	.remove = rpmon_qmi_drv_remove,
++	.driver = {
++		.name = DRIVER_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(rpmon_of_qmi_match),
++	},
++};
++
++static int __init rpmon_qmi_drv_init(void)
 +{
-+	return init_rpmon_class();
-+}
-+subsys_initcall(rpmon_init);
++	int ret;
 +
-+static void rpmon_exit(void)
-+{
-+	release_rpmon_class();
-+	idr_destroy(&rpmon_idr);
++	rpqmi_wq = create_singlethread_workqueue("rpmon_qmi_wq");
++	if (!rpqmi_wq) {
++		pr_err("Error creating workqueue\n");
++		ret = -EFAULT;
++		goto out;
++	}
++
++	rpqmi = kzalloc(sizeof(*rpqmi), GFP_KERNEL);
++	if (!rpqmi) {
++		ret = -ENOMEM;
++		goto err_wq_free;
++	}
++
++	ret = rpmon_qmi_handle_init(rpqmi, rpmon_qmi_msg_callback);
++	if (ret)
++		goto err_rpqmi_free;
++
++	ret = qmi_handle_init(&rpqmi->qmi,
++			      RPQMI_BUF_SIZE, NULL, rpqmi->handlers);
++	if (ret < 0) {
++		pr_err("Error init qmi handle, %d", ret);
++		goto err_rpqmi_free;
++	}
++
++	ret = qmi_add_server(&rpqmi->qmi,
++			     rpqmi->svc->service,
++			     rpqmi->svc->version,
++			     rpqmi->svc->instance);
++	if (ret < 0) {
++		pr_err("Error add qmi server, %d", ret);
++		goto err_rpqmi_free;
++	}
++	mutex_init(&rdev_list_lock);
++
++	return platform_driver_register(&rpmon_qmi_drv);
++
++err_rpqmi_free:
++	kfree(rpqmi);
++err_wq_free:
++	destroy_workqueue(rpqmi_wq);
++out:
++	return ret;
 +}
-+module_exit(rpmon_exit);
++late_initcall_sync(rpmon_qmi_drv_init);
++
++static void rpmon_qmi_del_server(void)
++{
++	struct qrtr_ctrl_pkt pkt;
++	struct sockaddr_qrtr sq;
++	struct msghdr msg = { };
++	struct kvec iv = { &pkt, sizeof(pkt) };
++	struct qmi_service *svc = rpqmi->svc;
++	struct qmi_handle *qmi = &rpqmi->qmi;
++	int ret;
++
++	memset(&pkt, 0, sizeof(pkt));
++	pkt.cmd = cpu_to_le32(QRTR_TYPE_DEL_SERVER);
++	pkt.server.service = cpu_to_le32(svc->service);
++	pkt.server.instance = cpu_to_le32(svc->version | svc->instance << 8);
++	pkt.server.node = cpu_to_le32(qmi->sq.sq_node);
++	pkt.server.port = cpu_to_le32(qmi->sq.sq_port);
++
++	sq.sq_family = qmi->sq.sq_family;
++	sq.sq_node = qmi->sq.sq_node;
++	sq.sq_port = QRTR_PORT_CTRL;
++
++	msg.msg_name = &sq;
++	msg.msg_namelen = sizeof(sq);
++
++	mutex_lock(&qmi->sock_lock);
++	if (qmi->sock) {
++		ret = kernel_sendmsg(qmi->sock, &msg, &iv, 1, sizeof(pkt));
++		if (ret < 0)
++			pr_err("send service delete message failed: %d\n", ret);
++	}
++	mutex_unlock(&qmi->sock_lock);
++}
++
++static void __exit rpmon_qmi_drv_exit(void)
++{
++	rpmon_qmi_del_server();
++
++	qmi_handle_release(&rpqmi->qmi);
++
++	platform_driver_unregister(&rpmon_qmi_drv);
++}
++module_exit(rpmon_qmi_drv_exit);
 +
 +MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
-+MODULE_DESCRIPTION("Remote Processor Monitor Core Framework");
++MODULE_DESCRIPTION("Subsystem Monitor via QMI platform driver");
++MODULE_ALIAS("platform:" DRIVER_NAME);
 +MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/rpmon.h b/include/linux/rpmon.h
-new file mode 100644
-index 000000000000..4bbcdeefebee
---- /dev/null
-+++ b/include/linux/rpmon.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-+ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-+ * All rights reserved.
-+ */
-+
-+#ifndef RPMON_H
-+#define RPMON_H
-+
-+#include <net/sock.h>
-+
-+/* RPMON action would be taken */
-+enum rpmon_exec {
-+	RPMON_EXEC_CHECK_CONN = 0,
-+	RPMON_EXEC_MAX,
-+};
-+
-+/* RPMON events that may be notified */
-+enum rpmon_event {
-+	RPMON_EVENT_CHKCONN_FAIL = 0,
-+	RPMON_EVENT_REGISTER,
-+	RPMON_EVENT_MAX,
-+};
-+
-+#define RPMON_EVENT(x)		(0x1 << (x))
-+#define RPMON_ACTION(x)		(0x1 << (x))
-+
-+struct rpmon_device {
-+	struct module		*owner;
-+	struct device		dev;
-+	int			minor;
-+	atomic_t		event;
-+	struct fasync_struct	*async_queue;
-+	wait_queue_head_t	wait;
-+	struct rpmon_info	*info;
-+	struct mutex		info_lock;
-+	struct kobject		*map_dir;
-+};
-+
-+struct rpmon_info {
-+	struct rpmon_device	*rpmon_dev;
-+	const char		*name;
-+	const char		*version;
-+	void			*priv;
-+	u32			event;
-+
-+	int (*open)(struct rpmon_info *info, struct inode *inode);
-+	int (*release)(struct rpmon_info *info, struct inode *inode);
-+	int (*monitor)(struct rpmon_info *info, u32 event);
-+	int (*rpmon_dev_add_attrs)(struct rpmon_device *rpmondev);
-+	void (*rpmon_dev_del_attrs)(struct rpmon_device *rpmondev);
-+};
-+
-+extern int __must_check
-+	__rpmon_register_device(struct module *owner,
-+				struct device *parent,
-+				struct rpmon_info *info);
-+
-+/* Use a define to avoid include chaining to get THIS_MODULE */
-+#define rpmon_register_device(parent, info) \
-+	__rpmon_register_device(THIS_MODULE, parent, info)
-+
-+extern void rpmon_unregister_device(struct rpmon_info *info);
-+
-+extern void rpmon_event_notify(struct rpmon_info *info, u32 event);
-+
-+#endif /* RPMON_H */
 -- 
 2.17.1
 
