@@ -2,118 +2,78 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBBCC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0625DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B65206E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZ7fYEt7"
+	by mail.kernel.org (Postfix) with ESMTP id DE526206E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgDLOct (ORCPT
+        id S1727066AbgDLOfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:32:49 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38979 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDLOct (ORCPT
+        Sun, 12 Apr 2020 10:35:14 -0400
+Received: from smtp01.smtpout.orange.fr ([80.12.242.123]:52388 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgDLOfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:32:49 -0400
-Received: by mail-pj1-f68.google.com with SMTP id o1so1999023pjs.4;
-        Sun, 12 Apr 2020 07:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=/Lj7/UVhiRjtSh2yT7HeljEOXZWQTtN5YOXyQ/wCWCY=;
-        b=XZ7fYEt706nnXOsWwkkXV2znCaV1uZBc/qih5IwvviHtoehAHgl7D2w5sm2q4JkDla
-         bhW1LSzxRFE5g/tbJs7NLpW3VjRMN77n5H+lblLrdJNtzPurzYwrsyzAp9JsGzDndDkf
-         kXm319skeqK3tUz9BETmdCtclFGfvGD6GPfSwpjpkgPZChiJ4iUZ0BP109p11OFQTesx
-         OyVrRBu63ZjOyD/pLRBdpjrgjB6OghdeyMaMMalQh4rl1kqT7CbzLCzTLXsP+xDYlCUa
-         41wSEX2VxDRSuZEKzIFoU8EGxrinmfawOEiHz/FIIHtFF/Yyv3GeBSVSfFP7I56FiEeC
-         YV4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=/Lj7/UVhiRjtSh2yT7HeljEOXZWQTtN5YOXyQ/wCWCY=;
-        b=UFk9eAJUa6LpT8Y9DIUgxi2+fgdXgxu/cvRhESbG4vek0sqIHIpF3eX8maqFpIKmD4
-         pcJW9FYzP80G/oAsVx+OIYoEWRGlLDsCEhwJ+cCVV+f3dHrktFWxCqW1zg9EqH3fgE8V
-         g99lrgjLSjt/2BGwc4gT6+wz2H0fqEq1VBq8IoOhl+JSJH0y4QxbNLRSOfS3knKuS5lt
-         nqD1DWdtLS/f901BXwq9XKXcDa3oPcHZkZSJsF4lPTyLcDl2VMkaEbV9aFfAMj++dax/
-         qakIvp+X1K/ePwhTjboDGIU25NQSBWl6y+mry8xMmtPFL4EZjAzJiMZP+9GDIxTPgAMc
-         QBtg==
-X-Gm-Message-State: AGi0PuZwCm+YLvD7Yns+PJyP5dKQk7ZwxRpi19Ng2hpth511Y95IVie2
-        DHlhYPCxxAV9dPX2mv/kthc=
-X-Google-Smtp-Source: APiQypI8Aw8VypliK7WobMXeNhlVyHnh78NM3mTSMY1+2n993F5rJj/bworYiZmPZNFkPwrvout9+g==
-X-Received: by 2002:a17:90a:a111:: with SMTP id s17mr17362116pjp.129.1586701966819;
-        Sun, 12 Apr 2020 07:32:46 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:992:22ab:f465:67ce:fbea:c439])
-        by smtp.gmail.com with ESMTPSA id o11sm5804266pgh.78.2020.04.12.07.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 07:32:46 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Aishwarya R <aishwaryarj100@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: sun4i-gpadc-iio: Use devm_platform_ioremap_resource
-Date:   Sun, 12 Apr 2020 20:02:18 +0530
-Message-Id: <20200412143220.4476-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200409141331.30882-1-aishwaryarj100@gmail.com>
-References: <20200409141331.30882-1-aishwaryarj100@gmail.com>
+        Sun, 12 Apr 2020 10:35:14 -0400
+Received: from localhost.localdomain ([93.22.37.28])
+        by mwinf5d36 with ME
+        id RqbA2200b0cS4cl03qbBFc; Sun, 12 Apr 2020 16:35:12 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 12 Apr 2020 16:35:12 +0200
+X-ME-IP: 93.22.37.28
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] drm/msm: Fix typo
+Date:   Sun, 12 Apr 2020 16:35:09 +0200
+Message-Id: <20200412143509.11353-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Duplicated 'we'
 
-Use the helper function that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together.Reduces boilerplate and suggested
-by coccinelle.
-
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 176e1cb4abb1..0f2c1738a90d 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -496,7 +496,6 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 				struct iio_dev *indio_dev)
- {
- 	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
--	struct resource *mem;
- 	void __iomem *base;
- 	int ret;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index 998bef1190a3..b5fed67c4651 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -959,7 +959,7 @@ static int mdp5_crtc_cursor_set(struct drm_crtc *crtc,
+ 	if (!ctl)
+ 		return -EINVAL;
  
-@@ -508,8 +507,7 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
- 	indio_dev->channels = sun8i_a33_gpadc_channels;
+-	/* don't support LM cursors when we we have source split enabled */
++	/* don't support LM cursors when we have source split enabled */
+ 	if (mdp5_cstate->pipeline.r_mixer)
+ 		return -EINVAL;
  
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, mem);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
+@@ -1030,7 +1030,7 @@ static int mdp5_crtc_cursor_move(struct drm_crtc *crtc, int x, int y)
+ 		return -EINVAL;
+ 	}
+ 
+-	/* don't support LM cursors when we we have source split enabled */
++	/* don't support LM cursors when we have source split enabled */
+ 	if (mdp5_cstate->pipeline.r_mixer)
+ 		return -EINVAL;
  
 -- 
-2.17.1
+2.20.1
 
