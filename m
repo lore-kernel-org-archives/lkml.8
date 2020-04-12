@@ -2,155 +2,152 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BBFC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7B9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE51C206B8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586698213;
-	bh=JCenLFN5beHsJI7hfY8pGkBETX594Vt2msukbcaD+m8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=g6MstfxX5MFt3TN7j8GkND7TfuNB7D6Ik5Dbmi6MjnGsNRaCk1Ee19sSGAa4q1ev4
-	 NO1EyzelmTQQc+MaiV8h3PYKqq1NZEIUBPfcVazOOpqBMfSpp27UMkUhKuxzbdYodc
-	 jmYfI+bulLtBvwiKNhgJmnrphLBzJpREwVHh57xM=
+	by mail.kernel.org (Postfix) with ESMTP id 74846206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:44:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oep9Bi1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgDLNaM (ORCPT
+        id S1727034AbgDLNo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgDLNaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:30:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5ED20673;
-        Sun, 12 Apr 2020 13:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586698211;
-        bh=JCenLFN5beHsJI7hfY8pGkBETX594Vt2msukbcaD+m8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AY42TAcq1YeUTaD/Tc+pfhNsfyzWdgz83t/0oQkAdF8RKbbNVLSOzLiNh1jlZxRo9
-         XxtGcDe+D/vFVIyRzxmQj1+O2JzU1U01PeNXabOyUGQ6qz+1AuXf31xm31z6BctIhx
-         Up2YaDlx8cmVWnjrBUcE4AGDZUIauyxNIm6qw61U=
-Date:   Sun, 12 Apr 2020 14:30:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] iio: buffer: remove null-checks for 'indio_dev->info'
-Message-ID: <20200412143008.3fa722a9@archlinux>
-In-Reply-To: <20200407145918.6833-1-alexandru.ardelean@analog.com>
-References: <20200407145918.6833-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Apr 2020 09:44:58 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36164 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgDLNo5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 09:44:57 -0400
+Received: by mail-il1-f194.google.com with SMTP id t8so1648559ilj.3;
+        Sun, 12 Apr 2020 06:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VYsC8YIiUn94Jux5CSjT7x5juT2k9650lk3hczfKxeU=;
+        b=Oep9Bi1KORyB+M4gSQ9Ws2AopSAiNXqkK4Sl4EY0j4Qjao5GDHCT+b1ZNLWKxre3bl
+         J0Cuvh+URweme+qqz/X2KQzSYLEbPPGZ+Fhf4JEH+62qeZSS0XMKE1zYZB5Gm6n7oOHe
+         ai5WniXnSWug3aX3aC38jNkpnhk0X+S2H0SwDuAhoe7F7h2N9wH7Kpr9wrd27BEXtonN
+         6QiGz1Cik42cnuVZumwh5DuSTZZ/SYQEB+RnDN3obW4B3V7exE5xbA8PL+X3oEFoZprR
+         fS0WDjrB1/b5QUt+EUxb2ng+cyjybl5oimyeDEcS2Z347LxPFh8EI77UbG5YqDo31GwC
+         6n9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VYsC8YIiUn94Jux5CSjT7x5juT2k9650lk3hczfKxeU=;
+        b=qS2fRr644Hi8fkqZZbFedWtt31OW4M4gJDEwE3Uk/Q03y/0PMuV8YiiqU8ot8ca3Br
+         h/iWFYhOfgHaWPoXUgBZ51WHBks9fmgO0Lp0M1IwU9TDdy9yxrqftqz0zwU6cFFhnPx1
+         SdRTDV8JE7iH+vN5XOzMmimah+pieOWSnFaoS4Tlt93VH9FhnhG1yD26yyHuyjEa8GDS
+         Qcn86eFLfez8uExnCWbSHyaxcNlF/u0uPaSnAyabgoULoytiwL6QgJor/7PXuWR9S036
+         P/K/QVyBHa8eeafJPr8T9aq4Gg+3p/sdKg9VsdkmpwKBHNXfuf9xZIGXyMLUHJ3qBWwL
+         KfwA==
+X-Gm-Message-State: AGi0PuanjFaLPxEj1dyEX4/F/xsqv7q51XGaq2ly6r95REBR5DXn4Wk4
+        x5shgJXESUh3VlEKBQog2LwHajLXs6UqmqeovZA=
+X-Google-Smtp-Source: APiQypLeUWHD17m1jcbll/fLl+WNlRp5MHeZrHx9Sis4ExawTsb46KBo0x4pr2nQB7+6GAnsRzgb5Hpcoi15NETpuKM=
+X-Received: by 2002:a92:dc09:: with SMTP id t9mr11365390iln.308.1586699095577;
+ Sun, 12 Apr 2020 06:44:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+ <20200408152151.5780-3-christian.brauner@ubuntu.com> <CADyDSO54-GuSUJrciSD2jbSShCYDpXCp53cr+D7u0ZQT141uTA@mail.gmail.com>
+ <20200409082659.exequ3evhlv33csr@wittgenstein> <CADyDSO54FV7OaVwWremmnNbTkvw6hQ-KTLJdEg3V5rfBi8n3Yw@mail.gmail.com>
+ <20200412120300.vuigwofazxfbxluu@wittgenstein>
+In-Reply-To: <20200412120300.vuigwofazxfbxluu@wittgenstein>
+From:   David Rheinsberg <david.rheinsberg@gmail.com>
+Date:   Sun, 12 Apr 2020 15:44:44 +0200
+Message-ID: <CADyDSO7t7xXWmc=GJVbi6GWicuvDh_80tdYbWsneR7ZoTqE79A@mail.gmail.com>
+Subject: Re: [PATCH 2/8] loopfs: implement loopfs
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 17:59:18 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Hi
 
-> Checking for 'indio_dev->info' is an impossible condition, since an IIO
-> device should NOT be able to register without that information.
-> The iio_device_register() function won't allow an IIO device to register if
-> 'indio_dev->info' is NULL.
-> 
-> If that information somehow becomes NULL, then we're likely busted anyway
-> and we should crash the system, if we haven't already.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-I'm glad there was a comment in there to remind me of what was going on here.
+On Sun, Apr 12, 2020 at 2:03 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+[...]
+> On Sun, Apr 12, 2020 at 12:38:54PM +0200, David Rheinsberg wrote:
+> > which scenario the limit would be useful. Anyone can create a user-ns,
+> > create a new loopfs mount, and just happily create more loop-devices.
+> > So what is so special that you want to restrict the devices on a
+> > _single_ mount instance?
+>
+> To share that instance across namespaces. You can e.g. create the
+> mount instance in one mount namespace owned by userns1, create a second
+> user namespace usern2 with the same mapping which is blocked from
+> creating additional user namespaces either by seccomp or by
+> /proc/sys/user/max_user_namespaces or lsms what have you. Because it
+> doesn't own the mount namespace the loopfs mount it is in it can't
+> remount it and can't exceed the local limit.
 
-This is the result of an ancient set from (I think) Lars hardening IIO
-against forced removal.
+Right. But now you re-use the userns-limit to also limit loopfs (or
+other userns restrictions to limit loopfs access). Existing safe
+setups allow contained processes to create their own user-namespace.
+With your patchset merged, every such existing contained system with
+userns-access gets access to a kernel API that allows them unbound
+kernel memory allocations. I don't think you can tell every existing
+system to not enable CONFIG_LOOP_FS. Or to make sure to install
+seccomp filters before updating their kernels. Right? These setups
+already exist, and they happily use distribution kernels.
 
-The indio_dev->info == NULL is deliberately set to true by the IIO core
-during device remove in order to deal with any inflight data.
+I think there is no way around `struct user_struct`, `struct ucount`,
+or whatever you like.
 
-Reference counting should ensure the device doesn't go away but we need
-to avoid actually doing anything if this occurs.  That pointer was a
-convenient option to avoid having to add an explicit flag or 'going away'.
+> > Furthermore, how do you intend to limit user-space from creating an
+> > unbound amount of loop devices? Unless I am mistaken, with your
+> > proposal *any* process can create a new loopfs with a basically
+> > unlimited amount of loop-devices, thus easily triggering unbound
+> > kernel allocations. I think this needs to be accounted. The classic
+> > way is to put a per-uid limit into `struct user_struct` (done by
+> > pipes, mlock, epoll, mq, etc.). An alternative is `struct ucount`,
+> > which allows hierarchical management (inotify uses that, as an
+> > example).
+>
+> Yeah, I know. We can certainly do this.
 
-Now, it's possible we don't need this any more due to other changes but
-I certainly don't want to remove it without that being very thoroughly
-verified!
+My point is, I think we have to.
 
-Thanks,
+[...]
+> > With your proposed loop-fs we could achieve something close to it:
+> > Mount a private loopfs, create a loop-device, and rely on automatic
+> > cleanup when the mount-namespace is destroyed.
+>
+> With loopfs you can do this with the old or new mount api and you don't
+> need to have loopfs mounted for that at all. Here's a sample program
+> that works right now with the old mount api:
 
-Jonathan
+Yeah, loopfs would certainly allow this, and I would be perfectly
+happy with this API. I think it is overly heavy for the use-case we
+have, but I do acknowledge that there are other use-cases as well.
+But I think your claim that "you don't need to have loopfs mounted" is
+misleading. loopfs must be mounted for the entirety of the program.
+Instead, you don't have to have it linked in your mount-namespace,
+since you can immediately detach it. And with the new mount-APIs, you
+don't even need it linked initially, as you can create a detached
+mount right away.
 
-> ---
->  drivers/iio/industrialio-buffer.c | 19 +------------------
->  1 file changed, 1 insertion(+), 18 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index e6fa1a4e135d..c96071bfada8 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -54,10 +54,6 @@ static bool iio_buffer_ready(struct iio_dev *indio_dev, struct iio_buffer *buf,
->  	size_t avail;
->  	int flushed = 0;
->  
-> -	/* wakeup if the device was unregistered */
-This comment makes it clear this isn't as 'obvious' as it might at first seem ;)
-
-> -	if (!indio_dev->info)
-> -		return true;
-> -
->  	/* drain the buffer if it was disabled */
->  	if (!iio_buffer_is_active(buf)) {
->  		to_wait = min_t(size_t, to_wait, 1);
-> @@ -109,9 +105,6 @@ ssize_t iio_buffer_read_outer(struct file *filp, char __user *buf,
->  	size_t to_wait;
->  	int ret = 0;
->  
-> -	if (!indio_dev->info)
-> -		return -ENODEV;
-> -
->  	if (!rb || !rb->access->read)
->  		return -EINVAL;
->  
-> @@ -131,11 +124,6 @@ ssize_t iio_buffer_read_outer(struct file *filp, char __user *buf,
->  
->  	add_wait_queue(&rb->pollq, &wait);
->  	do {
-> -		if (!indio_dev->info) {
-> -			ret = -ENODEV;
-> -			break;
-> -		}
-> -
->  		if (!iio_buffer_ready(indio_dev, rb, to_wait, n / datum_size)) {
->  			if (signal_pending(current)) {
->  				ret = -ERESTARTSYS;
-> @@ -171,7 +159,7 @@ __poll_t iio_buffer_poll(struct file *filp,
->  	struct iio_dev *indio_dev = filp->private_data;
->  	struct iio_buffer *rb = indio_dev->buffer;
->  
-> -	if (!indio_dev->info || rb == NULL)
-> +	if (rb == NULL)
->  		return 0;
->  
->  	poll_wait(filp, &rb->pollq, wait);
-> @@ -1100,11 +1088,6 @@ int iio_update_buffers(struct iio_dev *indio_dev,
->  		goto out_unlock;
->  	}
->  
-> -	if (indio_dev->info == NULL) {
-> -		ret = -ENODEV;
-> -		goto out_unlock;
-> -	}
-> -
->  	ret = __iio_update_buffers(indio_dev, insert_buffer, remove_buffer);
->  
->  out_unlock:
-
+Thanks
+David
