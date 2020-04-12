@@ -2,155 +2,170 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F32C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 21:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16FFC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 21:45:54 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76790206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 21:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFCA20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 21:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Csj+WSbQ"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 76790206C3
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bKxRtOU9"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 6CFCA20732
 Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgDLVmA (ORCPT
+        id S1728368AbgDLVpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 17:42:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:50302 "EHLO
+        Sun, 12 Apr 2020 17:45:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:50946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbgDLVmA (ORCPT
+        with ESMTP id S1727388AbgDLVpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 17:42:00 -0400
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com [205.139.110.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5662EC0A88B7
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 14:42:00 -0700 (PDT)
+        Sun, 12 Apr 2020 17:45:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAECC0A3BF5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 14:45:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586727719;
+        s=mimecast20190719; t=1586727951;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=cZgZS3VL9u0IfZZxKaJedf/PTKndLbqxtt6EqiRUq98=;
-        b=Csj+WSbQRiNSZFMZYrdYh08sUHrUTjaS8W8HqaiwJDSyhhWoW1vRpG2f2sH67tj1X1NtTz
-        Pdt+vADwGxXtNe7+q4kub2Qv3mBZ/WVvwxwCYpOHcglgcr1FeM1F1i/oDegy0palWluEsL
-        bzVU+RBhsie/hGocB+/24XxluJ+bU08=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-I_EpEg8lPRK337sVw_AYUA-1; Sun, 12 Apr 2020 17:41:55 -0400
-X-MC-Unique: I_EpEg8lPRK337sVw_AYUA-1
-Received: by mail-qt1-f199.google.com with SMTP id q43so5945396qtj.11
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 14:41:55 -0700 (PDT)
+        bh=gDOZbGbYc6a0ITpk5OWVoS7nLueP9baBRaeKv2m/AsE=;
+        b=bKxRtOU9M86FRrdFRljo6imbElJXMN+Bq7pfCe/MKCFOPqH59FOmJK8GSdN5aLh1zicJeD
+        lFhg3oZ2HcRNjeZjifgTTRTeLQNxN4FCGH4FBuA4FRXlPeDaEEYwNBzxUetNc/PfeIhgGI
+        uTd0lGG1kmY0wvcbR5dLXjbFnC9W1cE=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-6H7jhS_jPq2Q4KJLWsXsSw-1; Sun, 12 Apr 2020 17:45:47 -0400
+X-MC-Unique: 6H7jhS_jPq2Q4KJLWsXsSw-1
+Received: by mail-qk1-f200.google.com with SMTP id r64so6972821qkc.17
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 14:45:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cZgZS3VL9u0IfZZxKaJedf/PTKndLbqxtt6EqiRUq98=;
-        b=nR+Tn6pfRS5/0pnrFJh4qATLAcsYq5GlBnvWierwAt1kmAMz08N9Hg+yITRLbDFvx8
-         MILsDWwMyOeQlARi7kPBP4tVYH4ASG/QhvjiB5dQdejBezSgyEy+QvneplCssdDLRV1/
-         rlkz9dLrDaI/+6JDZyuZ2oOOEoov5khcUev997CQH/x+MHfadd8X8KOnSWnfjzPr1KfH
-         G6qdunZJWBCEs6xLUSDc6YYqG3NfKZXIKa9h+42VRs0P2m/YbnW+AkR6fapzXi2IoKOC
-         8zRvVinD1HngXKIK7DgWUhPojTsRVvRnKBUyHCUuEl6QYlcvHF77zdZ0sNgUvcBl0+9D
-         kapw==
-X-Gm-Message-State: AGi0Pub8DOOY9zdCmfOg4Jh1qGGHSJV8JWAGSTY4rumOCWC0LOMMg2ue
-        nfvtC1AMwU5G1NMQxZHm+qNdx4H08BSM9/0j5a8qUt4faanUalMwP6DKTSgbL5WhqKOu3+5hySE
-        EzIHWzFx5pnjwN/9v6sD3PQJe
-X-Received: by 2002:ac8:7408:: with SMTP id p8mr8849251qtq.82.1586727714583;
-        Sun, 12 Apr 2020 14:41:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLYhh5/2KJDBWWaSqKpz9rNtf6twGnt8bcq4F1iR6WS2PijfIjU2a+iOx4m4OwZ4jGuWFBpvg==
-X-Received: by 2002:ac8:7408:: with SMTP id p8mr8849243qtq.82.1586727714223;
-        Sun, 12 Apr 2020 14:41:54 -0700 (PDT)
+        bh=gDOZbGbYc6a0ITpk5OWVoS7nLueP9baBRaeKv2m/AsE=;
+        b=JRxzmEVmY56pF8y6MYeX0NePZ0L3FOYPIcagIj+HglCNjOk0unpu4cKvfx5CEQyY+o
+         IRxP+CA2NUP+WSsib5u/vjNZ/GazhS6bmp2dhU9xoNwFQ4kdU5+lnmRFd08kVDze/OiN
+         fYmh5LWSRYxhJ0qIWFDY8qXLa2c7MZOpxLfhEwffIdT/iIAL+bSkqiszdXEqe3+D9H+n
+         f7igszZwefKJoDPzunQQZ3ErO4hSXLW+zMm9TbHmIl/BawHWhh6BxylOEkmXlid7kmME
+         hKUuDhX8I4IxpVYb0t620Z7qyMXCSBuUFMq6VUvvOBug/PEH7SZNa/ZpphbWGyvMm5Ny
+         Fbnw==
+X-Gm-Message-State: AGi0PuasEaW/Tq9it/6PSIYAXfVgL2aoixMYjQHVVzjB5NkAtxg1Cbzs
+        R/S5/z4s938uVWYlbC/BAkoi/E0F8eQyCAHociLEvYZN5wQqqmc04hFoyysZXhUDhQnnxnAVi3C
+        Q4jIcaEb93+FlYmyAHVE5FIzq
+X-Received: by 2002:a0c:ffcb:: with SMTP id h11mr2115023qvv.166.1586727946967;
+        Sun, 12 Apr 2020 14:45:46 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJHpqxXU+mPC9x54gU9Fp9TiGbPpXJJG6ATF65B0HQPWkrjAxOez+nEQRO0BEdJ//5gIJignA==
+X-Received: by 2002:a0c:ffcb:: with SMTP id h11mr2115009qvv.166.1586727946729;
+        Sun, 12 Apr 2020 14:45:46 -0700 (PDT)
 Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id j92sm1505197qtd.58.2020.04.12.14.41.51
+        by smtp.gmail.com with ESMTPSA id u14sm6944716qtq.41.2020.04.12.14.45.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 14:41:53 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 17:41:50 -0400
+        Sun, 12 Apr 2020 14:45:46 -0700 (PDT)
+Date:   Sun, 12 Apr 2020 17:45:45 -0400
 From:   Peter Xu <peterx@redhat.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        lkft-triage@lists.linaro.org, Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mateusz Nosek <mateusznosek0@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hillf Danton <hdanton@sina.com>
-Subject: Re: i386: selftests: vm: compaction_test: BUG: kernel NULL pointer
- dereference, address: 00000000
-Message-ID: <20200412214150.GB38470@xz-x1>
-References: <CA+G9fYsRGvkqtpdGv_aVr+Hn17KgYq04Q=EE=pB774qVxRqOeg@mail.gmail.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     mm <linux-mm@kvack.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: f45ec5ff16 ("userfaultfd: wp: support swap and page migration"):
+ [  140.777858] BUG: Bad rss-counter state mm:b278fc66 type:MM_ANONPAGES
+ val:1
+Message-ID: <20200412214545.GC38470@xz-x1>
+References: <20200410002518.GG8179@shao2-debian>
+ <20200410073209.11164-1-hdanton@sina.com>
+ <20200412125408.18008-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYsRGvkqtpdGv_aVr+Hn17KgYq04Q=EE=pB774qVxRqOeg@mail.gmail.com>
+In-Reply-To: <20200412125408.18008-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Naresh,
-
-On Sun, Apr 12, 2020 at 12:24:57PM +0530, Naresh Kamboju wrote:
-> On Linux mainline kernel 5.6.0 running kselftest vm compaction_test on i386
->  kernel running on x86_64 devices we have noticed this Kernel BUG followed by
-> Kernel panic.
+On Sun, Apr 12, 2020 at 08:54:08PM +0800, Hillf Danton wrote:
 > 
-> BUG: kernel NULL pointer dereference, address: 00000000
-> Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+> On Fri, 10 Apr 2020 11:32:34 -0400 Peter Xu wrote:
+> > 
+> > I'm not sure this is correct.  As I mentioned, the commit wanted to
+> > apply the uffd-wp bit even for the swap entries so that even the swap
+> > entries got swapped in, the page will still be write protected.  So
+> > IIUC think we can't remove that.
 > 
-> Steps to reproduce:
-> --------------------------
-> # cd /opt/kselftests/default-in-kernel/vm/
-> # ./compaction_test
+> Yes you are right.
 > 
-> [   45.955706] kauditd_printk_skb: 15 callbacks suppressed
-> [   45.955707] audit: type=1334 audit(1586671685.974:25): prog-id=13 op=UNLOAD
-> [   45.968082] audit: type=1334 audit(1586671685.974:26): prog-id=12 op=UNLOAD
-> [   46.008163] get_swap_device: Bad swap file entry 7007504a
-> [   46.013647] BUG: kernel NULL pointer dereference, address: 00000000
+> Now both CONFIG_MIGRATION and swap entry are restored after making uffd_wq
+> survive migrate the same way as soft_dirty.
+> 
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -236,6 +236,8 @@ static bool remove_migration_pte(struct
+>  		pte = pte_mkold(mk_pte(new, READ_ONCE(vma->vm_page_prot)));
+>  		if (pte_swp_soft_dirty(*pvmw.pte))
+>  			pte = pte_mksoft_dirty(pte);
+> +		if (pte_swp_uffd_wp(*pvmw.pte))
+> +			pte = pte_mkuffd_wp(pte);
+>  
+>  		/*
+>  		 * Recheck VMA as permissions can change since migration started
+> @@ -243,15 +245,11 @@ static bool remove_migration_pte(struct
+>  		entry = pte_to_swp_entry(*pvmw.pte);
+>  		if (is_write_migration_entry(entry))
+>  			pte = maybe_mkwrite(pte, vma);
+> -		else if (pte_swp_uffd_wp(*pvmw.pte))
+> -			pte = pte_mkuffd_wp(pte);
+>  
+>  		if (unlikely(is_zone_device_page(new))) {
+>  			if (is_device_private_page(new)) {
+>  				entry = make_device_private_entry(new, pte_write(pte));
+>  				pte = swp_entry_to_pte(entry);
+> -				if (pte_swp_uffd_wp(*pvmw.pte))
+> -					pte = pte_mkuffd_wp(pte);
+>  			}
+>  		}
+>  
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -139,11 +139,13 @@ static unsigned long change_pte_range(st
+>  			}
+>  			ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
+>  			pages++;
+> -		} else if (is_swap_pte(oldpte)) {
+> +		} else if (IS_ENABLED(CONFIG_MIGRATION)) {
+>  			swp_entry_t entry = pte_to_swp_entry(oldpte);
+>  			pte_t newpte;
+>  
+> -			if (is_write_migration_entry(entry)) {
+> +			if (!non_swap_entry(entry)) {
+> +				newpte = oldpte;
+> +			} else if (is_write_migration_entry(entry)) {
+>  				/*
+>  				 * A protection check is difficult so
+>  				 * just be safe and disable write
+> @@ -164,7 +166,7 @@ static unsigned long change_pte_range(st
+>  				if (pte_swp_uffd_wp(oldpte))
+>  					newpte = pte_swp_mkuffd_wp(newpte);
+>  			} else {
+> -				newpte = oldpte;
+> +				continue;
+>  			}
+>  
+>  			if (uffd_wp)
+> 
+> 
 
-I suspect this is the same issue with:
+Hi, Hillf,
 
-https://lore.kernel.org/lkml/20200410002518.GG8179@shao2-debian/
+Feel free to have a look at another report, which I think is the same
+issue of this:
 
-And since this one is very easy to reproduce, I finally noticed that
-we have wrongly enabled uffd-wp on x86_32, which is definely not going
-to work... Because we'll use bit 2 of swap entry assuming that's the
-uffd-wp bit, while that's part of swp offset on 32bit systems.
+https://lore.kernel.org/lkml/CA+G9fYsRGvkqtpdGv_aVr+Hn17KgYq04Q=EE=pB774qVxRqOeg@mail.gmail.com/
 
-Naresh, could you try whether below change fixes the issue for you?
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 8d078642b4be..7ac524d1316e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -149,7 +149,7 @@ config X86
-        select HAVE_ARCH_TRACEHOOK
-        select HAVE_ARCH_TRANSPARENT_HUGEPAGE
-        select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
--       select HAVE_ARCH_USERFAULTFD_WP         if USERFAULTFD
-+       select HAVE_ARCH_USERFAULTFD_WP         if X86_64 && USERFAULTFD
-        select HAVE_ARCH_VMAP_STACK             if X86_64
-        select HAVE_ARCH_WITHIN_STACK_FRAMES
-        select HAVE_ASM_MODVERSIONS
+IMHO this bisected commit is correct itself, it's just that we
+shouldn't enable uffd-wp on 32bit system.
 
 Thanks,
 
