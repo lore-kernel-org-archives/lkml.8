@@ -2,101 +2,91 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A884C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A7BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:10:13 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D0520673
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="wCzovzOj"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 16D0520673
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=pqgruber.com
+	by mail.kernel.org (Postfix) with ESMTP id CACFD20673
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:10:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org CACFD20673
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgDLRKG (ORCPT
+        id S1727261AbgDLRKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 13:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:58956 "EHLO
+        Sun, 12 Apr 2020 13:10:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:58964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgDLRKG (ORCPT
+        with ESMTP id S1727201AbgDLRKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 Apr 2020 13:10:06 -0400
-X-Greylist: delayed 386 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Apr 2020 13:10:05 EDT
-Received: from mail.pqgruber.com (mail.pqgruber.com [52.59.78.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C63C0A3BF7;
-        Sun, 12 Apr 2020 10:03:39 -0700 (PDT)
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 90795C72B3D;
-        Sun, 12 Apr 2020 19:03:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1586711017;
-        bh=h5rmaNjv1K2NqnWO/qM8HinP3HArqEqSj+pZJ0R9K0w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wCzovzOj8mNTrdpRjHD+OGACB7ku2BLR5Wrx/Kjwrb5ShJo0cly7c9qGGTluOdV0C
-         XBqOb/N1N5JD2Oa4b10UnfNx9i3V0bmvXDgPBxbqtL+vMr69fv/NqPHf7EAzlvevY6
-         EsUT7TtpDS+AY6CuZ1lAvHRbIgtmwq8n4T5stgV8=
-Date:   Sun, 12 Apr 2020 19:03:36 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: marvell: Fix pause frame negotiation
-Message-ID: <20200412170336.GA1826@workstation.tuxnet>
-References: <20200408214326.934440-1-clemens.gruber@pqgruber.com>
- <20200410174304.22f812fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200411091705.GG25745@shell.armlinux.org.uk>
- <20200411132401.GA273086@workstation.tuxnet>
- <20200411134344.GI25745@shell.armlinux.org.uk>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F17AC0A3BF9;
+        Sun, 12 Apr 2020 10:04:22 -0700 (PDT)
+IronPort-SDR: 7LuXZj+dZEiceUCK23Pi75vIRpBaYJzdgXmuW9+ZwiRqt7GXnucH6eKa+2gv0c4wUuo5AEzU65
+ KyrtoDeCfcVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 10:04:22 -0700
+IronPort-SDR: DTTdKPJHO0uXGagxqHZl2vgjFStjmywwfVSPECr7jUaNvuTE4PuiP7PhBzKK+tCJhqa2W1kmBw
+ ICtY9IPRFwPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,375,1580803200"; 
+   d="scan'208";a="298228946"
+Received: from apresura-mobl.ger.corp.intel.com (HELO localhost) ([10.252.61.246])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Apr 2020 10:04:19 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
+Date:   Sun, 12 Apr 2020 20:04:12 +0300
+Message-Id: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200411134344.GI25745@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 02:43:44PM +0100, Russell King - ARM Linux admin wrote:
-> The fiber code is IMHO very suspect; the decoding of the pause status
-> seems to be completely broken. However, I'm not sure whether anyone
-> actually uses that or not, so I've been trying not to touch it.
+Call devm_free_irq() if we have to revert to polling in order not to
+unnecessarily reserve the IRQ for the life-cycle of the driver.
 
-If the following table for the link partner advertisement is correct..
-PAUSE           ASYM_PAUSE      MEANING
-0               0               Link partner has no pause frame support
-0               1               <-  Link partner can TX pause frames
-1               0               <-> Link partner can RX and TX pauses
-1               1                -> Link partner can RX pause frames
+Cc: stable@vger.kernel.org # 4.5.x
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-..then I think both pause and asym_pause have to be assigned
-independently, like this:
-phydev->pause = !!(lpa & LPA_1000XPAUSE);
-phydev->asym_pause = !!(lpa & LPA_1000XPAUSE_ASYM);
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 27c6ca031e23..ae6868e7b696 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+ 						 irq);
+-			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
++			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+ 				dev_err(&chip->dev, FW_BUG
+ 					"TPM interrupt not working, polling instead\n");
++				devm_free_irq(chip->dev.parent, priv->irq,
++					      chip);
++			}
+ 		} else {
+ 			tpm_tis_probe_irq(chip, intmask);
+ 		}
+-- 
+2.25.1
 
-(Using the defines from uapi mii.h instead of the redundant/combined
-LPA_PAUSE_FIBER etc. which can then be removed from marvell.c)
-
-Currently, if LPA_1000XPAUSE_ASYM is set we do pause=1 and asym_pause=1
-no matter if LPA_1000XPAUSE is set. This could lead us to mistake a link
-partner who can only send for one who can only receive pause frames.
-^ Was this the problem you meant?
-
-I saw that for the copper case and in other drivers, we first set the
-ETHTOOL_LINK_MODE_(Asym_)Pause_BIT bit in lp_advertising and then set
-phydev->(asym_)pause depending on the ETHTOOL_LINK_MODE_... bit.
-Do you agree that we should also set the ETHTOOL_ bits in the fiber
-case?
-
-Does anybody have access to a Marvell PHY with 1000base-X Ethernet?
-(I only have a 88E1510 + 1000Base-T at the home office)
-
-Thanks,
-Clemens
