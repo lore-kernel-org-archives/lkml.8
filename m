@@ -2,78 +2,119 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91A3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71402C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC04206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E/y/4XcD"
+	by mail.kernel.org (Postfix) with ESMTP id 4A77D20709
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586686421;
+	bh=Km3t+lTTTiSV9AJxSvLGxQM3QWc8v3EtPhvy9GxYp78=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yHFOd8pPBxn7Z1n4NPZd+DitT00JkNzTGce+SI9yHTJWK3sO7oyx4u9fv9sqp3+47
+	 rDi4nFok7KBCjGuxVA5VchGoONDr3LvIiDe/AMrbci0Q7n7Aq6AM7wSBZ0pw1OcIYb
+	 H3r4t+UjWSQEpKc+0gY9s01Uo2QfqLDT5G+1kNtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgDLKM3 (ORCPT
+        id S1726979AbgDLKNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 06:12:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45750 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgDLKM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 06:12:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IeLMEVbvWVML8LPWQwzHP2rI+YsS4LJFQqPobAoE0tQ=; b=E/y/4XcDknSVI1zx7tOO8lIIH1
-        tl+TJApQwjBaxjL9NVH82By12JnXxz1NeXwbGJgfGWRqbY9GqCGHl/VPjaHWEhBs/gwpdJshy8skB
-        UG/rF9MyMoCncohfY5JBnVgKdViPNk09ol9DW9H00aEfGgKiMdelCVE7zFrERgTQ22s1c4du6XB5k
-        Ahn0YXtnOnEc3a6PtATx/zbeseBzE+o/sd824d8rvTKdifPsE9qc+1tg7YmbyCCbpWqRU0LSQnj9V
-        JE3uSTNRYbnnO+l1LpGY6lBx/PDxtxsBSRNwRz45iuqpaCHr3jsXRM6aanKaLVf7ddBrSMYlElgyK
-        Uhu7b25g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jNZbD-0002RV-Uv; Sun, 12 Apr 2020 10:12:23 +0000
-Date:   Sun, 12 Apr 2020 03:12:23 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [RFC PATCH 4/4] mm: Add PG_zero support
-Message-ID: <20200412101223.GK21484@bombadil.infradead.org>
-References: <20200412090945.GA19582@open-light-1.localdomain>
+        Sun, 12 Apr 2020 06:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgDLKNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 06:13:39 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C37206DA;
+        Sun, 12 Apr 2020 10:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586686419;
+        bh=Km3t+lTTTiSV9AJxSvLGxQM3QWc8v3EtPhvy9GxYp78=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Qzml9lHLuO8FdM9NYT7jYkBqWHM6OLkPUa8ELk6Sf1wwaRdUqyubGjC7KWZSte/46
+         Ffjlrk8ffBoBUlVAjOIN5rrAfmDym//KFhTZIaemZ0nVggKQJMq8h8ZqpSXj4Me+oh
+         AtPgDLjtkkuEM4tJ7/lOsxzLGYeq2UgD3HsuUkJs=
+Date:   Sun, 12 Apr 2020 11:13:34 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Aishwarya R <aishwaryarj100@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: at91-adc: Use devm_platform_ioremap_resource
+Message-ID: <20200412111334.46fccd20@archlinux>
+In-Reply-To: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+References: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200412090945.GA19582@open-light-1.localdomain>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 05:09:49AM -0400, liliangleo wrote:
-> Zero out the page content usually happens when allocating pages,
-> this is a time consuming operation, it makes pin and mlock
-> operation very slowly, especially for a large batch of memory.
-> 
-> This patch introduce a new feature for zero out pages before page
-> allocation, it can help to speed up page allocation.
-> 
-> The idea is very simple, zero out free pages when the system is
-> not busy and mark the page with PG_zero, when allocating a page,
-> if the page need to be filled with zero, check the flag in the
-> struct page, if it's marked as PG_zero, zero out can be skipped,
-> it can save cpu time and speed up page allocation.
+On Thu,  9 Apr 2020 20:41:23 +0530
+Aishwarya R <aishwaryarj100@gmail.com> wrote:
 
-We are very short on bits in the page flags.  If we can implement this
-feature without using another one, this would be good.
+> Use the helper function that wraps the calls to
+> platform_get_resource() and devm_ioremap_resource()
+> together.
+> 
+> Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
+Hi Aishwarya R,
 
-If the bit is only set on pages which are PageBuddy(), we can definitely
-find space for it as an alias of another bit.
+Thanks for the patch.  Good to add a little more detail to the description
+and note that I do prefer one patch per driver for IIO drivers.
+
+One other thing.  Please use full name for the signed-off-by.
+I see you use a longer form in your email later in the thread.
+The DCO is a formal legal statement 
+https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+so we tend to be fussy!
+
+Thanks,
+
+Jonathan
+
+
+> ---
+>  drivers/iio/adc/at91_adc.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+> index abe99856c823..0368b6dc6d60 100644
+> --- a/drivers/iio/adc/at91_adc.c
+> +++ b/drivers/iio/adc/at91_adc.c
+> @@ -1152,7 +1152,6 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  	int ret;
+>  	struct iio_dev *idev;
+>  	struct at91_adc_state *st;
+> -	struct resource *res;
+>  	u32 reg;
+>  
+>  	idev = devm_iio_device_alloc(&pdev->dev, sizeof(struct at91_adc_state));
+> @@ -1182,9 +1181,7 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  	if (st->irq < 0)
+>  		return -ENODEV;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+> -	st->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	st->reg_base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(st->reg_base))
+>  		return PTR_ERR(st->reg_base);
+>  
+
