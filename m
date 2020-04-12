@@ -2,64 +2,64 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD2EC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C2CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82B0206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135A520739
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZIaB3Hp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6V+wkIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgDLJNC (ORCPT
+        id S1726946AbgDLJN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 05:13:02 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36193 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgDLJNB (ORCPT
+        Sun, 12 Apr 2020 05:13:29 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35816 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgDLJN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 05:13:01 -0400
-Received: by mail-pj1-f66.google.com with SMTP id nu11so2634150pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 02:13:00 -0700 (PDT)
+        Sun, 12 Apr 2020 05:13:29 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y12so2038444pll.2
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 02:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:subject:message-id:mail-followup-to:mime-version
          :content-disposition:user-agent;
-        bh=LfvvcUpq2FDP8LIShcAOisvw6VyejprD1pNSIk/3HfM=;
-        b=OZIaB3Hp9mGYcRd9yIsPoQlX+8fyZAjTy4eW4wEY5bNHdn57ZS2Ls8C5H3GCr70Unt
-         EtByddlnJRhDXHXrgMayn/azIoDAAAA+MbcyZ47VWClI9fbDFjcOP8OiKDAjzWRhpFmY
-         7Pfy5gDiQKSYA3kWKzy/ErBOs73NrKDFBnkr6bsh3qBTGCMZyPoG5VHmamsr5ypQlw/2
-         LdcG8EuUyX3McHTUHRuZfwbAMqAOAt0xsFjXVBHj/QvuUsek/0RqcNRVzZnDPLSpcr8c
-         Ef3uEKLORRIRHyTTLlv+Ir5djdHK5ciOKEZqphPpJsu3pFghDREYaac68f9WiUl/0roN
-         OqiA==
+        bh=RuB1CaDpM0woLJXutDrQTOUUotmzhwc0OsCFpbFNptA=;
+        b=H6V+wkIRDejLir6iRbxVY7CX2fia/E09n9eexfrXPrbXSwPB7iYZSqJIMSDwa+w9Z7
+         3j1u23NQvBvNsKsq/r+qCdUim8VsGxkUpXC80iNFjD28ASiuzwT0ViCnPsUuDzKO/9au
+         WlSD8vkDoFIajB9XtSwyIvuyu70EsfMh7xgLvcH2gEQXf+4MdOBXiwraC0/qxwLU84T3
+         4FApS/7RK58A0rgXMcgAaA/oVkTY58KwDEbg7VQJdmxbhQdLVrx2xDQWU8gKlK0IU1gG
+         gAZsGlJ0OWf/2QeRUC4h3ol6hBF6CK4VdUAw7bOti56H/siMGzMOk+euNtiujucc96W3
+         cjcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:subject:message-id:mail-followup-to
          :mime-version:content-disposition:user-agent;
-        bh=LfvvcUpq2FDP8LIShcAOisvw6VyejprD1pNSIk/3HfM=;
-        b=Z/ikp0qZGX2gFKc2KXe9rQhR5OeBGaNNhHJGxLljWzicS3vVzyLA6FRJU2SYYOMhhy
-         r+mo3xQLV+74zj8vK99XVYOTeN73F1vrhm5sjSVFXFuR7yI3VSUr6E5d26h/acuRPX2x
-         +SuBZrwkK6v/eKIB4bfSt+Ldaax0+5gYAV951Syu1A73toRSJiyRDfGKDnXiBlhzpOQA
-         OhA+V5p0N3bKvuEOknNqMLvGNKr7QzSmYDv9yLyriGOD2Qu40KbmiwVWwt9RKC6Vzmf1
-         yBczegfJPY53wLeXR5PVJ35XV24AjDnhbv4NSZAAZou/nYhFDkCgVT/56O7H6HVkEntk
-         g7oA==
-X-Gm-Message-State: AGi0PuZp5lsh8pa6N1xb3fNIkTGhL9jiPIercOXmOeqxNFMntGluMq1s
-        eoOQrXZk1Zu9Q6D0fJHBrsM=
-X-Google-Smtp-Source: APiQypK2+SbPWYDwAaMikOSsmCED4pKg8K/I5TQ0zYj+iHsrwsi33Mv5xyj5Pqz9/a991qhcHGv0Cg==
-X-Received: by 2002:a17:902:6b01:: with SMTP id o1mr12665327plk.100.1586682779821;
-        Sun, 12 Apr 2020 02:12:59 -0700 (PDT)
+        bh=RuB1CaDpM0woLJXutDrQTOUUotmzhwc0OsCFpbFNptA=;
+        b=lm/siBxi1LOAW3w/wRtm9mb+/2mcBF9Ju00o5tvVwt60SDYs6G9eGXQzasQV1sz/hS
+         0bsNoQ9KkVB3fhqklYFHquqbksgNf2adh230VbA5JGvLLVvvwTlqF7CBBj/IGkxBIkpc
+         yZwasTIRB1/tZwu1qzQ+3MSiJiqxCHZAi/hHnAQCvibQEzk1KgCqwBss/xiaQI98HIyv
+         Bf57gN8U4vHfMQMfcHm+jcoBg9HpxOUkeQTwgNt7DCXEF1g66MuYY8/5vnRejdYw2JnK
+         rFNZZvQTpJkSW27vmEZaVbBwF8W1L0E8sZYniTCK0RzZ/qUWisKrDdxP8d7GqKc5DFqp
+         dX0Q==
+X-Gm-Message-State: AGi0PuaVh7l3PBj+5t0RxEOkDHz+m/qOAJsSRV0r/EN5o8l1KmA9YjQ/
+        z3dL9jhIVLEqyXVDaP6Oju4=
+X-Google-Smtp-Source: APiQypJuLi6FpbQOASVt3bnvLG7scASlrJ5x7KwCWifh3zbzoiuzuJkj8eG+Sx+zIbBUBby62zO42g==
+X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr12549686plo.45.1586682808174;
+        Sun, 12 Apr 2020 02:13:28 -0700 (PDT)
 Received: from open-light-1.localdomain ([66.98.113.28])
-        by smtp.gmail.com with ESMTPSA id w192sm4621946pfc.126.2020.04.12.02.12.57
+        by smtp.gmail.com with ESMTPSA id p12sm6057594pfq.153.2020.04.12.02.13.26
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 Apr 2020 02:12:58 -0700 (PDT)
+        Sun, 12 Apr 2020 02:13:27 -0700 (PDT)
 From:   liliangleo <liliang.opensource@gmail.com>
 X-Google-Original-From: liliangleo <liliangleo@didiglobal.com>
-Date:   Sun, 12 Apr 2020 05:07:32 -0400
+Date:   Sun, 12 Apr 2020 05:08:00 -0400
 To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
@@ -70,8 +70,8 @@ To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alex Williamson <alex.williamson@redhat.com>
-Subject: [RFC PATCH 0/4] mm: Add PG_zero support
-Message-ID: <20200412090728.GA19572@open-light-1.localdomain>
+Subject: [RFC PATCH 1/4] mm: reduce the impaction of page reporing worker
+Message-ID: <20200412090756.GA19574@open-light-1.localdomain>
 Mail-Followup-To: Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
@@ -91,79 +91,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zero out the page content usually happens when allocating pages,
-this is a time consuming operation, it makes pin and mlock
-operation very slowly, especially for a large batch of memory.
+When scaning the free list, 'page_reporting_cycle' may hold the
+zone->lock for a long time when there are no reported page in the
+free list. Setting PAGE_REPORTING_MIN_ORDER to a lower oder will
+make this issue worse.
 
-This patch introduce a new feature for zero out pages before page
-allocation, it can help to speed up page allocation.
+Two ways were used to reduce the impact:
+   1. Release zone lock periodicly
+   2. Yield cpu voluntarily if needed.
 
-The idea is very simple, zero out free pages when the system is
-not busy and mark the page with PG_zero, when allocating a page,
-if the page need to be filled with zero, check the flag in the
-struct page, if it's marked as PG_zero, zero out can be skipped,
-it can save cpu time and speed up page allocation.
-
-This serial is based on the feature 'free page reporting' which
-introduced by Alexander Duyck 
-
-We can benefit from this feature in the flowing case:
-    1. User space mlock a large chunk of memory
-    2. VFIO pin pages for DMA
-    3. Allocating transparent huge page
-    4. Speed up page fault process
-
-My original intention for adding this feature is to shorten
-VM creation time when VFIO device is attached, it works good 
-and the VM creation time is reduced obviously. 
-
-Creating a VM [64G RAM, 32 CPUs] with GPU passthrough
-=====================================================
-QEMU use 4K pages, THP is off
-                  round1      round2      round3
-w/o this patch:    23.5s       24.7s       24.6s 
-w/ this patch:     10.2s       10.3s       11.2s
-
-QEMU use 4K pages, THP is on
-                  round1      round2      round3
-w/o this patch:    17.9s       14.8s       14.9s 
-w/ this patch:     1.9s        1.8s        1.9s
-=====================================================
-
-Look forward to your feedbacks.
-
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: David Hildenbrand <david@redhat.com>  
-Cc: Michal Hocko <mhocko@kernel.org> 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: liliangleo <liliangleo@didiglobal.com>
+---
+ mm/page_reporting.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-liliangleo (4):
-  mm: reduce the impaction of page reporing worker
-  mm: Add batch size for free page reporting
-  mm: add sys fs configuration for page reporting
-  mm: Add PG_zero support
-
- include/linux/highmem.h        |  31 ++++++-
- include/linux/page-flags.h     |  18 +++-
- include/trace/events/mmflags.h |   7 ++
- mm/Kconfig                     |  10 +++
- mm/Makefile                    |   1 +
- mm/huge_memory.c               |   3 +-
- mm/page_alloc.c                |   2 +
- mm/page_reporting.c            | 181 +++++++++++++++++++++++++++++++++++++++--
- mm/page_reporting.h            |  16 +++-
- mm/zero_page.c                 | 151 ++++++++++++++++++++++++++++++++++
- mm/zero_page.h                 |  13 +++
- 11 files changed, 416 insertions(+), 17 deletions(-)
- create mode 100644 mm/zero_page.c
- create mode 100644 mm/zero_page.h
-
+diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+index 3bbd471cfc81..3a7084e508e1 100644
+--- a/mm/page_reporting.c
++++ b/mm/page_reporting.c
+@@ -6,11 +6,14 @@
+ #include <linux/export.h>
+ #include <linux/delay.h>
+ #include <linux/scatterlist.h>
++#include <linux/sched.h>
+ 
+ #include "page_reporting.h"
+ #include "internal.h"
+ 
+ #define PAGE_REPORTING_DELAY	(2 * HZ)
++#define MAX_SCAN_NUM 1024
++
+ static struct page_reporting_dev_info __rcu *pr_dev_info __read_mostly;
+ 
+ enum {
+@@ -115,7 +118,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+ 	unsigned int page_len = PAGE_SIZE << order;
+ 	struct page *page, *next;
+ 	long budget;
+-	int err = 0;
++	int err = 0, scan_cnt = 0;
+ 
+ 	/*
+ 	 * Perform early check, if free area is empty there is
+@@ -145,8 +148,14 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+ 	/* loop through free list adding unreported pages to sg list */
+ 	list_for_each_entry_safe(page, next, list, lru) {
+ 		/* We are going to skip over the reported pages. */
+-		if (PageReported(page))
++		if (PageReported(page)) {
++			if (++scan_cnt >= MAX_SCAN_NUM) {
++				err = scan_cnt;
++				break;
++			}
+ 			continue;
++		}
++
+ 
+ 		/*
+ 		 * If we fully consumed our budget then update our
+@@ -219,6 +228,26 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+ 	return err;
+ }
+ 
++static int
++reporting_order_type(struct page_reporting_dev_info *prdev, struct zone *zone,
++		     unsigned int order, unsigned int mt,
++		     struct scatterlist *sgl, unsigned int *offset)
++{
++	int ret = 0;
++	unsigned long total = 0;
++
++	might_sleep();
++	do {
++		cond_resched();
++		ret = page_reporting_cycle(prdev, zone, order, mt,
++					   sgl, offset);
++		if (ret > 0)
++			total += ret;
++	} while (ret > 0 && total < zone->free_area[order].nr_free);
++
++	return ret;
++}
++
+ static int
+ page_reporting_process_zone(struct page_reporting_dev_info *prdev,
+ 			    struct scatterlist *sgl, struct zone *zone)
+@@ -245,7 +274,7 @@ page_reporting_process_zone(struct page_reporting_dev_info *prdev,
+ 			if (is_migrate_isolate(mt))
+ 				continue;
+ 
+-			err = page_reporting_cycle(prdev, zone, order, mt,
++			err = reporting_order_type(prdev, zone, order, mt,
+ 						   sgl, &offset);
+ 			if (err)
+ 				return err;
 -- 
 2.14.1
 
