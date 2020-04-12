@@ -6,38 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0625DC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDB6C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE526206E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4848206E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgDLOfO (ORCPT
+        id S1727065AbgDLOhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:35:14 -0400
-Received: from smtp01.smtpout.orange.fr ([80.12.242.123]:52388 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDLOfO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:35:14 -0400
-Received: from localhost.localdomain ([93.22.37.28])
-        by mwinf5d36 with ME
-        id RqbA2200b0cS4cl03qbBFc; Sun, 12 Apr 2020 16:35:12 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 12 Apr 2020 16:35:12 +0200
-X-ME-IP: 93.22.37.28
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] drm/msm: Fix typo
-Date:   Sun, 12 Apr 2020 16:35:09 +0200
-Message-Id: <20200412143509.11353-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 12 Apr 2020 10:37:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:42870 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbgDLOhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 10:37:54 -0400
+IronPort-SDR: 6X6Y2a955p9PXJvQwseZExGI8zetNBY8qigwixeTfv46jevUnjlbpBvHeKvqcTBhx91JnNb7le
+ XYuxp8SmvGtg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 07:37:54 -0700
+IronPort-SDR: g5GvYPM/6OJkMkd1J5auhcXyQrxGN9ZljbobsePfIk+rccajZMSz7msFDjzYvmKFAlTFNY9jtF
+ BhoCNlkV3IuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,374,1580803200"; 
+   d="scan'208";a="452907895"
+Received: from apresura-mobl.ger.corp.intel.com (HELO localhost) ([10.252.61.246])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Apr 2020 07:37:52 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] selftests/tpm2: Change exception handling to be Python 3 compatible
+Date:   Sun, 12 Apr 2020 17:36:54 +0300
+Message-Id: <20200412143656.72955-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,35 +49,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Duplicated 'we'
+I need more time to fix all the byte array / string related stuff but
+it makes sense to fix the exceptions as it is fairly mechanical
+procedure:
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+1,$s/except \(.*\), \(.*\):/except \1(\2):/g
+
+I.e. fix the low hanging fruit first and the rest later.
+
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/tpm2/tpm2_tests.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-index 998bef1190a3..b5fed67c4651 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-@@ -959,7 +959,7 @@ static int mdp5_crtc_cursor_set(struct drm_crtc *crtc,
- 	if (!ctl)
- 		return -EINVAL;
+diff --git a/tools/testing/selftests/tpm2/tpm2_tests.py b/tools/testing/selftests/tpm2/tpm2_tests.py
+index 728be7c69b76..c3c06899e042 100644
+--- a/tools/testing/selftests/tpm2/tpm2_tests.py
++++ b/tools/testing/selftests/tpm2/tpm2_tests.py
+@@ -65,7 +65,7 @@ class SmokeTest(unittest.TestCase):
+         blob = self.client.seal(self.root_key, data, auth, None)
+         try:
+             result = self.client.unseal(self.root_key, blob, auth[:-1] + 'B', None)
+-        except ProtocolError, e:
++        except ProtocolError(e):
+             rc = e.rc
  
--	/* don't support LM cursors when we we have source split enabled */
-+	/* don't support LM cursors when we have source split enabled */
- 	if (mdp5_cstate->pipeline.r_mixer)
- 		return -EINVAL;
+         self.assertEqual(rc, tpm2.TPM2_RC_AUTH_FAIL)
+@@ -119,7 +119,7 @@ class SmokeTest(unittest.TestCase):
+             self.client.policy_password(handle)
  
-@@ -1030,7 +1030,7 @@ static int mdp5_crtc_cursor_move(struct drm_crtc *crtc, int x, int y)
- 		return -EINVAL;
- 	}
+             result = self.client.unseal(self.root_key, blob, auth, handle)
+-        except ProtocolError, e:
++        except ProtocolError(e):
+             rc = e.rc
+             self.client.flush_context(handle)
+         except:
+@@ -136,7 +136,7 @@ class SmokeTest(unittest.TestCase):
+         rc = 0
+         try:
+             blob = self.client.seal(self.root_key, data, auth, None)
+-        except ProtocolError, e:
++        except ProtocolError(e):
+             rc = e.rc
  
--	/* don't support LM cursors when we we have source split enabled */
-+	/* don't support LM cursors when we have source split enabled */
- 	if (mdp5_cstate->pipeline.r_mixer)
- 		return -EINVAL;
+         self.assertEqual(rc, tpm2.TPM2_RC_SIZE)
+@@ -152,7 +152,7 @@ class SmokeTest(unittest.TestCase):
+                               0xDEADBEEF)
  
+             self.client.send_cmd(cmd)
+-        except IOError, e:
++        except IOError(e):
+             rejected = True
+         except:
+             pass
+@@ -212,7 +212,7 @@ class SmokeTest(unittest.TestCase):
+             self.client.tpm.write(cmd)
+             rsp = self.client.tpm.read()
+ 
+-        except IOError, e:
++        except IOError(e):
+             # read the response
+             rsp = self.client.tpm.read()
+             rejected = True
+@@ -283,7 +283,7 @@ class SpaceTest(unittest.TestCase):
+         rc = 0
+         try:
+             space1.send_cmd(cmd)
+-        except ProtocolError, e:
++        except ProtocolError(e):
+             rc = e.rc
+ 
+         self.assertEqual(rc, tpm2.TPM2_RC_COMMAND_CODE |
 -- 
-2.20.1
+2.25.1
 
