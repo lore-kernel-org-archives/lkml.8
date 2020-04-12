@@ -2,102 +2,68 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E1EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 15:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28760C2BB55
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 15:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02262206A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 15:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B4SxjzeZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2EC206A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 15:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgDLPpa (ORCPT
+        id S1727104AbgDLPuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 11:45:30 -0400
-Received: from mout.gmx.net ([212.227.17.21]:42493 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgDLPpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 11:45:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586706324;
-        bh=Ozo3Pc+S3y/l2oIB0mqBuzQkGUe1bcJdHUx4viCHUBo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=B4SxjzeZ2Ll+UJqAsNnGYmHVoNs7jquH7NdyI1yBIcQmhk3hwyno7tJy0k0P0XAZm
-         i3D0+Rv3VZIc7OoKAz8B5zBLhOCikqbWzf9RJlsnOteOINsXMFyqmzC+S109hAOuGD
-         hVWl3AplEbu4fua6DRFHYwjXvvc8FjGdH+4KCKl8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MmlTC-1ixuAX3jOw-00jqWo; Sun, 12 Apr 2020 17:45:24 +0200
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc:     Alex Dewar <alex.dewar@gmx.co.uk>
-Subject: [PATCH] KVM: PPC: Book3S: Remove unneeded NULL check before kfree()
-Date:   Sun, 12 Apr 2020 16:45:09 +0100
-Message-Id: <20200412154510.36496-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.26.0
+        Sun, 12 Apr 2020 11:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:45786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgDLPuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 11:50:06 -0400
+X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Apr 2020 11:50:05 EDT
+Received: from mailgw-02.dd24.net (mailgw-02.dd24.net [193.46.215.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 320C9C0A3BF1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 08:42:33 -0700 (PDT)
+Received: from mailpolicy-01.live.igb.homer.key-systems.net (mailpolicy-02.live.igb.homer.key-systems.net [192.168.1.27])
+        by mailgw-02.dd24.net (Postfix) with ESMTP id 7897C5FF7F
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 15:42:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at
+        mailpolicy-02.live.igb.homer.key-systems.net
+Received: from smtp.dd24.net ([192.168.1.36])
+        by mailpolicy-01.live.igb.homer.key-systems.net (mailpolicy-02.live.igb.homer.key-systems.net [192.168.1.25]) (amavisd-new, port 10236)
+        with ESMTP id iVyKSVNqqReV for <linux-kernel@vger.kernel.org>;
+        Sun, 12 Apr 2020 15:42:29 +0000 (UTC)
+Received: from heisenberg.fritz.box (ppp-88-217-42-14.dynamic.mnet-online.de [88.217.42.14])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp.dd24.net (Postfix) with ESMTPSA
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 15:42:29 +0000 (UTC)
+Message-ID: <401217bf3f840f66ab84ed290213570d551a699f.camel@scientia.net>
+Subject: Re: great CPU temperature increase from 5.2 to 5.5 ... and when
+ using intel_pstate
+From:   Christoph Anton Mitterer <calestyo@scientia.net>
+To:     linux-kernel@vger.kernel.org
+Date:   Sun, 12 Apr 2020 17:42:29 +0200
+In-Reply-To: <ce8097694ddfab616616f8f81521495d99c74416.camel@scientia.net>
+References: <ce8097694ddfab616616f8f81521495d99c74416.camel@scientia.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zvL24rS43N3XslrqBtPvrvM5md1EmfOJKzhOuGBfpkdurmKL1sy
- uTI3dwu+5jue0RbfeTpwSienBHxg8f8T3xXFOQLLczXuLOaoONOFEHKMYK2NLTSgSwLm7VA
- vPUpyMYOVgqJbwZXqSP4pW2KOvNV69AGK3HL1VFG+GVx2I55airIC82U+LZtruRyUGAVd9f
- Axncb1CsQHTVM9/rg3zow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mS3sETiRlb4=:G9c88SfyOlwhRW67sgdigT
- mK9Xc0CCQpjZgPCIFUXJDTVV3oWMXVKNTrAKcuDIxrk7J4nKiZpKHpZwwW8ZHoG/5ucNe34gT
- 68mYlQNNvq3AQFigV2lGKiE2xLR629TntbKayBNaaxLu2OOQIHez/4LIGbn13P3dXPA2zFRdv
- h3HizeE8vHr6wN3+yBj+kzR/AEqem7kbnKrJAm5VAkISdiB8d6oAdygv/K5rQ4TeZS6zOafuA
- 0MoaymEBdh8NYKIm3mZWVG/Ci5pkeGyTaZ6oBa5JVU2g4IRqb4QN+2gOkABaeZRixjn6Ed1Yi
- Lv3wmRxGH+vjQP5TpM7Hz2cA72HnH3QRRFtbi9K73V/tBgq+ZCvPA1LbN0Om8cQ66BLGwyrEu
- a1q4GosjhzebhYndZ/DoKN3JcLpV2DrShpD50aUn8V8Q1uDLSRfg0XcI8T7Osh+OHzUNjHQjt
- cXThgmPAeZ7uRvivanAjTB2LevnxyutAprklH6P5RyWcUHYQU66432mB4XJNEaq2TlysmEXm/
- T3DWOWSmnxdAPnG4mVjJxh3d7LG2WT5wwr1aWmE+R4vbHhIJtObWhgkN0BW595p8WdnqvYu+t
- zZ8dQ2eFSFBDnQN9Jxqjp8+qlM6UrbEteiDDfhH+fTV80pY/k9JvU29ga6ZGBc8WkS0jwHXF4
- Xw39HOcqZMzx1zrtWJPm/aqqmsIhFA0yg7V3FPr6VAldq4U7tdIYyiXmc//2xoAYJFvG2zkWN
- 6yat7VxiSgTvnhPpREeh9p3nLWknWMsL4S1Zb160cz5MBC2sMbc+ECOtfShj/1fonklbjg19t
- WJN7J8IeVyNubvD47znU9ggc7R1gYdxnZ0Ew3BYAfk4yfqnGWOXMDEjzI3li0vdvoJtt9LypT
- e0rYZJpk1yMPO3JzQfOV2AmLc/GTd66EONQjKoqqEakLJ8wEpD14ynyC+bey1pZjiNz6hMRhx
- oxy580iSpMcCXp0sS54q2+KuovwpqBe3S3QN1IKjsYm7MejO/DyWVhp+sNHqoSJFDq/JCYOEA
- o6GQr5SiZX4q/J7esGbeCHMTkNnWKxLEWpawA2rdi22TJKEVh18G6tfFxrBXL3HG9gw+z/CdH
- Ag37WpQk7nO2UfNFfoH0OE+bTcFhoKexi7S5kTUKbCsZlSlu+YewR46FGQj3rQCD8gx4X6SqB
- OQO0WqtR5s/361G64CZBw/tMLAYvYBxLSTNgRo4c40tvRDotgybadOto+M4DcA/jJGzV3buQ3
- HMqLQ+XM7kvnsw4DI
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kfree() already checks for NULL arguments, so this check is reduntant.
-Remove it.
+Hey.
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- arch/powerpc/kvm/book3s_hv_nested.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Well it seems no one cares about such a heave regression ... event
+though it's quite clearly proven by the plots.
+Perhaps it's just normal that Linux suddenly runs 10-40°C hotter.
 
-diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s=
-_hv_nested.c
-index dc97e5be76f61..cad324312040b 100644
-=2D-- a/arch/powerpc/kvm/book3s_hv_nested.c
-+++ b/arch/powerpc/kvm/book3s_hv_nested.c
-@@ -1416,8 +1416,7 @@ static long int __kvmhv_nested_page_fault(struct kvm=
-_run *run,
- 	rmapp =3D &memslot->arch.rmap[gfn - memslot->base_gfn];
- 	ret =3D kvmppc_create_pte(kvm, gp->shadow_pgtable, pte, n_gpa, level,
- 				mmu_seq, gp->shadow_lpid, rmapp, &n_rmap);
--	if (n_rmap)
--		kfree(n_rmap);
-+	kfree(n_rmap);
- 	if (ret =3D=3D -EAGAIN)
- 		ret =3D RESUME_GUEST;	/* Let the guest try again */
+Is there any subproject in the kernel which deals with such issues?
 
-=2D-
-2.26.0
+
+Thanks,
+Chris.
 
