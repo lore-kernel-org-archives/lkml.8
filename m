@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4601EC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E205C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D77A2076B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD7520709
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586691514;
-	bh=tVCDDWtcQtbB1lZLEaiB5lN7ts0DMoNVhW0b7Etn49U=;
+	s=default; t=1586692515;
+	bh=T7ow75b0ZoEqCiy/VmthNZ+rK0XXz/yyjCJeWfN2rhs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=H8YOjnHLLYc3aNDnrwt3uJ6zJVF0xH2tXgms/ORw+QqFlQc/hWqOb+En7YJQiuabr
-	 GGWNNmBEC1iQ4OPEBn5SOjP6fwwe6PsH7oK3SH0YbhtHZdOav87GvQT06SBK533AWd
-	 XsgvuweUL9EoXHrUgrRaKDrFwM4AmgnQVO9QIEdQ=
+	b=txIreCp0+BBdsLUc0YI4yfiTZLW6s0YkXV+xPQ+Gw9o9Rhva2WPztsavnkGbQ98ya
+	 vgD3MiVmlewSCam0umjKJ8XctSRM0TpOZOTbZ6/Nf1Tpw0ZQUqsxOfwlbACc1ZPwzz
+	 Z6zOx2jYSqYoV+iYo3YmcPraGquReUEbVal5KL24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgDLLic (ORCPT
+        id S1726988AbgDLLzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60028 "EHLO mail.kernel.org"
+        Sun, 12 Apr 2020 07:55:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgDLLic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:38:32 -0400
+        id S1726043AbgDLLzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 07:55:14 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E3E6206DA;
-        Sun, 12 Apr 2020 11:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C1DD20709;
+        Sun, 12 Apr 2020 11:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586691512;
-        bh=tVCDDWtcQtbB1lZLEaiB5lN7ts0DMoNVhW0b7Etn49U=;
+        s=default; t=1586692513;
+        bh=T7ow75b0ZoEqCiy/VmthNZ+rK0XXz/yyjCJeWfN2rhs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hovffOIazgnz86myi3OtY2VthDf3RPBMjUSv47fblnM/6fM0ymYsUSFC7ltm4uc6T
-         LbitMgWSkBo6M01oZUGnPFmfA9hXPPGTMTHUFGweJ5dWXgVvKwCZ1tIScAvXxOUpSr
-         DthzgxRDTcaJbtSrHpUfEaVIbNnArERZpTAQaOtQ=
-Date:   Sun, 12 Apr 2020 12:38:28 +0100
+        b=GsGQ3xeQat/zHz4njwZ/2qVXTsIBA3yidfYrjtl1p/0DVfCTbM0szmGz/2rariYXD
+         nGV/ZHlZbiK04qSFfDDwgA38yUGBWA9mSFqWiXZO0sDFTU2Dv9zmttiWE5juudiqSo
+         qTFsgEs43CKhPurZfMzFhmIP59xHKNPq/LNhZukQ=
+Date:   Sun, 12 Apr 2020 12:55:10 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alexandru.tachici@analog.com>
-Subject: Re: [PATCH v2] iio: adc: ad7192: fix null pointer de-reference
- crash during probe
-Message-ID: <20200412123828.6fa25008@archlinux>
-In-Reply-To: <20200407063310.85466-1-alexandru.ardelean@analog.com>
-References: <20200406123109.56947-1-alexandru.ardelean@analog.com>
-        <20200407063310.85466-1-alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/8] iio: core: drop devm_iio_device_unregister() API
+ call
+Message-ID: <20200412125510.55304d4c@archlinux>
+In-Reply-To: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,73 +57,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 09:33:10 +0300
+On Thu, 27 Feb 2020 15:52:20 +0200
 Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
-> assignment:
->   'indio_dev->name = spi_get_device_id(spi)->name;'
+> It's unused so far, so it can't be removed. Also makes sense to remove it
+> to discourage weird uses of this call during review.
 > 
-> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
-> during probe with null de-ref.
-> 
-> This change assigns the 'compatible' string from the DT table, as the new
-> 'indio_dev->name'. As such, the new device/part name now looks like
-> 'adi,ad719x', and now has the vendor prefix.
-> 
-> Note that this change is not doing any NULL check to the return value of
-> 'of_match_device()'. This shouldn't happen, and if it does it's likely a
-> framework error on the probe side.
-> 
-> Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Time to pick these up I think.  They've sat here a while and no
+one has commented + I can't think of any disadvantages.
 
-Hmm. Returning the compatible isn't compatible with the ABI.
+Hence,
 
-I think we will have to introduce a bit of indirection here to
-allow for a 'chip info' type structure with the name and the magic ID value
-that is currently in the data field of the of_device_id table.
+Applied to the togreg  branch of iio.git and pushed out as testing for
+the autobuilders to play with them.
 
-That way we can have the name explicit.   Note I don't want to
-mess around with stripping the prefix off the compatible as that sort of
-thing is hard to read.
+Thanks,
 
 Jonathan
 
 > ---
+>  .../driver-api/driver-model/devres.rst          |  1 -
+>  drivers/iio/industrialio-core.c                 | 17 -----------------
+>  include/linux/iio/iio.h                         |  4 ----
+>  3 files changed, 22 deletions(-)
 > 
-> Changelog v1 -> v2:
-> * fix colon for Fixes tag
-> * updated commit title a bit; to make it longer
-> 
->  drivers/iio/adc/ad7192.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-> index 8ec28aa8fa8a..0039a45e1f33 100644
-> --- a/drivers/iio/adc/ad7192.c
-> +++ b/drivers/iio/adc/ad7192.c
-> @@ -888,6 +888,7 @@ MODULE_DEVICE_TABLE(of, ad7192_of_match);
+> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+> index 46c13780994c..0580c64ebdfd 100644
+> --- a/Documentation/driver-api/driver-model/devres.rst
+> +++ b/Documentation/driver-api/driver-model/devres.rst
+> @@ -286,7 +286,6 @@ IIO
+>    devm_iio_device_alloc()
+>    devm_iio_device_free()
+>    devm_iio_device_register()
+> -  devm_iio_device_unregister()
+>    devm_iio_kfifo_allocate()
+>    devm_iio_kfifo_free()
+>    devm_iio_triggered_buffer_setup()
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 0b14666dff09..e4011f8431f9 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -1823,23 +1823,6 @@ int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
+>  }
+>  EXPORT_SYMBOL_GPL(__devm_iio_device_register);
 >  
->  static int ad7192_probe(struct spi_device *spi)
->  {
-> +	const struct of_device_id *of_id;
->  	struct ad7192_state *st;
->  	struct iio_dev *indio_dev;
->  	int ret, voltage_uv = 0;
-> @@ -937,10 +938,12 @@ static int ad7192_probe(struct spi_device *spi)
->  		goto error_disable_avdd;
->  	}
->  
-> +	of_id = of_match_device(ad7192_of_match, &spi->dev);
-> +
->  	spi_set_drvdata(spi, indio_dev);
-> -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
-> +	st->devid = (unsigned long)of_id->data;
->  	indio_dev->dev.parent = &spi->dev;
-> -	indio_dev->name = spi_get_device_id(spi)->name;
-> +	indio_dev->name = of_id->compatible;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
->  	ret = ad7192_channels_config(indio_dev);
+> -/**
+> - * devm_iio_device_unregister - Resource-managed iio_device_unregister()
+> - * @dev:	Device this iio_dev belongs to
+> - * @indio_dev:	the iio_dev associated with the device
+> - *
+> - * Unregister iio_dev registered with devm_iio_device_register().
+> - */
+> -void devm_iio_device_unregister(struct device *dev, struct iio_dev *indio_dev)
+> -{
+> -	int rc;
+> -
+> -	rc = devres_release(dev, devm_iio_device_unreg,
+> -			    devm_iio_device_match, indio_dev);
+> -	WARN_ON(rc);
+> -}
+> -EXPORT_SYMBOL_GPL(devm_iio_device_unregister);
+> -
+>  /**
+>   * iio_device_claim_direct_mode - Keep device in direct mode
+>   * @indio_dev:	the iio_dev associated with the device
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 862ce0019eba..0eb9e8d7ec68 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -591,9 +591,6 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+>   * calls iio_device_register() internally. Refer to that function for more
+>   * information.
+>   *
+> - * If an iio_dev registered with this function needs to be unregistered
+> - * separately, devm_iio_device_unregister() must be used.
+> - *
+>   * RETURNS:
+>   * 0 on success, negative error number on failure.
+>   */
+> @@ -601,7 +598,6 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+>  	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE);
+>  int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
+>  			       struct module *this_mod);
+> -void devm_iio_device_unregister(struct device *dev, struct iio_dev *indio_dev);
+>  int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);
+>  int iio_device_claim_direct_mode(struct iio_dev *indio_dev);
+>  void iio_device_release_direct_mode(struct iio_dev *indio_dev);
 
