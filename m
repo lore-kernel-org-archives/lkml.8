@@ -2,116 +2,125 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A2EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 02:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2FFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 02:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B205620753
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 02:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A2620708
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 02:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDpwEbYH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZB00UFdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgDLCId (ORCPT
+        id S1726865AbgDLC0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 22:08:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36674 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgDLCIc (ORCPT
+        Sat, 11 Apr 2020 22:26:15 -0400
+Received: from mail-yb1-f177.google.com ([209.85.219.177]:45275 "EHLO
+        mail-yb1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgDLC0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 22:08:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n10so2945470pff.3;
-        Sat, 11 Apr 2020 19:08:32 -0700 (PDT)
+        Sat, 11 Apr 2020 22:26:14 -0400
+Received: by mail-yb1-f177.google.com with SMTP id g6so3333971ybh.12;
+        Sat, 11 Apr 2020 19:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2XTiPR3NjTU2y5mQ5J0Pv6fdfmC7aqoQXGxB8xurXAY=;
-        b=lDpwEbYHC9at0O1/B5PbecUoT+1zLNbJJBOjARMz1vPiPAZBxvUrVH5hV342v8CaFt
-         a+I5t0MMp3yKWm1/XhdBCF5fMcDcvldG3YzNzo+98u9VjmM3qkmwU2LEH1R5FVaSneic
-         7+y6w8ZmazEseq6ypQ+mk1+A5Yc9E34zL7pYLna9QbmUpef2c50w7XcQPXQXgPs9c84L
-         YuZFpYEZ1xgZfskMHnj0FcLrXcK3dxQEc9RdlUv+5pH0JvRJHiFGrlGfuJwKfUeRJVPG
-         xtDq/X8ZmLWtOjlWR5J0H7sDNy2S02+b8TZnC5h3QRrLCz80U5KzDaIU5uriOG0mmL0J
-         KDVg==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Im3Zo9a3ywNa9900rrlLtq4o6wPWZNFpB2TZ5aSwRXc=;
+        b=ZB00UFdE8pBRNldGtjaeZpPsIv2jWKSAPJ33Ljs3fmewi3WNdytZi9ghWL+qp+5VVh
+         F1yx9nZ3edHYFRixj4Q+dX44hMpbgxLQSnZJYTCGixYSp7EM1fF0BEA6HSyT9MGw2Szk
+         4RRmua8kHgKvdoVe9/1JcH43rFPt1zGkCmCOf6uE0tcKYjjX5AtmKfyL/fMZ4LOsiPxl
+         XizAD5w2RSuymrdpTQHaWlQETzP0XU0eIB7xSxZ4jF/vPkW+tRert7R7k11ogcE+MUr+
+         MFuNEQ3P8v24RZinvNd7EZiUw0pxcnc187CP1zOGIsxiqHu8nZoU5NvWvoy8af/LCodA
+         tAYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2XTiPR3NjTU2y5mQ5J0Pv6fdfmC7aqoQXGxB8xurXAY=;
-        b=OTJ/iBXtjWw8awhgZpkpWaRvRufMonYE+ODCHOCIZgcwvtcC/KdSRlkA/CURGxnQNY
-         vR9aEfYRMx8UgYcvmrL33OOuAsI3/m35Q2Q5S61tLApwu9YzVtZawF8l9oanvruP6rmf
-         bVWJ1aAjcrbMbKg+J5V13oucLy2geojs7PLKpHOmxbUp6W6Eqb7TyYsvCiNI80nAqMd7
-         c59aTMMG5JlC0Kn33PPHe6mE0ebE6EPw3eFSRCWr6kT3pKeYphqxOfkrPUrlxRilJ2A7
-         4T6PUXbNloXA6KzblscOfqukY5y9i+P3jyJJiWea6tu3CaARkghZUwBylZwiduJSPZ58
-         P2gQ==
-X-Gm-Message-State: AGi0PuZfZRk/YAj4KjF61ukPIbuJZUN7RP3JJFfK7Rq6IywAcPoSGGSI
-        KvfJUSVgzGJ7aCKqnsJZrzQ=
-X-Google-Smtp-Source: APiQypJ60bO+ukorWl/8JR2FaX5qNy91w61uKW994f9Dy9yVPv9w6abyS3PWd2+Up8uTp/PFc4Ngxw==
-X-Received: by 2002:a62:cf82:: with SMTP id b124mr7362893pfg.124.1586657312126;
-        Sat, 11 Apr 2020 19:08:32 -0700 (PDT)
-Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
-        by smtp.gmail.com with ESMTPSA id b16sm5148188pfb.71.2020.04.11.19.08.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 Apr 2020 19:08:31 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 19:08:14 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 5/7] ASoC: fsl_asrc: Move common definition to
- fsl_asrc_common
-Message-ID: <20200412020814.GA5984@Asurada>
-References: <cover.1585726761.git.shengjiu.wang@nxp.com>
- <93531963f028aabf9176173de3c6038a200acb89.1585726761.git.shengjiu.wang@nxp.com>
- <20200406234819.GB20945@Asurada-Nvidia.nvidia.com>
- <CAA+D8AM69bhorQKikQGwwFRqgBYN8V2pXBW5JLZyFCVHWKkNGg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Im3Zo9a3ywNa9900rrlLtq4o6wPWZNFpB2TZ5aSwRXc=;
+        b=CRXPMz0tDupR0ETiKf7IIexqMHCXXEEirA4edgKKUVPKDBJPAIMccbTdLMst0OVTAK
+         XJhlXrToP57BiWXlSF2x0efGLjuk59m7Al4+fhi702JDK21CqapV4czxM0Qd9NXsK2f1
+         UdG3z+CFk2pr/jbndZ1HsO8MWP6tRj2DBrtYdjyVKj0oo+v0DAbb0p65TJ86bdFSA7DF
+         QR72U4hAW0awE80Tjr+k6TPr8pqyOoUP4/kY/EXYYze8Pg+hV3yFiQ9HQlEBPNAwPNCt
+         iyQmdPqfA9+xIVHf1xlg8eH410wzi3cvMUFNZWtPpvdWFkpRr4nvIcV4XU4ykeWGYw84
+         u7Fw==
+X-Gm-Message-State: AGi0PuZcBKwBYfeRM330YZoELXdKl5UcXTJUwBNSQlJRYZD83EvVl59x
+        JBMInaAdEq1NU+jq9XwLb24YCAJjpjnz1lrUpXQiC5TmwSM=
+X-Google-Smtp-Source: APiQypIySMu4+E10x287DrvNOMkbsA6R6k+vfoQm29hEg/57UQkOarQwRPCOxAsAGEkzTk1CZbCIqZuXg93Glrku9tM=
+X-Received: by 2002:a25:b78b:: with SMTP id n11mr19558994ybh.376.1586658372285;
+ Sat, 11 Apr 2020 19:26:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+D8AM69bhorQKikQGwwFRqgBYN8V2pXBW5JLZyFCVHWKkNGg@mail.gmail.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 11 Apr 2020 21:26:01 -0500
+Message-ID: <CAH2r5mu1iahVN8nRxPs1Pxu0m+XuMo+ePaKQph-xsbKuTfgbZQ@mail.gmail.com>
+Subject: [GIT PULL] cifs/smb3 fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 01:49:43PM +0800, Shengjiu Wang wrote:
+Please pull the following changes since commit
+645c248d6fc4350562766fefd8ba1d7defe4b5e7:
 
-> > > diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-> > > index b15946e03380..5cf0468ce6e3 100644
-> > > --- a/sound/soc/fsl/fsl_asrc_dma.c
-> > > +++ b/sound/soc/fsl/fsl_asrc_dma.c
-> >
-> > > @@ -311,11 +311,12 @@ static int fsl_asrc_dma_startup(struct snd_soc_component *component,
-> > >               return ret;
-> > >       }
-> > >
-> > > -     pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
-> > > +     pair = kzalloc(sizeof(struct fsl_asrc_pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
-> >
-> > If we only use the PAIR_PRIVATE_SIZE here, maybe we can put the
-> > define in this file too, rather than in the header file.
-> >
-> > And could fit 80 characters:
-> >
-> > +       pair = kzalloc(sizeof(*pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
+  Merge tag '5.7-rc-smb3-fixes-part1' of
+git://git.samba.org/sfrench/cifs-2.6 (2020-03-31 14:30:10 -0700)
 
-> I will use a function pointer
->     int (*get_pair_priv_size)(void)
+are available in the Git repository at:
 
-Since it's the size of pair or cts structure, could be just a
-size_t variable?
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.7-rc-smb3-fixes-part2
+
+for you to fetch changes up to 4e8aea30f7751ce7c4b158aa0c04e7744d281cc3:
+
+  smb3: enable swap on SMB3 mounts (2020-04-10 13:32:32 -0500)
+
+----------------------------------------------------------------
+10 cifs/smb3 fixes
+  - five RDMA (smbdirect) related
+  - add experimental support for swap over SMB3 mounts
+  - also adds fix which improves performance of signed connections
+
+Regression testing results:
+http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/343
+----------------------------------------------------------------
+Aurelien Aptel (1):
+      cifs: ignore cached share root handle closing errors
+
+Long Li (6):
+      cifs: smbd: Merge code to track pending packets
+      cifs: smbd: Check send queue size before posting a send
+      cifs: smbd: Update receive credits before sending and deal with
+credits roll back on failure before sending
+      cifs: Allocate crypto structures on the fly for calculating
+signatures of incoming packets
+      cifs: smbd: Properly process errors on ib_post_send
+      cifs: smbd: Do not schedule work to send immediate packet on every receive
+
+Steve French (3):
+      smb3: smbdirect support can be configured by default
+      smb3: change noisy error message to FYI
+      smb3: enable swap on SMB3 mounts
+
+ fs/cifs/Kconfig         |   2 +-
+ fs/cifs/cifs_debug.c    |   6 +-
+ fs/cifs/cifsfs.c        |   4 +
+ fs/cifs/cifsglob.h      |   4 +-
+ fs/cifs/file.c          |  61 ++++++++++
+ fs/cifs/inode.c         |   4 +
+ fs/cifs/readdir.c       |   2 +-
+ fs/cifs/smb2misc.c      |  14 +++
+ fs/cifs/smb2proto.h     |   6 +-
+ fs/cifs/smb2transport.c |  87 +++++++++-----
+ fs/cifs/smbdirect.c     | 313 +++++++++++++++++++-----------------------------
+ fs/cifs/smbdirect.h     |   7 +-
+ 12 files changed, 272 insertions(+), 238 deletions(-)
+
+-- 
+Thanks,
+
+Steve
