@@ -2,112 +2,190 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D187C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 00:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CD3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09CD920787
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 00:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1110120787
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="dnescYHE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmuRKusM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDLA7G (ORCPT
+        id S1726830AbgDLBP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 20:59:06 -0400
-Received: from mail-dm6nam10on2137.outbound.protection.outlook.com ([40.107.93.137]:62516
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726689AbgDLA7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 20:59:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CH5rsXUMVBB8ofr/ZqIXVA5/Wfh00P5iTxAbBLQZIUPgOXD726N79nnRVo0ocSaXW2HK/y4Y4hDvKoZnZKQpJqFcQXG8DNYsCHcT2kS1dJphLwk6lem6ZtyCCG1Ea1XrEv82L2+4Tr+66RiMrZdV9MEwuZGCNiHR864cKDGLd6yrRHz1FZdpOgVfSGIZFvwAS3Y+HAacHo2EI/EdvSAm17KCAhKyX9BiVBc0hAMwSgLnmZVlF3b1PiOoatZ2EprLJ85ipdA0ZtP2Rp7LioH9jbE4u45lEKggiu5Ubg7TDPwMkVCrzTrt8c1cW7MOr+Yyxe37TaFcBWUxl3KVQiBQXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k8YmJ+voSMHr8jNGzhzA4s9e4PH7Meefd4tw9qN6+qc=;
- b=TcYhCP6iPrQd+nXS6l3dvwqOM1HGEjPq7F39ku1U/YWiwKEMJxXvGiHI/ApC8h+b6I7Aspo4w8iQ6xWtpO6FrcIp7H0eXzZN6IUM5nnIzPBX1k7vDrPJqov8vgrLtUlLRhTcXbOXBnBHAdBFLDdbP6mPhgMYxblBRlHAncDqvjdF0rH5KrfrqCI5cRcRJMhhreAQ1VQZRmilA0C++rLtvAGlkJCHbBbaytDS9H1Dax+VOAvyfWzGuIQZc/Z9CFwl6BF26fGzhyLXZ9WqNW1UDC5p1gIXFVKYQgDNkmQ2tvGoOw2R/xLp7v8Ls0rEad8fXW6fXT5tqS7USP5uS2ZW2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k8YmJ+voSMHr8jNGzhzA4s9e4PH7Meefd4tw9qN6+qc=;
- b=dnescYHEgc7BCvb0M/9gee4MK2veyupppx5RlCYZmf/Uzm/V1xnY3Psle6wqovbIleZHM3cUI15mUvO2/eUFPm/I8shdy/UBukux85TCnMAJ8Q3XUQXrP8AxgMg19On1u5kp+c0joZM2lBa86smYTHFrLXt9AS7rZ8kbIUyNNq8=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3318.namprd13.prod.outlook.com (2603:10b6:610:21::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.14; Sun, 12 Apr
- 2020 00:59:01 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2921.023; Sun, 12 Apr 2020
- 00:59:00 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS bugfix for Linux 5.7
-Thread-Topic: [GIT PULL] Please pull NFS bugfix for Linux 5.7
-Thread-Index: AQHWEGWNajeB60ueMU2zAOFvCYS7VA==
-Date:   Sun, 12 Apr 2020 00:59:00 +0000
-Message-ID: <b1fd16bb3607f03e60f4e18c0d8d046451f8882d.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 68407d59-89d7-4d73-2eaf-08d7de7cb03d
-x-ms-traffictypediagnostic: CH2PR13MB3318:
-x-microsoft-antispam-prvs: <CH2PR13MB3318F282C0AE30570D35D06DB8DC0@CH2PR13MB3318.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:506;
-x-forefront-prvs: 0371762FE7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(396003)(39830400003)(366004)(376002)(346002)(5660300002)(8936002)(66476007)(4744005)(66946007)(91956017)(66446008)(6486002)(4326008)(81156014)(64756008)(76116006)(66556008)(6512007)(8676002)(71200400001)(186003)(26005)(54906003)(6916009)(478600001)(36756003)(2616005)(6506007)(316002)(86362001)(2906002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XSWdfmbml/74xMl89gvtMmWQQJVgApmsWJRmq9dTmdYJgtzcE8Dx9kcT0jwRFoXxoVkwZ/7DKdjlxqRekALgS2Y45rWPbizA4W/ota14fWbwCExGlszxus5FFxPQuVT3pmeQv4XXe1w0lhJUIeEs31sme5etFhp5Tfq4aYNTYZZpCBwv6GYw1sWLJ2zs3wNLDtgrMn2XZiEmsRMF2lveuxQYOUmB/fYgDMYptXexJEdT6FdN64hxbLLu5Hxy36agUPXvKcqzeqRYHs8NfGI29U5WHoUJnK27pWYhKlTaqb7G5YeRTcg4QHhB9CoQ3WntHph6U0QDBLf0UEA64AhhlmK2U7mQgQ1LHMir8Vh2mdhtg1o3OsX8DKG+uSLJ+cKUElkg1uFOYjgBCWfnHwF2BPXC6B3AjHYsf3uEKQjqvHJQDHt8/PyqC9C2C6+/AmAr
-x-ms-exchange-antispam-messagedata: wb0L/MIcE8PQbLuDp3GflhP67cZ0Emx72N87uS9/CZuCbPp5k7GMWuifbsmEYDQLe0q+H7dgrRQpomOC4HYmXPIdTfr0Y7XSVxhDExE4sgTvwc11fCapursbzUQahraPffeZ15CySZ4p5XGStnX11w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5030DBB3DF95594A80DE27253B6A4D90@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 11 Apr 2020 21:15:57 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52234 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgDLBP5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 21:15:57 -0400
+Received: by mail-pj1-f65.google.com with SMTP id ng8so2395965pjb.2;
+        Sat, 11 Apr 2020 18:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nzgXVCmGCB2h+fYHwYNmPaz3ajnzbIPh10nAQ9+5zFc=;
+        b=rmuRKusMg6uuLqh9+NYfoKVmOTDgZ7nFSoX1oSV/al8wErzBeJpLCTY/MWLuM52wPI
+         Un9lscTJZXYsD2wg4mb6W1JO1Y6ZwpZuOSYGKGteCwAOv5xAEks6uO6ZytOk0ZcaJyU7
+         Z66ZpZF3e/jJppkHmygYYJV8ghRzIDveJ8lsdfIuRYJRMWOIZPuv3hy0HfZE7vEDmDgs
+         0Rpi5FMXoakgI9s4RaXL+VPscXfTwkneISyJ6eVysRbuR4tGeDgWvnh24cEP1aYLgtRY
+         rjbCtvldLDwC/nfMmXB5Oki8gq1KMw5zFlSuog3OlkVTfTTEVOdgZntjNEwyU4QXCe2j
+         8o5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nzgXVCmGCB2h+fYHwYNmPaz3ajnzbIPh10nAQ9+5zFc=;
+        b=Lz4Gten6Wofqa7ZOAdtZqmmbgFTj/6VIH1etuMFlrynudmDouZJa+WgjiMmd62PSTB
+         wUpBBexKe31C5+4WqNjp1tQLN8EOSS0AWjp7UjGymuy8q+mg0uOnG8g90JDCVwosKO65
+         eTUL4bOCcuExfpI76hWFWZx5nB+sZwO4wU2K9IbNkyQkkaPL4Snvt0j8o/U+Ky0PgVAF
+         eX8yQa7nlKhbuWmnSuwPrXrR9h6YxAxtj4hiZOhgfcNWFPZm0JpRJiTkpWMyrz85A/aK
+         Sj7QF+NxGHeZ/PfVc7U6A8J0CITnyPiyAnBQPsqvQClM9n7D7ZW26G1lBBueChXfnxCu
+         3jAw==
+X-Gm-Message-State: AGi0PuZ4dkfboKLd8mc7/YYttdU4PE/PsTMiZ8nMs9BHzMHKo0W9dt+B
+        re1FHJ9Wdpe4oM6lA5omwvUp5Nft
+X-Google-Smtp-Source: APiQypKS4NdUz6Fx5jz6jZBDIHOtm/POexqYOFZVoGYCc36GODtzHf2PiUuTClW54IVrxmEsgL20eg==
+X-Received: by 2002:a17:90a:8c10:: with SMTP id a16mr4250128pjo.78.1586654155606;
+        Sat, 11 Apr 2020 18:15:55 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id q201sm5165026pfq.32.2020.04.11.18.15.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 18:15:54 -0700 (PDT)
+Subject: Re: [PATCH AUTOSEL 4.14 19/37] net: dsa: bcm_sf2: Also configure Port
+ 5 for 2Gb/sec on 7278
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20200411231327.26550-1-sashal@kernel.org>
+ <20200411231327.26550-19-sashal@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <485a30d3-0677-dce4-c35d-4ccfdc523efe@gmail.com>
+Date:   Sat, 11 Apr 2020 18:15:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68407d59-89d7-4d73-2eaf-08d7de7cb03d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2020 00:59:00.6547
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xi2r4VXtTsGmEFTawRu91P+fYL7RQ6V3McpfbHC4vHbdtkFu2gMFE1DOJotqYStY1YQjkPwvrikHlmjpZ6I8Cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3318
+In-Reply-To: <20200411231327.26550-19-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgOTNjZTRhZjc3
-NGJjM2Q4YTcyY2UyMjcxZDAzMjQxYzk2MzgzNjI5ZDoNCg0KICBORlM6IENsZWFuIHVwIHByb2Nl
-c3Mgb2YgbWFya2luZyBpbm9kZSBzdGFsZS4gKDIwMjAtMDQtMDYgMTM6NTY6MzMgLTA0MDApDQoN
-CmFyZSBhdmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KDQogIGdpdDovL2dpdC5s
-aW51eC1uZnMub3JnL3Byb2plY3RzL3Ryb25kbXkvbGludXgtbmZzLmdpdCB0YWdzL25mcy1mb3It
-NS43LTINCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvIDI3ZDIzMWMwYzYzYmI2MTk5
-OTdhMjRiYWI4NWQ1NGQ5MGNhNzExMTA6DQoNCiAgcE5GUzogRml4IFJDVSBsb2NrIGxlYWthZ2Ug
-KDIwMjAtMDQtMTEgMTE6NDI6MzUgLTA0MDApDQoNClRoYW5rcywNCiAgVHJvbmQNCg0KLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQ0KTkZTIGNsaWVudCBidWdmaXggZm9yIExpbnV4IDUuNw0KDQpCdWdmaXg6DQotIEZpeCBhbiBS
-Q1UgcmVhZCBsb2NrIGxlYWthZ2UgaW4gcG5mc19hbGxvY19kc19jb21taXRzX2xpc3QoKQ0KDQot
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tDQpUcm9uZCBNeWtsZWJ1c3QgKDEpOg0KICAgICAgcE5GUzogRml4IFJDVSBsb2NrIGxl
-YWthZ2UNCg0KIGZzL25mcy9wbmZzX25mcy5jIHwgMSArDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFp
-bmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+
+
+On 4/11/2020 4:13 PM, Sasha Levin wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> [ Upstream commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ]
+> 
+> Either port 5 or port 8 can be used on a 7278 device, make sure that
+> port 5 also gets configured properly for 2Gb/sec in that case.
+
+This was later reverted with:
+
+3f02735e5da5367e4cd563ce6e5c21ce27922248 ("Revert "net: dsa: bcm_sf2:
+Also configure Port 5 for 2Gb/sec on 7278") please drop it from this
+selection.
+
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/net/dsa/bcm_sf2.c      | 3 +++
+>  drivers/net/dsa/bcm_sf2_regs.h | 1 +
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+> index 6bca42e34a53d..4b0c48a40ba6e 100644
+> --- a/drivers/net/dsa/bcm_sf2.c
+> +++ b/drivers/net/dsa/bcm_sf2.c
+> @@ -691,6 +691,9 @@ static void bcm_sf2_sw_adjust_link(struct dsa_switch *ds, int port,
+>  	if (phydev->duplex == DUPLEX_FULL)
+>  		reg |= DUPLX_MODE;
+>  
+> +	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
+> +		reg |= GMIIP_SPEED_UP_2G;
+> +
+>  	core_writel(priv, reg, offset);
+>  
+>  	if (!phydev->is_pseudo_fixed_link)
+> diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
+> index 49695fcc2ea8f..3c4fd7cda701a 100644
+> --- a/drivers/net/dsa/bcm_sf2_regs.h
+> +++ b/drivers/net/dsa/bcm_sf2_regs.h
+> @@ -162,6 +162,7 @@ enum bcm_sf2_reg_offs {
+>  #define  RXFLOW_CNTL			(1 << 4)
+>  #define  TXFLOW_CNTL			(1 << 5)
+>  #define  SW_OVERRIDE			(1 << 6)
+> +#define  GMIIP_SPEED_UP_2G		(1 << 7)
+>  
+>  #define CORE_WATCHDOG_CTRL		0x001e4
+>  #define  SOFTWARE_RESET			(1 << 7)
+> 
+
+-- 
+Florian
