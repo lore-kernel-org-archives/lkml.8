@@ -2,80 +2,120 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A30FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7679C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1167206E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80880206E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:57:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cz9w5UUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgDLNxq (ORCPT
+        id S1727027AbgDLN5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:53:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:43942 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgDLNxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:53:46 -0400
-IronPort-SDR: YSskhaiSOLg+TKevmKGqzvz1cOX05k9fgjrRiYnxIV90L4KBGaff06k22Z2wQ1+oFtPcIf2IfN
- 8/PN3NyKCfBg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 06:53:46 -0700
-IronPort-SDR: IsDGhEKfyeBItsAE95C1LrP1UtZa3IOkzqwjtcURdqaKPfA2bBzVy/Csk8I+sZg9VBGzjJ6drV
- dX8yJy80GvSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,374,1580803200"; 
-   d="scan'208";a="399379453"
-Received: from apresura-mobl.ger.corp.intel.com (HELO localhost) ([10.252.61.246])
-  by orsmga004.jf.intel.com with ESMTP; 12 Apr 2020 06:53:40 -0700
-Date:   Sun, 12 Apr 2020 16:53:40 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Amir Mizinski <amirmizi6@gmail.com>
-Cc:     Eyal.Cohen@nuvoton.com, Oshri Alkobi <oshrialkoby85@gmail.com>,
-        Alexander Steffen <alexander.steffen@infineon.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
-        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
-        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: Re: [PATCH v6 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops
-Message-ID: <20200412135340.GA68975@linux.intel.com>
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-3-amirmizi6@gmail.com>
- <20200408183324.GB33486@linux.intel.com>
- <CAMHTsUUzQ9rpPfsnEtJruAC3THr+XNA=5Wk7OCteqZXOQ0L=UA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMHTsUUzQ9rpPfsnEtJruAC3THr+XNA=5Wk7OCteqZXOQ0L=UA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Sun, 12 Apr 2020 09:57:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42182 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgDLN5F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 09:57:05 -0400
+Received: by mail-pg1-f194.google.com with SMTP id g6so3337889pgs.9;
+        Sun, 12 Apr 2020 06:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=88xbndOYpGPe/NGmyaJojaQNXhzRAvoZsI5qqKDeBKc=;
+        b=Cz9w5UUrnKe3vHpSv451HrsP+jELlu2KJ/F9ZdaTxYjNFIbLL60xBXWzS9pJNu+q+q
+         lt31gX+qh0g1CrqTZrgSp55NNy8CdMq/nPtykmffOMhrDy8XrQLqE59ovGvPg4J8JGml
+         mACtcCkJAMRanQLr6NR0vhVb3XZeRfbq69VjdPyUTldcbGRw637Hp83U0dxKzEfOB0bM
+         NVmn9PUAB7xJFOOyDwcWwVFP/ohBLiuBjKf7C0GHekrkgUFXEarMHAF2KTG2uHlMJ4vC
+         6kBMmic6+mT+IvRReQnlD+hmkjOQHMcnErvBzetcBNKJ49tAkvGy0/Hzn/1wHYdTV85o
+         eCLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=88xbndOYpGPe/NGmyaJojaQNXhzRAvoZsI5qqKDeBKc=;
+        b=r3wPTk77ELz4f/w/Ps9Bq7020jzuW9RYD8F76mqkhTQ2S4mDhvk6ztbUUzamz6ILP0
+         AAeAidvYBGQGE035c94F3BJaHeuMb8WNwHA7m639jvp+xnbYR3cX98xq59rHNlJqh971
+         Q2HJ+6Y/da19OKdszpRlGA/h6nWdLPNyQ7HMv3H0DSv9WRx23vB9Qg4C8+KdodTZfSZY
+         RSxYOdVjca1+Gsz6nckKJksFhZqbbHYBOIBQI8TQfkzfWlpQpXrBnwEudna6duIb+ODT
+         /pVWhZb5/M+LoCgOUprt7hvQPNddf+8O7RH5/uLjmuACQYF59ESyA0jnl0ziBr14aOub
+         Y4xw==
+X-Gm-Message-State: AGi0PubrSIjEIhZKg8gtroxCFxUHr/OwaHH8++ShFOWOVUq7hpUhJkvh
+        TNM1bV8g0fpjt1FkSMO3CUM=
+X-Google-Smtp-Source: APiQypKVgCfL7VmfA1bSCl2vQ5+BYxlM/jmWtJJk14l2KcB4YSAQrQ4wq4TxZtKLs407YAEvSYMHiw==
+X-Received: by 2002:a62:8343:: with SMTP id h64mr14488459pfe.166.1586699824643;
+        Sun, 12 Apr 2020 06:57:04 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:992:22ab:f465:67ce:fbea:c439])
+        by smtp.gmail.com with ESMTPSA id 139sm6139060pfv.0.2020.04.12.06.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Apr 2020 06:57:03 -0700 (PDT)
+From:   Aishwarya R <aishwaryarj100@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Aishwarya R <aishwaryarj100@gmail.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: adc: at91-adc: Use devm_platform_ioremap_resource
+Date:   Sun, 12 Apr 2020 19:26:42 +0530
+Message-Id: <20200412135644.4027-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+References: <20200409151125.32677-1-aishwaryarj100@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is something seriously wrong in your email client.
-Please reconfigure your email client according to:
+From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-https://www.kernel.org/doc/html/v5.5/process/email-clients.html
+Use the helper function that wraps the calls to
+platform_get_resource() and devm_ioremap_resource()
+together. It reduces boilerplate and suggested by coccinelle.
 
-Then re-response.
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+---
+ drivers/iio/adc/at91_adc.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-This is.. I've lost to the count how many times I've requsted this.
+diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+index abe99856c823..0368b6dc6d60 100644
+--- a/drivers/iio/adc/at91_adc.c
++++ b/drivers/iio/adc/at91_adc.c
+@@ -1152,7 +1152,6 @@ static int at91_adc_probe(struct platform_device *pdev)
+ 	int ret;
+ 	struct iio_dev *idev;
+ 	struct at91_adc_state *st;
+-	struct resource *res;
+ 	u32 reg;
+ 
+ 	idev = devm_iio_device_alloc(&pdev->dev, sizeof(struct at91_adc_state));
+@@ -1182,9 +1181,7 @@ static int at91_adc_probe(struct platform_device *pdev)
+ 	if (st->irq < 0)
+ 		return -ENODEV;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	st->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	st->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(st->reg_base))
+ 		return PTR_ERR(st->reg_base);
+ 
+-- 
+2.17.1
 
-Thanks.
-
-/Jarkko
