@@ -2,105 +2,122 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF08C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE61FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:24:10 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A832063A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F032063A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OQgwj7/m"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 54A832063A
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bgCfyXJm"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 71F032063A
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgDLTT2 (ORCPT
+        id S1727905AbgDLTYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 15:19:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:52038 "EHLO
+        Sun, 12 Apr 2020 15:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:52806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbgDLTT1 (ORCPT
+        with ESMTP id S1727315AbgDLTYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 15:19:27 -0400
-Received: from mail26.static.mailgun.info (mail26.static.mailgun.info [104.130.122.26])
-        by lindbergh.monkeyblade.net (Postfix) with UTF8SMTPS id 2DFB2C0A3BF5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 12:19:26 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586719168; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=YliS61QCQYD8IvrSZrsXQtbU5Db5p1TuVwVrC572Azs=;
- b=OQgwj7/moAnO6B5Bf2ezut03cHiaeXEVgiU5RwDivYU2YDNpqSDjekbGwHICP573jrvNJnqb
- W2vofflKvfNIe1lVre9GvhwROYcMabdjNT0xmL/DZwAuU7NJWAYWYrQotclzJKZdX0y1rQ/k
- /HuXnnd5Bt3w72vMyxN8OWrkPrE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9369af.7efdfea73ed8-smtp-out-n03;
- Sun, 12 Apr 2020 19:19:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AEDF8C433F2; Sun, 12 Apr 2020 19:19:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: abhinavk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 252B6C433F2;
-        Sun, 12 Apr 2020 19:19:11 +0000 (UTC)
+        Sun, 12 Apr 2020 15:24:08 -0400
+Received: from conssluserg-05.nifty.com (conssluserg-05.nifty.com [210.131.2.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2079C0A3BF0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 12:24:08 -0700 (PDT)
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 03CJNmXV015715
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:23:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 03CJNmXV015715
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586719429;
+        bh=NMozP3DYwt3NE7LQJWa1rj0X2R6il1LXjzmgjQnxUbk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bgCfyXJmIovSQ0gSE2ssQaeO5duSl26FbvO2fIug0KlEqjTUKftwCvLf0ZbCxX/1j
+         lqmLwzwNIW3uUiQ3pgftGSjSO69Nj8LclLyIB1igmsQfHxhLrlJ2A4c2/JYHvYVt1p
+         fNi0yxpBDMaFmW5IE0noaPWKaOmNavyZ//Z/MC1vNp5ICv2uc/2PsVhpHT51O3Hzpf
+         W7u474au0KYQU9C6IhJRhhuosV4woUiSb38Tn7PxjIpRlPAcArbuETuqKvHgO1ohdf
+         EMBwjEijQXVEXX9aUXs2LdJVl/vxNxAYVMZeFgjLd0ifP+1CldyLZI+1fZab7jN+kP
+         yHEp7EPEfGaaQ==
+X-Nifty-SrcIP: [209.85.221.176]
+Received: by mail-vk1-f176.google.com with SMTP id l5so1783976vko.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 12:23:49 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua9kLimde7PteB90+E7QajAChnrUmQ7AOfnYbH41NKEk1fJcD7M
+        89LKbOMtXCf+mBxROosbDm9adGnA42NIu3yWfa4=
+X-Google-Smtp-Source: APiQypJseq22CKkD2zXqPBsNkgPQaV+1ABsu7rpd2uGY+yTFtz30aO5h5CmCBthEKxo5sPtVmMTHomRDdedF3H8mMJ0=
+X-Received: by 2002:a1f:d182:: with SMTP id i124mr8779268vkg.26.1586719427938;
+ Sun, 12 Apr 2020 12:23:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 12 Apr 2020 12:19:11 -0700
-From:   abhinavk@codeaurora.org
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: Fix typo
-In-Reply-To: <20200412143509.11353-1-christophe.jaillet@wanadoo.fr>
-References: <20200412143509.11353-1-christophe.jaillet@wanadoo.fr>
-Message-ID: <22cbe4e4310b7d475c02da6bf44c44f9@codeaurora.org>
-X-Sender: abhinavk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200410165741.27078-1-jeremie.francois@gmail.com>
+In-Reply-To: <20200410165741.27078-1-jeremie.francois@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 13 Apr 2020 04:23:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ7R3LW2ZLRJNHyRqcyWfkz5UiSRaw059sgSSe5qRG=cQ@mail.gmail.com>
+Message-ID: <CAK7LNAQ7R3LW2ZLRJNHyRqcyWfkz5UiSRaw059sgSSe5qRG=cQ@mail.gmail.com>
+Subject: Re: [PATCH] scripts/config: allow colons in option strings for sed
+To:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-12 07:35, Christophe JAILLET wrote:
-> Duplicated 'we'
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+On Sat, Apr 11, 2020 at 1:58 AM Jeremie Francois (on alpha)
+<jeremie.francois@gmail.com> wrote:
+>
+> Sed broke on some strings as it used colon as a separator.
+> I made it more robust by using \001, which is legit POSIX AFAIK.
+>
+> E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+> failed with: sed: -e expression #1, char 55: unknown option to `s'
+>
+> Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
 > ---
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> index 998bef1190a3..b5fed67c4651 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> @@ -959,7 +959,7 @@ static int mdp5_crtc_cursor_set(struct drm_crtc 
-> *crtc,
->  	if (!ctl)
->  		return -EINVAL;
-> 
-> -	/* don't support LM cursors when we we have source split enabled */
-> +	/* don't support LM cursors when we have source split enabled */
->  	if (mdp5_cstate->pipeline.r_mixer)
->  		return -EINVAL;
-> 
-> @@ -1030,7 +1030,7 @@ static int mdp5_crtc_cursor_move(struct drm_crtc
-> *crtc, int x, int y)
->  		return -EINVAL;
->  	}
-> 
-> -	/* don't support LM cursors when we we have source split enabled */
-> +	/* don't support LM cursors when we have source split enabled */
->  	if (mdp5_cstate->pipeline.r_mixer)
->  		return -EINVAL;
+>  scripts/config | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/scripts/config b/scripts/config
+> index e0e39826dae9..d365081b60b2 100755
+> --- a/scripts/config
+> +++ b/scripts/config
+> @@ -7,6 +7,9 @@ myname=${0##*/}
+>  # If no prefix forced, use the default CONFIG_
+>  CONFIG_="${CONFIG_-CONFIG_}"
+>
+> +# We use an uncommon delimiter for sed substitutions
+> +SED_DELIM=$(echo -en "\001")
+
+At first, 'echo -en' caught my eye,
+but this script is always run by bash.
+So, there is no portability issue here.
+
+Applied to linux-kbuild.
+Thanks.
+
+
+
+> +
+>  usage() {
+>         cat >&2 <<EOL
+>  Manipulate options in a .config file from the command line.
+> @@ -83,7 +86,7 @@ txt_subst() {
+>         local infile="$3"
+>         local tmpfile="$infile.swp"
+>
+> -       sed -e "s:$before:$after:" "$infile" >"$tmpfile"
+> +       sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+>         # replace original file with the edited one
+>         mv "$tmpfile" "$infile"
+>  }
+> --
+> 2.17.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
