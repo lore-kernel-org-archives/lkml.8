@@ -2,109 +2,122 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8293CC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326BDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6467520705
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D608206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DmcUhIft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgDLOLO (ORCPT
+        id S1727064AbgDLOLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:11:14 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:43148 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgDLOLO (ORCPT
+        Sun, 12 Apr 2020 10:11:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14022 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726689AbgDLOLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:11:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id o9so7720679ila.10
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 07:11:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=73xQG11pagPgCICtXY2EiAPlDki56JGVb2G/W2gPtpw=;
-        b=PnJ/iPrbjCgXCzA/9myx6Oad9Jbh9Ya4muL4V21P+G9RIbuHcU4CO53jOQnpR8jVV4
-         AauyYDngoto/Vwzuk5dqHiMnP67OodSrpEusQKzUKhfK7xznGUqaiKsAiE62VGWtldeb
-         ZDM7Kdl/LrBnZkDbEbPwSFqAmPuWrrzPAw6417xG4mYmftbk+zCmyP+RYOSIFgeIk5hl
-         UAb8LLmrjhauX1GqI9b4jy5Bqe4m6V6PCAneQpUsqxQ+UgEDvGkNRe5FqM16J5uWkQGh
-         6BSWY93saHkSwye6G4oLVzxAdKOT/Ve+9pW9nryfCKaMlTrGjn9yorTZ7oOTY20Pq3Gt
-         7I9w==
-X-Gm-Message-State: AGi0PuZ3sy8F1H9ZHYsX9H5Yt05BzmCCixhTcQVt+z2bFSwFdQGjWWkA
-        Pn8qGs4i6zO4UhIoHMC6w1mnsIEDHneCJ5zmn6Hb6qaHuwBg
-X-Google-Smtp-Source: APiQypJNgeXiWcgYp+NUapQFGn3xzuFCCkC4aRZxSFeZJxsGPY1nw7qj/FfTZXe6ys7i9Parky9Vh1Dddg/myTeGca5tdsJG0zUJ
+        Sun, 12 Apr 2020 10:11:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586700677; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Fs11ZYNs11KRXX0CMgRlVZnl3dBXHk7slByjIz5Iuj4=; b=DmcUhIftEpzZYRPqYmxxJp89cTQJz+GwVpER5IahYOFwaOR6xvJPQY/MZMDlVYW/R/aBedSY
+ UjNsERtx4U+EMGE2f2rfssuACrNBCk3fskhkxnmTOQIfH4tH+V9PhBr9tDbceZl0oKcBgi81
+ cKj9qvlIPG1M3//HNvrn5qwqaII=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e932174.7f4af2710ed8-smtp-out-n02;
+ Sun, 12 Apr 2020 14:11:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 886CFC432C2; Sun, 12 Apr 2020 14:11:00 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.136.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA686C433F2;
+        Sun, 12 Apr 2020 14:10:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA686C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v16 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
+ caches
+To:     Doug Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
+ <1586154741-8293-5-git-send-email-mkshah@codeaurora.org>
+ <158649213142.77611.5740203322498170248@swboyd.mtv.corp.google.com>
+ <CAD=FV=UkiR+xLeowOT+H3ZKNCesf84AJi6mHiHNpJ2P9-DiXaQ@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <11c37c89-aa1f-7297-9ecf-4d77a20deebd@codeaurora.org>
+Date:   Sun, 12 Apr 2020 19:40:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:52d:: with SMTP id h13mr794798ils.18.1586700672492;
- Sun, 12 Apr 2020 07:11:12 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 07:11:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f2ecd605a31889d0@google.com>
-Subject: KASAN: null-ptr-deref Read in init_emulate_ctxt
-From:   syzbot <syzbot+4a946e65aa25edfdb55f@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAD=FV=UkiR+xLeowOT+H3ZKNCesf84AJi6mHiHNpJ2P9-DiXaQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On 4/10/2020 8:22 PM, Doug Anderson wrote:
+> Hi,
+>
+> On Thu, Apr 9, 2020 at 9:15 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>>>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>> This function name keeps throwing me off. Can we please call it
+>> something like rpmh_configure_tcs_sleep_wake()? The word "flush" seems
+>> to imply there's some sort of cache going on, but that's not really the
+>> case. We're programming a couple TCS FIFOs so that they can be used
+>> across deep CPU sleep states.
+> I'm hoping this rename can be deferred until Maulik's series and my
+> cleanup series land.  While I agree that rpmh_flush() is a bit of a
+> confusing name, it's not a new name and renaming it midway through
+> when there are a bunch of patches in-flight is going to be a hassle.
+>
+> Assuming others agree, my thought is that Maulik will do one more v17
+> spin with small nits fixed up, then his series can land early next
+> week when (presumably) -rc1 comes out.  If my current cleanup doesn't
+> apply cleanly (or if Bjorn/Andy don't want to fix the two nits in
+> commit messages when applying) I can repost my series and that can
+> land in short order.  Once those land:
+>
+> * Maulik can post this rpmh_flush() rename atop.
+>
+> * I can post the patch to remove the "pm_lock" that was introduced in
+> this series.  A preview at <https://crrev.com/c/2142823>.
+>
+> * Maulik can post some of the cleanups that Maulik wanted to do in
+> rpmh.c with regards to __fill_rpmh_msg()
+>
+> ...assuming those are not controversial perhaps they can be reviewed
+> quickly and land quickly?  I suppose I can always dream...
+>
+>
+> -Doug
 
-HEAD commit:    f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17e6d61be00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
-dashboard link: https://syzkaller.appspot.com/bug?extid=4a946e65aa25edfdb55f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Agree, I can defer rename until this series lands and then post above 
+listed changes.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Thanks,
+Maulik
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4a946e65aa25edfdb55f@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: null-ptr-deref in init_emulate_ctxt+0x497/0x4a0 arch/x86/kvm/x86.c:6424
-Read of size 8 at addr 0000000000000005 by task syz-executor.2/9707
-
-CPU: 1 PID: 9707 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- init_emulate_ctxt+0x497/0x4a0 arch/x86/kvm/x86.c:6424
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9707 Comm: syz-executor.2 Tainted: G    B             5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- end_report+0x4d/0x53 mm/kasan/report.c:103
- __kasan_report.cold+0xd/0x4d mm/kasan/report.c:518
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- init_emulate_ctxt+0x497/0x4a0 arch/x86/kvm/x86.c:6424
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
