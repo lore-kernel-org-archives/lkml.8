@@ -2,139 +2,233 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC80AC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70B3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D9C2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586685778;
-	bh=3TI71pGqOglXGFWs6U3O6CSa3M5ETRL11QWYGd3ewkE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qb1Ywdf5IspA+6V4/M2w/QKb4KuGTwWIaYxvU3uwTu9VmxoVRpQFo0HU/3AunueJN
-	 PTdtakcQBUpKzJvqffWIFxXYDjB8zp6wfqwn9HipgTD/NnI5VbSnDH7SYJeSFH0hJj
-	 u/rI6xqHcAqtXe0Xa+7VHBc4ehukXNvadqPUJs04=
+	by mail.kernel.org (Postfix) with ESMTP id 8CB71206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GvfVR5S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgDLKC5 (ORCPT
+        id S1726876AbgDLKFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 06:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDLKC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 06:02:56 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17ED4206DA;
-        Sun, 12 Apr 2020 10:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586685776;
-        bh=3TI71pGqOglXGFWs6U3O6CSa3M5ETRL11QWYGd3ewkE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i6QVA8dj6M3c3VK5zilZuC/jPe7zozoMAcnM5E/rNxERDQiiNMUSKJRrCvy2jMksY
-         QO/H0IVWWwUu7/053/dj3Wdz5DODPcPgU6cFjGGoB1tvcW51I4uRGcz18qn7mfBk0p
-         /q99HQ5x6nIMgEqG7X8BjCv09YXVXq7UNG86cUD8=
-Date:   Sun, 12 Apr 2020 11:02:53 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH][RFC] iio: buffer: remove 'scan_el_attrs' attribute
- group from buffer struct
-Message-ID: <20200412110253.52d93e71@archlinux>
-In-Reply-To: <20200410093607.74516-1-alexandru.ardelean@analog.com>
-References: <20200410093607.74516-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Apr 2020 06:05:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44505 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgDLKFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 06:05:18 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z26so6017103ljz.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 03:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3poMWLMS+Y0AirDPgoxNpgkvsEj8CUgi4NnvvSus0Ys=;
+        b=GvfVR5S4msaepb9ZqQaBViyW66mnM49/Ox6puWdnCxugNW8gaUnXwwK8Qp4JOChLsW
+         ZwkR1Mzp/eaSQWfmj10rH+iABGjG5UMF/sk4A2jhdhxE7WaPH5hPt+0WvTVQZ06oa7Os
+         JoDl94htWvSqFxUtvtviTo6bjaUdMFlXT0kgy2NaUeOIoRXkP6TwbBb3mSIpeWthChxN
+         sPxSlU0x3wchTOmNTMiRXQtxpxAMpYyc899pe4NjvZjIjLbK21hRVcpvDxJjXLmMeCra
+         oyz2M3H1eOr51VmKm2ZUkWwphOPxsbV5OdfB3iFsv51hHBqQbnY8+uwixV//wNCYMxop
+         ThOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3poMWLMS+Y0AirDPgoxNpgkvsEj8CUgi4NnvvSus0Ys=;
+        b=LTtQd79tl2NrV67c1nccFS1SPzc5z6gePja2WE4kjV4r9/v77Fgsdui+3xeLSdBOZ9
+         6KaEySFJS9XDqlxlgB9eoJnEE/c2sSilRD355TQuLhrHLseznbtiAkhNgcPNr6OrATGM
+         wFaKD66QldkB7tJINGGUw1O6yVFx4PeBZG1pT59wbWLZ7/TmVmQSYx8q3cwsmAv7RWSk
+         05frnrTovMqSMjsycpHSajR/pOnfmY/RKS99d5rbwxtAz9YaJv1Nn5c1g8aMac8MFu38
+         rdHo7AfdJZV7z3yHC96wA0yw2T6o60IMVb+1gMVNUwkkIgcvxU9yPj90UZWJuETqgGGd
+         bzwQ==
+X-Gm-Message-State: AGi0PuYsUsFZBQfrGx3t8OcVrQKnp2ZQlsrd4TKb3VgStFAu8cpGXCH0
+        vHn9ubOSZVee3u1bE7U/DzajF7pp5qGkN6q9yznSSQ==
+X-Google-Smtp-Source: APiQypIWimhBBeVhQTK+0MOOr30jp0Bt95mIG4YzyDh2pR6n4c3Lp99zRy9nAaxo36LuffWhKh5q6YbDwI+/a4BgRtU=
+X-Received: by 2002:a2e:97d6:: with SMTP id m22mr7930949ljj.245.1586685916350;
+ Sun, 12 Apr 2020 03:05:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200411115407.651296755@linuxfoundation.org>
+In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sun, 12 Apr 2020 15:35:04 +0530
+Message-ID: <CA+G9fYuM6XSYk1nniG9d8oHQKw+rZZUfEVcmWAfjB6x_U-T6Pg@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/29] 4.4.219-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020 12:36:07 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Sat, 11 Apr 2020 at 17:41, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.219 release.
+> There are 29 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.219-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-> This field doesn't seem used. It seems that only 'buffer->attrs' was ever
-> used to extend sysfs attributes for an IIO buffer.
-> 
-> Moving forward, it may not make sense to keep it. This patch removes the
-> field and it's initialization code.
-> 
-> Since we want to rework IIO buffer, to be able to add more buffers per IIO
-> device, we will merge [somehow] the 'buffer' & 'scan_elements' groups, and
-> we will continue to add the attributes to the 'buffer' group.
-> 
-> Removing it here, will also make the rework here a bit smaller, since
-> this code will not be present.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Looks like dead code to me.  Applied to the togreg branch of iio.git and
-pushed out as testing for the autobuilders to play with it.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thanks,
+Summary
+------------------------------------------------------------------------
 
-Jonathan
+kernel: 4.4.219-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 8cd74c57ff4a364d0a753e448ce5eab18cc5bb75
+git describe: v4.4.218-30-g8cd74c57ff4a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.218-30-g8cd74c57ff4a
 
-> ---
-> 
-> I have no idea whether removing this is acceptable or not.
-> If it is acceptable, then this can be applied.
-> I am a bit vague on how this was ever used, of if it was ever used, but
-> it looks like dead code.
-> 
-> 
->  drivers/iio/industrialio-buffer.c | 8 --------
->  include/linux/iio/buffer_impl.h   | 6 ------
->  2 files changed, 14 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index e6fa1a4e135d..221157136af6 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -1283,11 +1283,6 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
->  
->  	indio_dev->groups[indio_dev->groupcounter++] = &buffer->buffer_group;
->  
-> -	if (buffer->scan_el_attrs != NULL) {
-> -		attr = buffer->scan_el_attrs->attrs;
-> -		while (*attr++ != NULL)
-> -			attrcount_orig++;
-> -	}
->  	attrcount = attrcount_orig;
->  	INIT_LIST_HEAD(&buffer->scan_el_dev_attr_list);
->  	channels = indio_dev->channels;
-> @@ -1325,9 +1320,6 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
->  		ret = -ENOMEM;
->  		goto error_free_scan_mask;
->  	}
-> -	if (buffer->scan_el_attrs)
-> -		memcpy(buffer->scan_el_group.attrs, buffer->scan_el_attrs,
-> -		       sizeof(buffer->scan_el_group.attrs[0])*attrcount_orig);
->  	attrn = attrcount_orig;
->  
->  	list_for_each_entry(p, &buffer->scan_el_dev_attr_list, l)
-> diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
-> index 1e7edf6bed96..a63dc07b7350 100644
-> --- a/include/linux/iio/buffer_impl.h
-> +++ b/include/linux/iio/buffer_impl.h
-> @@ -94,12 +94,6 @@ struct iio_buffer {
->  	unsigned int watermark;
->  
->  	/* private: */
-> -	/*
-> -	 * @scan_el_attrs: Control of scan elements if that scan mode
-> -	 * control method is used.
-> -	 */
-> -	struct attribute_group *scan_el_attrs;
-> -
->  	/* @scan_timestamp: Does the scan mode include a timestamp. */
->  	bool scan_timestamp;
->  
 
+No regressions (compared to build v4.4.218)
+
+No fixes (compared to build v4.4.218)
+
+
+Ran 27015 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* kselftest
+* kvm-unit-tests
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* spectre-meltdown-checker-test
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.219-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.219-rc1-hikey-20200411-691
+git commit: 9b98182ae4842aa200b9878be74c2fa565a1ab29
+git describe: 4.4.219-rc1-hikey-20200411-691
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.219-rc1-hikey-20200411-691
+
+
+No regressions (compared to build 4.4.219-rc1-hikey-20200409-690)
+
+
+No fixes (compared to build 4.4.219-rc1-hikey-20200409-690)
+
+Ran 1726 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
