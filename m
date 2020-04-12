@@ -2,135 +2,93 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8609FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D57C2BB55
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 15:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC1B206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5330A206A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 15:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d421EDxW"
+	dkim=pass (2048-bit key) header.d=easyb-ch.20150623.gappssmtp.com header.i=@easyb-ch.20150623.gappssmtp.com header.b="i7Z8Lvye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgDLOvG (ORCPT
+        id S1727022AbgDLPCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:51:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23186 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727133AbgDLOvG (ORCPT
+        Sun, 12 Apr 2020 11:02:33 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40066 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgDLPCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:51:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586703066; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=rOLam1Q9vI5c4I6n7FfGkAOVE3pt/oyTwAH/a+3r7+o=; b=d421EDxWzv7s2pc46HqREptHtsV0cH+CmWCTFPrWfx3II/oMI4vlNrhS6NXBCrIUfALECKK4
- nsaL/WfEM2Pq7zI7Iowb/0xcvNgp+BoHr6qLFt0SYHj8XGbkHrtyrOGv4Eh/0a/g3xGiTFcf
- zWCqiLvqxxrlemZ3oqBi9aXk4fY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e932acb.7f76bbeaa928-smtp-out-n05;
- Sun, 12 Apr 2020 14:50:51 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A812DC44788; Sun, 12 Apr 2020 14:50:50 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44E3FC43636;
-        Sun, 12 Apr 2020 14:50:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 44E3FC43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v17 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
-Date:   Sun, 12 Apr 2020 20:20:04 +0530
-Message-Id: <1586703004-13674-7-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586703004-13674-1-git-send-email-mkshah@codeaurora.org>
-References: <1586703004-13674-1-git-send-email-mkshah@codeaurora.org>
+        Sun, 12 Apr 2020 11:02:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a81so7640029wmf.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 08:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=easyb-ch.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0yqa+EKJqOMZqIixsYzmlt55IzP82TkpcbHu7uxFT4o=;
+        b=i7Z8LvyenibZTZyXkEsEEE3K8RDOujJ5674sYvNfURpQHNE2oBiWWT7e/r2jmyhWQD
+         y1+2fnERImX69QvnWOISWrNrpamrprTbjTLcqfhrku9LoEMEmGG9qEuMsikEqSsaxSqK
+         Y79t6ml2mxu6Bg8wZRcptCDJfETVDXs2SZK8GQltSXQNOiaJe/6CdZyheSlXoFomAFYU
+         BHejmk7ZGe37MV75QLmNKF23jBsXVadUdm/DzLwRTeJn8gbN5K6kRtSZybzhaMVIOrrG
+         kkpACiuBfCAkHXBTZasQv7jicUw7dN29mk5V0RP+E4nBX49iA5hmeuiTzHvVhCaBoAUV
+         g05g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0yqa+EKJqOMZqIixsYzmlt55IzP82TkpcbHu7uxFT4o=;
+        b=VIOkYaW79z3Re9BNkht9zb9R0LYFCEfEh/JKVIjzzd6FZVe3qQucAI00ftsxb0L3LQ
+         2CA0Hqhje27BnvC/0+p91iZohsNBQIDq1kEgXhDn0aNpbxdIGqT3KHxXEFBoB1vJjTbS
+         qkwPlJLtCys0NsdXFDMTJ4oUG8qAb9o3OuyN6m5xf0NO+WE5Y655xgZv7GBni7YsGbB/
+         PtzPfy93CsazyglPy+9fIr2dtXuSpxL0vCv1qoVw90vWUkRaWPLKKj10ypE13fgb30A3
+         DIVw+J154NdBz4Z9ZMK0/Vb0IW4PUIxDjw7TIgchqnxmW1zPRV3IbObqJKPboNies62t
+         1ANg==
+X-Gm-Message-State: AGi0PuZo8mVWza+kvBY9fM8N3NWIujE6evGeQlzUR+NvIep72vo5T1s8
+        BRVSx0JHcNhyBNNaOC1xVr1Psg==
+X-Google-Smtp-Source: APiQypJ5G4BL6g1G/EhYOU8fMFTZs+je8F9lWXNuf0JLZA90eJeTelxDQNlTSUguKI6gLklzRQKBzw==
+X-Received: by 2002:a1c:a553:: with SMTP id o80mr14005777wme.159.1586703750678;
+        Sun, 12 Apr 2020 08:02:30 -0700 (PDT)
+Received: from ?IPv6:2001:1715:4e3a:130:cca:5c89:8758:a721? ([2001:1715:4e3a:130:cca:5c89:8758:a721])
+        by smtp.gmail.com with ESMTPSA id i13sm5808364wro.50.2020.04.12.08.02.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 Apr 2020 08:02:30 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
+Subject: Re: [PATCH] selftests/tpm2: Change exception handling to be Python 3
+ compatible
+From:   Ezra Buehler <ezra@easyb.ch>
+In-Reply-To: <20200412143656.72955-1-jarkko.sakkinen@linux.intel.com>
+Date:   Sun, 12 Apr 2020 17:02:27 +0200
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1FE03B4F-C42C-4B5F-A4B5-8169705911FA@easyb.ch>
+References: <20200412143656.72955-1-jarkko.sakkinen@linux.intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.9.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there are more than one WAKE TCS available and there is no dedicated
-ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
-transfer to complete in first WAKE TCS blocks using another free WAKE TCS
-to complete current request.
+Hi Jarkkon,
 
-Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
-is re-purposed to be used for Active mode. Clear only currently used
-WAKE TCS's register configuration.
+> On 12 Apr 2020, at 16:36, Jarkko Sakkinen =
+<jarkko.sakkinen@linux.intel.com> wrote:
+> +        except ProtocolError(e):
 
-Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
- drivers/soc/qcom/rpmh-rsc.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+Should this not be
 
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 80e8a94..cc1293c 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -154,7 +154,7 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
- static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
- 					 const struct tcs_request *msg)
- {
--	int type, ret;
-+	int type;
- 	struct tcs_group *tcs;
- 
- 	switch (msg->state) {
-@@ -175,19 +175,10 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
- 	 * If we are making an active request on a RSC that does not have a
- 	 * dedicated TCS for active state use, then re-purpose a wake TCS to
- 	 * send active votes.
--	 * NOTE: The driver must be aware that this RSC does not have a
--	 * dedicated AMC, and therefore would invalidate the sleep and wake
--	 * TCSes before making an active state request.
- 	 */
- 	tcs = get_tcs_of_type(drv, type);
--	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
-+	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs)
- 		tcs = get_tcs_of_type(drv, WAKE_TCS);
--		if (tcs->num_tcs) {
--			ret = rpmh_rsc_invalidate(drv);
--			if (ret)
--				return ERR_PTR(ret);
--		}
--	}
- 
- 	return tcs;
- }
-@@ -412,8 +403,16 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
- 
- 	tcs->req[tcs_id - tcs->offset] = msg;
- 	set_bit(tcs_id, drv->tcs_in_use);
--	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
-+	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS) {
-+		/*
-+		 * Clear previously programmed WAKE commands in selected
-+		 * repurposed TCS to avoid triggering them. tcs->slots will be
-+		 * cleaned from rpmh_flush() by invoking rpmh_rsc_invalidate()
-+		 */
-+		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-+		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
- 		enable_tcs_irq(drv, tcs_id, true);
-+	}
- 	spin_unlock(&drv->lock);
- 
- 	__tcs_buffer_write(drv, tcs_id, 0, msg);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+        except ProtocolError as e:
+
+?
+
+Cheers,
+Ezra.
+
