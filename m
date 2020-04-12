@@ -2,137 +2,67 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB73C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F95C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7214220732
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C3B20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Izfs6T4s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m+nJBszF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDLHuA (ORCPT
+        id S1726264AbgDLIJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 03:50:00 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:55326 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgDLHt7 (ORCPT
+        Sun, 12 Apr 2020 04:09:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35304 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgDLIJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 03:49:59 -0400
-Received: from flygoat-x1e (unknown [IPv6:240e:390:499:a20::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 92F8320CE8;
-        Sun, 12 Apr 2020 07:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1586677799; bh=k5hxOeHZh9IXjDoSK3WNcs/9hTqV8S41aIzhUrny+3k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Izfs6T4sNhGSQrbDpc1FuzRkrZlA/Osk5StRIEV1TJ4Fe72X2TGwBh4OAZyI2RU9H
-         4juvb/wwxEJZ3JXCHjgwRcIBnQdtXetGmwTCkFlGS41zJErwM87iU1Gv/z4e1vGywy
-         SQZpAlaAbQD7K3v8RQncp4B/+s1NnynFKs6WpUgcybeYZfvPqtjHEnga7cEYuIoNrw
-         oJn5cQ/8B8Kmbd7o/+D+RhAHqnzIwpzM1ZNvugs1JD/QH49S5fuB2bcbOOL09BID/u
-         A0pRRIrRmZxwAYv+sKsaqDlJoZebMupTbfAJ5m47TwhhVmG7SP3TMwB7hiS2sMxPSE
-         IlIU52Wnfg4OQ==
-Date:   Sun, 12 Apr 2020 15:49:27 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        " =?UTF-8?B?5ZGo55Cw5p2w?= (Zhou Yanjie) " 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 05/11] MIPS: Switch to arch_topology
-Message-ID: <20200412154927.7ac453d5@flygoat-x1e>
-In-Reply-To: <202004121349.xFzTOGS4%lkp@intel.com>
-References: <20200412032123.3896114-6-jiaxun.yang@flygoat.com>
-        <202004121349.xFzTOGS4%lkp@intel.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Apr 2020 04:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JDEA4aSSIckcWLhH+0n2OyNXRY6oS0EWJxgESd0P7Gg=; b=m+nJBszFbsHkAkcCRyWRhrX4Zv
+        5NtrbyIG4/Y5IncFEmp2qIQxkoEF5KFIIq48pM7xQgC1GMz4xjGbLUc718zSdW5Od0AlqYbbbUax9
+        r88iM9tt2iOXp8h6GmY7QELnSiQFhrHv2j+RSSShbmeiJqSDp8qk0B6wK5X2elJHHhLBi9GCj8Snh
+        2SfJH+iY9pIJGHcV73jjj1fj2wjZjpqO3MQEVyJnZ+UMaZNjLly9DqLf3iJhc6qSxzGdhP74sZiRg
+        BWVggmTXTwsTbb01g/NvP5TG34P3zzYcg42vAhWEZUeooECbyY62rKILwUSjEs/AYYL3tKeBNCOMr
+        sfWZU0Mg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jNXgZ-0001kE-Rp; Sun, 12 Apr 2020 08:09:47 +0000
+Date:   Sun, 12 Apr 2020 01:09:47 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        krzk@kernel.org, kwmad.kim@samsung.com, avri.altman@wdc.com,
+        cang@codeaurora.org, Seungwon Jeon <essuuj@gmail.com>,
+        stanley.chu@mediatek.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for Exynos
+ SoCs
+Message-ID: <20200412080947.GA6524@infradead.org>
+References: <20200412073159.37747-1-alim.akhtar@samsung.com>
+ <CGME20200412074218epcas5p3ef7973c8a47533a15a359b069da8003c@epcas5p3.samsung.com>
+ <20200412073159.37747-5-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200412073159.37747-5-alim.akhtar@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 13:24:21 +0800
-kbuild test robot <lkp@intel.com> wrote:
+On Sun, Apr 12, 2020 at 01:01:58PM +0530, Alim Akhtar wrote:
+> This patch introduces Exynos UFS host controller driver,
+> which mainly handles vendor-specific operations including
+> link startup, power mode change and hibernation/unhibernation.
 
-> Hi Jiaxun,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on driver-core/driver-core-testing]
-> [also build test ERROR on pm/linux-next linus/master next-20200411]
-> [cannot apply to tip/perf/core tip/irq/core v5.6]
-> [if your patch is applied to the wrong git tree, please drop us a
-> note to help improve the system. BTW, we also suggest to use '--base'
-> option to specify the base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
-> 
-> url:
-> https://github.com/0day-ci/linux/commits/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
-> base:
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-> a10c9c710f9ecea87b9f4bbb837467893b4bef01 config: mips-allnoconfig
-> (attached as .config) compiler: mips-linux-gcc (GCC) 9.3.0 reproduce:
-> wget
-> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> -O ~/bin/make.cross chmod +x ~/bin/make.cross # save the attached
-> .config to linux build tree GCC_VERSION=9.3.0 make.cross ARCH=mips 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> Note: the
-> linux-review/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
-> HEAD 8e8e9d4f7aa74359f2199773786ffe2fbb7877d0 builds fine. It only
-> hurts bisectibility.
-> 
-Hi all,
-
-In this case I think it should be fine to break bisect, otherwise #05
-will combine too many modifications in different subsystems.
-
-
-Thanks.
---
-Jiaxun Yang
+So this doesn't actually require the various removed or not added quirks
+after all?
