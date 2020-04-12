@@ -2,265 +2,171 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E2EC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7F8C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1466206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCFD20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="83NPBz1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgDLOTk (ORCPT
+        id S1727070AbgDLOVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:19:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41461 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbgDLOTd (ORCPT
+        Sun, 12 Apr 2020 10:21:36 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:62370 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726955AbgDLOVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:19:33 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jNdSN-0001Ww-4U; Sun, 12 Apr 2020 16:19:31 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id A99B6100E35;
-        Sun, 12 Apr 2020 16:19:30 +0200 (CEST)
-Date:   Sun, 12 Apr 2020 14:18:42 -0000
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/urgent for 5.7-rc1
-References: <158670111777.20085.1305752188791047060.tglx@nanos.tec.linutronix.de>
-Message-ID: <158670112259.20085.6131532982985666749.tglx@nanos.tec.linutronix.de>
+        Sun, 12 Apr 2020 10:21:36 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03CELXEX011172;
+        Sun, 12 Apr 2020 10:21:33 -0400
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
+        by mx0b-00128a01.pphosted.com with ESMTP id 30b7najden-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 12 Apr 2020 10:21:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EJQiUs2ga83W/7hJMYbBAHm8v+Yj8JR/b3CuaFNV4wVs5RIz1fpN7FmroooX4zRNBZZ3obzQF/s2hzjP7oBAuWXXUlYiSPmtiJDYMrF8Q0rh4clYNcdt6raZXCNPZK25Yb/QhkPkKO+heDvKlVxNTTjjJlXsSsZ05vdkWtiE+aVRmS63MEGP4mMdTo+0W+xTCdhaeS4zEGSvWpAIBx6j3LnbFfalYoGJ2hAbUrte1fPD9FXkOdzQy7GBDnNcBacX8ZEpi74HFBs0jlmLnm45wlCrO0st+BDx3EYJ1b3N78LBswYF7SOVc9cQPv/VBvywGaY3vOt89vcNnNLsHS4YdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p9Twu+SLtsq5CKTUf7CPieBFBSiO3evonOCSDNgAJek=;
+ b=WzDa31xWlA0bahudnFmQ1IpoJcQn+q0n6iuIqepOZD8nK6KTCD3Ng5ZHpwbAVhojtX0Jn9p0Zg8a4ODs5kngTXaMoCHT06VraoCgM5qd4QwC0OoeN/q1cyF+fW9SUPCv1v/3SerHdLHiLrq5IZKNIVi+DY1LSEdvzZcAkLCajBxxCLCFOslzSsWUTGumBxXyhMS+/65bbgbFv/FyF9Z+raQuj//XN9+9mReSEHkJS9fjLkSkbTBxO10w5I1ywiEvAN/m9Bim7PQ4Rf47uIdgiIhcNd1tnkQ/xj+LCpZJ9iiYGJVTKe+Yqgej40KYOukTcWvLDJYAVXifwriKhPExFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p9Twu+SLtsq5CKTUf7CPieBFBSiO3evonOCSDNgAJek=;
+ b=83NPBz1NSVW7qHrTdFPcm6BuCVmOqQcEwi6znnAF6Ng5Xjw9brrqfSgpmFsqe8otMKRYqdNgTcexiCr/B3hVUuWj7JFdfGO2zEQYmB1lJpftKpgJysgrsEV2q97NAHu+cVNK/UwBzQ8EFgLObPctGw4gKFchYywlqZ3NGkl/9Ko=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB3466.namprd03.prod.outlook.com (2603:10b6:5:aa::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Sun, 12 Apr
+ 2020 14:21:30 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2900.026; Sun, 12 Apr 2020
+ 14:21:30 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 8/8] iio: buffer: drop devm_iio_kfifo_free() API call
+Thread-Topic: [PATCH 8/8] iio: buffer: drop devm_iio_kfifo_free() API call
+Thread-Index: AQHWEMpyNS2su2vqxE+utAAXG3Qm7Kh1itCA
+Date:   Sun, 12 Apr 2020 14:21:30 +0000
+Message-ID: <cb04d59306f79d0d978d22f545a2b129e82e9738.camel@analog.com>
+References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+         <20200227135227.12433-8-alexandru.ardelean@analog.com>
+         <20200412140104.0f30a475@archlinux>
+In-Reply-To: <20200412140104.0f30a475@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.27.135.58]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 421ca5da-ae57-402c-ad64-08d7deeccb83
+x-ms-traffictypediagnostic: DM6PR03MB3466:
+x-microsoft-antispam-prvs: <DM6PR03MB3466479D7DD504181BA8215BF9DC0@DM6PR03MB3466.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1148;
+x-forefront-prvs: 0371762FE7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(39850400004)(346002)(396003)(376002)(136003)(366004)(26005)(4326008)(6916009)(186003)(2906002)(36756003)(6512007)(478600001)(6486002)(6506007)(316002)(5660300002)(66446008)(81156014)(86362001)(64756008)(66946007)(54906003)(8676002)(2616005)(71200400001)(8936002)(66476007)(66556008)(91956017)(76116006);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kNUETmOsStIEFgYp6R/Rm8kVMenR9Xfl4ae6vh3dUxW1lThymzs2G8S5r3x/pxg2CMgL3sqQl+QW2DBck9t9r3AEtcpK5arDSbBtKVOnzqwjcKnorZNAb681bOdeWpBvL2NCLMGOu4bVyTjp5GcaWCBaudVPbookW9rrvwcyF9xB8fzJ2A0533St0Q6lmb7MqBUZCCizbo7Hdm/EGYxgyL4wA0bPnePF3mrB8I1tGO3BaVGU6qN5V5EWu2SuL4W2ey7zYUTc8uucCznJCLfQRnTYxbXHDyZ22qFppEOgvopxEKVWs2IvNBb1ScAGT6CpwrC4T9aObvvprXq8MfzVLh4RS12YDqN3bnAfO2nWTfT8yDFuHwEdYnj3FHUwNRIMXI5myrsdyK0zbEGSR7+d8ajvxl5reBuoGuG2arUba2ofdLeaOlKvr+Zcgw3DlA64
+x-ms-exchange-antispam-messagedata: EFdHLo/Uwe11xMLMltYlOyLMcNaH23QUw5Y7765bxpWl9tn0OJAJEX1lATuAIS/F7BwDT7c80zdj1Pk7oVi5DVe7cwufk5P+WD/t4VkJXr1OWA9b+jhUkpuGSvoFBaYnex11+gr5CTeyipTlG8I9xA==
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-ID: <A8109743335FDF4AB48843657B85D655@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 421ca5da-ae57-402c-ad64-08d7deeccb83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2020 14:21:30.3707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Yi4xaolkyEx1z8nG7/BSUPEM8NfcW31RZ5lDTVicEAB6S3AsqlVpWVAMQ+F2DKPvOVWhD5Tj1Ccan68OC3HIvGCRu8x1TgwgxrXwLnGSjqo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3466
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-12_02:2020-04-11,2020-04-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 spamscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 impostorscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004120130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
-
-please pull the latest x86/urgent branch from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-04-12
-
-up to:  e6f8b6c12f03: KVM: VMX: Extend VMXs #AC interceptor to handle split lock #AC in guest
-
-
-A set of three patches to fix the fallout of the newly added split lock
-detection feature.
-
-They address the case where a KVM guest triggers a split lock #AC and KVM
-reinjects it into the guest which is not prepared to handle it.
-
-Adds proper sanity checks which prevent the unconditional injection into
-the guest and handles the #AC on the host side in the same way as user
-space detections are handled. Depending on the detection mode it either
-warns and disables detection for the task or kills the task if the mode is
-set to fatal.
-
-
-
-Thanks,
-
-	tglx
-
------------------->
-Thomas Gleixner (1):
-      x86/split_lock: Provide handle_guest_split_lock()
-
-Xiaoyao Li (2):
-      KVM: x86: Emulate split-lock access as a write in emulator
-      KVM: VMX: Extend VMXs #AC interceptor to handle split lock #AC in guest
-
-
- arch/x86/include/asm/cpu.h  |  6 ++++++
- arch/x86/kernel/cpu/intel.c | 33 ++++++++++++++++++++++++++++-----
- arch/x86/kvm/vmx/vmx.c      | 37 ++++++++++++++++++++++++++++++++++---
- arch/x86/kvm/x86.c          | 12 +++++++++++-
- 4 files changed, 79 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index ff6f3ca649b3..dd17c2da1af5 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -44,6 +44,7 @@ unsigned int x86_stepping(unsigned int sig);
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
- extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern bool handle_guest_split_lock(unsigned long ip);
- #else
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
-@@ -51,5 +52,10 @@ static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- {
- 	return false;
- }
-+
-+static inline bool handle_guest_split_lock(unsigned long ip)
-+{
-+	return false;
-+}
- #endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 9a26e972cdea..bf08d4508ecb 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -21,6 +21,7 @@
- #include <asm/elf.h>
- #include <asm/cpu_device_id.h>
- #include <asm/cmdline.h>
-+#include <asm/traps.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -1066,13 +1067,10 @@ static void split_lock_init(void)
- 	split_lock_verify_msr(sld_state != sld_off);
- }
- 
--bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+static void split_lock_warn(unsigned long ip)
- {
--	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
--		return false;
--
- 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
--			    current->comm, current->pid, regs->ip);
-+			    current->comm, current->pid, ip);
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
-@@ -1081,6 +1079,31 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- 	 */
- 	sld_update_msr(false);
- 	set_tsk_thread_flag(current, TIF_SLD);
-+}
-+
-+bool handle_guest_split_lock(unsigned long ip)
-+{
-+	if (sld_state == sld_warn) {
-+		split_lock_warn(ip);
-+		return true;
-+	}
-+
-+	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-+		     current->comm, current->pid,
-+		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
-+
-+	current->thread.error_code = 0;
-+	current->thread.trap_nr = X86_TRAP_AC;
-+	force_sig_fault(SIGBUS, BUS_ADRALN, NULL);
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-+
-+bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+{
-+	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-+		return false;
-+	split_lock_warn(regs->ip);
- 	return true;
- }
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 8959514eaf0f..83050977490c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4588,6 +4588,26 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+/*
-+ * If the host has split lock detection disabled, then #AC is
-+ * unconditionally injected into the guest, which is the pre split lock
-+ * detection behaviour.
-+ *
-+ * If the host has split lock detection enabled then #AC is
-+ * only injected into the guest when:
-+ *  - Guest CPL == 3 (user mode)
-+ *  - Guest has #AC detection enabled in CR0
-+ *  - Guest EFLAGS has AC bit set
-+ */
-+static inline bool guest_inject_ac(struct kvm_vcpu *vcpu)
-+{
-+	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-+		return true;
-+
-+	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-+	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
-+}
-+
- static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4653,9 +4673,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		return handle_rmode_exception(vcpu, ex_no, error_code);
- 
- 	switch (ex_no) {
--	case AC_VECTOR:
--		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
--		return 1;
- 	case DB_VECTOR:
- 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
- 		if (!(vcpu->guest_debug &
-@@ -4684,6 +4701,20 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
- 		kvm_run->debug.arch.exception = ex_no;
- 		break;
-+	case AC_VECTOR:
-+		if (guest_inject_ac(vcpu)) {
-+			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-+			return 1;
-+		}
-+
-+		/*
-+		 * Handle split lock. Depending on detection mode this will
-+		 * either warn and disable split lock detection for this
-+		 * task or force SIGBUS on it.
-+		 */
-+		if (handle_guest_split_lock(kvm_rip_read(vcpu)))
-+			return 1;
-+		fallthrough;
- 	default:
- 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
- 		kvm_run->ex.exception = ex_no;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 027dfd278a97..3bf2ecafd027 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5839,6 +5839,7 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
- {
- 	struct kvm_host_map map;
- 	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
-+	u64 page_line_mask;
- 	gpa_t gpa;
- 	char *kaddr;
- 	bool exchanged;
-@@ -5853,7 +5854,16 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
- 	    (gpa & PAGE_MASK) == APIC_DEFAULT_PHYS_BASE)
- 		goto emul_write;
- 
--	if (((gpa + bytes - 1) & PAGE_MASK) != (gpa & PAGE_MASK))
-+	/*
-+	 * Emulate the atomic as a straight write to avoid #AC if SLD is
-+	 * enabled in the host and the access splits a cache line.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-+		page_line_mask = ~(cache_line_size() - 1);
-+	else
-+		page_line_mask = PAGE_MASK;
-+
-+	if (((gpa + bytes - 1) & page_line_mask) != (gpa & page_line_mask))
- 		goto emul_write;
- 
- 	if (kvm_vcpu_map(vcpu, gpa_to_gfn(gpa), &map))
-
+T24gU3VuLCAyMDIwLTA0LTEyIGF0IDE0OjAxICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBUaHUsIDI3IEZlYiAyMDIwIDE1OjUyOjI3ICswMjAw
+DQo+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdy
+b3RlOg0KPiANCj4gPiBJdCdzIHVudXNlZCBzbyBmYXIsIHNvIGl0IGNhbid0IGJlIHJlbW92ZWQu
+IEFsc28gbWFrZXMgc2Vuc2UgdG8gcmVtb3ZlIGl0DQo+ID4gdG8gZGlzY291cmFnZSB3ZWlyZCB1
+c2VzIG9mIHRoaXMgY2FsbCBkdXJpbmcgcmV2aWV3Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+IEFw
+cGxpZWQgd2l0aCB0aGUgY2FuJ3QgLT4gY2FuIGFib3ZlIGZpeGVkIHVwLg0KPiANCg0KVGhhbmtz
+IGZvciBub3RpY2luZyB0aGUgdHlwby4NCkkgc2hvdWxkIHJlYWxseSBhbGxvY2F0ZWQgbW9yZSBi
+cmFpbiBwb3dlciB0byBjb21taXQgY29tbWVudHMuDQpJIHRoaW5rIEkgaGF2ZSBhIGJhZCBoYWJp
+dCBvZiBwb3dlcmluZyBkb3duIG15IGJyYWluIGZvciB0aGUgY29tbWVudHMsIGFmdGVyDQpkb2lu
+ZyB0aGUgY29kZS4NCg0KDQo+IFRoYW5rcywNCj4gDQo+IEpvbmF0aGFuDQo+IA0KPiA+IC0tLQ0K
+PiA+ICAuLi4vZHJpdmVyLWFwaS9kcml2ZXItbW9kZWwvZGV2cmVzLnJzdCAgICAgICAgfCAgMSAt
+DQo+ID4gIGRyaXZlcnMvaWlvL2J1ZmZlci9rZmlmb19idWYuYyAgICAgICAgICAgICAgICB8IDIy
+IC0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgaW5jbHVkZS9saW51eC9paW8va2ZpZm9fYnVmLmgg
+ICAgICAgICAgICAgICAgIHwgIDEgLQ0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDI0IGRlbGV0aW9u
+cygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZHJp
+dmVyLW1vZGVsL2RldnJlcy5yc3QNCj4gPiBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9kcml2
+ZXItbW9kZWwvZGV2cmVzLnJzdA0KPiA+IGluZGV4IDEwY2NlYmU5ZjdjMS4uOTFiMGI4ZTU1NTZj
+IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9kcml2ZXItbW9kZWwv
+ZGV2cmVzLnJzdA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9kcml2ZXItbW9k
+ZWwvZGV2cmVzLnJzdA0KPiA+IEBAIC0yODYsNyArMjg2LDYgQEAgSUlPDQo+ID4gICAgZGV2bV9p
+aW9fZGV2aWNlX2FsbG9jKCkNCj4gPiAgICBkZXZtX2lpb19kZXZpY2VfcmVnaXN0ZXIoKQ0KPiA+
+ICAgIGRldm1faWlvX2tmaWZvX2FsbG9jYXRlKCkNCj4gPiAtICBkZXZtX2lpb19rZmlmb19mcmVl
+KCkNCj4gPiAgICBkZXZtX2lpb190cmlnZ2VyZWRfYnVmZmVyX3NldHVwKCkNCj4gPiAgICBkZXZt
+X2lpb190cmlnZ2VyX2FsbG9jKCkNCj4gPiAgICBkZXZtX2lpb190cmlnZ2VyX3JlZ2lzdGVyKCkN
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYnVmZmVyL2tmaWZvX2J1Zi5jIGIvZHJpdmVy
+cy9paW8vYnVmZmVyL2tmaWZvX2J1Zi5jDQo+ID4gaW5kZXggMzE1MGY4YWI5ODRiLi4xMzU5YWJl
+ZDNiMzEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9paW8vYnVmZmVyL2tmaWZvX2J1Zi5jDQo+
+ID4gKysrIGIvZHJpdmVycy9paW8vYnVmZmVyL2tmaWZvX2J1Zi5jDQo+ID4gQEAgLTE3OSwxNiAr
+MTc5LDYgQEAgc3RhdGljIHZvaWQgZGV2bV9paW9fa2ZpZm9fcmVsZWFzZShzdHJ1Y3QgZGV2aWNl
+ICpkZXYsDQo+ID4gdm9pZCAqcmVzKQ0KPiA+ICAJaWlvX2tmaWZvX2ZyZWUoKihzdHJ1Y3QgaWlv
+X2J1ZmZlciAqKilyZXMpOw0KPiA+ICB9DQo+ID4gIA0KPiA+IC1zdGF0aWMgaW50IGRldm1faWlv
+X2tmaWZvX21hdGNoKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqcmVzLCB2b2lkICpkYXRhKQ0K
+PiA+IC17DQo+ID4gLQlzdHJ1Y3QgaWlvX2J1ZmZlciAqKnIgPSByZXM7DQo+ID4gLQ0KPiA+IC0J
+aWYgKFdBUk5fT04oIXIgfHwgISpyKSkNCj4gPiAtCQlyZXR1cm4gMDsNCj4gPiAtDQo+ID4gLQly
+ZXR1cm4gKnIgPT0gZGF0YTsNCj4gPiAtfQ0KPiA+IC0NCj4gPiAgLyoqDQo+ID4gICAqIGRldm1f
+aWlvX2ZpZm9fYWxsb2NhdGUgLSBSZXNvdXJjZS1tYW5hZ2VkIGlpb19rZmlmb19hbGxvY2F0ZSgp
+DQo+ID4gICAqIEBkZXY6CQlEZXZpY2UgdG8gYWxsb2NhdGUga2ZpZm8gYnVmZmVyIGZvcg0KPiA+
+IEBAIC0yMTYsMTYgKzIwNiw0IEBAIHN0cnVjdCBpaW9fYnVmZmVyICpkZXZtX2lpb19rZmlmb19h
+bGxvY2F0ZShzdHJ1Y3QNCj4gPiBkZXZpY2UgKmRldikNCj4gPiAgfQ0KPiA+ICBFWFBPUlRfU1lN
+Qk9MKGRldm1faWlvX2tmaWZvX2FsbG9jYXRlKTsNCj4gPiAgDQo+ID4gLS8qKg0KPiA+IC0gKiBk
+ZXZtX2lpb19maWZvX2ZyZWUgLSBSZXNvdXJjZS1tYW5hZ2VkIGlpb19rZmlmb19mcmVlKCkNCj4g
+PiAtICogQGRldjoJCURldmljZSB0aGUgYnVmZmVyIGJlbG9uZ3MgdG8NCj4gPiAtICogQHI6CQkJ
+VGhlIGJ1ZmZlciBhc3NvY2lhdGVkIHdpdGggdGhlIGRldmljZQ0KPiA+IC0gKi8NCj4gPiAtdm9p
+ZCBkZXZtX2lpb19rZmlmb19mcmVlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGlpb19idWZm
+ZXIgKnIpDQo+ID4gLXsNCj4gPiAtCVdBUk5fT04oZGV2cmVzX3JlbGVhc2UoZGV2LCBkZXZtX2lp
+b19rZmlmb19yZWxlYXNlLA0KPiA+IC0JCQkgICAgICAgZGV2bV9paW9fa2ZpZm9fbWF0Y2gsIHIp
+KTsNCj4gPiAtfQ0KPiA+IC1FWFBPUlRfU1lNQk9MKGRldm1faWlvX2tmaWZvX2ZyZWUpOw0KPiA+
+IC0NCj4gPiAgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRl
+L2xpbnV4L2lpby9rZmlmb19idWYuaCBiL2luY2x1ZGUvbGludXgvaWlvL2tmaWZvX2J1Zi5oDQo+
+ID4gaW5kZXggNzY0NjU5ZTAxYjY4Li4xZmMxZWZhNzc5OWQgMTAwNjQ0DQo+ID4gLS0tIGEvaW5j
+bHVkZS9saW51eC9paW8va2ZpZm9fYnVmLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2lpby9r
+Zmlmb19idWYuaA0KPiA+IEBAIC05LDYgKzksNSBAQCBzdHJ1Y3QgaWlvX2J1ZmZlciAqaWlvX2tm
+aWZvX2FsbG9jYXRlKHZvaWQpOw0KPiA+ICB2b2lkIGlpb19rZmlmb19mcmVlKHN0cnVjdCBpaW9f
+YnVmZmVyICpyKTsNCj4gPiAgDQo+ID4gIHN0cnVjdCBpaW9fYnVmZmVyICpkZXZtX2lpb19rZmlm
+b19hbGxvY2F0ZShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KPiA+IC12b2lkIGRldm1faWlvX2tmaWZv
+X2ZyZWUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgaWlvX2J1ZmZlciAqcik7DQo+ID4gIA0K
+PiA+ICAjZW5kaWYNCg==
