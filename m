@@ -2,111 +2,433 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07290C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 20:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104D1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 20:59:34 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4CA5206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 20:46:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D4CA5206E9
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=denx.de
+	by mail.kernel.org (Postfix) with ESMTP id D562620708
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 20:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONB8qeJZ"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D562620708
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgDLUqJ (ORCPT
+        id S1728195AbgDLU7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 16:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:39312 "EHLO
+        Sun, 12 Apr 2020 16:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbgDLUqJ (ORCPT
+        with ESMTP id S1728180AbgDLU7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 16:46:09 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 472F5C0A3BF5;
-        Sun, 12 Apr 2020 13:46:09 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F00A41C69AF; Sun, 12 Apr 2020 22:46:07 +0200 (CEST)
-Date:   Sun, 12 Apr 2020 22:46:07 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH 4.19 20/54] power: supply: axp288_charger: Add special
- handling for HP Pavilion x2 10
-Message-ID: <20200412204607.GB5796@duo.ucw.cz>
-References: <20200411115508.284500414@linuxfoundation.org>
- <20200411115510.523425293@linuxfoundation.org>
+        Sun, 12 Apr 2020 16:59:31 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C685C0A3BF5;
+        Sun, 12 Apr 2020 13:59:31 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x2so5839726qtr.0;
+        Sun, 12 Apr 2020 13:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+oGha8BwVFGHyeSdF+xfvU5jDMPO0lkkRHjX1TTo+IA=;
+        b=ONB8qeJZxdZc5aoz+PTkxRUemiWREghJiaggCxQbAyBsJ0sUzzzOf3b3yJXTaqZLAF
+         IjSIwe2ipOslb4icX98h/FJCd6VPxwTY8FnMXutHj/BBKIDBWKjKKHHLuFbpoy29+5QS
+         OdcsNAY3LtPooiVgJFrhLvUFL5NNs5jkZfJbvTiCk/Na0egCKMgLHZpoUMDHu9U5yx/p
+         t6IIP0Rix0soutpv8mA+n3PAmBwMCZnfux8mmr8oznAmVp/OkFxQju7592ONfsEkFl3o
+         jHnSRYqvGLl0a3sLIuBEI5TmoBlYQ1Pp6ethlWpxnWnPh87DuTmrf+NAy7GsBh+4+T34
+         EIcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+oGha8BwVFGHyeSdF+xfvU5jDMPO0lkkRHjX1TTo+IA=;
+        b=FOx9swuZQ/bEZKsiErXw0OglFZsipT0WjjV2mv3UPkZVFCiLTxjCj5lRQ/rrcztLQj
+         mnDn0k8YcUudIER8PBWcwjMXHRM/IShhEe405zVmVC6NfMiFqUbSZFxCQ4DD0vk2h0sI
+         7/xialtiN37mgCRB8AwY+p3//wsIujwr4TrRy53UYb0uCpTS6GGzeRNFVdTVIIsfiRNF
+         lQ7hGswfYkkLKH59Dxi7MkkUOy8ElCMG44HsVC0uieE0mwy1mHeVeTXASeku2AmfpIfR
+         RDxnZ2V9diSkL7u1WlToEdF0tPCyT4ziO/LNSqeB41NagSep5aOOg/qlhkYg6eFQKrA0
+         W7sQ==
+X-Gm-Message-State: AGi0PuYIzH/pR8MqsnU79cAUaEuU2Wo7XK7xGl9IKE9MYv/4jfUR+CQh
+        +xDKkoGGzz48s4wPgHJPtlRraA2m
+X-Google-Smtp-Source: APiQypJoEAfUIeLBNG56MDLayNIOgrC4o0T/bEWonL57Vi3Sh+/SgqAJ1asxT3R5slMoYG45RdqkVA==
+X-Received: by 2002:ac8:728b:: with SMTP id v11mr1524147qto.108.1586725170421;
+        Sun, 12 Apr 2020 13:59:30 -0700 (PDT)
+Received: from localhost.localdomain ([2804:431:c7f0:399e:5739:49e3:a0ab:5902])
+        by smtp.gmail.com with ESMTPSA id g14sm7190108qtb.24.2020.04.12.13.59.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Apr 2020 13:59:29 -0700 (PDT)
+From:   "Carlos E. C. Barbosa" <barbosa.carlos.ec@gmail.com>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Subject: [PATCH v4] media: vimc: get pixformat info from v4l2_format_info
+Date:   Sun, 12 Apr 2020 17:59:16 -0300
+Message-Id: <20200412205916.3333547-1-barbosa.carlos.ec@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
-Content-Disposition: inline
-In-Reply-To: <20200411115510.523425293@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Carlos E.C. Barbosa" <barbosa.carlos.ec@gmail.com>
 
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There is overlapping code over two distinct lists. This repurposes
+vimc_pix_map for mapping formats and remaps the calls to the matching
+v4l2_format_info.
 
-On Sat 2020-04-11 14:09:02, Greg Kroah-Hartman wrote:
-> From: Hans de Goede <hdegoede@redhat.com>
->=20
-> commit 9c80662a74cd2a5d1113f5c69d027face963a556 upstream.
->=20
-> Some HP Pavilion x2 10 models use an AXP288 for charging and fuel-gauge.
-> We use a native power_supply / PMIC driver in this case, because on most
-> models with an AXP288 the ACPI AC / Battery code is either completely
-> missing or relies on custom / proprietary ACPI OpRegions which Linux
-> does not implement.
->=20
-> The native drivers mostly work fine, but there are 2 problems:
->=20
-> 1. These model uses a Type-C connector for charging which the AXP288 does
-> not support. As long as a Type-A charger (which uses the USB data pins for
-> charger type detection) is used everything is fine. But if a Type-C
-> charger is used (such as the charger shipped with the device) then the
-> charger is not recognized.
->=20
-> So we end up slowly discharging the device even though a charger is
-> connected, because we are limiting the current from the charger to 500mA.
-> To make things worse this happens with the device's official charger.
->=20
-> Looking at the ACPI tables HP has "solved" the problem of the AXP288 not
-> being able to recognize Type-C chargers by simply always programming the
-> input-current-limit at 3000mA and relying on a Vhold setting of 4.7V
-> (normally 4.4V) to limit the current intake if the charger cannot handle
-> this.
+Signed-off-by: Carlos E. C. Barbosa <barbosa.carlos.ec@gmail.com>
 
-Hmm.. Drawing 3A from port designed for .5A... is not that a bit
-dangerous? It is certainly against the specs.
+---
 
-I believe it will work okay 90% of time, but maybe something overheats
-or some fuse trips in the remaining cases. I believe I've seen fuse
-triping on USB port of my home router..
+Changes in v2:
+As advised by Helen Koike and Hans Verkuil, the const qualifiers are
+not
+removed, the bayer flag is kept and the unnecessary changes are not
+made.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Changes in v3:
+Change declaration order of variables and some minor style changes.
 
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v4:
+Unused variables were removed.
 
------BEGIN PGP SIGNATURE-----
+v4l2-compliance -m /dev/media0 output:
+https://pastebin.com/F98792eW
+---
+ drivers/media/platform/vimc/vimc-capture.c | 14 ++++++++-----
+ drivers/media/platform/vimc/vimc-common.c  | 23 ----------------------
+ drivers/media/platform/vimc/vimc-common.h  |  2 --
+ drivers/media/platform/vimc/vimc-debayer.c |  7 +++++--
+ drivers/media/platform/vimc/vimc-scaler.c  |  8 ++++++--
+ drivers/media/platform/vimc/vimc-sensor.c  |  9 +++++++--
+ 6 files changed, 27 insertions(+), 36 deletions(-)
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXpN+DwAKCRAw5/Bqldv6
-8u9oAKC5lpXEWnBKfIzTnhMzbY37kb655QCfZUmwKkcsmbxbM9/YySEQ1ANbaIw=
-=IJfG
------END PGP SIGNATURE-----
+diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+index 23e740c1c5c0..4f85e0bb8f27 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -85,6 +85,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+ 				    struct v4l2_format *f)
+ {
+ 	struct v4l2_pix_format *format = &f->fmt.pix;
++	const struct v4l2_format_info *vinfo;
+ 	const struct vimc_pix_map *vpix;
+ 
+ 	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
+@@ -94,12 +95,13 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+ 
+ 	/* Don't accept a pixelformat that is not on the table */
+ 	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+-	if (!vpix) {
++	if (!vpix)
+ 		format->pixelformat = fmt_default.pixelformat;
+-		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+-	}
++
++	vinfo = v4l2_format_info(format->pixelformat);
++
+ 	/* TODO: Add support for custom bytesperline values */
+-	format->bytesperline = format->width * vpix->bpp;
++	format->bytesperline = format->width * vinfo->bpp[0];
+ 	format->sizeimage = format->bytesperline * format->height;
+ 
+ 	if (format->field == V4L2_FIELD_ANY)
+@@ -386,6 +388,7 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+ 				     const char *vcfg_name)
+ {
+ 	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
++	const struct v4l2_format_info *vinfo;
+ 	const struct vimc_pix_map *vpix;
+ 	struct vimc_cap_device *vcap;
+ 	struct video_device *vdev;
+@@ -435,7 +438,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+ 	/* Set default frame format */
+ 	vcap->format = fmt_default;
+ 	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
+-	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
++	vinfo = v4l2_format_info(vpix->pixelformat);
++	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
+ 	vcap->format.sizeimage = vcap->format.bytesperline *
+ 				 vcap->format.height;
+ 
+diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+index c95c17c048f2..fc881daee627 100644
+--- a/drivers/media/platform/vimc/vimc-common.c
++++ b/drivers/media/platform/vimc/vimc-common.c
+@@ -21,19 +21,16 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+ 	{
+ 		.code = MEDIA_BUS_FMT_BGR888_1X24,
+ 		.pixelformat = V4L2_PIX_FMT_BGR24,
+-		.bpp = 3,
+ 		.bayer = false,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_RGB888_1X24,
+ 		.pixelformat = V4L2_PIX_FMT_RGB24,
+-		.bpp = 3,
+ 		.bayer = false,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
+ 		.pixelformat = V4L2_PIX_FMT_ARGB32,
+-		.bpp = 4,
+ 		.bayer = false,
+ 	},
+ 
+@@ -41,49 +38,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+ 	{
+ 		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SBGGR8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SGBRG8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SGRBG8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SRGGB8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SBGGR10,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SGBRG10,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SGRBG10,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SRGGB10,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 
+@@ -91,25 +80,21 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+ 	{
+ 		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 
+@@ -117,49 +102,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+ 	{
+ 		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+ 		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
+-		.bpp = 1,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
+ 		.pixelformat = V4L2_PIX_FMT_SBGGR12,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
+ 		.pixelformat = V4L2_PIX_FMT_SGBRG12,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
+ 		.pixelformat = V4L2_PIX_FMT_SGRBG12,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+ 		.pixelformat = V4L2_PIX_FMT_SRGGB12,
+-		.bpp = 2,
+ 		.bayer = true,
+ 	},
+ };
+diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+index 616d5a6b0754..838d5df7b9ed 100644
+--- a/drivers/media/platform/vimc/vimc-common.h
++++ b/drivers/media/platform/vimc/vimc-common.h
+@@ -62,7 +62,6 @@ do {									\
+  * struct vimc_pix_map - maps media bus code with v4l2 pixel format
+  *
+  * @code:		media bus format code defined by MEDIA_BUS_FMT_* macros
+- * @bbp:		number of bytes each pixel occupies
+  * @pixelformat:	pixel format devined by V4L2_PIX_FMT_* macros
+  *
+  * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
+@@ -70,7 +69,6 @@ do {									\
+  */
+ struct vimc_pix_map {
+ 	unsigned int code;
+-	unsigned int bpp;
+ 	u32 pixelformat;
+ 	bool bayer;
+ };
+diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+index baf6bf9f65b5..c141a307851c 100644
+--- a/drivers/media/platform/vimc/vimc-debayer.c
++++ b/drivers/media/platform/vimc/vimc-debayer.c
+@@ -303,6 +303,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+ 	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+ 
+ 	if (enable) {
++		const struct v4l2_format_info *vinfo;
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
+ 
+@@ -311,12 +312,14 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+ 
+ 		/* Calculate the frame size of the source pad */
+ 		vpix = vimc_pix_map_by_code(vdeb->src_code);
++		vinfo = v4l2_format_info(vpix->pixelformat);
+ 		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
+-				vpix->bpp;
++				vinfo->bpp[0];
+ 
+ 		/* Save the bytes per pixel of the sink */
+ 		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
+-		vdeb->sink_bpp = vpix->bpp;
++		vinfo = v4l2_format_info(vpix->pixelformat);
++		vdeb->sink_bpp = vinfo->bpp[0];
+ 
+ 		/* Get the corresponding pixel map from the table */
+ 		vdeb->sink_pix_map =
+diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+index 7521439747c5..9429aeea9cee 100644
+--- a/drivers/media/platform/vimc/vimc-scaler.c
++++ b/drivers/media/platform/vimc/vimc-scaler.c
+@@ -180,8 +180,10 @@ static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
+ 
+ 	/* Only accept code in the pix map table in non bayer format */
+ 	vpix = vimc_pix_map_by_code(fmt->code);
+-	if (!vpix || vpix->bayer)
++	if (!vpix || vpix->bayer) {
+ 		fmt->code = sink_fmt_default.code;
++		vpix = vimc_pix_map_by_code(fmt->code);
++	}
+ 
+ 	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+ 			     VIMC_FRAME_MAX_WIDTH) & ~1;
+@@ -331,6 +333,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+ 	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+ 
+ 	if (enable) {
++		const struct v4l2_format_info *vinfo;
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
+ 
+@@ -339,7 +342,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+ 
+ 		/* Save the bytes per pixel of the sink */
+ 		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
+-		vsca->bpp = vpix->bpp;
++		vinfo = v4l2_format_info(vpix->pixelformat);
++		vsca->bpp = vinfo->bpp[0];
+ 
+ 		/* Calculate the width in bytes of the src frame */
+ 		vsca->src_line_size = vsca->crop_rect.width *
+diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+index 92daee58209e..fac2260b939f 100644
+--- a/drivers/media/platform/vimc/vimc-sensor.c
++++ b/drivers/media/platform/vimc/vimc-sensor.c
+@@ -102,10 +102,13 @@ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
+ {
+ 	const struct vimc_pix_map *vpix =
+ 				vimc_pix_map_by_code(vsen->mbus_format.code);
++	const struct v4l2_format_info *vinfo =
++				v4l2_format_info(vpix->pixelformat);
+ 
+ 	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
+ 			 vsen->mbus_format.height, vsen->mbus_format.field);
+-	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
++	tpg_s_bytesperline(&vsen->tpg, 0,
++			   vsen->mbus_format.width * vinfo->bpp[0]);
+ 	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
+ 	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
+ 	/* TODO: add support for V4L2_FIELD_ALTERNATE */
+@@ -198,12 +201,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+ 				container_of(sd, struct vimc_sen_device, sd);
+ 
+ 	if (enable) {
++		const struct v4l2_format_info *vinfo;
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
+ 
+ 		/* Calculate the frame size */
+ 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+-		frame_size = vsen->mbus_format.width * vpix->bpp *
++		vinfo = v4l2_format_info(vpix->pixelformat);
++		frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
+ 			     vsen->mbus_format.height;
+ 
+ 		/*
+-- 
+2.26.0
 
---KFztAG8eRSV9hGtP--
