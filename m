@@ -2,126 +2,144 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B4DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE0DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:51:04 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C92F206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:47:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 8C92F206C3
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+	by mail.kernel.org (Postfix) with ESMTP id 7D0EE2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I/RqJDXe"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 7D0EE2072D
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgDLTry (ORCPT
+        id S1727969AbgDLTvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 15:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:56588 "EHLO
+        Sun, 12 Apr 2020 15:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:57130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbgDLTry (ORCPT
+        with ESMTP id S1727315AbgDLTvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 15:47:54 -0400
-Received: from smtprelay.hostedemail.com (smtprelay0152.hostedemail.com [216.40.44.152])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43AA4C0A3BF0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 12:47:54 -0700 (PDT)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 6A56818013526;
-        Sun, 12 Apr 2020 19:47:53 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: tooth14_7ef77ec3d0010
-X-Filterd-Recvd-Size: 2969
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 12 Apr 2020 19:47:52 +0000 (UTC)
-Message-ID: <c1f28a6b5ae0fc1b6575d74c72363921ff74da44.camel@perches.com>
-Subject: Re: Request to sort MAINTAINERS again just before an -rc1 release
-From:   Joe Perches <joe@perches.com>
+        Sun, 12 Apr 2020 15:51:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2C1C0A3BF0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 12:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586721060;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dkKaQ8e58hW+EwI1ZMWf6joU++0Hx4+kuiK9v/2dsLY=;
+        b=I/RqJDXePjTxchC2G7moBEgmEzMkjJv6p6IzsNS2HKL7VOkmHtMFI+AaZADJCHi+fwfhuu
+        pL2PuY1gcJC5GUu48vPddpLRqcL5WGHYVG2CIuD6P01pkVQmhZs9Hn3G9GUopifQV5TGML
+        W43lxDirnAtNmB+FVWpCgQoMXlTB3PA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-hK6QV5XPMLWEuuKcKDgVYA-1; Sun, 12 Apr 2020 15:50:56 -0400
+X-MC-Unique: hK6QV5XPMLWEuuKcKDgVYA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 663F4800D53;
+        Sun, 12 Apr 2020 19:50:55 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.67])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 32C9060BE0;
+        Sun, 12 Apr 2020 19:50:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sun, 12 Apr 2020 21:50:55 +0200 (CEST)
+Date:   Sun, 12 Apr 2020 21:50:49 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Sun, 12 Apr 2020 12:45:46 -0700
-In-Reply-To: <CAHk-=whs8jNmbrXVyOekWD2zugN=jweHrspPqYVx59+0c5BWhQ@mail.gmail.com>
-References: <f53fdf2283e1c847a4c44ea7bea4cb6600c06991.camel@perches.com>
-         <af4673918a3f6bfba51118d68d554d4a1ff3dad4.camel@perches.com>
-         <CAHk-=whs8jNmbrXVyOekWD2zugN=jweHrspPqYVx59+0c5BWhQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+Message-ID: <20200412195049.GA23824@redhat.com>
+References: <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
+ <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
+ <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <87imi8nzlw.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+ <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
+ <20200411182043.GA3136@redhat.com>
+ <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-04-12 at 11:08 -0700, Linus Torvalds wrote:
-> On Sat, Apr 11, 2020 at 9:45 AM Joe Perches <joe@perches.com> wrote:
-> > Please consider running and committing:
-> > 
-> > $ ./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS --order
-> 
-> Ok, done. Let's see how painful this ends up being..
+On 04/11, Linus Torvalds wrote:
+>
+> On Sat, Apr 11, 2020 at 11:21 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 04/09, Linus Torvalds wrote:
+> > >
+> > >  (1) have execve() not wait for dead threads while holding the cred
+> > > mutex
+> >
+> > This is what I tried to do 3 years ago, see
+>
+> Well, you did it differently - by moving the "wait for dead threads"
+> logic to after releasing the lock.
 
-Thanks.
+Yes, please see below.
 
-Hopefully, it's not too bad as were only 4 diff sections
-for MAINTAINERS between your tree and the latest -next
-before these changes.
+> My simpler patch was lazier
 
-$ diff -urN MAINTAINERS ../next/MAINTAINERS
---- MAINTAINERS	2020-04-12 12:40:53.261770465 -0700
-+++ ../next/MAINTAINERS	2020-04-11 22:10:49.051770733 -0700
-@@ -2259,6 +2259,8 @@
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-realtek-soc@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
-+F:	arch/arm/boot/dts/rtd*
-+F:	arch/arm/mach-realtek/
- F:	arch/arm64/boot/dts/realtek/
- F:	Documentation/devicetree/bindings/arm/realtek.yaml
- 
-@@ -5959,6 +5961,7 @@
- S:	Maintained
- F:	include/linux/dim.h
- F:	lib/dim/
-+F:	Documentation/networking/net_dim.rst
- 
- DZ DECSTATION DZ11 SERIAL DRIVER
- M:	"Maciej W. Rozycki" <macro@linux-mips.org>
-@@ -9155,6 +9158,17 @@
- F:	scripts/kconfig/
- F:	scripts/Kconfig.include
- 
-+KCSAN
-+M:	Marco Elver <elver@google.com>
-+R:	Dmitry Vyukov <dvyukov@google.com>
-+L:	kasan-dev@googlegroups.com
-+S:	Maintained
-+F:	Documentation/dev-tools/kcsan.rst
-+F:	include/linux/kcsan*.h
-+F:	kernel/kcsan/
-+F:	lib/Kconfig.kcsan
-+F:	scripts/Makefile.kcsan
-+
- KDUMP
- M:	Dave Young <dyoung@redhat.com>
- M:	Baoquan He <bhe@redhat.com>
-@@ -9386,6 +9400,13 @@
- F:	include/keys/
- F:	security/keys/
- 
-+KFIFO:
-+M:	Stefani Seibold <stefani@seibold.net>
-+S:	Maintained
-+F:	lib/kfifo.c
-+F:	include/linux/kfifo.h
-+F:	samples/kfifo/
-+
- KGDB / KDB /debug_core
- M:	Jason Wessel <jason.wessel@windriver.com>
- M:	Daniel Thompson <daniel.thompson@linaro.org>
+To be honest, I don't understand it... OK, suppose that the main thread
+M execs and zap_other_threads() finds a single (and alive) sub-thread T,
+sig->notify_count = 1.
 
+If T is traced, then ->notify_count won't be decremented until the tracer
+reaps this task, so we have the same problem.
+
+This is fixeable, say, we can uglify exit_notify() like my patch does,
+but:
+
+> - just don't wait for dead threads at all,
+> since they are dead and not interesting.
+
+Well, I am not sure. Just for example, seccomp(SECCOMP_FILTER_FLAG_TSYNC)
+can fail after mt-exec because seccomp_can_sync_threads() finds a zombe
+thread. Sure, this too can can be fixed, but I think there should be no
+other threads after exec.
+
+And:
+
+> You do say in that old patch that we can't just share the signal
+> state, but I wonder how true that is.
+
+We can share sighand_struct with TASK_ZOMBIE's. The problem is that
+we can not unshare ->sighand until they go away, execing thread and
+zombies must use the same sighand->siglock to serialize the access to
+->thread_head/etc.
+
+OK, we probably can if we complicate unshare_sighand(), we will need
+to take tasklist_lock/oldsighand->siglock unconditionally to check
+oldsighand->count > sig->nr_thread, then do
+
+	for_each_thread(current, t) {
+		t->sighand = newsighand;
+		__cleanup_sighand(oldsighand);
+	}
+
+but see above, I don't think this makes any sense.
+
+Oleg
 
