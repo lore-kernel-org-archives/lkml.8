@@ -2,146 +2,117 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D67C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C87C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511E120787
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFBC20753
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:34:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwPTvAUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgDLBWL (ORCPT
+        id S1726813AbgDLBeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 21:22:11 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30655 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgDLBWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 21:22:11 -0400
-IronPort-SDR: GFDhty0SoVP3Pf29nRru7lkHk+ZaE1fBdTV9DxUYahcrXQOWwA+RKPDA0i1gJfeJFYJIr1uwLT
- ObtbCtfRRKyw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2020 18:22:10 -0700
-IronPort-SDR: Gjf92eSK82jr/qQbFG8R9uw/bJCBIGWfD2QuPjgeosf3hzpJ36O5fpCo8rKlfmpx7ySX09jF8D
- QIZs66LiAvhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,372,1580803200"; 
-   d="scan'208";a="252551950"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 11 Apr 2020 18:22:09 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jNRK4-0005Ty-Ql; Sun, 12 Apr 2020 09:22:08 +0800
-Date:   Sun, 12 Apr 2020 09:21:28 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- e6f8b6c12f03818baacc5f504fe83fa5e20771d6
-Message-ID: <5e926d18.MOsH99BQt5InP/HZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 11 Apr 2020 21:34:00 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:40566 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgDLBeA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 21:34:00 -0400
+Received: by mail-qv1-f65.google.com with SMTP id k9so2818236qvw.7;
+        Sat, 11 Apr 2020 18:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G3nQaM43k9Rklf2xLNnAGkRhKH0gN0HpijPYsLTLZdM=;
+        b=AwPTvAUITiOJF80dM/rPAHATDeQ3GU/8cDAo/hNSm4EOixAspTDZ53W/ovEXabIXJP
+         e0xUYfwOywrkk9NqihZ14MIAOHUhXmTwoQsbk0GAGjO98BJAnpUk9DdqI1HNB2FQAjUI
+         4pH3/Yb/3y+UnAxVViaohluOE0a8zpMYnGerS8s4wIe+fCtRTh2Kjxx9Ci7RpiP3AbNN
+         GO88B3Ft2D0KY+4FC1mRrbhHu8yq40rZLboGWpdk2e2cvGB+OG3S73cHpUcKEYeYTT0K
+         pCzrZ1tQKwokXPE2RzleSzlhvv52z5xs2Ah7M8BPGQKvrq9QnWEqMsqdzrYneMcA+uJX
+         Zofw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G3nQaM43k9Rklf2xLNnAGkRhKH0gN0HpijPYsLTLZdM=;
+        b=lQd3bbPFEfYQEaQIYB3V59nO1Giacdkmt/p8PCBizIk1LDJ0a4N34P+bVjiLIpjdCb
+         LEq3gXSljg1RfPZZJF7J42WxuYXCjDB/nLzQQnWRCacnkJaLpCudPieXH8jE1iKHKxnQ
+         GNTCiHe0DWvRDotddcV8iUPb4kJh4aLHIHZKj4Fn3Py2hN87o9obsEbjdLMv2KyHwUgr
+         iJAv+O+Oa4qCqd+QZjoFcQ00Ev0nGsckGAd4O/UOYUcm9iUyn8g/0cf/9kEFIhfBCZGI
+         dx+QF4NK3c5fZBon5xNCZ0pPuySFusNM/vK9n+DG+GpXBB2b+5cLQrn3p5r44N3Kdj/t
+         lobg==
+X-Gm-Message-State: AGi0PuYcx6FnvpNX4aiVqZXvPb1PtZ9VcZKsS9NF5dJTUkssTWs/gweT
+        cC3eu5xx4u/dEJ9nlubHFWHQcxQngVY=
+X-Google-Smtp-Source: APiQypJiEV0RnRUmTyA/JuKefTQfZz6CM0s4Ym1Yzm4HZEMGiidJ3sWyRm1wpigUBRrhybZ2bO6rIQ==
+X-Received: by 2002:a0c:f70d:: with SMTP id w13mr11652746qvn.118.1586655239720;
+        Sat, 11 Apr 2020 18:33:59 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id n92sm4965192qtd.68.2020.04.11.18.33.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 18:33:59 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] gpiolib: of: Improve gpiolib-of support pull up/down on expanders
+Date:   Sat, 11 Apr 2020 20:33:51 -0500
+Message-Id: <20200412013352.674506-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
-branch HEAD: e6f8b6c12f03818baacc5f504fe83fa5e20771d6  KVM: VMX: Extend VMXs #AC interceptor to handle split lock #AC in guest
+When using GPIO expanders attached to I2C ports, their set_config function
+needs to be passed a config setting which contains options to enable pull
+up or pull down bias feature.  In order to set this config properly,
+the gpio parser needs to handle GPIO_PULL_UP and GPIO_PULL_DOWN.
 
-elapsed time: 559m
+This patch enables the flags corresponding to GPIO_PULL_UP and
+GPIO_PULL_DOWN.
 
-configs tested: 79
-configs skipped: 102
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index c6d30f73df07..bf17afb1f66d 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -344,6 +344,12 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
+ 	if (transitory)
+ 		lflags |= GPIO_TRANSITORY;
+ 
++	if (flags & OF_GPIO_PULL_UP)
++		lflags |= GPIO_PULL_UP;
++
++	if (flags & OF_GPIO_PULL_DOWN)
++		lflags |= GPIO_PULL_DOWN;
++
+ 	ret = gpiod_configure_flags(desc, propname, lflags, dflags);
+ 	if (ret < 0) {
+ 		gpiod_put(desc);
+@@ -585,6 +591,10 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+ 		*lflags |= GPIO_ACTIVE_LOW;
+ 	if (xlate_flags & OF_GPIO_TRANSITORY)
+ 		*lflags |= GPIO_TRANSITORY;
++	if (xlate_flags & OF_GPIO_PULL_UP)
++		*lflags |= GPIO_PULL_UP;
++	if (xlate_flags & OF_GPIO_PULL_DOWN)
++		*lflags |= GPIO_PULL_DOWN;
+ 
+ 	if (of_property_read_bool(np, "input"))
+ 		*dflags |= GPIOD_IN;
+-- 
+2.25.1
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-ia64                             allmodconfig
-m68k                           sun3_defconfig
-c6x                              allyesconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             alldefconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-alpha                randconfig-a001-20200412
-m68k                 randconfig-a001-20200412
-mips                 randconfig-a001-20200412
-nds32                randconfig-a001-20200412
-parisc               randconfig-a001-20200412
-riscv                randconfig-a001-20200412
-c6x                  randconfig-a001-20200412
-h8300                randconfig-a001-20200412
-microblaze           randconfig-a001-20200412
-nios2                randconfig-a001-20200412
-sparc64              randconfig-a001-20200412
-x86_64               randconfig-b002-20200412
-i386                 randconfig-b001-20200412
-x86_64               randconfig-b001-20200412
-x86_64               randconfig-b003-20200412
-i386                 randconfig-b003-20200412
-i386                 randconfig-b002-20200412
-x86_64               randconfig-d001-20200412
-x86_64               randconfig-d002-20200412
-x86_64               randconfig-d003-20200412
-i386                 randconfig-d001-20200412
-i386                 randconfig-d002-20200412
-i386                 randconfig-d003-20200412
-x86_64               randconfig-e001-20200412
-i386                 randconfig-e001-20200412
-i386                 randconfig-e002-20200412
-i386                 randconfig-e003-20200412
-x86_64               randconfig-e003-20200412
-x86_64               randconfig-e002-20200412
-x86_64               randconfig-f001-20200412
-x86_64               randconfig-f002-20200412
-x86_64               randconfig-f003-20200412
-i386                 randconfig-f001-20200412
-i386                 randconfig-f002-20200412
-i386                 randconfig-f003-20200412
-x86_64               randconfig-g001-20200412
-x86_64               randconfig-g002-20200412
-x86_64               randconfig-g003-20200412
-i386                 randconfig-g001-20200412
-i386                 randconfig-g002-20200412
-i386                 randconfig-g003-20200412
-x86_64               randconfig-h001-20200412
-i386                 randconfig-h003-20200412
-i386                 randconfig-h002-20200412
-i386                 randconfig-h001-20200412
-x86_64               randconfig-h003-20200412
-x86_64               randconfig-h002-20200412
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
