@@ -2,106 +2,185 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848F6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAA4C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C03208FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9EE20787
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 01:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eB2mHLKx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBZbJcc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgDLBeC (ORCPT
+        id S1726834AbgDLBtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 21:34:02 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43284 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgDLBeC (ORCPT
+        Sat, 11 Apr 2020 21:49:08 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34188 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgDLBtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 21:34:02 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z90so4585529qtd.10;
-        Sat, 11 Apr 2020 18:34:02 -0700 (PDT)
+        Sat, 11 Apr 2020 21:49:08 -0400
+Received: by mail-qk1-f193.google.com with SMTP id t3so2405430qkg.1;
+        Sat, 11 Apr 2020 18:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J22mB3NQXWC/CST6MY0ECTvn5DksxAQMXIJYanPvBBM=;
-        b=eB2mHLKxf3oeEvkGJbhlLEyFKxlCPsZXzd2uBK0OA9ZINs+MSzb/oSX+VjeD3Vyf0i
-         EgkoLIXo08RM21vB+qTqS6gEIF2UnoXURiwbyGnOsX/JGitRes9Y5UnhMZ5D1S4ELa8P
-         lnXYWeWxX6L0JtibzGU8hRR7wuWW8SXp/tuTZ8wKaCLaeNHqpJ0+Vi022TQ9Z6OlSjZf
-         eTyouX1ArE25fIMFa2qGH6VOTvBl8jce/avfwr68YaY+sNVtQ1PK+ysc/fWUeYYlu6AB
-         +EU3PZcZa/4PHvLjs1zdwhtkPBM7HtilPyBc+RNq8hQKxPDd5osHbXpGb5iG4K3/mAkz
-         c9Ag==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+9Y3dV2Xtqku3qCrqdtglCwXhbHqnJgBuqt5KN+/kvg=;
+        b=YBZbJcc2LD98dHyVKU3N1vQhlEmAYnA3UYBtOP15S1lZNBAIEm0GTF7xL3d23wT/NQ
+         DgrhZAlFsfSSRh+eCWgoyQUqHKFF+ZC0rfE3H4wo65JXU8/KSHNTTieZthVhaaZR+dYI
+         0GA8ymh5pR1f9cMrllMX5O8AtqIct+/ipWZBTRaQrh/XvJvfxYnhGjjyfuctNyvUB8hH
+         bAZQ6IozBklxpY234SyPCL/bHiepyiwWAiPpDDHECXeTk+esu7gTE4ofDRAO42O8d2RA
+         f4JyAODQP7TdOdadjz8RgOrB7uFLUPghKUHbb14waASLjvMJRJTJMuE97Ei35S/5c0nV
+         cHhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J22mB3NQXWC/CST6MY0ECTvn5DksxAQMXIJYanPvBBM=;
-        b=YyZyz2b1O5Eh3woxDOnrLDRfOJSyXNiatqvuqctUCAL8ACwFYqf9Z5jmZGQJHrINjh
-         Mc3ilZM7RkrlObq6Ek0dA/BaT97/Yi9yIts1hI3A8oqz4NJL3IBHVTQWmH90M0TPDc0X
-         sawgXEs9XXNWDDBix+MO6mw8RwoEgCoa8sOTJNgIiyHn1IOYqrE8j+gtrFk7t77MAimY
-         JcBR+1TNJwmLow0RaZVKs9P7jBNboEiYEpjtCRYquDOZRT5mp/7QGC0rd1GYx+BzUwOy
-         bY5nTUyaOfDA76stK/d4B5CNFOSwfj7nae+B02ZRw6Ii+8GBBTQC6QZqg9OXBPo/7HuM
-         QFwQ==
-X-Gm-Message-State: AGi0PubWam/vAYqRQvJz3m/xQHF/VR1sfRHCutJvOxzavugQhNUi2A6y
-        abB1GQpGeRFcUI7QhfLhZauOL6OMjLw=
-X-Google-Smtp-Source: APiQypKIcOmRhbPE7CF37aPdRPiKcrwaissa2BNrJRAb3iEArDqyTm5Cr57d/hsg9V13peD+22f2XQ==
-X-Received: by 2002:ac8:65cc:: with SMTP id t12mr5627735qto.310.1586655241329;
-        Sat, 11 Apr 2020 18:34:01 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id n92sm4965192qtd.68.2020.04.11.18.34.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+9Y3dV2Xtqku3qCrqdtglCwXhbHqnJgBuqt5KN+/kvg=;
+        b=Ry5gDsPBP1UbLjXgE+v70l1nGxTtRQjlGcKQNn0dLrWbWBUCwJBqBcGwM2E3V7Z/t4
+         b0EN4uqb0Nah9yh/Q2gnMchVwD9qDZhcHcaylbV68DlbqN08m7WPCwY/WeKTgEEQiOWr
+         mTkiVH3vzIOQtLtbw/rkK/zQ34jSS159wBEdQuCUcMNkVPhDMCrrI+FIu+DJwqsTgfa0
+         gdFInIxs7Anq/nTfFx+MLs8Ugj7fuFloHE3UFVuovBa2av8DzRNm9kHxST6HBi74ZRtv
+         qxlDt/aSo2v/11oBvsNuC1oTd6t5Y0oWagAHN9uzwX5PiGLbY3S1pVmioWD9aVyRU2Ic
+         bhNw==
+X-Gm-Message-State: AGi0PuaGOY04DQmEFEUpXiG9nM99KU1v41OZzCZRUsRBQAfC2PpU0cZ0
+        zWwyc3oQRNbJspCLkWxRi2s=
+X-Google-Smtp-Source: APiQypKmffyrA28h99L9u2AYaxmu/LUn4aSf8as55IdDhJF1wTNt/ElTINEknk5ayr3tVCyCCXPd5g==
+X-Received: by 2002:a37:317:: with SMTP id 23mr10488030qkd.233.1586656145392;
+        Sat, 11 Apr 2020 18:49:05 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id l7sm4979378qkb.47.2020.04.11.18.49.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 18:34:00 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sat, 11 Apr 2020 18:49:04 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 21:48:48 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] gpio: pca953x: Fix pca953x_gpio_set_config
-Date:   Sat, 11 Apr 2020 20:33:52 -0500
-Message-Id: <20200412013352.674506-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200412013352.674506-1-aford173@gmail.com>
-References: <20200412013352.674506-1-aford173@gmail.com>
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 0/3] Introduce a counter inkernel API
+Message-ID: <20200412014848.GA108143@icarus>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200411172259.GB95806@icarus>
+ <20200411233145.GC3628@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Disposition: inline
+In-Reply-To: <20200411233145.GC3628@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pca953x_gpio_set_config is setup to support pull-up/down
-bias.  Currently the driver uses a variable called 'config' to
-determine which options to use.  Unfortunately, this is incorrect.
 
-This patch uses function pinconf_to_config_param(config), which
-converts this 'config' parameter back to pinconfig to determine
-which option to use.
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 15add06841a3 ("gpio: pca953x: add ->set_config implementation")
+On Sun, Apr 12, 2020 at 01:31:45AM +0200, Alexandre Belloni wrote:
+> Hi,
+>=20
+> On 11/04/2020 13:22:59-0400, William Breathitt Gray wrote:
+> > I'm not inherently opposed to adding an in-kernel API for the Counter
+> > subsystem, but I'm not sure yet if it's necessary for this particular
+> > situation.
+> >=20
+> > Is the purpose of this driver to allow users to poll on the rotary
+> > encoder position value? If so, perhaps instead of an in-kernel API, the
+> > polling functionality should be added as part of the Counter subsystem;
+> > I can see this being a useful feature for many counter devices, and
+> > it'll keep the code contained to a single subsystem.
+> >=20
+> > By the way, I'm going to be submitting a major update to the Counter
+> > subsystem code in the next couple weeks that isolates the sysfs code
+> > from the rest of the subsystem -- it'll likely affect the interface and
+> > code here -- so I'll probably wait to decide for certain until that
+> > patch lands; I anticipate it making things easier for you here after
+> > it's merged.
+> >=20
+> > For now, I want to get a better high-level understanding about how users
+> > would interact with this driver to use the device (input_setup_polling
+> > is a new call for me). That should help me understand whether an
+> > in-kernel API is the best choice here.
+> >=20
+>=20
+> Well, the goal is not really polling the counters but mainly exposing
+> the correct userspace interface for the rotary encoders that are
+> connected to quadrature decoders.
+>=20
+> The input driver is using polling because this reduces the complexity of
+> the patches but the ultimate goal is to also have interrupts working.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Okay, I think understand now. Interrupt support is another feature I
+want to get working for counters too, so that development will probably
+overlap with this driver as well. Hopefully with interrupts working
+you'll be able to signal to the input driver whenever data is ready,
+rather than just polling periodically to check.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 5638b4e5355f..4269ea9a817e 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -531,7 +531,7 @@ static int pca953x_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
- {
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
- 
--	switch (config) {
-+	switch (pinconf_to_config_param(config)) {
- 	case PIN_CONFIG_BIAS_PULL_UP:
- 	case PIN_CONFIG_BIAS_PULL_DOWN:
- 		return pca953x_gpio_set_pull_up_down(chip, offset, config);
--- 
-2.25.1
+> I'm pretty sure the in-kernel interface can also have other usages like
+> for example iio triggers. I could envision having to read an ADC after x
+> turns of a motor to check for the torque.
 
+That's an interesting use case. I can see how an in-kernel interface
+would be helpful here.
+
+> I also think that having the sysfs code separate would help as it could
+> be considered as one of the in-kernel interface user.
+>=20
+> BTW, do you have plans to add a character device interface?
+
+Yes, actually a character device interface (and the timestamp feature)
+is the primary motivation for this refactoring: sysfs code is separated
+so that it can share a common core of functionality with the character
+device code.
+
+Implementing an in-kernel API should be trivial after these changes
+since it will be just a matter of codifying the shared code that forms
+the new core of the Counter subsystem. So perhaps this patchset should
+wait until the Counter subsystem is updated, since it may be easier to
+interact with counter devices once that is complete.
+
+If you're curious about this patch, it's available on my personal iio
+tree in the counter_chardev branch:
+https://gitlab.com/vilhelmgray/iio/-/commits/counter_chardev/
+
+I still need to add the character device code and respective userspace
+API, but I expect to have it completed in the next couple weeks,
+assuming no major issues or delays arise.
+
+William Breathitt Gray
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6Sc3MACgkQhvpINdm7
+VJI6mRAA0IuuWWCtufHeMdtLn9J/o04q1ZcvE5YsY8vDHCdSvnRTGp0HvjEmd5jO
+GZFU7ljEwqRf1FwPjmn3SkoQfoMMpbyp6TWDTNzAKV+rOEu+iOR6VJwnjzmwmYNV
+PtHErMSFSAbB36jr2mKODi9eUPmFIQmrOXpnmXDKwxTHgq+i76a3T4z7WSDSoX2u
+1rVjFav0cyT2BZPEaBb2YO8BlGqSUTk5EcG7ORiuXGoR87BOXpilHp95c9WZZpbY
+gZ3N8Q9Kpll6ZC/SVFo9ZKwxR2wEV1NV/+Shl8wauQ6oB4Oljy6iOY+r7aSsUXmM
+R9DmWrvwzIeYa+LRcIfcdrENUfqqgXjCDHtKJbBd+ux88KI/zzohcoPw6hO0uRe+
+ZH16nqYrHhlWmn6N9OptrC7yinm3AC+68E64L/9I898rPFHbOpJW/0yfeGXIWq+U
+Er1AkqmsZngFr8wmfehBNMc12gL/+Fy4xo0DvozxfmZkqCI/UzQW0qAqUxiyYbEQ
+AKmodl8jENNjGMkvFAO+q0MIg9R2kNKRc4B+ekRnA47m0MopIR+kpwvzagW4Razs
+LlNK/7napsnNiOP1ETUJeqlKQI6kgaxcsrYbtjD5XWj8LuqYQeuN3+xgVAsqjHP/
+OO+VzX1USpVNKc29yn9uzqVfyajwEBFCWoJdXi7alCpwI/LCXxI=
+=Xd2U
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
