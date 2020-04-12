@@ -2,80 +2,117 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954EFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFC0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:06:46 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEEE20673
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:05:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 4DEEE20673
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+	by mail.kernel.org (Postfix) with ESMTP id 2A29520732
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 17:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lIklf8Gj"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 2A29520732
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgDLRFG (ORCPT
+        id S1727219AbgDLRGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 13:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:58046 "EHLO
+        Sun, 12 Apr 2020 13:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:58362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgDLRFG (ORCPT
+        with ESMTP id S1727121AbgDLRGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 13:05:06 -0400
-Received: from smtprelay.hostedemail.com (smtprelay0242.hostedemail.com [216.40.44.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B81C0A3BF1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 09:58:53 -0700 (PDT)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 71D88100E7B40;
-        Sun, 12 Apr 2020 16:58:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bag70_6a529ded9e51b
-X-Filterd-Recvd-Size: 1544
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 12 Apr 2020 16:58:50 +0000 (UTC)
-Message-ID: <ac67c70345464efd347d56267d6748064131f7e2.camel@perches.com>
-Subject: Re: [PATCH] Staging: comedi: drivers: jr3_pci: fixed two warnings
-From:   Joe Perches <joe@perches.com>
-To:     carlosteniswarrior@gmail.com, gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sun, 12 Apr 2020 09:56:44 -0700
-In-Reply-To: <20200412142508.327-1-carlosteniswarrior@gmail.com>
-References: <20200412142508.327-1-carlosteniswarrior@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sun, 12 Apr 2020 13:06:44 -0400
+Received: from mail26.static.mailgun.info (mail26.static.mailgun.info [104.130.122.26])
+        by lindbergh.monkeyblade.net (Postfix) with UTF8SMTPS id F25F7C0A3BF1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 10:06:41 -0700 (PDT)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586711204; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=zIDzD0EzbXqwgB4oG5u62ICxJEfPXcrgnzopJvH6e60=; b=lIklf8Gj/9tqUk1c1fFaneK4zPlipXipZAbJBa6BjQRkHXjM0nZGMp6+WM6FVwAkiUZEPzBX
+ 1OKHptq95+R497Xkt1ChzTcWsUQNDBqk+RCbk58h9ZoRYxgP5ccKG39LHOTUEqGjl+7xzs5S
+ WNSsRHFjYLLZUkkEw/7ubUKCoSY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e934a93.7f2208b99fb8-smtp-out-n05;
+ Sun, 12 Apr 2020 17:06:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E48E7C43636; Sun, 12 Apr 2020 17:06:26 +0000 (UTC)
+Received: from [192.168.0.105] (unknown [183.83.68.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C91F4C433F2;
+        Sun, 12 Apr 2020 17:06:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C91F4C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V1 4/4] mmc: sdhci-msm: Enable ADMA length mismatch error
+ interrupt
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+References: <1586706808-27337-1-git-send-email-vbadigan@codeaurora.org>
+ <1586706808-27337-5-git-send-email-vbadigan@codeaurora.org>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <520046b7-44ee-521e-ff6d-8ee72c55cd44@codeaurora.org>
+Date:   Sun, 12 Apr 2020 22:36:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <1586706808-27337-5-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-04-12 at 16:25 +0200, carlosteniswarrior@gmail.com wrote:
-> Fixed two checkpatch warnings.
 
-by introducing compiler errors.
-
-> diff --git a/drivers/staging/comedi/drivers/jr3_pci.c b/drivers/staging/comedi/drivers/jr3_pci.c
-[]
-> @@ -91,8 +91,8 @@ struct jr3_pci_dev_private {
->  };
- 
->  union jr3_pci_single_range {
-> -	struct comedi_lrange l;
-> -	char _reserved[offsetof(struct comedi_lrange, range[1])];
-> +	const comedi_lrange l;
-> +	char _reserved[offsetof(const comedi_lrange, range[1])];
->  };
-
-try this:
-
-$ make allyesconfig
-$ make drivers/staging/comedi/drivers/jr3_pci.o
-
-_always_ compile the files modified by your patch before
-you post it to a mailing list or submit it to a maintainer.
-
-
+On 4/12/2020 9:23 PM, Veerabhadrarao Badiganti wrote:
+> ADMA_ERR_SIZE_EN bit of VENDOR_SPECIFIC_FUNC register controls
+> ADMA length mismatch error interrupt. Enable it by default.
+>
+> And update all bit shift defines with BIT macro.
+>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>   drivers/mmc/host/sdhci-msm.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 482045b..660e1bc 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -56,19 +56,19 @@
+>   #define CORE_FLL_CYCLE_CNT	BIT(18)
+>   #define CORE_DLL_CLOCK_DISABLE	BIT(21)
+>   
+> -#define CORE_VENDOR_SPEC_POR_VAL 0xa1c
+> +#define CORE_VENDOR_SPEC_POR_VAL 0xa3c
+Sorry . This should be 0xa9c, not 0xa3c. Correcting it.
+>   #define CORE_CLK_PWRSAVE	BIT(1)
+>   #define CORE_HC_MCLK_SEL_DFLT	(2 << 8)
+>   #define CORE_HC_MCLK_SEL_HS400	(3 << 8)
+>   #define CORE_HC_MCLK_SEL_MASK	(3 << 8)
+> -#define CORE_IO_PAD_PWR_SWITCH_EN	(1 << 15)
+> -#define CORE_IO_PAD_PWR_SWITCH  (1 << 16)
+> +#define CORE_IO_PAD_PWR_SWITCH_EN	BIT(15)
+> +#define CORE_IO_PAD_PWR_SWITCH	BIT(16)
+>   #define CORE_HC_SELECT_IN_EN	BIT(18)
+>   #define CORE_HC_SELECT_IN_HS400	(6 << 19)
+>   #define CORE_HC_SELECT_IN_MASK	(7 << 19)
+>   
+> -#define CORE_3_0V_SUPPORT	(1 << 25)
+> -#define CORE_1_8V_SUPPORT	(1 << 26)
+> +#define CORE_3_0V_SUPPORT	BIT(25)
+> +#define CORE_1_8V_SUPPORT	BIT(26)
+>   #define CORE_VOLT_SUPPORT	(CORE_3_0V_SUPPORT | CORE_1_8V_SUPPORT)
+>   
+>   #define CORE_CSR_CDC_CTLR_CFG0		0x130
