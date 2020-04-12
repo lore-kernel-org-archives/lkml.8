@@ -2,127 +2,141 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CB4C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 22:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D24C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 23:12:40 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B1020767
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 22:50:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eipor2GO"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org E5B1020767
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=canb.auug.org.au
+	by mail.kernel.org (Postfix) with ESMTP id BC88A20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 23:12:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org BC88A20708
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=arm.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgDLWuq (ORCPT
+        id S1726635AbgDLXMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 18:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:32982 "EHLO
+        Sun, 12 Apr 2020 19:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:36604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgDLWuq (ORCPT
+        with ESMTP id S1726185AbgDLXMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 18:50:46 -0400
-Received: from ozlabs.org (ozlabs.org [203.11.71.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF6DC0A88B5;
-        Sun, 12 Apr 2020 15:50:46 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 490n5p0vMFz9sP7;
-        Mon, 13 Apr 2020 08:50:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586731839;
-        bh=ouvuSGWpY8zCYwGIJvJauHXD9yFe7/WcWfZ8JgoLDwU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eipor2GOTvcm006DPDbtrDSZB/YjCbiYO3yQYcPDPl/QN1bVpIZtMVv/oY8LPAAWi
-         mQ0tVSIJPYVTMLq4M9TE7FS5Tx8esBJ+Q/TcrHSD7Iouux3PQl5B4xh6lAipip0Bu+
-         bVg1yM+E6+xa+BMWfnsAovG1wOKkyVitnqB4kOmKUpD1IDaH3yCT1WPomoQ90kPz21
-         krXUqp5HcSU9zaBsiav4I9ro42v/v5ARPthKE8BNoTz0ZaA4LJezb0ivt20J++18wU
-         4C0FzzxJGHWDEMB7g0UWOCVW+XFBlBrH4v1ufnU3lWGo3HVQSjvguxpg+1v4rSb/1g
-         EDp4YdcBD4fEQ==
-Date:   Mon, 13 Apr 2020 08:50:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>
-Subject: linux-next: manual merge of the realtek tree with Linus' tree
-Message-ID: <20200413085034.5e77f236@canb.auug.org.au>
+        Sun, 12 Apr 2020 19:12:38 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D8ECAC0A88B5;
+        Sun, 12 Apr 2020 16:12:38 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 653811FB;
+        Sun, 12 Apr 2020 16:12:38 -0700 (PDT)
+Received: from [10.37.12.1] (unknown [10.37.12.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE55C3F73D;
+        Sun, 12 Apr 2020 16:12:36 -0700 (PDT)
+Subject: Re: [PATCH] coresight: tmc: Read TMC mode only when TMC hw is enabled
+To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, swboyd@chromium.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <9a792e3e-5a17-156d-4b59-4a3ec8f9993e@arm.com>
+Date:   Mon, 13 Apr 2020 00:17:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SUqht2mkXPQtYMW.duPijK.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SUqht2mkXPQtYMW.duPijK.
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Sai,
 
-Hi all,
+On 04/09/2020 12:35 PM, Sai Prakash Ranjan wrote:
+> Reading TMC mode register in tmc_read_prepare_etb without
+> enabling the TMC hardware leads to async exceptions like
+> the one in the call trace below. This can happen if the
+> user tries to read the TMC etf data via device node without
+> setting up source and the sink first which enables the TMC
+> hardware in the path. So make sure that the TMC is enabled
+> before we try to read TMC data.
 
-Today's linux-next merge of the realtek tree got a conflict in:
+So, one can trigger the same SError by simply :
 
-  MAINTAINERS
+$ cat /sys/bus/coresight/device/tmc_etb0/mgmt/mode
 
-between commit:
 
-  3b50142d8528 ("MAINTAINERS: sort field names for all entries")
+And also :
 
-from Linus' tree and commit:
+> 
+>   Kernel panic - not syncing: Asynchronous SError Interrupt
+>   CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 #122
+>   Call trace:
+>    dump_backtrace+0x0/0x188
+>    show_stack+0x20/0x2c
+>    dump_stack+0xdc/0x144
+>    panic+0x168/0x36c
+>    panic+0x0/0x36c
+>    arm64_serror_panic+0x78/0x84
+>    do_serror+0x130/0x138
+>    el1_error+0x84/0xf8
+>    tmc_read_prepare_etb+0x88/0xb8
+>    tmc_open+0x40/0xd8
+>    misc_open+0x120/0x158
+>    chrdev_open+0xb8/0x1a4
+>    do_dentry_open+0x268/0x3a0
+>    vfs_open+0x34/0x40
+>    path_openat+0x39c/0xdf4
+>    do_filp_open+0x90/0x10c
+>    do_sys_open+0x150/0x3e8
+>    __arm64_compat_sys_openat+0x28/0x34
+>    el0_svc_common+0xa8/0x160
+>    el0_svc_compat_handler+0x2c/0x38
+>    el0_svc_compat+0x8/0x10
+> 
+> Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
+> Reported-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-tmc.c | 5 +++++
+>   drivers/hwtracing/coresight/coresight-tmc.h | 1 +
+>   2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+> index 1cf82fa58289..7bae69748ab7 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+> @@ -62,11 +62,13 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
+>   
+>   void tmc_enable_hw(struct tmc_drvdata *drvdata)
+>   {
+> +	drvdata->enable = true;
+>   	writel_relaxed(TMC_CTL_CAPT_EN, drvdata->base + TMC_CTL);
+>   }
+>   
+>   void tmc_disable_hw(struct tmc_drvdata *drvdata)
+>   {
+> +	drvdata->enable = false;
+>   	writel_relaxed(0x0, drvdata->base + TMC_CTL);
+>   }
+>   
+> @@ -102,6 +104,9 @@ static int tmc_read_prepare(struct tmc_drvdata *drvdata)
+>   {
+>   	int ret = 0;
+>   
+> +	if (!drvdata->enable)
+> +		return -EINVAL;
+> +
 
-  d6656fa4c621 ("ARM: Prepare Realtek RTD1195")
+Does this check always guarantee that the TMC is enabled when
+we actually get to reading the MODE ? This needs to be done
+under the spinlock.
 
-from the realtek tree.
+Cheers
+Suzuki
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
 
-diff --cc MAINTAINERS
-index 6851ef7cf1bd,1b15d2dd2535..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -2269,8 -2203,10 +2269,9 @@@ M:	Andreas F=C3=A4rber <afaerber@suse.de
-  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-  L:	linux-realtek-soc@lists.infradead.org (moderated for non-subscribers)
-  S:	Maintained
- -F:	arch/arm/boot/dts/rtd*
- +F:	Documentation/devicetree/bindings/arm/realtek.yaml
-+ F:	arch/arm/mach-realtek/
-  F:	arch/arm64/boot/dts/realtek/
- -F:	Documentation/devicetree/bindings/arm/realtek.yaml
- =20
-  ARM/RENESAS ARM64 ARCHITECTURE
-  M:	Geert Uytterhoeven <geert+renesas@glider.be>
-
---Sig_/SUqht2mkXPQtYMW.duPijK.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6TmzoACgkQAVBC80lX
-0GxJGgf/RKvJlfNRD23g7ndl1Mslb/0aHL2rcRiLKabQPWEKZJqtjcCV8P7qbOq+
-4uFmQRGuIJwwwTSLcvX72iNc1gHKTeND56m9GMPjoS8nR/7Ia+vwmtJjWgLIRVFA
-g8cO/20M8dfYLhlCtm+SIxUbTWdSbBdRhJ5bl1xR0GvF/dchf1ceDS2uNRSfoeNO
-91UX81eg4MRh4YHbjO2KdyC0wbyYL1c+30p1/lWcfrbNWafCY13UMk/HkvMl7b6c
-7w6Zc6LnfnOPFN9zoFZ6ey4ic04QMSAHWXEfYBgXYKa/vBZPK0u4Dmz/fGicDLt3
-HR6Kzm3/ux34J2uSlDAi9jidvmje2g==
-=r51D
------END PGP SIGNATURE-----
-
---Sig_/SUqht2mkXPQtYMW.duPijK.--
