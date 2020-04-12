@@ -2,179 +2,343 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE84C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99195C2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9C2206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nS01Mv3V"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA99206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgDMKgQ (ORCPT
+        id S1728686AbgDMKiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:36:16 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39814 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728600AbgDMKgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:36:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586774175; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=SFH893uQOOO6/8hNRsrKM3ohXphYzx9aQKAy6M1a/H0=; b=nS01Mv3V9YrUD3IhvLVtc2x4IW1n3Bye6O0WLc5DNxcxrTnnk4Tl9jGH01geYm8vb7JdHcMd
- RxR+M4h6lGe0iBEDHPDBE/Mfmg7Ldky3AIgmpH59H9XXUJrznh0uGSp8nHkQLT9Coy0P7mIJ
- nh8s4H2WzJ28S3s7SL4wUu47UEY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e94408c.7f3e13bfcf48-smtp-out-n01;
- Mon, 13 Apr 2020 10:35:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4AC0AC433CB; Mon, 13 Apr 2020 10:35:56 +0000 (UTC)
-Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5101CC433F2;
-        Mon, 13 Apr 2020 10:35:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5101CC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 01/21] opp: Manage empty OPP tables with clk handle
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-2-git-send-email-rnayak@codeaurora.org>
- <20200409075724.7t3bt3oxaxoygldb@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <78dcbda6-12d1-7a88-b1f9-a03fb0ba9b87@codeaurora.org>
-Date:   Mon, 13 Apr 2020 16:04:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 13 Apr 2020 06:38:03 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:57546 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727776AbgDMKiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:38:02 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jNlJh-0006wK-EU; Mon, 13 Apr 2020 00:43:05 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        heiko@sntech.de, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        xxm@rock-chips.com, kever.yang@rock-chips.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v3] iio: adc: rockchip_saradc: Add support iio buffers
+Date:   Mon, 13 Apr 2020 00:42:51 +0200
+Message-Id: <20200412224251.2919182-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200409075724.7t3bt3oxaxoygldb@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Simon Xue <xxm@rock-chips.com>
 
-On 4/9/2020 1:27 PM, Viresh Kumar wrote:
-> On 08-04-20, 19:16, Rajendra Nayak wrote:
->> With OPP core now supporting DVFS for IO devices, we have instances of
->> IO devices (same IP block) which require an OPP on some platforms/SoCs
-> 
-> By OPP you mean both freq and voltage here ?
+Add the ability to also support access via (triggered) buffers
+next to the existing direct mode.
 
-yes, freq and perf state.
+Device in question is the Odroid Go Advance that connects a joystick
+to two of the saradc channels for X and Y axis and the new (and still
+pending) adc joystick driver of course wants to use triggered buffers
+from the iio subsystem.
 
-> 
->> while just needing to scale the clock on some others.
-> 
-> And only freq here ?
+Signed-off-by: Simon Xue <xxm@rock-chips.com>
+[some simplifications and added commit description]
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+changes in v3:
+- split buffer struct into values and timestamp area similar to dln2-adc
+  and make sure timestamp gets 8-byte aligned - ALIGN uses 4 as it aligns
+  u16 elements not bytes - hopefully I got it right this time ;-)
+changes in v2:
+- use devm_iio_triggered_buffer_setup
+- calculate data array size from channel number (curtesy of at91-sama5d2_adc)
 
-yes.
+ drivers/iio/adc/Kconfig           |   2 +
+ drivers/iio/adc/rockchip_saradc.c | 146 ++++++++++++++++++++++--------
+ 2 files changed, 112 insertions(+), 36 deletions(-)
 
-> 
->> In order to avoid conditional code in every driver which supports such
->> devices (to check for availability of OPPs and then deciding to do
->> either dev_pm_opp_set_rate() or clk_set_rate()) add support to manage
->> empty OPP tables with a clk handle.
-> 
-> Why can't these devices have an opp table with just rate mentioned in each node
-> ?
-
-These are existing devices already upstream.
-
-> 
->> This makes dev_pm_opp_set_rate() equivalent of a clk_set_rate() for
->> devices with just a clk and no OPPs specified, and makes
->> dev_pm_opp_set_rate(0) bail out without throwing an error.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   drivers/opp/core.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->> index ba43e6a..e4f01e7 100644
->> --- a/drivers/opp/core.c
->> +++ b/drivers/opp/core.c
->> @@ -819,6 +819,8 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->>   	if (unlikely(!target_freq)) {
->>   		if (opp_table->required_opp_tables) {
->>   			ret = _set_required_opps(dev, opp_table, NULL);
->> +		} else if (!_get_opp_count(opp_table)) {
->> +			return 0;
-> 
-> Why should anyone call this with target_freq = 0 ? I know it was required to
-> drop votes in the above case, but why here ?
-
-Well, it is to drop votes. But in cases where we don't have perf votes being put
-(and only clock is scaled), the driver would still call this with freq = 0, i am
-just making sure that in such cases its treated as a nop.
-
-> 
->>   		} else {
->>   			dev_err(dev, "target frequency can't be 0\n");
->>   			ret = -EINVAL;
->> @@ -849,6 +851,18 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->>   		goto put_opp_table;
->>   	}
->>   
->> +	/*
->> +	 * For IO devices which require an OPP on some platforms/SoCs
->> +	 * while just needing to scale the clock on some others
->> +	 * we look for empty OPP tables with just a clock handle and
->> +	 * scale only the clk. This makes dev_pm_opp_set_rate()
->> +	 * equivalent to a clk_set_rate()
->> +	 */
->> +	if (!_get_opp_count(opp_table)) {
->> +		ret = _generic_set_opp_clk_only(dev, clk, freq);
->> +		goto put_opp_table;
->> +	}
->> +
-> 
-> Is this enough? _of_add_opp_table_v2() returns with error if there is no OPP
-> node within the table. Please give an example of how DT looks for the case you
-> want to support.
-
-FWIK, no one should call a _of_add_opp_table_v2 in cases where there is no OPP in DT?
-The 'empty' OPP table from what I understand will be created by dev_pm_opp_set_clkname.
-A good case to look at is the PATCH 13/21 in this series. The driver I am modifying
-is used on sdm845/sc7180 and a host of other older qualcomm SoCs. Since i am adding
-support for perf state voting using OPP only on sdm845/sc7180 I want the existing
-platforms to just do what they were doing. Now thats not possible unless I start
-adding a bunch of if/else around every opp call in the driver to distinguish between
-the two.
-
-I am a little surprised since I though the idea of doing something like this came from
-you :) (or perhaps Stephen, I somehow can't recollect) to avoid all the if/else conditions
-I had when I initially posted some of these changes.
-Btw, you had this patch reviewed when this was posted a long while back too [1]
-
-[1] https://patchwork.kernel.org/patch/11027217/
-
-  
-> 
->>   	temp_freq = old_freq;
->>   	old_opp = _find_freq_ceil(opp_table, &temp_freq);
->>   	if (IS_ERR(old_opp)) {
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
-> 
-
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 12bb8b7ca1ff..8d2dd60614c6 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -809,6 +809,8 @@ config ROCKCHIP_SARADC
+ 	tristate "Rockchip SARADC driver"
+ 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+ 	depends on RESET_CONTROLLER
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Say yes here to build support for the SARADC found in SoCs from
+ 	  Rockchip.
+diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+index 582ba047c4a6..0713363a4b43 100644
+--- a/drivers/iio/adc/rockchip_saradc.c
++++ b/drivers/iio/adc/rockchip_saradc.c
+@@ -15,7 +15,11 @@
+ #include <linux/delay.h>
+ #include <linux/reset.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/iio/buffer.h>
+ #include <linux/iio/iio.h>
++#include <linux/iio/trigger.h>
++#include <linux/iio/trigger_consumer.h>
++#include <linux/iio/triggered_buffer.h>
+ 
+ #define SARADC_DATA			0x00
+ 
+@@ -32,9 +36,12 @@
+ #define SARADC_DLY_PU_SOC_MASK		0x3f
+ 
+ #define SARADC_TIMEOUT			msecs_to_jiffies(100)
++#define SARADC_MAX_CHANNELS		6
++
++/* buffer elements are u16, timestamp needs to be 8-byte aligned */
++#define SARADC_BUFFER_NUM_U16	ALIGN(SARADC_MAX_CHANNELS, 4)
+ 
+ struct rockchip_saradc_data {
+-	int				num_bits;
+ 	const struct iio_chan_spec	*channels;
+ 	int				num_channels;
+ 	unsigned long			clk_rate;
+@@ -49,8 +56,37 @@ struct rockchip_saradc {
+ 	struct reset_control	*reset;
+ 	const struct rockchip_saradc_data *data;
+ 	u16			last_val;
++	const struct iio_chan_spec *last_chan;
+ };
+ 
++static void rockchip_saradc_power_down(struct rockchip_saradc *info)
++{
++	/* Clear irq & power down adc */
++	writel_relaxed(0, info->regs + SARADC_CTRL);
++}
++
++static int rockchip_saradc_conversion(struct rockchip_saradc *info,
++				   struct iio_chan_spec const *chan)
++{
++	reinit_completion(&info->completion);
++
++	/* 8 clock periods as delay between power up and start cmd */
++	writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
++
++	info->last_chan = chan;
++
++	/* Select the channel to be used and trigger conversion */
++	writel(SARADC_CTRL_POWER_CTRL
++			| (chan->channel & SARADC_CTRL_CHN_MASK)
++			| SARADC_CTRL_IRQ_ENABLE,
++		   info->regs + SARADC_CTRL);
++
++	if (!wait_for_completion_timeout(&info->completion, SARADC_TIMEOUT))
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
+ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
+ 				    struct iio_chan_spec const *chan,
+ 				    int *val, int *val2, long mask)
+@@ -62,24 +98,12 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_RAW:
+ 		mutex_lock(&indio_dev->mlock);
+ 
+-		reinit_completion(&info->completion);
+-
+-		/* 8 clock periods as delay between power up and start cmd */
+-		writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
+-
+-		/* Select the channel to be used and trigger conversion */
+-		writel(SARADC_CTRL_POWER_CTRL
+-				| (chan->channel & SARADC_CTRL_CHN_MASK)
+-				| SARADC_CTRL_IRQ_ENABLE,
+-		       info->regs + SARADC_CTRL);
+-
+-		if (!wait_for_completion_timeout(&info->completion,
+-						 SARADC_TIMEOUT)) {
+-			writel_relaxed(0, info->regs + SARADC_CTRL);
++		ret = rockchip_saradc_conversion(info, chan);
++		if (ret) {
++			rockchip_saradc_power_down(info);
+ 			mutex_unlock(&indio_dev->mlock);
+-			return -ETIMEDOUT;
++			return ret;
+ 		}
+-
+ 		*val = info->last_val;
+ 		mutex_unlock(&indio_dev->mlock);
+ 		return IIO_VAL_INT;
+@@ -91,7 +115,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
+ 		}
+ 
+ 		*val = ret / 1000;
+-		*val2 = info->data->num_bits;
++		*val2 = chan->scan_type.realbits;
+ 		return IIO_VAL_FRACTIONAL_LOG2;
+ 	default:
+ 		return -EINVAL;
+@@ -104,10 +128,9 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
+ 
+ 	/* Read value */
+ 	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
+-	info->last_val &= GENMASK(info->data->num_bits - 1, 0);
++	info->last_val &= GENMASK(info->last_chan->scan_type.realbits - 1, 0);
+ 
+-	/* Clear irq & power down adc */
+-	writel_relaxed(0, info->regs + SARADC_CTRL);
++	rockchip_saradc_power_down(info);
+ 
+ 	complete(&info->completion);
+ 
+@@ -118,51 +141,55 @@ static const struct iio_info rockchip_saradc_iio_info = {
+ 	.read_raw = rockchip_saradc_read_raw,
+ };
+ 
+-#define ADC_CHANNEL(_index, _id) {				\
++#define ADC_CHANNEL(_index, _id, _res) {			\
+ 	.type = IIO_VOLTAGE,					\
+ 	.indexed = 1,						\
+ 	.channel = _index,					\
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+ 	.datasheet_name = _id,					\
++	.scan_index = _index,					\
++	.scan_type = {						\
++		.sign = 'u',					\
++		.realbits = _res,				\
++		.storagebits = 16,				\
++		.endianness = IIO_LE,				\
++	},							\
+ }
+ 
+ static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
+-	ADC_CHANNEL(0, "adc0"),
+-	ADC_CHANNEL(1, "adc1"),
+-	ADC_CHANNEL(2, "adc2"),
++	ADC_CHANNEL(0, "adc0", 10),
++	ADC_CHANNEL(1, "adc1", 10),
++	ADC_CHANNEL(2, "adc2", 10),
+ };
+ 
+ static const struct rockchip_saradc_data saradc_data = {
+-	.num_bits = 10,
+ 	.channels = rockchip_saradc_iio_channels,
+ 	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
+ 	.clk_rate = 1000000,
+ };
+ 
+ static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
+-	ADC_CHANNEL(0, "adc0"),
+-	ADC_CHANNEL(1, "adc1"),
++	ADC_CHANNEL(0, "adc0", 12),
++	ADC_CHANNEL(1, "adc1", 12),
+ };
+ 
+ static const struct rockchip_saradc_data rk3066_tsadc_data = {
+-	.num_bits = 12,
+ 	.channels = rockchip_rk3066_tsadc_iio_channels,
+ 	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
+ 	.clk_rate = 50000,
+ };
+ 
+ static const struct iio_chan_spec rockchip_rk3399_saradc_iio_channels[] = {
+-	ADC_CHANNEL(0, "adc0"),
+-	ADC_CHANNEL(1, "adc1"),
+-	ADC_CHANNEL(2, "adc2"),
+-	ADC_CHANNEL(3, "adc3"),
+-	ADC_CHANNEL(4, "adc4"),
+-	ADC_CHANNEL(5, "adc5"),
++	ADC_CHANNEL(0, "adc0", 10),
++	ADC_CHANNEL(1, "adc1", 10),
++	ADC_CHANNEL(2, "adc2", 10),
++	ADC_CHANNEL(3, "adc3", 10),
++	ADC_CHANNEL(4, "adc4", 10),
++	ADC_CHANNEL(5, "adc5", 10),
+ };
+ 
+ static const struct rockchip_saradc_data rk3399_saradc_data = {
+-	.num_bits = 10,
+ 	.channels = rockchip_rk3399_saradc_iio_channels,
+ 	.num_channels = ARRAY_SIZE(rockchip_rk3399_saradc_iio_channels),
+ 	.clk_rate = 1000000,
+@@ -193,6 +220,42 @@ static void rockchip_saradc_reset_controller(struct reset_control *reset)
+ 	reset_control_deassert(reset);
+ }
+ 
++static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *i_dev = pf->indio_dev;
++	struct rockchip_saradc *info = iio_priv(i_dev);
++	struct {
++		u16 values[SARADC_BUFFER_NUM_U16];
++		int64_t timestamp;
++	} data;
++	int ret;
++	int i, j = 0;
++
++	mutex_lock(&i_dev->mlock);
++
++	for_each_set_bit(i, i_dev->active_scan_mask, i_dev->masklength) {
++		const struct iio_chan_spec *chan = &i_dev->channels[i];
++
++		ret = rockchip_saradc_conversion(info, chan);
++		if (ret) {
++			rockchip_saradc_power_down(info);
++			goto out;
++		}
++
++		data.values[j] = info->last_val;
++		j++;
++	}
++
++	iio_push_to_buffers_with_timestamp(i_dev, &data, iio_get_time_ns(i_dev));
++out:
++	mutex_unlock(&i_dev->mlock);
++
++	iio_trigger_notify_done(i_dev->trig);
++
++	return IRQ_HANDLED;
++}
++
+ static int rockchip_saradc_probe(struct platform_device *pdev)
+ {
+ 	struct rockchip_saradc *info = NULL;
+@@ -221,6 +284,11 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 
+ 	info->data = match->data;
+ 
++	if (info->data->num_channels > SARADC_MAX_CHANNELS) {
++		dev_err(&pdev->dev, "max channels exceeded");
++		return -EINVAL;
++	}
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(info->regs))
+@@ -315,6 +383,12 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	indio_dev->channels = info->data->channels;
+ 	indio_dev->num_channels = info->data->num_channels;
+ 
++	ret = devm_iio_triggered_buffer_setup(&indio_dev->dev, indio_dev, NULL,
++					      rockchip_saradc_trigger_handler,
++					      NULL);
++	if (ret)
++		goto err_clk;
++
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret)
+ 		goto err_clk;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.24.1
+
