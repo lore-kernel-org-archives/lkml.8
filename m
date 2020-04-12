@@ -2,179 +2,89 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E23C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B58C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2E0206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ynif4CWa"
+	by mail.kernel.org (Postfix) with ESMTP id 8D7A92072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586685634;
+	bh=DiVkzZNd9n/tfy3LeFZlnUenRZDPc3lnjjjY+IbeVWg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cOxjdlmWt5hzJZ0HgKGG6W+Ke/abqfdihWe4yjm7QlCTLlhjMWp18x0wpTJwRuq9n
+	 HVzWLrFdb5dZr0dE6BBjf/JK7eZ7tCaWfYM/KXax8xASwD6Fv11vt+Pm9PWuhZGaNY
+	 bBFt3TdcePy8tYyuh2c4Zf0koYdx3paLbm8he428=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgDLJ64 (ORCPT
+        id S1726911AbgDLKAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 05:58:56 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38033 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgDLJ6z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 05:58:55 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l11so4416412lfc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 02:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=a9yLePZ2G/VXWV0ASH8NZRvDgdmjba14EvCAxqN8+9E=;
-        b=Ynif4CWaFk8IzWGB8BMa77huV8EffPE9bjLc+92O6jtdyNk1cKnuCFMjojSX/CaMf8
-         c0hRrNbxNBPv3f6l05bkq3FCow05ptzmkctsU/IK4MOc6UwngTwNat8qX8rtaI4yi+I7
-         ghDhKAW9tljn3pNWBRy09mtZJvxdxaTfjEd/PupuSTy3VMKmm99VYFnCela3eyQT6jak
-         aiza/DrFa0bKGUNW9/0cUcrsDSy+qGbnyvK0fPnzmmvP6XflsOfapOnPE2GVW8kUC0UX
-         qcwJByLneu5fdiHFAZUXBAGPnQZBZQfaJl+uphrCmLtcFG3vi8VFqizYj2rttZ95NR1M
-         n75A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=a9yLePZ2G/VXWV0ASH8NZRvDgdmjba14EvCAxqN8+9E=;
-        b=lhZEVzVW/jHzrIKe4BIJ/OXAPy6bQUWmjma2xO/ANdMrM5r1z4tZISfSsIOWPxh2GQ
-         zvkzGlT0yDlOvvVrqql0bj3Sp3gqXbiQZykEa9Har3FsM9nKpPhsBWSN7db2mNOEGr+j
-         juqDEPMT6s1z024ra01D1zVYg/kw6Fm/khkqQrgwXbohg9NbZdy3kNlM3kvcwLmd6IuC
-         yYjL98/2k6rsvbJWNMmFoECgt8M8izRtBa/yqdWlOLdnlw3wVC4MbXEi4f3ah2HNBWqk
-         7Wc/g5I8Q5q5tc2DnPK53DoV0iWT92i0ds+SQcypClgQyk2eoOwgO8ycDT5IShvhiiFD
-         i80w==
-X-Gm-Message-State: AGi0PuZ1StD9Ig0Cnd++ZF/U0P0hAacJ/6KxxUCPrmEBYc3MZBnYeEzL
-        ni14ZT//GjP5RgBiuszOdfJMc73nDSW9gqKbcGJ/KQ==
-X-Google-Smtp-Source: APiQypKYz1EEvMGZ273zPuZUPVUX270HcGDlT2cPH7NuRr5hXW3fI57L+95xL/tG6Ba4x24gxRl703n3MAxrM9u48TU=
-X-Received: by 2002:ac2:5559:: with SMTP id l25mr7533583lfk.55.1586685533011;
- Sun, 12 Apr 2020 02:58:53 -0700 (PDT)
+        Sun, 12 Apr 2020 06:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbgDLKAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 06:00:32 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BBB206DA;
+        Sun, 12 Apr 2020 10:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586685633;
+        bh=DiVkzZNd9n/tfy3LeFZlnUenRZDPc3lnjjjY+IbeVWg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0yglTGFxm5cYzae5V2eVokB6x2GZMQQMrbKhiRufFvQJeizSt/taN30+NtbnzLJRk
+         hGgrPmc/LDW5rVEH4/pGUZNKaaTPu+b0A+ReIybpgpFPn1Hql5puaYF9/rTewCVf37
+         8geZ+aGOf08pW0ziqu6eK6ESbY/e9G0zBjKfyXM8=
+Date:   Sun, 12 Apr 2020 11:00:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     alexandru.ardelean@analog.com, lars@metafoo.de,
+        Michael.Hennerich@analog.com, stefan.popa@analog.com,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iio: imu: adis: Add a missing '\n' in a log message
+Message-ID: <20200412110005.79af5069@archlinux>
+In-Reply-To: <20200410171224.4633-1-christophe.jaillet@wanadoo.fr>
+References: <20200410171224.4633-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200411115418.455500023@linuxfoundation.org>
-In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sun, 12 Apr 2020 15:28:41 +0530
-Message-ID: <CA+G9fYuOH2EPwNMi+gqz4fd_i57_hnL9ekvjGuRsCaA-a4n-Wg@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/32] 4.9.219-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Apr 2020 at 17:43, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.219 release.
-> There are 32 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.219-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, 10 Apr 2020 19:12:24 +0200
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
+> 
+> Fixes: 1fd456702692 ("iio: imu: adis: add support product ID check in adis_initial_startup")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Applied thanks,
 
-Summary
-------------------------------------------------------------------------
+Jonathan
 
-kernel: 4.9.219-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: ed218652c6a621a6c9bc9655eefed3c460f93d83
-git describe: v4.9.218-33-ged218652c6a6
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.218-33-ged218652c6a6
+> ---
+>  drivers/iio/imu/adis.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> index a8afd01de4f3..2e7d0d337f8f 100644
+> --- a/drivers/iio/imu/adis.c
+> +++ b/drivers/iio/imu/adis.c
+> @@ -419,7 +419,7 @@ int __adis_initial_startup(struct adis *adis)
+>  
+>  	if (prod_id != adis->data->prod_id)
+>  		dev_warn(&adis->spi->dev,
+> -			 "Device ID(%u) and product ID(%u) do not match.",
+> +			 "Device ID(%u) and product ID(%u) do not match.\n",
+>  			 adis->data->prod_id, prod_id);
+>  
+>  	return 0;
 
-No regressions (compared to build v4.9.218)
-
-No fixes (compared to build v4.9.218)
-
-Ran 28926 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* ltp-sched-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
