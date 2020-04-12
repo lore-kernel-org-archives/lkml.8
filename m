@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF3C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86662C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7232072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D35206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMSPD8CY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNK0ACOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgDLJOu (ORCPT
+        id S1726884AbgDLJPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 05:14:50 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46746 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgDLJOt (ORCPT
+        Sun, 12 Apr 2020 05:15:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42420 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgDLJPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 05:14:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q3so3187788pff.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 02:14:49 -0700 (PDT)
+        Sun, 12 Apr 2020 05:15:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id v2so2337961plp.9
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 02:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:subject:message-id:mail-followup-to:mime-version
          :content-disposition:user-agent;
-        bh=645bKxd6X1AK15EMEGsJ7MidT4FGWFCl1Q2sCxk51Hw=;
-        b=TMSPD8CYaHf7z6vnobwe1NUr51t3OGXC3jJqBgNK0ek99bzjymh+t+itHap5mPGdvO
-         dEV030oIbRbLZUcxgqdVkoHQ1iMhLoIDaZJLlvjyo0Xmv7P2whFtTMiTw+SBRB2m5nwC
-         Bo+3/NZZu6ao2zUKzLLawbkYiHyk3r0ry9RWUZqylg9sUTK03m5mWuZmIM67CyQqaEiM
-         lw8V8ji0/5Q1E2kWdfUgl+X011Q7IiOlsrmG16/EbSeDSSEsTTVZDeEYxtjh47/GF1m4
-         hPFLnQfQiCmhiJxW8ts5Pz/EJ+Tl9sdjzZwmKr/6aZKl9oEkuaNxQOWwcfkUrl3Vnoc1
-         hUTQ==
+        bh=w2t8ynRQtZD2Msdal+FOK6sOorbXy2D4HYAx3w0ig3U=;
+        b=aNK0ACOhQllXZs0VCPl/RMrScHbzox0I19JvSeLQkHr7cpAsFZnk3sBTNvhRXQT0Pq
+         4HysbmsQIS2ozo2sw7IYekVT95jU1y+TgqISvlP9DVTbXt/SS0Ss9sSz7XsCje0E9jwP
+         xYyxnboszWw+e6PoqCI63DdeQnN9N2YptazidMhuQEESF5CHTEkZArOdEm1ZMmeLgeuC
+         Kv+2vlziBOv8Mxs+PlBL4cm6fzki8dKT2FVk2bW8cZL/sRDdXAY7lFteobPEKCnEqxDU
+         3qI+nZg+LS49bgfB8aRbNhcPrfUmHsoquLvxsXIN7bmiExdnBu4x4OemnG453UIcMwTy
+         02hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:subject:message-id:mail-followup-to
          :mime-version:content-disposition:user-agent;
-        bh=645bKxd6X1AK15EMEGsJ7MidT4FGWFCl1Q2sCxk51Hw=;
-        b=YdAyKAcQl7AUotTP18SZzpBMrmu+pl19r99UUKI1I/UaIiD4YR/Bl9a7xDLVq2ctq9
-         k2q0Jn32h3BoIZcOtK7D3opS+6kpyDoXZNZz1OkIPI2wtculkw3gpX4QC1NF/xcsbmqC
-         c6eWZl5GlbW33VKIDqSm9eU8vjoGvbL6XGyxHE1Xzu4nfqVmTiB3vKHLlkDoxJlpqG8e
-         RROftEbJdJZDi7bRVKz1ANN7GbxDK7S1p9eyVzRy0arIoJOOcrm41Ack/NNdGlHZqs/G
-         9SAN2KIRCQbL4ypOssHVHr77/gdaavasKyJruTPscTHqyWODETPSUk3S29sOMYdsqAGA
-         phDQ==
-X-Gm-Message-State: AGi0PuahZHdgof2OouqSJclWK8YJn2k7np9qvr8vlbMKDBZQTFFD+QcY
-        LZACNMpMeHyRGZJqP5O7wOE=
-X-Google-Smtp-Source: APiQypLw91cgexxg9C84CDs1cpXXDV8EOUaWLEkb+LJ78u7NE1KoHRVkvqkzLQjUZyTJyWXYCdRlYg==
-X-Received: by 2002:a62:7d11:: with SMTP id y17mr12652324pfc.127.1586682889135;
-        Sun, 12 Apr 2020 02:14:49 -0700 (PDT)
+        bh=w2t8ynRQtZD2Msdal+FOK6sOorbXy2D4HYAx3w0ig3U=;
+        b=oYrgHJI+TzEJTDyJxErBMJSmUkpUC0z7rbmikgBxJhS7wI44POMd0VnMMBAlaY25rV
+         D7u5l8hvHQat/nsP9DG50Vpz2iKS/21AfEP18OTje4hGzPDU8DpPLNyjP1mj/DuAiKGr
+         S8yq886S7uv8JQptC9dsJupYtbGlXe47Mw8awiY6o51x9s6tL5KfE+EfUZkeQAQh5ady
+         667ODrj1QGfMucIQJEjPxWMu4mff9MWewpyrBq6CpGQRWlSsBcVWQ2cftU9yI/7budAK
+         jXN2YWvUjHRzmJmTRZ+qUoKM8zH1JYz8mdapwvrCBVYIWxzg5UeCKDNQDyGVn61S8Fnn
+         V/Sg==
+X-Gm-Message-State: AGi0PuYceOpvCC4/LtCICIbPgQ50lHLoOxixUAApGaTzg0BrfO6RX7lo
+        B+JWAV3ZUFt2432PyC+HArQ=
+X-Google-Smtp-Source: APiQypLyQhpHzaamG8hC/k4msCztQyfU7Dz0cXUrQ8pk66EhcehcJxHjyyj3q+lZbH3P576DWP5BTw==
+X-Received: by 2002:a17:90a:fe18:: with SMTP id ck24mr16235456pjb.57.1586682915585;
+        Sun, 12 Apr 2020 02:15:15 -0700 (PDT)
 Received: from open-light-1.localdomain ([66.98.113.28])
-        by smtp.gmail.com with ESMTPSA id a9sm5408165pgv.18.2020.04.12.02.14.47
+        by smtp.gmail.com with ESMTPSA id y131sm5858792pfb.78.2020.04.12.02.15.14
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 Apr 2020 02:14:48 -0700 (PDT)
+        Sun, 12 Apr 2020 02:15:14 -0700 (PDT)
 From:   liliangleo <liliang.opensource@gmail.com>
 X-Google-Original-From: liliangleo <liliangleo@didiglobal.com>
-Date:   Sun, 12 Apr 2020 05:09:22 -0400
+Date:   Sun, 12 Apr 2020 05:09:49 -0400
 To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
@@ -70,8 +70,8 @@ To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alex Williamson <alex.williamson@redhat.com>
-Subject: [RFC PATCH 3/4] mm: add sys fs configuration for page reporting
-Message-ID: <20200412090919.GA19580@open-light-1.localdomain>
+Subject: [RFC PATCH 4/4] mm: Add PG_zero support
+Message-ID: <20200412090945.GA19582@open-light-1.localdomain>
 Mail-Followup-To: Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
@@ -91,19 +91,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add 'delay_millisecs', 'mini_order', 'batch_size',
-in '/sys/kernel/mm/page_report/'. Usage:
+Zero out the page content usually happens when allocating pages,
+this is a time consuming operation, it makes pin and mlock
+operation very slowly, especially for a large batch of memory.
 
-"delay_millisecs":
-Time delay interval between page free and work start to run.
+This patch introduce a new feature for zero out pages before page
+allocation, it can help to speed up page allocation.
 
-"mini_order":
-Only pages with order equal or greater than mini_order will be
-reported.
+The idea is very simple, zero out free pages when the system is
+not busy and mark the page with PG_zero, when allocating a page,
+if the page need to be filled with zero, check the flag in the
+struct page, if it's marked as PG_zero, zero out can be skipped,
+it can save cpu time and speed up page allocation.
 
-"batch_size"
-Wake up the worker only when free pages total size are greater
-than 'batch_size'.
+This serial is based on the feature 'free page reporting' which
+introduced by Alexander Duyck
+
+We can benefit from this feature in the flowing case:
+    1. User space mlock a large chunk of memory
+    2. VFIO pin pages for DMA
+    3. Allocating transparent huge page
+    4. Speed up page fault process
+
+My original intention for adding this feature is to shorten
+VM creation time when VFIO device is attached, it works good
+and the VM creation time is reduced obviously.
 
 Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 Cc: Mel Gorman <mgorman@techsingularity.net>
@@ -116,227 +128,385 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: liliangleo <liliangleo@didiglobal.com>
 ---
- mm/page_reporting.c | 144 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- mm/page_reporting.h |   4 +-
- 2 files changed, 141 insertions(+), 7 deletions(-)
+ include/linux/highmem.h        |  31 ++++++++-
+ include/linux/page-flags.h     |  18 ++++-
+ include/trace/events/mmflags.h |   7 ++
+ mm/Kconfig                     |  10 +++
+ mm/Makefile                    |   1 +
+ mm/huge_memory.c               |   3 +-
+ mm/page_alloc.c                |   2 +
+ mm/zero_page.c                 | 151 +++++++++++++++++++++++++++++++++++++++++
+ mm/zero_page.h                 |  13 ++++
+ 9 files changed, 231 insertions(+), 5 deletions(-)
+ create mode 100644 mm/zero_page.c
+ create mode 100644 mm/zero_page.h
 
-diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-index dc7a22a4b752..cc6a42596560 100644
---- a/mm/page_reporting.c
-+++ b/mm/page_reporting.c
-@@ -7,15 +7,19 @@
- #include <linux/delay.h>
- #include <linux/scatterlist.h>
- #include <linux/sched.h>
-+#include <linux/kobject.h>
+diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+index ea5cdbd8c2c3..0308837adc19 100644
+--- a/include/linux/highmem.h
++++ b/include/linux/highmem.h
+@@ -157,7 +157,13 @@ do {                                                            \
+ #ifndef clear_user_highpage
+ static inline void clear_user_highpage(struct page *page, unsigned long vaddr)
+ {
+-	void *addr = kmap_atomic(page);
++	void *addr;
++
++#ifdef CONFIG_ZERO_PAGE
++	if (TestClearPageZero(page))
++		return;
++#endif
++	addr = kmap_atomic(page);
+ 	clear_user_page(addr, vaddr, page);
+ 	kunmap_atomic(addr);
+ }
+@@ -208,9 +214,30 @@ alloc_zeroed_user_highpage_movable(struct vm_area_struct *vma,
+ 	return __alloc_zeroed_user_highpage(__GFP_MOVABLE, vma, vaddr);
+ }
  
- #include "page_reporting.h"
++#ifdef CONFIG_ZERO_PAGE
++static inline void __clear_highpage(struct page *page)
++{
++	void *kaddr;
++
++	if (PageZero(page))
++		return;
++
++	kaddr = kmap_atomic(page);
++	clear_page(kaddr);
++	SetPageZero(page);
++	kunmap_atomic(kaddr);
++}
++#endif
++
+ static inline void clear_highpage(struct page *page)
+ {
+-	void *kaddr = kmap_atomic(page);
++	void *kaddr;
++
++#ifdef CONFIG_ZERO_PAGE
++	if (TestClearPageZero(page))
++		return;
++#endif
++	kaddr = kmap_atomic(page);
+ 	clear_page(kaddr);
+ 	kunmap_atomic(kaddr);
+ }
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 222f6f7b2bb3..ace247c5d3ec 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -136,6 +136,10 @@ enum pageflags {
+ 	PG_young,
+ 	PG_idle,
+ #endif
++#ifdef CONFIG_ZERO_PAGE
++	PG_zero,
++#endif
++
+ 	__NR_PAGEFLAGS,
+ 
+ 	/* Filesystems */
+@@ -447,6 +451,16 @@ PAGEFLAG(Idle, idle, PF_ANY)
+  */
+ __PAGEFLAG(Reported, reported, PF_NO_COMPOUND)
+ 
++#ifdef CONFIG_ZERO_PAGE
++PAGEFLAG(Zero, zero, PF_ANY)
++TESTSCFLAG(Zero, zero, PF_ANY)
++#define __PG_ZERO (1UL << PG_zero)
++#else
++PAGEFLAG_FALSE(Zero)
++#define __PG_ZERO 0
++#endif
++
++
+ /*
+  * On an anonymous page mapped into a user virtual memory area,
+  * page->mapping points to its anon_vma, not to a struct address_space;
+@@ -843,7 +857,7 @@ static inline void ClearPageSlabPfmemalloc(struct page *page)
+ 	 1UL << PG_private	| 1UL << PG_private_2	|	\
+ 	 1UL << PG_writeback	| 1UL << PG_reserved	|	\
+ 	 1UL << PG_slab		| 1UL << PG_active 	|	\
+-	 1UL << PG_unevictable	| __PG_MLOCKED)
++	 1UL << PG_unevictable	| __PG_MLOCKED | __PG_ZERO)
+ 
+ /*
+  * Flags checked when a page is prepped for return by the page allocator.
+@@ -854,7 +868,7 @@ static inline void ClearPageSlabPfmemalloc(struct page *page)
+  * alloc-free cycle to prevent from reusing the page.
+  */
+ #define PAGE_FLAGS_CHECK_AT_PREP	\
+-	(((1UL << NR_PAGEFLAGS) - 1) & ~__PG_HWPOISON)
++	(((1UL << NR_PAGEFLAGS) - 1) & ~(__PG_HWPOISON | __PG_ZERO))
+ 
+ #define PAGE_FLAGS_PRIVATE				\
+ 	(1UL << PG_private | 1UL << PG_private_2)
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 5fb752034386..7be4153bed2c 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -73,6 +73,12 @@
+ #define IF_HAVE_PG_HWPOISON(flag,string)
+ #endif
+ 
++#ifdef CONFIG_ZERO_PAGE
++#define IF_HAVE_PG_ZERO(flag,string) ,{1UL << flag, string}
++#else
++#define IF_HAVE_PG_ZERO(flag,string)
++#endif
++
+ #if defined(CONFIG_IDLE_PAGE_TRACKING) && defined(CONFIG_64BIT)
+ #define IF_HAVE_PG_IDLE(flag,string) ,{1UL << flag, string}
+ #else
+@@ -104,6 +110,7 @@
+ IF_HAVE_PG_MLOCK(PG_mlocked,		"mlocked"	)		\
+ IF_HAVE_PG_UNCACHED(PG_uncached,	"uncached"	)		\
+ IF_HAVE_PG_HWPOISON(PG_hwpoison,	"hwpoison"	)		\
++IF_HAVE_PG_ZERO(PG_zero,		"zero"		)		\
+ IF_HAVE_PG_IDLE(PG_young,		"young"		)		\
+ IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
+ 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index c1acc34c1c35..3806bdbff4c9 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -252,6 +252,16 @@ config PAGE_REPORTING
+ 	  those pages to another entity, such as a hypervisor, so that the
+ 	  memory can be freed within the host for other uses.
+ 
++#
++# support for zero free page
++config ZERO_PAGE
++	bool "Zero free page"
++	def_bool y
++	depends on PAGE_REPORTING
++	help
++	  Zero page allows zero out free pages in freelist based on free
++	  page reporting
++
+ #
+ # support for page migration
+ #
+diff --git a/mm/Makefile b/mm/Makefile
+index fccd3756b25f..ee23147a623f 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -112,3 +112,4 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
+ obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
+ obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
+ obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
++obj-$(CONFIG_ZERO_PAGE) += zero_page.o
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 6ecd1045113b..a28707aea3c5 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2542,7 +2542,8 @@ static void __split_huge_page_tail(struct page *head, int tail,
+ 			 (1L << PG_workingset) |
+ 			 (1L << PG_locked) |
+ 			 (1L << PG_unevictable) |
+-			 (1L << PG_dirty)));
++			 (1L << PG_dirty) |
++			 __PG_ZERO));
+ 
+ 	/* ->mapping in first tail page is compound_mapcount */
+ 	VM_BUG_ON_PAGE(tail > 2 && page_tail->mapping != TAIL_MAPPING,
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 69827d4fa052..3e9601d0b944 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -75,6 +75,7 @@
  #include "internal.h"
+ #include "shuffle.h"
+ #include "page_reporting.h"
++#include "zero_page.h"
  
--#define PAGE_REPORTING_DELAY	(2 * HZ)
- #define MAX_SCAN_NUM 1024
+ /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
+ static DEFINE_MUTEX(pcp_batch_high_lock);
+@@ -1179,6 +1180,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
  
- unsigned long page_report_batch_size  __read_mostly = 4 * 1024 * 1024UL;
+ 	trace_mm_page_free(page, order);
  
-+static unsigned long page_report_delay_millisecs __read_mostly = 2000;
-+
-+unsigned int page_report_mini_order __read_mostly = 8;
-+
- static struct page_reporting_dev_info __rcu *pr_dev_info __read_mostly;
- 
- enum {
-@@ -48,7 +52,8 @@ __page_reporting_request(struct page_reporting_dev_info *prdev)
- 	 * now we are limiting this to running no more than once every
- 	 * couple of seconds.
- 	 */
--	schedule_delayed_work(&prdev->work, PAGE_REPORTING_DELAY);
-+	schedule_delayed_work(&prdev->work,
-+			      msecs_to_jiffies(page_report_delay_millisecs));
- }
- 
- /* notify prdev of free page reporting request */
-@@ -260,7 +265,7 @@ page_reporting_process_zone(struct page_reporting_dev_info *prdev,
- 
- 	/* Generate minimum watermark to be able to guarantee progress */
- 	watermark = low_wmark_pages(zone) +
--		    (PAGE_REPORTING_CAPACITY << PAGE_REPORTING_MIN_ORDER);
-+		    (PAGE_REPORTING_CAPACITY << page_report_mini_order);
- 
++	clear_zero_page_flag(page, order);
  	/*
- 	 * Cancel request if insufficient free memory or if we failed
-@@ -270,7 +275,7 @@ page_reporting_process_zone(struct page_reporting_dev_info *prdev,
- 		return err;
- 
- 	/* Process each free list starting from lowest order/mt */
--	for (order = PAGE_REPORTING_MIN_ORDER; order < MAX_ORDER; order++) {
-+	for (order = page_report_mini_order; order < MAX_ORDER; order++) {
- 		for (mt = 0; mt < MIGRATE_TYPES; mt++) {
- 			/* We do not pull pages from the isolate free list */
- 			if (is_migrate_isolate(mt))
-@@ -337,7 +342,8 @@ static void page_reporting_process(struct work_struct *work)
- 	 */
- 	state = atomic_cmpxchg(&prdev->state, state, PAGE_REPORTING_IDLE);
- 	if (state == PAGE_REPORTING_REQUESTED)
--		schedule_delayed_work(&prdev->work, PAGE_REPORTING_DELAY);
-+		schedule_delayed_work(&prdev->work,
-+				msecs_to_jiffies(page_report_delay_millisecs));
- }
- 
- static DEFINE_MUTEX(page_reporting_mutex);
-@@ -393,3 +399,131 @@ void page_reporting_unregister(struct page_reporting_dev_info *prdev)
- 	mutex_unlock(&page_reporting_mutex);
- }
- EXPORT_SYMBOL_GPL(page_reporting_unregister);
+ 	 * Check tail pages before head page information is cleared to
+ 	 * avoid checking PageCompound for order-0 pages.
+diff --git a/mm/zero_page.c b/mm/zero_page.c
+new file mode 100644
+index 000000000000..f3b3d58f0ef2
+--- /dev/null
++++ b/mm/zero_page.c
+@@ -0,0 +1,151 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
-+static ssize_t batch_size_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
++/*
++ *  Copyright (C) 2020  Didi chuxing.
++ *
++ *  Authors: Liang Li <liliangleo@didiglobal.com>
++ *
++ *  This work is licensed under the terms of the GNU GPL, version 2. See
++ *  the COPYING file in the top-level directory.
++ */
++
++#include <linux/mm.h>
++#include <linux/highmem.h>
++#include <linux/rmap.h>
++#include <linux/mm_inline.h>
++#include <linux/page_reporting.h>
++#include "internal.h"
++#include "zero_page.h"
++
++#define ZERO_PAGE_STOP	0
++#define ZERO_PAGE_RUN	1
++
++static unsigned long zeropage_enable __read_mostly;
++static DEFINE_MUTEX(kzeropaged_mutex);
++static struct page_reporting_dev_info zero_page_dev_info;
++
++inline void clear_zero_page_flag(struct page *page, int order)
 +{
-+	return sprintf(buf, "%lu\n", page_report_batch_size);
++	int i;
++
++	for (i = 0; i < (1 << order); i++)
++		ClearPageZero(page + i);
 +}
 +
-+static ssize_t batch_size_store(struct kobject *kobj,
-+				struct kobj_attribute *attr,
-+				const char *buf, size_t count)
++static int zero_free_pages(struct page_reporting_dev_info *pr_dev_info,
++			   struct scatterlist *sgl, unsigned int nents)
 +{
-+	unsigned long size;
++	struct scatterlist *sg = sgl;
++
++	might_sleep();
++	do {
++		struct page *page = sg_page(sg);
++		unsigned int order = get_order(sg->length);
++		int i;
++
++		VM_BUG_ON(PageBuddy(page) || page_order(page));
++
++		for (i = 0; i < (1 << order); i++) {
++			cond_resched();
++			__clear_highpage(page + i);
++		}
++	} while ((sg = sg_next(sg)));
++
++	return 0;
++}
++
++static int start_kzeropaged(void)
++{
++	int err = 0;
++
++	if (zeropage_enable) {
++		zero_page_dev_info.report = zero_free_pages;
++		err = page_reporting_register(&zero_page_dev_info);
++		pr_info("Zero page enabled\n");
++	} else {
++		page_reporting_unregister(&zero_page_dev_info);
++		pr_info("Zero page disabled\n");
++	}
++
++	return err;
++}
++
++static ssize_t enabled_show(struct kobject *kobj,
++			    struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%lu\n", zeropage_enable);
++}
++
++static ssize_t enabled_store(struct kobject *kobj,
++			     struct kobj_attribute *attr,
++			     const char *buf, size_t count)
++{
++	ssize_t ret = 0;
++	unsigned long flags;
 +	int err;
 +
-+	err = kstrtoul(buf, 10, &size);
-+	if (err || size >= UINT_MAX)
++	err = kstrtoul(buf, 10, &flags);
++	if (err || flags > UINT_MAX)
++		return -EINVAL;
++	if (flags > ZERO_PAGE_RUN)
 +		return -EINVAL;
 +
-+	page_report_batch_size = size;
-+
-+	return count;
-+}
-+
-+static struct kobj_attribute batch_size_attr =
-+	__ATTR(batch_size, 0644, batch_size_show, batch_size_store);
-+
-+static ssize_t delay_millisecs_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%lu\n", page_report_delay_millisecs);
-+}
-+
-+static ssize_t delay_millisecs_store(struct kobject *kobj,
-+				struct kobj_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	unsigned long msecs;
-+	int err;
-+
-+	err = kstrtoul(buf, 10, &msecs);
-+	if (err || msecs >= UINT_MAX)
-+		return -EINVAL;
-+
-+	page_report_delay_millisecs = msecs;
-+
-+	return count;
-+}
-+
-+static struct kobj_attribute wake_delay_millisecs_attr =
-+	__ATTR(delay_millisecs, 0644, delay_millisecs_show,
-+		delay_millisecs_store);
-+
-+static ssize_t mini_order_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%u\n", page_report_mini_order);
-+}
-+
-+static ssize_t mini_order_store(struct kobject *kobj,
-+				struct kobj_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	unsigned int order;
-+	int err;
-+
-+	err = kstrtouint(buf, 10, &order);
-+	if (err || order >= MAX_ORDER)
-+		return -EINVAL;
-+
-+	if (page_report_mini_order != order) {
-+		mutex_lock(&page_reporting_mutex);
-+		page_report_mini_order = order;
-+		mutex_unlock(&page_reporting_mutex);
++	if (zeropage_enable != flags) {
++		mutex_lock(&kzeropaged_mutex);
++		zeropage_enable = flags;
++		ret = start_kzeropaged();
++		mutex_unlock(&kzeropaged_mutex);
 +	}
 +
 +	return count;
 +}
 +
-+static struct kobj_attribute mini_order_attr =
-+	__ATTR(mini_order, 0644, mini_order_show, mini_order_store);
++static struct kobj_attribute enabled_attr =
++	__ATTR(enabled, 0644, enabled_show, enabled_store);
 +
-+static struct attribute *page_report_attr[] = {
-+	&mini_order_attr.attr,
-+	&wake_delay_millisecs_attr.attr,
-+	&batch_size_attr.attr,
++static struct attribute *zeropage_attr[] = {
++	&enabled_attr.attr,
 +	NULL,
 +};
 +
-+static struct attribute_group page_report_attr_group = {
-+	.attrs = page_report_attr,
++static struct attribute_group zeropage_attr_group = {
++	.attrs = zeropage_attr,
 +};
 +
-+static int __init page_report_init_sysfs(struct kobject **page_report_kobj)
++static int __init zeropage_init_sysfs(struct kobject **zeropage_kobj)
 +{
 +	int err;
 +
-+	*page_report_kobj = kobject_create_and_add("page_report", mm_kobj);
-+	if (unlikely(!*page_report_kobj)) {
-+		pr_err("page_report: failed to create page_report kobject\n");
++	*zeropage_kobj = kobject_create_and_add("zero_page", mm_kobj);
++	if (unlikely(!*zeropage_kobj)) {
++		pr_err("zeropage: failed to create zeropage kobject\n");
 +		return -ENOMEM;
 +	}
 +
-+	err = sysfs_create_group(*page_report_kobj, &page_report_attr_group);
++	err = sysfs_create_group(*zeropage_kobj, &zeropage_attr_group);
 +	if (err) {
-+		pr_err("page_report: failed to register page_report group\n");
++		pr_err("zeropage: failed to register zeropage group\n");
 +		goto delete_obj;
 +	}
 +
 +	return 0;
 +
 +delete_obj:
-+	kobject_put(*page_report_kobj);
++	kobject_put(*zeropage_kobj);
 +	return err;
 +}
 +
-+static int __init page_report_init(void)
++static int __init zeropage_init(void)
 +{
 +	int err;
-+	struct kobject *page_report_kobj;
++	struct kobject *zeropage_kobj;
 +
-+	msecs_to_jiffies(page_report_delay_millisecs);
-+	err = page_report_init_sysfs(&page_report_kobj);
++	err = zeropage_init_sysfs(&zeropage_kobj);
 +	if (err)
 +		return err;
 +
++	start_kzeropaged();
++
 +	return 0;
 +}
-+subsys_initcall(page_report_init);
-diff --git a/mm/page_reporting.h b/mm/page_reporting.h
-index f18c85ecdfe0..5e52777c934d 100644
---- a/mm/page_reporting.h
-+++ b/mm/page_reporting.h
-@@ -10,7 +10,7 @@
- #include <asm/pgtable.h>
- #include <linux/scatterlist.h>
- 
--#define PAGE_REPORTING_MIN_ORDER	pageblock_order
-+extern unsigned int page_report_mini_order;
- 
- extern unsigned long page_report_batch_size;
- 
-@@ -42,7 +42,7 @@ static inline void page_reporting_notify_free(unsigned int order)
- 		return;
- 
- 	/* Determine if we have crossed reporting threshold */
--	if (order < PAGE_REPORTING_MIN_ORDER)
-+	if (order < page_report_mini_order)
- 		return;
- 
- 	batch_size += (1 << order) << PAGE_SHIFT;
++subsys_initcall(zeropage_init);
+diff --git a/mm/zero_page.h b/mm/zero_page.h
+new file mode 100644
+index 000000000000..bfa3c9fe94d3
+--- /dev/null
++++ b/mm/zero_page.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_ZERO_PAGE_H
++#define _LINUX_ZERO_PAGE_H
++
++#ifdef CONFIG_ZERO_PAGE
++extern inline void clear_zero_page_flag(struct page *page, int order);
++#else
++inline void clear_zero_page_flag(struct page *page, int order)
++{
++}
++#endif
++#endif /*_LINUX_ZERO_NG_H */
++
 -- 
 2.14.1
 
