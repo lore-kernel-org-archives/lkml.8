@@ -2,117 +2,157 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C9FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26C3C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7E020709
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586687149;
-	bh=GPoR6fO9oT8HCa7+VFKYGXh0NeNqRhagYkJ4iTjJt/U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r/Iyx+bu/ABX4n6lizZL5uK9z03fzoZd/oL+F5W9YIq6Xs3NqqovoQBuq/XReyZcR
-	 j59kCh1tf8XRG5hn4ng+386EsZWbpjFYgNKIO0tnbMVcUMrC0QhztWCRn2H1XUCrLV
-	 WxrvrGC8N2L9MCD0q8ufslLLf2t4c0ft5kIPJKxI=
+	by mail.kernel.org (Postfix) with ESMTP id BDBAA20739
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C70+d3ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgDLKZr (ORCPT
+        id S1726968AbgDLKjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 06:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgDLKZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 06:25:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABE820708;
-        Sun, 12 Apr 2020 10:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586687146;
-        bh=GPoR6fO9oT8HCa7+VFKYGXh0NeNqRhagYkJ4iTjJt/U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BXF89qPSLNzeNHt80CdhfT3Z5f0uYHt7THlNdM3epKAaCVFqrCGjxeERp/OjeSI/S
-         Jxjhr83g+1iBKcB85v67YpHhBaPhL6Gz2EJZhPbLCej2+3M1+KUZDibLqgxxon0o0m
-         eI/GChqvxjQF1CloTeeJyHa4Ynu6YN6Q05784YwQ=
-Date:   Sun, 12 Apr 2020 11:25:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Aishwarya R <aishwaryarj100@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: fsl-imx25-gcq: Use
- devm_platform_ioremap_resource
-Message-ID: <20200412112541.2a2097fa@archlinux>
-In-Reply-To: <20200409151306.308-1-aishwaryarj100@gmail.com>
-References: <20200409151306.308-1-aishwaryarj100@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Apr 2020 06:39:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34618 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgDLKjI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 06:39:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id f3so6565395ioj.1;
+        Sun, 12 Apr 2020 03:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mB50ITuRAo45vr3yEb8CNvZ6X6/DqWAF63v0IHs/huk=;
+        b=C70+d3ftVTHPJ4YDz5UWzWytEpPr478SefEVDz2ZHLx3PLV3IMFwjyAhOslonQ4jIB
+         AR+AIDrKr4L2KJx2ybirfGiNixFdxEKqw2s9a80UXmMgaxnXCk8IwREAycKj7ikzeyPy
+         JsnyvJyw3D0uHi4qgnTGxPsCk9H4HhZ9MNPdNnq1I0m0r+sxmyIl0Y7uCFRzcWeHZkEG
+         o5P4PPGtJcccXZa2fm+EuCOj5D9Vx3UVOK463OSaq6BmLsRP4ATenR9LROvD/Hb/HgUP
+         vEFXCiQOgi1mn8izS0eBazZaVUqhdWOwy6gat1SuxfGAJPBiHNnN7Wu1RxYc4mF0NP9s
+         kJTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mB50ITuRAo45vr3yEb8CNvZ6X6/DqWAF63v0IHs/huk=;
+        b=JX75j1GgXh3BJvptmpWJvqywOfU9wYSWfJF937yaGrnMAZLuUA4vGbV5IJzF6bYD0w
+         qe1A0Oe57G7wvTgv9bIGPQ96PhqOAyiDBdWVmD7/RWJR/Pj385eVokh7YmPhz5kI3nep
+         qVc1YBer5G053+OUdRLWXXMWYx7oImIHM9itfaxde6Q45wZYMd6Gk/P03VcnSP48c9Ri
+         ooxT6i1AbwbncSNU1qfMJPTFM/3yUqTXIkU9t9rpI2zRpCdz91rrnUdplZTPL2mDE5mJ
+         zvcNYwW+kqDLkXKir4HmkftzqJg6BpLji5vEIP+ulioRcRMBfB/gmhtgW7GtNkgA93vN
+         srfg==
+X-Gm-Message-State: AGi0PuZhMsyuAHrHG72aeMi/aTCQePGixgw1eHmbTJuF/KReDZcXLDgH
+        3nPcTUdkFH7LxaYcpsEyICVp+7aXXmcbV89oujsHe+6L
+X-Google-Smtp-Source: APiQypIGAWmKLY3IBZTNsF7xonyMGYkQaY5+Bq/c8BhUrXrk0TMoDADZ4sRM0A+mpRjivLgKubtfP5yiY+od1UyhHn0=
+X-Received: by 2002:a5e:cb02:: with SMTP id p2mr11839251iom.76.1586687945916;
+ Sun, 12 Apr 2020 03:39:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+ <20200408152151.5780-3-christian.brauner@ubuntu.com> <CADyDSO54-GuSUJrciSD2jbSShCYDpXCp53cr+D7u0ZQT141uTA@mail.gmail.com>
+ <20200409082659.exequ3evhlv33csr@wittgenstein>
+In-Reply-To: <20200409082659.exequ3evhlv33csr@wittgenstein>
+From:   David Rheinsberg <david.rheinsberg@gmail.com>
+Date:   Sun, 12 Apr 2020 12:38:54 +0200
+Message-ID: <CADyDSO54FV7OaVwWremmnNbTkvw6hQ-KTLJdEg3V5rfBi8n3Yw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] loopfs: implement loopfs
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  9 Apr 2020 20:43:05 +0530
-Aishwarya R <aishwaryarj100@gmail.com> wrote:
+Hey
 
-> Use the helper function that wraps the calls to
-> platform_get_resource() and devm_ioremap_resource()
-> together.
-> 
-> Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
-Please update the commit message for v2. In particular if an automated
-tool was used to identify this location then mention that.  If not just
-say 'by inspection' or similar!
+On Thu, Apr 9, 2020 at 10:27 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> On Thu, Apr 09, 2020 at 07:39:18AM +0200, David Rheinsberg wrote:
+> > With loopfs in place, any process can create its own user_ns, mount
+> > their private loopfs and create as many loop-devices as they want.
+> > Hence, this limit does not serve as an effective global
+> > resource-control. Secondly, anyone with access to `loop-control` can
+> > now create loop instances until this limit is hit, thus causing anyone
+> > else to be unable to create more. This effectively prevents you from
+> > sharing a loopfs between non-trusting parties. I am unsure where that
+> > limit would actually be used?
+>
+> Restricting it globally indeed wasn't the intended use-case for it. This
+> was more so that you can specify an instance limit, bind-mount that
+> instance into several places and sufficiently locked down users cannot
+> exceed the instance limit.
 
-Also, same thing about the signed-off-by as in previous patch.
+But then these users can each exhaust the limit individually. As such,
+you cannot share this instance across users that have no
+trust-relationship. Fine with me, but I still don't understand in
+which scenario the limit would be useful. Anyone can create a user-ns,
+create a new loopfs mount, and just happily create more loop-devices.
+So what is so special that you want to restrict the devices on a
+_single_ mount instance?
 
-Thanks,
+> I don't think we'd be getting much out of a global limit per se I think
+> the initial namespace being able to reserve a bunch of devices
+> they can always rely on being able create when they need them is more
+> interesting. This is similat to what devpts implements with the
+> "reserved" mount option and what I initially proposed for binderfs. For
+> the latter it was deemed unnecessary by others so I dropped it from
+> loopfs too.
 
-Jonathan
+The `reserve` of devpts has a fixed 2-tier system: A global limit, and
+a init-ns reserve. This does nothing to protect one container from
+another.
 
-> ---
->  drivers/iio/adc/fsl-imx25-gcq.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-> index fa71489195c6..b0a4dc88ba9b 100644
-> --- a/drivers/iio/adc/fsl-imx25-gcq.c
-> +++ b/drivers/iio/adc/fsl-imx25-gcq.c
-> @@ -294,7 +294,6 @@ static int mx25_gcq_probe(struct platform_device *pdev)
->  	struct mx25_gcq_priv *priv;
->  	struct mx25_tsadc *tsadc = dev_get_drvdata(pdev->dev.parent);
->  	struct device *dev = &pdev->dev;
-> -	struct resource *res;
->  	void __iomem *mem;
->  	int ret;
->  	int i;
-> @@ -305,8 +304,7 @@ static int mx25_gcq_probe(struct platform_device *pdev)
->  
->  	priv = iio_priv(indio_dev);
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	mem = devm_ioremap_resource(dev, res);
-> +	mem = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(mem))
->  		return PTR_ERR(mem);
->  
+Furthermore, how do you intend to limit user-space from creating an
+unbound amount of loop devices? Unless I am mistaken, with your
+proposal *any* process can create a new loopfs with a basically
+unlimited amount of loop-devices, thus easily triggering unbound
+kernel allocations. I think this needs to be accounted. The classic
+way is to put a per-uid limit into `struct user_struct` (done by
+pipes, mlock, epoll, mq, etc.). An alternative is `struct ucount`,
+which allows hierarchical management (inotify uses that, as an
+example).
 
+> I also expect most users to pre-create devices in the initial namespace
+> instance they need (e.g. similar to what binderfs does or what loop
+> devices currently have). Does that make sense to you?
+
+Our use-case is to get programmatic access to loop-devices, so we can
+build customer images on request (especially to create XFS images,
+since mkfs.xfs cannot write them, IIRC). We would be perfectly happy
+with a kernel-interface that takes a file-descriptor to a regular file
+and returns us a file-descriptor to a newly created block device
+(which is automatically destroyed when the last file-descriptor to it
+is closed). This would be ideal *to us*, since it would do automatic
+cleanup on crashes.
+
+We don't need any representation of the loop-device in the
+file-system, as long as we can somehow mount it (either by passing the
+bdev-FD to the new mount-api, or by using /proc/self/fd/ as
+mount-source).
+
+With your proposed loop-fs we could achieve something close to it:
+Mount a private loopfs, create a loop-device, and rely on automatic
+cleanup when the mount-namespace is destroyed.
+
+Thanks
+David
