@@ -2,187 +2,112 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B8FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 00:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D187C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 00:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CE720787
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 00:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CD920787
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 00:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Lt+jpjBv"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="dnescYHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgDLAwc (ORCPT
+        id S1726883AbgDLA7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 20:52:32 -0400
-Received: from mout.gmx.net ([212.227.17.20]:50097 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbgDLAwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 20:52:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586652735;
-        bh=o7WH1HuElSf495BU72Ulf3dSSlN3P/CxizUUhDu1V5w=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Lt+jpjBvbMH8JgxnWBCdymH+IZ9kPxVLAGhhcy8d8tTnfzN4GG03CyMgP2ubqqDQ/
-         0zOeY0FWh1pbMVw/5+WPSYQrmgaJS15DBO2yVEcdDYok9+uUI3hXxQQyiurLJnGoQb
-         LL6smlX1Ydr6RATE7mIuJ182AC08i15n876HlnW0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mo6ux-1iugfF0xBb-00pai2; Sun, 12
- Apr 2020 02:52:14 +0200
-Subject: Re: [PATCH] btrfs: Fix backref.c selftest compilation warning
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-References: <20200411154915.9408-1-tangbin@cmss.chinamobile.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
- PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
- 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
- D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
- efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
- ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
- BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
- 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
- 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
- EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
- 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
- ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
- oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
- fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
- 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
- ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
- oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
-Message-ID: <ea85377e-4648-c174-2827-53173587777c@gmx.com>
-Date:   Sun, 12 Apr 2020 08:52:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Apr 2020 20:59:06 -0400
+Received: from mail-dm6nam10on2137.outbound.protection.outlook.com ([40.107.93.137]:62516
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726689AbgDLA7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 20:59:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CH5rsXUMVBB8ofr/ZqIXVA5/Wfh00P5iTxAbBLQZIUPgOXD726N79nnRVo0ocSaXW2HK/y4Y4hDvKoZnZKQpJqFcQXG8DNYsCHcT2kS1dJphLwk6lem6ZtyCCG1Ea1XrEv82L2+4Tr+66RiMrZdV9MEwuZGCNiHR864cKDGLd6yrRHz1FZdpOgVfSGIZFvwAS3Y+HAacHo2EI/EdvSAm17KCAhKyX9BiVBc0hAMwSgLnmZVlF3b1PiOoatZ2EprLJ85ipdA0ZtP2Rp7LioH9jbE4u45lEKggiu5Ubg7TDPwMkVCrzTrt8c1cW7MOr+Yyxe37TaFcBWUxl3KVQiBQXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k8YmJ+voSMHr8jNGzhzA4s9e4PH7Meefd4tw9qN6+qc=;
+ b=TcYhCP6iPrQd+nXS6l3dvwqOM1HGEjPq7F39ku1U/YWiwKEMJxXvGiHI/ApC8h+b6I7Aspo4w8iQ6xWtpO6FrcIp7H0eXzZN6IUM5nnIzPBX1k7vDrPJqov8vgrLtUlLRhTcXbOXBnBHAdBFLDdbP6mPhgMYxblBRlHAncDqvjdF0rH5KrfrqCI5cRcRJMhhreAQ1VQZRmilA0C++rLtvAGlkJCHbBbaytDS9H1Dax+VOAvyfWzGuIQZc/Z9CFwl6BF26fGzhyLXZ9WqNW1UDC5p1gIXFVKYQgDNkmQ2tvGoOw2R/xLp7v8Ls0rEad8fXW6fXT5tqS7USP5uS2ZW2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k8YmJ+voSMHr8jNGzhzA4s9e4PH7Meefd4tw9qN6+qc=;
+ b=dnescYHEgc7BCvb0M/9gee4MK2veyupppx5RlCYZmf/Uzm/V1xnY3Psle6wqovbIleZHM3cUI15mUvO2/eUFPm/I8shdy/UBukux85TCnMAJ8Q3XUQXrP8AxgMg19On1u5kp+c0joZM2lBa86smYTHFrLXt9AS7rZ8kbIUyNNq8=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3318.namprd13.prod.outlook.com (2603:10b6:610:21::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.14; Sun, 12 Apr
+ 2020 00:59:01 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2921.023; Sun, 12 Apr 2020
+ 00:59:00 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS bugfix for Linux 5.7
+Thread-Topic: [GIT PULL] Please pull NFS bugfix for Linux 5.7
+Thread-Index: AQHWEGWNajeB60ueMU2zAOFvCYS7VA==
+Date:   Sun, 12 Apr 2020 00:59:00 +0000
+Message-ID: <b1fd16bb3607f03e60f4e18c0d8d046451f8882d.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68407d59-89d7-4d73-2eaf-08d7de7cb03d
+x-ms-traffictypediagnostic: CH2PR13MB3318:
+x-microsoft-antispam-prvs: <CH2PR13MB3318F282C0AE30570D35D06DB8DC0@CH2PR13MB3318.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:506;
+x-forefront-prvs: 0371762FE7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(396003)(39830400003)(366004)(376002)(346002)(5660300002)(8936002)(66476007)(4744005)(66946007)(91956017)(66446008)(6486002)(4326008)(81156014)(64756008)(76116006)(66556008)(6512007)(8676002)(71200400001)(186003)(26005)(54906003)(6916009)(478600001)(36756003)(2616005)(6506007)(316002)(86362001)(2906002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XSWdfmbml/74xMl89gvtMmWQQJVgApmsWJRmq9dTmdYJgtzcE8Dx9kcT0jwRFoXxoVkwZ/7DKdjlxqRekALgS2Y45rWPbizA4W/ota14fWbwCExGlszxus5FFxPQuVT3pmeQv4XXe1w0lhJUIeEs31sme5etFhp5Tfq4aYNTYZZpCBwv6GYw1sWLJ2zs3wNLDtgrMn2XZiEmsRMF2lveuxQYOUmB/fYgDMYptXexJEdT6FdN64hxbLLu5Hxy36agUPXvKcqzeqRYHs8NfGI29U5WHoUJnK27pWYhKlTaqb7G5YeRTcg4QHhB9CoQ3WntHph6U0QDBLf0UEA64AhhlmK2U7mQgQ1LHMir8Vh2mdhtg1o3OsX8DKG+uSLJ+cKUElkg1uFOYjgBCWfnHwF2BPXC6B3AjHYsf3uEKQjqvHJQDHt8/PyqC9C2C6+/AmAr
+x-ms-exchange-antispam-messagedata: wb0L/MIcE8PQbLuDp3GflhP67cZ0Emx72N87uS9/CZuCbPp5k7GMWuifbsmEYDQLe0q+H7dgrRQpomOC4HYmXPIdTfr0Y7XSVxhDExE4sgTvwc11fCapursbzUQahraPffeZ15CySZ4p5XGStnX11w==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5030DBB3DF95594A80DE27253B6A4D90@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200411154915.9408-1-tangbin@cmss.chinamobile.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="JmAtQApbs3a74LvrlYSsuQtc1n76tUtoa"
-X-Provags-ID: V03:K1:EFmFHqYGjwVLQEVxPBAN0xWzo0Ia4TCvtkrQv01D+it+9f+dOr5
- k72fw9EWqI5dD/ZtcX6/Ey01XxiQUbGwobeGTPTsU2+Px7Phvc2eg8+4OIG7TvJ+f0vEUB3
- 7CdQgJYhH44rky2+IxzlJx3dU6cKpDro2NkPlOdRdbEW1UdIu1HsZWnel8XVyISG4gHRGnc
- zHD/frxlfqjTo6TZRAe+w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WDJ1sXrb4Oo=:8faP7IqMcpy7H4WTWSOWH2
- 2KRwRUe+kIozwYDifoQWw4G6rObSuBAnShBWShWxQdGUCBfpM5MhHh60WOZGBMSBW4JGK3ePc
- PKzsIoXiM3KuBhHCytg+Ik9Au2WOAkZGqjpYJMJ9RmTFGJW/6f+j96KWB7E86OSitK05Bj7ya
- 1h7fzAc8fbWRoOsuKFRR2HmFnJwKXMrpbDSQWU+LRW9x1TcOHJ9az+KvqHEl2tCnEWiKv0KAk
- M/ANCf/YlnbI1J+hCl2BM1karfo60nKlNUY6pM5g7KyCsjynRWq5ki3yZ3p6dAFOLUw8feqIg
- 5bf2kTyoKJAEtVWns9jZxF0xOFQJUzRgp9ueZdLfY/wVBY4SlDnAveW2Rj47UJLOaxJAYKICv
- m471CyliOiIg0tc1cBUEjIyfAn4QPCWrE7wZGj5w1N904yfhY6k8De4q+6GPW8neLpZ1b73tq
- afm6o56cLt7nk48HAHgDc+Gbanb1YT9S50ENlAVvmz0HJXKwCuOxSfw3u1BWw/690TAVgz4X4
- xJ6TTgmQyQQtQC5MwV5Ch792o1wdIOAmc1RuqcZnS7OJ46jltHWfTd6MokX69lSdzYmefaHna
- urHlI3kcje8Y48zQbLy4kkr0ElEtHsyMS0dbTQrNc1o+zb6KmDN5hwlv2U8uGEEyWkRd0+xUy
- KsxVurRJrSKPKF1uXUcPT1mh6r+dp5+cSGpO18Fd5JxMPIVeeUTo+5kP++ySBHmdRbFSv8kWg
- SEeNkyrLbkzQ5GwonbbVOamF2Ax+P8tBzcWEO5RgISK4v+i34zbhbt+A+i/5iAJizXXPv8yNe
- GhF694pBXiM+mhFAWF4r+GQMzZ0of4Adxy5uo5wi/dmi06wlMsydWNxvcipVS2KijB6ALoOGJ
- Mq0Kz6UPqAZUzRixnDFJbdxk+Epm6JQDsTPhalCucV6Zlj1+hxJU2YSmm2FGQOO2Bj7INAuqk
- UueqUEWSgLY+foou/Nu0ED1OUy3OuE1OgQShY0Xlk9KIZKJmGbrMWjkLDtbO/iCTINtoTL1ag
- wuAszMfzSFCrcfSZN3ccZn5O9URAPJ9o+BJgz1jPd8QQaUeOhXPVbQHzXRdrnZ+NCn/WOZg/x
- mQM9CbguIZbBQ+264X22wIVjgWiKim9HKIFLXmTh/By5idAERSf/Z+mDwRcGj5YN4BeVUXqyD
- 3JCPLdbqZUhjBdJUPwM2IKh8UNuN5PEHwPIFqRVdgvYfqLwbGzCTXCpjsefMRMIMch5Kjg5pn
- 9p8YIpf/AHr1NSm2f
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68407d59-89d7-4d73-2eaf-08d7de7cb03d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2020 00:59:00.6547
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xi2r4VXtTsGmEFTawRu91P+fYL7RQ6V3McpfbHC4vHbdtkFu2gMFE1DOJotqYStY1YQjkPwvrikHlmjpZ6I8Cg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---JmAtQApbs3a74LvrlYSsuQtc1n76tUtoa
-Content-Type: multipart/mixed; boundary="cZQ9m8lO2FSKMJuBptDaAEhFbTjOKb6CE"
-
---cZQ9m8lO2FSKMJuBptDaAEhFbTjOKb6CE
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On 2020/4/11 =E4=B8=8B=E5=8D=8811:49, Tang Bin wrote:
-> Fix missing braces compilation warning in the ARM
-> compiler environment:
->     fs/btrfs/backref.c: In function =E2=80=98is_shared_data_backref=E2=80=
-=99:
->     fs/btrfs/backref.c:394:9: warning: missing braces around initialize=
-r [-Wmissing-braces]
->       struct prelim_ref target =3D {0};
->     fs/btrfs/backref.c:394:9: warning: (near initialization for =E2=80=98=
-target.rbnode=E2=80=99) [-Wmissing-braces]
-
-GCC version please.
-
-It looks like you're using an older GCC, as it's pretty common certain
-prebuild tool chain is still using outdated GCC.
-
-In my environment with GCC 9.2.0 natively (on aarch64) it's completely fi=
-ne.
-Thus personally I recommend to build your own tool chain using
-buildroot, or run it natively, other than rely on prebuilt one.
-
->=20
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-> ---
->  fs/btrfs/backref.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
-> index 9c380e7..0cc0257 100644
-> --- a/fs/btrfs/backref.c
-> +++ b/fs/btrfs/backref.c
-> @@ -391,7 +391,7 @@ static int is_shared_data_backref(struct preftrees =
-*preftrees, u64 bytenr)
->  	struct rb_node **p =3D &preftrees->direct.root.rb_root.rb_node;
->  	struct rb_node *parent =3D NULL;
->  	struct prelim_ref *ref =3D NULL;
-> -	struct prelim_ref target =3D {0};
-> +	struct prelim_ref target =3D {};
-
-In fact your fix could cause problem, as the original code is
-initializing all members to 0, but now it's uninitialized.
-
-You need to locate the root cause other than blindly follow the warning.
-
-Thanks,
-Qu
-
->  	int result;
-> =20
->  	target.parent =3D bytenr;
->=20
-
-
---cZQ9m8lO2FSKMJuBptDaAEhFbTjOKb6CE--
-
---JmAtQApbs3a74LvrlYSsuQtc1n76tUtoa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl6SZjgACgkQwj2R86El
-/qgb7gf+KRnz+69MoTyVt3+9GTehkw6oW5whqntVrLgzBOyKQV1pbkna6AQK3IIX
-m1PmkgUgNbuc+mByvn80vv4G9gFo+zF1jOfRSfX41fyVrkVYe8K1hm4Vpc3ltvea
-0DLauT3bKpoHcNzU+Ugak+7FKyzO9DxbGlggbpOrgXIeVLtep/+iNBzD9TBYMp+r
-Ta1N0onPhwSDW6aGtoGjOjjZGssjr10hfiSnVHC33C3TpFLL5Vg27UegXoTVgha8
-lsnU1kOeWSe3FUPddwioxQ2wVFDBfIqoWJVnBgEhO7Zfx+N4DMYBAbk0X8kkc4S1
-XS/85ih0CvYrOuqCkWz+5niFGdI1FA==
-=bMKi
------END PGP SIGNATURE-----
-
---JmAtQApbs3a74LvrlYSsuQtc1n76tUtoa--
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgOTNjZTRhZjc3
+NGJjM2Q4YTcyY2UyMjcxZDAzMjQxYzk2MzgzNjI5ZDoNCg0KICBORlM6IENsZWFuIHVwIHByb2Nl
+c3Mgb2YgbWFya2luZyBpbm9kZSBzdGFsZS4gKDIwMjAtMDQtMDYgMTM6NTY6MzMgLTA0MDApDQoN
+CmFyZSBhdmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KDQogIGdpdDovL2dpdC5s
+aW51eC1uZnMub3JnL3Byb2plY3RzL3Ryb25kbXkvbGludXgtbmZzLmdpdCB0YWdzL25mcy1mb3It
+NS43LTINCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvIDI3ZDIzMWMwYzYzYmI2MTk5
+OTdhMjRiYWI4NWQ1NGQ5MGNhNzExMTA6DQoNCiAgcE5GUzogRml4IFJDVSBsb2NrIGxlYWthZ2Ug
+KDIwMjAtMDQtMTEgMTE6NDI6MzUgLTA0MDApDQoNClRoYW5rcywNCiAgVHJvbmQNCg0KLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KTkZTIGNsaWVudCBidWdmaXggZm9yIExpbnV4IDUuNw0KDQpCdWdmaXg6DQotIEZpeCBhbiBS
+Q1UgcmVhZCBsb2NrIGxlYWthZ2UgaW4gcG5mc19hbGxvY19kc19jb21taXRzX2xpc3QoKQ0KDQot
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tDQpUcm9uZCBNeWtsZWJ1c3QgKDEpOg0KICAgICAgcE5GUzogRml4IFJDVSBsb2NrIGxl
+YWthZ2UNCg0KIGZzL25mcy9wbmZzX25mcy5jIHwgMSArDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFp
+bmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
