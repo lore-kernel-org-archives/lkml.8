@@ -2,194 +2,243 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0390C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87379C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BBE2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A16220732
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586690312;
+	bh=KVxlN5pn9biEvZszl+Y+7ZXezrAEjJJg578pji2Cn5A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gZGZvilB9wXVK6e/Fx5XT6UgSgXxXk0C5G1p+8DfQSqvJHquloKRRlQQcRdfYS4Jd
+	 kBygKG9qyH/yKytoXrEZxj61pbxcIV94FggrFwrGvSfFhGtZTNELsQM2v9/PxNIS5f
+	 VLR655cOi7RhEZ5EIfiDutMytRElshWQtBoss2jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgDLLMH (ORCPT
+        id S1726896AbgDLLSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:12:07 -0400
-Received: from m176151.mail.qiye.163.com ([59.111.176.151]:45206 "EHLO
-        m176151.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgDLLMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:12:07 -0400
-Received: from vivo.com (wm-11.qy.internal [127.0.0.1])
-        by m176151.mail.qiye.163.com (Hmail) with ESMTP id 9B1094829A1;
-        Sun, 12 Apr 2020 19:12:00 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ALoA6ACVCNCor3KnbEO6yarq.3.1586689920621.Hmail.wenhu.wang@vivo.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIGRyaXZlcjogcnBtb246IGFkZCBycG1vbl9xbWkgZHJpdmVy?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <4aea2dc0-3378-9da0-9123-115a5c3e9893@infradead.org>
+        Sun, 12 Apr 2020 07:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgDLLS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 07:18:29 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1555C206E9;
+        Sun, 12 Apr 2020 11:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586690309;
+        bh=KVxlN5pn9biEvZszl+Y+7ZXezrAEjJJg578pji2Cn5A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AELM0sLAn6vjIN6P4iu0wZmzKagd5DqiyEGAjE0ScHaCoZwabaIsabcfwpw4APzVL
+         XyRtESekXsjNZeKly+q9PJZ7qN1pAeEryAR5klskxUwDL5Td6SrLz16TQZioDOKbbk
+         DcEKF6AgVS+bylCoQ3fQCGFrJgFDILOXCZRuh9zU=
+Date:   Sun, 12 Apr 2020 12:18:24 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH 1/3] iio: kfifo: add iio_device_attach_kfifo_buffer()
+ helper
+Message-ID: <20200412121824.2319c12d@archlinux>
+In-Reply-To: <48e7f8d5f090971e0c48c0134ebb2dca86a0f144.camel@analog.com>
+References: <20200401125936.6398-1-alexandru.ardelean@analog.com>
+        <20200405114602.160c690b@archlinux>
+        <48e7f8d5f090971e0c48c0134ebb2dca86a0f144.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Sun, 12 Apr 2020 19:12:00 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Sun, 12 Apr 2020 19:12:00 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VMTUxCQkJNT0JLT0xDTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSkNPSklMTElLN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6NxQ6TTo4LTg1OBQJSDAVGT40TQIaCQpVSFVKTkNNTUNCQklJTEpPVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUpJQklONwY+
-X-HM-Tid: 0a716e16ce7c93b5kuws9b1094829a1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksCkZyb206IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPgpEYXRlOiAyMDIw
-LTA0LTEyIDAzOjIzOjAwClRvOiAgV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4sZ3Jl
-Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwpTdWJq
-ZWN0OiBSZTogW1BBVENIIDMvM10gZHJpdmVyOiBycG1vbjogYWRkIHJwbW9uX3FtaSBkcml2ZXI+
-SGktLQo+Cj5PbiA0LzExLzIwIDI6NTMgQU0sIFdhbmcgV2VuaHUgd3JvdGU6Cj4+IFJQTU9OX1FN
-SSBpcyB1c2VkIGJ5IFJQTU9OIHRvIGNvbW11bmljYXRlIHdpdGggcmVtb3RlIHByb2Nlc3NvcnMK
-Pj4gd2l0aCBRTUkgQVBJcyBpZiBlbmFibGVkLiBSUE1PTl9RTUkgaXRzZWxmIGlzIGRlc2lnbmVk
-IGFzIGEgbW9kdWxhcgo+PiBmcmFtZXdvcmsgdGhhdCB3b3VsZCBpbnRyb2R1Y2UgZGlmZmVyZW50
-IGtpbmRzIG9mIG1lc3NhZ2Ugc2V0cwo+PiB3aGljaCBtYXkgYmUgdXBkYXRlZCBmb3IgdmVyc2lv
-bnMuCj4+IAo+PiBSUE1PTl9RTUkgY3JlYXRlcyBhIGRldmljZSBvZiBycG1vbl9kZXZpY2UgdHlw
-ZSBmb3IgZWFjaCByZW1vdGUKPj4gcHJvY2Vzc29yIGVuZHBvaW50LiBBbGwgdGhlIGVuZHBvaW50
-IGRldmljZXMgc2hhcmVzIGFuIHVuaXF1ZSBzZXQKPj4gb2YgUU1JIHN1aXRlLgo+PiAKPj4gU2ln
-bmVkLW9mZi1ieTogV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gLS0tCj4+ICBk
-cml2ZXJzL3JwbW9uL0tjb25maWcgICAgIHwgIDE1ICsrCj4+ICBkcml2ZXJzL3JwbW9uL01ha2Vm
-aWxlICAgIHwgICAxICsKPj4gIGRyaXZlcnMvcnBtb24vcnBtb25fcW1pLmMgfCA0MzQgKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4gIDMgZmlsZXMgY2hhbmdlZCwgNDUw
-IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3JwbW9uL3JwbW9u
-X3FtaS5jCj4+IAo+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3JwbW9uL3JwbW9uX3FtaS5jIGIv
-ZHJpdmVycy9ycG1vbi9ycG1vbl9xbWkuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRl
-eCAwMDAwMDAwMDAwMDAuLmFlNDk1MTBjYmI4Mwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2Ry
-aXZlcnMvcnBtb24vcnBtb25fcW1pLmMKPj4gQEAgLTAsMCArMSw0MzQgQEAKPj4gKy8vIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkKPj4gKy8qCj4+ICsgKiBDb3B5cmlnaHQg
-KEMpIDIwMjAgVml2byBDb21tdW5pY2F0aW9uIFRlY2hub2xvZ3kgQ28uIEx0ZC4KPj4gKyAqIENv
-cHlyaWdodCAoQykgMjAyMCBXYW5nIFdlbmh1IDx3ZW5odS53YW5nQHZpdm8uY29tPgo+PiArICog
-QWxsIHJpZ2h0cyByZXNlcnZlZC4KPj4gKyAqCj4+ICsgKiBSUE1PTjogQW4gaW1wbGVtZW50YXRp
-b24gb2YgcmVtb3RlIHByb2Nlc3NvciBtb25pdG9yIGZyZWFtd29yawo+Cj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZyYW1ld29yawo+
-CgpBZGRyZXNzZWQgaW4gdjIKCj4+ICsgKiBmb3IgcGxhdGZvcm1zIHRoYXQgbXVsdGktcHJvY2Vz
-c29ycyBleGlzdHMuIFJQTU9OIGlzIGltcGxlbWVudGVkCj4KPiAgICAgIGNvbmZ1c2luZyBzZW50
-ZW5jZSBhYm92ZS4KPgoKQWRkcmVzc2VkIGluIHYyCgo+PiArICogd2l0aCBjaGFyZGV2IGFuZCBz
-eXNmcyBjbGFzcyBhcyBpbnRlcmZhY2VzIHRvIGNvbW11bmljYXRlIHdpdGgKPj4gKyAqIHRoZSB1
-c2VyIGxldmVsLiBJdCBzdXBwb3J0cyBkaWZmZXJlbnQgY29tbXVuaWNhdGlvbiBpbnRlcmZhY2Vz
-Cj4+ICsgKiBhZGRlZCBtb2R1bGFybHkgd2l0aCByZW1vdGUgcHJvY2Vzc29ycy4gQ3VycmVudGx5
-IFFNSSBpbXBsZW1lbnRhdGlvbgo+PiArICogaXMgYXZhaWxhYmxlLgo+PiArICoKPj4gKyAqIFJQ
-TU9OIGNvdWxkIGJlIHVzZWQgdG8gZGV0ZWN0IHRoZSBzdGFiaWxpdGllcyBvZiByZW1vdGUgcHJv
-Y2Vzc29ycywKPj4gKyAqIGNvbGxlY3QgYW55IGtpbmRzIG9mIGluZm9ybWF0aW9uIHlvdSBhcmUg
-aW50ZXJlc3RlZCB3aXRoLCB0YWtlCj4KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgaW50ZXJlc3RlZCBpbiwgdGFrZQo+CgpBZGRyZXNzZWQgaW4gdjIKCj4+
-ICsgKiBhY3Rpb25zIGxpa2UgY29ubmVjdGlvbiBzdGF0dXMgY2hlY2ssIGFuZCBzbyBvbi4gRW5o
-YW5jZW1lbnRzIGNhbgo+PiArICogYmUgbWFkZSB1cG9uIGN1cnJlbnQgaW1wbGVtZW50YXRpb24u
-Cj4+ICsgKi8KPj4gKwo+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+PiArI2luY2x1ZGUg
-PGxpbnV4L3JwbW9uLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvc29jL3Fjb20vcW1pLmg+Cj4+ICsj
-aW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPj4gKyNpbmNsdWRlICJycG1vbl9xbWkuaCIK
-Pj4gKwo+PiArI2RlZmluZSBEUklWRVJfTkFNRSAicnBtb25fcW1pX2RydiIKPj4gKwo+PiArLyoK
-Pj4gKyAqIFJlbW90ZSBwcm9jZXNzb3IgcmVnaXN0ZXJlZC4KPj4gKyAqLwo+PiArI2RlZmluZSBS
-UF9SRUdJU1RFUkVECQkweDAwMDEKPj4gKwo+PiArLyoKPj4gKyAqIHdvcmsgc3RydWN0IGZvciBt
-ZXNzYWdlIHByb2Nlc3NpbmcuCj4+ICsgKi8KPj4gK3N0cnVjdCByZWN2X3dvcmsgewo+PiArCXN0
-cnVjdCB3b3JrX3N0cnVjdCB3b3JrOwo+PiArCXN0cnVjdCBzb2NrYWRkcl9xcnRyIHNxOwo+PiAr
-CXZvaWQgKm1zZzsKPj4gK307Cj4+ICsKPj4gKy8qCj4+ICsgKiBEZWxheWVkIHdvcmsgdG8gdGFr
-ZSBhIHJlc2V0IGFjdGlvbiB3aGVuIGEgZmFpbHVyZSBpcyBkZXRlY3RlZC4KPj4gKyAqLwo+PiAr
-c3RydWN0IGV4ZWNfY2Jfd29yayB7Cj4+ICsJc3RydWN0IGRlbGF5ZWRfd29yawkJZHdrOwo+PiAr
-CXN0cnVjdCBycG1vbl9xbWlfZGV2aWNlICpyZGV2Owo+PiArCXUzMgkJCWNoZWNrczsKPj4gK307
-Cj4+ICsKPj4gK3N0cnVjdCBycG1vbl9xbWlfZXhlY19mbiB7Cj4+ICsJaW50ICgqZXhlY19jYWxs
-KShzdHJ1Y3QgcnBtb25fcW1pX2RldmljZSAqcmRldik7Cj4+ICt9Owo+PiArCj4+ICtzdHJ1Y3Qg
-cnBtb25fcW1pX2NiX2ZuIHsKPj4gKwl2b2lkICgqY2FsbGJhY2spKHN0cnVjdCB3b3JrX3N0cnVj
-dCAqd29yayk7Cj4+ICsJdTMyIG1zZ19sZW47Cj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgREVGSU5F
-X01VVEVYKHJkZXZfbGlzdF9sb2NrKTsKPj4gK3N0YXRpYyBMSVNUX0hFQUQocmRldl9saXN0KTsK
-Pj4gK3N0YXRpYyBzdHJ1Y3QgcnBtb25fcW1pICpycHFtaTsKPj4gK3N0YXRpYyBzdHJ1Y3Qgd29y
-a3F1ZXVlX3N0cnVjdCAqcnBxbWlfd3E7Cj4KPltzbmlwXQo+Cj4+ICsvKioKPj4gKyAqIHJwbW9u
-X3FtaV9leGVjX2NiX3dvcmtlciAtIGNhbGxiYWNrIHdvcmtlciBmb3IgZXhlY3V0aW9uCj4+ICsg
-KiBAd29yazogd29yayB0byBiZWVuIGRvbmUKPj4gKyAqCj4+ICsgKiBDYWxsZWQgYXMgd29ya2Vy
-IGhhbmRsZXIgYnkgdGhlIHNpZ25sZSB3b3JrZXIgdGhyZWFkIG9mIHJwbW9uX3dxLgo+Cj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpbmdsZQo+CgpBZGRyZXNzZWQgaW4g
-djIKCj4+ICsgKiBUaGUgd29ya2VyIGlzIHNjaGVkdWxlZCBhZnRlciB0aW1lb3V0IG1zIGR1cmF0
-aW9uIHNpbmNlIHRoZSBleGVjdXRpb24uCj4+ICsgKi8KPj4gK3N0YXRpYyB2b2lkIHJwbW9uX3Ft
-aV9leGVjX2NiX3dvcmtlcihzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspCj4+ICt7Cj4+ICsJc3Ry
-dWN0IGRlbGF5ZWRfd29yayAqZHdrID0gdG9fZGVsYXllZF93b3JrKHdvcmspOwo+PiArCXN0cnVj
-dCBleGVjX2NiX3dvcmsgKmV3ayA9Cj4+ICsJCQljb250YWluZXJfb2YoZHdrLCBzdHJ1Y3QgZXhl
-Y19jYl93b3JrLCBkd2spOwo+PiArCXN0cnVjdCBycG1vbl9xbWlfZGV2aWNlICpyZGV2ID0gZXdr
-LT5yZGV2Owo+PiArCj4+ICsJbXV0ZXhfbG9jaygmcmRldl9saXN0X2xvY2spOwo+PiArCWlmIChl
-d2stPmNoZWNrcyA8PSBhdG9taWNfcmVhZCgmcmRldi0+cmVwb3J0cykpIHsKPj4gKwkJcHJfZGVi
-dWcoIiVzIGhlYWx0aCBjaGVjayBzdWNjZXNzIiwgcmRldi0+aW5mby0+bmFtZSk7Cj4+ICsJCWdv
-dG8gb3V0Owo+PiArCX0KPj4gKwo+PiArCXByX2Vycigic3Vic3lzdGVtICVzIGZhaWxlZCB0byBy
-ZXNwb25kIGluIHRpbWUiLCByZGV2LT5pbmZvLT5uYW1lKTsKPj4gKwo+PiArCXJwbW9uX2V2ZW50
-X25vdGlmeShyZGV2LT5pbmZvLCBSUE1PTl9FVkVOVF9DSEtDT05OX0ZBSUwpOwo+PiArCj4+ICtv
-dXQ6Cj4+ICsJbXV0ZXhfdW5sb2NrKCZyZGV2X2xpc3RfbG9jayk7Cj4+ICsJa2ZyZWUoZXdrKTsK
-Pj4gK30KPj4gKwo+PiArc3RhdGljIHN0cnVjdCBycG1vbl9xbWlfY2JfZm4gcnBtb25fcW1pX2V2
-ZW50X2NhbGxiYWNrc1tdID0gewo+PiArCXsKPj4gKwkJLmNhbGxiYWNrID0gcnBtb25fcW1pX3Jl
-Z2lzdGVyX3JlcV9jYiwKPj4gKwkJLm1zZ19sZW4gPSBzaXplb2Yoc3RydWN0IHJwbW9uX3JlZ2lz
-dGVyX3JlcSksCj4+ICsJfSwKPj4gKwl7Cj4+ICsJCS5jYWxsYmFjayA9IHJwbW9uX3FtaV9jb25u
-X2NoZWNrX3Jlc3BfY2IsCj4+ICsJCS5tc2dfbGVuID0gc2l6ZW9mKHN0cnVjdCBycG1vbl9jb25u
-X2NoZWNrX3Jlc3ApLAo+PiArCX0sCj4+ICt9Owo+PiArCj4+ICsvKioKPj4gKyAqIHJwbW9uX3Ft
-aV9jb25uX2NoZWNrIC0gc2VuZCBpbmRpY2F0aW9uLCBpbml0aWF0ZSBhbmQgcXVldWUgY2FsbGJh
-Y2sgd29yawo+PiArICogQHJkZXY6IGRldmljZSBpbnRlcmZhY2Ugb2Ygc3BlY2lmaWMgcmVtb3Rl
-IHByb2Nlc3NvciB0byBiZSBjaGVja2VkCj4+ICsgKi8KPj4gK3N0YXRpYyBpbnQgcnBtb25fcW1p
-X2Nvbm5fY2hlY2soc3RydWN0IHJwbW9uX3FtaV9kZXZpY2UgKnJkZXYpCj4+ICt7Cj4+ICsJc3Ry
-dWN0IGV4ZWNfY2Jfd29yayAqZXdrOwo+PiArCj4+ICsJbXV0ZXhfbG9jaygmcmRldl9saXN0X2xv
-Y2spOwo+PiArCWlmICghKHJkZXYtPmZsYWcgJiBSUF9SRUdJU1RFUkVEKSkgewo+PiArCQlwcl9l
-cnIoIiVzIGhhcyBub3QgcmVnaXN0ZXJlZCIsIHJkZXYtPmluZm8tPm5hbWUpOwo+PiArCQlyZXR1
-cm4gLUVOT0FOTzsKPgo+V2h5IEVOT0FOTz8KPgpNeSBmYXVsdCwgc2hvdWxkIGJlIEVOT05FVCBj
-YXVzZSB0aGUgcmVtb3RlIGVuZHBvaW50IGhhcyBub3QgcmVnaXN0ZXJlZCwKbWVhbmluZyAiTWFj
-aGluZSBpcyBub3Qgb24gdGhlIG5ldHdvcmsiLgoKQWRkcmVzc2VkIGluIHYyCgo+PiArCX0KPj4g
-Kwo+PiArCWlmICghX19yYXRlbGltaXQoJnJkZXYtPnJhdGVsaW1pdCkpIHsKPj4gKwkJcHJfZXJy
-KCIlcyByYXRlLWxpbWl0ZWQiLCByZGV2LT5pbmZvLT5uYW1lKTsKPj4gKwkJcmV0dXJuIDA7Cj4+
-ICsJfQo+PiArCW11dGV4X3VubG9jaygmcmRldl9saXN0X2xvY2spOwo+PiArCj4+ICsJcmRldi0+
-cnFtaS0+c2VuZG1zZyhyZGV2LCBOVUxMLCAwKTsKPj4gKwo+PiArCWV3ayA9IGt6YWxsb2Moc2l6
-ZW9mKCpld2spLCBHRlBfS0VSTkVMKTsKPj4gKwlpZiAoIWV3aykKPj4gKwkJcmV0dXJuIC1FTk9B
-Tk87Cj4KPmRpdHRvLgoKTXkgZmF1bHQsIHNob3VsZCBiZSBFTk9NRU07CkFkZHJlc3NlZCBpbiB2
-MgoKPgo+PiArCWV3ay0+cmRldiA9IHJkZXY7Cj4+ICsJZXdrLT5jaGVja3MgPSBhdG9taWNfaW5j
-X3JldHVybigmcmRldi0+Y2hlY2tzKTsKPj4gKwlJTklUX0RFTEFZRURfV09SSygmZXdrLT5kd2ss
-IHJwbW9uX3FtaV9leGVjX2NiX3dvcmtlcik7Cj4+ICsJcXVldWVfZGVsYXllZF93b3JrKHJwcW1p
-X3dxLAo+PiArCQkJICAgJmV3ay0+ZHdrLCBtc2Vjc190b19qaWZmaWVzKHJkZXYtPnRpbWVvdXQp
-KTsKPj4gKwo+PiArCXJldHVybiAwOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgc3RydWN0IHJwbW9u
-X3FtaV9leGVjX2ZuIHJwbW9uX3FtaV9leGVjX2NhbGxzW10gPSB7Cj4+ICsJey5leGVjX2NhbGwg
-PSBycG1vbl9xbWlfY29ubl9jaGVja30sCj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgaW50IHJwbW9u
-X3FtaV9tb25pdG9yKHN0cnVjdCBycG1vbl9pbmZvICppbmZvLCB1MzIgZXZlbnQpCj4+ICt7Cj4+
-ICsJc3RydWN0IHJwbW9uX3FtaV9kZXZpY2UgKnJkZXYgPSAoc3RydWN0IHJwbW9uX3FtaV9kZXZp
-Y2UgKilpbmZvLT5wcml2Owo+PiArCWludCBpOwo+PiArCj4+ICsJZm9yIChpID0gMDsgaSA8IFJQ
-TU9OX0VYRUNfTUFYOyBpKyspIHsKPj4gKwkJaWYgKGV2ZW50ICYgUlBNT05fQUNUSU9OKGkpKSB7
-Cj4+ICsJCQlpZiAoaSA+PSAoc2l6ZW9mKHJwbW9uX3FtaV9leGVjX2NhbGxzKSAvCj4+ICsJCQkJ
-ICBzaXplb2Yoc3RydWN0IHJwbW9uX3FtaV9leGVjX2ZuKSkpCj4+ICsJCQkJcmV0dXJuIC1FTk9U
-U1VQUDsKPj4gKwo+Cj5JJ20gbm90IHRvdGFsbHkgdXAgYWJvdXQgc3BlY3VsYXRpdmUgZmV0Y2hl
-cywgYnV0IGlzIGFueSBvZgo+PGxpbnV4L25vc3BlYy5oPiBuZWVkZWQgaGVyZT8KPgoKU3VyZWx5
-LCBhZGRyZXNzZWQgaW4gdjIKCj4+ICsJCQlpZiAocnBtb25fcW1pX2V4ZWNfY2FsbHNbaV0uZXhl
-Y19jYWxsKQo+PiArCQkJCXJldHVybiBycG1vbl9xbWlfZXhlY19jYWxsc1tpXS5leGVjX2NhbGwo
-cmRldik7Cj4+ICsJCQllbHNlCj4+ICsJCQkJcmV0dXJuIC1FTk9UU1VQUDsKPj4gKwkJfQo+PiAr
-CX0KPj4gKwo+PiArCXJldHVybiAtRUlOVkFMOwo+PiArfQo+Cj5bc25pcF0KPgo+PiArc3RhdGlj
-IHZvaWQgcnBtb25fcW1pX21zZ19jYWxsYmFjayhlbnVtIHJwbW9uX3FtaV9tc2dfdHlwZSB0eXBl
-LAo+PiArCQkJc3RydWN0IHNvY2thZGRyX3FydHIgKnNxLAo+PiArCQkJY29uc3Qgdm9pZCAqbXNn
-KQo+PiArewo+PiArCXN0cnVjdCByZWN2X3dvcmsgKnJ3azsKPj4gKwo+PiArCWlmICh0eXBlID49
-IChzaXplb2YocnBtb25fcW1pX2V2ZW50X2NhbGxiYWNrcykgLwo+PiArCQkgICAgIHNpemVvZihz
-dHJ1Y3QgcnBtb25fcW1pX2NiX2ZuKSkpIHsKPj4gKwkJcHJfZXJyKCJFcnJvciBub25lIHN1cHBv
-cnRlZCBtZXNzYWdlIHR5cGUuXG4iKTsKPgo+CQkgICAgICAgICAgICAgIG5vbi1zdXBwb3J0ZWQK
-PgoKQWRkcmVzc2VkIGluIHYyCgo+PiArCQlyZXR1cm47Cj4+ICsJfQo+PiArCj4+ICsJaWYgKHJw
-bW9uX3FtaV9ldmVudF9jYWxsYmFja3NbdHlwZV0uY2FsbGJhY2spIHsKPj4gKwkJcndrID0ga3ph
-bGxvYyhzaXplb2YoKnJ3ayksIEdGUF9LRVJORUwpOwo+PiArCQlpZiAoIXJ3aykgewo+PiArCQkJ
-cHJfZXJyKCJFcnJvciB0byBhbGxvYyByZWN2X3dvcmsiKTsKPj4gKwkJCXJldHVybjsKPj4gKwkJ
-fQo+PiArCj4+ICsJCUlOSVRfV09SSygmcndrLT53b3JrLCBycG1vbl9xbWlfZXZlbnRfY2FsbGJh
-Y2tzW3R5cGVdLmNhbGxiYWNrKTsKPj4gKwkJbWVtY3B5KCZyd2stPnNxLCBzcSwgc2l6ZW9mKCpz
-cSkpOwo+PiArCj4+ICsJCXJ3ay0+bXNnID0ga3phbGxvYyhycG1vbl9xbWlfZXZlbnRfY2FsbGJh
-Y2tzW3R5cGVdLm1zZ19sZW4sCj4+ICsJCQkJICAgR0ZQX0tFUk5FTCk7Cj4+ICsJCWlmICghcndr
-LT5tc2cpIHsKPj4gKwkJCXByX2VycigiRXJyb3IgdG8gYWxsb2MgbWVzc2FnZSBvZiByZWN2X3dv
-cmsiKTsKPj4gKwkJCWtmcmVlKHJ3ayk7Cj4+ICsJCQlyZXR1cm47Cj4+ICsJCX0KPj4gKwo+PiAr
-CQltZW1jcHkocndrLT5tc2csIG1zZywgcnBtb25fcW1pX2V2ZW50X2NhbGxiYWNrc1t0eXBlXS5t
-c2dfbGVuKTsKPj4gKwkJcXVldWVfd29yayhycHFtaV93cSwgJnJ3ay0+d29yayk7Cj4+ICsJfQo+
-PiArfQo+Cj5bc25pcF0KPgo+PiArc3RhdGljIHZvaWQgX19leGl0IHJwbW9uX3FtaV9kcnZfZXhp
-dCh2b2lkKQo+PiArewo+PiArCXJwbW9uX3FtaV9kZWxfc2VydmVyKCk7Cj4+ICsKPj4gKwlxbWlf
-aGFuZGxlX3JlbGVhc2UoJnJwcW1pLT5xbWkpOwo+PiArCj4+ICsJcGxhdGZvcm1fZHJpdmVyX3Vu
-cmVnaXN0ZXIoJnJwbW9uX3FtaV9kcnYpOwo+PiArfQo+PiArbW9kdWxlX2V4aXQocnBtb25fcW1p
-X2Rydl9leGl0KTsKPj4gKwo+PiArTU9EVUxFX0FVVEhPUigiV2FuZyBXZW5odSIpOwo+Cj5QbGVh
-c2UgYWRkIGVtYWlsIGFkZHJlc3MgYWJvdmUuCj4KCkFkZHJlc3NlZCBpbiB2MgoKPj4gK01PRFVM
-RV9ERVNDUklQVElPTigiU3Vic3lzdGVtIE1vbml0b3IgdmlhIFFNSSBwbGF0Zm9ybSBkcml2ZXIi
-KTsKPj4gK01PRFVMRV9BTElBUygicGxhdGZvcm06IiBEUklWRVJfTkFNRSk7Cj4+ICtNT0RVTEVf
-TElDRU5TRSgiR1BMIHYyIik7Cj4+IAo+Cj50aGFua3MuCj4tLSAKPn5SYW5keQo+CgpUaGFua3Ms
-Cldlbmh1DQoNCg==
+On Mon, 6 Apr 2020 08:12:42 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+
+> On Sun, 2020-04-05 at 11:46 +0100, Jonathan Cameron wrote:
+> > [External]
+> > 
+> > On Wed, 1 Apr 2020 15:59:34 +0300
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >   
+> > > This change adds the iio_device_attach_kfifo_buffer() helper/short-hand,
+> > > which groups the simple routine of allocating a kfifo buffers via
+> > > devm_iio_kfifo_allocate() and calling iio_device_attach_buffer().
+> > > 
+> > > The mode_flags parameter is required. The setup_ops parameter is optional.
+> > > 
+> > > This function will be a bit more useful when needing to define multiple
+> > > buffers per IIO device.
+> > > 
+> > > One requirement [that is more a recommendation] for this helper, is to call
+> > > it after 'indio_dev' has been populated.
+> > > 
+> > > Also, one consequence related to using this helper is that the resource
+> > > management of the buffer will be tied to 'indio_dev->dev'. Previously it
+> > > was open-coded, and each driver does it slightly differently. Most of them
+> > > tied it to the parent device, some of them to 'indio_dev->dev'.
+> > > This shouldn't be a problem, and may be a good idea when adding more
+> > > buffers per-device.  
+> > 
+> > I'm glad you highlighted this subtlety.  I'm not sure it's safe in all cases
+> > because the result is that the managed cleanup for this will occur once we
+> > get to the cleanup for devm_iio_device_alloc and we release the indio_dev->dev
+> > 
+> > That would put it 'after' any other devm calls that are still hung off the
+> > parent
+> > device.
+> > 
+> > Now the question is whether that ever causes us problems... See next patch.
+> > It potentially does.  I think we need to provide the dev separately even
+> > if it feels a bit silly to do so.  Scope management is complex so I don't
+> > really want to force people to mix and match between different devices
+> > and so get it wrong by accident.
+> > 
+> > The other issue is that it's not readily apparent from the naming that
+> > this function is registering stuff that is cleaned up automatically or
+> > that it even allocates anything that might need that..
+> > 
+> > devm_iio_device_attach_new_kfifo_buffer maybe?
+> > 
+> > I'm sort of wondering if we should do what dma did and have
+> > 
+> > iiom_device_attach_new_kfifo_buffer to indicate it's managed in the
+> > scope of the iio device?
+> > 
+> > What do people think?
+> > 
+> > However, see patch 2 before commenting.  Reality is I'm not sure forcing
+> > managed calls to hang off iio_dev->dev is a good idea (at this stage given
+> > where we are).  
+> 
+> What I am really after with this patch is to hide away these:
+>      iio_kfifo_free(indio_dev->buffer);
+>      iio_buffer_set_attrs(indio_dev->buffer, xxxx_fifo_attributes); 
+> i.e. not have 'indio_dev->buffer' open-coded in drivers, and hide it in IIO core
+> somewhere.
+> Some ideas can go in parallel [like this one] to add support for multiple
+> buffers.
+> 
+> So, I will think of a better [less sloppy] V2 for this.
+> 
+> One intermediate alternative is to do 'iio_device_kfifo_free(indio_dev)', but
+> I'll still try to think of a better devm_ approach.
+> devm_iio_device_attach_new_kfifo_buffer() sounds a bit long but may work.
+> iiom_device_attach_new_kfifo_buffer() can also work.
+> 
+> What if we just default attaching to the parent device?
+
+That would work and be consistent with the vast majority of current cases.
+
+> 
+> Would it work to also attach the parent device in devm_iio_device_alloc() by
+> default?
+
+That would need a thorough audit to check nothing crazy is done by
+a driver with an odd structure.  Such a driver would (I think) be
+buggy though as the child lifetime should be dependent on the parent
+and not some other device.
+
+> Or change 'iio_device_alloc()' to take a parent device as argument?
+
+I think there are only a couple of users, so that would work.
+
+> Which for devm_iio_device_alloc(dev,...) would implicitly mean that 'dev' is
+> 'parent'?
+
+I think that's a fair assumption (though needs a sanity check)
+
+> 
+> These are just some thoughts.
+> 
+> 
+> > 
+> > Thanks
+> > 
+> > Jonathan
+> > 
+> >   
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> > >  drivers/iio/buffer/kfifo_buf.c | 37 ++++++++++++++++++++++++++++++++++
+> > >  include/linux/iio/kfifo_buf.h  |  4 ++++
+> > >  2 files changed, 41 insertions(+)
+> > > 
+> > > diff --git a/drivers/iio/buffer/kfifo_buf.c b/drivers/iio/buffer/kfifo_buf.c
+> > > index 3150f8ab984b..05b7c5fc6f1d 100644
+> > > --- a/drivers/iio/buffer/kfifo_buf.c
+> > > +++ b/drivers/iio/buffer/kfifo_buf.c
+> > > @@ -228,4 +228,41 @@ void devm_iio_kfifo_free(struct device *dev, struct
+> > > iio_buffer *r)
+> > >  }
+> > >  EXPORT_SYMBOL(devm_iio_kfifo_free);
+> > >  
+> > > +/**
+> > > + * iio_device_attach_kfifo_buffer - Allocate a kfifo buffer & attach it to
+> > > an IIO device
+> > > + * @indio_dev: The device the buffer should be attached to
+> > > + * @mode_flags: The mode flags for this buffer (INDIO_BUFFER_SOFTWARE
+> > > and/or
+> > > + *		INDIO_BUFFER_TRIGGERED).
+> > > + * @setup_ops: The setup_ops required to configure the HW part of the
+> > > buffer (optional)
+> > > + *
+> > > + * This function allocates a kfifo buffer via devm_iio_kfifo_allocate() and
+> > > + * attaches it to the IIO device via iio_device_attach_buffer().
+> > > + * This is meant to be a bit of a short-hand/helper function as many driver
+> > > + * seem to do this.
+> > > + */
+> > > +int iio_device_attach_kfifo_buffer(struct iio_dev *indio_dev,
+> > > +				   int mode_flags,
+> > > +				   const struct iio_buffer_setup_ops *setup_ops)
+> > > +{
+> > > +	struct iio_buffer *buffer;
+> > > +
+> > > +	if (mode_flags)
+> > > +		mode_flags &= kfifo_access_funcs.modes;
+> > > +
+> > > +	if (!mode_flags)
+> > > +		return -EINVAL;
+> > > +
+> > > +	buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
+> > > +	if (!buffer)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	iio_device_attach_buffer(indio_dev, buffer);
+> > > +
+> > > +	indio_dev->modes |= mode_flags;
+> > > +	indio_dev->setup_ops = setup_ops;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(iio_device_attach_kfifo_buffer);
+> > > +
+> > >  MODULE_LICENSE("GPL");
+> > > diff --git a/include/linux/iio/kfifo_buf.h b/include/linux/iio/kfifo_buf.h
+> > > index 764659e01b68..2363a931be14 100644
+> > > --- a/include/linux/iio/kfifo_buf.h
+> > > +++ b/include/linux/iio/kfifo_buf.h
+> > > @@ -11,4 +11,8 @@ void iio_kfifo_free(struct iio_buffer *r);
+> > >  struct iio_buffer *devm_iio_kfifo_allocate(struct device *dev);
+> > >  void devm_iio_kfifo_free(struct device *dev, struct iio_buffer *r);
+> > >  
+> > > +int iio_device_attach_kfifo_buffer(struct iio_dev *indio_dev,
+> > > +				   int mode_flags,
+> > > +				   const struct iio_buffer_setup_ops
+> > > *setup_ops);
+> > > +
+> > >  #endif  
+
