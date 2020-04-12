@@ -2,120 +2,214 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7679C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF26C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80880206E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D03E2063A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cz9w5UUr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uuQaRsFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgDLN5F (ORCPT
+        id S1727021AbgDLOEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:57:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42182 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgDLN5F (ORCPT
+        Sun, 12 Apr 2020 10:04:32 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:35806 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725909AbgDLOEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:57:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g6so3337889pgs.9;
-        Sun, 12 Apr 2020 06:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=88xbndOYpGPe/NGmyaJojaQNXhzRAvoZsI5qqKDeBKc=;
-        b=Cz9w5UUrnKe3vHpSv451HrsP+jELlu2KJ/F9ZdaTxYjNFIbLL60xBXWzS9pJNu+q+q
-         lt31gX+qh0g1CrqTZrgSp55NNy8CdMq/nPtykmffOMhrDy8XrQLqE59ovGvPg4J8JGml
-         mACtcCkJAMRanQLr6NR0vhVb3XZeRfbq69VjdPyUTldcbGRw637Hp83U0dxKzEfOB0bM
-         NVmn9PUAB7xJFOOyDwcWwVFP/ohBLiuBjKf7C0GHekrkgUFXEarMHAF2KTG2uHlMJ4vC
-         6kBMmic6+mT+IvRReQnlD+hmkjOQHMcnErvBzetcBNKJ49tAkvGy0/Hzn/1wHYdTV85o
-         eCLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=88xbndOYpGPe/NGmyaJojaQNXhzRAvoZsI5qqKDeBKc=;
-        b=r3wPTk77ELz4f/w/Ps9Bq7020jzuW9RYD8F76mqkhTQ2S4mDhvk6ztbUUzamz6ILP0
-         AAeAidvYBGQGE035c94F3BJaHeuMb8WNwHA7m639jvp+xnbYR3cX98xq59rHNlJqh971
-         Q2HJ+6Y/da19OKdszpRlGA/h6nWdLPNyQ7HMv3H0DSv9WRx23vB9Qg4C8+KdodTZfSZY
-         RSxYOdVjca1+Gsz6nckKJksFhZqbbHYBOIBQI8TQfkzfWlpQpXrBnwEudna6duIb+ODT
-         /pVWhZb5/M+LoCgOUprt7hvQPNddf+8O7RH5/uLjmuACQYF59ESyA0jnl0ziBr14aOub
-         Y4xw==
-X-Gm-Message-State: AGi0PubrSIjEIhZKg8gtroxCFxUHr/OwaHH8++ShFOWOVUq7hpUhJkvh
-        TNM1bV8g0fpjt1FkSMO3CUM=
-X-Google-Smtp-Source: APiQypKVgCfL7VmfA1bSCl2vQ5+BYxlM/jmWtJJk14l2KcB4YSAQrQ4wq4TxZtKLs407YAEvSYMHiw==
-X-Received: by 2002:a62:8343:: with SMTP id h64mr14488459pfe.166.1586699824643;
-        Sun, 12 Apr 2020 06:57:04 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:992:22ab:f465:67ce:fbea:c439])
-        by smtp.gmail.com with ESMTPSA id 139sm6139060pfv.0.2020.04.12.06.56.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 06:57:03 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Aishwarya R <aishwaryarj100@gmail.com>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: at91-adc: Use devm_platform_ioremap_resource
-Date:   Sun, 12 Apr 2020 19:26:42 +0530
-Message-Id: <20200412135644.4027-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200409151125.32677-1-aishwaryarj100@gmail.com>
-References: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+        Sun, 12 Apr 2020 10:04:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586700271; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=4CBbqsGpzdCcaZYo9uWnzeF9Zf76aR5LSzbuJBhR7PI=; b=uuQaRsFs7Zheed54NoT2MQWvI4tMWPcyfu/h47F6HjTUso9Mg9jfQDhvjMhP8R6niFHHm3cE
+ fq/eFOmBhX/3nCQhuDBcL2yMyyHGuSl5uf+laiYImOkzYQrAcMORIXdRaWqoSyA4/WGmsfTK
+ H04wnYhJh65x5CF9gajlBcmcnoc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e931fda.7f62214e2ca8-smtp-out-n01;
+ Sun, 12 Apr 2020 14:04:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A187EC432C2; Sun, 12 Apr 2020 14:04:10 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.136.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E1A48C433F2;
+        Sun, 12 Apr 2020 14:04:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E1A48C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v16 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
+ caches
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        dianders@chromium.org, evgreen@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
+ <1586154741-8293-5-git-send-email-mkshah@codeaurora.org>
+ <158649213142.77611.5740203322498170248@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <58ede10e-535f-be2c-ed77-8e3d688e4f7c@codeaurora.org>
+Date:   Sun, 12 Apr 2020 19:34:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <158649213142.77611.5740203322498170248@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Hi,
 
-Use the helper function that wraps the calls to
-platform_get_resource() and devm_ioremap_resource()
-together. It reduces boilerplate and suggested by coccinelle.
+On 4/10/2020 9:45 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-04-05 23:32:19)
+>> Add changes to invoke rpmh flush() from CPU PM notification.
+>> This is done when the last the cpu is entering power collapse and
+> 'power collapse' is a qcom-ism. Maybe say something like "deep CPU idle
+> states"?
+Okay, i updated in v17.
+>
+>> controller is not busy.
+>>
+>> Controllers that do have 'HW solver' mode do not need to register
+>> for CPU PM notification. They may be in autonomous mode executing
+>> low power mode and do not require rpmh_flush() to happen from CPU
+>> PM notification.
+> Can you provide an example of a HW solver mode controller? Presumably
+> the display RSC is one of these?
+Sure, Added in v17 to mention display RSC.
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+>> index b718221..fbe1f3e 100644
+>> --- a/drivers/soc/qcom/rpmh-rsc.c
+>> +++ b/drivers/soc/qcom/rpmh-rsc.c
+>> @@ -521,8 +527,86 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+>>          return tcs_ctrl_write(drv, msg);
+>>   }
+>>   
+>> +/**
+>> + * rpmh_rsc_ctrlr_is_busy() - Check if any of the AMCs are busy.
+>> + *
+>> + * @drv: The controller
+>> + *
+>> + * Checks if any of the AMCs are busy in handling ACTIVE sets.
+>> + * This is called from the last cpu powering down before flushing
+>> + * SLEEP and WAKE sets. If AMCs are busy, controller can not enter
+>> + * power collapse, so deny from the last cpu's pm notification.
+>> + *
+>> + * Return:
+>> + * * False             - AMCs are idle
+>> + * * True              - AMCs are busy
+>> + */
+>> +static bool rpmh_rsc_ctrlr_is_busy(struct rsc_drv *drv)
+> Can drv be const? Would be nice to make it const in some places in this
+> driver.
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/iio/adc/at91_adc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+It can, but it will require changing multiple places to make it const. 
+some of those functions are
 
-diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-index abe99856c823..0368b6dc6d60 100644
---- a/drivers/iio/adc/at91_adc.c
-+++ b/drivers/iio/adc/at91_adc.c
-@@ -1152,7 +1152,6 @@ static int at91_adc_probe(struct platform_device *pdev)
- 	int ret;
- 	struct iio_dev *idev;
- 	struct at91_adc_state *st;
--	struct resource *res;
- 	u32 reg;
- 
- 	idev = devm_iio_device_alloc(&pdev->dev, sizeof(struct at91_adc_state));
-@@ -1182,9 +1181,7 @@ static int at91_adc_probe(struct platform_device *pdev)
- 	if (st->irq < 0)
- 		return -ENODEV;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	st->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	st->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(st->reg_base))
- 		return PTR_ERR(st->reg_base);
- 
+dropped/modified in doug's cleanup series. I can do in separate patch 
+once this series is pulled in.
+
+>
+>> +{
+>> +       int m;
+>> +       struct tcs_group *tcs = get_tcs_of_type(drv, ACTIVE_TCS);
+>> +
+>> +       /*
+>> +        * If we made an active request on a RSC that does not have a
+>> +        * dedicated TCS for active state use, then re-purposed wake TCSes
+>> +        * should be checked for not busy.
+> not busy, because we use wake TCSes for active requests in this case.
+Ok, added in v17.
+>
+>> +        *
+>> +        * Since this is called from the last cpu, need not take drv or tcs
+>> +        * lock before checking tcs_is_free().
+>> +        */
+>> +       if (!tcs->num_tcs)
+>> +               tcs = get_tcs_of_type(drv, WAKE_TCS);
+>> +
+>> +       for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
+>> +               if (!tcs_is_free(drv, m))
+>> +                       return true;
+>> +       }
+>> +
+>> +       return false;
+>> +}
+> [...]
+>> +
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index a75f3df..88f8801 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -433,16 +430,17 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
+>>   }
+>>   
+>>   /**
+>> - * rpmh_flush: Flushes the buffered active and sleep sets to TCS
+>> + * rpmh_flush() - Flushes the buffered sleep and wake sets to TCSes
+>>    *
+>> - * @ctrlr: controller making request to flush cached data
+>> + * @ctrlr: Controller making request to flush cached data
+>>    *
+>> - * Return: -EBUSY if the controller is busy, probably waiting on a response
+>> - * to a RPMH request sent earlier.
+>> + * This function is called from sleep code on the last CPU
+>> + * (thus no spinlock needed).
+> Might be good to stick a lockdep_assert_irqs_disabled() in this function
+> then. That would document that this function should only be called when
+> irqs are disabled.
+
+Okay. Added  lockdep_assert_irqs_disabled(). But this may need to be 
+dropped when
+
+we add support for display RSC.
+
+>
+>>    *
+>> - * This function is always called from the sleep code from the last CPU
+>> - * that is powering down the entire system. Since no other RPMH API would be
+>> - * executing at this time, it is safe to run lockless.
+>> + * Return:
+>> + * * 0          - Success
+>> + * * -EAGAIN    - Retry again
+>> + * * Error code - Otherwise
+>>    */
+>>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+> This function name keeps throwing me off. Can we please call it
+> something like rpmh_configure_tcs_sleep_wake()? The word "flush" seems
+> to imply there's some sort of cache going on, but that's not really the
+> case. We're programming a couple TCS FIFOs so that they can be used
+> across deep CPU sleep states.
+>
+>>   {
+>> @@ -455,9 +453,7 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>          }
+>>   
+>>          /* Invalidate the TCSes first to avoid stale data */
+>> -       do {
+>> -               ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+>> -       } while (ret == -EAGAIN);
+>> +       ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+>>          if (ret)
+>>                  return ret;
+
+Thanks,
+
+Maulik
+
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
