@@ -2,139 +2,167 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBD6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E949C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C597920705
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586696469;
-	bh=8lEq43mVTnv5gBR+gJ9XIkZyLjfNuczQB0NMtpyiYzU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gbYhfeeeKu+cx4RD74K8hrFL7gkFsLHc6DFZuGYN/RuwGV40MqO2XNZ8hrmrtUFLw
-	 h0DyZVKPbohJjx9P6p4JLqCUZHqLLgHiTbh8QDnRBuugizkeLqyAKYhS9bG6fQe947
-	 ozhYmpJcPRyAseJ3nYrRISbHbNBfQ4hs/QbszYkE=
+	by mail.kernel.org (Postfix) with ESMTP id DBF6C2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgDLNBI (ORCPT
+        id S1727039AbgDLNFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgDLNBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:01:08 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5453720705;
-        Sun, 12 Apr 2020 13:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586696468;
-        bh=8lEq43mVTnv5gBR+gJ9XIkZyLjfNuczQB0NMtpyiYzU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PIFecLOE1/LxlhXqEyUFzFnhvvfXRFvaZBQpiBVglpiMTOMkNxRdBEPFE7jdvFWs4
-         y7+D2WifRzQ7Zqul459pYRMorMEMOpO+QHAA1yLMYsg4vm+ToYubtF9erA0lUOKkTr
-         YsuTItGPaF0+y7mgTKJ4CsS52GCYUGunTU43togI=
-Date:   Sun, 12 Apr 2020 14:01:04 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 8/8] iio: buffer: drop devm_iio_kfifo_free() API call
-Message-ID: <20200412140104.0f30a475@archlinux>
-In-Reply-To: <20200227135227.12433-8-alexandru.ardelean@analog.com>
-References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
-        <20200227135227.12433-8-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Apr 2020 09:05:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36402 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgDLNFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 09:05:04 -0400
+Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jNcIE-0002g0-B9; Sun, 12 Apr 2020 13:04:58 +0000
+Date:   Sun, 12 Apr 2020 15:04:57 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Rheinsberg <david.rheinsberg@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 2/8] loopfs: implement loopfs
+Message-ID: <20200412130457.a7ma4z3lmry5tcmc@wittgenstein>
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+ <20200408152151.5780-3-christian.brauner@ubuntu.com>
+ <CADyDSO54-GuSUJrciSD2jbSShCYDpXCp53cr+D7u0ZQT141uTA@mail.gmail.com>
+ <20200409082659.exequ3evhlv33csr@wittgenstein>
+ <CADyDSO54FV7OaVwWremmnNbTkvw6hQ-KTLJdEg3V5rfBi8n3Yw@mail.gmail.com>
+ <20200412120300.vuigwofazxfbxluu@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200412120300.vuigwofazxfbxluu@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 15:52:27 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> It's unused so far, so it can't be removed. Also makes sense to remove it
-> to discourage weird uses of this call during review.
+On Sun, Apr 12, 2020 at 02:03:00PM +0200, Christian Brauner wrote:
+> On Sun, Apr 12, 2020 at 12:38:54PM +0200, David Rheinsberg wrote:
+> > Hey
+> > 
+> > On Thu, Apr 9, 2020 at 10:27 AM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > > On Thu, Apr 09, 2020 at 07:39:18AM +0200, David Rheinsberg wrote:
+> > > > With loopfs in place, any process can create its own user_ns, mount
+> > > > their private loopfs and create as many loop-devices as they want.
+> > > > Hence, this limit does not serve as an effective global
+> > > > resource-control. Secondly, anyone with access to `loop-control` can
+> > > > now create loop instances until this limit is hit, thus causing anyone
+> > > > else to be unable to create more. This effectively prevents you from
+> > > > sharing a loopfs between non-trusting parties. I am unsure where that
+> > > > limit would actually be used?
+> > >
+> > > Restricting it globally indeed wasn't the intended use-case for it. This
+> > > was more so that you can specify an instance limit, bind-mount that
+> > > instance into several places and sufficiently locked down users cannot
+> > > exceed the instance limit.
+> > 
+> > But then these users can each exhaust the limit individually. As such,
+> > you cannot share this instance across users that have no
+> > trust-relationship. Fine with me, but I still don't understand in
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied with the can't -> can above fixed up.
-
-Thanks,
-
-Jonathan
-
-> ---
->  .../driver-api/driver-model/devres.rst        |  1 -
->  drivers/iio/buffer/kfifo_buf.c                | 22 -------------------
->  include/linux/iio/kfifo_buf.h                 |  1 -
->  3 files changed, 24 deletions(-)
+> Well, you can't really share anything across clients with the same
+> privilege level if one of them is untrusted.
 > 
-> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-> index 10ccebe9f7c1..91b0b8e5556c 100644
-> --- a/Documentation/driver-api/driver-model/devres.rst
-> +++ b/Documentation/driver-api/driver-model/devres.rst
-> @@ -286,7 +286,6 @@ IIO
->    devm_iio_device_alloc()
->    devm_iio_device_register()
->    devm_iio_kfifo_allocate()
-> -  devm_iio_kfifo_free()
->    devm_iio_triggered_buffer_setup()
->    devm_iio_trigger_alloc()
->    devm_iio_trigger_register()
-> diff --git a/drivers/iio/buffer/kfifo_buf.c b/drivers/iio/buffer/kfifo_buf.c
-> index 3150f8ab984b..1359abed3b31 100644
-> --- a/drivers/iio/buffer/kfifo_buf.c
-> +++ b/drivers/iio/buffer/kfifo_buf.c
-> @@ -179,16 +179,6 @@ static void devm_iio_kfifo_release(struct device *dev, void *res)
->  	iio_kfifo_free(*(struct iio_buffer **)res);
->  }
->  
-> -static int devm_iio_kfifo_match(struct device *dev, void *res, void *data)
-> -{
-> -	struct iio_buffer **r = res;
-> -
-> -	if (WARN_ON(!r || !*r))
-> -		return 0;
-> -
-> -	return *r == data;
-> -}
-> -
->  /**
->   * devm_iio_fifo_allocate - Resource-managed iio_kfifo_allocate()
->   * @dev:		Device to allocate kfifo buffer for
-> @@ -216,16 +206,4 @@ struct iio_buffer *devm_iio_kfifo_allocate(struct device *dev)
->  }
->  EXPORT_SYMBOL(devm_iio_kfifo_allocate);
->  
-> -/**
-> - * devm_iio_fifo_free - Resource-managed iio_kfifo_free()
-> - * @dev:		Device the buffer belongs to
-> - * @r:			The buffer associated with the device
-> - */
-> -void devm_iio_kfifo_free(struct device *dev, struct iio_buffer *r)
-> -{
-> -	WARN_ON(devres_release(dev, devm_iio_kfifo_release,
-> -			       devm_iio_kfifo_match, r));
-> -}
-> -EXPORT_SYMBOL(devm_iio_kfifo_free);
-> -
->  MODULE_LICENSE("GPL");
-> diff --git a/include/linux/iio/kfifo_buf.h b/include/linux/iio/kfifo_buf.h
-> index 764659e01b68..1fc1efa7799d 100644
-> --- a/include/linux/iio/kfifo_buf.h
-> +++ b/include/linux/iio/kfifo_buf.h
-> @@ -9,6 +9,5 @@ struct iio_buffer *iio_kfifo_allocate(void);
->  void iio_kfifo_free(struct iio_buffer *r);
->  
->  struct iio_buffer *devm_iio_kfifo_allocate(struct device *dev);
-> -void devm_iio_kfifo_free(struct device *dev, struct iio_buffer *r);
->  
->  #endif
+> > which scenario the limit would be useful. Anyone can create a user-ns,
+> > create a new loopfs mount, and just happily create more loop-devices.
+> > So what is so special that you want to restrict the devices on a
+> > _single_ mount instance?
+> 
+> To share that instance across namespaces. You can e.g. create the
+> mount instance in one mount namespace owned by userns1, create a second
+> user namespace usern2 with the same mapping which is blocked from
+> creating additional user namespaces either by seccomp or by
+> /proc/sys/user/max_user_namespaces or lsms what have you. Because it
+> doesn't own the mount namespace the loopfs mount it is in it can't
+> remount it and can't exceed the local limit.
+> 
+> > 
+> > > I don't think we'd be getting much out of a global limit per se I think
+> > > the initial namespace being able to reserve a bunch of devices
+> > > they can always rely on being able create when they need them is more
+> > > interesting. This is similat to what devpts implements with the
+> > > "reserved" mount option and what I initially proposed for binderfs. For
+> > > the latter it was deemed unnecessary by others so I dropped it from
+> > > loopfs too.
+> > 
+> > The `reserve` of devpts has a fixed 2-tier system: A global limit, and
+> > a init-ns reserve. This does nothing to protect one container from
+> > another.
+> 
+> What I was getting at is that what matters first and foremost is
+> protecting init userns.
+> 
+> > 
+> > Furthermore, how do you intend to limit user-space from creating an
+> > unbound amount of loop devices? Unless I am mistaken, with your
+> > proposal *any* process can create a new loopfs with a basically
+> > unlimited amount of loop-devices, thus easily triggering unbound
+> > kernel allocations. I think this needs to be accounted. The classic
+> > way is to put a per-uid limit into `struct user_struct` (done by
+> > pipes, mlock, epoll, mq, etc.). An alternative is `struct ucount`,
+> > which allows hierarchical management (inotify uses that, as an
+> > example).
+> 
+> Yeah, I know. We can certainly do this.
+> 
+> > 
+> > > I also expect most users to pre-create devices in the initial namespace
+> > > instance they need (e.g. similar to what binderfs does or what loop
+> > > devices currently have). Does that make sense to you?
+> > 
+> > Our use-case is to get programmatic access to loop-devices, so we can
+> > build customer images on request (especially to create XFS images,
+> > since mkfs.xfs cannot write them, IIRC). We would be perfectly happy
+> > with a kernel-interface that takes a file-descriptor to a regular file
+> > and returns us a file-descriptor to a newly created block device
+> > (which is automatically destroyed when the last file-descriptor to it
+> > is closed). This would be ideal *to us*, since it would do automatic
+> > cleanup on crashes.
+> > 
+> > We don't need any representation of the loop-device in the
+> > file-system, as long as we can somehow mount it (either by passing the
+> > bdev-FD to the new mount-api, or by using /proc/self/fd/ as
+> > mount-source).
+> 
+> We want the ability to have a filesystem representation as it will allow
+> us to handle a host of legacy workloads cleanly e.g. that users can just
+> call mount -o loop /bla whenever they have opted into syscall
+> interception for a particular filesystem. In addition, we can cover your
+> use case completely was well I think. Both with the old and new mount api.
+> 
+> > 
+> > With your proposed loop-fs we could achieve something close to it:
+> > Mount a private loopfs, create a loop-device, and rely on automatic
+> > cleanup when the mount-namespace is destroyed.
+> 
+> With loopfs you can do this with the old or new mount api and you don't
+> need to have loopfs mounted for that at all. Here's a sample program
+> that works right now with the old mount api:
 
+That also led me to discover a bug I need to fix, so thanks!
+Christian
