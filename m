@@ -2,182 +2,252 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66448C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD166C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3922E20692
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D4D20692
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qRPfn3gH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQh/QZ3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgDLFib (ORCPT
+        id S1726276AbgDLFl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 01:38:31 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40704 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgDLFib (ORCPT
+        Sun, 12 Apr 2020 01:41:58 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38366 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgDLFl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 01:38:31 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 198so4183365lfo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 22:38:30 -0700 (PDT)
+        Sun, 12 Apr 2020 01:41:57 -0400
+Received: by mail-ua1-f67.google.com with SMTP id g10so2057877uae.5;
+        Sat, 11 Apr 2020 22:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YJb1IrFatNyDwLHwXKKwjPCgXOVxPWmrVgBNW47BrBo=;
-        b=qRPfn3gHP9YhDHguGhvkaTZPp4TECE0lNLyXVIR3Q16v0yznO5VV/hIVnJHnREsxga
-         cnxRdT/tIqvlIfc6M1Q64Ii9+Gc5WXo7jr5tUfOGhDe9E/3gl1/hqKCfuRigmHkTQyTk
-         xijuHofb5hByWKiC316i+zRBYRuIWHvm1eME+iXpKI+Lz2fb1/7GvDIGSOLOQQwoN5bQ
-         Gd5bq/RQOqimZYt88WuQTIKjlxImvhbCoYDuBxJaUe3OOkCG69sh0z4Mu1e9q9UBlXpB
-         axrsKPAslff5mw1ek5eANYyAGuqmgjV4occ/GZW6vHJI7hvUIgWZFMOotNljJWl9yuHr
-         y9Cw==
+         :cc;
+        bh=XMvROckWSzZfp2JUvr5KET2psvIF8ZxdMVepuEQaA4s=;
+        b=PQh/QZ3Ntpmm0BQVcIAg+kDDuZ9M8adW+Sux0XWnEYRhMuYFvX/+o0hdOiBbociQIH
+         iddxcqiUXIcylhnDmNw/qOxMAmfEg5v7wwpXFw/4ZUzN8QtLf9UxvWQ12EME3TooVT+a
+         m+SORXmlAlP4gLW9mzh1Ze3p/c6m8zBECVIDDwkQq+Xl68dPCAEg+M7lyujU8DDOjh+5
+         /FQMfzu4sI+8JKIwsJYtnLhe6KVUlyXfdSo/ByQzljBnHaENkDOcDTNk21NerMBKQ1As
+         GOu5xyDi9FaZZiUUuUudfUxQiUD0ZPDdEOB8ilSAIJoiv2xpR/dxwUg9SEKUELN8OzMO
+         LYfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YJb1IrFatNyDwLHwXKKwjPCgXOVxPWmrVgBNW47BrBo=;
-        b=fHidwK5HTIW6cGeO1LPwFt6mYEkTgjw0yLlGtgYdqhjoYa7+XvtH471ofcZFiWELP+
-         OqTrF2Cduz3sexVwD8g5rReM/2cbfJ1wYNC8pSkmiZ/zeUa6g0Rzw/aCpHSZbiW9KTki
-         vLnz0QTgqVEkK/sUfqPUdEQ4LqSDlCyhoN7ZziZ550HoFeZkBOWt4Rrbe5PL3krp3P/V
-         gI5HU9y1jDt4bPj61zMN+BirKVDjdRy1Ft0ki7atZBptjLYm9qVTr34ho76TupAqyb4L
-         2PFRsCJjSqbGRheAl6WMY6qitzyAxHTlWAjyOcVH1BZk3QsX30Dwt7OYRcYs2poU5ejP
-         0wIQ==
-X-Gm-Message-State: AGi0PubGvt011f0B30KOTlI9H9fij417RtbPmQUswjWVIkD1l8QkL5QT
-        Lnm9fJAOM1f7Ul0pCM8fCvVy+g3/1yrE6mGMYyVRLA==
-X-Google-Smtp-Source: APiQypJe0lx25S7QjgoaYFi3qKXzEyrs3gDvvOZ3Ap1l1/OFurhQRgWTFkufDg33aHoJs1d+5BYIMDv3FeHyoHdIol4=
-X-Received: by 2002:ac2:4da7:: with SMTP id h7mr6829654lfe.95.1586669909579;
- Sat, 11 Apr 2020 22:38:29 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=XMvROckWSzZfp2JUvr5KET2psvIF8ZxdMVepuEQaA4s=;
+        b=ewWaatCt3Y9YPF9TflZpgTIYImhO7kMJSgJF6dOUMO1qYxRM9heKju+uUiEL32yN6S
+         h/GwKoazgwshFPn9kByM1tFKVRh0mBrqnfWQ+wAMPagQzvX462o70CmEZAOEepFI7taS
+         X2AmUw3d4K6dkHyCsnobRJAMWVQDelw3F2Spq1sqbbSKLBqzyH3vpGpGTuwr1ar7hSsj
+         Xllu8JXw9hd2K7OZpN7rOIvvEkdppv+sbhzJ0M+i9daN2SlTHrmpoI4+zFVvYJGAdCRh
+         kKS21Q5t266DgGwXp7a7AZlhG9G3LlfT9GCD8a+d9PZPMzneg8v9Hu1rPUGwHXv8yWpg
+         1Fng==
+X-Gm-Message-State: AGi0PuYT+r4FbHOguGge6A0Z4b6hX+5FGu28d47HvLGVpZSQQk7YDV+f
+        wuuWE75HZvf51/J7ayZ3w1arsJg4D3VxAR9Dm5lDiA==
+X-Google-Smtp-Source: APiQypKaKILu/yYi19LBLzQbWwiJVhXP8pRWBBkZ7RYj0TWODlXX/ZismC6P31jZPZPtZW3m/h/S8zEQwC1eRu4SlDA=
+X-Received: by 2002:a9f:27ca:: with SMTP id b68mr5443180uab.8.1586670115689;
+ Sat, 11 Apr 2020 22:41:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200411115459.324496182@linuxfoundation.org>
-In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sun, 12 Apr 2020 11:08:18 +0530
-Message-ID: <CA+G9fYuC0s59WRDmBzy7gx62snosjDAX6EigYSGmvX+46cRASw@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/38] 5.6.4-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+References: <20200327170638.17670-1-alim.akhtar@samsung.com>
+ <CGME20200327171418epcas5p4b85bea273e17c05a7edca58f528c435a@epcas5p4.samsung.com>
+ <20200327170638.17670-4-alim.akhtar@samsung.com> <20200405020208.GA22609@bogus>
+In-Reply-To: <20200405020208.GA22609@bogus>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Sun, 12 Apr 2020 11:11:19 +0530
+Message-ID: <CAGOxZ52nCF92adSk3a64qjZfMxXd3qHRayWZzuTRwNjcd2cC1w@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] Documentation: devicetree: ufs: Add DT bindings
+ for exynos UFS host controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kiwoong Kim <kwmad.kim@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Apr 2020 at 17:52, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Rob
+
+On Sun, Apr 5, 2020 at 7:33 AM Rob Herring <robh@kernel.org> wrote:
 >
-> This is the start of the stable review cycle for the 5.6.4 release.
-> There are 38 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> On Fri, Mar 27, 2020 at 10:36:36PM +0530, Alim Akhtar wrote:
+> > This adds Exynos Universal Flash Storage (UFS) Host Controller DT bindings.
 >
-> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
-> Anything received after that time might be too late.
+> Why the inconsistent subject. 'dt-bindings: ...' please.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.4-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
+Sure will update
+> >
+> > Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+> > Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > ---
+> >  .../devicetree/bindings/ufs/ufs-exynos.txt    | 104 ++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
 >
-> thanks,
+> Use DT schema format. Not sure why you'd do that for one and not the
+> other...
 >
-> greg k-h
+Yah, this is my 1st attempt to write binding in DT schema format, few
+things were not clear, now with your review, things got clear. I will
+keep the common UFS binding as it is and change exynos UFS binding in
+schema format.
+Will post the changes soon.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> >
+> > diff --git a/Documentation/devicetree/bindings/ufs/ufs-exynos.txt b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+> > new file mode 100644
+> > index 000000000000..08e2d1497b1b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+> > @@ -0,0 +1,104 @@
+> > +* Exynos Universal Flash Storage (UFS) Host Controller
+> > +
+> > +UFSHC nodes are defined to describe on-chip UFS host controllers.
+> > +Each UFS controller instance should have its own node.
+> > +
+> > +Required properties:
+> > +- compatible        : compatible name, contains "samsung,exynos7-ufs"
+> > +- interrupts        : <interrupt mapping for UFS host controller IRQ>
+> > +- reg               : Should contain HCI, vendor specific, UNIPRO and
+> > +                   UFS protector address space
+> > +- reg-names      : "hci", "vs_hci", "unipro", "ufsp";
+> > +
+> > +Optional properties:
+> > +- vdd-hba-supply        : phandle to UFS host controller supply regulator node
+> > +- vcc-supply            : phandle to VCC supply regulator node
+> > +- vccq-supply           : phandle to VCCQ supply regulator node
+> > +- vccq2-supply          : phandle to VCCQ2 supply regulator node
+> > +- vcc-supply-1p8        : For embedded UFS devices, valid VCC range is 1.7-1.95V
+> > +                          or 2.7-3.6V. This boolean property when set, specifies
+> > +                       to use low voltage range of 1.7-1.95V. Note for external
+> > +                       UFS cards this property is invalid and valid VCC range is
+> > +                       always 2.7-3.6V.
+>
+> The supply for vcc-supply should be restricted to the valid range and
+> this is not needed.
+>
+For now, I will leave these common binding as it is.
+> > +- vcc-max-microamp      : specifies max. load that can be drawn from vcc supply
+> > +- vccq-max-microamp     : specifies max. load that can be drawn from vccq supply
+> > +- vccq2-max-microamp    : specifies max. load that can be drawn from vccq2 supply
+>
+> How is this information useful?
+>
+> > +- <name>-fixed-regulator : boolean property specifying that <name>-supply is a fixed regulator
+>
+> No need for this. Look up the phandle and check supply's node if you
+> want to know this.
+>
+ok
+> > +
+> > +- clocks                : List of phandle and clock specifier pairs
+> > +- clock-names           : List of clock input name strings sorted in the same
+> > +                          order as the clocks property.
+> > +                       "core", "sclk_unipro_main", "ref" and ref_parent
+> > +
+> > +- freq-table-hz              : Array of <min max> operating frequencies stored in the same
+> > +                       order as the clocks property. If this property is not
+> > +                       defined or a value in the array is "0" then it is assumed
+> > +                       that the frequency is set by the parent clock or a
+> > +                       fixed rate clock source.
+> > +- pclk-freq-avail-range : specifies available frequency range(min/max) for APB clock
+> > +- ufs,pwr-attr-mode : specifies mode value for power mode change, possible values are
+> > +                     "FAST", "SLOW", "FAST_auto" and "SLOW_auto"
+>
+> Anything before the ',' is considered a vendor prefix and 'ufs' is not a
+> vendor.
+>
+> If these are standard UFS properties, then they should be documented in
+> a common UFS binding. On the flip side, none of the other UFS bindings
+> have needed these properties, so why do you?
+>
+Yah understood, these are not UFS common properties, I will change the
+driver instead to handle them.
+This will also simply exynos UFS binding.
 
-Summary
-------------------------------------------------------------------------
+> > +- ufs,pwr-attr-lane : specifies lane count value for power mode change
+> > +                   allowed values are 1 or 2
+> > +- ufs,pwr-attr-gear : specifies gear count value for power mode change
+> > +                   allowed values are 1 or 2
+> > +- ufs,pwr-attr-hs-series : specifies HS rate series for power mode change
+> > +                        can be one of "HS_rate_b" or "HS_rate_a"
+> > +- ufs,pwr-local-l2-timer : specifies array of local UNIPRO L2 timer values
+> > +                        3 timers supported
+> > +                        <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal, AFC0ReqTimeOutVal>
+> > +- ufs,pwr-remote-l2-timer : specifies array of remote UNIPRO L2 timer values
+> > +                        3 timers supported
+> > +                        <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal, AFC0ReqTimeOutVal>
+> > +- ufs-rx-adv-fine-gran-sup_en : specifies support of fine granularity of MPHY,
+> > +                           this is a boolean property.
+> > +- ufs-rx-adv-fine-gran-step : specifies granularity steps of MPHY,
+> > +                           allowed step size is 0 to 3
+> > +- ufs-rx-adv-min-activate-time-cap : specifies rx advanced minimum activate time of MPHY
+> > +                                  range is 1 to 9
+> > +- ufs-pa-granularity : specifies Granularity for PA_TActivate and PA_Hibern8Time
+> > +- ufs-pa-tacctivate : specifies time to wake-up remote M-RX
+> > +- ufs-pa-hibern8time : specifies minimum time to wait in HIBERN8 state
+> > +
+> > +Note: If above properties are not defined it can be assumed that the supply
+> > +regulators or clocks are always on.
+> > +
+> > +Example:
+> > +     ufshc@0x15570000 {
+> > +             compatible = "samsung,exynos7-ufs";
+> > +             reg = <0x15570000 0x100>,
+> > +                   <0x15570100 0x100>,
+> > +                   <0x15571000 0x200>,
+> > +                   <0x15572000 0x300>;
+> > +             reg-names = "hci", "vs_hci", "unipro", "ufsp";
+> > +             interrupts = <0 200 0>;
+> > +
+> > +             vdd-hba-supply = <&xxx_reg0>;
+> > +             vdd-hba-fixed-regulator;
+> > +             vcc-supply = <&xxx_reg1>;
+> > +             vcc-supply-1p8;
+> > +             vccq-supply = <&xxx_reg2>;
+> > +             vccq2-supply = <&xxx_reg3>;
+> > +             vcc-max-microamp = 500000;
+> > +             vccq-max-microamp = 200000;
+> > +             vccq2-max-microamp = 200000;
+> > +
+> > +             clocks = <&core 0>, <&ref 0>, <&iface 0>;
+> > +             clock-names = "core", "sclk_unipro_main", "ref", "ref_parent";
+> > +             freq-table-hz = <100000000 200000000>, <0 0>, <0 0>, <0 0>;
+> > +
+> > +             pclk-freq-avail-range = <70000000 133000000>;
+> > +
+> > +             ufs,pwr-attr-mode = "FAST";
+> > +             ufs,pwr-attr-lane = <2>;
+> > +             ufs,pwr-attr-gear = <2>;
+> > +             ufs,pwr-attr-hs-series = "HS_rate_b";
+> > +             ufs,pwr-local-l2-timer = <8000 28000 20000>;
+> > +             ufs,pwr-remote-l2-timer = <12000 32000 16000>;
+> > +             ufs-rx-adv-fine-gran-sup_en = <1>;
+> > +             ufs-rx-adv-fine-gran-step = <3>;
+> > +             ufs-rx-adv-min-activate-time-cap = <9>;
+> > +             ufs-pa-granularity = <6>;
+> > +             ufs-pa-tacctivate = <6>;
+> > +             ufs-pa-hibern8time = <20>;
+> > +     };
+> > --
+> > 2.17.1
+> >
 
-kernel: 5.6.4-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: 62251e4703ac6d416aeeec0bfe2af46dfa423a7b
-git describe: v5.6.3-39-g62251e4703ac
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.3-39-g62251e4703ac
 
 
-No regressions (compared to build v5.6.2-47-g4491f12cfc6a)
-
-No fixes (compared to build v5.6.2-47-g4491f12cfc6a)
-
-Ran 31688 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* network-basic-tests
-* kvm-unit-tests
-* ltp-commands-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-open-posix-tests
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Regards,
+Alim
