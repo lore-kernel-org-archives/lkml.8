@@ -2,90 +2,54 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F95C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4601EC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F1520709
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:33:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HKcd+fIt"
+	by mail.kernel.org (Postfix) with ESMTP id 1D77A2076B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586691514;
+	bh=tVCDDWtcQtbB1lZLEaiB5lN7ts0DMoNVhW0b7Etn49U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=H8YOjnHLLYc3aNDnrwt3uJ6zJVF0xH2tXgms/ORw+QqFlQc/hWqOb+En7YJQiuabr
+	 GGWNNmBEC1iQ4OPEBn5SOjP6fwwe6PsH7oK3SH0YbhtHZdOav87GvQT06SBK533AWd
+	 XsgvuweUL9EoXHrUgrRaKDrFwM4AmgnQVO9QIEdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgDLLdW (ORCPT
+        id S1727004AbgDLLic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:33:22 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:55386 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgDLLdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:33:21 -0400
-Received: from flygoat-x1e (unknown [IPv6:240e:390:499:a20::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 6461320D00;
-        Sun, 12 Apr 2020 11:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1586691201; bh=sL4MzaGwxvIRSq9CUuhbsYMx0T4QWjj2y1rYAqSVLws=;
+        Sun, 12 Apr 2020 07:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbgDLLic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 07:38:32 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E3E6206DA;
+        Sun, 12 Apr 2020 11:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586691512;
+        bh=tVCDDWtcQtbB1lZLEaiB5lN7ts0DMoNVhW0b7Etn49U=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HKcd+fItvP6Hapt81u6McR/G/BybTwn3ZURsy4BZib/1PjBh2tKi6u+OJFUSc2qpd
-         fsFLojsxIqB04tj7sKG2ACe7sVOS5TtTM/g9Y9vqolFWHquMOONkXrKcWwO2Mrc+0V
-         7dBHRoP1XMZyUPWQmmcKdZ27U141H3GZ+tTI0GvNDhwrnFRfFeUmXnQZy9GRNhBCjG
-         GH0JbQt+iaqvwDZ0SrrZqpkporGlnb7+XS+iybCr3/L2fL06Jh1eFSb9/feiAqBhcr
-         ktE1Sc8dO7p2vQMtI9YgJyFEvvyhzJ9RBLYnO1MquOdrUGdi23XekKr9N/u03ny4ZI
-         XEO1Do3o7sh+w==
-Date:   Sun, 12 Apr 2020 19:32:25 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        " =?UTF-8?B?5ZGo55Cw5p2w?= (Zhou Yanjie) " 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 05/11] MIPS: Switch to arch_topology
-Message-ID: <20200412193225.47fa4680@flygoat-x1e>
-In-Reply-To: <20200412103908.2594483d@why>
-References: <20200412032123.3896114-6-jiaxun.yang@flygoat.com>
-        <202004121349.xFzTOGS4%lkp@intel.com>
-        <20200412154927.7ac453d5@flygoat-x1e>
-        <20200412103908.2594483d@why>
+        b=hovffOIazgnz86myi3OtY2VthDf3RPBMjUSv47fblnM/6fM0ymYsUSFC7ltm4uc6T
+         LbitMgWSkBo6M01oZUGnPFmfA9hXPPGTMTHUFGweJ5dWXgVvKwCZ1tIScAvXxOUpSr
+         DthzgxRDTcaJbtSrHpUfEaVIbNnArERZpTAQaOtQ=
+Date:   Sun, 12 Apr 2020 12:38:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alexandru.tachici@analog.com>
+Subject: Re: [PATCH v2] iio: adc: ad7192: fix null pointer de-reference
+ crash during probe
+Message-ID: <20200412123828.6fa25008@archlinux>
+In-Reply-To: <20200407063310.85466-1-alexandru.ardelean@analog.com>
+References: <20200406123109.56947-1-alexandru.ardelean@analog.com>
+        <20200407063310.85466-1-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -95,69 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 10:39:08 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+On Tue, 7 Apr 2020 09:33:10 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> On Sun, 12 Apr 2020 15:49:27 +0800
-> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+> assignment:
+>   'indio_dev->name = spi_get_device_id(spi)->name;'
 > 
-> > On Sun, 12 Apr 2020 13:24:21 +0800
-> > kbuild test robot <lkp@intel.com> wrote:
-> >   
-> > > Hi Jiaxun,
-> > > 
-> > > I love your patch! Yet something to improve:
-> > > 
-> > > [auto build test ERROR on driver-core/driver-core-testing]
-> > > [also build test ERROR on pm/linux-next linus/master
-> > > next-20200411] [cannot apply to tip/perf/core tip/irq/core v5.6]
-> > > [if your patch is applied to the wrong git tree, please drop us a
-> > > note to help improve the system. BTW, we also suggest to use
-> > > '--base' option to specify the base tree in git format-patch,
-> > > please see https://stackoverflow.com/a/37406982]
-> > > 
-> > > url:
-> > > https://github.com/0day-ci/linux/commits/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
-> > > base:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-> > > a10c9c710f9ecea87b9f4bbb837467893b4bef01 config: mips-allnoconfig
-> > > (attached as .config) compiler: mips-linux-gcc (GCC) 9.3.0
-> > > reproduce: wget
-> > > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> > > -O ~/bin/make.cross chmod +x ~/bin/make.cross # save the attached
-> > > .config to linux build tree GCC_VERSION=9.3.0 make.cross
-> > > ARCH=mips 
-> > > 
-> > > If you fix the issue, kindly add following tag as appropriate
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > 
-> > > Note: the
-> > > linux-review/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
-> > > HEAD 8e8e9d4f7aa74359f2199773786ffe2fbb7877d0 builds fine. It only
-> > > hurts bisectibility.
-> > >     
-> > Hi all,
-> > 
-> > In this case I think it should be fine to break bisect, otherwise
-> > #05 will combine too many modifications in different subsystems.  
+> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+> during probe with null de-ref.
 > 
-> No. It is never OK to break bisection, specially when it affects a
-> whole architecture.
+> This change assigns the 'compatible' string from the DT table, as the new
+> 'indio_dev->name'. As such, the new device/part name now looks like
+> 'adi,ad719x', and now has the vendor prefix.
+> 
+> Note that this change is not doing any NULL check to the return value of
+> 'of_match_device()'. This shouldn't happen, and if it does it's likely a
+> framework error on the probe side.
+> 
+> Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-I'm going to squash all these into patch #5.
-It's really hard to do it gradually.
+Hmm. Returning the compatible isn't compatible with the ABI.
 
-Thanks.
+I think we will have to introduce a bit of indirection here to
+allow for a 'chip info' type structure with the name and the magic ID value
+that is currently in the data field of the of_device_id table.
 
+That way we can have the name explicit.   Note I don't want to
+mess around with stripping the prefix off the compatible as that sort of
+thing is hard to read.
+
+Jonathan
+
+> ---
 > 
-> We introduce gradual changes over multiple subsystems all the time by
-> using configuration symbols, no matter the number of patches. Yes, it
-> is sometimes hard. But breaking the kernel and forcing everyone else
-> to just deal with it is not acceptable.
+> Changelog v1 -> v2:
+> * fix colon for Fixes tag
+> * updated commit title a bit; to make it longer
 > 
-> Thanks,
+>  drivers/iio/adc/ad7192.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> 	M.
---
-Jiaxun Yang
+> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+> index 8ec28aa8fa8a..0039a45e1f33 100644
+> --- a/drivers/iio/adc/ad7192.c
+> +++ b/drivers/iio/adc/ad7192.c
+> @@ -888,6 +888,7 @@ MODULE_DEVICE_TABLE(of, ad7192_of_match);
+>  
+>  static int ad7192_probe(struct spi_device *spi)
+>  {
+> +	const struct of_device_id *of_id;
+>  	struct ad7192_state *st;
+>  	struct iio_dev *indio_dev;
+>  	int ret, voltage_uv = 0;
+> @@ -937,10 +938,12 @@ static int ad7192_probe(struct spi_device *spi)
+>  		goto error_disable_avdd;
+>  	}
+>  
+> +	of_id = of_match_device(ad7192_of_match, &spi->dev);
+> +
+>  	spi_set_drvdata(spi, indio_dev);
+> -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
+> +	st->devid = (unsigned long)of_id->data;
+>  	indio_dev->dev.parent = &spi->dev;
+> -	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->name = of_id->compatible;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+>  	ret = ad7192_channels_config(indio_dev);
 
