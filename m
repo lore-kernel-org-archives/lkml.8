@@ -2,97 +2,94 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C01C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 02:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732F3C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 03:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DF7206E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 02:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABKvW/nR"
+	by mail.kernel.org (Postfix) with ESMTP id 4811420769
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 03:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgDLCtj (ORCPT
+        id S1726866AbgDLDUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 22:49:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45370 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726108AbgDLCtj (ORCPT
+        Sat, 11 Apr 2020 23:20:03 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5393 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgDLDUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 22:49:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586659778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=VogcAM4f+7ZYGZP3VmVCoYpWE3MtWwpRfqsHtlQY+ws=;
-        b=ABKvW/nRIPaYrJHY508S/C0Hey0yIhO4eklFiMZcWhzITuxTfmExjp1aETVWoSzzxXjtxI
-        E5qQdCzCCnRhEGyngQ697x/BitEQkhfIBoStNovgZZibeTLtovL/m+AE+WOdfnfAqJsD5x
-        5X4YH/CgfyN48a3cWx5x2U7tbXSMxlo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-iwefRy8oOki2qNz0nU7NVA-1; Sat, 11 Apr 2020 22:49:34 -0400
-X-MC-Unique: iwefRy8oOki2qNz0nU7NVA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C977A107ACC9;
-        Sun, 12 Apr 2020 02:49:33 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-101.pek2.redhat.com [10.72.12.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E5514CFDE3;
-        Sun, 12 Apr 2020 02:49:31 +0000 (UTC)
-Date:   Sun, 12 Apr 2020 10:49:27 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] efi/earlycon: fix early printk for wider fonts
-Message-ID: <20200412024927.GA6884@dhcp-128-65.nay.redhat.com>
+        Sat, 11 Apr 2020 23:20:03 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9288cd600-1c81a; Sun, 12 Apr 2020 11:19:41 +0800 (CST)
+X-RM-TRANSID: 2eea5e9288cd600-1c81a
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.0.106] (unknown[112.1.172.56])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95e9288cca75-41b3c;
+        Sun, 12 Apr 2020 11:19:41 +0800 (CST)
+X-RM-TRANSID: 2ee95e9288cca75-41b3c
+Subject: Re: [PATCH] btrfs: Fix backref.c selftest compilation warning
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200411154915.9408-1-tangbin@cmss.chinamobile.com>
+ <ea85377e-4648-c174-2827-53173587777c@gmx.com>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <4b1e57b3-ca0d-f3e0-f4c4-72cdfe943d7a@cmss.chinamobile.com>
+Date:   Sun, 12 Apr 2020 11:21:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <ea85377e-4648-c174-2827-53173587777c@gmx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I play with terminus fonts I noticed the efi early printk does
-not work because the earlycon code assumes font width is 8.
+Hi Qu:
 
-Here add the code to adapt with larger fonts.  Tested with all kinds
-of kernel built-in fonts on my laptop. Also tested with a local draft
-patch for 14x28 !bold terminus font.
+On 2020/4/12 8:52, Qu Wenruo wrote:
+>
+> On 2020/4/11 下午11:49, Tang Bin wrote:
+>> Fix missing braces compilation warning in the ARM
+>> compiler environment:
+>>      fs/btrfs/backref.c: In function ‘is_shared_data_backref’:
+>>      fs/btrfs/backref.c:394:9: warning: missing braces around initializer [-Wmissing-braces]
+>>        struct prelim_ref target = {0};
+>>      fs/btrfs/backref.c:394:9: warning: (near initialization for ‘target.rbnode’) [-Wmissing-braces]
+> GCC version please.
+>
+> It looks like you're using an older GCC, as it's pretty common certain
+> prebuild tool chain is still using outdated GCC.
+>
+> In my environment with GCC 9.2.0 natively (on aarch64) it's completely fine.
+> Thus personally I recommend to build your own tool chain using
+> buildroot, or run it natively, other than rely on prebuilt one.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- drivers/firmware/efi/earlycon.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+My environment:
 
---- linux-x86.orig/drivers/firmware/efi/earlycon.c
-+++ linux-x86/drivers/firmware/efi/earlycon.c
-@@ -114,14 +114,16 @@ static void efi_earlycon_write_char(u32
- 	const u32 color_black = 0x00000000;
- 	const u32 color_white = 0x00ffffff;
- 	const u8 *src;
--	u8 s8;
--	int m;
-+	int m, n, bytes;
-+	u8 x;
- 
--	src = font->data + c * font->height;
--	s8 = *(src + h);
-+	bytes = BITS_TO_BYTES(font->width);
-+	src = font->data + c * font->height * bytes + h * bytes;
- 
--	for (m = 0; m < 8; m++) {
--		if ((s8 >> (7 - m)) & 1)
-+	for (m = 0; m < font->width; m++) {
-+		n = m % 8;
-+		x = *(src + m / 8);
-+		if ((x >> (7 - n)) & 1)
- 			*dst = color_white;
- 		else
- 			*dst = color_black;
+   PC : Ubuntu 16.04
+
+   Hardware : I.MX6ULL
+
+   Tool Chain : arm-linux-gnueabihf-gcc (Linaro GCC 4.9-2017.01) 4.9.4
+
+>
+> In fact your fix could cause problem, as the original code is
+> initializing all members to 0, but now it's uninitialized.
+>
+> You need to locate the root cause other than blindly follow the warning.
+
+In hardware experiment, this approach is feasible.
+
+Thanks.
+
+Tang Bin
+
+>
+>
+
 
