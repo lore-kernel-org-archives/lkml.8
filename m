@@ -2,243 +2,109 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87379C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547AAC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A16220732
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586690312;
-	bh=KVxlN5pn9biEvZszl+Y+7ZXezrAEjJJg578pji2Cn5A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gZGZvilB9wXVK6e/Fx5XT6UgSgXxXk0C5G1p+8DfQSqvJHquloKRRlQQcRdfYS4Jd
-	 kBygKG9qyH/yKytoXrEZxj61pbxcIV94FggrFwrGvSfFhGtZTNELsQM2v9/PxNIS5f
-	 VLR655cOi7RhEZ5EIfiDutMytRElshWQtBoss2jE=
+	by mail.kernel.org (Postfix) with ESMTP id 313A820575
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 11:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgDLLSa (ORCPT
+        id S1726994AbgDLLY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:18:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDLLS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:18:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1555C206E9;
-        Sun, 12 Apr 2020 11:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586690309;
-        bh=KVxlN5pn9biEvZszl+Y+7ZXezrAEjJJg578pji2Cn5A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AELM0sLAn6vjIN6P4iu0wZmzKagd5DqiyEGAjE0ScHaCoZwabaIsabcfwpw4APzVL
-         XyRtESekXsjNZeKly+q9PJZ7qN1pAeEryAR5klskxUwDL5Td6SrLz16TQZioDOKbbk
-         DcEKF6AgVS+bylCoQ3fQCGFrJgFDILOXCZRuh9zU=
-Date:   Sun, 12 Apr 2020 12:18:24 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH 1/3] iio: kfifo: add iio_device_attach_kfifo_buffer()
- helper
-Message-ID: <20200412121824.2319c12d@archlinux>
-In-Reply-To: <48e7f8d5f090971e0c48c0134ebb2dca86a0f144.camel@analog.com>
-References: <20200401125936.6398-1-alexandru.ardelean@analog.com>
-        <20200405114602.160c690b@archlinux>
-        <48e7f8d5f090971e0c48c0134ebb2dca86a0f144.camel@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 12 Apr 2020 07:24:28 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:7259 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgDLLY2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 07:24:28 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 58C9C4E1659;
+        Sun, 12 Apr 2020 19:24:23 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc:     rdunlap@infradead.org, kernel@vivo.com,
+        Wang Wenhu <wenhu.wang@vivo.com>
+Subject: [PATCH v2,0/3] drivers: rpmon: new driver Remote Processor Monitor
+Date:   Sun, 12 Apr 2020 04:24:02 -0700
+Message-Id: <20200412112405.24116-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200411095301.18780-1-wenhu.wang@vivo.com>
+References: <20200411095301.18780-1-wenhu.wang@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVJT0lLS0tKS0lCQk1DSFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MiI6Eww5Hjg2TxQpMSwiNDcP
+        NRdPFCJVSlVKTkNNTUJLTU1OTU9OVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUhNT0w3Bg++
+X-HM-Tid: 0a716e2224699376kuws58c9c4e1659
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 08:12:42 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+RPMON is a driver framework. It supports remote processor monitor
+from user level. The basic components are a character device
+with sysfs interfaces for user space communication and different
+kinds of message drivers introduced modularly, which are used to
+communicate with remote processors.
 
-> On Sun, 2020-04-05 at 11:46 +0100, Jonathan Cameron wrote:
-> > [External]
-> > 
-> > On Wed, 1 Apr 2020 15:59:34 +0300
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >   
-> > > This change adds the iio_device_attach_kfifo_buffer() helper/short-hand,
-> > > which groups the simple routine of allocating a kfifo buffers via
-> > > devm_iio_kfifo_allocate() and calling iio_device_attach_buffer().
-> > > 
-> > > The mode_flags parameter is required. The setup_ops parameter is optional.
-> > > 
-> > > This function will be a bit more useful when needing to define multiple
-> > > buffers per IIO device.
-> > > 
-> > > One requirement [that is more a recommendation] for this helper, is to call
-> > > it after 'indio_dev' has been populated.
-> > > 
-> > > Also, one consequence related to using this helper is that the resource
-> > > management of the buffer will be tied to 'indio_dev->dev'. Previously it
-> > > was open-coded, and each driver does it slightly differently. Most of them
-> > > tied it to the parent device, some of them to 'indio_dev->dev'.
-> > > This shouldn't be a problem, and may be a good idea when adding more
-> > > buffers per-device.  
-> > 
-> > I'm glad you highlighted this subtlety.  I'm not sure it's safe in all cases
-> > because the result is that the managed cleanup for this will occur once we
-> > get to the cleanup for devm_iio_device_alloc and we release the indio_dev->dev
-> > 
-> > That would put it 'after' any other devm calls that are still hung off the
-> > parent
-> > device.
-> > 
-> > Now the question is whether that ever causes us problems... See next patch.
-> > It potentially does.  I think we need to provide the dev separately even
-> > if it feels a bit silly to do so.  Scope management is complex so I don't
-> > really want to force people to mix and match between different devices
-> > and so get it wrong by accident.
-> > 
-> > The other issue is that it's not readily apparent from the naming that
-> > this function is registering stuff that is cleaned up automatically or
-> > that it even allocates anything that might need that..
-> > 
-> > devm_iio_device_attach_new_kfifo_buffer maybe?
-> > 
-> > I'm sort of wondering if we should do what dma did and have
-> > 
-> > iiom_device_attach_new_kfifo_buffer to indicate it's managed in the
-> > scope of the iio device?
-> > 
-> > What do people think?
-> > 
-> > However, see patch 2 before commenting.  Reality is I'm not sure forcing
-> > managed calls to hang off iio_dev->dev is a good idea (at this stage given
-> > where we are).  
-> 
-> What I am really after with this patch is to hide away these:
->      iio_kfifo_free(indio_dev->buffer);
->      iio_buffer_set_attrs(indio_dev->buffer, xxxx_fifo_attributes); 
-> i.e. not have 'indio_dev->buffer' open-coded in drivers, and hide it in IIO core
-> somewhere.
-> Some ideas can go in parallel [like this one] to add support for multiple
-> buffers.
-> 
-> So, I will think of a better [less sloppy] V2 for this.
-> 
-> One intermediate alternative is to do 'iio_device_kfifo_free(indio_dev)', but
-> I'll still try to think of a better devm_ approach.
-> devm_iio_device_attach_new_kfifo_buffer() sounds a bit long but may work.
-> iiom_device_attach_new_kfifo_buffer() can also work.
-> 
-> What if we just default attaching to the parent device?
+As for user space, one can get notifications of different events
+of remote processors, like their registrations, through standard
+file read operation of the file descriptors related to the exported
+character devices. Actions can also be taken into account via
+standard write operations to the devices. Besides, the sysfs class
+attributes could be accessed conveniently.
 
-That would work and be consistent with the vast majority of current cases.
+Message drivers act as engines to communicate with remote processors.
+Currently RPMON_QMI is available which uses QMI infrastructures
+on Qualcomm SoC Platforms.
 
-> 
-> Would it work to also attach the parent device in devm_iio_device_alloc() by
-> default?
+RPMON_QMI implements a kind of communication routine for RPMON to
+communicate with remote processors through QMI infrastructure.
+RPMON_QMI itself is designed as a modular framework that would
+introduce different kind of message sets which are binding to
+different services.
 
-That would need a thorough audit to check nothing crazy is done by
-a driver with an odd structure.  Such a driver would (I think) be
-buggy though as the child lifetime should be dependent on the parent
-and not some other device.
+RPMON_QMI creates a device of rpmon_device type for each remote
+processor endpoint. All the endpoint devices share an unique set
+of QMI suite.
 
-> Or change 'iio_device_alloc()' to take a parent device as argument?
+RPMON_QMI_MSG_V01 implements a RPMON_QMI message set for connection check.
+RPMON_QMI defines its message types modularly. Each rpmon service
+binds to a message set and introduced as a module. This version 1.0
+message set could be used for connection checking of remote processors.
 
-I think there are only a couple of users, so that would work.
+RPMON_QMI messages depend on QCOM_QMI_HELPERS and should be updated
+together with QMI related modules.
 
-> Which for devm_iio_device_alloc(dev,...) would implicitly mean that 'dev' is
-> 'parent'?
+Changes since v1:
+ - Addressed review comments from Randy
 
-I think that's a fair assumption (though needs a sanity check)
+Wang Wenhu (3):
+  driver: rpmon: new driver Remote Processor Monitor
+  driver: rpmon: qmi message version 01
+  driver: rpmon: add rpmon_qmi driver
 
-> 
-> These are just some thoughts.
-> 
-> 
-> > 
-> > Thanks
-> > 
-> > Jonathan
-> > 
-> >   
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > >  drivers/iio/buffer/kfifo_buf.c | 37 ++++++++++++++++++++++++++++++++++
-> > >  include/linux/iio/kfifo_buf.h  |  4 ++++
-> > >  2 files changed, 41 insertions(+)
-> > > 
-> > > diff --git a/drivers/iio/buffer/kfifo_buf.c b/drivers/iio/buffer/kfifo_buf.c
-> > > index 3150f8ab984b..05b7c5fc6f1d 100644
-> > > --- a/drivers/iio/buffer/kfifo_buf.c
-> > > +++ b/drivers/iio/buffer/kfifo_buf.c
-> > > @@ -228,4 +228,41 @@ void devm_iio_kfifo_free(struct device *dev, struct
-> > > iio_buffer *r)
-> > >  }
-> > >  EXPORT_SYMBOL(devm_iio_kfifo_free);
-> > >  
-> > > +/**
-> > > + * iio_device_attach_kfifo_buffer - Allocate a kfifo buffer & attach it to
-> > > an IIO device
-> > > + * @indio_dev: The device the buffer should be attached to
-> > > + * @mode_flags: The mode flags for this buffer (INDIO_BUFFER_SOFTWARE
-> > > and/or
-> > > + *		INDIO_BUFFER_TRIGGERED).
-> > > + * @setup_ops: The setup_ops required to configure the HW part of the
-> > > buffer (optional)
-> > > + *
-> > > + * This function allocates a kfifo buffer via devm_iio_kfifo_allocate() and
-> > > + * attaches it to the IIO device via iio_device_attach_buffer().
-> > > + * This is meant to be a bit of a short-hand/helper function as many driver
-> > > + * seem to do this.
-> > > + */
-> > > +int iio_device_attach_kfifo_buffer(struct iio_dev *indio_dev,
-> > > +				   int mode_flags,
-> > > +				   const struct iio_buffer_setup_ops *setup_ops)
-> > > +{
-> > > +	struct iio_buffer *buffer;
-> > > +
-> > > +	if (mode_flags)
-> > > +		mode_flags &= kfifo_access_funcs.modes;
-> > > +
-> > > +	if (!mode_flags)
-> > > +		return -EINVAL;
-> > > +
-> > > +	buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
-> > > +	if (!buffer)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	iio_device_attach_buffer(indio_dev, buffer);
-> > > +
-> > > +	indio_dev->modes |= mode_flags;
-> > > +	indio_dev->setup_ops = setup_ops;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(iio_device_attach_kfifo_buffer);
-> > > +
-> > >  MODULE_LICENSE("GPL");
-> > > diff --git a/include/linux/iio/kfifo_buf.h b/include/linux/iio/kfifo_buf.h
-> > > index 764659e01b68..2363a931be14 100644
-> > > --- a/include/linux/iio/kfifo_buf.h
-> > > +++ b/include/linux/iio/kfifo_buf.h
-> > > @@ -11,4 +11,8 @@ void iio_kfifo_free(struct iio_buffer *r);
-> > >  struct iio_buffer *devm_iio_kfifo_allocate(struct device *dev);
-> > >  void devm_iio_kfifo_free(struct device *dev, struct iio_buffer *r);
-> > >  
-> > > +int iio_device_attach_kfifo_buffer(struct iio_dev *indio_dev,
-> > > +				   int mode_flags,
-> > > +				   const struct iio_buffer_setup_ops
-> > > *setup_ops);
-> > > +
-> > >  #endif  
+ drivers/Kconfig                  |   2 +
+ drivers/Makefile                 |   1 +
+ drivers/rpmon/Kconfig            |  54 ++++
+ drivers/rpmon/Makefile           |   3 +
+ drivers/rpmon/rpmon.c            | 506 +++++++++++++++++++++++++++++++
+ drivers/rpmon/rpmon_qmi.c        | 431 ++++++++++++++++++++++++++
+ drivers/rpmon/rpmon_qmi.h        |  77 +++++
+ drivers/rpmon/rpmon_qmi_msg_v1.c | 242 +++++++++++++++
+ include/linux/rpmon.h            |  68 +++++
+ 9 files changed, 1384 insertions(+)
+ create mode 100644 drivers/rpmon/Kconfig
+ create mode 100644 drivers/rpmon/Makefile
+ create mode 100644 drivers/rpmon/rpmon.c
+ create mode 100644 drivers/rpmon/rpmon_qmi.c
+ create mode 100644 drivers/rpmon/rpmon_qmi.h
+ create mode 100644 drivers/rpmon/rpmon_qmi_msg_v1.c
+ create mode 100644 include/linux/rpmon.h
+
+-- 
+2.17.1
 
