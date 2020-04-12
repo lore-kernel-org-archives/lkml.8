@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5257AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8323BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCC220705
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D80206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgDLOTe (ORCPT
+        id S1727088AbgDLOTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:19:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41449 "EHLO
+        Sun, 12 Apr 2020 10:19:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41453 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgDLOTc (ORCPT
+        with ESMTP id S1727015AbgDLOTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 Apr 2020 10:19:32 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jNdSJ-0001W7-F2; Sun, 12 Apr 2020 16:19:27 +0200
+        id 1jNdSK-0001WT-NB; Sun, 12 Apr 2020 16:19:28 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 04689100E35;
-        Sun, 12 Apr 2020 16:19:27 +0200 (CEST)
-Date:   Sun, 12 Apr 2020 14:18:38 -0000
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 3BE61100E35;
+        Sun, 12 Apr 2020 16:19:28 +0200 (CEST)
+Date:   Sun, 12 Apr 2020 14:18:40 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] perf/urgent for 5.7-rc1
+Subject: [GIT pull] sched/urgent for 5.7-rc1
 References: <158670111777.20085.1305752188791047060.tglx@nanos.tec.linutronix.de>
-Message-ID: <158670111898.20085.15483830842616301182.tglx@nanos.tec.linutronix.de>
+Message-ID: <158670112018.20085.16323984475817000231.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -48,821 +48,362 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest perf/urgent branch from:
+please pull the latest sched/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2020-04-12
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2020-04-12
 
-up to:  d3296fb372bf: perf/core: Disable page faults when getting phys address
-
-
-Thre fixes/updates for perf:
-
- - Fix the perf event cgroup tracking which tries to track the cgroup even
-   for disabled events.
-
- - Add Ice Lake server support for uncore events
-
- - Disable pagefaults when retrieving the physical address in the sampling
-   code.
+up to:  96e74ebf8d59: sched/debug: Add task uclamp values to SCHED_DEBUG procfs
 
 
+Scheduler fixes/updates:
+
+ - Deduplicate the average computations in the scheduler core and the fair
+   class code.
+
+ - Fix a raise between runtime distribution and assignement which can cause
+   exceeding the quota by up to 70%.
+
+ - Prevent negative results in the imbalanace calculation
+
+ - Remove a stale warning in the workqueue code which can be triggered
+   since the call site was moved out of preempt disabled code. It's a false
+   positive.
+
+ - Deduplicate the print macros for procfs
+
+ - Add the ucmap values to the SCHED_DEBUG procfs output for completness
 
 Thanks,
 
 	tglx
 
 ------------------>
-Ian Rogers (1):
-      perf/cgroup: Correct indirection in perf_less_group_idx()
+Aubrey Li (1):
+      sched/fair: Fix negative imbalance in imbalance calculation
 
-Jiri Olsa (1):
-      perf/core: Disable page faults when getting phys address
+Huaixin Chang (1):
+      sched/fair: Fix race between runtime distribution and assignment
 
-Kan Liang (1):
-      perf/x86/intel/uncore: Add Ice Lake server uncore support
+Sebastian Andrzej Siewior (1):
+      workqueue: Remove the warning in wq_worker_sleeping()
 
-Peter Zijlstra (1):
-      perf/core: Fix event cgroup tracking
+Valentin Schneider (4):
+      sched/fair: Align rq->avg_idle and rq->avg_scan_cost
+      sched/debug: Remove redundant macro define
+      sched/debug: Factor out printing formats into common macros
+      sched/debug: Add task uclamp values to SCHED_DEBUG procfs
+
+Vincent Donnefort (1):
+      sched/core: Remove unused rq::last_load_update_tick
 
 
- arch/x86/events/intel/uncore.c       |   8 +
- arch/x86/events/intel/uncore.h       |   3 +
- arch/x86/events/intel/uncore_snbep.c | 511 +++++++++++++++++++++++++++++++++++
- kernel/events/core.c                 |  82 +++---
- 4 files changed, 573 insertions(+), 31 deletions(-)
+ kernel/sched/core.c  | 10 ++--------
+ kernel/sched/debug.c | 44 ++++++++++++++++++--------------------------
+ kernel/sched/fair.c  | 46 +++++++++++++++++++++-------------------------
+ kernel/sched/sched.h |  7 ++++++-
+ kernel/workqueue.c   |  6 ++++--
+ 5 files changed, 51 insertions(+), 62 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 1ba72c563313..cf76d6631afa 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1476,6 +1476,12 @@ static const struct intel_uncore_init_fun tgl_l_uncore_init __initconst = {
- 	.mmio_init = tgl_l_uncore_mmio_init,
- };
- 
-+static const struct intel_uncore_init_fun icx_uncore_init __initconst = {
-+	.cpu_init = icx_uncore_cpu_init,
-+	.pci_init = icx_uncore_pci_init,
-+	.mmio_init = icx_uncore_mmio_init,
-+};
-+
- static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
- 	.cpu_init = snr_uncore_cpu_init,
- 	.pci_init = snr_uncore_pci_init,
-@@ -1511,6 +1517,8 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&icl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&icl_uncore_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&icx_uncore_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&icx_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&tgl_l_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&tgl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&snr_uncore_init),
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index b30429f8a53a..0da4a4605536 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -550,6 +550,9 @@ void skx_uncore_cpu_init(void);
- int snr_uncore_pci_init(void);
- void snr_uncore_cpu_init(void);
- void snr_uncore_mmio_init(void);
-+int icx_uncore_pci_init(void);
-+void icx_uncore_cpu_init(void);
-+void icx_uncore_mmio_init(void);
- 
- /* uncore_nhmex.c */
- void nhmex_uncore_cpu_init(void);
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 01023f0d935b..07652fa20ebb 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -382,6 +382,42 @@
- #define SNR_IMC_MMIO_MEM0_OFFSET		0xd8
- #define SNR_IMC_MMIO_MEM0_MASK			0x7FF
- 
-+/* ICX CHA */
-+#define ICX_C34_MSR_PMON_CTR0			0xb68
-+#define ICX_C34_MSR_PMON_CTL0			0xb61
-+#define ICX_C34_MSR_PMON_BOX_CTL		0xb60
-+#define ICX_C34_MSR_PMON_BOX_FILTER0		0xb65
-+
-+/* ICX IIO */
-+#define ICX_IIO_MSR_PMON_CTL0			0xa58
-+#define ICX_IIO_MSR_PMON_CTR0			0xa51
-+#define ICX_IIO_MSR_PMON_BOX_CTL		0xa50
-+
-+/* ICX IRP */
-+#define ICX_IRP0_MSR_PMON_CTL0			0xa4d
-+#define ICX_IRP0_MSR_PMON_CTR0			0xa4b
-+#define ICX_IRP0_MSR_PMON_BOX_CTL		0xa4a
-+
-+/* ICX M2PCIE */
-+#define ICX_M2PCIE_MSR_PMON_CTL0		0xa46
-+#define ICX_M2PCIE_MSR_PMON_CTR0		0xa41
-+#define ICX_M2PCIE_MSR_PMON_BOX_CTL		0xa40
-+
-+/* ICX UPI */
-+#define ICX_UPI_PCI_PMON_CTL0			0x350
-+#define ICX_UPI_PCI_PMON_CTR0			0x320
-+#define ICX_UPI_PCI_PMON_BOX_CTL		0x318
-+#define ICX_UPI_CTL_UMASK_EXT			0xffffff
-+
-+/* ICX M3UPI*/
-+#define ICX_M3UPI_PCI_PMON_CTL0			0xd8
-+#define ICX_M3UPI_PCI_PMON_CTR0			0xa8
-+#define ICX_M3UPI_PCI_PMON_BOX_CTL		0xa0
-+
-+/* ICX IMC */
-+#define ICX_NUMBER_IMC_CHN			2
-+#define ICX_IMC_MEM_STRIDE			0x4
-+
- DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
- DEFINE_UNCORE_FORMAT_ATTR(event2, event, "config:0-6");
- DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
-@@ -390,6 +426,7 @@ DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext, umask, "config:8-15,32-43,45-55");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext2, umask, "config:8-15,32-57");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext3, umask, "config:8-15,32-39");
-+DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config:8-15,32-55");
- DEFINE_UNCORE_FORMAT_ATTR(qor, qor, "config:16");
- DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
- DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
-@@ -4551,3 +4588,477 @@ void snr_uncore_mmio_init(void)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a2694ba82874..3a61a3b8eaa9 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2119,12 +2119,6 @@ int select_task_rq(struct task_struct *p, int cpu, int sd_flags, int wake_flags)
+ 	return cpu;
  }
  
- /* end of SNR uncore support */
-+
-+/* ICX uncore support */
-+
-+static unsigned icx_cha_msr_offsets[] = {
-+	0x2a0, 0x2ae, 0x2bc, 0x2ca, 0x2d8, 0x2e6, 0x2f4, 0x302, 0x310,
-+	0x31e, 0x32c, 0x33a, 0x348, 0x356, 0x364, 0x372, 0x380, 0x38e,
-+	0x3aa, 0x3b8, 0x3c6, 0x3d4, 0x3e2, 0x3f0, 0x3fe, 0x40c, 0x41a,
-+	0x428, 0x436, 0x444, 0x452, 0x460, 0x46e, 0x47c, 0x0,   0xe,
-+	0x1c,  0x2a,  0x38,  0x46,
-+};
-+
-+static int icx_cha_hw_config(struct intel_uncore_box *box, struct perf_event *event)
-+{
-+	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
-+	bool tie_en = !!(event->hw.config & SNBEP_CBO_PMON_CTL_TID_EN);
-+
-+	if (tie_en) {
-+		reg1->reg = ICX_C34_MSR_PMON_BOX_FILTER0 +
-+			    icx_cha_msr_offsets[box->pmu->pmu_idx];
-+		reg1->config = event->attr.config1 & SKX_CHA_MSR_PMON_BOX_FILTER_TID;
-+		reg1->idx = 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct intel_uncore_ops icx_uncore_chabox_ops = {
-+	.init_box		= ivbep_uncore_msr_init_box,
-+	.disable_box		= snbep_uncore_msr_disable_box,
-+	.enable_box		= snbep_uncore_msr_enable_box,
-+	.disable_event		= snbep_uncore_msr_disable_event,
-+	.enable_event		= snr_cha_enable_event,
-+	.read_counter		= uncore_msr_read_counter,
-+	.hw_config		= icx_cha_hw_config,
-+};
-+
-+static struct intel_uncore_type icx_uncore_chabox = {
-+	.name			= "cha",
-+	.num_counters		= 4,
-+	.perf_ctr_bits		= 48,
-+	.event_ctl		= ICX_C34_MSR_PMON_CTL0,
-+	.perf_ctr		= ICX_C34_MSR_PMON_CTR0,
-+	.box_ctl		= ICX_C34_MSR_PMON_BOX_CTL,
-+	.msr_offsets		= icx_cha_msr_offsets,
-+	.event_mask		= HSWEP_S_MSR_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext		= SNR_CHA_RAW_EVENT_MASK_EXT,
-+	.constraints		= skx_uncore_chabox_constraints,
-+	.ops			= &icx_uncore_chabox_ops,
-+	.format_group		= &snr_uncore_chabox_format_group,
-+};
-+
-+static unsigned icx_msr_offsets[] = {
-+	0x0, 0x20, 0x40, 0x90, 0xb0, 0xd0,
-+};
-+
-+static struct event_constraint icx_uncore_iio_constraints[] = {
-+	UNCORE_EVENT_CONSTRAINT(0x02, 0x3),
-+	UNCORE_EVENT_CONSTRAINT(0x03, 0x3),
-+	UNCORE_EVENT_CONSTRAINT(0x83, 0x3),
-+	UNCORE_EVENT_CONSTRAINT(0xc0, 0xc),
-+	UNCORE_EVENT_CONSTRAINT(0xc5, 0xc),
-+	EVENT_CONSTRAINT_END
-+};
-+
-+static struct intel_uncore_type icx_uncore_iio = {
-+	.name			= "iio",
-+	.num_counters		= 4,
-+	.num_boxes		= 6,
-+	.perf_ctr_bits		= 48,
-+	.event_ctl		= ICX_IIO_MSR_PMON_CTL0,
-+	.perf_ctr		= ICX_IIO_MSR_PMON_CTR0,
-+	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext		= SNR_IIO_PMON_RAW_EVENT_MASK_EXT,
-+	.box_ctl		= ICX_IIO_MSR_PMON_BOX_CTL,
-+	.msr_offsets		= icx_msr_offsets,
-+	.constraints		= icx_uncore_iio_constraints,
-+	.ops			= &skx_uncore_iio_ops,
-+	.format_group		= &snr_uncore_iio_format_group,
-+};
-+
-+static struct intel_uncore_type icx_uncore_irp = {
-+	.name			= "irp",
-+	.num_counters		= 2,
-+	.num_boxes		= 6,
-+	.perf_ctr_bits		= 48,
-+	.event_ctl		= ICX_IRP0_MSR_PMON_CTL0,
-+	.perf_ctr		= ICX_IRP0_MSR_PMON_CTR0,
-+	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl		= ICX_IRP0_MSR_PMON_BOX_CTL,
-+	.msr_offsets		= icx_msr_offsets,
-+	.ops			= &ivbep_uncore_msr_ops,
-+	.format_group		= &ivbep_uncore_format_group,
-+};
-+
-+static struct event_constraint icx_uncore_m2pcie_constraints[] = {
-+	UNCORE_EVENT_CONSTRAINT(0x14, 0x3),
-+	UNCORE_EVENT_CONSTRAINT(0x23, 0x3),
-+	UNCORE_EVENT_CONSTRAINT(0x2d, 0x3),
-+	EVENT_CONSTRAINT_END
-+};
-+
-+static struct intel_uncore_type icx_uncore_m2pcie = {
-+	.name		= "m2pcie",
-+	.num_counters	= 4,
-+	.num_boxes	= 6,
-+	.perf_ctr_bits	= 48,
-+	.event_ctl	= ICX_M2PCIE_MSR_PMON_CTL0,
-+	.perf_ctr	= ICX_M2PCIE_MSR_PMON_CTR0,
-+	.box_ctl	= ICX_M2PCIE_MSR_PMON_BOX_CTL,
-+	.msr_offsets	= icx_msr_offsets,
-+	.constraints	= icx_uncore_m2pcie_constraints,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.ops		= &ivbep_uncore_msr_ops,
-+	.format_group	= &ivbep_uncore_format_group,
-+};
-+
-+enum perf_uncore_icx_iio_freerunning_type_id {
-+	ICX_IIO_MSR_IOCLK,
-+	ICX_IIO_MSR_BW_IN,
-+
-+	ICX_IIO_FREERUNNING_TYPE_MAX,
-+};
-+
-+static unsigned icx_iio_clk_freerunning_box_offsets[] = {
-+	0x0, 0x20, 0x40, 0x90, 0xb0, 0xd0,
-+};
-+
-+static unsigned icx_iio_bw_freerunning_box_offsets[] = {
-+	0x0, 0x10, 0x20, 0x90, 0xa0, 0xb0,
-+};
-+
-+static struct freerunning_counters icx_iio_freerunning[] = {
-+	[ICX_IIO_MSR_IOCLK]	= { 0xa55, 0x1, 0x20, 1, 48, icx_iio_clk_freerunning_box_offsets },
-+	[ICX_IIO_MSR_BW_IN]	= { 0xaa0, 0x1, 0x10, 8, 48, icx_iio_bw_freerunning_box_offsets },
-+};
-+
-+static struct uncore_event_desc icx_uncore_iio_freerunning_events[] = {
-+	/* Free-Running IIO CLOCKS Counter */
-+	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
-+	/* Free-Running IIO BANDWIDTH IN Counters */
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
-+	{ /* end: all zeroes */ },
-+};
-+
-+static struct intel_uncore_type icx_uncore_iio_free_running = {
-+	.name			= "iio_free_running",
-+	.num_counters		= 9,
-+	.num_boxes		= 6,
-+	.num_freerunning_types	= ICX_IIO_FREERUNNING_TYPE_MAX,
-+	.freerunning		= icx_iio_freerunning,
-+	.ops			= &skx_uncore_iio_freerunning_ops,
-+	.event_descs		= icx_uncore_iio_freerunning_events,
-+	.format_group		= &skx_uncore_iio_freerunning_format_group,
-+};
-+
-+static struct intel_uncore_type *icx_msr_uncores[] = {
-+	&skx_uncore_ubox,
-+	&icx_uncore_chabox,
-+	&icx_uncore_iio,
-+	&icx_uncore_irp,
-+	&icx_uncore_m2pcie,
-+	&skx_uncore_pcu,
-+	&icx_uncore_iio_free_running,
-+	NULL,
-+};
-+
-+/*
-+ * To determine the number of CHAs, it should read CAPID6(Low) and CAPID7 (High)
-+ * registers which located at Device 30, Function 3
-+ */
-+#define ICX_CAPID6		0x9c
-+#define ICX_CAPID7		0xa0
-+
-+static u64 icx_count_chabox(void)
-+{
-+	struct pci_dev *dev = NULL;
-+	u64 caps = 0;
-+
-+	dev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x345b, dev);
-+	if (!dev)
-+		goto out;
-+
-+	pci_read_config_dword(dev, ICX_CAPID6, (u32 *)&caps);
-+	pci_read_config_dword(dev, ICX_CAPID7, (u32 *)&caps + 1);
-+out:
-+	pci_dev_put(dev);
-+	return hweight64(caps);
-+}
-+
-+void icx_uncore_cpu_init(void)
-+{
-+	u64 num_boxes = icx_count_chabox();
-+
-+	if (WARN_ON(num_boxes > ARRAY_SIZE(icx_cha_msr_offsets)))
-+		return;
-+	icx_uncore_chabox.num_boxes = num_boxes;
-+	uncore_msr_uncores = icx_msr_uncores;
-+}
-+
-+static struct intel_uncore_type icx_uncore_m2m = {
-+	.name		= "m2m",
-+	.num_counters   = 4,
-+	.num_boxes	= 4,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= SNR_M2M_PCI_PMON_CTR0,
-+	.event_ctl	= SNR_M2M_PCI_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl	= SNR_M2M_PCI_PMON_BOX_CTL,
-+	.ops		= &snr_m2m_uncore_pci_ops,
-+	.format_group	= &skx_uncore_format_group,
-+};
-+
-+static struct attribute *icx_upi_uncore_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask_ext4.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_thresh8.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group icx_upi_uncore_format_group = {
-+	.name = "format",
-+	.attrs = icx_upi_uncore_formats_attr,
-+};
-+
-+static struct intel_uncore_type icx_uncore_upi = {
-+	.name		= "upi",
-+	.num_counters   = 4,
-+	.num_boxes	= 3,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= ICX_UPI_PCI_PMON_CTR0,
-+	.event_ctl	= ICX_UPI_PCI_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.event_mask_ext = ICX_UPI_CTL_UMASK_EXT,
-+	.box_ctl	= ICX_UPI_PCI_PMON_BOX_CTL,
-+	.ops		= &skx_upi_uncore_pci_ops,
-+	.format_group	= &icx_upi_uncore_format_group,
-+};
-+
-+static struct event_constraint icx_uncore_m3upi_constraints[] = {
-+	UNCORE_EVENT_CONSTRAINT(0x1c, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x1d, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x1e, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x1f, 0x1),
-+	UNCORE_EVENT_CONSTRAINT(0x40, 0x7),
-+	UNCORE_EVENT_CONSTRAINT(0x4e, 0x7),
-+	UNCORE_EVENT_CONSTRAINT(0x4f, 0x7),
-+	UNCORE_EVENT_CONSTRAINT(0x50, 0x7),
-+	EVENT_CONSTRAINT_END
-+};
-+
-+static struct intel_uncore_type icx_uncore_m3upi = {
-+	.name		= "m3upi",
-+	.num_counters   = 4,
-+	.num_boxes	= 3,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= ICX_M3UPI_PCI_PMON_CTR0,
-+	.event_ctl	= ICX_M3UPI_PCI_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl	= ICX_M3UPI_PCI_PMON_BOX_CTL,
-+	.constraints	= icx_uncore_m3upi_constraints,
-+	.ops		= &ivbep_uncore_pci_ops,
-+	.format_group	= &skx_uncore_format_group,
-+};
-+
-+enum {
-+	ICX_PCI_UNCORE_M2M,
-+	ICX_PCI_UNCORE_UPI,
-+	ICX_PCI_UNCORE_M3UPI,
-+};
-+
-+static struct intel_uncore_type *icx_pci_uncores[] = {
-+	[ICX_PCI_UNCORE_M2M]		= &icx_uncore_m2m,
-+	[ICX_PCI_UNCORE_UPI]		= &icx_uncore_upi,
-+	[ICX_PCI_UNCORE_M3UPI]		= &icx_uncore_m3upi,
-+	NULL,
-+};
-+
-+static const struct pci_device_id icx_uncore_pci_ids[] = {
-+	{ /* M2M 0 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(12, 0, ICX_PCI_UNCORE_M2M, 0),
-+	},
-+	{ /* M2M 1 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(13, 0, ICX_PCI_UNCORE_M2M, 1),
-+	},
-+	{ /* M2M 2 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(14, 0, ICX_PCI_UNCORE_M2M, 2),
-+	},
-+	{ /* M2M 3 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(15, 0, ICX_PCI_UNCORE_M2M, 3),
-+	},
-+	{ /* UPI Link 0 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3441),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(2, 1, ICX_PCI_UNCORE_UPI, 0),
-+	},
-+	{ /* UPI Link 1 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3441),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(3, 1, ICX_PCI_UNCORE_UPI, 1),
-+	},
-+	{ /* UPI Link 2 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3441),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(4, 1, ICX_PCI_UNCORE_UPI, 2),
-+	},
-+	{ /* M3UPI Link 0 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3446),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(5, 1, ICX_PCI_UNCORE_M3UPI, 0),
-+	},
-+	{ /* M3UPI Link 1 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3446),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(6, 1, ICX_PCI_UNCORE_M3UPI, 1),
-+	},
-+	{ /* M3UPI Link 2 */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3446),
-+		.driver_data = UNCORE_PCI_DEV_FULL_DATA(7, 1, ICX_PCI_UNCORE_M3UPI, 2),
-+	},
-+	{ /* end: all zeroes */ }
-+};
-+
-+static struct pci_driver icx_uncore_pci_driver = {
-+	.name		= "icx_uncore",
-+	.id_table	= icx_uncore_pci_ids,
-+};
-+
-+int icx_uncore_pci_init(void)
-+{
-+	/* ICX UBOX DID */
-+	int ret = snbep_pci2phy_map_init(0x3450, SKX_CPUNODEID,
-+					 SKX_GIDNIDMAP, true);
-+
-+	if (ret)
-+		return ret;
-+
-+	uncore_pci_uncores = icx_pci_uncores;
-+	uncore_pci_driver = &icx_uncore_pci_driver;
-+	return 0;
-+}
-+
-+static void icx_uncore_imc_init_box(struct intel_uncore_box *box)
-+{
-+	unsigned int box_ctl = box->pmu->type->box_ctl +
-+			       box->pmu->type->mmio_offset * (box->pmu->pmu_idx % ICX_NUMBER_IMC_CHN);
-+	int mem_offset = (box->pmu->pmu_idx / ICX_NUMBER_IMC_CHN) * ICX_IMC_MEM_STRIDE +
-+			 SNR_IMC_MMIO_MEM0_OFFSET;
-+
-+	__snr_uncore_mmio_init_box(box, box_ctl, mem_offset);
-+}
-+
-+static struct intel_uncore_ops icx_uncore_mmio_ops = {
-+	.init_box	= icx_uncore_imc_init_box,
-+	.exit_box	= uncore_mmio_exit_box,
-+	.disable_box	= snr_uncore_mmio_disable_box,
-+	.enable_box	= snr_uncore_mmio_enable_box,
-+	.disable_event	= snr_uncore_mmio_disable_event,
-+	.enable_event	= snr_uncore_mmio_enable_event,
-+	.read_counter	= uncore_mmio_read_counter,
-+};
-+
-+static struct intel_uncore_type icx_uncore_imc = {
-+	.name		= "imc",
-+	.num_counters   = 4,
-+	.num_boxes	= 8,
-+	.perf_ctr_bits	= 48,
-+	.fixed_ctr_bits	= 48,
-+	.fixed_ctr	= SNR_IMC_MMIO_PMON_FIXED_CTR,
-+	.fixed_ctl	= SNR_IMC_MMIO_PMON_FIXED_CTL,
-+	.event_descs	= hswep_uncore_imc_events,
-+	.perf_ctr	= SNR_IMC_MMIO_PMON_CTR0,
-+	.event_ctl	= SNR_IMC_MMIO_PMON_CTL0,
-+	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-+	.box_ctl	= SNR_IMC_MMIO_PMON_BOX_CTL,
-+	.mmio_offset	= SNR_IMC_MMIO_OFFSET,
-+	.ops		= &icx_uncore_mmio_ops,
-+	.format_group	= &skx_uncore_format_group,
-+};
-+
-+enum perf_uncore_icx_imc_freerunning_type_id {
-+	ICX_IMC_DCLK,
-+	ICX_IMC_DDR,
-+	ICX_IMC_DDRT,
-+
-+	ICX_IMC_FREERUNNING_TYPE_MAX,
-+};
-+
-+static struct freerunning_counters icx_imc_freerunning[] = {
-+	[ICX_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
-+	[ICX_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
-+	[ICX_IMC_DDRT]	= { 0x22a0, 0x8, 0, 2, 48 },
-+};
-+
-+static struct uncore_event_desc icx_uncore_imc_freerunning_events[] = {
-+	INTEL_UNCORE_EVENT_DESC(dclk,			"event=0xff,umask=0x10"),
-+
-+	INTEL_UNCORE_EVENT_DESC(read,			"event=0xff,umask=0x20"),
-+	INTEL_UNCORE_EVENT_DESC(read.scale,		"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(read.unit,		"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(write,			"event=0xff,umask=0x21"),
-+	INTEL_UNCORE_EVENT_DESC(write.scale,		"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(write.unit,		"MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(ddrt_read,		"event=0xff,umask=0x30"),
-+	INTEL_UNCORE_EVENT_DESC(ddrt_read.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(ddrt_read.unit,		"MiB"),
-+	INTEL_UNCORE_EVENT_DESC(ddrt_write,		"event=0xff,umask=0x31"),
-+	INTEL_UNCORE_EVENT_DESC(ddrt_write.scale,	"3.814697266e-6"),
-+	INTEL_UNCORE_EVENT_DESC(ddrt_write.unit,	"MiB"),
-+	{ /* end: all zeroes */ },
-+};
-+
-+static void icx_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-+{
-+	int mem_offset = box->pmu->pmu_idx * ICX_IMC_MEM_STRIDE +
-+			 SNR_IMC_MMIO_MEM0_OFFSET;
-+
-+	__snr_uncore_mmio_init_box(box, uncore_mmio_box_ctl(box), mem_offset);
-+}
-+
-+static struct intel_uncore_ops icx_uncore_imc_freerunning_ops = {
-+	.init_box	= icx_uncore_imc_freerunning_init_box,
-+	.exit_box	= uncore_mmio_exit_box,
-+	.read_counter	= uncore_mmio_read_counter,
-+	.hw_config	= uncore_freerunning_hw_config,
-+};
-+
-+static struct intel_uncore_type icx_uncore_imc_free_running = {
-+	.name			= "imc_free_running",
-+	.num_counters		= 5,
-+	.num_boxes		= 4,
-+	.num_freerunning_types	= ICX_IMC_FREERUNNING_TYPE_MAX,
-+	.freerunning		= icx_imc_freerunning,
-+	.ops			= &icx_uncore_imc_freerunning_ops,
-+	.event_descs		= icx_uncore_imc_freerunning_events,
-+	.format_group		= &skx_uncore_iio_freerunning_format_group,
-+};
-+
-+static struct intel_uncore_type *icx_mmio_uncores[] = {
-+	&icx_uncore_imc,
-+	&icx_uncore_imc_free_running,
-+	NULL,
-+};
-+
-+void icx_uncore_mmio_init(void)
-+{
-+	uncore_mmio_uncores = icx_mmio_uncores;
-+}
-+
-+/* end of ICX uncore support */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 55e44417f66d..bc9b98a9af9a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -983,16 +983,10 @@ perf_cgroup_set_shadow_time(struct perf_event *event, u64 now)
- 	event->shadow_ctx_time = now - t->timestamp;
- }
- 
--/*
-- * Update cpuctx->cgrp so that it is set when first cgroup event is added and
-- * cleared when last cgroup event is removed.
-- */
- static inline void
--list_update_cgroup_event(struct perf_event *event,
--			 struct perf_event_context *ctx, bool add)
-+perf_cgroup_event_enable(struct perf_event *event, struct perf_event_context *ctx)
+-static void update_avg(u64 *avg, u64 sample)
+-{
+-	s64 diff = sample - *avg;
+-	*avg += diff >> 3;
+-}
+-
+ void sched_set_stop_task(int cpu, struct task_struct *stop)
  {
- 	struct perf_cpu_context *cpuctx;
--	struct list_head *cpuctx_entry;
- 
- 	if (!is_cgroup_event(event))
- 		return;
-@@ -1009,28 +1003,41 @@ list_update_cgroup_event(struct perf_event *event,
- 	 * because if the first would mismatch, the second would not try again
- 	 * and we would leave cpuctx->cgrp unset.
+ 	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
+@@ -4126,7 +4120,8 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 	 * it wants to wake up a task to maintain concurrency.
+ 	 * As this function is called inside the schedule() context,
+ 	 * we disable preemption to avoid it calling schedule() again
+-	 * in the possible wakeup of a kworker.
++	 * in the possible wakeup of a kworker and because wq_worker_sleeping()
++	 * requires it.
  	 */
--	if (add && !cpuctx->cgrp) {
-+	if (ctx->is_active && !cpuctx->cgrp) {
- 		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
+ 	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+ 		preempt_disable();
+@@ -6699,7 +6694,6 @@ void __init sched_init(void)
  
- 		if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
- 			cpuctx->cgrp = cgrp;
- 	}
- 
--	if (add && ctx->nr_cgroups++)
-+	if (ctx->nr_cgroups++)
- 		return;
--	else if (!add && --ctx->nr_cgroups)
-+
-+	list_add(&cpuctx->cgrp_cpuctx_entry,
-+			per_cpu_ptr(&cgrp_cpuctx_list, event->cpu));
-+}
-+
-+static inline void
-+perf_cgroup_event_disable(struct perf_event *event, struct perf_event_context *ctx)
-+{
-+	struct perf_cpu_context *cpuctx;
-+
-+	if (!is_cgroup_event(event))
-+		return;
-+
-+	/*
-+	 * Because cgroup events are always per-cpu events,
-+	 * @ctx == &cpuctx->ctx.
-+	 */
-+	cpuctx = container_of(ctx, struct perf_cpu_context, ctx);
-+
-+	if (--ctx->nr_cgroups)
- 		return;
- 
--	/* no cgroup running */
--	if (!add)
-+	if (ctx->is_active && cpuctx->cgrp)
- 		cpuctx->cgrp = NULL;
- 
--	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
--	if (add)
--		list_add(cpuctx_entry,
--			 per_cpu_ptr(&cgrp_cpuctx_list, event->cpu));
--	else
--		list_del(cpuctx_entry);
-+	list_del(&cpuctx->cgrp_cpuctx_entry);
- }
- 
- #else /* !CONFIG_CGROUP_PERF */
-@@ -1096,11 +1103,14 @@ static inline u64 perf_cgroup_event_time(struct perf_event *event)
- }
- 
- static inline void
--list_update_cgroup_event(struct perf_event *event,
--			 struct perf_event_context *ctx, bool add)
-+perf_cgroup_event_enable(struct perf_event *event, struct perf_event_context *ctx)
- {
- }
- 
-+static inline void
-+perf_cgroup_event_disable(struct perf_event *event, struct perf_event_context *ctx)
-+{
-+}
+ 		rq_attach_root(rq, &def_root_domain);
+ #ifdef CONFIG_NO_HZ_COMMON
+-		rq->last_load_update_tick = jiffies;
+ 		rq->last_blocked_load_update_tick = jiffies;
+ 		atomic_set(&rq->nohz_flags, 0);
  #endif
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 8331bc04aea2..a562df57a86e 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -816,10 +816,12 @@ static int __init init_sched_debug_procfs(void)
  
- /*
-@@ -1791,13 +1801,14 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
- 		add_event_to_groups(event, ctx);
- 	}
+ __initcall(init_sched_debug_procfs);
  
--	list_update_cgroup_event(event, ctx, true);
--
- 	list_add_rcu(&event->event_entry, &ctx->event_list);
- 	ctx->nr_events++;
- 	if (event->attr.inherit_stat)
- 		ctx->nr_stat++;
+-#define __P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)F)
+-#define   P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)p->F)
+-#define __PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
+-#define   PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
++#define __PS(S, F) SEQ_printf(m, "%-45s:%21Ld\n", S, (long long)(F))
++#define __P(F) __PS(#F, F)
++#define   P(F) __PS(#F, p->F)
++#define __PSN(S, F) SEQ_printf(m, "%-45s:%14Ld.%06ld\n", S, SPLIT_NS((long long)(F)))
++#define __PN(F) __PSN(#F, F)
++#define   PN(F) __PSN(#F, p->F)
  
-+	if (event->state > PERF_EVENT_STATE_OFF)
-+		perf_cgroup_event_enable(event, ctx);
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+@@ -868,18 +870,9 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 	SEQ_printf(m,
+ 		"---------------------------------------------------------"
+ 		"----------\n");
+-#define __P(F) \
+-	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)F)
+-#define P(F) \
+-	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)p->F)
+-#define P_SCHEDSTAT(F) \
+-	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)schedstat_val(p->F))
+-#define __PN(F) \
+-	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
+-#define PN(F) \
+-	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
+-#define PN_SCHEDSTAT(F) \
+-	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)schedstat_val(p->F)))
 +
- 	ctx->generation++;
- }
++#define P_SCHEDSTAT(F)  __PS(#F, schedstat_val(p->F))
++#define PN_SCHEDSTAT(F) __PSN(#F, schedstat_val(p->F))
  
-@@ -1976,8 +1987,6 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
- 
- 	event->attach_state &= ~PERF_ATTACH_CONTEXT;
- 
--	list_update_cgroup_event(event, ctx, false);
--
- 	ctx->nr_events--;
- 	if (event->attr.inherit_stat)
- 		ctx->nr_stat--;
-@@ -1994,8 +2003,10 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
- 	 * of error state is by explicit re-enabling
- 	 * of the event
- 	 */
--	if (event->state > PERF_EVENT_STATE_OFF)
-+	if (event->state > PERF_EVENT_STATE_OFF) {
-+		perf_cgroup_event_disable(event, ctx);
- 		perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-+	}
- 
- 	ctx->generation++;
- }
-@@ -2226,6 +2237,7 @@ event_sched_out(struct perf_event *event,
- 
- 	if (READ_ONCE(event->pending_disable) >= 0) {
- 		WRITE_ONCE(event->pending_disable, -1);
-+		perf_cgroup_event_disable(event, ctx);
- 		state = PERF_EVENT_STATE_OFF;
+ 	PN(se.exec_start);
+ 	PN(se.vruntime);
+@@ -939,10 +932,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
  	}
- 	perf_event_set_state(event, state);
-@@ -2363,6 +2375,7 @@ static void __perf_event_disable(struct perf_event *event,
- 		event_sched_out(event, cpuctx, ctx);
  
- 	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-+	perf_cgroup_event_disable(event, ctx);
+ 	__P(nr_switches);
+-	SEQ_printf(m, "%-45s:%21Ld\n",
+-		   "nr_voluntary_switches", (long long)p->nvcsw);
+-	SEQ_printf(m, "%-45s:%21Ld\n",
+-		   "nr_involuntary_switches", (long long)p->nivcsw);
++	__PS("nr_voluntary_switches", p->nvcsw);
++	__PS("nr_involuntary_switches", p->nivcsw);
+ 
+ 	P(se.load.weight);
+ #ifdef CONFIG_SMP
+@@ -955,6 +946,12 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 	P(se.avg.last_update_time);
+ 	P(se.avg.util_est.ewma);
+ 	P(se.avg.util_est.enqueued);
++#endif
++#ifdef CONFIG_UCLAMP_TASK
++	__PS("uclamp.min", p->uclamp[UCLAMP_MIN].value);
++	__PS("uclamp.max", p->uclamp[UCLAMP_MAX].value);
++	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
++	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
+ #endif
+ 	P(policy);
+ 	P(prio);
+@@ -963,11 +960,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 		P(dl.deadline);
+ 	}
+ #undef PN_SCHEDSTAT
+-#undef PN
+-#undef __PN
+ #undef P_SCHEDSTAT
+-#undef P
+-#undef __P
+ 
+ 	{
+ 		unsigned int this_cpu = raw_smp_processor_id();
+@@ -975,8 +968,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 
+ 		t0 = cpu_clock(this_cpu);
+ 		t1 = cpu_clock(this_cpu);
+-		SEQ_printf(m, "%-45s:%21Ld\n",
+-			   "clock-delta", (long long)(t1-t0));
++		__PS("clock-delta", t1-t0);
+ 	}
+ 
+ 	sched_show_numa(p, m);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1ea3dddafe69..02f323b85b6d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4836,11 +4836,10 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 		resched_curr(rq);
+ }
+ 
+-static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
++static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
+ {
+ 	struct cfs_rq *cfs_rq;
+-	u64 runtime;
+-	u64 starting_runtime = remaining;
++	u64 runtime, remaining = 1;
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
+@@ -4855,10 +4854,13 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+ 		/* By the above check, this should never be true */
+ 		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
+ 
++		raw_spin_lock(&cfs_b->lock);
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+-		if (runtime > remaining)
+-			runtime = remaining;
+-		remaining -= runtime;
++		if (runtime > cfs_b->runtime)
++			runtime = cfs_b->runtime;
++		cfs_b->runtime -= runtime;
++		remaining = cfs_b->runtime;
++		raw_spin_unlock(&cfs_b->lock);
+ 
+ 		cfs_rq->runtime_remaining += runtime;
+ 
+@@ -4873,8 +4875,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+ 			break;
+ 	}
+ 	rcu_read_unlock();
+-
+-	return starting_runtime - remaining;
  }
  
  /*
-@@ -2746,7 +2759,7 @@ static int  __perf_install_in_context(void *info)
- 	}
- 
- #ifdef CONFIG_CGROUP_PERF
--	if (is_cgroup_event(event)) {
-+	if (event->state > PERF_EVENT_STATE_OFF && is_cgroup_event(event)) {
- 		/*
- 		 * If the current cgroup doesn't match the event's
- 		 * cgroup, we should not try to schedule it.
-@@ -2906,6 +2919,7 @@ static void __perf_event_enable(struct perf_event *event,
- 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
- 
- 	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
-+	perf_cgroup_event_enable(event, ctx);
- 
- 	if (!ctx->is_active)
- 		return;
-@@ -3508,7 +3522,8 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
- 
- static bool perf_less_group_idx(const void *l, const void *r)
+@@ -4885,7 +4885,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+  */
+ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, unsigned long flags)
  {
--	const struct perf_event *le = l, *re = r;
-+	const struct perf_event *le = *(const struct perf_event **)l;
-+	const struct perf_event *re = *(const struct perf_event **)r;
+-	u64 runtime;
+ 	int throttled;
  
- 	return le->group_index < re->group_index;
- }
-@@ -3616,8 +3631,10 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 	/* no need to continue the timer with no bandwidth constraint */
+@@ -4914,24 +4913,17 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
+ 	cfs_b->nr_throttled += overrun;
+ 
+ 	/*
+-	 * This check is repeated as we are holding onto the new bandwidth while
+-	 * we unthrottle. This can potentially race with an unthrottled group
+-	 * trying to acquire new bandwidth from the global pool. This can result
+-	 * in us over-using our runtime if it is all used during this loop, but
+-	 * only by limited amounts in that extreme case.
++	 * This check is repeated as we release cfs_b->lock while we unthrottle.
+ 	 */
+ 	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
+-		runtime = cfs_b->runtime;
+ 		cfs_b->distribute_running = 1;
+ 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ 		/* we can't nest cfs_b->lock while distributing bandwidth */
+-		runtime = distribute_cfs_runtime(cfs_b, runtime);
++		distribute_cfs_runtime(cfs_b);
+ 		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+ 
+ 		cfs_b->distribute_running = 0;
+ 		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+-
+-		lsub_positive(&cfs_b->runtime, runtime);
  	}
  
- 	if (event->state == PERF_EVENT_STATE_INACTIVE) {
--		if (event->attr.pinned)
-+		if (event->attr.pinned) {
-+			perf_cgroup_event_disable(event, ctx);
- 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-+		}
+ 	/*
+@@ -5065,10 +5057,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 	if (!runtime)
+ 		return;
  
- 		*can_add_hw = 0;
- 		ctx->rotate_necessary = 1;
-@@ -6917,9 +6934,12 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe __get_user_pages_fast first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if ((current->mm != NULL) &&
--		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
--			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+		if (current->mm != NULL) {
-+			pagefault_disable();
-+			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
-+				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+			pagefault_enable();
-+		}
+-	runtime = distribute_cfs_runtime(cfs_b, runtime);
++	distribute_cfs_runtime(cfs_b);
  
- 		if (p)
- 			put_page(p);
+ 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+-	lsub_positive(&cfs_b->runtime, runtime);
+ 	cfs_b->distribute_running = 0;
+ 	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ }
+@@ -6080,8 +6071,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+ 	struct sched_domain *this_sd;
+ 	u64 avg_cost, avg_idle;
+-	u64 time, cost;
+-	s64 delta;
++	u64 time;
+ 	int this = smp_processor_id();
+ 	int cpu, nr = INT_MAX;
+ 
+@@ -6119,9 +6109,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 	}
+ 
+ 	time = cpu_clock(this) - time;
+-	cost = this_sd->avg_scan_cost;
+-	delta = (s64)(time - cost) / 8;
+-	this_sd->avg_scan_cost += delta;
++	update_avg(&this_sd->avg_scan_cost, time);
+ 
+ 	return cpu;
+ }
+@@ -9048,6 +9036,14 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 
+ 		sds->avg_load = (sds->total_load * SCHED_CAPACITY_SCALE) /
+ 				sds->total_capacity;
++		/*
++		 * If the local group is more loaded than the selected
++		 * busiest group don't try to pull any tasks.
++		 */
++		if (local->avg_load >= busiest->avg_load) {
++			env->imbalance = 0;
++			return;
++		}
+ 	}
+ 
+ 	/*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 0f616bf7bce3..db3a57675ccf 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -195,6 +195,12 @@ static inline int task_has_dl_policy(struct task_struct *p)
+ 
+ #define cap_scale(v, s) ((v)*(s) >> SCHED_CAPACITY_SHIFT)
+ 
++static inline void update_avg(u64 *avg, u64 sample)
++{
++	s64 diff = sample - *avg;
++	*avg += diff / 8;
++}
++
+ /*
+  * !! For sched_setattr_nocheck() (kernel) only !!
+  *
+@@ -882,7 +888,6 @@ struct rq {
+ #endif
+ #ifdef CONFIG_NO_HZ_COMMON
+ #ifdef CONFIG_SMP
+-	unsigned long		last_load_update_tick;
+ 	unsigned long		last_blocked_load_update_tick;
+ 	unsigned int		has_blocked_load;
+ #endif /* CONFIG_SMP */
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 3816a18c251e..891ccad5f271 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -858,7 +858,8 @@ void wq_worker_running(struct task_struct *task)
+  * @task: task going to sleep
+  *
+  * This function is called from schedule() when a busy worker is
+- * going to sleep.
++ * going to sleep. Preemption needs to be disabled to protect ->sleeping
++ * assignment.
+  */
+ void wq_worker_sleeping(struct task_struct *task)
+ {
+@@ -875,7 +876,8 @@ void wq_worker_sleeping(struct task_struct *task)
+ 
+ 	pool = worker->pool;
+ 
+-	if (WARN_ON_ONCE(worker->sleeping))
++	/* Return if preempted before wq_worker_running() was reached */
++	if (worker->sleeping)
+ 		return;
+ 
+ 	worker->sleeping = 1;
 
