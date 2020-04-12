@@ -2,180 +2,176 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2AAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA0FC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DA320753
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3400B2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n2Yx0bs5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QdStt1rP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgDLH2q (ORCPT
+        id S1726664AbgDLHly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 03:28:46 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33979 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgDLH2q (ORCPT
+        Sun, 12 Apr 2020 03:41:54 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:45377 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgDLHlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 03:28:46 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x23so4287263lfq.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 00:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/ZcAHoOOBMZ8adBm6iXUvbbzB7r+AYB7tVVj7nCRf8U=;
-        b=n2Yx0bs5Qm4OyyaQCGplrG5Rf7KHCudd5jxrTagKJWgWJkxHf7rwqJa24yCIWnYgCa
-         28Q2i2LSr24oFyJls3tkA/sPyH7Y6KlbC+ARBCI4vqNrwRyIcQbwvMqKS8eKPMaxgBZw
-         Q2QJkknRVnb0fwza97YVu1Zsk01wmHm0l3jHzhHNEkN+vT4kFyqSGaqI0F+kEDmyGhvk
-         9xE+x1gjQcTSZS4jcvSjEnaVJaW1rnTDC/txnUAEjZlnsI2hoBad/w6hn67P1nj0dJK9
-         WIinlTkIc2vkAlCPDCuujRok7uKQz6WSIXyjq+b52IGMQ6up+0GIpXSX3S97jirGdnQJ
-         HxKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/ZcAHoOOBMZ8adBm6iXUvbbzB7r+AYB7tVVj7nCRf8U=;
-        b=ShuqoEbJXUVYXY8V9YkoPhd8f9XCzvaib5bwa6+OTupw0dNjWQ/iaYa3KA1Tl3ju+0
-         IvedWNsFQkN+afqYYeTPB4hadQddWQ1G8MMJg1F7nZL7EEktBT/WYtGW67y2L4lc5KKv
-         cPTQY1PxzrffoEJCByW7bumvNI457BGQKbkhdS3X9K7WoKCagFX1b/qZuwV0ULjAB4N8
-         MPCGZu2bn9HIgaueUXx8j/SYJis1KQbVNUI9Vua8o558VAP1Z5Zz3thzefsw2NACE0In
-         qwzGcY8geKpnmz3K0QlMkCQWQovlASxil3/thRy7EYbMx/ilVKyF1MtaMvUfILelm+zD
-         Muew==
-X-Gm-Message-State: AGi0PuYMDP8SnBpzmrBDpwp8ofWDJEq4cb++CIj5QaCM2YZXNQQwmNIO
-        +QgysCPRKaupkleWXf+rQHVrBf1h0FHmsjN8jsChnA==
-X-Google-Smtp-Source: APiQypKVC5Y4JyQjHUhH3pWsWQHnCXlDMNJWdPj3/t+7BXPCOL4WbqeAqw9GWGVuurTeQP++dLvfxC1icLkPxLIj+WI=
-X-Received: by 2002:a19:c64b:: with SMTP id w72mr7126295lff.82.1586676524043;
- Sun, 12 Apr 2020 00:28:44 -0700 (PDT)
+        Sun, 12 Apr 2020 03:41:53 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200412074151epoutp01a2bf3b4cd4dd180fc22d8e03f655dfb9~FApu6wieU0396503965epoutp01V
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 07:41:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200412074151epoutp01a2bf3b4cd4dd180fc22d8e03f655dfb9~FApu6wieU0396503965epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586677311;
+        bh=N5C9PGRvGrEXxYHl+c9/OzalapqkBFidqKsfpVmYo0g=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=QdStt1rPaK0BKs6TlsWiZQ82+ACBOMFtKimFOeIckeqcDPUI9Kx0awlW53mMfqCR4
+         B01czJ2uEu5cXMyiM0m+nZaItEwrdsMkYpC0+GN85UluNwg8Sic+RGzLDgC/y933KB
+         ymsuR+Z9/e6RsCuhQWSbzQSJ41JJ8B5lr90h+jsM=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200412074150epcas5p45cb87935223642ec4163598b32dfe43c~FApuTuPtv1693016930epcas5p4v;
+        Sun, 12 Apr 2020 07:41:50 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        79.91.04736.E36C29E5; Sun, 12 Apr 2020 16:41:50 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200412074149epcas5p1084ed98b4e0651cd4f671bbe61147073~FApsjEF5P1951719517epcas5p1o;
+        Sun, 12 Apr 2020 07:41:49 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200412074148epsmtrp1805fc83c051cec88b430e4c957b42315~FApsfo4ob1966119661epsmtrp1s;
+        Sun, 12 Apr 2020 07:41:48 +0000 (GMT)
+X-AuditID: b6c32a4b-ae3ff70000001280-9a-5e92c63eec37
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6B.3E.04024.C36C29E5; Sun, 12 Apr 2020 16:41:48 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200412074146epsmtip1a1a2b0e09a826752211e1325f88bf1b9~FApqeREfW0407304073epsmtip1E;
+        Sun, 12 Apr 2020 07:41:46 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Cc:     krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v5 0/5] exynos-ufs: Add support for UFS HCI
+Date:   Sun, 12 Apr 2020 13:01:54 +0530
+Message-Id: <20200412073159.37747-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200411115504.124035693@linuxfoundation.org>
-In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sun, 12 Apr 2020 12:58:32 +0530
-Message-ID: <CA+G9fYtKpO0OabwO3ss1KJYyKRbsnaWAfXKALyWu53So+=tUDQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/41] 5.4.32-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGec9tR/PEaSq9ahgMJFTSwowDmYkUnFDIvohkXkYeVObm2Lwj
+        Zmne5t0P5QUTyTQ1tDnNptVp3r84yFvTQstFWaGkZV7K0p1Jfvv9n//z8PxfeElUrMOdyXhF
+        EqdSSBMkhC3WM+DuftJ/uDLylGbGl1mo7yGYpc0pglnteIgz9wfHccZo7BQxJt0QxmgXp3Fm
+        Ql9HMPeMLxBGM9NLMM0jOwjzt79XxDR1m0AAxU6UliCstrWQYLse3GRzx15i7PePsxhbqmsF
+        7JrWlc3nNUgIec3WL4ZLiE/hVN7+0bZxmrVmVFnmmMbP9+DZoJEuAjYkpM/At9nP8CJgS4rp
+        PgDXs7dEwrAKoGGnChWGdQD7f8xi+5Ha5Tqr6zmAX/s0VlcuAucrTMiei6A94bu7Ogs70EFw
+        hTdaSlC6HoGNH4otC3v6HMwZbxftMUa7wYUZs4Up2g+OlM4Doe44bOvkUUE/AseqzZYz0F09
+        p7vW0gzpNQI+qrhFCIGLsHBj1cr28MuITiSwM1wqy9tlcpdlsFjvI8iZsKl+2Pq0C5CfrMP2
+        LCjtDjv03kLVYViybUaEJAUL8sSC2w3mLE9Zky6wQqPBBQsL56osFjEdAVc6TEg5cK05cH/N
+        gftr/nc1ALQVOHFKtTyWU/sqfRRcqpdaKlcnK2K9biTKtcDylzyCeoF2PNgAaBJI7Ch+uiJS
+        jEtT1OlyA4AkKnGgzKm7EhUjTc/gVIlRquQETm0ALiQmOUpV4lPXxXSsNImTcZySU+1vEdLG
+        ORscqq46FrCl5Hm//EDfridvapx2OmaMoU/vpPQwl2Tn+ZXFNHm4/fR7WUuCgjLU3978nfor
+        enhDMRDW4BueHBg2Ohf1qpXVf/vp1P36T8jnTM8s086VT3bB1GDi5Yzy0bYssSMd4Tdklmw/
+        btFONqVMnGgvV1wrkMY3XI0LPbvhKMHUcdLTHqhKLf0HHisu60cDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPLMWRmVeSWpSXmKPExsWy7bCSnK7NsUlxBvv3G1s8mLeNzeLlz6ts
+        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
+        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
+        nMyy1CJ9uwSujO7Py5kL+kUrDtzfxtrAuEigi5GTQ0LARGL2uznsXYxcHEICuxklLp86zASR
+        kJa4vnECO4QtLLHy33OooiYmiZbnH8ESbALaEnenbwFrEBHwl/jz/RhYEbPAKiaJzt6zjCAJ
+        YQFrieZza8AaWARUJR5cfwJm8wrYSBzvu88IsUFeYvWGA8wQcUGJkzOfsHQxcgANUpdYP08I
+        JMwMVNK8dTbzBEb+WUiqZiFUzUJStYCReRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4m
+        RnC0aGnuYLy8JP4QowAHoxIP74FrE+OEWBPLiitzDzFKcDArifA+KQcK8aYkVlalFuXHF5Xm
+        pBYfYpTmYFES532adyxSSCA9sSQ1OzW1ILUIJsvEwSnVwKibKW9wqN21KXOGTfWuHpPj/BNz
+        PN3UVkYW+NbGmO3hknPacKJ229siG8vSs3d8mhJUwtkv9HtuFjnx9PLUT08n7nU/ZdaQpO26
+        MEP0u9MZ7UdpHFNcGVveNc+d9kAsOX5ZxYc1JkFy2U+X5rn8nrJ8oZdF4LGT0qatPil1YjEM
+        65Yw7/VYocRSnJFoqMVcVJwIANUTaqGSAgAA
+X-CMS-MailID: 20200412074149epcas5p1084ed98b4e0651cd4f671bbe61147073
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200412074149epcas5p1084ed98b4e0651cd4f671bbe61147073
+References: <CGME20200412074149epcas5p1084ed98b4e0651cd4f671bbe61147073@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Apr 2020 at 17:48, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.32 release.
-> There are 41 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.32-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+This patch-set introduces UFS (Universal Flash Storage) host controller support
+for Samsung family SoC. Mostly, it consists of UFS PHY and host specific driver.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.32-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: f163418797b9310a9eb4a73c3d0214a7cb415a12
-git describe: v5.4.31-42-gf163418797b9
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.31-42-gf163418797b9
+- Changes since v4:
+* Addressed review comments from Avir and Rob 
+* Minor improvment on the ufs phy and ufshc drivers
+* Added Tested-by from Pawel
+* Change UFS binding to DT schema format
 
 
-No regressions (compared to build v5.4.30-54-g6f04e8ca5355)
+- Changes since v3:
+* Addressed Kishon's and Avir's review comments
+* fixed make dt_binding_check error as pointed by Rob 
 
-No fixes (compared to build v5.4.30-54-g6f04e8ca5355)
+- Changes since v2:
+* fixed build warning by kbuild test robot 
+* Added Reported-by tags
 
-Ran 27945 total tests in the following environments and test suites.
+- Changes since v1:
+* fixed make dt_binding_check error as pointed by Rob
+* Addressed Krzysztof's review comments
+* Added Reviewed-by tags
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+ 
+patch 1/5: define devicetree bindings for UFS PHY
+patch 2/5: Adds UFS PHY driver
+patch 3/5: define devicetree bindings for UFS HCI 
+patch 4/5: Adds Samsung UFS HCI driver
+patch 5/5: Enabled UFS on exynos7 platform
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* perf
-* v4l2-compliance
-* kselftest
-* ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* kvm-unit-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-none
+Note: This series is based on Linux-5.6 (commit: 7111951b8d49)
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Alim Akhtar (5):
+  dt-bindings: phy: Document Samsung UFS PHY bindings
+  phy: samsung-ufs: add UFS PHY driver for samsung SoC
+  dt-bindings: ufs: Add DT binding documentation for ufs
+  scsi: ufs-exynos: add UFS host support for Exynos SoCs
+  arm64: dts: Add node for ufs exynos7
+
+ .../bindings/phy/samsung,ufs-phy.yaml         |   74 +
+ .../bindings/ufs/samsung,exynos-ufs.yaml      |   93 ++
+ .../boot/dts/exynos/exynos7-espresso.dts      |    4 +
+ arch/arm64/boot/dts/exynos/exynos7.dtsi       |   44 +-
+ drivers/phy/samsung/Kconfig                   |    9 +
+ drivers/phy/samsung/Makefile                  |    1 +
+ drivers/phy/samsung/phy-exynos7-ufs.h         |   85 ++
+ drivers/phy/samsung/phy-samsung-ufs.c         |  369 +++++
+ drivers/phy/samsung/phy-samsung-ufs.h         |  142 ++
+ drivers/scsi/ufs/Kconfig                      |   12 +
+ drivers/scsi/ufs/Makefile                     |    1 +
+ drivers/scsi/ufs/ufs-exynos.c                 | 1288 +++++++++++++++++
+ drivers/scsi/ufs/ufs-exynos.h                 |  284 ++++
+ drivers/scsi/ufs/unipro.h                     |   36 +
+ 14 files changed, 2440 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+ create mode 100644 drivers/phy/samsung/phy-exynos7-ufs.h
+ create mode 100644 drivers/phy/samsung/phy-samsung-ufs.c
+ create mode 100644 drivers/phy/samsung/phy-samsung-ufs.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+
+
+base-commit: 7111951b8d4973bda27ff663f2cf18b663d15b48
+-- 
+2.17.1
+
