@@ -2,203 +2,266 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CC1C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B9FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8E8206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:05:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="a/Lrq3KZ"
+	by mail.kernel.org (Postfix) with ESMTP id D0FD3206B8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 05:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586668442;
+	bh=o15yl6i3Tl6MjNG1fMvCTZ6LsBdH7GT+eCxjX/2NlTs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SvO+v+/H8vlK0qvt/VCebOEJFTVnF3pamEAIfMwY9O8nE/4qiakAA7cbe3lN7tCMe
+	 BExplTjXo1cskHCG4zX86RoviNCUpvs9Dv9i4i9IvelaLgqUpq7q6Sn2/vgmczi2PK
+	 AqdrhxKB5oyDPAQCaNu1x3Xt58VeWOsfgiLVmEis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgDLFE7 (ORCPT
+        id S1726086AbgDLFOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 01:04:59 -0400
-Received: from mout.gmx.net ([212.227.15.15]:41501 "EHLO mout.gmx.net"
+        Sun, 12 Apr 2020 01:14:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgDLFE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 01:04:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586667876;
-        bh=rB3tUbQ0M2gM3foxNXYYIEyOnjZlq9lSpj55UJ6yr4g=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=a/Lrq3KZlmOYFSzy95X5l9IHgbGGRimI5cIJcyXFKvhoFKD/XG4d32E28GEB1JfKA
-         z1d3rImFLpm7qarfGPbdJUwbcxqNPOtAxknim1sE20nlatFz44hh+WvsFw2fBUe6pM
-         KuI14TG11uEOoC6YuZLYRN/LHxY2q+AC208nMgnM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MxUs7-1j3vcA44zZ-00xrVQ; Sun, 12
- Apr 2020 07:04:36 +0200
-Subject: Re: [PATCH] btrfs: Fix backref.c selftest compilation warning
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200411154915.9408-1-tangbin@cmss.chinamobile.com>
- <ea85377e-4648-c174-2827-53173587777c@gmx.com>
- <4b1e57b3-ca0d-f3e0-f4c4-72cdfe943d7a@cmss.chinamobile.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
- PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
- 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
- D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
- efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
- ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
- BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
- 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
- 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
- EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
- 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
- ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
- oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
- fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
- 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
- ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
- oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
-Message-ID: <b1298579-8b24-344d-00cb-b922d6e4a398@gmx.com>
-Date:   Sun, 12 Apr 2020 13:04:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725812AbgDLFOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 01:14:01 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50F4B206E9
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 05:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586668440;
+        bh=o15yl6i3Tl6MjNG1fMvCTZ6LsBdH7GT+eCxjX/2NlTs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HFvDe0oW/RQ9oBEzXDLIjZI66tFIcAhZ+LNwoC1HT3WifMwemhoqOb04u+63W21j3
+         G9kWE0eKfQYOZFA1nArl5IV+EO1XGinJPKL0fYVjmKjnY9QAfS3zFm21s7I6X2xMVC
+         93ZD0xzr+Qk0iVeyCVy3l01k/HeZliB9X5eNPvv4=
+Received: by mail-lj1-f182.google.com with SMTP id q19so5677698ljp.9
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 22:14:00 -0700 (PDT)
+X-Gm-Message-State: AGi0Puboq2tNmtb0b4vl9hlcmSTkhgTnFUc0GdvLO/lmPIXGhSL5Qblv
+        yksvW9rbTpbL5aMIVT2SNxMORfhuZEvidu/Fdt4=
+X-Google-Smtp-Source: APiQypIvKIuQln1REJ+wnYOKl40MquF0FqzdfLMcawVz+7qg8LKopErPAReWxCpNoQEhbFRpzSEQ3l0Xailj64Ujqio=
+X-Received: by 2002:a2e:3812:: with SMTP id f18mr7437940lja.67.1586668438308;
+ Sat, 11 Apr 2020 22:13:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4b1e57b3-ca0d-f3e0-f4c4-72cdfe943d7a@cmss.chinamobile.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="MUDCRRcwo0eNNbk73S3sYUzPZTRiylwO1"
-X-Provags-ID: V03:K1:l3mGqGvc98XzmVBfizvzQcXu6C/pkbGaaZchkPPy4C2eRBFqDSx
- nEu3EvgafTihJT/OXKni6XC2M4DCZLVGG2ikYI95qc37U7KkiViKyz8+qKLU9s4bb6060cD
- zzbgvcVaAAX1+jORU+Dm3LwTsRofWMwCeSH9xd2gVBx+MNqap/Y9/RGSdHJXP1LyNx9eoVk
- elraSOagUeKcaVEG6fbhA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FydJrNllGfA=:fT9DGcYdsBVQW00wCpviYe
- a/kxF5mewOfh7k76LJqqytc30HGuPCBhAbjWnZ1XhJXaEYBKSOxtr2dHgUE/vDyShBzKIa5+Q
- Ma4nC6qEvCHe/NhKb1KprUxQ6eACUErTdOD0a165mxwglnpnhf1Rit/rC1tLgavzBJ8R4oeX8
- 2nk1ekPuAuSK/r2J31jVmRoF9fNVkdQGf6D0ZcqSKEpIdEIje7uQcx2I2z4Bss2AlarrFBiFz
- uqab/uz+LqcSqjtWk7YUWLJUvPHSiVX1j2oq4K2GSN9YoN50hjn2Jk1eoZLmHP/Spb7wwpvKh
- lnEKQk5bg4rWKQ5epTbssVgxA3z6l3q2nF2OinFUv4bhpH5eFmGY9VOl7sDrEga9zY11qnTDA
- rkWo9nHbTou99DrtLBF0CvvB7cvfFBlVhoP5bkRM1HL0VvyHfQtqLOG1UwDR7wtlVtLNkXK3k
- rvyykE84NtVunBd8N3KogMWx7mpSt18wLkJKwCK9BOGz6GG51TA4K6wxe0hKMRRwjA4aAzxyc
- SvpasTyCjOqEDF1/jI1fxztIZuCHKRv8BaE5ThXK30s9ocUeXGtI295Z6ZEXjRAc6Qio4KuqA
- Ju1G1jyN+Ydd6LfDYXVCZuQDnHkxrEGgVJoSX1SVDNv50RHxjJzsgIXGqpHMaCjyZcAOo/OPj
- WY+DFyqgpSGZAEBBXipDgpT2G4OK/UXOscGAKpeQ69i1KtzfmoLiIIsG8kkAD9kcv9QC5rMcE
- VIwEZFEgciuZAqmFVZjSeggSNotpHc4CE46vj8c2qh0XP2U55ByoNFyntvE7TdmiyvVztePg0
- 15AQ+XyBRbNci3fCv++OZpnqfHQvPWDYzgTAd0smgfbY5YmoaA/oQYq9f5pkxLXmGXyAo1jfr
- fjzwPs/ZpK2HZYAo8V4uGzvBsVju6qRNxo+g7xEG7tn0dL49awBns0PP0BEtjCvKIVxpcmq9K
- afpProc07wuTZSM2v1GMS+G1ydxMou7Up9jVhggVXiYXzfx3eMV44wyStKvnBapFVBedQTHGW
- 2XUO6NTcV9ErkbMrcSqEBQ0DWYMj9dlwul3UkVx8Djh8+cRDAi/wEjcVNOQfJnQo90ush7gkU
- 2xrR//mlnH+yDS4aG9YgJrf+/bMdPRWZx2QF0Qd0yOhnvqah7t0DxOg17KETfMnOMxXaWYz08
- AG1dBu6sZoR8S9hH4ltz1yaBkeEHSphimAf6E+Mkp1pTysB5nhcglyQkHjvP8DQGE1W3K9fzu
- zFXYRB2UBUo2bXBLi
+References: <20200410032634.57511-1-zong.li@sifive.com> <CAJF2gTSAe_=0Eg12O-Sjc6897EOqwZOQFPc5utKWQ32gn6BFEA@mail.gmail.com>
+ <CANXhq0rPxoKfwL302ehihr=TR64mN1_T8qBH9vbDbrpdfzR1tg@mail.gmail.com>
+In-Reply-To: <CANXhq0rPxoKfwL302ehihr=TR64mN1_T8qBH9vbDbrpdfzR1tg@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sun, 12 Apr 2020 13:13:46 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQzC+cO+7Wjh5ZHJMocJRZJLvMpbUkjV7o9BmnX9pEN_g@mail.gmail.com>
+Message-ID: <CAJF2gTQzC+cO+7Wjh5ZHJMocJRZJLvMpbUkjV7o9BmnX9pEN_g@mail.gmail.com>
+Subject: Re: [PATCH] riscv: remove the assert of lock for cpu_running
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---MUDCRRcwo0eNNbk73S3sYUzPZTRiylwO1
-Content-Type: multipart/mixed; boundary="dryZrHRxVOTPI2NxyibNxzHfHavl919QM"
+Ok, I'll continue riscv locdep work and include your patch.
 
---dryZrHRxVOTPI2NxyibNxzHfHavl919QM
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On Sat, Apr 11, 2020 at 12:17 PM Zong Li <zong.li@sifive.com> wrote:
+>
+> On Sat, Apr 11, 2020 at 11:44 AM Guo Ren <guoren@kernel.org> wrote:
+> >
+> > Acked-by: Guo Ren <guoren@kernel.org>
+> >
+> > Haha, are you working on lockdep ? Me too, here is my patch, not finished.
+>
+> No, I just went to add a lock assert at somewhere, so enabled lockdep
+> to test it on incomplete lockdep support, then I found this error. If
+> you are working on lockdep, it might be better to fix this problem on
+> your side instead of here.
+>
+> >
+> > It's still warning at begin, I've no time to debug, and it's similar to csky's:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/csky?id=000591f1ca3312d9a29e15a9e3fe5c4171f75586
+> >
+> > If you are working on LOCKDEP, I'll wait your patch :)
+> >
+> > commit 096d7a4b26d21aa7c71c86f200241144569e697a (riscv-lockdep)
+> > Author: Guo Ren <guoren@linux.alibaba.com>
+> > Date:   Fri Apr 10 16:38:37 2020 +0800
+> >
+> >     riscv: Enable LOCKDEP_SUPPORT
+> >
+> >     Lockdep is needed by proving the spinlocks and rwlocks.
+> >
+> >     Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> >
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index 8672e77a5b7a..bfe76c76a107 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -163,6 +163,9 @@ config PGTABLE_LEVELS
+> >         default 3 if 64BIT
+> >         default 2
+> >
+> > +config LOCKDEP_SUPPORT
+> > +       def_bool y
+> > +
+> >  source "arch/riscv/Kconfig.socs"
+> >
+> >  menu "Platform type"
+> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> > index 208702d8c18e..41588ee74cb2 100644
+> > --- a/arch/riscv/kernel/entry.S
+> > +++ b/arch/riscv/kernel/entry.S
+> > @@ -175,6 +175,24 @@ ENTRY(handle_exception)
+> >  .option pop
+> >
+> >         la ra, ret_from_exception
+> > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > +       call trace_hardirqs_off
+> > +       la ra, ret_from_exception
+> > +       REG_L s0, PT_SP(sp)
+> > +       REG_L s1, PT_STATUS(sp)
+> > +       REG_L s2, PT_EPC(sp)
+> > +       REG_L s3, PT_BADADDR(sp)
+> > +       REG_L s4, PT_CAUSE(sp)
+> > +       REG_L s5, PT_TP(sp)
+> > +       REG_L a0, PT_A0(sp)
+> > +       REG_L a1, PT_A1(sp)
+> > +       REG_L a2, PT_A2(sp)
+> > +       REG_L a3, PT_A3(sp)
+> > +       REG_L a4, PT_A4(sp)
+> > +       REG_L a5, PT_A5(sp)
+> > +       REG_L a6, PT_A6(sp)
+> > +       REG_L a7, PT_A7(sp)
+> > +#endif
+> >         /*
+> >          * MSB of cause differentiates between
+> >          * interrupts and exceptions
+> > @@ -191,6 +209,24 @@ ENTRY(handle_exception)
+> >          */
+> >         andi t0, s1, SR_PIE
+> >         beqz t0, 1f
+> > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > +       call trace_hardirqs_on
+> > +       la ra, ret_from_exception
+> > +       REG_L s0, PT_SP(sp)
+> > +       REG_L s1, PT_STATUS(sp)
+> > +       REG_L s2, PT_EPC(sp)
+> > +       REG_L s3, PT_BADADDR(sp)
+> > +       REG_L s4, PT_CAUSE(sp)
+> > +       REG_L s5, PT_TP(sp)
+> > +       REG_L a0, PT_A0(sp)
+> > +       REG_L a1, PT_A1(sp)
+> > +       REG_L a2, PT_A2(sp)
+> > +       REG_L a3, PT_A3(sp)
+> > +       REG_L a4, PT_A4(sp)
+> > +       REG_L a5, PT_A5(sp)
+> > +       REG_L a6, PT_A6(sp)
+> > +       REG_L a7, PT_A7(sp)
+> > +#endif
+> >         csrs CSR_STATUS, SR_IE
+> >
+> >  1:
+> > @@ -291,6 +327,31 @@ resume_userspace:
+> >         csrw CSR_SCRATCH, tp
+> >
+> >  restore_all:
+> > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > +       REG_L s1, PT_STATUS(sp)
+> > +       andi t0, s1, SR_PIE
+> > +       beqz t0, 1f
+> > +       call trace_hardirqs_on
+> > +       j 2f
+> > +1:
+> > +       call trace_hardirqs_off
+> > +2:
+> > +       la ra, ret_from_exception
+> > +       REG_L s0, PT_SP(sp)
+> > +       REG_L s1, PT_STATUS(sp)
+> > +       REG_L s2, PT_EPC(sp)
+> > +       REG_L s3, PT_BADADDR(sp)
+> > +       REG_L s4, PT_CAUSE(sp)
+> > +       REG_L s5, PT_TP(sp)
+> > +       REG_L a0, PT_A0(sp)
+> > +       REG_L a1, PT_A1(sp)
+> > +       REG_L a2, PT_A2(sp)
+> > +       REG_L a3, PT_A3(sp)
+> > +       REG_L a4, PT_A4(sp)
+> > +       REG_L a5, PT_A5(sp)
+> > +       REG_L a6, PT_A6(sp)
+> > +       REG_L a7, PT_A7(sp)
+> > +#endif
+> >         RESTORE_ALL
+> >  #ifdef CONFIG_RISCV_M_MODE
+> >         mret
+> > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> > index 8bc01f0ca73b..54fd70eb50bd 100644
+> > --- a/arch/riscv/kernel/smpboot.c
+> > +++ b/arch/riscv/kernel/smpboot.c
+> > @@ -115,7 +115,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+> >                   task_stack_page(tidle) + THREAD_SIZE);
+> >         WRITE_ONCE(__cpu_up_task_pointer[hartid], tidle);
+> >
+> > -       lockdep_assert_held(&cpu_running);
+> > +//     lockdep_assert_held(&cpu_running);
+> >         wait_for_completion_timeout(&cpu_running,
+> >                                             msecs_to_jiffies(1000));
+> >
+> > On Fri, Apr 10, 2020 at 11:26 AM Zong Li <zong.li@sifive.com> wrote:
+> > >
+> > > The cpu_running is not a lock-class, it lacks the dep_map member in
+> > > completion. It causes the error as follow:
+> > >
+> > > arch/riscv/kernel/smpboot.c: In function '__cpu_up':
+> > > ./include/linux/lockdep.h:364:52: error: 'struct completion' has no member named 'dep_map'
+> > >   364 | #define lockdep_is_held(lock)  lock_is_held(&(lock)->dep_map)
+> > >       |                                                    ^~
+> > > ./include/asm-generic/bug.h:113:25: note: in definition of macro 'WARN_ON'
+> > >   113 |  int __ret_warn_on = !!(condition);    \
+> > >       |                         ^~~~~~~~~
+> > > ./include/linux/lockdep.h:390:27: note: in expansion of macro 'lockdep_is_held'
+> > >   390 |   WARN_ON(debug_locks && !lockdep_is_held(l)); \
+> > >       |                           ^~~~~~~~~~~~~~~
+> > > arch/riscv/kernel/smpboot.c:118:2: note: in expansion of macro 'lockdep_assert_held'
+> > >   118 |  lockdep_assert_held(&cpu_running);
+> > >
+> > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > ---
+> > >  arch/riscv/kernel/smpboot.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > >
+> > > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> > > index 8bc01f0ca73b..bbc1baa2d90c 100644
+> > > --- a/arch/riscv/kernel/smpboot.c
+> > > +++ b/arch/riscv/kernel/smpboot.c
+> > > @@ -115,7 +115,6 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+> > >                   task_stack_page(tidle) + THREAD_SIZE);
+> > >         WRITE_ONCE(__cpu_up_task_pointer[hartid], tidle);
+> > >
+> > > -       lockdep_assert_held(&cpu_running);
+> > >         wait_for_completion_timeout(&cpu_running,
+> > >                                             msecs_to_jiffies(1000));
+> > >
+> > > --
+> > > 2.26.0
+> > >
+> > >
+> >
+> >
+> > --
+> > Best Regards
+> >  Guo Ren
+> >
+> > ML: https://lore.kernel.org/linux-csky/
 
 
 
-On 2020/4/12 =E4=B8=8A=E5=8D=8811:21, Tang Bin wrote:
-> Hi Qu:
->=20
-> On 2020/4/12 8:52, Qu Wenruo wrote:
->>
->> On 2020/4/11 =E4=B8=8B=E5=8D=8811:49, Tang Bin wrote:
->>> Fix missing braces compilation warning in the ARM
->>> compiler environment:
->>> =C2=A0=C2=A0=C2=A0=C2=A0 fs/btrfs/backref.c: In function =E2=80=98is_=
-shared_data_backref=E2=80=99:
->>> =C2=A0=C2=A0=C2=A0=C2=A0 fs/btrfs/backref.c:394:9: warning: missing b=
-races around
->>> initializer [-Wmissing-braces]
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct prelim_ref target =3D {0}=
-;
->>> =C2=A0=C2=A0=C2=A0=C2=A0 fs/btrfs/backref.c:394:9: warning: (near ini=
-tialization for
->>> =E2=80=98target.rbnode=E2=80=99) [-Wmissing-braces]
->> GCC version please.
->>
->> It looks like you're using an older GCC, as it's pretty common certain=
+-- 
+Best Regards
+ Guo Ren
 
->> prebuild tool chain is still using outdated GCC.
->>
->> In my environment with GCC 9.2.0 natively (on aarch64) it's completely=
-
->> fine.
->> Thus personally I recommend to build your own tool chain using
->> buildroot, or run it natively, other than rely on prebuilt one.
->=20
-> My environment:
->=20
-> =C2=A0 PC : Ubuntu 16.04
->=20
-> =C2=A0 Hardware : I.MX6ULL
->=20
-> =C2=A0 Tool Chain : arm-linux-gnueabihf-gcc (Linaro GCC 4.9-2017.01) 4.=
-9.4
-
-That's pretty old.
-
-You'd better fetch the newer version, as newer kernel may require higher
-version gcc.
-
-Or even build your own using tools like buildroot.
-
-Thanks,
-Qu
-
->=20
->>
->> In fact your fix could cause problem, as the original code is
->> initializing all members to 0, but now it's uninitialized.
->>
->> You need to locate the root cause other than blindly follow the warnin=
-g.
->=20
-> In hardware experiment, this approach is feasible.
->=20
-> Thanks.
->=20
-> Tang Bin
->=20
->>
->>
->=20
->=20
-
-
---dryZrHRxVOTPI2NxyibNxzHfHavl919QM--
-
---MUDCRRcwo0eNNbk73S3sYUzPZTRiylwO1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl6SoV0ACgkQwj2R86El
-/qjTSggAg8hB2i+/2hO2cjJZwJF+WIrYOgLYco54Wm3L1YiHfAoRWZSo5Xu3bDLu
-cxMdYFs1qXYhfMYEzo8sD6CUBi7qzSZgI89Jp2FtlQ3XM9W+thH9wT55fp76/dTZ
-I1U5ip9eV59nF5Or6RZNTmI0ySbO4bnTw/JofDq7O3Os5oviEv8PJoo8j7gWRpMp
-W0g5qkKYzFJnbyY2dIkc2FH5bAVCWSRUe91PteY0nTAOyQ3NDfxK+CkaxaSML4xa
-OvBWbtIlakHZfshx32RgSoe5/cOT6NXGEKfgT46jlyjmk4nDl5tFvVfDNXx5J/+N
-WTXr7BW7XUn37gBr5KsmKONtTkdOPw==
-=K/Nc
------END PGP SIGNATURE-----
-
---MUDCRRcwo0eNNbk73S3sYUzPZTRiylwO1--
+ML: https://lore.kernel.org/linux-csky/
