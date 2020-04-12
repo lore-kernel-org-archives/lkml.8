@@ -2,122 +2,89 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326BDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A279C2BB55
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D608206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DmcUhIft"
+	by mail.kernel.org (Postfix) with ESMTP id F034220705
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 14:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgDLOLR (ORCPT
+        id S1727081AbgDLOL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 10:11:17 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14022 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726689AbgDLOLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 10:11:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586700677; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Fs11ZYNs11KRXX0CMgRlVZnl3dBXHk7slByjIz5Iuj4=; b=DmcUhIftEpzZYRPqYmxxJp89cTQJz+GwVpER5IahYOFwaOR6xvJPQY/MZMDlVYW/R/aBedSY
- UjNsERtx4U+EMGE2f2rfssuACrNBCk3fskhkxnmTOQIfH4tH+V9PhBr9tDbceZl0oKcBgi81
- cKj9qvlIPG1M3//HNvrn5qwqaII=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e932174.7f4af2710ed8-smtp-out-n02;
- Sun, 12 Apr 2020 14:11:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 886CFC432C2; Sun, 12 Apr 2020 14:11:00 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.136.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA686C433F2;
-        Sun, 12 Apr 2020 14:10:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA686C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v16 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
- caches
-To:     Doug Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
- <1586154741-8293-5-git-send-email-mkshah@codeaurora.org>
- <158649213142.77611.5740203322498170248@swboyd.mtv.corp.google.com>
- <CAD=FV=UkiR+xLeowOT+H3ZKNCesf84AJi6mHiHNpJ2P9-DiXaQ@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <11c37c89-aa1f-7297-9ecf-4d77a20deebd@codeaurora.org>
-Date:   Sun, 12 Apr 2020 19:40:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 12 Apr 2020 10:11:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:57266 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgDLOL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 10:11:26 -0400
+IronPort-SDR: 7jqYE0Hh2SrjJnTWDHl1/XOTjdYluOn4wHPcNMqQ83w0r72Z6+RNIqej9IIeUoUrfKnyb/vmN4
+ mEI1eBOZ9Utg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 07:11:23 -0700
+IronPort-SDR: YcF9grRNMDlNiy+jJV6ObXJCi7szAvUALbUtLto5Lo6282uVrQe3ew4QxGUyba7qEbbivq1+ls
+ 5wT6Yk3yOGKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,374,1580803200"; 
+   d="scan'208";a="287651096"
+Received: from apresura-mobl.ger.corp.intel.com (HELO localhost) ([10.252.61.246])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Apr 2020 07:11:21 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] selftests/tpm: Fix runtime error
+Date:   Sun, 12 Apr 2020 17:11:17 +0300
+Message-Id: <20200412141118.70688-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=UkiR+xLeowOT+H3ZKNCesf84AJi6mHiHNpJ2P9-DiXaQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+There is some random clutter in test_smoke.sh:
 
-On 4/10/2020 8:22 PM, Doug Anderson wrote:
-> Hi,
->
-> On Thu, Apr 9, 2020 at 9:15 PM Stephen Boyd <swboyd@chromium.org> wrote:
->>>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->> This function name keeps throwing me off. Can we please call it
->> something like rpmh_configure_tcs_sleep_wake()? The word "flush" seems
->> to imply there's some sort of cache going on, but that's not really the
->> case. We're programming a couple TCS FIFOs so that they can be used
->> across deep CPU sleep states.
-> I'm hoping this rename can be deferred until Maulik's series and my
-> cleanup series land.  While I agree that rpmh_flush() is a bit of a
-> confusing name, it's not a new name and renaming it midway through
-> when there are a bunch of patches in-flight is going to be a hassle.
->
-> Assuming others agree, my thought is that Maulik will do one more v17
-> spin with small nits fixed up, then his series can land early next
-> week when (presumably) -rc1 comes out.  If my current cleanup doesn't
-> apply cleanly (or if Bjorn/Andy don't want to fix the two nits in
-> commit messages when applying) I can repost my series and that can
-> land in short order.  Once those land:
->
-> * Maulik can post this rpmh_flush() rename atop.
->
-> * I can post the patch to remove the "pm_lock" that was introduced in
-> this series.  A preview at <https://crrev.com/c/2142823>.
->
-> * Maulik can post some of the cleanups that Maulik wanted to do in
-> rpmh.c with regards to __fill_rpmh_msg()
->
-> ...assuming those are not controversial perhaps they can be reviewed
-> quickly and land quickly?  I suppose I can always dream...
->
->
-> -Doug
+  ./test_smoke.sh: line 3: self.flags: command not found
 
-Agree, I can defer rename until this series lands and then post above 
-listed changes.
+Remove it.
 
-Thanks,
-Maulik
+Fixes: b32694cd0724 ("Kernel selftests: tpm2: check for tpm support")
+Cc: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+I rely on these tests and this was not even cc'd to me and obviously
+was untested. There is neither reviewed-by nor tested-by tags in the
+commit (not to mention some cosmetic things like short summary
+formatted wrong and the extra newline character).
 
+Please do not do this next time. Thanks.
+ tools/testing/selftests/tpm2/test_smoke.sh | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index b630c7b5950a..e55d3e400666 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,11 +1,9 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+-self.flags = flags
+ 
+ # Kselftest framework requirement - SKIP code is 4.
+ ksft_skip=4
+ 
+-
+ if [ -f /dev/tpm0 ] ; then
+ 	python -m unittest -v tpm2_tests.SmokeTest
+ 	python -m unittest -v tpm2_tests.AsyncTest
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
