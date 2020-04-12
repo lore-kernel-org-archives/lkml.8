@@ -2,73 +2,109 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5A6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5B9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25FD206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FC520709
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:30:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sCoCfMu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgDLJ0N (ORCPT
+        id S1726798AbgDLJaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 05:26:13 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:3994 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgDLJ0N (ORCPT
+        Sun, 12 Apr 2020 05:30:22 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36143 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgDLJaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 05:26:13 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee55e92de9da03-1fbc8; Sun, 12 Apr 2020 17:25:51 +0800 (CST)
-X-RM-TRANSID: 2ee55e92de9da03-1fbc8
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.1.172.56])
-        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e92de9c9bf-68f8a;
-        Sun, 12 Apr 2020 17:25:51 +0800 (CST)
-X-RM-TRANSID: 2eea5e92de9c9bf-68f8a
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     khalasa@piap.pl, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] net: ethernet: ixp4xx: Add error handling in ixp4xx_eth_probe()
-Date:   Sun, 12 Apr 2020 17:27:28 +0800
-Message-Id: <20200412092728.8396-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Sun, 12 Apr 2020 05:30:22 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w145so4398598lff.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 02:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wvZjieRj4qaMs+6TZihVR3SxRNAcxfJpdpQbrdTQclA=;
+        b=sCoCfMu0RCkeRdSj17DdbWeFKZD3rHgAuAb8cNCMqPqeUuaWB8wGLbnhQr1BYWTXoi
+         upzKaP2DiqcCZOw7Yimp3sz52v7DeyzftOwUBxRkfd2qok0nXYnqVZjH0b47y+kRLZ8C
+         xAIHMfCHjom4BynzVP1HKozH8iBRDWBFIPs/KK+dGDWQ6fNYNI++9uF4CoCi6/FYx7za
+         DifRQVk5Gsuj8f/M+4L6sAQKwiKR1rGWqx3KLO7Yb6/HrShMNEjgLgL9gnO48L2IioUN
+         ijdYlnim6ISiftXFTlzkJWTFmng/tJdrqujwye1v5YnXFFar2lk7nPJu3p/ULW2r+zps
+         fdNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wvZjieRj4qaMs+6TZihVR3SxRNAcxfJpdpQbrdTQclA=;
+        b=cb004VSrmF5BOCYt+fiOtAJ//6sbcgMXjc4g2qXYiW6hriW0sVQJlc9M3UMDKTdByt
+         E+zrRofcH8NzYNiamRlI6GDXqcFpWm6z4/smlJ9LyQZhv73b2dGX/Mc+8/gmaCvfjiew
+         TxgEXG6z6y+sh+qg1uMA9nf4EvwbBvld6GxLTqJm0JyN3JtWMT81kmDXueLO3I4plV7V
+         VrAfOD1s8hql7fiCG4EaPEcRvkq3XrD/B4YThNgIQvuUFw0+jNTvE5t1vFkwJKrwcJOz
+         7CIil6PMM4bzVJF/pb684el7uKtlaBx4YSAbNayWzXV+BzwPiuDEESAkjFyDBw0BEsdu
+         MUbA==
+X-Gm-Message-State: AGi0PuZfLK39PjzXSIyszJ30sryHabnfLNduvNE3ve870KFz1v3trfZu
+        /K4cj4vTEfhc4b4u7uSg8UcuRedrAuH/ww==
+X-Google-Smtp-Source: APiQypIiCKyDOWmQveSF/1l/II8M/C9LZdjb3kLvTVumC4zxn5XVOZ2W4iOLnw80Mn52Yek+rtsWuA==
+X-Received: by 2002:a19:d3:: with SMTP id 202mr7255970lfa.24.1586683820655;
+        Sun, 12 Apr 2020 02:30:20 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4648:ec80:e5e4:a4d:fae6:7d12? ([2a00:1fa0:4648:ec80:e5e4:a4d:fae6:7d12])
+        by smtp.gmail.com with ESMTPSA id b2sm1131469lfi.14.2020.04.12.02.30.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Apr 2020 02:30:20 -0700 (PDT)
+Subject: Re: [PATCH AUTOSEL 5.6 056/149] sh_eth: check
+ sh_eth_cpu_data::no_xdfar when dumping registers
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Chris Brandt <chris.brandt@renesas.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <20200411230347.22371-1-sashal@kernel.org>
+ <20200411230347.22371-56-sashal@kernel.org>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <6416ffc7-84a0-0383-aeda-93b4cb80c800@cogentembedded.com>
+Date:   Sun, 12 Apr 2020 12:30:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200411230347.22371-56-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function ixp4xx_eth_probe() does not perform sufficient error
-checking after executing devm_ioremap_resource(),which can result
-in crashes if a critical error path is encountered.
+Hello!
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
----
- drivers/net/ethernet/xscale/ixp4xx_eth.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 12.04.2020 2:02, Sasha Levin wrote:
 
-diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
-index 269596c15..2e5202923 100644
---- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
-+++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
-@@ -1387,6 +1387,8 @@ static int ixp4xx_eth_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	regs_phys = res->start;
- 	port->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(port->regs))
-+		return PTR_ERR(port->regs);
- 
- 	switch (port->id) {
- 	case IXP4XX_ETH_NPEA:
--- 
-2.20.1.windows.1
+> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> [ Upstream commit 7bf47f609f7eaac4f7e9c407a85ad78997288a38 ]
+> 
+> When adding the sh_eth_cpu_data::no_xdfar flag I forgot to add the flag
+> check to  __sh_eth_get_regs(), causing the non-existing RDFAR/TDFAR to be
+> considered for dumping on the R-Car gen1/2 SoCs (the register offset check
+> has the final say here)...
+> 
+> Fixes: 4c1d45850d5 ("sh_eth: add sh_eth_cpu_data::cexcr flag")
 
+    Oops, wrong commit here, should've been:
 
+Fixes: 6e80e55bd37a ("sh_eth: add sh_eth_cpu_data::no_xdfar flag")
 
+Luckily, both commits appeared in the same version, 4.17. :-)
+
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Tested-by: Chris Brandt <chris.brandt@renesas.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+[...]
+
+MBR, Sergei
