@@ -2,415 +2,78 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CD6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91A3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D03206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC04206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E/y/4XcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgDLKLT (ORCPT
+        id S1726958AbgDLKM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 06:11:19 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:54530 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgDLKLT (ORCPT
+        Sun, 12 Apr 2020 06:12:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45750 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgDLKM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 06:11:19 -0400
-Received: by mail-io1-f71.google.com with SMTP id n18so6853784ioj.21
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 03:11:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=QGttFSsvCsu1csQaylb6Sjxngh+/apVNQWyg0kZpo5U=;
-        b=FWq5v15OzeIhKEp1sGPpCyoVhsr+hLixmEZBuiNJxi8A37X8oeEk1C48smRo1TkPFs
-         DeEujcjQ8Bkq0zaJmsD3JjlsNmiq1/mULp160Q5+79h7R9Ch8WlnJGmtCc6OgxPvuv6t
-         bSt/x4c0jd6xH/zm4Bzk4ZI/PexqDxEr1nQtRllQp2Eb8Bo9PXpbeONX30+jptYqW8Ef
-         acRB7PBC9Up8NaNzGKbWH1p0i7+lWrYQ/U8t3ZoJQyBp/bL9vG+lGwfKEclp8beYQ5wX
-         uwciTQ6v7237338eQoD+zG0fyqiJ+KqgHgXG7lLkTfgVFNp9Q5pNT6fYlHxDT5z8ac4m
-         zy/g==
-X-Gm-Message-State: AGi0PuZc/CTsAoCMdwM+p76WTvgt/clAIw4bAw46WprwW0vnU0sqvmTD
-        5rRxL3ITEePt2BAMkJgXvfxL8KFauMrU/nyJMWzpbpOXEZf7
-X-Google-Smtp-Source: APiQypIEnrw0AILPd6ojZBk6xnhc5Eof5RNR/ELSceshm0Ox1bImTompRgMZxj4l5TGUZYeIMx7oq2Z/2wfPQxoKAv1JeKFyUKwz
+        Sun, 12 Apr 2020 06:12:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IeLMEVbvWVML8LPWQwzHP2rI+YsS4LJFQqPobAoE0tQ=; b=E/y/4XcDknSVI1zx7tOO8lIIH1
+        tl+TJApQwjBaxjL9NVH82By12JnXxz1NeXwbGJgfGWRqbY9GqCGHl/VPjaHWEhBs/gwpdJshy8skB
+        UG/rF9MyMoCncohfY5JBnVgKdViPNk09ol9DW9H00aEfGgKiMdelCVE7zFrERgTQ22s1c4du6XB5k
+        Ahn0YXtnOnEc3a6PtATx/zbeseBzE+o/sd824d8rvTKdifPsE9qc+1tg7YmbyCCbpWqRU0LSQnj9V
+        JE3uSTNRYbnnO+l1LpGY6lBx/PDxtxsBSRNwRz45iuqpaCHr3jsXRM6aanKaLVf7ddBrSMYlElgyK
+        Uhu7b25g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jNZbD-0002RV-Uv; Sun, 12 Apr 2020 10:12:23 +0000
+Date:   Sun, 12 Apr 2020 03:12:23 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [RFC PATCH 4/4] mm: Add PG_zero support
+Message-ID: <20200412101223.GK21484@bombadil.infradead.org>
+References: <20200412090945.GA19582@open-light-1.localdomain>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c10e:: with SMTP id p14mr1356926ile.215.1586686276762;
- Sun, 12 Apr 2020 03:11:16 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 03:11:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e5838c05a3152f53@google.com>
-Subject: possible deadlock in shmem_uncharge
-From:   syzbot <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, hughd@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200412090945.GA19582@open-light-1.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Apr 12, 2020 at 05:09:49AM -0400, liliangleo wrote:
+> Zero out the page content usually happens when allocating pages,
+> this is a time consuming operation, it makes pin and mlock
+> operation very slowly, especially for a large batch of memory.
+> 
+> This patch introduce a new feature for zero out pages before page
+> allocation, it can help to speed up page allocation.
+> 
+> The idea is very simple, zero out free pages when the system is
+> not busy and mark the page with PG_zero, when allocating a page,
+> if the page need to be filled with zero, check the flag in the
+> struct page, if it's marked as PG_zero, zero out can be skipped,
+> it can save cpu time and speed up page allocation.
 
-syzbot found the following crash on:
+We are very short on bits in the page flags.  If we can implement this
+feature without using another one, this would be good.
 
-HEAD commit:    ae46d2aa mm/gup: Let __get_user_pages_locked() return -EIN..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14a30a77e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
-dashboard link: https://syzkaller.appspot.com/bug?extid=c8a8197c8852f566b9d9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5632be00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132ade57e00000
-
-The bug was bisected to:
-
-commit 71725ed10c40696dc6bdccf8e225815dcef24dba
-Author: Hugh Dickins <hughd@google.com>
-Date:   Tue Apr 7 03:07:57 2020 +0000
-
-    mm: huge tmpfs: try to split_huge_page() when punching hole
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120a752be00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=110a752be00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=160a752be00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-Fixes: 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page() when punching hole")
-
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-5.6.0-syzkaller #0 Not tainted
------------------------------------------------------
-syz-executor428/8337 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-ffff8880a851c778 (&info->lock){....}-{2:2}, at: shmem_uncharge+0x24/0x270 mm/shmem.c:341
-
-and this task is already holding:
-ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
-ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: split_huge_page_to_list+0xad0/0x33b0 mm/huge_memory.c:2864
-which would create a new lock dependency:
- (&xa->xa_lock#4){..-.}-{2:2} -> (&info->lock){....}-{2:2}
-
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (&xa->xa_lock#4){..-.}-{2:2}
-
-... which became SOFTIRQ-irq-safe at:
-  lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-  test_clear_page_writeback+0x1d7/0x11e0 mm/page-writeback.c:2728
-  end_page_writeback+0x239/0x520 mm/filemap.c:1317
-  end_buffer_async_write+0x442/0x5c0 fs/buffer.c:384
-  end_bio_bh_io_sync+0xe2/0x140 fs/buffer.c:3012
-  bio_endio+0x473/0x820 block/bio.c:1422
-  req_bio_endio block/blk-core.c:245 [inline]
-  blk_update_request+0x3e1/0xdc0 block/blk-core.c:1472
-  scsi_end_request+0x80/0x7b0 drivers/scsi/scsi_lib.c:575
-  scsi_io_completion+0x1e7/0x1300 drivers/scsi/scsi_lib.c:959
-  scsi_softirq_done+0x31e/0x3b0 drivers/scsi/scsi_lib.c:1454
-  blk_done_softirq+0x2db/0x440 block/blk-softirq.c:37
-  __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x192/0x1d0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-  do_IRQ+0xda/0x270 arch/x86/kernel/irq.c:263
-  ret_from_intr+0x0/0x2b
-  arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-  lock_acquire+0x267/0x8f0 kernel/locking/lockdep.c:4926
-  down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
-  inode_lock include/linux/fs.h:797 [inline]
-  process_measurement+0x68a/0x1750 security/integrity/ima/ima_main.c:228
-  ima_file_check+0xb9/0x100 security/integrity/ima/ima_main.c:440
-  do_open fs/namei.c:3231 [inline]
-  path_openat+0x1997/0x27d0 fs/namei.c:3346
-  do_filp_open+0x192/0x260 fs/namei.c:3373
-  do_sys_openat2+0x585/0x7d0 fs/open.c:1148
-  do_sys_open+0xc3/0x140 fs/open.c:1164
-  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-to a SOFTIRQ-irq-unsafe lock:
- (shmlock_user_lock){+.+.}-{2:2}
-
-... which became SOFTIRQ-irq-unsafe at:
-...
-  lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:353 [inline]
-  user_shm_lock+0xab/0x230 mm/mlock.c:855
-  hugetlb_file_setup+0x4e1/0x677 fs/hugetlbfs/inode.c:1416
-  newseg+0x460/0xe60 ipc/shm.c:652
-  ipcget_new ipc/util.c:344 [inline]
-  ipcget+0xf0/0xcb0 ipc/util.c:643
-  ksys_shmget ipc/shm.c:742 [inline]
-  __do_sys_shmget ipc/shm.c:747 [inline]
-  __se_sys_shmget ipc/shm.c:745 [inline]
-  __x64_sys_shmget+0x139/0x1a0 ipc/shm.c:745
-  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-other info that might help us debug this:
-
-Chain exists of:
-  &xa->xa_lock#4 --> &info->lock --> shmlock_user_lock
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(shmlock_user_lock);
-                               local_irq_disable();
-                               lock(&xa->xa_lock#4);
-                               lock(&info->lock);
-  <Interrupt>
-    lock(&xa->xa_lock#4);
-
- *** DEADLOCK ***
-
-5 locks held by syz-executor428/8337:
- #0: ffff8880a7948450 (sb_writers#7){.+.+}-{0:0}, at: sb_start_write include/linux/fs.h:1655 [inline]
- #0: ffff8880a7948450 (sb_writers#7){.+.+}-{0:0}, at: do_sys_ftruncate+0x29f/0x570 fs/open.c:190
- #1: ffff8880a851c9d0 (&sb->s_type->i_mutex_key#16){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:797 [inline]
- #1: ffff8880a851c9d0 (&sb->s_type->i_mutex_key#16){+.+.}-{3:3}, at: do_truncate+0x125/0x1f0 fs/open.c:62
- #2: ffff8880a851cb90 (&mapping->i_mmap_rwsem){++++}-{3:3}, at: i_mmap_lock_read include/linux/fs.h:541 [inline]
- #2: ffff8880a851cb90 (&mapping->i_mmap_rwsem){++++}-{3:3}, at: split_huge_page_to_list+0x4c3/0x33b0 mm/huge_memory.c:2825
- #3: ffff88812ffffcd8 (&pgdat->lru_lock){....}-{2:2}, at: split_huge_page_to_list+0x8da/0x33b0 mm/huge_memory.c:2855
- #4: ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
- #4: ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: split_huge_page_to_list+0xad0/0x33b0 mm/huge_memory.c:2864
-
-the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
--> (&xa->xa_lock#4){..-.}-{2:2} {
-   IN-SOFTIRQ-W at:
-                    lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-                    _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-                    test_clear_page_writeback+0x1d7/0x11e0 mm/page-writeback.c:2728
-                    end_page_writeback+0x239/0x520 mm/filemap.c:1317
-                    end_buffer_async_write+0x442/0x5c0 fs/buffer.c:384
-                    end_bio_bh_io_sync+0xe2/0x140 fs/buffer.c:3012
-                    bio_endio+0x473/0x820 block/bio.c:1422
-                    req_bio_endio block/blk-core.c:245 [inline]
-                    blk_update_request+0x3e1/0xdc0 block/blk-core.c:1472
-                    scsi_end_request+0x80/0x7b0 drivers/scsi/scsi_lib.c:575
-                    scsi_io_completion+0x1e7/0x1300 drivers/scsi/scsi_lib.c:959
-                    scsi_softirq_done+0x31e/0x3b0 drivers/scsi/scsi_lib.c:1454
-                    blk_done_softirq+0x2db/0x440 block/blk-softirq.c:37
-                    __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
-                    invoke_softirq kernel/softirq.c:373 [inline]
-                    irq_exit+0x192/0x1d0 kernel/softirq.c:413
-                    exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-                    do_IRQ+0xda/0x270 arch/x86/kernel/irq.c:263
-                    ret_from_intr+0x0/0x2b
-                    arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-                    lock_acquire+0x267/0x8f0 kernel/locking/lockdep.c:4926
-                    down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
-                    inode_lock include/linux/fs.h:797 [inline]
-                    process_measurement+0x68a/0x1750 security/integrity/ima/ima_main.c:228
-                    ima_file_check+0xb9/0x100 security/integrity/ima/ima_main.c:440
-                    do_open fs/namei.c:3231 [inline]
-                    path_openat+0x1997/0x27d0 fs/namei.c:3346
-                    do_filp_open+0x192/0x260 fs/namei.c:3373
-                    do_sys_openat2+0x585/0x7d0 fs/open.c:1148
-                    do_sys_open+0xc3/0x140 fs/open.c:1164
-                    do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                    entry_SYSCALL_64_after_hwframe+0x49/0xb3
-   INITIAL USE at:
-                   lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
-                   _raw_spin_lock_irq+0x5b/0x80 kernel/locking/spinlock.c:167
-                   spin_lock_irq include/linux/spinlock.h:378 [inline]
-                   __add_to_page_cache_locked+0x607/0xe00 mm/filemap.c:855
-                   add_to_page_cache_lru+0x1aa/0x700 mm/filemap.c:921
-                   do_read_cache_page+0x9ab/0x1810 mm/filemap.c:2755
-                   read_mapping_page include/linux/pagemap.h:397 [inline]
-                   read_part_sector+0xf6/0x600 block/partitions/core.c:643
-                   adfspart_check_ICS+0x9d/0xc80 block/partitions/acorn.c:360
-                   check_partition block/partitions/core.c:140 [inline]
-                   blk_add_partitions+0x474/0xe50 block/partitions/core.c:571
-                   bdev_disk_changed+0x1fb/0x380 fs/block_dev.c:1544
-                   __blkdev_get+0xb15/0x1530 fs/block_dev.c:1647
-                   blkdev_get+0x41/0x2b0 fs/block_dev.c:1749
-                   register_disk block/genhd.c:763 [inline]
-                   __device_add_disk+0xa4f/0x1170 block/genhd.c:853
-                   add_disk include/linux/genhd.h:294 [inline]
-                   brd_init+0x297/0x463 drivers/block/brd.c:533
-                   do_one_initcall+0x10a/0x7d0 init/main.c:1158
-                   do_initcall_level init/main.c:1231 [inline]
-                   do_initcalls init/main.c:1247 [inline]
-                   do_basic_setup init/main.c:1267 [inline]
-                   kernel_init_freeable+0x501/0x5ae init/main.c:1451
-                   kernel_init+0xd/0x1bb init/main.c:1358
-                   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
- }
- ... key      at: [<ffffffff8c67b1e0>] __key.18007+0x0/0x40
- ... acquired at:
-   lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-   _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-   shmem_uncharge+0x24/0x270 mm/shmem.c:341
-   __split_huge_page mm/huge_memory.c:2613 [inline]
-   split_huge_page_to_list+0x274b/0x33b0 mm/huge_memory.c:2886
-   split_huge_page include/linux/huge_mm.h:204 [inline]
-   shmem_punch_compound+0x13e/0x1e0 mm/shmem.c:814
-   shmem_undo_range+0x5f1/0x1b80 mm/shmem.c:870
-   shmem_truncate_range+0x27/0xa0 mm/shmem.c:980
-   shmem_setattr+0x8b6/0xc80 mm/shmem.c:1039
-   notify_change+0xb6d/0x1020 fs/attr.c:336
-   do_truncate+0x134/0x1f0 fs/open.c:64
-   do_sys_ftruncate+0x4a5/0x570 fs/open.c:195
-   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-   entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-
-the dependencies between the lock to be acquired
- and SOFTIRQ-irq-unsafe lock:
- -> (shmlock_user_lock){+.+.}-{2:2} {
-    HARDIRQ-ON-W at:
-                      lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                      spin_lock include/linux/spinlock.h:353 [inline]
-                      user_shm_lock+0xab/0x230 mm/mlock.c:855
-                      hugetlb_file_setup+0x4e1/0x677 fs/hugetlbfs/inode.c:1416
-                      newseg+0x460/0xe60 ipc/shm.c:652
-                      ipcget_new ipc/util.c:344 [inline]
-                      ipcget+0xf0/0xcb0 ipc/util.c:643
-                      ksys_shmget ipc/shm.c:742 [inline]
-                      __do_sys_shmget ipc/shm.c:747 [inline]
-                      __se_sys_shmget ipc/shm.c:745 [inline]
-                      __x64_sys_shmget+0x139/0x1a0 ipc/shm.c:745
-                      do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                      entry_SYSCALL_64_after_hwframe+0x49/0xb3
-    SOFTIRQ-ON-W at:
-                      lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                      spin_lock include/linux/spinlock.h:353 [inline]
-                      user_shm_lock+0xab/0x230 mm/mlock.c:855
-                      hugetlb_file_setup+0x4e1/0x677 fs/hugetlbfs/inode.c:1416
-                      newseg+0x460/0xe60 ipc/shm.c:652
-                      ipcget_new ipc/util.c:344 [inline]
-                      ipcget+0xf0/0xcb0 ipc/util.c:643
-                      ksys_shmget ipc/shm.c:742 [inline]
-                      __do_sys_shmget ipc/shm.c:747 [inline]
-                      __se_sys_shmget ipc/shm.c:745 [inline]
-                      __x64_sys_shmget+0x139/0x1a0 ipc/shm.c:745
-                      do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                      entry_SYSCALL_64_after_hwframe+0x49/0xb3
-    INITIAL USE at:
-                     lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                     __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                     _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                     spin_lock include/linux/spinlock.h:353 [inline]
-                     user_shm_lock+0xab/0x230 mm/mlock.c:855
-                     shmem_lock+0x1dd/0x2d0 mm/shmem.c:2184
-                     shmctl_do_lock+0x73f/0x8f0 ipc/shm.c:1111
-                     ksys_shmctl.constprop.0+0x203/0x350 ipc/shm.c:1188
-                     do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                     entry_SYSCALL_64_after_hwframe+0x49/0xb3
-  }
-  ... key      at: [<ffffffff89a5e858>] shmlock_user_lock+0x18/0x5c0
-  ... acquired at:
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:353 [inline]
-   user_shm_lock+0xab/0x230 mm/mlock.c:855
-   shmem_lock+0x1dd/0x2d0 mm/shmem.c:2184
-   shmctl_do_lock+0x73f/0x8f0 ipc/shm.c:1111
-   ksys_shmctl.constprop.0+0x203/0x350 ipc/shm.c:1188
-   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-   entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
--> (&info->lock){....}-{2:2} {
-   INITIAL USE at:
-                   lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
-                   _raw_spin_lock_irq+0x5b/0x80 kernel/locking/spinlock.c:167
-                   spin_lock_irq include/linux/spinlock.h:378 [inline]
-                   shmem_getpage_gfp+0x937/0x2a10 mm/shmem.c:1882
-                   shmem_getpage mm/shmem.c:154 [inline]
-                   shmem_write_begin+0x102/0x1e0 mm/shmem.c:2483
-                   generic_perform_write+0x20a/0x4e0 mm/filemap.c:3302
-                   __generic_file_write_iter+0x24c/0x610 mm/filemap.c:3431
-                   generic_file_write_iter+0x3f3/0x630 mm/filemap.c:3463
-                   call_write_iter include/linux/fs.h:1907 [inline]
-                   new_sync_write+0x4a2/0x700 fs/read_write.c:483
-                   __vfs_write+0xc9/0x100 fs/read_write.c:496
-                   vfs_write+0x268/0x5d0 fs/read_write.c:558
-                   ksys_write+0x12d/0x250 fs/read_write.c:611
-                   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                   entry_SYSCALL_64_after_hwframe+0x49/0xb3
- }
- ... key      at: [<ffffffff8c667e80>] __key.56422+0x0/0x40
- ... acquired at:
-   lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-   _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-   shmem_uncharge+0x24/0x270 mm/shmem.c:341
-   __split_huge_page mm/huge_memory.c:2613 [inline]
-   split_huge_page_to_list+0x274b/0x33b0 mm/huge_memory.c:2886
-   split_huge_page include/linux/huge_mm.h:204 [inline]
-   shmem_punch_compound+0x13e/0x1e0 mm/shmem.c:814
-   shmem_undo_range+0x5f1/0x1b80 mm/shmem.c:870
-   shmem_truncate_range+0x27/0xa0 mm/shmem.c:980
-   shmem_setattr+0x8b6/0xc80 mm/shmem.c:1039
-   notify_change+0xb6d/0x1020 fs/attr.c:336
-   do_truncate+0x134/0x1f0 fs/open.c:64
-   do_sys_ftruncate+0x4a5/0x570 fs/open.c:195
-   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-   entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-
-stack backtrace:
-CPU: 0 PID: 8337 Comm: syz-executor428 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_bad_irq_dependency kernel/locking/lockdep.c:2132 [inline]
- check_irq_usage.cold+0x566/0x6de kernel/locking/lockdep.c:2330
- check_prev_add kernel/locking/lockdep.c:2519 [inline]
- check_prevs_add kernel/locking/lockdep.c:2620 [inline]
- validate_chain kernel/locking/lockdep.c:3237 [inline]
- __lock_acquire+0x2c39/0x4e00 kernel/locking/lockdep.c:4344
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
- shmem_uncharge+0x24/0x270 mm/shmem.c:341
- __split_huge_page mm/huge_memory.c:2613 [inline]
- split_huge_page_to_list+0x274b/0x33b0 mm/huge_memory.c:2886
- split_huge_page include/linux/huge_mm.h:204 [inline]
- shmem_punch_compound+0x13e/0x1e0 mm/shmem.c:814
- shmem_undo_range+0x5f1/0x1b80 mm/shmem.c:870
- shmem_truncate_range+0x27/0xa0 mm/shmem.c:980
- shmem_setattr+0x8b6/0xc80 mm/shmem.c:1039
- notify_change+0xb6d/0x1020 fs/attr.c:336
- do_truncate+0x134/0x1f0 fs/open.c:64
- do_sys_ftruncate+0x4a5/0x570 fs/open.c:195
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x44e769
-Code: 4d c9 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 1b c9 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe511b3fce8 EFLAGS: 00000246 ORIG_RAX: 000000000000004d
-RAX: ffffffffffffffda RBX: 00000000006e1c68 RCX: 000000000044e769
-RDX: 000000000044e769 RSI: 00000000000001ff RDI: 0000000000000006
-RBP: 00000000006e1c60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e1c6c
-R13: 00007ffce699f92f R14: 00007fe511b409c0 R15: 0000000000000000
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+If the bit is only set on pages which are PageBuddy(), we can definitely
+find space for it as an alias of another bit.
