@@ -2,63 +2,137 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD41C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB73C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9EB206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7214220732
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 07:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Izfs6T4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgDLHoE (ORCPT
+        id S1726155AbgDLHuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 03:44:04 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:35137 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgDLHoE (ORCPT
+        Sun, 12 Apr 2020 03:50:00 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:55326 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgDLHt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 03:44:04 -0400
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id CD3BFCED27;
-        Sun, 12 Apr 2020 09:53:38 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3 1/3] dt-bindings: net: bluetooth: Add
- rtl8723bs-bluetooth
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200412020644.355142-1-alistair@alistair23.me>
-Date:   Sun, 12 Apr 2020 09:44:02 +0200
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org,
-        anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org
+        Sun, 12 Apr 2020 03:49:59 -0400
+Received: from flygoat-x1e (unknown [IPv6:240e:390:499:a20::d68])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 92F8320CE8;
+        Sun, 12 Apr 2020 07:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1586677799; bh=k5hxOeHZh9IXjDoSK3WNcs/9hTqV8S41aIzhUrny+3k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Izfs6T4sNhGSQrbDpc1FuzRkrZlA/Osk5StRIEV1TJ4Fe72X2TGwBh4OAZyI2RU9H
+         4juvb/wwxEJZ3JXCHjgwRcIBnQdtXetGmwTCkFlGS41zJErwM87iU1Gv/z4e1vGywy
+         SQZpAlaAbQD7K3v8RQncp4B/+s1NnynFKs6WpUgcybeYZfvPqtjHEnga7cEYuIoNrw
+         oJn5cQ/8B8Kmbd7o/+D+RhAHqnzIwpzM1ZNvugs1JD/QH49S5fuB2bcbOOL09BID/u
+         A0pRRIrRmZxwAYv+sKsaqDlJoZebMupTbfAJ5m47TwhhVmG7SP3TMwB7hiS2sMxPSE
+         IlIU52Wnfg4OQ==
+Date:   Sun, 12 Apr 2020 15:49:27 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        " =?UTF-8?B?5ZGo55Cw5p2w?= (Zhou Yanjie) " 
+        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 05/11] MIPS: Switch to arch_topology
+Message-ID: <20200412154927.7ac453d5@flygoat-x1e>
+In-Reply-To: <202004121349.xFzTOGS4%lkp@intel.com>
+References: <20200412032123.3896114-6-jiaxun.yang@flygoat.com>
+        <202004121349.xFzTOGS4%lkp@intel.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <AE147CB3-B2A4-4AF4-AE16-1C24F278B0BA@holtmann.org>
-References: <20200412020644.355142-1-alistair@alistair23.me>
-To:     Alistair Francis <alistair@alistair23.me>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alistair,
+On Sun, 12 Apr 2020 13:24:21 +0800
+kbuild test robot <lkp@intel.com> wrote:
 
-> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+> Hi Jiaxun,
 > 
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
-> .../bindings/net/realtek,rtl8723bs-bt.yaml    | 52 +++++++++++++++++++
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on driver-core/driver-core-testing]
+> [also build test ERROR on pm/linux-next linus/master next-20200411]
+> [cannot apply to tip/perf/core tip/irq/core v5.6]
+> [if your patch is applied to the wrong git tree, please drop us a
+> note to help improve the system. BTW, we also suggest to use '--base'
+> option to specify the base tree in git format-patch, please see
+> https://stackoverflow.com/a/37406982]
+> 
+> url:
+> https://github.com/0day-ci/linux/commits/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
+> base:
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+> a10c9c710f9ecea87b9f4bbb837467893b4bef01 config: mips-allnoconfig
+> (attached as .config) compiler: mips-linux-gcc (GCC) 9.3.0 reproduce:
+> wget
+> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
+> -O ~/bin/make.cross chmod +x ~/bin/make.cross # save the attached
+> .config to linux build tree GCC_VERSION=9.3.0 make.cross ARCH=mips 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> Note: the
+> linux-review/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
+> HEAD 8e8e9d4f7aa74359f2199773786ffe2fbb7877d0 builds fine. It only
+> hurts bisectibility.
+> 
+Hi all,
 
-follow the current names and use net/realtek-bluetooth.yaml.
+In this case I think it should be fine to break bisect, otherwise #05
+will combine too many modifications in different subsystems.
 
-Regards
 
-Marcel
-
+Thanks.
+--
+Jiaxun Yang
