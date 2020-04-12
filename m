@@ -2,144 +2,83 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14294C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01175C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D110420708
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E8720673
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XSmSdUxJ"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="qPWBD9is"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgDLNZo (ORCPT
+        id S1727014AbgDLN3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:25:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36285 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725911AbgDLNZn (ORCPT
+        Sun, 12 Apr 2020 09:29:36 -0400
+Received: from forward104o.mail.yandex.net ([37.140.190.179]:39408 "EHLO
+        forward104o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgDLN3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:25:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586697944; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=4VfuyD4f5rFnoAYJobQ4/A4xjtNnrrA1oaLe/r4z69A=; b=XSmSdUxJDmkltZPanzH4mYNExqxxwDNAVx2oZOOP+ZnjZ5QBI5kv+sSlHR3bZXfRSZ6UShdt
- ldZdLynaPSn6a4OOgyc31vyGtpNgyqO4CyHH8I6tCCAL9cloTD9ga8DsqYrgy+YQAqXkyGyf
- s1mpL717x9BF5RNhN2TK/B+VBHQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9316cb.7f0d02778a40-smtp-out-n04;
- Sun, 12 Apr 2020 13:25:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 690B0C43636; Sun, 12 Apr 2020 13:25:30 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.136.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD29CC433F2;
-        Sun, 12 Apr 2020 13:25:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AD29CC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v16 3/6] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes
- before flushing new data
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        dianders@chromium.org, evgreen@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
- <1586154741-8293-4-git-send-email-mkshah@codeaurora.org>
- <158646379456.77611.8638840660664120750@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <69028d69-0a11-3ceb-afe1-25171b8718cd@codeaurora.org>
-Date:   Sun, 12 Apr 2020 18:55:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 12 Apr 2020 09:29:35 -0400
+Received: from forward102q.mail.yandex.net (forward102q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:516:4e7d])
+        by forward104o.mail.yandex.net (Yandex) with ESMTP id 05B57940544;
+        Sun, 12 Apr 2020 16:29:33 +0300 (MSK)
+Received: from mxback5q.mail.yandex.net (mxback5q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:b716:ad89])
+        by forward102q.mail.yandex.net (Yandex) with ESMTP id 00A8E7F20013;
+        Sun, 12 Apr 2020 16:29:33 +0300 (MSK)
+Received: from vla1-61ce7aa04735.qloud-c.yandex.net (vla1-61ce7aa04735.qloud-c.yandex.net [2a02:6b8:c0d:3e86:0:640:61ce:7aa0])
+        by mxback5q.mail.yandex.net (mxback/Yandex) with ESMTP id fn6LxomBys-TWlmAoTw;
+        Sun, 12 Apr 2020 16:29:32 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1586698172;
+        bh=20Xym1g+2xCGcmJuCNInJKvW+oOdMSKnpImJLyKpihA=;
+        h=In-Reply-To:From:Subject:Date:References:To:Message-ID;
+        b=qPWBD9isSUDiBc3MbyJ7Ck6D+eeRBuBxlRzKowgfjkouZwjd7402O6xPeWFuYGSRf
+         WSWdf4g+OoAX9ozjgDWkJV5HB8EE8PGzSWlcttBrR7xS9qf34IeZ4Hm911iXoTdeio
+         6u+sM4rwoJD39xd+ge0ZGJCAAIbdc87/jX/bt2LU=
+Authentication-Results: mxback5q.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by vla1-61ce7aa04735.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id uGxk6FJkg5-TVXS9kgN;
+        Sun, 12 Apr 2020 16:29:31 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190712071746.2474-5-nishkadg.linux@gmail.com>
+Subject: Re: [PATCH 5/8] staging: rtl8188eu: Remove function rtw_modular64()
+From:   Ivan Safonov <isaf21@yandex.ru>
+Message-ID: <66fb1e37-107e-54f4-4986-ca4e4bb99d2d@yandex.ru>
+Date:   Sun, 12 Apr 2020 16:34:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <158646379456.77611.8638840660664120750@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190712071746.2474-5-nishkadg.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> Remove function rtw_modular64 as all it does is call do_div.
 
-On 4/10/2020 1:53 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-04-05 23:32:18)
->> TCSes have previously programmed data when rpmh_flush is called.
-> rpmh_flush()
-Ok, i will update in v17.
->
->> This can cause old data to trigger along with newly flushed.
->>
->> Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
->>
->> With this there is no need to invoke rpmh_rsc_invalidate() call from
->> rpmh_invalidate().
->>
->> Simplify rpmh_invalidate() by moving invalidate_batch() inside.
->>
->> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 41 ++++++++++++++++++-----------------------
->>   1 file changed, 18 insertions(+), 23 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index 03630ae..a75f3df 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -498,24 +492,25 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->>   }
->>   
->>   /**
->> - * rpmh_invalidate: Invalidate all sleep and active sets
->> - * sets.
->> + * rpmh_invalidate: Invalidate sleep and wake sets in batch_cache
->>    *
->>    * @dev: The device making the request
->>    *
->> - * Invalidate the sleep and active values in the TCS blocks.
->> + * Invalidate the sleep and wake values in batch_cache.
->>    */
->>   int rpmh_invalidate(const struct device *dev)
->>   {
->>          struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
->> -       int ret;
->> -
->> -       invalidate_batch(ctrlr);
->> +       struct batch_cache_req *req, *tmp;
->> +       unsigned long flags;
->>   
->> -       do {
->> -               ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
->> -       } while (ret == -EAGAIN);
->> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->> +       list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
->> +               kfree(req);
->> +       INIT_LIST_HEAD(&ctrlr->batch_cache);
->> +       ctrlr->dirty = true;
->> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>   
->> -       return ret;
->> +       return 0;
-> Now this always returns 0. Maybe it should become a void function, but
-> doing that requires a change in the interconnect code so maybe do it
-> later.
+This is wrong. Macro do_div(x, y) change first argument x, but 
+rtw_modular64(x, y) preserve it.
 
-Sure i will add in my To-Do list.
+> +			tsf = pmlmeext->TSFValue - do_div(pmlmeext->TSFValue, (pmlmeinfo->bcn_interval*1024)) - 1024; /* us */
 
-Thanks,
-Maulik
+rounddown(pmlmeext->TSFValue, pmlmeinfo->bcn_interval * 1024) - 1024
+is a better replacement for
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> -			tsf = pmlmeext->TSFValue - rtw_modular64(pmlmeext->TSFValue, (pmlmeinfo->bcn_interval*1024)) - 1024; /* us */
+
+Patch '[PATCH 01/10] staging: rtl8723bs: Remove function 
+rtw_modular64()' have same bug.
+
+Ivan Safonov.
