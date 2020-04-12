@@ -2,95 +2,94 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA30BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20252C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09E7206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HUTO+Qx+"
+	by mail.kernel.org (Postfix) with ESMTP id EC4B7206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 08:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgDLIju (ORCPT
+        id S1726837AbgDLIm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 04:39:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33126 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgDLIjt (ORCPT
+        Sun, 12 Apr 2020 04:42:26 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:57124 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbgDLImZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 04:39:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so7168926wrd.0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 01:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3ydioquZgqLSixo2HGZzKcXImWHvCTw0YsXAUmkffXQ=;
-        b=HUTO+Qx+Z0tSbrVKqd1NH9/8CJwkjJOYIxaDu1HlTYhcZncWsEM0aP/Vh3zuEGoqJy
-         ExIyUty46K0Yb3UhYRyT9Xoxl75DK64ZIdtZ4oca9G6dLZrbJcTXlYcb76cCaAtfWEbp
-         rI9lf60tOgAtDMLE4/K1htsk2SRq/Ii0ZYHXskL0qwmAsJvUM/bpwRj8X6jaUXS03UkJ
-         aMbnHVDbgfMJsEyCBeBjh3d2AweuMui+/Bch+xf1I7cLycDEBn0glzpOM+vV3ESkSFRV
-         w3i1JjTNBEONGyrSaBy/hXdQJQrJ7RrK6zjXyvhlVbtLGf0RbPEU67cgZ/kfNV/bqX13
-         DboQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3ydioquZgqLSixo2HGZzKcXImWHvCTw0YsXAUmkffXQ=;
-        b=VznN0vmnctWmREQAijUNDO2bMu8f5WYBljK7Kjn8VLaG7h4T7k3NPAR3axgAEiCtme
-         vBkJ1A/vkSS5KVmXAhaf/K3hoHGprv96AaSfENyCwn+Jz+zY4lSQb15rijC1yP+6eFos
-         8iZiQIKAGdPcclwysSGmi3XZbyXsy60UqMlzMvpqXN9AD6SvpSFk4sFUSR6I8bu8Wp6X
-         erETRDuIqSMgPEww7bOWOvhcFYANgdSMtlwgg8Xbi9V23Pq4m2Ek3BKeGS14DVeYvj8g
-         Hd7HFRDa8oUjOJ6RNprdGK7fOsQQIUyiEf6uS1jz+8+IFkzK8LV4l2s0sEGhrOUEATi1
-         /9Sg==
-X-Gm-Message-State: AGi0Pua7uYf4/W63ZxTJdahMtnsJNAejv/VlbGUg/LIfUHRVXzvCVe5W
-        q5OuGNLKRi8BYAXBdl+dgBQWsJ4I+rA=
-X-Google-Smtp-Source: APiQypJoZQU2qKjrNS9LUnKMGyhn3HCZq9g+cbw5ltOT5bSCdNAyA4Llpbaa+RN6tpZqI9bHl8ykXQ==
-X-Received: by 2002:a5d:4cc7:: with SMTP id c7mr12730820wrt.375.1586680786499;
-        Sun, 12 Apr 2020 01:39:46 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.googlemail.com with ESMTPSA id t67sm10373203wmg.40.2020.04.12.01.39.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Apr 2020 01:39:45 -0700 (PDT)
-Subject: Re: [PATCH V2 1/9] thermal: Move default governor config option to
- the internal header
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     amit.kucheria@verdurent.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200402142747.8307-1-daniel.lezcano@linaro.org>
- <271484966db322cb052b59833a4babcfb8488d95.camel@intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <86c25a5a-f339-a6f1-fb5a-568c7f158125@linaro.org>
-Date:   Sun, 12 Apr 2020 10:39:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 12 Apr 2020 04:42:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=rocking@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvGWLBf_1586680942;
+Received: from 30.25.201.141(mailfrom:rocking@linux.alibaba.com fp:SMTPD_---0TvGWLBf_1586680942)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 12 Apr 2020 16:42:22 +0800
+From:   Peng Wang <rocking@linux.alibaba.com>
+Subject: Re: [PATCH] sched/fair: Simplify the code of should_we_balance()
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org
+References: <245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com>
+Message-ID: <6f372bce-151e-79e1-2fda-d8b2bcf777d6@linux.alibaba.com>
+Date:   Sun, 12 Apr 2020 16:42:21 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <271484966db322cb052b59833a4babcfb8488d95.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/2020 10:35, Zhang Rui wrote:
-> Hi, Daniel,
+On 4/11/20 5:20 PM, Peng Wang wrote:
+> We only consider group_balance_cpu() after there is no idle
+> cpu. So, just do comparison before return at these two cases.
 > 
-> please feel free to add my Acked-by for the whole patch set.
+> Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+> ---
+>   kernel/sched/fair.c | 16 +++++-----------
+>   1 file changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1ea3ddd..81b2c647 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9413,7 +9413,7 @@ static int active_load_balance_cpu_stop(void *data);
+>   static int should_we_balance(struct lb_env *env)
+>   {
+>   	struct sched_group *sg = env->sd->groups;
+> -	int cpu, balance_cpu = -1;
+> +	int cpu;
+>   
+>   	/*
+>   	 * Ensure the balancing environment is consistent; can happen
+> @@ -9434,18 +9434,12 @@ static int should_we_balance(struct lb_env *env)
+>   		if (!idle_cpu(cpu))
+>   			continue;
+>   
+> -		balance_cpu = cpu;
+> -		break;
+> +		/* Are we the first idle CPU? */
+> +		return cpu == env->dst_cpu;
+>   	}
+>   
+> -	if (balance_cpu == -1)
+> -		balance_cpu = group_balance_cpu(sg);
+> -
+> -	/*
+> -	 * First idle CPU or the first CPU(busiest) in this sched group
+> -	 * is eligible for doing load balancing at this and above domains.
+> -	 */
+> -	return balance_cpu == env->dst_cpu;
+> +	/* Are we the first balance CPU of this group? */
+> +	return group_balance_cpu(sg) == env->dst_cpu;
+>   }
+>   
+>   /*
+> 
 
-Great, thanks!
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
++juri.lelli@redhat.com
