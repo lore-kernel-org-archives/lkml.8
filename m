@@ -2,212 +2,461 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77DDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E387DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974A5206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A788420709
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586689019;
+	bh=X3fEng+5biN0i5V0U5O+A5zlawcrsCFcufGJy9DUGmU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DH67Ufm5J1eGRdrp3XWgcU9v7sL/B7nXBDL50OXEWFEEF78J/ifRsnIYXcorV1v4E
+	 drYT10J/47eVmAIYLiJOavLy5TiB1n7P9Awu+ZXlKDdJ2uoDKOnrQIofPtIovvmtIv
+	 AQwt8y0ZxP0cjKb9pPgPXztKdDu3M018d3D3i0ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgDLKwZ (ORCPT
+        id S1726964AbgDLK45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 06:52:25 -0400
-Received: from m176151.mail.qiye.163.com ([59.111.176.151]:35544 "EHLO
-        m176151.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgDLKwY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 06:52:24 -0400
-Received: from vivo.com (wm-11.qy.internal [127.0.0.1])
-        by m176151.mail.qiye.163.com (Hmail) with ESMTP id BF7E9483AFA;
-        Sun, 12 Apr 2020 18:52:10 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AHgABAClCOKoeJL-ajjSxaqg.3.1586688730769.Hmail.wenhu.wang@vivo.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCAxLzNdIGRyaXZlcjogcnBtb246IG5ldyBkcml2ZXIgUmVtb3RlIFByb2Nlc3NvciBNb25pdG9y?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <64b5f77a-7bc1-ee43-0f83-1ff323e4ac51@infradead.org>
+        Sun, 12 Apr 2020 06:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgDLK44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 06:56:56 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD41206DA;
+        Sun, 12 Apr 2020 10:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586689015;
+        bh=X3fEng+5biN0i5V0U5O+A5zlawcrsCFcufGJy9DUGmU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YMjHcv14QqrIEqk/Zr0tZsBfoApNMYDONx1fBb+edqxGs1cn+vmL1hi5/DY39m2gX
+         qUSD7Xp6fnsZnBmMM5QtNZ7Vpg9Q1A7vQ7HDWH+6lCHOmIIK4e+liq4kvdrZE974OW
+         j91MrbloJW3JSGAYsxd1o8AWZl457+lg2ZCxV+hg=
+Date:   Sun, 12 Apr 2020 11:56:50 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 2/2 v8] iio: Add SEMTECH SX9310/9311 sensor driver
+Message-ID: <20200412115650.5312f05e@archlinux>
+In-Reply-To: <CAHp75VcuPoVK_+KV+88Di1dUFZ9S8-1nNqo2s8a_n3vgSMoecg@mail.gmail.com>
+References: <20200408175058.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
+        <CAHp75VcuPoVK_+KV+88Di1dUFZ9S8-1nNqo2s8a_n3vgSMoecg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Sun, 12 Apr 2020 18:52:10 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Sun, 12 Apr 2020 18:52:10 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVOSkNLS0tKSU5DQ05LSllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSkNIQkpJT05NN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Mxw6OTo4Fzg0MBQeMTdWGhERKAMaChxVSFVKTkNNTUNDTEhJQ05LVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUpPT0pMNwY+
-X-HM-Tid: 0a716e04a6a193b5kuwsbf7e9483afa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksCkZyb206IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPgpEYXRlOiAyMDIw
-LTA0LTEyIDAyOjA4OjA5ClRvOiAgV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4sZ3Jl
-Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwpTdWJq
-ZWN0OiBSZTogW1BBVENIIDEvM10gZHJpdmVyOiBycG1vbjogbmV3IGRyaXZlciBSZW1vdGUgUHJv
-Y2Vzc29yIE1vbml0b3I+SGktLQo+Cj5PbiA0LzExLzIwIDI6NTIgQU0sIFdhbmcgV2VuaHUgd3Jv
-dGU6Cj4+IFJQTU9OIGlzIGEgZHJpdmVyIGZyYW1ld29yay4gSXQgc3VwcG9ydHMgcmVtb3RlIHBy
-b2Nlc3NvciBtb25pdG9yCj4+IGZyb20gdXNlciBsZXZlbC4gVGhlIGJhaXNjIGNvbXBvbmVudHMg
-YXJlIGEgY2hhcmFjdGVyIGRldmljZQo+Cj4gICAgICAgICAgICAgICAgICAgICAgIGJhc2ljCgpB
-ZGRyZXNzZWQgaW4gdjIKCj4KPj4gd2l0aCBzeXNmcyBpbnRlcmZhY2VzIGZvciB1c2VyIHNwYWNl
-IGNvbW11bmljYXRpb24gYW5kIGRpZmZlcmVudAo+PiBraW5kcyBvZiBtZXNzYWdlIGRyaXZlcnMg
-aW50cm9kdWNlZCBtb2R1bGFybHksIHdoaWNoIGFyZSB1c2VkIHRvCj4+IGNvbW11bmljYXRlIHdp
-dGggcmVtb3RlIHByb2Nlc3NvcnMuCj4+IAo+PiBBcyBmb3IgdXNlciBzcGFjZSwgb25lIGNhbiBn
-ZXQgbm90aWZpY2F0aW9ucyBvZiBkaWZmZXJlbnQgZXZlbnRzCj4+IG9mIHJlbW90ZSBwcm9jZXNz
-b3JzLCBsaWtlIHRoZWlyIHJlZ2lzdHJhdGlvbnMsIHRocm91Z2ggc3RhbmRhcmQKPj4gZmlsZSBy
-ZWFkIG9wZXJhdGlvbiBvZiB0aGUgZmlsZSBkaXNjcmlwdG9ycyByZWxhdGVkIHRvIHRoZSBleHBv
-cnRlZAo+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRvcnMKCkFk
-ZHJlc3NlZCBpbiB2MgoKPgo+PiBjaGFyYWN0ZXIgZGV2aWNlcy4gQWN0aW9ucyBjYW4gYWxzbyBi
-ZSB0YWtlbiBpbnRvIGFjY291bnQgdmlhCj4+IHN0YW5kYXJkIHdyaXRlIG9wZXJhdGlvbnMgdG8g
-dGhlIGRldmljZXMuIEJlc2lkZXMsIHRoZSBzeXNmcyBjbGFzcwo+PiBhdHRyaWJ1dGVzIGNvdWxk
-IGJlIGFjY2Vzc2VkIGNvbnZlbmllbnRseS4KPj4gCj4+IE1lc3NhZ2UgZHJpdmVycyBhY3QgYXMg
-ZW5naW5lcyB0byBjb21tdW5pY2F0ZSB3aXRoIHJlbW90ZSBwcm9jZXNzb3JzLgo+PiBDdXJyZW50
-bHkgUlBNT05fUU1JIGlzIGF2YWlsYWJsZSB3aGljaCB1c2VzIFFNSSBpbmZyYXN0cnVjdHVyZXMK
-Pj4gb24gUXVhbGNvbW0gU29DIFBsYXRmb3Jtcy4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IFdhbmcg
-V2VuaHUgPHdlbmh1LndhbmdAdml2by5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9LY29uZmlnICAg
-ICAgICB8ICAgMiArCj4+ICBkcml2ZXJzL01ha2VmaWxlICAgICAgIHwgICAxICsKPj4gIGRyaXZl
-cnMvcnBtb24vS2NvbmZpZyAgfCAgMjYgKysrCj4+ICBkcml2ZXJzL3JwbW9uL01ha2VmaWxlIHwg
-ICAxICsKPj4gIGRyaXZlcnMvcnBtb24vcnBtb24uYyAgfCA1MDUgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysKPj4gIGluY2x1ZGUvbGludXgvcnBtb24uaCAgfCAgNjgg
-KysrKysrCj4+ICA2IGZpbGVzIGNoYW5nZWQsIDYwMyBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ycG1vbi9LY29uZmlnCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ycG1vbi9NYWtlZmlsZQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcnBt
-b24vcnBtb24uYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvcnBtb24uaAo+
-PiAKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnBtb24vS2NvbmZpZyBiL2RyaXZlcnMvcnBtb24v
-S2NvbmZpZwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjUw
-NWQyNjNlMDg2Nwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMvcnBtb24vS2NvbmZp
-Zwo+PiBAQCAtMCwwICsxLDI2IEBACj4+ICsjCj4+ICsjIFJlbW90ZSBQcm9jZXNzb3IgTW9uaXRv
-ciBEcml2ZXJzCj4+ICsjCj4+ICttZW51ICJSZW1vdGUgUHJvY2Vzc29yIE1vbml0b3IgRHJpdmVy
-cyIKPj4gKwo+PiArY29uZmlnIFJQTU9OCj4+ICsJdHJpc3RhdGUgIlJlbW90ZSBQcm9jZXNzb3Ig
-TW9uaXRvciBDb3JlIEZyYW1ld29yayIKPj4gKwloZWxwCj4+ICsJICBSUE1PTiBpcyBhIGRyaXZl
-ciBmcmFtZXdvcmsuIEl0IHN1cHBvcnRzIHJlbW90ZSBwcm9jZXNzb3IgbW9uaXRvcgo+PiArCSAg
-ZnJvbSB1c2VyIGxldmVsLiBUaGUgYmFpc2MgY29tcG9uZW50cyBhcmUgYSBjaGFyYWN0ZXIgZGV2
-aWNlCj4KPgkgICAgICAgICAgICAgICAgICAgICAgIGJhc2ljCgpBZGRyZXNzZWQgaW4gdjIKCj4K
-Pj4gKwkgIHdpdGggc3lzZnMgaW50ZXJmYWNlcyBmb3IgdXNlciBzcGFjZSBjb21tdW5pY2F0aW9u
-IGFuZCBkaWZmZXJlbnQKPj4gKwkgIGtpbmRzIG9mIG1lc3NhZ2UgZHJpdmVycyBpbnRyb2R1Y2Vk
-IG1vZHVsYXJseSwgd2hpY2ggYXJlIHVzZWQgdG8KPj4gKwkgIGNvbW11bmljYXRlIHdpdGggcmVt
-b3RlIHByb2Nlc3NvcnMuCj4+ICsKPj4gKwkgIEFzIGZvciB1c2VyIHNwYWNlLCBvbmUgY2FuIGdl
-dCBub3RpZmljYXRpb25zIG9mIGRpZmZlcmVudCBldmVudHMKPj4gKwkgIG9mIHJlbW90ZSBwcm9j
-ZXNzb3JzLCBsaWtlIHRoZWlyIHJlZ2lzdHJhdGlvbnMsIHRocm91Z2ggc3RhbmRhcmQKPj4gKwkg
-IGZpbGUgcmVhZCBvcGVyYXRpb24gb2YgdGhlIGZpbGUgZGlzY3JpcHRvcnMgcmVsYXRlZCB0byB0
-aGUgZXhwb3J0ZWQKPgo+CSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXNjcmlw
-dG9ycwoKQWRkcmVzc2VkIGluIHYyCgo+Cj4+ICsJICBjaGFyYWN0ZXIgZGV2aWNlcy4gQWN0aW9u
-cyBjYW4gYWxzbyBiZSB0YWtlbiBpbnRvIGFjY291bnQgdmlhCj4+ICsJICBzdGFuZGFyZCB3cml0
-ZSBvcGVyYXRpb25zIHRvIHRoZSBkZXZpY2VzLiBCZXNpZGVzLCB0aGUgc3lzZnMgY2xhc3MKPj4g
-KwkgIGF0dHJpYnV0ZXMgY291bGQgYmUgYWNjZXNzZWQgY29udmVuaWVudGx5Lgo+PiArCj4+ICsJ
-ICBNZXNzYWdlIGRyaXZlcnMgYWN0IGFzIGVuZ2luZXMgdG8gY29tbXVuaWNhdGUgd2l0aCByZW1v
-dGUgcHJvY2Vzc29ycy4KPj4gKwkgIEN1cnJlbnRseSBSUE1PTl9RTUkgaXMgYXZhaWxhYmxlIHdo
-aWNoIHVzZXMgUU1JIGluZnJhc3RydWN0dXJlcwo+PiArCSAgb24gUXVhbGNvbW0gU29DIFBsYXRm
-b3Jtcy4KPj4gKwo+PiArZW5kbWVudQo+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3JwbW9uL3Jw
-bW9uLmMgYi9kcml2ZXJzL3JwbW9uL3JwbW9uLmMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4g
-aW5kZXggMDAwMDAwMDAwMDAwLi42NWFhYjRkZTY3MzMKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysg
-Yi9kcml2ZXJzL3JwbW9uL3JwbW9uLmMKPj4gQEAgLTAsMCArMSw1MDUgQEAKPj4gKy8vIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAy
-MDIwIFZpdm8gQ29tbXVuaWNhdGlvbiBUZWNobm9sb2d5IENvLiBMdGQuCj4+ICsgKiBDb3B5cmln
-aHQgKEMpIDIwMjAgV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gKyAqIEFsbCBy
-aWdodHMgcmVzZXJ2ZWQuCj4+ICsgKgo+PiArICogUlBNT046IEFuIGltcGxlbWVudGF0aW9uIG9m
-IHJlbW90ZSBwcm9jZXNzb3IgbW9uaXRvciBmcmVhbXdvcmsKPgo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmcmFtZXdvcmsKCkFkZHJl
-c3NlZCBpbiB2MgoKPgo+PiArICogZm9yIHBsYXRmb3JtcyB0aGF0IG11bHRpLXByb2Nlc3NvcnMg
-ZXhpc3RzLiBSUE1PTiBpcyBpbXBsZW1lbnRlZAo+Cj4gICAgICBjb25mdXNpbmcgd29yZGluZyBh
-Ym92ZSBeXl5eXl5eXl5eXl5eXl5eXgoKQWRkcmVzc2VkIGluIHYyCgo+Cj4+ICsgKiB3aXRoIGNo
-YXJkZXYgYW5kIHN5c2ZzIGNsYXNzIGFzIGludGVyZmFjZXMgdG8gY29tbXVuaWNhdGUgd2l0aAo+
-PiArICogdGhlIHVzZXIgbGV2ZWwuIEl0IHN1cHBvcnRzIGRpZmZlcmVudCBjb21tdW5pY2F0aW9u
-IGludGVyZmFjZXMKPj4gKyAqIGFkZGVkIG1vZHVsYXJseSB3aXRoIHJlbW90ZSBwcm9jZXNzb3Jz
-LiBDdXJyZW50bHkgUU1JIGltcGxlbWVudGF0aW9uCj4+ICsgKiBpcyBhdmFpbGFibGUuCj4+ICsg
-Kgo+PiArICogUlBNT04gY291bGQgYmUgdXNlZCB0byBkZXRlY3QgdGhlIHN0YWJpbGl0aWVzIG9m
-IHJlbW90ZSBwcm9jZXNzb3JzLAo+PiArICogY29sbGVjdCBhbnkga2luZHMgb2YgaW5mb3JtYXRp
-b24geW91IGFyZSBpbnRlcmVzdGVkIHdpdGgsIHRha2UKPgo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcmVzdGVkIGluLAoKQWRkcmVzc2VkIGluIHYy
-Cgo+Cj4+ICsgKiBhY3Rpb25zIGxpa2UgY29ubmVjdGlvbiBzdGF0dXMgY2hlY2ssIGFuZCBzbyBv
-bi4gRW5oYW5jZW1lbnRzIGNhbgo+PiArICogYmUgbWFkZSB1cG9uIGN1cnJlbnQgaW1wbGVtZW50
-YXRpb24uCj4+ICsgKi8KPj4gKwo+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+PiArI2lu
-Y2x1ZGUgPGxpbnV4L2NkZXYuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9ycG1vbi5oPgo+PiArCj4+
-ICsjZGVmaW5lIFJQTU9OX01BWF9ERVZJQ0VTCSgxVSA8PCBNSU5PUkJJVFMpCj4+ICsjZGVmaW5l
-IFJQTU9OX05BTUUJCQkicnBtb24iCj4+ICsKPj4gK3N0YXRpYyBpbnQgcnBtb25fbWFqb3I7Cj4+
-ICtzdGF0aWMgc3RydWN0IGNkZXYgKnJwbW9uX2NkZXY7Cj4+ICtzdGF0aWMgREVGSU5FX0lEUihy
-cG1vbl9pZHIpOwo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMgcnBtb25f
-Zm9wczsKPj4gKwo+PiArLyogUHJvdGVjdCBpZHIgYWNjZXNzZXMgKi8KPj4gK3N0YXRpYyBERUZJ
-TkVfTVVURVgobWlub3JfbG9jayk7Cj4+ICsKPgo+W3NuaXBdCj4KPj4gKy8qKgo+PiArICogcnBt
-b25fZXZlbnRfbm90aWZ5IC0gdHJpZ2dlciBhbiBub3RpZnkgZXZlbnQKPj4gKyAqIEBpbmZvOiAg
-UlBNT04gZGV2aWNlIGNhcGFiaWxpdGllcwo+PiArICogQGV2ZW50OiBSUE1PTiBldmVudCB0byBi
-ZSB0cmlnZ2VyZWQKPj4gKyAqLwo+PiArdm9pZCBycG1vbl9ldmVudF9ub3RpZnkoc3RydWN0IHJw
-bW9uX2luZm8gKmluZm8sIHUzMiBldmVudCkKPj4gK3sKPj4gKwlzdHJ1Y3QgcnBtb25fZGV2aWNl
-ICpycG1vbmRldiA9IGluZm8tPnJwbW9uX2RldjsKPj4gKwo+PiArCWlmIChldmVudCA+PSBSUE1P
-Tl9FVkVOVF9NQVgpIHsKPj4gKwkJcHJfZXJyKCJFcnJvciB1bi1zdXBwb3J0ZWQgcnBtb24gZXZl
-bnQgJWQiLCBldmVudCk7Cj4KPgkJICAgICAgICAgICAgICB1bnN1cHBvcnRlZAoKQWRkcmVzc2Vk
-IGluIHYyCgo+Cj4+ICsJCXJldHVybjsKPj4gKwl9Cj4+ICsKPj4gKwlhdG9taWNfc2V0KCZycG1v
-bmRldi0+ZXZlbnQsIFJQTU9OX0VWRU5UKGV2ZW50KSk7Cj4+ICsJd2FrZV91cF9pbnRlcnJ1cHRp
-YmxlKCZycG1vbmRldi0+d2FpdCk7Cj4+ICsJa2lsbF9mYXN5bmMoJnJwbW9uZGV2LT5hc3luY19x
-dWV1ZSwgU0lHSU8sIFBPTExfSU4pOwo+PiArfQo+PiArRVhQT1JUX1NZTUJPTF9HUEwocnBtb25f
-ZXZlbnRfbm90aWZ5KTsKPgo+W3NuaXBdCj4KPj4gKy8qKgo+PiArICogcnBtb25fcmVnaXN0ZXJf
-ZGV2aWNlIC0gcmVnaXN0ZXIgYSBuZXcgcnBtb24gaW50ZXJmYWNlIGRldmljZQo+PiArICogQG93
-bmVyOgltb2R1bGUgdGhhdCBjcmVhdGVzIHRoZSBuZXcgZGV2aWNlCj4+ICsgKiBAcGFyZW50Oglw
-YXJlbnQgZGV2aWNlCj4+ICsgKiBAaW5mbzoJcm9tb24gZGV2aWNlIGNhcGFiaWxpdGllcwo+Cj4J
-CXMvcm9tb24vcnBtb24vCgpBZGRyZXNzZWQgaW4gdjIKCj4KPj4gKyAqCj4+ICsgKiByZXR1cm5z
-IHplcm8gb24gc3VjY2VzcyBvciBhIG5lZ2F0aXZlIGVycm9yIGNvZGUuCj4KPnVzZSBrZXJuZWwt
-ZG9jIG5vdGF0aW9uOgo+Cj4gICAgKiByZXR1cm46IHplcm8gb24gc3VjY2VzcyBvciBhIG5lZ2F0
-aXZlIGVycm9yIGNvZGUuCj4KCkFkZHJlc3NlZCBpbiB2MgoKPj4gKyAqLwo+PiAraW50IF9fcnBt
-b25fcmVnaXN0ZXJfZGV2aWNlKHN0cnVjdCBtb2R1bGUgKm93bmVyLAo+PiArCQkJICAgIHN0cnVj
-dCBkZXZpY2UgKnBhcmVudCwKPj4gKwkJCSAgICBzdHJ1Y3QgcnBtb25faW5mbyAqaW5mbykKPj4g
-K3sKPj4gKwlzdHJ1Y3QgcnBtb25fZGV2aWNlICpycG1vbmRldjsKPj4gKwlpbnQgcmV0ID0gMDsK
-Pj4gKwo+PiArCWlmICghcnBtb25fY2xhc3NfcmVnaXN0ZXJlZCkKPj4gKwkJcmV0dXJuIC1FUFJP
-QkVfREVGRVI7Cj4+ICsKPj4gKwlpZiAoIXBhcmVudCB8fCAhaW5mbyB8fCAhaW5mby0+bmFtZSB8
-fCAhaW5mby0+dmVyc2lvbikKPj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4+ICsKPj4gKwlpbmZvLT5y
-cG1vbl9kZXYgPSBOVUxMOwo+PiArCj4+ICsJcnBtb25kZXYgPSBremFsbG9jKHNpemVvZigqcnBt
-b25kZXYpLCBHRlBfS0VSTkVMKTsKPj4gKwlpZiAoIXJwbW9uZGV2KQo+PiArCQlyZXR1cm4gLUVO
-T01FTTsKPj4gKwo+PiArCXJwbW9uZGV2LT5vd25lciA9IG93bmVyOwo+PiArCXJwbW9uZGV2LT5p
-bmZvID0gaW5mbzsKPj4gKwltdXRleF9pbml0KCZycG1vbmRldi0+aW5mb19sb2NrKTsKPj4gKwlp
-bml0X3dhaXRxdWV1ZV9oZWFkKCZycG1vbmRldi0+d2FpdCk7Cj4+ICsJYXRvbWljX3NldCgmcnBt
-b25kZXYtPmV2ZW50LCAwKTsKPj4gKwo+PiArCXJldCA9IHJwbW9uX2dldF9taW5vcihycG1vbmRl
-dik7Cj4+ICsJaWYgKHJldCkgewo+PiArCQlrZnJlZShycG1vbmRldik7Cj4+ICsJCXJldHVybiBy
-ZXQ7Cj4+ICsJfQo+PiArCj4+ICsJZGV2aWNlX2luaXRpYWxpemUoJnJwbW9uZGV2LT5kZXYpOwo+
-PiArCXJwbW9uZGV2LT5kZXYuZGV2dCA9IE1LREVWKHJwbW9uX21ham9yLCBycG1vbmRldi0+bWlu
-b3IpOwo+PiArCXJwbW9uZGV2LT5kZXYuY2xhc3MgPSAmcnBtb25fY2xhc3M7Cj4+ICsJcnBtb25k
-ZXYtPmRldi5wYXJlbnQgPSBwYXJlbnQ7Cj4+ICsJcnBtb25kZXYtPmRldi5yZWxlYXNlID0gcnBt
-b25fZGV2aWNlX3JlbGVhc2U7Cj4+ICsJZGV2X3NldF9kcnZkYXRhKCZycG1vbmRldi0+ZGV2LCBy
-cG1vbmRldik7Cj4+ICsKPj4gKwlyZXQgPSBkZXZfc2V0X25hbWUoJnJwbW9uZGV2LT5kZXYsIFJQ
-TU9OX05BTUUiJWQiLCBycG1vbmRldi0+bWlub3IpOwo+PiArCWlmIChyZXQpCj4+ICsJCWdvdG8g
-ZXJyX2RldmljZV9jcmVhdGU7Cj4+ICsKPj4gKwlyZXQgPSBkZXZpY2VfYWRkKCZycG1vbmRldi0+
-ZGV2KTsKPj4gKwlpZiAocmV0KQo+PiArCQlnb3RvIGVycl9kZXZpY2VfY3JlYXRlOwo+PiArCj4+
-ICsJaWYgKHJwbW9uZGV2LT5pbmZvLT5ycG1vbl9kZXZfYWRkX2F0dHJzKSB7Cj4+ICsJCXJldCA9
-IHJwbW9uZGV2LT5pbmZvLT5ycG1vbl9kZXZfYWRkX2F0dHJzKHJwbW9uZGV2KTsKPj4gKwkJaWYg
-KHJldCkKPj4gKwkJCWdvdG8gZXJyX2Rldl9hZGRfYXR0cnM7Cj4+ICsJfQo+PiArCj4+ICsJaW5m
-by0+cnBtb25fZGV2ID0gcnBtb25kZXY7Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPj4gKwo+PiArZXJy
-X2Rldl9hZGRfYXR0cnM6Cj4+ICsJZGV2aWNlX2RlbCgmcnBtb25kZXYtPmRldik7Cj4+ICtlcnJf
-ZGV2aWNlX2NyZWF0ZToKPj4gKwlycG1vbl9mcmVlX21pbm9yKHJwbW9uZGV2KTsKPj4gKwlwdXRf
-ZGV2aWNlKCZycG1vbmRldi0+ZGV2KTsKPj4gKwlyZXR1cm4gcmV0Owo+PiArfQo+PiArRVhQT1JU
-X1NZTUJPTF9HUEwoX19ycG1vbl9yZWdpc3Rlcl9kZXZpY2UpOwo+Cj5bc25pcF0KPgo+PiArbW9k
-dWxlX2V4aXQocnBtb25fZXhpdCk7Cj4+ICsKPj4gK01PRFVMRV9BVVRIT1IoIldhbmcgV2VuaHUi
-KTsKPgo+UGxlYXNlIGFkZCBlbWFpbCBhZGRyZXNzIGluIHRoZSBNT0RVTEVfQVVUSE9SKCkgc3Ry
-aW5nLgo+QWJvdXQgMy80IG9mIGFsbCB1c2VzIG9mIE1PRFVMRV9BVVRIT1IoKSBkbyBzby4KPgoK
-QWRkcmVzc2VkIGluIHYyCgo+PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJSZW1vdGUgUHJvY2Vzc29y
-IE1vbml0b3IgQ29yZSBGcmFtZXdvcmsiKTsKPj4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsK
-Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcnBtb24uaCBiL2luY2x1ZGUvbGludXgvcnBt
-b24uaAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjQwOTgz
-YTNiNTY1NQo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvcnBtb24uaAo+
-PiBAQCAtMCwwICsxLDY4IEBACj4+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
-MC1vbmx5ICovCj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAyMDIwIFZpdm8gQ29tbXVuaWNh
-dGlvbiBUZWNobm9sb2d5IENvLiBMdGQuCj4+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMjAgV2FuZyBX
-ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gKyAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4+
-ICsgKi8KPj4gKwo+PiArI2lmbmRlZiBSUE1PTl9ICj4+ICsjZGVmaW5lIFJQTU9OX0gKPj4gKwo+
-PiArI2luY2x1ZGUgPG5ldC9zb2NrLmg+Cj4+ICsKPj4gKy8qIFJQTU9OIGFjdGlvbiB3b3VsZCBi
-ZSB0YWtlbiAqLwo+PiArZW51bSBycG1vbl9leGVjIHsKPj4gKwlSUE1PTl9FWEVDX0NIRUNLX0NP
-Tk4gPSAwLAo+PiArCVJQTU9OX0VYRUNfTUFYLAo+PiArfTsKPj4gKwo+PiArLyogUlBNT04gZXZl
-bnRzIHRoYXQgbWF5IGJlIG5vdGlmaWVkICovCj4+ICtlbnVtIHJwbW9uX2V2ZW50IHsKPj4gKwlS
-UE1PTl9FVkVOVF9DSEtDT05OX0ZBSUwgPSAwLAo+PiArCVJQTU9OX0VWRU5UX1JFR0lTVEVSLAo+
-PiArCVJQTU9OX0VWRU5UX01BWCwKPj4gK307Cj4+ICsKPj4gKyNkZWZpbmUgUlBNT05fRVZFTlQo
-eCkJKDB4MSA8PCB4KQo+PiArI2RlZmluZSBSUE1PTl9BQ1RJT04oeCkJKDB4MSA8PCB4KQo+Cj5V
-bmxlc3MgeW91IGFyZSB2ZXJ5IHN1cmUgdGhhdCAneCcgYWJvdmUgaXMgbmV2ZXIgbW9yZSB0aGFu
-IGEgc2ltcGxlCj5leHByZXNzaW9uLCB5b3Ugc2hvdWxkIHB1dCB4IGluIHBhcmVudGhlc2VzLCBs
-aWtlIHNvOgo+CgpBZGRyZXNzZWQgaW4gdjIKCj4+ICsjZGVmaW5lIFJQTU9OX0VWRU5UKHgpCSgx
-IDw8ICh4KSkKPj4gKyNkZWZpbmUgUlBNT05fQUNUSU9OKHgpCSgxIDw8ICh4KSkKPgo+c28gdGhh
-dCB0aGVyZSBjYW5ub3QgYmUgYW55IG9wZXJhdG9yIHByZWNlZGVuY2UgcHJvYmxlbXMuCj4KPgo+
-dGhhbmtzLgo+LS0gCj5+UmFuZHkKPgoKdGhhbmtzLCAKV2VuaHUNCg0K
+On Fri, 10 Apr 2020 13:52:16 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> One side note. Whenever you prepare patches do the following:
+> - use -v<n> to git-format-patch to versioning it by using standard
+> template (<n> is a version number)
+> - use --thread to make messages in one bunch
+> - resend entire series
+> - do not send patches more often than once per 24 hours
+
+If no one replied to earlier thread and you are fixing up something
+you noticed yourself, please also reply to that thread so that
+no one accidentally reviews it when catching up on emails!
+
+Jonathan
+
+> 
+> On Thu, Apr 9, 2020 at 2:54 AM Daniel Campello <campello@chromium.org> wrote:
+> >
+> > Add SEMTECH SX9310/9311 driver.
+> >
+> > The device has the following entry points:
+> >
+> > Usual frequency:
+> > - sampling_frequency
+> > - sampling_frequency_available
+> >
+> > Instant reading of current values for different sensors:
+> > - in_proximity0_raw
+> > - in_proximity1_raw
+> > - in_proximity2_raw
+> > - in_proximity3_comb_raw
+> > and associated events in events/
+> >
+> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> > Signed-off-by: Enrico Granata <egranata@chromium.org>  
+> 
+> This is not understandable. Are they who helped you develop the code
+> (we have a special tag, i.e. Co-developed-by in addition to SoB), or
+> just people in the middle? Then the question is, how come author is
+> you and not Gwendal?
+> 
+> ...
+> 
+> > +What:          /sys/bus/iio/devices/iio:deviceX/in_proximity3_comb_raw  
+> 
+> > +Description:
+> > +               Proximity measurement indicating that some object is
+> > +               near the combined sensor. The combined sensor presents
+> > +               proximity measurements constructed by hardware by
+> > +               combining measurements taken from a given set of
+> > +               physical sensors.  
+> 
+> I'm wondering if we rather have some standard tag across sensors for
+> combined values.
+> It's particular to proximity sensors only? Would it stay like this
+> forever? Won't we come to the very heavy and noisy ABI if more sensors
+> are gaining something like this?
+
+It's the first instance I've ever seen of this particular oddity.
+We have combined magic for cases like accelerometers where there is
+maths involved (x^2 + y^2 + z^2) but this is a bit 'special'.
+To be honest, I'm not sure what the point in actually doing it in a
+design is.
+
+So yes we are paying a price in ABI by doing this but until we have some
+visibility of more sensors doing it, I'm not sure we can come up with a
+general solution.
+
+> 
+> ...
+> 
+> > + * Copyright 2018 Google LLC.  
+> 
+> I remember you did changes in this year...
+> Is your changes copyrighted by G company?
+> 
+> > + * Reworked April 2019 by Evan Green <evgreen@chromium.org>  
+> 
+> in April
+> 
+> > + * and January 2020 by Daniel Campello <campello@chromium.org>  
+> 
+> in January
+> 
+> And since it looks like a sentence, put period at the end of it.
+> 
+> ...
+> 
+> > +#include <linux/acpi.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pm.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/slab.h>  
+> 
+> ...
+> 
+> > +#define SX9310_REG_IRQ_MSK                             0x03  
+> 
+> Is MSK abbreviation in datasheet? Please spell it how it's in datasheet.
+> 
+> > +#define   SX9310_CONVDONE_IRQ                          BIT(3)
+> > +#define   SX9310_FAR_IRQ                               BIT(5)
+> > +#define   SX9310_CLOSE_IRQ                             BIT(6)  
+> 
+> > +#define   SX9310_EVENT_IRQ             (SX9310_FAR_IRQ | SX9310_CLOSE_IRQ)  
+> 
+> Is it listed in hardware, or simple an addition to have it easier to
+> handle in the code?
+> 
+> ...
+> 
+> > +#define   SX9310_REG_PROX_CTRL0_EN_MASK                        0x0F  
+> 
+> GENMASK()
+> 
+> ...
+> 
+> > +#define   SX9310_REG_PROX_CTRL2_COMBMODE_ALL           0x80  
+> 
+> BIT() ?
+> 
+> > +#define   SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC       0x04  
+> 
+> BIT() ?
+> 
+> If it is not a one bit value, better to use (value << shift) and
+> perhaps mention other possibilities.
+> But for current case looks like anyway BIT() macro can be suitable.
+> 
+> You can revisit all the rest definitions, but it's up to you, just try
+> to be close to the datasheet.
+> 
+> ...
+> 
+> > +struct sx9310_data {  
+> 
+> > +       struct i2c_client *client;  
+> 
+> > +};  
+> 
+> ...
+> 
+> > +static ssize_t sx9310_show_samp_freq_avail(struct device *dev,
+> > +                                          struct device_attribute *attr,
+> > +                                          char *buf)
+> > +{
+> > +       size_t len = 0;
+> > +       int i;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(sx9310_samp_freq_table); i++)
+> > +               len += scnprintf(buf + len, PAGE_SIZE - len, "%d.%d ",
+> > +                                sx9310_samp_freq_table[i].val,
+> > +                                sx9310_samp_freq_table[i].val2);
+> > +       buf[len - 1] = '\n';
+> > +       return len;
+> > +}
+> > +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(sx9310_show_samp_freq_avail);  
+> 
+> Jonathan, what is the best practice now with this kind of output? I
+> think that IIO core provides a unified format to out this.
+
+Yeah.  I've been a bit lazy on pushing the read_avail callback other than
+in cases where we need to provide in kernel access.  However, in this
+particular case the code is replicating what the core does so would be
+nice to switch to the avail callbacks if possible.
+
+At somepoint I'll actually add good documentation on how to use those
+then start being a lot fussier about moving over to them for new
+code.  To do that I'd also want to convert a few drivers to give more
+examples of the various options.  It's been on the todo list for a while
+(that list is far too long!)
+
+If anyone wants to take this task on they would be most welcome - however
+this probably isn't one for a beginner!
+
+Jonathan
+
+> 
+> ...
+> 
+> > +static int sx9310_read_prox_data(struct sx9310_data *data,
+> > +                                const struct iio_chan_spec *chan, __be16 *val)
+> > +{
+> > +       int ret;
+> > +
+> > +       ret = regmap_write(data->regmap, SX9310_REG_SENSOR_SEL, chan->channel);  
+> 
+> > +       if (ret < 0)  
+> 
+> Do you need all these ' < 0' checks? Revisit code and drop where it's
+> not needed, like here.
+> 
+> > +               return ret;
+> > +
+> > +       return regmap_bulk_read(data->regmap, chan->address, val,  
+> 
+> > +                               sizeof(__be16));  
+> 
+> sizeof(*val)
+> 
+> > +}  
+> 
+> ...
+> 
+> > +static int sx9310_read_proximity(struct sx9310_data *data,
+> > +                                const struct iio_chan_spec *chan, int *val)
+> > +{  
+> 
+> > +       int ret = 0;  
+> 
+> Unneede assignment.
+> 
+> > +       if (ret < 0)
+> > +               goto out_disable_irq;  
+> 
+> And if the path was non-IRQ one do we need to call ..._disable_irq()?
+> 
+> > +       if (ret < 0)
+> > +               goto out_disable_irq;  
+> 
+> Ditto.
+> 
+> > +       ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
+> > +       if (ret < 0)
+> > +               goto out_put_channel;  
+> 
+> Ditto.
+> 
+> > +       return IIO_VAL_INT;
+> > +
+> > +out_disable_irq:
+> > +       sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
+> > +out_put_channel:
+> > +       sx9310_put_read_channel(data, chan->channel);
+> > +out:
+> > +       mutex_unlock(&data->mutex);
+> > +
+> > +       return ret;
+> > +}  
+> 
+> ...
+> 
+> > +static int sx9310_read_samp_freq(struct sx9310_data *data, int *val, int *val2)
+> > +{
+> > +       unsigned int regval;  
+> 
+> > +       int ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &regval);  
+> 
+> Slightly better to assign exactly before use, i.e. below before if (ret).
+> For now it's okay, but rationale is that if you need to inject some
+> code in between in the future, this will become an additional burden.
+> 
+> > +       if (ret < 0)
+> > +               return ret;  
+> 
+> > +}  
+> 
+> ...
+> 
+> > +       for_each_set_bit(chan, &data->chan_event, SX9310_NUM_CHANNELS) {
+> > +               int dir;
+> > +               u64 ev;  
+> 
+> > +               bool new_prox = val & BIT(chan);  
+> 
+> Similar: slightly better to assign before use.
+> 
+> > +
+> > +               if (new_prox == data->prox_stat[chan])
+> > +                       /* No change on this channel. */
+> > +                       continue;  
+> 
+> > +       }  
+> 
+> ...
+> 
+> > +#define SX_INIT(_reg, _def)                    \
+> > +       {                                       \
+> > +               .reg = SX9310_REG_##_reg,       \
+> > +               .def = _def,                    \
+> > +       }  
+> 
+> I think this macro makes it harder to read, and better simple to put
+> these initializers directly into below structure, but it's up to you.
+> 
+> ...
+> 
+> > +       ret = regmap_read_poll_timeout(data->regmap, SX9310_REG_STAT1, val,
+> > +                                      !(val & SX9310_COMPSTAT_MASK), 20000,
+> > +                                      2000000);
+> > +       if (ret == -ETIMEDOUT)
+> > +               dev_err(&data->client->dev,
+> > +                       "initial compensation timed out: 0x%02x", val);
+> > +  
+> 
+> > +       regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);  
+> 
+> Even in timeout case?
+> 
+> > +       return ret;  
+> 
+> ...
+> 
+> > +       if ((long)device_get_match_data(dev) != whoami)  
+> 
+>   unsigned int long ddata;
+> 
+>   ddata = (uintptr_t)device_get_match_data(dev);
+>   if (ddata != whoami)
+>   ...
+> 
+> > +               dev_err(dev, "WHOAMI does not match device data: %d", whoami);  
+> 
+> If it's error, why not bail out here?
+> Or i.o.w. what is the usefulness of the driver data?
+> 
+> > +       switch (whoami) {
+> > +       case SX9310_WHOAMI_VALUE:
+> > +               indio_dev->name = "sx9310";
+> > +               break;
+> > +       case SX9311_WHOAMI_VALUE:
+> > +               indio_dev->name = "sx9311";
+> > +               break;
+> > +       default:
+> > +               dev_err(dev, "unexpected WHOAMI response: %u", whoami);
+> > +               return -ENODEV;
+> > +       }  
+> 
+> ...
+> 
+> > +               data->trig = devm_iio_trigger_alloc(
+> > +                       dev, "%s-dev%d", indio_dev->name, indio_dev->id);  
+> 
+> Indentation issues.
+> 
+> ...
+> 
+> > +       mutex_lock(&data->mutex);
+> > +       ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0,
+> > +                         &data->suspend_ctrl0);  
+> 
+> > +  
+> 
+> Blank line in a wrong position?
+> 
+> > +       if (ret)
+> > +               goto out;
+> > +  
+> 
+> ...
+> 
+> > +       mutex_lock(&data->mutex);
+> > +       ret = regmap_write(data->regmap, SX9310_REG_PAUSE, 1);
+> > +       if (ret)
+> > +               goto out;
+> > +
+> > +       ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0,
+> > +                          data->suspend_ctrl0);
+> > +
+> > +out:
+> > +       mutex_unlock(&data->mutex);
+> > +  
+> 
+> > +       enable_irq(data->client->irq);  
+> 
+> So, you enable IRQ despite the error. Why?
+> 
+> ...
+> 
+> > +static const struct dev_pm_ops sx9310_pm_ops = {
+> > +       SET_SYSTEM_SLEEP_PM_OPS(sx9310_suspend, sx9310_resume)
+> > +};  
+> 
+> ...
+> 
+> > +               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
+> > +               .of_match_table = of_match_ptr(sx9310_of_match),  
+> 
+> Drop these macros. They more harmful than useful, i.e. you will get
+> compiler warning.
+> If you would like to use them, you have to guard ID tables with ugly ifdeffery.
+> 
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
+
