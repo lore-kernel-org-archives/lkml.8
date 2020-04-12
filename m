@@ -2,157 +2,212 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26C3C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77DDC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBAA20739
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:39:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C70+d3ft"
+	by mail.kernel.org (Postfix) with ESMTP id 974A5206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 10:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgDLKjJ (ORCPT
+        id S1726905AbgDLKwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 06:39:09 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34618 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgDLKjI (ORCPT
+        Sun, 12 Apr 2020 06:52:25 -0400
+Received: from m176151.mail.qiye.163.com ([59.111.176.151]:35544 "EHLO
+        m176151.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgDLKwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 06:39:08 -0400
-Received: by mail-io1-f65.google.com with SMTP id f3so6565395ioj.1;
-        Sun, 12 Apr 2020 03:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mB50ITuRAo45vr3yEb8CNvZ6X6/DqWAF63v0IHs/huk=;
-        b=C70+d3ftVTHPJ4YDz5UWzWytEpPr478SefEVDz2ZHLx3PLV3IMFwjyAhOslonQ4jIB
-         AR+AIDrKr4L2KJx2ybirfGiNixFdxEKqw2s9a80UXmMgaxnXCk8IwREAycKj7ikzeyPy
-         JsnyvJyw3D0uHi4qgnTGxPsCk9H4HhZ9MNPdNnq1I0m0r+sxmyIl0Y7uCFRzcWeHZkEG
-         o5P4PPGtJcccXZa2fm+EuCOj5D9Vx3UVOK463OSaq6BmLsRP4ATenR9LROvD/Hb/HgUP
-         vEFXCiQOgi1mn8izS0eBazZaVUqhdWOwy6gat1SuxfGAJPBiHNnN7Wu1RxYc4mF0NP9s
-         kJTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mB50ITuRAo45vr3yEb8CNvZ6X6/DqWAF63v0IHs/huk=;
-        b=JX75j1GgXh3BJvptmpWJvqywOfU9wYSWfJF937yaGrnMAZLuUA4vGbV5IJzF6bYD0w
-         qe1A0Oe57G7wvTgv9bIGPQ96PhqOAyiDBdWVmD7/RWJR/Pj385eVokh7YmPhz5kI3nep
-         qVc1YBer5G053+OUdRLWXXMWYx7oImIHM9itfaxde6Q45wZYMd6Gk/P03VcnSP48c9Ri
-         ooxT6i1AbwbncSNU1qfMJPTFM/3yUqTXIkU9t9rpI2zRpCdz91rrnUdplZTPL2mDE5mJ
-         zvcNYwW+kqDLkXKir4HmkftzqJg6BpLji5vEIP+ulioRcRMBfB/gmhtgW7GtNkgA93vN
-         srfg==
-X-Gm-Message-State: AGi0PuZhMsyuAHrHG72aeMi/aTCQePGixgw1eHmbTJuF/KReDZcXLDgH
-        3nPcTUdkFH7LxaYcpsEyICVp+7aXXmcbV89oujsHe+6L
-X-Google-Smtp-Source: APiQypIGAWmKLY3IBZTNsF7xonyMGYkQaY5+Bq/c8BhUrXrk0TMoDADZ4sRM0A+mpRjivLgKubtfP5yiY+od1UyhHn0=
-X-Received: by 2002:a5e:cb02:: with SMTP id p2mr11839251iom.76.1586687945916;
- Sun, 12 Apr 2020 03:39:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
- <20200408152151.5780-3-christian.brauner@ubuntu.com> <CADyDSO54-GuSUJrciSD2jbSShCYDpXCp53cr+D7u0ZQT141uTA@mail.gmail.com>
- <20200409082659.exequ3evhlv33csr@wittgenstein>
-In-Reply-To: <20200409082659.exequ3evhlv33csr@wittgenstein>
-From:   David Rheinsberg <david.rheinsberg@gmail.com>
-Date:   Sun, 12 Apr 2020 12:38:54 +0200
-Message-ID: <CADyDSO54FV7OaVwWremmnNbTkvw6hQ-KTLJdEg3V5rfBi8n3Yw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] loopfs: implement loopfs
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+        Sun, 12 Apr 2020 06:52:24 -0400
+Received: from vivo.com (wm-11.qy.internal [127.0.0.1])
+        by m176151.mail.qiye.163.com (Hmail) with ESMTP id BF7E9483AFA;
+        Sun, 12 Apr 2020 18:52:10 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AHgABAClCOKoeJL-ajjSxaqg.3.1586688730769.Hmail.wenhu.wang@vivo.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCAxLzNdIGRyaXZlcjogcnBtb246IG5ldyBkcml2ZXIgUmVtb3RlIFByb2Nlc3NvciBNb25pdG9y?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <64b5f77a-7bc1-ee43-0f83-1ff323e4ac51@infradead.org>
+MIME-Version: 1.0
+Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Sun, 12 Apr 2020 18:52:10 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Sun, 12 Apr 2020 18:52:10 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVOSkNLS0tKSU5DQ05LSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSkNIQkpJT05NN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Mxw6OTo4Fzg0MBQeMTdWGhERKAMaChxVSFVKTkNNTUNDTEhJQ05LVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUpPT0pMNwY+
+X-HM-Tid: 0a716e04a6a193b5kuwsbf7e9483afa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey
-
-On Thu, Apr 9, 2020 at 10:27 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> On Thu, Apr 09, 2020 at 07:39:18AM +0200, David Rheinsberg wrote:
-> > With loopfs in place, any process can create its own user_ns, mount
-> > their private loopfs and create as many loop-devices as they want.
-> > Hence, this limit does not serve as an effective global
-> > resource-control. Secondly, anyone with access to `loop-control` can
-> > now create loop instances until this limit is hit, thus causing anyone
-> > else to be unable to create more. This effectively prevents you from
-> > sharing a loopfs between non-trusting parties. I am unsure where that
-> > limit would actually be used?
->
-> Restricting it globally indeed wasn't the intended use-case for it. This
-> was more so that you can specify an instance limit, bind-mount that
-> instance into several places and sufficiently locked down users cannot
-> exceed the instance limit.
-
-But then these users can each exhaust the limit individually. As such,
-you cannot share this instance across users that have no
-trust-relationship. Fine with me, but I still don't understand in
-which scenario the limit would be useful. Anyone can create a user-ns,
-create a new loopfs mount, and just happily create more loop-devices.
-So what is so special that you want to restrict the devices on a
-_single_ mount instance?
-
-> I don't think we'd be getting much out of a global limit per se I think
-> the initial namespace being able to reserve a bunch of devices
-> they can always rely on being able create when they need them is more
-> interesting. This is similat to what devpts implements with the
-> "reserved" mount option and what I initially proposed for binderfs. For
-> the latter it was deemed unnecessary by others so I dropped it from
-> loopfs too.
-
-The `reserve` of devpts has a fixed 2-tier system: A global limit, and
-a init-ns reserve. This does nothing to protect one container from
-another.
-
-Furthermore, how do you intend to limit user-space from creating an
-unbound amount of loop devices? Unless I am mistaken, with your
-proposal *any* process can create a new loopfs with a basically
-unlimited amount of loop-devices, thus easily triggering unbound
-kernel allocations. I think this needs to be accounted. The classic
-way is to put a per-uid limit into `struct user_struct` (done by
-pipes, mlock, epoll, mq, etc.). An alternative is `struct ucount`,
-which allows hierarchical management (inotify uses that, as an
-example).
-
-> I also expect most users to pre-create devices in the initial namespace
-> instance they need (e.g. similar to what binderfs does or what loop
-> devices currently have). Does that make sense to you?
-
-Our use-case is to get programmatic access to loop-devices, so we can
-build customer images on request (especially to create XFS images,
-since mkfs.xfs cannot write them, IIRC). We would be perfectly happy
-with a kernel-interface that takes a file-descriptor to a regular file
-and returns us a file-descriptor to a newly created block device
-(which is automatically destroyed when the last file-descriptor to it
-is closed). This would be ideal *to us*, since it would do automatic
-cleanup on crashes.
-
-We don't need any representation of the loop-device in the
-file-system, as long as we can somehow mount it (either by passing the
-bdev-FD to the new mount-api, or by using /proc/self/fd/ as
-mount-source).
-
-With your proposed loop-fs we could achieve something close to it:
-Mount a private loopfs, create a loop-device, and rely on automatic
-cleanup when the mount-namespace is destroyed.
-
-Thanks
-David
+SGksCkZyb206IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPgpEYXRlOiAyMDIw
+LTA0LTEyIDAyOjA4OjA5ClRvOiAgV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4sZ3Jl
+Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwpTdWJq
+ZWN0OiBSZTogW1BBVENIIDEvM10gZHJpdmVyOiBycG1vbjogbmV3IGRyaXZlciBSZW1vdGUgUHJv
+Y2Vzc29yIE1vbml0b3I+SGktLQo+Cj5PbiA0LzExLzIwIDI6NTIgQU0sIFdhbmcgV2VuaHUgd3Jv
+dGU6Cj4+IFJQTU9OIGlzIGEgZHJpdmVyIGZyYW1ld29yay4gSXQgc3VwcG9ydHMgcmVtb3RlIHBy
+b2Nlc3NvciBtb25pdG9yCj4+IGZyb20gdXNlciBsZXZlbC4gVGhlIGJhaXNjIGNvbXBvbmVudHMg
+YXJlIGEgY2hhcmFjdGVyIGRldmljZQo+Cj4gICAgICAgICAgICAgICAgICAgICAgIGJhc2ljCgpB
+ZGRyZXNzZWQgaW4gdjIKCj4KPj4gd2l0aCBzeXNmcyBpbnRlcmZhY2VzIGZvciB1c2VyIHNwYWNl
+IGNvbW11bmljYXRpb24gYW5kIGRpZmZlcmVudAo+PiBraW5kcyBvZiBtZXNzYWdlIGRyaXZlcnMg
+aW50cm9kdWNlZCBtb2R1bGFybHksIHdoaWNoIGFyZSB1c2VkIHRvCj4+IGNvbW11bmljYXRlIHdp
+dGggcmVtb3RlIHByb2Nlc3NvcnMuCj4+IAo+PiBBcyBmb3IgdXNlciBzcGFjZSwgb25lIGNhbiBn
+ZXQgbm90aWZpY2F0aW9ucyBvZiBkaWZmZXJlbnQgZXZlbnRzCj4+IG9mIHJlbW90ZSBwcm9jZXNz
+b3JzLCBsaWtlIHRoZWlyIHJlZ2lzdHJhdGlvbnMsIHRocm91Z2ggc3RhbmRhcmQKPj4gZmlsZSBy
+ZWFkIG9wZXJhdGlvbiBvZiB0aGUgZmlsZSBkaXNjcmlwdG9ycyByZWxhdGVkIHRvIHRoZSBleHBv
+cnRlZAo+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRvcnMKCkFk
+ZHJlc3NlZCBpbiB2MgoKPgo+PiBjaGFyYWN0ZXIgZGV2aWNlcy4gQWN0aW9ucyBjYW4gYWxzbyBi
+ZSB0YWtlbiBpbnRvIGFjY291bnQgdmlhCj4+IHN0YW5kYXJkIHdyaXRlIG9wZXJhdGlvbnMgdG8g
+dGhlIGRldmljZXMuIEJlc2lkZXMsIHRoZSBzeXNmcyBjbGFzcwo+PiBhdHRyaWJ1dGVzIGNvdWxk
+IGJlIGFjY2Vzc2VkIGNvbnZlbmllbnRseS4KPj4gCj4+IE1lc3NhZ2UgZHJpdmVycyBhY3QgYXMg
+ZW5naW5lcyB0byBjb21tdW5pY2F0ZSB3aXRoIHJlbW90ZSBwcm9jZXNzb3JzLgo+PiBDdXJyZW50
+bHkgUlBNT05fUU1JIGlzIGF2YWlsYWJsZSB3aGljaCB1c2VzIFFNSSBpbmZyYXN0cnVjdHVyZXMK
+Pj4gb24gUXVhbGNvbW0gU29DIFBsYXRmb3Jtcy4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IFdhbmcg
+V2VuaHUgPHdlbmh1LndhbmdAdml2by5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9LY29uZmlnICAg
+ICAgICB8ICAgMiArCj4+ICBkcml2ZXJzL01ha2VmaWxlICAgICAgIHwgICAxICsKPj4gIGRyaXZl
+cnMvcnBtb24vS2NvbmZpZyAgfCAgMjYgKysrCj4+ICBkcml2ZXJzL3JwbW9uL01ha2VmaWxlIHwg
+ICAxICsKPj4gIGRyaXZlcnMvcnBtb24vcnBtb24uYyAgfCA1MDUgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysKPj4gIGluY2x1ZGUvbGludXgvcnBtb24uaCAgfCAgNjgg
+KysrKysrCj4+ICA2IGZpbGVzIGNoYW5nZWQsIDYwMyBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ycG1vbi9LY29uZmlnCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ycG1vbi9NYWtlZmlsZQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcnBt
+b24vcnBtb24uYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvcnBtb24uaAo+
+PiAKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnBtb24vS2NvbmZpZyBiL2RyaXZlcnMvcnBtb24v
+S2NvbmZpZwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjUw
+NWQyNjNlMDg2Nwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMvcnBtb24vS2NvbmZp
+Zwo+PiBAQCAtMCwwICsxLDI2IEBACj4+ICsjCj4+ICsjIFJlbW90ZSBQcm9jZXNzb3IgTW9uaXRv
+ciBEcml2ZXJzCj4+ICsjCj4+ICttZW51ICJSZW1vdGUgUHJvY2Vzc29yIE1vbml0b3IgRHJpdmVy
+cyIKPj4gKwo+PiArY29uZmlnIFJQTU9OCj4+ICsJdHJpc3RhdGUgIlJlbW90ZSBQcm9jZXNzb3Ig
+TW9uaXRvciBDb3JlIEZyYW1ld29yayIKPj4gKwloZWxwCj4+ICsJICBSUE1PTiBpcyBhIGRyaXZl
+ciBmcmFtZXdvcmsuIEl0IHN1cHBvcnRzIHJlbW90ZSBwcm9jZXNzb3IgbW9uaXRvcgo+PiArCSAg
+ZnJvbSB1c2VyIGxldmVsLiBUaGUgYmFpc2MgY29tcG9uZW50cyBhcmUgYSBjaGFyYWN0ZXIgZGV2
+aWNlCj4KPgkgICAgICAgICAgICAgICAgICAgICAgIGJhc2ljCgpBZGRyZXNzZWQgaW4gdjIKCj4K
+Pj4gKwkgIHdpdGggc3lzZnMgaW50ZXJmYWNlcyBmb3IgdXNlciBzcGFjZSBjb21tdW5pY2F0aW9u
+IGFuZCBkaWZmZXJlbnQKPj4gKwkgIGtpbmRzIG9mIG1lc3NhZ2UgZHJpdmVycyBpbnRyb2R1Y2Vk
+IG1vZHVsYXJseSwgd2hpY2ggYXJlIHVzZWQgdG8KPj4gKwkgIGNvbW11bmljYXRlIHdpdGggcmVt
+b3RlIHByb2Nlc3NvcnMuCj4+ICsKPj4gKwkgIEFzIGZvciB1c2VyIHNwYWNlLCBvbmUgY2FuIGdl
+dCBub3RpZmljYXRpb25zIG9mIGRpZmZlcmVudCBldmVudHMKPj4gKwkgIG9mIHJlbW90ZSBwcm9j
+ZXNzb3JzLCBsaWtlIHRoZWlyIHJlZ2lzdHJhdGlvbnMsIHRocm91Z2ggc3RhbmRhcmQKPj4gKwkg
+IGZpbGUgcmVhZCBvcGVyYXRpb24gb2YgdGhlIGZpbGUgZGlzY3JpcHRvcnMgcmVsYXRlZCB0byB0
+aGUgZXhwb3J0ZWQKPgo+CSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXNjcmlw
+dG9ycwoKQWRkcmVzc2VkIGluIHYyCgo+Cj4+ICsJICBjaGFyYWN0ZXIgZGV2aWNlcy4gQWN0aW9u
+cyBjYW4gYWxzbyBiZSB0YWtlbiBpbnRvIGFjY291bnQgdmlhCj4+ICsJICBzdGFuZGFyZCB3cml0
+ZSBvcGVyYXRpb25zIHRvIHRoZSBkZXZpY2VzLiBCZXNpZGVzLCB0aGUgc3lzZnMgY2xhc3MKPj4g
+KwkgIGF0dHJpYnV0ZXMgY291bGQgYmUgYWNjZXNzZWQgY29udmVuaWVudGx5Lgo+PiArCj4+ICsJ
+ICBNZXNzYWdlIGRyaXZlcnMgYWN0IGFzIGVuZ2luZXMgdG8gY29tbXVuaWNhdGUgd2l0aCByZW1v
+dGUgcHJvY2Vzc29ycy4KPj4gKwkgIEN1cnJlbnRseSBSUE1PTl9RTUkgaXMgYXZhaWxhYmxlIHdo
+aWNoIHVzZXMgUU1JIGluZnJhc3RydWN0dXJlcwo+PiArCSAgb24gUXVhbGNvbW0gU29DIFBsYXRm
+b3Jtcy4KPj4gKwo+PiArZW5kbWVudQo+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3JwbW9uL3Jw
+bW9uLmMgYi9kcml2ZXJzL3JwbW9uL3JwbW9uLmMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4g
+aW5kZXggMDAwMDAwMDAwMDAwLi42NWFhYjRkZTY3MzMKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysg
+Yi9kcml2ZXJzL3JwbW9uL3JwbW9uLmMKPj4gQEAgLTAsMCArMSw1MDUgQEAKPj4gKy8vIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAy
+MDIwIFZpdm8gQ29tbXVuaWNhdGlvbiBUZWNobm9sb2d5IENvLiBMdGQuCj4+ICsgKiBDb3B5cmln
+aHQgKEMpIDIwMjAgV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gKyAqIEFsbCBy
+aWdodHMgcmVzZXJ2ZWQuCj4+ICsgKgo+PiArICogUlBNT046IEFuIGltcGxlbWVudGF0aW9uIG9m
+IHJlbW90ZSBwcm9jZXNzb3IgbW9uaXRvciBmcmVhbXdvcmsKPgo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmcmFtZXdvcmsKCkFkZHJl
+c3NlZCBpbiB2MgoKPgo+PiArICogZm9yIHBsYXRmb3JtcyB0aGF0IG11bHRpLXByb2Nlc3NvcnMg
+ZXhpc3RzLiBSUE1PTiBpcyBpbXBsZW1lbnRlZAo+Cj4gICAgICBjb25mdXNpbmcgd29yZGluZyBh
+Ym92ZSBeXl5eXl5eXl5eXl5eXl5eXgoKQWRkcmVzc2VkIGluIHYyCgo+Cj4+ICsgKiB3aXRoIGNo
+YXJkZXYgYW5kIHN5c2ZzIGNsYXNzIGFzIGludGVyZmFjZXMgdG8gY29tbXVuaWNhdGUgd2l0aAo+
+PiArICogdGhlIHVzZXIgbGV2ZWwuIEl0IHN1cHBvcnRzIGRpZmZlcmVudCBjb21tdW5pY2F0aW9u
+IGludGVyZmFjZXMKPj4gKyAqIGFkZGVkIG1vZHVsYXJseSB3aXRoIHJlbW90ZSBwcm9jZXNzb3Jz
+LiBDdXJyZW50bHkgUU1JIGltcGxlbWVudGF0aW9uCj4+ICsgKiBpcyBhdmFpbGFibGUuCj4+ICsg
+Kgo+PiArICogUlBNT04gY291bGQgYmUgdXNlZCB0byBkZXRlY3QgdGhlIHN0YWJpbGl0aWVzIG9m
+IHJlbW90ZSBwcm9jZXNzb3JzLAo+PiArICogY29sbGVjdCBhbnkga2luZHMgb2YgaW5mb3JtYXRp
+b24geW91IGFyZSBpbnRlcmVzdGVkIHdpdGgsIHRha2UKPgo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcmVzdGVkIGluLAoKQWRkcmVzc2VkIGluIHYy
+Cgo+Cj4+ICsgKiBhY3Rpb25zIGxpa2UgY29ubmVjdGlvbiBzdGF0dXMgY2hlY2ssIGFuZCBzbyBv
+bi4gRW5oYW5jZW1lbnRzIGNhbgo+PiArICogYmUgbWFkZSB1cG9uIGN1cnJlbnQgaW1wbGVtZW50
+YXRpb24uCj4+ICsgKi8KPj4gKwo+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+PiArI2lu
+Y2x1ZGUgPGxpbnV4L2NkZXYuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9ycG1vbi5oPgo+PiArCj4+
+ICsjZGVmaW5lIFJQTU9OX01BWF9ERVZJQ0VTCSgxVSA8PCBNSU5PUkJJVFMpCj4+ICsjZGVmaW5l
+IFJQTU9OX05BTUUJCQkicnBtb24iCj4+ICsKPj4gK3N0YXRpYyBpbnQgcnBtb25fbWFqb3I7Cj4+
+ICtzdGF0aWMgc3RydWN0IGNkZXYgKnJwbW9uX2NkZXY7Cj4+ICtzdGF0aWMgREVGSU5FX0lEUihy
+cG1vbl9pZHIpOwo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMgcnBtb25f
+Zm9wczsKPj4gKwo+PiArLyogUHJvdGVjdCBpZHIgYWNjZXNzZXMgKi8KPj4gK3N0YXRpYyBERUZJ
+TkVfTVVURVgobWlub3JfbG9jayk7Cj4+ICsKPgo+W3NuaXBdCj4KPj4gKy8qKgo+PiArICogcnBt
+b25fZXZlbnRfbm90aWZ5IC0gdHJpZ2dlciBhbiBub3RpZnkgZXZlbnQKPj4gKyAqIEBpbmZvOiAg
+UlBNT04gZGV2aWNlIGNhcGFiaWxpdGllcwo+PiArICogQGV2ZW50OiBSUE1PTiBldmVudCB0byBi
+ZSB0cmlnZ2VyZWQKPj4gKyAqLwo+PiArdm9pZCBycG1vbl9ldmVudF9ub3RpZnkoc3RydWN0IHJw
+bW9uX2luZm8gKmluZm8sIHUzMiBldmVudCkKPj4gK3sKPj4gKwlzdHJ1Y3QgcnBtb25fZGV2aWNl
+ICpycG1vbmRldiA9IGluZm8tPnJwbW9uX2RldjsKPj4gKwo+PiArCWlmIChldmVudCA+PSBSUE1P
+Tl9FVkVOVF9NQVgpIHsKPj4gKwkJcHJfZXJyKCJFcnJvciB1bi1zdXBwb3J0ZWQgcnBtb24gZXZl
+bnQgJWQiLCBldmVudCk7Cj4KPgkJICAgICAgICAgICAgICB1bnN1cHBvcnRlZAoKQWRkcmVzc2Vk
+IGluIHYyCgo+Cj4+ICsJCXJldHVybjsKPj4gKwl9Cj4+ICsKPj4gKwlhdG9taWNfc2V0KCZycG1v
+bmRldi0+ZXZlbnQsIFJQTU9OX0VWRU5UKGV2ZW50KSk7Cj4+ICsJd2FrZV91cF9pbnRlcnJ1cHRp
+YmxlKCZycG1vbmRldi0+d2FpdCk7Cj4+ICsJa2lsbF9mYXN5bmMoJnJwbW9uZGV2LT5hc3luY19x
+dWV1ZSwgU0lHSU8sIFBPTExfSU4pOwo+PiArfQo+PiArRVhQT1JUX1NZTUJPTF9HUEwocnBtb25f
+ZXZlbnRfbm90aWZ5KTsKPgo+W3NuaXBdCj4KPj4gKy8qKgo+PiArICogcnBtb25fcmVnaXN0ZXJf
+ZGV2aWNlIC0gcmVnaXN0ZXIgYSBuZXcgcnBtb24gaW50ZXJmYWNlIGRldmljZQo+PiArICogQG93
+bmVyOgltb2R1bGUgdGhhdCBjcmVhdGVzIHRoZSBuZXcgZGV2aWNlCj4+ICsgKiBAcGFyZW50Oglw
+YXJlbnQgZGV2aWNlCj4+ICsgKiBAaW5mbzoJcm9tb24gZGV2aWNlIGNhcGFiaWxpdGllcwo+Cj4J
+CXMvcm9tb24vcnBtb24vCgpBZGRyZXNzZWQgaW4gdjIKCj4KPj4gKyAqCj4+ICsgKiByZXR1cm5z
+IHplcm8gb24gc3VjY2VzcyBvciBhIG5lZ2F0aXZlIGVycm9yIGNvZGUuCj4KPnVzZSBrZXJuZWwt
+ZG9jIG5vdGF0aW9uOgo+Cj4gICAgKiByZXR1cm46IHplcm8gb24gc3VjY2VzcyBvciBhIG5lZ2F0
+aXZlIGVycm9yIGNvZGUuCj4KCkFkZHJlc3NlZCBpbiB2MgoKPj4gKyAqLwo+PiAraW50IF9fcnBt
+b25fcmVnaXN0ZXJfZGV2aWNlKHN0cnVjdCBtb2R1bGUgKm93bmVyLAo+PiArCQkJICAgIHN0cnVj
+dCBkZXZpY2UgKnBhcmVudCwKPj4gKwkJCSAgICBzdHJ1Y3QgcnBtb25faW5mbyAqaW5mbykKPj4g
+K3sKPj4gKwlzdHJ1Y3QgcnBtb25fZGV2aWNlICpycG1vbmRldjsKPj4gKwlpbnQgcmV0ID0gMDsK
+Pj4gKwo+PiArCWlmICghcnBtb25fY2xhc3NfcmVnaXN0ZXJlZCkKPj4gKwkJcmV0dXJuIC1FUFJP
+QkVfREVGRVI7Cj4+ICsKPj4gKwlpZiAoIXBhcmVudCB8fCAhaW5mbyB8fCAhaW5mby0+bmFtZSB8
+fCAhaW5mby0+dmVyc2lvbikKPj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4+ICsKPj4gKwlpbmZvLT5y
+cG1vbl9kZXYgPSBOVUxMOwo+PiArCj4+ICsJcnBtb25kZXYgPSBremFsbG9jKHNpemVvZigqcnBt
+b25kZXYpLCBHRlBfS0VSTkVMKTsKPj4gKwlpZiAoIXJwbW9uZGV2KQo+PiArCQlyZXR1cm4gLUVO
+T01FTTsKPj4gKwo+PiArCXJwbW9uZGV2LT5vd25lciA9IG93bmVyOwo+PiArCXJwbW9uZGV2LT5p
+bmZvID0gaW5mbzsKPj4gKwltdXRleF9pbml0KCZycG1vbmRldi0+aW5mb19sb2NrKTsKPj4gKwlp
+bml0X3dhaXRxdWV1ZV9oZWFkKCZycG1vbmRldi0+d2FpdCk7Cj4+ICsJYXRvbWljX3NldCgmcnBt
+b25kZXYtPmV2ZW50LCAwKTsKPj4gKwo+PiArCXJldCA9IHJwbW9uX2dldF9taW5vcihycG1vbmRl
+dik7Cj4+ICsJaWYgKHJldCkgewo+PiArCQlrZnJlZShycG1vbmRldik7Cj4+ICsJCXJldHVybiBy
+ZXQ7Cj4+ICsJfQo+PiArCj4+ICsJZGV2aWNlX2luaXRpYWxpemUoJnJwbW9uZGV2LT5kZXYpOwo+
+PiArCXJwbW9uZGV2LT5kZXYuZGV2dCA9IE1LREVWKHJwbW9uX21ham9yLCBycG1vbmRldi0+bWlu
+b3IpOwo+PiArCXJwbW9uZGV2LT5kZXYuY2xhc3MgPSAmcnBtb25fY2xhc3M7Cj4+ICsJcnBtb25k
+ZXYtPmRldi5wYXJlbnQgPSBwYXJlbnQ7Cj4+ICsJcnBtb25kZXYtPmRldi5yZWxlYXNlID0gcnBt
+b25fZGV2aWNlX3JlbGVhc2U7Cj4+ICsJZGV2X3NldF9kcnZkYXRhKCZycG1vbmRldi0+ZGV2LCBy
+cG1vbmRldik7Cj4+ICsKPj4gKwlyZXQgPSBkZXZfc2V0X25hbWUoJnJwbW9uZGV2LT5kZXYsIFJQ
+TU9OX05BTUUiJWQiLCBycG1vbmRldi0+bWlub3IpOwo+PiArCWlmIChyZXQpCj4+ICsJCWdvdG8g
+ZXJyX2RldmljZV9jcmVhdGU7Cj4+ICsKPj4gKwlyZXQgPSBkZXZpY2VfYWRkKCZycG1vbmRldi0+
+ZGV2KTsKPj4gKwlpZiAocmV0KQo+PiArCQlnb3RvIGVycl9kZXZpY2VfY3JlYXRlOwo+PiArCj4+
+ICsJaWYgKHJwbW9uZGV2LT5pbmZvLT5ycG1vbl9kZXZfYWRkX2F0dHJzKSB7Cj4+ICsJCXJldCA9
+IHJwbW9uZGV2LT5pbmZvLT5ycG1vbl9kZXZfYWRkX2F0dHJzKHJwbW9uZGV2KTsKPj4gKwkJaWYg
+KHJldCkKPj4gKwkJCWdvdG8gZXJyX2Rldl9hZGRfYXR0cnM7Cj4+ICsJfQo+PiArCj4+ICsJaW5m
+by0+cnBtb25fZGV2ID0gcnBtb25kZXY7Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPj4gKwo+PiArZXJy
+X2Rldl9hZGRfYXR0cnM6Cj4+ICsJZGV2aWNlX2RlbCgmcnBtb25kZXYtPmRldik7Cj4+ICtlcnJf
+ZGV2aWNlX2NyZWF0ZToKPj4gKwlycG1vbl9mcmVlX21pbm9yKHJwbW9uZGV2KTsKPj4gKwlwdXRf
+ZGV2aWNlKCZycG1vbmRldi0+ZGV2KTsKPj4gKwlyZXR1cm4gcmV0Owo+PiArfQo+PiArRVhQT1JU
+X1NZTUJPTF9HUEwoX19ycG1vbl9yZWdpc3Rlcl9kZXZpY2UpOwo+Cj5bc25pcF0KPgo+PiArbW9k
+dWxlX2V4aXQocnBtb25fZXhpdCk7Cj4+ICsKPj4gK01PRFVMRV9BVVRIT1IoIldhbmcgV2VuaHUi
+KTsKPgo+UGxlYXNlIGFkZCBlbWFpbCBhZGRyZXNzIGluIHRoZSBNT0RVTEVfQVVUSE9SKCkgc3Ry
+aW5nLgo+QWJvdXQgMy80IG9mIGFsbCB1c2VzIG9mIE1PRFVMRV9BVVRIT1IoKSBkbyBzby4KPgoK
+QWRkcmVzc2VkIGluIHYyCgo+PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJSZW1vdGUgUHJvY2Vzc29y
+IE1vbml0b3IgQ29yZSBGcmFtZXdvcmsiKTsKPj4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsK
+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcnBtb24uaCBiL2luY2x1ZGUvbGludXgvcnBt
+b24uaAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjQwOTgz
+YTNiNTY1NQo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvcnBtb24uaAo+
+PiBAQCAtMCwwICsxLDY4IEBACj4+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MC1vbmx5ICovCj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAyMDIwIFZpdm8gQ29tbXVuaWNh
+dGlvbiBUZWNobm9sb2d5IENvLiBMdGQuCj4+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMjAgV2FuZyBX
+ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gKyAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4+
+ICsgKi8KPj4gKwo+PiArI2lmbmRlZiBSUE1PTl9ICj4+ICsjZGVmaW5lIFJQTU9OX0gKPj4gKwo+
+PiArI2luY2x1ZGUgPG5ldC9zb2NrLmg+Cj4+ICsKPj4gKy8qIFJQTU9OIGFjdGlvbiB3b3VsZCBi
+ZSB0YWtlbiAqLwo+PiArZW51bSBycG1vbl9leGVjIHsKPj4gKwlSUE1PTl9FWEVDX0NIRUNLX0NP
+Tk4gPSAwLAo+PiArCVJQTU9OX0VYRUNfTUFYLAo+PiArfTsKPj4gKwo+PiArLyogUlBNT04gZXZl
+bnRzIHRoYXQgbWF5IGJlIG5vdGlmaWVkICovCj4+ICtlbnVtIHJwbW9uX2V2ZW50IHsKPj4gKwlS
+UE1PTl9FVkVOVF9DSEtDT05OX0ZBSUwgPSAwLAo+PiArCVJQTU9OX0VWRU5UX1JFR0lTVEVSLAo+
+PiArCVJQTU9OX0VWRU5UX01BWCwKPj4gK307Cj4+ICsKPj4gKyNkZWZpbmUgUlBNT05fRVZFTlQo
+eCkJKDB4MSA8PCB4KQo+PiArI2RlZmluZSBSUE1PTl9BQ1RJT04oeCkJKDB4MSA8PCB4KQo+Cj5V
+bmxlc3MgeW91IGFyZSB2ZXJ5IHN1cmUgdGhhdCAneCcgYWJvdmUgaXMgbmV2ZXIgbW9yZSB0aGFu
+IGEgc2ltcGxlCj5leHByZXNzaW9uLCB5b3Ugc2hvdWxkIHB1dCB4IGluIHBhcmVudGhlc2VzLCBs
+aWtlIHNvOgo+CgpBZGRyZXNzZWQgaW4gdjIKCj4+ICsjZGVmaW5lIFJQTU9OX0VWRU5UKHgpCSgx
+IDw8ICh4KSkKPj4gKyNkZWZpbmUgUlBNT05fQUNUSU9OKHgpCSgxIDw8ICh4KSkKPgo+c28gdGhh
+dCB0aGVyZSBjYW5ub3QgYmUgYW55IG9wZXJhdG9yIHByZWNlZGVuY2UgcHJvYmxlbXMuCj4KPgo+
+dGhhbmtzLgo+LS0gCj5+UmFuZHkKPgoKdGhhbmtzLCAKV2VuaHUNCg0K
