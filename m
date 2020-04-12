@@ -2,131 +2,106 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265C6C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3527EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0091F20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLMyKEkC"
+	by mail.kernel.org (Postfix) with ESMTP id 0C3D52070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgDLJkQ (ORCPT
+        id S1727001AbgDLJko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 05:40:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44265 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgDLJkQ (ORCPT
+        Sun, 12 Apr 2020 05:40:44 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:21820 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgDLJko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 05:40:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id h6so6427256iok.11;
-        Sun, 12 Apr 2020 02:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DudAws+5XXDrWI0GuFKZK0uggxlFAK8zrjJOHTOzHvQ=;
-        b=oLMyKEkCm7I/W/A1JgYH0WtXqiBHsTY1omrWGoWeTSLEN3CRY+SOrCzgj+j8dXbT3R
-         3V4g+VDYJ18ht3BvE76CVfsI9aLy76I2/saDHYI7TAhDY+aCf1QXeuoQj1ierGjq6yUs
-         6NQE12G79t/FQbSZxu5L7qhGKRdBhiaUilKHwcCkeiySozNDg8lYnZjgQrtJvlDnddT6
-         5lN9bG180nss/feExrMPMJyu1Zky5KVreWqzrGRNCg/KpPYRpunMIP2rzSN7Zwd+vEEv
-         jVTerEys3qTK+pzUep1SHCOz4GFY/BEi4vIKQGIetWtTLJpJKPeSuOg2/3EmE7j1Em/i
-         Z6Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DudAws+5XXDrWI0GuFKZK0uggxlFAK8zrjJOHTOzHvQ=;
-        b=CMCm94W+N1aTYLnPG2SsdfB+cYDdO1hrAU/UGJiIGIT+u8BV5EP7RvfqOdcJEXL/N7
-         tdJXZEkpIW/B1RytV4gKqBc/2BCYRfCGni9XrhgfaW3jj1863uUiQXAAvfFp+XuQ+gXC
-         EXAI/1kUVxZheQmPhQtJzF80lXHT8+HiswyAN9g80NNxlvVdbcf0+Rg54N+rkEkBRhyT
-         vJXHK7Ia8Od/O3zAEME0anGGSXgvMRH+tTNC+KgWobPCz7vMkwj6dxyjLAfQxVOHb6TC
-         1pfr2mZjpmvyPluExs8hccdvsJdYniKrXcmDL7F7L+dRL4xDuGuHKfdb4RaLjSZNY9xu
-         nzhg==
-X-Gm-Message-State: AGi0PuayF7XyUEYYFp1oD8ReCUidUjmJVD0Kbuas6kPdKhswlwjz8z2S
-        HlV/dqQfqbCUWF+cWDObkwUBcN5L00bk3bvlFCc=
-X-Google-Smtp-Source: APiQypKgib8dZi5NZWvrgJ3IJzahp49Bg5kAH7kyRnQiEqTUnZAvY9sH5N9xMqe9W2wkw6a4Vie0NTHrFFJZfCswvCI=
-X-Received: by 2002:a6b:cd4a:: with SMTP id d71mr11597681iog.5.1586684415253;
- Sun, 12 Apr 2020 02:40:15 -0700 (PDT)
+        Sun, 12 Apr 2020 05:40:44 -0400
+Received: from localhost.localdomain ([90.126.162.40])
+        by mwinf5d55 with ME
+        id Rlgg2200K0scBcy03lghJr; Sun, 12 Apr 2020 11:40:42 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 12 Apr 2020 11:40:42 +0200
+X-ME-IP: 90.126.162.40
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     aacraid@microsemi.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] scsi: aacraid: Fix some error handling paths in 'aac_probe_one()'
+Date:   Sun, 12 Apr 2020 11:40:39 +0200
+Message-Id: <20200412094039.8822-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <00000000000048518b05a2fef23a@google.com> <20200411161439.GE21484@bombadil.infradead.org>
- <20200412091713.B7282A404D@d06av23.portsmouth.uk.ibm.com>
-In-Reply-To: <20200412091713.B7282A404D@d06av23.portsmouth.uk.ibm.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sun, 12 Apr 2020 12:40:04 +0300
-Message-ID: <CAOQ4uxg0Fmh58bvTKFyHDhAsmCtgbxpHr+mHYY=O9Wcuo_1JZQ@mail.gmail.com>
-Subject: Re: WARNING in iomap_apply
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Theodore Tso <tytso@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 12:17 PM Ritesh Harjani <riteshh@linux.ibm.com> wrote:
->
->
->
-> On 4/11/20 9:44 PM, Matthew Wilcox wrote:
-> > On Sat, Apr 11, 2020 at 12:39:13AM -0700, syzbot wrote:
-> >> The bug was bisected to:
-> >>
-> >> commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
-> >> Author: Ritesh Harjani <riteshh@linux.ibm.com>
-> >> Date:   Fri Feb 28 09:26:58 2020 +0000
-> >>
-> >>      ext4: move ext4_fiemap to use iomap framework
-> >>
-> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
-> >> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
-> >>
-> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
-> >> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
-> >>
-> >> ------------[ cut here ]------------
-> >> WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
-> >
-> > This is:
-> >
-> >          if (WARN_ON(iomap.length == 0))
-> >                  return -EIO;
-> >
-> > and the call trace contains ext4_fiemap() so the syzbot bisection looks
-> > correct.
->
-> I think I know what could be going wrong here.
->
-> So the problem happens when we have overlayfs mounted on top of ext4.
-> Now overlayfs might be supporting max logical filesize which is more
-> than what ext4 could support (i.e. sb->s_maxbytes for overlayfs must
-> be greater than compared to ext4). So that's why the check in func
-> ioctl_fiemap -> fiemap_check_ranges() couldn't truncate to logical
-> filesize which the actual underlying filesystem supports.
->
-> @All,
-> Do you think we should make overlayfs also check for
-> fiemap_check_ranges()? Not as part of this fix, but as a later
-> addition to overlayfs? Please let me know, I could also make that patch.
->
+If 'scsi_host_alloc()' or 'kcalloc()' fail, 'error' is known to be 0. Set
+it explicitly to -ENOMEM instead before branching to the error handling
+path.
 
-Yes, I think that would be correct.
+While at it, axe 2 useless assignments to 'error'. These values are
+overwridden a few lines later.
 
-Thanks,
-Amir.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/scsi/aacraid/linit.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+index 83a60b0a8cd8..a0a2b3abc512 100644
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -1632,7 +1632,7 @@ static int aac_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct Scsi_Host *shost;
+ 	struct aac_dev *aac;
+ 	struct list_head *insert = &aac_devices;
+-	int error = -ENODEV;
++	int error;
+ 	int unique_id = 0;
+ 	u64 dmamask;
+ 	int mask_bits = 0;
+@@ -1657,7 +1657,6 @@ static int aac_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	error = pci_enable_device(pdev);
+ 	if (error)
+ 		goto out;
+-	error = -ENODEV;
+ 
+ 	if (!(aac_drivers[index].quirks & AAC_QUIRK_SRC)) {
+ 		error = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+@@ -1689,8 +1688,10 @@ static int aac_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	pci_set_master(pdev);
+ 
+ 	shost = scsi_host_alloc(&aac_driver_template, sizeof(struct aac_dev));
+-	if (!shost)
++	if (!shost) {
++		error = -ENOMEM;
+ 		goto out_disable_pdev;
++	}
+ 
+ 	shost->irq = pdev->irq;
+ 	shost->unique_id = unique_id;
+@@ -1714,8 +1715,11 @@ static int aac_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	aac->fibs = kcalloc(shost->can_queue + AAC_NUM_MGT_FIB,
+ 			    sizeof(struct fib),
+ 			    GFP_KERNEL);
+-	if (!aac->fibs)
++	if (!aac->fibs) {
++		error = -ENOMEM;
+ 		goto out_free_host;
++	}
++
+ 	spin_lock_init(&aac->fib_lock);
+ 
+ 	mutex_init(&aac->ioctl_mutex);
+-- 
+2.20.1
+
