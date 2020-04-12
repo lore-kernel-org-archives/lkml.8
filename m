@@ -2,167 +2,161 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E949C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E7C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF6C2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238E420708
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 13:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586696746;
+	bh=vQ2ijPfgHyfD5uLqbnIBZ1qOAfAzreu0lThBZ/PCPUI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jMfjarfpSV2GS6NvRIFqgsf6zUgsHifjvx/gixWehCZ1967LIyr/41BjpLb+WI0yO
+	 90f0Cye+rcjtix2nh60e2xbYL5CWam4JOMFxYOVJPp1k90TPTnD5WDcVNOLUYAEHYN
+	 16JLqm3UrHBkn1tAyaRvCuUzQG48Y07fTmtveb7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgDLNFE (ORCPT
+        id S1727052AbgDLNFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:05:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36402 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgDLNFE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:05:04 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jNcIE-0002g0-B9; Sun, 12 Apr 2020 13:04:58 +0000
-Date:   Sun, 12 Apr 2020 15:04:57 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     David Rheinsberg <david.rheinsberg@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 2/8] loopfs: implement loopfs
-Message-ID: <20200412130457.a7ma4z3lmry5tcmc@wittgenstein>
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
- <20200408152151.5780-3-christian.brauner@ubuntu.com>
- <CADyDSO54-GuSUJrciSD2jbSShCYDpXCp53cr+D7u0ZQT141uTA@mail.gmail.com>
- <20200409082659.exequ3evhlv33csr@wittgenstein>
- <CADyDSO54FV7OaVwWremmnNbTkvw6hQ-KTLJdEg3V5rfBi8n3Yw@mail.gmail.com>
- <20200412120300.vuigwofazxfbxluu@wittgenstein>
+        Sun, 12 Apr 2020 09:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgDLNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 09:05:44 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F86820705;
+        Sun, 12 Apr 2020 13:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586696744;
+        bh=vQ2ijPfgHyfD5uLqbnIBZ1qOAfAzreu0lThBZ/PCPUI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A1sBPEX9yB5LNire+7Z43N3bLt7iLiCE0PVaiuwtl4intBYM+MgQ27zEyK687+m1v
+         i5I2yClxSsnUPnOQezTT/1dJfbrYbw8WSLxY9mrk+7QTpLRXyUatQczYoc7m2pPfcu
+         EEwm+MTaptw8JjWRHdiDjq2+jzC1Zy5Bfk1pUtnI=
+Date:   Sun, 12 Apr 2020 14:05:39 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v8 1/2] iio: proximity: provide device tree binding
+ document
+Message-ID: <20200412140539.4b4ddff1@archlinux>
+In-Reply-To: <20200406172002.18028-2-i.mikhaylov@yadro.com>
+References: <20200406172002.18028-1-i.mikhaylov@yadro.com>
+        <20200406172002.18028-2-i.mikhaylov@yadro.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200412120300.vuigwofazxfbxluu@wittgenstein>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 02:03:00PM +0200, Christian Brauner wrote:
-> On Sun, Apr 12, 2020 at 12:38:54PM +0200, David Rheinsberg wrote:
-> > Hey
-> > 
-> > On Thu, Apr 9, 2020 at 10:27 AM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > > On Thu, Apr 09, 2020 at 07:39:18AM +0200, David Rheinsberg wrote:
-> > > > With loopfs in place, any process can create its own user_ns, mount
-> > > > their private loopfs and create as many loop-devices as they want.
-> > > > Hence, this limit does not serve as an effective global
-> > > > resource-control. Secondly, anyone with access to `loop-control` can
-> > > > now create loop instances until this limit is hit, thus causing anyone
-> > > > else to be unable to create more. This effectively prevents you from
-> > > > sharing a loopfs between non-trusting parties. I am unsure where that
-> > > > limit would actually be used?
-> > >
-> > > Restricting it globally indeed wasn't the intended use-case for it. This
-> > > was more so that you can specify an instance limit, bind-mount that
-> > > instance into several places and sufficiently locked down users cannot
-> > > exceed the instance limit.
-> > 
-> > But then these users can each exhaust the limit individually. As such,
-> > you cannot share this instance across users that have no
-> > trust-relationship. Fine with me, but I still don't understand in
-> 
-> Well, you can't really share anything across clients with the same
-> privilege level if one of them is untrusted.
-> 
-> > which scenario the limit would be useful. Anyone can create a user-ns,
-> > create a new loopfs mount, and just happily create more loop-devices.
-> > So what is so special that you want to restrict the devices on a
-> > _single_ mount instance?
-> 
-> To share that instance across namespaces. You can e.g. create the
-> mount instance in one mount namespace owned by userns1, create a second
-> user namespace usern2 with the same mapping which is blocked from
-> creating additional user namespaces either by seccomp or by
-> /proc/sys/user/max_user_namespaces or lsms what have you. Because it
-> doesn't own the mount namespace the loopfs mount it is in it can't
-> remount it and can't exceed the local limit.
-> 
-> > 
-> > > I don't think we'd be getting much out of a global limit per se I think
-> > > the initial namespace being able to reserve a bunch of devices
-> > > they can always rely on being able create when they need them is more
-> > > interesting. This is similat to what devpts implements with the
-> > > "reserved" mount option and what I initially proposed for binderfs. For
-> > > the latter it was deemed unnecessary by others so I dropped it from
-> > > loopfs too.
-> > 
-> > The `reserve` of devpts has a fixed 2-tier system: A global limit, and
-> > a init-ns reserve. This does nothing to protect one container from
-> > another.
-> 
-> What I was getting at is that what matters first and foremost is
-> protecting init userns.
-> 
-> > 
-> > Furthermore, how do you intend to limit user-space from creating an
-> > unbound amount of loop devices? Unless I am mistaken, with your
-> > proposal *any* process can create a new loopfs with a basically
-> > unlimited amount of loop-devices, thus easily triggering unbound
-> > kernel allocations. I think this needs to be accounted. The classic
-> > way is to put a per-uid limit into `struct user_struct` (done by
-> > pipes, mlock, epoll, mq, etc.). An alternative is `struct ucount`,
-> > which allows hierarchical management (inotify uses that, as an
-> > example).
-> 
-> Yeah, I know. We can certainly do this.
-> 
-> > 
-> > > I also expect most users to pre-create devices in the initial namespace
-> > > instance they need (e.g. similar to what binderfs does or what loop
-> > > devices currently have). Does that make sense to you?
-> > 
-> > Our use-case is to get programmatic access to loop-devices, so we can
-> > build customer images on request (especially to create XFS images,
-> > since mkfs.xfs cannot write them, IIRC). We would be perfectly happy
-> > with a kernel-interface that takes a file-descriptor to a regular file
-> > and returns us a file-descriptor to a newly created block device
-> > (which is automatically destroyed when the last file-descriptor to it
-> > is closed). This would be ideal *to us*, since it would do automatic
-> > cleanup on crashes.
-> > 
-> > We don't need any representation of the loop-device in the
-> > file-system, as long as we can somehow mount it (either by passing the
-> > bdev-FD to the new mount-api, or by using /proc/self/fd/ as
-> > mount-source).
-> 
-> We want the ability to have a filesystem representation as it will allow
-> us to handle a host of legacy workloads cleanly e.g. that users can just
-> call mount -o loop /bla whenever they have opted into syscall
-> interception for a particular filesystem. In addition, we can cover your
-> use case completely was well I think. Both with the old and new mount api.
-> 
-> > 
-> > With your proposed loop-fs we could achieve something close to it:
-> > Mount a private loopfs, create a loop-device, and rely on automatic
-> > cleanup when the mount-namespace is destroyed.
-> 
-> With loopfs you can do this with the old or new mount api and you don't
-> need to have loopfs mounted for that at all. Here's a sample program
-> that works right now with the old mount api:
+On Mon, 6 Apr 2020 20:20:01 +0300
+Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-That also led me to discover a bug I need to fix, so thanks!
-Christian
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+One comment inline preempting likely review from Rob.  I'd also like
+there to be plenty of time for Rob and others to take a look before I
+apply this.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../bindings/iio/proximity/vcnl3020.yaml      | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..29ab2dee1694
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Very much preferred for new bindings to have a dual license including
+BSD to allow there use outside of the Linux kernel.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrated Proximity Sensor With Infrared Emitter
+> +
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: IRQ line for the proximity sensor
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-milliamp:
+> +    description:
+> +        IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +        1 = 10 mA, 20 = 200 mA (2 = 20 mA = DEFAULT). LED Current is
+> +        limited to 200 mA for values higher than decimal 20.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+> +              18, 19, 20]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-milliamp = <0x14>;
+> +        };
+> +    };
+
