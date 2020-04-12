@@ -2,135 +2,105 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE592C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF08C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:19:29 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE2D20692
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A832063A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 19:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qsuGX73e"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org AEE2D20692
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OQgwj7/m"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 54A832063A
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgDLTS3 (ORCPT
+        id S1727880AbgDLTT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 15:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:51882 "EHLO
+        Sun, 12 Apr 2020 15:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:52038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgDLTS3 (ORCPT
+        with ESMTP id S1727862AbgDLTT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 15:18:29 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF73C0A3BF0;
-        Sun, 12 Apr 2020 12:18:28 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id r17so5062912lff.2;
-        Sun, 12 Apr 2020 12:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=VkyKrLNu8ffJklwz2DWuUoxP4CUcBoFlfVslbsBnJX0=;
-        b=qsuGX73epyXNjON9/w88k16v8K+/shVFv10T8frCS4jBcI0JnJpTsbM7s2QJpJAkNO
-         YSKOnSec+tuMDA5Hw2GA7MEsXrLjZIk0k6lXrbjOcgz6W19bNX9QjM9JbLz2FhALQYGn
-         cPgfjCw84JO7Ar3V+7HUhI7s95pB74FQtCge9/lHPkHMhs71xlYzvQt7RqQn/3V6LN4z
-         W1nfMqzEghfVX9diJZ9e/48LHfSaIjda64UuLW01LkZnxx7PXqM98dk7TYZFfRjUsmyu
-         Qmsmotln0FD6/sMsz3H661V29Z1FGa5DGQLF3uGeA4Sv0DzXxC04/6SNzA55doxw65Yw
-         4K8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=VkyKrLNu8ffJklwz2DWuUoxP4CUcBoFlfVslbsBnJX0=;
-        b=hSLk4VENbzp/4FxIkLH/fD03k9j2S/PpLvP9rDvV9vwGEOrrkbUz5twrDO7SslwFn+
-         VNafkt85ijutn64HjUlOD89Ra0BR4XJr3JamYzhwfYHaJ3pDxALsdPrv0xRd5pY179Kb
-         SXriqnNQ14BdFulH8PCv2WoHAjXyCRHMADM76TvuQaoFgi+oQZ6roH5qA0bEG96C5Y1M
-         NDMMapRuz4xgx3K5yBh0hWFg5fX/+xArGHp+iL4wV1/dzKLvrf7JjodnrKbf1ePpR8+A
-         rL21pfrqBen3lwgPeKRsjQxu3zDGOv2do2VYzwkvzmRpk4V/Esxhf8J5eByTdXD7EuXQ
-         /mgQ==
-X-Gm-Message-State: AGi0PuZzqU1eWZWrIB1tPLp96ET5YWmWyHdPuA4GB/Re/s0JAippu4x9
-        buIMk/M/1BHhJQ8cCMCT4Knveaw4rC2Hqg==
-X-Google-Smtp-Source: APiQypJ8NnSBxmjCaan8XzDzEiA37QUDVrXEHT5hVr1cwwq6xm9DAZNH2ChfKSnXsUERrdl15qEUjQ==
-X-Received: by 2002:ac2:4d10:: with SMTP id r16mr8409917lfi.180.1586719107321;
-        Sun, 12 Apr 2020 12:18:27 -0700 (PDT)
-Received: from laptop ([178.170.168.10])
-        by smtp.gmail.com with ESMTPSA id c2sm6641803lfb.43.2020.04.12.12.18.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 12:18:26 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 22:18:24 +0300
-From:   Maxim Zhukov <mussitantesmortem@gmail.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: BUG: e1000: infinitely loop at e1000_set_link_ksettings
-Message-ID: <20200412191824.GA109724@laptop>
+        Sun, 12 Apr 2020 15:19:27 -0400
+Received: from mail26.static.mailgun.info (mail26.static.mailgun.info [104.130.122.26])
+        by lindbergh.monkeyblade.net (Postfix) with UTF8SMTPS id 2DFB2C0A3BF5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 12:19:26 -0700 (PDT)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586719168; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=YliS61QCQYD8IvrSZrsXQtbU5Db5p1TuVwVrC572Azs=;
+ b=OQgwj7/moAnO6B5Bf2ezut03cHiaeXEVgiU5RwDivYU2YDNpqSDjekbGwHICP573jrvNJnqb
+ W2vofflKvfNIe1lVre9GvhwROYcMabdjNT0xmL/DZwAuU7NJWAYWYrQotclzJKZdX0y1rQ/k
+ /HuXnnd5Bt3w72vMyxN8OWrkPrE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9369af.7efdfea73ed8-smtp-out-n03;
+ Sun, 12 Apr 2020 19:19:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AEDF8C433F2; Sun, 12 Apr 2020 19:19:11 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: abhinavk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 252B6C433F2;
+        Sun, 12 Apr 2020 19:19:11 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 12 Apr 2020 12:19:11 -0700
+From:   abhinavk@codeaurora.org
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] drm/msm: Fix typo
+In-Reply-To: <20200412143509.11353-1-christophe.jaillet@wanadoo.fr>
+References: <20200412143509.11353-1-christophe.jaillet@wanadoo.fr>
+Message-ID: <22cbe4e4310b7d475c02da6bf44c44f9@codeaurora.org>
+X-Sender: abhinavk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Qemu X86 (kernel 5.4.31):
-The system-maintenance daemon hangout on D-state at startup on
-ioctl(ETHTOOL_SSET) for setup advertising, duplex, etc...
-
-kgdb stacktrace:
-
-----
-
-#0  0x00000000 in ?? ()
-#1  0x00000046 in ?? ()
-#2  0xdf59b780 in ?? ()
-#3  0xc19e0870 in schedule () at kernel/sched/core.c:4150
-#4  0xc19e2f3e in schedule_timeout (timeout=<optimized out>) at kernel/time/timer.c:1895
-#5  0xc19e3041 in schedule_timeout_uninterruptible (timeout=<optimized out>) at kernel/time/timer.c:1929
-#6  0xc10b3dd1 in msleep (msecs=<optimized out>) at kernel/time/timer.c:2048
-#7  0xc160345d in e1000_set_link_ksettings (netdev=0xdec0b000, cmd=0xde47fe00) at drivers/net/ethernet/intel/e1000/e1000_ethtool.c:190
-#8  0xc177b377 in ethtool_set_settings (dev=0xdec0b000, useraddr=0xbfc33620) at net/core/ethtool.c:757
-#9  0xc177fb1a in dev_ethtool (net=0xc1e84480 <init_net>, ifr=<optimized out>) at net/core/ethtool.c:2637
-#10 0xc179e313 in dev_ioctl (net=0xc1e84480 <init_net>, cmd=<optimized out>, ifr=0xde47feb4, need_copyout=0xde47feac) at net/core/dev_ioctl.c:424
-#11 0xc1755861 in sock_do_ioctl (net=0xc1e84480 <init_net>, sock=<optimized out>, cmd=35142, arg=3217241600) at net/socket.c:1061
-#12 0xc1755b61 in sock_ioctl (file=<optimized out>, cmd=35142, arg=<optimized out>) at net/socket.c:1189
-#13 0xc11986fe in vfs_ioctl (filp=<optimized out>, cmd=<optimized out>, arg=<optimized out>) at fs/ioctl.c:47
-#14 0xc11994da in do_vfs_ioctl (filp=<optimized out>, fd=24, cmd=<optimized out>, arg=3217241600) at fs/ioctl.c:699
-#15 0xc119955e in ksys_ioctl (fd=<optimized out>, cmd=<optimized out>, arg=<optimized out>) at fs/ioctl.c:714
-#16 0xc1199586 in __do_sys_ioctl (arg=<optimized out>, cmd=<optimized out>, fd=<optimized out>) at fs/ioctl.c:721
-#17 __se_sys_ioctl (fd=24, cmd=35142, arg=-1077725696) at fs/ioctl.c:719
-#18 0xc10020d6 in do_syscall_32_irqs_on (regs=<optimized out>) at arch/x86/entry/common.c:341
-#19 do_fast_syscall_32 (regs=0xde47ffb4) at arch/x86/entry/common.c:404
-
-
-frame 7:
-
-189		while (test_and_set_bit(__E1000_RESETTING, &adapter->flags))
-190			msleep(1);
-191
-
-
-Also stalled workers backtrace:
-
-#3  0xc19e0870 in schedule () at kernel/sched/core.c:4150
-#4  0xc19e2f3e in schedule_timeout (timeout=<optimized out>) at kernel/time/timer.c:1895
-#5  0xc19e3041 in schedule_timeout_uninterruptible (timeout=<optimized out>) at kernel/time/timer.c:1929
-#6  0xc10b3dd1 in msleep (msecs=<optimized out>) at kernel/time/timer.c:2048
-#7  0xc1771fb4 in napi_disable (n=0xdec0b7d8) at net/core/dev.c:6240
-#8  0xc15f0e87 in e1000_down (adapter=0xdec0b540) at drivers/net/ethernet/intel/e1000/e1000_main.c:522
-#9  0xc15f0f35 in e1000_reinit_locked (adapter=0xdec0b540) at drivers/net/ethernet/intel/e1000/e1000_main.c:545
-#10 0xc15f6ecd in e1000_reset_task (work=0xdec0bca0) at drivers/net/ethernet/intel/e1000/e1000_main.c:3506
-#11 0xc106c882 in process_one_work (worker=0xdef4d840, work=0xdec0bca0) at kernel/workqueue.c:2272
-#12 0xc106ccc6 in worker_thread (__worker=0xdef4d840) at kernel/workqueue.c:2418
-#13 0xc1070657 in kthread (_create=0xdf508800) at kernel/kthread.c:255
-#14 0xc19e4078 in ret_from_fork () at arch/x86/entry/entry_32.S:813
-
-
------
-
-If you need any additional information, I am entirely at your disposal.
-Thanks!
+On 2020-04-12 07:35, Christophe JAILLET wrote:
+> Duplicated 'we'
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> index 998bef1190a3..b5fed67c4651 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> @@ -959,7 +959,7 @@ static int mdp5_crtc_cursor_set(struct drm_crtc 
+> *crtc,
+>  	if (!ctl)
+>  		return -EINVAL;
+> 
+> -	/* don't support LM cursors when we we have source split enabled */
+> +	/* don't support LM cursors when we have source split enabled */
+>  	if (mdp5_cstate->pipeline.r_mixer)
+>  		return -EINVAL;
+> 
+> @@ -1030,7 +1030,7 @@ static int mdp5_crtc_cursor_move(struct drm_crtc
+> *crtc, int x, int y)
+>  		return -EINVAL;
+>  	}
+> 
+> -	/* don't support LM cursors when we we have source split enabled */
+> +	/* don't support LM cursors when we have source split enabled */
+>  	if (mdp5_cstate->pipeline.r_mixer)
+>  		return -EINVAL;
