@@ -2,165 +2,131 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1251BC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265C6C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA62D2073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586684356;
-	bh=wbyOBODIndCEMu0D2z+phq+6eSufCY9PcFL95wATkQc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fOOs56Zm7LcfXxOZQIzdVPJ+jwa9LTObRUoRuUzWm3PqEnAdPy7micBWgIMrtNH3n
-	 8Co2/qcMiBStToCqfpNxHFIxkeRs+nC2Fy96VOQ/p5ShJUXL+D8VkNVjs1tyZk5e9W
-	 JnmKIuvW1nXTBGV76Hi59o5zJilkvA7qTVWUje4A=
+	by mail.kernel.org (Postfix) with ESMTP id 0091F20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 09:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLMyKEkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgDLJjP (ORCPT
+        id S1726991AbgDLJkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 05:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbgDLJjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 05:39:15 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9A620709;
-        Sun, 12 Apr 2020 09:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586684354;
-        bh=wbyOBODIndCEMu0D2z+phq+6eSufCY9PcFL95wATkQc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CCvFXU6ZZAkPrqhY+3mO0dLN947kPjR0dnkmJSLpM8pYApfGKpeH/f2n2ddJe6pre
-         YIswjxP8gVprMtr/9TTFdGG9nzgWZGJs7MNrbIE4WGoIiShAV7Zft3ggd5BxeCt+YC
-         o23fwDeeTcJzz/NMWB712zrQ5FcEDe+ApYn4lckc=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jNZ55-002cys-Sy; Sun, 12 Apr 2020 10:39:12 +0100
-Date:   Sun, 12 Apr 2020 10:39:08 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        " =?UTF-8?Q?=E5=91=A8=E7=90=B0=E6=9D=B0?= (Zhou Yanjie) " 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 05/11] MIPS: Switch to arch_topology
-Message-ID: <20200412103908.2594483d@why>
-In-Reply-To: <20200412154927.7ac453d5@flygoat-x1e>
-References: <20200412032123.3896114-6-jiaxun.yang@flygoat.com>
-        <202004121349.xFzTOGS4%lkp@intel.com>
-        <20200412154927.7ac453d5@flygoat-x1e>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Apr 2020 05:40:16 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44265 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgDLJkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Apr 2020 05:40:16 -0400
+Received: by mail-io1-f66.google.com with SMTP id h6so6427256iok.11;
+        Sun, 12 Apr 2020 02:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DudAws+5XXDrWI0GuFKZK0uggxlFAK8zrjJOHTOzHvQ=;
+        b=oLMyKEkCm7I/W/A1JgYH0WtXqiBHsTY1omrWGoWeTSLEN3CRY+SOrCzgj+j8dXbT3R
+         3V4g+VDYJ18ht3BvE76CVfsI9aLy76I2/saDHYI7TAhDY+aCf1QXeuoQj1ierGjq6yUs
+         6NQE12G79t/FQbSZxu5L7qhGKRdBhiaUilKHwcCkeiySozNDg8lYnZjgQrtJvlDnddT6
+         5lN9bG180nss/feExrMPMJyu1Zky5KVreWqzrGRNCg/KpPYRpunMIP2rzSN7Zwd+vEEv
+         jVTerEys3qTK+pzUep1SHCOz4GFY/BEi4vIKQGIetWtTLJpJKPeSuOg2/3EmE7j1Em/i
+         Z6Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DudAws+5XXDrWI0GuFKZK0uggxlFAK8zrjJOHTOzHvQ=;
+        b=CMCm94W+N1aTYLnPG2SsdfB+cYDdO1hrAU/UGJiIGIT+u8BV5EP7RvfqOdcJEXL/N7
+         tdJXZEkpIW/B1RytV4gKqBc/2BCYRfCGni9XrhgfaW3jj1863uUiQXAAvfFp+XuQ+gXC
+         EXAI/1kUVxZheQmPhQtJzF80lXHT8+HiswyAN9g80NNxlvVdbcf0+Rg54N+rkEkBRhyT
+         vJXHK7Ia8Od/O3zAEME0anGGSXgvMRH+tTNC+KgWobPCz7vMkwj6dxyjLAfQxVOHb6TC
+         1pfr2mZjpmvyPluExs8hccdvsJdYniKrXcmDL7F7L+dRL4xDuGuHKfdb4RaLjSZNY9xu
+         nzhg==
+X-Gm-Message-State: AGi0PuayF7XyUEYYFp1oD8ReCUidUjmJVD0Kbuas6kPdKhswlwjz8z2S
+        HlV/dqQfqbCUWF+cWDObkwUBcN5L00bk3bvlFCc=
+X-Google-Smtp-Source: APiQypKgib8dZi5NZWvrgJ3IJzahp49Bg5kAH7kyRnQiEqTUnZAvY9sH5N9xMqe9W2wkw6a4Vie0NTHrFFJZfCswvCI=
+X-Received: by 2002:a6b:cd4a:: with SMTP id d71mr11597681iog.5.1586684415253;
+ Sun, 12 Apr 2020 02:40:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, lkp@intel.com, kbuild-all@lists.01.org, linux-mips@vger.kernel.org, tsbogend@alpha.franken.de, chenhc@lemote.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, f.fainelli@gmail.com, rric@kernel.org, sudeep.holla@arm.com, gregkh@linuxfoundation.org, rafael@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, paulburton@kernel.org, allison@lohutok.net, info@metux.net, kstewart@linuxfoundation.org, vladimir.kondratiev@intel.com, paul@crapouillou.net, zhouyanjie@zoho.com, zhouyanjie@wanyeetech.com, syq@debian.org, arnd@arndb.de, fancer.lancer@gmail.com, matt.redfearn@mips.com, swinslow@gmail.com, alexios.zavras@intel.com, rfontana@redhat.com, peterx@redhat.com, afzal.mohd.ma@gmail.com, kdasu.kdev@gmail.com, linux@rempel-privat.de, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, oprofile-lis
- t@lists.sf.net, linux-pm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <00000000000048518b05a2fef23a@google.com> <20200411161439.GE21484@bombadil.infradead.org>
+ <20200412091713.B7282A404D@d06av23.portsmouth.uk.ibm.com>
+In-Reply-To: <20200412091713.B7282A404D@d06av23.portsmouth.uk.ibm.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sun, 12 Apr 2020 12:40:04 +0300
+Message-ID: <CAOQ4uxg0Fmh58bvTKFyHDhAsmCtgbxpHr+mHYY=O9Wcuo_1JZQ@mail.gmail.com>
+Subject: Re: WARNING in iomap_apply
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Theodore Tso <tytso@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 15:49:27 +0800
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Sun, Apr 12, 2020 at 12:17 PM Ritesh Harjani <riteshh@linux.ibm.com> wrote:
+>
+>
+>
+> On 4/11/20 9:44 PM, Matthew Wilcox wrote:
+> > On Sat, Apr 11, 2020 at 12:39:13AM -0700, syzbot wrote:
+> >> The bug was bisected to:
+> >>
+> >> commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
+> >> Author: Ritesh Harjani <riteshh@linux.ibm.com>
+> >> Date:   Fri Feb 28 09:26:58 2020 +0000
+> >>
+> >>      ext4: move ext4_fiemap to use iomap framework
+> >>
+> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
+> >> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
+> >>
+> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+> >> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
+> >>
+> >> ------------[ cut here ]------------
+> >> WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
+> >
+> > This is:
+> >
+> >          if (WARN_ON(iomap.length == 0))
+> >                  return -EIO;
+> >
+> > and the call trace contains ext4_fiemap() so the syzbot bisection looks
+> > correct.
+>
+> I think I know what could be going wrong here.
+>
+> So the problem happens when we have overlayfs mounted on top of ext4.
+> Now overlayfs might be supporting max logical filesize which is more
+> than what ext4 could support (i.e. sb->s_maxbytes for overlayfs must
+> be greater than compared to ext4). So that's why the check in func
+> ioctl_fiemap -> fiemap_check_ranges() couldn't truncate to logical
+> filesize which the actual underlying filesystem supports.
+>
+> @All,
+> Do you think we should make overlayfs also check for
+> fiemap_check_ranges()? Not as part of this fix, but as a later
+> addition to overlayfs? Please let me know, I could also make that patch.
+>
 
-> On Sun, 12 Apr 2020 13:24:21 +0800
-> kbuild test robot <lkp@intel.com> wrote:
-> 
-> > Hi Jiaxun,
-> > 
-> > I love your patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on driver-core/driver-core-testing]
-> > [also build test ERROR on pm/linux-next linus/master next-20200411]
-> > [cannot apply to tip/perf/core tip/irq/core v5.6]
-> > [if your patch is applied to the wrong git tree, please drop us a
-> > note to help improve the system. BTW, we also suggest to use '--base'
-> > option to specify the base tree in git format-patch, please see
-> > https://stackoverflow.com/a/37406982]
-> > 
-> > url:
-> > https://github.com/0day-ci/linux/commits/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
-> > base:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-> > a10c9c710f9ecea87b9f4bbb837467893b4bef01 config: mips-allnoconfig
-> > (attached as .config) compiler: mips-linux-gcc (GCC) 9.3.0 reproduce:
-> > wget
-> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> > -O ~/bin/make.cross chmod +x ~/bin/make.cross # save the attached
-> > .config to linux build tree GCC_VERSION=9.3.0 make.cross ARCH=mips 
-> > 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > Note: the
-> > linux-review/Jiaxun-Yang/MIPS-Topology-DeviceTree-CPU-rework-v2/20200412-113308
-> > HEAD 8e8e9d4f7aa74359f2199773786ffe2fbb7877d0 builds fine. It only
-> > hurts bisectibility.
-> >   
-> Hi all,
-> 
-> In this case I think it should be fine to break bisect, otherwise #05
-> will combine too many modifications in different subsystems.
-
-No. It is never OK to break bisection, specially when it affects a
-whole architecture.
-
-We introduce gradual changes over multiple subsystems all the time by
-using configuration symbols, no matter the number of patches. Yes, it is
-sometimes hard. But breaking the kernel and forcing everyone else to
-just deal with it is not acceptable.
+Yes, I think that would be correct.
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Amir.
