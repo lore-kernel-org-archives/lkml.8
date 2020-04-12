@@ -2,111 +2,181 @@ Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7A9C38A2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 16:08:16 +0000 (UTC)
-X-Greylist: delayed 185 seconds by postgrey-1.34 at mail.kernel.org; Sun, 12 Apr 2020 16:08:16 UTC
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ROkWz/V4"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 910C920705
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DFFC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 16:20:08 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910C920705
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 16:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59996206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 16:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CTGwsCdJ"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 59996206C3
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=oracle.com
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgDLQFJ (ORCPT
+        id S1727150AbgDLQUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 12:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:48226 "EHLO
+        Sun, 12 Apr 2020 12:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgDLQFH (ORCPT
+        with ESMTP id S1727093AbgDLQUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 12:05:07 -0400
-Received: from mail26.static.mailgun.info (mail26.static.mailgun.info [104.130.122.26])
-        by lindbergh.monkeyblade.net (Postfix) with UTF8SMTPS id 52028C0A88B7
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 08:55:16 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586706918; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=v/4Unzb4XAwnL5kA9b53Pbk4hh5BiItYhXRNTg5Uj0I=; b=ROkWz/V40xC55pcCA9ThsStLl5XoPaYgwT6SDVEmLRE4MTtd2a3EXrFon6jfYdx4sbs53cl0
- oXgvR4wnlju13APJS7pS1B3A50TUOxe4R5e4PIBb07MzwVdYfPrvvJcNR/kZq5AfnW+HTYrz
- WH8y0Iy+ZeiWQuFUN76ni4NUdn4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9339da.7f330b33d030-smtp-out-n05;
- Sun, 12 Apr 2020 15:55:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5577FC433F2; Sun, 12 Apr 2020 15:55:05 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59024C433CB;
-        Sun, 12 Apr 2020 15:55:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59024C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: [PATCH V1 4/4] mmc: sdhci-msm: Enable ADMA length mismatch error interrupt
-Date:   Sun, 12 Apr 2020 21:23:28 +0530
-Message-Id: <1586706808-27337-5-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586706808-27337-1-git-send-email-vbadigan@codeaurora.org>
-References: <1586706808-27337-1-git-send-email-vbadigan@codeaurora.org>
+        Sun, 12 Apr 2020 12:20:06 -0400
+X-Greylist: delayed 421 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Apr 2020 12:20:06 EDT
+Received: from aserp2120.oracle.com (aserp2120.oracle.com [141.146.126.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B09C0A3BF1;
+        Sun, 12 Apr 2020 09:13:06 -0700 (PDT)
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03CGA4xS067338;
+        Sun, 12 Apr 2020 16:12:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=k/PHXmE1tFF4uwo/11j/QXvuGih1LNDMw3dj5UKLqms=;
+ b=CTGwsCdJuFJ4C3jpBtgQYXWIBjyk4Nxfl4g0rFUjZ86pwSO0kHA/le2EEn+q1XQ3v+fz
+ DToJZKVvciAyWzzsM0P/kf3DJqLcOnHIBD/CQayRWbCXBXJFqudQHPaYs/2v/XnkCHG8
+ hNByy//xNMT4y5VMRGWyVgR+/RQq/R+C6I5xLSUR1SHPZ+lB7KTFc/h41jMJ4OxUDvyN
+ lUop2aISJrE0fPbrXnS/gwJxjVRp0vMu+A0CxYYIn+EA1/MZCj8YVxyy8Dpzo0oTwL/C
+ FflEbLKOm+xJn6uGE6/lSrZEi/W/fls0pejZ590XmT/2aXGuIH/XrMzksQ/mPSf3khVB Mg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30b5ukud8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 12 Apr 2020 16:12:38 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03CGBbEU009877;
+        Sun, 12 Apr 2020 16:12:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30bqcbfd6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 12 Apr 2020 16:12:37 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03CGCT5R016047;
+        Sun, 12 Apr 2020 16:12:30 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 12 Apr 2020 09:12:29 -0700
+Date:   Sun, 12 Apr 2020 09:12:27 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>,
+        hch@infradead.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Subject: Re: WARNING in iomap_apply
+Message-ID: <20200412161227.GE6749@magnolia>
+References: <00000000000048518b05a2fef23a@google.com>
+ <20200411092558.20856-1-hdanton@sina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200411092558.20856-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9589 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004120148
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9589 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004120147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ADMA_ERR_SIZE_EN bit of VENDOR_SPECIFIC_FUNC register controls
-ADMA length mismatch error interrupt. Enable it by default.
+On Sat, Apr 11, 2020 at 05:25:58PM +0800, Hillf Danton wrote:
+> 
+> On Sat, 11 Apr 2020 00:39:13 -0700
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    7e634208 Merge tag 'acpi-5.7-rc1-2' of git://git.kernel.or..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=127ebeb3e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=12205d036cec317f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=77fa5bdb65cc39711820
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1196f257e00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c336c7e00000
+> > 
+> > The bug was bisected to:
+> > 
+> > commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
+> > Author: Ritesh Harjani <riteshh@linux.ibm.com>
+> > Date:   Fri Feb 28 09:26:58 2020 +0000
+> > 
+> >     ext4: move ext4_fiemap to use iomap framework
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+> > Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
+> > 
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 7023 Comm: syz-executor296 Not tainted 5.6.0-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> >  panic+0x2e3/0x75c kernel/panic.c:221
+> >  __warn.cold+0x2f/0x35 kernel/panic.c:582
+> >  report_bug+0x27b/0x2f0 lib/bug.c:195
+> >  fixup_bug arch/x86/kernel/traps.c:175 [inline]
+> >  fixup_bug arch/x86/kernel/traps.c:170 [inline]
+> >  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+> >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> > RIP: 0010:iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
+> > Code: ff e9 0e fd ff ff e8 23 30 96 ff 0f 0b e9 07 f7 ff ff e8 17 30 96 ff 0f 0b 49 c7 c4 fb ff ff ff e9 35 f9 ff ff e8 04 30 96 ff <0f> 0b 49 c7 c4 fb ff ff ff e9 22 f9 ff ff e8 f1 2f 96 ff 0f 0b e9
+> > RSP: 0018:ffffc90000f87968 EFLAGS: 00010293
+> > RAX: ffff8880a1b00480 RBX: ffffc90000f879c8 RCX: ffffffff81dcf934
+> > RDX: 0000000000000000 RSI: ffffffff81dd016c RDI: 0000000000000007
+> > RBP: 0000000000000000 R08: ffff8880a1b00480 R09: ffffed1015cc70fc
+> > R10: ffff8880ae6387db R11: ffffed1015cc70fb R12: 0000000000000000
+> > R13: ffff888085e716b8 R14: 0000000000000000 R15: ffffc90000f87b50
+> >  iomap_fiemap+0x184/0x2c0 fs/iomap/fiemap.c:88
+> >  _ext4_fiemap+0x178/0x4f0 fs/ext4/extents.c:4860
+> >  ovl_fiemap+0x13f/0x200 fs/overlayfs/inode.c:467
+> >  ioctl_fiemap fs/ioctl.c:226 [inline]
+> >  do_vfs_ioctl+0x8d7/0x12d0 fs/ioctl.c:715
+> >  ksys_ioctl+0xa3/0x180 fs/ioctl.c:761
+> >  __do_sys_ioctl fs/ioctl.c:772 [inline]
+> >  __se_sys_ioctl fs/ioctl.c:770 [inline]
+> >  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+> Check out-of-bound parameters.
 
-And update all bit shift defines with BIT macro.
+No SOB, this patch cannot be taken.
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
- drivers/mmc/host/sdhci-msm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> --- a/fs/iomap/fiemap.c
+> +++ b/fs/iomap/fiemap.c
+> @@ -70,6 +70,9 @@ int iomap_fiemap(struct inode *inode, st
+>  	struct fiemap_ctx ctx;
+>  	loff_t ret;
+>  
+> +	if (start < 0 || len < 0)
+> +		return -EINVAL;
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 482045b..660e1bc 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -56,19 +56,19 @@
- #define CORE_FLL_CYCLE_CNT	BIT(18)
- #define CORE_DLL_CLOCK_DISABLE	BIT(21)
- 
--#define CORE_VENDOR_SPEC_POR_VAL 0xa1c
-+#define CORE_VENDOR_SPEC_POR_VAL 0xa3c
- #define CORE_CLK_PWRSAVE	BIT(1)
- #define CORE_HC_MCLK_SEL_DFLT	(2 << 8)
- #define CORE_HC_MCLK_SEL_HS400	(3 << 8)
- #define CORE_HC_MCLK_SEL_MASK	(3 << 8)
--#define CORE_IO_PAD_PWR_SWITCH_EN	(1 << 15)
--#define CORE_IO_PAD_PWR_SWITCH  (1 << 16)
-+#define CORE_IO_PAD_PWR_SWITCH_EN	BIT(15)
-+#define CORE_IO_PAD_PWR_SWITCH	BIT(16)
- #define CORE_HC_SELECT_IN_EN	BIT(18)
- #define CORE_HC_SELECT_IN_HS400	(6 << 19)
- #define CORE_HC_SELECT_IN_MASK	(7 << 19)
- 
--#define CORE_3_0V_SUPPORT	(1 << 25)
--#define CORE_1_8V_SUPPORT	(1 << 26)
-+#define CORE_3_0V_SUPPORT	BIT(25)
-+#define CORE_1_8V_SUPPORT	BIT(26)
- #define CORE_VOLT_SUPPORT	(CORE_3_0V_SUPPORT | CORE_1_8V_SUPPORT)
- 
- #define CORE_CSR_CDC_CTLR_CFG0		0x130
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+FIEMAP parameters ought to be range-checked in ioctl_fiemap().
+
+--D
+
+> +
+>  	memset(&ctx, 0, sizeof(ctx));
+>  	ctx.fi = fi;
+>  	ctx.prev.type = IOMAP_HOLE;
+> 
