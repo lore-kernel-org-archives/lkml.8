@@ -2,119 +2,101 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5340CC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E789C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:42:15 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238CC2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:35:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAaTOHhr"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 238CC2073E
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	by mail.kernel.org (Postfix) with ESMTP id 6291D20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:42:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 6291D20735
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgDMHfD (ORCPT
+        id S1729411AbgDMHmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 03:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:33664 "EHLO
+        Mon, 13 Apr 2020 03:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:34866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgDMHfC (ORCPT
+        with ESMTP id S1727480AbgDMHmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 03:35:02 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA292C008651;
-        Mon, 13 Apr 2020 00:35:01 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g12so1224173wmh.3;
-        Mon, 13 Apr 2020 00:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jNvpxtX/L+YMcC9uGmkISLCwGkRZNFiP+NPeaB0ugAk=;
-        b=CAaTOHhrXd2f0/o9O0vjmpdMKqGTeG7I5T0YM4fecMsoVwj6PytUIeE6mJKgmIcvH4
-         s9VlGD8cefVpVIb13UaC3kqH4HxbsszpnJ8WjpO1RmLigkzYCHO7nFfa6d9CvP5sycmi
-         dSQoAoCDstvKUbhs8WBEZ/eMLne8IBfZqya52u8s8u87RHIlxDbLYouseoUyDcuttzWu
-         gCz0iK54/pEvIUzzfe+U7iNls/UBZgI+3MQY/1KkY9R5c91WCq3DcPhctk1R1mPCYVMh
-         cht9VNr5zHT5y4Fr8ktYv22GjDg3dxkA4sAVzw44Cldi9zoHSplxggVqsiUid1phBPIX
-         u+8Q==
+        Mon, 13 Apr 2020 03:42:13 -0400
+Received: from mail-ot1-f67.google.com (mail-ot1-f67.google.com [209.85.210.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 713AAC008651;
+        Mon, 13 Apr 2020 00:42:13 -0700 (PDT)
+Received: by mail-ot1-f67.google.com with SMTP id i27so5394400ota.7;
+        Mon, 13 Apr 2020 00:42:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jNvpxtX/L+YMcC9uGmkISLCwGkRZNFiP+NPeaB0ugAk=;
-        b=ceAV+i6gNUOYEySt9MuG60h3xrtBGzE4rh2ZTloVaypUDlw5dJ5/rSiRlWxan5ItFN
-         KHmK5/Te9vhfCiBeUFGHoz7lMDA2SxxZMhMhnzx8lhSfiYvaaFTpCul8BG8ROnqBBEKJ
-         WZpZvaC3JP8x79hcdCZQFOGf6x0EVI60yenb0eGvBETXungpuCUETaUDSWgh3EclZMwg
-         933dYx8BRvkBXe8M54ZSw9U3+yYlblNcihCZeW0N3fMxJ3nasZCaupXLQKm/gF3wfLAz
-         zsuq7/YFPoUhN1tAbDtTNGMkZvbs8BTO4T7w0GAiUpwpwfe4PwLwp+iSGSu8kl5BIKRi
-         AGsg==
-X-Gm-Message-State: AGi0PuadQDqXpq8VkuFjWQAp5mJuIXNk5gCNLxFHVDvJ6TcMfWPIDnHo
-        WAYnnhKzM+zH2LY+jkQhs2M=
-X-Google-Smtp-Source: APiQypI/zPo1GszUY9LqyhxKcL6TzejRe+86z7SOxoStPUo7xJSmZS5DYRN/oVfDW9ELOOvAspC5tw==
-X-Received: by 2002:a1c:7416:: with SMTP id p22mr1053662wmc.80.1586763300441;
-        Mon, 13 Apr 2020 00:35:00 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2da9:2f00:c0be:812e:7fb0:ebe0])
-        by smtp.gmail.com with ESMTPSA id q9sm13673845wrp.61.2020.04.13.00.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 00:34:59 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
-        Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH RESEND] MAINTAINERS: rectify EDAC-SIFIVE entry
-Date:   Mon, 13 Apr 2020 09:34:47 +0200
-Message-Id: <20200413073447.9284-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d708XQKpnHs/u2LgctRBUUp8mQtOH0Q66KFRsQSWh+Q=;
+        b=Bbv7QTfdArRZ9fPYMwMyRqaxMpDGu8B+jX5XXByAQCHi1AjPpp6oQeFsR9lOPtkQiC
+         ASHH0TO0tCw/ToX2RNMDyN/VHAicN3eQC/2YeOXLxm6gAWVOsOMSzfXcODEHYk0m7BHX
+         bXYE3PQ2HqCtEzJAQyqoI24MdJgmIQMCAFfDnhWrtFHx+WmVdStyPWVtdTNiW9Opz6VO
+         ZXztHNbw4dKWI5jvarPWZXaqdxkSrBMaZDfBT/Nnc15CHi54chsZSMTwtIV4BlpwM92B
+         y5gHRocJseyCpkKZ+llGBwZqj5nDRnoNrbDeYRkUdte7bWTVaRnVkQdecZom7HE+8e3o
+         bfXQ==
+X-Gm-Message-State: AGi0PuYrKfQJcfM4QZFowIfBVvCRwXlt5TgNGnTgg2gu8zeD9SZx81tp
+        uVKDQi1s02pWYVrP2uob89gcCJJbYgB/X/DetXE=
+X-Google-Smtp-Source: APiQypIRnInq/orWeaoAPrkHsOfmBEXAmFtHcWXt7jzY5yBQE+fHrQJiHteCrRoPj6ZkngX8ciKhcGkSv1Z7yb3ea/Q=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr13431915otk.250.1586763732609;
+ Mon, 13 Apr 2020 00:42:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200413014743.16353-1-masahiroy@kernel.org>
+In-Reply-To: <20200413014743.16353-1-masahiroy@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 Apr 2020 09:42:01 +0200
+Message-ID: <CAMuHMdWyouYStBj=kjJuMwgi1ZNQkBC8J+ums7id6t2exOj=WA@mail.gmail.com>
+Subject: Re: [PATCH] sh: fix build error in mm/init.c
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc") moved
-arch/riscv/mm/sifive_l2_cache.c to drivers/soc/sifive/sifive_l2_cache.c
-and adjusted the MAINTAINERS EDAC-SIFIVE entry but slipped in a mistake.
+On Mon, Apr 13, 2020 at 7:44 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> The closing parenthesis is missing.
+>
+> Fixes: bfeb022f8fe4 ("mm/memory_hotplug: add pgprot_t to mhp_params")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-  warning: no file matches F: drivers/soc/sifive_l2_cache.c
+> --- a/arch/sh/mm/init.c
+> +++ b/arch/sh/mm/init.c
+> @@ -412,7 +412,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>         unsigned long nr_pages = size >> PAGE_SHIFT;
+>         int ret;
+>
+> -       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot)
+> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>                 return -EINVAL;
+>
+>         /* We only have ZONE_NORMAL, so this is easy.. */
 
-Rectify the EDAC-SIFIVE entry in MAINTAINERS now.
+Gr{oetje,eeting}s,
 
-Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Paul, please pick this patch.
+                        Geert
 
-v1: https://lore.kernel.org/lkml/20200304144045.15060-1-lukas.bulwahn@gmail.com/
-  - was not picked up.
-
-v1-resend: applies on v5.7-rc1
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..e28676766b26 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6172,7 +6172,7 @@ M:	Yash Shah <yash.shah@sifive.com>
- L:	linux-edac@vger.kernel.org
- S:	Supported
- F:	drivers/edac/sifive_edac.c
--F:	drivers/soc/sifive_l2_cache.c
-+F:	drivers/soc/sifive/sifive_l2_cache.c
- 
- EDAC-SKYLAKE
- M:	Tony Luck <tony.luck@intel.com>
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
