@@ -2,136 +2,128 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C78C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BF1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 075A52072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0vI36uY"
+	by mail.kernel.org (Postfix) with ESMTP id 4B5692072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586785938;
+	bh=2QT0hVPsskyN8JQI/O18ExbNXWNjGVlkPziO10x9bI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jruiBBjaV6/ikvJdxlqqWGjfwV9Zh9REc7Im9Ir1aZ1p6CIlAen/oztbhVZPm1mzS
+	 Fa5at+KanVIGxAwIFCg2a4MfFh7PGcxjsysfceIryDw4JkDsXOxB2IPWoLiSb134bv
+	 rlHgoNb5eunZRFCexYaa/OVGjzjOCkUhcuvQxPQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgDMNrE (ORCPT
+        id S1730157AbgDMNwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 09:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
+        Mon, 13 Apr 2020 09:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730085AbgDMNrC (ORCPT
+        with ESMTP id S1730000AbgDMNwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:47:02 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D34C0C0A3BDC;
-        Mon, 13 Apr 2020 06:47:01 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id v38so4348585qvf.6;
-        Mon, 13 Apr 2020 06:47:01 -0700 (PDT)
+        Mon, 13 Apr 2020 09:52:16 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CAEC0A3BDC;
+        Mon, 13 Apr 2020 06:52:15 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c63so9449298qke.2;
+        Mon, 13 Apr 2020 06:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=x1yXSTDynQiy82Vyc5H3wDcpDxiJ8zfFOpxq7i05rdA=;
-        b=E0vI36uYuChS4rQ8OqvYKwGYdN2vO6ZS5h2cVbCMl/eDa9rd8yb54EO5+f26Vbj/9g
-         ZEl5MmTu1k9kbiztjCQmN//Bri+Q82cr0kZ3fbIbU0KP7o/g8FQ6wRUw0sgD/C0gIqtx
-         8L+CjWXZr5zVfReTtEvnyUejSBIQyyvLqFsO4m49e2fdIWNIKIl//ebNJAs9ev5wQVWZ
-         pHQhDYWwcH9rowmV/JA3/48cFm64knG8LgaSgctO2Z6k6QYx+xCrM4TRzEI/m4e3vkwS
-         NpYpjhR0x3uVF4xYo3g6zOkFSUq5T+u3vHPOqhek9NMEsPLC8uKT7AIP7k5qltMwXR+5
-         l0qg==
+        bh=pEQ2ZN/sQMUNp0cAGyj+0Oo/y3A6wiKh+7dkMJzMwVI=;
+        b=MRSZ1qTh0me/yxxie/3CYFIGX8lrDC3ISjXJe6J7lVXk3NNURSYMsAEkOVRdvkUZVL
+         K97VBE5C8GBEcLI1j6snQqwxNHlR4+HRv+4c/KG8wrRFOyycSy4N/YUZrTbaWF/itcdj
+         cB85PL1NzoFmMsWzbeHhQx6dVVQzIf3ZmbjjAeD+6Zxf9S4eQh8M7DkjB6DbllIxcu9+
+         EKj5ePFmNh8aNV2InN7y+YDDIRVaayW85AjvKvBf+4LPxQciv2SkXZe9Pwsh7Sb+gzyp
+         dfQBXRF70YH8Zx2h75h9z8upaN74WXugMBbMvCCiTmq4wrRoQAEL6eB/jTiTQivTf8P6
+         cxJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=x1yXSTDynQiy82Vyc5H3wDcpDxiJ8zfFOpxq7i05rdA=;
-        b=tuWJdyHjwkwXvrieMAM4TUiehuRNI2wy4gnUPd0Y+idwrRhHTddqsrOO7PmZGMXoz6
-         c9Xa3bx7bUxcMPIbTmwBApOJcAGS2uqNJWwZACDeJw8MIygEAAElZeCNS1oMOaA6zay7
-         yQuFEfGHC/n133EZkAJmmGkEyIAYxb4RiylGw1LCHwaNQw9jA3hSctcrRenC3WLatPZt
-         wtZhzi0gVjx/LhsljM86vyDS733wEdAK94nZlfjb0qVOjVmJKBlad8yQOPVrV7LGcgI+
-         /ssVou+CBNrO1e4Z1GSS0y5SVWo8uhW7aXZoba5bLh5W4FqgZ/LIm7Q7VP4+NwdOcZ/z
-         engw==
-X-Gm-Message-State: AGi0PubrtzL/DDFeRuV+LaoUReQBELcPLOvYb/JvdB3lQIjdN3rjoehJ
-        EuVxlqiIxH6fTay2IxJFnWA=
-X-Google-Smtp-Source: APiQypKRGoH7GuYS1xxa6TJXgAVk03aMRlImkl8rhi+XUAJ1qsmZFzQOgk5xM1YjprER8S/Reox48w==
-X-Received: by 2002:a05:6214:1781:: with SMTP id ct1mr17456897qvb.87.1586785620886;
-        Mon, 13 Apr 2020 06:47:00 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id i42sm7254276qtc.83.2020.04.13.06.46.59
+        bh=pEQ2ZN/sQMUNp0cAGyj+0Oo/y3A6wiKh+7dkMJzMwVI=;
+        b=NnlNV5l2gecQ4fPeqiap813QxvpTfOFGEidjKBRM0IHYzu0JiRis6pOBX7YniBMrLS
+         PWdiu2ZG42FT5ILkPSWOwnQE4uXE9VumJ7sMVxBZB3t3sedwkiZ7wDATyqY6v/duduSn
+         ImERfNeWW0awC29tRVt6FsMZAUibiWWj4empa+oJSwEFjPZOMDO3IqnnHVbBBB4fCcFb
+         PTyfy+yvdJR7DE6l7T906u/gVUsUAPh4zynFR9E17idUP9lj53ZHHKCo5fSinYCvc4eo
+         eaNr+fcvwPs8R1GgE99/otzAtG2MAjAKxb1Nis8ZLtANn5VbCMrscRdypaMZfBqMxg9e
+         I1pQ==
+X-Gm-Message-State: AGi0PuZRS/nHVjVz3z4hrINI0U2WsotxHOO1RX/yaLkL7m7O3/OVIhat
+        NGTZDokwL8EP79fnLBFCHeM=
+X-Google-Smtp-Source: APiQypLe7MO13U/Rf9ZmvyBPQqLT6zGJOfgTyGiBiUG0HsVQKvD4PRhBAITPJDiJayaHpv91ab4IvA==
+X-Received: by 2002:a37:418d:: with SMTP id o135mr16605498qka.349.1586785934916;
+        Mon, 13 Apr 2020 06:52:14 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id c8sm8541264qke.90.2020.04.13.06.52.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 06:47:00 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 13 Apr 2020 09:46:58 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Victor Erminpour <victor.erminpour@oracle.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] efi/libstub/arm64: Enable __efistub_global define in
- .data section
-Message-ID: <20200413134658.GA2111242@rani.riverdale.lan>
-References: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
- <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
- <aee6c7cc-24c7-2822-47d5-1e05413a8024@oracle.com>
- <CAMj1kXFF3gR+LyE1VbLuwnRA3CzQtF90mv7rpw9x2RcyugO1JA@mail.gmail.com>
+        Mon, 13 Apr 2020 06:52:14 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 09:52:12 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@vger.kernel.org,
+        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com
+Subject: Re: [PATCH 2/5] block: add request->io_data_len
+Message-ID: <20200413135212.GA60335@mtj.duckdns.org>
+References: <20200408201450.3959560-1-tj@kernel.org>
+ <20200408201450.3959560-3-tj@kernel.org>
+ <b027a718-1c76-6e34-1edb-5435a5605d35@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXFF3gR+LyE1VbLuwnRA3CzQtF90mv7rpw9x2RcyugO1JA@mail.gmail.com>
+In-Reply-To: <b027a718-1c76-6e34-1edb-5435a5605d35@acm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 08:39:00AM +0200, Ard Biesheuvel wrote:
-> On Sat, 11 Apr 2020 at 00:12, Victor Erminpour
-> <victor.erminpour@oracle.com> wrote:
-> >
-> >
-> >
-> > On 4/10/20 1:09 AM, Ard Biesheuvel wrote:
-> > > On Thu, 9 Apr 2020 at 23:44, Victor Erminpour
-> > > <victor.erminpour@oracle.com> wrote:
-> > >>
-> > >> Enable the __efistub_global define to place variables in the
-> > >> .data section for both CONFIG_ARM and CONFIG_ARM64.
-> > >>
-> > >> This places the EFIstub sys_table variable and other EFIstub
-> > >> static variables in the .data section for both CONFIG_ARM and
-> > >> CONFIG_ARM64.
-> > >>
-> > >
-> > > What does that achieve?
-> >
-> > Hi Ard,
-> >
-> > Without placing these global variables in .data, I get the
-> > following errors when booting an ARM64 EFI system:
-> >
-> > EFI stub: ERROR: Exit boot services failed.
-> > EFI stub: ERROR: Failed to update FDT and exit boot services
-> >
-> 
-> Which boot loader are you using? Does this involve shim?
-> 
-> Also, does it help if you add 'efi=no_disable_early_pci_dma'?
-> 
-> 
-> >
-> > I know that the ARM64 linker script is supposed to put the
-> > .init.bss into the .init.data section, but I don't think this
-> > is happening for all systems.
-> >
-> > Having it explicitly enabled for CONFIG_ARM64 worked for me.
-> >
-> 
-> OK, thanks for the report. However, we will be removing
-> __efistub_global entirely during the next cycle, so this is not the
-> right fix.
+Hello,
 
-Victor, can you attach your kernel configuration and the output of
-	objdump -t drivers/firmware/efi/libstub/lib.a
-on the non-working kernel and the working kernel?
+On Wed, Apr 08, 2020 at 08:44:17PM -0700, Bart Van Assche wrote:
+> On 2020-04-08 13:14, Tejun Heo wrote:
+> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> > index 32868fbedc9e..bfd34c6a27ef 100644
+> > --- a/include/linux/blkdev.h
+> > +++ b/include/linux/blkdev.h
+> > @@ -142,6 +142,14 @@ struct request {
+> >  
+> >  	/* the following two fields are internal, NEVER access directly */
+> >  	unsigned int __data_len;	/* total data len */
+> > +#ifdef CONFIG_BLK_RQ_IO_DATA_LEN
+> > +	/*
+> > +	 * Total data len at the time of issue. This doesn't get deducted by
+> > +	 * blk_update_request() and can be used by completion path to determine
+> > +	 * the request size.
+> > +	 */
+> > +	unsigned int io_data_len;
+> > +#endif
+> >  	sector_t __sector;		/* sector cursor */
+> >  
+> >  	struct bio *bio;
+> 
+> So we have one struct member with the description "total data len" and
+> another struct member with the description "total data len at the time
+> of issue"? How could one not get confused by these descriptions?
 
-Also, is this failing with the latest git kernel or some other version?
+The new one explicitly says it doesn't get deducted by update_request.
+
+> This change makes the comment above __data_len incorrect. Please update
+> that comment or move io_data_len in front of that comment.
+
+Sure.
+
+> How does this change interact with the code in drivers/scsi/sd.c that
+> manipulates __data_len directly?
+
+It doesn't.
 
 Thanks.
+
+-- 
+tejun
