@@ -1,142 +1,208 @@
-Return-Path: <SRS0=29S8=54=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D24C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 23:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71432C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:01:25 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC88A20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Apr 2020 23:12:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org BC88A20708
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=arm.com
+	by mail.kernel.org (Postfix) with ESMTP id 4156120768
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VBRZ27la"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 4156120768
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=canb.auug.org.au
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgDLXMj (ORCPT
+        id S1726776AbgDMABX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 19:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:36604 "EHLO
+        Sun, 12 Apr 2020 20:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:44682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgDLXMi (ORCPT
+        with ESMTP id S1726185AbgDMABX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 19:12:38 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D8ECAC0A88B5;
-        Sun, 12 Apr 2020 16:12:38 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 653811FB;
-        Sun, 12 Apr 2020 16:12:38 -0700 (PDT)
-Received: from [10.37.12.1] (unknown [10.37.12.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE55C3F73D;
-        Sun, 12 Apr 2020 16:12:36 -0700 (PDT)
-Subject: Re: [PATCH] coresight: tmc: Read TMC mode only when TMC hw is enabled
-To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, swboyd@chromium.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <9a792e3e-5a17-156d-4b59-4a3ec8f9993e@arm.com>
-Date:   Mon, 13 Apr 2020 00:17:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Sun, 12 Apr 2020 20:01:23 -0400
+X-Greylist: delayed 4239 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 12 Apr 2020 17:01:23 PDT
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C421C0A3BE0;
+        Sun, 12 Apr 2020 17:01:23 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 490pgK5bVRz9sQt;
+        Mon, 13 Apr 2020 10:01:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586736080;
+        bh=IcZEq/yyh49ITpPIHFp6PhuhvWDTsoLe/4/zgqF40gU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VBRZ27lagN0Pfnbjx3Nxi3nYl2TlTAjlztjQAlNk4laejEdm4xZRcRyQWOS902I38
+         Eb4bBGLlE1gbboSsO49D/Mvk2c4qgNl+YQycUvhDc73M7ixoqFOWS/Wm/bPlBg3oWK
+         1TRATRMSZ2g+eWoHPnE8RCdn24K5JRTKHttNsFOrEWldHkhsMaFzs6cer/kfCKd0uv
+         c0AO0/Zj6NVtxLdMzyqGyAX+cTl37CsivjFJKECdJyxn19dt+wwIbyVl+o22Qgg+Ur
+         Y7pjabDJksDvBTolZk5kTLUUUXXbWSQqcUV0nUUM+ZTQR5C5e6JcF8y3zYq0PfVwoN
+         nJPG2Ud6KBmRw==
+Date:   Mon, 13 Apr 2020 10:01:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: linux-next: build warning after merge of the tip tree
+Message-ID: <20200413100112.2e114e24@canb.auug.org.au>
+In-Reply-To: <874ku2q18k.fsf@nanos.tec.linutronix.de>
+References: <20200330134746.627dcd93@canb.auug.org.au>
+        <20200401085753.617c1636@canb.auug.org.au>
+        <877dyzv6y2.fsf@nanos.tec.linutronix.de>
+        <20200402090051.741905cd@canb.auug.org.au>
+        <874ku2q18k.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Pk_O4snDeaSGZI2P2=FNYNB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+--Sig_/Pk_O4snDeaSGZI2P2=FNYNB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 04/09/2020 12:35 PM, Sai Prakash Ranjan wrote:
-> Reading TMC mode register in tmc_read_prepare_etb without
-> enabling the TMC hardware leads to async exceptions like
-> the one in the call trace below. This can happen if the
-> user tries to read the TMC etf data via device node without
-> setting up source and the sink first which enables the TMC
-> hardware in the path. So make sure that the TMC is enabled
-> before we try to read TMC data.
+Hi Thomas,
 
-So, one can trigger the same SError by simply :
+On Thu, 02 Apr 2020 00:39:55 +0200 Thomas Gleixner <tglx@linutronix.de> wro=
+te:
+>
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> > On Wed, 01 Apr 2020 12:25:25 +0200 Thomas Gleixner <tglx@linutronix.de>=
+ wrote: =20
+> >> Me neither. Which compiler version? =20
+> >
+> > arm-linux-gnueabi-gcc (Debian 9.2.1-21) 9.2.1 20191130
+> > =20
+> >> I'm using arm-linux-gnueabi-gcc (Debian 8.3.0-2) 8.3.0 which does not
+> >> show that oddity. =20
+> >
+> > I assume it is because of the change to arch_futex_atomic_op_inuser()
+> > for arm and the compiler is not clever enough to work out that the early
+> > return from arch_futex_atomic_op_inuser() means that oldval is not
+> > referenced in its caller. =20
+>=20
+> Actually no. It's the ASM part which causes this. With the following
+> hack applied it compiles:
+>=20
+> diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+> index e133da303a98..2c6b40f71009 100644
+> --- a/arch/arm/include/asm/futex.h
+> +++ b/arch/arm/include/asm/futex.h
+> @@ -132,7 +132,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *=
+uaddr,
+>  static inline int
+>  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *ua=
+ddr)
+>  {
+> -	int oldval =3D 0, ret, tmp;
+> +	int oldval =3D 0, ret;
+> =20
+>  	if (!access_ok(uaddr, sizeof(u32)))
+>  		return -EFAULT;
+> @@ -142,6 +142,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *o=
+val, u32 __user *uaddr)
+>  #endif
+> =20
+>  	switch (op) {
+> +#if 0
+>  	case FUTEX_OP_SET:
+>  		__futex_atomic_op("mov	%0, %4", ret, oldval, tmp, uaddr, oparg);
+>  		break;
+> @@ -157,6 +158,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *o=
+val, u32 __user *uaddr)
+>  	case FUTEX_OP_XOR:
+>  		__futex_atomic_op("eor	%0, %1, %4", ret, oldval, tmp, uaddr, oparg);
+>  		break;
+> +#endif
+>  	default:
+>  		ret =3D -ENOSYS;
+>  	}
+>=20
+> but with this is emits the warning:
+>=20
+> diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+> index e133da303a98..5191d7b61b83 100644
+> --- a/arch/arm/include/asm/futex.h
+> +++ b/arch/arm/include/asm/futex.h
+> @@ -145,6 +145,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *o=
+val, u32 __user *uaddr)
+>  	case FUTEX_OP_SET:
+>  		__futex_atomic_op("mov	%0, %4", ret, oldval, tmp, uaddr, oparg);
+>  		break;
+> +#if 0
+>  	case FUTEX_OP_ADD:
+>  		__futex_atomic_op("add	%0, %1, %4", ret, oldval, tmp, uaddr, oparg);
+>  		break;
+> @@ -157,6 +158,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *o=
+val, u32 __user *uaddr)
+>  	case FUTEX_OP_XOR:
+>  		__futex_atomic_op("eor	%0, %1, %4", ret, oldval, tmp, uaddr, oparg);
+>  		break;
+> +#endif
+>  	default:
+>  		ret =3D -ENOSYS;
+>  	}
+>=20
+> and the below proves it:
+>=20
+> diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+> index e133da303a98..a9151884bc85 100644
+> --- a/arch/arm/include/asm/futex.h
+> +++ b/arch/arm/include/asm/futex.h
+> @@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *=
+oval, u32 __user *uaddr)
+>  	preempt_enable();
+>  #endif
+> =20
+> -	if (!ret)
+> -		*oval =3D oldval;
+> +	/*
+> +	 * Store unconditionally. If ret !=3D 0 the extra store is the least
+> +	 * of the worries but GCC cannot figure out that __futex_atomic_op()
+> +	 * is either setting ret to -EFAULT or storing the old value in
+> +	 * oldval which results in a uninitialized warning at the call site.
+> +	 */
+> +	*oval =3D oldval;
+> =20
+>  	return ret;
+>  }
+>=20
+> I think that's the right thing to do anyway. The conditional is pointless.
 
-$ cat /sys/bus/coresight/device/tmc_etb0/mgmt/mode
+Thanks for the analysis.
 
+I am still getting this warning, now from Linus' tree builds.
 
-And also :
+--=20
+Cheers,
+Stephen Rothwell
 
-> 
->   Kernel panic - not syncing: Asynchronous SError Interrupt
->   CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 #122
->   Call trace:
->    dump_backtrace+0x0/0x188
->    show_stack+0x20/0x2c
->    dump_stack+0xdc/0x144
->    panic+0x168/0x36c
->    panic+0x0/0x36c
->    arm64_serror_panic+0x78/0x84
->    do_serror+0x130/0x138
->    el1_error+0x84/0xf8
->    tmc_read_prepare_etb+0x88/0xb8
->    tmc_open+0x40/0xd8
->    misc_open+0x120/0x158
->    chrdev_open+0xb8/0x1a4
->    do_dentry_open+0x268/0x3a0
->    vfs_open+0x34/0x40
->    path_openat+0x39c/0xdf4
->    do_filp_open+0x90/0x10c
->    do_sys_open+0x150/0x3e8
->    __arm64_compat_sys_openat+0x28/0x34
->    el0_svc_common+0xa8/0x160
->    el0_svc_compat_handler+0x2c/0x38
->    el0_svc_compat+0x8/0x10
-> 
-> Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->   drivers/hwtracing/coresight/coresight-tmc.c | 5 +++++
->   drivers/hwtracing/coresight/coresight-tmc.h | 1 +
->   2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-> index 1cf82fa58289..7bae69748ab7 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
-> @@ -62,11 +62,13 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
->   
->   void tmc_enable_hw(struct tmc_drvdata *drvdata)
->   {
-> +	drvdata->enable = true;
->   	writel_relaxed(TMC_CTL_CAPT_EN, drvdata->base + TMC_CTL);
->   }
->   
->   void tmc_disable_hw(struct tmc_drvdata *drvdata)
->   {
-> +	drvdata->enable = false;
->   	writel_relaxed(0x0, drvdata->base + TMC_CTL);
->   }
->   
-> @@ -102,6 +104,9 @@ static int tmc_read_prepare(struct tmc_drvdata *drvdata)
->   {
->   	int ret = 0;
->   
-> +	if (!drvdata->enable)
-> +		return -EINVAL;
-> +
+--Sig_/Pk_O4snDeaSGZI2P2=FNYNB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Does this check always guarantee that the TMC is enabled when
-we actually get to reading the MODE ? This needs to be done
-under the spinlock.
+-----BEGIN PGP SIGNATURE-----
 
-Cheers
-Suzuki
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Tq8gACgkQAVBC80lX
+0Gwu7wf8DeBTLRfLkW+SrKzC9O9D+FG7c++XTn+nBinRgIUHP28oKTKsTT6yGwdF
+vrDWP3KFxl14sxN3D/DU78nYo2VM532+0rhfL2uOzVDRbyFuoJeBLsOsECj+HKNa
+k8ZJpb6dh/oQI2zsEQ1FqiFv5UTJ1JTnVGXGx7jxzkCQb1C28QA1kUYWZwUewyvo
+n3cCKqMmYR6T7KKb2BRyhEzzbD5A8nWNxVgx+9JZoeIhV+vrA6JGfZTF8MTYCM6z
+3Wpp1A0qKqLPwAgUNEEVXcMTFHxMYLy1wfEX8p8wVTSrYaC5SbpOL/0Zm7597w1Q
+t2ZK9cOB3weOJQwKuT1JZpocNlyyBg==
+=0b/o
+-----END PGP SIGNATURE-----
 
-
-
+--Sig_/Pk_O4snDeaSGZI2P2=FNYNB--
