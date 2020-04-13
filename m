@@ -2,150 +2,204 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84E2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D157FC2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:21:43 +0000 (UTC)
 Received: from vger.kernel.org (unknown [23.128.96.19])
-	by mail.kernel.org (Postfix) with ESMTP id B49F92063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A2C20692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="Gza5qcbv"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org B49F92063A
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=dc.MitsubishiElectric.co.jp
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="yXjWK9xj"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org A0A2C20692
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgDMIQW (ORCPT
+        id S1729349AbgDMIVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42114 "EHLO
+        Mon, 13 Apr 2020 04:21:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgDMIQT (ORCPT
+        with ESMTP id S1727971AbgDMIVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:16:19 -0400
-Received: from mx06.melco.co.jp (mx06.melco.co.jp [192.218.140.146])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B42EC00860B;
-        Mon, 13 Apr 2020 01:16:19 -0700 (PDT)
-Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
-        by mx06.melco.co.jp (Postfix) with ESMTP id 13D123A4140;
-        Mon, 13 Apr 2020 17:16:17 +0900 (JST)
-Received: from mr06.melco.co.jp (unknown [127.0.0.1])
-        by mr06.imss (Postfix) with ESMTP id 4911fS74ZwzRjMR;
-        Mon, 13 Apr 2020 17:16:16 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr06.melco.co.jp (Postfix) with ESMTP id 4911fS6mF5zRjKP;
-        Mon, 13 Apr 2020 17:16:16 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 4911fS6cfYzRkCv;
-        Mon, 13 Apr 2020 17:16:16 +0900 (JST)
-Received: from JPN01-OS2-obe.outbound.protection.outlook.com (unknown [104.47.92.59])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 4911fS69rczRk8h;
-        Mon, 13 Apr 2020 17:16:16 +0900 (JST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ASqxjPJVFccHAldcb1dJBhtOd2Pg7icaSMNpu7v0sSVptiHa29ofTeye+Nvu3iP2hwnhyyasWUxardjPbqQ1WEwBUvdAQnllzhf+2tzwPG0TKTJ/y+9yMIxuggKil7dRfz1mgaTnHrWbXS2FlUPI5UqiHS0DyJgKkOFr6m+hdiKFy4Wa2N/o0IbcAtC+NZNo0IkBaQwYP88F1ukFEEXsSXseNlRsmuCCoQJkDbRM2HAcM14WvawEAvEQ4uyVTAiZpZtSsfWMJmQjAvb1w7oUtk0V70RwVjaSI3Dxw9T/Q44MlLLxmN3c9NkGwn8pqMzwCb9WPFSquDnDsWT5WXlDzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zht/yYmsPAY4Xs5tzCVoLHlW9PaYN10OQpTtmgxjyUQ=;
- b=XYrcdev1n6bemJy+5JxLkVYx5bO7Cal36XQPoH7pvvNTno70CpKvqOygkDRxl4OfPH08M23WA89WXMP5iJB43oIujP7LVVXwKP8Qzh6Ns9DrzW/0wlehiZRXN6R4E/EPrfyaMZGYV1JuQRrGU8isEmv46o0WanvjhjoTXT2ituQ5sde7vHl3cPNy9SOBZB5qUpbXm+58HoKx8ikCdHGFpwErsR6KGjR+A/WwsyxLuZ5PHG31gNJmatf45MuRSA3LY/Jw+XCLwsQ3oV0friDyMXR4RZVbFBpNiCqi+7UGOZ1G+g2+oVpDFKesNk3+NRTGcGgtxugxlgY4wWGP6f8dMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
- header.from=dc.mitsubishielectric.co.jp; dkim=pass
- header.d=dc.mitsubishielectric.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mitsubishielectricgroup.onmicrosoft.com;
- s=selector2-mitsubishielectricgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zht/yYmsPAY4Xs5tzCVoLHlW9PaYN10OQpTtmgxjyUQ=;
- b=Gza5qcbvMIbRmfVMhr0j7N0aKVIfcWlrPikAi/D8LmkxVR+YxSsvgJmhlIWrk7n6zQc09ZeTmfYv7dpKq9ipZ3HvlK8ktgmUSeEN9eV05LbRGwkU96OXoW1tAu70AB2SXv9zxCvV2jnrxiAWjQZsdDNIKVShyb5+v2S57rjhPkA=
-Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com (52.133.161.22) by
- TY1PR01MB1849.jpnprd01.prod.outlook.com (52.133.161.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.28; Mon, 13 Apr 2020 08:16:16 +0000
-Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com
- ([fe80::c5d6:a88e:62c6:4b96]) by TY1PR01MB1578.jpnprd01.prod.outlook.com
- ([fe80::c5d6:a88e:62c6:4b96%3]) with mapi id 15.20.2878.022; Mon, 13 Apr 2020
- 08:16:16 +0000
-From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     =?utf-8?B?J1BhbGkgUm9ow6FyJw==?= <pali@kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-CC:     "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'namjae.jeon@samsung.com'" <namjae.jeon@samsung.com>,
-        "'sj1557.seo@samsung.com'" <sj1557.seo@samsung.com>
-Subject: RE: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
- above U+FFFF
-Thread-Topic: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
- above U+FFFF
-Thread-Index: AQHWCfgm33iC4HYp6U6hpobeaScABqhrVdFggAIevgCAARtD4IAAZbCAgAd0CHA=
-Date:   Mon, 13 Apr 2020 08:13:45 +0000
-Deferred-Delivery: Mon, 13 Apr 2020 08:16:00 +0000
-Message-ID: <TY1PR01MB15784063EED4CEC93A2B501390DD0@TY1PR01MB1578.jpnprd01.prod.outlook.com>
-References: <TY1PR01MB15782019FA3094015950830590C70@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200403204037.hs4ae6cl3osogrso@pali>
- <TY1PR01MB1578D63C6F303DE805D75DAA90C20@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200407100648.phkvxbmv2kootyt7@pali>
- <TY1PR01MB1578892F886C62868F87663B90C00@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200408090435.i3ufmbfinx5dyd7w@pali>
-In-Reply-To: <20200408090435.i3ufmbfinx5dyd7w@pali>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-melpop: 1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp; 
-x-originating-ip: [121.80.0.162]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: adc98d28-5756-4de2-7ea6-08d7df82f021
-x-ms-traffictypediagnostic: TY1PR01MB1849:
-x-microsoft-antispam-prvs: <TY1PR01MB18499D4D2E3EF81220D93BAB90DD0@TY1PR01MB1849.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 037291602B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1578.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(396003)(366004)(346002)(39860400002)(136003)(5660300002)(33656002)(2906002)(26005)(478600001)(186003)(8676002)(66556008)(66446008)(52536014)(9686003)(55016002)(54906003)(4326008)(110136005)(66946007)(8936002)(76116006)(64756008)(66476007)(6506007)(86362001)(7696005)(71200400001)(81156014)(316002)(6666004);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: dc.MitsubishiElectric.co.jp does
- not designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: esXop6033GcWd0Kpz+HDbMRC1IaQZFRCARSR6x0uvupPsV4qNGh4QTCsaoVvQppRjn8gpIrWMQD3wbhF5gk5BlS+WWJoIH+O+BA9m3+r1hPIoSo8qIdIAtrzWNSVOQb/Vq/HzQO8DYvFa5M0iNvQXoaqg/7XC2E7Lf1DNVspSH+nq3CM3aOChaxEFunJ3xPdE7ewqlKjldo9jHAcjM7nDnISn3fvCzfpmIYJQLNvEOJdp9+4sFdl6aSrbZPnfM6NEI8cjywBUh2gy2iTqlgbwEMDf8igbnqS5ZjyW6HCO0ik0IUpmuu6dqX1yrmIdQi8Y7zParrbJNfWtJK9ZFQaUKG4oueA4zDy6wG3CZMSeQqO1ep82PvNAPQQrzC6VhBZFQjB6CWhFhQL+e0ZOQu90JFBVBMFbJpRYmolMecsqceYdX8bkLGg5iZ26kObVCN0
-x-ms-exchange-antispam-messagedata: Rn3n6uSWga6aRdXuvl4JPX7PecqKpqzviOt7xHxpTfsbKL9qveA/2sFUrr1aCnL5CvrvCj26LqybTXFfZ7NXD0jSrbOAXae084uB4CLNA2j/fgx/NkEgjt7brrTi3In8I1HaOVyBZu7PdSXQTeQOUg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 13 Apr 2020 04:21:39 -0400
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC198C014CDB;
+        Mon, 13 Apr 2020 01:21:39 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F310E20692;
+        Mon, 13 Apr 2020 08:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586766099;
+        bh=MQm1wWb2hwpv0w9XdV4EvpcKIJ5A46S2JOi+pdHXLV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yXjWK9xjTpc/v9E4OAeGO3IiiWXOMf+NVd9PXpdas8IOfF0wDwhGBJ78euJnAZejp
+         Y6T4q5OGcNG8KTCh9dV2yjHXQhv7pudywmglP1h9cWeYJl7+82Ga6NHMtvXcxXxmbW
+         a1FAovW+rDZkITYg4mgOWHzjiz8KREiRyRp3K0AI=
+Date:   Mon, 13 Apr 2020 10:21:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     nobuhiro1.iwamatsu@toshiba.co.jp
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        sboyd@kernel.org, swboyd@chromium.org, jcrouse@codeaurora.org,
+        robdclark@chromium.org, seanpaul@chromium.org, lee.jones@linaro.org
+Subject: Re: [PATCH 4.19 50/54] drm/msm: stop abusing dma_map/unmap for cache
+Message-ID: <20200413082137.GB2792388@kroah.com>
+References: <20200411115508.284500414@linuxfoundation.org>
+ <20200411115513.709554942@linuxfoundation.org>
+ <OSAPR01MB366788E02572D95F246D6DEC92DD0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: dc.MitsubishiElectric.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: adc98d28-5756-4de2-7ea6-08d7df82f021
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2020 08:16:16.2664
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZYg9gSuQL5/Mge3Expwkq1/YoMU2SAMQ0VgXRSjY8A8+aFLTlE6JjOJh9z0i7XW354MhLji7zatxVNsncUPbjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1849
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSAPR01MB366788E02572D95F246D6DEC92DD0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBXZWRuZXNkYXkgMDggQXByaWwgMjAyMCAwMzo1OTowNiBLb2hhZGEuVGV0c3VoaXJvQGRj
-Lk1pdHN1YmlzaGlFbGVjdHJpYy5jby5qcCB3cm90ZToNCj4gPiA+IFNvIHBhcnRpYWxfbmFtZV9o
-YXNoKCkgbGlrZSBJIHVzZWQgaXQgaW4gdGhpcyBwYXRjaCBzZXJpZXMgaXMgZW5vdWdoPw0KPiA+
-DQo+ID4gSSB0aGluayBwYXJ0aWFsX25hbWVfaGFzaCgpIGlzIGVub3VnaCBmb3IgOC8xNi8yMWJp
-dCBjaGFyYWN0ZXJzLg0KPiANCj4gR3JlYXQhDQo+IA0KPiBBbCwgY291bGQgeW91IHBsZWFzZSB0
-YWtlIHRoaXMgcGF0Y2ggc2VyaWVzPw0KDQpJIHRoaW5rIGl0J3MgZ29vZC4NCg0KDQo+ID4gQW5v
-dGhlciBwb2ludCBhYm91dCB0aGUgZGlzY3JpbWluYXRpb24gb2YgMjFiaXQgY2hhcmFjdGVyczoN
-Cj4gPiBJIHRoaW5rIHRoYXQgY2hlY2tpbmcgaW4gZXhmYXRfdG91cHBlciAoKSBjYW4gYmUgbW9y
-ZSBzaW1wbGlmaWVkLg0KPiA+DQo+ID4gIGV4OiByZXR1cm4gYSA8IFBMQU5FX1NJWkUgJiYgc2Jp
-LT52b2xfdXRibFthXSA/IHNiaS0+dm9sX3V0YmxbYV0gOiBhOw0KPiANCj4gSSB3YXMgdGhpbmtp
-bmcgYWJvdXQgaXQsIGJ1dCBpdCBuZWVkcyBtb3JlIHJlZmFjdG9yaW5nLiBDdXJyZW50bHkNCj4g
-ZXhmYXRfdG91cHBlcigpIGlzIHVzZWQgb24gb3RoZXIgcGxhY2VzIGZvciBVVEYtMTYgKHUxNiBh
-cnJheSkgYW5kIHRoZXJlZm9yZSBpdCBjYW5ub3QgYmUgZXh0ZW5kZWQgdG8gdGFrZSBtb3JlIHRo
-ZW4gMTYNCj4gYml0IHZhbHVlLg0KDQpJ4oCZbSBhbHNvIGEgbGl0dGxlIHdvcnJpZWQgdGhhdCBl
-eGZhdF90b3VwcGVyKCkgaXMgZGVzaWduZWQgZm9yIG9ubHkgdXRmMTYuDQpDdXJyZW50bHksIGl0
-IGlzIGNvbnZlcnRpbmcgZnJvbSB1dGY4IHRvIHV0ZjMyIGluIHNvbWUgcGxhY2VzLCBhbmQgZnJv
-bSB1dGY4IHRvIHV0ZjE2IGluIG90aGVycy4NCkFub3RoZXIgd2F5IHdvdWxkIGJlIHRvIHVuaWZ5
-IHRvIHV0ZjE2Lg0KDQo+IEJ1dCBJIGFncmVlIHRoYXQgdGhpcyBpcyBhbm90aGVyIHN0ZXAgd2hp
-Y2ggY2FuIGJlIGltcHJvdmVkLg0KDQpZZXMuDQoNCg==
+On Mon, Apr 13, 2020 at 05:03:26AM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
+> Hi,
+> 
+> > -----Original Message-----
+> > From: stable-owner@vger.kernel.org [mailto:stable-owner@vger.kernel.org] On Behalf Of Greg Kroah-Hartman
+> > Sent: Saturday, April 11, 2020 9:10 PM
+> > To: linux-kernel@vger.kernel.org
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; stable@vger.kernel.org; Stephen Boyd <sboyd@kernel.org>; Stephen
+> > Boyd <swboyd@chromium.org>; Jordan Crouse <jcrouse@codeaurora.org>; Rob Clark <robdclark@chromium.org>; Sean Paul
+> > <seanpaul@chromium.org>; Lee Jones <lee.jones@linaro.org>
+> > Subject: [PATCH 4.19 50/54] drm/msm: stop abusing dma_map/unmap for cache
+> > 
+> > From: Rob Clark <robdclark@chromium.org>
+> > 
+> > commit 0036bc73ccbe7e600a3468bf8e8879b122252274 upstream.
+> > 
+> > Recently splats like this started showing up:
+> > 
+> >    WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+> >    Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops
+> > vide
+> >    CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+> >    Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+> >    Workqueue: msm msm_gem_free_work [msm]
+> >    pstate: 80c00005 (Nzcv daif +PAN +UAO)
+> >    pc : __iommu_dma_unmap+0xb8/0xc0
+> >    lr : __iommu_dma_unmap+0x54/0xc0
+> >    sp : ffff0000119abce0
+> >    x29: ffff0000119abce0 x28: 0000000000000000
+> >    x27: ffff8001f9946648 x26: ffff8001ec271068
+> >    x25: 0000000000000000 x24: ffff8001ea3580a8
+> >    x23: ffff8001f95ba010 x22: ffff80018e83ba88
+> >    x21: ffff8001e548f000 x20: fffffffffffff000
+> >    x19: 0000000000001000 x18: 00000000c00001fe
+> >    x17: 0000000000000000 x16: 0000000000000000
+> >    x15: ffff000015b70068 x14: 0000000000000005
+> >    x13: 0003142cc1be1768 x12: 0000000000000001
+> >    x11: ffff8001f6de9100 x10: 0000000000000009
+> >    x9 : ffff000015b78000 x8 : 0000000000000000
+> >    x7 : 0000000000000001 x6 : fffffffffffff000
+> >    x5 : 0000000000000fff x4 : ffff00001065dbc8
+> >    x3 : 000000000000000d x2 : 0000000000001000
+> >    x1 : fffffffffffff000 x0 : 0000000000000000
+> >    Call trace:
+> >     __iommu_dma_unmap+0xb8/0xc0
+> >     iommu_dma_unmap_sg+0x98/0xb8
+> >     put_pages+0x5c/0xf0 [msm]
+> >     msm_gem_free_work+0x10c/0x150 [msm]
+> >     process_one_work+0x1e0/0x330
+> >     worker_thread+0x40/0x438
+> >     kthread+0x12c/0x130
+> >     ret_from_fork+0x10/0x18
+> >    ---[ end trace afc0dc5ab81a06bf ]---
+> > 
+> > Not quite sure what triggered that, but we really shouldn't be abusing
+> > dma_{map,unmap}_sg() for cache maint.
+> > 
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Tested-by: Stephen Boyd <swboyd@chromium.org>
+> > Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> > Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> This commit also requires the following commits:
+> 
+> commit 3de433c5b38af49a5fc7602721e2ab5d39f1e69c
+> Author: Rob Clark <robdclark@chromium.org>
+> Date:   Tue Jul 30 14:46:28 2019 -0700
+> 
+>     drm/msm: Use the correct dma_sync calls in msm_gem
+>     
+>     [subject was: drm/msm: shake fist angrily at dma-mapping]
+>     
+>     So, using dma_sync_* for our cache needs works out w/ dma iommu ops, but
+>     it falls appart with dma direct ops.  The problem is that, depending on
+>     display generation, we can have either set of dma ops (mdp4 and dpu have
+>     iommu wired to mdss node, which maps to toplevel drm device, but mdp5
+>     has iommu wired up to the mdp sub-node within mdss).
+>     
+>     Fixes this splat on mdp5 devices:
+>     
+>        Unable to handle kernel paging request at virtual address ffffffff80000000
+>        Mem abort info:
+>          ESR = 0x96000144
+>          Exception class = DABT (current EL), IL = 32 bits
+>          SET = 0, FnV = 0
+>          EA = 0, S1PTW = 0
+>        Data abort info:
+>          ISV = 0, ISS = 0x00000144
+>          CM = 1, WnR = 1
+>        swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000810e4000
+>        [ffffffff80000000] pgd=0000000000000000
+>        Internal error: Oops: 96000144 [#1] SMP
+>        Modules linked in: btqcomsmd btqca bluetooth cfg80211 ecdh_generic ecc rfkill libarc4 panel_simple msm wcnss_ctrl qrtr_smd drm_kms_helper venus_enc venus_dec videobuf2_dma_sg videobuf2_memops drm venus_core ipv6 qrtr qcom_wcnss_pil v4l2_mem2mem qcom_sysmon videobuf2_v4l2 qmi_helpers videobuf2_common crct10dif_ce mdt_loader qcom_common videodev qcom_glink_smem remoteproc bmc150_accel_i2c bmc150_magn_i2c bmc150_accel_core bmc150_magn snd_soc_lpass_apq8016 snd_soc_msm8916_analog mms114 mc nf_defrag_ipv6 snd_soc_lpass_cpu snd_soc_apq8016_sbc industrialio_triggered_buffer kfifo_buf snd_soc_lpass_platform snd_soc_msm8916_digital drm_panel_orientation_quirks
+>        CPU: 2 PID: 33 Comm: kworker/2:1 Not tainted 5.3.0-rc2 #1
+>        Hardware name: Samsung Galaxy A5U (EUR) (DT)
+>        Workqueue: events deferred_probe_work_func
+>        pstate: 80000005 (Nzcv daif -PAN -UAO)
+>        pc : __clean_dcache_area_poc+0x20/0x38
+>        lr : arch_sync_dma_for_device+0x28/0x30
+>        sp : ffff0000115736a0
+>        x29: ffff0000115736a0 x28: 0000000000000001
+>        x27: ffff800074830800 x26: ffff000011478000
+>        x25: 0000000000000000 x24: 0000000000000001
+>        x23: ffff000011478a98 x22: ffff800009fd1c10
+>        x21: 0000000000000001 x20: ffff800075ad0a00
+>        x19: 0000000000000000 x18: ffff0000112b2000
+>        x17: 0000000000000000 x16: 0000000000000000
+>        x15: 00000000fffffff0 x14: ffff000011455d70
+>        x13: 0000000000000000 x12: 0000000000000028
+>        x11: 0000000000000001 x10: ffff00001106c000
+>        x9 : ffff7e0001d6b380 x8 : 0000000000001000
+>        x7 : ffff7e0001d6b380 x6 : ffff7e0001d6b382
+>        x5 : 0000000000000000 x4 : 0000000000001000
+>        x3 : 000000000000003f x2 : 0000000000000040
+>        x1 : ffffffff80001000 x0 : ffffffff80000000
+>        Call trace:
+>         __clean_dcache_area_poc+0x20/0x38
+>         dma_direct_sync_sg_for_device+0xb8/0xe8
+>         get_pages+0x22c/0x250 [msm]
+>         msm_gem_get_and_pin_iova+0xdc/0x168 [msm]
+>         ...
+>     
+>     Fixes the combination of two patches:
+>     
+>     Fixes: 0036bc73ccbe (drm/msm: stop abusing dma_map/unmap for cache)
+>     Fixes: 449fa54d6815 (dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device)
+>     Tested-by: Stephan Gerhold <stephan@gerhold.net>
+>     Signed-off-by: Rob Clark <robdclark@chromium.org>
+>     [seanpaul changed subject to something more desriptive]
+>     Signed-off-by: Sean Paul <seanpaul@chromium.org>
+>     Link: https://patchwork.freedesktop.org/patch/msgid/20190730214633.17820-1-robdclark@gmail.com
+> 
+> 
+> And this commit requires not only 4.19 but also 4.9 and 4.14.
+> Please apply this.
+
+Now queued up, thanks!
+
+greg k-h
