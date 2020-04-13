@@ -2,114 +2,182 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DCC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB7C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B54652064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV7U7X1u"
+	by mail.kernel.org (Postfix) with ESMTP id E4AA02064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbgDMThF (ORCPT
+        id S2387973AbgDMTjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 15:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387935AbgDMThD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 15:37:03 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D45CC0A3BDC;
-        Mon, 13 Apr 2020 12:37:03 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a25so11439926wrd.0;
-        Mon, 13 Apr 2020 12:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=IL8UM2G8ckEvz5Q1HLyYzF8mVCI5/VI6cQ0z6c472EQ=;
-        b=XV7U7X1uveyRb9PqFljNV4aJTxa3bkX51B52APKWQ966g3JSC5gvNoJEzwMITXvu4w
-         8WpFgNgK3PYryJPfcnHdA2tdc5pEiqnZwrjX/EFiy1skmg9LqAER1U7Fvc9ozcKXNnd+
-         X74GyxoMg6w5PmxaQbeq0BkHivsnaSSItAbCEC7nMfw/h48FJ6xZJJzjndZqHyfpiVuf
-         hjwj8hRiy6jk7Oo2QTQeDKtIKyWR/3OkYUQrdlTWqBDVYgU3w1UJJEKzLoqug9CsS2kV
-         vD1DLdh1amsg09ityJ4RQFMUYoNN620mliVCKOf4GCjk1bCieTf0vo2d6hjZHvUC0Z4W
-         udcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IL8UM2G8ckEvz5Q1HLyYzF8mVCI5/VI6cQ0z6c472EQ=;
-        b=CdFMiffn+UqAAxr8f1DhOYTWR9DJpz3GmtEEqMIQBnH4KSwEmHZ+rn+ox8vl7tuIyf
-         qKZV1Mx3e1Xjb8HHiv9ed7Xd3yVSmINVzVL1VMi2rNgLugn9L5N6nuYUFJqw9q/Mndb+
-         hL3IqqNQ3hM/aEyHkGnHOgYNY68DhGuSoYSWOXVGLAxj4LFqQFjuF1ZJgOUgTYokaTdX
-         igMn9XfpAjwK3ZFWaMVkRwwyZaO1pbCFEVRyuhUtMZuei/v1c8cxo4HDRiPRHmA9koU8
-         6by9J56Z1zl0COVaPybks17QYrYvvy2t38HgG22yqmoAJXKxxYobicCEaqNyn/GDjUVr
-         o33g==
-X-Gm-Message-State: AGi0PuYxpZyoir7Nnj09g/2M5oMMQEuoCV3OVOuklPDkgKeIFZ+KOC/4
-        82zoS848EhIJWnagxm19wv+i2UOL
-X-Google-Smtp-Source: APiQypL9aZQMlpGKhdYWyFuCrzaNq51hpaS4p3qbtjobH7zo8hHacrhQXSiGqmJXkX1J+79WQN70IQ==
-X-Received: by 2002:adf:f8d2:: with SMTP id f18mr20903930wrq.139.1586806621899;
-        Mon, 13 Apr 2020 12:37:01 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id b4sm11121659wrv.42.2020.04.13.12.37.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Apr 2020 12:37:01 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: remove bus-width from mmc nodes in rk3308.dtsi
-Date:   Mon, 13 Apr 2020 21:36:52 +0200
-Message-Id: <20200413193652.1952-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 13 Apr 2020 15:39:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2346 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387935AbgDMTj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 15:39:28 -0400
+IronPort-SDR: SPlWXs2KrMSQxUnM6RnTorVE2e0tU99HnckO1Aw/31ckL/pmC1D3ttqdunzBpaQoof6rnbKwNF
+ NMB6Xu8U1hNA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 12:39:28 -0700
+IronPort-SDR: AtZlCvspS0QhHfNaeA4JpRFkstaWsTU7TlFEOda3Xn0ws7J1kIWaG8dnZOqg7oDZGJPh9Nsewu
+ chVjMzIPBUww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
+   d="scan'208";a="245219538"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Apr 2020 12:39:28 -0700
+Date:   Mon, 13 Apr 2020 12:39:28 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V7 5/9] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200413193927.GC1649878@iweiny-DESK2.sc.intel.com>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
+ <20200413054046.1560106-6-ira.weiny@intel.com>
+ <20200413155251.GU6742@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413155251.GU6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'bus-width' property for mmc nodes is defined both in
-'rk3308.dtsi' and 'rk3308-roc-cc.dts'.
-In line with the other Rockchip SoCs define that in a user dts only,
-so remove all entries from mmc nodes in 'rk3308.dtsi'.
+On Mon, Apr 13, 2020 at 08:52:51AM -0700, Darrick J. Wong wrote:
+> On Sun, Apr 12, 2020 at 10:40:42PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> > that it is enabled for DAX.
+> > 
+> > Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> > and underlying storage support dax.
+> > 
+> > Add a new function xfs_inode_enable_dax() which reflects if the inode
+> > should be enabled for DAX.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from v6:
+> > 	Change enable checks to be sequential logic.
+> > 	Update for 2 bit tri-state option.
+> > 	Make 'static' consistent.
+> > 	Don't set S_DAX if !CONFIG_FS_DAX
+> > 
+> > Changes from v5:
+> > 	Update to reflect the new tri-state mount option
+> > 
+> > Changes from v3:
+> > 	Update functions and names to be more clear
+> > 	Update commit message
+> > 	Merge with
+> > 		'fs/xfs: Clean up DAX support check'
+> > 		don't allow IS_DAX() on a directory
+> > 		use STATIC macro for static
+> > 		make xfs_inode_supports_dax() static
+> > ---
+> >  fs/xfs/xfs_iops.c | 34 +++++++++++++++++++++++++++++-----
+> >  1 file changed, 29 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > index 81f2f93caec0..37bd15b55878 100644
+> > --- a/fs/xfs/xfs_iops.c
+> > +++ b/fs/xfs/xfs_iops.c
+> > @@ -1244,12 +1244,11 @@ xfs_inode_supports_dax(
+> >  	struct xfs_mount	*mp = ip->i_mount;
+> >  
+> >  	/* Only supported on non-reflinked files. */
+> > -	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
+> > +	if (xfs_is_reflink_inode(ip))
+> >  		return false;
+> >  
+> > -	/* DAX mount option or DAX iflag must be set. */
+> > -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> > -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> > +	/* Only supported on regular files. */
+> > +	if (!S_ISREG(VFS_I(ip)->i_mode))
+> >  		return false;
+> 
+> Why separate the !S_ISREG and the is_reflink_inode checks?
+> 
+> The part about "Change the use of xfs_inode_supports_dax() to reflect
+> only if the inode and underlying storage support dax" would be a lot
+> more straightforward if this hunk only removed the DIFLAG2_DAX check.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+Yes I could see that.  But for me the separate checks were more clear.  FWIW,
+Dave requested a similar pattern for xfs_inode_enable_dax()[*] and I think I
+agree with him.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index a9b98555d..130771ede 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -587,7 +587,6 @@
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff480000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
--		bus-width = <4>;
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-@@ -602,7 +601,6 @@
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff490000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
--		bus-width = <8>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-@@ -615,7 +613,6 @@
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff4a0000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
--		bus-width = <4>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
--- 
-2.11.0
+So I'm inclined to keep the checks like this.
 
+Thanks for the reviews!
+Ira
+
+[*] https://lore.kernel.org/lkml/20200408000533.GG24067@dread.disaster.area/
+
+> 
+> The rest of the patch looks ok.
+> 
+> --D
+> 
+> >  
+> >  	/* Block size must match page size */
+> > @@ -1260,6 +1259,31 @@ xfs_inode_supports_dax(
+> >  	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
+> >  }
+> >  
+> > +#ifdef CONFIG_FS_DAX
+> > +static bool
+> > +xfs_inode_enable_dax(
+> > +	struct xfs_inode *ip)
+> > +{
+> > +	if (ip->i_mount->m_flags & XFS_MOUNT_NODAX)
+> > +		return false;
+> > +	if (!xfs_inode_supports_dax(ip))
+> > +		return false;
+> > +	if (ip->i_mount->m_flags & XFS_MOUNT_DAX)
+> > +		return true;
+> > +	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> > +		return true;
+> > +	return false;
+> > +}
+> > +#else /* !CONFIG_FS_DAX */
+> > +static bool
+> > +xfs_inode_enable_dax(
+> > +	struct xfs_inode *ip)
+> > +{
+> > +	return false;
+> > +}
+> > +#endif /* CONFIG_FS_DAX */
+> > +
+> > +
+> >  STATIC void
+> >  xfs_diflags_to_iflags(
+> >  	struct inode		*inode,
+> > @@ -1278,7 +1302,7 @@ xfs_diflags_to_iflags(
+> >  		inode->i_flags |= S_SYNC;
+> >  	if (flags & XFS_DIFLAG_NOATIME)
+> >  		inode->i_flags |= S_NOATIME;
+> > -	if (xfs_inode_supports_dax(ip))
+> > +	if (xfs_inode_enable_dax(ip))
+> >  		inode->i_flags |= S_DAX;
+> >  }
+> >  
+> > -- 
+> > 2.25.1
+> > 
