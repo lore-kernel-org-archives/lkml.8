@@ -2,164 +2,198 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C307C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC40AC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546202074B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5F220739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stGWxXpq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgxuuZRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733107AbgDMSuV (ORCPT
+        id S1733122AbgDMSwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51606 "EHLO
+        Mon, 13 Apr 2020 14:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728106AbgDMSuQ (ORCPT
+        by vger.kernel.org with ESMTP id S1733112AbgDMSwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:50:16 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF046C0A3BDC;
-        Mon, 13 Apr 2020 11:50:15 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id h9so11242995wrc.8;
-        Mon, 13 Apr 2020 11:50:15 -0700 (PDT)
+        Mon, 13 Apr 2020 14:52:37 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA52EC0A3BDC;
+        Mon, 13 Apr 2020 11:52:37 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 103so10181773otv.0;
+        Mon, 13 Apr 2020 11:52:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ypxii2YE5TJTFobtoZ3bxlwCYM5c9IgWRJHcbubUIFk=;
-        b=stGWxXpq1iqGKETDz+BqkKspCAA8HAaoSsEoFBqNgOSwYmGZYnCOQ48O/wxD8RI/eG
-         L/lwKPwRpo6mgoDpzKKR7nqgyt3Jzh+NNTW6mBGX0QjsDmNzBqhGKu5JADbHNVEbr85e
-         wR6/09CEZpUKuNeMqwClEXulk5fCbTmNPT2fCxZ5oWOJENPwZNn22/TD/pjtwolQ0IZV
-         JEkVQYSu5uifIrCsBUL89UU+qeBwSXTNEeDNIp64SaIJhi+OwEsJjiBgagZwla1Sfu9j
-         B6GkxpaiS9dtPWgr8rmSOT1t7HIKq1cV5539hC491XOJGGlHTi+YIY4LLJ+nioXfvGQP
-         iw4g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xC3x0yRcgUpqkBQhYGspeGLwB9d9vOWv+kQdwmDFIYk=;
+        b=IgxuuZRwoOsuo5lS8HrLEy3dHrJ8MoK5xyRYnt9I1YdQ8MnuA3vJjpXRLYDJACtokz
+         2BRT2ctu0wRwrbuPq+G/Nvno2QYLro6FeqP6aZ2JN9k6NBfmjtwNFwvbbWpe41rZV7Ct
+         Bh3aJ/sJcCUZe7OoTrQzOV2Ez5z9+9jEdUzggJ1U6Zciz28QpxP4JeoadZCHcDY7ES7l
+         LQWUR92cASEYS4r+YcT/6F3sofRQjDi34BOm88Gl3gI1jE6Z94gCCdl85lvVBUyYTOdE
+         UpFzsvG0XhQEAtC0AqwUjSY2g+u/iwFTvG9DXe4pTXCs8J6svRaYYmc3UdP/NVO2OET8
+         EsTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ypxii2YE5TJTFobtoZ3bxlwCYM5c9IgWRJHcbubUIFk=;
-        b=fVdXtYuFSe0luVJelZrjHjUCS7E9d7Nu0aPz2U1tUz3i1NcIXQWqQSQH58pNN7Kjas
-         iggaD09PaE6nYyv1aTGlQOGtkM9bE8IZS6VDhNZuBkode0iOIMk0idEiBUDxtRnd/J15
-         ifvSaOZzE9VKqj0OEGRWpcOLQL+6vF0moKaa8TKBMRxyGLJQx1Pto9VC02yo4VxZexJX
-         Y6q0kWKOPYAQkRTYrOGjq1ZfxQJvkdjci1HqOikBy0QcsVLuPw9jsDyvk/QdHdh2Z1sQ
-         Y1cwDxL55TSSclv9pQI7mrmc6zU9MGdRXyG6QudLoghS1wm7xP5js6YjMPywrXNumLgg
-         Y9Sw==
-X-Gm-Message-State: AGi0PuZxaO9/MH70m4/idgSjQ0BcDs49GeJQetJVMs88RGB26RdT+RyG
-        XjCTNPNkWzbDkvsLFzM1t1Y=
-X-Google-Smtp-Source: APiQypJkXvKXCTDzsz294XYjN0s2ZCmu2STZJUCXRZi2oslRuzp+B1IAgPpN7X7B42f3xovLHkTxMg==
-X-Received: by 2002:adf:97d9:: with SMTP id t25mr9627400wrb.157.1586803814340;
-        Mon, 13 Apr 2020 11:50:14 -0700 (PDT)
-Received: from [192.168.43.75] ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id y18sm16650962wmc.45.2020.04.13.11.50.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 11:50:13 -0700 (PDT)
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com,
-        ming.lei@redhat.com, bvanassche@acm.org
-References: <20200413162758.97252-1-tj@kernel.org>
- <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
- <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
- <20200413170833.GD60335@mtj.duckdns.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and latency
- target handling
-Message-ID: <5d2e4017-563b-4a2e-58d7-7af6e3183569@gmail.com>
-Date:   Mon, 13 Apr 2020 21:49:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xC3x0yRcgUpqkBQhYGspeGLwB9d9vOWv+kQdwmDFIYk=;
+        b=pVnXTYy2A9pJ2JnCEuEnt7ncFaV3GzOVzuT0dvUEXqcyPDuqr1kjZRm7ABKuGZhYRq
+         Eff/ix0eekPQw8f6akDhbPa6euz+ESEPDA/JU39CE4m8syW28tyDIgN3RwpWfs/y4F83
+         ayxxgTINZMMI0vicEeKUDv3rfET4nA+OuhQtardZK1OvbuwRft5FkC6dMQUoNmcPJZMv
+         MFf7QDaFiAchOzDXByzCPJbVYMe0VSZ+GOfVXor01a8As/AY0h2KB42ZYT/Cc6+J7pz/
+         +NbFGWTBO719rYYy2Voo98S+sR6Wh44z/jAGh4BnQuDNdr6ChygwHt0NQ8YBcCw9KAcN
+         s65w==
+X-Gm-Message-State: AGi0PuZPuY67UcRWu3zvyii14WV5B+Do0TKCEf7PlY8XXNr9UEXNO/Lo
+        5NDAMv7/tNjfWQ+ZTfHiBXM=
+X-Google-Smtp-Source: APiQypIASkLqrCad3LTHgKfEnGZ92poqy7f3+DANLMdN/Fse/aVtD4kzlXdMBHfPe+6h3+/HEWN0wg==
+X-Received: by 2002:a4a:9c41:: with SMTP id c1mr15471481ook.43.1586803956871;
+        Mon, 13 Apr 2020 11:52:36 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id w19sm4948336otj.57.2020.04.13.11.52.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Apr 2020 11:52:36 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 11:52:34 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, macro@linux-mips.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] MIPS: Truncate link address into 32bit for 32bit
+ kernel
+Message-ID: <20200413185234.GA12413@ubuntu-s3-xlarge-x86>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200413170833.GD60335@mtj.duckdns.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/04/2020 20:08, Tejun Heo wrote:
-> On Mon, Apr 13, 2020 at 08:00:29PM +0300, Pavel Begunkov wrote:
->> On 13/04/2020 19:56, Pavel Begunkov wrote:
->>> On 13/04/2020 19:27, Tejun Heo wrote:
->>>> Changes from v1[1]
->>>>
->>>> * Dropped 0002-block-add-request-io_data_len.patch and updated to use
->>>>   rq->stats_sectors instead as suggested by Pavel Begunkov.
->>>
->>> rq->stats_sectors is set only when there is QUEUE_FLAG_STATS, see
->>> blk_mq_start_request(). I don't see blk-iocost requiring it. Did I miss something?
->>
->> And there is no reason to not initialise it unconditionally.
-> 
-> The updated patch turns on accounting when iocost is enabled on a queue.
+Hi Jiaxun,
 
-Great. FWIW, if you don't really need accounting, it'd be IMHO more robust and
-with less overhead just to do this ->stats_sectors assignment unconditionally.
-
+On Mon, Apr 13, 2020 at 02:26:49PM +0800, Jiaxun Yang wrote:
+> LLD failed to link vmlinux with 64bit load address for 32bit ELF
+> while bfd will strip 64bit address into 32bit silently.
+> To fix LLD build, we should truncate load address provided by platform
+> into 32bit for 32bit kernel.
 > 
->   @@ -2267,6 +2295,7 @@ static ssize_t ioc_qos_write(struct kernfs_open_file *of, char *input,
->    	spin_lock_irq(&ioc->lock);
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/786
+> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+> Cc: Fangrui Song <maskray@google.com>
+> Cc: Nathan Chancellor <natechancellor@gmail.com>
+> --
+> V2: Take MaskRay's shell magic.
+> 
+> V3: After spent an hour on dealing with special character issue in
+> Makefile, I gave up to do shell hacks and write a util in C instead.
+> Thanks Maciej for pointing out Makefile variable problem.
+> 
+> v4: Finally we managed to find a Makefile method to do it properly
+> thanks to Kees. As it's too far from the initial version, I removed
+> Review & Test tag from Nick and Fangrui and Cc instead.
+> ---
+>  arch/mips/Makefile             | 12 +++++++++++-
+>  arch/mips/kernel/vmlinux.lds.S |  2 +-
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+> index e1c44aed8156..18495568f03e 100644
+> --- a/arch/mips/Makefile
+> +++ b/arch/mips/Makefile
+> @@ -288,9 +288,19 @@ ifdef CONFIG_64BIT
+>    endif
+>  endif
 >  
->    	if (enable) {
->   +		blk_stat_enable_accounting(ioc->rqos.q);
->    		blk_queue_flag_set(QUEUE_FLAG_RQ_ALLOC_TIME, ioc->rqos.q);
->    		ioc->enabled = true;
->    	} else {
-> 
-> Thanks.
+> +# When linking a 32-bit executable the LLVM linker cannot cope with a
+> +# 32-bit load address that has been sign-extended to 64 bits.  Simply
+> +# remove the upper 32 bits then, as it is safe to do so with other
+> +# linkers.
+> +ifdef CONFIG_64BIT
+> +	load-ld			= $(load-y)
+> +else
+> +	load-ld			= $(subst 0xffffffff,0x,$(load-y))
+> +endif
+> +
+>  KBUILD_AFLAGS	+= $(cflags-y)
+>  KBUILD_CFLAGS	+= $(cflags-y)
+> -KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
+> +KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(load-ld)
+>  KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+>  
+>  bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
+> diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+> index a5f00ec73ea6..5226cd8e4bee 100644
+> --- a/arch/mips/kernel/vmlinux.lds.S
+> +++ b/arch/mips/kernel/vmlinux.lds.S
+> @@ -55,7 +55,7 @@ SECTIONS
+>  	/* . = 0xa800000000300000; */
+>  	. = 0xffffffff80300000;
+>  #endif
+> -	. = VMLINUX_LOAD_ADDRESS;
+> +	. = VMLINUX_LINK_ADDRESS;
+>  	/* read-only */
+>  	_text = .;	/* Text and read-only data */
+>  	.text : {
+> -- 
+> 2.26.0.rc2
 > 
 
--- 
-Pavel Begunkov
+This version does not quite work:
+
+ld.lld: error: section .text at 0xFFFFFFFF80990000 of size 0x388C exceeds available address space
+ld.lld: error: section .MIPS.abiflags at 0xFFFFFFFF80993890 of size 0x18 exceeds available address space
+ld.lld: error: section .rodata.str1.1 at 0xFFFFFFFF809938A8 of size 0x164 exceeds available address space
+ld.lld: error: section .eh_frame at 0xFFFFFFFF80993A0C of size 0x2C exceeds available address space
+ld.lld: error: section .data at 0xFFFFFFFF80993A40 of size 0x38EFD0 exceeds available address space
+ld.lld: error: section .got at 0xFFFFFFFF80D22A10 of size 0x8 exceeds available address space
+ld.lld: error: section .bss at 0xFFFFFFFF80E22A20 of size 0x402010 exceeds available address space
+ld.lld: error: section .sbss at 0xFFFFFFFF81224A30 of size 0x8 exceeds available address space
+make[2]: *** [/home/nathan/src/linux/arch/mips/boot/compressed/Makefile:104: vmlinuz] Error 1
+
+I think something like this is needed but I do not know if it is proper.
+
+Cheers,
+Nathan
+
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 18495568f03e..68c0f22fefc0 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -304,6 +304,7 @@ KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(loa
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+ 
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  VMLINUX_LINK_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)" \
+ 		  ITS_INPUTS="$(its-y)"
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 0df0ee8a298d..3d391256ab7e 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(VMLINUX_LINK_ADDRESS))
+ endif
+ UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
+ 
