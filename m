@@ -2,126 +2,76 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18078C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ACDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E546420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109FC20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qkg4y3oB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H1EOraWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbgDMPNG (ORCPT
+        id S1730948AbgDMPNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:13:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46226 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729696AbgDMPM5 (ORCPT
+        Mon, 13 Apr 2020 11:13:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30863 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729706AbgDMPNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:12:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586790777; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=LU4lIIs6P7WbetJLktGFAgPFpHgnYydgpo5RLRCAr2Q=; b=qkg4y3oB76gwaFxe0BJ5z+3/OurW8dsq2yHCUDMH7sARqg8IcLdrwQBj9bmGz9exzlqYS2Df
- D1ewFaTPvs9h21Sj5NMchD64vSNNfvoikohpvJxsXswhGDpvEnZ0LRJkoVNu8VQKFLzNn3UO
- 9g6+QU12Hc0L09p1epm3K6jQeus=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e94816e.7f147a93c810-smtp-out-n04;
- Mon, 13 Apr 2020 15:12:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 00BC2C43637; Mon, 13 Apr 2020 15:12:45 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 13 Apr 2020 11:13:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586790817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kJowtOvzAa19C32LJEMTxVyIKp1fzSsgOgfg3CQWfw0=;
+        b=H1EOraWx+HWU79UO96IXOJVYVBbx0thl6/zJCnbVlKTB43Evfa7C/wHvk+a4v3BvJDRz12
+        HZIWGFRlZke0YrpyUIEbd+dJomLO30EQ0kq3cS3UxWQ6rlWutXD5IF5BULgMTV1Cfh8w9s
+        YUJLEcXkXGZA+PyZsEdvgrJyUpkamHM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-446-VqRzGYoNMgSl-wmSX7-zdg-1; Mon, 13 Apr 2020 11:13:35 -0400
+X-MC-Unique: VqRzGYoNMgSl-wmSX7-zdg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E460C433F2;
-        Mon, 13 Apr 2020 15:12:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E460C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 13 Apr 2020 09:12:42 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH 0/2] iommu/arm-smmu: Allow client devices to select
- direct mapping
-Message-ID: <20200413151241.GB20818@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Matthias Kaehlcke <mka@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <7761534cdb4f1891d993e73931894a63@codeaurora.org>
- <20200409233124.GW199755@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A4768017FD;
+        Mon, 13 Apr 2020 15:13:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2090B5C1B5;
+        Mon, 13 Apr 2020 15:13:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <2940559.1586789415@warthog.procyon.org.uk>
+References: <2940559.1586789415@warthog.procyon.org.uk>
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] afs: Fixes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409233124.GW199755@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3060969.1586790812.1@warthog.procyon.org.uk>
+Date:   Mon, 13 Apr 2020 16:13:32 +0100
+Message-ID: <3060970.1586790812@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 04:31:24PM -0700, Matthias Kaehlcke wrote:
-> On Tue, Feb 04, 2020 at 11:12:17PM +0530, Sai Prakash Ranjan wrote:
-> > Hello Robin, Will
-> > 
-> > On 2020-01-22 17:18, Sai Prakash Ranjan wrote:
-> > > This series allows drm devices to set a default identity
-> > > mapping using iommu_request_dm_for_dev(). First patch is
-> > > a cleanup to support other SoCs to call into QCOM specific
-> > > implementation and preparation for second patch.
-> > > Second patch sets the default identity domain for drm devices.
-> > > 
-> > > Jordan Crouse (1):
-> > >   iommu/arm-smmu: Allow client devices to select direct mapping
-> > > 
-> > > Sai Prakash Ranjan (1):
-> > >   iommu: arm-smmu-impl: Convert to a generic reset implementation
-> > > 
-> > >  drivers/iommu/arm-smmu-impl.c |  8 +++--
-> > >  drivers/iommu/arm-smmu-qcom.c | 55 +++++++++++++++++++++++++++++++++--
-> > >  drivers/iommu/arm-smmu.c      |  3 ++
-> > >  drivers/iommu/arm-smmu.h      |  5 ++++
-> > >  4 files changed, 65 insertions(+), 6 deletions(-)
-> > 
-> > Any review comments?
-> 
-> Ping
-> 
-> What is the status of this series, is it ready to land or are any changes
-> needed?
-> 
-> Thanks
-> 
-> Matthias
+David Howells <dhowells@redhat.com> wrote:
 
-I think this is up in the air following the changes that Joerg suggested:
-https://lists.linuxfoundation.org/pipermail/iommu/2020-April/043017.html
+>  (1) Fix the decoding of fetched file status records do that in advances
+>      the xdr pointer under all circumstances.
 
-Jordan
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+As Willy points out, this isn't very English.  Let me try that again.
+
+David
+
