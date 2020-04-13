@@ -6,39 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C1AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AFAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B07002075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7695B20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbgDMOGW (ORCPT
+        id S1730326AbgDMOGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:06:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2366 "EHLO huawei.com"
+        Mon, 13 Apr 2020 10:06:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39446 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730285AbgDMOGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:06:20 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 94F0C48F6690EAB73C69;
-        Mon, 13 Apr 2020 22:06:14 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
- 22:06:07 +0800
+        id S1730285AbgDMOG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:06:29 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DAA1B5009B9C567DB427;
+        Mon, 13 Apr 2020 22:06:25 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
+ 22:06:17 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
         <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <yanaijie@huawei.com>, <sam@ravnborg.org>,
-        <y.oudjana@protonmail.com>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] drm/amdgpu: remove dead code in si_dpm.c
-Date:   Mon, 13 Apr 2020 22:32:35 +0800
-Message-ID: <20200413143235.22945-1-yanaijie@huawei.com>
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] drm/radeon: remove defined but not used 'dte_data_tahiti_le'
+Date:   Mon, 13 Apr 2020 22:32:45 +0800
+Message-ID: <20200413143245.23107-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.175.124.28]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,23 +45,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code is dead, let's remove it.
+Fix the following gcc warning:
+
+drivers/gpu/drm/radeon/si_dpm.c:255:33: warning: ‘dte_data_tahiti_le’
+defined but not used [-Wunused-const-variable=]
+ static const struct si_dte_data dte_data_tahiti_le =
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/gpu/drm/amd/amdgpu/si_dpm.c | 20 --------------------
- 1 file changed, 20 deletions(-)
+ drivers/gpu/drm/radeon/si_dpm.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.c b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
-index 0860e85a2d35..c00ba4b23c9a 100644
---- a/drivers/gpu/drm/amd/amdgpu/si_dpm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
-@@ -345,26 +345,6 @@ static const struct si_dte_data dte_data_tahiti =
+diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
+index 2cb85dbe728f..a167e1c36d24 100644
+--- a/drivers/gpu/drm/radeon/si_dpm.c
++++ b/drivers/gpu/drm/radeon/si_dpm.c
+@@ -252,24 +252,6 @@ static const struct si_dte_data dte_data_tahiti =
  	false
  };
  
--#if 0
 -static const struct si_dte_data dte_data_tahiti_le =
 -{
 -	{ 0x1E8480, 0x7A1200, 0x2160EC0, 0x3938700, 0 },
@@ -80,7 +82,6 @@ index 0860e85a2d35..c00ba4b23c9a 100644
 -	85,
 -	true
 -};
--#endif
 -
  static const struct si_dte_data dte_data_tahiti_pro =
  {
