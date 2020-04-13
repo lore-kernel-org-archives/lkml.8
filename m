@@ -2,181 +2,126 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F521C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 01:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBEFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 01:23:41 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE56E20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 01:04:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org EE56E20732
+	by mail.kernel.org (Postfix) with ESMTP id 0A483206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 01:23:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 0A483206C3
 Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgDMBEI (ORCPT
+        id S1726944AbgDMBXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 21:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:54934 "EHLO
+        Sun, 12 Apr 2020 21:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:58044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgDMBEI (ORCPT
+        with ESMTP id S1726917AbgDMBXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 21:04:08 -0400
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97ACDC0A3BE0;
-        Sun, 12 Apr 2020 18:04:07 -0700 (PDT)
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C9C895BBA84481540FD5;
-        Mon, 13 Apr 2020 09:04:05 +0800 (CST)
-Received: from DESKTOP-27KDQMV.china.huawei.com (10.173.228.124) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 13 Apr 2020 09:03:57 +0800
-From:   "Longpeng(Mike)" <longpeng2@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     Longpeng <longpeng2@huawei.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v5] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
-Date:   Mon, 13 Apr 2020 09:03:42 +0800
-Message-ID: <20200413010342.771-1-longpeng2@huawei.com>
-X-Mailer: git-send-email 2.25.0.windows.1
+        Sun, 12 Apr 2020 21:23:37 -0400
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65398C0A3BE0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 18:23:37 -0700 (PDT)
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 84931C6D573870651A49;
+        Mon, 13 Apr 2020 09:23:34 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
+ 09:23:24 +0800
+Subject: Re: [PATCH v5 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
+        <dja@axtens.net>
+References: <20200330022023.3691-1-yanaijie@huawei.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <433bb006-aa45-524d-c57e-79657d01c685@huawei.com>
+Date:   Mon, 13 Apr 2020 09:23:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.228.124]
+In-Reply-To: <20200330022023.3691-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng <longpeng2@huawei.com>
+ping...
 
-Our machine encountered a panic(addressing exception) after run
-for a long time and the calltrace is:
-RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
-RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
-RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
-RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
-RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
-R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
-R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
-FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
- [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
- [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
- [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
- [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
- [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
- [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
- [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
- [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
- ...
- [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
- [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
- [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
- [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
- [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
- [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
- [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
-
-For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
-may return a wrong 'pmdp' if there is a race. Please look at the following
-code snippet:
-    ...
-    pud = pud_offset(p4d, addr);
-    if (sz != PUD_SIZE && pud_none(*pud))
-        return NULL;
-    /* hugepage or swap? */
-    if (pud_huge(*pud) || !pud_present(*pud))
-        return (pte_t *)pud;
-
-    pmd = pmd_offset(pud, addr);
-    if (sz != PMD_SIZE && pmd_none(*pmd))
-        return NULL;
-    /* hugepage or swap? */
-    if (pmd_huge(*pmd) || !pmd_present(*pmd))
-        return (pte_t *)pmd;
-    ...
-
-The following sequence would trigger this bug:
-1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
-1. CPU0: "pud_huge(*pud)" is false
-2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
-3. CPU0: "!pud_present(*pud)" is false, continue
-4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
-However, we want CPU0 to return NULL or pudp in this case.
-
-We must make sure there is exactly one dereference of pud and pmd.
-
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Longpeng <longpeng2@huawei.com>
----
-v4 -> v5:
-  fix a bug of on i386
-v3 -> v4:
-  fix a typo s/p4g/p4d.  [Jason]
-v2 -> v3:
-  make sure p4d/pud/pmd be dereferenced once. [Jason]
-
----
- mm/hugetlb.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index cd45915..bcabbe0 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5365,8 +5365,8 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- {
- 	pgd_t *pgd;
- 	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
-+	pud_t *pud, pud_entry;
-+	pmd_t *pmd, pmd_entry;
- 
- 	pgd = pgd_offset(mm, addr);
- 	if (!pgd_present(*pgd))
-@@ -5376,17 +5376,19 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 		return NULL;
- 
- 	pud = pud_offset(p4d, addr);
--	if (sz != PUD_SIZE && pud_none(*pud))
-+	pud_entry = READ_ONCE(*pud);
-+	if (sz != PUD_SIZE && pud_none(pud_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pud_huge(*pud) || !pud_present(*pud))
-+	if (pud_huge(pud_entry) || !pud_present(pud_entry))
- 		return (pte_t *)pud;
- 
- 	pmd = pmd_offset(pud, addr);
--	if (sz != PMD_SIZE && pmd_none(*pmd))
-+	pmd_entry = READ_ONCE(*pmd);
-+	if (sz != PMD_SIZE && pmd_none(pmd_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pmd_huge(*pmd) || !pmd_present(*pmd))
-+	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
- 		return (pte_t *)pmd;
- 
- 	return NULL;
--- 
-1.8.3.1
+ÔÚ 2020/3/30 10:20, Jason Yan Ð´µÀ:
+> This is a try to implement KASLR for Freescale BookE64 which is based on
+> my earlier implementation for Freescale BookE32:
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718&state=*
+> 
+> The implementation for Freescale BookE64 is similar as BookE32. One
+> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+> booting. Another difference is that ppc64 needs the kernel to be
+> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+> it 64K-aligned. This can save some code to creat another TLB map at
+> early boot. The disadvantage is that we only have about 1G/64K = 16384
+> slots to put the kernel in.
+> 
+>      KERNELBASE
+> 
+>            64K                     |--> kernel <--|
+>             |                      |              |
+>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>          |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>          |                         |                        1G
+>          |----->   offset    <-----|
+> 
+>                                kernstart_virt_addr
+> 
+> I'm not sure if the slot numbers is enough or the design has any
+> defects. If you have some better ideas, I would be happy to hear that.
+> 
+> Thank you all.
+> 
+> v4->v5:
+>    Fix "-Werror=maybe-uninitialized" compile error.
+>    Fix typo "similar as" -> "similar to".
+> v3->v4:
+>    Do not define __kaslr_offset as a fixed symbol. Reference __run_at_load and
+>      __kaslr_offset by symbol instead of magic offsets.
+>    Use IS_ENABLED(CONFIG_PPC32) instead of #ifdef CONFIG_PPC32.
+>    Change kaslr-booke32 to kaslr-booke in index.rst
+>    Switch some instructions to 64-bit.
+> v2->v3:
+>    Fix build error when KASLR is disabled.
+> v1->v2:
+>    Add __kaslr_offset for the secondary cpu boot up.
+> 
+> Jason Yan (6):
+>    powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
+>      kaslr_early_init()
+>    powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
+>    powerpc/fsl_booke/64: implement KASLR for fsl_booke64
+>    powerpc/fsl_booke/64: do not clear the BSS for the second pass
+>    powerpc/fsl_booke/64: clear the original kernel if randomized
+>    powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
+>      and add 64bit part
+> 
+>   Documentation/powerpc/index.rst               |  2 +-
+>   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 ++++++-
+>   arch/powerpc/Kconfig                          |  2 +-
+>   arch/powerpc/kernel/exceptions-64e.S          | 23 +++++
+>   arch/powerpc/kernel/head_64.S                 | 13 +++
+>   arch/powerpc/kernel/setup_64.c                |  3 +
+>   arch/powerpc/mm/mmu_decl.h                    | 23 +++--
+>   arch/powerpc/mm/nohash/kaslr_booke.c          | 91 +++++++++++++------
+>   8 files changed, 147 insertions(+), 45 deletions(-)
+>   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+> 
 
