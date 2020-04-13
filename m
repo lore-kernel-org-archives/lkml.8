@@ -2,102 +2,100 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600ACC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CFDC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C51E20692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824A120692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XD5w0XjM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbgDMSV7 (ORCPT
+        id S2387694AbgDMSWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:21:59 -0400
-Received: from smtprelay0213.hostedemail.com ([216.40.44.213]:49966 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732988AbgDMSV5 (ORCPT
+        Mon, 13 Apr 2020 14:22:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41728 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387695AbgDMSWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:21:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id D64AD181D330D;
-        Mon, 13 Apr 2020 18:21:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: doll17_109959b0eed47
-X-Filterd-Recvd-Size: 2761
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 13 Apr 2020 18:21:53 +0000 (UTC)
-Message-ID: <6566837cdb0e8db522c53daba8baf49c2ca79376.camel@perches.com>
-Subject: Re: [PATCH v4 01/10] drivers: qcom: rpmh-rsc: Clean code
- reading/writing TCS regs/cmds
-From:   Joe Perches <joe@perches.com>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     swboyd@chromium.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, evgreen@chromium.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Apr 2020 11:19:46 -0700
-In-Reply-To: <20200413100321.v4.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
-References: <20200413170415.32463-1-dianders@chromium.org>
-         <20200413100321.v4.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 13 Apr 2020 14:22:49 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DIAhrG057732;
+        Mon, 13 Apr 2020 18:22:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=d9rweeiKACYb4np+ASa2+QDpz4eFlzgf4GMZTwV2Hn0=;
+ b=XD5w0XjMxhpdntlgLTKtVxcY54pjudt353DUfO9Vmek68E6eHp5uTBzFNbG/13l/M6Zw
+ qPPhk8SeOp94kIL3fWGajEgrTaVsBRvbUsHoZW8Gz18v+3XH88rlXN+uc+5KRZml3dG+
+ mR6vH34g32CeQQ7CYRbDbp2UioF7NNLuoiI5+wmhibsZlBJKqHvWxwZ0uXfodQGWn3mU
+ WlYwefCneA0IWs4k0BUpAkaMdbnwFBJ+FkP6SXbeS+L1p43KFIcWVeRgQMIhg4r/HV2l
+ cYGq0QRStkJxQCuf1g2yjRHIIZMF3ZYBZR8/dU+Da71U6zrvJvwzhN67acmXAcbu50hN BA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30b5ar05m1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 18:22:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DI84AL111325;
+        Mon, 13 Apr 2020 18:20:42 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30bqpcu37v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 18:20:42 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03DIKfV7020077;
+        Mon, 13 Apr 2020 18:20:41 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Apr 2020 11:20:41 -0700
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 23/35] docs: fusion: mptbase.c: get rid of a doc build warning
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+        <9ca049c2d25689c56448afddf4f0d1e619fa87f7.1586359676.git.mchehab+huawei@kernel.org>
+Date:   Mon, 13 Apr 2020 14:20:38 -0400
+In-Reply-To: <9ca049c2d25689c56448afddf4f0d1e619fa87f7.1586359676.git.mchehab+huawei@kernel.org>
+        (Mauro Carvalho Chehab's message of "Wed, 8 Apr 2020 17:46:15 +0200")
+Message-ID: <yq17dyjxn61.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=996 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004130139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-13 at 10:04 -0700, Douglas Anderson wrote:
-> This patch makes two changes, both of which should be no-ops:
-> 
-> 1. Make read_tcs_reg() / read_tcs_cmd() symmetric to write_tcs_reg() /
->    write_tcs_cmd().
-> 
-> 2. Change the order of operations in the above functions to make it
->    more obvious to me what the math is doing.  Specifically first you
->    want to find the right TCS, then the right register, and then
->    multiply by the command ID if necessary.
 
-Though these operations are only used a couple times, perhaps
-it'd be useful to have static inlines for the calcs.
+Mauro,
 
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-[]
-> @@ -67,28 +67,33 @@
->  #define CMD_STATUS_ISSUED		BIT(8)
->  #define CMD_STATUS_COMPL		BIT(16)
+> Use a table for the enum list, to avoid this warning:
+>
+> 	./drivers/message/fusion/mptbase.c:5058: WARNING: Definition list ends without a blank line; unexpected unindent.
 
-Maybe something like:
+Applied to 5.8/scsi-queue, thanks!
 
-static inline void __iomem *
-tcs_reg_addr(struct rsc_drv drv, int reg, int tcs_id)
-{
-	return drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg;
-}
-
-static inline void __iomem *
-tcs_cmd_addr(struct rsc_drv drv, int reg, int tcs_id, int cmd_id)
-{
-	return tcs_reg_addr(drv, reg, tcs_id) + RSC_DRV_CMD_OFFSET * cmd_id;
-}
-
-> -static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
-> +static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
->  {
-> -	return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-> +	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
->  			     RSC_DRV_CMD_OFFSET * cmd_id);
-
-	return readl_relaxed(tcs_cmd_addr(drv, reg, tcs_id, cmd_id));
-
-etc...
-
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
