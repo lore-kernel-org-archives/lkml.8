@@ -2,237 +2,299 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65396C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575FAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43E7920732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586794381;
-	bh=PiJCskkBH4HQmJKrq6l2BUxAKLvdz6RRfLLB9w3jJOM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nQPvw41imFy5qI9gCGeXHrdahDiKKJNlosmVNa+dHtPhKoOkacBogVwnmup0aalAx
-	 FOmWS3Zc5OqIdK/ryyJrGcx6Du3SxrgM7HqFqDaELjQnOKz3c8joB+HM2Fa0qhujxg
-	 hIPF3B1KNcQasdtW+jLfaSPYstFGWVGhdm25yw/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2B1FE2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:13:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ME8D1w29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbgDMQM7 (ORCPT
+        id S1731347AbgDMQNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731261AbgDMQM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:12:56 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C22EA2063A;
-        Mon, 13 Apr 2020 16:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586794375;
-        bh=PiJCskkBH4HQmJKrq6l2BUxAKLvdz6RRfLLB9w3jJOM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=R0+4nAcRn19VFnyDoemwSPHdWrk2+ibRP2cCMe54Ax+eEkaLOH/HHthNQdQxqFWlI
-         BAb45HSy3I0sObAAk4VaxQVGh4R1oi7KiL93fGwWboPEoSi0u5TbGzhxRpLn+1hqCF
-         nvGmpWTb4eC43ldhTNkcfJIGviC5qh1UWrHtbkeo=
-Date:   Mon, 13 Apr 2020 17:12:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alexandru.tachici@analog.com>
-Subject: Re: [PATCH v3 1/2] iio: adc: ad7192: fix null pointer de-reference
- crash during probe
-Message-ID: <20200413171251.5407db5b@archlinux>
-In-Reply-To: <20200413082044.81101-1-alexandru.ardelean@analog.com>
-References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 12:13:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53116 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731324AbgDMQM5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:12:57 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DGAbB0021662;
+        Mon, 13 Apr 2020 16:12:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=pDenx9MnkyaPn+VTHPEtoLB3ox/bBPr6tmpD/F6AJME=;
+ b=ME8D1w29Vo+Sz2e4JfRvME2qTJ7E3cAaqIQiqdHfkZRIJxAWzglUVDhVPK/7AV6wOIo8
+ DHaW58HDKRAFjNt5kxBCICH8p79SeqLXXMiPGwJty3GABJSP+FTXTu0BkYU9nVcz/p21
+ MyShFRIs2a7LXWI+TAXiRE5WByfgtzXwfgLFsC3orY2/qlOk0TBLGmp+QWzR3Wf9GdGH
+ G+4PO5meEWagQEyv9SKlHtHuM+FvrzhJrbHUpq5ZioVWfuMY1qPNxpXVBI3zgdX6ak1L
+ i8tKSv2R1XzoQugEOcTKfq/Ex5D0y/8EE+z/KaXc8sC1pxw6LeuPHZLgj+RMIhIzo3u9 sg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30b5aqyew8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 16:12:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DG82TC135790;
+        Mon, 13 Apr 2020 16:12:43 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30bqpcdsfy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 16:12:43 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03DGCgJa006179;
+        Mon, 13 Apr 2020 16:12:42 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Apr 2020 09:12:42 -0700
+Date:   Mon, 13 Apr 2020 09:12:40 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V7 8/9] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
+Message-ID: <20200413161240.GX6742@magnolia>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
+ <20200413054046.1560106-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413054046.1560106-9-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=3 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 suspectscore=3 adultscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004130123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 11:20:43 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
-> assignment:
->    'indio_dev->name = spi_get_device_id(spi)->name;'
+On Sun, Apr 12, 2020 at 10:40:45PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
-> during probe with null de-ref.
+> We only support changing FS_XFLAG_DAX on directories.  Files get their
+> flag from the parent directory on creation only.  So no data
+> invalidation needs to happen.
 > 
-> This change fixes this by introducing an ad7192_chip_info struct, and
-> defines all part-names [that should be assigned to indio_dev->name] in a
-> 'ad7192_chip_info_tbl' table.
+> Alter the xfs_ioctl_setattr_dax_invalidate() to be
+> xfs_ioctl_setattr_dax_validate().  xfs_ioctl_setattr_dax_validate() now
+> validates that any FS_XFLAG_DAX change is ok.
 > 
-> With this change, the old 'st->devid' is also moved to be a
-> 'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
-> 'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
-> values in the new 'ad7192_chip_info_tbl'.
+> This also allows use to remove the join_flags logic.
 > 
-> This should fix the bug, and maintain the ABI for the 'indio_dev->name'
-> field.
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied to the fixes-togreg branch of iio.git.
-
-Thanks,
-
-Jonathan
-
 > ---
+> Changes from v6:
+> 	Fix completely broken implementation and update commit message.
+> 	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
+> 	and S_DAX changing on drop_caches
 > 
-> Changelog v2 -> v3:
-> * reworked patch to introduce a chip_info struct for the part-name
-> * added 2nd patch to move of-table closer to the end of the file; this
->   patch is more cosmetic; has no fixes tag, but is on top of the previous
+> Changes from v5:
+> 	New patch
+> ---
+>  fs/xfs/xfs_ioctl.c | 102 +++++++--------------------------------------
+>  1 file changed, 16 insertions(+), 86 deletions(-)
 > 
-> Changelog v1 -> v2:
-> * fix colon for Fixes tag
-> * updated commit title a bit; to make it longer
-> 
->  drivers/iio/adc/ad7192.c | 61 ++++++++++++++++++++++++++++++----------
->  1 file changed, 46 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-> index 8ec28aa8fa8a..7e8662c5cb0e 100644
-> --- a/drivers/iio/adc/ad7192.c
-> +++ b/drivers/iio/adc/ad7192.c
-> @@ -125,10 +125,10 @@
->  #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
->  
->  /* ID Register Bit Designations (AD7192_REG_ID) */
-> -#define ID_AD7190		0x4
-> -#define ID_AD7192		0x0
-> -#define ID_AD7193		0x2
-> -#define ID_AD7195		0x6
-> +#define CHIPID_AD7190		0x4
-> +#define CHIPID_AD7192		0x0
-> +#define CHIPID_AD7193		0x2
-> +#define CHIPID_AD7195		0x6
->  #define AD7192_ID_MASK		0x0F
->  
->  /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
-> @@ -161,7 +161,20 @@ enum {
->     AD7192_SYSCALIB_FULL_SCALE,
->  };
->  
-> +enum {
-> +	ID_AD7190,
-> +	ID_AD7192,
-> +	ID_AD7193,
-> +	ID_AD7195,
-> +};
-> +
-> +struct ad7192_chip_info {
-> +	unsigned int			chip_id;
-> +	const char			*name;
-> +};
-> +
->  struct ad7192_state {
-> +	const struct ad7192_chip_info	*chip_info;
->  	struct regulator		*avdd;
->  	struct regulator		*dvdd;
->  	struct clk			*mclk;
-> @@ -172,7 +185,6 @@ struct ad7192_state {
->  	u32				conf;
->  	u32				scale_avail[8][2];
->  	u8				gpocon;
-> -	u8				devid;
->  	u8				clock_sel;
->  	struct mutex			lock;	/* protect sensor state */
->  	u8				syscalib_mode[8];
-> @@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
->  
->  	id &= AD7192_ID_MASK;
->  
-> -	if (id != st->devid)
-> +	if (id != st->chip_info->chip_id)
->  		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
->  			 id);
->  
-> @@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
->  		st->mode |= AD7192_MODE_REJ60;
->  
->  	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
-> -	if (refin2_en && st->devid != ID_AD7195)
-> +	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
->  		st->conf |= AD7192_CONF_REFSEL;
->  
->  	st->conf &= ~AD7192_CONF_CHOP;
-> @@ -859,11 +871,30 @@ static const struct iio_chan_spec ad7193_channels[] = {
->  	IIO_CHAN_SOFT_TIMESTAMP(14),
->  };
->  
-> +static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
-> +	[ID_AD7190] = {
-> +		.chip_id = CHIPID_AD7190,
-> +		.name = "ad7190",
-> +	},
-> +	[ID_AD7192] = {
-> +		.chip_id = CHIPID_AD7192,
-> +		.name = "ad7192",
-> +	},
-> +	[ID_AD7193] = {
-> +		.chip_id = CHIPID_AD7193,
-> +		.name = "ad7193",
-> +	},
-> +	[ID_AD7195] = {
-> +		.chip_id = CHIPID_AD7195,
-> +		.name = "ad7195",
-> +	},
-> +};
-> +
->  static int ad7192_channels_config(struct iio_dev *indio_dev)
->  {
->  	struct ad7192_state *st = iio_priv(indio_dev);
->  
-> -	switch (st->devid) {
-> +	switch (st->chip_info->chip_id) {
->  	case ID_AD7193:
->  		indio_dev->channels = ad7193_channels;
->  		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
-> @@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index c6cd92ef4a05..ba42a5fb5b05 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1145,63 +1145,23 @@ xfs_ioctl_setattr_xflags(
 >  }
 >  
->  static const struct of_device_id ad7192_of_match[] = {
-> -	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
-> -	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
-> -	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
-> -	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
-> +	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-> +	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-> +	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-> +	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, ad7192_of_match);
-> @@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
+>  /*
+> - * If we are changing DAX flags, we have to ensure the file is clean and any
+> - * cached objects in the address space are invalidated and removed. This
+> - * requires us to lock out other IO and page faults similar to a truncate
+> - * operation. The locks need to be held until the transaction has been committed
+> - * so that the cache invalidation is atomic with respect to the DAX flag
+> - * manipulation.
+> + * Mark inodes with a changing FS_XFLAG_DAX, I_DONTCACHE
+>   */
+> -static int
+> +static void
+>  xfs_ioctl_setattr_dax_invalidate(
+>  	struct xfs_inode	*ip,
+> -	struct fsxattr		*fa,
+> -	int			*join_flags)
+> +	struct fsxattr		*fa)
+>  {
+> -	struct inode		*inode = VFS_I(ip);
+> -	struct super_block	*sb = inode->i_sb;
+> -	int			error;
+> -
+> -	*join_flags = 0;
+> -
+> -	/*
+> -	 * It is only valid to set the DAX flag on regular files and
+> -	 * directories on filesystems where the block size is equal to the page
+> -	 * size. On directories it serves as an inherited hint so we don't
+> -	 * have to check the device for dax support or flush pagecache.
+> -	 */
+> -	if (fa->fsx_xflags & FS_XFLAG_DAX) {
+> -		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+> -
+> -		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
+> -			return -EINVAL;
+> -	}
+> -
+> -	/* If the DAX state is not changing, we have nothing to do here. */
+> -	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
+> -		return 0;
+> -	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
+> -		return 0;
+> +	struct inode            *inode = VFS_I(ip);
+>  
+>  	if (S_ISDIR(inode->i_mode))
+> -		return 0;
+> -
+> -	/* lock, flush and invalidate mapping in preparation for flag change */
+> -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> -	error = filemap_write_and_wait(inode->i_mapping);
+> -	if (error)
+> -		goto out_unlock;
+> -	error = invalidate_inode_pages2(inode->i_mapping);
+> -	if (error)
+> -		goto out_unlock;
+> -
+> -	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
+> -	return 0;
+> -
+> -out_unlock:
+> -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> -	return error;
+> +		return;
+
+We also need a check up here to skip the I_DONTCACHE setting if the
+admin has set a mount option to override the inode flag.
+
+The rest looks good to me.
+
+--D
+
+> +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
+> +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
+> +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
+> +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
+> +		inode->i_state |= I_DONTCACHE;
+>  }
+>  
+>  /*
+> @@ -1209,17 +1169,10 @@ xfs_ioctl_setattr_dax_invalidate(
+>   * have permission to do so. On success, return a clean transaction and the
+>   * inode locked exclusively ready for further operation specific checks. On
+>   * failure, return an error without modifying or locking the inode.
+> - *
+> - * The inode might already be IO locked on call. If this is the case, it is
+> - * indicated in @join_flags and we take full responsibility for ensuring they
+> - * are unlocked from now on. Hence if we have an error here, we still have to
+> - * unlock them. Otherwise, once they are joined to the transaction, they will
+> - * be unlocked on commit/cancel.
+>   */
+>  static struct xfs_trans *
+>  xfs_ioctl_setattr_get_trans(
+> -	struct xfs_inode	*ip,
+> -	int			join_flags)
+> +	struct xfs_inode	*ip)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  	struct xfs_trans	*tp;
+> @@ -1236,8 +1189,7 @@ xfs_ioctl_setattr_get_trans(
+>  		goto out_unlock;
+>  
+>  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
+> -	join_flags = 0;
+> +	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+>  
+>  	/*
+>  	 * CAP_FOWNER overrides the following restrictions:
+> @@ -1258,8 +1210,6 @@ xfs_ioctl_setattr_get_trans(
+>  out_cancel:
+>  	xfs_trans_cancel(tp);
+>  out_unlock:
+> -	if (join_flags)
+> -		xfs_iunlock(ip, join_flags);
+>  	return ERR_PTR(error);
+>  }
+>  
+> @@ -1386,7 +1336,6 @@ xfs_ioctl_setattr(
+>  	struct xfs_dquot	*pdqp = NULL;
+>  	struct xfs_dquot	*olddquot = NULL;
+>  	int			code;
+> -	int			join_flags = 0;
+>  
+>  	trace_xfs_ioctl_setattr(ip);
+>  
+> @@ -1410,18 +1359,9 @@ xfs_ioctl_setattr(
+>  			return code;
 >  	}
 >  
->  	spi_set_drvdata(spi, indio_dev);
-> -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
-> +	st->chip_info = of_device_get_match_data(&spi->dev);
->  	indio_dev->dev.parent = &spi->dev;
-> -	indio_dev->name = spi_get_device_id(spi)->name;
-> +	indio_dev->name = st->chip_info->name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
+> -	/*
+> -	 * Changing DAX config may require inode locking for mapping
+> -	 * invalidation. These need to be held all the way to transaction commit
+> -	 * or cancel time, so need to be passed through to
+> -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> -	 * appropriately.
+> -	 */
+> -	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
+> -	if (code)
+> -		goto error_free_dquots;
+> +	xfs_ioctl_setattr_dax_invalidate(ip, fa);
 >  
->  	ret = ad7192_channels_config(indio_dev);
->  	if (ret < 0)
->  		goto error_disable_dvdd;
+> -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> +	tp = xfs_ioctl_setattr_get_trans(ip);
+>  	if (IS_ERR(tp)) {
+>  		code = PTR_ERR(tp);
+>  		goto error_free_dquots;
+> @@ -1552,7 +1492,6 @@ xfs_ioc_setxflags(
+>  	struct fsxattr		fa;
+>  	struct fsxattr		old_fa;
+>  	unsigned int		flags;
+> -	int			join_flags = 0;
+>  	int			error;
 >  
-> -	if (st->devid == ID_AD7195)
-> +	if (st->chip_info->chip_id == CHIPID_AD7195)
->  		indio_dev->info = &ad7195_info;
->  	else
->  		indio_dev->info = &ad7192_info;
-
+>  	if (copy_from_user(&flags, arg, sizeof(flags)))
+> @@ -1569,18 +1508,9 @@ xfs_ioc_setxflags(
+>  	if (error)
+>  		return error;
+>  
+> -	/*
+> -	 * Changing DAX config may require inode locking for mapping
+> -	 * invalidation. These need to be held all the way to transaction commit
+> -	 * or cancel time, so need to be passed through to
+> -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> -	 * appropriately.
+> -	 */
+> -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
+> -	if (error)
+> -		goto out_drop_write;
+> +	xfs_ioctl_setattr_dax_invalidate(ip, &fa);
+>  
+> -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> +	tp = xfs_ioctl_setattr_get_trans(ip);
+>  	if (IS_ERR(tp)) {
+>  		error = PTR_ERR(tp);
+>  		goto out_drop_write;
+> -- 
+> 2.25.1
+> 
