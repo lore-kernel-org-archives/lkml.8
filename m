@@ -2,106 +2,101 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7F8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CECC2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB81F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECEA206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e1WrT4Kc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQYKaPXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgDMKGZ (ORCPT
+        id S1728308AbgDMKJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
+        Mon, 13 Apr 2020 06:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728142AbgDMKEl (ORCPT
+        by vger.kernel.org with ESMTP id S1728131AbgDMKJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:04:41 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B41C008615
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:58:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x25so8855686wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:58:24 -0700 (PDT)
+        Mon, 13 Apr 2020 06:09:41 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5299C00861B;
+        Mon, 13 Apr 2020 03:00:48 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t11so8045311ils.1;
+        Mon, 13 Apr 2020 03:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KJ5PBE+QCFWEenkZ4gUgAJxpbhutHi1vjlsaJ3JQibs=;
-        b=e1WrT4KcRVi9wuVJVygj8vhAkk71TGHmHpMYTjCJuHliLGWyDssU9cGqkK2CSWVejb
-         4tT7JgSQKtWSPtNh3MjeQe8Xag+jQXEUvDzA4/c/aaEnJYs60cHLHBhujmeY4hi+2jOZ
-         QOgTyQT1PBEuG3CNM4Dzr7gnqon6jRP/XbvFjRMA5pLCqDH5m4NWksv6aOpkM35twxc1
-         C5RVOi9OWRzoAxTOoZeZX/Rqh/7Sb5KQ8kMAoxCxBZfIrd4KOqCmv7p62qTS15T2tZaM
-         4LPqKZuEN8KUTxxGwhYIznawduuzubHIjr/o+hRL6rcZfZRKmub0W2+6H1q20NktRFAE
-         pIAA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Fh+7I1nkl6E4OzdC/8Kb7+iYk/dpPtFFiLYTuSRlqc=;
+        b=MQYKaPXnXdR08uDLBNJFXCoLmScqfdF0zA5PJ9vcgwyZlaMidV2d5DvAgSLiECYamH
+         nqkzukGFfZb6nwSiKPltyngON8ChcHHxbDj1Xmc7z7ds2wQZmpjZaP300cu3Nt+NpLdo
+         8vNcURIBBdgW7+9gSpidTL1u5rGK/6vKS3PWj0yay+qJBt56MKoKhCWIOIUBleY1uBrP
+         WnIR/CHcM5Y4IJjWKhspbmT5FCj4eTwPYff8t9WecyA9q2i+sN+sniv1iu/Yyy0bYVGn
+         8T9AVS8OMSB3TLs6HTREIICo6XQf9AcB88xOE4sD6Oki4vx42Cov8M/Jr0W69DOJtscE
+         0rXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KJ5PBE+QCFWEenkZ4gUgAJxpbhutHi1vjlsaJ3JQibs=;
-        b=C2V4NVjxy6rvq/kJXfcZc4sYL0mlY9oSzPgubjqYU3QLzxyp5rM4OA01KQ2I1W0Rw+
-         wHp3pU4w0oh8n9wouMX0HLhxhUh5eeW2pUAPkx6xt8km4rAIHvvyJ8nQhX4mWoDHpF5U
-         53XAM1T/OpSnhbjjk1yzf1YmUx4xQvDD7D9+hEdt0mtY/HXPkCUUVV5w2Nsp3PHggExX
-         r7j0WaEYI9CDSom/HsqvghAqKKjx31A7ACJ0tKdNagSnzrp3eUAY5UH2NXj7UD+/2yVe
-         REsLPIl9wikOc1hsBYIBXTOxdDmAlaoHOqBRlDT9PuCxqOjysatgQ8sQ/m7dWZFmvog3
-         ZNOQ==
-X-Gm-Message-State: AGi0PuZLnCa+3iZOZOgjL0TegKlKbOBVNax681adQG84j6KDlq3d0jlO
-        toRVw3BLegFQADr+senvKVBXSz167y4=
-X-Google-Smtp-Source: APiQypI8Oui5Njp9cGwOgZMXxDuOowTpat6FLkW6gIqG5p+5OQvCmGnkx5jBVxT8gj6Q9S2kjdEoxw==
-X-Received: by 2002:a1c:c90a:: with SMTP id f10mr17527326wmb.179.1586771902925;
-        Mon, 13 Apr 2020 02:58:22 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id v21sm13594491wmj.8.2020.04.13.02.58.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Apr 2020 02:58:22 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 7/9] crypto: sun8i-ce: Add stat_bytes debugfs
-Date:   Mon, 13 Apr 2020 09:58:07 +0000
-Message-Id: <1586771889-3299-8-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586771889-3299-1-git-send-email-clabbe@baylibre.com>
-References: <1586771889-3299-1-git-send-email-clabbe@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Fh+7I1nkl6E4OzdC/8Kb7+iYk/dpPtFFiLYTuSRlqc=;
+        b=GfzacWdfGmxsXEj8WepKP9jQlWPAz/kFwdm56RmfHhzaH66C/jtUWd2ELKP3MX3I+U
+         JQE8j+NRSGz32faeyw3WsSiPSU2+BENSE+7orKQMnc0BPQwV2geruhIQIsDnmJY18WuA
+         ZY9mqIc9Gl3+fwz6//uyId/mgGDG9CQI+1aScwd77+sQzkqUahwK3bjGBY8eSZhAJseY
+         Rb4IAy+kQ/CsbwF+NklhvQn+ZFfghwiKJhgYx2k7e+YkFqiiHiYzKPLRkXnqlPy8cV7R
+         A5Ox06S9pnJWBRvgK2QK8RyLJt2f9Qlk3d59dBwqgwwoyhGnPCWl4/T9i/2F73hLz/Jf
+         IwOw==
+X-Gm-Message-State: AGi0PuaJD8mxuYARnwyL46MYtFZ/JET7t80ML4LMB2iKJxzh+eZB41Ja
+        G8fKY+RY2LLVTG3HuYrgPsrEcBjkPcuov88V1EkHs5i0
+X-Google-Smtp-Source: APiQypIA0oldmzxseP+rUre/aNgrThAcSTbX3lATEBnJG6MdpbCZKGbma9DopJXmarexktqodGEFAslUUE+SAesQ2MI=
+X-Received: by 2002:a92:a312:: with SMTP id a18mr16124853ili.249.1586772048130;
+ Mon, 13 Apr 2020 03:00:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586413563-29125-1-git-send-email-raviteja.narayanam@xilinx.com>
+In-Reply-To: <1586413563-29125-1-git-send-email-raviteja.narayanam@xilinx.com>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Mon, 13 Apr 2020 15:30:36 +0530
+Message-ID: <CAKfKVtFHhz-wD-2fiJVRMXxupe=YRZQ4SV-VU+u=Yxe3gfmvrg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] serial: uartps: Add tx_empty checks
+To:     Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+Cc:     linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jslaby@suse.com, Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new stat_bytes counter in the sun8i-ce debugfs.
+Hi Raviteja,
+thanks for the patch.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h | 2 ++
- 1 file changed, 2 insertions(+)
+On Thu, Apr 9, 2020 at 11:59 AM Raviteja Narayanam
+<raviteja.narayanam@xilinx.com> wrote:
+>
+> This patch series does the following:
+> Use cdns_uart_tx_empty function in the driver.
+> Wait for empty.
+>
+> v2:
+> Modified the wait in console setup and used cdns_uart_tx_empty function
+> in console_write as suggested by Maarten.
+>
+Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-index 19ced8b1cd89..ef2f1e5aa23a 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-@@ -274,6 +274,7 @@ struct sun8i_ce_hash_reqctx {
-  * @alg:		one of sub struct must be used
-  * @stat_req:		number of request done on this template
-  * @stat_fb:		number of request which has fallbacked
-+ * @stat_bytes:		total data size done by this template
-  */
- struct sun8i_ce_alg_template {
- 	u32 type;
-@@ -287,6 +288,7 @@ struct sun8i_ce_alg_template {
- #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
- 	unsigned long stat_req;
- 	unsigned long stat_fb;
-+	unsigned long stat_bytes;
- #endif
- };
- 
--- 
-2.24.1
-
+> Raviteja Narayanam (2):
+>   serial: uartps: Wait for tx_empty in console setup
+>   serial: uartps: Use cdns_uart_tx_empty in console_write
+>
+>  drivers/tty/serial/xilinx_uartps.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> --
+> 2.7.4
+>
