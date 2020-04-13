@@ -2,224 +2,322 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC73C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEA5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA63A2072A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF172072A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXFQ5Dmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389530AbgDMWVk (ORCPT
+        id S2389540AbgDMWVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 18:21:40 -0400
-Received: from mga09.intel.com ([134.134.136.24]:7747 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389509AbgDMWVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 18:21:37 -0400
-IronPort-SDR: xnXzc3dPyLmJisWYe8uMs4+T3yFqowfR488WAsw23BTGq20fBL/fleDipAkcfVAUEIY+f8qXG1
- u54ZMgECkxCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 15:21:35 -0700
-IronPort-SDR: 4lE/s8euzScsVUomnFU78UfOqi3RN+6geeksqZSr2L7nOhsdEN2FKE6EJD9BcCyEjpAu2t+uUo
- cqBjOFaRr9lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
-   d="scan'208";a="298529923"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Apr 2020 15:21:34 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jO7SP-0003aT-O2; Tue, 14 Apr 2020 06:21:33 +0800
-Date:   Tue, 14 Apr 2020 06:21:26 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 0ddfac80e054f2ed076ff6049c1ecbb257493ffd
-Message-ID: <5e94e5e6.DngzWKq6kV2fSZ7q%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 13 Apr 2020 18:21:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38685 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389528AbgDMWVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 18:21:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586816499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YUKZXXSYeFudW02TCBb+YJ5vlqz4fbhPl0ENrJ4E7Ok=;
+        b=eXFQ5DmwTIzZcAaATlBsbjNLtkBThssWfuZnkfRm8UxWJ8o54ROaIL6HdscHArwLgFE9Ns
+        u1qa0K6UPueOd00hUFSb+hz6frbZ64GsWF5Fz4mM/czq2hmtBBqFrs2V5cFq/loy3JL4u7
+        msZR+qBmJRHAbzWjmZNRxbolh+6mCs8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-aIdoVem1PjqPjFgWhFaP8w-1; Mon, 13 Apr 2020 18:21:33 -0400
+X-MC-Unique: aIdoVem1PjqPjFgWhFaP8w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2547A18C43C1;
+        Mon, 13 Apr 2020 22:21:32 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 759535D9C9;
+        Mon, 13 Apr 2020 22:21:30 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 16:21:29 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
+Message-ID: <20200413162129.313b3b5a@w520.home>
+In-Reply-To: <20200413134157.395981a6@jacob-builder>
+References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200326092316.GA31648@infradead.org>
+        <20200326094442.5be042ce@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
+        <20200327074702.GA27959@infradead.org>
+        <20200327165335.397f24a3@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
+        <20200330090746.23c5599c@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
+        <20200331085444.44bee0bb@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
+        <20200402113604.6eea1e6f@jacob-builder>
+        <20200413134157.395981a6@jacob-builder>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 0ddfac80e054f2ed076ff6049c1ecbb257493ffd  Merge branch 'x86/urgent'
+On Mon, 13 Apr 2020 13:41:57 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-elapsed time: 483m
+> Hi All,
+> 
+> Just a gentle reminder, any feedback on the options I listed below? New
+> ideas will be even better.
+> 
+> Christoph, does the explanation make sense to you? We do have the
+> capability/flag based scheme for IOMMU API extension, the version is
+> mainly used for size lookup. Compatibility checking is another use of
+> the version, it makes checking easy when a vIOMMU is launched.
+> 
+> Thanks,
+> 
+> Jacob
+> 
+> On Thu, 2 Apr 2020 11:36:04 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> 
+> > On Wed, 1 Apr 2020 05:32:21 +0000
+> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> >   
+> > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > Sent: Tuesday, March 31, 2020 11:55 PM
+> > > > 
+> > > > On Tue, 31 Mar 2020 06:06:38 +0000
+> > > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > > >       
+> > > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > > Sent: Tuesday, March 31, 2020 12:08 AM
+> > > > > >
+> > > > > > On Mon, 30 Mar 2020 05:40:40 +0000
+> > > > > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > > > > >      
+> > > > > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > > > > Sent: Saturday, March 28, 2020 7:54 AM
+> > > > > > > >
+> > > > > > > > On Fri, 27 Mar 2020 00:47:02 -0700
+> > > > > > > > Christoph Hellwig <hch@infradead.org> wrote:
+> > > > > > > >      
+> > > > > > > > > On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin
+> > > > > > > > > wrote:      
+> > > > > > > > > > If those API calls are inter-dependent for composing a
+> > > > > > > > > > feature (e.g. SVA), shouldn't we need a way to check
+> > > > > > > > > > them together before exposing the feature to the
+> > > > > > > > > > guest, e.g. through a iommu_get_uapi_capabilities
+> > > > > > > > > > interface?      
+> > > > > > > > >
+> > > > > > > > > Yes, that makes sense.  The important bit is to have a
+> > > > > > > > > capability flags and not version numbers.      
+> > > > > > > >
+> > > > > > > > The challenge is that there are two consumers in the
+> > > > > > > > kernel for this. 1. VFIO only look for compatibility, and
+> > > > > > > > size of each data struct such that it can copy_from_user.
+> > > > > > > >
+> > > > > > > > 2. IOMMU driver, the "real consumer" of the content.
+> > > > > > > >
+> > > > > > > > For 2, I agree and we do plan to use the capability flags
+> > > > > > > > to check content and maintain backward compatibility etc.
+> > > > > > > >
+> > > > > > > > For VFIO, it is difficult to do size look up based on
+> > > > > > > > capability flags.      
+> > > > > > >
+> > > > > > > Can you elaborate the difficulty in VFIO? if, as Christoph
+> > > > > > > Hellwig pointed out, version number is already avoided
+> > > > > > > everywhere, it is interesting to know whether this work
+> > > > > > > becomes a real exception or just requires a different
+> > > > > > > mindset.   
+> > > > > > From VFIO p.o.v. the IOMMU UAPI data is opaque, it only needs
+> > > > > > to do two things:
+> > > > > > 1. is the UAPI compatible?
+> > > > > > 2. what is the size to copy?
+> > > > > >
+> > > > > > If you look at the version number, this is really a "version
+> > > > > > as size" lookup, as provided by the helper function in this
+> > > > > > patch. An example can be the newly introduced clone3 syscall.
+> > > > > > https://lwn.net/Articles/792628/
+> > > > > > In clone3, new version must have new size. The slight
+> > > > > > difference here is that, unlike clone3, we have multiple data
+> > > > > > structures instead of a single struct clone_args {}. And each
+> > > > > > struct has flags to enumerate its contents besides size.      
+> > > > >
+> > > > > Thanks for providing that link. However clone3 doesn't include a
+> > > > > version field to do "version as size" lookup. Instead, as you
+> > > > > said, it includes a size parameter which sounds like the option
+> > > > > 3 (argsz) listed below.
+> > > > >      
+> > > > Right, there is no version in clone3. size = version. I view this
+> > > > as a 1:1 lookup.
+> > > >       
+> > > > > >
+> > > > > > Besides breaching data abstraction, if VFIO has to check IOMMU
+> > > > > > flags to determine the sizes, it has many combinations.
+> > > > > >
+> > > > > > We also separate the responsibilities into two parts
+> > > > > > 1. compatibility - version, size by VFIO
+> > > > > > 2. sanity check - capability flags - by IOMMU      
+> > > > >
+> > > > > I feel argsz+flags approach can perfectly meet above
+> > > > > requirement. The userspace set the size and flags for whatever
+> > > > > capabilities it uses, and VFIO simply copies the parameters by
+> > > > > size and pass to IOMMU for further sanity check. Of course the
+> > > > > assumption is that we do provide an interface for userspace to
+> > > > > enumerate all supported capabilities.     
+> > > > You cannot trust user for argsz. the size to be copied from user
+> > > > must be based on knowledge in kernel. That is why we have this
+> > > > version to size lookup.
+> > > > 
+> > > > In VFIO, the size to copy is based on knowledge of each VFIO UAPI
+> > > > structures and VFIO flags. But here the flags are IOMMU UAPI
+> > > > flags. As you pointed out in another thread, VFIO is one user.      
+> > > 
+> > > If that is the case, can we let VFIO only copy its own UAPI fields
+> > > while simply passing the user pointer of IOMMU UAPI structure to
+> > > IOMMU driver for further size check and copy? Otherwise we are
+> > > entering a dead end that VFIO doesn't want to parse a structure
+> > > which is not defined by him while using version to represent the
+> > > black box size is considered as a discarded scheme and doesn't
+> > > scale well...   
+> > I think this could be an other viable option. Let me try to summarize
+> > since this has been a long discussion since the original version.
+> > 
+> > Problem statements:
+> > 1. When launching vIOMMU in the guest, how can we ensure the host has
+> > compatible support upfront? as compared to fail later.
 
-configs tested: 157
-configs skipped: 0
+This sounds like a feature/extension interface, both KVM and vfio have
+them to allow userspace to check support of specific features.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > 2. As UAPI data gets extended (both in size and flags), how can we
+> > know the size to copy
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-arc                                 defconfig
-m68k                       m5475evb_defconfig
-microblaze                      mmu_defconfig
-mips                             allmodconfig
-riscv                             allnoconfig
-ia64                                defconfig
-powerpc                             defconfig
-nios2                         10m50_defconfig
-openrisc                 simple_smp_defconfig
-i386                             allyesconfig
-sh                               allmodconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                              debian-10.3
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-i386                 randconfig-a002-20200413
-x86_64               randconfig-a002-20200413
-i386                 randconfig-a003-20200413
-i386                 randconfig-a001-20200413
-mips                 randconfig-a001-20200413
-nds32                randconfig-a001-20200413
-h8300                randconfig-a001-20200413
-nios2                randconfig-a001-20200413
-c6x                  randconfig-a001-20200413
-microblaze           randconfig-a001-20200413
-sparc64              randconfig-a001-20200413
-s390                 randconfig-a001-20200413
-xtensa               randconfig-a001-20200413
-sh                   randconfig-a001-20200413
-openrisc             randconfig-a001-20200413
-csky                 randconfig-a001-20200413
-x86_64               randconfig-b001-20200413
-x86_64               randconfig-b002-20200413
-x86_64               randconfig-b003-20200413
-i386                 randconfig-b001-20200413
-i386                 randconfig-b002-20200413
-i386                 randconfig-b003-20200413
-x86_64               randconfig-c001-20200413
-x86_64               randconfig-c002-20200413
-x86_64               randconfig-c003-20200413
-i386                 randconfig-c001-20200413
-i386                 randconfig-c002-20200413
-i386                 randconfig-c003-20200413
-i386                 randconfig-d002-20200413
-x86_64               randconfig-d003-20200413
-x86_64               randconfig-d001-20200413
-i386                 randconfig-d003-20200413
-i386                 randconfig-d001-20200413
-x86_64               randconfig-d002-20200413
-x86_64               randconfig-e001-20200413
-i386                 randconfig-e002-20200413
-i386                 randconfig-e001-20200413
-x86_64               randconfig-e002-20200413
-i386                 randconfig-e003-20200413
-x86_64               randconfig-e003-20200413
-i386                 randconfig-f003-20200413
-i386                 randconfig-f002-20200413
-x86_64               randconfig-f003-20200413
-x86_64               randconfig-f001-20200413
-x86_64               randconfig-f002-20200413
-i386                 randconfig-f001-20200413
-x86_64               randconfig-g003-20200413
-i386                 randconfig-g003-20200413
-x86_64               randconfig-g001-20200413
-x86_64               randconfig-g002-20200413
-i386                 randconfig-g002-20200413
-i386                 randconfig-g001-20200413
-x86_64               randconfig-h001-20200413
-i386                 randconfig-h003-20200413
-i386                 randconfig-h002-20200413
-i386                 randconfig-h001-20200413
-x86_64               randconfig-h002-20200413
-ia64                 randconfig-a001-20200413
-arc                  randconfig-a001-20200413
-arm                  randconfig-a001-20200413
-sparc                randconfig-a001-20200413
-riscv                            allmodconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
+For vfio we of course use the argsz/flags trick where the user tells us
+how big the buffer is and flags in the header tell us what fields
+beyond the base specification are enabled.  This can get tricky to
+extend and there can be confusion whether a flag indicates the presence
+of a field or the validity of a field.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+We also have interfaces where the ioctl is a header plus a data blob
+where flags tell us what the data is.  These can serve double duty as a
+extension check too as we've done for VFIO_DEVICE_FEATURE.  This
+doesn't really support extension of a defined feature though, rather
+we'd be more likely to create a set of flags that indicate the data
+object is feature-v2 and redefine the structure, or of course we
+revisit the entire featuring question within the structure of that data
+blob.
+
+We also implement capability chains, though they're more meant for
+passing data to the user, where the user provides a buffer and we link
+capabilities together within that buffer for the user to walk.  We've
+defined a mechanism through -ENOSPC and argsz to tell the user how
+large a buffer is necessary.  I dare mention we have a version per
+capability as these are largely modeled after capability chains in PCI
+config space.  We haven't actually incremented any versions, but I
+imagine we'd do so like PCI, maintaining backwards compatibility and
+only defining unused bits and adding fields as the version increases.
+
+Is the objection to a global version or to any version fields?  I don't
+really understand the global version, I'd think a mechanism to check
+extensions plus a per structure flags/version would be preferred.  The
+former should resolve how userspace can test support for features
+requiring multiple interfaces.  A global version also implies that
+we're only ever adding features and never removing.  For example,
+feature Foo is added in version 4, but it's replaced by feature Bar in
+version 5, now userspace can't simply test version >= 4 must include
+feature Foo.
+
+It seems to me that version and flags can also be complimentary, for
+example a field might be defined by a version but a flag could indicate
+if it's implemented.  With only the flag, we'd infer the field from the
+flag, with only the version we'd need to assume the field is always
+implemented.  So I have a hard time making a blanket statement that all
+versions fields should be avoided.
+ 
+> > 3. Maintain backward compatibility while allowing extensions?
+> > 
+> > I think we all agreed that using flags (capability or types) is the
+> > way to address #3. As Christoph pointed out, version number should
+> > not be used for this purpose.
+> > 
+> > So for problem 1 & 2, we have the following options:
+> > 1. Have a version-size mapping as proposed in this set. VFIO copies
+> > from user the correct size based on version-type lookup. Processing
+> > of the data is based on flags in IOMMU driver.
+> > 
+> > 2. VFIO copy its own minsz then pass the user pointer to IOMMU driver
+> > for further copy_from_user based on flags. (by Kevin)
+> > 
+> > 3. Adopt VFIO argsz scheme, caller fills in argsz for the offset the
+> > variable size union. VFIO do not check argsz in that it requires IOMMU
+> > specific knowledge. IOMMU driver Use flags to handle the variable
+> > size.(by Alex). I think this what we have in Yi's VFIO & QEMU patch.
+> > argsz filled by QEMU includes bind_data.
+> > 
+> > 4. Do not use a unified version, have a fixed size of all UAPI
+> > structures, padding in struct and union. (Wasteful, not preferred per
+> > V1 discussion)
+> > 
+> > For both 2 & 3, a unified version is not used, each API
+> > treated separately. vIOMMU will be launched w/o assurance of
+> > compatibility of all APIs. Fault handling may be more complex in
+> > normal operations.
+> > 
+> > Appreciate everyone's input. Joerg and Alex, could you help to make a
+> > decision here?
+
+As above, I think using a global API version number to imply support
+for a feature is doomed to fail, we should instead expose an interface
+to check for specific features.  In any of the proposed solutions, the
+IOMMU driver is ultimately responsible for validating the user data, so
+do we want vfio performing the copy_from_user() to an object that could
+later be assumed to be sanitized, or should vfio just pass a user
+pointer to make it obvious that the consumer is responsible for all the
+user protections?  Seems like the latter.  That still really doesn't
+address what's in that user data blob yet, but the vfio interface could
+be:
+
+struct {
+	__u32 argsz;
+	__u32 flags;
+	__u8  data[];
+}
+
+Where flags might be partitioned like we do for DEVICE_FEATURE to
+indicate the format of data and what vfio should do with it, and data
+might simply be defined as a (__u64 __user *).
+
+This user pointer would then likely be an IOMMU UAPI struct, so I've
+only just gotten back the the IOMMU UAPI question at hand, but I don't
+really see the disadvantage to including both version and flags fields
+per structure.  Perhaps this is choice 1. above, but with a version at
+a per structure level indicating the backwards compatible size and
+layout of the structure and flags being used to indicate support for
+optional features within those fields.  Is a version field still taboo
+for such a use case?  Thanks,
+
+Alex
+
