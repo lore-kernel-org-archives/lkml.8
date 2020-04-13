@@ -2,312 +2,193 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B13C352B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552C3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D789120732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E15720678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:22:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n24vJWBZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hGB+nycY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731452AbgDMQT3 (ORCPT
+        id S1731481AbgDMQWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:19:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49536 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731429AbgDMQT1 (ORCPT
+        Mon, 13 Apr 2020 12:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731410AbgDMQWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:19:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DGJHqe083245;
-        Mon, 13 Apr 2020 16:19:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=YJU6HlQqS/nwIZeFXkDwYcE2QyTAfB5Ec7sJE/JFGpI=;
- b=n24vJWBZxI5JFE6YXnfl1Kd/WBKx6YiX89PN1hc8fmZEH0StJ1jI1/E2LfALihrZSyYP
- VmPDKHWl1fmoweRcsxk2Bll5rKo/NAjK4dwAk8GRjvdthq1r2As0ATROZ+YfXMj0XEf+
- a9m+3HBARZTiR2qJzz1wt5fSmsY+x82883kz+KEzDoAvms/9eLXSvbn2FO2rje2/NPLv
- 1ZCxpuyeosjY9BCa175JwhoBEJvDuzGN2mlIF6hs6KdCRFDwYTyutGx3vI3qEPeIme+K
- 03usrLXvmGlOs6drylsbAYl0DB27WtwY5YzjRaJzUyNyuN5OrEDUcBhmLGqlGQpLQ/lB Jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30b6hpfef5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 16:19:16 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DGGsWe027463;
-        Mon, 13 Apr 2020 16:19:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30bqkxnnu2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 16:19:16 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03DGJEcr006215;
-        Mon, 13 Apr 2020 16:19:15 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Apr 2020 09:19:14 -0700
-Date:   Mon, 13 Apr 2020 09:19:12 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V7 9/9] Documentation/dax: Update Usage section
-Message-ID: <20200413161912.GZ6742@magnolia>
-References: <20200413054046.1560106-1-ira.weiny@intel.com>
- <20200413054046.1560106-10-ira.weiny@intel.com>
+        Mon, 13 Apr 2020 12:22:05 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9905BC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:22:05 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id t10so5516170ybk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aueNGgz6u3sNtqkhsSGk625u8jz/OXUXnCvNarHkXT8=;
+        b=hGB+nycYyNsDh4L32k/R1uYGR4IRpyEYRsOwgkriU5fTc8OksiLctdiTLpU2s073vl
+         MAG+w+dgbosjLaBxj8qWlIwAgzfTwk2MRMc3zgWHL5vev1K0SzQJEvl74VC3Ypn6f8hw
+         IQU9E8jisraw6BFfntWvn6gqQxXSa2bDF5nzRvFB/hgU0LKQnL/krN0qOt5buKck2Yal
+         BN0+s1mHskAl9JPblhCLHdNvdmiy1bzQkJTeIOwYOHLqTZBrOWuKjB4/XQSU35G2E7Fq
+         Abq8DxVMV6iQxyKR41OCwoF9JO538QbEibpUkdbQI3ZgPDyGEpFAY4uqWqfxcnT1wdAD
+         T3Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aueNGgz6u3sNtqkhsSGk625u8jz/OXUXnCvNarHkXT8=;
+        b=Qpln/i9r0cgYCSdjn43aZdI7YSkgSROzXN51hVnHfFK14acFAuMn3BBVlhonL0NN9L
+         S+ei6TccLhXufq7kHnJ7BMVP4GT6lGR+DRcNuFFqVoLVhDkoAMtzWk84Oe52QUdhr2Yh
+         gcmRik+LhkYTi02NsORU374tM0ba+jO+R3mGvmTxqDGGb+2d5zKhB3uy2zasiij6WXdM
+         DCPMglRp2WcfUO69OCV/XtXYCKdHXFrMgyYf0sVCz9aWLSZ/+1FLo9xnkngyAp+Da2hr
+         FJZYw/5fAgTLQMfNe0gytP2bPhQNKPC7i6QEsvXCzZrvWA5AYJPz5kaH6RPP0I0i34vS
+         /tqQ==
+X-Gm-Message-State: AGi0PuZkvdfQLAxF7wcr8SD+HEdbkIfvYLZud2p+WXvp6DGhW1uh0TSU
+        /+l4zrHgYKjTFH+39/bVLH6bgzHduULfSiMfd0XMdg==
+X-Google-Smtp-Source: APiQypIt2LisAlLfGLmw/+IXHMYb9k9Pia4hK9rSJOo3OZHgZQyGjIXO9+invjB/a7PiPX9vABydpaTJmz8GIdJm9p4=
+X-Received: by 2002:a25:be81:: with SMTP id i1mr28871733ybk.184.1586794924465;
+ Mon, 13 Apr 2020 09:22:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413054046.1560106-10-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130124
+References: <20200411064248.247530-1-irogers@google.com> <CAM9d7cgOO88sWDh8F1x2Mnk2ikSF0FUCp88c1wAheW5zJ9+B0g@mail.gmail.com>
+In-Reply-To: <CAM9d7cgOO88sWDh8F1x2Mnk2ikSF0FUCp88c1wAheW5zJ9+B0g@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Apr 2020 09:21:53 -0700
+Message-ID: <CAP-5=fW_5pPZTA3bXdT9d9Tt_d5aJw=4bf_fr9eqzGPfoVs3aQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] tools api: add a lightweight buffered reading api
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 10:40:46PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Update the Usage section to reflect the new individual dax selection
-> functionality.
+On Mon, Apr 13, 2020 at 12:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hi Ian,
+>
+> On Sat, Apr 11, 2020 at 3:42 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > The synthesize benchmark shows the majority of execution time going to
+> > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+> > reading library that will be used to replace these calls in a follow-up
+> > CL. Add tests for the library to perf test.
+> >
+> > v4 adds the test file missed in v3.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> > +/* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
+> > + * first character isn't hexadecimal returns -2, io->eof returns -1, otherwise
+> > + * returns the character after the hexadecimal value which may be -1 for eof.
+>
+> I'm not sure returning -1 is good when it actually reads something and
+> meets EOF.
+> Although it would have a valid value, users might consider it an error IMHO.
+> Why not returning 0 instead? (I'm ok with -1 for the later use of the API).
 
-Yum. :)
+Thanks for the feedback! In the code for /proc/pid/maps this is a
+hypothetical, but I think having the API right is important. I didn't
+go with 0 as you mention 0 'could' encode a character, for example,
+7fffabcd\0 wouldn't be distinguishable from 7fffabcd<EOF>. The updated
+code distinguishes the cases as 0 meaning character \0, -1 meaning EOF
+and -2 meaning bad encoding. Your worry is that a hex number that's
+next to EOF will get a result of -1 showing the EOF came next. and
+code that does 'if ( .. < 0)' would trigger. While clunky, it'd be
+possible in those cases to change the code to 'if ( .. < -1)'. So my
+thoughts are:
+1) being able to tell apart the 3 cases could be important - this is
+all hypothetical;
+2) keeping EOF and error as negative numbers has a degree of consistency;
+3) using -1 for EOF comes from get_char, it'd be nice to have one
+value mean EOF.
+Perhaps the issue is the name of the function? It isn't a standard API
+to return the next character, but it simplified things for me as I
+didn't need to add a 'rewind' operation. The function names could be
+something like io__get_hex_then_char and io__get_dec_then_char, EOF
+for the 'then_char' part would be more consistent. I'd tried to keep
+the names short and have a load bearing comment, which isn't ideal but
+generally I believe the style is that function names are kept short.
+Let me know what you think.
 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from V6:
-> 	Update to allow setting FS_XFLAG_DAX any time.
-> 	Update with list of behaviors from Darrick
-> 	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
-> 
-> Changes from V5:
-> 	Update to reflect the agreed upon semantics
-> 	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> ---
->  Documentation/filesystems/dax.txt | 166 +++++++++++++++++++++++++++++-
->  1 file changed, 163 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-> index 679729442fd2..af14c1b330a9 100644
-> --- a/Documentation/filesystems/dax.txt
-> +++ b/Documentation/filesystems/dax.txt
-> @@ -17,11 +17,171 @@ For file mappings, the storage device is mapped directly into userspace.
->  Usage
->  -----
->  
-> -If you have a block device which supports DAX, you can make a filesystem
-> +If you have a block device which supports DAX, you can make a file system
->  on it as usual.  The DAX code currently only supports files with a block
->  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
-> -size when creating the filesystem.  When mounting it, use the "-o dax"
-> -option on the command line or add 'dax' to the options in /etc/fstab.
-> +size when creating the file system.
-> +
-> +Currently 2 filesystems support DAX, ext4 and xfs.  Enabling DAX on them is
-> +different at this time.
+Thanks,
+Ian
 
-I thought ext2 supports DAX?
-
-> +Enabling DAX on ext4
-> +--------------------
-> +
-> +When mounting the filesystem, use the "-o dax" option on the command line or
-> +add 'dax' to the options in /etc/fstab.
-> +
-> +
-> +Enabling DAX on xfs
-> +-------------------
-> +
-> +Summary
-> +-------
-> +
-> + 1. There exists an in-kernel access mode flag S_DAX that is set when
-> +    file accesses go directly to persistent memory, bypassing the page
-> +    cache.  Applications must call statx to discover the current S_DAX
-> +    state (STATX_ATTR_DAX).
-> +
-> + 2. There exists an advisory file inode flag FS_XFLAG_DAX that is
-> +    inherited from the parent directory FS_XFLAG_DAX inode flag at file
-> +    creation time.  This advisory flag can be set or cleared at any
-> +    time, but doing so does not immediately affect the S_DAX state.
-> +
-> +    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
-> +    and the fs is on pmem then it will enable S_DAX at inode load time;
-> +    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> +
-> + 3. There exists a dax= mount option.
-> +
-> +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> +
-> +    "-o dax=always" means "always set S_DAX (at least on pmem),
-> +                    and ignore FS_XFLAG_DAX."
-> +
-> +    "-o dax"        is an alias for "dax=always".
-> +
-> +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> +
-> + 4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
-> +    be set or cleared at any time.  The flag state is inherited by any files or
-> +    subdirectories when they are created within that directory.
-> +
-> + 5. Programs that require a specific file access mode (DAX or not DAX)
-> +    can do one of the following:
-> +
-> +    (a) Create files in directories that the FS_XFLAG_DAX flag set as
-> +        needed; or
-> +
-> +    (b) Have the administrator set an override via mount option; or
-> +
-> +    (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
-> +        must then cause the kernel to evict the inode from memory.  This
-> +        can be done by:
-> +
-> +        i>  Closing the file and re-opening the file and using statx to
-> +            see if the fs has changed the S_DAX flag; and
-> +
-> +        ii> If the file still does not have the desired S_DAX access
-> +            mode, either unmount and remount the filesystem, or close
-> +            the file and use drop_caches.
-> +
-> + 6. It is expected that users who want to squeeze every last bit of performance
-> +    out of the particular rough and tumble bits of their storage will also be
-> +    exposed to the difficulties of what happens when the operating system can't
-> +    totally virtualize those hardware capabilities.  DAX is such a feature.
-> +    Basically, Formula-1 cars require a bit more care and feeding than your
-> +    averaged Toyota minivan, as it were.
-
-I think we can omit this last sentence for the formal documentation...
-:)
-
-> +
-> +
-> +Details
-> +-------
-> +
-> +There are 2 per-file dax flags.  One is a physical inode setting (FS_XFLAG_DAX)
-> +and the other a currently enabled state (S_DAX).
-> +
-> +FS_XFLAG_DAX is maintained, on disk, on individual inodes.  It is preserved
-> +within the file system.  This 'physical' config setting can be set using an
-> +ioctl and/or an application such as "xfs_io -c 'chattr [-+]x'".  Files and
-> +directories automatically inherit FS_XFLAG_DAX from their parent directory
-> +_when_ _created_.  Therefore, setting FS_XFLAG_DAX at directory creation time
-> +can be used to set a default behavior for an entire sub-tree.  (Doing so on the
-> +root directory acts to set a default for the entire file system.)
-> +
-> +To clarify inheritance here are 3 examples:
-> +
-> +Example A:
-> +
-> +mkdir -p a/b/c
-> +xfs_io 'chattr +x' a
-> +mkdir a/b/c/d
-> +mkdir a/e
-> +
-> +	dax: a,e
-> +	no dax: b,c,d
-> +
-> +Example B:
-> +
-> +mkdir a
-> +xfs_io 'chattr +x' a
-> +mkdir -p a/b/c/d
-> +
-> +	dax: a,b,c,d
-> +	no dax:
-> +
-> +Example C:
-> +
-> +mkdir -p a/b/c
-> +xfs_io 'chattr +x' c
-> +mkdir a/b/c/d
-> +
-> +	dax: c,d
-> +	no dax: a,b
-> +
-> +
-> +The current enabled state (S_DAX) is set when a file inode is _loaded_ based on
-> +the underlying media support, the value of FS_XFLAG_DAX, and the file systems
-> +dax mount option setting.  See below.
-> +
-> +statx can be used to query S_DAX.  NOTE that a directory will never have S_DAX
-> +set and therefore statx will always return false on directories.
-
-"statx will never indicate that S_DAX is set on directories."
-
-> +
-> +NOTE: Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs
-> +even if the underlying media does not support dax and/or the file system is
-> +overridden with a mount option.
-> +
-> +
-> +Overriding FS_XFLAG_DAX (dax= mount option)
-> +-------------------------------------------
-> +
-> +There exists a dax mount option.  Using the mount option does not change the
-> +physical configured state of individual files but overrides the S_DAX operating
-> +state when inodes are loaded.
-> +
-> +Given underlying media support, the dax mount option is a tri-state option
-> +(never, always, inode) with the following meanings:
-> +
-> +   "-o dax=never" means "never set S_DAX, ignore FS_XFLAG_DAX"
-> +   "-o dax=always" means "always set S_DAX, ignore FS_XFLAG_DAX"
-> +        "-o dax" by itself means "dax=always" to remain compatible with older
-> +	         kernels
-> +   "-o dax=inode" means "follow FS_XFLAG_DAX"
-> +
-> +The default state is 'inode'.  Given underlying media support, the following
-> +algorithm is used to determine the effective mode of the file S_DAX on a
-> +capable device.
-> +
-> +	S_DAX = FS_XFLAG_DAX;
-> +
-> +	if (dax_mount == "always")
-> +		S_DAX = true;
-> +	else if (dax_mount == "off"
-> +		S_DAX = false;
-> +
-> +To reiterate: Setting, and inheritance, continues to affect FS_XFLAG_DAX even
-> +while the file system is mounted with a dax override.  However, file enabled
-> +state, S_DAX, will continue to be the overridden until the file system is
-> +remounted with dax=inode.
-
-"However, in-core inode state (S_DAX) will continue to be overridden
-until the filesystem is remounted with dax=inode and the inode is
-evicted."
-
-...since we don't currently evict inodes just because a remount occurred.
-:)
-
---D
-
->  
->  
->  Implementation Tips for Block Driver Writers
-> -- 
-> 2.25.1
-> 
+> > + * If the read value is larger than a u64 the high-order bits will be dropped.
+> > + */
+> > +static inline int io__get_hex(struct io *io, __u64 *hex)
+> > +{
+> > +       bool first_read = true;
+> > +
+> > +       *hex = 0;
+> > +       while (true) {
+> > +               int ch = io__get_char(io);
+> > +
+> > +               if (ch < 0)
+> > +                       return ch;
+> > +               if (ch >= '0' && ch <= '9')
+> > +                       *hex = (*hex << 4) | (ch - '0');
+> > +               else if (ch >= 'a' && ch <= 'f')
+> > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
+> > +               else if (ch >= 'A' && ch <= 'F')
+> > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
+> > +               else if (first_read)
+> > +                       return -2;
+> > +               else
+> > +                       return ch;
+> > +               first_read = false;
+> > +       }
+> > +}
+> > +
+> > +/* Read a positive decimal value with out argument dec. If the first character
+> > + * isn't a decimal returns -2, io->eof returns -1, otherwise returns the
+> > + * character after the decimal value which may be -1 for eof. If the read value
+> > + * is larger than a u64 the high-order bits will be dropped.
+>
+> Ditto.
+>
+> Thanks
+> Namhyung
+>
+>
+> > + */
+> > +static inline int io__get_dec(struct io *io, __u64 *dec)
+> > +{
+> > +       bool first_read = true;
+> > +
+> > +       *dec = 0;
+> > +       while (true) {
+> > +               int ch = io__get_char(io);
+> > +
+> > +               if (ch < 0)
+> > +                       return ch;
+> > +               if (ch >= '0' && ch <= '9')
+> > +                       *dec = (*dec * 10) + ch - '0';
+> > +               else if (first_read)
+> > +                       return -2;
+> > +               else
+> > +                       return ch;
+> > +               first_read = false;
+> > +       }
+> > +}
+> > +
+> > +#endif /* __API_IO__ */
