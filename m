@@ -2,114 +2,129 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E49C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52031C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7173E20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2opoYpI"
+	by mail.kernel.org (Postfix) with ESMTP id 2B3BB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586809552;
+	bh=7PcGTf+Br3iofGrHqpT1Lk86E7HQeOdsnGtnmkXmQXU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wEo0tyzBJK1vqpnIv+GtJvwqpP9KvPpyQ5JUlr8X3cNRva0SPc1xBTgoSCLVuOljr
+	 5OMZdcIO7xmqxrnq6PJdRQ86N6hjR/Hfm0MQ0gzUODhfYLJlP/tbjTGosiFL+RvB0t
+	 q/oOpbK4KJovLN6AFDKbf01aY4mGwIAT5GrDVpz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388343AbgDMUXV (ORCPT
+        id S2388357AbgDMUZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388320AbgDMUXO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:23:14 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4C2C0A3BDC;
-        Mon, 13 Apr 2020 13:23:14 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id c23so4978009pgj.3;
-        Mon, 13 Apr 2020 13:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SmYokySQc4mDg5AFnuTSHPu2MaxcLIZMXu10ec67aWA=;
-        b=T2opoYpInMSpCsD8FGnwp8RshE9LSmcUdKcxZmnLcVWaLY+YkwwpiJEbo2CL+dXGQh
-         FDSq6Fguk1B/sqw5Yfb2IUgPZw+S61mN6LTusdBkdA7Zs7fehJhoGl1tg3wvYmXnXD1w
-         QD72ryeQvsJ1KZNxnLlPMDD5PINAK6oVjiQEMqi4HaTdko1Wul28U2GYxRXMBlMWwjuy
-         0qmlTZ7azXWOdtMZ4Kktw6tp6kID/Q5NrgUlVvWyXChtEQ8x6vkcTUPQcukFs18FQ2WC
-         qNW2Pax98aRgIsVCFqBSoF83wAVb+5+GasXsJg6xN0YdtUPVV6OtjpCNrw/6XYdZos9T
-         boVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SmYokySQc4mDg5AFnuTSHPu2MaxcLIZMXu10ec67aWA=;
-        b=Ko4USKdTZkNbWJ3Uh5QcFrhLMpJGl0kyDmyd5PtxYDxluSmi+A57rwXGavdUH7YtSD
-         k5accJ9VBhKW79Hmb+11WMfExHKU96kbt+s/N1aYpJdVmi8T2DhOuSYRvnltj8JX7kU/
-         YWxMazPzqUXCr0CyZuXJt87Vk+Ru58/LOQpChxCNAcRkMu0q3zEFq/FNAqfkiFtxtWXx
-         W3O2+bKlLmwg7i3MidUm+NpcVYcwNXqXsBtcodiJkS8lgGa6plGOFahAV+uS5zPVBd1H
-         w4mtxu9AU47Tj0p7feVQDIkoHtKJO0J95Zij7KnbKA5xll3XXelAq/CpVN85yATrQupm
-         69xg==
-X-Gm-Message-State: AGi0PuZu1AGRUvCENexuCrv8prIbiK44tOXMjAA0ka5CT/H+5WDZpRZY
-        fWpA7pMi7BDUcUUts0ZH/I2nU+rvpS6INiZlWKg=
-X-Google-Smtp-Source: APiQypImH1MBeCQNjKwKjxst1BQnslU5r64FY1doy8gBsgZ1iDkIJUEd6FClNazs9I3WKnl7n2NFqWTsz4jHkZ5580c=
-X-Received: by 2002:aa7:9097:: with SMTP id i23mr19183933pfa.170.1586809394372;
- Mon, 13 Apr 2020 13:23:14 -0700 (PDT)
+        Mon, 13 Apr 2020 16:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388320AbgDMUZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:25:49 -0400
+Received: from localhost (mobile-166-175-184-103.mycingular.net [166.175.184.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA2220663;
+        Mon, 13 Apr 2020 20:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586809549;
+        bh=7PcGTf+Br3iofGrHqpT1Lk86E7HQeOdsnGtnmkXmQXU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=at1uT8/PSg/+IWjPO7DOJs5nfPYZthY1ltxXmI5cn1TByUbMH4Uqus6jTmfnvKdbx
+         fPnj04MTgRm1UPZAc2+zQdLr+uHnTLQVgryUeGLtrK02GEsQpuO4MYFsO3a4+mCf8m
+         qNA5QJvKmPUCDr/YMcvS4/dfyC3ORWClhg6vO+Z4=
+Date:   Mon, 13 Apr 2020 15:25:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     devicetree@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] drivers: pci: dwc: pci-imx6: update binding to
+ generic name
+Message-ID: <20200413202546.GA147401@google.com>
 MIME-Version: 1.0
-References: <20200412183658.6755-1-mani@kernel.org> <20200412183658.6755-4-mani@kernel.org>
-In-Reply-To: <20200412183658.6755-4-mani@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 13 Apr 2020 23:23:03 +0300
-Message-ID: <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC sensor
-To:     mani@kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410004738.19668-3-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:23 AM <mani@kernel.org> wrote:
->
-> From: Manivannan Sadhasivam <mani@kernel.org>
->
-> Add devicetree OF match table support for CCS811 VOC sensor.
+If/when you repost this, please update the subject to match the
+convention:
 
-...
+  $ git log --oneline drivers/pci/controller/dwc/pci-imx6.c
+  2170a09fb4b0 PCI: imx6: Propagate errors for optional regulators
+  075af61c19cd PCI: imx6: Limit DBI register length
+  1b8df7aa7874 PCI: imx6: Allow asynchronous probing
+  87cb312777b5 PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
 
-> +#include <linux/of.h>
+As Fabio pointed out, we can't break backward compatibility without a
+good reason.
 
-Why?
-
-...
-
-> +static const struct of_device_id ccs811_dt_ids[] = {
-> +       { .compatible = "ams,ccs811" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
-
-Since it has no ugly ifdeffery...
-
->  static struct i2c_driver ccs811_driver = {
->         .driver = {
->                 .name = "ccs811",
-> +               .of_match_table = of_match_ptr(ccs811_dt_ids),
-
-...use of of_match_ptr() brings a compiler warning.
-
-Drop of_match_ptr() for good. And thus drop redundant of.h.
-
->         },
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Fri, Apr 10, 2020 at 02:47:36AM +0200, Ansuel Smith wrote:
+> Rename specific bindings to generic name.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index acfbd34032a8..4ac140e007b4 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1146,28 +1146,28 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Grab PCIe PHY Tx Settings */
+> -	if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
+> +	if (of_property_read_u32(node, "tx-deemph-gen1",
+>  				 &imx6_pcie->tx_deemph_gen1))
+>  		imx6_pcie->tx_deemph_gen1 = 0;
+>  
+> -	if (of_property_read_u32(node, "fsl,tx-deemph-gen2-3p5db",
+> +	if (of_property_read_u32(node, "tx-deemph-gen2-3p5db",
+>  				 &imx6_pcie->tx_deemph_gen2_3p5db))
+>  		imx6_pcie->tx_deemph_gen2_3p5db = 0;
+>  
+> -	if (of_property_read_u32(node, "fsl,tx-deemph-gen2-6db",
+> +	if (of_property_read_u32(node, "tx-deemph-gen2-6db",
+>  				 &imx6_pcie->tx_deemph_gen2_6db))
+>  		imx6_pcie->tx_deemph_gen2_6db = 20;
+>  
+> -	if (of_property_read_u32(node, "fsl,tx-swing-full",
+> +	if (of_property_read_u32(node, "tx-swing-full",
+>  				 &imx6_pcie->tx_swing_full))
+>  		imx6_pcie->tx_swing_full = 127;
+>  
+> -	if (of_property_read_u32(node, "fsl,tx-swing-low",
+> +	if (of_property_read_u32(node, "tx-swing-low",
+>  				 &imx6_pcie->tx_swing_low))
+>  		imx6_pcie->tx_swing_low = 127;
+>  
+>  	/* Limit link speed */
+> -	ret = of_property_read_u32(node, "fsl,max-link-speed",
+> +	ret = of_property_read_u32(node, "max-link-speed",
+>  				   &imx6_pcie->link_gen);
+>  	if (ret)
+>  		imx6_pcie->link_gen = 1;
+> -- 
+> 2.25.1
+> 
