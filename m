@@ -2,87 +2,111 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFC0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA34C352B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26436206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A516206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgDMKqt (ORCPT
+        id S1728740AbgDMKq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:46:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:4726 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727776AbgDMKqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:46:48 -0400
-IronPort-SDR: UGbTkBwiCm4AE4CFrSFl76aBolCKu38xqdZwnT/THUrvjWsYGJ2AM3WZiyNDdwD53u0ihbSNBr
- S/KgEWICXKag==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 03:46:48 -0700
-IronPort-SDR: YhG4SpOJAtuDhIzfdEXl0XuA2uTQR1KtNec9MqjZLOMdU/k+LJkJqjARAneI13RPWqNDWPO4/p
- 60GiSpmBpcPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="243507814"
-Received: from ftehrig-mobl.amr.corp.intel.com (HELO [10.209.82.92]) ([10.209.82.92])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Apr 2020 03:46:45 -0700
-Subject: Re: [PATCH -next] soundwire: intel: Make sdw_intel_init static
-To:     YueHaibing <yuehaibing@huawei.com>, vkoul@kernel.org,
-        sanyog.r.kale@intel.com
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200410115708.27708-1-yuehaibing@huawei.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <e58ff419-588b-da7b-2e36-6cf568315c57@linux.intel.com>
-Date:   Fri, 10 Apr 2020 10:25:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 13 Apr 2020 06:46:57 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:44217 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727776AbgDMKq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:46:56 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1FA72240004;
+        Mon, 13 Apr 2020 10:46:52 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 12:46:52 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
+Message-ID: <20200413104652.GE3628@piout.net>
+References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+ <20200410222658.GB3628@piout.net>
+ <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200410115708.27708-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13/04/2020 08:51:12+0000, Claudiu.Beznea@microchip.com wrote:
+> 
+> 
+> On 11.04.2020 01:26, Alexandre Belloni wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > On 10/04/2020 19:26:58+0300, Claudiu Beznea wrote:
+> >> Add RTT.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >> ---
+> >>  arch/arm/boot/dts/at91-sam9x60ek.dts | 5 +++++
+> >>  arch/arm/boot/dts/sam9x60.dtsi       | 7 +++++++
+> >>  2 files changed, 12 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
+> >> index ab3d2d9a420a..4020e79a958e 100644
+> >> --- a/arch/arm/boot/dts/at91-sam9x60ek.dts
+> >> +++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
+> >> @@ -617,6 +617,11 @@
+> >>       };
+> >>  };
+> >>
+> >> +&rtt {
+> >> +     atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
+> >> +     status = "okay";
+> > 
+> > Is there any point using a gpbr register while there is already a much
+> > better RTC in the system?
+> 
+> Only to have it also enabled.
+> 
+
+Why would one use the RTT while the RTC is far superior?
+
+> > 
+> > In any case, this diff should be merge with the other at91-sam9x60ek.dts
+> > change instead of being with the dtsi change.
+> 
+> The changes in this patch are related to enabling the RTT. The other dts
+> change is related to enabling gpbr. The RTT uses that enabled gpbr -> one
+> change per patch.
+> 
+> If you still want to merge then, I'll do it, but then it becomes mixed.
+> 
+
+This patch is already mixing add the gpbr in sam9x60ek and add the node
+in sam9x60.dtsi which is worse.
+
+Just have one patch adding the rtt node to the sam9x60.dtsi and then a
+patch adding the RTT to sam9x60ek. Because the RTT uses the gpbr, it is
+a good time to add enable the gpbr, this is a single functionnal change.
+
+Let's say that for some reason, the RTT patch on sam9x60ek has to be
+reverted, then the RTT node is still defined which is good for all the
+other eventual users.
 
 
-On 4/10/20 6:57 AM, YueHaibing wrote:
-> Fix sparse warning:
-> 
-> drivers/soundwire/intel_init.c:193:6: warning:
->   symbol 'sdw_intel_init' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/soundwire/intel_init.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-> index 4b769409f6f8..ad7053463889 100644
-> --- a/drivers/soundwire/intel_init.c
-> +++ b/drivers/soundwire/intel_init.c
-> @@ -190,7 +190,8 @@ static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
->    * This scans the namespace and creates SoundWire link controller devices
->    * based on the info queried.
->    */
-> -void *sdw_intel_init(acpi_handle *parent_handle, struct sdw_intel_res *res)
-> +static void *sdw_intel_init(acpi_handle *parent_handle,
-> +			    struct sdw_intel_res *res)
-
-This declaration has been this way since 2017, there are no users and it 
-will be removed with the Intel patchsets, so fixing this warning doesn't 
-really add much value. No sustained objection though.
-
->   {
->   	acpi_status status;
->   
-> 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
