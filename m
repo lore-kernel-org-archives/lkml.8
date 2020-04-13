@@ -2,231 +2,122 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF5BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A08C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BE520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LiW9TWY6"
+	by mail.kernel.org (Postfix) with ESMTP id 782F820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgDMIff (ORCPT
+        id S1728376AbgDMIfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:35:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:40938 "EHLO
+        Mon, 13 Apr 2020 04:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbgDMILB (ORCPT
+        with ESMTP id S1729339AbgDMIUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:11:01 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40211C00860E;
-        Mon, 13 Apr 2020 01:04:59 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F06C9001913BA8A68E69387.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:c900:1913:ba8a:68e6:9387])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AB4B41EC0C5C;
-        Mon, 13 Apr 2020 10:04:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586765097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NtPO5LzemSA3ICkOs6m1ba4SCa7L4ISc43jbxALQ8Eo=;
-        b=LiW9TWY65xGpOpMp70AGqFiT+xVtj2UulV/4AIQ88A2mmw52OenPNvt84zJTmXQ7bqMzGL
-        zhBkQqATm2LMmz85N6xLixb3fl93koLptHv/GK7iGITPLXQOTiYA/vG270sn9ouOu+R2FU
-        JQU+EnPno3Dy9bJNMibbKFZ/Eah3XRc=
-Date:   Mon, 13 Apr 2020 10:04:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     David Miller <davem@davemloft.net>, leon@kernel.org
-Cc:     kuba@kernel.org, thomas.lendacky@amd.com,
-        keyur@os.amperecomputing.com, pcnet32@frontier.com,
-        vfalico@gmail.com, j.vosburgh@gmail.com, linux-acenic@sunsite.dk,
-        mripard@kernel.org, heiko@sntech.de, mark.einon@gmail.com,
-        chris.snook@gmail.com, linux-rockchip@lists.infradead.org,
-        iyappan@os.amperecomputing.com, irusskikh@marvell.com,
-        dave@thedillows.org, netanel@amazon.com,
-        quan@os.amperecomputing.com, jcliburn@gmail.com,
-        LinoSanfilippo@gmx.de, linux-arm-kernel@lists.infradead.org,
-        andreas@gaisler.com, andy@greyhouse.net, netdev@vger.kernel.org,
-        thor.thayer@linux.intel.com, linux-kernel@vger.kernel.org,
-        ionut@badula.org, akiyano@amazon.com, jes@trained-monkey.org,
-        nios2-dev@lists.rocketboards.org, wens@csie.org
-Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
-Message-ID: <20200413080452.GA3772@zn.tnic>
-References: <20200413045555.GE334007@unreal>
- <20200412.220739.516022706077351913.davem@davemloft.net>
- <20200413052637.GG334007@unreal>
- <20200412.223604.1160930629964379276.davem@davemloft.net>
+        Mon, 13 Apr 2020 04:20:19 -0400
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F19EC008612;
+        Mon, 13 Apr 2020 01:20:19 -0700 (PDT)
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03D8IFTw003688;
+        Mon, 13 Apr 2020 04:20:19 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30bat4p92t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Apr 2020 04:20:19 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03D8KI2D001797
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 13 Apr 2020 04:20:18 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 13 Apr 2020 04:20:17 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 13 Apr 2020 04:20:17 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 13 Apr 2020 04:20:17 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03D8KEka026212;
+        Mon, 13 Apr 2020 04:20:15 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <alexandru.tachici@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3 2/2] iio: adc: ad7192: move ad7192_of_match table closer to the end of the file
+Date:   Mon, 13 Apr 2020 11:20:44 +0300
+Message-ID: <20200413082044.81101-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200412.223604.1160930629964379276.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-13_02:2020-04-12,2020-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 10:36:04PM -0700, David Miller wrote:
-> From: Leon Romanovsky <leon@kernel.org>
-> Date: Mon, 13 Apr 2020 08:26:37 +0300
-> 
-> > How do you want us to handle it? Boris resend, me to send, you to fix?
-> 
-> Anyone other than me can do it ;-)
+The change is more cosmetic. There is no need to reference this table in
+the probe function since 'of_device_get_match_data' is used, which obtains
+this information from the driver object.
 
-Ok, here's what I'm thinking: that vermagic.h is normally automatically
-included in the *mod.c as part of the module creation, see add_header()
-in modpost.c.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/adc/ad7192.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-So then perhaps drivers should not use it directly due to the current
-inclusion order:
-
-linux/module.h includes asm/module.h and that arch-specific header
-defines MODULE_VERMAGIC* for the respective arch.
-
-linux/vermagic.h defines all those fallbacks for those MODULE_VERMAGIC*
-things and if the inclusion order is swapped - we get the redefinition
-warning.
-
-Yesterday I tried the below - basically get rid of all the remaining
-includers of linux/vermagic.h but two are left:
-
-drivers/net/ethernet/hisilicon/hns3/hns3_enet.c:18:#include <linux/vermagic.h>
-drivers/net/ethernet/netronome/nfp/nfp_main.c:17:#include <linux/vermagic.h>
-
-because both use VERMAGIC_STRING directly.
-
-So,
-
-* one could either allow that and sort the inclusion order so that, for
-example, asm/module.h includes linux/vermagic.h and thus the fallbacks
-are there present.
-
-or
-
-* remove all uses of VERMAGIC_STRING from the drivers, add a header
-guard which prevents people from using it directly and leave
-VERMAGIC_STRING only to the internal module machinery in the kernel.
-
-Judging by how only a handful of old drivers are even using that,
-perhaps not too far fetched.
-
-In any case, this needs a maintainer decision.
-
-Leon, if you wanna do it whatever you guys end up agreeing on, just go
-ahead and submit the patches - it's not like I don't have anything else
-on the TODO :-) Just add a Reported-by: me and that should be enough.
-
-If you're busy too, lemme know and I'll put it on my todo then.
-
-Thx.
-
-diff --git a/drivers/net/bonding/bonding_priv.h b/drivers/net/bonding/bonding_priv.h
-index 45b77bc8c7b3..48cdf3a49a7d 100644
---- a/drivers/net/bonding/bonding_priv.h
-+++ b/drivers/net/bonding/bonding_priv.h
-@@ -14,7 +14,7 @@
+diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+index 7e8662c5cb0e..cef61f962e60 100644
+--- a/drivers/iio/adc/ad7192.c
++++ b/drivers/iio/adc/ad7192.c
+@@ -908,15 +908,6 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+ 	return 0;
+ }
  
- #ifndef _BONDING_PRIV_H
- #define _BONDING_PRIV_H
--#include <linux/vermagic.h>
-+#include <generated/utsrelease.h>
+-static const struct of_device_id ad7192_of_match[] = {
+-	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
+-	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
+-	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
+-	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(of, ad7192_of_match);
+-
+ static int ad7192_probe(struct spi_device *spi)
+ {
+ 	struct ad7192_state *st;
+@@ -1050,6 +1041,15 @@ static int ad7192_remove(struct spi_device *spi)
+ 	return 0;
+ }
  
- #define DRV_NAME	"bonding"
- #define DRV_DESCRIPTION	"Ethernet Channel Bonding Driver"
-diff --git a/drivers/net/ethernet/3com/3c509.c b/drivers/net/ethernet/3com/3c509.c
-index b762176a1406..139d0120f511 100644
---- a/drivers/net/ethernet/3com/3c509.c
-+++ b/drivers/net/ethernet/3com/3c509.c
-@@ -85,7 +85,6 @@
- #include <linux/device.h>
- #include <linux/eisa.h>
- #include <linux/bitops.h>
--#include <linux/vermagic.h>
- 
- #include <linux/uaccess.h>
- #include <asm/io.h>
-diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
-index 90312fcd6319..47b4215bb93b 100644
---- a/drivers/net/ethernet/3com/3c515.c
-+++ b/drivers/net/ethernet/3com/3c515.c
-@@ -22,7 +22,6 @@
- 
- */
- 
--#include <linux/vermagic.h>
- #define DRV_NAME		"3c515"
- 
- #define CORKSCREW 1
-diff --git a/drivers/net/ethernet/adaptec/starfire.c b/drivers/net/ethernet/adaptec/starfire.c
-index 2db42211329f..a64191fc2af9 100644
---- a/drivers/net/ethernet/adaptec/starfire.c
-+++ b/drivers/net/ethernet/adaptec/starfire.c
-@@ -45,7 +45,6 @@
- #include <asm/processor.h>		/* Processor type for cache alignment. */
- #include <linux/uaccess.h>
- #include <asm/io.h>
--#include <linux/vermagic.h>
- 
- /*
-  * The current frame processor firmware fails to checksum a fragment
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index 588c62e9add7..3ed150512091 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -6,7 +6,7 @@
- #include <linux/module.h>
- #include <linux/netdevice.h>
- #include <linux/utsname.h>
--#include <linux/vermagic.h>
-+#include <generated/utsrelease.h>
- 
- #include "ionic.h"
- #include "ionic_bus.h"
-diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test_power.c
-index 65c23ef6408d..b3c05ff05783 100644
---- a/drivers/power/supply/test_power.c
-+++ b/drivers/power/supply/test_power.c
-@@ -16,7 +16,7 @@
- #include <linux/power_supply.h>
- #include <linux/errno.h>
- #include <linux/delay.h>
--#include <linux/vermagic.h>
-+#include <generated/utsrelease.h>
- 
- enum test_power_id {
- 	TEST_AC,
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 89d0b1827aaf..adab97e500cf 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -17,7 +17,6 @@
- #include <linux/phy.h>
- #include <linux/bitops.h>
- #include <linux/uaccess.h>
--#include <linux/vermagic.h>
- #include <linux/vmalloc.h>
- #include <linux/sfp.h>
- #include <linux/slab.h>
-@@ -29,6 +28,8 @@
- #include <net/flow_offload.h>
- #include <linux/ethtool_netlink.h>
- 
-+#include <generated/utsrelease.h>
++static const struct of_device_id ad7192_of_match[] = {
++	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
++	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
++	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
++	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
++	{}
++};
++MODULE_DEVICE_TABLE(of, ad7192_of_match);
 +
- #include "common.h"
- 
- /*
-
-
+ static struct spi_driver ad7192_driver = {
+ 	.driver = {
+ 		.name	= "ad7192",
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
