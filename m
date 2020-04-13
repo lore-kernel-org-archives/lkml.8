@@ -2,201 +2,167 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FBEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B08C2BB55
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:01:34 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E973206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD9E20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:01:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVgHrIm4"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 1E973206C3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJaWdMZk"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org ACD9E20678
 Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgDMC4G (ORCPT
+        id S1728469AbgDMDBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 22:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:44938 "EHLO
+        Sun, 12 Apr 2020 23:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:45800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbgDMC4F (ORCPT
+        with ESMTP id S1728460AbgDMDBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 22:56:05 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C75C0A3BE0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 19:56:04 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h25so7358049lja.10
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 19:56:04 -0700 (PDT)
+        Sun, 12 Apr 2020 23:01:32 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4118C0A3BE0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:01:32 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id j4so8189711qkc.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gYNMycTvlJ2EV1Lo7lvdVTGrDHdMYyiEd3JD336Xl10=;
-        b=BVgHrIm4GEcahLKxi/1EW1/6QdLDS4OKrZMEh1jiAFHC2C0B5FQxElY5m1u+LAZjF2
-         JLnTIzS+UC7k7aUX2Q/PA8l11nnrAD6tfzo8WZcrC2a+Y1vY6m5qU+4IzoWsu3BoNF5t
-         pvfpk2KS8cACHwvGElpYSZmL4IUaU/j3pIC038XNO622Ss7825ksr0rtPDLf6G/ZMq6P
-         TYUqdFETXA6s6mK7hEUcOi0YH45jKTucf26EbFOEofbQ5TtYVhldRH+SPBipCTMsqaRI
-         hgGJpNK6YScSa90fQZBBGj9iGKNJ2YQa4c5eNcKU/h8wysVrPdG6d6tnTKLl21tuMmZd
-         Fiuw==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9mQX+KyXjCVkEwrSR2o41b1Ot5pYdAT4bZiqTAuIYN0=;
+        b=aJaWdMZkG1cE5j/Wm8VZt8qgiOX8psJyOjp/o9CICZev/QYcRMFKDimRoNo5hH/Qu1
+         Y3jGDooRVtdbrsIBFLqBpqbsXFa85w5osXid8My4Dw8C0CbQzez1XWzW2S19AW2NqqB1
+         NlbnPlc9kqy1J5+sgGlAf24hUhfrqY7WRoq3qUHVVPzBAuBNQaCgra39URVcSZRtt0z3
+         nXLOWaDQQohYJjJZFgaDLSAg2O7r5Hsaw56MrUh501zlYBna/YdLHxz+1e8zZFEHHlvr
+         72obBKgvXHrvsYRPjFP0hHTq+EGeTFMQ2AvAwJRJazasdALpPX3XKONIb1IlKN04tn18
+         TyYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gYNMycTvlJ2EV1Lo7lvdVTGrDHdMYyiEd3JD336Xl10=;
-        b=uE3mLzx1G8xw3QJA+8ObZ7QYzJZmN3ZolrqILKTpqyWG0gzdB+XobPFT3PAtaAC8x+
-         UdQkDa6bl4fUmgYGThK7YF+fMbnI/6ZNCoHVpurBIhcBNOA4X+uvPYvPXJEh9GZPpBta
-         Kl7TrGIrqJk72XUvta3JJLYXTuF6W9zWv06Xa65gYV/R2wf48Am7nPxyxlO8iKsfTKv7
-         9HAojT3pFXlicwphZODPUjdPuN4TcRCBZJ4qcUHGPQVZnY5rMIITsTItFv0Z918aGr3v
-         dVl+iz1kXb158Hdoc0+WuZMh//mMU6TmUQh5h8xwjG1+RxN3bjao2+RSZBx8yGEO4CMH
-         xFhQ==
-X-Gm-Message-State: AGi0PubY7kmQOcssQaRuFHfCpUBwLNUF03eWZuDs6B2MEBm3929mXA8P
-        6VpJ/wqxdf0rU8nyP2rAKg7JkqVv7TXFxE8Nd7g=
-X-Google-Smtp-Source: APiQypKHr/vr0Gpf89vhDp6ifCxufaNG+KZzBgq0wae4l5a7rNDXJ682W7fLztfPJsxKuuViIi2cRYtop8hlAWIWZQk=
-X-Received: by 2002:a2e:9b07:: with SMTP id u7mr9150089lji.110.1586746562594;
- Sun, 12 Apr 2020 19:56:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9mQX+KyXjCVkEwrSR2o41b1Ot5pYdAT4bZiqTAuIYN0=;
+        b=nrFbSze9XGnFV+1Aze60NGTb0E5jSN7wx1mvYfi6M02rBub1zGc3bK3Wgb6Dfio07X
+         9BMlF4sIhpIKjEFpI4G5FFJ8P4NAnvHssBQMRRRQF7+hR9PDRhkHNjH5wdVeNn3hsOXc
+         LNf0jxqssfU/9tMCAStvXHU+M6O9I1kH0sjfml9DNFcmckgCjqkkjFjH5RnMF3DLtUD0
+         pnR2bAQOtsd5bAGgcD3JwBF0G2Gr1KTbDSKvnJuADp/5P23elCDPEmQ0NfKd6Di2oUK6
+         kUZbo1/aoV8DRh83VwLPUQ6lKKIzB6w2j7OikrYTG/Y+9mEMQZOSBMfvubEmRLIgf+Y0
+         8CSQ==
+X-Gm-Message-State: AGi0Pub9afyzAyu8PWpC2BLotghNloY0VGcQCA6GZ9liNwCUvjCfXB+7
+        0oLBy3ntOCBPbKZWpd3TZBE=
+X-Google-Smtp-Source: APiQypJZp9gK8i5BNduuh+7QfE4lAzdYgPYn7wCiXiZdGKkngk+UH8/k/2jGb1lsTCCHQFbF3an3BQ==
+X-Received: by 2002:a37:e10c:: with SMTP id c12mr5385520qkm.483.1586746891631;
+        Sun, 12 Apr 2020 20:01:31 -0700 (PDT)
+Received: from localhost.localdomain ([189.78.178.135])
+        by smtp.gmail.com with ESMTPSA id i20sm7208754qkl.135.2020.04.12.20.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Apr 2020 20:01:30 -0700 (PDT)
+From:   Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
+To:     gregkh@linuxfoundation.org, navid.emamdoost@gmail.com,
+        sylphrenadin@gmail.com, nishkadg.linux@gmail.com,
+        stephen@brennan.io, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH 1/2] staging: rtl8192u: Refactoring setKey function
+Date:   Mon, 13 Apr 2020 03:01:28 +0000
+Message-Id: <20200413030129.861-1-c.cantanheide@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
-In-Reply-To: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 13 Apr 2020 10:55:49 +0800
-Message-ID: <CADBw62pmiguVmuq334eskLAZ5CkrjxohW_fXNjNev+O1U15=OQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers/clocksource/timer-of: Remove __init markings
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Changes of the local variable value and
+modification in the seletive repetition structure.
 
-On Tue, Mar 24, 2020 at 1:59 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> From: Saravana Kannan <saravanak@google.com>
->
-> This allows timer drivers to be compiled as modules.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Signed-off-by: Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
+---
+ drivers/staging/rtl8192u/r8192U_core.c | 52 ++++++++++++--------------
+ 1 file changed, 24 insertions(+), 28 deletions(-)
 
-Do you have any comments for this patch set? Thanks.
-
-> ---
->  drivers/clocksource/timer-of.c | 17 +++++++++--------
->  drivers/clocksource/timer-of.h |  4 ++--
->  2 files changed, 11 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-> index 572da47..fd3b868 100644
-> --- a/drivers/clocksource/timer-of.c
-> +++ b/drivers/clocksource/timer-of.c
-> @@ -19,7 +19,7 @@
->   *
->   * Free the irq resource
->   */
-> -static __init void timer_of_irq_exit(struct of_timer_irq *of_irq)
-> +static void timer_of_irq_exit(struct of_timer_irq *of_irq)
->  {
->         struct timer_of *to = container_of(of_irq, struct timer_of, of_irq);
->
-> @@ -47,7 +47,7 @@ static __init void timer_of_irq_exit(struct of_timer_irq *of_irq)
->   *
->   * Returns 0 on success, < 0 otherwise
->   */
-> -static __init int timer_of_irq_init(struct device_node *np,
-> +static int timer_of_irq_init(struct device_node *np,
->                                     struct of_timer_irq *of_irq)
->  {
->         int ret;
-> @@ -91,7 +91,7 @@ static __init int timer_of_irq_init(struct device_node *np,
->   *
->   * Disables and releases the refcount on the clk
->   */
-> -static __init void timer_of_clk_exit(struct of_timer_clk *of_clk)
-> +static void timer_of_clk_exit(struct of_timer_clk *of_clk)
->  {
->         of_clk->rate = 0;
->         clk_disable_unprepare(of_clk->clk);
-> @@ -107,7 +107,7 @@ static __init void timer_of_clk_exit(struct of_timer_clk *of_clk)
->   *
->   * Returns 0 on success, < 0 otherwise
->   */
-> -static __init int timer_of_clk_init(struct device_node *np,
-> +static int timer_of_clk_init(struct device_node *np,
->                                     struct of_timer_clk *of_clk)
->  {
->         int ret;
-> @@ -146,12 +146,12 @@ static __init int timer_of_clk_init(struct device_node *np,
->         goto out;
->  }
->
-> -static __init void timer_of_base_exit(struct of_timer_base *of_base)
-> +static void timer_of_base_exit(struct of_timer_base *of_base)
->  {
->         iounmap(of_base->base);
->  }
->
-> -static __init int timer_of_base_init(struct device_node *np,
-> +static int timer_of_base_init(struct device_node *np,
->                                      struct of_timer_base *of_base)
->  {
->         of_base->base = of_base->name ?
-> @@ -165,7 +165,7 @@ static __init int timer_of_base_init(struct device_node *np,
->         return 0;
->  }
->
-> -int __init timer_of_init(struct device_node *np, struct timer_of *to)
-> +int timer_of_init(struct device_node *np, struct timer_of *to)
->  {
->         int ret = -EINVAL;
->         int flags = 0;
-> @@ -209,6 +209,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
->                 timer_of_base_exit(&to->of_base);
->         return ret;
->  }
-> +EXPORT_SYMBOL_GPL(timer_of_init);
->
->  /**
->   * timer_of_cleanup - release timer_of ressources
-> @@ -217,7 +218,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
->   * Release the ressources that has been used in timer_of_init().
->   * This function should be called in init error cases
->   */
-> -void __init timer_of_cleanup(struct timer_of *to)
-> +void timer_of_cleanup(struct timer_of *to)
->  {
->         if (to->flags & TIMER_OF_IRQ)
->                 timer_of_irq_exit(&to->of_irq);
-> diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-> index a5478f3..1b8cfac5 100644
-> --- a/drivers/clocksource/timer-of.h
-> +++ b/drivers/clocksource/timer-of.h
-> @@ -66,9 +66,9 @@ static inline unsigned long timer_of_period(struct timer_of *to)
->         return to->of_clk.period;
->  }
->
-> -extern int __init timer_of_init(struct device_node *np,
-> +extern int timer_of_init(struct device_node *np,
->                                 struct timer_of *to);
->
-> -extern void __init timer_of_cleanup(struct timer_of *to);
-> +extern void timer_of_cleanup(struct timer_of *to);
->
->  #endif
-> --
-> 1.9.1
->
-
-
+diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+index 9b8d85a4855d..87c02aee3854 100644
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -4880,7 +4880,7 @@ void EnableHWSecurityConfig8192(struct net_device *dev)
+ void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
+ 	    u8 *macaddr, u8 defaultkey, u32 *keycontent)
+ {
+-	u32 target_command = 0;
++	u32 target_command = CAM_CONTENT_COUNT * entryno |  BIT(31) | BIT(16);
+ 	u32 target_content = 0;
+ 	u16 us_config = 0;
+ 	u8 i;
+@@ -4890,39 +4890,35 @@ void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
+ 
+ 	RT_TRACE(COMP_SEC,
+ 		 "====>to %s, dev:%p, EntryNo:%d, KeyIndex:%d, KeyType:%d, MacAddr%pM\n",
+-        	 __func__, dev, entryno, keyindex, keytype, macaddr);
++		 __func__, dev, entryno, keyindex, keytype, macaddr);
+ 
+ 	if (defaultkey)
+ 		us_config |= BIT(15) | (keytype << 2);
+ 	else
+ 		us_config |= BIT(15) | (keytype << 2) | keyindex;
+ 
+-	for (i = 0; i < CAM_CONTENT_COUNT; i++) {
+-		target_command  = i + CAM_CONTENT_COUNT * entryno;
+-		target_command |= BIT(31) | BIT(16);
+-
+-		if (i == 0) { /* MAC|Config */
+-			target_content = (u32)(*(macaddr + 0)) << 16 |
+-					(u32)(*(macaddr + 1)) << 24 |
+-					(u32)us_config;
+-
+-			write_nic_dword(dev, WCAMI, target_content);
+-			write_nic_dword(dev, RWCAM, target_command);
+-		} else if (i == 1) { /* MAC */
+-			target_content = (u32)(*(macaddr + 2))	 |
+-					(u32)(*(macaddr + 3)) <<  8 |
+-					(u32)(*(macaddr + 4)) << 16 |
+-					(u32)(*(macaddr + 5)) << 24;
+-			write_nic_dword(dev, WCAMI, target_content);
+-			write_nic_dword(dev, RWCAM, target_command);
+-		} else {
+-			/* Key Material */
+-			if (keycontent) {
+-				write_nic_dword(dev, WCAMI,
+-						*(keycontent + i - 2));
+-				write_nic_dword(dev, RWCAM, target_command);
+-                	}
+-		}
++	target_content = macaddr[0] << 16 |
++			 macaddr[0] << 24 |
++			(u32)us_config;
++
++	write_nic_dword(dev, WCAMI, target_content);
++	write_nic_dword(dev, RWCAM, target_command++);
++
++	/* MAC */
++	target_content = macaddr[2]	  |
++			 macaddr[3] <<  8 |
++			 macaddr[4] << 16 |
++			 macaddr[5] << 24;
++	write_nic_dword(dev, WCAMI, target_content);
++	write_nic_dword(dev, RWCAM, target_command++);
++
++	/* Key Material */
++	if (!keycontent)
++		return;
++
++	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
++		write_nic_dword(dev, WCAMI, *keycontent++);
++		write_nic_dword(dev, RWCAM, target_command++);
+ 	}
+ }
+ 
 -- 
-Baolin Wang
+2.20.1
+
