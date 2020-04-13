@@ -2,168 +2,132 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84229C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5F2C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A52E20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F4A20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:51:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B75LEcVd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pp3345.net header.i=@pp3345.net header.b="lp0mI9+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389226AbgDMVtf (ORCPT
+        id S2389246AbgDMVvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 17:49:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53344 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbgDMVte (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 17:49:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DLhGGM120617;
-        Mon, 13 Apr 2020 21:49:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=TjE48uLAAq9aDU+ochnPRAc0jmvakJU8GSuxF56pjkI=;
- b=B75LEcVdiNgZJdi669mmZipTKtQAhSNz/JrFW6BUL7vB5ttlKUa1dsarz8y9nPO+sPON
- zwN1xTOeXpl/bvKpb/bXnGhDjSj7OblgBhqN0ZKNgJWU8OqlqkPHzLarv4Ljflnbx4Eg
- 6uM+xEvAo37yiSdjWI8uVBDgMxegasYxEeH/atOICGkWqdLxobLFgc1C0hbms67JaLZJ
- nULXu4eNsLNlCSwRp/eN4ExDbLRnKyFd9rdKVMNZTfEoXajG+4qrGqVWH1r/OfBXEo8a
- GzLu69sJDw5pxEaW24cjnu29+YoGezJI23F4P3MInHa4AMsOyw8wvfTcdiZw5v7W4Dpt CA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30b6hph25h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 21:49:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DLksnV086018;
-        Mon, 13 Apr 2020 21:47:08 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30bqkygj2u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 21:47:08 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03DLl4kW001157;
-        Mon, 13 Apr 2020 21:47:05 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Apr 2020 14:47:04 -0700
-Subject: Re: [PATCH v5] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset
-To:     "Longpeng (Mike)" <longpeng2@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-References: <20200413010342.771-1-longpeng2@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <9d32dc1b-4b94-c118-64cf-5ec47ccedbc1@oracle.com>
-Date:   Mon, 13 Apr 2020 14:47:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 13 Apr 2020 17:51:46 -0400
+Received: from saul.pp3345.net ([163.172.111.124]:56730 "EHLO saul.pp3345.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389228AbgDMVvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 17:51:42 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: dev@pp3345.net)
+        by saul.pp3345.net (Postcow) with ESMTPSA id D38089A420B;
+        Mon, 13 Apr 2020 23:43:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pp3345.net; s=saul;
+        t=1586814196; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:autocrypt;
+        bh=0Dd50Aj7Tm41xdkXFsIgBzwtxqD7/pPkBoUkuy2w2PM=;
+        b=lp0mI9+pg396qWyQOxDdLw778E9nXBjvlymgaeLMbaINrUjEBK9zn6HzoEmVmFQh6AZLCZ
+        et9rJfDCTAqy6+iFUQIhnyCK+3236NwyiAqdMByBUfIml0DITtcGbPI1cDZb7i1VUic1H2
+        D/m1ooJIIetw+U8O0zmi3/BOuTc8iqzJjJviBeQky63I+uY0XyHMMr44aVromVXvSpYOaw
+        aeOMeecNj2awTkdi4j1m72atjYphNZjX7/aSA15ytKlarXOYoRfybXL//iL3RH6kW57hoi
+        uIXSqbbLza5nQuEXytXdJ8gm1RJiejv5RWqhNQ/3y5OLOmoAigqc/9GCaHhkNA==
+From:   Yussuf Khalil <dev@pp3345.net>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     Yussuf Khalil <dev@pp3345.net>
+Subject: [PATCH 3/5] drm: Add drm_connector_state_select_rgb_quantization_range() helper
+Date:   Mon, 13 Apr 2020 23:40:24 +0200
+Message-Id: <20200413214024.46500-4-dev@pp3345.net>
+In-Reply-To: <20200413214024.46500-1-dev@pp3345.net>
+References: <20200413214024.46500-1-dev@pp3345.net>
 MIME-Version: 1.0
-In-Reply-To: <20200413010342.771-1-longpeng2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130159
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130158
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/20 6:03 PM, Longpeng(Mike) wrote:
-> From: Longpeng <longpeng2@huawei.com>
-> 
-> Our machine encountered a panic(addressing exception) after run
-> for a long time and the calltrace is:
-> RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
-> RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
-> RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
-> RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
-> RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
-> R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
-> R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
-> FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
->  [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
->  [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
->  [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
->  [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
->  [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
->  [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
->  [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
->  [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
->  ...
->  [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
->  [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
->  [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
->  [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
->  [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
->  [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
->  [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
-> 
-> For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
-> may return a wrong 'pmdp' if there is a race. Please look at the following
-> code snippet:
->     ...
->     pud = pud_offset(p4d, addr);
->     if (sz != PUD_SIZE && pud_none(*pud))
->         return NULL;
->     /* hugepage or swap? */
->     if (pud_huge(*pud) || !pud_present(*pud))
->         return (pte_t *)pud;
-> 
->     pmd = pmd_offset(pud, addr);
->     if (sz != PMD_SIZE && pmd_none(*pmd))
->         return NULL;
->     /* hugepage or swap? */
->     if (pmd_huge(*pmd) || !pmd_present(*pmd))
->         return (pte_t *)pmd;
->     ...
-> 
-> The following sequence would trigger this bug:
-> 1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
-> 1. CPU0: "pud_huge(*pud)" is false
-> 2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
-> 3. CPU0: "!pud_present(*pud)" is false, continue
-> 4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
-> However, we want CPU0 to return NULL or pudp in this case.
-> 
-> We must make sure there is exactly one dereference of pud and pmd.
-> 
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Longpeng <longpeng2@huawei.com>
+This helper can be used to determine the appropriate RGB quantization range
+based on a connector's "RGB quantization range" property and a mode.
 
-Thank you for continuing to work this!
+Signed-off-by: Yussuf Khalil <dev@pp3345.net>
+---
+ drivers/gpu/drm/drm_connector.c | 31 +++++++++++++++++++++++++++++++
+ include/drm/drm_connector.h     |  4 ++++
+ 2 files changed, 35 insertions(+)
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+index e60d3b6e5e56..d5a46bbf284e 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -2187,6 +2187,37 @@ int drm_connector_set_panel_orientation_with_quirk(
+ }
+ EXPORT_SYMBOL(drm_connector_set_panel_orientation_with_quirk);
+ 
++/**
++ * drm_connector_state_select_rgb_quantization_range - find RGB quantization
++ * range appropriate for a connector's state and mode
++ *
++ * @state: state of the connector for which to determine the range
++ * @mode: mode for which to determine the range
++ *
++ * For a given connector state (i.e., RGB quantization range property) and a
++ * given mode, determine which RGB quantization range should be used.
++ *
++ * Returns:
++ * A constant from the HDMI quantization range enum.
++ */
++enum hdmi_quantization_range drm_connector_state_select_rgb_quantization_range(
++	const struct drm_connector_state *state,
++        const struct drm_display_mode *mode)
++{
++	switch (state->rgb_quantization_range) {
++	default:
++		WARN_ON(1);
++		/* fallthrough */
++	case DRM_MODE_RGB_QUANTIZATION_RANGE_AUTOMATIC:
++		return drm_default_rgb_quant_range(mode);
++	case DRM_MODE_RGB_QUANTIZATION_RANGE_FULL:
++		return HDMI_QUANTIZATION_RANGE_FULL;
++	case DRM_MODE_RGB_QUANTIZATION_RANGE_LIMITED:
++		return HDMI_QUANTIZATION_RANGE_LIMITED;
++	}
++}
++EXPORT_SYMBOL(drm_connector_state_select_rgb_quantization_range);
++
+ int drm_connector_set_obj_prop(struct drm_mode_object *obj,
+ 				    struct drm_property *property,
+ 				    uint64_t value)
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index f605e0fbcc0e..43ce305d882f 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -42,6 +42,7 @@ struct drm_property_blob;
+ struct drm_printer;
+ struct edid;
+ struct i2c_adapter;
++struct drm_display_mode;
+ 
+ enum drm_connector_force {
+ 	DRM_FORCE_UNSPECIFIED,
+@@ -1621,6 +1622,9 @@ int drm_connector_set_panel_orientation_with_quirk(
+ 	int width, int height);
+ int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
+ 					  int min, int max);
++enum hdmi_quantization_range drm_connector_state_select_rgb_quantization_range(
++	const struct drm_connector_state *state,
++	const struct drm_display_mode *mode);
+ 
+ /**
+  * struct drm_tile_group - Tile group metadata
 -- 
-Mike Kravetz
+2.26.0
+
