@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35611C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDE4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E90620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D338F20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="azjtEAgb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Zl/2tIXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgDMP1n (ORCPT
+        id S1731011AbgDMP1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:27:43 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40258 "EHLO
+        Mon, 13 Apr 2020 11:27:52 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:40286 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730200AbgDMP1k (ORCPT
+        with ESMTP id S1730200AbgDMP1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:27:40 -0400
+        Mon, 13 Apr 2020 11:27:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1586791632; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1586791633; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ZN4uSv67NQClrE+9U7eVygZv+RQaDv0OlQU6IUvmAW8=;
-        b=azjtEAgbWbVW38f/Ggow3q0R8zRqC+FKvLyePUeCVS1fvzQc3GmBYBYqC4n3YL7RPs8kxo
-        +mdl9p32rZu48e/KjJITwTubqsgGutBkQGSuh7p56whGHvCLZ1dRnQ74OLEIImxgyper/U
-        /fBPexyKxCkipnG+3SYg1niu9eObIF8=
+        bh=PM73Jz2DCirYQzF4P/qNEUCm+/GFIlfa4jqb8rqtShU=;
+        b=Zl/2tIXNqdt5bmNcVu0PT4l5d52zeCsbv60n1HdNAKuBrImkCuKr4BvzdUdCZJ/y54+MnF
+        8ozUm3u5v5xm0hjdEDea91ZT+ltI3T4ySa9TNerp4IiX5k/wnNQVe1IiwXSUIE3xAw3vsI
+        RxapN9qvvvqHKPV9vpH1NZY4aRKnW5M=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Rob Herring <robh+dt@kernel.org>
@@ -38,9 +38,9 @@ Cc:     od@zcrc.me,
         =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
         devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 04/13] dt-bindings: usb: ingenic,musb: Add usb-role-switch property
-Date:   Mon, 13 Apr 2020 17:26:24 +0200
-Message-Id: <20200413152633.198301-4-paul@crapouillou.net>
+Subject: [PATCH 05/13] dt-bindings: MIPS: Require SoC compatible string after board string
+Date:   Mon, 13 Apr 2020 17:26:25 +0200
+Message-Id: <20200413152633.198301-5-paul@crapouillou.net>
 In-Reply-To: <20200413152633.198301-1-paul@crapouillou.net>
 References: <20200413152633.198301-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -50,28 +50,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the common usb-role-switch boolean property to the list of the
-supported properties.
+All devicetree board files list a compatible string for the SoC after
+the compatible string of the board.
+
+Enhance the YAML format so that these SoC compatible strings appear
+aside each supported Ingenic board.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- Documentation/devicetree/bindings/usb/ingenic,musb.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/mips/ingenic/devices.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,musb.yaml b/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-index 1d6877875077..292905a8c20b 100644
---- a/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-+++ b/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-@@ -42,6 +42,9 @@ properties:
-   phys:
-     description: PHY specifier for the USB PHY
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+index 78dcf6ef3883..d1175030781a 100644
+--- a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
++++ b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+@@ -20,16 +20,20 @@ properties:
+       - description: Qi Hardware Ben NanoNote
+         items:
+           - const: qi,lb60
++          - const: ingenic,jz4740
  
-+  usb-role-switch:
-+    type: boolean
-+
- required:
-   - compatible
-   - reg
+       - description: Game Consoles Worldwide GCW Zero
+         items:
+           - const: gcw,zero
++          - const: ingenic,jz4770
+ 
+       - description: MIPS Creator CI20
+         items:
+           - const: img,ci20
++          - const: ingenic,jz4780
+ 
+       - description: YSH & ATIL General Board CU Neo
+         items:
+           - const: yna,cu1000-neo
++          - const: ingenic,x1000
+ ...
 -- 
 2.25.1
 
