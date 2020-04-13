@@ -2,131 +2,118 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D98C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBACC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A026D2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CA320735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JVE0Oy/n"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="ih91VCgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbgDMOvF (ORCPT
+        id S1729448AbgDMPAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:51:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60958 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730888AbgDMOu4 (ORCPT
+        Mon, 13 Apr 2020 11:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbgDMPAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:50:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586789456; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=uvf3bpTwOKniLL1tkFEZ8lUYaBxnlGE9DNXjmA347Xc=;
- b=JVE0Oy/nbYlWJ2cLaPDvDLUAfV066FdCQDNMkvnkmXf9zUeA08NlACv4BRhWZy1UZ2z2PdNJ
- BibB5/HMk3DptM0ViEtYVolDnwGEB99e5CvecAMiAncPyiZ8QujRhmoprcaDv9WynkXRILhO
- oIJaQ/M0oY6qo6qsQxeWZQZRU0k=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e947c4a.7f33307f5ab0-smtp-out-n01;
- Mon, 13 Apr 2020 14:50:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 85830C433BA; Mon, 13 Apr 2020 14:50:48 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A50E3C433F2;
-        Mon, 13 Apr 2020 14:50:47 +0000 (UTC)
+        Mon, 13 Apr 2020 11:00:42 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D5DC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:00:42 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i3so9555855ioo.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jy5m+JSS9axJA1aUUKOnEP/2vQVM4tf4Fj0Xx7p6asY=;
+        b=ih91VCggyLJYHB7AGsZ6Y8UgWmptcPgtxL/1bWcQ8c/TQyLZQtdr2eutN35JVVwRre
+         yrJAdJNp6g3V9UQYxxeVqx7oav9aXe1HtrKTcwzYIV44+WtEsy60H8kap/u1JGWJ/EyS
+         n1BHb3Hu1G3mxgX2vzJoMzpj0AMXtCTu1uC8q+SnCVz3O4Z7nbYlE+Or/UvGoiaoqdDf
+         BdRFU5b04t8W/+rM4BrcF+VITmOGwwbY2lGxYjMtixXJXXyjGaacOybrQNd/QmGnNxOz
+         T4cfwAb6TiCcOvibfRFjYGrYGqFQHO4jTVNm4acIJZpOYOxpwI9zi7qtQL9A/Qh+MnMl
+         OW8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jy5m+JSS9axJA1aUUKOnEP/2vQVM4tf4Fj0Xx7p6asY=;
+        b=d6keKedf2U/kTylbYZjodOEgfraXSYs70qZ0qa0iHaLQSWbdp25bLHdhLs5C0YCv+7
+         VEnH6D1HLbSFk995kRwYr3fxhNWmNTEWFNiqF63bj9T0WI38DK+ZmOwv3Epl0SH1ZCjK
+         keZ8FC6uJFw3wIEdSB59KqebMp/40x1+pKEoI42bQyTImEknaPW2Xva1IwNdDO85F4h6
+         DQt8xlKRtPvx5+lfem3jmps8OqN36yzpvurHT7vvmEW6QnkXWVhcwr0pI5KZWsHLiqPg
+         WyjYbfd5AvkyUVi1IFdWAleq2C4eJtDgq57/tpu5CKubHMq1dpgSlM/4feSD/YqxONJV
+         IvZw==
+X-Gm-Message-State: AGi0PuZfj/A8pmbYQaIxlwuKCUCFDYQS0jb4fl7IVrjbogycTzW0ujnG
+        SOiA19OH85+RmF7lMddwLwd7BdRQzd3TI+f0QkXJjqiz7jRJsXpN
+X-Google-Smtp-Source: APiQypJnvqVsqGf2509fS+CvuSUhzf5Rmrje0bxZeL6I5VgIZYAnEUO6Ygp01Sen4+8CSk4PHw9K6hMdtr/ZHTk9srQ=
+X-Received: by 2002:a02:650f:: with SMTP id u15mr16677578jab.53.1586790041299;
+ Mon, 13 Apr 2020 08:00:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Apr 2020 20:20:47 +0530
-From:   kgunda@codeaurora.org
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Rob Herring <robh@kernel.org>, bjorn.andersson@linaro.org,
-        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings to
- .yaml format
-In-Reply-To: <20200406085024.GF30614@dell>
-References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
- <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
- <20200331175401.GA9791@bogus>
- <ac8f25113a3bb233c11fd7cd9e62c2cf@codeaurora.org>
- <20200403114651.m6rholzufzqinanc@holly.lan> <20200406085024.GF30614@dell>
-Message-ID: <4fb0643342e512a248f57198cbafe50c@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200406121008.62903-1-songmuchun@bytedance.com> <xm26imico4wg.fsf@google.com>
+In-Reply-To: <xm26imico4wg.fsf@google.com>
+From:   =?UTF-8?B?5a6L54mn5pil?= <songmuchun@bytedance.com>
+Date:   Mon, 13 Apr 2020 23:00:04 +0800
+Message-ID: <CAMZfGtXjvKdKUVtNKWqLd01PATArMezumm+gX+edLXuRtQ6eiA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] sched/fair: Fix call walk_tg_tree_from()
+ without hold rcu_lock
+To:     Benjamin Segall <bsegall@google.com>, mingo@kernel.org,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, mgorman@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-06 14:20, Lee Jones wrote:
-> On Fri, 03 Apr 2020, Daniel Thompson wrote:
-> 
->> On Fri, Apr 03, 2020 at 04:45:49PM +0530, kgunda@codeaurora.org wrote:
->> > On 2020-03-31 23:24, Rob Herring wrote:
->> > > On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
->> > > > diff --git
->> > > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> > > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> > > > new file mode 100644
->> > > > index 0000000..8a388bf
->> > > > --- /dev/null
->> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> > > > @@ -0,0 +1,184 @@
->> > > > +# SPDX-License-Identifier: GPL-2.0-only
->> > > > +%YAML 1.2
->> > > > +---
->> > > > +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
->> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > > > +
->> > > > +title: Binding for Qualcomm Technologies, Inc. WLED driver
->> > > > +
->> > > > +maintainers:
->> > > > +  - Lee Jones <lee.jones@linaro.org>
->> > >
->> > > Should be the h/w owner (you), not who applies patches.
->> > >
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> 
->> If you agree on all points raised I doubt there is any need for a 
->> point
->> by point reply since everyone who reads it will have to scroll down
->> simply to find out that you agree on all points.
->> 
->> Better just to acknowledge the feedback and reply to the first one
->> saying you'll agree on all points and will address all feedback in the
->> next revision (and then trim the reply to keep it short).
-> 
-> Or better still, just submit the next revision with all the fixes. :)
-Noted.
+On Tue, Apr 7, 2020 at 2:17 AM <bsegall@google.com> wrote:
+>
+> Muchun Song <songmuchun@bytedance.com> writes:
+>
+> > The walk_tg_tree_from() caller must hold rcu_lock, but the caller
+> > do not call rcu_read_lock() in the unthrottle_cfs_rq(). The
+> > unthrottle_cfs_rq() is used in 3 places. There are
+> > distribute_cfs_runtime(), unthrottle_offline_cfs_rqs() and
+> > tg_set_cfs_bandwidth(). The former 2 already hold the rcu lock,
+> > but the last one does not. So fix it with calling rcu_read_lock()
+> > in the unthrottle_cfs_rq().
+>
+> It might be a tiny bit better to put it in the tg_set_cfs_bandwidth
+> instead, but the other two sources were kinda by accident, so this is
+> reasonable too.
+>
+> Reviewed-by: Ben Segall <bsegall@google.com>
+>
+> >
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> > ---
+> >  kernel/sched/fair.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 6f05843c76d7d..870853c47b63c 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -4782,7 +4782,9 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+> >       raw_spin_unlock(&cfs_b->lock);
+> >
+> >       /* update hierarchical throttle state */
+> > +     rcu_read_lock();
+> >       walk_tg_tree_from(cfs_rq->tg, tg_nop, tg_unthrottle_up, (void *)rq);
+> > +     rcu_read_unlock();
+> >
+> >       if (!cfs_rq->load.weight)
+> >               return;
+
+Ping guys?
+
+-- 
+Yours,
+Muchun
