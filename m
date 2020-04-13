@@ -2,108 +2,188 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CE4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61101C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23CE20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C9820774
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="2BcCxaxN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ha1viH90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgDMOrt (ORCPT
+        id S1730854AbgDMOt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbgDMOrs (ORCPT
+        Mon, 13 Apr 2020 10:49:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43282 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728185AbgDMOt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:47:48 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDBF8C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:47:48 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id n10so4588083pff.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:47:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Sm2TzUdkC6hw1ndCjQ7aP7HJefqahFEuBiubec5j08=;
-        b=2BcCxaxNRSFHLmG0N4cIxzZa98Q3C9wp71K/ERLhsbyo/1uKurISkkAOutnvBWrlUQ
-         h+jd3XAmujnuxzWNzdbj75eOQBKO2377ULkRLYQ5YWkl9OlAMTT4YKjv8K4OsSPVVTq4
-         8ULUEE39/AbzECqh4NBsK3ohbTDL2yB4b7XLctibU0JwtW2lCTp/3WesibNL02Ce4so+
-         GfYGEu0C+K2rYU89gJOk1rPQKbnjz35t22uf51e9MewfEZ0cirJUxu40/MhWW6/4WzbT
-         QEaS39qTrZiQtFnDq/lOLCVDZ63poHJVKHTW0TlHtIWrovtk29tsnXtLhS6bXSwuhM/j
-         VzHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Sm2TzUdkC6hw1ndCjQ7aP7HJefqahFEuBiubec5j08=;
-        b=eQyztBBLWlo/OPO7qP3BqEybuZBUILHzw7kVki7jqar8wHydd9Y9MoHUAeyQK2dS+m
-         0KkWIEbG5+7V/S7BxMo6KzFC0aSt3uk+YB5gHA/BQbO7H2jfAQ4f+gUEa911V1yi+6Z5
-         r5QywnSftn3NH28NH/ffm/REG46z97KxyI0viw+SdMG/viifWbsXP3xEsrWRODJOoajR
-         wnDrW5N755ohApM909XW3NL7b7Qqp3Bq8h602Sjfs0XKTIIcajHjLKIzhwAAMMCyP5BP
-         AQLtJLxxWTs1in98ez6WvrAA78DcwTXMJm/JThkPyJJywccX00J488LCZm16vUoZRjmH
-         LqYQ==
-X-Gm-Message-State: AGi0Pube8h0pCBYBgmfLntS2wzdlfCwcuAX7rUtNIoWPB5lo539oOyC9
-        rfrw5DIyJV3kOtMQXQphjhw2+Q==
-X-Google-Smtp-Source: APiQypL6KPqZFybu6lwtYsU35C+jXJEjwanQwqw1PlNI4ppX9nkOq/wc0h4AoWUIWz4UdkkAAmpC+Q==
-X-Received: by 2002:a63:1053:: with SMTP id 19mr17941569pgq.60.1586789268356;
-        Mon, 13 Apr 2020 07:47:48 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.220.73])
-        by smtp.gmail.com with ESMTPSA id g185sm2981601pfb.6.2020.04.13.07.47.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Apr 2020 07:47:47 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, mingo@kernel.org
-Cc:     peterz@infradead.org, shile.zhang@linux.alibaba.com,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] x86/unwind: Make some variables static
-Date:   Mon, 13 Apr 2020 22:47:27 +0800
-Message-Id: <20200413144727.51258-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Mon, 13 Apr 2020 10:49:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586789364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+5eENFL+xFtZoGHWDZ5E8Yp9YG5Rnosv7zY1Jfb/mgA=;
+        b=Ha1viH909cYt7UakKVGJDGDmSCJYq6myaoE1gGJHHEL3l/3/XtnAYCKkVqpdrMRtq2/ek0
+        7d81GrOTGMvsD0+syrMgQ7AqsU219jgGcVjWXVPWJDW52EPh6/1XRE8aCyethK0otb0dsQ
+        sfAm9lmG7hZfy7r0LIc211QstZJt9Ug=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-FbJpKWs6NdC9QrrkNG3y5w-1; Mon, 13 Apr 2020 10:49:22 -0400
+X-MC-Unique: FbJpKWs6NdC9QrrkNG3y5w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2CB2107ACC9;
+        Mon, 13 Apr 2020 14:49:20 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-48.phx2.redhat.com [10.3.114.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F2F9D5D9C9;
+        Mon, 13 Apr 2020 14:49:16 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 10:49:15 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Josh Don <joshdon@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Paul Turner <pjt@google.com>,
+        Huaixin Chang <changhuaixin@linux.alibaba.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] sched: remove distribute_running from CFS bandwidth
+Message-ID: <20200413144915.GB2517@lorien.usersys.redhat.com>
+References: <20200410225208.109717-1-joshdon@google.com>
+ <20200410225208.109717-3-joshdon@google.com>
+ <CABk29NtBxtJeAowLTGC4xQRD5MNtoiKLTLV7O3zLWp1CtW4nvg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABk29NtBxtJeAowLTGC4xQRD5MNtoiKLTLV7O3zLWp1CtW4nvg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variables are local to the source and do not need to be
-in global scope, so make them static.
+Hi Josh,
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- arch/x86/kernel/unwind_orc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Sat, Apr 11, 2020 at 07:01:45PM -0700 Josh Don wrote:
+> On Fri, Apr 10, 2020 at 3:52 PM Josh Don <joshdon@google.com> wrote:
+> >
+> > This is mostly a revert of baa9be4ff.
+> >
+> > The primary use of distribute_running was to determine whether to add
+> > throttled entities to the head or the tail of the throttled list. Now
+> > that we always add to the tail, we can remove this field.
+> >
+> > The other use of distribute_running is in the slack_timer, so that we
+> > don't start a distribution while one is already running. However, even
+> > in the event that this race occurs, it is fine to have two distributions
+> > running (especially now that distribute grabs the cfs_b->lock to
+> > determine remaining quota before assigning).
+> >
+> > Signed-off-by: Josh Don <joshdon@google.com>
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index e9cc182aa97ee..0dbabc469ce2d 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -16,11 +16,11 @@ extern struct orc_entry __start_orc_unwind[];
- extern struct orc_entry __stop_orc_unwind[];
- 
- static DEFINE_MUTEX(sort_mutex);
--int *cur_orc_ip_table = __start_orc_unwind_ip;
--struct orc_entry *cur_orc_table = __start_orc_unwind;
-+static int *cur_orc_ip_table = __start_orc_unwind_ip;
-+static struct orc_entry *cur_orc_table = __start_orc_unwind;
- 
--unsigned int lookup_num_blocks;
--bool orc_init;
-+static unsigned int lookup_num_blocks;
-+static bool orc_init;
- 
- static inline unsigned long orc_ip(const int *ip)
- {
+Nice. This was more or less a hack. It's good to be able to remove it.
+I re-ran my test cases that originally caused the need for the
+distribute_running.  As expected, since there is no adding to the head
+of the queue, the behavior is the same as before this series.
+
+Reviewed-by: Phil Auld <pauld@redhat.com>
+Tested-by: Phil Auld <pauld@redhat.com>
+
+
+Cheers,
+Phil
+
+> > ---
+> >  kernel/sched/fair.c  | 13 +------------
+> >  kernel/sched/sched.h |  1 -
+> >  2 files changed, 1 insertion(+), 13 deletions(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 3fb986c52825..24b5e12efb40 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -4930,14 +4930,12 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
+> >         /*
+> >          * This check is repeated as we release cfs_b->lock while we unthrottle.
+> >          */
+> > -       while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
+> > -               cfs_b->distribute_running = 1;
+> > +       while (throttled && cfs_b->runtime > 0) {
+> >                 raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> >                 /* we can't nest cfs_b->lock while distributing bandwidth */
+> >                 distribute_cfs_runtime(cfs_b);
+> >                 raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> >
+> > -               cfs_b->distribute_running = 0;
+> >                 throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+> >         }
+> >
+> > @@ -5051,10 +5049,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+> >         /* confirm we're still not at a refresh boundary */
+> >         raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> >         cfs_b->slack_started = false;
+> > -       if (cfs_b->distribute_running) {
+> > -               raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> > -               return;
+> > -       }
+> >
+> >         if (runtime_refresh_within(cfs_b, min_bandwidth_expiration)) {
+> >                 raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> > @@ -5064,9 +5058,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+> >         if (cfs_b->quota != RUNTIME_INF && cfs_b->runtime > slice)
+> >                 runtime = cfs_b->runtime;
+> >
+> > -       if (runtime)
+> > -               cfs_b->distribute_running = 1;
+> > -
+> >         raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> >
+> >         if (!runtime)
+> > @@ -5075,7 +5066,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+> >         distribute_cfs_runtime(cfs_b);
+> >
+> >         raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> > -       cfs_b->distribute_running = 0;
+> >         raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> >  }
+> >
+> > @@ -5217,7 +5207,6 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+> >         cfs_b->period_timer.function = sched_cfs_period_timer;
+> >         hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> >         cfs_b->slack_timer.function = sched_cfs_slack_timer;
+> > -       cfs_b->distribute_running = 0;
+> >         cfs_b->slack_started = false;
+> >  }
+> >
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index db3a57675ccf..7198683b2869 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -349,7 +349,6 @@ struct cfs_bandwidth {
+> >
+> >         u8                      idle;
+> >         u8                      period_active;
+> > -       u8                      distribute_running;
+> >         u8                      slack_started;
+> >         struct hrtimer          period_timer;
+> >         struct hrtimer          slack_timer;
+> > --
+> > 2.26.0.110.g2183baf09c-goog
+> >
+> 
+> +pauld@redhat.com
+> 
+
 -- 
-2.11.0
 
