@@ -2,102 +2,181 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E20C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F521C2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 01:04:10 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6965820709
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:52:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 6965820709
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=suse.de
+	by mail.kernel.org (Postfix) with ESMTP id EE56E20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 01:04:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org EE56E20732
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgDMAwU (ORCPT
+        id S1726911AbgDMBEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 20:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:53016 "EHLO
+        Sun, 12 Apr 2020 21:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:54934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgDMAwT (ORCPT
+        with ESMTP id S1726879AbgDMBEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 20:52:19 -0400
-Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113E9C0A3BE0;
-        Sun, 12 Apr 2020 17:52:20 -0700 (PDT)
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B2654AEC3;
-        Mon, 13 Apr 2020 00:52:17 +0000 (UTC)
-Subject: Re: linux-next: manual merge of the realtek tree with Linus' tree
-To:     Joe Perches <joe@perches.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>
-References: <20200413085034.5e77f236@canb.auug.org.au>
- <dbdc1f6b-faf8-7d0d-7730-4ae3f5610dde@suse.de>
- <8194c2197b9d57f6c37cc6417c9dc9b310732e6b.camel@perches.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <539791a5-9b5f-4969-4dda-6f10ea11b9cd@suse.de>
-Date:   Mon, 13 Apr 2020 02:52:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 12 Apr 2020 21:04:08 -0400
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97ACDC0A3BE0;
+        Sun, 12 Apr 2020 18:04:07 -0700 (PDT)
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C9C895BBA84481540FD5;
+        Mon, 13 Apr 2020 09:04:05 +0800 (CST)
+Received: from DESKTOP-27KDQMV.china.huawei.com (10.173.228.124) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 13 Apr 2020 09:03:57 +0800
+From:   "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     Longpeng <longpeng2@huawei.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v5] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
+Date:   Mon, 13 Apr 2020 09:03:42 +0800
+Message-ID: <20200413010342.771-1-longpeng2@huawei.com>
+X-Mailer: git-send-email 2.25.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <8194c2197b9d57f6c37cc6417c9dc9b310732e6b.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.228.124]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Joe,
+From: Longpeng <longpeng2@huawei.com>
 
-Am 13.04.20 um 02:27 schrieb Joe Perches:
-> One of the lines changed was from 2017.
-> 
-> d6656fa4 (Andreas Färber     2017-10-05 03:59:15 +0200 2263) F: arch/arm/mach-realtek/
-> 
-> Is that commit ever going forward?
-> 
-> commit d6656fa4c6215b293d23ed7242ced83a2fce1fec
-> Author: Andreas Färber <afaerber@suse.de>
-> Date:   Thu Oct 5 03:59:15 2017 +0200
-> 
->      ARM: Prepare Realtek RTD1195
->      
->      Introduce ARCH_REALTEK Kconfig option also for 32-bit Arm.
->      
->      Override the text offset to cope with boot ROM occupying first 0xa800
->      bytes and further reservations up to 0xf4000 (compare Device Tree).
->      
->      Add a custom machine_desc to enforce memory carveout for I/O registers.
->      
->      Signed-off-by: Andreas Färber <afaerber@suse.de>
+Our machine encountered a panic(addressing exception) after run
+for a long time and the calltrace is:
+RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
+RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
+RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
+RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
+RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
+R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
+R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
+FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
+ [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
+ [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
+ [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
+ [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
+ [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
+ [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
+ [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
+ [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
+ ...
+ [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
+ [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
+ [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
+ [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
+ [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
+ [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
+ [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
 
-It was in a late pull request for 5.6 but missed it; Olof wanted to 
-merge it for 5.7 instead, but apparently that didn't happen either, so 
-I've rebased it for 5.8 earlier today.
+For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
+may return a wrong 'pmdp' if there is a race. Please look at the following
+code snippet:
+    ...
+    pud = pud_offset(p4d, addr);
+    if (sz != PUD_SIZE && pud_none(*pud))
+        return NULL;
+    /* hugepage or swap? */
+    if (pud_huge(*pud) || !pud_present(*pud))
+        return (pte_t *)pud;
 
-For the record, the conflict came from someone reordering entries in my 
-MAINTAINERS section, without notifying me.
+    pmd = pmd_offset(pud, addr);
+    if (sz != PMD_SIZE && pmd_none(*pmd))
+        return NULL;
+    /* hugepage or swap? */
+    if (pmd_huge(*pmd) || !pmd_present(*pmd))
+        return (pte_t *)pmd;
+    ...
 
-Note that I have even older gems hidden in my branches: Infineon 
-XMC4500, Spansion/Cypress/Infineon FM4, Andromeda Box Edge, ... All 
-requires time and desk space.
+The following sequence would trigger this bug:
+1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
+1. CPU0: "pud_huge(*pud)" is false
+2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
+3. CPU0: "!pud_present(*pud)" is false, continue
+4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
+However, we want CPU0 to return NULL or pudp in this case.
 
-Regards,
-Andreas
+We must make sure there is exactly one dereference of pud and pmd.
 
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Longpeng <longpeng2@huawei.com>
+---
+v4 -> v5:
+  fix a bug of on i386
+v3 -> v4:
+  fix a typo s/p4g/p4d.  [Jason]
+v2 -> v3:
+  make sure p4d/pud/pmd be dereferenced once. [Jason]
+
+---
+ mm/hugetlb.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index cd45915..bcabbe0 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5365,8 +5365,8 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ {
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+-	pud_t *pud;
+-	pmd_t *pmd;
++	pud_t *pud, pud_entry;
++	pmd_t *pmd, pmd_entry;
+ 
+ 	pgd = pgd_offset(mm, addr);
+ 	if (!pgd_present(*pgd))
+@@ -5376,17 +5376,19 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 		return NULL;
+ 
+ 	pud = pud_offset(p4d, addr);
+-	if (sz != PUD_SIZE && pud_none(*pud))
++	pud_entry = READ_ONCE(*pud);
++	if (sz != PUD_SIZE && pud_none(pud_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pud_huge(*pud) || !pud_present(*pud))
++	if (pud_huge(pud_entry) || !pud_present(pud_entry))
+ 		return (pte_t *)pud;
+ 
+ 	pmd = pmd_offset(pud, addr);
+-	if (sz != PMD_SIZE && pmd_none(*pmd))
++	pmd_entry = READ_ONCE(*pmd);
++	if (sz != PMD_SIZE && pmd_none(pmd_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pmd_huge(*pmd) || !pmd_present(*pmd))
++	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
+ 		return (pte_t *)pmd;
+ 
+ 	return NULL;
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+1.8.3.1
+
