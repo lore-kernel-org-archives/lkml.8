@@ -2,115 +2,171 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B915FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C797C2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEBE20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4718820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:01:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XrkEZNHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgDMIfo (ORCPT
+        id S1728036AbgDMJB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:35:44 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60863 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbgDMIez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:34:55 -0400
-IronPort-SDR: odkCGTvyB8UjCzKWLrUJ3FfJP/p13xW+1OfF8VR58J2MkpPqiPebo3DuBHQMofM3IQmDbyAuUo
- lr63i/9XxwIg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 01:34:55 -0700
-IronPort-SDR: XkPBaEPk3nYKkijQE0zTcybK4lHwfULNgyRdgi64MnHpbewtkjOe0HJmutO6/sflQDAWZZzaHC
- qF1yJLGFfZAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="252813717"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by orsmga003.jf.intel.com with ESMTP; 13 Apr 2020 01:34:52 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
-        Mac Chiang <mac.chiang@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: bdw-rt5650: remove 3-channel capture support
-Date:   Mon, 13 Apr 2020 16:28:53 +0800
-Message-Id: <1586766533-18557-1-git-send-email-brent.lu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 Apr 2020 05:01:27 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55205 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728530AbgDMIZl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 04:25:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586766335; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=a6YQJ78S6nCn8YzVsbvRmz3ffyuX/j8RJJEiKzBvYyU=;
+ b=XrkEZNHq5+1yQxz+aoK3bylvctTFRlDXzJQp6hEwaO6KzMK07QLhoa21zVNkziG1Y2/Etb3x
+ vO9B8seM2VCosf6DJwkRe5ABWZKGTFpdW9TpJHjFHoONkYF27v0DN2qMtlxN/D+9v/EI09ux
+ pS62z0IsqrdQjmdBQ+0hvbrsgTs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9421fb.7fc8e7ca5c70-smtp-out-n03;
+ Mon, 13 Apr 2020 08:25:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4AA34C432C2; Mon, 13 Apr 2020 08:25:31 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 93F84C433F2;
+        Mon, 13 Apr 2020 08:25:30 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Apr 2020 13:55:30 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        swboyd@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] coresight: tmc: Read TMC mode only when TMC hw is enabled
+In-Reply-To: <9a792e3e-5a17-156d-4b59-4a3ec8f9993e@arm.com>
+References: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
+ <9a792e3e-5a17-156d-4b59-4a3ec8f9993e@arm.com>
+Message-ID: <1751aeabd22bee18d2eef0f643883265@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a constrain to exclude 3-channel capture since only 2 and 4
-channel capture are supported on the platform.
+Hi Suzuki,
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
----
- sound/soc/intel/boards/bdw-rt5650.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+On 2020-04-13 04:47, Suzuki K Poulose wrote:
+> Hi Sai,
+> 
+> On 04/09/2020 12:35 PM, Sai Prakash Ranjan wrote:
+>> Reading TMC mode register in tmc_read_prepare_etb without
+>> enabling the TMC hardware leads to async exceptions like
+>> the one in the call trace below. This can happen if the
+>> user tries to read the TMC etf data via device node without
+>> setting up source and the sink first which enables the TMC
+>> hardware in the path. So make sure that the TMC is enabled
+>> before we try to read TMC data.
+> 
+> So, one can trigger the same SError by simply :
+> 
+> $ cat /sys/bus/coresight/device/tmc_etb0/mgmt/mode
+> 
 
-diff --git a/sound/soc/intel/boards/bdw-rt5650.c b/sound/soc/intel/boards/bdw-rt5650.c
-index af2f502..eedbdad 100644
---- a/sound/soc/intel/boards/bdw-rt5650.c
-+++ b/sound/soc/intel/boards/bdw-rt5650.c
-@@ -83,6 +83,36 @@ static struct snd_soc_jack_pin mic_jack_pin = {
- 	.mask	= SND_JACK_MICROPHONE,
- };
- 
-+static const unsigned int channels[] = {
-+	2, 4,
-+};
-+
-+static const struct snd_pcm_hw_constraint_list constraints_channels = {
-+	.count = ARRAY_SIZE(channels),
-+	.list = channels,
-+	.mask = 0,
-+};
-+
-+static int bdw_fe_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+
-+	/*
-+	 * On this platform for PCM device we support,
-+	 * 2 or 4 channel capture
-+	 */
-+	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-+		snd_pcm_hw_constraint_list(runtime, 0,
-+					   SNDRV_PCM_HW_PARAM_CHANNELS,
-+					   &constraints_channels);
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_ops bdw_rt5650_fe_ops = {
-+	.startup = bdw_fe_startup,
-+};
-+
- static int broadwell_ssp0_fixup(struct snd_soc_pcm_runtime *rtd,
- 			struct snd_pcm_hw_params *params)
- {
-@@ -234,6 +264,7 @@ static struct snd_soc_dai_link bdw_rt5650_dais[] = {
- 		.name = "System PCM",
- 		.stream_name = "System Playback",
- 		.dynamic = 1,
-+		.ops = &bdw_rt5650_fe_ops,
- #if !IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
- 		.init = bdw_rt5650_rtd_init,
- #endif
+I do not see any SError when I run the above command.
+
+localhost ~ # cat /sys/bus/coresight/devices/tmc_etf0/mgmt/mode
+0x0
+
+And this is most likely due to
+
+commit cd9e3474bb793dc ("coresight: add PM runtime calls to 
+coresight_simple_func()")
+
+> And also :
+> 
+>> 
+>>   Kernel panic - not syncing: Asynchronous SError Interrupt
+>>   CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 
+>> #122
+>>   Call trace:
+>>    dump_backtrace+0x0/0x188
+>>    show_stack+0x20/0x2c
+>>    dump_stack+0xdc/0x144
+>>    panic+0x168/0x36c
+>>    panic+0x0/0x36c
+>>    arm64_serror_panic+0x78/0x84
+>>    do_serror+0x130/0x138
+>>    el1_error+0x84/0xf8
+>>    tmc_read_prepare_etb+0x88/0xb8
+>>    tmc_open+0x40/0xd8
+>>    misc_open+0x120/0x158
+>>    chrdev_open+0xb8/0x1a4
+>>    do_dentry_open+0x268/0x3a0
+>>    vfs_open+0x34/0x40
+>>    path_openat+0x39c/0xdf4
+>>    do_filp_open+0x90/0x10c
+>>    do_sys_open+0x150/0x3e8
+>>    __arm64_compat_sys_openat+0x28/0x34
+>>    el0_svc_common+0xa8/0x160
+>>    el0_svc_compat_handler+0x2c/0x38
+>>    el0_svc_compat+0x8/0x10
+>> 
+>> Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare 
+>> functions generic")
+>> Reported-by: Stephen Boyd <swboyd@chromium.org>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-tmc.c | 5 +++++
+>>   drivers/hwtracing/coresight/coresight-tmc.h | 1 +
+>>   2 files changed, 6 insertions(+)
+>> 
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c 
+>> b/drivers/hwtracing/coresight/coresight-tmc.c
+>> index 1cf82fa58289..7bae69748ab7 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+>> @@ -62,11 +62,13 @@ void tmc_flush_and_stop(struct tmc_drvdata 
+>> *drvdata)
+>>     void tmc_enable_hw(struct tmc_drvdata *drvdata)
+>>   {
+>> +	drvdata->enable = true;
+>>   	writel_relaxed(TMC_CTL_CAPT_EN, drvdata->base + TMC_CTL);
+>>   }
+>>     void tmc_disable_hw(struct tmc_drvdata *drvdata)
+>>   {
+>> +	drvdata->enable = false;
+>>   	writel_relaxed(0x0, drvdata->base + TMC_CTL);
+>>   }
+>>   @@ -102,6 +104,9 @@ static int tmc_read_prepare(struct tmc_drvdata 
+>> *drvdata)
+>>   {
+>>   	int ret = 0;
+>>   +	if (!drvdata->enable)
+>> +		return -EINVAL;
+>> +
+> 
+> Does this check always guarantee that the TMC is enabled when
+> we actually get to reading the MODE ? This needs to be done
+> under the spinlock.
+> 
+
+Ok I will make this change.
+
+Thanks,
+Sai
+
 -- 
-2.7.4
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
