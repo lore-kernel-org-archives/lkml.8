@@ -2,73 +2,106 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC2CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028DEC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:35:56 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5DB20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:23:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org EE5DB20776
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.alibaba.com
+	by mail.kernel.org (Postfix) with ESMTP id C5FFB20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:35:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C5FFB20708
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgDMCXk (ORCPT
+        id S1728184AbgDMCfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 22:23:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:39650 "EHLO
+        Sun, 12 Apr 2020 22:35:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbgDMCXk (ORCPT
+        with ESMTP id S1727520AbgDMCfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 22:23:40 -0400
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBCFC0086C7;
-        Sun, 12 Apr 2020 19:23:39 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TvJd4lf_1586744615;
-Received: from 30.27.118.45(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvJd4lf_1586744615)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 13 Apr 2020 10:23:36 +0800
-Subject: Re: [PATCH v2 0/2] support to read and tune appraise mode in runtime
-To:     Nayna <nayna@linux.vnet.ibm.com>, zhang.jia@linux.alibaba.com
-Cc:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, zhangliguang@linux.alibaba.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200409103440.47946-1-tianjia.zhang@linux.alibaba.com>
- <1e160d08-788a-0c3b-0f9f-2077e55b286a@linux.vnet.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <f892b420-315c-72aa-82d6-1a6a17b99b3a@linux.alibaba.com>
-Date:   Mon, 13 Apr 2020 10:23:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 12 Apr 2020 22:35:53 -0400
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108A7C0A3BE0;
+        Sun, 12 Apr 2020 19:35:54 -0700 (PDT)
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1F5E2A423606824BB29A;
+        Mon, 13 Apr 2020 10:35:51 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 13 Apr 2020 10:35:41 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <dennis.dalessandro@intel.com>, <mike.marciniszyn@intel.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>,
+        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] IB/qib: remove unused variable ret
+Date:   Mon, 13 Apr 2020 10:42:04 +0800
+Message-ID: <1586745724-107477-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-In-Reply-To: <1e160d08-788a-0c3b-0f9f-2077e55b286a@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch fixes below warnings reported by coccicheck
 
+drivers/infiniband/hw/qib/qib_iba7322.c:6878:8-11:
+Unneeded variable: "ret". Return "0" on line 6907
+drivers/infiniband/hw/qib/qib_iba7322.c:2378:5-8:
+Unneeded variable: "ret". Return "0" on line 2513
 
-On 2020/4/12 5:43, Nayna wrote:
-> 
-> On 4/9/20 6:34 AM, Tianjia Zhang wrote:
->> Support the read and write operations of ima_appraise by adding a
->> securifyfs file 'appraise_mode'.
->>
->> In order to tune appraise mode in runtime, writing a PKCS#7 signature
-> 
-> I am curious to know why would you tune appraise mode in runtime ?
-> 
-> Thanks & Regards,
-> 
->        - Nayna
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/infiniband/hw/qib/qib_iba7322.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Mainly used for emergency shutdown under some abnormal conditions.
+diff --git a/drivers/infiniband/hw/qib/qib_iba7322.c b/drivers/infiniband/hw/qib/qib_iba7322.c
+index 91d64dd..8bcbc88 100644
+--- a/drivers/infiniband/hw/qib/qib_iba7322.c
++++ b/drivers/infiniband/hw/qib/qib_iba7322.c
+@@ -2375,7 +2375,6 @@ static int qib_7322_bringup_serdes(struct qib_pportdata *ppd)
+ 	struct qib_devdata *dd = ppd->dd;
+ 	u64 val, guid, ibc;
+ 	unsigned long flags;
+-	int ret = 0;
+ 
+ 	/*
+ 	 * SerDes model not in Pd, but still need to
+@@ -2510,7 +2509,7 @@ static int qib_7322_bringup_serdes(struct qib_pportdata *ppd)
+ 		val | ERR_MASK_N(IBStatusChanged));
+ 
+ 	/* Always zero until we start messing with SerDes for real */
+-	return ret;
++	return 0;
+ }
+ 
+ /**
+@@ -6875,7 +6874,7 @@ static int init_sdma_7322_regs(struct qib_pportdata *ppd)
+ 	struct qib_devdata *dd = ppd->dd;
+ 	unsigned lastbuf, erstbuf;
+ 	u64 senddmabufmask[3] = { 0 };
+-	int n, ret = 0;
++	int n;
+ 
+ 	qib_write_kreg_port(ppd, krp_senddmabase, ppd->sdma_descq_phys);
+ 	qib_sdma_7322_setlengen(ppd);
+@@ -6904,7 +6903,7 @@ static int init_sdma_7322_regs(struct qib_pportdata *ppd)
+ 	qib_write_kreg_port(ppd, krp_senddmabufmask0, senddmabufmask[0]);
+ 	qib_write_kreg_port(ppd, krp_senddmabufmask1, senddmabufmask[1]);
+ 	qib_write_kreg_port(ppd, krp_senddmabufmask2, senddmabufmask[2]);
+-	return ret;
++	return 0;
+ }
+ 
+ /* sdma_lock must be held */
+-- 
+2.6.2
 
-Thanks,
-Tianjia
