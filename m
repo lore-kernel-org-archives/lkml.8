@@ -2,146 +2,120 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA65CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33CFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED5220735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OeRBeq++"
+	by mail.kernel.org (Postfix) with ESMTP id 6A48820735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586801639;
+	bh=/PoTNeVrc6MwSon4BjbQ9ftFoRVce1YIXW9yX1m6Vlg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qAiCtgiG3+ZCh8S2PJW7MopzrqsIomnlzFm/tDqumz58QtNe65nxV4jTNo4JRvM/V
+	 0O/cRcDzejkUa3OBo53o1x3D3HeK/DCmbGTzi8wTbBPXZSYkE/hOmiAFuOVrqMc12c
+	 /yElgLmDYLGARlw5ngHqDlDWZXNyxIj/xSqlGOJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387666AbgDMSLW (ORCPT
+        id S2387676AbgDMSN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:11:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59019 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387625AbgDMSLV (ORCPT
+        Mon, 13 Apr 2020 14:13:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387623AbgDMSN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:11:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586801479;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JNPtJ8c/6eKA9KomFbmLXvT7+P5Oxb4zf/a4YOxSAA0=;
-        b=OeRBeq++pn62iYpN+RAQ4DaNLbVCijjXtuZphqkgDjsZBSzHSWTVSKuN7bmLS90jMEN4pU
-        hbAUJrJgvwwbBZHntuDM1ZlhrqbnYOxdtVziJx7SKhsy96kdAqO+Z/Uuo52s+Dt0wNtiaK
-        h8O6w1bOVZrc4p2uXtNpMO2lvv7Dn5o=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-5-T8XlfXr4MnezN3ulka_p_w-1; Mon, 13 Apr 2020 14:11:18 -0400
-X-MC-Unique: T8XlfXr4MnezN3ulka_p_w-1
-Received: by mail-wr1-f72.google.com with SMTP id w12so7080975wrl.23
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:11:18 -0700 (PDT)
+        Mon, 13 Apr 2020 14:13:56 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC99C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:13:56 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m19so7237864lfq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yqrn/lvg8MKN3ZJAgVGn2Djp8dSZuTuTN4gwks6EVe4=;
+        b=AK0WRb2rySLprGYr7CAPSgeXCNnAUatM1AU+74gdeAF/7P8aEG6EI+bM0vz5uFAzJu
+         hPw6AOOr5NT3Bua/PoMqEoSGeDomSpnxfzm7gSGhETxUHe9jqJ/zM1HZfiFYg59ogWc4
+         ErzmFA3qU6zs7+PocOTTBiQoM7v3RvoMcLuNM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JNPtJ8c/6eKA9KomFbmLXvT7+P5Oxb4zf/a4YOxSAA0=;
-        b=fdepBn+rkfKOP6MWxW9O/y+lPv6OaLTjdCEiE/uaNZwYtfU+WRQfqnsQwACCcoyFhh
-         j1FPLaVTQc7qCet9h629rjCIvBo0lFf2sQo4451ebZjfgLxmz0bCzY0POl9LjPNi5TLS
-         cRXFnli4RW7L3Js7OoPRHr9X5dDTPq2C+RufOVWQdC9mq3FXOce6ZKjQdCf7Ez2sNfkO
-         Mf0/buPx/VdhAUvDPzzdnFAsrPx1hB0jE2CKXHnryJX09oLBSVBctqpgRJdQXvwGj3/m
-         6x2h3lEHLzaA660HqeOmmkBhMHoh+AyJJq6sDE9EYCre26W4OMlRd0MhvCw1691K7/O5
-         S/bA==
-X-Gm-Message-State: AGi0Pua59qpv3tZQrnmavgohB6qN6oCP29QnUPj2XXNUW9YEOE+vQl+e
-        CyXYaxmEOgWbQPxS4KOEerETSX8YTN5HaKXGNEs7F0UnQOOJEGCpPiIlrWjSii3xLH96B9JTtnV
-        Z6e/T9pXlqRVrU+xGybcfFX4I
-X-Received: by 2002:a5d:400f:: with SMTP id n15mr19758040wrp.344.1586801476915;
-        Mon, 13 Apr 2020 11:11:16 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIEWIf8yN5ITV/kXEWxKi8eoPvVfgHAhrsr1nqOLbuFlRfLczNT6LewjXD8xCJdaxf1ANDKoQ==
-X-Received: by 2002:a5d:400f:: with SMTP id n15mr19758023wrp.344.1586801476691;
-        Mon, 13 Apr 2020 11:11:16 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id 74sm2584923wrk.30.2020.04.13.11.11.15
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yqrn/lvg8MKN3ZJAgVGn2Djp8dSZuTuTN4gwks6EVe4=;
+        b=sB02OdPXX43+1pt0NLjcXmMaU1slvxfBNvGY7eK+DJbO/kLClCK008JLtSmeJp5Eaf
+         E9bezwkjAARa0xAbtWqyxJ2CspL+sTeng3JEYqgTlx4b+x1Ei+EIkiAPHg09M/0zf7Sx
+         xi9vz8U/6VJn0xH5qIszvbVJxPTHpJyJ/XZGZmKThuHkSmtRXA9fPVJooKb0fs58UJ5y
+         iMbVQPUvra0l+5XIe0pJ3rvx6dVF4zN6oh1e3oK2h2KSLw/qpJ8EAG6Ys1iVjEPoxyvc
+         5VgrD3pqLQwrseUoFVL4CcfwUv9zN3HF6uWqkChJrtD9B+x/Bq+eZZX/yo5JfmgZjFWQ
+         t6TQ==
+X-Gm-Message-State: AGi0Pub9NrgiKIQqCfHPVhetAWkSGkpJ6FMcK8PvtMpeV2qOwKfI0oFe
+        wrSpxsRzFT40wVxwL788Gx6WbRYRPGM=
+X-Google-Smtp-Source: APiQypIq2ba2wm09YiCAQVLHm3KNZAFWccl+W27CkRixmFouf50aRd5aEDzn3djWBJt6M1wShfJGSQ==
+X-Received: by 2002:a05:6512:6c8:: with SMTP id u8mr9161338lff.23.1586801634076;
+        Mon, 13 Apr 2020 11:13:54 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id w24sm7565872ljh.57.2020.04.13.11.13.51
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 11:11:15 -0700 (PDT)
-Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
- <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
- <20200413180732.GA11147@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7df7f8bd-c65e-1435-7e82-b9f4ecd729de@redhat.com>
-Date:   Mon, 13 Apr 2020 20:11:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 13 Apr 2020 11:13:52 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 198so7280513lfo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:13:51 -0700 (PDT)
+X-Received: by 2002:a19:240a:: with SMTP id k10mr11275697lfk.30.1586801631427;
+ Mon, 13 Apr 2020 11:13:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200413180732.GA11147@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 13 Apr 2020 11:13:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgbMi2+VBN0SCEw9GeoiWgui034AOBwbt_dW9tdCa3Nig@mail.gmail.com>
+Message-ID: <CAHk-=wgbMi2+VBN0SCEw9GeoiWgui034AOBwbt_dW9tdCa3Nig@mail.gmail.com>
+Subject: Re: [PATCH v3] Add kernel config option for tweaking kernel behavior.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Apr 12, 2020 at 11:34 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> Existing kernel config options are defined based on "whether you want to
+> enable this module/feature or not". And such granularity is sometimes
+> too rough-grained for fuzzing tools which try to find bugs inside each
+> module/feature.
 
-On 4/13/20 8:07 PM, Jarkko Sakkinen wrote:
-> On Mon, Apr 13, 2020 at 12:04:25PM +0200, Hans de Goede wrote:
->> Hi Jarkko,
->>
->> On 4/12/20 7:04 PM, Jarkko Sakkinen wrote:
->>> Call devm_free_irq() if we have to revert to polling in order not to
->>> unnecessarily reserve the IRQ for the life-cycle of the driver.
->>>
->>> Cc: stable@vger.kernel.org # 4.5.x
->>> Reported-by: Hans de Goede <hdegoede@redhat.com>
->>> Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
->>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>> ---
->>>    drivers/char/tpm/tpm_tis_core.c | 5 ++++-
->>>    1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
->>> index 27c6ca031e23..ae6868e7b696 100644
->>> --- a/drivers/char/tpm/tpm_tis_core.c
->>> +++ b/drivers/char/tpm/tpm_tis_core.c
->>> @@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->>>    		if (irq) {
->>>    			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
->>>    						 irq);
->>> -			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
->>> +			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
->>>    				dev_err(&chip->dev, FW_BUG
->>>    					"TPM interrupt not working, polling instead\n");
->>> +				devm_free_irq(chip->dev.parent, priv->irq,
->>> +					      chip);
->>> +			}
->>
->> My initial plan was actually to do something similar, but if the probe code
->> is actually ever fixed to work as intended again then this will lead to a
->> double free as then the IRQ-test path of tpm_tis_send() will have called
->> disable_interrupts() which already calls devm_free_irq().
->>
->> You could check for chip->irq != 0 here to avoid that.
->>
->> But it all is rather messy, which is why I went with the "#if 0" approach
->> in my patch.
-> 
-> I think it is right way to fix it. It is a bug independent of the issue
-> we are experiencing.
-> 
-> However, what you are suggesting should be done in addition. Do you have
-> a patch in place or do you want me to refine mine?
+I still detest making this a hardcoded build-time config option.
 
-I do not have a patch ready for this, if you can refine yours that would
-be great.
+A kernel parameter that sets a flag seems much simpler. More
+importantly, having it be something sanely named, and something you
+can set independently some other way, would allow a regular kernel to
+then run a fuzzer as root.
 
-Regards,
+Some kind of "not even root" flag, which might be per-process and not
+possible to clear once set (so that your _normal_ system binaries
+could still do the root-only stuff, but then you could start a fuzzing
+process with that flag set, knowing that the fuzzing process - and
+it's children - are not able to do things).
 
-Hans
+Honestly, in a perfect world, it has nothing at all to do with
+fuzzing, and people could even have some local rules like "anybody who
+came in through ssh from the network will also have this flag set".
 
+                 Linus
