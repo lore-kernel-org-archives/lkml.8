@@ -2,367 +2,257 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CE2C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B72C2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8496620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B28120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fCDpK/7I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o/NmGIxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389420AbgDMWG2 (ORCPT
+        id S2389440AbgDMWGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 18:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        Mon, 13 Apr 2020 18:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389421AbgDMWGZ (ORCPT
+        by vger.kernel.org with ESMTP id S2389421AbgDMWGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 18:06:25 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F82C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:06:25 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id x66so11217310qkd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:06:25 -0700 (PDT)
+        Mon, 13 Apr 2020 18:06:40 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB402C0A3BDC;
+        Mon, 13 Apr 2020 15:06:39 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f3so11129650ioj.1;
+        Mon, 13 Apr 2020 15:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mAW0Z9iy5jXuQEUQ85fFt5Phw6cZ235LzZx+czNX0W8=;
-        b=fCDpK/7IpFWuk90gDq037a3Qr8kgQJPuy+ycX/T+BmcDIgFKaDLN/3uiBgwhtLl0aU
-         XmDai1ltBXL6flbgcHICARZ6DEoek38JcWJzdyLjbBR61gjTBqWJxNflq5RGox++UCXg
-         DkKsA7YqS8nYz759FVM4a3emifiYebqfueY43RjksbsWiqISK5hl3YWkQZEic4KdC+N1
-         uBZmZ5p6wAOeWKODfTO58AAcdvXyECuPDT21DqpbD0ZP2+X5AODJ/7fp2TOJj6ds3cH7
-         xvsQE8R9Rpo7giHO4TcYmMWBD+I66iXSO0olabR386mG7MQCuYNgeDu0gWVhNwEUthrb
-         Z/eg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q0FiT4PHNrauiWTa+TiA0HkrLQXfbRooruY9TfJ2FBA=;
+        b=o/NmGIxXhgshMEuR2HpUR4QyraYu5ek6sHEYjx0ps9zKMzo4WA9pnjiSZ5rJdrW1QS
+         YiWMPUV7d8tbZqqvTUfsftvGa0t/FAF1lKkcrF7GW/TDCexuTObnrj0VKefFvR/CltQi
+         hAE8t1eQnsgIQUvJh31/YNEnCaVHR109Tki/xSS7qwWjcTtGtgtTxJp5+N4j1vB95pFW
+         E1m/tjVhEZP1saoYCCxXcYa46NKq/hw5NZ0h40t6kHkPa2W0WHf36zaES/L9K3rHKJ42
+         ucbLARpPrhdTbxmoQhK0LcGuLiWbiSXyN49HVPRLc4tcRndId9GSuaNfaEHPSuv5fhls
+         lP1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mAW0Z9iy5jXuQEUQ85fFt5Phw6cZ235LzZx+czNX0W8=;
-        b=lAnqKEhAulddBJQsT99vTJKdIziPyTI5J/quM6zx7tgYcIm9b235gZegVM9ceLZRz2
-         XgxhnLaOWeLWw8f26g5/6LDlJEeDex8wXtQ5UXjOqXjzMw9de1GLLjlooWADekG5LYX9
-         pnc+vjH+pIeIH/6PNB9Kpjjv4wULHwCMoQQ6EmJw4buZzPrq4PIekb4tlSKPfD8Ub6g/
-         dGhRdogF1wXI9phF1/1N0FjmQmpG/dSCbv8TviLV0XY3QKP3tiUVNJRLINH69Km6ttiX
-         tlfcjU10+/Wru4T0PLM9JoGMtlosJI8AeRwu4q47TRiGdrPh13VRh9PzzSjv6Dl/pZLg
-         5e0w==
-X-Gm-Message-State: AGi0PubrGydbfYUovcPCfqV1gfdylchPVq5BRH3d/Ct2s1sa24TGzmu7
-        jd9w4orncoOYyRB9krD4ZQnx5T/GPh7siA==
-X-Google-Smtp-Source: APiQypJ3fYEQHAc9fPVsuemrbblAMZDgJ/dqgk67+7/YyzmKDs63K3MGdD31C1cDMHa/GvY0btxtWQ==
-X-Received: by 2002:a37:7846:: with SMTP id t67mr17694923qkc.77.1586815583945;
-        Mon, 13 Apr 2020 15:06:23 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 63sm3880719qkl.64.2020.04.13.15.06.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Apr 2020 15:06:23 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200410092951.6db32bfe@canb.auug.org.au>
-Date:   Mon, 13 Apr 2020 18:06:21 -0400
-Cc:     Dmitry Vyukov <dvyukov@google.com>, Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7325374A-6072-44E4-85EE-F97FC7E8565F@lca.pw>
-References: <20200408014010.80428-1-peterx@redhat.com>
- <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
- <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
- <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
- <20200410092951.6db32bfe@canb.auug.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q0FiT4PHNrauiWTa+TiA0HkrLQXfbRooruY9TfJ2FBA=;
+        b=HCii78c0zAD3P7LKXbZf2/dQag2DL02OXpCA0nNsAzJv4bz6CPi7V0e45mRw1U+w5l
+         vr951lxxZcFXHD5sSwZa+1X5cohokqL2BKcR2ryPvUB9JpI4kI3d7XEHZT/aihxWv1HQ
+         w67b99buNCrxhocVcTGr6hX4vc4mTUn0KM7oTXDJx3kAzH5iUy0yiq4jDeEuUpmSBYdf
+         e85v1EcKk1k0x7f+3JPQxKR0+h2wJbCIgHRr7yuJo+Wy5NqWI6rbvs9fkIleZUDoncaQ
+         xiwISceq0hhAeQnEuLd9+E2nmwXf4f7jaGB63EX2aq9zNtnpRhkuHikDyWOnkVDsWkOc
+         zjSQ==
+X-Gm-Message-State: AGi0PuauWD7TbN8vrafmkGFaxVuAHjboZMi8TY7W2INH6E5/4ZDtgFAl
+        WWU5c2x6RXd0Cp/l1Pa+UFVL9XzN+lw=
+X-Google-Smtp-Source: APiQypJA10hi9vZqtDIsZxFJTW9fIstdbxsUyWlSF9gBdNQ6LapnqZYNirka8JSnwdWKL10XqFOUGg==
+X-Received: by 2002:a5d:8152:: with SMTP id f18mr18546181ioo.74.1586815599087;
+        Mon, 13 Apr 2020 15:06:39 -0700 (PDT)
+Received: from r2700x.localdomain (c-67-190-64-15.hsd1.co.comcast.net. [67.190.64.15])
+        by smtp.gmail.com with ESMTPSA id s6sm4320356ilk.67.2020.04.13.15.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 15:06:38 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 16:06:31 -0600
+From:   Jeremy Fertic <jeremyfertic@gmail.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexandru.tachici@analog.com
+Subject: Re: [PATCH v3 1/2] iio: adc: ad7192: fix null pointer de-reference
+ crash during probe
+Message-ID: <20200413220631.GA4884@r2700x.localdomain>
+References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413082044.81101-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 13, 2020 at 11:20:43AM +0300, Alexandru Ardelean wrote:
+> When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+> assignment:
+>    'indio_dev->name = spi_get_device_id(spi)->name;'
+> 
+> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+> during probe with null de-ref.
+> 
+> This change fixes this by introducing an ad7192_chip_info struct, and
+> defines all part-names [that should be assigned to indio_dev->name] in a
+> 'ad7192_chip_info_tbl' table.
+> 
+> With this change, the old 'st->devid' is also moved to be a
+> 'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
+> 'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
+> values in the new 'ad7192_chip_info_tbl'.
+> 
+> This should fix the bug, and maintain the ABI for the 'indio_dev->name'
+> field.
+> 
+> Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+> 
+> Changelog v2 -> v3:
+> * reworked patch to introduce a chip_info struct for the part-name
+> * added 2nd patch to move of-table closer to the end of the file; this
+>   patch is more cosmetic; has no fixes tag, but is on top of the previous
+> 
+> Changelog v1 -> v2:
+> * fix colon for Fixes tag
+> * updated commit title a bit; to make it longer
+> 
+>  drivers/iio/adc/ad7192.c | 61 ++++++++++++++++++++++++++++++----------
+>  1 file changed, 46 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+> index 8ec28aa8fa8a..7e8662c5cb0e 100644
+> --- a/drivers/iio/adc/ad7192.c
+> +++ b/drivers/iio/adc/ad7192.c
+> @@ -125,10 +125,10 @@
+>  #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
+>  
+>  /* ID Register Bit Designations (AD7192_REG_ID) */
+> -#define ID_AD7190		0x4
+> -#define ID_AD7192		0x0
+> -#define ID_AD7193		0x2
+> -#define ID_AD7195		0x6
+> +#define CHIPID_AD7190		0x4
+> +#define CHIPID_AD7192		0x0
+> +#define CHIPID_AD7193		0x2
+> +#define CHIPID_AD7195		0x6
+>  #define AD7192_ID_MASK		0x0F
+>  
+>  /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
+> @@ -161,7 +161,20 @@ enum {
+>     AD7192_SYSCALIB_FULL_SCALE,
+>  };
+>  
+> +enum {
+> +	ID_AD7190,
+> +	ID_AD7192,
+> +	ID_AD7193,
+> +	ID_AD7195,
+> +};
+> +
+> +struct ad7192_chip_info {
+> +	unsigned int			chip_id;
+> +	const char			*name;
+> +};
+> +
+>  struct ad7192_state {
+> +	const struct ad7192_chip_info	*chip_info;
+>  	struct regulator		*avdd;
+>  	struct regulator		*dvdd;
+>  	struct clk			*mclk;
+> @@ -172,7 +185,6 @@ struct ad7192_state {
+>  	u32				conf;
+>  	u32				scale_avail[8][2];
+>  	u8				gpocon;
+> -	u8				devid;
+>  	u8				clock_sel;
+>  	struct mutex			lock;	/* protect sensor state */
+>  	u8				syscalib_mode[8];
+> @@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+>  
+>  	id &= AD7192_ID_MASK;
+>  
+> -	if (id != st->devid)
+> +	if (id != st->chip_info->chip_id)
+>  		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
+>  			 id);
+>  
+> @@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+>  		st->mode |= AD7192_MODE_REJ60;
+>  
+>  	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
+> -	if (refin2_en && st->devid != ID_AD7195)
+> +	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
+>  		st->conf |= AD7192_CONF_REFSEL;
+>  
+>  	st->conf &= ~AD7192_CONF_CHOP;
+> @@ -859,11 +871,30 @@ static const struct iio_chan_spec ad7193_channels[] = {
+>  	IIO_CHAN_SOFT_TIMESTAMP(14),
+>  };
+>  
+> +static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
+> +	[ID_AD7190] = {
+> +		.chip_id = CHIPID_AD7190,
+> +		.name = "ad7190",
+> +	},
+> +	[ID_AD7192] = {
+> +		.chip_id = CHIPID_AD7192,
+> +		.name = "ad7192",
+> +	},
+> +	[ID_AD7193] = {
+> +		.chip_id = CHIPID_AD7193,
+> +		.name = "ad7193",
+> +	},
+> +	[ID_AD7195] = {
+> +		.chip_id = CHIPID_AD7195,
+> +		.name = "ad7195",
+> +	},
+> +};
+> +
+>  static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  {
+>  	struct ad7192_state *st = iio_priv(indio_dev);
+>  
+> -	switch (st->devid) {
+> +	switch (st->chip_info->chip_id) {
+>  	case ID_AD7193:
 
+Would it be better to change this to CHIPID_AD7193? It looks like it works
+the way you have it, but only by coincidence since it happens to be true
+that ID_AD7193 == CHIPID_AD7193.
 
-> On Apr 9, 2020, at 7:29 PM, Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Hi Linus,
->=20
-> On Thu, 9 Apr 2020 09:32:32 -0700 Linus Torvalds =
-<torvalds@linux-foundation.org> wrote:
->>=20
->> On Thu, Apr 9, 2020 at 5:55 AM Dmitry Vyukov <dvyukov@google.com> =
-wrote:
->>>=20
->>> linux-next is boot-broken for more than a month and bugs are piling
->>> onto bugs, I've seen at least 3 different ones.
->>> syzbot can't get any working linux-next build for testing for a very
->>> long time now. =20
->>=20
->> Ouch.
->>=20
->> Ok, that's not good. It means that linux-next has basically only done
->> build-testing this whole cycle.
->=20
-> Well, there are other CI's beyond syzbot .. Does syzbot only =
-build/test
-> a single kernel arch/config?
->=20
->> Stephen, Dmitry - is there some way linux-next could possibly kick =
-out
->> trees more aggressively if syzbot can't even boot?
->=20
-> Of course that could be done if I knew that there were problems.  From
-> memory and my mail archives, I was only cc'd on 3 problems by sysbot
-> since last November and they were all responded to by the appropriate
-> maintainers/developers.
->=20
-> Currently, when I am cc'd on reports, if they are also sent to who
-> seem like the appropriate people, I just file the report assuming it
-> will be dealt with.
->=20
->> Kicking trees out of linux-next and making noise if they cause syzbot
->> failures might also make some maintainers react more..
->=20
-> That may be true, but in some cases I have carried =
-fixups/reverts/older
-> versions of trees for quite some time before things get fixed.  But at
-> least if that happens, I do tend to remind people.
+Jeremy
 
-BTW, I=E2=80=99ll be adding fuzzers to my daily linux-next routines =
-where it triggers this
-io_uring/scheduler bug almost immediately, so hopefully would buy syzbot =
-some
-time to resume on linux-next.
-
-[67493.516737][T211750] BUG: unable to handle page fault for address: =
-ffffffffffffffe8
-[67493.557315][T211750] #PF: supervisor read access in kernel mode
-[67493.586726][T211750] #PF: error_code(0x0000) - not-present page
-[67493.614434][T211750] PGD f96e17067 P4D f96e17067 PUD f96e19067 PMD 0=20=
-
-[67493.644846][T211750] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[67493.674127][T211750] CPU: 55 PID: 211750 Comm: trinity-c127 Tainted: =
-G    B        L    5.7.0-rc1-next-20200413 #4
-[67493.722516][T211750] Hardware name: HP ProLiant DL380 Gen9/ProLiant =
-DL380 Gen9, BIOS P89 04/12/2017
-[67493.764925][T211750] RIP: 0010:__wake_up_common+0x98/0x290
-__wake_up_common at kernel/sched/wait.c:87
-[67493.790675][T211750] Code: 40 4d 8d 78 e8 49 8d 7f 18 49 39 fd 0f 84 =
-80 00 00 00 e8 6b bd 2b 00 49 8b 5f 18 45 31 e4 48 83 eb 18 4c 89 ff e8 =
-08 bc 2b 00 <45> 8b 37 41 f6 c6 04 75 71 49 8d 7f 10 e8 46 bd 2b 00 49 =
-8b 47 10
-[67493.881650][T211750] RSP: 0018:ffffc9000adbfaf0 EFLAGS: 00010046
-[67493.909854][T211750] RAX: 0000000000000000 RBX: ffffffffffffffe8 RCX: =
-ffffffffaa9636b8
-[67493.947131][T211750] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: =
-ffffffffffffffe8
-[67493.983829][T211750] RBP: ffffc9000adbfb40 R08: fffffbfff582c5fd R09: =
-fffffbfff582c5fd
-[67494.020861][T211750] R10: ffffffffac162fe3 R11: fffffbfff582c5fc R12: =
-0000000000000000
-[67494.059249][T211750] R13: ffff888ef82b0960 R14: ffffc9000adbfb80 R15: =
-ffffffffffffffe8
-[67494.099699][T211750] FS:  00007fdcba4c4740(0000) =
-GS:ffff889033780000(0000) knlGS:0000000000000000
-[67494.141858][T211750] CS:  0010 DS: 0000 ES: 0000 CR0: =
-0000000080050033
-[67494.172660][T211750] CR2: ffffffffffffffe8 CR3: 0000000f776a0004 CR4: =
-00000000001606e0
-[67494.209760][T211750] Call Trace:
-[67494.224720][T211750]  __wake_up_common_lock+0xea/0x150
-(inlined by) __wake_up_common_lock at kernel/sched/wait.c:124
-[67494.248753][T211750]  ? __wake_up_common+0x290/0x290
-[67494.272014][T211750]  ? lockdep_hardirqs_on+0x16/0x2c0
-[67494.296139][T211750]  __wake_up+0x13/0x20
-[67494.314946][T211750]  io_cqring_ev_posted+0x75/0xe0
-(inlined by) io_cqring_ev_posted at fs/io_uring.c:1160
-[67494.337726][T211750]  io_ring_ctx_wait_and_kill+0x1c0/0x2f0
-io_ring_ctx_wait_and_kill at fs/io_uring.c:7305
-[67494.363840][T211750]  io_uring_create+0xa8d/0x13b0
-[67494.386526][T211750]  ? io_req_defer_prep+0x990/0x990
-[67494.410119][T211750]  ? __kasan_check_write+0x14/0x20
-[67494.433646][T211750]  io_uring_setup+0xb8/0x130
-[67494.454870][T211750]  ? io_uring_create+0x13b0/0x13b0
-[67494.478342][T211750]  ? check_flags.part.28+0x220/0x220
-[67494.502947][T211750]  ? lockdep_hardirqs_on+0x16/0x2c0
-[67494.526965][T211750]  __x64_sys_io_uring_setup+0x31/0x40
-[67494.551820][T211750]  do_syscall_64+0xcc/0xaf0
-[67494.574829][T211750]  ? syscall_return_slowpath+0x580/0x580
-[67494.604591][T211750]  ? lockdep_hardirqs_off+0x1f/0x140
-[67494.628901][T211750]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-[67494.657616][T211750]  ? trace_hardirqs_off_caller+0x3a/0x150
-[67494.683999][T211750]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[67494.709982][T211750]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-[67494.737167][T211750] RIP: 0033:0x7fdcb9dd76ed
-[67494.757698][T211750] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 =
-0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c =
-24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 6b 57 2c 00 f7 d8 64 =
-89 01 48
-[67494.849485][T211750] RSP: 002b:00007ffe7fd4e4f8 EFLAGS: 00000246 =
-ORIG_RAX: 00000000000001a9
-[67494.887906][T211750] RAX: ffffffffffffffda RBX: 00000000000001a9 RCX: =
-00007fdcb9dd76ed
-[67494.924754][T211750] RDX: fffffffffffffffc RSI: 0000000000000000 RDI: =
-0000000000005d54
-[67494.961516][T211750] RBP: 00000000000001a9 R08: 0000000e31d3caa7 R09: =
-0082400004004000
-[67494.998485][T211750] R10: ffffffffffffffff R11: 0000000000000246 R12: =
-0000000000000002
-[67495.035510][T211750] R13: 00007fdcb842e058 R14: 00007fdcba4c46c0 R15: =
-00007fdcb842e000
-[67495.072679][T211750] Modules linked in: bridge stp llc nfnetlink cn =
-brd vfat fat ext4 crc16 mbcache jbd2 loop kvm_intel kvm irqbypass =
-intel_cstate intel_uncore dax_pmem intel_rapl_perf dax_pmem_core =
-ip_tables x_tables xfs sd_mod tg3 firmware_class libphy hpsa =
-scsi_transport_sas dm_mirror dm_region_hash dm_log dm_mod [last =
-unloaded: binfmt_misc]
-[67495.221120][T211750] CR2: ffffffffffffffe8
-[67495.240237][T211750] ---[ end trace f9502383d57e0e22 ]---
-[67495.265301][T211750] RIP: 0010:__wake_up_common+0x98/0x290
-[67495.290903][T211750] Code: 40 4d 8d 78 e8 49 8d 7f 18 49 39 fd 0f 84 =
-80 00 00 00 e8 6b bd 2b 00 49 8b 5f 18 45 31 e4 48 83 eb 18 4c 89 ff e8 =
-08 bc 2b 00 <45> 8b 37 41 f6 c6 04 75 71 49 8d 7f 10 e8 46 bd 2b 00 49 =
-8b 47 10
-[67495.382302][T211750] RSP: 0018:ffffc9000adbfaf0 EFLAGS: 00010046
-[67495.410551][T211750] RAX: 0000000000000000 RBX: ffffffffffffffe8 RCX: =
-ffffffffaa9636b8
-[67495.447570][T211750] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: =
-ffffffffffffffe8
-[67495.484252][T211750] RBP: ffffc9000adbfb40 R08: fffffbfff582c5fd R09: =
-fffffbfff582c5fd
-[67495.521068][T211750] R10: ffffffffac162fe3 R11: fffffbfff582c5fc R12: =
-0000000000000000
-[67495.557461][T211750] R13: ffff888ef82b0960 R14: ffffc9000adbfb80 R15: =
-ffffffffffffffe8
-[67495.594607][T211750] FS:  00007fdcba4c4740(0000) =
-GS:ffff889033780000(0000) knlGS:0000000000000000
-[67495.639332][T211750] CS:  0010 DS: 0000 ES: 0000 CR0: =
-0000000080050033
-[67495.669033][T211750] CR2: ffffffffffffffe8 CR3: 0000000f776a0004 CR4: =
-00000000001606e0
-[67495.704569][T211750] Kernel panic - not syncing: Fatal exception
-[67495.731758][T211750] Kernel Offset: 0x29800000 from =
-0xffffffff81000000 (relocation range: =
-0xffffffff80000000-0xffffffffbfffffff)
-[67495.784988][T211750] ---[ end Kernel panic - not syncing: Fatal =
-exception ]=E2=80=94
-
-Also, I=E2=80=99ll need to deal with this slub sysfs and memcg lockdep =
-splat first, so lockdep would still be functioning during the fuzzing.
-
-[ 8137.254287][T53013] WARNING: possible circular locking dependency =
-detected
-[ 8137.261231][T53013] 5.7.0-rc1-next-20200413+ #2 Not tainted
-[ 8137.266981][T53013] =
-------------------------------------------------------
-[ 8137.274016][T53013] trinity-c10/53013 is trying to acquire lock:
-[ 8137.280127][T53013] ffffffff89ad2968 (slab_mutex){+.+.}-{3:3}, at: =
-slab_attr_store+0x79/0xf0
-[ 8137.288660][T53013]=20
-[ 8137.288660][T53013] but task is already holding lock:
-[ 8137.295944][T53013] ffff9ea421940dd8 (kn->count#88){++++}-{0:0}, at: =
-kernfs_fop_write+0x10e/0x280
-[ 8137.305004][T53013]=20
-[ 8137.305004][T53013] which lock already depends on the new lock.
-[ 8137.305004][T53013]=20
-[ 8137.315347][T53013]=20
-[ 8137.315347][T53013] the existing dependency chain (in reverse order) =
-is:
-[ 8137.324470][T53013]=20
-[ 8137.324470][T53013] -> #1 (kn->count#88){++++}-{0:0}:
-[ 8137.331774][T53013]        __kernfs_remove+0x3bb/0x420
-[ 8137.336977][T53013]        kernfs_remove+0x2c/0x40
-[ 8137.341829][T53013]        sysfs_remove_dir+0x7e/0x90
-[ 8137.346988][T53013]        kobject_del+0x60/0xb0
-[ 8137.351663][T53013]        sysfs_slab_unlink+0x1c/0x20
-[ 8137.356853][T53013]        shutdown_cache+0x155/0x1c0
-[ 8137.361958][T53013]        kmemcg_cache_shutdown_fn+0xe/0x20
-[ 8137.367756][T53013]        kmemcg_workfn+0x35/0x50
-[ 8137.372705][T53013]        process_one_work+0x560/0xba0
-[ 8137.377985][T53013]        worker_thread+0x80/0x5f0
-[ 8137.382920][T53013]        kthread+0x1db/0x200
-[ 8137.387467][T53013]        ret_from_fork+0x27/0x50
-[ 8137.392296][T53013]=20
-[ 8137.392296][T53013] -> #0 (slab_mutex){+.+.}-{3:3}:
-[ 8137.399587][T53013]        __lock_acquire+0x1673/0x23a0
-[ 8137.404865][T53013]        lock_acquire+0xcd/0x410
-[ 8137.409710][T53013]        __mutex_lock+0xc9/0xbf0
-[ 8137.414561][T53013]        mutex_lock_nested+0x31/0x40
-[ 8137.419823][T53013]        slab_attr_store+0x79/0xf0
-[ 8137.424991][T53013]        sysfs_kf_write+0x9a/0xb0
-[ 8137.429919][T53013]        kernfs_fop_write+0x15e/0x280
-[ 8137.435272][T53013]        do_iter_write+0x261/0x2c0
-[ 8137.440291][T53013]        vfs_writev+0xe6/0x170
-[ 8137.444995][T53013]        do_pwritev+0xab/0xd0
-[ 8137.449731][T53013]        __x64_sys_pwritev+0x61/0x80
-[ 8137.455079][T53013]        do_syscall_64+0x91/0xb10
-[ 8137.460010][T53013]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-[ 8137.466330][T53013]=20
-[ 8137.466330][T53013] other info that might help us debug this:
-[ 8137.466330][T53013]=20
-[ 8137.476695][T53013]  Possible unsafe locking scenario:
-[ 8137.476695][T53013]=20
-[ 8137.484067][T53013]        CPU0                    CPU1
-[ 8137.489337][T53013]        ----                    ----
-[ 8137.494609][T53013]   lock(kn->count#88);
-[ 8137.498718][T53013]                                lock(slab_mutex);
-[ 8137.505130][T53013]                                =
-lock(kn->count#88);
-[ 8137.511718][T53013]   lock(slab_mutex);
-[ 8137.515594][T53013]=20
-[ 8137.515594][T53013]  *** DEADLOCK ***
-[ 8137.515594][T53013]=20
-[ 8137.523780][T53013] 3 locks held by trinity-c10/53013:
-[ 8137.528967][T53013]  #0: ffff9ea42c841430 (sb_writers#3){.+.+}-{0:0}, =
-at: vfs_writev+0x13f/0x170
-[ 8137.537847][T53013]  #1: ffff9ea3c2c9c288 (&of->mutex){+.+.}-{3:3}, =
-at: kernfs_fop_write+0xfe/0x280
-[ 8137.547149][T53013]  #2: ffff9ea421940dd8 (kn->count#88){++++}-{0:0}, =
-at: kernfs_fop_write+0x10e/0x280
-[ 8137.556554][T53013]=20
-[ 8137.556554][T53013] stack backtrace:
-[ 8137.562360][T53013] CPU: 22 PID: 53013 Comm: trinity-c10 Not tainted =
-5.7.0-rc1-next-20200413+ #2
-[ 8137.571216][T53013] Hardware name: HPE ProLiant DL385 Gen10/ProLiant =
-DL385 Gen10, BIOS A40 03/09/2018
-[ 8137.580670][T53013] Call Trace:
-[ 8137.583865][T53013]  dump_stack+0xa4/0x100
-[ 8137.588105][T53013]  print_circular_bug.cold.49+0x13c/0x141
-[ 8137.593746][T53013]  check_noncircular+0x183/0x1a0
-[ 8137.598818][T53013]  ? do_raw_spin_unlock+0x10b/0x1c0
-[ 8137.603971][T53013]  __lock_acquire+0x1673/0x23a0
-[ 8137.608732][T53013]  ? print_unreferenced+0x224/0x230
-[ 8137.613846][T53013]  lock_acquire+0xcd/0x410
-[ 8137.618169][T53013]  ? slab_attr_store+0x79/0xf0
-[ 8137.619804][T52801] VFS: "mand" mount option not supported
-[ 8137.623085][T53013]  __mutex_lock+0xc9/0xbf0
-[ 8137.632939][T53013]  ? slab_attr_store+0x79/0xf0
-[ 8137.637679][T53013]  ? _find_next_bit.constprop.1+0xd0/0x100
-[ 8137.643477][T53013]  ? slab_attr_store+0x79/0xf0
-[ 8137.648252][T53013]  ? find_next_bit+0x36/0x40
-[ 8137.652748][T53013]  ? cpumask_next+0x46/0x60
-[ 8137.657155][T53013]  mutex_lock_nested+0x31/0x40
-[ 8137.661897][T53013]  ? slab_attr_show+0x30/0x30
-[ 8137.666476][T53013]  ? mutex_lock_nested+0x31/0x40
-[ 8137.671373][T53013]  slab_attr_store+0x79/0xf0
-[ 8137.676035][T53013]  ? slab_attr_show+0x30/0x30
-[ 8137.680672][T53013]  sysfs_kf_write+0x9a/0xb0
-[ 8137.685085][T53013]  ? sysfs_file_ops+0xb0/0xb0
-[ 8137.689673][T53013]  kernfs_fop_write+0x15e/0x280
-[ 8137.694433][T53013]  do_iter_write+0x261/0x2c0
-[ 8137.698997][T53013]  vfs_writev+0xe6/0x170
-[ 8137.703142][T53013]  ? lock_acquire+0xcd/0x410
-[ 8137.707696][T53013]  ? find_held_lock+0x35/0xa0
-[ 8137.712279][T53013]  ? __fget_light+0xa3/0x170
-[ 8137.716897][T53013]  do_pwritev+0xab/0xd0
-[ 8137.720960][T53013]  __x64_sys_pwritev+0x61/0x80
-[ 8137.725808][T53013]  do_syscall_64+0x91/0xb10
-[ 8137.730274][T53013]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[ 8137.735733][T53013]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-[ 8137.741588][T53013] RIP: 0033:0x7f54d0a386ed=
+>  		indio_dev->channels = ad7193_channels;
+>  		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
+> @@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  }
+>  
+>  static const struct of_device_id ad7192_of_match[] = {
+> -	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
+> -	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
+> -	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
+> -	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
+> +	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
+> +	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
+> +	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
+> +	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, ad7192_of_match);
+> @@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
+>  	}
+>  
+>  	spi_set_drvdata(spi, indio_dev);
+> -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
+> +	st->chip_info = of_device_get_match_data(&spi->dev);
+>  	indio_dev->dev.parent = &spi->dev;
+> -	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->name = st->chip_info->name;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+>  	ret = ad7192_channels_config(indio_dev);
+>  	if (ret < 0)
+>  		goto error_disable_dvdd;
+>  
+> -	if (st->devid == ID_AD7195)
+> +	if (st->chip_info->chip_id == CHIPID_AD7195)
+>  		indio_dev->info = &ad7195_info;
+>  	else
+>  		indio_dev->info = &ad7192_info;
+> -- 
+> 2.17.1
+> 
