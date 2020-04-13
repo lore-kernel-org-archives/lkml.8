@@ -2,85 +2,117 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C78C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B77E72072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D6820735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586792165;
-	bh=Fghdcs+Xo3g6CsC/I9zekJS+Thc3LL56X6I8ePl7Iqw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=W2umgx5y3u9TiNfPM3E7X6J6cPTI+HuCJvOGW6HQpRaWVoVWL87UaxTa6aMPsgM/w
-	 EeXnkPd1DOK2MfU1BB8gm8MjgdySBTs2hrqLkqo2QTYk/3gl6URu5aVbK6WwTNXWps
-	 zAQbLfZTIQfzXRiwT2MswiNbiKP/7Racb/SehjC4=
+	s=default; t=1586792178;
+	bh=ySJ/GZ+In15NYeLHoiARho05iwPwM96hM78oDSnn3u4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PwV9o2tLszJV6NApSEW2eXGpAWd1yb0wMQg+nTj892Mok0KkbXJrUOTwsl6E8tId4
+	 pi8gsdjAr4mnH7K2iTGPxHhF81zOVsrXBuiKr+UBU0axqLwsAaymjXIlsQQ5jtKiu3
+	 X37p2qWxtQWS62xpzG5A5WJd7CsLvf6tzyWtLF8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbgDMPgE (ORCPT
+        id S1730545AbgDMPgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:36:04 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:22932 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbgDMPgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:36:04 -0400
-Received: from oscar.flets-west.jp (softbank060142179096.bbtec.net [60.142.179.96]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03DFZl6i014699;
-        Tue, 14 Apr 2020 00:35:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03DFZl6i014699
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586792148;
-        bh=I/IO9cMQMpuzJ0W5BPTg8gDTRyOF5xRFRKZp//cctOg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JG8bOQ0Us8rszC44gpthN3SCLP8FYSYtgIhPI8n8r7mP6OV+a6gUf85MExMAgXhOh
-         KroUXPzbw+3CDGRIiiXRDbP5+bxdGk7Prz+LSaHXBWb7RPv2ouzGDam2R70vO5AcUL
-         Fx0W8CmZ2pwQXZqLGAbdmnjgyeEa/hFE7L2G9x0ndtYU88ZuzzopN6wBec5Ax5sq1v
-         278+C2DFjleS1GgSU9ZVyVVf4tUcF3YgbA+/UFnsIfsBibs4w3IUIrTc8zOSOBonGg
-         u3VW9ydy3f5Y5kcxdiv9nUb9iosqCH8OjufdbPXQODYeGyodVohzQZk5S4EwlUQS5W
-         rPHG0wecqzU7w==
-X-Nifty-SrcIP: [60.142.179.96]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Mon, 13 Apr 2020 11:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728194AbgDMPgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:36:13 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA5622072C;
+        Mon, 13 Apr 2020 15:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586792173;
+        bh=ySJ/GZ+In15NYeLHoiARho05iwPwM96hM78oDSnn3u4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k2i6dfph/vfNL/JUvwdMldgHGQna7KMCx43iJ0B9PPYZKoRGdbusbuGVzC0ZkzgtI
+         bZt9ct5xW8bBDEiZ0elrES7yPSglluNUH/YQxJmoV3tyXa/FDS+4ABNXA4bH3fQk/N
+         7/bGXJKBPnBjKzo6QjgwwGud7rg617wrjKbPoBcA=
+Date:   Mon, 13 Apr 2020 16:36:07 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Aishwarya R <aishwaryarj100@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: do not assign a variable in the return statement
-Date:   Tue, 14 Apr 2020 00:35:42 +0900
-Message-Id: <20200413153542.94064-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] iio: adc: at91-adc: Use devm_platform_ioremap_resource
+Message-ID: <20200413163607.4fc548a2@archlinux>
+In-Reply-To: <20200412135644.4027-1-aishwaryarj100@gmail.com>
+References: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+        <20200412135644.4027-1-aishwaryarj100@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am not a big fan of doing assignment in a return statement.
-Split it into two lines.
+On Sun, 12 Apr 2020 19:26:42 +0530
+Aishwarya R <aishwaryarj100@gmail.com> wrote:
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> 
+> Use the helper function that wraps the calls to
+> platform_get_resource() and devm_ioremap_resource()
+> together. It reduces boilerplate and suggested by coccinelle.
+> 
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Same comments as the previous patch.  Applied anyway (this time)
+mostly because it's quicker for me than insisting on a v3.
 
- scripts/kconfig/menu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index e436ba44c9c5..a5fbd6ccc006 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -65,7 +65,8 @@ void menu_add_entry(struct symbol *sym)
- struct menu *menu_add_menu(void)
- {
- 	last_entry_ptr = &current_entry->list;
--	return current_menu = current_entry;
-+	current_menu = current_entry;
-+	return current_menu;
- }
- 
- void menu_end_menu(void)
--- 
-2.25.1
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/at91_adc.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+> index abe99856c823..0368b6dc6d60 100644
+> --- a/drivers/iio/adc/at91_adc.c
+> +++ b/drivers/iio/adc/at91_adc.c
+> @@ -1152,7 +1152,6 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  	int ret;
+>  	struct iio_dev *idev;
+>  	struct at91_adc_state *st;
+> -	struct resource *res;
+>  	u32 reg;
+>  
+>  	idev = devm_iio_device_alloc(&pdev->dev, sizeof(struct at91_adc_state));
+> @@ -1182,9 +1181,7 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  	if (st->irq < 0)
+>  		return -ENODEV;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+> -	st->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	st->reg_base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(st->reg_base))
+>  		return PTR_ERR(st->reg_base);
+>  
 
