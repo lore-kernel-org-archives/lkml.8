@@ -2,240 +2,162 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C9EC2BBC7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7207C2BA19
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C79D420753
+	by mail.kernel.org (Postfix) with ESMTP id A760B206E9
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgDMIfi (ORCPT
+        id S1728363AbgDMITQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42904 "EHLO
+        Mon, 13 Apr 2020 04:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgDMIUT (ORCPT
+        with ESMTP id S1727971AbgDMITO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:20:19 -0400
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A17C00860B;
-        Mon, 13 Apr 2020 01:20:19 -0700 (PDT)
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03D8IJsC003744;
-        Mon, 13 Apr 2020 04:20:19 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30bat4p92s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Apr 2020 04:20:19 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03D8KHXT020286
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 13 Apr 2020 04:20:17 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 13 Apr
- 2020 01:20:16 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 13 Apr 2020 01:20:15 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03D8KEkZ026212;
-        Mon, 13 Apr 2020 04:20:14 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <alexandru.tachici@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 1/2] iio: adc: ad7192: fix null pointer de-reference crash during probe
-Date:   Mon, 13 Apr 2020 11:20:43 +0300
-Message-ID: <20200413082044.81101-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Apr 2020 04:19:14 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699F1C00860B
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 01:19:14 -0700 (PDT)
+IronPort-SDR: YHSj5ES432f/mAs2Hv5AV/UQCXPr0hiV3x2UDkpqiuWWuJFmCptnsccBjAcJwGqAlt2YZWiqAY
+ Y2bTMahmft4A==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 01:19:13 -0700
+IronPort-SDR: xpFBVXMksRbqrWtgafP/j1YD8Xl1CEayw09shA+pmV9XFahtg8PJsY1zlGl2KZulP08TdRm/sz
+ zuIvbOYomwig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="txt'?scan'208";a="426619258"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.5.222]) ([10.238.5.222])
+  by orsmga005.jf.intel.com with ESMTP; 13 Apr 2020 01:19:11 -0700
+Subject: Re: [LKP] [btrfs] 8d47a0d8f7: fio.write_bw_MBps -28.6% regression
+To:     dsterba@suse.cz, Qu Wenruo <wqu@suse.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        David Sterba <dsterba@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Leonard Lausen <leonard@lausen.nl>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
+References: <20190513031733.GI31424@shao2-debian>
+ <d82835ec-c99c-bb40-be9f-f49f8101e921@linux.intel.com>
+ <a52f10f7-cdf6-9b00-9e49-b1344c17a190@suse.com>
+ <20200410101406.GI5920@suse.cz>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <5816c503-e4d3-0b8b-4e89-a817d0b57851@linux.intel.com>
+Date:   Mon, 13 Apr 2020 16:19:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-13_02:2020-04-12,2020-04-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130074
+In-Reply-To: <20200410101406.GI5920@suse.cz>
+Content-Type: multipart/mixed;
+ boundary="------------669AD32897F11BCD272E286F"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
-assignment:
-   'indio_dev->name = spi_get_device_id(spi)->name;'
+This is a multi-part message in MIME format.
+--------------669AD32897F11BCD272E286F
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
-during probe with null de-ref.
+This regression happened on "lkp-hsw-ep2", but “lkp-hsw-ep2” has been 
+removed from the LKP tbox, so we retest the regression on another tbox 
+“lkp-hsw-ep4”, their hardware is almost the same, "72 threads Intel(R) 
+Xeon(R) CPU E5-2699 v3 @ 2.30GHz with 256G memory". The test result is 
+in the attached file compare.txt. The regression is -6.7% for v5.6, the 
+origin regression is -8.9%, it is not serious as it test on 
+"lkp-hsw-ep2" before.
 
-This change fixes this by introducing an ad7192_chip_info struct, and
-defines all part-names [that should be assigned to indio_dev->name] in a
-'ad7192_chip_info_tbl' table.
 
-With this change, the old 'st->devid' is also moved to be a
-'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
-'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
-values in the new 'ad7192_chip_info_tbl'.
+On 4/10/2020 6:14 PM, David Sterba wrote:
+> On Fri, Apr 10, 2020 at 02:44:55PM +0800, Qu Wenruo wrote:
+>> On 2020/4/10 下午2:34, Xing Zhengjun wrote:
+>>> Hi Wenruo,
+>>>
+>>>     We test it in v5.6, the issue still exist, do you have time to take a
+>>> look at this? Thanks.
+>>
+>> This is expected.
+>>
+>> The extra check brings new overhead mostly equal to another CRC32 run.
+>>
+>> We believe it's worthy, as our read time tree checker has exposed quite
+>> some bit flip corruption.
+> 
+> The test probably runs on a PMEM device so there's no slowdown from the
+> actual IO and the in-memory checks are measurable, though 28% is a lot,
+> I'd expect something like 5-10% at most.
+> 
 
-This should fix the bug, and maintain the ABI for the 'indio_dev->name'
-field.
-
-Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
-
-Changelog v2 -> v3:
-* reworked patch to introduce a chip_info struct for the part-name
-* added 2nd patch to move of-table closer to the end of the file; this
-  patch is more cosmetic; has no fixes tag, but is on top of the previous
-
-Changelog v1 -> v2:
-* fix colon for Fixes tag
-* updated commit title a bit; to make it longer
-
- drivers/iio/adc/ad7192.c | 61 ++++++++++++++++++++++++++++++----------
- 1 file changed, 46 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-index 8ec28aa8fa8a..7e8662c5cb0e 100644
---- a/drivers/iio/adc/ad7192.c
-+++ b/drivers/iio/adc/ad7192.c
-@@ -125,10 +125,10 @@
- #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
- 
- /* ID Register Bit Designations (AD7192_REG_ID) */
--#define ID_AD7190		0x4
--#define ID_AD7192		0x0
--#define ID_AD7193		0x2
--#define ID_AD7195		0x6
-+#define CHIPID_AD7190		0x4
-+#define CHIPID_AD7192		0x0
-+#define CHIPID_AD7193		0x2
-+#define CHIPID_AD7195		0x6
- #define AD7192_ID_MASK		0x0F
- 
- /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
-@@ -161,7 +161,20 @@ enum {
-    AD7192_SYSCALIB_FULL_SCALE,
- };
- 
-+enum {
-+	ID_AD7190,
-+	ID_AD7192,
-+	ID_AD7193,
-+	ID_AD7195,
-+};
-+
-+struct ad7192_chip_info {
-+	unsigned int			chip_id;
-+	const char			*name;
-+};
-+
- struct ad7192_state {
-+	const struct ad7192_chip_info	*chip_info;
- 	struct regulator		*avdd;
- 	struct regulator		*dvdd;
- 	struct clk			*mclk;
-@@ -172,7 +185,6 @@ struct ad7192_state {
- 	u32				conf;
- 	u32				scale_avail[8][2];
- 	u8				gpocon;
--	u8				devid;
- 	u8				clock_sel;
- 	struct mutex			lock;	/* protect sensor state */
- 	u8				syscalib_mode[8];
-@@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
- 
- 	id &= AD7192_ID_MASK;
- 
--	if (id != st->devid)
-+	if (id != st->chip_info->chip_id)
- 		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
- 			 id);
- 
-@@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
- 		st->mode |= AD7192_MODE_REJ60;
- 
- 	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
--	if (refin2_en && st->devid != ID_AD7195)
-+	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
- 		st->conf |= AD7192_CONF_REFSEL;
- 
- 	st->conf &= ~AD7192_CONF_CHOP;
-@@ -859,11 +871,30 @@ static const struct iio_chan_spec ad7193_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(14),
- };
- 
-+static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
-+	[ID_AD7190] = {
-+		.chip_id = CHIPID_AD7190,
-+		.name = "ad7190",
-+	},
-+	[ID_AD7192] = {
-+		.chip_id = CHIPID_AD7192,
-+		.name = "ad7192",
-+	},
-+	[ID_AD7193] = {
-+		.chip_id = CHIPID_AD7193,
-+		.name = "ad7193",
-+	},
-+	[ID_AD7195] = {
-+		.chip_id = CHIPID_AD7195,
-+		.name = "ad7195",
-+	},
-+};
-+
- static int ad7192_channels_config(struct iio_dev *indio_dev)
- {
- 	struct ad7192_state *st = iio_priv(indio_dev);
- 
--	switch (st->devid) {
-+	switch (st->chip_info->chip_id) {
- 	case ID_AD7193:
- 		indio_dev->channels = ad7193_channels;
- 		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
-@@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- }
- 
- static const struct of_device_id ad7192_of_match[] = {
--	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
--	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
--	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
--	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
-+	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-+	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-+	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-+	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, ad7192_of_match);
-@@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
- 	}
- 
- 	spi_set_drvdata(spi, indio_dev);
--	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
-+	st->chip_info = of_device_get_match_data(&spi->dev);
- 	indio_dev->dev.parent = &spi->dev;
--	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->name = st->chip_info->name;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
- 	ret = ad7192_channels_config(indio_dev);
- 	if (ret < 0)
- 		goto error_disable_dvdd;
- 
--	if (st->devid == ID_AD7195)
-+	if (st->chip_info->chip_id == CHIPID_AD7195)
- 		indio_dev->info = &ad7195_info;
- 	else
- 		indio_dev->info = &ad7192_info;
 -- 
-2.17.1
+Zhengjun Xing
 
+--------------669AD32897F11BCD272E286F
+Content-Type: text/plain; charset=UTF-8;
+ name="compare.txt"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="compare.txt"
+
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdGJveF9ncm91cC90ZXN0Y2Fz
+ZS9yb290ZnMva2NvbmZpZy9jb21waWxlci9kZWJ1Zy1zZXR1cC9kaXNrL2ZzL3J1bnRpbWUv
+bnJfdGFzay90aW1lX2Jhc2VkL3J3L2JzL2lvZW5naW5lL3Rlc3Rfc2l6ZS9jcHVmcmVxX2dv
+dmVybm9yL3Vjb2RlOgogIGxrcC1oc3ctZXA0L2Zpby1iYXNpYy9kZWJpYW4teDg2XzY0LTIw
+MTkxMTE0LmNnei94ODZfNjQtcmhlbC03LjYvZ2NjLTcvdGVzdC8ycG1lbS9idHJmcy8yMDBz
+LzUwJS90Yi9yYW5kd3JpdGUvNGsvbGliYWlvLzEwMEcvcGVyZm9ybWFuY2UvMHg0MwoKY29t
+bWl0OiAKICBmZjJhYzEwN2ZhZTI0NDBiNjg3N2M2MTVjMGFjNzg4ZDJhMTA2ZWQ3CiAgOGQ0
+N2EwZDhmNzk0NzQyMmRkMzU5YWM4ZTQ2MjY4N2Y4MWE3YTEzNwogIHY1LjYKCmZmMmFjMTA3
+ZmFlMjQ0MGIgOGQ0N2EwZDhmNzk0NzQyMmRkMzU5YWM4ZTQ2ICAgICAgICAgICAgICAgICAg
+ICAgICAgdjUuNiAKLS0tLS0tLS0tLS0tLS0tLSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIAogICAgICAgICAlc3RkZGV2ICAgICAl
+Y2hhbmdlICAgICAgICAgJXN0ZGRldiAgICAgJWNoYW5nZSAgICAgICAgICVzdGRkZXYKICAg
+ICAgICAgICAgIFwgICAgICAgICAgfCAgICAgICAgICAgICAgICBcICAgICAgICAgIHwgICAg
+ICAgICAgICAgICAgXCAgCiAgICAgIDAuNDQgwrEgIDclICAgICAgLTAuMSAgICAgICAgMC4z
+MiDCsSAgNCUgICAgICAtMC4xICAgICAgICAwLjM2IMKxIDEwJSAgZmlvLmxhdGVuY3lfMTAw
+MG1zJQogICAgICAwLjE2IMKxIDExJSAgICAgIC0wLjEgICAgICAgIDAuMDMgwrEgMjUlICAg
+ICAgLTAuMSAgICAgICAgMC4wMiDCsSAgOCUgIGZpby5sYXRlbmN5XzEwMG1zJQogICAgICA1
+LjU5IMKxICAzJSAgICAgIC0wLjAgICAgICAgIDUuNTkgwrEgIDklICAgICAgKzUuNyAgICAg
+ICAxMS4yNiDCsSAxNSUgIGZpby5sYXRlbmN5XzEwbXMlCiAgICAgMzguMjUgICAgICAgICAg
+ICArMS43ICAgICAgIDM5LjkyIMKxICAzJSAgICAgICs0LjcgICAgICAgNDIuOTcgICAgICAg
+IGZpby5sYXRlbmN5XzIwbXMlCiAgICAgIDAuMjkgwrEgIDQlICAgICAgLTAuMSAgICAgICAg
+MC4xNiDCsSAgMiUgICAgICAtMC4yICAgICAgICAwLjA2IMKxIDE0JSAgZmlvLmxhdGVuY3lf
+MjUwbXMlCiAgICAgIDAuNTggwrEgMTclICAgICAgKzAuMSAgICAgICAgMC42NiDCsSAxMCUg
+ICAgICAtMC41ICAgICAgICAwLjA4IMKxICA2JSAgZmlvLmxhdGVuY3lfMjUwdXMlCiAgICAg
+IDAuMTcgwrEgNDMlICAgICAgKzAuMSAgICAgICAgMC4yNCDCsSAzNCUgICAgICArMC4yICAg
+ICAgICAwLjQwIMKxIDMwJSAgZmlvLmxhdGVuY3lfMm1zJQogICAgIDQ0LjI0ICAgICAgICAg
+ICAgLTQuMyAgICAgICAzOS45NSAgICAgICAgICAgIC00LjIgICAgICAgMzkuOTkgwrEgIDMl
+ICBmaW8ubGF0ZW5jeV80bXMlCiAgICAgIDAuMDMgwrEgIDQlICAgICAgKzAuMiAgICAgICAg
+MC4xOSDCsSAgMyUgICAgICArMC4xICAgICAgICAwLjE2IMKxIDEwJSAgZmlvLmxhdGVuY3lf
+NTAwbXMlCiAgICAgIDguNTYgwrEgIDQlICAgICAgKzIuNyAgICAgICAxMS4zMCDCsSAgOCUg
+ICAgICAtNi4yICAgICAgICAyLjM1IMKxICA1JSAgZmlvLmxhdGVuY3lfNTBtcyUKICAgICAg
+MC4wMyDCsSAyNCUgICAgICArMC4yICAgICAgICAwLjI4ICAgICAgICAgICAgKzAuNCAgICAg
+ICAgMC40NSDCsSAgMiUgIGZpby5sYXRlbmN5Xzc1MG1zJQogICAgICAwLjExIMKxIDM4JSAg
+ICAgIC0wLjAgICAgICAgIDAuMTAgwrEgMzElICAgICAgKzAuMyAgICAgICAgMC40MSDCsSAz
+MyUgIGZpby5sYXRlbmN5Xzc1MHVzJQogIDEzNjgyNzEzICAgICAgICAgICAgLTkuMCUgICAx
+MjQ1NzExOCAgICAgICAgICAgIC02LjclICAgMTI3NjQ4MjcgICAgICAgIGZpby53b3JrbG9h
+ZAogICAgMjY2LjM2ICAgICAgICAgICAgLTguOSUgICAgIDI0Mi43MCAgICAgICAgICAgIC02
+LjUlICAgICAyNDguOTkgICAgICAgIGZpby53cml0ZV9id19NQnBzCiAgMTk5NjY2MzQgICAg
+ICAgICAgICArMy4xJSAgIDIwNTc4MzA0ICAgICAgICAgICAgLTkuMiUgICAxODEzMTYyNiAg
+ICAgICAgZmlvLndyaXRlX2NsYXRfOTAlX3VzCiAgMjE5NzY0MDUgICAgICAgICAgICArMy4y
+JSAgIDIyNjc1NDU2ICAgICAgICAgICAtMTIuMyUgICAxOTI2NzU4NCAgICAgICAgZmlvLndy
+aXRlX2NsYXRfOTUlX3VzCiAgOTI3OTg5NzYgwrEgIDUlICAgICsxMjQuMSUgICAyLjA4ZSsw
+OCDCsSAgMyUgICAgKzM3NS4zJSAgNC40MTFlKzA4IMKxICAyJSAgZmlvLndyaXRlX2NsYXRf
+OTklX3VzCiAgMTYzNTMzMDQgICAgICAgICAgICArOS43JSAgIDE3OTQyOTQyICAgICAgICAg
+ICAgKzcuMCUgICAxNzUwMDc4OSAgICAgICAgZmlvLndyaXRlX2NsYXRfbWVhbl91cwogIDc2
+ODI4NzMyICAgICAgICAgICAgKzAuNCUgICA3NzEzMjkxMSAgICAgICAgICAgICs2LjklICAg
+ODIxMzU0MjQgwrEgIDIlICBmaW8ud3JpdGVfY2xhdF9zdGRkZXYKICAgICA2ODE4OCAgICAg
+ICAgICAgIC04LjklICAgICAgNjIxMzEgICAgICAgICAgICAtNi41JSAgICAgIDYzNzQwICAg
+ICAgICBmaW8ud3JpdGVfaW9wcwogICAgNTIzNDA2ICAgICAgICAgICAgKzkuNyUgICAgIDU3
+NDQwMCAgICAgICAgICAgICs3LjAlICAgICA1NjAyNjAgICAgICAgIGZpby53cml0ZV9zbGF0
+X21lYW5fdXMKICAxMzY0OTkxOSAgICAgICAgICAgIC0zLjglICAgMTMxMzM0NzEgICAgICAg
+ICAgICArNy45JSAgIDE0NzI5NzAzICAgICAgICBmaW8ud3JpdGVfc2xhdF9zdGRkZXYKCg==
+--------------669AD32897F11BCD272E286F--
