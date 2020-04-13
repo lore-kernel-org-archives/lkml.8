@@ -2,103 +2,133 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB4FC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D031FC2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F9F20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586786532;
-	bh=sZLn/w/87aDP+vYy/QIQc6dA8wJaDjYWNYS1sRBH0lI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=by8y5orKtyX0SjWJ9coEq0OsNAEqHIko4EPLNKl7aTNbYCqmAA0x2TDzfpPKfKVjt
-	 4nNxapi2pbT9bW/DkfVLhutuytk0Rsd/2R+RNnh3pwRzHxxWhpoLQmmyWY4A3mQ9t+
-	 voztgPAyhmVy6JK7H8VPZNFJyBgi35XKQkq93XrE=
+	by mail.kernel.org (Postfix) with ESMTP id 9ED5320692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UXmiIOPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbgDMOCL (ORCPT
+        id S1730238AbgDMOCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgDMOCK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:02:10 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2132FC0A3BDC;
-        Mon, 13 Apr 2020 07:02:10 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b62so9460668qkf.6;
-        Mon, 13 Apr 2020 07:02:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ITKk+IbM/Pu4iwCMAU82Dk9TCoQ6Vio94t7SmWjtKJY=;
-        b=oohXv3GgKxF3JQKxq9eUkBNfeVoWdmwO7PciLXRyq4R+kxI5Zv/hFU86wvO2vaGEoY
-         +ba/L/ysawNwxImhrJb5CEqTgej8lP9ibrtHhTLvVC+6zXe6LIt/4yoNNwDY8OpSRav8
-         U0xVcD2Z/xP1RsSjMZl/LoerF2n1ace3iy+jfUvTqyF5EJuLsQaWLbU/nxo5SlHmp/oG
-         XCSvoOd1kAzphvtwpgGZ4b/DIE6agvYmKEBDWiRYhrziszA+RKx/ypDrs/+0Lzx7EITX
-         v+EYF1mOEHuHuUhWdGqzauOd9kR0Qvy6IIDglBUr0hAGP4sXyjbVkmdC1YH3N5FYuTtW
-         8i8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ITKk+IbM/Pu4iwCMAU82Dk9TCoQ6Vio94t7SmWjtKJY=;
-        b=W+nDd0ibtZIT61xrwyvGJdcWxqMtanrwREsdZP4lI8ynoiM2m91ZpevWuumB4mKL28
-         ui8wGEv58j6mSsHcjQ3hPaH4SSdIRHO/WTH3Mot6MRbJb7WmQaw96+UqYlJAxNBBMZPy
-         JGII0KCn4C73FASTrFB2cHOns17s/FcROYbPef0lt0TuPfpJmxpos+Zfuu5yM70q3RRc
-         xKC9aAuvn4np7B+HdVludY04SGaVHumPRh8vJkVfsHwLb6MBGA6BEv6e/Nnnekx60Scl
-         JRKNKzcvU6aXSnh9ZE/aXxxZbaegAOc/jeqveaWKJw9N3ofmnBwnbYvrz1OK2Avd0QaM
-         2OvQ==
-X-Gm-Message-State: AGi0Pubca1Yi89ZL+TWb+JQMqg5u4Lhpm2qn6U7qtpjRvrVFq4EeMP9D
-        dmOmSJztPlBceDQxecicFsE86zt+QHY=
-X-Google-Smtp-Source: APiQypLuTmPHWtZxfgG0mjY7lpX4MSh38cQgM2ohPQHg14AtAnHEB7qocja0Fw0LVK/xEgYdG8F8pQ==
-X-Received: by 2002:a37:b03:: with SMTP id 3mr15773770qkl.67.1586786528891;
-        Mon, 13 Apr 2020 07:02:08 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id l9sm8740713qth.60.2020.04.13.07.02.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 07:02:07 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 10:02:06 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@vger.kernel.org, cgroups@vger.kernel.org,
-        newella@fb.com, josef@toxicpanda.com
-Subject: Re: [PATCH 2/5] block: add request->io_data_len
-Message-ID: <20200413140206.GC60335@mtj.duckdns.org>
-References: <20200408201450.3959560-1-tj@kernel.org>
- <20200408201450.3959560-3-tj@kernel.org>
- <20200409014406.GA370295@localhost.localdomain>
- <20200409021119.GJ162390@mtj.duckdns.org>
- <20200409023857.GB370295@localhost.localdomain>
- <c2b362f5-36f6-116d-ddb5-2445d13d2bac@gmail.com>
+        Mon, 13 Apr 2020 10:02:42 -0400
+Received: from mout.gmx.net ([212.227.17.20]:37161 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730229AbgDMOCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:02:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586786553;
+        bh=aWabkX+VjxCXEjMZgVB4rhzfh2PYPDYf+m/yRAvUdDY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=UXmiIOPA01lkaO7c8pVPiFVlYAdtE2z6cx/xBQtkdNWd8r6HszcmTzc1kjzbLO6vd
+         UaedWVg1B0qb21PmcMXg69xHmqQY9a7c8LsfMdLAv5rRtfnLydMSSWsMWaQ6wEIIpY
+         480jAfm8AdHGDiFwG/26t+3bXL+RxPC0Yw/VEJHE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MORAU-1jcltO3vu2-00PuwR; Mon, 13 Apr 2020 16:02:33 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [RFC] staging: vt6656: Add formula to the vnt_rf_addpower function
+Date:   Mon, 13 Apr 2020 16:02:09 +0200
+Message-Id: <20200413140209.4520-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2b362f5-36f6-116d-ddb5-2445d13d2bac@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2Sy7ENs56EYNCOfQsabHsx7yt45HYz2D+WcFO1uzxDE12fmN9Ho
+ kB/1t2vAIFxKUzTOW0Vdjnq8jrSToLtEPqKIYm1ChSBptJqxklKw8WFOunBwTQcWkNCB/FF
+ uoLUV3/bqAX6XH5InrZhum8I+RAWOZn90yEPNgR68+dcftV3wwgmhwt1ijQJsvXE6YC1kjV
+ 5N+Ut59T+fexUk6ISm0GQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:G5K3oNxTWQI=:tiYGVznO3UgoOT1SouVKw/
+ 0JF6wxj/IKctsFjZsO7Eh3qJst9qhvElq4WWcozw7x9a8KBxEb0XAMQ58sPWXnhxpfis/aLc6
+ 3UGGeJHFrN7n/SmReiq9lWX6r7gCc9nOs/+auElvoRkoSUt80bfThbEaM/hHVzDUPTKusDicp
+ HqDUInDAg2peNwwC+EITNeITUhe7DcYJEKIZe9NbbyiX1rrKRzxKkVKdXwAAwHv6wg6zC7oSX
+ uNow+QKfIICJOjH/sMsY0IcnTfNkWLmqvjdW7R2drib5flBY+6lcY6bniuFR7XpxW6igg9g4n
+ ypXZTELY0Jjrq0gxLZGCZhgy46QvbTvQmDgxt2OgSIRky4ITPYcxvTjhOCvPstxTdbZRNTVza
+ phHW/hOMKXsfc1epqngYlwHLSU7uX5sxufhsozbQzwNqknp2u73OA6AXRh/bqQTpGoZ9TnnV4
+ g5aMmqkgG/Op7d0xidn3XfBwmxzl83ZtWNo+7bpfIG3qyW5v4D6pn+ggugCF8ats6bE4rV+F2
+ rQMx7RqjbQ1sgbmdd9e/wli6BrxdaqshIsVuR8Gm+vrzcrzolipT5T2+9sxjZXCUjB/DxIvAV
+ Kvhi8IyE1skEkbQAnuVXbsslvucDSDXk4a52SBUfVHWG5sMp0awn+WEVGRZDWPns3ha/DEk5c
+ ZMwyZhp12aW+bAC0dPDQsk6UlBBCrhFwdSjSFPrKFIBGy3SQic5DUlWuHPYyeXFNlj7BWUpxz
+ MH/GSAZdOn9Hi4QDIEo7y6Gk2RpF8GLJ1i1jmyZWNsiF3LISpBA9pvKwWsQt5r/WuCfbM/HU8
+ YwxscsQMwgQKgSbkdoD1EV7Hvt/a5GyGAkX/6QlD1qT9Nb9CZ3GNXU4HrHcmX/R53A0WDTCmp
+ cPq4pnyQCg/fIRR6+JMXD+mJqMB+BC7C06t9fomVSflLarv2nkOczWf7mplRsbBx0jAkyODfK
+ hrSVJh/QmIM5MyRFUSDo5tgnd/S1yj0fNgS8W3qbKfBBO0sFINRh3kmv0bKHyvztxOy0av8KK
+ wncfeN92AF6xkavqoNhuQkjAPfKWoAfyZDfgn8+LxKJFcf6HCvFeudBOmz11Qp0nPa9Xnu722
+ rbUhkA6MP1/82kBVkTpaZjLCOnY/DD8rn9V3hGGESnyzdAzz1hMZ3fxezf8BqHW8AKowyR/vP
+ o/U75LXQAAD+Ry3SOuGL4yi7zEcKZpOz8XvWWRHupR8cEJqDH9paA7mjdrdB5hl/g1R+37PQ0
+ vrNDR/0M9UEDLyoST
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Use a formula to calculate the return value of the vnt_rf_addpower
+function instead of the "if" statement with literal values for every
+case.
 
-On Thu, Apr 09, 2020 at 08:08:59AM +0300, Pavel Begunkov wrote:
-> struct request already has such field (see @stats_sectors) because of the same
-> root-cause. I'd prefer killing it as well by following Ming's way, but otherwise
-> it could be easily adopted.
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+What is the better approach for this function ? Leave it as is or use
+a formula although it is less clear.
 
-Oh, I completely missed that field. Lemme just use that one instead. Please
-disregard this patch. As for killing partial completions, while I'm not
-necessarily against it, it isn't a no brainer either.
+I prefer the formula as it is a more compact function.
+What do you think ? Feedback wellcome.
 
-Thanks.
+Thanks,
+Oscar Carter
 
--- 
-tejun
+ drivers/staging/vt6656/rf.c | 20 +++-----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
+index 4f9aba0f21b0..3b200d7290a5 100644
+=2D-- a/drivers/staging/vt6656/rf.c
++++ b/drivers/staging/vt6656/rf.c
+@@ -575,28 +575,14 @@ int vnt_rf_setpower(struct vnt_private *priv, u32 ra=
+te, u32 channel)
+
+ static u8 vnt_rf_addpower(struct vnt_private *priv)
+ {
++	s32 base;
+ 	s32 rssi =3D -priv->current_rssi;
+
+ 	if (!rssi)
+ 		return 7;
+
+-	if (priv->rf_type =3D=3D RF_VT3226D0) {
+-		if (rssi < -70)
+-			return 9;
+-		else if (rssi < -65)
+-			return 7;
+-		else if (rssi < -60)
+-			return 5;
+-	} else {
+-		if (rssi < -80)
+-			return 9;
+-		else if (rssi < -75)
+-			return 7;
+-		else if (rssi < -70)
+-			return 5;
+-	}
+-
+-	return 0;
++	base =3D (priv->rf_type =3D=3D RF_VT3226D0) ? -60 : -70;
++	return (rssi < base--) ? ((rssi - base) / -5) * 2 + 5 : 0;
+ }
+
+ /* Set Tx power by power level and rate */
+=2D-
+2.20.1
+
