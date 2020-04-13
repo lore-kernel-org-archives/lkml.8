@@ -2,136 +2,99 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FECC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087BEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306A420692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:29:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y88rwGl/"
+	by mail.kernel.org (Postfix) with ESMTP id DEE1820692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgDML3n (ORCPT
+        id S1729001AbgDMLcU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 07:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728625AbgDML3m (ORCPT
+        Mon, 13 Apr 2020 07:32:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728886AbgDMLcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 07:29:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A48D2C0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:21:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m8so8353417lji.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TfybxCS9KvV17UPheJnqSM+e/cLRrV8TeDHR7AgRiYw=;
-        b=y88rwGl/RjfrMbIPOK7+s+NQx1aoXwZDd8G3Aln6CMeD6UrIUasDet6IZZcqT9dOg3
-         l4Nv3vQFImsFKN8Wer2g6roOIKKoWwGPTIPRR2BDmBgiuGNzPbldm5GlyKxYeioexKSM
-         oGygbWZZ+ma2QaheiQrXtpCSqLrG1Ue+y1CEC5+cpb5b2ujPN3zfjQNxtDr5KIgCSYPo
-         +Rj0dQk0vBVucBeDXA94ZYtSYVmc7M6iasr8XMAVU7DJ08AjFPmtZGSbwo7oeH4C6MtN
-         W/eUnnA5mlK8b3G1nJCBEJp7l89bzD+tCMbv/jN17QQ5fXLGWtDv4POsulXDupmsSIlP
-         SEqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TfybxCS9KvV17UPheJnqSM+e/cLRrV8TeDHR7AgRiYw=;
-        b=udCdTPZ/siUferSw9L2OQ+QlSAOoVZ8ieqzmvi6snF6CeLbLY60OcUkPzktnhiJvOD
-         euNrRYg18KM577e3u59MdCOQmQPUjjYHx3y8bq+C64JIeyVQrCwvgbV91gZPQZPMdElx
-         JhirTfDYxHe4DfeiuuT37ZnfVaepQlIltxJzrsaguONLFa18FnJL9P4U0Z5LrEfp6kR4
-         9MX50kPY5NwkzX8Bgs/u/KK+BDk+F08X1q2Gtb08NI1bCTRzGaKkzCxnzSEtGLPOQeEQ
-         tAj1moPyxoG86i49jkmRce2a6c0M/6B6yaSnbdG1gj8KcJdhSdHZSSkR6Syie+htaYVt
-         TQ1A==
-X-Gm-Message-State: AGi0PuZGXmDTjY7AMCV1/wStPLYdQFVoQFFWrA/BEf6zxUz68/o/LPID
-        pmet+DwMThm87/LXP3hKQvjS+NhyqTVF8yXowbYKKQ==
-X-Google-Smtp-Source: APiQypKZxajlMe0BodxfJkVJg9NJCcYeXNTqOwy0OQAXKiMOpmeX9tR3Jo8ny+juQeVyUWeXVPsZc/KvhmVF+uDhGws=
-X-Received: by 2002:a2e:a495:: with SMTP id h21mr10092859lji.123.1586776897822;
- Mon, 13 Apr 2020 04:21:37 -0700 (PDT)
+        Mon, 13 Apr 2020 07:32:20 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03DBWICI043134
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:32:19 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30bae4hqk6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:32:19 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Mon, 13 Apr 2020 12:31:28 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 Apr 2020 12:31:26 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03DBVoHY53739626
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 11:31:50 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 914CEA4040;
+        Mon, 13 Apr 2020 11:31:50 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 165EAA4053;
+        Mon, 13 Apr 2020 11:31:50 +0000 (GMT)
+Received: from localhost (unknown [9.85.126.225])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Apr 2020 11:31:49 +0000 (GMT)
+Date:   Mon, 13 Apr 2020 17:01:45 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH] tools headers: Move powerpc and s390 syscall table check
+ to check-headers.sh
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
+        Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20200220063740.785913-1-naveen.n.rao@linux.vnet.ibm.com>
+In-Reply-To: <20200220063740.785913-1-naveen.n.rao@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <CA+G9fYsRGvkqtpdGv_aVr+Hn17KgYq04Q=EE=pB774qVxRqOeg@mail.gmail.com>
- <20200412214150.GB38470@xz-x1>
-In-Reply-To: <20200412214150.GB38470@xz-x1>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 13 Apr 2020 16:51:25 +0530
-Message-ID: <CA+G9fYvARTCKjbfHYEbfOjtn_s7desuAToOF4g+Z_fztzZ-myw@mail.gmail.com>
-Subject: Re: i386: selftests: vm: compaction_test: BUG: kernel NULL pointer
- dereference, address: 00000000
-To:     Peter Xu <peterx@redhat.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        lkft-triage@lists.linaro.org, Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mateusz Nosek <mateusznosek0@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20041311-0008-0000-0000-0000036FD553
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041311-0009-0000-0000-00004A917FCA
+Message-Id: <1586777427.30yicdm2kt.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-13_04:2020-04-13,2020-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ mlxscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 priorityscore=1501 phishscore=0 mlxlogscore=864
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004130080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 at 03:12, Peter Xu <peterx@redhat.com> wrote:
-> And since this one is very easy to reproduce, I finally noticed that
-> we have wrongly enabled uffd-wp on x86_32, which is definely not going
-> to work... Because we'll use bit 2 of swap entry assuming that's the
-> uffd-wp bit, while that's part of swp offset on 32bit systems.
->
-> Naresh, could you try whether below change fixes the issue for you?
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 8d078642b4be..7ac524d1316e 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -149,7 +149,7 @@ config X86
->         select HAVE_ARCH_TRACEHOOK
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
-> -       select HAVE_ARCH_USERFAULTFD_WP         if USERFAULTFD
-> +       select HAVE_ARCH_USERFAULTFD_WP         if X86_64 && USERFAULTFD
->         select HAVE_ARCH_VMAP_STACK             if X86_64
->         select HAVE_ARCH_WITHIN_STACK_FRAMES
->         select HAVE_ASM_MODVERSIONS
->
+Naveen N. Rao wrote:
+> It is good to know changes in headers and syscall tables across all
+> architectures so that the changes can be sync'ed at once. Move check for
+> arch-specific syscall table changes from tools/perf/arch for powerpc and
+> s390, to the generic check-headers.sh script, similar to how we do the
+> check for x86.
+> 
+> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> ---
 
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Arnaldo,
+Is this patch good? Do you want to see any changes in this?
 
-The above patch tested and did not notice the crash.
-+ cd /opt/kselftests/default-in-kernel/vm/
-+ ./compaction_test
-No of huge pages allocated = 297
-+ ./compaction_test
-[   46.059785] kauditd_printk_skb: 15 callbacks suppressed
-[   46.059786] audit: type=1334 audit(1586776582.927:25): prog-id=17 op=UNLOAD
-[   46.071997] audit: type=1334 audit(1586776582.927:26): prog-id=16 op=UNLOAD
-No of huge pages allocated = 160
+- Naveen
 
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/1362495#L1308
-
-Build artifacts.
-https://builds.tuxbuild.com/w0ol7cCsGan0wzPp7bNqkg/
-
-- Naresh
