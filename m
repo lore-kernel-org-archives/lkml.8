@@ -2,301 +2,172 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6512C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD8FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B742C20737
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C48D20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fLFFHluG"
+	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="Mihc4o/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgDMKU5 (ORCPT
+        id S1728264AbgDMJYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:20:57 -0400
-Received: from mout.gmx.net ([212.227.17.20]:42361 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbgDMKUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:20:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586773200;
-        bh=QiOr1DeVPm8b1WI0oWjMb4zAXSFo1UBAnReM7F1ktdM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=fLFFHluGxWstu0No/gZbOyDkPtMQ/+viCNDTbqlL06TXxyXHEZvCOg8gKPv5TAV9/
-         a+3+myAJ9SZjBx44jfLOZHsrE2YWhloO053GnGVQyw22Awvk1cF6q61cKhpidVt/ct
-         R0yS/z0E2hBlxDDI5FCDoPc+tsREEalDpRoyRWRQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MDhhX-1jWQWG3Gb9-00An7f; Mon, 13 Apr 2020 12:19:59 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Malcolm Priestley <tvboxspy@gmail.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vt6656: Return error code in vnt_rf_write_embedded function
-Date:   Mon, 13 Apr 2020 12:19:31 +0200
-Message-Id: <20200413101931.6334-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gKYAHCKsplbokEjqMBJ57pEksNP3lEOJ+XgziKN3JbeKRuYgO9e
- XfoTV3qN68FeLE1NYV04cgw9wWdNDMJm8imol2QfC0anzzCXIC5DLB24bgC2sZcgX259DM4
- Fv8L69cPcFBdFvzSNvqdtF0TxZX8WqZeArHm7DCaOWgQ+IB1RQJ4A7eE8ZOlQVHSAQ99SXV
- 52gS/a9U3lKOYQMz+sVYQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TRGExfgQuJw=:OWz++pYOkcTjIa1pR1SQ6g
- wVNMlzZ3JJsOhaCbSGfbnrMgTxCPXXyfi3Z448b9GqtrWWlE9nrVRKCxyasjsmDIytLYBJtys
- 5HQ41j7ylHaK1bjOdVVAsMrbEUih3A7zde/+6s/GxdV31a4g8GX9+w+cM+UrSwJ9tvSMwStr/
- ujQEEE+u7/372PvqW34utaMO/za3pZ7Q8zCufyaFTFyk0CBCDXi80VrOLn39UVmogh2YiupBm
- rlJJ5LswXx5TFhTWemrTd+jacC7/1ihSH0/AsxqR1vdhbnneLO87vET/ZeKkxmU+nOh+ON/W/
- DbLe6llWKGIIzwn+KO1atks76md3Mp15qbovhthsjPelIHqNTRG9jMWEVeQI8IxRkYUbu8UZg
- FXEiRywGqWF7C4kBNQ/Uhbf5UtLjXfYnEj339DkaYWR90vLXD6cRdS4XjVT0KVslgsV+Uk/hD
- A+KVCeOy0uJF8n54z/HxICbupHLkYZq6hl+loMBZz0P+7u6cNhNU/zS3u0Jyes0ldaVah5LBR
- 0/m3P4mUKTlHSAlWDyURJ8kxeBGwpznv1f4H0JDRm9b5A6xge0vXGhvX7fsnNGCG0AJ3HI8gC
- cwzaP1AtE9wmQZJCKnAYPG4BMo/djy9mEzP1JO3dLmW+xydfMcgj2c9R5NZPCcM5QDFDVOYXX
- S+4zvnlvthusjbxCAXjfZzf3OxqW9MQzUL/A7GjVSLnO0pi1kVohNT/DRM3gv9gdqgf5EMXPq
- 80HwW1zt/ayt/QnnJG5ip/wBIzeM4zwF5Y13mOOMDXHlWL6848Oiri5T05LWWk7RQrPIjrVzq
- wtKHskkfJKtvG7rs6Ovr045XtHa/VM3p1HG3wsa3vynCUSucNf2dZ5U/wJ9W5REmp5mKfWD03
- RM6XNVeIhgEC25lICORLpeDbckgipCyfXYtvy2qKOA2tS13W1THxrpcT++KK4nZu4t9mMd+H6
- xnN4tmkdbkhbhr20yHkP1fVZF3GLSXt6E0BY6xbjMq+SwiHUDAcMLjtRQUvefLfQ7lUDsigmh
- IGNRI6iHJno7DXwna3wnwXYZb4mvWtw/rmQRH1KiYMUl7mPfPzK5mne1r1SqQCDXz+drdT9vM
- TW0kwSTZ5LCMO4SLBsH4jC/gY91uVCns+vIe9hdTyy2rd/tNTrpF1kDmiC3LJ6b8U1IIv9USC
- IPNI6h3VGskGh3jGn0Z6YSA2AGAmbM+bcsRt6+jpjjr5Mae8mUgdSPf1AGXC3FO92HQ1TQFsl
- dtqn81HYwDzdtgS2E
+        Mon, 13 Apr 2020 05:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728225AbgDMJYm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 05:24:42 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E5CC008612
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:18:31 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m8so8068037lji.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=globallogic.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=xNnpgHBnAt93LCIPafN5Q7raYCjrxR7PxR0eKNYX2Gg=;
+        b=Mihc4o/u2GESh9QtZTLS9bDa+fIpzDDIm2QbW1xflipN04q6us+ZS1uuRCXW42gyxp
+         ow7SBl/uxT9YusmKcBLDSyPz4BYek5tLeXf2G7KWa6MhhNMYNp5TYWANvY7lnExEPunn
+         pKyTXFOcFlCR2BbHRRphxmDybSCmGDn6qeE333lKjs0UK+VUjASrhHDjWY9zpGB8ubEN
+         Mm3Witfs/SG0Q3+H781+h4IBoBvwJetZXuiqZiUhjU1BUkm4bdpafTHYbueQx6dAHBxs
+         3mI0gF2Y9e04sr9hEsN9/NFaui/nlLu45u4lCAfiSF4u3g9t1qEFNaUpgHg/v1MBbDBQ
+         sjMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=xNnpgHBnAt93LCIPafN5Q7raYCjrxR7PxR0eKNYX2Gg=;
+        b=tJ7CmgVCbCY54OPYza1EOlsv/dJ/u0yieWuZAIJMusSH88bMgOH5pvboRzNLdmdlwq
+         JNeumrRyQvq7r2Xv7zYJAeKL8OC+3hhRhSFBPo15T+MU2PGRRZw5d3dLDMVgZML1bFKu
+         3KEnHBTE6AXhbPcdkQvd+OxN+/XQM95CA9BLIfNU6rfHkO2fmRRjec1YATYPPzEsmb/Z
+         oXeNNDfQyGoLtV69aZRr8cv7FaYaLLZ487BxPP0HkpFKWqm1pUuCKcK9Zu7s9b428XDs
+         CBhab3/VLdrV0dLd4sSJZ/qeHcNZrJAdA+rvIkDBhrxsWnRGwQxx+lneiuq5WURAtowR
+         6o4A==
+X-Gm-Message-State: AGi0PuZJ4N2hQBRvkeU3OlPz+Thk19Mds2VPLq89ump685Lwt2lDZSZz
+        hHrQVAA88HE2BS3fVoydrhKKCeutbs8b8w==
+X-Google-Smtp-Source: APiQypJkQICP4Ap1mDBsse87b5AUPBn0Cjrn55lJDgqRygunQAPYwy5UN/m68rQqdBdC4VSjmv0Gjw==
+X-Received: by 2002:a05:651c:1064:: with SMTP id y4mr6248ljm.49.1586769509596;
+        Mon, 13 Apr 2020 02:18:29 -0700 (PDT)
+Received: from localhost.localdomain ([159.224.5.60])
+        by smtp.googlemail.com with ESMTPSA id e16sm8339049ljh.18.2020.04.13.02.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 02:18:29 -0700 (PDT)
+From:   Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Luis Oliveira <lolivei@synopsys.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>,
+        Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Subject: [PATCH 3/4] media: ov5647: Add support for non-continuous clock mode
+Date:   Mon, 13 Apr 2020 12:17:46 +0300
+Message-Id: <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1586758372.git.roman.kovalivskyi@globallogic.com>
+References: <cover.1586758372.git.roman.kovalivskyi@globallogic.com>
+In-Reply-To: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
+References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the error code returned by the vnt_control_out function as the
-returned value of the vnt_rf_write_embedded function instead of a
-boolean value.
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-Then, fix all vnt_rf_write_embedded calls removing the "and" operations
-and replace with a direct assignment to the ret variable and add a check
-condition after every call.
+The driver was only supporting continuous clock mode
+although this was not stated anywhere.
+Non-continuous clock saves a small amount of power and
+on some SoCs is easier to interface with.
 
-Also replace the boolean values true or false in the vnt_rf_set_txpower
-function to 0 or error code EINVAL to follow the coding style guide.
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+---
+ drivers/media/i2c/ov5647.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-The vnt_rf_set_txpower function is called only in the vnt_rf_setpower
-function that already returns error codes. The calls to this function
-(vnt_rf_set_txpower) not use the returned values, so they not need to be
-fixed.
-
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/rf.c | 99 ++++++++++++++++++++++++-------------
- 1 file changed, 64 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
-index 4f9aba0f21b0..5270ef511af9 100644
-=2D-- a/drivers/staging/vt6656/rf.c
-+++ b/drivers/staging/vt6656/rf.c
-@@ -21,6 +21,7 @@
-  *
-  */
-
-+#include <linux/errno.h>
- #include "mac.h"
- #include "rf.h"
- #include "baseband.h"
-@@ -531,10 +532,8 @@ int vnt_rf_write_embedded(struct vnt_private *priv, u=
-32 data)
- 	reg_data[2] =3D (u8)(data >> 16);
- 	reg_data[3] =3D (u8)(data >> 24);
-
--	vnt_control_out(priv, MESSAGE_TYPE_WRITE_IFRF,
--			0, 0, ARRAY_SIZE(reg_data), reg_data);
--
--	return true;
-+	return vnt_control_out(priv, MESSAGE_TYPE_WRITE_IFRF, 0, 0,
-+			       ARRAY_SIZE(reg_data), reg_data);
- }
-
- /* Set Tx power by rate and channel number */
-@@ -603,14 +602,14 @@ static u8 vnt_rf_addpower(struct vnt_private *priv)
- int vnt_rf_set_txpower(struct vnt_private *priv, u8 power, u32 rate)
+diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+index c39e3d20e3ef..8a1a515388e0 100644
+--- a/drivers/media/i2c/ov5647.c
++++ b/drivers/media/i2c/ov5647.c
+@@ -44,6 +44,7 @@
+ #define PWDN_ACTIVE_DELAY_MS	20
+ 
+ #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
++#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
+ #define MIPI_CTRL00_BUS_IDLE			BIT(2)
+ #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
+ 
+@@ -95,6 +96,7 @@ struct ov5647 {
+ 	int				power_count;
+ 	struct clk			*xclk;
+ 	struct gpio_desc		*pwdn;
++	unsigned int			flags;
+ };
+ 
+ static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
+@@ -269,9 +271,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
+ 
+ static int ov5647_stream_on(struct v4l2_subdev *sd)
  {
- 	u32 power_setting =3D 0;
--	int ret =3D true;
-+	int ret =3D 0;
-
- 	power +=3D vnt_rf_addpower(priv);
- 	if (power > VNT_RF_MAX_POWER)
- 		power =3D VNT_RF_MAX_POWER;
-
- 	if (priv->power =3D=3D power)
--		return true;
-+		return 0;
-
- 	priv->power =3D power;
-
-@@ -618,35 +617,50 @@ int vnt_rf_set_txpower(struct vnt_private *priv, u8 =
-power, u32 rate)
- 	case RF_AL2230:
- 		power_setting =3D 0x0404090 | (power << 12);
-
--		ret &=3D vnt_rf_write_embedded(priv, power_setting);
-+		ret =3D vnt_rf_write_embedded(priv, power_setting);
-+		if (ret)
-+			return ret;
-
- 		if (rate <=3D RATE_11M)
--			ret &=3D vnt_rf_write_embedded(priv, 0x0001b400);
-+			ret =3D vnt_rf_write_embedded(priv, 0x0001b400);
- 		else
--			ret &=3D vnt_rf_write_embedded(priv, 0x0005a400);
-+			ret =3D vnt_rf_write_embedded(priv, 0x0005a400);
++	struct ov5647 *ov5647 = to_state(sd);
++	u8 val = MIPI_CTRL00_BUS_IDLE;
+ 	int ret;
+ 
+-	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
++	if (ov5647->flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)
++		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
++		       MIPI_CTRL00_LINE_SYNC_ENABLE;
 +
- 		break;
- 	case RF_AL2230S:
- 		power_setting =3D 0x0404090 | (power << 12);
-
--		ret &=3D vnt_rf_write_embedded(priv, power_setting);
-+		ret =3D vnt_rf_write_embedded(priv, power_setting);
-+		if (ret)
-+			return ret;
-
- 		if (rate <=3D RATE_11M) {
--			ret &=3D vnt_rf_write_embedded(priv, 0x040c1400);
--			ret &=3D vnt_rf_write_embedded(priv, 0x00299b00);
-+			ret =3D vnt_rf_write_embedded(priv, 0x040c1400);
-+			if (ret)
-+				return ret;
++	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -568,7 +576,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
+ 	.open = ov5647_open,
+ };
+ 
+-static int ov5647_parse_dt(struct device_node *np)
++static int ov5647_parse_dt(struct device_node *np, struct ov5647 *sensor)
+ {
+ 	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
+ 	struct device_node *ep;
+@@ -581,6 +589,9 @@ static int ov5647_parse_dt(struct device_node *np)
+ 
+ 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
+ 
++	if (!ret)
++		sensor->flags = bus_cfg.bus.mipi_csi2.flags;
 +
-+			ret =3D vnt_rf_write_embedded(priv, 0x00299b00);
- 		} else {
--			ret &=3D vnt_rf_write_embedded(priv, 0x0005a400);
--			ret &=3D vnt_rf_write_embedded(priv, 0x00099b00);
-+			ret =3D vnt_rf_write_embedded(priv, 0x0005a400);
-+			if (ret)
-+				return ret;
-+
-+			ret =3D vnt_rf_write_embedded(priv, 0x00099b00);
- 		}
-+
- 		break;
-
- 	case RF_AIROHA7230:
- 		if (rate <=3D RATE_11M)
--			ret &=3D vnt_rf_write_embedded(priv, 0x111bb900);
-+			ret =3D vnt_rf_write_embedded(priv, 0x111bb900);
- 		else
--			ret &=3D vnt_rf_write_embedded(priv, 0x221bb900);
-+			ret =3D vnt_rf_write_embedded(priv, 0x221bb900);
-+
-+		if (ret)
-+			return ret;
-
- 		if (power >=3D AL7230_PWR_IDX_LEN)
--			return false;
-+			return -EINVAL;
-
- 		/*
- 		 * 0x080F1B00 for 3 wire control TxGain(D10)
-@@ -654,61 +668,76 @@ int vnt_rf_set_txpower(struct vnt_private *priv, u8 =
-power, u32 rate)
- 		 */
- 		power_setting =3D 0x080c0b00 | (power << 12);
-
--		ret &=3D vnt_rf_write_embedded(priv, power_setting);
--
-+		ret =3D vnt_rf_write_embedded(priv, power_setting);
- 		break;
-
- 	case RF_VT3226:
- 		if (power >=3D VT3226_PWR_IDX_LEN)
--			return false;
-+			return -EINVAL;
- 		power_setting =3D ((0x3f - power) << 20) | (0x17 << 8);
-
--		ret &=3D vnt_rf_write_embedded(priv, power_setting);
--
-+		ret =3D vnt_rf_write_embedded(priv, power_setting);
- 		break;
- 	case RF_VT3226D0:
- 		if (power >=3D VT3226_PWR_IDX_LEN)
--			return false;
-+			return -EINVAL;
-
- 		if (rate <=3D RATE_11M) {
- 			u16 hw_value =3D priv->hw->conf.chandef.chan->hw_value;
-
- 			power_setting =3D ((0x3f - power) << 20) | (0xe07 << 8);
-
--			ret &=3D vnt_rf_write_embedded(priv, power_setting);
--			ret &=3D vnt_rf_write_embedded(priv, 0x03c6a200);
-+			ret =3D vnt_rf_write_embedded(priv, power_setting);
-+			if (ret)
-+				return ret;
-+
-+			ret =3D vnt_rf_write_embedded(priv, 0x03c6a200);
-+			if (ret)
-+				return ret;
-
- 			dev_dbg(&priv->usb->dev,
- 				"%s 11b channel [%d]\n", __func__, hw_value);
-
- 			hw_value--;
-
--			if (hw_value < ARRAY_SIZE(vt3226d0_lo_current_table))
--				ret &=3D vnt_rf_write_embedded(priv,
-+			if (hw_value < ARRAY_SIZE(vt3226d0_lo_current_table)) {
-+				ret =3D vnt_rf_write_embedded(priv,
- 					vt3226d0_lo_current_table[hw_value]);
-+				if (ret)
-+					return ret;
-+			}
-
--			ret &=3D vnt_rf_write_embedded(priv, 0x015C0800);
-+			ret =3D vnt_rf_write_embedded(priv, 0x015C0800);
- 		} else {
- 			dev_dbg(&priv->usb->dev,
- 				"@@@@ %s> 11G mode\n", __func__);
-
- 			power_setting =3D ((0x3f - power) << 20) | (0x7 << 8);
-
--			ret &=3D vnt_rf_write_embedded(priv, power_setting);
--			ret &=3D vnt_rf_write_embedded(priv, 0x00C6A200);
--			ret &=3D vnt_rf_write_embedded(priv, 0x016BC600);
--			ret &=3D vnt_rf_write_embedded(priv, 0x00900800);
-+			ret =3D vnt_rf_write_embedded(priv, power_setting);
-+			if (ret)
-+				return ret;
-+
-+			ret =3D vnt_rf_write_embedded(priv, 0x00C6A200);
-+			if (ret)
-+				return ret;
-+
-+			ret =3D vnt_rf_write_embedded(priv, 0x016BC600);
-+			if (ret)
-+				return ret;
-+
-+			ret =3D vnt_rf_write_embedded(priv, 0x00900800);
- 		}
-+
- 		break;
-
- 	case RF_VT3342A0:
- 		if (power >=3D VT3342_PWR_IDX_LEN)
--			return false;
-+			return -EINVAL;
-
- 		power_setting =3D  ((0x3f - power) << 20) | (0x27 << 8);
-
--		ret &=3D vnt_rf_write_embedded(priv, power_setting);
--
-+		ret =3D vnt_rf_write_embedded(priv, power_setting);
- 		break;
- 	default:
- 		break;
-=2D-
-2.20.1
+ 	of_node_put(ep);
+ 	return ret;
+ }
+@@ -599,7 +610,7 @@ static int ov5647_probe(struct i2c_client *client)
+ 		return -ENOMEM;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+-		ret = ov5647_parse_dt(np);
++		ret = ov5647_parse_dt(np, sensor);
+ 		if (ret) {
+ 			dev_err(dev, "DT parsing error: %d\n", ret);
+ 			return ret;
+-- 
+2.17.1
 
