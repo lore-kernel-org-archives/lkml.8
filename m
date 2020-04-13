@@ -2,116 +2,129 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D06C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B27FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A1E2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327892072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:43:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="ZnMPCZNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgDMPnR (ORCPT
+        id S1730637AbgDMPnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:43:17 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8074 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728597AbgDMPnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:43:16 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85e9488800f3-3c2e1; Mon, 13 Apr 2020 23:42:57 +0800 (CST)
-X-RM-TRANSID: 2ee85e9488800f3-3c2e1
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.0.102] (unknown[112.1.172.56])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15e948880e98-3d466;
-        Mon, 13 Apr 2020 23:42:57 +0800 (CST)
-X-RM-TRANSID: 2ee15e948880e98-3d466
-Subject: Re: [PATCH v3]ipmi:bt-bmc:Avoid unnecessary judgement
-To:     minyard@acm.org
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-References: <20200408115958.2848-1-tangbin@cmss.chinamobile.com>
- <20200413113225.GB3587@minyard.net>
- <47c06465-9ae5-42c2-ca00-5c666521bbde@cmss.chinamobile.com>
- <20200413142348.GD3587@minyard.net>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <3894dab2-0660-999c-6f4c-4b5b9ff57773@cmss.chinamobile.com>
-Date:   Mon, 13 Apr 2020 23:44:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200413142348.GD3587@minyard.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 13 Apr 2020 11:43:31 -0400
+Received: from mail-db8eur05on2098.outbound.protection.outlook.com ([40.107.20.98]:11649
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728597AbgDMPn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:43:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n6rlkU/kHKD4TEIjrwx2IH7AjTKQ2RbTwXM9WYARisp+pV/46RWfAaYvdL8RbfWN3wyIr+j4UMCNwbFYoqllFKotos8WNTvaGb5FkaryUbOZaAu5di8zJc0EE5JwV7qouElyYlIrzBLPwZOrZZe/lDfRteuCbdLGOi3COMiEnR1Xvicnd+1qo5gbyiIMDkr/Rbtx6RAnaU3u1vJ0EPWwysDXLnczoRY49ZbbG6zrrvKv1lFY+q9SOgB4HQADPN9tTXyTQyScZLVsVA0FLbZgIiQJwaZZgal2F4EvRFIWV/MPB7OVZhjOJTWNpd6NLlOAUmXm0N0T9HXn2TktM829sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6ddXb6IjnAUTvKtR+n8DdiwhMh0/iXKbtFOQnU3kBXc=;
+ b=UmGNU8eQHAgiRHyYbN5F7Ud2ROrrHJHv5AmbqHsmhu8l1bJeQI5zLrLNtGmVnQnidtdMwGUDhuTDuJuiRVMTBtgN9tAxySrZIoAh02VrrrEEvbVkJo4Ulit4d7Qx3NJvkkfUDCXCdy4u6CKl/+RyEJk+Sc7lVCY5m1EbzqXQ8d0vgQHfoTlme1Ty3IO9fHdAf8kEjApIcgHVY+/2FIHMlVvKKmbOSH8KE9ZU55YX2W99+IbLCqDBDiwjwwo7koxGBp7ZTOl4dWTb31KkkL80ewz0H12OH3557HBcLQN2eOWJoqiSADGSm+KqfxJoCdwJ0aaaQFVIHn1BuPa5qxblrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=criteo.com; dmarc=pass action=none header.from=criteo.com;
+ dkim=pass header.d=criteo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6ddXb6IjnAUTvKtR+n8DdiwhMh0/iXKbtFOQnU3kBXc=;
+ b=ZnMPCZNyIw6xoCqwVolpfxLLhGdTjOjSRj4bnnLPoXxWCSdtITsYjniXS9qjL+yhwbbZ7LAO3iRIhUk5PHbrrmi+GBxjOKay4dQTMbfuNVGs6/vecAfZaHUmnks5L1I3/yVNO2cK+tZ/b3qcEFTcWFKgJ5AvEsnBhjHgLL3AZpU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=v.minet@criteo.com; 
+Received: from AM6PR04MB4230.eurprd04.prod.outlook.com (2603:10a6:209:41::33)
+ by AM6PR04MB6599.eurprd04.prod.outlook.com (2603:10a6:20b:fd::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Mon, 13 Apr
+ 2020 15:43:23 +0000
+Received: from AM6PR04MB4230.eurprd04.prod.outlook.com
+ ([fe80::f151:2536:ba90:6629]) by AM6PR04MB4230.eurprd04.prod.outlook.com
+ ([fe80::f151:2536:ba90:6629%5]) with mapi id 15.20.2900.028; Mon, 13 Apr 2020
+ 15:43:23 +0000
+From:   Vincent Minet <v.minet@criteo.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Vincent Minet <v.minet@criteo.com>
+Subject: [PATCH] umh: fix memory leak on execve failure
+Date:   Mon, 13 Apr 2020 17:42:44 +0200
+Message-Id: <20200413154244.18583-1-v.minet@criteo.com>
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-ClientProxiedBy: PR2PR09CA0010.eurprd09.prod.outlook.com
+ (2603:10a6:101:16::22) To AM6PR04MB4230.eurprd04.prod.outlook.com
+ (2603:10a6:209:41::33)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (5.196.75.236) by PR2PR09CA0010.eurprd09.prod.outlook.com (2603:10a6:101:16::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Mon, 13 Apr 2020 15:43:22 +0000
+X-Originating-IP: [5.196.75.236]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6532f9b9-13c0-4b69-f9c0-08d7dfc1660c
+X-MS-TrafficTypeDiagnostic: AM6PR04MB6599:|AM6PR04MB6599:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB659977074E5484FC385E2A9590DD0@AM6PR04MB6599.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 037291602B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4230.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(136003)(376002)(346002)(396003)(39850400004)(36756003)(6486002)(8936002)(66946007)(66476007)(478600001)(6916009)(2906002)(6666004)(8676002)(81156014)(66556008)(16526019)(26005)(86362001)(186003)(52116002)(5660300002)(54906003)(316002)(2616005)(956004)(55236004)(6506007)(107886003)(4326008)(6512007)(1076003)(69590400007);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: criteo.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tzXq3Ff5BnbIgxmDkgRQgWK0L3PuZj/ysOLlpzquOpFAp3QROKAvZh46llUYpoPuWQ3g9N8HAZnAuDHAkdBSz7gJgAhLt0TZD3NgrfwvQ+JaMV3F5Dl2kNP/BD36huF52bFQMMw1HeE71R+9U7pbuAxGjEVRzuFgTduKRH9i1GXD5vzKwwky3c3qlin8OYXYmF1wCora1ZXewX5LXtJ2lnj1HHnqnL9TJmCTS5hxx9m6T12aPKjS6Wd1sTtq729i3agwzIrE7rXWZmYYNHMw7J7zLMY1AmllzEg2njoEpodtJ1XtMU5rc0fdfyJrPupRlM6RXdKkr3gg0s1ToEU4kIpSV43Eqx1IfOaKoh+AZEwAnkxngIA5ZJISQzsM36zMH3J5w/v/eoAB1L//Dlm0uqCxaBdOYFac2HxhOfVQ92x5T9Is5+5eMH4Con5YgqbbIJigrGO0YTP5TspsarpyCf1b5y4dBOJ8zoo2exPcgvmAVTHSPqVPNvqZSgnUrnmu
+X-MS-Exchange-AntiSpam-MessageData: 4oFjgn+HuaEjKhhjo8H8fKSdA0eqTa2BHZJUgOO+ITs18FanXB+9qZnS872JS3YbcO5MC2ikTsC2w3oE2BPaHXIhNf2ypdcwqu4mNNgD9ETN9mLf0aXl6rbC1KvNhx1yRmMCfd8v7w94IVSNVk69YQ==
+X-OriginatorOrg: criteo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6532f9b9-13c0-4b69-f9c0-08d7dfc1660c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2020 15:43:23.2681
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2a35d8fd-574d-48e3-927c-8c398e225a01
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2P5RF1PRmC1HRwB8nBHybNE6aS/AgMFS1UDA3W8YuZlpHBcL6/YR3mXtwHm4jpQYJboQS6fl2uOvv5LwCDh23Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6599
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Corey:
+If a UMH process created by fork_usermode_blob() fails to execute,
+a pair of struct file allocated by umh_pipe_setup() will leak.
 
-On 2020/4/13 22:23, Corey Minyard wrote:
->> Can I consider that the patch will be applied in 5.8？
-> It's in my queue, so that's the plan.
->
->>>    I
->>> changed the title to be "Avoid unnecessary check".
->> You have modified it, which means I don't need to submit a new patch？
-> Correct.
+Under normal conditions, the caller (like bpfilter) needs to manage the
+lifetime of the UMH and its two pipes. But when fork_usermode_blob()
+fails, the caller doesn't really have a way to know what needs to be
+done. It seems better to do the cleanup ourselves in this case.
 
-Thank you very much, I am waiting for the applied.
+Fixes: 449325b52b7a ("umh: introduce fork_usermode_blob() helper")
+Signed-off-by: Vincent Minet <v.minet@criteo.com>
+---
+ kernel/umh.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-
-Then, I have some questions to ask you:
-
-     I have checked the file bt-bmc.c carefully, and found that there 
-are another two problems.Please help me analyze them, if you think it is 
-feasible, then I will submit the patch.
-
-     Q1: About Format Problem
-
-            In the 469~471 line, the first letter should be indented, 
-please check if the writing here is reasonable?
-
-
-     Q2: About the function bt_bmc_config_irq()
-
-           1）In the function bt_bmc_probe(), the return value of 
-bt_bmc_config_irq() made no judgement, whether it is suitable? （If your 
-view is don't need to judge, the following will change.）
-
-
-           2）According to the kernel interface of platform_get_irq(),the 
-return value is negative,
-
-                    if (!bt_bmc->irq)
-                         return -ENODEV;
-
-                so the check here is invalid.The standard way to write is:
-
-                      if (bt_bmc->irq < 0)
-                           return bt_bmc->irq;
-
-                But consider if failed, "bt_bmc->irq" must be assigned 
-to "0"，the easiest way is to delete the        403~404 line, handled 
-directly by the function devm_request_irq().
-
-
-         Q3：About dev_warm()
-
-                 KERN_WARNING is higher than KERN_INFO, the same to 
-dev_warn() and dev_info(). When the function bt_bmc_probe() uses 
-dev_info() to print error message, the dev_warm() in the line of 409 
-should be redundant.
-
-
-I am waiting for your replay, and thank you for your guidance.
-
-Tang Bin
-
-
+diff --git a/kernel/umh.c b/kernel/umh.c
+index 7f255b5a8845..20d51e0957e0 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -475,6 +475,12 @@ static void umh_clean_and_save_pid(struct subprocess_info *info)
+ {
+ 	struct umh_info *umh_info = info->data;
+ 
++	/* cleanup if umh_pipe_setup() was successful but exec failed */
++	if (info->pid && info->retval) {
++		fput(umh_info->pipe_to_umh);
++		fput(umh_info->pipe_from_umh);
++	}
++
+ 	argv_free(info->argv);
+ 	umh_info->pid = info->pid;
+ }
+-- 
+2.26.0
 
