@@ -2,80 +2,77 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB3EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DC4C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D29B20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EC020732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbgDMOFH (ORCPT
+        id S1730300AbgDMOFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:05:07 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:51933 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730262AbgDMOFF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:05:05 -0400
-Received: by mail-il1-f199.google.com with SMTP id i13so10676019ilq.18
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:05:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=dSAaCUxfmH3RsO4S6JaqC9sPiFMT1emTj9SauC2DHLk=;
-        b=fdC46RIExKTw9SmxCzjZJTqGSSA2r08zRI5ymDmYbBevrGZVVBfVavTTo5oRxlzqlR
-         zaY3xroGVtr84zNomLLijGywTUj/Im29aZLvRycV5VyFTAAXEENBz0Ki25cagvxMsnoG
-         icAMhVoDJbvBgPjkOSbZ9PA//pCoiE7Q5k9+a1LM6jPpB28Jvf8PM9lUfuToLVQYm7lK
-         ne/qt48EOdLRqonIipef8d9Rp1iIRA6kK652gU3lFMRA4O7YyPVFXrFdrG0AsPZH9TGe
-         vJ/cz4bBK2xsk+Tk90YriuXwy84dTu+FlV4JXD2e8WqQ9mI6gfNsv1wmFXgEnh6LGAxq
-         NcQw==
-X-Gm-Message-State: AGi0PuYxJBTZpORno/A0xYfvXmzSYtr2Ptp/f3T2rEl+mgAtZE3LV4Ze
-        F8hUu2SAlPnBgErPuyqMH7gXGdh/qetHy0mkIMy+rZsyIFwi
-X-Google-Smtp-Source: APiQypLR1F78iaVNLapYRHoDrHWZAKXWioEFmpkhtSEmyxWdBCDJ9YMPc5xSsHv6bj/OoSxNP8wJr0eMQai+nXX/+ecVqEcBkG0h
+        Mon, 13 Apr 2020 10:05:44 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2365 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730262AbgDMOFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:05:42 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B85697FE27BEFDDC1BA6;
+        Mon, 13 Apr 2020 22:05:34 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
+ 22:05:28 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <robert.moore@intel.com>, <erik.kaneda@intel.com>,
+        <rafael.j.wysocki@intel.com>, <lenb@kernel.org>,
+        <linux-acpi@vger.kernel.org>, <devel@acpica.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] ACPICA: Use ARRAY_SIZE instead of hardcoded siz
+Date:   Mon, 13 Apr 2020 22:31:56 +0800
+Message-ID: <20200413143156.22633-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:7b05:: with SMTP id q5mr16487082jac.105.1586786703461;
- Mon, 13 Apr 2020 07:05:03 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 07:05:03 -0700
-In-Reply-To: <000000000000bb471d05a2f246d7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cb517b05a32c917b@google.com>
-Subject: Re: WARNING in hwsim_new_radio_nl
-From:   syzbot <syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes@sipsolutions.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, mathew.j.martineau@linux.intel.com,
-        matthieu.baerts@tessares.net, netdev@vger.kernel.org,
-        pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Fix the following coccicheck warning:
 
-commit 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6
-Author: Paolo Abeni <pabeni@redhat.com>
-Date:   Fri Mar 27 21:48:51 2020 +0000
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
 
-    mptcp: add netlink-based PM
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/acpi/acpica/rsdumpinfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10225bb3e00000
-start commit:   4f8a3cc1 Merge tag 'x86-urgent-2020-04-12' of git://git.ke..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12225bb3e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14225bb3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bfbde87e8e65624
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4aee3f42d7584d76761
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100825afe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10df613fe00000
+diff --git a/drivers/acpi/acpica/rsdumpinfo.c b/drivers/acpi/acpica/rsdumpinfo.c
+index cafa8134b4c6..f1ba4cd8080f 100644
+--- a/drivers/acpi/acpica/rsdumpinfo.c
++++ b/drivers/acpi/acpica/rsdumpinfo.c
+@@ -15,7 +15,7 @@ ACPI_MODULE_NAME("rsdumpinfo")
+ #if defined(ACPI_DEBUG_OUTPUT) || defined(ACPI_DISASSEMBLER) || defined(ACPI_DEBUGGER)
+ #define ACPI_RSD_OFFSET(f)          (u8) ACPI_OFFSET (union acpi_resource_data,f)
+ #define ACPI_PRT_OFFSET(f)          (u8) ACPI_OFFSET (struct acpi_pci_routing_table,f)
+-#define ACPI_RSD_TABLE_SIZE(name)   (sizeof(name) / sizeof (struct acpi_rsdump_info))
++#define ACPI_RSD_TABLE_SIZE(name)   ARRAY_SIZE(name)
+ /*******************************************************************************
+  *
+  * Resource Descriptor info tables
+-- 
+2.21.1
 
-Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
