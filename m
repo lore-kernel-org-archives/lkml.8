@@ -2,215 +2,147 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB9FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E19BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8BB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8C020692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:49:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ChXLd26k";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="szvMWsA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgDMKsp (ORCPT
+        id S1728777AbgDMKtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:48:45 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:50122 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728011AbgDMKso (ORCPT
+        Mon, 13 Apr 2020 06:49:20 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:2842 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbgDMKtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:48:44 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TvP6RXn_1586774914;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvP6RXn_1586774914)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 13 Apr 2020 18:48:35 +0800
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
-Date:   Mon, 13 Apr 2020 18:48:22 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Mon, 13 Apr 2020 06:49:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1586774959; x=1618310959;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=cXrBHSYwDJETMu57qlB6ZWhmCg2C/tC6KLvHIrTHt28=;
+  b=ChXLd26khKDTJYmY+dqelL93yrjRCXPOPk3PHDiKFqM725RPGb/uMF2E
+   yqvxqJNlkyOMVN5jayPOOoGcqQcu8xEHOEgTCpit6W+xnVesGajHb4xDH
+   b/a16nMdm3uWUJY7tAbA4H4lwxqY7l6j4Lb8llVraQRKzaPQBH38ph6zr
+   mBrO20O34KeJsDUVkQpM4p8bMH67kxVIkDdyYx0PYHKqiRWOKAH3XVbfC
+   V74LVdrWZuP5mykuuvLiu76tQ9TcoGeK8xN+LXJkPK9whwoV7fJM7ArA4
+   BkQm57kf6Ja6Fauil+QOtiSr8I9AeamXJ3mNU7AnOoc62Nc6FweFpPm42
+   w==;
+IronPort-SDR: Z3Ly5NLTpWqOoFV4uT9YabvDY6+rPWbaqLwZwYiUgvC1k4dQMQKJ3td73IffE0ROnakv//Lmdl
+ bLpMBTZt+/wLe9ZmWSHh7RrcZL/odXELLbByKkxfLjrZK3wkVuyOXLTGNSfKYh1U7wvOTkxAi3
+ 7Zcpk3auo1k1YcijHVQP5abvYv5wFFabUguqx5P8L+1s+zzGmIGVsceATgvYTrDABaB6+rCoDW
+ lYGtmqxZ3SxWBVVZa4Tsp7tH6BZk2d4nhuJjcZgjksv7LS50BCe4JIYl3/YRKkKasxrVAf33L9
+ JJY=
+X-IronPort-AV: E=Sophos;i="5.72,378,1580745600"; 
+   d="scan'208";a="135212751"
+Received: from mail-bn8nam11lp2177.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.177])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Apr 2020 18:49:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=il3Jje+njS2uki92Upoy287eivMhprkDffkdlfHPFlQKQMwHCb11gTybjsuAqAxgZFuejiMar1HOq+iiBTjooTbbmpy1X1ZDaNlqdVrvbnt4lRnLAD79BXGdTcvWv7Qrct/zgxPqvNX++GAfepz3q+7AyBocI2it8mCrJiRJKCJycEKIhgB+dZUYm67DPeQCk95ZZmbDrIkuWSvnViWPb2HXbttmJG2qzeQ6suy9fyYw0ovxFzG9lJ+nXclM81ZKENEIA2fEb53N6n+3/JqGeE9ZOXT7DslUrUCtf5/Tn09p+6+3pDxopPq2aKdclCPM9eCwxCqstiYTPdu+cd4EhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cXrBHSYwDJETMu57qlB6ZWhmCg2C/tC6KLvHIrTHt28=;
+ b=ERlJ+dedtyzhMSq2/fvkM14ThEysUtzWzCUEIRlw1Ab6L9qy3x9agKXRnJyWv+8JKZBKvxzesc6SD1av8UkSEy4N1b2h5EeG2hp4e6QRtdSxq1jN+X0iZxb4sWE4Ry2B1IaJS5pcY9qBkkJFBsSip7mwr4bwPeEHRUFYsr8V82QC6PPIEZZF7e7t4hfST1YgGQ8G3XRm8jq3xKbClxe7i9o51cck3c4Kdk1ZI1QUklNYXwn4X+Kyuz+QKYZpszUPpkZo0rvuuZgJSzUck2J+2QPv3eKVMfv4LI76BXx/LjfDxWXTtVliCHJ/1rDsoadoEraJSiQWvM+MuKBoIufwbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cXrBHSYwDJETMu57qlB6ZWhmCg2C/tC6KLvHIrTHt28=;
+ b=szvMWsA7BgY9R5AYlv1WlLvHqzCCf2fbBVy/p+knVE2+2u9VCg8uNVgHAxcB/foskBo22BnsB1ZUBUaC0FAf4nSvyu7nMT/BDrujFX0bFKwq+OIbqfL6RxUg4u/05dA9usMjeXAGJwlkpDTBbGeSPuny5lPr1bbQoNkbz5JDQkI=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4015.namprd04.prod.outlook.com (2603:10b6:805:3f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Mon, 13 Apr
+ 2020 10:49:16 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2900.028; Mon, 13 Apr 2020
+ 10:49:16 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     "krzk@kernel.org" <krzk@kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "kwmad.kim@samsung.com" <kwmad.kim@samsung.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Seungwon Jeon <essuuj@gmail.com>
+Subject: RE: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for Exynos
+ SoCs
+Thread-Topic: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for Exynos
+ SoCs
+Thread-Index: AQHWEJ3tZZYUB/0KkkO5PNiaFbmGc6h24Mtw
+Date:   Mon, 13 Apr 2020 10:49:15 +0000
+Message-ID: <SN6PR04MB46402903F25BF57C2EA3DAC1FCDD0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200412073159.37747-1-alim.akhtar@samsung.com>
+        <CGME20200412074218epcas5p3ef7973c8a47533a15a359b069da8003c@epcas5p3.samsung.com>
+ <20200412073159.37747-5-alim.akhtar@samsung.com>
+In-Reply-To: <20200412073159.37747-5-alim.akhtar@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 61c28761-1ab0-40ef-befc-08d7df984fbb
+x-ms-traffictypediagnostic: SN6PR04MB4015:
+x-microsoft-antispam-prvs: <SN6PR04MB401523E4836EC814F97122FDFCDD0@SN6PR04MB4015.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:483;
+x-forefront-prvs: 037291602B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(6029001)(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(66476007)(66446008)(64756008)(66946007)(6506007)(76116006)(478600001)(186003)(66556008)(54906003)(316002)(110136005)(4744005)(7696005)(71200400001)(52536014)(5660300002)(86362001)(4326008)(26005)(7416002)(33656002)(55016002)(9686003)(8676002)(2906002)(8936002)(81156014);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2vrURz5+rrDaRkHSrIZO5ICagq0Fxrtzfp2tykPkx77j/ssGLQDd4aDjVM95jyDhouFpU0RaMbWdPX9eFyTncKgO+eOCJmoZF+KNhhO6jrKR01mO+vYBWxMkrNcT2HtoRtMIm+80c7XRJ/RdOuEIn/CieygGMtJcZlo4/IHqpo7PWSM2GpYY72YBXcHnLUru4xHvzydOF3EdX+C9yc2HptKoWeEAq36BiKbhraXV/Y7EB8XlEx3eIV/LRWfJDP3XFHpVgF5/KpYGvcPCooFCwSsHqSVPiWXjlJCzPsU2gs921/LjGVPPpRGEDcj4AHXdeHPmTkX9watOKjh4ogoMs+omSm/HzGY0PAURH7HO9pXZyV8wDJAzeEx14iQZMvQOP1EVhxmVg8f1Q+tsakufV2A1bdz90YBZsie75qdBbMSNfHz+xVHtj5/AzvTONXo+
+x-ms-exchange-antispam-messagedata: eE6Ly8ehoz/lXwhvwM/vv3tNaiUPoKPVxDFSejQQovTxTpG9ikeexDi3qymJBt0mSLzUcmfy0oaX92DmrUgEOFT0DBEq0eXL9Vk95TdjU0zDv0qAc/eXJQx4rm5gy0yho5U1h/4vbLbhTqW+1iCajQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200116215222.GA64230@cmpxchg.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61c28761-1ab0-40ef-befc-08d7df984fbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2020 10:49:16.0772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UajJMu34pmO1JwiFlT1lqG2UvTymXKtPLyGpggj9+FhRfEwUyem7MvZGJYLNK7xbV98VTb7SU4E5zRys+KZmFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In a previous review, I pointed out the following race condition
-> between page charging and compaction:
-> 
-> compaction:				generic_file_buffered_read:
-> 
-> 					page_cache_alloc()
-> 
-> !PageBuddy()
-> 
-> lock_page_lruvec(page)
->   lruvec = mem_cgroup_page_lruvec()
->   spin_lock(&lruvec->lru_lock)
->   if lruvec != mem_cgroup_page_lruvec()
->     goto again
-> 
-> 					add_to_page_cache_lru()
-> 					  mem_cgroup_commit_charge()
-> 					    page->mem_cgroup = foo
-> 					  lru_cache_add()
-> 					    __pagevec_lru_add()
-> 					      SetPageLRU()
-> 
-> if PageLRU(page):
->   __isolate_lru_page()
-> 
-> As far as I can see, you have not addressed this. You have added
-> lock_page_memcg(), but that prevents charged pages from moving between
-> cgroups, it does not prevent newly allocated pages from being charged.
-> 
-> It doesn't matter how many times you check the lruvec before and after
-> locking - if you're looking at a free page, it might get allocated,
-> charged and put on a new lruvec after you're done checking, and then
-> you isolate a page from an unlocked lruvec.
-> 
-> You simply cannot serialize on page->mem_cgroup->lruvec when
-> page->mem_cgroup isn't stable. You need to serialize on the page
-> itself, one way or another, to make this work.
-> 
-> 
-> So here is a crazy idea that may be worth exploring:
-> 
-> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
-> linked list.
-> 
-> Can we make PageLRU atomic and use it to stabilize the lru_lock
-> instead, and then use the lru_lock only serialize list operations?
-> 
-> I.e. in compaction, you'd do
-> 
-> 	if (!TestClearPageLRU(page))
-> 		goto isolate_fail;
-> 	/*
-> 	 * We isolated the page's LRU state and thereby locked out all
-> 	 * other isolators, including cgroup page moving, page reclaim,
-> 	 * page freeing etc. That means page->mem_cgroup is now stable
-> 	 * and we can safely look up the correct lruvec and take the
-> 	 * page off its physical LRU list.
-> 	 */
-> 	lruvec = mem_cgroup_page_lruvec(page);
-> 	spin_lock_irq(&lruvec->lru_lock);
-> 	del_page_from_lru_list(page, lruvec, page_lru(page));
-> 
-> Putback would mostly remain the same (although you could take the
-> PageLRU setting out of the list update locked section, as long as it's
-> set after the page is physically linked):
-> 
-> 	/* LRU isolation pins page->mem_cgroup */
-> 	lruvec = mem_cgroup_page_lruvec(page)
-> 	spin_lock_irq(&lruvec->lru_lock);
-> 	add_page_to_lru_list(...);
-> 	spin_unlock_irq(&lruvec->lru_lock);
-> 
-> 	SetPageLRU(page);
-> 
-> And you'd have to carefully review and rework other sites that rely on
-> PageLRU: reclaim, __page_cache_release(), __activate_page() etc.
-> 
-> Especially things like activate_page(), which used to only check
-> PageLRU to shuffle the page on the LRU list would now have to briefly
-> clear PageLRU and then set it again afterwards.
-> 
-> However, aside from a bit more churn in those cases, and the
-> unfortunate additional atomic operations, I currently can't think of a
-> fundamental reason why this wouldn't work.
-> 
-> Hugh, what do you think?
-> 
-
-Hi Johannes
-
-As to the idea of TestClearPageLRU, we except the following scenario
-    compaction                       commit_charge
-                                     if (TestClearPageLRU)
-        !TestClearPageLRU                 lock_page_lruvec
-            goto isolate_fail;            del_from_lru_list
-                                          unlock_page_lruvec
-
-But there is a difficult situation to handle:
-
-   compaction                        commit_charge
-        TestClearPageLRU
-                                    !TestClearPageLRU
-
-                                    page possible state:
-                                    a, reclaiming, b, moving between lru list, c, migrating, like in compaction
-                                    d, mlocking,   e, split_huge_page,
-
-If the page lru bit was cleared in commit_charge with lrucare,
-we still have no idea if the page was isolated by the reason from a~e
-or the page is never on LRU, to deal with different reasons is high cost.
-
-So as to the above issue you mentioned, Maybe the better idea is to
-set lrucare when do mem_cgroup_commit_charge(), since the charge action
-is not often. What's your idea of this solution?
-
-Thanks
-Alex
-
-> compaction:				generic_file_buffered_read:
-> 
-> 					page_cache_alloc()
-> 
-> !PageBuddy()
-> 
-> lock_page_lruvec(page)
->   lruvec = mem_cgroup_page_lruvec()
->   spin_lock(&lruvec->lru_lock)
->   if lruvec != mem_cgroup_page_lruvec()
->     goto again
-> 
-> 					add_to_page_cache_lru()
-> 					  mem_cgroup_commit_charge()
-
-					 //do charge with lrucare
-					 spin_lock(&lruvec->lru_lock)
-> 					    page->mem_cgroup = foo
-> 					  lru_cache_add()
-> 					    __pagevec_lru_add()
-> 					      SetPageLRU()
-> 
-> if PageLRU(page):
->   __isolate_lru_page()
+PiANCj4gVGhpcyBwYXRjaCBpbnRyb2R1Y2VzIEV4eW5vcyBVRlMgaG9zdCBjb250cm9sbGVyIGRy
+aXZlciwNCj4gd2hpY2ggbWFpbmx5IGhhbmRsZXMgdmVuZG9yLXNwZWNpZmljIG9wZXJhdGlvbnMg
+aW5jbHVkaW5nDQo+IGxpbmsgc3RhcnR1cCwgcG93ZXIgbW9kZSBjaGFuZ2UgYW5kIGhpYmVybmF0
+aW9uL3VuaGliZXJuYXRpb24uDQo+IA0KPiBSZXBvcnRlZC1ieToga2J1aWxkIHRlc3Qgcm9ib3Qg
+PGxrcEBpbnRlbC5jb20+DQo+IFJlcG9ydGVkLWJ5OiBKdWxpYSBMYXdhbGwgPGp1bGlhLmxhd2Fs
+bEBsaXA2LmZyPg0KPiBbcm9ib3Q6IGRyaXZlcnMvc2NzaS91ZnMvdWZzLWV4eW5vcy5jOjkzMTo4
+LTEwOg0KPiAgV0FSTklORzogcG9zc2libGUgY29uZGl0aW9uIHdpdGggbm8gZWZmZWN0IChpZiA9
+PSBlbHNlKQ0KPiBdDQo+IFJldmlld2VkLWJ5OiBLaXdvb25nIEtpbSA8a3dtYWQua2ltQHNhbXN1
+bmcuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBTZXVuZ3dvbiBKZW9uIDxlc3N1dWpAZ21haWwuY29t
+Pg0KPiBTaWduZWQtb2ZmLWJ5OiBBbGltIEFraHRhciA8YWxpbS5ha2h0YXJAc2Ftc3VuZy5jb20+
+DQo+IFRlc3RlZC1ieTogUGF3ZcWCIENobWllbCA8cGF3ZWwubWlrb2xhai5jaG1pZWxAZ21haWwu
+Y29tPg0KUmV2aWV3ZWQtYnk6IEF2cmkgQWx0bWFuIDxhdnJpLmFsdG1hbkB3ZGMuY29tPg0KDQo=
