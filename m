@@ -8,59 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BE9C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4990C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7266B2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA082075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:59:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5S1BJRQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgVrUESm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgDMM7x (ORCPT
+        id S1729687AbgDMM7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36904 "EHLO
+        Mon, 13 Apr 2020 08:59:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgDMM7n (ORCPT
+        by vger.kernel.org with ESMTP id S1729670AbgDMM7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 08:59:43 -0400
-X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 08:59:42 EDT
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3242C008769;
-        Mon, 13 Apr 2020 05:54:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id np9so3790518pjb.4;
-        Mon, 13 Apr 2020 05:54:23 -0700 (PDT)
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77759C00860B;
+        Mon, 13 Apr 2020 05:54:38 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id o1so2920763pjs.4;
+        Mon, 13 Apr 2020 05:54:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k49Z1eeIe8RAePIWxlY/V+bEMZoWrI+Axi8oPgRhVtE=;
-        b=L5S1BJRQ9w88zx9XItTQeKB1SWsCw9jN3PuCuTfVxmuOCKWgUewZNKRsVyQjwxHom4
-         ryvIxTIOl9WF3LHatElNK8cNsWnR1tE7/N5ODwBzb5+SkQvox0yCH821WVCcfqm495pa
-         LK65a2FSueaENFn4ZvlWg3x+AHB5L2wFPRT41i9dbpsLWS2dWFfpccRmZEmhKUWPEymx
-         WyI5x9Acu8dyiVuDncUPJrEQb0Sf9Z9Fwppf9ivQJDnmtOAgeNFzkaQYfo3pypCDwIVI
-         ITWDYFpdOCKbVXLiHa2pbhcRH0bGRxSg+GfkJc2W005zzgPh63LtWhzwzkFkwciB+nEy
-         N5WA==
+        bh=t/wcNzaAB5pAArlx+ZjBI9wsNpeJjlLOlloWkaJo2n4=;
+        b=TgVrUESmDUMV2qkPYNmjlgmMwQVS/rXuX+p4JfyO5oH8F93TSYD1nLlg8YLxzziZCo
+         KvrlLoETWJNRh5ducV8daE6BuUTVDAl1vMXM5Q72je6aKY+eMRSLrxC8RWoQFaQwl4EE
+         87rU/kiWEXxXduA3cgMoXJvdHG2+ufl7y5bWwp/udEWoMYooNnyNHOalR7+iMriyogMK
+         jQgHAfqvoWEw4jHqF6GPVmrp+9RzUGl0Ca8Q6vKv6ZudkHE8IXEUQ2/WBSZtyYCoReWl
+         fOHmutSGi+FG7GH/xmlRuosY0QpoX2sc+SakFBvE+yTmDI/0yky8hBK2vk7uoffF8TA5
+         dpUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k49Z1eeIe8RAePIWxlY/V+bEMZoWrI+Axi8oPgRhVtE=;
-        b=a41o3EmaxirITjePC+1ZbdQa9IiqRl8yWAmNgcU2V3dQewJDCd2XTTpCfX7jNSv/On
-         FhpGY4VuAQ2RSFO1/5m/mKN+TfSfALv2tP9xl1iDU0vOtOPN+YFT/F3eaX7/OAIzTIDd
-         1kqdlCLHAtSnvmCKv/7Rl2Gz3hMjXo3bGg53qQTWgvnmbDba28mjcRO8h0ssWD/TM9AU
-         TO7s1H6a6TZL60ZZDoXcRnaHN/xz4er0twir6jCKN54yVXwtfWjEH/9cfsApoUApDbEt
-         IISkW8r97U9dOE7RoMc3DnqKcydai68hYnEWd5e5oYSMany8/dU1ZAqhlwLsqIiAgxR2
-         jO1g==
-X-Gm-Message-State: AGi0PuaZ/7bLqa85XLkCEgNiTMxrWnOYtaT3ueyAt3nY9ShmaINxrzCQ
-        ucmjgRUnxL+wvUVCRzj+u8U=
-X-Google-Smtp-Source: APiQypKN1B5uL3kKzB/lOZ19Pz9DdktaX2dQyGsTq0k0RExJ7gXb2rmJrqHeHeQ2h0CyWmOAFzHcaA==
-X-Received: by 2002:a17:90a:368d:: with SMTP id t13mr20937061pjb.175.1586782463462;
-        Mon, 13 Apr 2020 05:54:23 -0700 (PDT)
+        bh=t/wcNzaAB5pAArlx+ZjBI9wsNpeJjlLOlloWkaJo2n4=;
+        b=tVJHnbGal/jNwtcD4Dovsc0STEd102qQxJdzRZYv86QJXgFw0UHCqg4ttoN811a7AO
+         QHKWSXRfYPj/wsHF6vc5GKMvTxEJ4Wm9xGlpHBaXepvzzTxggFoQHJ/3wal5SCHphvqG
+         CcjoPESo2b/OsY1Q88C6GBaaCv0tM4BdVu685d6w8uJyPOp2DxkqcH7JygLWAGGaGPUN
+         NMFTN1NkFnwRv0AA/nZfCF/1irdoQBe8anD0yVn48rj11Ayrv2RtcTDH9VXpA551gZ92
+         jnVaXfXwmYzvDB18A1rAuTld6VM+TncmOxInzrfoc5hUzaYVgIB1ruvO4lUZaVWEgX25
+         befw==
+X-Gm-Message-State: AGi0PuYqHvE7F4tjACwY/VPte5W8vsnQsFIYruvlRudIQhpAokKtxdaz
+        VgzlctbGHZx1T0s4xDD2mIA=
+X-Google-Smtp-Source: APiQypLq3osf0ABPUom7dyWk1j667e+sJMY76Pzt7difwoQJbWgnQtWDrEdJQ9QwzVXtD99r1MM5zw==
+X-Received: by 2002:a17:90b:3585:: with SMTP id mm5mr21755398pjb.168.1586782477948;
+        Mon, 13 Apr 2020 05:54:37 -0700 (PDT)
 Received: from bobo.ibm.com (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id j24sm9235610pji.20.2020.04.13.05.54.17
+        by smtp.gmail.com with ESMTPSA id j24sm9235610pji.20.2020.04.13.05.54.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 05:54:22 -0700 (PDT)
+        Mon, 13 Apr 2020 05:54:37 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-mm@kvack.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
@@ -71,9 +70,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2 1/4] mm/vmalloc: fix vmalloc_to_page for huge vmap mappings
-Date:   Mon, 13 Apr 2020 22:53:00 +1000
-Message-Id: <20200413125303.423864-2-npiggin@gmail.com>
+Subject: [PATCH v2 3/4] mm: HUGE_VMAP arch query functions cleanup
+Date:   Mon, 13 Apr 2020 22:53:02 +1000
+Message-Id: <20200413125303.423864-4-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200413125303.423864-1-npiggin@gmail.com>
 References: <20200413125303.423864-1-npiggin@gmail.com>
@@ -84,101 +83,266 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmalloc_to_page returns NULL for addresses mapped by larger pages[*].
-Whether or not a vmap is huge depends on the architecture details,
-alignments, boot options, etc., which the caller can not be expected
-to know. Therefore HUGE_VMAP is a regression for vmalloc_to_page.
+This changes the awkward approach where architectures provide init
+functions to determine which levels they can provide large mappings for,
+to one where the arch is queried for each call.
 
-This change teaches vmalloc_to_page about larger pages, and returns
-the struct page that corresponds to the offset within the large page.
-This makes the API agnostic to mapping implementation details.
+This allows odd configurations to be allowed (PUD but not PMD), and will
+make it easier to constant-fold dead code away if the arch inlines
+unsupported levels.
 
-[*] As explained by commit 029c54b095995 ("mm/vmalloc.c: huge-vmap:
-    fail gracefully on unexpected huge vmap mappings")
+This also adds a prot argument to the arch query. This is unused
+currently but could help with some architectures (some powerpc
+implementations can't map uncacheable memory with large pages for
+example).
+
+The name is changed from ioremap to vmap, as it will be used more
+generally in the next patch.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- mm/vmalloc.c | 40 ++++++++++++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 14 deletions(-)
+ arch/arm64/mm/mmu.c                      |  8 ++--
+ arch/powerpc/mm/book3s64/radix_pgtable.c |  6 +--
+ arch/x86/mm/ioremap.c                    |  6 +--
+ include/linux/io.h                       |  3 --
+ include/linux/vmalloc.h                  | 10 +++++
+ lib/ioremap.c                            | 51 ++----------------------
+ mm/vmalloc.c                             |  9 +++++
+ 7 files changed, 33 insertions(+), 60 deletions(-)
 
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a374e4f51a62..b8e381c46fa1 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -1244,12 +1244,12 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ 	return dt_virt;
+ }
+ 
+-int __init arch_ioremap_p4d_supported(void)
++bool arch_vmap_p4d_supported(pgprot_t prot)
+ {
+ 	return 0;
+ }
+ 
+-int __init arch_ioremap_pud_supported(void)
++bool arch_vmap_pud_supported(pgprot_t prot)
+ {
+ 	/*
+ 	 * Only 4k granule supports level 1 block mappings.
+@@ -1259,9 +1259,9 @@ int __init arch_ioremap_pud_supported(void)
+ 	       !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+ }
+ 
+-int __init arch_ioremap_pmd_supported(void)
++bool arch_vmap_pmd_supported(pgprot_t prot)
+ {
+-	/* See arch_ioremap_pud_supported() */
++	/* See arch_vmap_pud_supported() */
+ 	return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+ }
+ 
+diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+index 8f9edf07063a..5130e7912dd4 100644
+--- a/arch/powerpc/mm/book3s64/radix_pgtable.c
++++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+@@ -1091,13 +1091,13 @@ void radix__ptep_modify_prot_commit(struct vm_area_struct *vma,
+ 	set_pte_at(mm, addr, ptep, pte);
+ }
+ 
+-int __init arch_ioremap_pud_supported(void)
++bool arch_vmap_pud_supported(pgprot_t prot)
+ {
+ 	/* HPT does not cope with large pages in the vmalloc area */
+ 	return radix_enabled();
+ }
+ 
+-int __init arch_ioremap_pmd_supported(void)
++bool arch_vmap_pmd_supported(pgprot_t prot)
+ {
+ 	return radix_enabled();
+ }
+@@ -1191,7 +1191,7 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+ 	return 1;
+ }
+ 
+-int __init arch_ioremap_p4d_supported(void)
++bool arch_vmap_p4d_supported(pgprot_t prot)
+ {
+ 	return 0;
+ }
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 18c637c0dc6f..bb4b75c344e4 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -481,12 +481,12 @@ void iounmap(volatile void __iomem *addr)
+ }
+ EXPORT_SYMBOL(iounmap);
+ 
+-int __init arch_ioremap_p4d_supported(void)
++bool arch_vmap_p4d_supported(pgprot_t prot)
+ {
+ 	return 0;
+ }
+ 
+-int __init arch_ioremap_pud_supported(void)
++bool arch_vmap_pud_supported(pgprot_t prot)
+ {
+ #ifdef CONFIG_X86_64
+ 	return boot_cpu_has(X86_FEATURE_GBPAGES);
+@@ -495,7 +495,7 @@ int __init arch_ioremap_pud_supported(void)
+ #endif
+ }
+ 
+-int __init arch_ioremap_pmd_supported(void)
++bool arch_vmap_pmd_supported(pgprot_t prot)
+ {
+ 	return boot_cpu_has(X86_FEATURE_PSE);
+ }
+diff --git a/include/linux/io.h b/include/linux/io.h
+index 8394c56babc2..2832e051bc2e 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -33,9 +33,6 @@ static inline int ioremap_page_range(unsigned long addr, unsigned long end,
+ 
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+ void __init ioremap_huge_init(void);
+-int arch_ioremap_p4d_supported(void);
+-int arch_ioremap_pud_supported(void);
+-int arch_ioremap_pmd_supported(void);
+ #else
+ static inline void ioremap_huge_init(void) { }
+ #endif
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index eb8a5080e472..291313a7e663 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -84,6 +84,16 @@ struct vmap_area {
+ 	};
+ };
+ 
++#ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
++bool arch_vmap_p4d_supported(pgprot_t prot);
++bool arch_vmap_pud_supported(pgprot_t prot);
++bool arch_vmap_pmd_supported(pgprot_t prot);
++#else
++static inline bool arch_vmap_p4d_supported(pgprot_t prot) { return false; }
++static inline bool arch_vmap_pud_supported(pgprot_t prot) { return false; }
++static inline bool arch_vmap_pmd_supported(prprot_t prot) { return false; }
++#endif
++
+ /*
+  *	Highlevel APIs for driver use
+  */
+diff --git a/lib/ioremap.c b/lib/ioremap.c
+index 7e383bdc51ad..0a1ddf1a1286 100644
+--- a/lib/ioremap.c
++++ b/lib/ioremap.c
+@@ -14,10 +14,9 @@
+ #include <asm/cacheflush.h>
+ #include <asm/pgtable.h>
+ 
++static unsigned int __read_mostly max_page_shift = PAGE_SHIFT;
++
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+-static int __read_mostly ioremap_p4d_capable;
+-static int __read_mostly ioremap_pud_capable;
+-static int __read_mostly ioremap_pmd_capable;
+ static int __read_mostly ioremap_huge_disabled;
+ 
+ static int __init set_nohugeiomap(char *str)
+@@ -29,56 +28,14 @@ early_param("nohugeiomap", set_nohugeiomap);
+ 
+ void __init ioremap_huge_init(void)
+ {
+-	if (!ioremap_huge_disabled) {
+-		if (arch_ioremap_p4d_supported())
+-			ioremap_p4d_capable = 1;
+-		if (arch_ioremap_pud_supported())
+-			ioremap_pud_capable = 1;
+-		if (arch_ioremap_pmd_supported())
+-			ioremap_pmd_capable = 1;
+-	}
+-}
+-
+-static inline int ioremap_p4d_enabled(void)
+-{
+-	return ioremap_p4d_capable;
+-}
+-
+-static inline int ioremap_pud_enabled(void)
+-{
+-	return ioremap_pud_capable;
++	if (!ioremap_huge_disabled)
++		max_page_shift = P4D_SHIFT;
+ }
+-
+-static inline int ioremap_pmd_enabled(void)
+-{
+-	return ioremap_pmd_capable;
+-}
+-
+-#else	/* !CONFIG_HAVE_ARCH_HUGE_VMAP */
+-static inline int ioremap_p4d_enabled(void) { return 0; }
+-static inline int ioremap_pud_enabled(void) { return 0; }
+-static inline int ioremap_pmd_enabled(void) { return 0; }
+ #endif	/* CONFIG_HAVE_ARCH_HUGE_VMAP */
+ 
+ int ioremap_page_range(unsigned long addr,
+ 		       unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
+ {
+-	unsigned int max_page_shift = PAGE_SHIFT;
+-
+-	/*
+-	 * Due to the max_page_shift parameter to vmap_range, platforms must
+-	 * enable all smaller sizes to take advantage of a given size,
+-	 * otherwise fall back to small pages.
+-	 */
+-	if (ioremap_pmd_enabled()) {
+-		max_page_shift = PMD_SHIFT;
+-		if (ioremap_pud_enabled()) {
+-			max_page_shift = PUD_SHIFT;
+-			if (ioremap_p4d_enabled())
+-				max_page_shift = P4D_SHIFT;
+-		}
+-	}
+-
+ 	return vmap_range(addr, end, phys_addr, prot, max_page_shift);
+ }
+ 
 diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 399f219544f7..1afec7def23f 100644
+index b1bc2fcae4e0..c898d16ddd25 100644
 --- a/mm/vmalloc.c
 +++ b/mm/vmalloc.c
-@@ -36,6 +36,7 @@
- #include <linux/rbtree_augmented.h>
+@@ -171,6 +171,9 @@ static int vmap_try_huge_pmd(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 	if (max_page_shift < PMD_SHIFT)
+ 		return 0;
  
- #include <linux/uaccess.h>
-+#include <asm/pgtable.h>
- #include <asm/tlbflush.h>
- #include <asm/shmparam.h>
- 
-@@ -272,7 +273,9 @@ int is_vmalloc_or_module_addr(const void *x)
- }
- 
- /*
-- * Walk a vmap address to the struct page it maps.
-+ * Walk a vmap address to the struct page it maps. Huge vmap mappings will
-+ * return the tail page that corresponds to the base page address, which
-+ * matches small vmap mappings.
-  */
- struct page *vmalloc_to_page(const void *vmalloc_addr)
- {
-@@ -292,25 +295,33 @@ struct page *vmalloc_to_page(const void *vmalloc_addr)
- 
- 	if (pgd_none(*pgd))
- 		return NULL;
-+	if (WARN_ON_ONCE(pgd_leaf(*pgd)))
-+		return NULL; /* XXX: no allowance for huge pgd */
-+	if (WARN_ON_ONCE(pgd_bad(*pgd)))
-+		return NULL;
++	if (!arch_vmap_pmd_supported(prot))
++		return 0;
 +
- 	p4d = p4d_offset(pgd, addr);
- 	if (p4d_none(*p4d))
- 		return NULL;
--	pud = pud_offset(p4d, addr);
-+	if (p4d_leaf(*p4d))
-+		return p4d_page(*p4d) + ((addr & ~P4D_MASK) >> PAGE_SHIFT);
-+	if (WARN_ON_ONCE(p4d_bad(*p4d)))
-+		return NULL;
+ 	if ((end - addr) != PMD_SIZE)
+ 		return 0;
  
--	/*
--	 * Don't dereference bad PUD or PMD (below) entries. This will also
--	 * identify huge mappings, which we may encounter on architectures
--	 * that define CONFIG_HAVE_ARCH_HUGE_VMAP=y. Such regions will be
--	 * identified as vmalloc addresses by is_vmalloc_addr(), but are
--	 * not [unambiguously] associated with a struct page, so there is
--	 * no correct value to return for them.
--	 */
--	WARN_ON_ONCE(pud_bad(*pud));
--	if (pud_none(*pud) || pud_bad(*pud))
-+	pud = pud_offset(p4d, addr);
-+	if (pud_none(*pud))
-+		return NULL;
-+	if (pud_leaf(*pud))
-+		return pud_page(*pud) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-+	if (WARN_ON_ONCE(pud_bad(*pud)))
- 		return NULL;
-+
- 	pmd = pmd_offset(pud, addr);
--	WARN_ON_ONCE(pmd_bad(*pmd));
--	if (pmd_none(*pmd) || pmd_bad(*pmd))
-+	if (pmd_none(*pmd))
-+		return NULL;
-+	if (pmd_leaf(*pmd))
-+		return pmd_page(*pmd) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-+	if (WARN_ON_ONCE(pmd_bad(*pmd)))
- 		return NULL;
+@@ -219,6 +222,9 @@ static int vmap_try_huge_pud(pud_t *pud, unsigned long addr,
+ 	if (max_page_shift < PUD_SHIFT)
+ 		return 0;
  
- 	ptep = pte_offset_map(pmd, addr);
-@@ -318,6 +329,7 @@ struct page *vmalloc_to_page(const void *vmalloc_addr)
- 	if (pte_present(pte))
- 		page = pte_page(pte);
- 	pte_unmap(ptep);
++	if (!arch_vmap_pud_supported(prot))
++		return 0;
 +
- 	return page;
- }
- EXPORT_SYMBOL(vmalloc_to_page);
+ 	if ((end - addr) != PUD_SIZE)
+ 		return 0;
+ 
+@@ -268,6 +274,9 @@ static int vmap_try_huge_p4d(p4d_t *p4d, unsigned long addr,
+ 	if (max_page_shift < P4D_SHIFT)
+ 		return 0;
+ 
++	if (!arch_vmap_p4d_supported(prot))
++		return 0;
++
+ 	if ((end - addr) != P4D_SIZE)
+ 		return 0;
+ 
 -- 
 2.23.0
 
