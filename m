@@ -2,102 +2,116 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38667C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9435EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:36:04 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061B02073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610A2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3QyUVmo"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 061B02073E
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uz5+521n"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 610A2206E9
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgDMGap (ORCPT
+        id S1728568AbgDMGgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 02:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:51072 "EHLO
+        Mon, 13 Apr 2020 02:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:51890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbgDMGap (ORCPT
+        with ESMTP id S1727536AbgDMGgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 02:30:45 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2800FC008673;
-        Sun, 12 Apr 2020 23:30:45 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g6so4055380pgs.9;
-        Sun, 12 Apr 2020 23:30:45 -0700 (PDT)
+        Mon, 13 Apr 2020 02:36:02 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFAB3C008673;
+        Sun, 12 Apr 2020 23:36:01 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id t3so4691483qkg.1;
+        Sun, 12 Apr 2020 23:36:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=b7+FE76CrAbv5/Ztny79Na77dk/ZlKbkr1Vw0gozAZk=;
-        b=t3QyUVmofB/LxJYTmuH4EW8oCoXGwEFD+QkS+7y1z6JaT1weNzVFYjQv0KQYme6fKY
-         GwxfggGIvPgP487KP7nrSd5sT+1T+SwEBGGt8ozgqrMaRBO6FOibksLyZSx2zgyNjZ+L
-         TVnZwDg+7LaUD0qCiWAHHSkeDB9NEPk1o9c+pLeA24L72hPbDUBOxuc5Azul2Wixqlcj
-         WoZNMBoUfNgX8uJ1zjTuLGmPAYqYQfJiwFBNzxb8x7UZcaIDqu+61eWzVdsZcz9IqD6S
-         9o5h5H5OeXs6fZxkhICKGhm6FbskaK0+MXggudlnhAVpqxINNTI2bMjVfN4DQeLPWzku
-         JeZQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KMpw6K79lA/hKqIcCn2kKRSspiTDXkb2D8JjBGFr8zQ=;
+        b=uz5+521nlHBocaytihEXa/MzRtF6lSl6OnhByj/4tYGgzxMgsJepipn9S0nNQZMDJz
+         P9ee2v+EOPvrZl1stRWdTm9Of9V5vQioB7DSLHUIFvX8TZX3V1LKRUTYZ0fERav4znaL
+         ZQk7orz6i9h4g6ZzPYHczp93XiJ1euMZ2rulHWmEGDtfoxa4CRd/aewcwaAEHQdI75YQ
+         umHMLAFnEEzpJsCqD/LGFB7rPxGqxW9NBs//tY0mSGGrX1NmQJq+BRbg3orUyls6Eq5f
+         nMjVM/Z+9Tvx9dFxQHWvQGH1c63oXgjcGODdQ7gvgZTD0bQCB1/tpNBC/EHYReMxxX+J
+         oKMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=b7+FE76CrAbv5/Ztny79Na77dk/ZlKbkr1Vw0gozAZk=;
-        b=OcGfd6YLHG0Y9DEnUx9rDsxC134UdhwaX2WBuovx1eliPtmZ8xGaDeyBLJreG8eyHO
-         CtHTdAgFtuYmFhDP7ZprQzJtyxvofnujVttDpvYaMWr3CPUiBpNeFZ/Ka+ePR+Y+tqI5
-         73q5hTjTxsT/87R0YhjiYDESh32HzRqXk0sGBpX6nUxS/COfmfjs+7XzUmFAuG2dd9d7
-         g6k2JLt6Z4jGnUJEBwJfPn0nLr3T4wqyFhMkSX+ys0Kg/y+U9hWZ4QwValxzqed16mqv
-         LnTR0tpYYvbUNK8OClZONaFH4VPgkPEJXbrQI55yYwEWBEnin3l+nm8gscRwBnSsSwlb
-         ryuQ==
-X-Gm-Message-State: AGi0Pubs7AqJ91peT3uySaT9Hq5Qf3gi5RJsYtl074qh+niPm6m5gG8x
-        EIKyxoYlWfccoFUp8aunTRs=
-X-Google-Smtp-Source: APiQypIMMmaSuobJaTPNM0QJ3WTO4JlQhK7yxLHjgNC+EcZIc7aimYlP+URBewW9DSu9sa2sYUjRvQ==
-X-Received: by 2002:a63:7a15:: with SMTP id v21mr16274168pgc.416.1586759444700;
-        Sun, 12 Apr 2020 23:30:44 -0700 (PDT)
-Received: from localhost.localdomain ([45.135.186.19])
-        by smtp.gmail.com with ESMTPSA id w10sm6594286pfd.128.2020.04.12.23.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 23:30:44 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     broonie@kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: sprd: adi: Use IS_ENABLED() to validate configs
-Date:   Mon, 13 Apr 2020 14:30:25 +0800
-Message-Id: <e38807eadd5550add8eb90dd3f8fbe2cfc39cc13.1586759322.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KMpw6K79lA/hKqIcCn2kKRSspiTDXkb2D8JjBGFr8zQ=;
+        b=tgqWtRRrxSr2eDB/injdtVY48C4Ki1TeIZ/oQz6vho80zdfdI8SgHX8YETDSlapzGq
+         JPSoiq9GdKnusBkzmEPQ/JTmq3DJoWBrBJ4XEGbMQ+EP/vdYXs51yK7p2O4nQZGzdfAL
+         hZ/XTzoRHQyXEMux98sq3bfzQMAZEQfK11ZGQWZKoiQdiQRjGHsDuqOaGW5RL6i8E/U2
+         FPe94y6mOmDhkEf1Nr20ImDAwuUw4zM7pP3r8wekiKbXH2grtTSLEaeF1SsstnUqnQPJ
+         iSZtE76y+N0yZChluiMYylYi9uBxLiWZeFY9/CpU25C/rVw/0rqu/CRxDiss/mqnWpEu
+         GWqQ==
+X-Gm-Message-State: AGi0PuZ55bqQ9oU4+nwCRXo5BALb5VDWQVThe4IKTmOn4vjsOwVp5rVz
+        C5MWyAUUVkTiJ3nXhfHlOGC1eQDa2KP8bVf/Jng=
+X-Google-Smtp-Source: APiQypLAkeIgbG9vE5BMPoUzyd5dJuTAeNpXUZF1UwhH8UT1xsBlzhBm3dFEKEbDE+I8yBJb7oDCmyFUzPvyYPBCdUQ=
+X-Received: by 2002:a37:ac6:: with SMTP id 189mr952703qkk.60.1586759759747;
+ Sun, 12 Apr 2020 23:35:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1888197.j9z7NJ8yPn@kreacher> <5092680.jloV5Ae5OO@kreacher>
+In-Reply-To: <5092680.jloV5Ae5OO@kreacher>
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Date:   Sun, 12 Apr 2020 23:35:48 -0700
+Message-ID: <CAL3LdT71aa3NfqoGTvmz-XzS7Ng=LqpwPROWyf=w_+PyvEET-w@mail.gmail.com>
+Subject: Re: [PATCH 5/7] PM: sleep: core: Rename DPM_FLAG_NEVER_SKIP
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        DRI-devel <dri-devel@lists.freedesktop.org>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the Spreadtrum wachdog is loaded as a module, we still need set default
-watchdog reboot mode in case the rebooting is caused by watchdog. But now
-we can not set the watchdog reboot mode by using '#ifdef' to validate
-the watchdog configuration, thus we can change to use IS_ENABLED() to
-fix this issue.
+On Fri, Apr 10, 2020 at 9:03 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>
+> Rename DPM_FLAG_NEVER_SKIP to DPM_FLAG_NO_DIRECT_COMPLETE which
+> matches its purpose more closely.
+>
+> No functional impact.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/spi/spi-sprd-adi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index 87dadb6b8ebf..88e6543648cb 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -319,7 +319,7 @@ static int sprd_adi_transfer_one(struct spi_controller *ctlr,
- 
- static void sprd_adi_set_wdt_rst_mode(struct sprd_adi *sadi)
- {
--#ifdef CONFIG_SPRD_WATCHDOG
-+#if IS_ENABLED(CONFIG_SPRD_WATCHDOG)
- 	u32 val;
- 
- 	/* Set default watchdog reboot mode */
--- 
-2.17.1
+For the driver changes to e1000e, igb and igc.
 
+> ---
+>  Documentation/driver-api/pm/devices.rst    |  6 +++---
+>  Documentation/power/pci.rst                | 10 +++++-----
+>  drivers/base/power/main.c                  |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    |  2 +-
+>  drivers/gpu/drm/i915/intel_runtime_pm.c    |  2 +-
+>  drivers/gpu/drm/radeon/radeon_kms.c        |  2 +-
+>  drivers/misc/mei/pci-me.c                  |  2 +-
+>  drivers/misc/mei/pci-txe.c                 |  2 +-
+>  drivers/net/ethernet/intel/e1000e/netdev.c |  2 +-
+>  drivers/net/ethernet/intel/igb/igb_main.c  |  2 +-
+>  drivers/net/ethernet/intel/igc/igc_main.c  |  2 +-
+>  drivers/pci/pcie/portdrv_pci.c             |  2 +-
+>  include/linux/pm.h                         |  6 +++---
+>  13 files changed, 21 insertions(+), 21 deletions(-)
+>
