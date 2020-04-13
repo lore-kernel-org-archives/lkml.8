@@ -2,182 +2,231 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1296DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68105C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:55:07 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DB6206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdKv4Bhm"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D6DB6206A1
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	by mail.kernel.org (Postfix) with ESMTP id 308AD206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:55:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 308AD206E9
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgDMHyu (ORCPT
+        id S1729552AbgDMHzG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 03:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:37460 "EHLO
+        Mon, 13 Apr 2020 03:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:37520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgDMHys (ORCPT
+        with ESMTP id S1727480AbgDMHzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 03:54:48 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9AEC008651;
-        Mon, 13 Apr 2020 00:54:48 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id n10so8549276iom.3;
-        Mon, 13 Apr 2020 00:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fxdds2vPGS3N/102R6ExV/SBHS+w/11kI+QRFuDnruo=;
-        b=LdKv4BhmbHJcCbUnqYd7/INd7IRPACwNoGsA+AW7nLT9uuV9rGvs/8favMyv1eZwZZ
-         Wyw02zFL0pMC6j02qV9kT8QSNqmPtZ10h7PFXbT5HN15zveOABgeIRuO25KBGTEdiAT1
-         x+fL0JFJrzeYbeZskSJBRrxUz3qFqTNh86hPJVMHDz5cFc/H0OUTRTSN1i00o0YbK5wg
-         XpCljmKRIw2wEprR1kjab0mzXG0jJFavEUlRlUG4TUbxOD+R8DiHgf30ZT34el3EHw2k
-         WezgSHoiZfzKq6GQ3QX2pLsJDeZo5ptLjwoLtpAqUVAQyp/ljQwCsFR9EJAXAOz02qpj
-         AEvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fxdds2vPGS3N/102R6ExV/SBHS+w/11kI+QRFuDnruo=;
-        b=mbber3RmO5vEhbxW1IBgM9Jl5yljeevnkMJFINzNL2XETtYiF3Ta9oUBu70I1whvAy
-         OstmP4E7+LWiJ4Z6o2bgOqhoiCii26I+PxjLZ0o/2gDIPWSL8xesTxmZxPTFTerAt5ws
-         qUzeY9mahyXCWod6UblpXXLKQhl24oL+QYEqVlKRW58hNIonbVkFI9KQ2cn0N4B/q8um
-         mbV9lONA8PksUgPR0sB4rU2C+Ff2jzsfYyJbJGEdihSGGBoGV1w331+Klz64l3AuhvvJ
-         3kaT4JTp2FNtwv7Pno+ya1FlbntLgo2/Z/58uC5KeM77+5gZIE3yPYwYKxeq7WJGxXEc
-         qH+g==
-X-Gm-Message-State: AGi0PuaGv8VKBDV3LNBHF9VSVWIEorJu6QTCGH9stP8Oxdz+iYm1/qz4
-        H9JPPRniiWrCUb9wBLcaYuQBzbrJeEO5wk+pPt8=
-X-Google-Smtp-Source: APiQypL5Eljk4TK/mwa+XDxgwgpIUGCujDIQ8sy3Yf0VdZARHKdYNLMpnF8pB675OD/IHE0afd4q+knrLM59ckuUgB0=
-X-Received: by 2002:a05:6602:1302:: with SMTP id h2mr15261121iov.186.1586764487632;
- Mon, 13 Apr 2020 00:54:47 -0700 (PDT)
+        Mon, 13 Apr 2020 03:55:05 -0400
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53751C008651;
+        Mon, 13 Apr 2020 00:55:05 -0700 (PDT)
+IronPort-SDR: qJ18wRl8tUbVKMIGg87yNHQSBUcfPC6XmoRHlbdL2vnwfZaXJK1LwZ+ZmvpSisorMx/w2t6srp
+ GK5v9sMxPYtA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 00:55:04 -0700
+IronPort-SDR: VOaIKfMCzR1du3JANgnxCa7cpABRhIOZQb23o9yOs+zwnp86GsiZ/4OjHAr1fpDUNd/OiNsSC/
+ XXKRGm6M5MQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="399541005"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga004.jf.intel.com with ESMTP; 13 Apr 2020 00:55:04 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 13 Apr 2020 00:55:04 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
+ Mon, 13 Apr 2020 15:54:59 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
+Subject: RE: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Topic: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Index: AQHWAEVGCz5QQWvL/U+nYnlD7MiZ7Khl/jEAgACVNICAAJ/EgIAF8c6ggAA/A4CAAMnRgIAAzpAAgAb/OoCAAMrPQA==
+Date:   Mon, 13 Apr 2020 07:54:59 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D81A2EE@SHSMSX104.ccr.corp.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+ <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+ <20200403112545.6c115ba3@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+ <20200407095801.648b1371@w520.home> <20200408040021.GS67127@otc-nc-03>
+ <20200408101940.3459943d@w520.home>
+ <20200413031043.GA18183@araj-mobl1.jf.intel.com>
+In-Reply-To: <20200413031043.GA18183@araj-mobl1.jf.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200413054419.1560503-1-ira.weiny@intel.com>
-In-Reply-To: <20200413054419.1560503-1-ira.weiny@intel.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 13 Apr 2020 10:54:36 +0300
-Message-ID: <CAOQ4uxguVRysAuVEtQmPj+x=RDtDnGCtNeGvbvXNuvppwagwDg@mail.gmail.com>
-Subject: Re: [PATCH] xfs/XXX: Add xfs/XXX
-To:     ira.weiny@intel.com
-Cc:     fstests <fstests@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 9:06 AM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> Add XXX to test per file DAX operations.
+> From: Raj, Ashok <ashok.raj@linux.intel.com>
+> Sent: Monday, April 13, 2020 11:11 AM
+> 
+> On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:
+> > On Tue, 7 Apr 2020 21:00:21 -0700
+> > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> >
+> > > Hi Alex
+> > >
+> > > + Bjorn
+> >
+> >  + Don
+> >
+> > > FWIW I can't understand why PCI SIG went different ways with ATS,
+> > > where its enumerated on PF and VF. But for PASID and PRI its only
+> > > in PF.
+> > >
+> > > I'm checking with our internal SIG reps to followup on that.
+> > >
+> > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > > > > Is there vendor guarantee that hidden registers will locate at the
+> > > > > same offset between PF and VF config space?
+> > > >
+> > > > I'm not sure if the spec really precludes hidden registers, but the
+> > > > fact that these registers are explicitly outside of the capability
+> > > > chain implies they're only intended for device specific use, so I'd say
+> > > > there are no guarantees about anything related to these registers.
+> > >
+> > > As you had suggested in the other thread, we could consider
+> > > using the same offset as in PF, but even that's a better guess
+> > > still not reliable.
+> > >
+> > > The other option is to maybe extend driver ops in the PF to expose
+> > > where the offsets should be. Sort of adding the quirk in the
+> > > implementation.
+> > >
+> > > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is
+> resisting
+> > > making VF's first class citizen, we might ask them to add some verbiage
+> > > to suggest leave the same offsets as PF open to help emulation software.
+> >
+> > Even if we know where to expose these capabilities on the VF, it's not
+> > clear to me how we can actually virtualize the capability itself.  If
+> > the spec defines, for example, an enable bit as r/w then software that
+> > interacts with that register expects the bit is settable.  There's no
+> > protocol for "try to set the bit and re-read it to see if the hardware
+> > accepted it".  Therefore a capability with a fixed enable bit
+> > representing the state of the PF, not settable by the VF, is
+> > disingenuous to the spec.
+> 
+> I think we are all in violent agreement. A lot of times the pci spec gets
+> defined several years ahead of real products and no one remembers
+> the justification on why they restricted things the way they did.
+> 
+> Maybe someone early product wasn't quite exposing these features to the
+> VF
+> and hence the spec is bug compatible :-)
+> 
+> >
+> > If what we're trying to do is expose that PASID and PRI are enabled on
+> > the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+> > without the ability to control it is not the right approach.  Maybe we
+> 
+> As long as the capability enable is only provided when the PF has enabled
+> the feature. Then it seems the hardware seems to do the right thing.
+> 
+> Assume we expose PASID/PRI only when PF has enabled it. It will be the
+> case since the PF driver needs to exist, and IOMMU would have set the
+> PASID/PRI/ATS on PF.
+> 
+> If the emulation is purely spoofing the capability. Once vIOMMU driver
+> enables PASID, the context entries for the VF are completely independent
+> from the PF context entries.
+> 
+> vIOMMU would enable PASID, and we just spoof the PASID capability.
+> 
+> If vIOMMU or guest for some reason does disable_pasid(), then the
+> vIOMMU driver can disaable PASID on the VF context entries. So the VF
+> although the capability is blanket enabled on PF, IOMMU gaurantees the
+> transactions are blocked.
+> 
+> 
+> In the interim, it seems like the intent of the virtual capability
+> can be honored via help from the IOMMU for the controlling aspect..
+> 
+> Did i miss anything?
 
-Please change commit title to "xfs: Add test for per file DAX operations"
-The title Add xfs/XXX is not useful even if XXX where a number.
+Above works for emulating the enable bit (under the assumption that 
+PF driver won't disable pasid when vf is assigned). However, there are 
+also "Execute permission enable" and "Privileged mode enable" bits in 
+PASID control registers. I don't know how those bits could be cleanly 
+emulated when the guest writes a value different from PF's...
 
-But the kernel patch suggests that there is an intention to make
-this behavior also applicable to ext4??
-If that is the case I would recommend making this a generic tests
-which requires filesystem support for -o dax=XXX
+Similar problem also exists when talking about PRI emulation, e.g. 
+to enable PRI the software usually waits until the 'stopped' bit
+is set (indicating all previously issued requests have completed). How
+to emulate this bit accurately when one guest toggles the enable bit
+while the PF and other VFs are actively issuing page requests through
+the shared page request interface? from pcie spec I didn't find a way
+to catch when all previously-issued requests from a specific VF have
+completed. Can a conservative big-enough timeout value help here?
+I don't know... similar puzzle also exists for emulating the 'reset'
+control bit which is supposed to clear the pending request state for
+the whole page request interface.
 
->
-> The following is tested[*]
->
->  1. There exists an in-kernel access mode flag S_DAX that is set when
->     file accesses go directly to persistent memory, bypassing the page
->     cache.  Applications must call statx to discover the current S_DAX
->     state (STATX_ATTR_DAX).
->
->  2. There exists an advisory file inode flag FS_XFLAG_DAX that is
->     inherited from the parent directory FS_XFLAG_DAX inode flag at file
->     creation time.  This advisory flag can be set or cleared at any
->     time, but doing so does not immediately affect the S_DAX state.
->
->     Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
->     and the fs is on pmem then it will enable S_DAX at inode load time;
->     if FS_XFLAG_DAX is not set, it will not enable S_DAX.
->
->  3. There exists a dax= mount option.
->
->     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
->
->     "-o dax=always" means "always set S_DAX (at least on pmem),
->                     and ignore FS_XFLAG_DAX."
->
->     "-o dax"        is an alias for "dax=always".
->
->     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
->
->  4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
->     be set or cleared at any time.  The flag state is copied into any
->     files or subdirectories when they are created within that directory.
->
->  5. Programs that require a specific file access mode (DAX or not DAX)
->     can do one of the following:
->
->     (a) Create files in directories that the FS_XFLAG_DAX flag set as
->         needed; or
->
->     (b) Have the administrator set an override via mount option; or
->
->     (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
->         must then cause the kernel to evict the inode from memory.  This
->         can be done by:
->
->         i>  Closing the file and re-opening the file and using statx to
->             see if the fs has changed the S_DAX flag; and
->
->         ii> If the file still does not have the desired S_DAX access
->             mode, either unmount and remount the filesystem, or close
->             the file and use drop_caches.
->
->  6. It's not unreasonable that users who want to squeeze every last bit
->     of performance out of the particular rough and tumble bits of their
->     storage also be exposed to the difficulties of what happens when the
->     operating system can't totally virtualize those hardware
->     capabilities.  Your high performance sports car is not a Toyota
->     minivan, as it were.
->
-> [*] https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
->
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->
-> ---
-> Changes from v6 (kernel patch set):
->         Start versions tracking the kernel patch set.
->         Update for new requirements
->
-> Changes from V1 (xfstests patch):
->         Add test to ensure moved files preserve their flag
->         Check chattr of non-dax flags (check bug found by Darrick)
-> ---
-...
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -511,3 +511,4 @@
->  511 auto quick quota
->  512 auto quick acl attr
->  513 auto mount
-> +999 auto
+I feel the main problem in pcie spec is that, while they invent SR-IOV
+to address I/O virtualization requirement (where strict isolation is
+required), they blurred the boundary by leaving some shared resource 
+cross PF and VFs which imply sort of cooperation between PF and VF
+drivers. On bare metal such cooperation is easy to build, by enabling/
+disabling a capability en mass, by using the same set of setting, etc.
+However it doesn't consider the virtualization case where a VF is
+assigned to the guest which considers the VF as a standard PCI/PCIe 
+endpoint thus such cooperation is missing. A vendor capability could
+help fix the gap here but making it adopted by major guest OSes will
+take time. But honestly speaking I don't know other good alternative 
+now... :/
 
-The test looks also 'quick'
+> 
+> > need new capabilities exposing these as slave features that cannot be
+> > controlled?  We could define our own vendor capability for this, but of
+> > course we have both the where to put it in config space issue, as well
+> > as the issue of trying to push an ad-hoc standard.  vfio could expose
+> > these as device features rather than emulating capabilities, but that
+> > still leaves a big gap between vfio in the hypervisor and the driver in
+> > the guest VM.  That might still help push the responsibility and policy
+> > for how to expose it to the VM as a userspace problem though.
+> 
+> I think this is a good long term solution, but if the vIOMMU implenentations
+> can carry us for the time being, we can probably defer them unless
+> we are stuck.
+> 
+> >
+> > I agree though, I don't know why the SIG would preclude implementing
+> > per VF control of these features.  Thanks,
+> >
+> 
+> Cheers,
+> Ashok
 
-Thanks,
-Amir.
+Thanks
+Kevin
