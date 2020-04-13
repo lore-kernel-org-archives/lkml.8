@@ -2,99 +2,122 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087BEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F618C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE1820692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092A420678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8EnH2Xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgDMLcU convert rfc822-to-8bit (ORCPT
+        id S1729031AbgDMLep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 07:32:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4890 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728886AbgDMLcU (ORCPT
+        Mon, 13 Apr 2020 07:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbgDMLeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 07:32:20 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03DBWICI043134
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:32:19 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30bae4hqk6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:32:19 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Mon, 13 Apr 2020 12:31:28 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 Apr 2020 12:31:26 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03DBVoHY53739626
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 11:31:50 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 914CEA4040;
-        Mon, 13 Apr 2020 11:31:50 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 165EAA4053;
-        Mon, 13 Apr 2020 11:31:50 +0000 (GMT)
-Received: from localhost (unknown [9.85.126.225])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Apr 2020 11:31:49 +0000 (GMT)
-Date:   Mon, 13 Apr 2020 17:01:45 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH] tools headers: Move powerpc and s390 syscall table check
- to check-headers.sh
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20200220063740.785913-1-naveen.n.rao@linux.vnet.ibm.com>
-In-Reply-To: <20200220063740.785913-1-naveen.n.rao@linux.vnet.ibm.com>
-MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20041311-0008-0000-0000-0000036FD553
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041311-0009-0000-0000-00004A917FCA
-Message-Id: <1586777427.30yicdm2kt.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-13_04:2020-04-13,2020-04-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
- malwarescore=0 spamscore=0 priorityscore=1501 phishscore=0 mlxlogscore=864
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004130080
+        Mon, 13 Apr 2020 07:34:44 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6212C008769;
+        Mon, 13 Apr 2020 04:26:14 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so9023104wmj.1;
+        Mon, 13 Apr 2020 04:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=E9gKS0aLx/dN6WOsH21xjxRHRrDTUSuyvEQfHIY2zUE=;
+        b=k8EnH2XlPIgFLTq8Kd1IeXoNfmLrb8FV90H0m3xvqZ3Qg4zgLhGDk/ldL+XaoAAaZE
+         bb8FROY9p3+PIVCAermxDm4ojx7VsP7qr60+hpLYO7FZJIqKIZuwZ7Px0Wj1SxzbVfAi
+         yvVwVy+9tOqBw1vItQU7ao62MGW9CXYef2ZIGsD7yL4csxTzNQu1JG7LMOydEJzyn4Fh
+         scZV+UV0hKF1OHjJx0C4fdWfWKxEx4UwUjEHcuYyDt+GXAT0YJKvH9JertNdyJTAVRdg
+         fOe4zQcOhKNXeG9m8VN8tTqXs6+T2xl9zObQYQ6LCzuMPdH7hv4XGn8w3a8e6wjtQjHs
+         7f9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=E9gKS0aLx/dN6WOsH21xjxRHRrDTUSuyvEQfHIY2zUE=;
+        b=RMutIYlWeHJQ2kXAGSsNRGeAUWTTpRteQ1rudn+fraLDJcwNyErQWb7Vxu9fHsnjS7
+         jynlQIaJTw86yuKYC011O9yJQNJ+C8LCm5roVyOlWmMe9QQrSSV5rik9faBnKUMrJpaE
+         Pp6Y1NYSn3mtnUVJPxCkmMhbt3LIdrtyCw/3D4J2oLd4h9mQF3OkCiT6z/B95NcEZsGG
+         QY8LgdfmmNTsyx0oQpBD8a6/wsgkmjzasgcJMeWkAMjL8Y3po/Fjotgoa15jzJ6PH3j3
+         g8pBZY1MFT5uPlPLjp+lGdjrtWE7G+pxLDQeh8kjEW+bfe167u6Nt4EZmEWgKjRwec3c
+         391g==
+X-Gm-Message-State: AGi0PubvV7k3WHEEl+WL9+exjOelLTIrxnQQrAoOeW7HAgztyn4DnYMg
+        CYEo0a1abn5XBhVEg17Wbio=
+X-Google-Smtp-Source: APiQypIMdVL3KR2SMkYkC4jJZSxngZnkiVynUBtLFJ/LfyzHcGY3cDM4BrItamm6lD6gS9WhQNvwMw==
+X-Received: by 2002:a1c:208c:: with SMTP id g134mr17236290wmg.96.1586777173455;
+        Mon, 13 Apr 2020 04:26:13 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2da9:2f00:3165:1687:284f:4993])
+        by smtp.gmail.com with ESMTPSA id k184sm14012725wmf.9.2020.04.13.04.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 04:26:12 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH RFC v2] MAINTAINERS: add headers and doc to SCHEDULER
+Date:   Mon, 13 Apr 2020 13:26:03 +0200
+Message-Id: <20200413112603.5257-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naveen N. Rao wrote:
-> It is good to know changes in headers and syscall tables across all
-> architectures so that the changes can be sync'ed at once. Move check for
-> arch-specific syscall table changes from tools/perf/arch for powerpc and
-> s390, to the generic check-headers.sh script, similar to how we do the
-> check for x86.
-> 
-> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
+Various files in include/linux/sched/ and include/uapi/linux/sched/ are
+identified as part of THE REST according to MAINTAINERS, but they really
+belong to SCHEDULER.
 
-Arnaldo,
-Is this patch good? Do you want to see any changes in this?
+Add those headers and Documentation to the SCHEDULER entry.
 
-- Naveen
+This was identified with a small script that finds all files belonging to
+THE REST according to the current MAINTAINERS file, and I investigated
+upon its output.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+RFC v1: https://lore.kernel.org/lkml/20200308174931.9118-1-lukas.bulwahn@gmail.com/
+  - no feedback.
+
+RFC v2:
+  - v1 does not apply after reordering MAINTAINERS, i.e., commit 4400b7d68f6e
+    ("MAINTAINERS: sort entries by entry name") and commit 3b50142d8528
+    ("MAINTAINERS: sort field names for all entries").
+  - does not need to reorder entries anymore.
+  - applies cleanly on v5.7-rc1
+
+
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db31497..8546910db0ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14905,10 +14905,13 @@ R:	Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
++F:	Documentation/scheduler/
+ F:	include/linux/preempt.h
+ F:	include/linux/sched.h
++F:	include/linux/sched/
+ F:	include/linux/wait.h
+ F:	include/uapi/linux/sched.h
++F:	include/uapi/linux/sched/
+ F:	kernel/sched/
+ 
+ SCR24X CHIP CARD INTERFACE DRIVER
+-- 
+2.17.1
 
