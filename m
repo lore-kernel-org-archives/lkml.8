@@ -2,139 +2,175 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD00CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E2BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A677E206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE809206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D4QOMu0n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XzT+Tn3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387831AbgDMTKR (ORCPT
+        id S2387842AbgDMTLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 15:10:17 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35467 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387811AbgDMTKQ (ORCPT
+        Mon, 13 Apr 2020 15:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387811AbgDMTLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 15:10:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586805015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D2w0zTL2S2HNCke1rO2a892We/kRrnfinWwPLR7p/D8=;
-        b=D4QOMu0nBsCUPlF/qnKS+vTTJ57F3gIoej1j5gUBcMrNiELPtlr4BLbd9Z4hh25hTML1Yl
-        Szq/Fm5Hn1F3CmV/EZMmWZSXMhplrX+UNAmV9hQrwN3rEgEDWTFu+WH1iZiUfP1Kkgsa+0
-        GR/s3xkC7t8ZStWucA59D674XOnXRp4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-51-LRRuLY3rMi27XnVi9zMzzg-1; Mon, 13 Apr 2020 15:10:11 -0400
-X-MC-Unique: LRRuLY3rMi27XnVi9zMzzg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E339107ACC4;
-        Mon, 13 Apr 2020 19:10:09 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 973D799DEE;
-        Mon, 13 Apr 2020 19:10:08 +0000 (UTC)
-Date:   Mon, 13 Apr 2020 13:10:08 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Message-ID: <20200413131008.2ae53cc3@w520.home>
-In-Reply-To: <20200413032930.GB18479@araj-mobl1.jf.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-        <20200402165954.48d941ee@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
-        <20200403112545.6c115ba3@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
-        <20200407095801.648b1371@w520.home>
-        <20200408040021.GS67127@otc-nc-03>
-        <20200408101940.3459943d@w520.home>
-        <20200413031043.GA18183@araj-mobl1.jf.intel.com>
-        <20200413032930.GB18479@araj-mobl1.jf.intel.com>
+        Mon, 13 Apr 2020 15:11:10 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C193DC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:11:09 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id r7so9854795ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6E2riI0IkGg5so6kNR5+vB2edM7YCdJ1N8SPMSw1Rls=;
+        b=XzT+Tn3YvT1AQjdm78IDRMzVvhk4NDthYi+/Lqg1BSrpe1J2codCQUWF2PpRIN4NBZ
+         +sdUGpQ3OFbDDLs0pL/+sGVWwq/YdTamVw4NSJLDU1HAucbLoByS//8WCTcFh8V8Xgm1
+         58wOeU2Udneup6TbUeesldE5RO2QtsYSomLNfnzAUXKOT4g8C2AMw3mDf/6fE9cKVcIf
+         4TDRylZKaeC/8rUp24x90Z4/g9oxnL9SjZ0F9heF5c+ESQBXwfZNCnkKFXXRsOW2eWUt
+         Yg7l0B39oFSp1zFbv6ccE1k67Actv6fNEPeC/SMlG5SFU4yiu9/czW4adhZCx0a1A6ot
+         jkgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6E2riI0IkGg5so6kNR5+vB2edM7YCdJ1N8SPMSw1Rls=;
+        b=I4XX881W6wby7coNDLwA9ePjXgkOriwOmrlsBcE4VSMtTOTv1pRx10mSqEHxVHLleo
+         0k+tfaRpf0viBBbH7ApLISrCn+BlJNwhHCjdmUzfTh3FSu+bWib00ZoYad3jOu8mOwbi
+         7mmOMQ7DbsHjU5z39YrgnxcGqHJD8RBELtvumtDHo3qMvkCtjra+zQzZnjikjMGXENZK
+         q2b0crG63pU2S7XhG/62AE5LDPtihgE2cpfYlMZv1Cad/0xeVo7IMqFq3c4og00/XyTv
+         l1Km9YjdqQbgZTh+/ukLWJch50QKfMQDHqmxfFZ2+Lwn7DoVNQw2MKBQ52dVV5TjsUEK
+         rOsA==
+X-Gm-Message-State: AGi0PuaaGcWddeSq8fDZAC2qsFWTsTXEBHqzO1TvElhsPlY3a3Al0MUw
+        R4oO1qnkr6q5Md7YRY1nG0wtoteIl0ri+DjbIUNxAg==
+X-Google-Smtp-Source: APiQypLRXBI8I/e2KzJ1ZDb82h9Ivoa4sRuew1gA2hWgrB5j5s+vEJa59w61i92eBkb5VIZ/gRRMiNJoFbM6D8YP+xQ=
+X-Received: by 2002:a2e:8999:: with SMTP id c25mr2260602lji.73.1586805068126;
+ Mon, 13 Apr 2020 12:11:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
+ <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+ <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
+ <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
+ <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
+ <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
+ <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
+ <20200310111837.GA1368052@kuha.fi.intel.com> <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
+ <CA+G9fYuwv+TEhgi46pjs2-GCe0mmMHyki9nAokvGCEA2syK5Dg@mail.gmail.com> <CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com>
+In-Reply-To: <CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 14 Apr 2020 00:40:54 +0530
+Message-ID: <CA+G9fYtjE+GTjiMHmyVy7my_GBxjkhWHkgD9Bk-PbVECrqJ3jg@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 20:29:31 -0700
-"Raj, Ashok" <ashok.raj@intel.com> wrote:
+> > > I did already let Greg know when he emailed us on backporting the
+> > > patch to stable, and he acked saying he removed them. So as long as
+> > > these are not in the queue for 5.6 (it is not in Linus' tree yet), we
+> > > should be good.
+> >
+> > The reported bug is still noticed on Linux mainline master branch
+> > The Kernel BUG noticed on x86_64 and i386 running selftest on Linux
+> > mainline kernel 5.6.0.
+>
+> Oh sorry, I thought that this patch was dropped from the maintainer's
+> for-next branch.
+>
+> Heikki, what do you think about my suggestion of having kobject
+> deallocate its children?
+>
+> In the meantime, are people cool with the patch that Heikki proposed
+> as a temporary mitigation? I think my solution might be a bit more
+> involved. If I don't hear anything back, I will send out Heikki's
+> suggestion as a patch.
 
-> Hi Alex
-> 
-> Going through the PCIe Spec, there seems a lot of such capabilities
-> that are different between PF and VF. Some that make sense
-> and some don't.
-> 
-> 
-> On Sun, Apr 12, 2020 at 08:10:43PM -0700, Raj, Ashok wrote:
-> >   
-> > > 
-> > > I agree though, I don't know why the SIG would preclude implementing
-> > > per VF control of these features.  Thanks,
-> > >   
-> 
-> For e.g. 
-> 
-> VF doesn't have I/O and Mem space enables, but has BME
+This reported problem still noticed on 5.7.0-rc1
 
-VFs don't have I/O, so I/O enable is irrelevant.  The memory enable bit
-is emulated, so it doesn't really do anything from the VM perspective.
-The hypervisor could provide more emulation around this, but it hasn't
-proven necessary.
+Test crash log:
+-------------------
+[  281.822463] BUG: kernel NULL pointer dereference, address: 00000000
+[  281.829543] #PF: supervisor read access in kernel mode
+[  281.834680] #PF: error_code(0x0000) - not-present page
+[  281.839820] *pde = 00000000
+[  281.842706] Oops: 0000 [#1] SMP
+[  281.845852] CPU: 1 PID: 3998 Comm: modprobe Tainted: G        W
+    5.7.0-rc1 #1
+[  281.853590] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[  281.861063] EIP: ida_free+0x61/0x130
+[  281.864641] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
+88 c4 00 00 00 89 d3 e8 0d 8e 87 00 89 c7 8d 45 d8 e8 93 1e 01 00 a8
+01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 e0 8f 87 00 53 68 08 ab fd
+de e8
+[  281.883395] EAX: 00000000 EBX: 00000000 ECX: e422d8c0 EDX: 00000000
+[  281.889672] ESI: 00000000 EDI: 00000246 EBP: e5d63cdc ESP: e5d63cb0
+[  281.895935] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
+[  281.902720] CR0: 80050033 CR2: 00000000 CR3: 1db85000 CR4: 003406d0
+[  281.908978] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[  281.915243] DR6: fffe0ff0 DR7: 00000400
+[  281.919073] Call Trace:
+[  281.921521]  software_node_release+0x21/0x80
+[  281.925792]  kobject_put+0xa8/0x1c0
+[  281.929284]  kobject_del+0x40/0x60
+[  281.932680]  kobject_put+0x92/0x1c0
+[  281.936165]  fwnode_remove_software_node+0x30/0x50
+[  281.940957]  software_node_unregister_nodes+0x2b/0x50
+[  281.946002]  test_printf_init+0xe00/0x1d29 [test_printf]
+[  281.951320]  ? fs_reclaim_acquire.part.121+0x5/0x30
+[  281.956202]  ? test_hashed+0x54/0x54 [test_printf]
+[  281.960985]  ? test_hashed+0x54/0x54 [test_printf]
+[  281.965770]  do_one_initcall+0x54/0x2e0
+[  281.969639]  ? rcu_read_lock_sched_held+0x47/0x70
+[  281.974366]  ? kmem_cache_alloc_trace+0x285/0x2b0
+[  281.979063]  ? do_init_module+0x21/0x1f7
+[  281.982982]  ? do_init_module+0x21/0x1f7
+[  281.986899]  do_init_module+0x50/0x1f7
+[  281.990659]  load_module+0x1e32/0x2540
+[  281.994410]  __ia32_sys_finit_module+0x8f/0xe0
+[  281.998854]  do_fast_syscall_32+0x7f/0x330
+[  282.002949]  entry_SYSENTER_32+0xaa/0x102
+[  282.006952] EIP: 0xb7f07ce1
+[  282.009742] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
+8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
+34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
+8d 76
+[  282.028480] EAX: ffffffda EBX: 00000005 ECX: 0806233a EDX: 00000000
+[  282.034739] ESI: 099fe840 EDI: 099fe570 EBP: 099fe700 ESP: bf97146c
+[  282.040994] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
+[  282.047776] Modules linked in: test_printf(+) cls_bpf sch_fq 8021q
+sch_ingress veth algif_hash x86_pkg_temp_thermal fuse [last unloaded:
+gpio_mockup]
+[  282.061155] CR2: 0000000000000000
+[  282.064472] ---[ end trace 09f43fd7981266c9 ]---
+[  282.069084] EIP: ida_free+0x61/0x130
 
-> Interrupt Status
+https://lkft.validation.linaro.org/scheduler/job/1362555#L7962
 
-VFs don't have INTx, so this is irrelevant.
-
-> Correctable Error Reporting
-> Almost all of Device Control Register.
-
-Are we doing anything to virtualize these for VFs?  I think we've
-addressed access control to these for PFs, but I don't see that we try
-to virtualize them for the VF.
-
-> So it seems like there is a ton of them we have to deal with today for 
-> VF's. How do we manage to emulate them without any support for them 
-> in VF's? 
-
-The memory enable bit is just access to the MMIO space of the device,
-the hypervisor could choose to do more, but currently emulating the bit
-itself is sufficient.  This doesn't really affect the device, just
-access to the device.  The device control registers, I don't think
-we've had a need to virtualize them yet and I think we'd run into many
-of the same questions.  If your point is that there exists gaps in the
-spec that make things difficult to virtualize, I won't argue with you
-there.  MPS is a nearby one that's difficult to virtualize on the PF
-since its setting needs to take entire communication channels into
-account.
-
-So far though we aren't inventing new capabilities to add to VF config
-space and pretending they work, we're just stumbling on what the VF
-exposes whether on bare metal or in a VM.  Thanks,
-
-Alex
-
+- Naresh
