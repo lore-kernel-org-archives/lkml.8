@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42636C2BBC7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F21C2BA19
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:57:38 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107102076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB71E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RyZzeDuD"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 107102076B
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hviTTqyH"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org CB71E2073E
 Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=nxp.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgDMG5b (ORCPT
+        id S1728940AbgDMG5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 13 Apr 2020 02:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:55438 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:55436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728874AbgDMG5a (ORCPT
+        with ESMTP id S1727546AbgDMG5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 02:57:30 -0400
 Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30065.outbound.protection.outlook.com [40.107.3.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D1AC008676
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:57:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E69C008651
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:57:23 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FyDFea9EoQ8NYlo5rvbj4tTSRbaNpRoSvFymDL/4CQ7pDoFfN0z0YCDKaTmV0I9VLV6bzqTY9ZERStcF6fGIw2wLhAqgvyzOEK9ykK0WpsxVLpwj/umebhJ9/E/5b0q2QAvwzVA5XWOgzc2JidIUnNlfnXzTUHGhcm+q86u98rY03ywoCP9gMKFSJYVg+ozF8h+7AjAtLuNbX1U2bo7F2yY7Mrw2QvXsWIAu2RPjQsAtC2o6/LC8NjvPyUoFDaMX25QSgzDuCxYr3pFHN+BfbARrD+9zFgxv9EgKI+P/6hv+3D0BNvAhF5tHlXzM1zIa2dMuAZq4x0h2eJ2orDObPg==
+ b=CnmcmVa7G7mKIPNiPkHD3I3ZwsGkVsg65TNiQTJ8r1gP60/oik0tKD32L0oTImcFuWCppZdt5kzU+mpLFxVmzatTyTGb7HpII9id0oxKbLgyJ5OWxlmGIiebBQdT5ys//Jg3IP6tAUnX8rmJQSUIErWZPxbL5EwikaFqlfFJ/jm/OBUCZgUNoX2lwVIQeD3WOB+7SA8JZw1jQPFPZ2ywbTcDqS71Y2Jr+XDo4WJPU/dJ31QRkJ7Rh4svA2yrVSC3Bza6ZiRTwtWHUtKjbXH1weiPnwJPFMLPOw6+FJx+jx19boC5TVm+O8Li8mLDGtK80LUfdaiPdvRHoQEKZNqnmQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CJtwwi9R8AkYKYGMATprxuv8FqEL0gqBmcz9s4hqO1k=;
- b=NloUC4f9whDFHhLpw9M+oDj2Xvo7LMx+N0OROE+iztTtKva0tv0cIMj4LLm3E5BUT+pTc08k4z362WXNa+RjcabOopvuzmxa7uE4QgI9Nfm8WJv4ZO7w2s9i+AXpVTAT5cOhmlxq8j16oQDmhIhaoi/ekD0i49eIKPp4Qbfza0n105NEppKQHnCnqoV3DrWkm6g2xMas7/8V3pIwpqV8WLubFKX9M3J3OBd7/zH0zIgtJYrBTCpEniW+HlxumCuEENYPfkKxU6SolAGoKv9ZxiaVXi6W/PQOETcHehhhuTBCEPrk6ZEzbqQOzbtGKkSbjEUQMjXl3Z09/Sl5eXEUwQ==
+ bh=GOUvGQcFCI4VGVxKBmKJxz9nyt4dSetVyRYay1YvnBY=;
+ b=NBksdiAypMHxvko+nAYZ4ON4UPX3NEEaPya3EZ1ZH/ERqTK+7C9px7gmfY+3phN+4DbqwtKeskRaaFUDQyQtT3mtO2O9zwOMt5G2z0DjE/1xA6VQVHREOZUb68u6wK2ZIkBS4UERtWV8mHNo9kEIEYyViW5dcS5nAmU7x+Jo6x7ngNUVYEu2AURpe6XW5/BuHP7oDL2lROPMBEjs8iIRN8uPmntw05kXqH50ylBeyRhukN2mQ8+mlhz1OO6vdhjY4eQwsC/PrVZzE+E4Arol5IbsrT98vgLeqo81UXrfkm3D0e4BVVMfzP21VO4mpoyeMLdCKAtU953ciRiOLaO4fg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CJtwwi9R8AkYKYGMATprxuv8FqEL0gqBmcz9s4hqO1k=;
- b=RyZzeDuD6zKXe5EybzLxDd51gEMcWrIcJWtxQMOW962OfAz7Jfjlp8ZXWi6+YGCvJvugFoz3Db2bwxVkKqhgYcs7PfNnKwTUUJJ1++nSvo+PMPkzZIiuqJBa/pUYdKL2CoJl2NV/Z5gsvHmCNVQEcneSRzbPIvuR7UMMl85A2eQ=
+ bh=GOUvGQcFCI4VGVxKBmKJxz9nyt4dSetVyRYay1YvnBY=;
+ b=hviTTqyH76Cdi/m7fno6QUTb6qkjCT+aKtaPPIKfu+xnGPls3f1YV19bwmim5UjdsukVt47bq78UE9IO2FzGxvqzrmdZpm4ot4b+aJ8aekfxJHbC89ARqq91axGadna4p95fUN1wHTF9AQt45QCgemuJwnW7Mii/P6gDonb6Dvo=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
  by AM0PR04MB4564.eurprd04.prod.outlook.com (2603:10a6:208:74::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Mon, 13 Apr
- 2020 06:57:25 +0000
+ 2020 06:57:21 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.026; Mon, 13 Apr 2020
- 06:57:25 +0000
+ 06:57:21 +0000
 From:   peng.fan@nxp.com
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
         robh+dt@kernel.org
@@ -61,9 +61,9 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, abel.vesa@nxp.com,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 2/4] ARM: dts: imx7ulp: add pmc node
-Date:   Mon, 13 Apr 2020 14:49:06 +0800
-Message-Id: <1586760548-23046-3-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH V2 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
+Date:   Mon, 13 Apr 2020 14:49:05 +0800
+Message-Id: <1586760548-23046-2-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586760548-23046-1-git-send-email-peng.fan@nxp.com>
 References: <1586760548-23046-1-git-send-email-peng.fan@nxp.com>
@@ -73,32 +73,32 @@ X-ClientProxiedBy: SG2PR06CA0143.apcprd06.prod.outlook.com
  (2603:10a6:208:70::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0143.apcprd06.prod.outlook.com (2603:1096:1:1f::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2900.15 via Frontend Transport; Mon, 13 Apr 2020 06:57:21 +0000
+Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0143.apcprd06.prod.outlook.com (2603:1096:1:1f::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2900.15 via Frontend Transport; Mon, 13 Apr 2020 06:57:17 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0e615546-2713-44b4-d3ea-08d7df77ec2b
+X-MS-Office365-Filtering-Correlation-Id: 48266a4f-3604-4685-7117-08d7df77e9ca
 X-MS-TrafficTypeDiagnostic: AM0PR04MB4564:|AM0PR04MB4564:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4564A13225FC7A3C860B0C7D88DD0@AM0PR04MB4564.eurprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <AM0PR04MB45648212FB184E09C7FA826B88DD0@AM0PR04MB4564.eurprd04.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:243;
 X-Forefront-PRVS: 037291602B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(136003)(346002)(4326008)(86362001)(8936002)(478600001)(9686003)(316002)(16526019)(26005)(6512007)(6506007)(6666004)(52116002)(186003)(4744005)(8676002)(81156014)(6486002)(69590400007)(66476007)(66556008)(2616005)(956004)(36756003)(5660300002)(66946007)(2906002);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(136003)(346002)(4326008)(86362001)(8936002)(478600001)(9686003)(316002)(16526019)(26005)(6512007)(6506007)(6666004)(52116002)(186003)(966005)(8676002)(81156014)(6486002)(69590400007)(66476007)(66556008)(2616005)(956004)(36756003)(5660300002)(66946007)(2906002);DIR:OUT;SFP:1101;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +umwrqagFyXlytNl7OhCXgM0B3y4U8ICVbuCFonB6NK+3u0386EO/gQOQ89hgNBqMhmKVQo83jfHsvtmYhqOKo0W6C+FkTS88taq4sAvY83MQ0XHNuVtHS7wpOf0H0Zz//43oXK2ISgZRyuGO/ox6RTdVwqBLES08771MjWWC8bQni7Gtppcx3XXa7Rmki/7L7MUu7++Owa8OofNqPN8U9mZTuM81n542+jJfSfxg1qHTRCGYS6GFaGIUU5UhveS0ROA0JJTt2BzP/DbNxj8HTwJQOw0Ud9L8Z8ZFpoYjofpP0oHAeyqLVSKoOtMEQUSGcg1u6D/BXyxijHIwQkValIYPkHRNVT1ZTc/IPQ3Cfv/45EAG9fH+kMm3xWNudf0a8VORXZaTiYQx7B9X1TurK164nmX2Q0O/fd01yf+JOU3wAfa/RL3Oavp558st0bHvn+vx0/3ajYqpFdnDv4e58lAdrnQ5wevYurjzLHtt7R+Q9nDKeYB+zMda6k46EbC
-X-MS-Exchange-AntiSpam-MessageData: VGEV5e2PBDY+bAzLhkYoqGUMn6WiGZuR8iXAQQPe7lD55UaGD+N118GPulzKdWhcT9RqEN36GfjnQ/3SVf6etAqhy++ty5Y5ZuNbAM9nO+M4+IONv4mWFmhOnq1II39sclW6Cfd8smV123Rz2o+HAg==
+X-Microsoft-Antispam-Message-Info: NyefpIUYoddu9GW/Mra/DWfM+MvaXdICCzvmjLfDXZ5C5L3l166w4mYF8rHyLyGgEzCj8vIKdzPAjFsoHEnNMstdfJ80aQCe5rQ7hKUK/CgdNrjfSGiu2wTPXbPi0J6KDRe0nkDR3bFjDnecQa52k7SvIjs7UzkCzPhSmmH1fK/ATQBikxu6gmEzNpajxBX2mq5K8+oDfvLjQxqBI6Q2PvqJgfZ2ugB41OY+jSB9pSdYoNyWTS3DODNsQePc9hebtmWgHwormhy22c+Z1URhRIy0DK5/gKBIwE5iMCKRs+TGT8H4EgHqoy0LeQjf4CV146c+vDw5I/lnYObYdoQeMJD8uqlDW+AHiEe6MZqkoHuQ49YUHbemqdp64U+nyx36DZqIqdPGZsr59+Bg2ObLF6dKdZBsfBO1bGJSFi2snRuPV55PH2+HAEwz4Wk1ivnkpa9rQr6Qm33AgNQuNyNJ9SN4TaRanPq4ey7qUzjuTQgPONQJCVeGmpbNwsHvaNmljE4e4/pe+sTLIJBCTFql4GtnR4T0YJRU5RbJYi+b8D+ROFxTCFiXO5+1MXd4vlUR0U3VAW4C/nKjA6t5GiHICw==
+X-MS-Exchange-AntiSpam-MessageData: CfpCet6f6GmSYxgYMJCArhswNh1RqI8O6wQX0Kiov13HQejz/o5NxkXeSfMtey+QUQ82VfCurGViZoL2X619l2j2zMX3BxKHgeNeV2FUoR8gVnxsPaj2O6rlNfoc0dKC3J0Bj1DAunCPylLuRnUwnQ==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e615546-2713-44b4-d3ea-08d7df77ec2b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2020 06:57:25.5830
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48266a4f-3604-4685-7117-08d7df77e9ca
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2020 06:57:21.4784
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HsbSVvIGfmXM1BrjY3DvNUFq0nmiw1oVDno9M+VYTEVQmvq65Tucgp+wx6fXUlCAK347WY0S3vY6nT2LLyw6Jg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wb7bmo47i20WGN5MnsJgNLMAlDq4gv3gd2R7N6RN1Wizh9imETT+dpqSzC2hh6MNkWd/uKiJFLFWl1wKo+XcIg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4564
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -107,45 +107,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-Add i.MX7ULP pmc0/1 node
+Add i.MX7ULP Power Management Controller binding doc
+pmc0 is used by M4, pmc1 is used by A7, they have different
+register name and usage.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
 
 V2:
- None
+ Fix dt_bindings_check
 
- arch/arm/boot/dts/imx7ulp.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index f7c4878534c8..bc9d692c0530 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -286,6 +286,11 @@
- 			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
- 		};
- 
-+		pmc1: pmc1@40400000 {
-+			compatible = "fsl,imx7ulp-pmc1";
-+			reg = <0x40400000 0x1000>;
-+		};
+diff --git a/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+new file mode 100644
+index 000000000000..c60903039718
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/freescale/imx7ulp_pmc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 		smc1: clock-controller@40410000 {
- 			compatible = "fsl,imx7ulp-smc1";
- 			reg = <0x40410000 0x1000>;
-@@ -447,6 +452,11 @@
- 		reg = <0x41080000 0x80000>;
- 		ranges;
- 
-+		pmc0: pmc0@410a1000 {
-+			compatible = "fsl,imx7ulp-pmc0";
-+			reg = <0x410a1000 0x1000>;
-+		};
++title: i.MX7ULP Power Management Controller(PMC) Device Tree Bindings
 +
- 		sim: sim@410a3000 {
- 			compatible = "fsl,imx7ulp-sim", "syscon";
- 			reg = <0x410a3000 0x1000>;
++maintainers:
++  - Peng Fan <peng.fan@nxp.com>
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - fsl,imx7ulp-pmc0
++          - fsl,imx7ulp-pmc1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    pmc0: pmc0@410a1000 {
++        compatible = "fsl,imx7ulp-pmc0";
++        reg = <0x410a1000 0x1000>;
++    };
++...
 -- 
 2.16.4
 
