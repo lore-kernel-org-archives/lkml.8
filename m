@@ -2,157 +2,131 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5630C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D98C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E2520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026D2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ie3xJGh2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JVE0Oy/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbgDMOuu (ORCPT
+        id S1730897AbgDMOvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:50:50 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56605 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729311AbgDMOus (ORCPT
+        Mon, 13 Apr 2020 10:51:05 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60958 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730888AbgDMOu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:50:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586789446;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kr9KTKBU+/+uofMSqlPA49Feo8xCOB4FV94CTTUBStM=;
-        b=Ie3xJGh2HXXs48PTp4+nVDP+w5Ls9wNGKrWOfDDBrItha44fdOidDK1IVJ9BV015QE8U5b
-        Z9Lb+SRh8BbAyvNakFh9XdZrmaauPq2oU9Fa0MPb2NXp45piF8JSDNDGqxzKAEaY0IL9Ne
-        jCFX4IF2wsyKLoj/YJGZnozDRGicmBQ=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-441-V9VchQAgPjOpLTsvryhp7w-1; Mon, 13 Apr 2020 10:50:43 -0400
-X-MC-Unique: V9VchQAgPjOpLTsvryhp7w-1
-Received: by mail-qt1-f199.google.com with SMTP id n89so9157966qte.15
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:50:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kr9KTKBU+/+uofMSqlPA49Feo8xCOB4FV94CTTUBStM=;
-        b=IwWXYqL7TY9rxjXjYcdZsDlMtBOcz4La5/eO4h23+VdrJ9RkQxs0+26w5ww3gTkVIs
-         Rq+mqG3q9Qz6aA0UNZnG24ShB+kelhZok6SnsV7Awy2GasaxBV/xAwWvZ0HwRXNZQ2O0
-         1TGJOEsT1hnPPCH7k9JXkCOmAzO8ztotoIZuHswn5HCREmOmX1RPHJnvbgFar0Uav+sF
-         3g7WkEXl2efgTAkvD0OhrKRAU6U/N2nxm2j/8a+6Vyy+SY1KqfiF8r53tpF7ieuke9Dz
-         XcbwlJvDaWW53CHD+0bYQjmjalEtnGnm2v/vmRVoW5bZIVf725UaT1hDofusqhfkwUb2
-         nzMA==
-X-Gm-Message-State: AGi0PuY00QSgNS85NVPhJomuNGMSYYIR+2Oi1tPBQFLhbHk57ECUQEnK
-        xQYngAhggLaA7AnrejLEJ7Ym/Eowcjrr4LFH/+kYONHwZobEumPyxOMG9jVFdspl6hgmsZGT+u/
-        rUp6qcEd5d9CmcbDiWTP1qxF5cSAPQdLN6blS8/LA
-X-Received: by 2002:a37:a090:: with SMTP id j138mr17159945qke.168.1586789443340;
-        Mon, 13 Apr 2020 07:50:43 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIS1bM7/cnw0/cmr0zxcGu/p79bSOTSNpyLGH30P81IUc3vIXTO+mjh49kiiytoU5bQ/OGlrY1RcCqeUjyOqso=
-X-Received: by 2002:a37:a090:: with SMTP id j138mr17159916qke.168.1586789443027;
- Mon, 13 Apr 2020 07:50:43 -0700 (PDT)
+        Mon, 13 Apr 2020 10:50:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586789456; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=uvf3bpTwOKniLL1tkFEZ8lUYaBxnlGE9DNXjmA347Xc=;
+ b=JVE0Oy/nbYlWJ2cLaPDvDLUAfV066FdCQDNMkvnkmXf9zUeA08NlACv4BRhWZy1UZ2z2PdNJ
+ BibB5/HMk3DptM0ViEtYVolDnwGEB99e5CvecAMiAncPyiZ8QujRhmoprcaDv9WynkXRILhO
+ oIJaQ/M0oY6qo6qsQxeWZQZRU0k=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e947c4a.7f33307f5ab0-smtp-out-n01;
+ Mon, 13 Apr 2020 14:50:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 85830C433BA; Mon, 13 Apr 2020 14:50:48 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A50E3C433F2;
+        Mon, 13 Apr 2020 14:50:47 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200403165119.5030-1-eperezma@redhat.com> <20200413071044-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200413071044-mutt-send-email-mst@kernel.org>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Mon, 13 Apr 2020 16:50:06 +0200
-Message-ID: <CAJaqyWcOmzxfOodudSjrZa1SeYDZKiO3MFMy_w44cL_eaBhYDA@mail.gmail.com>
-Subject: Re: [PATCH 0/8] tools/vhost: Reset virtqueue on tests
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Apr 2020 20:20:47 +0530
+From:   kgunda@codeaurora.org
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Rob Herring <robh@kernel.org>, bjorn.andersson@linaro.org,
+        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings to
+ .yaml format
+In-Reply-To: <20200406085024.GF30614@dell>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
+ <20200331175401.GA9791@bogus>
+ <ac8f25113a3bb233c11fd7cd9e62c2cf@codeaurora.org>
+ <20200403114651.m6rholzufzqinanc@holly.lan> <20200406085024.GF30614@dell>
+Message-ID: <4fb0643342e512a248f57198cbafe50c@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 1:13 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Fri, Apr 03, 2020 at 06:51:11PM +0200, Eugenio P=C3=A9rez wrote:
-> > This series add the tests used to validate the "vhost: Reset batched
-> > descriptors on SET_VRING_BASE call" series, with a small change on the
-> > reset code (delete an extra unneded reset on VHOST_SET_VRING_BASE).
-> >
-> > They are based on the tests sent back them, the ones that were not
-> > included (reasons in that thread). This series changes:
-> >
-> > * Delete need to export the ugly function in virtio_ring, now all the
-> > code is added in tools/virtio (except the one line fix).
-> > * Add forgotten uses of vhost_vq_set_backend. Fix bad usage order in
-> > vhost_test_set_backend.
-> > * Drop random reset, not really needed.
-> > * Minor changes updating tests code.
-> >
-> > This serie is meant to be applied on top of
-> > 5de4e0b7068337cf0d4ca48a4011746410115aae in
-> > git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
->
-> Is this still needed?
-
-("tools/virtio: fix virtio_test.c") indentation is actually cosmetic.
-("vhost: Not cleaning batched descs in VHOST_SET_VRING_BASE ioctl")
-just avoid to clean batches descriptors for a third time (they are
-cleaned on backend removal and addition).
-
-("vhost: Fix bad order in vhost_test_set_backend at enable") is
-actually a fix, the test does not work properly without it. And
-("tools/virtio: Reset index in virtio_test --reset.") Makes the test
-work more similar than the actual VM does in a reset.
-
-("tools/virtio: Use __vring_new_virtqueue in virtio_test.c") and
-("tools/virtio: Extract virtqueue initialization in vq_reset") are
-convenience commits to reach the previous two.
-
-Lastly, ("tools/virtio: Use tools/include/list.h instead of stubs")
-just removes stub code, I did it when I try to test vdpa code and it
-seems to me a nice to have, but we can drop it from the patchset if
-you don't see that way.
-
-> The patches lack Signed-off-by and
-> commit log descriptions, reference commit Ids without subject.
-> See Documentation/process/submitting-patches.rst
->
-
-Sorry, I will try to keep an eye on that from now on. I will send a v2
-with Signed-off-by and extended descriptions if you see it ok.
-
-Thanks!
-
-> > Eugenio P=C3=A9rez (8):
-> >   tools/virtio: fix virtio_test.c indentation
-> >   vhost: Not cleaning batched descs in VHOST_SET_VRING_BASE ioctl
-> >   vhost: Replace vq->private_data access by backend accesors
-> >   vhost: Fix bad order in vhost_test_set_backend at enable
-> >   tools/virtio: Use __vring_new_virtqueue in virtio_test.c
-> >   tools/virtio: Extract virtqueue initialization in vq_reset
-> >   tools/virtio: Reset index in virtio_test --reset.
-> >   tools/virtio: Use tools/include/list.h instead of stubs
-> >
-> >  drivers/vhost/test.c        |  8 ++---
-> >  drivers/vhost/vhost.c       |  1 -
-> >  tools/virtio/linux/kernel.h |  7 +----
-> >  tools/virtio/linux/virtio.h |  5 ++--
-> >  tools/virtio/virtio_test.c  | 58 +++++++++++++++++++++++++++----------
-> >  tools/virtio/vringh_test.c  |  2 ++
-> >  6 files changed, 51 insertions(+), 30 deletions(-)
-> >
-> > --
-> > 2.18.1
->
-
+On 2020-04-06 14:20, Lee Jones wrote:
+> On Fri, 03 Apr 2020, Daniel Thompson wrote:
+> 
+>> On Fri, Apr 03, 2020 at 04:45:49PM +0530, kgunda@codeaurora.org wrote:
+>> > On 2020-03-31 23:24, Rob Herring wrote:
+>> > > On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
+>> > > > diff --git
+>> > > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> > > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> > > > new file mode 100644
+>> > > > index 0000000..8a388bf
+>> > > > --- /dev/null
+>> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> > > > @@ -0,0 +1,184 @@
+>> > > > +# SPDX-License-Identifier: GPL-2.0-only
+>> > > > +%YAML 1.2
+>> > > > +---
+>> > > > +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
+>> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > > > +
+>> > > > +title: Binding for Qualcomm Technologies, Inc. WLED driver
+>> > > > +
+>> > > > +maintainers:
+>> > > > +  - Lee Jones <lee.jones@linaro.org>
+>> > >
+>> > > Should be the h/w owner (you), not who applies patches.
+>> > >
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> > <snip>
+>> > will address in next post.
+>> 
+>> If you agree on all points raised I doubt there is any need for a 
+>> point
+>> by point reply since everyone who reads it will have to scroll down
+>> simply to find out that you agree on all points.
+>> 
+>> Better just to acknowledge the feedback and reply to the first one
+>> saying you'll agree on all points and will address all feedback in the
+>> next revision (and then trim the reply to keep it short).
+> 
+> Or better still, just submit the next revision with all the fixes. :)
+Noted.
