@@ -2,118 +2,160 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9846DC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D4AC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEEE20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C659B20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586792855;
-	bh=1kbI+L/FOBvyQlWHtEOqRSUxbelREV3uN+qV916OMhU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p+FmKMJQ7D2+aeq4oRfjGM5VQrn0azvaVPYBMv5D/tDpIsKV0Hz+lFvpA0WVhwjGv
-	 tFGfNtcR6wck/1liI+sXL/BqfHJa1a8JAOrY+a0VOz8xmIa2E85XMq2b4dILIJinbF
-	 ct42V2qveuH/8QSqXhA0meD7acXYAvdrEMY3Lh5o=
+	s=default; t=1586792924;
+	bh=qrS0TzuvSe49+jSFZAmztDDoWVn/PoG25J785axPwvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OCFbr8zQlOIKOWq6nCHIWfSjptdfaQl5ji2qK8H3uDI3b3HBzL/MiGBjFQHlOniz3
+	 Bfw4t8WUBo0jSFesCnjY5HmQGEZji2SaeQabOavpx0C96xwurF1CGmP6lcEIShAwzZ
+	 83lFFMhqS7plxhlXJGZYbkq1lYPBL71QyAHef8kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730771AbgDMPre (ORCPT
+        id S1730800AbgDMPsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbgDMPrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:47:31 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB9120735;
-        Mon, 13 Apr 2020 15:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586792850;
-        bh=1kbI+L/FOBvyQlWHtEOqRSUxbelREV3uN+qV916OMhU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EerhglLhkdcjrdNPG/aRGrsuRAIcQzU36TvUnEMoA/BZZ0R78JdNUtCyeEe5BHFDc
-         yCIml7K8Nb+vjzIA8Rn+u2D0g97+FT4V7lOMS1rVvs3o8QGtyO08/3aZuT6gra4HK7
-         3XDwpUWTX1rfvmnrm+3gZ/tQuMoZrP3p2x2W62JA=
-Date:   Mon, 13 Apr 2020 16:47:26 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH v3 1/5] iio: core: register buffer fileops only if
- buffer present
-Message-ID: <20200413164726.5e5e2efd@archlinux>
-In-Reply-To: <20200410141729.82834-2-alexandru.ardelean@analog.com>
-References: <20200410141729.82834-1-alexandru.ardelean@analog.com>
-        <20200410141729.82834-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 11:48:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43662 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728194AbgDMPsm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:48:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i10so10598446wrv.10;
+        Mon, 13 Apr 2020 08:48:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x0rLPq9Sns/BwRC2jB2YeCFw6+44rIg8cqCHCP4ZKv4=;
+        b=P1DqmbkBVRo3ZI9pMcOySFPvziR41fzgeZAKpBqwfYZne65orcvScKZ366nGgZxkiu
+         W9QGQM9o57kmSwH7VEc0QcjLbjzGS6adR8ENbg0qNPVniY2fw+T0Aazs6+T8vzqu5skc
+         ej5oCZMPg3RT5ko1d3wvrOgImAvw3yZc4fYiaGhSalo8fDc3VqAz+gBb97jQD+6OoUG6
+         detjOqXoGe3nyYfMKuDzcOdxRXo8l57/j6LZwj+UOLA2s9S6OcPdPg8Hbb/U1kN7/g13
+         MwbF4IyfcW4o9Ha6t7i3RVgKpxqiEOxoOT90qE0wl+ZXeVL9wK3x0kN7fgezzqKWqu7X
+         UASQ==
+X-Gm-Message-State: AGi0Pubm5XS9xvobHZuadhVUPYMH+r46ka0p0kLcRaI6SuUEBLVW5Tjf
+        MwuuRjxV5+IvuBlyxyrL13I=
+X-Google-Smtp-Source: APiQypIcYFzp+gNqqmZaeDC/cuip2gCYp7iGWnioOOPuaU8yex7GGlH8Wt1RpaACXZgneadvGKl2qA==
+X-Received: by 2002:a5d:6503:: with SMTP id x3mr12205070wru.153.1586792920517;
+        Mon, 13 Apr 2020 08:48:40 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id k133sm15851710wma.0.2020.04.13.08.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 08:48:39 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 16:48:36 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH 00/11] VMBus channel interrupt reassignment
+Message-ID: <20200413154836.rfvkbcg654pc5t5n@debian>
+References: <20200406001514.19876-1-parri.andrea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406001514.19876-1-parri.andrea@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020 17:17:25 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> The intent is to localize all buffer ops into the industrialio-buffer.c
-> file, to be able to add support for multiple buffers per IIO device.
+On Mon, Apr 06, 2020 at 02:15:03AM +0200, Andrea Parri (Microsoft) wrote:
+> Hi all,
 > 
-> We still need to allocate a chardev in __iio_device_register() to be able
-> to pass event ioctl commands. So, if the IIO device has no buffer, we
-> create the legacy chardev for the event ioctl() command.
+> This is a follow-up on the RFC submission [1].  The series introduces
+> changes in the VMBus drivers to reassign the CPU that a VMbus channel
+> will interrupt.  This feature can be used for load balancing or other
+> purposes (e.g. CPU offlining).  The submission integrates feedback in
+> the RFC to amend the handling of the 'array of channels' (patch #3).
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Whilst we are here, can we avoid allocating the chardev at all if
-we have neither buffer support, nor events?  So don't add the chrdev to the device.
-
-That covers quite a wide range of slow devices and is a nice incidental
-improvement (to be honest I'd forgotten we actually created a chardev
-in those circumstance :(
-
-Jonathan
-
-> ---
->  drivers/iio/industrialio-core.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> Thanks,
+>   Andrea
 > 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 157d95a24faa..c8c074602709 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -1707,6 +1707,15 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
->  
->  static const struct iio_buffer_setup_ops noop_ring_setup_ops;
->  
-> +static const struct file_operations iio_event_fileops = {
-> +	.release = iio_chrdev_release,
-> +	.open = iio_chrdev_open,
-> +	.owner = THIS_MODULE,
-> +	.llseek = noop_llseek,
-> +	.unlocked_ioctl = iio_ioctl,
-> +	.compat_ioctl = compat_ptr_ioctl,
-> +};
-> +
->  int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
->  {
->  	int ret;
-> @@ -1757,7 +1766,10 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
->  		indio_dev->setup_ops == NULL)
->  		indio_dev->setup_ops = &noop_ring_setup_ops;
->  
-> -	cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
-> +	if (indio_dev->buffer)
-> +		cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
-> +	else
-> +		cdev_init(&indio_dev->chrdev, &iio_event_fileops);
->  
->  	indio_dev->chrdev.owner = this_mod;
->  
+> [1] https://lkml.kernel.org/r/20200325225505.23998-1-parri.andrea@gmail.com
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> 
+> Andrea Parri (Microsoft) (11):
+>   Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
+>   Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific
+>     CPU
+>   Drivers: hv: vmbus: Replace the per-CPU channel lists with a global
+>     array of channels
+>   hv_netvsc: Disable NAPI before closing the VMBus channel
+>   hv_utils: Always execute the fcopy and vss callbacks in a tasklet
+>   Drivers: hv: vmbus: Use a spin lock for synchronizing channel
+>     scheduling vs. channel removal
+>   PCI: hv: Prepare hv_compose_msi_msg() for the
+>     VMBus-channel-interrupt-to-vCPU reassignment functionality
+>   Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
+>     logic
+>   Drivers: hv: vmbus: Synchronize init_vp_index() vs. CPU hotplug
+>   Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL message
+>     type
+>   scsi: storvsc: Re-init stor_chns when a channel interrupt is
+>     re-assigned
+> 
 
+Applied to hyperv-next. Thanks.
+
+This hunk in patch 10 doesn't apply cleanly because it conflicts with
+Vitaly's patch.
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 3785beead503d..1058c814ab06e 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1377,7 +1377,7 @@ channel_message_table[CHANNELMSG_COUNT] = {
+        { CHANNELMSG_19,                        0, NULL },
+        { CHANNELMSG_20,                        0, NULL },
+        { CHANNELMSG_TL_CONNECT_REQUEST,        0, NULL },
+-       { CHANNELMSG_22,                        0, NULL },
++       { CHANNELMSG_MODIFYCHANNEL,             0, NULL },
+        { CHANNELMSG_TL_CONNECT_RESULT,         0, NULL },
+ };
+
+I have fixed it up. New hunk looks like:
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index a6b21838e2de..9c62eb5e4135 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1380,7 +1380,7 @@ channel_message_table[CHANNELMSG_COUNT] = {
+        { CHANNELMSG_19,                        0, NULL, 0},
+        { CHANNELMSG_20,                        0, NULL, 0},
+        { CHANNELMSG_TL_CONNECT_REQUEST,        0, NULL, 0},
+-       { CHANNELMSG_22,                        0, NULL, 0},
++       { CHANNELMSG_MODIFYCHANNEL,             0, NULL, 0},
+        { CHANNELMSG_TL_CONNECT_RESULT,         0, NULL, 0},
+ };
+
+Let me know if I messed it up.
+
+Wei.
