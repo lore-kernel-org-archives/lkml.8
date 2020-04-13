@@ -2,183 +2,124 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FA5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCA0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82AF7206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:39:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="oAaf0jQg"
+	by mail.kernel.org (Postfix) with ESMTP id CD3A720737
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgDMIjz (ORCPT
+        id S1727964AbgDMIkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:39:55 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:15176 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727770AbgDMIjx (ORCPT
+        Mon, 13 Apr 2020 04:40:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39892 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbgDMIkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:39:53 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03D8ZlEU005571;
-        Mon, 13 Apr 2020 04:39:31 -0400
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30b7r5xqru-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Apr 2020 04:39:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m95MxQW7AU+1+xMGNEFnd17Nr+/A5+eOTHBiyUmwnFAR1TOyxq5BfDxg1GtDcLQ6dAwhB1tKNemr8FFsBLZrF6EwjccRKUEKYr0Zoms6fXCiY1O4Rehf2jsyCk6SZI+lV6l8AumgLxmRJgR+fOnEl0lTsYf9vH4SNo95c4QT3pX3noK4hfU7968A4G6Ofp7Jzt8M6ai1lwPDSaPpP6CoHt3N3SGHx+l+Mlfj+7eQ0nCJ8eWKkmsCgQyL9FnfYEPnkspqdnlUVyrT9Zhs4ts+OWDluUJA7hGEJv1EM8F86WfkDLMrYFRq7rW69pyXjoLLkbAwAI36G43rH6R67r0Nzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dWmKmTgf1zVlX3nWh5Bqi3KTfiBx8EnWWgPRZ1j6dEM=;
- b=a5Ni3NAohC7dxrWK3pGz3Psc42s4fHss3QunPT8dwAs2gJdDfVdVnEXvH0TRACAaOhspDCLfIByRVuc04JLG5Q+yQQY3BzbFOCizq52mRJi2M8IuiF3/UXJ0tx7QkcvEYA5rl2M1OwEEIOrl8E0ygeIF9SrdXYq7J/W5/mwqSHA0N8Qea4mPXHooTGWilPyEIHjJhmqe0GlmB6Pr/RsFhtR0yieZSzD5KHEtLcidq0zeRxulKyhNnHyte2LdJc8bOrfISxfVIwAF6NuimBckwT9j1m/f107iKPPmooHGdVmUWQgf9KSpblfMVdELqjoySltrvgtdMWmOUDP2FabZvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dWmKmTgf1zVlX3nWh5Bqi3KTfiBx8EnWWgPRZ1j6dEM=;
- b=oAaf0jQgjVuRA73qxbl/ZDZgNR4nd30HpnxnxFH4guThr4OcavG7b4AIVAJxC+f1FIKVK3UGDPYRP1UUq19UikBISbGMaU153s2QpPIc1DdS1YiJOqlpnkehOQiZm/n/Diaw/4jbTOXY1alHmCtIa6iE6nxhIvhjMrANNRFlWBw=
-Received: from DM6PR03MB5274.namprd03.prod.outlook.com (2603:10b6:5:24b::14)
- by DM6PR03MB3817.namprd03.prod.outlook.com (2603:10b6:5:50::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Mon, 13 Apr
- 2020 08:39:29 +0000
-Received: from DM6PR03MB5274.namprd03.prod.outlook.com
- ([fe80::41b:c63a:335f:b637]) by DM6PR03MB5274.namprd03.prod.outlook.com
- ([fe80::41b:c63a:335f:b637%5]) with mapi id 15.20.2878.028; Mon, 13 Apr 2020
- 08:39:29 +0000
-From:   "Togorean, Bogdan" <Bogdan.Togorean@analog.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: RE: [RESEND 2/2] drm: bridge: adv7511: Extend list of audio sample
- rates
-Thread-Topic: [RESEND 2/2] drm: bridge: adv7511: Extend list of audio sample
- rates
-Thread-Index: AQHV6wrnb32BIu99g0+rwV7SMOiq0ahuBu+AgAj/BPA=
-Date:   Mon, 13 Apr 2020 08:39:29 +0000
-Message-ID: <DM6PR03MB527487EAB8D2977CF1925BBC9BDD0@DM6PR03MB5274.namprd03.prod.outlook.com>
-References: <20200224120155.15510-1-bogdan.togorean@analog.com>
-        <CGME20200224165503eucas1p2a8aea2390c4b0421e99641e0d4183167@eucas1p2.samsung.com>
-        <20200224120155.15510-2-bogdan.togorean@analog.com>
- <6ecea2a4-ba7a-929e-3536-22bbb1a39f40@samsung.com>
-In-Reply-To: <6ecea2a4-ba7a-929e-3536-22bbb1a39f40@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWW5SdloyOXlaV0ZjWVhCd1pHRjBZVnh5YjJGdGFXNW5YREE1WkRnME9X?=
- =?utf-8?B?STJMVE15WkRNdE5HRTBNQzA0TldWbExUWmlPRFJpWVRJNVpUTTFZbHh0YzJk?=
- =?utf-8?B?elhHMXpaeTAwTmpsaVl6STNZaTAzWkRZeUxURXhaV0V0T0RZek1TMHhPREZr?=
- =?utf-8?B?WldFMU5EWmxaREpjWVcxbExYUmxjM1JjTkRZNVltTXlOMk10TjJRMk1pMHhN?=
- =?utf-8?B?V1ZoTFRnMk16RXRNVGd4WkdWaE5UUTJaV1F5WW05a2VTNTBlSFFpSUhONlBT?=
- =?utf-8?B?SXhOakUxSWlCMFBTSXhNekl6TVRJME1EYzJOak00TXpreE5UUWlJR2c5SWpG?=
- =?utf-8?B?NVZVRmFjemhCV2tOVVZuQnlRM1phZUcxV2FtNUVjbEp0UlQwaUlHbGtQU0lp?=
- =?utf-8?B?SUdKc1BTSXdJaUJpYnowaU1TSWdZMms5SW1OQlFVRkJSVkpJVlRGU1UxSlZS?=
- =?utf-8?B?azVEWjFWQlFVVnZRMEZCUTNsQ2VUUkxZbmhJVjBGU1VuTmxiM2RoVURRNFUw?=
- =?utf-8?B?WkhlRFpxUW04dmFuaEpSRUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRklRVUZCUVVSaFFWRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGRlFVRlJRVUpCUVVGQldHWnFXRVYzUVVGQlFVRkJRVUZCUVVGQlFVRkJT?=
- =?utf-8?B?alJCUVVGQ2FFRkhVVUZoVVVKbVFVaE5RVnBSUW1wQlNGVkJZMmRDYkVGR09F?=
- =?utf-8?B?RmpRVUo1UVVjNFFXRm5RbXhCUjAxQlpFRkNla0ZHT0VGYVowSm9RVWQzUVdO?=
- =?utf-8?B?M1FteEJSamhCV21kQ2RrRklUVUZoVVVJd1FVZHJRV1JuUW14QlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlowRkJRVUZCUVc1blFVRkJSMFZCV2tGQ2NFRkdPRUZqZDBKc1FVZE5RV1JS?=
- =?utf-8?B?UW5sQlIxVkJXSGRDZDBGSVNVRmlkMEp4UVVkVlFWbDNRakJCU0UxQldIZENN?=
- =?utf-8?B?RUZIYTBGYVVVSjVRVVJGUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRlJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRMEZCUVVGQlFVTmxRVUZCUVZsUlFtdEJSMnRCV0hkQ2Vr?=
- =?utf-8?B?RkhWVUZaZDBJeFFVaEpRVnBSUW1aQlNFRkJZMmRDZGtGSGIwRmFVVUpxUVVo?=
- =?utf-8?B?UlFXTjNRbVpCU0ZGQllWRkNiRUZJU1VGTlowRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZDUVVGQlFVRkJRVUZCUVVsQlFVRkJRVUZCUFQwaUx6NDhMMjFs?=
- =?utf-8?Q?dGE+?=
-x-dg-rorf: true
-x-originating-ip: [5.15.28.91]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 66408f48-bbef-4ff8-9234-08d7df862e53
-x-ms-traffictypediagnostic: DM6PR03MB3817:
-x-microsoft-antispam-prvs: <DM6PR03MB381792055B48DCA1E7FACF449BDD0@DM6PR03MB3817.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 037291602B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB5274.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(39860400002)(346002)(366004)(376002)(396003)(136003)(186003)(52536014)(71200400001)(26005)(76116006)(66476007)(5660300002)(64756008)(66446008)(478600001)(7696005)(66946007)(66556008)(6506007)(316002)(8676002)(54906003)(110136005)(9686003)(4326008)(55016002)(81156014)(33656002)(7416002)(8936002)(86362001)(2906002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BWyqYOs4soWtUUvccqWRnfvYdZOqeMJdM68TVfjL/RiYsFgrXT56jX0/RAQsO7638ZmR8MjDYVBHItzT3BhllwQwsdlLArvdQtDdNDhZrQr3mMxIEwJJbfW2X4rrkAr9wp2oFuddglMw8pbIlyegzcQsVgEGEiGM5IcmePIzbD8EWjVKqU6vgkros4b4dGLJnxkZxMH1b2iQaPXLZ35kMuoa81zCZ/rJU6C01JJ9pCitguSfNMHookV5HsRX6ti1ueuJmTCBc2sSfw22/S5NGDjcArHhprAcCocGcwR28r8uj3pC96uqk4YtpsB7cVMs/X3lATI3evgEv7rCh2WnBigqisFWaYYTe+q+8FMuMkqqGQCtvwkY04u6VlRcuoAWV1FRYm3vzukWy7MgBhpzFsaYVhk0CS0JuXxl98usjT6Xs745Zxf1/9YVGsStOyBU
-x-ms-exchange-antispam-messagedata: YigT1RGHz8xzNzFUJ93ZNaOn2NFH4LcbDYKjuyWgpU6bF06Zy6r3Yc7QGd+sJ+oJWqvDAykg+IXp5fIiCk8tguU/d5WSE/YDxYOGpDr86U8B2K9QyiTOK9ndNkFK9BD/OTwPJvlh8pRI6P5faR1OOw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 13 Apr 2020 04:40:22 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jNudf-0007z6-5Z; Mon, 13 Apr 2020 10:40:19 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A61BB1C0092;
+        Mon, 13 Apr 2020 10:40:18 +0200 (CEST)
+Date:   Mon, 13 Apr 2020 08:40:18 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/smpboot: Remove the last ICPU() macro
+Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200324185836.GI22931@zn.tnic>
+References: <20200324185836.GI22931@zn.tnic>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66408f48-bbef-4ff8-9234-08d7df862e53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2020 08:39:29.1756
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qbQ66lK3TR+HKDxj2y73zyIVSiddstoZeOLtlfViDCneF1B0XgdMYWb2VmBkrBY9wUjPhm0CAK1zhMQ5Z9ZYySroL0002qKlEUMZTN0Z/cY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3817
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-13_02:2020-04-12,2020-04-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1015 malwarescore=0 adultscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130077
+Message-ID: <158676721824.28353.7844544584535496373.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IEFEVjc1MTEgc3VwcG9ydCBzYW1wbGUgcmF0ZXMgdXAgdG8gMTkya0h6LiBDVFMgYW5kIE4g
-cGFyYW1ldGVycyBzaG91bGQNCj4gPiBiZSBjb21wdXRlZCBhY2NvcmRpbmdseSBzbyB0aGlzIGNv
-bW1pdCBleHRlbmQgdGhlIGxpc3QgdXAgdG8gbWF4aW11bQ0KPiA+IHN1cHBvcnRlZCBzYW1wbGUg
-cmF0ZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJvZ2RhbiBUb2dvcmVhbiA8Ym9nZGFuLnRv
-Z29yZWFuQGFuYWxvZy5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-YWR2NzUxMS9hZHY3NTExX2F1ZGlvLmMgfCAxMiArKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDEyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMV9hdWRpby5jDQo+IGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9hZHY3NTExL2Fkdjc1MTFfYXVkaW8uYw0KPiA+IGluZGV4IDFlOWIxMjhkMjI5Yi4u
-MTNlOGNlZTZlODI3IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2
-NzUxMS9hZHY3NTExX2F1ZGlvLmMNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fk
-djc1MTEvYWR2NzUxMV9hdWRpby5jDQo+ID4gQEAgLTI3LDYgKzI3LDE4IEBAIHN0YXRpYyB2b2lk
-IGFkdjc1MTFfY2FsY19jdHNfbih1bnNpZ25lZCBpbnQgZl90bWRzLA0KPiB1bnNpZ25lZCBpbnQg
-ZnMsDQo+ID4gIAljYXNlIDQ4MDAwOg0KPiA+ICAJCSpuID0gNjE0NDsNCj4gPiAgCQlicmVhazsN
-Cj4gPiArCWNhc2UgODgyMDA6DQo+ID4gKwkJKm4gPSAxMjU0NDsNCj4gPiArCQlicmVhazsNCj4g
-PiArCWNhc2UgOTYwMDA6DQo+ID4gKwkJKm4gPSAxMjI4ODsNCj4gPiArCQlicmVhazsNCj4gPiAr
-CWNhc2UgMTc2NDAwOg0KPiA+ICsJCSpuID0gMjUwODg7DQo+ID4gKwkJYnJlYWs7DQo+ID4gKwlj
-YXNlIDE5MjAwMDoNCj4gPiArCQkqbiA9IDI0NTc2Ow0KPiA+ICsJCWJyZWFrOw0KPiANCj4gDQo+
-IEkgd291bGQgcHV0Og0KPiANCj4gY2FzZSAzMjAwMDoNCj4gY2FzZSA0ODAwMDoNCj4gY2FzZSA5
-NjAwMDoNCj4gY2FzZSAxOTIwMDA6DQo+IMKgwqDCoCAqbiA9IGZzICogMTI4IC8gMTAwMDsNCj4g
-wqDCoMKgIGJyZWFrOw0KPiBjYXNlIDQ0MTAwOg0KPiBjYXNlIDg4MjAwOg0KPiBjYXNlIDE3NjQw
-MDoNCj4gwqDCoMKgICpuID0gZnMgKiAxMjggLyA5MDA7DQo+IMKgwqDCoCBicmVhazsNCj4gDQo+
-IFRvIHVuY292ZXIgdGhlIG1hZ2ljLiBVcCB0byB5b3UuDQpHcmVhdCBzb2x1dGlvbiBBbmRyemVq
-LA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgc3VnZ2VzdGlvbi4NCg0KUmVnYXJkcywNCkJvZ2Rhbg0K
-PiANCj4gUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+DQo+
-IA0KPiANCj4gUmVnYXJkcw0KPiBBbmRyemVqDQo+ID4gIAl9DQo+ID4NCj4gPiAgCSpjdHMgPSAo
-KGZfdG1kcyAqICpuKSAvICgxMjggKiBmcykpICogMTAwMDsNCj4gDQoNCg==
+The following commit has been merged into the x86/cleanups branch of tip:
+
+Commit-ID:     2fa9a3cf3055db07a4835eb7bd48c648cb17ac26
+Gitweb:        https://git.kernel.org/tip/2fa9a3cf3055db07a4835eb7bd48c648cb17ac26
+Author:        Borislav Petkov <bp@alien8.de>
+AuthorDate:    Tue, 24 Mar 2020 19:58:36 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 13 Apr 2020 10:34:09 +02:00
+
+x86/smpboot: Remove the last ICPU() macro
+
+Now all is using the shiny new macros.
+
+No code changed:
+
+  # arch/x86/kernel/smpboot.o:
+
+   text    data     bss     dec     hex filename
+  16432    2649      40   19121    4ab1 smpboot.o.before
+  16432    2649      40   19121    4ab1 smpboot.o.after
+
+md5:
+   a58104003b72c1de533095bc5a4c30a9  smpboot.o.before.asm
+   a58104003b72c1de533095bc5a4c30a9  smpboot.o.after.asm
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200324185836.GI22931@zn.tnic
+---
+ arch/x86/kernel/smpboot.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index fe3ab96..3b9bf8c 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1849,24 +1849,25 @@ static bool slv_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+ 
+-#define ICPU(model) \
+-	{X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
++#define X86_MATCH(model)					\
++	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,		\
++		INTEL_FAM6_##model, X86_FEATURE_APERFMPERF, NULL)
+ 
+ static const struct x86_cpu_id has_knl_turbo_ratio_limits[] = {
+-	ICPU(INTEL_FAM6_XEON_PHI_KNL),
+-	ICPU(INTEL_FAM6_XEON_PHI_KNM),
++	X86_MATCH(XEON_PHI_KNL),
++	X86_MATCH(XEON_PHI_KNM),
+ 	{}
+ };
+ 
+ static const struct x86_cpu_id has_skx_turbo_ratio_limits[] = {
+-	ICPU(INTEL_FAM6_SKYLAKE_X),
++	X86_MATCH(SKYLAKE_X),
+ 	{}
+ };
+ 
+ static const struct x86_cpu_id has_glm_turbo_ratio_limits[] = {
+-	ICPU(INTEL_FAM6_ATOM_GOLDMONT),
+-	ICPU(INTEL_FAM6_ATOM_GOLDMONT_D),
+-	ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
++	X86_MATCH(ATOM_GOLDMONT),
++	X86_MATCH(ATOM_GOLDMONT_D),
++	X86_MATCH(ATOM_GOLDMONT_PLUS),
+ 	{}
+ };
+ 
