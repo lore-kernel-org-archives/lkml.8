@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8FCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA66FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFBD020575
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BA820575
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HeMosw6Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d9U8U4mS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbgDMTeb (ORCPT
+        id S2387934AbgDMTei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 15:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58442 "EHLO
+        Mon, 13 Apr 2020 15:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387888AbgDMTeK (ORCPT
+        by vger.kernel.org with ESMTP id S2387900AbgDMTeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 15:34:10 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA7DC00860D
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:34:08 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w11so4897301pga.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:34:08 -0700 (PDT)
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3320EC00860C
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:34:07 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id i3so889537pgk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:34:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gU2cOA3BiSfFddDcALcj2wG+E3K4HvoumOkViRH8D+8=;
-        b=HeMosw6YchIKbW/5m0S6mmisN7wfVCq+TFADyM7X/zjgLv6x8SfDaXjGs2EzZ7xbOd
-         UBMg2roQLdvuMY8OaV/fAMYaNgPC2z9n2P+bGekXRp7uKpViPwRn1KOC0+5uS0BcKPlh
-         RQprc/CcgjZiejIbY9+g1EMg4ZPCZ3190q4L8IhDegAdu31HMcDZO63Zo/mcXRvkm8fw
-         1/PCPGpN22nPOw+bqr5ShQElpx1tQ78R+9GIvSzOSg2ECJ9FVle10VLVTQ1pmv6OXhNb
-         Bnonk89IUQY4mxJdgLMrNHElPGyTmPJIV2bd3VFYk36GBc4946tZa9oElN4tmnRYj+fD
-         mfWA==
+        bh=CbfVjk3n7dmtNabMVVrC9yJ09gyFOYpKGc85h9CW1lY=;
+        b=d9U8U4mSflEe4j0ZiTHJv35UwXRhVJ6QMZ+zO0JqNkV1GgmqV90Rb0/4+crhwnfLC8
+         xqF6GP1ev/WVIK2HJORf8n+ak1kc6JX4ZXSoAB6fxMYEyG788bXAbE51VRWOe6CaCBxs
+         2/0IgpNVCE/emIsUO91F29x7Ls9fgsm9bw1aVBRCUNDWQiSGz3L2j123CgwVImEq5fzC
+         B/03oKZ6RoNdcrH9vKZCKIQ5HhTDzR5JVocDGQcbq7ytU9MiChJ0BqUgJSodelh8Dcbu
+         BNpUOZ2vwiBKNi9tOoZMVTYRbA2APdRQBkz8jNU4jRDD7Xe3J8AHr/BfXhvi29LIPp25
+         Wrmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gU2cOA3BiSfFddDcALcj2wG+E3K4HvoumOkViRH8D+8=;
-        b=jYJ/silhVRg4SSV9ngD/hXk3gWhWr0j44PK15YH0z8SGKxotZVPcnDKonXlt0rW697
-         8RA4EK4laGwIdfGv5KWB7jusAjzsuAEextmrSg1TIem11w41w4wSrSU4a1SBdFJ/Kl8j
-         0vNR2Y+KGluvPU6vmm+kLyP5A9ss6j0kn2PFF+hWIafnclryFd7ismqB6ztwdwPiyyjQ
-         p81e1Uan4RWfVvuk7l9XOdgnVjI6qO0rQWI7QjFMi6i97GOh5+ELzAQTKUJrW9zFygBy
-         l+8IJe7gwi/sqmd7tFXsYGdao2KWzu9gZ4EQOKnORjbqCSRBt647Cp7F84q1miBe35C+
-         ocqA==
-X-Gm-Message-State: AGi0PuYOo4nf9bZbsKz0ipdAG3CcgFxwtxxjCSfCJKDa95mN9fVGs/00
-        DEiDfsTFDGe4FDNt+X2pBGkVjw==
-X-Google-Smtp-Source: APiQypLO7Rs9j/m1litrgLroiUDnC44EIiP0dbxzfEPDsTKCchKHqeCUne1a6mCxPCvBCRZVLL04xA==
-X-Received: by 2002:a63:cc03:: with SMTP id x3mr18918025pgf.28.1586806448202;
-        Mon, 13 Apr 2020 12:34:08 -0700 (PDT)
+        bh=CbfVjk3n7dmtNabMVVrC9yJ09gyFOYpKGc85h9CW1lY=;
+        b=DPPbRFeIfX/Nv+w0635Dz02Gm1kYboeeaRDIG4K3Kg1KLWuWXfcBDm37+TU/EsDbqm
+         TDsuGAILR1skHtjpQpr/e9X3O5hRN18f9VTo/aubqe9I/PJuBLXVcSxQ2SRCHsrVtL3G
+         YxohNpR34hM6DpjbfjBMkp5xjoOQ4m1VN02pjZu2I8h4d90LVLeDNjdMyvJEvRioWO8H
+         V/SErt/PSfThnzLvzjsILh8zk1b4iqcPHUICV6HVYZH+kWH0Qu1TqlUJN21IQjbH2+LI
+         /yZTJW9pzTpzdpctetedrR5YgmG9coIKrsN+2U/WhgB1V40ts7QZlPdu5TihPN3i7WOr
+         wcMg==
+X-Gm-Message-State: AGi0PuZxawK8EpvfJDzzmcGmIhFpsGoRbbJLIvknZ+Sdov0wZi0ccWod
+        vxfnDjiqbg0I3pkjW9I6+UhufA==
+X-Google-Smtp-Source: APiQypISK1cjUZOJJw7oxYyo4pLuVlNFM1tkqhgi6XI1egohf6p7Zoqspbr9PWLC3pqLQirvf6uSHw==
+X-Received: by 2002:a63:6604:: with SMTP id a4mr17533914pgc.381.1586806446754;
+        Mon, 13 Apr 2020 12:34:06 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id ml24sm7032330pjb.48.2020.04.13.12.34.06
+        by smtp.gmail.com with ESMTPSA id ml24sm7032330pjb.48.2020.04.13.12.34.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 12:34:07 -0700 (PDT)
+        Mon, 13 Apr 2020 12:34:06 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     bjorn.andersson@linaro.org, ohad@wizery.com
 Cc:     s-anna@ti.com, elder@linaro.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] remoteproc: Get rid of tedious error path
-Date:   Mon, 13 Apr 2020 13:34:01 -0600
-Message-Id: <20200413193401.27234-5-mathieu.poirier@linaro.org>
+Subject: [PATCH 3/4] remoteproc: Split rproc_ops allocation from rproc_alloc()
+Date:   Mon, 13 Apr 2020 13:34:00 -0600
+Message-Id: <20200413193401.27234-4-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200413193401.27234-1-mathieu.poirier@linaro.org>
 References: <20200413193401.27234-1-mathieu.poirier@linaro.org>
@@ -76,67 +76,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get rid of tedious error management by moving firmware and operation
-allocation after calling device_initialize().  That way we take advantage
-of the automatic call to rproc_type_release() to cleanup after ourselves
-when put_device() is called.
+Make the rproc_ops allocation a function on its own in order to
+introduce more flexibility to function rproc_alloc().
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 32 +++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index c272d78f07e8..10009b95867a 100644
+index 4dee63f319ba..c272d78f07e8 100644
 --- a/drivers/remoteproc/remoteproc_core.c
 +++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2061,12 +2061,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	if (!rproc)
- 		return NULL;
- 
--	if (rproc_alloc_firmware(rproc, name, firmware))
--		goto free_rproc;
--
--	if (rproc_alloc_ops(rproc, ops))
--		goto free_firmware;
--
- 	rproc->name = name;
- 	rproc->priv = &rproc[1];
- 	rproc->auto_boot = true;
-@@ -2079,12 +2073,17 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	rproc->dev.driver_data = rproc;
- 	idr_init(&rproc->notifyids);
- 
-+	if (rproc_alloc_firmware(rproc, name, firmware))
-+		goto out;
-+
-+	if (rproc_alloc_ops(rproc, ops))
-+		goto out;
-+
- 	/* Assign a unique device index and name */
- 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
- 	if (rproc->index < 0) {
- 		dev_err(dev, "ida_simple_get failed: %d\n", rproc->index);
--		put_device(&rproc->dev);
--		return NULL;
-+		goto out;
- 	}
- 
- 	dev_set_name(&rproc->dev, "remoteproc%d", rproc->index);
-@@ -2105,11 +2104,8 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	rproc->state = RPROC_OFFLINE;
- 
- 	return rproc;
--
--free_firmware:
--	kfree(rproc->firmware);
--free_rproc:
--	kfree(rproc);
-+out:
-+	put_device(&rproc->dev);
- 	return NULL;
+@@ -2006,6 +2006,25 @@ static int rproc_alloc_firmware(struct rproc *rproc,
+ 	return 0;
  }
- EXPORT_SYMBOL(rproc_alloc);
+ 
++static int rproc_alloc_ops(struct rproc *rproc, const struct rproc_ops *ops)
++{
++	rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
++	if (!rproc->ops)
++		return -ENOMEM;
++
++	/* Default to ELF loader if no load function is specified */
++	if (!rproc->ops->load) {
++		rproc->ops->load = rproc_elf_load_segments;
++		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
++		rproc->ops->find_loaded_rsc_table =
++						rproc_elf_find_loaded_rsc_table;
++		rproc->ops->sanity_check = rproc_elf_sanity_check;
++		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
++	}
++
++	return 0;
++}
++
+ /**
+  * rproc_alloc() - allocate a remote processor handle
+  * @dev: the underlying device
+@@ -2045,8 +2064,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 	if (rproc_alloc_firmware(rproc, name, firmware))
+ 		goto free_rproc;
+ 
+-	rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+-	if (!rproc->ops)
++	if (rproc_alloc_ops(rproc, ops))
+ 		goto free_firmware;
+ 
+ 	rproc->name = name;
+@@ -2073,16 +2091,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 
+ 	atomic_set(&rproc->power, 0);
+ 
+-	/* Default to ELF loader if no load function is specified */
+-	if (!rproc->ops->load) {
+-		rproc->ops->load = rproc_elf_load_segments;
+-		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
+-		rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
+-		if (!rproc->ops->sanity_check)
+-			rproc->ops->sanity_check = rproc_elf32_sanity_check;
+-		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+-	}
+-
+ 	mutex_init(&rproc->lock);
+ 
+ 	INIT_LIST_HEAD(&rproc->carveouts);
 -- 
 2.20.1
 
