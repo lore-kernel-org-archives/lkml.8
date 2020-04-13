@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE06C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92252C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A344020787
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA1520753
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgDMMFC (ORCPT
+        id S1729394AbgDMMFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:05:02 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:43726 "EHLO
+        Mon, 13 Apr 2020 08:05:10 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:44314 "EHLO
         m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729365AbgDMMFB (ORCPT
+        with ESMTP id S1729365AbgDMMFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:05:01 -0400
+        Mon, 13 Apr 2020 08:05:05 -0400
 Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 77C5926249B;
-        Mon, 13 Apr 2020 20:04:57 +0800 (CST)
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 00A902624A4;
+        Mon, 13 Apr 2020 20:05:00 +0800 (CST)
 From:   Wang Qing <wangqing@vivo.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
@@ -41,59 +41,50 @@ To:     Catalin Marinas <catalin.marinas@arm.com>,
         Dave Martin <Dave.Martin@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     opensource.kernel@vivo.com
-Subject: [PATCH 1/2] [V2 1/2]sched:add task_running_oncpu
-Date:   Mon, 13 Apr 2020 20:04:23 +0800
-Message-Id: <1586779466-4439-2-git-send-email-wangqing@vivo.com>
+Subject: [PATCH 2/2] [V2 2/2]ARM64:fixed dump_backtrace() when task running on another cpu
+Date:   Mon, 13 Apr 2020 20:04:24 +0800
+Message-Id: <1586779466-4439-3-git-send-email-wangqing@vivo.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586779466-4439-1-git-send-email-wangqing@vivo.com>
 References: <1586779466-4439-1-git-send-email-wangqing@vivo.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVPTkhLS0tLTUNNTU9OTllXWShZQU
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVPQkxCQkJCS01OSEJCSVlXWShZQU
         hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MjY6FDo6Pjg6PAstCk4DPysy
-        Tk1PCz5VSlVKTkNNTExCT0JMQ05LVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
-        VUtVSEpVSklJWVdZCAFZQUhKSE43Bg++
-X-HM-Tid: 0a71736da5329375kuws77c5926249b
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NzI6Ohw4Hjg3AgtLCk4JPzFP
+        CTUwCkxVSlVKTkNNTExCTktKSENKVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
+        VUtVSEpVSklJWVdZCAFZQUhJS083Bg++
+X-HM-Tid: 0a71736db2e99375kuws00a902624a4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have no interface whether the task is running,
-so we need to add an interface and distinguish CONFIG_SMP.
+We cannot get FP and PC when the task is running on another CPU,
+task->thread.cpu_context is the last time the task was switched out,
+it's better to give a reminder than to provide wrong information.
 
 Signed-off-by: Wang Qing <wangqing@vivo.com>
 ---
- include/linux/sched.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/kernel/traps.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4418f5c..13cc8f5 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1843,6 +1843,11 @@ static inline unsigned int task_cpu(const struct task_struct *p)
- 
- extern void set_task_cpu(struct task_struct *p, unsigned int cpu);
- 
-+static inline int task_running_oncpu(const struct task_struct *p)
-+{
-+	return p->on_cpu;
-+}
-+
- #else
- 
- static inline unsigned int task_cpu(const struct task_struct *p)
-@@ -1854,6 +1859,11 @@ static inline void set_task_cpu(struct task_struct *p, unsigned int cpu)
- {
- }
- 
-+static inline int task_running_oncpu(const struct task_struct *p)
-+{
-+	return p == current;
-+}
-+
- #endif /* CONFIG_SMP */
- 
- /*
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index cf402be..831b8fd 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -106,6 +106,13 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 		start_backtrace(&frame,
+ 				(unsigned long)__builtin_frame_address(0),
+ 				(unsigned long)dump_backtrace);
++	} else if (task_running_oncpu(tsk)) {
++		/*
++		 * The task is running in another cpu, we cannot get it.
++		 */
++		pr_warn("tsk: %s is running in CPU%d, Don't call trace!\n",
++			tsk->comm, task_cpu(tsk));
++		return;
+ 	} else {
+ 		/*
+ 		 * task blocked in __switch_to
 -- 
 2.7.4
 
