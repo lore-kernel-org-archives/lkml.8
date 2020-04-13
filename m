@@ -2,783 +2,120 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB711C2BB55
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C74C2BB85
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:16:46 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9CE20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:14:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 7E9CE20678
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+	by mail.kernel.org (Postfix) with ESMTP id 79E20206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rN69rysV"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 79E20206DA
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgDMDOK (ORCPT
+        id S1728525AbgDMDQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 23:14:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:47832 "EHLO
+        Sun, 12 Apr 2020 23:16:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:48262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgDMDOJ (ORCPT
+        with ESMTP id S1728460AbgDMDQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 23:14:09 -0400
-Received: from ZXSHCAS2.zhaoxin.com (unknown [203.148.12.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10DAC0A3BE0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:14:08 -0700 (PDT)
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 13 Apr
- 2020 11:14:03 +0800
-Received: from zx.zhaoxin.com (10.28.64.103) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 13 Apr
- 2020 11:14:02 +0800
-From:   CodyYao-oc <CodyYao-oc@zhaoxin.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     <cooperyan@zhaoxin.com>, <codyyao@zhaoxin.com>,
-        CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Subject: [PATCH] x86/perf: Add hardware performance events support for Zhaoxin CPU.
-Date:   Mon, 13 Apr 2020 11:14:29 +0800
-Message-ID: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 12 Apr 2020 23:16:43 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3FBC0A3BE0;
+        Sun, 12 Apr 2020 20:16:43 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id s63so4092969qke.4;
+        Sun, 12 Apr 2020 20:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8E/j11TZfH7UZNApZvH4fEyzZjBApgpFuNvhfzAcUS4=;
+        b=rN69rysVCPRtDzu9ocDB8luGscQ5EDAzFC2HUPBZoBmnadjkGd12CRKaUx5KCEmflo
+         EjTtB+OZ2lBX7RZXRvyzxIqvKtDx/jgPV82ukKk4l3qRTVFmtWCScuIAIcWvHi+zUDww
+         Cr7BAtYsbLMGPjM0IFFZx87NZcQUYIBsEaRTJDmxyRFWGIvQVX6iAisWS93MSXj07hrA
+         FB3kyYhKxDxDChLwsHTilLFCicvIZSSBv1ehw6yEG2MMLACgwMJp58iqUHb7TfI55Qa4
+         BVMIvw8KomziBHrkvm29KOnA7a6RWsgHHxhSdNWqrbO+XAg9rtixBd9DVRkw73jbvwkJ
+         7/lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8E/j11TZfH7UZNApZvH4fEyzZjBApgpFuNvhfzAcUS4=;
+        b=Y1TvHYcwQFzq8Cui3L+JsfW5EjaBijLupYOfNVzKTy4pVYXldSFyzM6lHucKlwKjDm
+         tIMwRMLtun/gYVC9fZPsmKfkllPWVoimXYJW5wb4QjQInoP0cptwct2qurcRaUavLFc6
+         O0xcp8KPd/+g5lIUcnKaIL3WGDotO2GI/LbumlSiIqZa6eQN5sVB/gCE64MO4LlS53ll
+         PI79B2mW/NYX/Qh6UgJ8IonCBGC67zGjaCHMNdlqMKOGph6GmLyh5lXH9UG8ckBf0+rh
+         VreVF2+zMW+wqkUil7+DWm0eZiVeTX9q3O82bQu7fGDGMAt6u/EfG+4Aqug9t/Uwny2C
+         cBNw==
+X-Gm-Message-State: AGi0PuZj9U52AQGsPJPws3NsVd7pHnNNU/6PMb/u26+pie5iNC33krEI
+        jcUGd789n2w9S8icBGr4NUZw/T3UQ4Gfa5asbOY=
+X-Google-Smtp-Source: APiQypItGHPXPnsy1S/7ewXviLIp7ovweo1JzQvp+pRla6x2SM0Xc5ae+Mid29m10MeNtKBNayczigkmHxXihCVcmM0=
+X-Received: by 2002:a37:4fd0:: with SMTP id d199mr14522999qkb.121.1586747802796;
+ Sun, 12 Apr 2020 20:16:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.64.103]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx2.zhaoxin.com (10.29.252.164)
+References: <cover.1585726761.git.shengjiu.wang@nxp.com> <93531963f028aabf9176173de3c6038a200acb89.1585726761.git.shengjiu.wang@nxp.com>
+ <20200406234819.GB20945@Asurada-Nvidia.nvidia.com> <CAA+D8AM69bhorQKikQGwwFRqgBYN8V2pXBW5JLZyFCVHWKkNGg@mail.gmail.com>
+ <20200412020814.GA5984@Asurada>
+In-Reply-To: <20200412020814.GA5984@Asurada>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Mon, 13 Apr 2020 11:16:31 +0800
+Message-ID: <CAA+D8AOapHbw_AREcJmef2tnM4aNiU11FLacW3HS7CXQThs80Q@mail.gmail.com>
+Subject: Re: [PATCH v6 5/7] ASoC: fsl_asrc: Move common definition to fsl_asrc_common
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhaoxin CPU has provided facilities for monitoring performance
-via PMU(Performance Monitor Unit), but the functionality is unused so far.
-Therefore, add support for zhaoxin pmu to make performance related
-hardware events available.
+On Sun, Apr 12, 2020 at 10:08 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Sat, Apr 11, 2020 at 01:49:43PM +0800, Shengjiu Wang wrote:
+>
+> > > > diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+> > > > index b15946e03380..5cf0468ce6e3 100644
+> > > > --- a/sound/soc/fsl/fsl_asrc_dma.c
+> > > > +++ b/sound/soc/fsl/fsl_asrc_dma.c
+> > >
+> > > > @@ -311,11 +311,12 @@ static int fsl_asrc_dma_startup(struct snd_soc_component *component,
+> > > >               return ret;
+> > > >       }
+> > > >
+> > > > -     pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
+> > > > +     pair = kzalloc(sizeof(struct fsl_asrc_pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
+> > >
+> > > If we only use the PAIR_PRIVATE_SIZE here, maybe we can put the
+> > > define in this file too, rather than in the header file.
+> > >
+> > > And could fit 80 characters:
+> > >
+> > > +       pair = kzalloc(sizeof(*pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
+>
+> > I will use a function pointer
+> >     int (*get_pair_priv_size)(void)
+>
+> Since it's the size of pair or cts structure, could be just a
+> size_t variable?
 
-Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Reported-by: kbuild test robot <lkp@intel.com>
----
- arch/x86/events/Makefile               |   2 +
- arch/x86/events/core.c                 |   4 +
- arch/x86/events/perf_event.h           |   9 +
- arch/x86/events/zhaoxin/Makefile       |   2 +
- arch/x86/events/zhaoxin/core.c         | 625 +++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/perfctr-watchdog.c |   6 +
- 6 files changed, 648 insertions(+)
- create mode 100644 arch/x86/events/zhaoxin/Makefile
- create mode 100644 arch/x86/events/zhaoxin/core.c
+Yes, should be "size_t (*get_pair_priv_size)(void)"
 
-diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index 9e07f55..6f1d1fd 100644
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -3,3 +3,5 @@ obj-y					+= core.o probe.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
-+obj-$(CONFIG_CPU_SUP_CENTAUR)		+= zhaoxin/
-+obj-$(CONFIG_CPU_SUP_ZHAOXIN)		+= zhaoxin/
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index a619763..9e63ee5 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1839,6 +1839,10 @@ static int __init init_hw_perf_events(void)
- 		err = amd_pmu_init();
- 		x86_pmu.name = "HYGON";
- 		break;
-+	case X86_VENDOR_ZHAOXIN:
-+	case X86_VENDOR_CENTAUR:
-+		err = zhaoxin_pmu_init();
-+		break;
- 	default:
- 		err = -ENOTSUPP;
- 	}
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index f1cd1ca..f6bbdca 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1133,3 +1133,12 @@ static inline int is_ht_workaround_enabled(void)
- 	return 0;
- }
- #endif /* CONFIG_CPU_SUP_INTEL */
-+
-+#if ((defined CONFIG_CPU_SUP_CENTAUR) || (defined CONFIG_CPU_SUP_ZHAOXIN))
-+int zhaoxin_pmu_init(void);
-+#else
-+static inline int zhaoxin_pmu_init(void)
-+{
-+	return 0;
-+}
-+#endif /*CONFIG_CPU_SUP_CENTAUR or CONFIG_CPU_SUP_ZHAOXIN*/
-diff --git a/arch/x86/events/zhaoxin/Makefile b/arch/x86/events/zhaoxin/Makefile
-new file mode 100644
-index 0000000..642c1174
---- /dev/null
-+++ b/arch/x86/events/zhaoxin/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-y	+= core.o
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-new file mode 100644
-index 0000000..77ed8a6
---- /dev/null
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -0,0 +1,625 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Per cpu state
-+ *
-+ * Used to coordinate shared registers among events on a single PMU.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/stddef.h>
-+#include <linux/types.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/export.h>
-+#include <linux/nmi.h>
-+
-+#include <asm/cpufeature.h>
-+#include <asm/hardirq.h>
-+#include <asm/apic.h>
-+
-+#include "../perf_event.h"
-+
-+/*
-+ * Zhaoxin PerfMon, used on zxc and later.
-+ */
-+static u64 zx_pmon_event_map[PERF_COUNT_HW_MAX] __read_mostly = {
-+
-+	[PERF_COUNT_HW_CPU_CYCLES]        = 0x0082,
-+	[PERF_COUNT_HW_INSTRUCTIONS]      = 0x00c0,
-+	[PERF_COUNT_HW_CACHE_REFERENCES]  = 0x0515,
-+	[PERF_COUNT_HW_CACHE_MISSES]      = 0x051a,
-+	[PERF_COUNT_HW_BUS_CYCLES]        = 0x0083,
-+};
-+
-+static struct event_constraint zxc_event_constraints[] __read_mostly = {
-+
-+	FIXED_EVENT_CONSTRAINT(0x0082, 1), /* unhalted core clock cycles */
-+	EVENT_CONSTRAINT_END
-+};
-+
-+static struct event_constraint zxd_event_constraints[] __read_mostly = {
-+
-+	FIXED_EVENT_CONSTRAINT(0x00c0, 0), /* retired instructions */
-+	FIXED_EVENT_CONSTRAINT(0x0082, 1), /* unhalted core clock cycles */
-+	FIXED_EVENT_CONSTRAINT(0x0083, 2), /* unhalted bus clock cycles */
-+	EVENT_CONSTRAINT_END
-+};
-+
-+static __initconst const u64 zxd_hw_cache_event_ids
-+				[PERF_COUNT_HW_CACHE_MAX]
-+				[PERF_COUNT_HW_CACHE_OP_MAX]
-+				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+[C(L1D)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0042,
-+		[C(RESULT_MISS)] = 0x0538,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0043,
-+		[C(RESULT_MISS)] = 0x0562,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(L1I)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0300,
-+		[C(RESULT_MISS)] = 0x0301,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x030a,
-+		[C(RESULT_MISS)] = 0x030b,
-+	},
-+},
-+[C(LL)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(DTLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0042,
-+		[C(RESULT_MISS)] = 0x052c,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0043,
-+		[C(RESULT_MISS)] = 0x0530,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x0564,
-+		[C(RESULT_MISS)] = 0x0565,
-+	},
-+},
-+[C(ITLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x00c0,
-+		[C(RESULT_MISS)] = 0x0534,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(BPU)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0700,
-+		[C(RESULT_MISS)] = 0x0709,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(NODE)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+};
-+
-+static __initconst const u64 zxe_hw_cache_event_ids
-+				[PERF_COUNT_HW_CACHE_MAX]
-+				[PERF_COUNT_HW_CACHE_OP_MAX]
-+				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+[C(L1D)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0568,
-+		[C(RESULT_MISS)] = 0x054b,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0669,
-+		[C(RESULT_MISS)] = 0x0562,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(L1I)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0300,
-+		[C(RESULT_MISS)] = 0x0301,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x030a,
-+		[C(RESULT_MISS)] = 0x030b,
-+	},
-+},
-+[C(LL)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0,
-+		[C(RESULT_MISS)] = 0x0,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0,
-+		[C(RESULT_MISS)] = 0x0,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x0,
-+		[C(RESULT_MISS)] = 0x0,
-+	},
-+},
-+[C(DTLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0568,
-+		[C(RESULT_MISS)] = 0x052c,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0669,
-+		[C(RESULT_MISS)] = 0x0530,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x0564,
-+		[C(RESULT_MISS)] = 0x0565,
-+	},
-+},
-+[C(ITLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x00c0,
-+		[C(RESULT_MISS)] = 0x0534,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(BPU)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0028,
-+		[C(RESULT_MISS)] = 0x0029,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(NODE)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+};
-+
-+static void zhaoxin_pmu_disable_all(void)
-+{
-+	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-+}
-+
-+static void zhaoxin_pmu_enable_all(int added)
-+{
-+	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, x86_pmu.intel_ctrl);
-+}
-+
-+static inline u64 zhaoxin_pmu_get_status(void)
-+{
-+	u64 status;
-+
-+	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, status);
-+
-+	return status;
-+}
-+
-+static inline void zhaoxin_pmu_ack_status(u64 ack)
-+{
-+	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
-+}
-+
-+static inline void zxc_pmu_ack_status(u64 ack)
-+{
-+	/*
-+	 * ZXC needs global control enabled in order to clear status bits.
-+	 */
-+	zhaoxin_pmu_enable_all(0);
-+	zhaoxin_pmu_ack_status(ack);
-+	zhaoxin_pmu_disable_all();
-+}
-+
-+static void zhaoxin_pmu_disable_fixed(struct hw_perf_event *hwc)
-+{
-+	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+	u64 ctrl_val, mask;
-+
-+	mask = 0xfULL << (idx * 4);
-+
-+	rdmsrl(hwc->config_base, ctrl_val);
-+	ctrl_val &= ~mask;
-+	wrmsrl(hwc->config_base, ctrl_val);
-+}
-+
-+static void zhaoxin_pmu_disable_event(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+		zhaoxin_pmu_disable_fixed(hwc);
-+		return;
-+	}
-+
-+	x86_pmu_disable_event(event);
-+}
-+
-+static void zhaoxin_pmu_enable_fixed(struct hw_perf_event *hwc)
-+{
-+	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+	u64 ctrl_val, bits, mask;
-+
-+	/*
-+	 * Enable IRQ generation (0x8),
-+	 * and enable ring-3 counting (0x2) and ring-0 counting (0x1)
-+	 * if requested:
-+	 */
-+	bits = 0x8ULL;
-+	if (hwc->config & ARCH_PERFMON_EVENTSEL_USR)
-+		bits |= 0x2;
-+	if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
-+		bits |= 0x1;
-+
-+	bits <<= (idx * 4);
-+	mask = 0xfULL << (idx * 4);
-+
-+	rdmsrl(hwc->config_base, ctrl_val);
-+	ctrl_val &= ~mask;
-+	ctrl_val |= bits;
-+	wrmsrl(hwc->config_base, ctrl_val);
-+}
-+
-+static void zhaoxin_pmu_enable_event(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+		zhaoxin_pmu_enable_fixed(hwc);
-+		return;
-+	}
-+
-+	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
-+}
-+
-+/*
-+ * This handler is triggered by the local APIC, so the APIC IRQ handling
-+ * rules apply:
-+ */
-+static int zhaoxin_pmu_handle_irq(struct pt_regs *regs)
-+{
-+	struct perf_sample_data data;
-+	struct cpu_hw_events *cpuc;
-+	int bit;
-+	u64 status;
-+	bool is_zxc = false;
-+	int handled = 0;
-+
-+	cpuc = this_cpu_ptr(&cpu_hw_events);
-+	apic_write(APIC_LVTPC, APIC_DM_NMI);
-+	zhaoxin_pmu_disable_all();
-+	status = zhaoxin_pmu_get_status();
-+	if (!status)
-+		goto done;
-+
-+	if (boot_cpu_data.x86 == 0x06 &&
-+		(boot_cpu_data.x86_model == 0x0f ||
-+			boot_cpu_data.x86_model == 0x19))
-+		is_zxc = true;
-+again:
-+
-+	/*Clearing status works only if the global control is enable on zxc.*/
-+	if (is_zxc)
-+		zxc_pmu_ack_status(status);
-+	else
-+		zhaoxin_pmu_ack_status(status);
-+
-+	inc_irq_stat(apic_perf_irqs);
-+
-+	/*
-+	 * CondChgd bit 63 doesn't mean any overflow status. Ignore
-+	 * and clear the bit.
-+	 */
-+	if (__test_and_clear_bit(63, (unsigned long *)&status)) {
-+		if (!status)
-+			goto done;
-+	}
-+
-+	for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
-+		struct perf_event *event = cpuc->events[bit];
-+
-+		handled++;
-+
-+		if (!test_bit(bit, cpuc->active_mask))
-+			continue;
-+
-+		x86_perf_event_update(event);
-+		perf_sample_data_init(&data, 0, event->hw.last_period);
-+
-+		if (!x86_perf_event_set_period(event))
-+			continue;
-+
-+		if (perf_event_overflow(event, &data, regs))
-+			x86_pmu_stop(event, 0);
-+	}
-+
-+	/*
-+	 * Repeat if there is more work to be done:
-+	 */
-+	status = zhaoxin_pmu_get_status();
-+	if (status)
-+		goto again;
-+
-+done:
-+	zhaoxin_pmu_enable_all(0);
-+	return handled;
-+}
-+
-+static u64 zhaoxin_pmu_event_map(int hw_event)
-+{
-+	return zx_pmon_event_map[hw_event];
-+}
-+
-+static struct event_constraint *
-+zhaoxin_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
-+			struct perf_event *event)
-+{
-+	struct event_constraint *c;
-+
-+	if (x86_pmu.event_constraints) {
-+		for_each_event_constraint(c, x86_pmu.event_constraints) {
-+			if ((event->hw.config & c->cmask) == c->code)
-+				return c;
-+		}
-+	}
-+
-+	return &unconstrained;
-+}
-+
-+PMU_FORMAT_ATTR(event,	"config:0-7");
-+PMU_FORMAT_ATTR(umask,	"config:8-15");
-+PMU_FORMAT_ATTR(edge,	"config:18");
-+PMU_FORMAT_ATTR(inv,	"config:23");
-+PMU_FORMAT_ATTR(cmask,	"config:24-31");
-+
-+static struct attribute *zx_arch_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_cmask.attr,
-+	NULL,
-+};
-+
-+static ssize_t zhaoxin_event_sysfs_show(char *page, u64 config)
-+{
-+	u64 event = (config & ARCH_PERFMON_EVENTSEL_EVENT);
-+
-+	return x86_event_sysfs_show(page, config, event);
-+}
-+
-+static const struct x86_pmu zhaoxin_pmu __initconst = {
-+	.name			= "zhaoxin",
-+	.handle_irq		= zhaoxin_pmu_handle_irq,
-+	.disable_all		= zhaoxin_pmu_disable_all,
-+	.enable_all		= zhaoxin_pmu_enable_all,
-+	.enable			= zhaoxin_pmu_enable_event,
-+	.disable		= zhaoxin_pmu_disable_event,
-+	.hw_config		= x86_pmu_hw_config,
-+	.schedule_events	= x86_schedule_events,
-+	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
-+	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
-+	.event_map		= zhaoxin_pmu_event_map,
-+	.max_events		= ARRAY_SIZE(zx_pmon_event_map),
-+	.apic			= 1,
-+	/*
-+	 * For zxd/zxe, read/write operation for PMCx MSR is 48 bits.
-+	 */
-+	.max_period		= (1ULL << 47) - 1,
-+	.get_event_constraints	= zhaoxin_get_event_constraints,
-+
-+	.format_attrs		= zx_arch_formats_attr,
-+	.events_sysfs_show	= zhaoxin_event_sysfs_show,
-+};
-+
-+static const struct { int id; char *name; } zx_arch_events_map[] __initconst = {
-+	{ PERF_COUNT_HW_CPU_CYCLES, "cpu cycles" },
-+	{ PERF_COUNT_HW_INSTRUCTIONS, "instructions" },
-+	{ PERF_COUNT_HW_BUS_CYCLES, "bus cycles" },
-+	{ PERF_COUNT_HW_CACHE_REFERENCES, "cache references" },
-+	{ PERF_COUNT_HW_CACHE_MISSES, "cache misses" },
-+	{ PERF_COUNT_HW_BRANCH_INSTRUCTIONS, "branch instructions" },
-+	{ PERF_COUNT_HW_BRANCH_MISSES, "branch misses" },
-+};
-+
-+static __init void zhaoxin_arch_events_quirk(void)
-+{
-+	int bit;
-+
-+	/* disable event that reported as not presend by cpuid */
-+	for_each_set_bit(bit, x86_pmu.events_mask,
-+			ARRAY_SIZE(zx_arch_events_map)) {
-+
-+		zx_pmon_event_map[zx_arch_events_map[bit].id] = 0;
-+		pr_warn("CPUID marked event: \'%s\' unavailable\n",
-+				zx_arch_events_map[bit].name);
-+	}
-+}
-+
-+__init int zhaoxin_pmu_init(void)
-+{
-+	union cpuid10_edx edx;
-+	union cpuid10_eax eax;
-+	union cpuid10_ebx ebx;
-+	struct event_constraint *c;
-+	unsigned int unused;
-+	int version;
-+
-+	pr_info("Welcome to zhaoxin pmu!\n");
-+
-+	/*
-+	 * Check whether the Architectural PerfMon supports
-+	 * hw_event or not.
-+	 */
-+	cpuid(10, &eax.full, &ebx.full, &unused, &edx.full);
-+
-+	if (eax.split.mask_length < ARCH_PERFMON_EVENTS_COUNT - 1)
-+		return -ENODEV;
-+
-+	version = eax.split.version_id;
-+	if (version == 2) {
-+		x86_pmu = zhaoxin_pmu;
-+		pr_info("Version check pass!\n");
-+	} else
-+		return -ENODEV;
-+
-+	x86_pmu.version			= version;
-+	x86_pmu.num_counters		= eax.split.num_counters;
-+	x86_pmu.cntval_bits		= eax.split.bit_width;
-+	x86_pmu.cntval_mask		= (1ULL << eax.split.bit_width) - 1;
-+	x86_pmu.events_maskl		= ebx.full;
-+	x86_pmu.events_mask_len		= eax.split.mask_length;
-+
-+	x86_pmu.num_counters_fixed = edx.split.num_counters_fixed;
-+	x86_add_quirk(zhaoxin_arch_events_quirk);
-+
-+	switch (boot_cpu_data.x86) {
-+	case 0x06:
-+		if (boot_cpu_data.x86_model == 0x0f ||
-+			boot_cpu_data.x86_model == 0x19) {
-+
-+			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
-+
-+			x86_pmu.event_constraints = zxc_event_constraints;
-+			zx_pmon_event_map[PERF_COUNT_HW_INSTRUCTIONS] = 0;
-+			zx_pmon_event_map[PERF_COUNT_HW_CACHE_REFERENCES] = 0;
-+			zx_pmon_event_map[PERF_COUNT_HW_CACHE_MISSES] = 0;
-+			zx_pmon_event_map[PERF_COUNT_HW_BUS_CYCLES] = 0;
-+
-+			pr_cont("ZXC events, ");
-+		} else
-+			return -ENODEV;
-+		break;
-+	case 0x07:
-+		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
-+		X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
-+
-+		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_BACKEND] =
-+		X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
-+
-+		switch (boot_cpu_data.x86_model) {
-+		case 0x1b:
-+			memcpy(hw_cache_event_ids, zxd_hw_cache_event_ids,
-+				sizeof(hw_cache_event_ids));
-+
-+			x86_pmu.event_constraints = zxd_event_constraints;
-+
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
-+				= 0x0700;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
-+				= 0x0709;
-+
-+			pr_cont("ZXD events, ");
-+			break;
-+		case 0x3b:
-+			memcpy(hw_cache_event_ids, zxe_hw_cache_event_ids,
-+				sizeof(hw_cache_event_ids));
-+
-+			x86_pmu.event_constraints = zxd_event_constraints;
-+
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
-+				= 0x0028;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
-+				= 0x0029;
-+
-+			pr_cont("ZXE events, ");
-+			break;
-+		default:
-+			return -ENODEV;
-+		}
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	x86_pmu.intel_ctrl = (1 << (x86_pmu.num_counters)) - 1;
-+	x86_pmu.intel_ctrl |=
-+		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
-+
-+	if (x86_pmu.event_constraints) {
-+		for_each_event_constraint(c, x86_pmu.event_constraints) {
-+			c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-+			c->weight += x86_pmu.num_counters;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-diff --git a/arch/x86/kernel/cpu/perfctr-watchdog.c b/arch/x86/kernel/cpu/perfctr-watchdog.c
-index 9556930..63a5828 100644
---- a/arch/x86/kernel/cpu/perfctr-watchdog.c
-+++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
-@@ -63,6 +63,9 @@ static inline unsigned int nmi_perfctr_msr_to_bit(unsigned int msr)
- 		case 15:
- 			return msr - MSR_P4_BPU_PERFCTR0;
- 		}
-+	case X86_VENDOR_ZHAOXIN:
-+	case X86_VENDOR_CENTAUR:
-+		return msr - MSR_ARCH_PERFMON_PERFCTR0;
- 	}
- 	return 0;
- }
-@@ -92,6 +95,9 @@ static inline unsigned int nmi_evntsel_msr_to_bit(unsigned int msr)
- 		case 15:
- 			return msr - MSR_P4_BSU_ESCR0;
- 		}
-+	case X86_VENDOR_ZHAOXIN:
-+	case X86_VENDOR_CENTAUR:
-+		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
- 	}
- 	return 0;
- 
--- 
-2.7.4
-
+best regards
+wang shengjiu
