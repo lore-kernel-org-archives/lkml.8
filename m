@@ -2,137 +2,250 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7BEC2BBC7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCF4C2BA2B
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A074020732
+	by mail.kernel.org (Postfix) with ESMTP id 89511206DA
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586810243;
-	bh=Qu9I/yBNG3sewZzG5+9vFbf7zJlTdJKivbayYPi68CY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L1sbNgFq62mr4FMkBE4C8VAhD1RfoyCArFq1UCUUMxRbOBnpjytK0OwialhSAKBJE
-	 98UVEm7309OaDTMj+DS2K7aRHr1RIHF7g9AlJSTeC3f5zqaPeoqvU2QCYpM4gXT3cS
-	 0HdJuHxD+n0JU63FaoKky4eOpS6rTBftYETFea8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388442AbgDMUhW (ORCPT
+        id S2388424AbgDMUgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgDMUhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:37:20 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2594C0A3BDC;
-        Mon, 13 Apr 2020 13:37:19 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c63so10985726qke.2;
-        Mon, 13 Apr 2020 13:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=po4Tg7l56X8JxsrIEn5K0LIpr3zSAdM72o29rNOLQgI=;
-        b=Hp3t8cqWgCww90WpjPKr38jrO+Iv/5BhpGdDiqycmqPAjfiEHYcvd5UP+Hru8q4vYK
-         5ENEFzBOozslgB+SOVFMh506HJmYv83+HUK+pGlakZZEK29BukuaKwWLLZipZk0y8uix
-         pYRMSO7TkhPysMN4UP1Jkb+L77SeMC6kL/zgYNREylPfk1ftXsiNnNgb+rdGlgxbvlM6
-         kO5HsmQUrQMRcI1Ve9/sNhKx/YLTy2NcPMpfGAyCWuPZSOqJCA2GWCi7+YeEAkHWi/0V
-         2N07GpCpeAWwbhCSJ/dFViu+7wUIRA/lhNYLKz9V5YtIHRWvkCEWHop7qMBqctVBzA4l
-         1VpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=po4Tg7l56X8JxsrIEn5K0LIpr3zSAdM72o29rNOLQgI=;
-        b=NrkM1f94XVv8k5HuM02oxy+YAa/qvhs3xno86lpA73a0i+ebgD+oJmbXtejJ694ipu
-         ZwZBVd1XHQMcBlWOOyW2DhqopH6cF97mjm/LFkfN5lFx8z/COBnlWonEIg9CmF4Ydjgl
-         DlReYuQZYbKi4xA4hmx7ZPcTWg+cXYjh0oWKQEObL+yPgYR8ugsmxKjrh7PfHg2IZ9AC
-         HyRsqPcFueZyL67lhvfZPuxT1ho2WEqm/g00dDlzVMib6Y5n7QlfRPkCG1g0yWlAreax
-         jr7l+bdWZVZVuluzv2AlN6pMJuURnWP+Ue7accFWDuLLFbFZ6pdE2KGL5jjAkClQ2IGi
-         Mhhg==
-X-Gm-Message-State: AGi0PuYqvbFvCS0BUrbZQBWOZMASg5hC5YsXmR87dvQF/GJ750xzBAfg
-        ccXi+KgHkrslDoo8qL2ePuk=
-X-Google-Smtp-Source: APiQypI1sBRWAvVsFGeAvZvDZ/uuO4AZV3fNnGoE4m3RLFGj+2KNntBYYyQ3Pbxs5eyriUzcF+avwA==
-X-Received: by 2002:ae9:e606:: with SMTP id z6mr7159623qkf.320.1586810238863;
-        Mon, 13 Apr 2020 13:37:18 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id b13sm5959814qka.20.2020.04.13.13.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 13:37:17 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 16:37:16 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 5/8] kernfs: let objects opt-in to propagating from the
- initial namespace
-Message-ID: <20200413203716.GK60335@mtj.duckdns.org>
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
- <20200408152151.5780-6-christian.brauner@ubuntu.com>
- <20200413190239.GG60335@mtj.duckdns.org>
- <20200413193950.tokh5m7wsyrous3c@wittgenstein>
- <20200413194550.GJ60335@mtj.duckdns.org>
- <20200413195915.yo2l657nmtkwripb@wittgenstein>
+        Mon, 13 Apr 2020 16:36:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:13754 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725272AbgDMUgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:36:04 -0400
+IronPort-SDR: YWnLxj9ZKkDaRQXE5fwICxaqLV4JuVRq/MNj4dTsNdCObzClJDqCk7Fz4ZEI9B9dfFfL8Ht5X3
+ tZwJtDGpcCjA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 13:36:04 -0700
+IronPort-SDR: 8KdnmNC/S2jBKm/8t/7nreeftfVQskYS5x1Y0Cf7q8JjScwK0ZXbuP6L/N72Ms8BpZYkahDib/
+ 6MdQo45sA5NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
+   d="scan'208";a="241766661"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007.jf.intel.com with ESMTP; 13 Apr 2020 13:36:03 -0700
+Date:   Mon, 13 Apr 2020 13:41:57 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
+Message-ID: <20200413134157.395981a6@jacob-builder>
+In-Reply-To: <20200402113604.6eea1e6f@jacob-builder>
+References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200326092316.GA31648@infradead.org>
+        <20200326094442.5be042ce@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
+        <20200327074702.GA27959@infradead.org>
+        <20200327165335.397f24a3@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
+        <20200330090746.23c5599c@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
+        <20200331085444.44bee0bb@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
+        <20200402113604.6eea1e6f@jacob-builder>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413195915.yo2l657nmtkwripb@wittgenstein>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi All,
 
-On Mon, Apr 13, 2020 at 09:59:15PM +0200, Christian Brauner wrote:
-> Right, pid namespaces deal with a single random identifier about which
-> userspace makes no assumptions other than that it's a positive number so
-> generating aliases is fine. In addition pid namespaces are nicely
+Just a gentle reminder, any feedback on the options I listed below? New
+ideas will be even better.
 
-I don't see any fundamental differences between pids and device numbers. One
-of the reasons pid namespace does aliasing instead of just showing subsets is
-because applications can have expectations on what the specific numbers should
-be - e.g. for checkpoint-restarting.
+Christoph, does the explanation make sense to you? We do have the
+capability/flag based scheme for IOMMU API extension, the version is
+mainly used for size lookup. Compatibility checking is another use of
+the version, it makes checking easy when a vIOMMU is launched.
 
-> hierarchical. I fear that we might introduce unneeded complexity if we
-> go this way and start generating aliases for devices that userspace
+Thanks,
 
-It adds complexity for sure but the other side of the scale is losing
-visiblity into what devices are on the system, which can become really nasty
-in practice, so I do think it can probably justify some additional complexity
-especially if it's something which can be used by different devices. Even just
-for block, if we end up expanding ns support to regular block devices for some
-reason, it's kinda dreadful to think a situation where all devices can't be
-discovered at the system level.
+Jacob
 
-> already knows about and has expectations of. We also still face some of
-> the other problems I mentioned.
-> I do think that what you say might make sense to explore in more detail
-> for a new device class (or type under a given class) that userspace does
-> not yet know about and were we don't regress anything.
+On Thu, 2 Apr 2020 11:36:04 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-I don't quite follow why adding namespace support would break existing users.
-Wouldn't namespace usage be opt-in?
+> On Wed, 1 Apr 2020 05:32:21 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> 
+> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Sent: Tuesday, March 31, 2020 11:55 PM
+> > > 
+> > > On Tue, 31 Mar 2020 06:06:38 +0000
+> > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > >     
+> > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > Sent: Tuesday, March 31, 2020 12:08 AM
+> > > > >
+> > > > > On Mon, 30 Mar 2020 05:40:40 +0000
+> > > > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > > > >    
+> > > > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > > > Sent: Saturday, March 28, 2020 7:54 AM
+> > > > > > >
+> > > > > > > On Fri, 27 Mar 2020 00:47:02 -0700
+> > > > > > > Christoph Hellwig <hch@infradead.org> wrote:
+> > > > > > >    
+> > > > > > > > On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin
+> > > > > > > > wrote:    
+> > > > > > > > > If those API calls are inter-dependent for composing a
+> > > > > > > > > feature (e.g. SVA), shouldn't we need a way to check
+> > > > > > > > > them together before exposing the feature to the
+> > > > > > > > > guest, e.g. through a iommu_get_uapi_capabilities
+> > > > > > > > > interface?    
+> > > > > > > >
+> > > > > > > > Yes, that makes sense.  The important bit is to have a
+> > > > > > > > capability flags and not version numbers.    
+> > > > > > >
+> > > > > > > The challenge is that there are two consumers in the
+> > > > > > > kernel for this. 1. VFIO only look for compatibility, and
+> > > > > > > size of each data struct such that it can copy_from_user.
+> > > > > > >
+> > > > > > > 2. IOMMU driver, the "real consumer" of the content.
+> > > > > > >
+> > > > > > > For 2, I agree and we do plan to use the capability flags
+> > > > > > > to check content and maintain backward compatibility etc.
+> > > > > > >
+> > > > > > > For VFIO, it is difficult to do size look up based on
+> > > > > > > capability flags.    
+> > > > > >
+> > > > > > Can you elaborate the difficulty in VFIO? if, as Christoph
+> > > > > > Hellwig pointed out, version number is already avoided
+> > > > > > everywhere, it is interesting to know whether this work
+> > > > > > becomes a real exception or just requires a different
+> > > > > > mindset. 
+> > > > > From VFIO p.o.v. the IOMMU UAPI data is opaque, it only needs
+> > > > > to do two things:
+> > > > > 1. is the UAPI compatible?
+> > > > > 2. what is the size to copy?
+> > > > >
+> > > > > If you look at the version number, this is really a "version
+> > > > > as size" lookup, as provided by the helper function in this
+> > > > > patch. An example can be the newly introduced clone3 syscall.
+> > > > > https://lwn.net/Articles/792628/
+> > > > > In clone3, new version must have new size. The slight
+> > > > > difference here is that, unlike clone3, we have multiple data
+> > > > > structures instead of a single struct clone_args {}. And each
+> > > > > struct has flags to enumerate its contents besides size.    
+> > > >
+> > > > Thanks for providing that link. However clone3 doesn't include a
+> > > > version field to do "version as size" lookup. Instead, as you
+> > > > said, it includes a size parameter which sounds like the option
+> > > > 3 (argsz) listed below.
+> > > >    
+> > > Right, there is no version in clone3. size = version. I view this
+> > > as a 1:1 lookup.
+> > >     
+> > > > >
+> > > > > Besides breaching data abstraction, if VFIO has to check IOMMU
+> > > > > flags to determine the sizes, it has many combinations.
+> > > > >
+> > > > > We also separate the responsibilities into two parts
+> > > > > 1. compatibility - version, size by VFIO
+> > > > > 2. sanity check - capability flags - by IOMMU    
+> > > >
+> > > > I feel argsz+flags approach can perfectly meet above
+> > > > requirement. The userspace set the size and flags for whatever
+> > > > capabilities it uses, and VFIO simply copies the parameters by
+> > > > size and pass to IOMMU for further sanity check. Of course the
+> > > > assumption is that we do provide an interface for userspace to
+> > > > enumerate all supported capabilities.   
+> > > You cannot trust user for argsz. the size to be copied from user
+> > > must be based on knowledge in kernel. That is why we have this
+> > > version to size lookup.
+> > > 
+> > > In VFIO, the size to copy is based on knowledge of each VFIO UAPI
+> > > structures and VFIO flags. But here the flags are IOMMU UAPI
+> > > flags. As you pointed out in another thread, VFIO is one user.    
+> > 
+> > If that is the case, can we let VFIO only copy its own UAPI fields
+> > while simply passing the user pointer of IOMMU UAPI structure to
+> > IOMMU driver for further size check and copy? Otherwise we are
+> > entering a dead end that VFIO doesn't want to parse a structure
+> > which is not defined by him while using version to represent the
+> > black box size is considered as a discarded scheme and doesn't
+> > scale well... 
+> I think this could be an other viable option. Let me try to summarize
+> since this has been a long discussion since the original version.
+> 
+> Problem statements:
+> 1. When launching vIOMMU in the guest, how can we ensure the host has
+> compatible support upfront? as compared to fail later.
+> 
+> 2. As UAPI data gets extended (both in size and flags), how can we
+> know the size to copy
+> 
+> 3. Maintain backward compatibility while allowing extensions?
+> 
+> I think we all agreed that using flags (capability or types) is the
+> way to address #3. As Christoph pointed out, version number should
+> not be used for this purpose.
+> 
+> So for problem 1 & 2, we have the following options:
+> 1. Have a version-size mapping as proposed in this set. VFIO copies
+> from user the correct size based on version-type lookup. Processing
+> of the data is based on flags in IOMMU driver.
+> 
+> 2. VFIO copy its own minsz then pass the user pointer to IOMMU driver
+> for further copy_from_user based on flags. (by Kevin)
+> 
+> 3. Adopt VFIO argsz scheme, caller fills in argsz for the offset the
+> variable size union. VFIO do not check argsz in that it requires IOMMU
+> specific knowledge. IOMMU driver Use flags to handle the variable
+> size.(by Alex). I think this what we have in Yi's VFIO & QEMU patch.
+> argsz filled by QEMU includes bind_data.
+> 
+> 4. Do not use a unified version, have a fixed size of all UAPI
+> structures, padding in struct and union. (Wasteful, not preferred per
+> V1 discussion)
+> 
+> For both 2 & 3, a unified version is not used, each API
+> treated separately. vIOMMU will be launched w/o assurance of
+> compatibility of all APIs. Fault handling may be more complex in
+> normal operations.
+> 
+> Appreciate everyone's input. Joerg and Alex, could you help to make a
+> decision here?
+> 
+> 
+> Thanks,
+> 
+> Jacob
+> 
+> > >     
+> >  [...]  
+> >  [...]  
+> >  [...]    
+> > > > >
+> > > > > [Jacob Pan]    
+> > > 
+> > > [Jacob Pan]    
+> > 
+> > Thanks
+> > Kevin  
+> 
+> [Jacob Pan]
 
-Thanks.
-
--- 
-tejun
+[Jacob Pan]
