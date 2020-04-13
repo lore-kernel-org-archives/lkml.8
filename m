@@ -2,104 +2,101 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34803C352BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA9EC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1494F20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6rUG6M+"
+	by mail.kernel.org (Postfix) with ESMTP id 282762072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbgDMPBO (ORCPT
+        id S1730903AbgDMPCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728537AbgDMPBM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:01:12 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87E7C0A3BDC;
-        Mon, 13 Apr 2020 08:01:10 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 131so6737128lfh.11;
-        Mon, 13 Apr 2020 08:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ru0QSPI9P9UnB6fBmE8CYo+keKBVUlIYNIIDkobQ4LQ=;
-        b=Y6rUG6M+j0aiSfmg6JaVatWMejLQsTEbkp+Py4z65rU+aUir3yH4IntWg02ep3JdhB
-         Usx5lvplfJa0s5cxCQggtxc7W1wuy/8j1mK4AZtTraerenGI/fqV/T+OEco9I8hWTw3G
-         H5eZJiTMnm9GprAVPGhUU7X7wHFEgQoqJDxH1gSMg4mpw4wjthr9obdVLEixRldPLNnf
-         XW/AIcU3Kw0c7BABMeRaSSqzB//NmqUeCTH+hoMqFLxXYzFcNL0yf5+hERb3K+Zb1/T1
-         oO1zLQ4iHnn+63mj5PtkZjuKKVjSrvSA7ffFDGrGQdVV2vvFVpai2yo/VXtWCSj+XtIx
-         wcvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ru0QSPI9P9UnB6fBmE8CYo+keKBVUlIYNIIDkobQ4LQ=;
-        b=lN9GcXayvEg4PNXmLwRpfz7PMMOlj9k/o9d7FZaSSKOQh2/0nX5u3CHAbt+BBeJd4H
-         48CXHLJIO+JbzmffdCyLPxlajiDFgUDEFqnrBk5XGNRElNNVb3WKd5P0SKIEW7tknFcK
-         XMIHnvM1XKq1bn7CU/q3EJH2HDakyqNOUh/ZhN7ZccI7KDKkwGJcDlj/AbeIFY3S+h5q
-         0QKuqo7rN2BlQzCJut17hmoG0UiuVNc0UG52IfK23uEg7fvdN0M4AGvGaczPikOw8dpS
-         NYfaY9AuG9UzYW6HxcQ2Tf8CjyzIXW45sDY+egt8VUIZp6uQrFOHNNXlD6UVoNAmyWoQ
-         YJTQ==
-X-Gm-Message-State: AGi0PuYGN9StUygYG2BWk0Mgtl7qwlKUA2sulFLnjJWLI7/QTeZseVbS
-        JBxP2T3eSS7vRD4jBYFFthhbafIU
-X-Google-Smtp-Source: APiQypJuMbGzqumA19vjCipPNUMuK6knNtWelRmhSmQ7RHP5iQyyKfnbir6+7o6qjvFvRW6ssE2yTw==
-X-Received: by 2002:a19:ee06:: with SMTP id g6mr9366702lfb.90.1586790069000;
-        Mon, 13 Apr 2020 08:01:09 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id b28sm8190875lfo.46.2020.04.13.08.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 08:01:08 -0700 (PDT)
-Subject: Re: [PATCH v2 11/22] memory: tegra: Register as interconnect provider
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20200330010904.27643-1-digetx@gmail.com>
- <20200330010904.27643-12-digetx@gmail.com>
- <70f724d6-5cb2-0ebe-ffc1-5dbb77d9dc74@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8d8dd1aa-71b3-e090-5637-578e23150bf1@gmail.com>
-Date:   Mon, 13 Apr 2020 18:01:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 13 Apr 2020 11:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728537AbgDMPCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:02:11 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08E5A20656;
+        Mon, 13 Apr 2020 15:02:09 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 11:02:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>,
+        <linux-trace-devel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: Fix the race between registering 'snapshot'
+ event trigger and triggering 'snapshot' operation
+Message-ID: <20200413110207.01a48591@gandalf.local.home>
+In-Reply-To: <20200413071252.13720-1-yangx.jy@cn.fujitsu.com>
+References: <20200413071252.13720-1-yangx.jy@cn.fujitsu.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <70f724d6-5cb2-0ebe-ffc1-5dbb77d9dc74@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Georgi,
+On Mon, 13 Apr 2020 15:12:52 +0800
+Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
 
-13.04.2020 15:43, Georgi Djakov пишет:
-...
->> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
+> Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
+> or snapshot_count_trigger()) when register_snapshot_trigger() has completed
+> registration but doesn't allocate spare buffer for 'snapshot' event trigger.
+> 'snapshot' operation always detects the lack of allocated buffer in the rare
+> case so make register_snapshot_trigger() allocate spare buffer first.
 > 
-> The interconnect framework can be also a module and the then the build will fail.
-
-That's a good catch!
-
->> +		err = tegra_mc_interconnect_setup(mc);
+> trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
+> -----------------------------------------------------------
+> cat trace
+> ...
+> ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
+>      <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
+>      <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
+> -----------------------------------------------------------
 > 
-> Maybe register the interconnect provider as a platform sub-device instead?
+> Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+> ---
+>  kernel/trace/trace_events_trigger.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index dd34a1b46a86..00e54cdcef3e 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -1088,9 +1088,13 @@ register_snapshot_trigger(char *glob, struct event_trigger_ops *ops,
+>  			  struct event_trigger_data *data,
+>  			  struct trace_event_file *file)
+>  {
+> -	int ret = register_trigger(glob, ops, data, file);
+> +	int alloc_ret, ret;
+>  
+> -	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
+> +	alloc_ret = tracing_alloc_snapshot_instance(file->tr);
+> +
+> +	ret = register_trigger(glob, ops, data, file);
+> +
+> +	if (ret > 0 && alloc_ret != 0) {
+>  		unregister_trigger(glob, ops, data, file);
+>  		ret = 0;
+>  	}
 
-The sub-device sound like a bit too much of hassle. I'm curious whether
-we could try to make all the tegra-memory drivers modular, please let me
-try..
+
+Why register if the allocation failed? Just switch the logic:
+
+	int ret = tracing_alloc_snapshot_instance(file->tr);
+
+	if (ret != 0)
+		return 0;
+
+	return register_trigger(glob, ops, data, file);
+
+
+-- Steve
