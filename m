@@ -2,124 +2,132 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B7FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D39CC352B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3562E20692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6912074B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:15:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aff51BbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbgDMPOf (ORCPT
+        id S1729836AbgDMPP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:14:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22542 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729732AbgDMPOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:14:34 -0400
-IronPort-SDR: 9a6/Xw3XLEKINQMz6PHcA1h9WKLwgg3QJWcXOsNNksxhhakOyApEKlReOJaX9Xlq/rIZUD5zop
- EyDb9leo2Yww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:14:33 -0700
-IronPort-SDR: gqZWhQxn0zjVq+nk9p+iyjC3lgxC2DoylDedMFQuvLieGAGHG6ic6zVsqgKwnOPddy+Inhmsdj
- +zsdsB7Ot3lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="256201794"
-Received: from vdhanraj-mobl3.amr.corp.intel.com (HELO [10.254.69.238]) ([10.254.69.238])
-  by orsmga006.jf.intel.com with ESMTP; 13 Apr 2020 08:14:32 -0700
-Subject: Re: [RFC PATCH 0/4] mm: Add PG_zero support
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-References: <20200412090728.GA19572@open-light-1.localdomain>
- <f9a3be0b-fe8d-ca25-f0df-4b9fd1f0fed5@intel.com>
- <20200413084915.1bae0007@w520.home>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <7a064e81-6bc1-b3e7-5f82-292ffa392058@intel.com>
-Date:   Mon, 13 Apr 2020 08:14:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 13 Apr 2020 11:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729618AbgDMPPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:15:54 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3856DC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:15:53 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so9650590wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZOE2P5jEH093/SFJkXAgVgRQaZk9Rt+ir8LjiFeoQis=;
+        b=aff51BbTFzKsXCpL5YhrA7DxEgyrrRCPmWwZUOL3KHYaxbOFqz2qgeZWsZxz0soAsP
+         UWdXdUwjE6+rqWK6X8x3JrDIYZfySNLGRtMr/hGTw4BxYQRgRoQqIkjhy2Ui+DsPeJU/
+         3w0XtJekYhySKH5t6TkwnBpWYKOJ4cQhY4Kihj0k5hGnmRfZBPSGH8M9wCx1VD/i5Kaa
+         8oVeKu6Q9+fxZPQRI6RJcb/7+6nXXHMalCRkZ8eBwVXKpH9stjFi02JGZ+ai3Avkzitp
+         nTZry48J4GQGvTh6EATNQOiLsE7Poc6LQl+TgMJ7Dw+MxALVuie46Z3gUHxr/1ERsuBg
+         /NdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZOE2P5jEH093/SFJkXAgVgRQaZk9Rt+ir8LjiFeoQis=;
+        b=TcFxRpEOKMn9o/BAOpCmKf3gxS8vhSbH7KyNaVV/YLJDvF9+1LokCZFcnGkewk9gZu
+         W4Kta66X7diH/+d0zyrTQ1nArLTzd+s4ndHNfy4yy0VZuyF/HsaUfVivyC5hTjVkJR+5
+         yunNgLlGr0aeXseeFAia+idliv0be/eTwv3dSFll2cZ8yNE1pea1iop6DT/uIb1/zkoN
+         Y9oeuIHGIRXU/rJyOBxm80/t4EhJzxzXMcC+FBqAuamo0omUMfZykTj2kNTHenuCXxGE
+         YLQ4l9UevWW1LMCS9cFmrd/M7QOJE3RBRZ9tgM5mt5kA79vnbRO7leJSkgfUlmI4zx4l
+         xRGw==
+X-Gm-Message-State: AGi0PuYT3fmcyffU0/CWmeoRKv6wxbKTZtRXx7IyQX5yGraa0pMYG5Fy
+        OYLjOlJ0do9qRxIH9JHIIABm3pAqJphAcZReM70=
+X-Google-Smtp-Source: APiQypLHuiS6scHkDpSNfTRPyoEdHVy8Bj6zjoCNDYrKSaz9THG91uzh6/pXXdN3L1Hm1QzrZ4lPTVZY3QJSZiT3zhA=
+X-Received: by 2002:a7b:cc0e:: with SMTP id f14mr2795738wmh.39.1586790951873;
+ Mon, 13 Apr 2020 08:15:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200413084915.1bae0007@w520.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200413143235.22945-1-yanaijie@huawei.com>
+In-Reply-To: <20200413143235.22945-1-yanaijie@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 13 Apr 2020 11:15:40 -0400
+Message-ID: <CADnq5_NejL35EFrK3doJHQXE3z5qeE_KVydB4AxbmGC=-_-++Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: remove dead code in si_dpm.c
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/13/20 7:49 AM, Alex Williamson wrote:
->> VFIO's unconditional page pinning is the real problem here IMNHO.  They
->> don't *really* need to pin the memory.  We just don't have good
->> paravirtualized IOMMU support or want to pay the runtime cost for
->> pin/unpin operations.  You *could* totally have speedy VM startup if
->> only the pages being accessed or having DMA performed to them were
->> allocated.  But, the hacks that are in place mean that everything must
->> be pinned.
-> Maybe in an SEV or Secure Boot environment we can assume the VM guest
-> OS uses the IOMMU exclusively for DMA, but otherwise the IOMMU is
-> optional (at least for x86, other archs do require IOMMU support
-> afaik).  Therefore, how would we know which pages to pin when there are
-> only limited configs where we might be able to lean on the vIOMMU to
-> this extent?  Thanks,
+Applied.  Thanks!
 
-You can delay pinning until the device is actually used.  That should be
-late enough for the host to figure out whether a paravirtualized IOMMU
-is in place.
+On Mon, Apr 13, 2020 at 10:06 AM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> This code is dead, let's remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/si_dpm.c | 20 --------------------
+>  1 file changed, 20 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.c b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> index 0860e85a2d35..c00ba4b23c9a 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> @@ -345,26 +345,6 @@ static const struct si_dte_data dte_data_tahiti =
+>         false
+>  };
+>
+> -#if 0
+> -static const struct si_dte_data dte_data_tahiti_le =
+> -{
+> -       { 0x1E8480, 0x7A1200, 0x2160EC0, 0x3938700, 0 },
+> -       { 0x7D, 0x7D, 0x4E4, 0xB00, 0 },
+> -       0x5,
+> -       0xAFC8,
+> -       0x64,
+> -       0x32,
+> -       1,
+> -       0,
+> -       0x10,
+> -       { 0x78, 0x7C, 0x82, 0x88, 0x8E, 0x94, 0x9A, 0xA0, 0xA6, 0xAC, 0xB0, 0xB4, 0xB8, 0xBC, 0xC0, 0xC4 },
+> -       { 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700, 0x3938700 },
+> -       { 0x2AF8, 0x2AF8, 0x29BB, 0x27F9, 0x2637, 0x2475, 0x22B3, 0x20F1, 0x1F2F, 0x1D6D, 0x1734, 0x1414, 0x10F4, 0xDD4, 0xAB4, 0x794 },
+> -       85,
+> -       true
+> -};
+> -#endif
+> -
+>  static const struct si_dte_data dte_data_tahiti_pro =
+>  {
+>         { 0x1E8480, 0x3D0900, 0x989680, 0x2625A00, 0x0 },
+> --
+> 2.21.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
