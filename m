@@ -2,106 +2,121 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028DEC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D457C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:46:22 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FFB20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:35:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C5FFB20708
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
+	by mail.kernel.org (Postfix) with ESMTP id 4C5D420705
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 02:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fc9qUsbx"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 4C5D420705
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgDMCfy (ORCPT
+        id S1728354AbgDMCqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 22:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41632 "EHLO
+        Sun, 12 Apr 2020 22:46:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbgDMCfx (ORCPT
+        with ESMTP id S1728248AbgDMCqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 22:35:53 -0400
-Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108A7C0A3BE0;
-        Sun, 12 Apr 2020 19:35:54 -0700 (PDT)
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1F5E2A423606824BB29A;
-        Mon, 13 Apr 2020 10:35:51 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 13 Apr 2020 10:35:41 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <dennis.dalessandro@intel.com>, <mike.marciniszyn@intel.com>,
-        <dledford@redhat.com>, <jgg@ziepe.ca>,
-        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] IB/qib: remove unused variable ret
-Date:   Mon, 13 Apr 2020 10:42:04 +0800
-Message-ID: <1586745724-107477-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Sun, 12 Apr 2020 22:46:20 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D65C0086D3;
+        Sun, 12 Apr 2020 19:46:21 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n13so3867208pgp.11;
+        Sun, 12 Apr 2020 19:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jD0arZtt+WUMcK2qKH6C7KoZfXl8ZzSelXg4KYilhDs=;
+        b=Fc9qUsbxn5DJg1rVGQ9RplGoWHMwry5kv48peqZDENWsE/JRTENmawnCZh9ejoE5vh
+         +IGdxEiJc83fr9iTKTsRznUihCFdZWCnOa3LTSz0oWxi6q4mjp7PaQFYI3r6pcyR6qiU
+         RcxqCZsYGjHKIxMgOKWcRF0kJmzHtQnQ5GPFJftGHD/j8WmbwfMfQywVVw1WUMkRmxTz
+         w11tosNggwxBzHllRxmBlkZL82VfXdI2wAvEnrOAxrfyL9th40ssBqQ/4ZDJzYWnGJiT
+         dhOE+eek4HCPBiF/LZIy6X8AeqjuMMDaIrLPHB2uRGYGOVy/T9Mk6FJgWvBJa2wNxFzf
+         DN0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jD0arZtt+WUMcK2qKH6C7KoZfXl8ZzSelXg4KYilhDs=;
+        b=Sp63Km2tjfTY0bW9POYkr4B9tuO/wf61MBn6QSpeI02sY5nrfFm/ujyvwumdDBGjYT
+         oHnfBhOOku36qTSF8MV9H6QIaIqhu3g6ZYxgt+NqnQN9r6MqYwaVlwRyjr3Ukt6jWcZM
+         DCxVdZ/uUixqWNMMUmol9o0DnPJSeLJrpWlF4f2QBse5sGht2wQZ1MOlsUKNRW9yfw2H
+         gRCNlCRXmN0jcQeWTwj8UVKW21YSf84CpE2mmY/MsNm2v31nbLQoT1TXMVi4a05g/rls
+         fSNN2oPlVasx4jPP9yofjJPt/DcMD6eqZAN51nuKzfeASS1ZN4vxsmS3QR1T0i4ZnwTs
+         G8oQ==
+X-Gm-Message-State: AGi0PuYd7HRAml1Bi9od4Ssr0ZxnP3s/EVoVTuh4KTplRR0+7bAV7ubu
+        ED06+q+G/eerWDKadFTMeUm9f6Wt/Aw=
+X-Google-Smtp-Source: APiQypLrW+6rz9JA18Kb1WG6Gz+FnhMmTZOpxm/xQNE1cPXbTA0JKx1suwzjZogLggMdO4VLkPA7hw==
+X-Received: by 2002:aa7:963b:: with SMTP id r27mr15685419pfg.71.1586745980513;
+        Sun, 12 Apr 2020 19:46:20 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.19])
+        by smtp.gmail.com with ESMTPSA id i15sm2327882pfe.197.2020.04.12.19.46.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Apr 2020 19:46:19 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     arnd@arndb.de, baolin.wang7@gmail.com, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] Introduce the request_atomic() for the host
+Date:   Mon, 13 Apr 2020 10:46:02 +0800
+Message-Id: <cover.1586744073.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warnings reported by coccicheck
+This patch set introduces a new request_atomic() interface for the
+MMC host controller, which is used to submit a request to host in
+the atomic context, such as in the irq hard handler, to reduce the
+request latency.
 
-drivers/infiniband/hw/qib/qib_iba7322.c:6878:8-11:
-Unneeded variable: "ret". Return "0" on line 6907
-drivers/infiniband/hw/qib/qib_iba7322.c:2378:5-8:
-Unneeded variable: "ret". Return "0" on line 2513
+Note, this patch set is based on Adrian's patch set:
+https://www.spinics.net/lists/linux-mmc/msg58529.html
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- drivers/infiniband/hw/qib/qib_iba7322.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Any comments are welcome. Thanks.
 
-diff --git a/drivers/infiniband/hw/qib/qib_iba7322.c b/drivers/infiniband/hw/qib/qib_iba7322.c
-index 91d64dd..8bcbc88 100644
---- a/drivers/infiniband/hw/qib/qib_iba7322.c
-+++ b/drivers/infiniband/hw/qib/qib_iba7322.c
-@@ -2375,7 +2375,6 @@ static int qib_7322_bringup_serdes(struct qib_pportdata *ppd)
- 	struct qib_devdata *dd = ppd->dd;
- 	u64 val, guid, ibc;
- 	unsigned long flags;
--	int ret = 0;
- 
- 	/*
- 	 * SerDes model not in Pd, but still need to
-@@ -2510,7 +2509,7 @@ static int qib_7322_bringup_serdes(struct qib_pportdata *ppd)
- 		val | ERR_MASK_N(IBStatusChanged));
- 
- 	/* Always zero until we start messing with SerDes for real */
--	return ret;
-+	return 0;
- }
- 
- /**
-@@ -6875,7 +6874,7 @@ static int init_sdma_7322_regs(struct qib_pportdata *ppd)
- 	struct qib_devdata *dd = ppd->dd;
- 	unsigned lastbuf, erstbuf;
- 	u64 senddmabufmask[3] = { 0 };
--	int n, ret = 0;
-+	int n;
- 
- 	qib_write_kreg_port(ppd, krp_senddmabase, ppd->sdma_descq_phys);
- 	qib_sdma_7322_setlengen(ppd);
-@@ -6904,7 +6903,7 @@ static int init_sdma_7322_regs(struct qib_pportdata *ppd)
- 	qib_write_kreg_port(ppd, krp_senddmabufmask0, senddmabufmask[0]);
- 	qib_write_kreg_port(ppd, krp_senddmabufmask1, senddmabufmask[1]);
- 	qib_write_kreg_port(ppd, krp_senddmabufmask2, senddmabufmask[2]);
--	return ret;
-+	return 0;
- }
- 
- /* sdma_lock must be held */
+Changes from v4:
+ - Remove redundant checking when warning the return value of request_atomic().
+ - Add acked tag from Adrian for patch 1.
+ - Re-implement the request_atomic() based on the Adrian's patch set.
+
+Changes from v3:
+ - Move patch 3 of V3 patch set into patch 1.
+ - Add a warning for unexpected return value of request_atomic().
+ - Remove redundant checking of ops->request().
+
+Changes from v2:
+ - Return busy flag if encountering unusual card busy state
+ instead of polling in interrupt context.
+ - Add a work for HSQ to try again in non-atomic context if the host
+ returns busy flag.
+
+Changes from v1:
+ - Re-split the changes to make them more clear suggested by Ulf.
+ - Factor out the auto CMD23 checking into a separate function.
+
+Baolin Wang (3):
+  mmc: host: Introduce the request_atomic() for the host
+  mmc: host: sdhci: Implement the request_atomic() API
+  mmc: host: sdhci-sprd: Implement the request_atomic() API
+
+ drivers/mmc/host/mmc_hsq.c    | 29 ++++++++++++++++++++++++++++-
+ drivers/mmc/host/mmc_hsq.h    |  1 +
+ drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
+ drivers/mmc/host/sdhci.c      | 34 ++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci.h      |  1 +
+ include/linux/mmc/host.h      |  3 +++
+ 6 files changed, 87 insertions(+), 4 deletions(-)
+
 -- 
-2.6.2
+2.17.1
 
