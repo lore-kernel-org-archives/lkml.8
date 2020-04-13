@@ -2,113 +2,151 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B658C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20585C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58894206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:30:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="MLu70IUS"
+	by mail.kernel.org (Postfix) with ESMTP id F1441206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbgDMVaO (ORCPT
+        id S2389110AbgDMVct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 17:30:14 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:20797 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389040AbgDMV3b (ORCPT
+        Mon, 13 Apr 2020 17:32:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55224 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389040AbgDMVcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 17:29:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1586813371; x=1618349371;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qT9c7eXt7ksLkS8LTzuMlCHOyGGyAUacpIVqI65fctQ=;
-  b=MLu70IUS2hLE69xBtxf4HXYYqiqCJ90w8n1+FmW88Re/x94ThSHjswHK
-   bp7s9W90OoJr6gfPFiOjZBPAC1DKJZ8FxjSAhxbLg4dHJrOloJpeNYFrn
-   +T8wKZLrtWas9KB16rPV6bY8o74Q9U6+VRNzfzhIxCVvXSuMDC+m+r9m7
-   uwYJtUuj125fhUc8eWbBSgvouZX0ZzZvUa3k+Q7M9rQrKbI4+fgqksW4Q
-   AHzVOk1KvXLrY4bYgSTjdj2UmC5Kd+z84rStAgTJE3D2xPKOxdmo5F6dn
-   YpHAcOThfs9H0HDnuQvcOfGiIiIHzTfFOaYaVVC5P17nFw3BGXyrqyyG8
-   g==;
-IronPort-SDR: nO1ZchRJARMTrxNZe+PgS8g00BAg5iWqV5aVQyS1K2FiuY0XSg+TMivYXlxWacnuJ7BHFxh+Oi
- GBtM6C+ov+tgms68OgVyRuDXh5tO6acghjfFKiwF5xkMqDG9hUcnvQZ7bm1Ms/s0YyQzjj0BVy
- udmpLJAVenuzN66L375m0UFApkRVX0WZW/y30IBxSTUOHQa602sGMJuROVEkD1O3eUi+hfcovk
- 1u1Wq/M93Aly361bQPo56znF1QlyosBDNosfBlxW5dx4nhM5vwF9TWjfWz6bcp/jU3WHjEuQvh
- AOk=
-X-IronPort-AV: E=Sophos;i="5.72,380,1580745600"; 
-   d="scan'208";a="139583355"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Apr 2020 05:29:30 +0800
-IronPort-SDR: E+yvfvhXJbEhx/CJBD5D0zj3URslcIkkwYG2kUR8NYq7lgAAOOR5IXKoVweJWHWLFfTlK6S9E7
- IXcAoo4FyCo786j/yMWuYE0lA6JzgZYpSWSFA/7Lrj1ho088J+JWhdwDdJnjgnUn1q0j7O0rn+
- DtUrXFGqRh7+vchy/6wtt+h22IMn5K7D/mNipAcFyKKzqalt1IdwuboFXGltTrnF27vQ1Z7kdl
- /r2yZvX5M0LG9oIjdRYdWEFG4FHMhW6v58OWqwpgjrQbiaZab7oO3PZrBhkKSwjhOcgC/9lOiF
- Egv00Nxz5nqd5qJzb1ekxcyE
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 14:20:35 -0700
-IronPort-SDR: 9G9nj2p0GT4YHZw2NCS5Fuwgbl/gAoRjzgFyJNSm5Lcn1NpB/1a46z/Nv8AljWcfv1LEgthoiw
- HQ4OPpp3BFp/21DWwQGdRZ5V26kUUtMlkny8vEd+BlAHg/uN/7p6R+m3zx7loxswaqt/FnF/Oe
- P6ZRbX+r7QcCgxG0UovpYsZJW9k4AUDuSdvPxf4ta9+KGGxh/Zmy97/uxm4CYNjPYg6ZRc+BAr
- 4gFQSVSiWGzxgCQ9Lk6/bwB90WBZZvPSQ5Mrl+frU+xteloZJgUJ8ArkHvwex4rdexUtILiskv
- Xqs=
-WDCIronportException: Internal
-Received: from 9dg4l72.ad.shared (HELO jedi-01.hgst.com) ([10.86.55.26])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Apr 2020 14:29:30 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>
-Subject: [v2 PATCH 2/5] include: pe.h: Add RISC-V related PE definition
-Date:   Mon, 13 Apr 2020 14:29:04 -0700
-Message-Id: <20200413212907.29244-3-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200413212907.29244-1-atish.patra@wdc.com>
-References: <20200413212907.29244-1-atish.patra@wdc.com>
+        Mon, 13 Apr 2020 17:32:48 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 40cc3ddfdceb1350; Mon, 13 Apr 2020 23:32:44 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Date:   Mon, 13 Apr 2020 23:32:43 +0200
+Message-ID: <6362254.rXp5uA8eak@kreacher>
+In-Reply-To: <Pine.LNX.4.44L0.2004102231270.30859-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2004102231270.30859-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define RISC-V related machine types.
+On Saturday, April 11, 2020 4:41:14 AM CEST Alan Stern wrote:
+> Okay, this is my attempt to summarize what we have been discussing.  
+> But first: There is a dev_pm_skip_resume() helper routine which
+> subsystems can call to see whether resume-side _early and _noirq driver
+> callbacks should be skipped.  But there is no corresponding
+> dev_pm_skip_suspend() helper routine.  Let's add one, or rename
+> dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
----
- include/linux/pe.h | 3 +++
- 1 file changed, 3 insertions(+)
+OK
 
-diff --git a/include/linux/pe.h b/include/linux/pe.h
-index 8ad71d763a77..daf09ffffe38 100644
---- a/include/linux/pe.h
-+++ b/include/linux/pe.h
-@@ -55,6 +55,9 @@
- #define	IMAGE_FILE_MACHINE_POWERPC	0x01f0
- #define	IMAGE_FILE_MACHINE_POWERPCFP	0x01f1
- #define	IMAGE_FILE_MACHINE_R4000	0x0166
-+#define	IMAGE_FILE_MACHINE_RISCV32	0x5032
-+#define	IMAGE_FILE_MACHINE_RISCV64	0x5064
-+#define	IMAGE_FILE_MACHINE_RISCV128	0x5128
- #define	IMAGE_FILE_MACHINE_SH3		0x01a2
- #define	IMAGE_FILE_MACHINE_SH3DSP	0x01a3
- #define	IMAGE_FILE_MACHINE_SH3E		0x01a4
--- 
-2.24.0
+> Given that, here's my understanding of what should happen.  (I'm
+> assuming the direct_complete mechanism is not being used.)  This tries
+> to describe what we _want_ to happen, which is not always the same as
+> what the current code actually _does_.
+
+OK
+
+> 	During the suspend side, for each of the
+> 	{suspend,freeze,poweroff}_{late,noirq} phases: If
+> 	dev_pm_skip_suspend() returns true then the subsystem should
+> 	not invoke the driver's callback, and if there is no subsystem
+> 	callback then the core will not invoke the driver's callback.
+> 
+> 	During the resume side, for each of the
+> 	{resume,thaw,restore}_{early,noirq} phases: If
+> 	dev_pm_skip_resume() returns true then the subsystem should
+> 	not invoke the driver's callback, and if there is no subsystem
+> 	callback then the core will not invoke the driver's callback.
+> 
+> 	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+> 	set and the device's runtime status is "suspended".
+
+Agreed with the above.
+
+> 	power.must_resume gets set following the suspend-side _noirq
+> 	phase if power.usage_count > 1 (indicating the device was
+> 	in active use before the start of the sleep transition) or
+> 	power.must_resume is set for any of the device's dependents.
+
+Or MAY_SKIP_RESUME is unset (which means that the driver does not
+allow its resume callbacks to be skipped), or power.may_skip_resume
+is unset (which means that the subsystem does not allow the
+driver callbacks to be skipped).
+
+> 	dev_pm_skip_resume() will return "false" if the current
+> 	transition is RESTORE or power.must_resume is set.  Otherwise:
+> 	It will return true if the current transition is THAW,
+> 	SMART_SUSPEND is set, and the device's runtime status is
+> 	"suspended".
+
+The other way around.  That is:
+
+dev_pm_skip_resume() will return "true" if the current transition is
+THAW and dev_pm_skip_suspend() returns "true" for that device (so
+SMART_SUSPEND is set, and the device's runtime status is "suspended",
+as per the definition of that function above).
+
+Otherwise, it will return "true" if the current transition is RESTORE
+(which means that all devices are resumed) or power.must_resume is not
+set (so this particular device need not be resumed).
+
+>  It will return "true" if the current transition is
+> 	RESUME, SMART_SUSPEND and MAY_SKIP_RESUME are both set, and
+> 	the device's runtime status is "suspended".
+
+Unless MAY_SKIP_RESUME is unset for at least one of its descendants (or
+dependent devices).
+
+> 	For a RESUME
+> 	transition, it will also return "true" if MAY_SKIP_RESUME and
+> 	power.may_skip_resume are both set, regardless of
+> 	SMART_SUSPEND or the current runtime status.
+
+And if the device was not in active use before suspend (as per its usage
+counter) or MAY_SKIP_RESUME is unset for at least one of its descendants (or
+dependent devices in general).
+
+> 	At the start of the {resume,thaw,restore}_noirq phase, if
+> 	dev_pm_skip_resume() returns true then the core will set the
+> 	runtime status to "suspended".  Otherwise it will set the
+> 	runtime status to "active".  If this is not what the subsystem
+> 	or driver wants, it must update the runtime status itself.
+
+Right.
+
+> Comments and differences with respect to the code in your pm-sleep-core
+> branch:
+> 
+> 	I'm not sure whether we should specify other conditions for
+> 	setting power.must_resume.
+
+IMO we should.
+
+Otherwise it is rather hard to catch the case in which one of the
+device's descendants has MAY_SKIP_RESUME unset (and so the device
+needs to be resumed).
+
+> 	dev_pm_skip_resume() doesn't compute the value described
+> 	above.  I'm pretty sure the existing code is wrong.
+
+Well, we don't seem to have reached an agreement on some details
+above ...
+
+Cheers!
+
+
 
