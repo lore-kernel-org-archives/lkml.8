@@ -2,146 +2,111 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15E7C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14826C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A15620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC01F2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ojwONc8Z"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="LySdmacw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgDMMCa (ORCPT
+        id S1729362AbgDMMEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48914 "EHLO
+        Mon, 13 Apr 2020 08:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbgDMMC3 (ORCPT
+        with ESMTP id S1728558AbgDMMEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:02:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22595C03BC81;
-        Mon, 13 Apr 2020 05:02:29 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a201so9291538wme.1;
-        Mon, 13 Apr 2020 05:02:29 -0700 (PDT)
+        Mon, 13 Apr 2020 08:04:42 -0400
+X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 08:04:42 EDT
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D67C03BC89
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:58:20 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o10so6832314qtr.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=g/O468N0+e2tRsKFjrhvYQJivMOIkdyRPfvfIRlI7cs=;
-        b=ojwONc8Z7k2dO3NqAqtxYI/NeOkT4ewz0t86tv53y/pIujj+hieQ3KLNk9ftfb3jmg
-         XzOeklQQIeuJXOTvbulnoZcgspyaKep5/AGmp2QenkL3N07PZNCd1LJEbw3OM5SgktJK
-         YSv3aD3xXkxvtcKzJ6Tt5fXxxEuwFMaDn6E4hHXKuYHHJXyvNej9i/AW8GqX7Fyxswq4
-         U0QTwfSBeCgKBeiYOgx+SVuvitHnUPLDkzhF9rlr2BqY2b7qcXr/9j6UQrLGR9lQDAp4
-         /f7DMQ5OSvk1h864+BPE2VRDLK5/uvmdME9pLzezv42cx4UEFFaKMJCYhIQN0vdxhLan
-         QLVQ==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHLps9o08dbvxE02Dvj/jt0RoFc0VpbMXtuiKFoxLZE=;
+        b=LySdmacwY+3ux5rursX79HmuxJceTvKyk9bpz+AOfNV99t68btXJuf6UgsaXMltmy5
+         tZDP2KmUMiyMJTIPp270VRv5tG2bOVOWia5u11Xi3SQUTMT44OrdkWoScr5iMKTMaH5y
+         2sc8k2WH3JCjDMhVMZwL3w8iS6YYCH6E+PrZdz3SGYbjRWOwUW99GNqCi6TBZEmd/nGm
+         KoT3fKvfOj7CbAsKXvrnf/7OklsAlHCZOk1I6tGiolX8RyMyldjt3i3pDeH+kCanbVUs
+         ML53t9cnnaiRDCF+gD8lwNk66Sa8OkufkZp66eEKeGLDLThS8szLRlnyS1lm5xbvE74T
+         gS4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=g/O468N0+e2tRsKFjrhvYQJivMOIkdyRPfvfIRlI7cs=;
-        b=mYUgWFs56lvKKQL8hpdEjtEO4vqrBZLy0GmbpNk8gD0YVWwvp91RHOlmGRB571PIXg
-         YaFFgHm4z/BY47L8vghLLV8xQhkETyN5NVZC3pGZ+CSltrFM1o2y/wJmyz70xLxobEZu
-         xojav1SIZC1DWEFlqTC6XMGGDiu77lpzNldjYGEmL8+MEg1pvlXFOCHZtNxjYkrQ+FWp
-         uwzGkTRRww0KHC6bl5VC7OA7Bj+1w0BbdIWp62UwQyc4iQHG1b5DWua9/kRAWIPLgCV5
-         SVZT1s8h0sTg9TWGYbau2lYZNrzV4ZwiQGujKw+JJkmCQCqKESqU97TX1wLFT+Nt8KwU
-         zmlQ==
-X-Gm-Message-State: AGi0PuaRpeiSrWPPCUGujRALR/xDwC0zQDaj0XJVTy3VbUguJbqXzm9A
-        30dfBVv4jBLXZUW7+KF6UELowEuRQ5A=
-X-Google-Smtp-Source: APiQypI/n5x0Dasbyjjtav2Kiy2dJHBsSLn588CFieJkVi6QTZqXPm+J/+su2U/4jAXj2iqawJdwFw==
-X-Received: by 2002:a1c:bc02:: with SMTP id m2mr18086398wmf.60.1586779347766;
-        Mon, 13 Apr 2020 05:02:27 -0700 (PDT)
-Received: from felia ([2001:16b8:2da9:2f00:3165:1687:284f:4993])
-        by smtp.gmail.com with ESMTPSA id a7sm14113305wmj.12.2020.04.13.05.02.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHLps9o08dbvxE02Dvj/jt0RoFc0VpbMXtuiKFoxLZE=;
+        b=K2r9T2JEutZQBq81V+9sRZ7Y4vQFXdgymCcOfjfxEYqsR8mDnae6wnTYBmtIfDxpUD
+         KzScr6bt55xSbcN1Gne6qBmk6EvKSagZMeOxG5ayhmBtEJxABq5vNlqrDIOL8CWK2dRz
+         helXpjYTwq2twHUOUCpEk8ck1pi8JsTepTHdI5uVfx+Jzrx8WblFRNRnlUgM4eUExTMl
+         41Drll4b6WBfsN4na5b/sjf5vznT5QiM1HtJPHYLjsWvULP1G5UyTsN6z9eylUdYXzss
+         7lOAHOsgAiG82aq0Y62NxGr4sdTYPzY/AtsXvpzAlgXUrz9pR/BXZRMvx2qqcowVa8T+
+         rrpA==
+X-Gm-Message-State: AGi0PubvtwO8b+pSAoz8KWSNLCh/l2zgMjZak98Yh092fYu5+cpvYfZn
+        Y3GlSNTzM/G3oh0QJlXR6frc9dXgrW4=
+X-Google-Smtp-Source: APiQypKofBoxZQiSMjHok5wcXaet362PDl853ajJ57KknzIVzKWUJoZUlUM+Vp5OOyWbvXiTN3xmoA==
+X-Received: by 2002:ac8:3686:: with SMTP id a6mr8822273qtc.317.1586779099732;
+        Mon, 13 Apr 2020 04:58:19 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id s14sm5129124qts.70.2020.04.13.04.58.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 05:02:27 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Mon, 13 Apr 2020 14:02:25 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
-        Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] MAINTAINERS: place sifive_l2_cache.c only in SIFIVE
- DRIVERS
-In-Reply-To: <20200413114702.6372-1-lukas.bulwahn@gmail.com>
-Message-ID: <alpine.DEB.2.21.2004131401190.7282@felia>
-References: <20200413114702.6372-1-lukas.bulwahn@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 13 Apr 2020 04:58:19 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org
+Subject: [PATCH] kbuild: arch/$(SUBARCH)/include/generated/ aren't cleaned by mrproper
+Date:   Mon, 13 Apr 2020 08:58:15 -0300
+Message-Id: <20200413115815.141587-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This bug was introduced in this commit a788b2ed81abe
 
+Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
 
-On Mon, 13 Apr 2020, Lukas Bulwahn wrote:
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+ Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc") moved
-> arch/riscv/mm/sifive_l2_cache.c to drivers/soc/sifive/sifive_l2_cache.c
-> and adjusted the MAINTAINERS EDAC-SIFIVE entry but slipped in a mistake.
-> 
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
-> 
->   warning: no file matches F: drivers/soc/sifive_l2_cache.c
-> 
-> Boris suggested that sifive_l2_cache.c is considered part of the SIFIVE
-> DRIVERS, not part of EDAC-SIFIVE. So, we can simply drop this entry, and
-> by the sifive keyword pattern in SIFIVE PATTERNS, it is automatically part
-> of the SIFIVE DRIVERS.
-> 
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Paul, please pick this patch.
-> 
-> v1: https://lore.kernel.org/lkml/20200304144045.15060-1-lukas.bulwahn@gmail.com/
->   - was not picked up.
-> 
-> v1-resend: https://lore.kernel.org/lkml/20200413073447.9284-1-lukas.bulwahn@gmail.com/
-> 
-> v2: reworked based on Boris comment; applies on v5.7-rc1
-> 
-> 
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e64e5db31497..e28676766b26 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6172,7 +6172,7 @@ M:	Yash Shah <yash.shah@sifive.com>
->  L:	linux-edac@vger.kernel.org
->  S:	Supported
->  F:	drivers/edac/sifive_edac.c
-> -F:	drivers/soc/sifive_l2_cache.c
-> +F:	drivers/soc/sifive/sifive_l2_cache.c
->  
->  EDAC-SKYLAKE
->  M:	Tony Luck <tony.luck@intel.com>
-> -- 
-> 2.17.1
-> 
-> 
+diff --git a/Makefile b/Makefile
+index 70def4907036..e1a79796032e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -532,7 +532,8 @@ outputmakefile:
+ ifdef building_out_of_srctree
+ 	$(Q)if [ -f $(srctree)/.config -o \
+ 		 -d $(srctree)/include/config -o \
+-		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
++		 -d $(srctree)/arch/$(SRCARCH)/include/generated -o \
++		 -d $(srctree)/arch/$(SUBARCH)/include/generated ]; then \
+ 		echo >&2 "***"; \
+ 		echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
+ 		echo >&2 "*** in $(abs_srctree)";\
+@@ -1388,6 +1389,7 @@ CLEAN_FILES += modules.builtin modules.builtin.modinfo modules.nsdeps
+ # Directories & files removed with 'make mrproper'
+ MRPROPER_DIRS  += include/config include/generated          \
+ 		  arch/$(SRCARCH)/include/generated .tmp_objdiff \
++		  arch/$(SUBARCH)/include/generated \
+ 		  debian/ snap/ tar-install/
+ MRPROPER_FILES += .config .config.old .version \
+ 		  Module.symvers \
+-- 
+2.25.1
 
-Please ignore this patch. I accidently sent this patch out too quickly.
-
-Please consider and pick this PATCH v3 instead:
-
-https://lore.kernel.org/lkml/20200413115255.7100-1-lukas.bulwahn@gmail.com/
-
-
-Lukas
