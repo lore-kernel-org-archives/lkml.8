@@ -2,178 +2,164 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90234C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C075CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F91D2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PAWFK6hy"
+	by mail.kernel.org (Postfix) with ESMTP id 9C76B20692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586797566;
+	bh=XSzvWwboQfJbnb90gbiOgWC167qu2vdKrgA+BfEfCpo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GqK/L3ARdhg/M07xe5CSkyvlmwjXLU1FiD9+cx5EaQXwCoDLZxvHclqvVyY/pL7+K
+	 Oey+QLBBuZLorE/92dGKwn2/p/s26Xc2qHtwZNKI4XDxl4K6H/02USjc3ntCsaoVF9
+	 pXWPW313UhTLDXgNbC/QFJ2FqvEuBRtIDHnydZn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgDMRGB (ORCPT
+        id S1732492AbgDMRGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 Apr 2020 13:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732482AbgDMRGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 13:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732352AbgDMREo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:04:44 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C323BC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:04:44 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id k15so4761531pfh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tzydfxNpFyQ37xWSVbnHjBlq3rGsJWK4NEoeBYdHSGE=;
-        b=PAWFK6hyUJ2FMAEd5m1yBDd9/wMCyVdsdeGo/pb+0IWz1bN+ACGpK6RiQ1OjnlHCDW
-         wg+3p3F/+xGKw5jAdn2vh9hDmUFAgpGqGeWKPpPAQ0hLNihu9ykfgagxoTXeFWXyFqrK
-         JZiT2I/pmITimBBh5qz/X06OMc+Un5+ZZUTMg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tzydfxNpFyQ37xWSVbnHjBlq3rGsJWK4NEoeBYdHSGE=;
-        b=lE4bgRzw4has90WwS1OYjfNdB//KieTJhv6Pu1Mjds3fAE3+7DaaJEq1ZWS5nDefkz
-         Ve3vhkrX+lzlQ4rQ2mmxKELO4MMVe/lIFIaHTxKfFWAF1IrBCE0i1aQNZnU7RS4lJ26x
-         vU9/Wqra1w6pc++fWyhUZuGO2I3pEcSNtwqcsQroBuXce0rCAYLqaUK6fxGIz0DFqIKj
-         bdRQ2oVQl1wCFKA/Wx3OM48/c1iFFGL82muciVz5/abLF0ef2cIz2firWPGylF/Hb/C+
-         FnTPKBzyKsM9fsWVEgxw7HcR46upC0va7lFZZlKtXxJv8p4D6jDaRz17fPao9qRAUVna
-         /02A==
-X-Gm-Message-State: AGi0PuYKMAHCFV42YweNnjHyCufANW12nkbx35az4pVzD2tlvGypc0WV
-        A5FCLieMJDfl0RN1/52T2kDU1EG9GL5q3A==
-X-Google-Smtp-Source: APiQypIjV881eF9Wj1nHGTP+Z56sK4PbX5r1Hs7Wq0wemPIScGv1u2J9wLQNTzsPos6dMrVHgXhSWw==
-X-Received: by 2002:aa7:94b5:: with SMTP id a21mr18448612pfl.290.1586797484336;
-        Mon, 13 Apr 2020 10:04:44 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id p62sm1634414pfb.93.2020.04.13.10.04.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 10:04:43 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     swboyd@chromium.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, evgreen@chromium.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/10] drivers: qcom: rpmh-rsc: Fold tcs_ctrl_write() into its single caller
-Date:   Mon, 13 Apr 2020 10:04:08 -0700
-Message-Id: <20200413100321.v4.3.Ie88ce5ccfc0c6055903ccca5286ae28ed3b85ed3@changeid>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-In-Reply-To: <20200413170415.32463-1-dianders@chromium.org>
-References: <20200413170415.32463-1-dianders@chromium.org>
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70AAE2063A;
+        Mon, 13 Apr 2020 17:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586797560;
+        bh=XSzvWwboQfJbnb90gbiOgWC167qu2vdKrgA+BfEfCpo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QqrGYb7IDH34G4ZR7RSg/V2SkPEJ2ZZyh7mDf3OYFbo7lQBigcWIvnrAz39PgzOhx
+         R6REQgOrgZLbNoHYrvUalvOTXj1LGyMghKalIM0d0RW0nAKgvikPXLU5aUah08TFbq
+         ANf+eAJWPV1B01x/z2JUsZ+QqISS9nhxYb0gtyRk=
+Date:   Mon, 13 Apr 2020 18:05:56 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <eugen.hristev@microchip.com>, <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Message-ID: <20200413180556.20638f3b@archlinux>
+In-Reply-To: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was trying to write documentation for the functions in rpmh-rsc and
-I got to tcs_ctrl_write().  The documentation for the function would
-have been: "This is the core of rpmh_rsc_write_ctrl_data(); all the
-caller does is error-check and then call this".
+On Wed, 4 Mar 2020 10:42:18 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Having the error checks in a separate function doesn't help for
-anything since:
-- There are no other callers that need to bypass the error checks.
-- It's less documenting.  When I read tcs_ctrl_write() I kept
-  wondering if I need to handle cases other than ACTIVE_ONLY or cases
-  with more commands than could fit in a TCS.  This is obvious when
-  the error checks and code are together.
-- The function just isn't that long, so there's no problem
-  understanding the combined function.
+> This change moves the logic to check if the current channel is the
+> touchscreen channel to a separate helper.
+> This reduces some code duplication, but the main intent is to re-use this
+> in the next patches.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Eugen / Ludovic,
 
-Things were even more confusing because the two functions names didn't
-make obvious (at least to me) their relationship.
+Have you had a chance to look at this series? 
 
-Simplify by folding one function into the other.
+Thanks,
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
----
+Jonathan
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- drivers/soc/qcom/rpmh-rsc.c | 39 ++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 439a0eadabf1..d9177324c6a2 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -587,27 +587,6 @@ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
- 	return 0;
- }
- 
--static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
--{
--	struct tcs_group *tcs;
--	int tcs_id = 0, cmd_id = 0;
--	unsigned long flags;
--	int ret;
--
--	tcs = get_tcs_for_msg(drv, msg);
--	if (IS_ERR(tcs))
--		return PTR_ERR(tcs);
--
--	spin_lock_irqsave(&tcs->lock, flags);
--	/* find the TCS id and the command in the TCS to write to */
--	ret = find_slots(tcs, msg, &tcs_id, &cmd_id);
--	if (!ret)
--		__tcs_buffer_write(drv, tcs_id, cmd_id, msg);
--	spin_unlock_irqrestore(&tcs->lock, flags);
--
--	return ret;
--}
--
- /**
-  * rpmh_rsc_write_ctrl_data: Write request to the controller
-  *
-@@ -618,6 +597,11 @@ static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
-  */
- int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
- {
-+	struct tcs_group *tcs;
-+	int tcs_id = 0, cmd_id = 0;
-+	unsigned long flags;
-+	int ret;
-+
- 	if (!msg || !msg->cmds || !msg->num_cmds ||
- 	    msg->num_cmds > MAX_RPMH_PAYLOAD) {
- 		pr_err("Payload error\n");
-@@ -628,7 +612,18 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
- 	if (msg->state == RPMH_ACTIVE_ONLY_STATE)
- 		return -EINVAL;
- 
--	return tcs_ctrl_write(drv, msg);
-+	tcs = get_tcs_for_msg(drv, msg);
-+	if (IS_ERR(tcs))
-+		return PTR_ERR(tcs);
-+
-+	spin_lock_irqsave(&tcs->lock, flags);
-+	/* find the TCS id and the command in the TCS to write to */
-+	ret = find_slots(tcs, msg, &tcs_id, &cmd_id);
-+	if (!ret)
-+		__tcs_buffer_write(drv, tcs_id, cmd_id, msg);
-+	spin_unlock_irqrestore(&tcs->lock, flags);
-+
-+	return ret;
- }
- 
- /**
--- 
-2.26.0.110.g2183baf09c-goog
+> ---
+> 
+> This patchset continues discussion:
+>    https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/
+> Apologies for the delay.
+> 
+> Changelog v1 -> v2:
+> * added patch 'iio: at91-sama5d2_adc: split at91_adc_current_chan_is_touch()
+>   helper'
+> * renamed at91_adc_buffer_postenable() -> at91_adc_buffer_preenable()
+>   - at91_adc_buffer_postenable() - now just calls
+>     iio_triggered_buffer_postenable() if the channel isn't the touchscreen
+>     channel
+> * renamed at91_adc_buffer_predisable() -> at91_adc_buffer_postdisable()
+>   - at91_adc_buffer_predisable() - now just calls
+>     iio_triggered_buffer_predisable() if the channel isn't the touchscreen
+>     channel
+> 
+>  drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> index a5c7771227d5..f2a74c47c768 100644
+> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
+>  	return 0;
+>  }
+>  
+> +static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
+> +{
+> +	struct at91_adc_state *st = iio_priv(indio_dev);
+> +
+> +	return !!bitmap_subset(indio_dev->active_scan_mask,
+> +			       &st->touch_st.channels_bitmask,
+> +			       AT91_SAMA5D2_MAX_CHAN_IDX + 1);
+> +}
+> +
+>  static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	int ret;
+>  	struct at91_adc_state *st = iio_priv(indio_dev);
+>  
+>  	/* check if we are enabling triggered buffer or the touchscreen */
+> -	if (bitmap_subset(indio_dev->active_scan_mask,
+> -			  &st->touch_st.channels_bitmask,
+> -			  AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> -		/* touchscreen enabling */
+> +	if (at91_adc_current_chan_is_touch(indio_dev))
+>  		return at91_adc_configure_touch(st, true);
+> -	}
+> +
+>  	/* if we are not in triggered mode, we cannot enable the buffer. */
+>  	if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+>  		return -EINVAL;
+> @@ -906,12 +912,9 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+>  	u8 bit;
+>  
+>  	/* check if we are disabling triggered buffer or the touchscreen */
+> -	if (bitmap_subset(indio_dev->active_scan_mask,
+> -			  &st->touch_st.channels_bitmask,
+> -			  AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> -		/* touchscreen disable */
+> +	if (at91_adc_current_chan_is_touch(indio_dev))
+>  		return at91_adc_configure_touch(st, false);
+> -	}
+> +
+>  	/* if we are not in triggered mode, nothing to do here */
+>  	if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+>  		return -EINVAL;
+> @@ -1886,14 +1889,10 @@ static __maybe_unused int at91_adc_resume(struct device *dev)
+>  		return 0;
+>  
+>  	/* check if we are enabling triggered buffer or the touchscreen */
+> -	if (bitmap_subset(indio_dev->active_scan_mask,
+> -			  &st->touch_st.channels_bitmask,
+> -			  AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> -		/* touchscreen enabling */
+> +	if (at91_adc_current_chan_is_touch(indio_dev))
+>  		return at91_adc_configure_touch(st, true);
+> -	} else {
+> +	else
+>  		return at91_adc_configure_trigger(st->trig, true);
+> -	}
+>  
+>  	/* not needed but more explicit */
+>  	return 0;
 
