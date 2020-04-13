@@ -2,143 +2,197 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10C0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0539EC352B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF85620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D394620732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jt+OFGnK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cb7xwvSr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgDMKEy (ORCPT
+        id S1728499AbgDMKFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:04:54 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60148 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728130AbgDMKEl (ORCPT
+        Mon, 13 Apr 2020 06:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728224AbgDMKEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:04:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586772280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gvtpikoyRBKdoFcJ8GEU4zwmH9E/dKn5BixvwyCzFc4=;
-        b=Jt+OFGnKk4d16E/qOD+X7Vz8+deENVuQf1EA1HF/4vgvQLjRZyZc4etnTS9pIbvqS6SP5q
-        Sr6QYjVVCVtJJwNmfRLLKHS9iP8b7m8P/+lHWjzdZD1d4ki7H+6CTKkrqxOsbDTIHmEcUQ
-        n4mmL7sFwTgZQKLFlrLSjl1zv4E+uz4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-kV3_HmjJMSSrsk5-hkenyA-1; Mon, 13 Apr 2020 06:04:38 -0400
-X-MC-Unique: kV3_HmjJMSSrsk5-hkenyA-1
-Received: by mail-wr1-f69.google.com with SMTP id m15so6510584wrb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 03:04:38 -0700 (PDT)
+        Mon, 13 Apr 2020 06:04:45 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5AD7C00860B
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:58:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k11so8940470wrp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qDVe2lNWj6L7/wSdaZ7MLd8k6z6SPV2+rDJKkWLkqmg=;
+        b=cb7xwvSrCFGmqMtEO9Nz1TT4LvfmEdBtGrUMwZHy9jKzaE/j4k/a7U/HcTEvLKwq+K
+         T51HSz1jslvlEJJz5HG8LkoAhtMLxVfp651GSWBGojwuhwJc5nqOSnVPBk2CynasMhm7
+         0n6bjlyRRYrA/HoM0GVdVtK6DD+5cf5LgrPMqsTjfqvT/C5wVuJ0ez7lOjVQzg9FrVxK
+         TideF52S1kT2MkX7ULrjSjMWGdZ2TJ359qgzEdb7hhjIjrgO8RdK23c7slw+R6SHYjFc
+         Qf1tZAwlWJpakox2EwmI2XQW8++zjK7mKIzThWlDItzgE++MuKYoRmD6mfnu21NhV/Dp
+         vYMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gvtpikoyRBKdoFcJ8GEU4zwmH9E/dKn5BixvwyCzFc4=;
-        b=sc+1fPionAIfvXUPpsPSVEI56dLpatx+/cKKe8TqNzJzVwO4jtJb8UxVGS6z0whm2y
-         hnau0A8qJ3S/7vuD6Jo2FbzTk2YQPph6uwD90aH5TiHVUZM4+upiR9tPl5XOIhOyGitm
-         Pdl5nHKmQ+gAqYy0mCpcc746nBS7GlwNuFY9e4SyylyIxXdhw0PGPEL84bhfqYIqWlMC
-         6T94CRYD/3/S+a4vn/R3/kMxGjqgknOOgaOtShNHM+xeHb48yPO9RDDQw2IxRbN7U/+T
-         O3guLn7Lp0/O1htUPvXhMiWq6q0YAxDbmigMZIHvAE9/HJWp4ozAHPWTDH5vtqCNl7MU
-         UFaQ==
-X-Gm-Message-State: AGi0PubjLEKuJjWhNGiAoYzdH/T1dLlssQnsbv7b1qDyC8qsorb9Dfe+
-        ZRLj/HJahzaceicWgeiLURXbnHftEWk/Admef5ovdw31ceMD6G0BZzQP3fLwZUq9qLJ9SBxhvw8
-        fTZ3FTVOlak+fvFAmQn7Bdhh1
-X-Received: by 2002:adf:c7c8:: with SMTP id y8mr17506956wrg.305.1586772277044;
-        Mon, 13 Apr 2020 03:04:37 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKLf/U31JZjFRkBRGJHsrPosoMp6/myT/NeT+ZxS/TXQH3VpqNomwC6Nks6u5GBINnLmnW9Sg==
-X-Received: by 2002:adf:c7c8:: with SMTP id y8mr17506398wrg.305.1586772268328;
-        Mon, 13 Apr 2020 03:04:28 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id v131sm14332473wmb.19.2020.04.13.03.04.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 03:04:27 -0700 (PDT)
-Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org
-Cc:     stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
-Date:   Mon, 13 Apr 2020 12:04:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qDVe2lNWj6L7/wSdaZ7MLd8k6z6SPV2+rDJKkWLkqmg=;
+        b=aXkgYCbOD8sWzclH+hyW6DdT86vmSdm4bFph6HUvAz7xr3BxmRJ/a7h6kAVMUdsbeN
+         LG1MXUj8St3SXXsiJ4FKAluaBN4hcB/OVtyQbM6efsipHfAPgNDDZIX7DYnZ5DMdDFFM
+         EN07uwjQTG74G8rQxOjANsXVfS491zkyWLm3zkYxwlDOq4HbyRHzZ1OMydetz9W0uMNq
+         JM39vmdLGbdFjII0oMH5BAtVf8YLoV4bPdG6Zcq+2BRMaxbSE4lE/Vz6rdV0nclX4lNF
+         PLsxM4PJgTDTqxaYBY0D4wQ3AH85y+yyu5Bc5H4ra8JZa9OySKyQibJ6Zm2jqsqSCAvw
+         kDDw==
+X-Gm-Message-State: AGi0PuaVTtPqPSYHnW9N8sTSW7RB/75UZq2F3AM7C7onONu3l+ja1ZHF
+        rggeqTJ/9ZhsePRJYjmLnwL8pQ==
+X-Google-Smtp-Source: APiQypIVZ1ttP0eV//Ltv8ylpI7LHgkkxJCEJVArBfNRSHT8diRrmKo3QVdPbd++ReOmQvuaTjl2gA==
+X-Received: by 2002:a5d:62cc:: with SMTP id o12mr8054469wrv.75.1586771898245;
+        Mon, 13 Apr 2020 02:58:18 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id v21sm13594491wmj.8.2020.04.13.02.58.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Apr 2020 02:58:17 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH 2/9] crypto: sun8i-ce: move iv data to request context
+Date:   Mon, 13 Apr 2020 09:58:02 +0000
+Message-Id: <1586771889-3299-3-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586771889-3299-1-git-send-email-clabbe@baylibre.com>
+References: <1586771889-3299-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jarkko,
+Instead of storing IV data in the channel context, store them in the
+request context.
+Storing them in the channel structure was conceptualy wrong since they
+are per request related.
 
-On 4/12/20 7:04 PM, Jarkko Sakkinen wrote:
-> Call devm_free_irq() if we have to revert to polling in order not to
-> unnecessarily reserve the IRQ for the life-cycle of the driver.
-> 
-> Cc: stable@vger.kernel.org # 4.5.x
-> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->   drivers/char/tpm/tpm_tis_core.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> index 27c6ca031e23..ae6868e7b696 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->   		if (irq) {
->   			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
->   						 irq);
-> -			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
-> +			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
->   				dev_err(&chip->dev, FW_BUG
->   					"TPM interrupt not working, polling instead\n");
-> +				devm_free_irq(chip->dev.parent, priv->irq,
-> +					      chip);
-> +			}
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 27 +++++++++----------
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 10 ++++---
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-My initial plan was actually to do something similar, but if the probe code
-is actually ever fixed to work as intended again then this will lead to a
-double free as then the IRQ-test path of tpm_tis_send() will have called
-disable_interrupts() which already calls devm_free_irq().
-
-You could check for chip->irq != 0 here to avoid that.
-
-But it all is rather messy, which is why I went with the "#if 0" approach
-in my patch.
-
-Also we will currently ALWAYS hit the "TPM interrupt not working, polling instead"
-error because the TPM_CHIP_FLAG_IRQ never gets set. So if we are going to do an
-interim fix (and we should) we should really also silence that error.
-
-Regards,
-
-Hans
-
-p.s.
-
-I'm currently in contact with Lenovo trying to figure out what is going on
-here with the always firing IRQ on the X1 8th gen, I guess the fix for that
-might also help with the T490 issue.
-
-
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index a5fd8975f3d3..7fd19667bceb 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -91,7 +91,6 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 	struct scatterlist *sg;
+ 	unsigned int todo, len, offset, ivsize;
+ 	dma_addr_t addr_iv = 0, addr_key = 0;
+-	void *backup_iv = NULL;
+ 	u32 common, sym;
+ 	int flow, i;
+ 	int nr_sgs = 0;
+@@ -154,24 +153,24 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 
+ 	ivsize = crypto_skcipher_ivsize(tfm);
+ 	if (areq->iv && crypto_skcipher_ivsize(tfm) > 0) {
+-		chan->ivlen = ivsize;
+-		chan->bounce_iv = kzalloc(ivsize, GFP_KERNEL | GFP_DMA);
+-		if (!chan->bounce_iv) {
++		rctx->ivlen = ivsize;
++		rctx->bounce_iv = kzalloc(ivsize, GFP_KERNEL | GFP_DMA);
++		if (!rctx->bounce_iv) {
+ 			err = -ENOMEM;
+ 			goto theend_key;
+ 		}
+ 		if (rctx->op_dir & CE_DECRYPTION) {
+-			backup_iv = kzalloc(ivsize, GFP_KERNEL);
+-			if (!backup_iv) {
++			rctx->backup_iv = kzalloc(ivsize, GFP_KERNEL);
++			if (!rctx->backup_iv) {
+ 				err = -ENOMEM;
+ 				goto theend_key;
+ 			}
+ 			offset = areq->cryptlen - ivsize;
+-			scatterwalk_map_and_copy(backup_iv, areq->src, offset,
+-						 ivsize, 0);
++			scatterwalk_map_and_copy(rctx->backup_iv, areq->src,
++						 offset, ivsize, 0);
+ 		}
+-		memcpy(chan->bounce_iv, areq->iv, ivsize);
+-		addr_iv = dma_map_single(ce->dev, chan->bounce_iv, chan->ivlen,
++		memcpy(rctx->bounce_iv, areq->iv, ivsize);
++		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen,
+ 					 DMA_TO_DEVICE);
+ 		cet->t_iv = cpu_to_le32(addr_iv);
+ 		if (dma_mapping_error(ce->dev, addr_iv)) {
+@@ -252,17 +251,17 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ theend_iv:
+ 	if (areq->iv && ivsize > 0) {
+ 		if (addr_iv)
+-			dma_unmap_single(ce->dev, addr_iv, chan->ivlen,
++			dma_unmap_single(ce->dev, addr_iv, rctx->ivlen,
+ 					 DMA_TO_DEVICE);
+ 		offset = areq->cryptlen - ivsize;
+ 		if (rctx->op_dir & CE_DECRYPTION) {
+-			memcpy(areq->iv, backup_iv, ivsize);
+-			kzfree(backup_iv);
++			memcpy(areq->iv, rctx->backup_iv, ivsize);
++			kzfree(rctx->backup_iv);
+ 		} else {
+ 			scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
+ 						 ivsize, 0);
+ 		}
+-		kfree(chan->bounce_iv);
++		kfree(rctx->bounce_iv);
+ 	}
+ 
+ theend_key:
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+index 0e9eac397e1b..c9c7ef8299e2 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+@@ -129,8 +129,6 @@ struct ce_task {
+ /*
+  * struct sun8i_ce_flow - Information used by each flow
+  * @engine:	ptr to the crypto_engine for this flow
+- * @bounce_iv:	buffer which contain the IV
+- * @ivlen:	size of bounce_iv
+  * @complete:	completion for the current task on this flow
+  * @status:	set to 1 by interrupt if task is done
+  * @t_phy:	Physical address of task
+@@ -139,8 +137,6 @@ struct ce_task {
+  */
+ struct sun8i_ce_flow {
+ 	struct crypto_engine *engine;
+-	void *bounce_iv;
+-	unsigned int ivlen;
+ 	struct completion complete;
+ 	int status;
+ 	dma_addr_t t_phy;
+@@ -183,10 +179,16 @@ struct sun8i_ce_dev {
+  * struct sun8i_cipher_req_ctx - context for a skcipher request
+  * @op_dir:	direction (encrypt vs decrypt) for this request
+  * @flow:	the flow to use for this request
++ * @backup_iv:	buffer which contain the next IV to store
++ * @bounce_iv:	buffer which contain a copy of IV
++ * @ivlen:	size of bounce_iv
+  */
+ struct sun8i_cipher_req_ctx {
+ 	u32 op_dir;
+ 	int flow;
++	void *backup_iv;
++	void *bounce_iv;
++	unsigned int ivlen;
+ };
+ 
+ /*
+-- 
+2.24.1
 
