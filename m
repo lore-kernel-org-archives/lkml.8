@@ -2,125 +2,106 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A15C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B003C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E852073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586792043;
-	bh=C3rwpvDMNRiUZqo5CRZNrWuQ/iGdulM0YD+Yiedl4is=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WiYgdrsq1y70cJjVR0cz8y6FR+pB1Ali/+nWbNTEpJ/h7Vb8eUtzLGe3m/M5pYFwO
-	 LGMAzU9prjP2y786VVo2UwTxWvBSAImaceNHeuIvRZaEpUAkNNT2O4zWlddR8QTr2Y
-	 uPmbDzCGpEygAuWFY55Ft2AGYcxWskHGpUsq2MJc=
+	by mail.kernel.org (Postfix) with ESMTP id 020D52072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730493AbgDMPeB (ORCPT
+        id S1730503AbgDMPew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbgDMPd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:33:57 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4773C2072C;
-        Mon, 13 Apr 2020 15:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586792036;
-        bh=C3rwpvDMNRiUZqo5CRZNrWuQ/iGdulM0YD+Yiedl4is=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nch7zZynKO9XRTNRHTyGFb43yPeXfg7AeWvauV6v/IMXB9OxThDPanZyxhR51xuey
-         mWeAgikpzWUR7Exd4nZl6YlU9Ikg+9GrMkH80dO8KrRZdSRikf6LSPTqit48yz2qDd
-         tIyupxztaVnKwHL6CnsX3cOH2wWIePm5bsrT3eSQ=
-Date:   Mon, 13 Apr 2020 16:33:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Aishwarya R <aishwaryarj100@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: sun4i-gpadc-iio: Use
- devm_platform_ioremap_resource
-Message-ID: <20200413163351.3b7cfd4e@archlinux>
-In-Reply-To: <20200412143220.4476-1-aishwaryarj100@gmail.com>
-References: <20200409141331.30882-1-aishwaryarj100@gmail.com>
-        <20200412143220.4476-1-aishwaryarj100@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 11:34:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60174 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728263AbgDMPev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:34:51 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 6B7B22A0BE2
+Received: by earth.universe (Postfix, from userid 1000)
+        id 619D43C08C7; Mon, 13 Apr 2020 17:34:46 +0200 (CEST)
+Date:   Mon, 13 Apr 2020 17:34:46 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] power: supply: bq24257_charger: Replace depends on
+ REGMAP_I2C with select
+Message-ID: <20200413153446.yrxhfyc3tyylvmfy@earth.universe>
+References: <20200413141051.506784-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n3loi6mwwmphleaw"
+Content-Disposition: inline
+In-Reply-To: <20200413141051.506784-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 20:02:18 +0530
-Aishwarya R <aishwaryarj100@gmail.com> wrote:
 
-> From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-> 
-> Use the helper function that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.Reduces boilerplate and suggested
-> by coccinelle.
-> 
-> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+--n3loi6mwwmphleaw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So couple of general things for future reference.
-1. New versions of a patch need a title such as [PATCH V2]
-2. You have several similar patches, they would have been best sent
-   as a series as that lets a maintainer pick them all up in one go.
-3. Don't send new versions in reply to older versions.  It doesn't scale
-   as we regularly end up 10 or more versions in to a series.  Not to mention
-   many reviewers read backwards in time (as often earlier patches are resolved
-   before you get to them) so by sending it as a reply you ensured it was much
-   less likely to be applied.  Here you were luck as I am on holiday so have
-   time to catch up.
+Hi,
 
-Applied to the togreg branch of iio.git with the message above tidied up
-a little.  Will be pushed out as testing for the autobuilders to poke at it.
-
-Thanks,
-
-Jonathan
-
+On Mon, Apr 13, 2020 at 04:10:51PM +0200, Enric Balletbo i Serra wrote:
+> regmap is a library function that gets selected by drivers that need
+> it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+> this driver only build if another driver already selected REGMAP_I2C,
+> as the symbol can't be selected through the menu kernel configuration.
+>=20
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index 176e1cb4abb1..0f2c1738a90d 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -496,7 +496,6 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->  				struct iio_dev *indio_dev)
->  {
->  	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-> -	struct resource *mem;
->  	void __iomem *base;
->  	int ret;
->  
-> @@ -508,8 +507,7 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->  	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
->  	indio_dev->channels = sun8i_a33_gpadc_channels;
->  
-> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	base = devm_ioremap_resource(&pdev->dev, mem);
-> +	base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(base))
->  		return PTR_ERR(base);
->  
 
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index f3424fdce341..d37ec0d03237 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -577,7 +577,7 @@ config CHARGER_BQ24257
+>  	tristate "TI BQ24250/24251/24257 battery charger driver"
+>  	depends on I2C
+>  	depends on GPIOLIB || COMPILE_TEST
+> -	depends on REGMAP_I2C
+> +	select REGMAP_I2C
+>  	help
+>  	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 batt=
+ery
+>  	  chargers.
+
+--n3loi6mwwmphleaw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6UhogACgkQ2O7X88g7
++ppXzg/8DpLbJx/q9foG5s2lAUmu407/lb/O47DOcOHRbGwlLhvlFqLVxLEAinIo
+G8FSsfXWBpmTKaev7lxF2rzS2XaSiiRKiWhWsvMoorYJqdg5wN8UmRe7H41vDoY9
+9jJryUmGjENCjierjEE2S4z8K9EO+hJf3UKuUWQb8DAg/c0rKONwtS6udodSyjZN
+AWE8AIalcoaptRTzKfpjUrywBXYoqzn+wHSj9tMH1v9HXJ6LbEY8dYbuon2k4b0U
+XmbOavkQlFc6x9mwnu0T/xif8CNKN8nxyQrmSrUpPO2w084Tv2DBtbrvezXTI9Lk
+1G9GC2liCVzMSMp+8CeGegWIp0obsStqY496eCaRPF6otEFsD40Td6Q7/UAh4ssz
+IjuVjwlW/PW7o9zCi8UXlq2uthQEy0YmdQAE9ZUQZTSMTN0OCncwEMw3wpr25gSZ
+IPEYSpUnd7RvwTe/bLwXtx5Ky2AwAL5OAVGqLN2ydu4v0o7cu3vQhsQX56/lKjXs
+qDzbkPeyYnUgkg2GvmLNhY865qaptGjEm9tOdi7CodtyXe9/5XI327mxh/mrZbkA
+ooBO0qHgIp22mc0+ErsyHt97pnCZvj1Zno7ElXuJZWefLS5wzUx+ixA7SIOaQNcD
+2ehEL7e3vbQtFc6uuKF8qAO2JS/BaLrPMFdyGue8PaaAn1zrkqA=
+=aU0m
+-----END PGP SIGNATURE-----
+
+--n3loi6mwwmphleaw--
