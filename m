@@ -2,43 +2,46 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBF0C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60513C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD4C20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335CC2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="IE856JHY"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VhRHB66T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbgDMNc1 (ORCPT
+        id S1729930AbgDMNcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 09:32:27 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:60593 "EHLO rere.qmqm.pl"
+        Mon, 13 Apr 2020 09:32:31 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:28189 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbgDMNcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:32:25 -0400
+        id S1729902AbgDMNc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 09:32:26 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4918g81rBXzZH;
-        Mon, 13 Apr 2020 15:32:20 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4918gD1Zp2zxC;
+        Mon, 13 Apr 2020 15:32:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1586784743; bh=G1pFtE4P65M5M56WyT/pXSuRd1kPbP62NRWfXhMvP5A=;
-        h=Date:From:Subject:To:Cc:From;
-        b=IE856JHY9qM6nf/7vx6AdFsnH8qABLH9sHKPpfFMQuQ5tPM+4FMdT0KuZxzVXZruv
-         wefITwyein0OU5cwFdD4rUOALUC1D27iyboawi13j9cttKlGt4k/ihJ0WoJFunA6Qr
-         UEgNqpLD0UPmXp3Nw59mTSA8dWpAbqor/sUemizCHWbb7Z7TjqOOW8JDYHk3rWA51e
-         diF54GQzopWJcltapKNr9/iYhFQogj77u/uwoYn4TwID9sWG+C1mK1+fG/AK78sW1p
-         L7IW28nQDoBCA8eGhdnRhKrbq0qDXPpRTFCkuXYt7g5Ki9OYpHPIf8I/0dHDkFw+y9
-         t7jy5IO++oZZA==
+        t=1586784744; bh=AMVDMp6lBsSzyLxgYU09hkRV6UlojdPFirY5aL6jJf4=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=VhRHB66TY06ZRbrdI0ruTqdmDxzqAv9a86f6V1+CjW85mOX6YsDNy9Tvm59IpQQu/
+         aPIvD8YV0EIulVpTHOvV85z0AGi1xei1O3hNTK4eWkryMRYPu2j7PYaXUhkbk2yPeg
+         bskRKli43HqzPxqmbltyGwXmX5MqYn8oPgg2OSrQIlhHjhALveFba5xEkJiAhIxJAV
+         Aa5fT7vgRu5WHgPiTM0GVXc/JFwY+M08rsj3kwh/zyInMkb4M0d2m1FUvUMaz6GJaU
+         +grLFcyk/SX1KAUYCZOWsau7f59klrW+1nJaDYdNRm7JmltdQMkjwU1iCeNbJKTb/a
+         +c2BlGk1aAMzg==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Mon, 13 Apr 2020 15:32:19 +0200
-Message-Id: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
+Date:   Mon, 13 Apr 2020 15:32:23 +0200
+Message-Id: <62e897b0d6f6054dae26c853a9a1f1fb6d3c420b.1586784389.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v3 0/9] input: elants: Support Asus TF300T touchscreen
+Subject: [PATCH v3 3/9] input: elants: remove unused axes
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -56,31 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series cleans up the driver a bit and implements changes needed to
-support EKTF3624-based touchscreen used in Asus TF300T and similar
-Tegra3-based tablets.
+Driver only ever reports MT events. Clear capabilities of all others.
 
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 ---
-v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
-v3: rebased for v5.7-rc1
+ drivers/input/touchscreen/elants_i2c.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-Dmitry Osipenko (3):
-  input: elants: support 0x66 reply opcode for reporting touches
-  dt-bindings: input: elants-i2c: Document common touchscreen properties
-  dt-bindings: input: elants-i2c: Document eKTF3624
-
-Michał Mirosław (6):
-  input: elants: document some registers and values
-  input: elants: support old touch report format
-  input: elants: remove unused axes
-  input: elants: override touchscreen info with DT properties
-  input: elants: refactor elants_i2c_execute_command()
-  input: elants: read touchscreen size for EKTF3624
-
- .../devicetree/bindings/input/elants_i2c.txt  |   6 +-
- drivers/input/touchscreen/elants_i2c.c        | 365 ++++++++++++------
- 2 files changed, 242 insertions(+), 129 deletions(-)
-
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index ddebd3741145..fcd3d189f184 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -1312,17 +1312,6 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	ts->input->name = "Elan Touchscreen";
+ 	ts->input->id.bustype = BUS_I2C;
+ 
+-	__set_bit(BTN_TOUCH, ts->input->keybit);
+-	__set_bit(EV_ABS, ts->input->evbit);
+-	__set_bit(EV_KEY, ts->input->evbit);
+-
+-	/* Single touch input params setup */
+-	input_set_abs_params(ts->input, ABS_X, 0, ts->x_max, 0, 0);
+-	input_set_abs_params(ts->input, ABS_Y, 0, ts->y_max, 0, 0);
+-	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
+-	input_abs_set_res(ts->input, ABS_X, ts->x_res);
+-	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
+-
+ 	/* Multitouch input params setup */
+ 	error = input_mt_init_slots(ts->input, MAX_CONTACT_NUM,
+ 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
 -- 
 2.20.1
 
