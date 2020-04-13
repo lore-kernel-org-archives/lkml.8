@@ -2,105 +2,118 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1001DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9846DC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D665A20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:47:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VJDBnUhG"
+	by mail.kernel.org (Postfix) with ESMTP id 5FEEE20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586792855;
+	bh=1kbI+L/FOBvyQlWHtEOqRSUxbelREV3uN+qV916OMhU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=p+FmKMJQ7D2+aeq4oRfjGM5VQrn0azvaVPYBMv5D/tDpIsKV0Hz+lFvpA0WVhwjGv
+	 tFGfNtcR6wck/1liI+sXL/BqfHJa1a8JAOrY+a0VOz8xmIa2E85XMq2b4dILIJinbF
+	 ct42V2qveuH/8QSqXhA0meD7acXYAvdrEMY3Lh5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbgDMPrY (ORCPT
+        id S1730771AbgDMPre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:47:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45362 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728597AbgDMPrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:47:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586792841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I4bWrwiElnw+d7X99Bis3FxuOxIFuXPdODeS5fzReoQ=;
-        b=VJDBnUhG1NLfdSHtC8ODFPj9zgEvePYE40coc4/RhZGxi8h3kOlYyp2fnhxy+PaGSsUAmG
-        S4uDySpYEL+D8b8VwvqfiWJm9K7iSk55ZHw1atanft+9nMjHTXbt3JFW/mbo1PZXjjzBux
-        aADvFeHJFnRO12eHapykTDMN+KnIbTk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-hZu3iWvfOrGndcnQ8Et5Ng-1; Mon, 13 Apr 2020 11:47:19 -0400
-X-MC-Unique: hZu3iWvfOrGndcnQ8Et5Ng-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 13 Apr 2020 11:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728597AbgDMPrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:47:31 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B8E4107ACC7;
-        Mon, 13 Apr 2020 15:47:18 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D576C60BE1;
-        Mon, 13 Apr 2020 15:47:14 +0000 (UTC)
-Date:   Mon, 13 Apr 2020 09:47:14 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 0/4] mm: Add PG_zero support
-Message-ID: <20200413094714.432b5841@w520.home>
-In-Reply-To: <7a064e81-6bc1-b3e7-5f82-292ffa392058@intel.com>
-References: <20200412090728.GA19572@open-light-1.localdomain>
-        <f9a3be0b-fe8d-ca25-f0df-4b9fd1f0fed5@intel.com>
-        <20200413084915.1bae0007@w520.home>
-        <7a064e81-6bc1-b3e7-5f82-292ffa392058@intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB9120735;
+        Mon, 13 Apr 2020 15:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586792850;
+        bh=1kbI+L/FOBvyQlWHtEOqRSUxbelREV3uN+qV916OMhU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EerhglLhkdcjrdNPG/aRGrsuRAIcQzU36TvUnEMoA/BZZ0R78JdNUtCyeEe5BHFDc
+         yCIml7K8Nb+vjzIA8Rn+u2D0g97+FT4V7lOMS1rVvs3o8QGtyO08/3aZuT6gra4HK7
+         3XDwpUWTX1rfvmnrm+3gZ/tQuMoZrP3p2x2W62JA=
+Date:   Mon, 13 Apr 2020 16:47:26 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>
+Subject: Re: [PATCH v3 1/5] iio: core: register buffer fileops only if
+ buffer present
+Message-ID: <20200413164726.5e5e2efd@archlinux>
+In-Reply-To: <20200410141729.82834-2-alexandru.ardelean@analog.com>
+References: <20200410141729.82834-1-alexandru.ardelean@analog.com>
+        <20200410141729.82834-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 08:14:32 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+On Fri, 10 Apr 2020 17:17:25 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> On 4/13/20 7:49 AM, Alex Williamson wrote:
-> >> VFIO's unconditional page pinning is the real problem here IMNHO.  They
-> >> don't *really* need to pin the memory.  We just don't have good
-> >> paravirtualized IOMMU support or want to pay the runtime cost for
-> >> pin/unpin operations.  You *could* totally have speedy VM startup if
-> >> only the pages being accessed or having DMA performed to them were
-> >> allocated.  But, the hacks that are in place mean that everything must
-> >> be pinned.  
-> > Maybe in an SEV or Secure Boot environment we can assume the VM guest
-> > OS uses the IOMMU exclusively for DMA, but otherwise the IOMMU is
-> > optional (at least for x86, other archs do require IOMMU support
-> > afaik).  Therefore, how would we know which pages to pin when there are
-> > only limited configs where we might be able to lean on the vIOMMU to
-> > this extent?  Thanks,  
+> The intent is to localize all buffer ops into the industrialio-buffer.c
+> file, to be able to add support for multiple buffers per IIO device.
 > 
-> You can delay pinning until the device is actually used.  That should be
-> late enough for the host to figure out whether a paravirtualized IOMMU
-> is in place.
+> We still need to allocate a chardev in __iio_device_register() to be able
+> to pass event ioctl commands. So, if the IIO device has no buffer, we
+> create the legacy chardev for the event ioctl() command.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-So the guest enables the bus master bit in the command register and at
-that point we'd stall the VM for an indeterminate length of time while
-we potentially pin all memory, and hope that both the user and the host
-has the resources to account and allocate that memory, otherwise the
-VM suddenly crashes?  All of this potentially taking place in the
-pre-boot environment to support option ROMs as well.  A delay starting
-the VM seems a lot more predictable.  Thanks,
+Whilst we are here, can we avoid allocating the chardev at all if
+we have neither buffer support, nor events?  So don't add the chrdev to the device.
 
-Alex
+That covers quite a wide range of slow devices and is a nice incidental
+improvement (to be honest I'd forgotten we actually created a chardev
+in those circumstance :(
+
+Jonathan
+
+> ---
+>  drivers/iio/industrialio-core.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 157d95a24faa..c8c074602709 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -1707,6 +1707,15 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
+>  
+>  static const struct iio_buffer_setup_ops noop_ring_setup_ops;
+>  
+> +static const struct file_operations iio_event_fileops = {
+> +	.release = iio_chrdev_release,
+> +	.open = iio_chrdev_open,
+> +	.owner = THIS_MODULE,
+> +	.llseek = noop_llseek,
+> +	.unlocked_ioctl = iio_ioctl,
+> +	.compat_ioctl = compat_ptr_ioctl,
+> +};
+> +
+>  int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+>  {
+>  	int ret;
+> @@ -1757,7 +1766,10 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+>  		indio_dev->setup_ops == NULL)
+>  		indio_dev->setup_ops = &noop_ring_setup_ops;
+>  
+> -	cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
+> +	if (indio_dev->buffer)
+> +		cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
+> +	else
+> +		cdev_init(&indio_dev->chrdev, &iio_event_fileops);
+>  
+>  	indio_dev->chrdev.owner = this_mod;
+>  
 
