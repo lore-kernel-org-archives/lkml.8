@@ -2,374 +2,137 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05642C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D843BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E089B20692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A8F20692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgDMMwa (ORCPT
+        id S1732953AbgDMRkO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:52:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:52678 "EHLO mga12.intel.com"
+        Mon, 13 Apr 2020 13:40:14 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20065 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbgDMMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:52:28 -0400
-IronPort-SDR: AWnQIaJCB0SNIF98fYKj5W1f7zT6UnOpW+7/vnMjBibQZtbEnkwLl2BzuM+8ClR7uH/tDvxwxm
- UwWe8X9gxs0Q==
+        id S1732941AbgDMRkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:40:13 -0400
+IronPort-SDR: a/wTV2e7FoIt+Egf2Zt/11NpncYYf5yQcPBFNB3/Vc/qV2sqNNHyMMAKIpUqpuZJJhKRSxn17R
+ cunqoaA4MLog==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 05:52:28 -0700
-IronPort-SDR: 0wGN6UiggZoH8hQIHsCNUhXlwygtfdaiAN9tzmqvmAtGHGxKCsojsh3SHGtgVrqSthTenhaERq
- +4BiwxUX6Hhw==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 10:39:12 -0700
+IronPort-SDR: wiAHJ4KIneuxAP4rm2G7cyHYAquz0lH6F6nhpgNXS0G2CkN2ZzOWn58IDdWhhczoInuhY10Cl7
+ Hw5m1tjuH3bQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="243529249"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Apr 2020 05:52:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 0A3872B6; Mon, 13 Apr 2020 15:52:22 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv3, RESEND 7/8] thp: Change CoW semantics for anon-THP
-Date:   Mon, 13 Apr 2020 15:52:19 +0300
-Message-Id: <20200413125220.663-8-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
-References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
+   d="scan'208";a="276969663"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Apr 2020 10:39:12 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.205]) by
+ ORSMSX109.amr.corp.intel.com ([169.254.11.20]) with mapi id 14.03.0439.000;
+ Mon, 13 Apr 2020 10:39:11 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     "Chatre, Reinette" <reinette.chatre@intel.com>,
+        David Binderman <dcb314@hotmail.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: RE: linux-5.7-rc1/tools/testing/selftests/resctrl/cqm_test.c:89:15:
+ error: Buffer is accessed out of bounds
+Thread-Topic: linux-5.7-rc1/tools/testing/selftests/resctrl/cqm_test.c:89:15: error:
+ Buffer is accessed out of bounds
+Thread-Index: AQHWEbDfJ6fzYiZKSEetFvBTCfNON6h3TNdA
+Date:   Mon, 13 Apr 2020 17:39:11 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F57374492@ORSMSX114.amr.corp.intel.com>
+References: <DB7PR08MB38010E1B93EEE780A48EBBB39CDD0@DB7PR08MB3801.eurprd08.prod.outlook.com>
+ <fcc738e6-0cff-d605-2e28-cd756921c981@intel.com>
+In-Reply-To: <fcc738e6-0cff-d605-2e28-cd756921c981@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we have different copy-on-write semantics for anon- and
-file-THP. For anon-THP we try to allocate huge page on the write fault,
-but on file-THP we split PMD and allocate 4k page.
+> -----Original Message-----
+> From: Reinette Chatre <reinette.chatre@intel.com>
+> Sent: Monday, April 13, 2020 9:31 AM
+> To: David Binderman <dcb314@hotmail.com>; Yu, Fenghua
+> <fenghua.yu@intel.com>; shuah@kernel.org; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>; linux-kselftest@vger.kernel.org; Prakhya, Sai Praneeth
+> <sai.praneeth.prakhya@intel.com>
+> Subject: Re: linux-5.7-rc1/tools/testing/selftests/resctrl/cqm_test.c:89:15:
+> error: Buffer is accessed out of bounds
+> 
+> +Sai
+> 
+> On 4/13/2020 2:43 AM, David Binderman wrote:
+> > Hello there,
+> >
+> > Source code is
+> >
+> >    while (fgets(temp, 1024, fp)) {
+> >
+> > but
+> >
+> >     char *token_array[8], temp[512];
+> >
+> > Use of compiler flag -D_FORTIFY_SOURCE=2 would have found the problem.
+> > For example:
+> >
+> > # include <stdio.h>
+> >
+> > extern void g( int);
+> >
+> > void
+> > f( FILE * fp)
+> > {
+> > 	char buf[ 100];
+> >
+> > 	while (fgets( buf, 200, fp) != 0)
+> > 	{
+> > 		g( 1);
+> > 	}
+> > }
+> >
+> > gives
+> >
+> > $ /home/dcb/gcc/results/bin/gcc -c -g -O2 -D_FORTIFY_SOURCE=2
+> > apr13c.cc In file included from /usr/include/stdio.h:867,
+> >                  from apr13c.cc:2:
+> > In function 'char* fgets(char*, int, FILE*)',
+> >     inlined from 'void f(FILE*)' at apr13c.cc:11:14:
+> > /usr/include/bits/stdio2.h:263:26: warning: call to '__fgets_chk_warn'
+> > declared with attribute warning: fgets called with bigger size than
+> > length of destination buffer [-Wattribute-warning]
+> >
+> > I suggest switch on compiler flag -D_FORTIFY_SOURCE=2 in all
+> > development builds.
+> >
+> 
+> Thank you very much for catching this David.
+> 
+> Sai: could you include this fix in your upcoming series of fixes? Using the pattern
+> of "fgets(buf, sizeof(buf), ...)" instead of hard coding the size should be helpful
+> here.
 
-Arguably, file-THP semantics is more desirable: we don't necessary want
-to unshare full PMD range from the parent on the first access. This is
-the primary reason THP is unusable for some workloads, like Redis.
+Reinette: Sure! I will include this fix. Just FYI, I did notice this and have fixed it in V1 patches that I sent out earlier.
 
-The original THP refcounting didn't allow to have PTE-mapped compound
-pages, so we had no options, but to allocate huge page on CoW (with
-fallback to 512 4k pages).
+David: Thanks for bringing this up. I wasn't aware of the gcc flag you had mentioned. I will add it.
 
-The current refcounting doesn't have such limitations and we can cut a
-lot of complex code out of fault path.
-
-khugepaged is now able to recover THP from such ranges if the
-configuration allows.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- mm/huge_memory.c | 249 +++++------------------------------------------
- 1 file changed, 25 insertions(+), 224 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 24ad53b4dfc0..25b84cc0f17d 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1206,262 +1206,63 @@ void huge_pmd_set_accessed(struct vm_fault *vmf, pmd_t orig_pmd)
- 	spin_unlock(vmf->ptl);
- }
- 
--static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
--			pmd_t orig_pmd, struct page *page)
--{
--	struct vm_area_struct *vma = vmf->vma;
--	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
--	struct mem_cgroup *memcg;
--	pgtable_t pgtable;
--	pmd_t _pmd;
--	int i;
--	vm_fault_t ret = 0;
--	struct page **pages;
--	struct mmu_notifier_range range;
--
--	pages = kmalloc_array(HPAGE_PMD_NR, sizeof(struct page *),
--			      GFP_KERNEL);
--	if (unlikely(!pages)) {
--		ret |= VM_FAULT_OOM;
--		goto out;
--	}
--
--	for (i = 0; i < HPAGE_PMD_NR; i++) {
--		pages[i] = alloc_page_vma_node(GFP_HIGHUSER_MOVABLE, vma,
--					       vmf->address, page_to_nid(page));
--		if (unlikely(!pages[i] ||
--			     mem_cgroup_try_charge_delay(pages[i], vma->vm_mm,
--				     GFP_KERNEL, &memcg, false))) {
--			if (pages[i])
--				put_page(pages[i]);
--			while (--i >= 0) {
--				memcg = (void *)page_private(pages[i]);
--				set_page_private(pages[i], 0);
--				mem_cgroup_cancel_charge(pages[i], memcg,
--						false);
--				put_page(pages[i]);
--			}
--			kfree(pages);
--			ret |= VM_FAULT_OOM;
--			goto out;
--		}
--		set_page_private(pages[i], (unsigned long)memcg);
--	}
--
--	for (i = 0; i < HPAGE_PMD_NR; i++) {
--		copy_user_highpage(pages[i], page + i,
--				   haddr + PAGE_SIZE * i, vma);
--		__SetPageUptodate(pages[i]);
--		cond_resched();
--	}
--
--	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma->vm_mm,
--				haddr, haddr + HPAGE_PMD_SIZE);
--	mmu_notifier_invalidate_range_start(&range);
--
--	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
--	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
--		goto out_free_pages;
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--
--	/*
--	 * Leave pmd empty until pte is filled note we must notify here as
--	 * concurrent CPU thread might write to new page before the call to
--	 * mmu_notifier_invalidate_range_end() happens which can lead to a
--	 * device seeing memory write in different order than CPU.
--	 *
--	 * See Documentation/vm/mmu_notifier.rst
--	 */
--	pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
--
--	pgtable = pgtable_trans_huge_withdraw(vma->vm_mm, vmf->pmd);
--	pmd_populate(vma->vm_mm, &_pmd, pgtable);
--
--	for (i = 0; i < HPAGE_PMD_NR; i++, haddr += PAGE_SIZE) {
--		pte_t entry;
--		entry = mk_pte(pages[i], vma->vm_page_prot);
--		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
--		memcg = (void *)page_private(pages[i]);
--		set_page_private(pages[i], 0);
--		page_add_new_anon_rmap(pages[i], vmf->vma, haddr, false);
--		mem_cgroup_commit_charge(pages[i], memcg, false, false);
--		lru_cache_add_active_or_unevictable(pages[i], vma);
--		vmf->pte = pte_offset_map(&_pmd, haddr);
--		VM_BUG_ON(!pte_none(*vmf->pte));
--		set_pte_at(vma->vm_mm, haddr, vmf->pte, entry);
--		pte_unmap(vmf->pte);
--	}
--	kfree(pages);
--
--	smp_wmb(); /* make pte visible before pmd */
--	pmd_populate(vma->vm_mm, vmf->pmd, pgtable);
--	page_remove_rmap(page, true);
--	spin_unlock(vmf->ptl);
--
--	/*
--	 * No need to double call mmu_notifier->invalidate_range() callback as
--	 * the above pmdp_huge_clear_flush_notify() did already call it.
--	 */
--	mmu_notifier_invalidate_range_only_end(&range);
--
--	ret |= VM_FAULT_WRITE;
--	put_page(page);
--
--out:
--	return ret;
--
--out_free_pages:
--	spin_unlock(vmf->ptl);
--	mmu_notifier_invalidate_range_end(&range);
--	for (i = 0; i < HPAGE_PMD_NR; i++) {
--		memcg = (void *)page_private(pages[i]);
--		set_page_private(pages[i], 0);
--		mem_cgroup_cancel_charge(pages[i], memcg, false);
--		put_page(pages[i]);
--	}
--	kfree(pages);
--	goto out;
--}
--
- vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
- {
- 	struct vm_area_struct *vma = vmf->vma;
--	struct page *page = NULL, *new_page;
--	struct mem_cgroup *memcg;
-+	struct page *page;
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
--	struct mmu_notifier_range range;
--	gfp_t huge_gfp;			/* for allocation and charge */
--	vm_fault_t ret = 0;
- 
- 	vmf->ptl = pmd_lockptr(vma->vm_mm, vmf->pmd);
- 	VM_BUG_ON_VMA(!vma->anon_vma, vma);
-+
- 	if (is_huge_zero_pmd(orig_pmd))
--		goto alloc;
-+		goto fallback;
-+
- 	spin_lock(vmf->ptl);
--	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd)))
--		goto out_unlock;
-+
-+	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-+		spin_unlock(vmf->ptl);
-+		return 0;
-+	}
- 
- 	page = pmd_page(orig_pmd);
- 	VM_BUG_ON_PAGE(!PageCompound(page) || !PageHead(page), page);
--	/*
--	 * We can only reuse the page if nobody else maps the huge page or it's
--	 * part.
--	 */
-+
-+	/* Lock page for reuse_swap_page() */
- 	if (!trylock_page(page)) {
- 		get_page(page);
- 		spin_unlock(vmf->ptl);
- 		lock_page(page);
- 		spin_lock(vmf->ptl);
- 		if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
-+			spin_unlock(vmf->ptl);
- 			unlock_page(page);
- 			put_page(page);
--			goto out_unlock;
-+			return 0;
- 		}
- 		put_page(page);
- 	}
-+
-+	/*
-+	 * We can only reuse the page if nobody else maps the huge page or it's
-+	 * part.
-+	 */
- 	if (reuse_swap_page(page, NULL)) {
- 		pmd_t entry;
- 		entry = pmd_mkyoung(orig_pmd);
- 		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
--		if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry,  1))
-+		if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry, 1))
- 			update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
--		ret |= VM_FAULT_WRITE;
- 		unlock_page(page);
--		goto out_unlock;
--	}
--	unlock_page(page);
--	get_page(page);
--	spin_unlock(vmf->ptl);
--alloc:
--	if (__transparent_hugepage_enabled(vma) &&
--	    !transparent_hugepage_debug_cow()) {
--		huge_gfp = alloc_hugepage_direct_gfpmask(vma);
--		new_page = alloc_hugepage_vma(huge_gfp, vma, haddr, HPAGE_PMD_ORDER);
--	} else
--		new_page = NULL;
--
--	if (likely(new_page)) {
--		prep_transhuge_page(new_page);
--	} else {
--		if (!page) {
--			split_huge_pmd(vma, vmf->pmd, vmf->address);
--			ret |= VM_FAULT_FALLBACK;
--		} else {
--			ret = do_huge_pmd_wp_page_fallback(vmf, orig_pmd, page);
--			if (ret & VM_FAULT_OOM) {
--				split_huge_pmd(vma, vmf->pmd, vmf->address);
--				ret |= VM_FAULT_FALLBACK;
--			}
--			put_page(page);
--		}
--		count_vm_event(THP_FAULT_FALLBACK);
--		goto out;
--	}
--
--	if (unlikely(mem_cgroup_try_charge_delay(new_page, vma->vm_mm,
--					huge_gfp, &memcg, true))) {
--		put_page(new_page);
--		split_huge_pmd(vma, vmf->pmd, vmf->address);
--		if (page)
--			put_page(page);
--		ret |= VM_FAULT_FALLBACK;
--		count_vm_event(THP_FAULT_FALLBACK);
--		goto out;
--	}
--
--	count_vm_event(THP_FAULT_ALLOC);
--	count_memcg_events(memcg, THP_FAULT_ALLOC, 1);
--
--	if (!page)
--		clear_huge_page(new_page, vmf->address, HPAGE_PMD_NR);
--	else
--		copy_user_huge_page(new_page, page, vmf->address,
--				    vma, HPAGE_PMD_NR);
--	__SetPageUptodate(new_page);
--
--	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma->vm_mm,
--				haddr, haddr + HPAGE_PMD_SIZE);
--	mmu_notifier_invalidate_range_start(&range);
--
--	spin_lock(vmf->ptl);
--	if (page)
--		put_page(page);
--	if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
- 		spin_unlock(vmf->ptl);
--		mem_cgroup_cancel_charge(new_page, memcg, true);
--		put_page(new_page);
--		goto out_mn;
--	} else {
--		pmd_t entry;
--		entry = mk_huge_pmd(new_page, vma->vm_page_prot);
--		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
--		pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
--		page_add_new_anon_rmap(new_page, vma, haddr, true);
--		mem_cgroup_commit_charge(new_page, memcg, false, true);
--		lru_cache_add_active_or_unevictable(new_page, vma);
--		set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
--		update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
--		if (!page) {
--			add_mm_counter(vma->vm_mm, MM_ANONPAGES, HPAGE_PMD_NR);
--		} else {
--			VM_BUG_ON_PAGE(!PageHead(page), page);
--			page_remove_rmap(page, true);
--			put_page(page);
--		}
--		ret |= VM_FAULT_WRITE;
-+		return VM_FAULT_WRITE;
- 	}
-+
-+	unlock_page(page);
- 	spin_unlock(vmf->ptl);
--out_mn:
--	/*
--	 * No need to double call mmu_notifier->invalidate_range() callback as
--	 * the above pmdp_huge_clear_flush_notify() did already call it.
--	 */
--	mmu_notifier_invalidate_range_only_end(&range);
--out:
--	return ret;
--out_unlock:
--	spin_unlock(vmf->ptl);
--	return ret;
-+fallback:
-+	__split_huge_pmd(vma, vmf->pmd, vmf->address, false, NULL);
-+	return VM_FAULT_FALLBACK;
- }
- 
- /*
--- 
-2.26.0
-
+Regards,
+Sai
