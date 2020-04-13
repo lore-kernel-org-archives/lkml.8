@@ -2,112 +2,121 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74D6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78D6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8561F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBeooTLL"
+	by mail.kernel.org (Postfix) with ESMTP id BC3A720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733215AbgDMULL (ORCPT
+        id S1733228AbgDMUMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727816AbgDMULH (ORCPT
+        Mon, 13 Apr 2020 16:12:53 -0400
+Received: from smtprelay0078.hostedemail.com ([216.40.44.78]:53276 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727816AbgDMUMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:11:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F309C0A3BDC;
-        Mon, 13 Apr 2020 13:11:06 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e16so4015309pjp.1;
-        Mon, 13 Apr 2020 13:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LZqafRmRyQFCaiVXl6/7KpQLXAfpOOpFwxoy3qp4Wzo=;
-        b=hBeooTLLnG54arHcFVqwFhOl1MSgWJ4FhzUtM+sQZPihXrROPFPV2lnHuZ0pGySA8I
-         urXtzC0sB4meF1fs4fMKK2pL+/Bqf3dBmA3dg4mNrDYsFuPmn4VUQ8xhL9mb2mooWd4E
-         x2nPBzbFJKztHKSEoIDE4hTSoVaVcln1WbG7g3g5Jwc66+4Jt1G1I/+Rh0Mo6RPwBxSC
-         kc3b39fvUkquG01Z2KtnpGCg2Pa6XqFKkwE2AadgpddodUClLJQNCFPNNh8QwfvAyv6r
-         CDgiw3nvaivXxy7nKQ/1qJGfY5SJP30o7EFRClHKr2zXs3SjXOR7QjuJVDXijsQu4hxU
-         aF6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LZqafRmRyQFCaiVXl6/7KpQLXAfpOOpFwxoy3qp4Wzo=;
-        b=AKUCPALX2z2FUaVmlJK2cLbZubN8Vb6bkyr2vf+rdLlCRkQgeiGV4t1iO/GaU+wAnY
-         4H1RpW07rLZK1KpV1tbp7zMFCG3LhebJW/FkUkC+PE2BVp3yHPtIpiSu0qqxk2G3BcSe
-         +MNtEukJRtj63gX4NxaflMrPYBqfWhnUHXBd/qhBRFH9HeG8Rpa2a8GUxFCIrynpWP6c
-         kvBdL/aP/NX7QBWgaheBfj7UUl62PLztNyKc0SYo+OCkG2ZO+TRofOlcAobgwgFljjXN
-         BP/aB3oIRIahFltyrK/aLbg2Z0jBFlMxD9rZZG9VQFdFoWitXt9RzaPJMyx2q9m6KfBk
-         mThA==
-X-Gm-Message-State: AGi0PuYdnFBSW90QHFegWBUlO/KKFHPX34lKFl+2N7/1+4bYTG/dItRJ
-        YkRxxRPqLdWqHA4WwN8vS3BkDERSmTsgxKcXypI=
-X-Google-Smtp-Source: APiQypINs7COjR3S1/ugzSWIcMYXhZLkL2dyDG4xs6MC97WDLSg7ekcSNiRGo6qgUndOlT4SrKpI4lG4HPbClh15hPA=
-X-Received: by 2002:a17:90a:ff06:: with SMTP id ce6mr457333pjb.1.1586808665986;
- Mon, 13 Apr 2020 13:11:05 -0700 (PDT)
+        Mon, 13 Apr 2020 16:12:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id E0A15180257EF;
+        Mon, 13 Apr 2020 20:12:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: truck75_6fe61a90e6901
+X-Filterd-Recvd-Size: 3304
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 13 Apr 2020 20:12:48 +0000 (UTC)
+Message-ID: <17677130b3ca62d79817e6a22546bad39d7e81b4.camel@perches.com>
+Subject: [PATCH] checkpatch: Additional MAINTAINER section entry ordering
+ checks
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@shadowen.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 13 Apr 2020 13:10:41 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20200413173656.28522-1-sravanhome@gmail.com> <20200413173656.28522-5-sravanhome@gmail.com>
-In-Reply-To: <20200413173656.28522-5-sravanhome@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 13 Apr 2020 23:10:54 +0300
-Message-ID: <CAHp75VeYFY1CW4AH+D4HAgzppMZ5J8dL8kKPYmcwsXNVGNSYjQ@mail.gmail.com>
-Subject: Re: [PATCH v8 4/6] power: supply: Add support for mps mp2629 battery charger
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 8:37 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
->
-> The mp2629 provides switching-mode battery charge management for
-> single-cell Li-ion or Li-polymer battery. Driver supports the
-> access/control input source and battery charging parameters.
+There is a preferred order for the entries in MAINTAINERS sections.
 
-...
+See:
 
-> +static int mp2629_charger_probe(struct platform_device *pdev)
-> +{
+commit 3b50142d8528 ("MAINTAINERS: sort field names for all entries")
+and
+commit 6680125ea5a2 ("MAINTAINERS: list the section entries in the preferred order)
 
-> +       irq = platform_get_irq(to_platform_device(pdev->dev.parent), 0);
+Add checkpatch tests to try to keep that ordering.
 
-Why not to use temporary variable dev?
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ scripts/checkpatch.pl | 45 +++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 8 deletions(-)
 
-This should be platform_get_irq_optional().
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d64c67..3c44833 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3060,14 +3060,43 @@ sub process {
+ 			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
+ 		}
+ 
+-# check for MAINTAINERS entries that don't have the right form
+-		if ($realfile =~ /^MAINTAINERS$/ &&
+-		    $rawline =~ /^\+[A-Z]:/ &&
+-		    $rawline !~ /^\+[A-Z]:\t\S/) {
+-			if (WARN("MAINTAINERS_STYLE",
+-				 "MAINTAINERS entries use one tab after TYPE:\n" . $herecurr) &&
+-			    $fix) {
+-				$fixed[$fixlinenr] =~ s/^(\+[A-Z]):\s*/$1:\t/;
++# check MAINTAINERS entries
++		if ($realfile =~ /^MAINTAINERS$/) {
++# check MAINTAINERS entries for the right form
++			if ($rawline =~ /^\+[A-Z]:/ &&
++			    $rawline !~ /^\+[A-Z]:\t\S/) {
++				if (WARN("MAINTAINERS_STYLE",
++					 "MAINTAINERS entries use one tab after TYPE:\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/^(\+[A-Z]):\s*/$1:\t/;
++				}
++			}
++# check MAINTAINERS entries for the right ordering too
++			my $preferred_order = 'MRLSWQBCPTFXNK';
++			if ($rawline =~ /^\+[A-Z]:/ &&
++			    $prevrawline =~ /^[\+ ][A-Z]:/) {
++				$rawline =~ /^\+([A-Z]):\s*(.*)/;
++				my $cur = $1;
++				my $curval = $2;
++				$prevrawline =~ /^[\+ ]([A-Z]):\s*(.*)/;
++				my $prev = $1;
++				my $prevval = $2;
++				my $curindex = index($preferred_order, $cur);
++				my $previndex = index($preferred_order, $prev);
++				if ($curindex < 0) {
++					WARN("MAINTAINERS_STYLE",
++					     "Unknown MAINTAINERS entry type: '$cur'\n" . $herecurr);
++				} else {
++					if ($previndex >= 0 && $curindex < $previndex) {
++						WARN("MAINTAINERS_STYLE",
++						     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
++					} elsif ((($prev eq 'F' && $cur eq 'F') ||
++						  ($prev eq 'X' && $cur eq 'X')) &&
++						 ($prevval cmp $curval) > 0) {
++						WARN("MAINTAINERS_STYLE",
++						     "Misordered MAINTAINERS entry - list file patterns in alphabetic order\n" . $hereprev);
++					}
++				}
+ 			}
+ 		}
+ 
 
-> +       if (irq) {
-> +               ret = devm_request_irq(dev, irq, mp2629_irq_handler,
-> +                                IRQF_TRIGGER_RISING, "mp2629-charger",
-> +                                charger);
-> +               if (ret) {
-> +                       dev_err(dev, "failed to request gpio IRQ\n");
-> +                       goto iio_fail;
-> +               }
-> +       }
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
