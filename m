@@ -2,125 +2,139 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C737CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1465C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE36D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49E520739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:13:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HTBqdcQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389478AbgDMWK4 (ORCPT
+        id S2389490AbgDMWNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 18:10:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28746 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727871AbgDMWKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 18:10:51 -0400
-IronPort-SDR: UjJnjSWF//cJkwdYQChy7N95T/itK2TTMoDnuKjFyWRCpF+FVOjybsxBTFtuL47UvUnyoYZAUN
- C/n7wCi1gn1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 15:10:51 -0700
-IronPort-SDR: JDDj75TY0RQWmARuE0Xi/GlC0/H86xFO5b0ySd1j8fwE8sDPolTRHc1UN0cL/FNVTr9odVA0lc
- CPOqlLX5jQDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
-   d="scan'208";a="268335512"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga008.jf.intel.com with ESMTP; 13 Apr 2020 15:10:51 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX104.amr.corp.intel.com ([169.254.4.76]) with mapi id 14.03.0439.000;
- Mon, 13 Apr 2020 15:10:51 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "heiko@sntech.de" <heiko@sntech.de>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
-        "agross@kernel.org" <agross@kernel.org>
-CC:     "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "jroedel@suse.de" <jroedel@suse.de>
-Subject: Re: [RFC PATCH 11/34] iommu: Split off default domain allocation
- from group assignment
-Thread-Topic: [RFC PATCH 11/34] iommu: Split off default domain allocation
- from group assignment
-Thread-Index: AQHWDQv5OT53tBkslE6hk6FAwlK+4qh4HAeA
-Date:   Mon, 13 Apr 2020 22:10:50 +0000
-Message-ID: <6a801ff9e6471bda7c6f510dfa2ba7e7c35cb559.camel@intel.com>
-References: <20200407183742.4344-1-joro@8bytes.org>
-         <20200407183742.4344-12-joro@8bytes.org>
-In-Reply-To: <20200407183742.4344-12-joro@8bytes.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.0.111]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <32CCA6BEC8F53949916D97ED0C44AA2D@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 Apr 2020 18:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727871AbgDMWNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 18:13:42 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874F3C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:13:40 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id v2so10818804oto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GLCCOE0nOtb0ZaUeeY6RIoKusS2ZdXw/3d25jLxeyEE=;
+        b=HTBqdcQL40YBSL0sugXtVRoo0wZPVSSoNy5a8NcjDpM3mZwtEQMRdPu1PDT295H4I/
+         Mo8llaAUvtKw5BFYovYN1CZ0+EdASDHusjzAIc+mmLaU1UEF7oWi2FtkulyLVFPP4C1k
+         CVzpPa1z/UVFpTJzAaHNQjg3gv8eagEULxuD8WxVhHuXwaJSvWcv8vkIVTp1ilvZb7Qs
+         i4o1clqtOl7u5jDLjwwlhrz2xRhbJLrdgNfQWePMm8G+XVG8cg9S+A4mu9/Xi5Fmsghj
+         mQIm3ntW8DS1xEI0wWrtIRL1omqpcDkeFBrph7cH3ipv3SBPduRq0UNk3bXzRhcECW6I
+         v3Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GLCCOE0nOtb0ZaUeeY6RIoKusS2ZdXw/3d25jLxeyEE=;
+        b=GqbTS6O0Ria70+q3sLN0ozVv9jd5zcA8sxsmmrgHv3/hRXRiDZNDwq40LUrYMD3Tke
+         tV5ktFTWKxS6ux5FG2coLQSyzrLd6wUp6G4vv3db6yiIUmWHvybXqHCqXILotExQqHUD
+         k5pmOFVfYGVmHGE4gwQlJ4B1IP2iXLuHlgzFDOvKrWNdGgFJAJLGZHfdus/soE25PZ0C
+         RdEEdXP+i5+hh40Rvqs2aWQ4Oh5AwWBftisdi4ZdAfP+pJ2Jp3mAZYiPvV30Dzf4mj2m
+         jhuk0VommExiowgW3Rvmm0UhvfyV7QR9wI52Iya2LLQu3OVksKXB0hXb7oLkgjoxLppy
+         1qAw==
+X-Gm-Message-State: AGi0PuY2t8tzlNv0Gw3QuaXnSEyADXyRAqFblqjlSbXRKR5Bqe44XUnF
+        +T3S6uoNxzD29JYHfF9n6nsxn9bFo4eLVCobHw4RxQ==
+X-Google-Smtp-Source: APiQypLvOgzX5JA3z8Oxe7h1JlV5rrdqzv/xLLs4kYksoQfwBcqH6vwqXiL83VnjfgaI1LfWLrzyw7EiKz+hqQP9rOI=
+X-Received: by 2002:a05:6830:20c3:: with SMTP id z3mr9665932otq.102.1586816019576;
+ Mon, 13 Apr 2020 15:13:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200411045918.179455-1-saravanak@google.com> <86sghas7so.wl-maz@kernel.org>
+In-Reply-To: <86sghas7so.wl-maz@kernel.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 13 Apr 2020 15:13:27 -0700
+Message-ID: <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper macros
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9lcmcsDQoNCk9uIFR1ZSwgMjAyMC0wNC0wNyBhdCAyMDozNyArMDIwMCwgSm9lcmcgUm9l
-ZGVsIHdyb3RlOg0KPiBGcm9tOiBKb2VyZyBSb2VkZWwgPGpyb2VkZWxAc3VzZS5kZT4NCj4gDQo+
-IFdoZW4gYSBidXMgaXMgaW5pdGlhbGl6ZWQgd2l0aCBpb21tdS1vcHMsIGFsbCBkZXZpY2VzIG9u
-IHRoZSBidXMgYXJlDQo+IHNjYW5uZWQgYW5kIGlvbW11LWdyb3VwcyBhcmUgYWxsb2NhdGVkIGZv
-ciB0aGVtLCBhbmQgZWFjaCBncm91cHMgd2lsbA0KPiBhbHNvIGdldCBhIGRlZmF1bHQgZG9tYWlu
-IGFsbG9jYXRlZC4NCj4gDQo+IFVudGlsIG5vdyB0aGlzIGhhcHBlbmVkIGFzIHNvb24gYXMgdGhl
-IGdyb3VwIHdhcyBjcmVhdGVkIGFuZCB0aGUgZmlyc3QNCj4gZGV2aWNlIGFkZGVkIHRvIGl0LiBX
-aGVuIG90aGVyIGRldmljZXMgd2l0aCBkaWZmZXJlbnQgZGVmYXVsdCBkb21haW4NCj4gcmVxdWly
-ZW1lbnRzIHdlcmUgYWRkZWQgdG8gdGhlIGdyb3VwIGxhdGVyIG9uLCB0aGUgZGVmYXVsdCBkb21h
-aW4gd2FzDQo+IHJlLWFsbG9jYXRlZCwgaWYgcG9zc2libGUuDQo+IA0KPiBUaGlzIHJlc3VsdGVk
-IGluIHNvbWUgYmFjayBhbmQgZm9ydGggYW5kIHVubmVjZXNzYXJ5IGFsbG9jYXRpb25zLCBzbw0K
-PiBjaGFuZ2UgdGhlIGZsb3cgdG8gZGVmZXIgZGVmYXVsdCBkb21haW4gYWxsb2NhdGlvbiB1bnRp
-bCBhbGwgZGV2aWNlcw0KPiBoYXZlIGJlZW4gYWRkZWQgdG8gdGhlaXIgcmVzcGVjdGl2ZSBJT01N
-VSBncm91cHMuDQo+IA0KPiBUaGUgZGVmYXVsdCBkb21haW5zIGFyZSBhbGxvY2F0ZWQgZm9yIG5l
-d2x5IGFsbG9jYXRlZCBncm91cHMgYWZ0ZXINCj4gZWFjaCBkZXZpY2Ugb24gdGhlIGJ1cyBpcyBo
-YW5kbGVkIGFuZCB3YXMgcHJvYmVkIGJ5IHRoZSBJT01NVSBkcml2ZXIuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBKb2VyZyBSb2VkZWwgPGpyb2VkZWxAc3VzZS5kZT4NCj4gLS0tDQpbc25pcF0NCg0K
-DQpJIGhhZCB0byBhZGQgdGhlIGZvbGxvd2luZyBmb3IgaW5pdGlhbCBWTUQgc3VwcG9ydC4gVGhl
-IG5ldyBQQ0llIGRvbWFpbg0KYWRkZWQgb24gVk1EIGVuZHBvaW50IHByb2JlIGRpZG4ndCBoYXZl
-IHRoZSBkZXZfaW9tbXUgbWVtYmVyIHNldCBvbiB0aGUNClZNRCBzdWJkZXZpY2VzLCB3aGljaCBJ
-J20gZ3Vlc3NpbmcgaXMgZHVlIHRvIHByb2JlX2lvbW11X2dyb3VwIGFscmVhZHkNCmhhdmluZyBi
-ZWVuIHJ1biBvbiB0aGUgVk1EIGVuZHBvaW50J3MgZ3JvdXAgcHJpb3IgdG8gdGhvc2Ugc3ViZGV2
-aWNlcw0KYmVpbmcgYWRkZWQuDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2lvbW11LmMg
-Yi9kcml2ZXJzL2lvbW11L2lvbW11LmMNCmluZGV4IDhhNWUxYWMzMjhkZC4uYWMxZTRmYjliZjQ4
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pb21tdS9pb21tdS5jDQorKysgYi9kcml2ZXJzL2lvbW11
-L2lvbW11LmMNCkBAIC0xNTc3LDYgKzE1NzcsOSBAQCBzdGF0aWMgaW50IGlvbW11X2J1c19ub3Rp
-ZmllcihzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKm5iLA0KICAgICAgICBpZiAoYWN0aW9uID09IEJV
-U19OT1RJRllfQUREX0RFVklDRSkgew0KICAgICAgICAgICAgICAgIGludCByZXQ7DQogDQorICAg
-ICAgICAgICAgICAgaWYgKCFkZXZfaW9tbXVfZ2V0KGRldikpDQorICAgICAgICAgICAgICAgICAg
-ICAgICByZXR1cm4gLUVOT01FTTsNCisNCiAgICAgICAgICAgICAgICByZXQgPSBpb21tdV9wcm9i
-ZV9kZXZpY2UoZGV2KTsNCiAgICAgICAgICAgICAgICByZXR1cm4gKHJldCkgPyBOT1RJRllfRE9O
-RSA6IE5PVElGWV9PSzsNCiAgICAgICAgfSBlbHNlIGlmIChhY3Rpb24gPT0gQlVTX05PVElGWV9S
-RU1PVkVEX0RFVklDRSkgew0K
+On Sat, Apr 11, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:
+> On Sat, 11 Apr 2020 05:59:18 +0100,
+> Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Add helper macros IRQCHIP_MODULE_BEGIN and IRQCHIP_MODULE_END that add
+> > the boilerplate code to be able to compile an irqchip driver as a
+> > module.
+> >
+> > The driver developer just needs to do add IRQCHIP_MODULE_BEGIN and
+> > IRQCHIP_MODULE_END(driver_name) around the IRQCHIP_DECLARE macros, like
+> > so:
+> >
+> > IRQCHIP_MODULE_BEGIN
+> > IRQCHIP_DECLARE(foo, "acme,foo", acme_foo_init)
+> > IRQCHIP_DECLARE(bar, "acme,bar", acme_bar_init)
+> > IRQCHIP_MODULE_END(acme_irq)
+> >
+> > Cc: John Stultz <john.stultz@linaro.org>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> > I don't expect this patch to be perfect or the final version. But I'd
+> > like to introduce macros like this that don't need the driver developer
+> > to copy/paste or repeat the same thing (compat string, function name,
+> > etc) in multiple places for the driver to work as a module. If the exact
+> > style of my macros aren't appealing, I'm open to other suggestions.
+> >
+> > There are some checkpatch warning about the > 80 columns that my patch
+> > doesn't add. There are also checkpatch warnings about the trailing ; in
+> > a macro, but I need those for IRQCHIP_DECLARE to work when the driver is
+> > builtin.
+>
+> I think you are looking at the problem from the wrong end, and adding
+> syntactic sugar should be the least of your worries. The reason for
+> not allowing irqchip drivers to be modular is that there is no
+> refcounting in place to prevent drivers from being removed whilst the
+> IRQ stack still has irq_desc, irq_data and various other objects
+> indirectly referencing the driver.
+>
+> I'm all for addressing these issues, though it begs the question of
+> *why* you want to do this. We have been perfectly happy with built-in
+> irqchips so far (they are pretty small, and there aren't millions of
+> them), so what changed?
+>
+
+I can't speak for Saravana, but my sense is that moving functionality
+to loadable modules is becoming more important for Android devices due
+to their efforts to utilize a single kernel image across various
+vendor devices[1].  Obviously with mobile device constraints
+minimizing the unused vendor code in the kernel image is important,
+and modules help there. While the unloading issues you raised are
+important, one can still benefit from having a permanent module
+(modules that don't have a .remove handler), as they can be only
+loaded on the devices that use them. You're also right that irqchip
+drivers are fairly small, but one issue is that any code they depend
+on also has to be built in if they are not able to be configured as a
+module, so by allowing the irqchip driver to be a module, you can also
+modularize whatever platform calls are made from that driver.
+
+thanks
+-john
+
+[1]: See:
+  https://arstechnica.com/gadgets/2019/11/google-outlines-plans-for-mainline-linux-kernel-support-in-android/
+  https://www.linuxplumbersconf.org/event/2/contributions/61/attachments/69/80/Android_and_Linux_Kernel__Herding_billions_of_penguins_one_version_at_a_time.pdf
+  https://linuxplumbersconf.org/event/4/contributions/401/attachments/318/542/GKI_Progress.pdf
