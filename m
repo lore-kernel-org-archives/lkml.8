@@ -2,125 +2,155 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE4BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64732C2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239792072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586786186;
-	bh=9YG8otoDqFQWTVOE4euBbHKykJPzOGYrpg2tLjI9R/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W9VZSouaC885h68bZDNagIp+i8jeO5mYJPZH2aFfg7CHrkHtm9LRuuOB+tXm4Auca
-	 bDWoYA6DlPCbtXTGGnVMH9gD3WE9I0ckJSXtrvjSzkpYIHEkjt0bbeRIiYOdDkAbta
-	 omoYoRVPJBP3gmZi2U5RQl44jxxUBD52HnuQsnWo=
+	by mail.kernel.org (Postfix) with ESMTP id 464BC2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:58:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bH9JdeHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgDMN4Z (ORCPT
+        id S1730196AbgDMN6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 09:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729430AbgDMN4Y (ORCPT
+        Mon, 13 Apr 2020 09:58:51 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:12515 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730186AbgDMN6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:56:24 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E903C0A3BDC;
-        Mon, 13 Apr 2020 06:56:24 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id l13so4374500qtr.7;
-        Mon, 13 Apr 2020 06:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MEV4w5u8wTFD0TinBcOlOPPgb+JBc/8ZPXNjItBqEvc=;
-        b=nhu8f+65G6mbDWJj8y7QJL/7UlzoaljLRQvRspKyQ1CA/3V1M0C4N1KGLFfrTbL8Tt
-         tocYT+riHzS6jXIOooqsI+Q70TgCylKcvjHW4rv4Wqzfs18PJ5vAmK+8EyMAiPZdCYAY
-         rue0xXczbx7/bbAKqpvIw/a5qCiA7yFQ/RyUo3AdGMjI2ziPFbOK2CCnThdfiJ9VjpxC
-         IBmL2aH+zNXCSWto2s+rkQfVgZ7Y37rnId0ypzJV1nlC70CMyYGi84ECkUDEjHNpu5oS
-         6uM0V++40A/0m0a86BcwN22LCZ6RBqGoi0NZjG//9GlQ8hYOpARHuViznwHNdU1zRaTU
-         PNjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MEV4w5u8wTFD0TinBcOlOPPgb+JBc/8ZPXNjItBqEvc=;
-        b=F4dUtmMgWIokbD2bim1bk0P738olAihiOd2jkRO/F7ctIph8v+AWxJCAozJq9a/xrc
-         D4XveNiRepUKHLzVs9lk/skzpgDp4SK3QKg9WXYkOO9WfssrbNWTvh3aaPo0/97SeJTC
-         Towb/QuuFj5lmU4nzOPQbUCF5PuaOCHbKUmi4dAYyyPn2jh0MuSKPJwDS5txEmxRICo3
-         QsFLtLhjGTy7oXuPKmuQWOJQdOOleEZUtJ0Hu0i71s/zZ61FRskp5xiPcNHFAhkMB6gU
-         JszDdY5YHMJDIbOGRhKCrqY4wJqzYmmb9fxqvLU63vBPhEPuJ4XlFycswEvoyuObaiUI
-         r1xA==
-X-Gm-Message-State: AGi0PuZRDXI52zDT6afS7gjmb+y+EdsVpt7Abg/C9xBmVvCfe6tWGwSL
-        mFQE3K7T//WsT3w5oxlDhY4=
-X-Google-Smtp-Source: APiQypKh5p1mK8Fu6o5MmCy3e0faMipQp8cuUVieWNXjoUNZwo+HvPrYywA6UjjylArxPOfmYc3gvg==
-X-Received: by 2002:ac8:193d:: with SMTP id t58mr10665708qtj.93.1586786183152;
-        Mon, 13 Apr 2020 06:56:23 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id p10sm8655544qtu.14.2020.04.13.06.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 06:56:22 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 09:56:21 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@vger.kernel.org,
-        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com
-Subject: Re: [PATCH 2/5] block: add request->io_data_len
-Message-ID: <20200413135621.GB60335@mtj.duckdns.org>
-References: <20200408201450.3959560-1-tj@kernel.org>
- <20200408201450.3959560-3-tj@kernel.org>
- <20200409014406.GA370295@localhost.localdomain>
- <20200409021119.GJ162390@mtj.duckdns.org>
- <20200409023857.GB370295@localhost.localdomain>
+        Mon, 13 Apr 2020 09:58:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586786329; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Y/gdVVe6BVm6JgYV9eCeY9S+PgE2k5W+l+hDimM0Yso=; b=bH9JdeHXhLqJNd00EQ2YQTWU6qHildHHyfsfHCvc2+ZL2/ACh78w/Pd0hyjj41AYl37oa0jk
+ g/8VWawtfVPIOFOT6FwMGqzwGUr2XbXSuc3ZJBnO+9yutskx5IFiHMjvHVN2OtQCBCH+SDHT
+ BSmLQXlvLt/RBN7Ye8hdINa+wHc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e947017.7f6220e1cd18-smtp-out-n01;
+ Mon, 13 Apr 2020 13:58:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BB972C433F2; Mon, 13 Apr 2020 13:58:47 +0000 (UTC)
+Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF2DFC433CB;
+        Mon, 13 Apr 2020 13:58:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF2DFC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
+ <20200409174511.GS199755@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <e3aa9e6f-14f5-de51-7087-094b5089d16b@codeaurora.org>
+Date:   Mon, 13 Apr 2020 19:28:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409023857.GB370295@localhost.localdomain>
+In-Reply-To: <20200409174511.GS199755@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Matthias,
 
-On Thu, Apr 09, 2020 at 10:38:57AM +0800, Ming Lei wrote:
-> On Wed, Apr 08, 2020 at 10:11:19PM -0400, Tejun Heo wrote:
-> > On Thu, Apr 09, 2020 at 09:44:06AM +0800, Ming Lei wrote:
-> > > Almost all __blk_mq_end_request() follow blk_update_request(), so the
-> > > completed bytes can be passed to __blk_mq_end_request(), then we can
-> > > avoid to introduce this field.
-> > 
-> > But on some drivers blk_update_request() may be called multiple times before
-> > __blk_mq_end_request() is called and what's needed here is the total number of
-> > bytes in the whole request, not just in the final completion.
+On 4/9/2020 11:15 PM, Matthias Kaehlcke wrote:
+> Hi Rajendra,
 > 
-> OK.
+> On Wed, Apr 08, 2020 at 07:16:28PM +0530, Rajendra Nayak wrote:
+>> geni serial needs to express a perforamnce state requirement on CX
+>> depending on the frequency of the clock rates. Use OPP table from
+>> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+>> set the clk/perf state.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Akash Asthana <akashast@codeaurora.org>
+>> Cc: linux-serial@vger.kernel.org
+>> ---
+>>   drivers/tty/serial/qcom_geni_serial.c | 20 +++++++++++++++-----
+>>   include/linux/qcom-geni-se.h          |  2 ++
+>>   2 files changed, 17 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+>> index 6119090..754eaf6 100644
+>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm_wakeirq.h>
+>> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>   		goto out_restart_rx;
+>>   
+>>   	uport->uartclk = clk_rate;
+>> -	clk_set_rate(port->se.clk, clk_rate);
+>> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
+>>   	ser_clk_cfg = SER_CLK_EN;
+>>   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>   
+>> @@ -1198,8 +1199,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>>   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+>>   		geni_se_resources_on(&port->se);
+>>   	else if (new_state == UART_PM_STATE_OFF &&
+>> -			old_state == UART_PM_STATE_ON)
+>> +			old_state == UART_PM_STATE_ON) {
+>> +		dev_pm_opp_set_rate(uport->dev, 0);
+>>   		geni_se_resources_off(&port->se);
+>> +	}
+>>   }
+>>   
+>>   static const struct uart_ops qcom_geni_console_pops = {
+>> @@ -1318,13 +1321,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>>   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
+>>   		port->cts_rts_swap = true;
+>>   
+>> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
 > 
-> Another choice might be to record request bytes in rq's payload
-> when calling .queue_rq() only for these drivers.
+> dev_pm_opp_set_clkname() can fail for multiple reasons, it seems an error
+> check would be warranted.
 
-There sure are multiple ways to skin a cat.
+right, looks like I should put some error check there
 
-> > > Also there is just 20 callers of __blk_mq_end_request(), looks this kind
-> > > of change shouldn't be too big.
-> > 
-> > This would work iff we get rid of partial completions and if we get rid of
-> > partial completions, we might as well stop exposing blk_update_request() and
-> > __blk_mq_end_request().
-> 
-> Indeed, we can store the completed bytes in request payload, so looks killing
-> partial completion shouldn't be too hard.
+> Is it actually necessary to save the OPP table in 'struct geni_se'? Both
+> the serial and the SPI driver save the table, but don't use it later (nor
+> does the SE driver).
 
-There's a reason why we've had partial completions. On slower IO devices, like
-floppy, partial completions actually are advantageous. I'm not arguing this
-still holds up as a valid justification but getting rid of partial completions
-isn't just a decision about plumbing details either.
+I think I did that initially because I wanted to use that to call into
+dev_pm_opp_put_clkname during cleanup. That however never worked since
+the way the clk_put is done in dev_pm_opp_put_clkname() and _opp_table_kref_release()
+seems buggy. I kind of forgot about fixing it up, I will figure our whats the right
+way to do it, and either not call dev_pm_opp_put_clkname() or not store the
+opp table returned by it.
 
-Thanks.
+thanks for taking time to review.
+
+- Rajendra
+  
 
 -- 
-tejun
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
