@@ -2,216 +2,107 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4821C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F0C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9947520692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C290620735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tDZBmoIp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msaOcQ77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733068AbgDMSmc (ORCPT
+        id S1733077AbgDMSmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 Apr 2020 14:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733067AbgDMSmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 14:42:32 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34690 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgDMSma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:42:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=8e8HuFV0TGA3SZAvtjW3okIjD6ZadtQhQFCOyp+9cMM=; b=tDZBmoIpTl7imtNp7ZyIoz4CfS
-        Wl/q3Vm0T+vfA94P9I+K9gpJ2G2DapV2etrMetKrRA+PuoKoSYhlgLqOPlX9jrFWGGWx/ANlZ2IVQ
-        s/BSgP+sB5/TAukc20TyEfexZHf9fbiy3zx4kQZ7DCxvRI5AVMrYGM1kDXay8Q4CU74I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jO42G-002Uln-2m; Mon, 13 Apr 2020 20:42:20 +0200
-Date:   Mon, 13 Apr 2020 20:42:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-Message-ID: <20200413184219.GH557892@lunn.ch>
-References: <20200413170107.246509-1-robert.marko@sartura.hr>
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A915C0A3BDC;
+        Mon, 13 Apr 2020 11:42:32 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f3so10483388ioj.1;
+        Mon, 13 Apr 2020 11:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uUwpLr7H3CWr7Gx8F04TUo2T/8suj5UNrxDHjUUZvKg=;
+        b=msaOcQ77WoCp08XUHtZBYXn+v79SNgrmzk5f9WkKnriOsGUpFtv2thcgRlpZNsKxh6
+         QmQI+GzrTKcamSbRgBicUxDhx+Kn9y9X753/EAcBW5Et5eVBmgmCmmPwTco7zy12cr0J
+         Ia9jdXLHKOLrE3xZuSpRjK7Q5PciG0tOu3ohkxYYoENjLScDDkYV1yF5FFw1H/rMTucm
+         4UW6oJOY5y0mow2FFVb/nT3JFuo6aACxKYZnuXlS48nN4o4Zwx0arG7FeOt1xw1pzRQo
+         iiptZlkihflts5Vd5bYFraDdAqp13255vB4EWJCynIVGSEh3TP4Rhsx/bqTYnNNTzSod
+         wJjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uUwpLr7H3CWr7Gx8F04TUo2T/8suj5UNrxDHjUUZvKg=;
+        b=PKuBNveFoXyEJahw6HwZQb2P/29EPV+aDi//ZMi08VvlJjAMPSihQMxzT+tObr8TBW
+         Bh6AGq6Zl3Hyo7aHrbYhmh2o6hJVc5FJ1vW+SSN8txBaZMaWSnaeZTqva0NZWTEfcQp3
+         zOQcf3k2mMZKMzS6OK82iI/TN5u6TpK0pWK9i0vkwt4BhjcdIwkYBXlA/tor6BkEUg5Y
+         4QOXy1JaREfMO3pG2cvC2WjoM8xglLvG/rV0f9gUgs59WODI5R+l2m5oYd1ge7u40BSx
+         rKeLA7PXKrDMRAkubjcGLE1RcLNDutqPPmK+qkMdYiMi7rRw0UPc//Ne/Cw+Gd6fGmrS
+         S+Zw==
+X-Gm-Message-State: AGi0PuZ9dBoj/Oq2TONU5Vt6Usk1Pp/xypeBXjqVkPM35um0u/pCq2rt
+        VA1sGuaKdqZMQvWf5TgznZDKTxYD
+X-Google-Smtp-Source: APiQypJPohEk9ESmF09tf/pWvi+u3JpBQ8Yr2dx6KqgK8CgXgnXXQk6KO2enx6eyA6Uw6lhmIDSH2A==
+X-Received: by 2002:a05:6602:5db:: with SMTP id w27mr5680022iox.152.1586803351007;
+        Mon, 13 Apr 2020 11:42:31 -0700 (PDT)
+Received: from james-x399.localdomain (97-118-146-253.hlrn.qwest.net. [97.118.146.253])
+        by smtp.gmail.com with ESMTPSA id 79sm4111565ila.54.2020.04.13.11.42.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 11:42:30 -0700 (PDT)
+From:   James Hilliard <james.hilliard1@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Oliver Neukum <oneukum@suse.com>, linux-kernel@vger.kernel.org,
+        James Hilliard <james.hilliard1@gmail.com>
+Subject: [RESEND PATCH] Input: usbtouchscreen - add support for BonXeon TP
+Date:   Mon, 13 Apr 2020 12:42:17 -0600
+Message-Id: <20200413184217.55700-1-james.hilliard1@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413170107.246509-1-robert.marko@sartura.hr>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
->  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
->  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
->  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-> +obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
->  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
->  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+Based on available information this uses the singletouch irtouch
+protocol. This is tested and confirmed to be fully functional on
+the BonXeon TP hardware I have.
 
-Hi Robert
+Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+---
+no response in over 2 weeks
+---
+ drivers/input/touchscreen/usbtouchscreen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-That looks odd. What happened to the
+diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+index 16d70201de4a..397cb1d3f481 100644
+--- a/drivers/input/touchscreen/usbtouchscreen.c
++++ b/drivers/input/touchscreen/usbtouchscreen.c
+@@ -182,6 +182,7 @@ static const struct usb_device_id usbtouch_devices[] = {
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
++	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
+ 	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
+ 	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
+ 	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
+-- 
+2.20.1
 
-obj-$(CONFIG_MDIO_IPQ8064)      += mdio-ipq8064.o
-
->  obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
-> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> new file mode 100644
-> index 000000000000..8068f1e6a077
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq40xx.c
-> @@ -0,0 +1,180 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define MDIO_CTRL_0_REG		0x40
-> +#define MDIO_CTRL_1_REG		0x44
-> +#define MDIO_CTRL_2_REG		0x48
-> +#define MDIO_CTRL_3_REG		0x4c
-> +#define MDIO_CTRL_4_REG		0x50
-
-Can we have better names than as. It seems like 3 is read data, 2 is
-write data, etc.
-
-> +#define MDIO_CTRL_4_ACCESS_BUSY		BIT(16)
-> +#define MDIO_CTRL_4_ACCESS_START		BIT(8)
-> +#define MDIO_CTRL_4_ACCESS_CODE_READ		0
-> +#define MDIO_CTRL_4_ACCESS_CODE_WRITE	1
-> +#define CTRL_0_REG_DEFAULT_VALUE	0x150FF
-
-No magic numbers please. Try to explain what each of these bits
-do. I'm guessing they are clock speed, preamble enable, maybe C22/C45?
-
-> +
-> +#define IPQ40XX_MDIO_RETRY	1000
-> +#define IPQ40XX_MDIO_DELAY	10
-> +
-> +struct ipq40xx_mdio_data {
-> +	struct mii_bus	*mii_bus;
-> +	void __iomem	*membase;
-> +	struct device	*dev;
-> +};
-> +
-> +static int ipq40xx_mdio_wait_busy(struct ipq40xx_mdio_data *am)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
-> +		unsigned int busy;
-> +
-> +		busy = readl(am->membase + MDIO_CTRL_4_REG) &
-> +			MDIO_CTRL_4_ACCESS_BUSY;
-> +		if (!busy)
-> +			return 0;
-> +
-> +		/* BUSY might take to be cleard by 15~20 times of loop */
-> +		udelay(IPQ40XX_MDIO_DELAY);
-> +	}
-> +
-> +	dev_err(am->dev, "%s: MDIO operation timed out\n", am->mii_bus->name);
-
-dev_err() should give you enough to identify the device. No need to
-print am->mii_bus->name as well.
-
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> +{
-> +	struct ipq40xx_mdio_data *am = bus->priv;
-> +	int value = 0;
-> +	unsigned int cmd = 0;
-> +
-> +	lockdep_assert_held(&bus->mdio_lock);
-
-Do you think the core is broken?
-
-Please check if the request is for a C45 read, and return -EOPNOTSUPP
-if so.
-
-
-> +
-> +	if (ipq40xx_mdio_wait_busy(am))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
-> +
-> +	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
-> +
-> +	/* issue read command */
-> +	writel(cmd, am->membase + MDIO_CTRL_4_REG);
-> +
-> +	/* Wait read complete */
-> +	if (ipq40xx_mdio_wait_busy(am))
-> +		return -ETIMEDOUT;
-> +
-> +	/* Read data */
-> +	value = readl(am->membase + MDIO_CTRL_3_REG);
-> +
-> +	return value;
-> +}
-> +
-> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> +							 u16 value)
-> +{
-> +	struct ipq40xx_mdio_data *am = bus->priv;
-> +	unsigned int cmd = 0;
-> +
-> +	lockdep_assert_held(&bus->mdio_lock);
-> +
-> +	if (ipq40xx_mdio_wait_busy(am))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
-> +
-> +	/* issue write data */
-> +	writel(value, am->membase + MDIO_CTRL_2_REG);
-> +
-> +	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_WRITE;
-> +	/* issue write command */
-> +	writel(cmd, am->membase + MDIO_CTRL_4_REG);
-> +
-> +	/* Wait write complete */
-> +	if (ipq40xx_mdio_wait_busy(am))
-> +		return -ETIMEDOUT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipq40xx_mdio_probe(struct platform_device *pdev)
-> +{
-> +	struct ipq40xx_mdio_data *am;
-
-Why the name am? Generally priv is used. I could also understand bus,
-or even data, but am?
-
-   Andrew
