@@ -2,257 +2,142 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B72C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B31C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B28120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB6E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 22:06:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o/NmGIxX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oYZb4MqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389440AbgDMWGq (ORCPT
+        id S2389447AbgDMWG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 18:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53956 "EHLO
+        Mon, 13 Apr 2020 18:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389421AbgDMWGk (ORCPT
+        by vger.kernel.org with ESMTP id S2389432AbgDMWGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 18:06:40 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB402C0A3BDC;
-        Mon, 13 Apr 2020 15:06:39 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id f3so11129650ioj.1;
-        Mon, 13 Apr 2020 15:06:39 -0700 (PDT)
+        Mon, 13 Apr 2020 18:06:42 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4D5C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:06:42 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id w26so5237577qvd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q0FiT4PHNrauiWTa+TiA0HkrLQXfbRooruY9TfJ2FBA=;
-        b=o/NmGIxXhgshMEuR2HpUR4QyraYu5ek6sHEYjx0ps9zKMzo4WA9pnjiSZ5rJdrW1QS
-         YiWMPUV7d8tbZqqvTUfsftvGa0t/FAF1lKkcrF7GW/TDCexuTObnrj0VKefFvR/CltQi
-         hAE8t1eQnsgIQUvJh31/YNEnCaVHR109Tki/xSS7qwWjcTtGtgtTxJp5+N4j1vB95pFW
-         E1m/tjVhEZP1saoYCCxXcYa46NKq/hw5NZ0h40t6kHkPa2W0WHf36zaES/L9K3rHKJ42
-         ucbLARpPrhdTbxmoQhK0LcGuLiWbiSXyN49HVPRLc4tcRndId9GSuaNfaEHPSuv5fhls
-         lP1Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MVAxxHzDK/qARg7NchMjhRdvGGEcCTTmLqMEP50fxqk=;
+        b=oYZb4MqSZ8X2CE6Y/k0aOzKLtL53RMFv1ShrKS9kAZLiSxbTQ/wZMM0ryIYVQLFhhT
+         e+ZSddaE+zEhC3DF1QKsjRDUtNgJGnhRe9rM4lDBtjD6CloNjrA2WJk1gHzfbJum7MKL
+         lKs4zbUC+eR3iJV6Uc1ONNr9Jby+bhRhWhjIU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q0FiT4PHNrauiWTa+TiA0HkrLQXfbRooruY9TfJ2FBA=;
-        b=HCii78c0zAD3P7LKXbZf2/dQag2DL02OXpCA0nNsAzJv4bz6CPi7V0e45mRw1U+w5l
-         vr951lxxZcFXHD5sSwZa+1X5cohokqL2BKcR2ryPvUB9JpI4kI3d7XEHZT/aihxWv1HQ
-         w67b99buNCrxhocVcTGr6hX4vc4mTUn0KM7oTXDJx3kAzH5iUy0yiq4jDeEuUpmSBYdf
-         e85v1EcKk1k0x7f+3JPQxKR0+h2wJbCIgHRr7yuJo+Wy5NqWI6rbvs9fkIleZUDoncaQ
-         xiwISceq0hhAeQnEuLd9+E2nmwXf4f7jaGB63EX2aq9zNtnpRhkuHikDyWOnkVDsWkOc
-         zjSQ==
-X-Gm-Message-State: AGi0PuauWD7TbN8vrafmkGFaxVuAHjboZMi8TY7W2INH6E5/4ZDtgFAl
-        WWU5c2x6RXd0Cp/l1Pa+UFVL9XzN+lw=
-X-Google-Smtp-Source: APiQypJA10hi9vZqtDIsZxFJTW9fIstdbxsUyWlSF9gBdNQ6LapnqZYNirka8JSnwdWKL10XqFOUGg==
-X-Received: by 2002:a5d:8152:: with SMTP id f18mr18546181ioo.74.1586815599087;
-        Mon, 13 Apr 2020 15:06:39 -0700 (PDT)
-Received: from r2700x.localdomain (c-67-190-64-15.hsd1.co.comcast.net. [67.190.64.15])
-        by smtp.gmail.com with ESMTPSA id s6sm4320356ilk.67.2020.04.13.15.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 15:06:38 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 16:06:31 -0600
-From:   Jeremy Fertic <jeremyfertic@gmail.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexandru.tachici@analog.com
-Subject: Re: [PATCH v3 1/2] iio: adc: ad7192: fix null pointer de-reference
- crash during probe
-Message-ID: <20200413220631.GA4884@r2700x.localdomain>
-References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MVAxxHzDK/qARg7NchMjhRdvGGEcCTTmLqMEP50fxqk=;
+        b=b/i/BmPSIM/HtFtj5TK13cY//DDA0Gj+uRwBQRE9nWNdZKDx2VDttLFueIOA4axKpv
+         PUMrf4Mc61ZoiYEBxvs/hD3SIaHRu9v5yFSnVo3tt64xroQAlNrctsoWFhE+G1vbv4WK
+         wS7y3SdgiO0uF6juwIrNTx0EPwg1ugV0e/d/sOEfKs23CkgFoKAbgPM9MniyItBub6eF
+         BoZyHsfjR3RLOL42I7+h5TCdxag/M5x6THk3zb9G2B+VxolC1/0ZKdEuSlCbLBKxcG0n
+         77I0yFb+Vm2sPSq3LQd7xSPJzVTdOUXg/ogM5eCn+aV1VxUt/OhZ82aetz545nbHrxwX
+         GCOA==
+X-Gm-Message-State: AGi0Pub1epz4z1n3DgL2FJN2mgshSIo6CIoAb0oKbUoJKC+4imCK+gzU
+        BUvSTuNHTYR7/95e5/Z3gRWhwr/vzpg=
+X-Google-Smtp-Source: APiQypKU6geFrM1HjAUlkoAlnIDWYvGCD51cqQyM/wyIC4KJ/VAPdmYD3+wWL1aR25Qt2xo2rV0JAg==
+X-Received: by 2002:a0c:f709:: with SMTP id w9mr19218904qvn.159.1586815601060;
+        Mon, 13 Apr 2020 15:06:41 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id z18sm10059297qtz.77.2020.04.13.15.06.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 15:06:40 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id i2so6093100ybk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 15:06:40 -0700 (PDT)
+X-Received: by 2002:a9f:27ca:: with SMTP id b68mr10592105uab.8.1586815210988;
+ Mon, 13 Apr 2020 15:00:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+References: <20200410151632.4.I8fba5961bf452ab92350654aa61957f23ecf0100@changeid>
+ <202004110744.nPoRwmTD%lkp@intel.com>
+In-Reply-To: <202004110744.nPoRwmTD%lkp@intel.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 13 Apr 2020 14:59:59 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UC-dKgmamNKFn_SEqcEisW1p4Z9iy8Nn8UqUxRsskZ3A@mail.gmail.com>
+Message-ID: <CAD=FV=UC-dKgmamNKFn_SEqcEisW1p4Z9iy8Nn8UqUxRsskZ3A@mail.gmail.com>
+Subject: Re: [PATCH 4/7] kgdboc: Add earlycon_kgdboc to support early kgdb
+ using boot consoles
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kbuild-all@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Jonathan Corbet <corbet@lwn.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, bp@alien8.de,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 11:20:43AM +0300, Alexandru Ardelean wrote:
-> When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
-> assignment:
->    'indio_dev->name = spi_get_device_id(spi)->name;'
-> 
-> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
-> during probe with null de-ref.
-> 
-> This change fixes this by introducing an ad7192_chip_info struct, and
-> defines all part-names [that should be assigned to indio_dev->name] in a
-> 'ad7192_chip_info_tbl' table.
-> 
-> With this change, the old 'st->devid' is also moved to be a
-> 'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
-> 'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
-> values in the new 'ad7192_chip_info_tbl'.
-> 
-> This should fix the bug, and maintain the ABI for the 'indio_dev->name'
-> field.
-> 
-> Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
-> 
-> Changelog v2 -> v3:
-> * reworked patch to introduce a chip_info struct for the part-name
-> * added 2nd patch to move of-table closer to the end of the file; this
->   patch is more cosmetic; has no fixes tag, but is on top of the previous
-> 
-> Changelog v1 -> v2:
-> * fix colon for Fixes tag
-> * updated commit title a bit; to make it longer
-> 
->  drivers/iio/adc/ad7192.c | 61 ++++++++++++++++++++++++++++++----------
->  1 file changed, 46 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-> index 8ec28aa8fa8a..7e8662c5cb0e 100644
-> --- a/drivers/iio/adc/ad7192.c
-> +++ b/drivers/iio/adc/ad7192.c
-> @@ -125,10 +125,10 @@
->  #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
->  
->  /* ID Register Bit Designations (AD7192_REG_ID) */
-> -#define ID_AD7190		0x4
-> -#define ID_AD7192		0x0
-> -#define ID_AD7193		0x2
-> -#define ID_AD7195		0x6
-> +#define CHIPID_AD7190		0x4
-> +#define CHIPID_AD7192		0x0
-> +#define CHIPID_AD7193		0x2
-> +#define CHIPID_AD7195		0x6
->  #define AD7192_ID_MASK		0x0F
->  
->  /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
-> @@ -161,7 +161,20 @@ enum {
->     AD7192_SYSCALIB_FULL_SCALE,
->  };
->  
-> +enum {
-> +	ID_AD7190,
-> +	ID_AD7192,
-> +	ID_AD7193,
-> +	ID_AD7195,
-> +};
-> +
-> +struct ad7192_chip_info {
-> +	unsigned int			chip_id;
-> +	const char			*name;
-> +};
-> +
->  struct ad7192_state {
-> +	const struct ad7192_chip_info	*chip_info;
->  	struct regulator		*avdd;
->  	struct regulator		*dvdd;
->  	struct clk			*mclk;
-> @@ -172,7 +185,6 @@ struct ad7192_state {
->  	u32				conf;
->  	u32				scale_avail[8][2];
->  	u8				gpocon;
-> -	u8				devid;
->  	u8				clock_sel;
->  	struct mutex			lock;	/* protect sensor state */
->  	u8				syscalib_mode[8];
-> @@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
->  
->  	id &= AD7192_ID_MASK;
->  
-> -	if (id != st->devid)
-> +	if (id != st->chip_info->chip_id)
->  		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
->  			 id);
->  
-> @@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
->  		st->mode |= AD7192_MODE_REJ60;
->  
->  	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
-> -	if (refin2_en && st->devid != ID_AD7195)
-> +	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
->  		st->conf |= AD7192_CONF_REFSEL;
->  
->  	st->conf &= ~AD7192_CONF_CHOP;
-> @@ -859,11 +871,30 @@ static const struct iio_chan_spec ad7193_channels[] = {
->  	IIO_CHAN_SOFT_TIMESTAMP(14),
->  };
->  
-> +static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
-> +	[ID_AD7190] = {
-> +		.chip_id = CHIPID_AD7190,
-> +		.name = "ad7190",
-> +	},
-> +	[ID_AD7192] = {
-> +		.chip_id = CHIPID_AD7192,
-> +		.name = "ad7192",
-> +	},
-> +	[ID_AD7193] = {
-> +		.chip_id = CHIPID_AD7193,
-> +		.name = "ad7193",
-> +	},
-> +	[ID_AD7195] = {
-> +		.chip_id = CHIPID_AD7195,
-> +		.name = "ad7195",
-> +	},
-> +};
-> +
->  static int ad7192_channels_config(struct iio_dev *indio_dev)
->  {
->  	struct ad7192_state *st = iio_priv(indio_dev);
->  
-> -	switch (st->devid) {
-> +	switch (st->chip_info->chip_id) {
->  	case ID_AD7193:
+Hi,
 
-Would it be better to change this to CHIPID_AD7193? It looks like it works
-the way you have it, but only by coincidence since it happens to be true
-that ID_AD7193 == CHIPID_AD7193.
+On Fri, Apr 10, 2020 at 4:56 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Douglas,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on arm64/for-next/core]
+> [also build test ERROR on tty/tty-testing v5.6 next-20200410]
+> [cannot apply to kgdb/kgdb-next]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Douglas-Anderson/kgdb-Support-late-serial-drivers-enable-early-debug-w-boot-consoles/20200411-062123
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+> config: microblaze-mmu_defconfig (attached as .config)
+> compiler: microblaze-linux-gcc (GCC) 9.3.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.3.0 make.cross ARCH=microblaze
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/misc/kgdbts.c: In function 'configure_kgdbts':
+> >> drivers/misc/kgdbts.c:1080:8: error: too few arguments to function 'kgdb_register_io_module'
+>     1080 |  err = kgdb_register_io_module(&kgdbts_io_ops);
 
-Jeremy
+Sigh, I knew I'd forget something stupid.  I have a fix for this and
+have confirmed that "kgdbts" continues to work after I fix it.
+Running it also found splats similar to what I fixed for "kgdboc" in
+commit 81eaadcae81b ("kgdboc: disable the console lock when in kgdb").
+I'll att a commit to my next version to move that fix into the kgdb
+core and then remove it from "kgdboc".
 
->  		indio_dev->channels = ad7193_channels;
->  		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
-> @@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
->  }
->  
->  static const struct of_device_id ad7192_of_match[] = {
-> -	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
-> -	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
-> -	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
-> -	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
-> +	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-> +	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-> +	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-> +	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, ad7192_of_match);
-> @@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
->  	}
->  
->  	spi_set_drvdata(spi, indio_dev);
-> -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
-> +	st->chip_info = of_device_get_match_data(&spi->dev);
->  	indio_dev->dev.parent = &spi->dev;
-> -	indio_dev->name = spi_get_device_id(spi)->name;
-> +	indio_dev->name = st->chip_info->name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
->  	ret = ad7192_channels_config(indio_dev);
->  	if (ret < 0)
->  		goto error_disable_dvdd;
->  
-> -	if (st->devid == ID_AD7195)
-> +	if (st->chip_info->chip_id == CHIPID_AD7195)
->  		indio_dev->info = &ad7195_info;
->  	else
->  		indio_dev->info = &ad7192_info;
-> -- 
-> 2.17.1
-> 
+I'm not setup to use kgdb over EHCI so I'll just fix that so it
+compiles and trust that it continues to work.
+
+For now I'll hold up on sending a new version to await feedback on v1.
+If I don't hear anything after a little while I'll send a v2 with just
+these fixes.
+
+-Doug
