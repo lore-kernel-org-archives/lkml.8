@@ -2,242 +2,93 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E062BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ADEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAAD02075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586781967;
-	bh=Q88wqHNzQKBDgruvG1lMwGi4VZ6og9fmuqRNVMz7MMI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TTn4YeNDxTVwstNv/ATotG8DvTSxIUMFhEdEuuvfT1NlDM3J9nintw2BiZqbdz+EC
-	 jbqMh0lo/cq6Qmv+t7m/czx5/BomoBGKIJg99VvLBs79+Ulpj5/VNGQr0RHDACUqO4
-	 /DwjO9V89GH+pPvEgTlWrD7HZhwAHHUMrUM2Z5SQ=
+	by mail.kernel.org (Postfix) with ESMTP id 222E62073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mC6KKwyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgDMMqD (ORCPT
+        id S1729540AbgDMMtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgDMMqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:46:02 -0400
-Received: from localhost.localdomain (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BC152073E;
-        Mon, 13 Apr 2020 12:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586781961;
-        bh=Q88wqHNzQKBDgruvG1lMwGi4VZ6og9fmuqRNVMz7MMI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=L8aiwc3cUlny6YqqbsXt3SGnVODs9mXyrLBUJ0oc1ogJGdWAmHEB0Tm3p2dkuZDwk
-         4GRrDOrzhXbj+lIdGiJ1NxICPXIero4lPLUPgN+qfzS5zalsK7/vKYzvdmWSs7ntKV
-         ytYhyp2xQ6Fj1d7MVfOq4UOV5WyzY5Bd+ywAGxzw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] ASoC: samsung: s3c24xx-i2s: Fix build after removal of DAI suspend/resume
-Date:   Mon, 13 Apr 2020 14:45:48 +0200
-Message-Id: <20200413124548.28197-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Apr 2020 08:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727797AbgDMMtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 08:49:13 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BCC8C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 05:49:13 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m8so8580739lji.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 05:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rbDD5DeAkQAv3XRBJBIaEDRRBL0cq0+mIq6gtoIwJZU=;
+        b=mC6KKwygD/vileEJq7528mS8TZmlrfjyV/5QKLXnNUb7Dd4GcGSrPZlGJZ/dUa78gx
+         2KNI65bh2aHROVXLIB4Q7myNNgvxPrUx874CUD9HLZGo3hAgtyoR0/t09LRpKQRzcGft
+         wwnEySDhElz42d7N/1VE0PYC4dV2J+e2jXrZ7jUxgIgiPCz3fBqpLpNWWWEEM76micUP
+         hlpGcZVqlH9/i+vZiiW7H8vvYoyaAkgMch67JGRj/dRp10ZR9Ssy6km5/U6AWdcbtgnO
+         P99Hqbr1EzfJyK59Gw02imvuL+nnCRqJUm7DBrO3OzS5++M/bdO1MiOmFfPtXfRC/rgW
+         meDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rbDD5DeAkQAv3XRBJBIaEDRRBL0cq0+mIq6gtoIwJZU=;
+        b=V9Z6vQT8BVl2/Hn8mwcDUyaouyHCi02vKIBT9wCg1eiueOcyfmi4+YJs3UzUa+Hl0D
+         37NCMcMHdTG1JeZ5phE2bC1Wf+GQ5OKWeZBVXbtRW+gtaII1vFah9oQD0e1n5AI9bNxg
+         NgcfF646UPjm8ioLq27aoEkAnNzHml1O8sLIgSkMXPpXYAFIrrza41CEv9UrcZAfDzbG
+         jwkUH+azPtj/j9y/bYtsds6R3/A67puzbOpiWRhvvQrDNVvhKwyqumjhXgP5s53FkXl/
+         JrT86ua4qksL5IsuiiLx55EtR18BWKtOp158uToplrZgub53Al0ApCR/h2aojnLMTKja
+         Evxw==
+X-Gm-Message-State: AGi0PuY/qS2sFU5OTecsDyi4inhFxnkhmbOSIOI5JTlOoj7n59nLOd9w
+        xDtW/iHU7PrGQwXoH9soRcgc5Q==
+X-Google-Smtp-Source: APiQypJzpKMJQTH9x4hIQGQMNXlmDVUpW0SuvwyD+TPebx84Bbver2RNEzmsaubdeBhC0pMnxUAByQ==
+X-Received: by 2002:a2e:8955:: with SMTP id b21mr5912499ljk.216.1586782151726;
+        Mon, 13 Apr 2020 05:49:11 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f7sm7095712ljj.4.2020.04.13.05.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 05:49:11 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 0402B10230F; Mon, 13 Apr 2020 15:49:12 +0300 (+03)
+Date:   Mon, 13 Apr 2020 15:49:11 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] thp/khugepaged improvements and CoW semantics
+Message-ID: <20200413124911.yvhferw32dnqeowj@box>
+References: <20200413100447.20073-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413100447.20073-1-kirill.shutemov@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
-removed the DAI side suspend/resume hooks and switched entirely to
-component suspend/resume.  However the Samsung SoC s3c-i2s-v2 driver was
-not updated.
+On Mon, Apr 13, 2020 at 01:04:41PM +0300, Kirill A. Shutemov wrote:
+> The patchset adds khugepaged selftest (anon-THP only for now), expands
+> cases khugepaged can handle and switches anon-THP copy-on-write handling
+> to 4k.
+> 
+> Please review and consider applying.
 
-Move the suspend/resume hooks from s3c-i2s-v2.c to s3c2412-i2s.c while
-changing dai to component which allows to keep the struct
-snd_soc_component_driver const.
+Please ignore, I've missed last two patches by mistake. I'll resend.
 
-This fixes build errors:
-
-    sound/soc/samsung/s3c-i2s-v2.c: In function ‘s3c_i2sv2_register_component’:
-    sound/soc/samsung/s3c-i2s-v2.c:730:9: error: ‘struct snd_soc_dai_driver’ has no member named ‘suspend’
-      dai_drv->suspend = s3c2412_i2s_suspend;
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
----
-
-Only compile tested.
----
- sound/soc/samsung/s3c-i2s-v2.c  | 57 ---------------------------------
- sound/soc/samsung/s3c2412-i2s.c | 56 ++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 57 deletions(-)
-
-diff --git a/sound/soc/samsung/s3c-i2s-v2.c b/sound/soc/samsung/s3c-i2s-v2.c
-index 358887848293..5e95c30fb2ba 100644
---- a/sound/soc/samsung/s3c-i2s-v2.c
-+++ b/sound/soc/samsung/s3c-i2s-v2.c
-@@ -656,60 +656,6 @@ void s3c_i2sv2_cleanup(struct snd_soc_dai *dai,
- }
- EXPORT_SYMBOL_GPL(s3c_i2sv2_cleanup);
- 
--#ifdef CONFIG_PM
--static int s3c2412_i2s_suspend(struct snd_soc_dai *dai)
--{
--	struct s3c_i2sv2_info *i2s = to_info(dai);
--	u32 iismod;
--
--	if (dai->active) {
--		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
--		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
--		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
--
--		/* some basic suspend checks */
--
--		iismod = readl(i2s->regs + S3C2412_IISMOD);
--
--		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
--			pr_warn("%s: RXDMA active?\n", __func__);
--
--		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
--			pr_warn("%s: TXDMA active?\n", __func__);
--
--		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
--			pr_warn("%s: IIS active\n", __func__);
--	}
--
--	return 0;
--}
--
--static int s3c2412_i2s_resume(struct snd_soc_dai *dai)
--{
--	struct s3c_i2sv2_info *i2s = to_info(dai);
--
--	pr_info("dai_active %d, IISMOD %08x, IISCON %08x\n",
--		dai->active, i2s->suspend_iismod, i2s->suspend_iiscon);
--
--	if (dai->active) {
--		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
--		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
--		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
--
--		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
--		       i2s->regs + S3C2412_IISFIC);
--
--		ndelay(250);
--		writel(0x0, i2s->regs + S3C2412_IISFIC);
--	}
--
--	return 0;
--}
--#else
--#define s3c2412_i2s_suspend NULL
--#define s3c2412_i2s_resume  NULL
--#endif
--
- int s3c_i2sv2_register_component(struct device *dev, int id,
- 			   const struct snd_soc_component_driver *cmp_drv,
- 			   struct snd_soc_dai_driver *dai_drv)
-@@ -727,9 +673,6 @@ int s3c_i2sv2_register_component(struct device *dev, int id,
- 	if (!ops->delay)
- 		ops->delay = s3c2412_i2s_delay;
- 
--	dai_drv->suspend = s3c2412_i2s_suspend;
--	dai_drv->resume = s3c2412_i2s_resume;
--
- 	return devm_snd_soc_register_component(dev, cmp_drv, dai_drv, 1);
- }
- EXPORT_SYMBOL_GPL(s3c_i2sv2_register_component);
-diff --git a/sound/soc/samsung/s3c2412-i2s.c b/sound/soc/samsung/s3c2412-i2s.c
-index 787a3f6e9f24..b35d828c1cfe 100644
---- a/sound/soc/samsung/s3c2412-i2s.c
-+++ b/sound/soc/samsung/s3c2412-i2s.c
-@@ -117,6 +117,60 @@ static int s3c2412_i2s_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int s3c2412_i2s_suspend(struct snd_soc_component *component)
-+{
-+	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
-+	u32 iismod;
-+
-+	if (component->active) {
-+		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
-+		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
-+		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
-+
-+		/* some basic suspend checks */
-+
-+		iismod = readl(i2s->regs + S3C2412_IISMOD);
-+
-+		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
-+			pr_warn("%s: RXDMA active?\n", __func__);
-+
-+		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
-+			pr_warn("%s: TXDMA active?\n", __func__);
-+
-+		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
-+			pr_warn("%s: IIS active\n", __func__);
-+	}
-+
-+	return 0;
-+}
-+
-+static int s3c2412_i2s_resume(struct snd_soc_component *component)
-+{
-+	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
-+
-+	pr_info("component_active %d, IISMOD %08x, IISCON %08x\n",
-+		component->active, i2s->suspend_iismod, i2s->suspend_iiscon);
-+
-+	if (component->active) {
-+		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
-+		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
-+		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
-+
-+		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
-+		       i2s->regs + S3C2412_IISFIC);
-+
-+		ndelay(250);
-+		writel(0x0, i2s->regs + S3C2412_IISFIC);
-+	}
-+
-+	return 0;
-+}
-+#else
-+#define s3c2412_i2s_suspend NULL
-+#define s3c2412_i2s_resume  NULL
-+#endif
-+
- #define S3C2412_I2S_RATES \
- 	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 | SNDRV_PCM_RATE_16000 | \
- 	SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \
-@@ -146,6 +200,8 @@ static struct snd_soc_dai_driver s3c2412_i2s_dai = {
- 
- static const struct snd_soc_component_driver s3c2412_i2s_component = {
- 	.name		= "s3c2412-i2s",
-+	.suspend	= s3c2412_i2s_suspend,
-+	.resume		= s3c2412_i2s_resume,
- };
- 
- static int s3c2412_iis_dev_probe(struct platform_device *pdev)
 -- 
-2.17.1
-
+ Kirill A. Shutemov
