@@ -2,80 +2,199 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF74C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09940C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9261320775
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D540920767
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586787186;
+	bh=fFn92oT/7JQWOe+eb1RWwMKoz4lHaWYcfVSK1R2f98g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tlYNBMhfCwitPzZRbN3XYNnD4u2QC9m39OSpXr5147DCugK1N1YcUxKC4lKxRId1v
+	 Qy41UZZSFBF0GrVFOhsoKxMJs9UQm/1ODazSoSDDgSp6FoxEA1jneKpuUZmm52zvLu
+	 tyKijmmjt0PwPibzWdZZk7UO9Mjw7hrcI+Pm7zm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgDMOMz (ORCPT
+        id S1730413AbgDMONF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:12:55 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33865 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730372AbgDMOMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:12:54 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s29so6587995edc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:12:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwii8YlQE8mee1Z5xIVhf603RnvUDTx/2KtWa57lsHE=;
-        b=qBn/4jteVc5z9+MKANjw+7JNv3UAhNTWBU4UGroZ/oAsdftjunU1BD8c1w3oYR3+uw
-         j1IuwTlB39BwvShlCQI4TgWL6lsWIXXpiILIBSU8zQpYwkkc0BQlJYl0gcRTvtzVfXE9
-         emsj6EqPTMRivRT/ZAfKZQIVOrmkUIcQdXUvSMOpNpCTtYD0u5ZypN1WYDmGzCse9da/
-         8lrj2jSh0jKwh11084qiYeKROknGJHOKoDKI2uM+NQgwgsihT8O4W8ZgPyPGtwqp935x
-         eB7Uo9+7N3GuvsFt1z9PramOw05TjN/p9OfWnQisqjuNBriJTf9pZyo7yo/QbAhABaB9
-         V7ig==
-X-Gm-Message-State: AGi0PuY5zT07TPScuT/SqmkUIXyl+dUinFCto61+iMKRmf2jsvsCtUrO
-        wdYAILbCAvxmRgkx+VtXnGMJuaVSIp0=
-X-Google-Smtp-Source: APiQypJjySahtwX210l6+YzHGGd9KTmUhMXtjUvPcObAZvzlT3R2fTTn3J5V8dE79qIA+G5ayVHxjw==
-X-Received: by 2002:a05:6402:1684:: with SMTP id a4mr819255edv.99.1586787170945;
-        Mon, 13 Apr 2020 07:12:50 -0700 (PDT)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
-        by smtp.gmail.com with ESMTPSA id u23sm1385690ejm.28.2020.04.13.07.12.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 07:12:50 -0700 (PDT)
-Received: by mail-wr1-f50.google.com with SMTP id x18so5992004wrq.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:12:50 -0700 (PDT)
-X-Received: by 2002:adf:f04a:: with SMTP id t10mr6751961wro.64.1586787169975;
- Mon, 13 Apr 2020 07:12:49 -0700 (PDT)
+        Mon, 13 Apr 2020 10:13:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730372AbgDMONC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:13:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BBD92075E;
+        Mon, 13 Apr 2020 14:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586787181;
+        bh=fFn92oT/7JQWOe+eb1RWwMKoz4lHaWYcfVSK1R2f98g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p1DHCiESlvhTiPZXniInk1VZLp/N5TlSG67QXKQaLE/7xtmztnwaoAlrbwH5ELOkB
+         BvIMAszq+85y4jImTos0W1yPNDl3NDZtkYOLxn+yVOiI+giGpnsHdNn9GcEfOC0YO+
+         L+qGrW8oYr3+k09cmhLzaHT7/wUuI33WGYwAoJAQ=
+Date:   Mon, 13 Apr 2020 16:12:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Message-ID: <20200413141259.GA3458877@kroah.com>
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-References: <20200413095457.1176754-1-jernej.skrabec@siol.net> <CAGb2v65qetxxVX1yoCjyduM4zRTyF3YKX1g9CuaHZkF_Z+AKQg@mail.gmail.com>
-In-Reply-To: <CAGb2v65qetxxVX1yoCjyduM4zRTyF3YKX1g9CuaHZkF_Z+AKQg@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 13 Apr 2020 22:12:39 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66LxhqTBeA_Br=kUrTq83hocEcAzYYC6nXpASvkkjn+1g@mail.gmail.com>
-Message-ID: <CAGb2v66LxhqTBeA_Br=kUrTq83hocEcAzYYC6nXpASvkkjn+1g@mail.gmail.com>
-Subject: Re: [PATCH] drm/sun4i: hdmi ddc clk: Fix size of m divider
-To:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413134611.478441-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 6:11 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Mon, Apr 13, 2020 at 5:55 PM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
-> >
-> > m divider in DDC clock register is 4 bits wide. Fix that.
-> >
-> > Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Meta-comment to the ACPI developers, shouldn't all of this happen
+"automatically" with the existing ACPI entries in sysfs?  If not, is
+this driver the proper way to do this?
 
-Cc stable?
+Minor review comments below:
+
+
+On Mon, Apr 13, 2020 at 03:46:11PM +0200, Enric Balletbo i Serra wrote:
+> +What:		/sys/bus/acpi/devices/GGL0001:00/BINF.{0,1,4}
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Description:
+> +		This file is reserved and doesn't shows useful information
+> +		for now.
+
+Then do not even have it present.  sysfs should never export files that
+nothing can be done with them, userspace "knows" that if a file is not
+present, it can not use it.  Bring it back when it is useful.
+
+> +What:		/sys/bus/acpi/devices/GGL0001:00/MECK
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Description:
+> +		This binary file returns the SHA-1 or SHA-256 hash that is
+> +		read out of the Management Engine extend registers during
+> +		boot. The hash is exported vi ACPI so the OS can verify that
+> +		the Management Engine firmware has not changed. If Management
+> +		Engine is not present, or if the firmware was unable to read the
+> +		extend registers, this buffer can be zero.
+
+The size is zero, or the contents are 0?
+
+> +static char *chromeos_acpi_alloc_name(char *name, int count, int index)
+> +{
+> +	char *str;
+> +
+> +	if (count == 1)
+> +		str = kstrdup(name, GFP_KERNEL);
+> +	else
+> +		str = kasprintf(GFP_KERNEL, "%s.%d", name, index);
+
+That's crazy, make this more obvious that "count" affects the name so
+much.  As it is, no one would know this unless they read the function
+code, and not just the name.
+
+
+> +/**
+> + * chromeos_acpi_add_group() - Create a sysfs group including attributes
+> + *			       representing a nested ACPI package.
+> + *
+> + * @adev: ACPI device.
+> + * @obj: Package contents as returned by ACPI.
+> + * @name: Name of the group.
+> + * @num_attrs: Number of attributes of this package.
+> + * @index: Index number of this particular group.
+> + *
+> + * The created group is called @name in case there is a single instance, or
+> + * @name.@index otherwise.
+> + *
+> + * All group and attribute storage allocations are included in the lists for
+> + * tracking of allocated memory.
+> + *
+> + * Return: 0 on success, negative errno on failure.
+> + */
+
+Meta-comment, no need for kerneldoc on static functions.  It's nice to
+see, but nothing is going to notice them...
+
+> +static int chromeos_acpi_add_method(struct acpi_device *adev, char *name)
+> +{
+> +	struct device *dev = &adev->dev;
+> +	struct acpi_buffer output;
+> +	union acpi_object *obj;
+> +	acpi_status status;
+> +	int ret = 0;
+> +
+> +	output.length = ACPI_ALLOCATE_BUFFER;
+> +
+> +	status = acpi_evaluate_object(adev->handle, name, NULL, &output);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(dev, "failed to retrieve %s (%d)\n", name, status);
+> +		return status;
+> +	}
+> +
+> +	obj = output.pointer;
+> +	if (obj->type == ACPI_TYPE_PACKAGE)
+> +		ret = chromeos_acpi_handle_package(adev, obj, name);
+> +
+> +	kfree(output.pointer);
+
+Why the need for 'obj' at all in this function?  Minor nit.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int chromeos_acpi_device_add(struct acpi_device *adev)
+> +{
+> +	struct chromeos_acpi_attribute_group *aag = chromeos_acpi.root;
+> +	struct device *dev = &adev->dev;
+> +	int i, ret;
+> +
+> +	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
+> +	if (!aag)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&aag->attribs);
+> +	INIT_LIST_HEAD(&aag->list);
+> +	INIT_LIST_HEAD(&chromeos_acpi.groups);
+> +
+> +	chromeos_acpi.root = aag;
+> +
+> +	/*
+> +	 * Attempt to add methods by querying the device's MLST method
+> +	 * for the list of methods.
+> +	 */
+> +	if (!chromeos_acpi_process_mlst(adev))
+> +		return 0;
+> +
+> +	dev_info(dev, "falling back to default list of methods\n");
+
+Is this debugging code left over?  If not, make it an error, and what
+would a user be able to do with it?
+
+thanks,
+
+greg k-h
