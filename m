@@ -2,175 +2,216 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E2BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D690C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE809206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1C8206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XzT+Tn3Y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CMBcQjit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387842AbgDMTLN (ORCPT
+        id S2387852AbgDMTNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 15:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
+        Mon, 13 Apr 2020 15:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387811AbgDMTLK (ORCPT
+        by vger.kernel.org with ESMTP id S2387844AbgDMTNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 15:11:10 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C193DC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:11:09 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r7so9854795ljg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:11:09 -0700 (PDT)
+        Mon, 13 Apr 2020 15:13:10 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDC7C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:13:10 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so2658355pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6E2riI0IkGg5so6kNR5+vB2edM7YCdJ1N8SPMSw1Rls=;
-        b=XzT+Tn3YvT1AQjdm78IDRMzVvhk4NDthYi+/Lqg1BSrpe1J2codCQUWF2PpRIN4NBZ
-         +sdUGpQ3OFbDDLs0pL/+sGVWwq/YdTamVw4NSJLDU1HAucbLoByS//8WCTcFh8V8Xgm1
-         58wOeU2Udneup6TbUeesldE5RO2QtsYSomLNfnzAUXKOT4g8C2AMw3mDf/6fE9cKVcIf
-         4TDRylZKaeC/8rUp24x90Z4/g9oxnL9SjZ0F9heF5c+ESQBXwfZNCnkKFXXRsOW2eWUt
-         Yg7l0B39oFSp1zFbv6ccE1k67Actv6fNEPeC/SMlG5SFU4yiu9/czW4adhZCx0a1A6ot
-         jkgQ==
+        bh=e4xDgyHrAaR0PWbatqOjb+dKS38cBqBXlUQRBaSrOKM=;
+        b=CMBcQjitoOG06iIIgLKAPgFwxrg5zXJDxXPJRusMXuO9B0GZ4OpjMQaa5jWoaY2msq
+         uA3VahVaBdEEeMMW+PI/eGalMkCV/zgyKHFZRKqlIONh6egDY8lCuDqDLqcGhzKAzEtY
+         fYiiE5TrBqn9QDIaLxcZ5ghSFUVvkpWEZlVwr3ZBaRQpLP8n0uWgInFneJeXT6ApvsPE
+         Mt7hpptRMeZAosXxs93ejIPW1jmpsXUSegSQEeyJe641fs5PgvcP7GqRz3PZz/GPT/JD
+         jnLf5fkQ1LdYHVmmq2s0d2cJz3HAAL6KUsdpumwLu1S2Am3NaOdFiRqRjJXWU0NIViPj
+         gN7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6E2riI0IkGg5so6kNR5+vB2edM7YCdJ1N8SPMSw1Rls=;
-        b=I4XX881W6wby7coNDLwA9ePjXgkOriwOmrlsBcE4VSMtTOTv1pRx10mSqEHxVHLleo
-         0k+tfaRpf0viBBbH7ApLISrCn+BlJNwhHCjdmUzfTh3FSu+bWib00ZoYad3jOu8mOwbi
-         7mmOMQ7DbsHjU5z39YrgnxcGqHJD8RBELtvumtDHo3qMvkCtjra+zQzZnjikjMGXENZK
-         q2b0crG63pU2S7XhG/62AE5LDPtihgE2cpfYlMZv1Cad/0xeVo7IMqFq3c4og00/XyTv
-         l1Km9YjdqQbgZTh+/ukLWJch50QKfMQDHqmxfFZ2+Lwn7DoVNQw2MKBQ52dVV5TjsUEK
-         rOsA==
-X-Gm-Message-State: AGi0PuaaGcWddeSq8fDZAC2qsFWTsTXEBHqzO1TvElhsPlY3a3Al0MUw
-        R4oO1qnkr6q5Md7YRY1nG0wtoteIl0ri+DjbIUNxAg==
-X-Google-Smtp-Source: APiQypLRXBI8I/e2KzJ1ZDb82h9Ivoa4sRuew1gA2hWgrB5j5s+vEJa59w61i92eBkb5VIZ/gRRMiNJoFbM6D8YP+xQ=
-X-Received: by 2002:a2e:8999:: with SMTP id c25mr2260602lji.73.1586805068126;
- Mon, 13 Apr 2020 12:11:08 -0700 (PDT)
+        bh=e4xDgyHrAaR0PWbatqOjb+dKS38cBqBXlUQRBaSrOKM=;
+        b=p5Z5xxGSBEZxvq/sXHwPc1JfkH/OEMe+hsL2dJYR6stC9pFNb5npcuCRIGuBuazRHg
+         vpVgUwwu1a1T1m9yxhJX5KLdq5MIz04rwy4d0t+vPDQwwO33q3LtlL/aaEzJ+W9+vlQC
+         mKCdvzyFWjaXuEA7i3wOqj98qH+V24bnbApke4A+Pl07JFrX50QJOedP7OKdp/9ENBpi
+         qX8eF0o34IRJoIoSA9JdYz/GwzTdXCEB6MizJDx1zDYQun6l8eofT7dzJTUK0wvANjd+
+         LmcKmewCtzGYyzuKeBtL/Y0VtnOe8cQraVkyym471fUuaXXUFHQ/Fm+7lkABPbsjU/fb
+         lnqQ==
+X-Gm-Message-State: AGi0PubEjjP2EUa9H/d79ju+BloIvESkIeOIZGU/44PrSv76bXL3G82x
+        b1Sg1l8MIj1k1j5bRpqekG/xoFS85BnlLKX7UeLdMw==
+X-Google-Smtp-Source: APiQypKkEaqtqmfGTNSuJ/lapu/UAciLB7FdMsJYfXNGEoBlYcPaDtMLRZq5RKC1uPgVqO4lI/7/zwbmIiceA1AbyZ4=
+X-Received: by 2002:a65:6704:: with SMTP id u4mr18940889pgf.263.1586805189832;
+ Mon, 13 Apr 2020 12:13:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
- <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
- <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
- <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
- <20200310111837.GA1368052@kuha.fi.intel.com> <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
- <CA+G9fYuwv+TEhgi46pjs2-GCe0mmMHyki9nAokvGCEA2syK5Dg@mail.gmail.com> <CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com>
-In-Reply-To: <CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 14 Apr 2020 00:40:54 +0530
-Message-ID: <CA+G9fYtjE+GTjiMHmyVy7my_GBxjkhWHkgD9Bk-PbVECrqJ3jg@mail.gmail.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+References: <20200324220830.110002-1-ndesaulniers@google.com>
+ <20200403231611.81444-1-ndesaulniers@google.com> <20200404160100.GB26298@redhat.com>
+ <20200404170604.GN23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200404170604.GN23230@ZenIV.linux.org.uk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 13 Apr 2020 12:12:58 -0700
+Message-ID: <CAKwvOdng5_KtX9CNxrTdtsdfNKsfY_4q=Rw_zMp-wGL+64skmg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: signal: move save_altstack_ex out of generic headers
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Marco Elver <elver@google.com>,
+        Brian Gerst <brgerst@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > I did already let Greg know when he emailed us on backporting the
-> > > patch to stable, and he acked saying he removed them. So as long as
-> > > these are not in the queue for 5.6 (it is not in Linus' tree yet), we
-> > > should be good.
+On Sat, Apr 4, 2020 at 10:06 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Sat, Apr 04, 2020 at 06:01:00PM +0200, Oleg Nesterov wrote:
+> > On 04/03, Nick Desaulniers wrote:
+> > >
+> > > --- a/arch/x86/kernel/signal.c
+> > > +++ b/arch/x86/kernel/signal.c
+> > > @@ -416,6 +416,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+> > >     return 0;
+> > >  Efault:
+> > >     user_access_end();
+> > > +   reset_altstack();
+> > >     return -EFAULT;
+> > >  }
+> > >  #else /* !CONFIG_X86_32 */
+> > > @@ -507,6 +508,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+> > >
+> > >  Efault:
+> > >     user_access_end();
+> > > +   reset_altstack();
+> > >     return -EFAULT;
+> > >  }
 > >
-> > The reported bug is still noticed on Linux mainline master branch
-> > The Kernel BUG noticed on x86_64 and i386 running selftest on Linux
-> > mainline kernel 5.6.0.
+> > I must have missed something, but this looks just wrong.
+> >
+> > reset_altstack() should be called when __setup_rt_frame() (and
+> > unsafe_save_altstack() in particular) succeeds, not when it fails.
+> >
+> > Nevermind, Al has already suggested to use signal_delivered()...
 >
-> Oh sorry, I thought that this patch was dropped from the maintainer's
-> for-next branch.
+> FWIW, I propose to do is the patch below (against the current mainline);
+> objections?
 >
-> Heikki, what do you think about my suggestion of having kobject
-> deallocate its children?
+> Don't do sas_ss_reset() until we are certain that sigframe won't be abandoned
 >
-> In the meantime, are people cool with the patch that Heikki proposed
-> as a temporary mitigation? I think my solution might be a bit more
-> involved. If I don't hear anything back, I will send out Heikki's
-> suggestion as a patch.
+> Currently we handle SS_AUTODISARM as soon as we have stored the
+> altstack settings into sigframe - that's the point when we have
+> set the things up for eventual sigreturn to restore the old settings.
+> And if we manage to set the sigframe up (we are not done with that
+> yet), everything's fine.  However, in case of failure we end up
+> with sigframe-to-be abandoned and SIGSEGV force-delivered.  And
+> in that case we end up with inconsistent rules - late failures
+> have altstack reset, early ones do not.
+>
+> It's trivial to get consistent behaviour - just handle SS_AUTODISARM
+> once we have set the sigframe up and are committed to entering
+> the handler, i.e. in signal_delivered().
+>
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-This reported problem still noticed on 5.7.0-rc1
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+I'll follow up on our KASAN implementation turning two consecutive
+longs into memset, which is odd.  Some of the recent changes to
+unsafe_put_user to pass a label are triggering new
+error: inline assembly requires more registers than available
+in arch/x86/ia32/ia32_signal.c for me, but they're unrelated to this patch.
 
-Test crash log:
--------------------
-[  281.822463] BUG: kernel NULL pointer dereference, address: 00000000
-[  281.829543] #PF: supervisor read access in kernel mode
-[  281.834680] #PF: error_code(0x0000) - not-present page
-[  281.839820] *pde = 00000000
-[  281.842706] Oops: 0000 [#1] SMP
-[  281.845852] CPU: 1 PID: 3998 Comm: modprobe Tainted: G        W
-    5.7.0-rc1 #1
-[  281.853590] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.0b 07/27/2017
-[  281.861063] EIP: ida_free+0x61/0x130
-[  281.864641] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
-88 c4 00 00 00 89 d3 e8 0d 8e 87 00 89 c7 8d 45 d8 e8 93 1e 01 00 a8
-01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 e0 8f 87 00 53 68 08 ab fd
-de e8
-[  281.883395] EAX: 00000000 EBX: 00000000 ECX: e422d8c0 EDX: 00000000
-[  281.889672] ESI: 00000000 EDI: 00000246 EBP: e5d63cdc ESP: e5d63cb0
-[  281.895935] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
-[  281.902720] CR0: 80050033 CR2: 00000000 CR3: 1db85000 CR4: 003406d0
-[  281.908978] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[  281.915243] DR6: fffe0ff0 DR7: 00000400
-[  281.919073] Call Trace:
-[  281.921521]  software_node_release+0x21/0x80
-[  281.925792]  kobject_put+0xa8/0x1c0
-[  281.929284]  kobject_del+0x40/0x60
-[  281.932680]  kobject_put+0x92/0x1c0
-[  281.936165]  fwnode_remove_software_node+0x30/0x50
-[  281.940957]  software_node_unregister_nodes+0x2b/0x50
-[  281.946002]  test_printf_init+0xe00/0x1d29 [test_printf]
-[  281.951320]  ? fs_reclaim_acquire.part.121+0x5/0x30
-[  281.956202]  ? test_hashed+0x54/0x54 [test_printf]
-[  281.960985]  ? test_hashed+0x54/0x54 [test_printf]
-[  281.965770]  do_one_initcall+0x54/0x2e0
-[  281.969639]  ? rcu_read_lock_sched_held+0x47/0x70
-[  281.974366]  ? kmem_cache_alloc_trace+0x285/0x2b0
-[  281.979063]  ? do_init_module+0x21/0x1f7
-[  281.982982]  ? do_init_module+0x21/0x1f7
-[  281.986899]  do_init_module+0x50/0x1f7
-[  281.990659]  load_module+0x1e32/0x2540
-[  281.994410]  __ia32_sys_finit_module+0x8f/0xe0
-[  281.998854]  do_fast_syscall_32+0x7f/0x330
-[  282.002949]  entry_SYSENTER_32+0xaa/0x102
-[  282.006952] EIP: 0xb7f07ce1
-[  282.009742] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[  282.028480] EAX: ffffffda EBX: 00000005 ECX: 0806233a EDX: 00000000
-[  282.034739] ESI: 099fe840 EDI: 099fe570 EBP: 099fe700 ESP: bf97146c
-[  282.040994] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
-[  282.047776] Modules linked in: test_printf(+) cls_bpf sch_fq 8021q
-sch_ingress veth algif_hash x86_pkg_temp_thermal fuse [last unloaded:
-gpio_mockup]
-[  282.061155] CR2: 0000000000000000
-[  282.064472] ---[ end trace 09f43fd7981266c9 ]---
-[  282.069084] EIP: ida_free+0x61/0x130
+> ---
+> diff --git a/include/linux/compat.h b/include/linux/compat.h
+> index 0480ba4db592..f614967374f5 100644
+> --- a/include/linux/compat.h
+> +++ b/include/linux/compat.h
+> @@ -461,8 +461,6 @@ int __compat_save_altstack(compat_stack_t __user *, unsigned long);
+>                         &__uss->ss_sp, label); \
+>         unsafe_put_user(t->sas_ss_flags, &__uss->ss_flags, label); \
+>         unsafe_put_user(t->sas_ss_size, &__uss->ss_size, label); \
+> -       if (t->sas_ss_flags & SS_AUTODISARM) \
+> -               sas_ss_reset(t); \
+>  } while (0);
+>
+>  /*
+> diff --git a/include/linux/signal.h b/include/linux/signal.h
+> index 05bacd2ab135..28fe9cc134f7 100644
+> --- a/include/linux/signal.h
+> +++ b/include/linux/signal.h
+> @@ -450,8 +450,6 @@ int __save_altstack(stack_t __user *, unsigned long);
+>         unsafe_put_user((void __user *)t->sas_ss_sp, &__uss->ss_sp, label); \
+>         unsafe_put_user(t->sas_ss_flags, &__uss->ss_flags, label); \
+>         unsafe_put_user(t->sas_ss_size, &__uss->ss_size, label); \
+> -       if (t->sas_ss_flags & SS_AUTODISARM) \
+> -               sas_ss_reset(t); \
+>  } while (0);
+>
+>  #ifdef CONFIG_PROC_FS
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index e58a6c619824..4cfe0b9af588 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2769,6 +2769,8 @@ static void signal_delivered(struct ksignal *ksig, int stepping)
+>         if (!(ksig->ka.sa.sa_flags & SA_NODEFER))
+>                 sigaddset(&blocked, ksig->sig);
+>         set_current_blocked(&blocked);
+> +       if (current->sas_ss_flags & SS_AUTODISARM)
+> +               sas_ss_reset(current);
+>         tracehook_signal_handler(stepping);
+>  }
+>
+> @@ -4070,11 +4072,7 @@ int __save_altstack(stack_t __user *uss, unsigned long sp)
+>         int err = __put_user((void __user *)t->sas_ss_sp, &uss->ss_sp) |
+>                 __put_user(t->sas_ss_flags, &uss->ss_flags) |
+>                 __put_user(t->sas_ss_size, &uss->ss_size);
+> -       if (err)
+> -               return err;
+> -       if (t->sas_ss_flags & SS_AUTODISARM)
+> -               sas_ss_reset(t);
+> -       return 0;
+> +       return err;
+>  }
+>
+>  #ifdef CONFIG_COMPAT
+> @@ -4129,11 +4127,7 @@ int __compat_save_altstack(compat_stack_t __user *uss, unsigned long sp)
+>                          &uss->ss_sp) |
+>                 __put_user(t->sas_ss_flags, &uss->ss_flags) |
+>                 __put_user(t->sas_ss_size, &uss->ss_size);
+> -       if (err)
+> -               return err;
+> -       if (t->sas_ss_flags & SS_AUTODISARM)
+> -               sas_ss_reset(t);
+> -       return 0;
+> +       return err;
+>  }
+>  #endif
+>
 
-https://lkft.validation.linaro.org/scheduler/job/1362555#L7962
 
-- Naresh
+-- 
+Thanks,
+~Nick Desaulniers
