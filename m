@@ -2,146 +2,112 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B13C352B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1D9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334872063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9046C206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DI6aEomb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fz3laViR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387447AbgDMRtM (ORCPT
+        id S2387464AbgDMRvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387436AbgDMRtL (ORCPT
+        Mon, 13 Apr 2020 13:51:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52514 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387436AbgDMRvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:49:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9791C0A3BDC;
-        Mon, 13 Apr 2020 10:49:10 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x4so10073890wmj.1;
-        Mon, 13 Apr 2020 10:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WT8RpNA0P+GqDuq/DyS+L+6ZT/1lo/cn+dTgGXIpD78=;
-        b=DI6aEomb/BXc6SfxFnQlVQo+tmkqg4/JH7mWJ02QKEPDvVT8si2J4K4iWaa8HrbiVG
-         AZ5zKrauwCZn+UxinpmGQAfBZ9SOrGjeQyyE3Qy6S6KvRkfk40OAGaPAN6AjBnxuPYia
-         cT2/yVvotVuHyE75pEhV0UCtwv8K2DyCW53di/ECstDUURwguj3SUe3ny68EFDU83u/O
-         ol6cA3MklZSvAn4pVYrmi+udUBX2kiHcZjjdyQgXcUxm93UvQTdxo7YqGfRelanItcFy
-         AqeroG+vhFOGIQ5xC6O6wCRrCuoNr755h7qlzOSVcivex3rCGETVc0Gwmf05JjsPAszS
-         Xlcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WT8RpNA0P+GqDuq/DyS+L+6ZT/1lo/cn+dTgGXIpD78=;
-        b=aZvCycgwa6knHtaAF4RwysQfxSgTPuYei6wxG7gamYXDZwA7R8IhSDQsdU4VaDhrNC
-         5Iy4PLD7FXucTxKyHlh4W4QK4wyK7+Tk40wX75Ja/3zmVGHyhOXzTCf1GAeTQcciN/y4
-         wOWsEpA2NvBftCwRQF4JMrqME1FY/PvlmRHSRwxrTM1Ksvmb9Z1vdBlSSGR0tqrs/jP6
-         1krpJT9RKaBrWEZzhE2+m16fFmC0X/1dBZZEHV7yJtFqInc2qQvjcnuBjl01ogjhTxRP
-         YMk5ifQ+4YLtOUOi6bzbwlnB+WX3QOeaBZDe9aov82IgYO0QVBcQ5oMp/Hr6xERWMIqJ
-         z5Vg==
-X-Gm-Message-State: AGi0PuZCf21kX7XwNumjhcYdZvXbdx759sCYcN+RQu4YyvVSbvIPRUtS
-        FRs+uwMuLCtbtSA+HuTU2Hlj6OHYbin/QcsQLInUjdPn
-X-Google-Smtp-Source: APiQypKijTsqeDp9flz+rvwjuFRJgzih5dOlUl923r/R/fXsWD/UuRvPQiIx6fhd+c8ClPZAGmtIGgB3/u4XfRPLJdc=
-X-Received: by 2002:a1c:6344:: with SMTP id x65mr19974588wmb.56.1586800149445;
- Mon, 13 Apr 2020 10:49:09 -0700 (PDT)
+        Mon, 13 Apr 2020 13:51:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DHnGpK059494;
+        Mon, 13 Apr 2020 17:51:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=WyvyD8fkR43Fmm1eZQNxVtNikVgJ6QpZU17W31tbyz0=;
+ b=fz3laViRxWavRfBg38tc1iC6EWtatytjkWPg/1zWivActwxYXLZFyhI7GctkR8xMmSb3
+ vItpylXfg+Xnie1peFO+/4QD2VDlmUp+8GMCLPg5mgd4L+tb9TyUaYbhur5KwOLHTIUo
+ 1zMgDcufE7oXjGB4JAElTkyj17Grc2bWbsk5N4uczCK2EFRWgfIUzIABPZPptmPPHee+
+ 3inVcveb+3WUrPy7/UhvY4Sln/w3/oj6PEe6C3fH9BjfuuSV33dc8nOWgWeliFLDvJ1X
+ CCMWJlj2LOJhITcc69mQkDUrQShmupNx43AobAwR4XLpMSoT5AttM/f+kH9r7woJvf/1 og== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 30b6hpfxw6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 17:51:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DHl4JL144669;
+        Mon, 13 Apr 2020 17:51:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30cta7mgg8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 17:51:27 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03DHpPi5032403;
+        Mon, 13 Apr 2020 17:51:26 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Apr 2020 10:51:25 -0700
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        paolo.valente@linaro.org, groeck@chromium.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>, sqazi@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] Revert "scsi: core: run queue if SCSI device queue isn't ready and queue is idle"
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200408150402.21208-1-dianders@chromium.org>
+        <20200408080255.v4.4.I630e6ca4cdcf9ab13ea899274745f9e3174eb12b@changeid>
+Date:   Mon, 13 Apr 2020 13:51:22 -0400
+In-Reply-To: <20200408080255.v4.4.I630e6ca4cdcf9ab13ea899274745f9e3174eb12b@changeid>
+        (Douglas Anderson's message of "Wed, 8 Apr 2020 08:04:02 -0700")
+Message-ID: <yq1o8rvxoit.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <f4eaf0ca-6cd6-c224-9205-bf64ca533ff5@molgen.mpg.de> <dcc4851e-0ab5-683a-2cf2-687d64a3c9da@molgen.mpg.de>
-In-Reply-To: <dcc4851e-0ab5-683a-2cf2-687d64a3c9da@molgen.mpg.de>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 13 Apr 2020 13:48:58 -0400
-Message-ID: <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
-Subject: Re: [regression 5.7-rc1] System does not power off, just halts
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Prike Liang <Prike.Liang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        regressions@leemhuis.info, David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>, Huang Rui <ray.huang@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mengbing Wang <Mengbing.Wang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 phishscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 1:47 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Prike, dear Alex, dear Linux folks,
->
->
-> Am 13.04.20 um 10:44 schrieb Paul Menzel:
->
-> > A regression between causes a system with the AMD board MSI B350M MORTA=
-R
-> > (MS-7A37) with an AMD Ryzen 3 2200G not to power off any more but just
-> > to halt.
-> >
-> > The regression is introduced in 9ebe5422ad6c..b032227c6293. I am in the
-> > process to bisect this, but maybe somebody already has an idea.
->
-> I found the Easter egg:
->
-> > commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58
-> > Author: Prike Liang <Prike.Liang@amd.com>
-> > Date:   Tue Apr 7 20:21:26 2020 +0800
-> >
-> >     drm/amdgpu: fix gfx hang during suspend with video playback (v2)
-> >
-> >     The system will be hang up during S3 suspend because of SMU is pend=
-ing
-> >     for GC not respose the register CP_HQD_ACTIVE access request.This i=
-ssue
-> >     root cause of accessing the GC register under enter GFX CGGPG and c=
-an
-> >     be fixed by disable GFX CGPG before perform suspend.
-> >
-> >     v2: Use disable the GFX CGPG instead of RLC safe mode guard.
-> >
-> >     Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-> >     Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-> >     Reviewed-by: Huang Rui <ray.huang@amd.com>
-> >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> >     Cc: stable@vger.kernel.org
->
-> It reverts cleanly on top of 5.7-rc1, and this fixes the issue.
->
-> Greg, please do not apply this to the stable series. The commit message
-> doesn=E2=80=99t even reference a issue/bug report, and doesn=E2=80=99t gi=
-ve a detailed
-> problem description. What system is it?
->
-> Dave, Alex, how to proceed? Revert? I created issue 1094 [1].
 
-Already fixed:
-https://patchwork.freedesktop.org/patch/361195/
+Douglas,
 
-Alex
+> This reverts commit 7e70aa789d4a0c89dbfbd2c8a974a4df717475ec.
+>
+> Now that we have the patches ("blk-mq: In blk_mq_dispatch_rq_list()
+> "no budget" is a reason to kick") and ("blk-mq: Rerun dispatching in
+> the case of budget contention") we should no longer need the fix in
+> the SCSI code.  Revert it, resolving conflicts with other patches that
+> have touched this code.
+>
+> With this revert (and the two new patches) I can run the script that
+> was in commit 7e70aa789d4a ("scsi: core: run queue if SCSI device
+> queue isn't ready and queue is idle") in a loop with no failure.  If I
+> do this revert without the two new patches I can easily get a failure.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
->
->
-> Kind regards,
->
-> Paul
->
->
-> [1]: https://gitlab.freedesktop.org/drm/amd/-/issues/1094
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Looks good to me, never really liked the original commit.
+
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
