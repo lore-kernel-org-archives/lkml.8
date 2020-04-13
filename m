@@ -2,244 +2,133 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DF5C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF90CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814A720692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899B420692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gP0sJX4z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BvE9X5S9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387869AbgDMTVc (ORCPT
+        id S1733153AbgDMTXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 15:21:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35398 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727849AbgDMTVb (ORCPT
+        Mon, 13 Apr 2020 15:23:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727849AbgDMTXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 15:21:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586805688;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U0H8keLbK3mVuVJkIOBQFVsta0mAjsJgEGaVcL/0Dlk=;
-        b=gP0sJX4zhNykMOuRG3sfdiFFTyy5CBa8phTFO1u30OOf5O8vLfVd4rIP3w4sUNGHqJedq8
-        leUf5SE7RioG9NR8yZtsyE3WQ1w9uD4Yx0//TQ4VGmYo2ZLSjmjdAdL0f9slr6Lj3/EE0p
-        X+aSCAcWIH9jJNYSRDMFcvDi20O2e9A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-X1wh1-omOiexprTuWWlTEQ-1; Mon, 13 Apr 2020 15:21:25 -0400
-X-MC-Unique: X1wh1-omOiexprTuWWlTEQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F3951937FC1;
-        Mon, 13 Apr 2020 19:21:24 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 151345C64F;
-        Mon, 13 Apr 2020 19:21:23 +0000 (UTC)
-Date:   Mon, 13 Apr 2020 13:21:22 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Message-ID: <20200413132122.46825849@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-        <20200402165954.48d941ee@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
-        <20200403112545.6c115ba3@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
-        <20200407095801.648b1371@w520.home>
-        <20200408040021.GS67127@otc-nc-03>
-        <20200408101940.3459943d@w520.home>
-        <20200413031043.GA18183@araj-mobl1.jf.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
+        Mon, 13 Apr 2020 15:23:51 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8BAC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:23:51 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id e16so3962995pjp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8lE32io1NRyqSa7MHqCZDRttxoRhAaBAKKn04pJslSA=;
+        b=BvE9X5S9Y0cIXImu51NYc31tHh4aVt0KseCDiyJkR7OZzY2JlIRDMkyDZdTNOPuC4R
+         9IYJkyCLyatQ9MCEd+g3PH5wq3a+NdnlcnQwJGnU5WCj0BtJz72G8SPSDblVjuOUBKvh
+         yhtI9Co6zz/+w4Y2ZsWWLZBcNOjxZAl0nlqk8AeM04HBptMq3I/aR+OocaBYkQ8aIM1n
+         jmagVkld4noTl+Up7eXZH2LGLT23dOn9qhWpW7udKYuYLNiClPgVQu0sh/zlvqTdjr7c
+         AkUSLYive4wNiDPW4Iix+C1+FjWDB6jiNv3afz3djTNXVT9cjCdb3G9SfKdliIBkFdtZ
+         CXhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8lE32io1NRyqSa7MHqCZDRttxoRhAaBAKKn04pJslSA=;
+        b=rlI3Jezwpl5SOgyRH5JLm1lto+ymmrt6sBLR7Fh/ePG4+l+/kE++3hyoJa64SyKSjc
+         4ZJ4bfZ6a3VPPapR6g3l8wNzEq1vB17fvSROV3QqFfDi/lcwbiEunVsKoZmviaa7NYoy
+         Ulo3jdt/Mx6gGAb0wI91j1djBVxzGNzRpDFm2f42t9xoPVp0ozR6Saln9UOth5Ur31f2
+         iP9OfMli+Xl7JnFaaHfWwuO7kHKP9Ff1B7NY+CcPIg59qxdvMcrdaR2ltOzd8R0W5nIX
+         gRX2egAHZSCQl5/8efTWmOvYP6a977Dh8eeIrMWymxQl3eKdVZamMwqwaZrHCevlVyZr
+         i6gQ==
+X-Gm-Message-State: AGi0Pubt/dCn4zQ7sWTthQyFNG/U9Tz27lu53eUJl2gET7JoJDkQzxrR
+        adz43Ug/LhpA2Jlr9AtAYnKHWv/ThyTdBCVVg6mk4Q==
+X-Google-Smtp-Source: APiQypKO1KUFCBfb3oR8QeV6GdNn+LL1TlznBqs1HPMQVZ+C86o3a66gINbmsxoBZH/I8gA95LPPPkmkWiOv+MWhxzc=
+X-Received: by 2002:a17:90a:266c:: with SMTP id l99mr13602789pje.186.1586805830250;
+ Mon, 13 Apr 2020 12:23:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200409232728.231527-1-caij2003@gmail.com> <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
+ <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com> <20200410123301.GX25745@shell.armlinux.org.uk>
+In-Reply-To: <20200410123301.GX25745@shell.armlinux.org.uk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 13 Apr 2020 12:23:38 -0700
+Message-ID: <CAKwvOd=-u3grX3O4CtBayJYhv=mmsxMrRTF=AMcKMbphN5Xkgg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Jian Cai <caij2003@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Smith <Peter.Smith@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jian Cai <jiancai@google.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 08:05:33 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On Fri, Apr 10, 2020 at 5:33 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> For older CPUs, it doesn't matter what the latest ARM ARM says, the
+> appropriate version of the ARM ARM is the one relevant for the CPU
+> architecture.  This is a mistake frequently made, and it's been pointed
+> out by Arm Ltd in the past (before ARMv6 even came on the scene) that
+> keeping older revisions is necessary if you want to be interested in
+> the older architectures.
 
-> > From: Tian, Kevin
-> > Sent: Monday, April 13, 2020 3:55 PM
-> >   
-> > > From: Raj, Ashok <ashok.raj@linux.intel.com>
-> > > Sent: Monday, April 13, 2020 11:11 AM
-> > >
-> > > On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:  
-> > > > On Tue, 7 Apr 2020 21:00:21 -0700
-> > > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
-> > > >  
-> > > > > Hi Alex
-> > > > >
-> > > > > + Bjorn  
-> > > >
-> > > >  + Don
-> > > >  
-> > > > > FWIW I can't understand why PCI SIG went different ways with ATS,
-> > > > > where its enumerated on PF and VF. But for PASID and PRI its only
-> > > > > in PF.
-> > > > >
-> > > > > I'm checking with our internal SIG reps to followup on that.
-> > > > >
-> > > > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:  
-> > > > > > > Is there vendor guarantee that hidden registers will locate at the
-> > > > > > > same offset between PF and VF config space?  
-> > > > > >
-> > > > > > I'm not sure if the spec really precludes hidden registers, but the
-> > > > > > fact that these registers are explicitly outside of the capability
-> > > > > > chain implies they're only intended for device specific use, so I'd say
-> > > > > > there are no guarantees about anything related to these registers.  
-> > > > >
-> > > > > As you had suggested in the other thread, we could consider
-> > > > > using the same offset as in PF, but even that's a better guess
-> > > > > still not reliable.
-> > > > >
-> > > > > The other option is to maybe extend driver ops in the PF to expose
-> > > > > where the offsets should be. Sort of adding the quirk in the
-> > > > > implementation.
-> > > > >
-> > > > > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is  
-> > > resisting  
-> > > > > making VF's first class citizen, we might ask them to add some verbiage
-> > > > > to suggest leave the same offsets as PF open to help emulation software.  
-> > > >
-> > > > Even if we know where to expose these capabilities on the VF, it's not
-> > > > clear to me how we can actually virtualize the capability itself.  If
-> > > > the spec defines, for example, an enable bit as r/w then software that
-> > > > interacts with that register expects the bit is settable.  There's no
-> > > > protocol for "try to set the bit and re-read it to see if the hardware
-> > > > accepted it".  Therefore a capability with a fixed enable bit
-> > > > representing the state of the PF, not settable by the VF, is
-> > > > disingenuous to the spec.  
-> > >
-> > > I think we are all in violent agreement. A lot of times the pci spec gets
-> > > defined several years ahead of real products and no one remembers
-> > > the justification on why they restricted things the way they did.
-> > >
-> > > Maybe someone early product wasn't quite exposing these features to the
-> > > VF
-> > > and hence the spec is bug compatible :-)
-> > >  
-> > > >
-> > > > If what we're trying to do is expose that PASID and PRI are enabled on
-> > > > the PF to a VF driver, maybe duplicating the PF capabilities on the VF
-> > > > without the ability to control it is not the right approach.  Maybe we  
-> > >
-> > > As long as the capability enable is only provided when the PF has enabled
-> > > the feature. Then it seems the hardware seems to do the right thing.
-> > >
-> > > Assume we expose PASID/PRI only when PF has enabled it. It will be the
-> > > case since the PF driver needs to exist, and IOMMU would have set the
-> > > PASID/PRI/ATS on PF.
-> > >
-> > > If the emulation is purely spoofing the capability. Once vIOMMU driver
-> > > enables PASID, the context entries for the VF are completely independent
-> > > from the PF context entries.
-> > >
-> > > vIOMMU would enable PASID, and we just spoof the PASID capability.
-> > >
-> > > If vIOMMU or guest for some reason does disable_pasid(), then the
-> > > vIOMMU driver can disaable PASID on the VF context entries. So the VF
-> > > although the capability is blanket enabled on PF, IOMMU gaurantees the
-> > > transactions are blocked.
-> > >
-> > >
-> > > In the interim, it seems like the intent of the virtual capability
-> > > can be honored via help from the IOMMU for the controlling aspect..
-> > >
-> > > Did i miss anything?  
-> > 
-> > Above works for emulating the enable bit (under the assumption that
-> > PF driver won't disable pasid when vf is assigned). However, there are
-> > also "Execute permission enable" and "Privileged mode enable" bits in
-> > PASID control registers. I don't know how those bits could be cleanly
-> > emulated when the guest writes a value different from PF's...  
-> 
-> sent too quick. the IOMMU also includes control bits for allowing/
-> blocking execute requests and supervisor requests. We can rely on 
-> IOMMU to block those requests to emulate the disabled cases of
-> all three control bits in the pasid cap.
+As if it never existed *waves hands*.  Interesting.  Does ARM still
+distribute these older reference manuals? Do you keep copies of the
+older revisions?
 
+>
+> However, there's an additional complication here: DEC's license from
+> Arm Ltd back in the days of StrongARM allowed them to make changes to
+> the architecture - that was passed over to Intel when they bought that
+> part of DEC.  Consequently, these "non-Arm vendor" cores contain
+> extensions that are not part of the ARM ARM.  iWMMXT is one such
+> example, which first appeared in the Intel PXA270 SoC (an ARMv5
+> derived CPU).
+>
+> In fact, several of the features found in later versions of the ARM
+> architecture came from DEC and Intel enhancements.
+>
+> If your compiler/assembler only implements what is in the latest ARM
+> ARM, then it is not going to be suitable for these older CPUs and
+> alternate vendor "ARM compatible" CPUs.
 
-So if the emulation of the PASID capability takes into account the
-IOMMU configuration to back that emulation, shouldn't we do that
-emulation in the hypervisor, ie. QEMU, rather than the kernel vfio
-layer?  Thanks,
-
-Alex 
-
-> > Similar problem also exists when talking about PRI emulation, e.g.
-> > to enable PRI the software usually waits until the 'stopped' bit
-> > is set (indicating all previously issued requests have completed). How
-> > to emulate this bit accurately when one guest toggles the enable bit
-> > while the PF and other VFs are actively issuing page requests through
-> > the shared page request interface? from pcie spec I didn't find a way
-> > to catch when all previously-issued requests from a specific VF have
-> > completed. Can a conservative big-enough timeout value help here?
-> > I don't know... similar puzzle also exists for emulating the 'reset'
-> > control bit which is supposed to clear the pending request state for
-> > the whole page request interface.
-> > 
-> > I feel the main problem in pcie spec is that, while they invent SR-IOV
-> > to address I/O virtualization requirement (where strict isolation is
-> > required), they blurred the boundary by leaving some shared resource
-> > cross PF and VFs which imply sort of cooperation between PF and VF
-> > drivers. On bare metal such cooperation is easy to build, by enabling/
-> > disabling a capability en mass, by using the same set of setting, etc.
-> > However it doesn't consider the virtualization case where a VF is
-> > assigned to the guest which considers the VF as a standard PCI/PCIe
-> > endpoint thus such cooperation is missing. A vendor capability could
-> > help fix the gap here but making it adopted by major guest OSes will
-> > take time. But honestly speaking I don't know other good alternative
-> > now... :/
-> >   
-> > >  
-> > > > need new capabilities exposing these as slave features that cannot be
-> > > > controlled?  We could define our own vendor capability for this, but of
-> > > > course we have both the where to put it in config space issue, as well
-> > > > as the issue of trying to push an ad-hoc standard.  vfio could expose
-> > > > these as device features rather than emulating capabilities, but that
-> > > > still leaves a big gap between vfio in the hypervisor and the driver in
-> > > > the guest VM.  That might still help push the responsibility and policy
-> > > > for how to expose it to the VM as a userspace problem though.  
-> > >
-> > > I think this is a good long term solution, but if the vIOMMU implenentations
-> > > can carry us for the time being, we can probably defer them unless
-> > > we are stuck.
-> > >  
-> > > >
-> > > > I agree though, I don't know why the SIG would preclude implementing
-> > > > per VF control of these features.  Thanks,
-> > > >  
-> > >
-> > > Cheers,
-> > > Ashok  
-> > 
-> > Thanks
-> > Kevin  
-> 
-
+This is a neat piece of history, thanks for sharing.
+-- 
+Thanks,
+~Nick Desaulniers
