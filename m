@@ -2,136 +2,102 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F93BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EC9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46E32206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186CF20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4GgF6Zv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJXkGH0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389209AbgDMVnJ (ORCPT
+        id S2389219AbgDMVo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 17:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388914AbgDMVnF (ORCPT
+        Mon, 13 Apr 2020 17:44:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45091 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388914AbgDMVo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 17:43:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E84C0A3BDC;
-        Mon, 13 Apr 2020 14:43:05 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so4646888wrx.4;
-        Mon, 13 Apr 2020 14:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=afpWVAYpzZoZj0cDvbL8nrVqxs7nYxlOztCZvs4WtUQ=;
-        b=n4GgF6ZvxeiMQzKcLPJYat0oTylnX+JU8HeEovMVSF3wH7koxJ/qhOk8Rx8OsZv2ZU
-         M/ouFWf+mujWlix45liM6rESmfaaySYkc4WbrHKEzprG80Tw6oCUi6AK2qopMck8TNLX
-         vCvCiNaPj5g/etB57fWlQx59B4vGjQh/IH95iiXlz1YWQAal1oWT20c38lnRF1kR1pcy
-         fMvDilMbH/oi9r8YRgjLOHrcwfx2OWxRIdqv4Tjw5zY+A7rRDZmY2sl6S6nw+FdmixRh
-         WO0cviCLsO5h3p5ZyVJBB6rDenpX6C4U8l7wP3qL+Vz3cNO8zQN1DbiH7SnGkBpmgpqB
-         8fKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=afpWVAYpzZoZj0cDvbL8nrVqxs7nYxlOztCZvs4WtUQ=;
-        b=WHeTLrKLR8AYA8U0rcJv4+a/WMy961JV5jr0bXbMtrdLns9okS2CWZqgDZecbWcpiZ
-         AEhXFGcqbFRhi79fPp+e1X466kj2VQwzLSFeWB/qZaUWktqdun9TSVEJNnXkvPWNZ9y4
-         CZ1BgEnmugOK7/QV1D00lBSwmCccsMT2t6COAA096daQ2beYRWWB2rNU2HAGotz70XSB
-         +ihj33UZOkQr09kgwdZBRcoBUOVB3GfzNaovD0RLvH6gw7NrNPDVndJNpBR7DDK8AzjZ
-         WVvNXiR9baUQrw7hcOb9YNo//E+usd6l5kbUQCWfeF72Fp81a23YQtTz4arLxjPs00GJ
-         SMhw==
-X-Gm-Message-State: AGi0PuYwszpaPiYBRenu0iMAN2jO8x+HEOBVpr+XQPyDQ7xZaT3fJ1Fi
-        nvbVUvXCrH8MOzB+PfIjGABzpc3D3Q==
-X-Google-Smtp-Source: APiQypKoWcnPd09pTJoHtRS5w95RqrkCG3ThrVdtiu2tqlaUdLoXeUKrjEYD25oz7RWRfHnpVPwR1Q==
-X-Received: by 2002:a5d:6a10:: with SMTP id m16mr22341815wru.371.1586814183920;
-        Mon, 13 Apr 2020 14:43:03 -0700 (PDT)
-Received: from ninjahost.lan (79-73-33-244.dynamic.dsl.as9105.com. [79.73.33.244])
-        by smtp.gmail.com with ESMTPSA id 1sm15597703wmi.0.2020.04.13.14.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 14:43:03 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     boqun.feng@gmail.com, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org (open list:FSNOTIFY: FILESYSTEM
-        NOTIFICATION INFRASTRUCTURE)
-Subject: [PATCH v2] fsnotify: Add missing annotation for fsnotify_finish_user_wait() and for fsnotify_prepare_user_wait()
-Date:   Mon, 13 Apr 2020 22:42:40 +0100
-Message-Id: <20200413214240.15245-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Apr 2020 17:44:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586814265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KQIqrFGUphmuFkBfyVpa5uYKSuyV3byu56jJQa16wH8=;
+        b=HJXkGH0BNqRMBvKhXJue8gAwXpkYSgeXNCOKSPso4CPa+90xjD+sG6JJuv89g9WBgYKhxB
+        z9i1eOkjT2p02ra5m7Gr9qNu8B+NlrRf2XLIJoLM8zxm9JfEHOoOMQq6Od/4DeJvciZS74
+        YKdnK5xrUrZKq3mKDH9665de/rLRJqo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-zHFU6IkTOpqpXbCPmWIjow-1; Mon, 13 Apr 2020 17:44:22 -0400
+X-MC-Unique: zHFU6IkTOpqpXbCPmWIjow-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E10DB8010F1;
+        Mon, 13 Apr 2020 21:44:18 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-119-134.rdu2.redhat.com [10.10.119.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C43D719C69;
+        Mon, 13 Apr 2020 21:44:12 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     intel-gfx@lists.freedesktop.org
+Cc:     Adam Jackson <ajax@redhat.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Lee Shawn C <shawn.c.lee@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915/dpcd_bl: Unbreak enable_dpcd_backlight modparam
+Date:   Mon, 13 Apr 2020 17:44:06 -0400
+Message-Id: <20200413214407.1851002-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warnings at fsnotify_prepare_user_wait()
-	and at fsnotify_finish_user_wait()
+Looks like I accidentally made it so you couldn't force DPCD backlight
+support on, whoops. Fix that.
 
-warning: context imbalance in fsnotify_finish_user_wait()
-	- wrong count at exit
-warning: context imbalance in fsnotify_prepare_user_wait()
-	- unexpected unlock
-
-The root cause is the missing annotation at fsnotify_finish_user_wait()
-	and at fsnotify_prepare_user_wait()
-fsnotify_prepare_user_wait() has an extra annotation __release()
- that only tell Sparse and not GCC to shutdown the warning
-
-Add the missing  __acquires(&fsnotify_mark_srcu) annotation
-Add the missing __releases(&fsnotify_mark_srcu) annotation
-Add the __release(&fsnotify_mark_srcu) annotation.
-
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 17f5d57915be ("drm/i915: Force DPCD backlight mode on X1 Extreme 2=
+nd Gen 4K AMOLED panel")
+Cc: Adam Jackson <ajax@redhat.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: "Ville Syrj=C3=A4l=C3=A4" <ville.syrjala@linux.intel.com>
 ---
-changes since v2
--include annotations for fsnotify_prepare_user_wait()
+ drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- fs/notify/mark.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/notify/mark.c b/fs/notify/mark.c
-index 1d96216dffd1..8387937b9d01 100644
---- a/fs/notify/mark.c
-+++ b/fs/notify/mark.c
-@@ -325,13 +325,16 @@ static void fsnotify_put_mark_wake(struct fsnotify_mark *mark)
- }
- 
- bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info)
-+	__releases(&fsnotify_mark_srcu)
- {
- 	int type;
- 
- 	fsnotify_foreach_obj_type(type) {
- 		/* This can fail if mark is being removed */
--		if (!fsnotify_get_mark_safe(iter_info->marks[type]))
-+		if (!fsnotify_get_mark_safe(iter_info->marks[type])) {
-+			__release(&fsnotify_mark_srcu);
- 			goto fail;
-+		}
- 	}
- 
- 	/*
-@@ -350,6 +353,7 @@ bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info)
- }
- 
- void fsnotify_finish_user_wait(struct fsnotify_iter_info *iter_info)
-+	__acquires(&fsnotify_mark_srcu)
- {
- 	int type;
- 
--- 
-2.24.1
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/driv=
+ers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+index 4b916468540f..0722540d64ad 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+@@ -358,6 +358,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_co=
+nnector *intel_connector)
+ 	 */
+ 	if (i915->vbt.backlight.type !=3D
+ 	    INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE &&
++	    i915_modparams.enable_dpcd_backlight !=3D 1 &&
+ 	    !drm_dp_has_quirk(&intel_dp->desc, intel_dp->edid_quirks,
+ 			      DP_QUIRK_FORCE_DPCD_BACKLIGHT)) {
+ 		drm_info(&i915->drm,
+--=20
+2.25.1
 
