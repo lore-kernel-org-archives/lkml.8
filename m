@@ -2,107 +2,143 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0EAC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D083CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099FB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:06:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VMQYWJ1Y"
+	by mail.kernel.org (Postfix) with ESMTP id AF983206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586797657;
+	bh=aZjUtUk9QZwo2K36lV5HFVf06Y2lBOpMb8+khBRP8JY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=te8KyDcF0AKs0pfeYMIesNllHySIozxB3Xh2QhDzan3r3bbsdY+fx8b5HXwvVjZ9S
+	 kB0FJeSbrDvjg4kOb7sCWJ+kplm2ckJfxxi0rTDf+cmfFURqhwmgzQsV9fRhc+j3b3
+	 Tp2r/+WtiF+QDNwFt8CwFmLDl9HYV0tBKz7FNH9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732514AbgDMRGf (ORCPT
+        id S1732525AbgDMRHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:06:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37628 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732482AbgDMRGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:06:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DH5e1j186408;
-        Mon, 13 Apr 2020 17:06:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=UAfRx68GmugaLtPZinUg/SwF6hel61cQgW6F9C717Cw=;
- b=VMQYWJ1YGtI4OmsNMa5Z3PjHN1LLlly2qYJbeEGxJfSs0RlbHWZTZ9TqwVy2dkl9gSDL
- h5234uiAA/9y741PT2sNDTczXE1sChiF/8X1HiuUipo4jqJFcaSexs3EVmygV34e89X8
- k8djMEXXdlM+ZfSiXmQX5xIkU1UV5FAuZGuMhtWVeGs4juml8lBdQILVdiL33AAWVWGW
- vBdlq6TMo1epDvd42rHezyZU+FSLImicPR3nDPsqz+CAlqFDZ9EXoiIgxbY1JP4ckY44
- Rz4RsTB+j5xk31gjIuasJRLS6rYRUmIxMysC0RyJe4wAHATKE65nuqfzfQCtVPbLBchT Cg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30b6hpfq2s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 17:06:05 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DH1uQ0105916;
-        Mon, 13 Apr 2020 17:06:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 30bqpck88c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 17:06:04 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03DH5wCw006578;
-        Mon, 13 Apr 2020 17:06:01 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Apr 2020 10:05:58 -0700
-Date:   Mon, 13 Apr 2020 13:06:18 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH v3 05/10] mmap locking API: convert mmap_sem call sites
- missed by coccinelle
-Message-ID: <20200413170618.3luttzyzwjsd5y26@ca-dmjordan1.us.oracle.com>
-References: <20200327225102.25061-1-walken@google.com>
- <20200327225102.25061-6-walken@google.com>
+        Mon, 13 Apr 2020 13:07:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732482AbgDMRHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:07:35 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6382063A;
+        Mon, 13 Apr 2020 17:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586797654;
+        bh=aZjUtUk9QZwo2K36lV5HFVf06Y2lBOpMb8+khBRP8JY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DujfD7l5PVD2eexgA0mb8vvI4TrQRk6HOy7OoMqiCxHZp6P47b2VEv6KjP6M0dE2x
+         Jly+puteAITXPxDql3q+W9tnHcxkKtxGlr5P6PfAS2MP0Khr1xrhsi2y+fsioFk7cE
+         vlWp+5+biQe8//+QZGYtfiUAJ9qlbotuBZlD24dQ=
+Date:   Mon, 13 Apr 2020 18:07:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 0/6] irq/irq_sim: try to improve the API
+Message-ID: <20200413180728.0714da3d@archlinux>
+In-Reply-To: <CAMRc=Mc=gTrpQsMdOTBJaYT6JLg=o17Mm78ijAGUJYE2pXcCQQ@mail.gmail.com>
+References: <20200211131240.15853-1-brgl@bgdev.pl>
+        <CAMRc=Mc=gTrpQsMdOTBJaYT6JLg=o17Mm78ijAGUJYE2pXcCQQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327225102.25061-6-walken@google.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 clxscore=1011 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130131
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:50:57PM -0700, Michel Lespinasse wrote:
-> Convert the last few remaining mmap_sem rwsem calls to use the new
-> mmap locking API. These were missed by coccinelle for some reason
-> (I think coccinelle does not support some of the preprocessor
-> constructs in these files ?)
+On Tue, 3 Mar 2020 08:57:43 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Adding the wrappers for instrumentation makes sense to me.  For patches 1-5,
-you can add
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> wt., 11 lut 2020 o 14:12 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82=
+(a):
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This is my second take at improving the interrupt simulator interface.
+> > I marked it as v2 but it actually takes a completely different approach.
+> >
+> > The interrupt simulator API exposes a lot of custom data structures and
+> > functions and doesn't reuse the interfaces already exposed by the irq
+> > subsystem. This series tries to address it.
+> >
+> > First, we make irq_domain_reset_irq_data() available to non-V2 domain A=
+PI
+> > users - that'll be used in the subsequent patch. Next we overhaul the
+> > public interfaces - we hide all specific data structures and instead
+> > rely on the irq_domain struct and virtual interrupt numberspace.
+> >
+> > Next four patches simplify the interface even more, but since the change
+> > may be a bit more controversial due to modification of the irq_domain
+> > I decided to split them out of the second patch.
+> >
+> > In patch 3/6 we're adding a new callback to irq_domain_ops that is call=
+ed
+> > right before all the other code in irq_domain_remove(). Next we use it =
+to
+> > remove the simulator-specific cleanup function from irq_sim.h - users n=
+ow
+> > can simply use the regular irq_domain_remove().
+> >
+> > Last two patches show that the new callback isn't limited to the interr=
+upt
+> > simulator and can be used to shrink code in real driver too. We introdu=
+ce
+> > a new helper for a common use case of disposing of all mappings before
+> > removing the irq_domain and use it in the keystone irqchip driver.
+> >
+> > The end effect is that we limit the interrupt simulator API to two
+> > functions (plus one device managed variant) and zero new structures.
+> >
+> > v1: https://lkml.org/lkml/2019/8/12/558
+> >
+> > v1 -> v2:
+> > - instead of just making the new data structures opaque for users, remo=
+ve
+> >   them entirely in favor of irq_domain
+> > - call irq_set_handler() & irq_domain_reset_irq_data() when unmapping
+> >   the simulated interrupt
+> > - fix a memory leak in error path
+> > - make it possible to use irq_find_matching_fwnode() with the simulator
+> >   domain
+> > - correctly use irq_create_mapping() and irq_find_mapping(): only use t=
+he
+> >   former at init-time and the latter at interrupt-time
+> > =20
+>=20
+> Hi,
+>=20
+> it's been three weeks, so gentle ping on that.
+>=20
+> Or should I resend the entire series with a more elaborate commit
+> message for patch 1/6?
 
-I'll wait for the next version to review the rest.
+I'd resend it now if nothing has happened that I missed.  Merge window
+having just closed, it's the perfect time for a rebase on rc1.
+
+thanks,
+
+Jonathan
+
+>=20
+> Bartosz
+
