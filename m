@@ -2,78 +2,73 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F7FC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 587052063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD09520692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="jPTarGOL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cE0wMgMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732335AbgDMRBw (ORCPT
+        id S1732347AbgDMREm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50488 "EHLO
+        Mon, 13 Apr 2020 13:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732285AbgDMRBY (ORCPT
+        by vger.kernel.org with ESMTP id S1732338AbgDMREl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:01:24 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37111C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:01:23 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a81so10643800wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:01:23 -0700 (PDT)
+        Mon, 13 Apr 2020 13:04:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45849C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:04:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b8so4754642pfp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
-        b=jPTarGOLBHICzFk/SWQUkgD3hCg8XcoDG7CXapZcDsRzSzijrqOD5k+F4T12xMaXyT
-         qy3afrMlLzxdyUYDQD/VFUeJMY2vJM2FTJsF41V6LjKtYLUAGwWz+Dw5k35Jg8El7kjV
-         oU4O7AnoWuRySOg/5UWGOjBJt6Z1eyKHu9iPB1RsBO+LoZ4Wf4XU7m4SpzwS12daXbNc
-         uKitNPeGTVXI4iYSDyweG/hu7Zd/ijYe7VOdapbt43UJaQQ1Rj5C8VJUpIKWxPNPe3dS
-         R9LkPX1l7cup7CDxcynh6qxvwLYesIfX632SKaVRI3CRV3eiQvMsNsigSIoejQ41TSVw
-         qYNA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ceulhz3n3M1xBWzRxkP3qWy9KlyCG/n8MPY9jtHXKak=;
+        b=cE0wMgMJTmg3KdGHenvJolN4TqRChZKPCuG0ZohpyvtJOUR5kGgiz/NP+wbVAQzTBz
+         HDepdqj0PNCewtBACtSAlf6KGPSKmZVyXmOqddKtZizRvfdYT0Hct+q0Wrq3nm/2IHSG
+         l3fEDQ0IwjjxBvpb8i00NeCPOJD4WRkrZaQQA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
-        b=euFk34656qBTIUzGP/oGlJ1yjnfQoQHx/GRvCA5Xgs4HcgW8s+UC3PYLg4qzDepV9A
-         1DMegz4RJ3rrmJpNjwO1OP5WC0vqZ8IgWJQsvjVo9LpIx6sTSvcZdP6UzowPO+8rH3Vv
-         TQK1t6r0wOMyJJjUBV/rc6M8GIRpOhGRP6+kBjgdoeYNL7uT+NCbFdisbygrESF6Ykhn
-         xrdOxXMYMql7FhBFZUY2WAOtHwJnW9L43+ma0F1gdqzB7CIz5+T+5bjdc9/lQPF6rL38
-         iTmYgrS3/a5eO72NNHikGIN4afQ1BNLZ/DMROgRfxtTKs3Z9di0zCYjR5+nVhpnN3BwW
-         mg5A==
-X-Gm-Message-State: AGi0PuZ81HgxQPse0KxJ7xp+ByD6XdZIT48sLLCXaygwf6VWVT8p+H5H
-        ry+uE2lN66l8Fq+uaFk4tmp6pg==
-X-Google-Smtp-Source: APiQypJ3/fefwpYozAGXpApn99Y34/0sqtBcP3vpsYtKnQrt+DmUza+fQ0CSr/nrIVqQOXBCqD3zSw==
-X-Received: by 2002:a1c:bc05:: with SMTP id m5mr9645067wmf.143.1586797281510;
-        Mon, 13 Apr 2020 10:01:21 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:1f1b:192:29fe:7bf:41fe:904d])
-        by smtp.googlemail.com with ESMTPSA id q187sm15443268wma.41.2020.04.13.10.01.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ceulhz3n3M1xBWzRxkP3qWy9KlyCG/n8MPY9jtHXKak=;
+        b=n8u6cGaZB38n1+HvF4cEtVxwwSly8f0tXk/2d6CvohiufGmIdtq5EsSi011FXCtdDR
+         qpitZr0W//fDoVR6tn/O6sA5Bwz972eqZpejnDue92UsQPIWquebLDW1n5JtGYvmqYtD
+         P5QgcWMSYbldcFY4eX+K68YyEdgLLYBODZTkzaZB6KsP+qqx95Rj/ZRki4UdMRXbOmwB
+         5RvZSIVzCWxxHYXx1/8gvvUdYuNqnjMfklHSF2PdgF4u6eEUBZUvFwVDL8O6WZdRDr8J
+         d5hXCU9R2Dap6u1vObo0NWxG7RvHZzrcLHzB4ofXS097SKroyY4nndzJPLD/DD9NoF7p
+         hfig==
+X-Gm-Message-State: AGi0PubV9dXpqcuH59vPu5Y6dgbkLIbq4JERYJYe0gdL4IDSi5zLOdyq
+        G4yFtilRfnQLXpkpjvEs/xkCKw==
+X-Google-Smtp-Source: APiQypJCj7EZAoTI/78OD3/Rna1nFDgg6H9lUbQV6x/gpSSn6lvb+SoYx3fzB5eW/lrsdnAwuikL0w==
+X-Received: by 2002:a63:2143:: with SMTP id s3mr17727335pgm.20.1586797480703;
+        Mon, 13 Apr 2020 10:04:40 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id p62sm1634414pfb.93.2020.04.13.10.04.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 10:01:21 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-Date:   Mon, 13 Apr 2020 19:01:06 +0200
-Message-Id: <20200413170107.246509-2-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200413170107.246509-1-robert.marko@sartura.hr>
-References: <20200413170107.246509-1-robert.marko@sartura.hr>
+        Mon, 13 Apr 2020 10:04:40 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, evgreen@chromium.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/10] drivers: qcom: rpmh-rsc: Cleanup / add lots of comments
+Date:   Mon, 13 Apr 2020 10:04:05 -0700
+Message-Id: <20200413170415.32463-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,83 +76,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the binding document for the IPQ40xx MDIO driver.
+In order to review Maulik's latest "rpmh_flush for non OSI targets"
+patch series I've found myself trying to understand rpmh-rsc better.
+To make it easier for others to do this in the future, add a whole lot
+of comments / documentation.
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
- .../bindings/net/qcom,ipq40xx-mdio.yaml       | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+As part of this there are a very small number of functional changes.
+- We'll get a tiny performance boost by getting rid of the "cmd_cache"
+  which I believe was unnecessary.
+- We now assume someone else is in charge of exclusivity for
+  tcs_invalidate() and have removed a lock in there. As per the
+  comments in the patch, this isn't expected to cause problems.
+- tcs_is_free() no longer checks hardware state, but we think it
+  didn't need to.
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-new file mode 100644
-index 000000000000..3e2ccf417fb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
-+
-+maintainers:
-+  - Robert Marko <robert.marko@sartura.hr>
-+
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq40xx-mdio
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    mdio@90000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      compatible = "qcom,ipq40xx-mdio";
-+      reg = <0x90000 0x64>;
-+      status = "disabled";
-+
-+      ethphy0: ethernet-phy@0 {
-+        reg = <0>;
-+      };
-+
-+      ethphy1: ethernet-phy@1 {
-+        reg = <1>;
-+      };
-+
-+      ethphy2: ethernet-phy@2 {
-+        reg = <2>;
-+      };
-+
-+      ethphy3: ethernet-phy@3 {
-+        reg = <3>;
-+      };
-+
-+      ethphy4: ethernet-phy@4 {
-+        reg = <4>;
-+      };
-+    };
+These changes touch a lot of code in rpmh-rsc.  Luckily Maulik has
+reported that he's tested them and they work fine for him.  They
+should be ready to go.
+
+I've tried to structure the patches so that simpler / less
+controversial patches are first. Those could certainly land on their
+own without later patches. Many of the patches could also be dropped
+and the others would still apply if they are controversial.  If you
+need help doing this then please yell.
+
+These patches are based on Maulik's v17 series, AKA:
+https://lore.kernel.org/r/1586703004-13674-1-git-send-email-mkshah@codeaurora.org
+
+There are still more cleanups that we need to do, but to avoid having
+too many patches flying through the air at once we'll do them after
+Maulik's v17 and this series lands.
+
+With all that, enjoy.
+
+Changes in v4:
+- Add "payload" to end of ("Don't double-check rpmh") patch subject
+- Removed extra "make sure" in commit message.
+
+Changes in v3:
+- ("...are not for IRQ") is new for v3.
+- ("Don't double-check rpmh") replaces ("Warning if tcs_write...")
+- Add "TCS" in title (Maulik).
+- Adjusted comments for rpmh_rsc_write_ctrl_data().
+- Comments for new enable_tcs_irq() function.
+- Comments for new rpmh_rsc_cpu_pm_callback() function.
+- Extra blank line removed (Maulik).
+- IRQ registers aren't in TCS0 (Maulik).
+- Kill find_match moves from patch #9 to patch #5 (Maulik).
+- Mention in message that I also fixed up kernel-doc stuff.
+- Moved comments patch after ("Kill cmd_cache and find_match...").
+- One space after a period now (Maulik).
+- Plural of TCS fixed to TCSes following Maulik's example.
+- Re-added comment in tcs_write() about checking for same address.
+- Rebased atop v16 ('Invoke rpmh_flush...') series.
+- Replace ("...warn if state mismatch") w/ ("...just check tcs_in_use")
+- Replaced ("irqsave()...") + ("...never -EBUSY") w/ ("Caller handles...")
+- Rewrote commit message to adjust for patch order.
+- __tcs_set_trigger() comments adjusted now that it can set or unset.
+- get_tcs_for_msg() documents why it's safe to borrow the wake TCS.
+- get_tcs_for_msg() no longer returns -EAGAIN.
+
+Changes in v2:
+- Comment tcs_is_free() new for v2; replaces old patch 6.
+- Document bug of tcs_write() not handling -EAGAIN.
+- Document get_tcs_for_msg() => -EAGAIN only for ACTIVE_ONLY.
+- Document locks for updating "tcs_in_use" more.
+- Document tcs_is_free() without drv->lock OK for tcs_invalidate().
+- Document that rpmh_rsc_send_data() can be an implicit invalidate.
+- Document two get_tcs_for_msg() issues if zero-active TCS.
+- Fixed documentation of "tcs" param in find_slots().
+- Got rid of useless "if (x) continue" at end of for loop.
+- More clear that active-only xfers can happen on wake TCS sometimes.
+- Now prose in comments instead of struct definitions.
+- Pretty ASCII art from Stephen.
+- Reword tcs_write() doc a bit.
+
+Douglas Anderson (10):
+  drivers: qcom: rpmh-rsc: Clean code reading/writing TCS regs/cmds
+  drivers: qcom: rpmh-rsc: Document the register layout better
+  drivers: qcom: rpmh-rsc: Fold tcs_ctrl_write() into its single caller
+  drivers: qcom: rpmh-rsc: Remove get_tcs_of_type() abstraction
+  drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
+  drivers: qcom: rpmh-rsc: A lot of comments
+  drivers: qcom: rpmh-rsc: tcs_is_free() can just check tcs_in_use
+  drivers: qcom: rpmh-rsc: Don't double-check rpmh payload
+  drivers: qcom: rpmh-rsc: Caller handles tcs_invalidate() exclusivity
+  drivers: qcom: rpmh-rsc: read_tcs_reg()/write_tcs_reg() are not for
+    IRQ
+
+ drivers/soc/qcom/rpmh-internal.h |  66 +++--
+ drivers/soc/qcom/rpmh-rsc.c      | 465 +++++++++++++++++++++----------
+ drivers/soc/qcom/rpmh.c          |   5 +-
+ 3 files changed, 363 insertions(+), 173 deletions(-)
+
 -- 
-2.26.0
+2.26.0.110.g2183baf09c-goog
 
