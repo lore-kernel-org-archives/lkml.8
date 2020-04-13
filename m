@@ -2,272 +2,90 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A8BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C17C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCB92072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nhnBxR+7"
+	by mail.kernel.org (Postfix) with ESMTP id 72B6D20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbgDMQB5 (ORCPT
+        id S1731227AbgDMQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:01:57 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53104 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731188AbgDMQB4 (ORCPT
+        Mon, 13 Apr 2020 12:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731188AbgDMQD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:01:56 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DFw3Uo028358;
-        Mon, 13 Apr 2020 16:01:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=REbA4S1oU2wWHOxI9V9GVO68wioqMje5FElRBnjCl5I=;
- b=nhnBxR+7YjxF8kahBI7sjAwFvjkmiXcvZP8glENhP/EGSHbsZ7A4q/qWXrhey5FDpeDf
- FsvMU4Lj3Qq1tcj2gKOCs3kipJB5zq979K5Ou1SopA5IPU9PlMSfjeBTNK4kbWDiCCEX
- yGV+SPTjDEdyO3X0WEH0I0hZGtCUjVCPwY6OCcHfgMgnrEOMOgZvXg9YIjLP4U/4Csz9
- Vw5ERk0VPVoAkxrJ1ClfLPMd0mT0WFzen5vx5au9ijHvS7+NTWYBB9nRRzElNaq5xwcN
- MsHvBVSfYLDZJMR81mOQSQ2M9QyOMu/aGcbKnP5xGRA025qAzUCA47a9pD8jo3WbmHQp tQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30b5ukycr6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 16:01:44 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DFurNL144073;
-        Mon, 13 Apr 2020 16:01:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 30bqkxmau9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Apr 2020 16:01:43 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03DG1fRL018862;
-        Mon, 13 Apr 2020 16:01:41 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Apr 2020 09:01:40 -0700
-Date:   Mon, 13 Apr 2020 09:01:38 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V7 6/9] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200413160138.GV6742@magnolia>
-References: <20200413054046.1560106-1-ira.weiny@intel.com>
- <20200413054046.1560106-7-ira.weiny@intel.com>
+        Mon, 13 Apr 2020 12:03:29 -0400
+X-Greylist: delayed 1720 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Apr 2020 09:03:29 PDT
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9261CC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:03:29 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 691072A0F92
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id E421D4800F7; Mon, 13 Apr 2020 18:03:25 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH] HID: multitouch: add eGalaxTouch P80H84 support
+Date:   Mon, 13 Apr 2020 18:02:37 +0200
+Message-Id: <20200413160237.610771-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413054046.1560106-7-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=1 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004130121
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 10:40:43PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The functionality in xfs_diflags_to_linux() and xfs_diflags_to_iflags() are
-> nearly identical.  The only difference is that *_to_linux() is called after
-> inode setup and disallows changing the DAX flag.
-> 
-> Combining them can be done with a flag which indicates if this is the initial
-> setup to allow the DAX flag to be properly set only at init time.
-> 
-> So remove xfs_diflags_to_linux() and call the modified xfs_diflags_to_iflags()
-> directly.
-> 
-> While we are here simplify xfs_diflags_to_iflags() to take struct xfs_inode and
-> use xfs_ip2xflags() to ensure future diflags are included correctly.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from V6:
-> 	Move unrelated hunk to previous patch.
-> 	Change logic for better code generation.
-> 
-> Changes from V5:
-> 	The functions are no longer identical so we can only combine
-> 	them rather than deleting one completely.  This is reflected in
-> 	the new init parameter.
-> ---
->  fs/xfs/xfs_inode.h |  1 +
->  fs/xfs/xfs_ioctl.c | 33 +--------------------------------
->  fs/xfs/xfs_iops.c  | 42 +++++++++++++++++++++++-------------------
->  3 files changed, 25 insertions(+), 51 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index 492e53992fa9..e76ed9ca17f7 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -466,6 +466,7 @@ int	xfs_break_layouts(struct inode *inode, uint *iolock,
->  /* from xfs_iops.c */
->  extern void xfs_setup_inode(struct xfs_inode *ip);
->  extern void xfs_setup_iops(struct xfs_inode *ip);
-> +extern void xfs_diflags_to_iflags(struct xfs_inode *ip, bool init);
->  
->  /*
->   * When setting up a newly allocated inode, we need to call
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index d42de92cb283..c6cd92ef4a05 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1100,37 +1100,6 @@ xfs_flags2diflags2(
->  	return di_flags2;
->  }
->  
-> -STATIC void
-> -xfs_diflags_to_linux(
-> -	struct xfs_inode	*ip)
-> -{
-> -	struct inode		*inode = VFS_I(ip);
-> -	unsigned int		xflags = xfs_ip2xflags(ip);
-> -
-> -	if (xflags & FS_XFLAG_IMMUTABLE)
-> -		inode->i_flags |= S_IMMUTABLE;
-> -	else
-> -		inode->i_flags &= ~S_IMMUTABLE;
-> -	if (xflags & FS_XFLAG_APPEND)
-> -		inode->i_flags |= S_APPEND;
-> -	else
-> -		inode->i_flags &= ~S_APPEND;
-> -	if (xflags & FS_XFLAG_SYNC)
-> -		inode->i_flags |= S_SYNC;
-> -	else
-> -		inode->i_flags &= ~S_SYNC;
-> -	if (xflags & FS_XFLAG_NOATIME)
-> -		inode->i_flags |= S_NOATIME;
-> -	else
-> -		inode->i_flags &= ~S_NOATIME;
-> -#if 0	/* disabled until the flag switching races are sorted out */
-> -	if (xflags & FS_XFLAG_DAX)
-> -		inode->i_flags |= S_DAX;
-> -	else
-> -		inode->i_flags &= ~S_DAX;
-> -#endif
-> -}
-> -
->  static int
->  xfs_ioctl_setattr_xflags(
->  	struct xfs_trans	*tp,
-> @@ -1168,7 +1137,7 @@ xfs_ioctl_setattr_xflags(
->  	ip->i_d.di_flags = xfs_flags2diflags(ip, fa->fsx_xflags);
->  	ip->i_d.di_flags2 = di_flags2;
->  
-> -	xfs_diflags_to_linux(ip);
-> +	xfs_diflags_to_iflags(ip, false);
->  	xfs_trans_ichgtime(tp, ip, XFS_ICHGTIME_CHG);
->  	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
->  	XFS_STATS_INC(mp, xs_ig_attrchg);
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 37bd15b55878..856ad823e754 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -1284,26 +1284,30 @@ xfs_inode_enable_dax(
->  #endif /* CONFIG_FS_DAX */
->  
->  
-> -STATIC void
-> +void
->  xfs_diflags_to_iflags(
-> -	struct inode		*inode,
-> -	struct xfs_inode	*ip)
-> +	struct xfs_inode	*ip,
-> +	bool init)
->  {
-> -	uint16_t		flags = ip->i_d.di_flags;
-> -
-> -	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC |
-> -			    S_NOATIME | S_DAX);
-> -
-> -	if (flags & XFS_DIFLAG_IMMUTABLE)
-> -		inode->i_flags |= S_IMMUTABLE;
-> -	if (flags & XFS_DIFLAG_APPEND)
-> -		inode->i_flags |= S_APPEND;
-> -	if (flags & XFS_DIFLAG_SYNC)
-> -		inode->i_flags |= S_SYNC;
-> -	if (flags & XFS_DIFLAG_NOATIME)
-> -		inode->i_flags |= S_NOATIME;
-> -	if (xfs_inode_enable_dax(ip))
-> -		inode->i_flags |= S_DAX;
-> +	struct inode            *inode = VFS_I(ip);
-> +	unsigned int            xflags = xfs_ip2xflags(ip);
-> +	unsigned int            flags = 0;
-> +
-> +	ASSERT(!(IS_DAX(inode) && init));
-> +
-> +	if (xflags & FS_XFLAG_IMMUTABLE)
-> +		flags |= S_IMMUTABLE;
-> +	if (xflags & FS_XFLAG_APPEND)
-> +		flags |= S_APPEND;
-> +	if (xflags & FS_XFLAG_SYNC)
-> +		flags |= S_SYNC;
-> +	if (xflags & FS_XFLAG_NOATIME)
-> +		flags |= S_NOATIME;
-> +	if (init && xfs_inode_enable_dax(ip))
-> +		flags |= S_DAX;
-> +
-> +	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME);
+Add support for P80H84 touchscreen from eGalaxy:
 
-I noticed that S_DAX drops out of the mask out operation here, which of
-course resulted in an eyebrow-raise because the other four flags are
-always set to whatever we just computed. :)
+  idVendor           0x0eef D-WAV Scientific Co., Ltd
+  idProduct          0xc002
+  iManufacturer           1 eGalax Inc.
+  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
 
-Then I realized that yes, this is intentional since we can't change
-S_DAX on the fly, and that S_DAX is never set i_flags on an inode that's
-being initialized so we don't need to mask off S_DAX ever.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-Could we add a comment here to remind the reader that S_DAX is a bit
-special?
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index b18b13147a6f..68d46e818dc2 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -385,6 +385,7 @@
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
++#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
+ 
+ #define USB_VENDOR_ID_ELAN		0x04f3
+ #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W	0x0401
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 362805ddf377..03c720b47306 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1922,6 +1922,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
++	{ .driver_data = MT_CLS_EGALAX,
++		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
++			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+ 
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
+-- 
+2.25.1
 
-/*
- * S_DAX can only be set during inode initialization and is never set by
- * the VFS, so we cannot mask off S_DAX in i_flags.
- */
-
-With that added,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> +	inode->i_flags |= flags;
->  }
->  
->  /*
-> @@ -1332,7 +1336,7 @@ xfs_setup_inode(
->  	inode->i_gid    = xfs_gid_to_kgid(ip->i_d.di_gid);
->  
->  	i_size_write(inode, ip->i_d.di_size);
-> -	xfs_diflags_to_iflags(inode, ip);
-> +	xfs_diflags_to_iflags(ip, true);
->  
->  	if (S_ISDIR(inode->i_mode)) {
->  		/*
-> -- 
-> 2.25.1
-> 
