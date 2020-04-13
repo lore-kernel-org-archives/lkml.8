@@ -2,103 +2,123 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8FBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A747C352B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6EAA2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="G6N26eb/"
+	by mail.kernel.org (Postfix) with ESMTP id 4F658206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586796662;
+	bh=kX2lIkUzBaiu0Fn0I8qHB+oBIIc1p2aUEa1l0kyhBW4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=j2CFWDIn6N9muKZxADS272PRuP+oEi2xWSzeOxM69Lj11d6AUeoIzc4+aiPLaPlQq
+	 FqOmJANZgeLVBk04cbpUP3eR4oLE0kd+6NWlOc+O0XqWbn5RhxqHOasQlz1T1c8i6P
+	 x6lOKDaauVbgTv/OgJgjHRX8cqmn5J1B3k3G/wIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731808AbgDMQsx (ORCPT
+        id S1731826AbgDMQvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:48:53 -0400
-Received: from sonic308-36.consmr.mail.ne1.yahoo.com ([66.163.187.59]:36856
-        "EHLO sonic308-36.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731786AbgDMQsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:48:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1586796520; bh=bElmMGeGrTv4UdyeT/oxmt1v3extMJthOFW7mXr0BPk=; h=Date:From:To:Cc:Subject:References:From:Subject; b=G6N26eb/yIVXiQw0qE6W8f1AUrYzP2Vnj639Wh1dRrPcss2DmnvhpM6jv3pahSdqrFPJylW7ww6buFHDad/XWvsA0ORW2x4Pqk2m7Rl3wB//SK75W/34y8J46ioDHOwyfgZuoNAirliNbZMXd2ssFqHczVm6uwjizaz8w4+roui8RAImkHC1G8HM0eLi+lIN+UpXYFFzsHxk0/fpUN7p1G+a08pwx9Q5aXfZHZH6JmyFThQVGq3uLKmzFlPLEIMb4NFQpKquxYjJdjfNPnsB8XJgTLhVI0idEPo/POaX9oGrUXioupjEW8jrcagzTy6jliHX7oUMzGd4K7n/idELdQ==
-X-YMail-OSG: LNqYr_cVM1k37p0BEArws0j2SMpuYOmfY_EMhqarqChYwpxuxB8KFGB5vV9fJsz
- iIhnJb3jaXvCGfE2aSt4doan7aJ6dnzbyn89vnjq_SV8cDsINa2Fqtq5gc4ss64xsowGwGkY0CFL
- bkDlKb.TBuK5i6h5kMoSuaco4ej32E_P1gf2QALa7eJ4GjX3kPp1EPZiOY7t91D7aYL8_D_qdt3H
- vO3CrC3b3OzsJM2iIxCQTrZhgw_xhCgXknUXKldyXSCljK.xwsr6ptXFP0ShFiClnDhnnzQSeb8U
- 8moIDJ0FYYVSUa5fkj9bVqabZrzyVLc1F11Q19S1nCLBWPK3XhvJyJYWLAXyfcB.b.GvP2KFnYxd
- .622OG1af5W_BeM9zU.B0c_zanoiWMHY5iDCE4YL7hr0Z9_vvXrbkIdlZzinFy1cDN.jqFa6Audw
- gINBZnjZwlUDG_kWvj7oLaD6DBTOlN5FSKkY3TqJCvii_60QSyGPbhVDbzMpyoK9WrDLrc9Qdcxv
- vplOG2bPeK6hS1GT4th80ccQjURFsuAX4URg1Ud7Pg.Rgy5_m3ChN8gh_gPG6s6yro2abNq1zTVk
- 5MiCxH5yW6Um1DLHst.PQPVBq0jsOJJINwuE52hU5csMNA1iS878f2XIdgfuJ80uGTw9C0Suq7MV
- jUQPvf7Jn.r0CPz6wIduG5MdgGa5MUc6EaQ9Uk2BgNfahC6Cjhlm1NdcNMBrpoQKcFCw2MeCoqOX
- XtKpIYf0Cwkg3P_imu2PoQSeZEBtLzT7fk1O2mdzN7Add.8_6nITJWcVQ9tLbKVk5cO0HzcmEX7G
- Wk3y05Z.DkCwSpSMcv1Pt2tu2Jm5sCTeBqMvJeRrc0sWL2q8Z_Hv.ZmxNrFPZ7yIhNm3tp7M33Oi
- YUy0yCJ2V8JL71R14dSZ9slsRCO26FHABrYpmPfindFDov.JMXs7_zdnKFTDtVehI.Pf1xUAh8WP
- eGk0o2xRK12vs3jQejL8E3_HS7MSqPRXf9.2YkjO9Mbn3MXzicXwMk00MgoB8EV_tGnMZCtZIwYw
- foZddko11qm3tQQONrDFvdKb9qax0V2OWdPkraYbNgpukrtllXThKRQhV2u34MzH3hmr3_urqUQs
- ClkLC64opRM.mNzxEj.VxatPE83c0L5SREGkqlyOHuHTA9bofUTDAb02wx7mVSNIOH8CIyvO8GS_
- 71HVoS2qnZAM_.wmbp1Lyyow_1hO6MGdI42Gg8O2AH5E5faSJVUDvjfsVcv2SiaiCKIOZvlOKCxX
- v9jYAeL6UkGR0Yy3ugJ6EPuNc1WvWQi9gkbZ6aNb7RshbfeE_dscpY1d691.OuEZa2dVD.of3eIn
- DqS2tCYzshoHXS.Hq5wHrwSAUsFwh12D8q0VPrMoQ3E0aTchM7X7hCVNafw95qXWfliTAppfKhiM
- EUiz_SVqm8in1o_lrVJUImDS0i2fBFlWRye6G2WZC.oU45UJJqcfnqc5_0WiZN8Ktf.JESTnVovd
- BytjHtcq9zOOXZcUjJ_3yQ73uipcIyH3TcxKvspLA2cqw95M.gQwTZc76yQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Mon, 13 Apr 2020 16:48:40 +0000
-Received: by smtp424.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 700b38ef91bca85d70b21427f6befc3c;
-          Mon, 13 Apr 2020 16:46:38 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 00:46:08 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
-Cc:     LKML <linux-kernel@vger.kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Lasse Collin <lasse.collin@tukaani.org>
-Subject: [ANNOUNCE] erofs-utils: release 1.1
-Message-ID: <20200413164544.GA5578@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Mon, 13 Apr 2020 12:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731759AbgDMQvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:51:00 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9F42063A;
+        Mon, 13 Apr 2020 16:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586796659;
+        bh=kX2lIkUzBaiu0Fn0I8qHB+oBIIc1p2aUEa1l0kyhBW4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cgfU03VuqSmqRvA9hKfgjFJSIOddPfA5cNcmoRHZXq0XTvxWuHOugVyZ8FCIaWP4U
+         lgSJsJFnfiLnIl1MkHZCUM3oPQ1FJea8BYYXp+nmt6ivsTh44lmUyY4LInOjCD1er6
+         0L+0MEEDM/NzCsL2nDrJJE9/akZm0eJWxFDVPcII=
+Date:   Mon, 13 Apr 2020 17:50:54 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     mani@kernel.org
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
+ sensor
+Message-ID: <20200413175054.626283dc@archlinux>
+In-Reply-To: <20200412183658.6755-4-mani@kernel.org>
+References: <20200412183658.6755-1-mani@kernel.org>
+        <20200412183658.6755-4-mani@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-References: <20200413164544.GA5578.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-Mailer: WebService/1.1.15620 hermes_aol Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On Mon, 13 Apr 2020 00:06:58 +0530
+mani@kernel.org wrote:
 
-A new version erofs-utils 1.1 is available at:
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git tags/v1.1
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> Add devicetree OF match table support for CCS811 VOC sensor.
+> 
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 
-It's actually a maintenance release including the following updates:
-  - (mkfs.erofs) add a manual for mkfs.erofs;
-  - (mkfs.erofs) add superblock checksum support;
-  - (mkfs.erofs) add filesystem UUID support;
-  - (mkfs.erofs) add exclude files support;
-  - (mkfs.erofs) fix compiling issues under some specific conditions,
-                 mainly reported by various buildbots;
-  - (mkfs.erofs) minor code cleanups;
+Hi,
 
-EROFS LZMA support is still ongoing, and the previous preliminary
-progress is available at
- https://lore.kernel.org/r/20200229045017.12424-1-hsiangkao@aol.com
-and
- https://lore.kernel.org/r/20200306020252.9041-1-hsiangkao@aol.com
-some minor updates I'd like to send out with the next WIP version.
-
-In addition, as discussed with Lasse before, XZ Utils liblzma would
-probably support fixed-sized output compression officially later
-as well. But it may need some more time then.
-
-Recently I have little time for features due to struggling with my
-upcoming English test which has been greatly impacted (delayed) by
-corona. While I'm still keeping up with community by email and
-available for all potential issues and/or responses if any.
+A few small things to clean up inline
 
 Thanks,
-Gao Xiang
+
+Jonathan
+
+> ---
+>  drivers/iio/chemical/ccs811.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
+> index 6cd92c49c348..313931208f61 100644
+> --- a/drivers/iio/chemical/ccs811.c
+> +++ b/drivers/iio/chemical/ccs811.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+
+You are including this just to get things in mod_devicetable.h
+so include that directly instead.
+
+>  
+>  #define CCS811_STATUS		0x00
+>  #define CCS811_MEAS_MODE	0x01
+> @@ -538,9 +539,16 @@ static const struct i2c_device_id ccs811_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ccs811_id);
+>  
+> +static const struct of_device_id ccs811_dt_ids[] = {
+> +	{ .compatible = "ams,ccs811" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+> +
+>  static struct i2c_driver ccs811_driver = {
+>  	.driver = {
+>  		.name = "ccs811",
+> +		.of_match_table = of_match_ptr(ccs811_dt_ids),
+No need for the of_match_ptr macro.  It has several issues.
+
+1) Blocks PRP001 ACPI magic device types being used to instantiate
+this using the device tree binding but under ACPI.
+2) Will give warnings about ccs811_dt_ids being unused on no
+   device tree builds.
+
+>  	},
+>  	.probe = ccs811_probe,
+>  	.remove = ccs811_remove,
 
