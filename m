@@ -2,99 +2,72 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A65C2BA19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F84C2BB86
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518F120692
+	by mail.kernel.org (Postfix) with ESMTP id 79B4920776
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgDMKlg (ORCPT
+        id S1729011AbgDMLeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:41:36 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:34533 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727776AbgDMKlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:41:36 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EF8DB200005;
-        Mon, 13 Apr 2020 10:41:32 +0000 (UTC)
-Date:   Mon, 13 Apr 2020 12:41:32 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu.Beznea@microchip.com
-Cc:     mark.rutland@arm.com, a.zummo@towertech.it, jason@lakedaemon.net,
-        devicetree@vger.kernel.org, maz@kernel.org,
-        linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com,
-        robh+dt@kernel.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 5/5] rtc: at91sam9: add microchip,sam9x60-rtt
-Message-ID: <20200413104132.GD3628@piout.net>
-References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
- <1586536019-12348-6-git-send-email-claudiu.beznea@microchip.com>
- <20200410174113.GZ3628@piout.net>
- <fa6366a0-e1a7-a7b3-e743-2517437b2b3d@microchip.com>
+        Mon, 13 Apr 2020 07:34:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2307 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727781AbgDMLeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 07:34:07 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AFCC094B43E8D0143BAE;
+        Mon, 13 Apr 2020 19:34:04 +0800 (CST)
+Received: from huawei.com (10.175.102.37) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
+ 19:33:55 +0800
+From:   Li Bin <huawei.libin@huawei.com>
+To:     <dgilbert@interlog.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <hare@suse.com>, <jthumshirn@suse.de>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>
+Subject: [PATCH] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Mon, 13 Apr 2020 19:28:10 +0800
+Message-ID: <1586777290-17271-1-git-send-email-huawei.libin@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa6366a0-e1a7-a7b3-e743-2517437b2b3d@microchip.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/04/2020 08:50:02+0000, Claudiu.Beznea@microchip.com wrote:
-> part of 1/5 is still necessary.
-> 
+If the dxfer_len is greater than 256M that the request is invalid,
+it should call sg_remove_request in sg_common_write.
 
-indeed.
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+---
+ drivers/scsi/sg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Regarding the fallback to "atmel,at91sam9260-rtt" I am aware of that. I
-> chose this approach because this IP is a bit different than the one with
-> "atmel,at91sam9260-rtt" compatible, meaning it has a features that the old
-> one has not. I'm talking about [1] which I cannot see on a SAM9G45 [2]
-> where RTT IP uses "atmel,at91sam9260-rtt" as compatible.
-> 
-> Is true it may be necessary in the future when new features may be
-> implemented. Taking this into account, would you like to get rid of the new
-> compatible in code and keep it only in device tree?
-> 
-
-What I said is not that the new compatible is not necessary at all but
-that it can be avoided in the aic code.
-
-> [1]
-> http://ww1.microchip.com/downloads/en/DeviceDoc/SAM9X60-Data-Sheet-DS60001579B.pdf#_OPENTOPIC_TOC_PROCESSING_d137e64502
-> [2]
-> http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6438-32-bit-ARM926-Embedded-Microprocessor-SAM9G45_Datasheet.pdf
-> 
-> > 
-> > I think 2/5 may be useful in the future but as far as the aic fixup
-> > is concerned, both IPs are identical.
-> > 
-> >>  - reg: should encode the memory region of the RTT controller
-> >>  - interrupts: rtt alarm/event interrupt
-> >>  - clocks: should contain the 32 KHz slow clk that will drive the RTT block.
-> >> --
-> >> 2.7.4
-> >>
-> > 
-> > --
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
-
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 4e6af592..9c0ee19 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -793,8 +793,10 @@ static int get_sg_io_pack_id(int *pack_id, void __user *buf, size_t count)
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
+ 
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
+ 
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+1.7.12.4
+
