@@ -2,134 +2,108 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B025C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC40C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B77C2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010FB206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GBlQgBqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbgDMMWz (ORCPT
+        id S1729486AbgDMM10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:22:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55336 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728344AbgDMMWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:22:55 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6B73DF5F703402750F59;
-        Mon, 13 Apr 2020 20:22:52 +0800 (CST)
-Received: from linux-kDCJWP.huawei.com (10.175.104.212) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 13 Apr 2020 20:22:45 +0800
-From:   Keqian Zhu <zhukeqian1@huawei.com>
-To:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>
-CC:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jay Zhou <jianjay.zhou@huawei.com>,
-        <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH v2] KVM/arm64: Support enabling dirty log gradually in small chunks
-Date:   Mon, 13 Apr 2020 20:20:23 +0800
-Message-ID: <20200413122023.52583-1-zhukeqian1@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 13 Apr 2020 08:27:26 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:52970 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729429AbgDMMPh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 08:15:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1586780128; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OZJbd7KDW2Gck5NN0k5YXIWfV4Rx4iYsgUeNGIDPTx0=;
+        b=GBlQgBqVsXzIHPSnhLr3Ep9G1a0NykoRKERZ12ulPd8eLVfo7jd6k2sGvJIMWWRyn7cKv7
+        YlKKfyrMA8sBbfRosZeVYtMNjVRWcpLcWRDiNHQ9UdU8BrCMviWepigV5HMPXYSV+ZNoSL
+        OYs+yFOnC6I4bG6zE8+eeSE1kU7UNtk=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 2/3] pwm: jz4740: Make PWM start with the active part
+Date:   Mon, 13 Apr 2020 14:14:44 +0200
+Message-Id: <20200413121445.72996-2-paul@crapouillou.net>
+In-Reply-To: <20200413121445.72996-1-paul@crapouillou.net>
+References: <20200413121445.72996-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.212]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is already support of enabling dirty log graually in small chunks
-for x86 in commit 3c9bd4006bfc ("KVM: x86: enable dirty log gradually in
-small chunks"). This adds support for arm64.
+The PWM would previously always start with the inactive part.
+To counter that, the common trick is to use an inverted duty as the
+real duty (as in, 'period - duty'), and invert the polarity when the
+PWM is enabled.
 
-x86 still writes protect all huge pages when DIRTY_LOG_INITIALLY_ALL_SET
-is eanbled. However, for arm64, both huge pages and normal pages can be
-write protected gradually by userspace.
+However, for some reason the driver was already configuring the hardware
+for an inverted duty, so inverting it again means we do configure the
+hardware with the actual duty value.
 
-Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
-Linux VMs with different page size. The memory pressure is 127G in each
-case. The time taken of memory_global_dirty_log_start in QEMU is listed
-below:
-
-Page Size      Before    After Optimization
-  4K            650ms         1.8ms
-  2M             4ms          1.8ms
-  1G             2ms          1.8ms
-
-Besides the time reduction, the biggest income is that we will minimize
-the performance side effect (because of dissloving huge pages and marking
-memslots dirty) on guest after enabling dirty log.
-
-Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- Documentation/virt/kvm/api.rst    |  2 +-
- arch/arm64/include/asm/kvm_host.h |  3 +++
- virt/kvm/arm/mmu.c                | 12 ++++++++++--
- 3 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-jz4740.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index efbbe570aa9b..0017f63fa44f 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -5777,7 +5777,7 @@ will be initialized to 1 when created.  This also improves performance because
- dirty logging can be enabled gradually in small chunks on the first call
- to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
- KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
--x86 for now).
-+x86 and arm64 for now).
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index 3cd5c054ad9a..f566f9d248d6 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -6,7 +6,6 @@
+  * Limitations:
+  * - The .apply callback doesn't complete the currently running period before
+  *   reconfiguring the hardware.
+- * - Each period starts with the inactive part.
+  */
  
- KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
- KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 32c8a675e5a4..a723f84fab83 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -46,6 +46,9 @@
- #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
- #define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
+ #include <linux/clk.h>
+@@ -163,7 +162,7 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Calculate duty value */
+ 	tmp = (unsigned long long)period * state->duty_cycle;
+ 	do_div(tmp, state->period);
+-	duty = period - tmp;
++	duty = (unsigned long)tmp;
  
-+#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
-+				     KVM_DIRTY_LOG_INITIALLY_SET)
-+
- DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+ 	if (duty >= period)
+ 		duty = period - 1;
+@@ -190,17 +189,13 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
  
- extern unsigned int kvm_sve_max_vl;
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index e3b9ee268823..1077f653a611 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -2265,8 +2265,16 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
- 	 * memory slot is write protected.
- 	 */
--	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
--		kvm_mmu_wp_memory_region(kvm, mem->slot);
-+	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
-+		/*
-+		 * If we're with initial-all-set, we don't need to write
-+		 * protect any pages because they're all reported as dirty.
-+		 * Huge pages and normal pages will be write protect gradually.
-+		 */
-+		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
-+			kvm_mmu_wp_memory_region(kvm, mem->slot);
-+		}
-+	}
- }
+ 	/* Set polarity */
+-	switch (state->polarity) {
+-	case PWM_POLARITY_NORMAL:
++	if ((state->polarity != PWM_POLARITY_INVERSED) ^ state->enabled)
+ 		regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+ 				   TCU_TCSR_PWM_INITL_HIGH, 0);
+-		break;
+-	case PWM_POLARITY_INVERSED:
++	else
+ 		regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+ 				   TCU_TCSR_PWM_INITL_HIGH,
+ 				   TCU_TCSR_PWM_INITL_HIGH);
+-		break;
+-	}
  
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ 	if (state->enabled)
+ 		jz4740_pwm_enable(chip, pwm);
 -- 
-2.19.1
+2.25.1
 
