@@ -4,58 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15871C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D303C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0FC720739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBB820739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586796878;
-	bh=zETJ3apcP8Pq3kfRODN0iLjR/W8qnyf0mRNdFNw2/h4=;
+	s=default; t=1586796886;
+	bh=S9zsoZaEeRAovYBhoG6sjAQNUq7j5Am/ZPdNcUlRFdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIXlZ8ez817tShdI/inqexfmK+5f3KnbDdIkvAv+ET9YRijyxBZuO0QcEfMgu34e1
-	 0kzhrD3sT4Vhq+LoWdvN1rF8DMAxN7ZkIWnV9SZ1BDEoLnaqPikUpaf1zbaGGnnojw
-	 D7J4Fmn2IwAcpNr5PtYwF1X2zR4R1lSgINmNlAOY=
+	b=jBn0kT/2UD8189zPpmf2AxRfWJvJiVJ6QtpCFBwDN5ND+Po5bkG0nzK7jw08Qqj46
+	 SDmJybpJyJMqz4p+ddGG5InDYQ4NtIHchkb4ZDjbyTMxvkdzfVXbjjyfK3kP2QwtJZ
+	 g9+vSMU42LPlDfmEWf1MmGKFNWXaT1rSPBQRWgTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732160AbgDMQyh (ORCPT
+        id S1731999AbgDMQxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 12:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732125AbgDMQyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:54:25 -0400
+        id S1731938AbgDMQxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:53:10 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F6A820CC7;
-        Mon, 13 Apr 2020 16:54:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997C2208FE;
+        Mon, 13 Apr 2020 16:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586796864;
-        bh=zETJ3apcP8Pq3kfRODN0iLjR/W8qnyf0mRNdFNw2/h4=;
+        s=default; t=1586796789;
+        bh=S9zsoZaEeRAovYBhoG6sjAQNUq7j5Am/ZPdNcUlRFdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHBofCKhh/9a1dMw07sugl5Egb4kZjfLfsNm9hvN1Tt+SrLNs4Z/f1svOIGAvsani
-         xS9kUB9fY5ATnL9hgFVcnTf7/8BnZZP2O+cXCiFt8MaBLTX+dzR4e9oGa7wThX952y
-         YXen7aNOoYSU+orDZGAII+xPcTbSRp0X0cP/4DSg=
+        b=nnl+mOx4rEjA1iBPwbYvhatCRtMT0c3UDzLrdqWeOp1JNg6MbFrs+jc+jPe5kk67R
+         G1Pq7BtkH4AMjg7Bp0aKvgzUw/1XWnIJhWhRSkC8KkbXeHOq6WidzMBT50wK7w9VN4
+         8lp7A8qTqu8y0x0ndSQ3Au95akSJQH5eON+O0VXE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Martin Spier <mspier@netflix.com>
-Subject: [PATCH 26/26] perf script: Add flamegraph.py script
-Date:   Mon, 13 Apr 2020 13:52:03 -0300
-Message-Id: <20200413165203.1816-27-acme@kernel.org>
+        Serge Hallyn <serge@hallyn.com>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 11/26] powerpc/perf: open access for CAP_PERFMON privileged process
+Date:   Mon, 13 Apr 2020 13:51:48 -0300
+Message-Id: <20200413165203.1816-12-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
@@ -66,209 +72,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gerstmayr <agerstmayr@redhat.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-This script works in tandem with d3-flame-graph to generate flame graphs
-from perf. It supports two output formats: JSON and HTML (the default).
-The HTML format will look for a standalone d3-flame-graph template file
-in /usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the
-collected stacks.
+Open access to monitoring for CAP_PERFMON privileged process.  Providing
+the access under CAP_PERFMON capability singly, without the rest of
+CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials
+and makes operation more secure.
 
-Usage:
+CAP_PERFMON implements the principle of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states
+that a process or program be granted only those privileges (e.g.,
+capabilities) necessary to accomplish its legitimate function, and only
+for the time that such privileges are actually required)
 
-    perf record -a -g -F 99 sleep 60
-    perf script report flamegraph
+For backward compatibility reasons access to the monitoring remains open
+for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
+secure monitoring is discouraged with respect to CAP_PERFMON capability.
 
-Combined:
-
-    perf script flamegraph -a -F 99 sleep 60
-
-Committer testing:
-
-Tested both with "PYTHON=python3" and with the default, that uses
-python2-devel:
-
-Complete set of instructions:
-
-  $ mkdir /tmp/build/perf
-  $ make PYTHON=python3 -C tools/perf O=/tmp/build/perf install-bin
-  $ export PATH=~/bin:$PATH
-  $ perf record -a -g -F 99 sleep 60
-  $ perf script report flamegraph
-
-Now go and open the generated flamegraph.html file in a browser.
-
-At first this required building with PYTHON=python3, but after I
-reported this Andreas was kind enough to send a patch making it work
-with both python and python3.
-
-Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Acked-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Igor Lubashev <ilubashe@akamai.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Brendan Gregg <bgregg@netflix.com>
-Cc: Martin Spier <mspier@netflix.com>
-Link: http://lore.kernel.org/lkml/20200320151355.66302-1-agerstmayr@redhat.com
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-man@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: selinux@vger.kernel.org
+Link: http://lore.kernel.org/lkml/ac98cd9f-b59e-673c-c70d-180b3e7695d2@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../perf/scripts/python/bin/flamegraph-record |   2 +
- .../perf/scripts/python/bin/flamegraph-report |   3 +
- tools/perf/scripts/python/flamegraph.py       | 124 ++++++++++++++++++
- 3 files changed, 129 insertions(+)
- create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
- create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
- create mode 100755 tools/perf/scripts/python/flamegraph.py
+ arch/powerpc/perf/imc-pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf/scripts/python/bin/flamegraph-record
-new file mode 100755
-index 000000000000..725d66e71570
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/flamegraph-record
-@@ -0,0 +1,2 @@
-+#!/usr/bin/sh
-+perf record -g "$@"
-diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
-new file mode 100755
-index 000000000000..b1a79afd903b
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/flamegraph-report
-@@ -0,0 +1,3 @@
-+#!/usr/bin/sh
-+# description: create flame graphs
-+perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
-diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-new file mode 100755
-index 000000000000..61f3be9add6b
---- /dev/null
-+++ b/tools/perf/scripts/python/flamegraph.py
-@@ -0,0 +1,124 @@
-+# flamegraph.py - create flame graphs from perf samples
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Usage:
-+#
-+#     perf record -a -g -F 99 sleep 60
-+#     perf script report flamegraph
-+#
-+# Combined:
-+#
-+#     perf script flamegraph -a -F 99 sleep 60
-+#
-+# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
-+# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
-+# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.com>
-+
-+from __future__ import print_function
-+import sys
-+import os
-+import argparse
-+import json
-+
-+
-+class Node:
-+    def __init__(self, name, libtype=""):
-+        self.name = name
-+        self.libtype = libtype
-+        self.value = 0
-+        self.children = []
-+
-+    def toJSON(self):
-+        return {
-+            "n": self.name,
-+            "l": self.libtype,
-+            "v": self.value,
-+            "c": self.children
-+        }
-+
-+
-+class FlameGraphCLI:
-+    def __init__(self, args):
-+        self.args = args
-+        self.stack = Node("root")
-+
-+        if self.args.format == "html" and \
-+                not os.path.isfile(self.args.template):
-+            print("Flame Graph template {} does not exist. Please install "
-+                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
-+                  "package, specify an existing flame graph template "
-+                  "(--template PATH) or another output format "
-+                  "(--format FORMAT).".format(self.args.template),
-+                  file=sys.stderr)
-+            sys.exit(1)
-+
-+    def find_or_create_node(self, node, name, dso):
-+        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
-+        if name is None:
-+            name = "[unknown]"
-+
-+        for child in node.children:
-+            if child.name == name and child.libtype == libtype:
-+                return child
-+
-+        child = Node(name, libtype)
-+        node.children.append(child)
-+        return child
-+
-+    def process_event(self, event):
-+        node = self.find_or_create_node(self.stack, event["comm"], None)
-+        if "callchain" in event:
-+            for entry in reversed(event['callchain']):
-+                node = self.find_or_create_node(
-+                    node, entry.get("sym", {}).get("name"), event.get("dso"))
-+        else:
-+            node = self.find_or_create_node(
-+                node, entry.get("symbol"), event.get("dso"))
-+        node.value += 1
-+
-+    def trace_end(self):
-+        json_str = json.dumps(self.stack, default=lambda x: x.toJSON())
-+
-+        if self.args.format == "html":
-+            try:
-+                with open(self.args.template) as f:
-+                    output_str = f.read().replace("/** @flamegraph_json **/",
-+                                                  json_str)
-+            except IOError as e:
-+                print("Error reading template file: {}".format(e), file=sys.stderr)
-+                sys.exit(1)
-+            output_fn = self.args.output or "flamegraph.html"
-+        else:
-+            output_str = json_str
-+            output_fn = self.args.output or "stacks.json"
-+
-+        if output_fn == "-":
-+            sys.stdout.write(output_str)
-+        else:
-+            print("dumping data to {}".format(output_fn))
-+            try:
-+                with open(output_fn, "w") as out:
-+                    out.write(output_str)
-+            except IOError as e:
-+                print("Error writing output file: {}".format(e), file=sys.stderr)
-+                sys.exit(1)
-+
-+
-+if __name__ == "__main__":
-+    parser = argparse.ArgumentParser(description="Create flame graphs.")
-+    parser.add_argument("-f", "--format",
-+                        default="html", choices=["json", "html"],
-+                        help="output file format")
-+    parser.add_argument("-o", "--output",
-+                        help="output file name")
-+    parser.add_argument("--template",
-+                        default="/usr/share/d3-flame-graph/d3-flamegraph-base.html",
-+                        help="path to flamegraph HTML template")
-+    parser.add_argument("-i", "--input",
-+                        help=argparse.SUPPRESS)
-+
-+    args = parser.parse_args()
-+    cli = FlameGraphCLI(args)
-+
-+    process_event = cli.process_event
-+    trace_end = cli.trace_end
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index cb50a9e1fd2d..e837717492e4 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -898,7 +898,7 @@ static int thread_imc_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/* Sampling not supported */
+@@ -1307,7 +1307,7 @@ static int trace_imc_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/* Return if this is a couting event */
 -- 
 2.21.1
 
