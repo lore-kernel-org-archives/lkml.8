@@ -2,105 +2,135 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66281C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1321C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47DDE206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B466320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="JflVCMLj"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ii9BQNUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733191AbgDMUKI (ORCPT
+        id S1733205AbgDMUKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727816AbgDMUKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:10:00 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 040EAC0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:09:59 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w29so7833660qtv.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=wS4LfUEfcaepgrDKoyH+3EpawEIoAdGvJZDCX/qAgsw=;
-        b=JflVCMLjUpbfqqdekGmPk2YdNBr3jdvUi51cFWBMMH9etXkxyBBj6+O+/FvzM3Vv1g
-         sa4gJ7ouxmFIOB8eutom3CJ3WsyGp+LUmMJyrJOkWwHA6Xc/a5kW2nVKpeHRy/VS1z5l
-         fFgWycU9UOu9ldrROmDjfiiMCkcdpP0lsvk5Rz/hxMuL9BLnb4hO85HjEm4o02sfXPYB
-         Zsj5BMGJwDg4yA41mpBavxAJPHCLpwN3GMq0gcoTM9lIkkTShfxTxpaF3Ga0XDWebniT
-         6NlKC5sWjlIpTyhE/pez4i9l1/rO6QDTq2uSDGf+kUYLH0ATL17SWb0MMvvLOlE0KDsd
-         5dRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=wS4LfUEfcaepgrDKoyH+3EpawEIoAdGvJZDCX/qAgsw=;
-        b=Bo+FqmExnb74Mc3+UIvbfOgJllD3N8xfEPnAkr+ckmKi8D/xViNFiBtgXd8sjPLOTg
-         MBaiIcySCTv/OOKeQtzFVZ+W6aWf8tbgZnLRIIO73ZJNToeYz2u7wmAUqik7LsWQGnwh
-         TOondsHfldLNYgzECXrc9D0PN3Vrmx7S4qJV6QEeERoViExXVwd4M7ACKWY0hZKvmDJX
-         bhP4R6Igh8v/5V4QL61b7DZDuHTMsHLo8Hrs7UB/LUG90eey3CcJWdR5tiEZap4Xiyv2
-         aBCK+LoXYzQheGi7PtfIWtd1H7YyiuQYskuLzWXtuvBhhlCJRvBYMGBE4iTNZkW6ujl3
-         s7Pw==
-X-Gm-Message-State: AGi0PuZpWjD4UnFei4TMlBTnCYfRFqrqkN7VtGB6uOG9ROPd3GLI85WX
-        3bHr1ernb3t+8Pcb4fLvDEf3fmALl0N5qA==
-X-Google-Smtp-Source: APiQypLEHBz158Idz//9kBLxhlQ68PJmoeLRwqPdwOoaLVPTQWsum2IkPpZPT0zpt9NDiw7tEKmXRw==
-X-Received: by 2002:ac8:4b4c:: with SMTP id e12mr13018668qts.78.1586808599022;
-        Mon, 13 Apr 2020 13:09:59 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id o16sm8773770qki.110.2020.04.13.13.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 13:09:58 -0700 (PDT)
-Message-ID: <14517051a7046f105570a90d61e3a02d4c8a51eb.camel@massaru.org>
-Subject: Re: [PATCH] kbuild: arch/$(SUBARCH)/include/generated/ aren't
- cleaned by mrproper
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Date:   Mon, 13 Apr 2020 17:09:54 -0300
-In-Reply-To: <CAFd5g45yG1sSyuft4e_hrFxTNeES5fQVVyjmN8qOFyEmoUU4fg@mail.gmail.com>
-References: <20200413115815.141587-1-vitor@massaru.org>
-         <CAFd5g45yG1sSyuft4e_hrFxTNeES5fQVVyjmN8qOFyEmoUU4fg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 13 Apr 2020 16:10:36 -0400
+Received: from mout.web.de ([217.72.192.78]:37351 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727816AbgDMUK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:10:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586808610;
+        bh=hohdPQZE7AeOOy6DzbYybr/CUWc/bO1yJDL5ARvFSMw=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=Ii9BQNUHyNmdB1tX9DQpcC5vCeI5lVBA+74fEnS1vyWSoH4yhoWphnatvnO9ZdOlA
+         rlcPcpDCKrv3GAWf22g19QcZf9fkxINxoxDrhGAIpcz3OKhOiOjj0SJ6+HH3YOzsgi
+         zovlHzn/If1oW0Q3fvn1L9lUZ4YSnwE+53HNkwds=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.133.146.177]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M40zO-1j6pVI2rX0-00rbJp; Mon, 13
+ Apr 2020 22:10:10 +0200
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Krzysztof Halasa <khalasa@piap.pl>
+Subject: Re: ethernet: ixp4xx: Add error handling in ixp4xx_eth_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, netdev@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <167fa941-6531-7ede-3a2c-cc4f2bde0845@web.de>
+Date:   Mon, 13 Apr 2020 22:10:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QqIufzfLP97h/oxSewSwBcYkS7m2tN9Ls0qVgcEzveqru+eCqJr
+ QjhB5DMz6UuM0oGIVBcK9PlNmY/Nrp4S1uit21P4WMIJDgbBvTdeLkTiD+qvPJIri4gzJIv
+ 0kMlCRDEFUnvD/vUorVKJqStjr6fRO+2ZciQtqfnNFwSF3WClgFhdTKOaOaOwIH7BiKSIeK
+ lzn/nKr55Hg6c33ObDdSg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I/8vNH4z2OE=:pwCb9PdPnBsR8UV6WUXXsc
+ 9hz+2kYXy8mdWVUlcgbo2mZ3nT6z7dR3ckt5A0UtlcWw10pGpu0/TpBd1uUnV6T7q/uEf8oWq
+ WVP4IBuNVGVaB2Hhh14RLqIu09QVlGnDQ8lXu+WImMzd0J1vc73GyKFeTvEJPzARtcTpjvBMN
+ Qbalw2rxo2XpB8zfeT/46AEoCxnf7WLRXQKGi5VxVUwRPhbV74J6ZmIMHtZMf3oGiteD453T9
+ CWq9GZmvuMkWcpsWyBuFrpdwkoGAhAJgfms6hVcPnJc1O0YQrkH46jMsqfwgrAHs02O6vTYzH
+ hQmNRY9tinISGr0bIbjiY/CM5Dor2TV1y5mbldf2ueCC2QSoJlxYhhLls/wF5mXqZSuOOxizO
+ I7S7Zhj7sqT1X/J5OjEolUVX+CHD9zhn+lspUSq/r8zr48hbmKb1A91JqtHVbBpJPaxqW1ddj
+ nmrZ9+UHWegtnBFAA17Kc6nrFE1nq+HdAEFgx4l7nDj4JU6vx+WtLTDqvrFqRo10szsEnlWP0
+ x3OLFFGoRm98skKx/qmMDzsx8LX+uswu3sYnD96e9lobN8T5UlRSgEWKOOt9zJqU+jsMeJf8O
+ buIYQOooMJQgvodTX0Ywq8xS5+v+SNm4+j4GGnrkGiqoaaNhugwuBEUhX7kZx0lCwf2z9bt0H
+ DrR90nOTV24838r61WGYllBZ++Nf3hxYM323euKqnkc6I1u3lYPwrpbnYq9e+1Tdon6AxnbKA
+ JSWB4GGz+kUJdwU6WlGRTo7OE3BRQmSBz1F1L/ZrPG5fU9hwUseeqyA78DWgNvUck5BL1Ia1l
+ IFuSAQi4hPEln3D1z7KSBTGwtVp4ij+XZID6aj9pNVOaw0IvFe5uRnNleVUHJg4d25AbNc3l/
+ aEDW+odRah6fAK408Bgr/ndCQmWWYCJFMldyxAKoUVWJs81JZBtQZ0W4SP+FBsdHC8twW7AnT
+ sSemvXxA+Wl35+ed8X+ymsRhnVGZyKuwUg5EkMOrjaaZ1cYZtFKinvKtQUVAdxDcjw9z530g3
+ SbDfsHQ9j28Po2+6+Fu+3jIqCXJM2CRpO9yeZmf82FBtcbmZWaOKpZTnYUsr02okyDIhCGSf3
+ pxxr1gFt+wcpwLMUOz6d8KzxkNmVgDK/8c0iqReB0Mrt5tP79HEvMxcG/bNhfRUkXPaUj7aBd
+ 92eU4qcrz5z2Ujl+QBPIiVnj+IJ8RZ9Hpw/If7aRuqFlkXt0qIfEfkNQQCSTnmkOzpnd8DPCy
+ McLIjy+Pok9No+FDL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-13 at 12:47 -0700, Brendan Higgins wrote:
-> On Mon, Apr 13, 2020 at 4:58 AM Vitor Massaru Iha <vitor@massaru.org>
-> wrote:
-> > This bug was introduced in this commit a788b2ed81abe
-> > 
-> > Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
-> > 
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> 
-> Please elaborate on what this change does and why it is necessary.
-> Shuah and I are not the only ones who will want to understand what is
-> going on here.
+> Fixes: f458ac47 ("ARM/net: ixp4xx: Pass ethernet physical base as
+> resource").
 
-Sure, I'll do that.
+Please adjust your tag suggestion.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D8f3d9f354286745c751374f5f1=
+fcafee6b3f3136#n183
 
-Thanks for the review.
+* The identification is too short.
 
-> 
-> Otherwise, the change itself looks good to me.
-> 
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Tested-by: Brendan Higgins <brendanhiggins@google.com>
+* Do not use a line break in the tag subject.
 
+Regards,
+Markus
