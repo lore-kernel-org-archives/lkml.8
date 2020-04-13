@@ -2,131 +2,112 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992F3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A569C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B4D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8212072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:03:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=qubes-os.org header.i=frederic.pierret@qubes-os.org header.b="lQnrmEWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgDMPCx (ORCPT
+        id S1730926AbgDMPDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:02:53 -0400
-Received: from mga02.intel.com ([134.134.136.20]:53129 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbgDMPCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:02:50 -0400
-IronPort-SDR: AuXHM/8LF35GCS/WpvmGGM+WNsucTszqgsmhW2KT0UuyQgeZWEPxi2yd/J9gCVD61cWnmmcYHr
- HBABQB1kdiXg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:02:49 -0700
-IronPort-SDR: EGr+8ztIa7H84eNHE5GS3otIEqA1/IFVaJAgRTLGtMEG5uDl7YwDPNhbbIUkc3BKd+bsY5N3Nl
- jRvxbLPN+WAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="256196489"
-Received: from vdhanraj-mobl3.amr.corp.intel.com (HELO [10.254.69.238]) ([10.254.69.238])
-  by orsmga006.jf.intel.com with ESMTP; 13 Apr 2020 08:02:49 -0700
-Subject: Re: [RFC PATCH] mm/vmalloc: make sure to traverse from the beginning
- when overflow occur
-To:     Liu Song <fishland@aliyun.com>, gregkh@linuxfoundation.org,
-        jroedel@suse.de, dave.hansen@linux.intel.com, tglx@linutronix.de
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        liu.song11@zte.com.cn
-References: <20200412143803.43931-1-fishland@aliyun.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <b295ec51-56fd-a377-95c9-a88cf5b151bc@intel.com>
-Date:   Mon, 13 Apr 2020 08:02:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 13 Apr 2020 11:03:45 -0400
+Received: from sender4-of-o53.zoho.com ([136.143.188.53]:21398 "EHLO
+        sender4-of-o53.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728578AbgDMPDo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:03:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586790203; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=NPb69smhNgO1P+KkviAiFToL+vKMqi7jVNTqvd+/2gnCbcv9y24R8zOws8A9OkHdGd4WmPuQPLlMakVNy1rUWrd0/p+jJmfMfV9zlWQA7pnRx2Py8/FadIUhgudpHY/NRqsSnTR/iFNS6Uf2vbnFW7intpBJv8O3naTSNT5Id3A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1586790203; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=9Pzk0cVzBCKcfGlQdKKLQ1SX00CFPc0gWvmG8POseOM=; 
+        b=MFesFXbunyENNW1kui0k53JuRrrpwJH+11cLWpTcneejw5V5mk3Sw5hR0p5Eg6+C9ARxHNJ5lj9DAey+hIWjqUo3eSQm0EI6MEqg7BjJB+o7PGDkCDtBAyiJdi/MuEFXpW93FRg3ePdfgbavNAQq8lfMVjweEj2wCh7rHbZdBGs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=qubes-os.org;
+        spf=pass  smtp.mailfrom=frederic.pierret@qubes-os.org;
+        dmarc=pass header.from=<frederic.pierret@qubes-os.org> header.from=<frederic.pierret@qubes-os.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586790203;
+        s=s; d=qubes-os.org; i=frederic.pierret@qubes-os.org;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=9Pzk0cVzBCKcfGlQdKKLQ1SX00CFPc0gWvmG8POseOM=;
+        b=lQnrmEWviXsFurbfdGrSiWqbpl0fOrpU4MuSD2vtweWTqg8TBjCgvbLrOuC/dhRQ
+        JqjaLXKKqWMIyNocT3CibI/HG3VPrcWN93/mREwU1NLSGgp5QQ29Dfr0z4RjPgdxNaG
+        7BoCdkKZdl1RHX6/4wjqRYrnmtykfuv1SUDX10y4=
+Received: from localhost.localdomain (92.188.110.153 [92.188.110.153]) by mx.zohomail.com
+        with SMTPS id 1586790200760672.0712336468074; Mon, 13 Apr 2020 08:03:20 -0700 (PDT)
+From:   =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
+        <frederic.pierret@qubes-os.org>
+To:     boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
+        <frederic.pierret@qubes-os.org>
+Message-ID: <20200413150314.13974-1-frederic.pierret@qubes-os.org>
+Subject: [PATCH v2] xen x86: fix early boot crash with gcc-10
+Date:   Mon, 13 Apr 2020 17:03:14 +0200
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200413142051.GC3772@zn.tnic>
+References: <20200413142051.GC3772@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20200412143803.43931-1-fishland@aliyun.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/20 7:38 AM, Liu Song wrote:
-> If overflow, should ensure that "free_vmap_cache" is set to NULL,
-> so as to ensure that it can be traversed from the beginning.
+The change fixes boot failure on VM where kernel (at least v5.4 and v5.6)
+is built with gcc-10 and STACKPROTECTOR_STRONG enabled:
 
-This changelog is a bit sparse.
+```
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: =
+cpu_bringup_and_idle+0x93/0xa0
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.4.31-1.qubes.x86_64 #1
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/201=
+4
+Call Trace:
+  dump_stack+0x64/0x88
+   panic+0x10b/0x2ed
+   ? cpu_bringup_and_idle+0x93/0xa0
+   __stack_chk_fail+0x15/0x20
+   cpu_bringup_and_idle+0x93/0xa
+```
+The change makes successfully booting the VM. The VM is hosted by
+KVM hypervisor and is running Xen into.
 
-Does this fix a demonstrated problem?  Or was it just discovered via
-code review and assumed to help a theoretical problem?
+Based on work done by Sergei Trofimovich: https://lkml.org/lkml/2020/3/26/1=
+133
 
-Which tree is it against?  'free_vmap_cache' doesn't show up in Linus's
-tree.
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index d8e877365f9f..2638a20d36ce 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -441,7 +441,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  	if (!free_vmap_cache ||
->  			size < cached_hole_size ||
->  			vstart < cached_vstart ||
-> -			align < cached_align) {
-> +			align < cached_align || purged) {
->  nocache:
->  		cached_hole_size = 0;
->  		free_vmap_cache = NULL;
+Signed-off-by: Fr=C3=A9d=C3=A9ric Pierret (fepitre) <frederic.pierret@qubes=
+-os.org>
+---
+ arch/x86/xen/smp_pv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is 'purged' the right way to do this?
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 8fb8a50a28b4..5c8ee4a5bb0c 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -88,7 +88,7 @@ static void cpu_bringup(void)
+ =09local_irq_enable();
+ }
+=20
+-asmlinkage __visible void cpu_bringup_and_idle(void)
++asmlinkage __visible void __no_stack_protector cpu_bringup_and_idle(void)
+ {
+ =09cpu_bringup();
+ =09boot_init_stack_canary();
+--=20
+2.25.2
 
-There is a path through the overflow code that also sets purged=0.  Does
-'free_vmap_cache' *not* need to get reset in that case?
 
-It also seems more natural to me that the code mucking with the rbtree
-would be the one to reset the cache.
