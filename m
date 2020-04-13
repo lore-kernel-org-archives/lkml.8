@@ -2,151 +2,124 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDFEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 23:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A2CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 23:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1E62051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 23:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C0720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 23:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SFp6T0s4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V2Pj+9rq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390022AbgDMXnp (ORCPT
+        id S2390340AbgDMXzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 19:43:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41443 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727804AbgDMXno (ORCPT
+        Mon, 13 Apr 2020 19:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390309AbgDMXzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 19:43:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586821421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xqr4dsXCGQ7mBSR00NAzM1Q6acm6mNGXK+xaVCuI9s0=;
-        b=SFp6T0s4x/mpYT7OZuM9ZVhf0knXif1xJWlcoWokAmOSe57awSUuPpAn7yzjLIIsk0KZkC
-        qdzApij+wVzacZ6OlrTlNEVTX/4FfiimwHxOhXzjZJTLD4Ax9Y4oxffDAj+6kNxG6CGPtN
-        n+xe6HtkaXFpsmlbS8O0JbRGH4SQWzw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-3tvLQx0XNVOMXgwoRFgZJg-1; Mon, 13 Apr 2020 19:43:40 -0400
-X-MC-Unique: 3tvLQx0XNVOMXgwoRFgZJg-1
-Received: by mail-ed1-f70.google.com with SMTP id q27so10688116edc.15
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 16:43:39 -0700 (PDT)
+        Mon, 13 Apr 2020 19:55:22 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1EE2C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 16:55:22 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id s19so650360pgq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 16:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=+4rFnX02gj14fuJltOp8b6tx4JnqFsAhBYMqq+dskm8=;
+        b=V2Pj+9rqbJ6+JXga562hk45vktjRQkUkDiy0oBfSI1RI5qub7/7ckyNrqiWyQs/Tn1
+         DFowFUvIEO0v76R08sWihTEswVIBptf58gDrVJH0XsYXNxEVpt8CMnzLvQUMSjkcKYML
+         TQXoNx1Nfzn61EwjknwVbSa1vupDLBhbEB9ZEM77wByW8CMv85WmmYUr2t3uEQ02BQE2
+         2IN3dnGSPW6xHyIb1hqOe7VyhhVVSJ9RHuyFQbWdufIchmklBz+OpgTuMgMC0PQ4JZUx
+         akvkzDJaP9NXF4PJpxKXQv5edTK7dl774rR0QyVP7cIDLH6gGt1ONrN0r5xipDkBMiaX
+         Cpog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xqr4dsXCGQ7mBSR00NAzM1Q6acm6mNGXK+xaVCuI9s0=;
-        b=uX1EbuvWmGErMal8vmDktOHhRlsffNk2Si3nDk7bDzvClFNM9V0uXcsvyZa1EXYdSv
-         iDY5ZHSl9mFfhtaA2Gtkovnipz+0UewoFRS4frzC6Nt2HiBPqohz1rzQU2D3OH/VhbSw
-         1u5NRlYSVYbiUucZmmifJadU5OV+VAB2LuoaVBQ+VAa4/+ObXbpYPtNWvOv/66iiHAqE
-         RCRSx0tyAfO3MNT77vqRyTX/Z031Ej4jP9ttnJiluNWXS0ZzHFq1Ces6zQRTpdfPwCwi
-         2fwYkFewvcknKXoWVA6dOrosfi+VVJMpTl6wiMkRadEnrznEiSf9fXr+cpQjSnCYLjSW
-         dtIg==
-X-Gm-Message-State: AGi0PuY5dYHrK4D2KF4oKbOAmumbLOknIiEua35ZWiRBh8vFjY9Cynz1
-        NIVO/5IzcGcoKFedZaS9fuRB90O6tQzIYyWSoXnyA2Q9tURB22tIfmK1SZ/yem4+ciUOnGB75em
-        kWtDsPiet9R37MJw+poBeGG78kEgsFHxf2TW5Z9WB
-X-Received: by 2002:a17:906:a418:: with SMTP id l24mr4284476ejz.362.1586821418588;
-        Mon, 13 Apr 2020 16:43:38 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKa/t6ZDKsi78psOMm2ofYlu33r+ev1cgYcUx7E9J7maeva3YKq+x4SEnS8Mxo6UUPZcXftIkJxkGJxL//DCa8=
-X-Received: by 2002:a17:906:a418:: with SMTP id l24mr4284462ejz.362.1586821418314;
- Mon, 13 Apr 2020 16:43:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190524100554.8606-1-maxime.chevallier@bootlin.com> <20190524100554.8606-4-maxime.chevallier@bootlin.com>
-In-Reply-To: <20190524100554.8606-4-maxime.chevallier@bootlin.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 14 Apr 2020 01:43:02 +0200
-Message-ID: <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to handle
- RSS tables
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        Nadav Haklai <nadavh@marvell.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=+4rFnX02gj14fuJltOp8b6tx4JnqFsAhBYMqq+dskm8=;
+        b=aRkI5x0XDaf/D3q4/iWSsKrp5GyEDV6h+gt6VmLMfsU4y5/5evHQ7hlj47MGVcAGQ2
+         ppwZxBHu/0nCUgAP2/s8QliI0yceasBHOvvfqATxYaG5zLuVz0C6/GRYrZ/X1exGHSrL
+         a2g1CL3SqwF5qj90GNayHwucLKR/qpjw4dedODQ759yLiVwcwJal9xV40X3RjKLnIb1N
+         XYg6ZxTKIkp1P8DkJi21kuZOhtMJhZMywoBqndDgR/3+yRX7Puoy6kKIKSksn9fmgKNO
+         zR3Af4ffdDKAil610G1ykStFAumgPoMNhZPQA7XrnwWls/w7a8MFBxHEoYCH/p3tuACB
+         z8lA==
+X-Gm-Message-State: AGi0PuZtZQfGZePUyEnfEDpHb2/ia1CIiNA5t7ch+31W/O+xEAQ4CpDJ
+        0tcIwp/PAOzBkVaKlB02tnMJXn5wrifT
+X-Google-Smtp-Source: APiQypLBf+cIzoYAbQ41Tj88P0cngrpnOWGou23Er6A8Po4w+vQmv2SPCfQMgxbgBqXIf8ujSH+jk0lhrZRI
+X-Received: by 2002:a17:90a:30e7:: with SMTP id h94mr22650088pjb.186.1586822122091;
+ Mon, 13 Apr 2020 16:55:22 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 16:55:15 -0700
+Message-Id: <20200413235515.221467-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH] perf stat: force error in fallback on :k events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 1:21 AM Maxime Chevallier
-<maxime.chevallier@bootlin.com> wrote:
->
-> The PPv2 controller has 8 RSS tables that are shared across all ports on
-> a given PPv2 instance. The previous implementation allocated one table
-> per port, leaving others unused.
->
-> By using RSS contexts, we can make use of multiple RSS tables per
-> port, one being the default table (always id 0), the other ones being
-> used as destinations for flow steering, in the same way as rx rings.
->
-> This commit introduces RSS contexts management in the PPv2 driver. We
-> always reserve one table per port, allocated when the port is probed.
->
-> The global table list is stored in the struct mvpp2, as it's a global
-> resource. Each port then maintains a list of indices in that global
-> table, that way each port can have it's own numbering scheme starting
-> from 0.
->
-> One limitation that seems unavoidable is that the hashing parameters are
-> shared across all RSS contexts for a given port. Hashing parameters for
-> ctx 0 will be applied to all contexts.
->
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+From: Stephane Eranian <eranian@google.com>
 
-Hi all,
+When it is not possible for a non-privilege perf command
+to monitor at the kernel level (:k), the fallback code forces
+a :u. That works if the event was previously monitoring both levels.
+But if the event was already constrained to kernel only, then it does
+not make sense to restrict it to user only.
+Given the code works by exclusion, a kernel only event would have:
+attr->exclude_user = 1
+The fallback code would add:
+attr->exclude_kernel = 1;
 
-I noticed that enabling rxhash blocks the RX on my Macchiatobin. It
-works fine with the 10G ports (the RX rate goes 4x up) but it
-completely kills the gigabit interface.
+In the end the end would not monitor in either the user level or kernel
+level. In other words, it would count nothing.
 
-# 10G port
-root@macchiatobin:~# iperf3 -c 192.168.0.2
-Connecting to host 192.168.0.2, port 5201
-[  5] local 192.168.0.1 port 42394 connected to 192.168.0.2 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   941 MBytes  7.89 Gbits/sec  4030    250 KBytes
-[  5]   1.00-2.00   sec   933 MBytes  7.82 Gbits/sec  4393    240 KBytes
-root@macchiatobin:~# ethtool -K eth0 rxhash on
-root@macchiatobin:~# iperf3 -c 192.168.0.2
-Connecting to host 192.168.0.2, port 5201
-[  5] local 192.168.0.1 port 42398 connected to 192.168.0.2 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   860 MBytes  7.21 Gbits/sec  428    410 KBytes
-[  5]   1.00-2.00   sec   859 MBytes  7.20 Gbits/sec  185    563 KBytes
+An event programmed to monitor kernel only cannot be switched to user only
+without seriously warning the user.
 
-# gigabit port
-root@macchiatobin:~# iperf3 -c turbo
-Connecting to host turbo, port 5201
-[  5] local 192.168.85.42 port 45144 connected to 192.168.85.6 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   113 MBytes   948 Mbits/sec    0    407 KBytes
-[  5]   1.00-2.00   sec   112 MBytes   942 Mbits/sec    0    428 KBytes
-root@macchiatobin:~# ethtool -K eth2 rxhash on
-root@macchiatobin:~# iperf3 -c turbo
-iperf3: error - unable to connect to server: Resource temporarily unavailable
+This patch forces an error in this case to make it clear the request
+cannot really be satisfied.
 
-I've bisected and it seems that this commit causes the issue. I tried
-to revert it on nex-next as a second test, but the code has changed a
-lot much since, generating too much conflicts.
-Can you have a look into this?
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d23db6755f51..d1e8862b86ce 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2446,6 +2446,13 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
+ 		char *new_name;
+ 		const char *sep = ":";
+ 
++		if (evsel->core.attr.exclude_user) {
++			scnprintf(msg, msgsize,
++"kernel.perf_event_paranoid=%d, event set to exclude user, so cannot also exclude kernel",
++				paranoid);
++			return false;
++		}
++
+ 		/* Is there already the separator in the name. */
+ 		if (strchr(name, '/') ||
+ 		    strchr(name, ':'))
 -- 
-Matteo Croce
-per aspera ad upstream
+2.26.0.110.g2183baf09c-goog
 
