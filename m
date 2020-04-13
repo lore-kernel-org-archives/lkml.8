@@ -2,133 +2,140 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EDFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF229C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:21:50 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23A520735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:15:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org B23A520735
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+	by mail.kernel.org (Postfix) with ESMTP id BDFF7206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:21:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4AhDKmp"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org BDFF7206A1
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linaro.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgDMGPR (ORCPT
+        id S1728169AbgDMGVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 02:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:48490 "EHLO
+        Mon, 13 Apr 2020 02:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:49620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgDMGPR (ORCPT
+        with ESMTP id S1727719AbgDMGVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 02:15:17 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99D0C008673
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:15:14 -0700 (PDT)
-Received: by mail-io1-f72.google.com with SMTP id p69so9598349iod.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:15:14 -0700 (PDT)
+        Mon, 13 Apr 2020 02:21:46 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AB5C008654
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:21:46 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id c5so4056806pgi.7
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:21:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=La50agcb/2KWA0YXVPyR15X/cVxbH5EFFNzow2CasCk=;
+        b=U4AhDKmpTjiiQCZMx8qJ1pvV8qHN5/3QPa+VuBSFlJKps1DI9ITUMc5Vs0rjFqGEFk
+         jnergkSEQGWU+5Kxd+rABuZrt2Uj2pIFjr97R4gXPKNC2B/tXBLXUEMn3jWZTCMxTC+d
+         Y4KwetQ/ZEN+5oNXk8NX3XVPtMRJjfP50fHutrzSmg8Ifet9woNEzC0a/qi0yLFeVccx
+         yRgkeliuuX2KAd5dT6IYcQ6e99JJXkCFk5kQixdxmzcrT9s3llqQkdUclDJTvA9sLQPS
+         owAhwVjvH/loJKinZhJcY6sV48c57edrdQub9pYTPcZQAbuOoulrCTh1pW59H8Tz2tlK
+         lW2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hZnovlyZtwDPt3BKlPSdR2ANOMYrJFMgs7FxVxmw4ZY=;
-        b=WpJi0OwRdzlzAOVt+9DPJBEKv2laetviKZW2PmS0DWGdDbM3a0rlqB6E+IdCkxT22G
-         qodX7BCkt1XTsHQ6b8RUlils1nQgzyindPVvngKjEzgEUZzhsr07xJf95i54pgso6cz2
-         AWoQWcs2h4H1RaXmadkCdjXnhC21HV8jIWXfmXT9YRbEleCwBJ4kt47EOEIxwHpySqxX
-         NCER1EngLG1ZiR/zeu126V30sDv4o41+0cwv/mScKi/HkoQlT+wqlQsNEncNFCJPOAhT
-         RF1r505eYRGYI/Ur7+gl0EKuqHsxtEQLURn7D/cy8P9vs5/0qW0g1KQs7/IEr+TcADix
-         NQsg==
-X-Gm-Message-State: AGi0PuYNgWo3Q5QZhQsbILkmVCogmpD+PX64iU0RNhJD5NMscuNGxMT3
-        YKI6u5wA9+cANzbamjwe2b+Rfc1GswbjQA3WY3ltBTjVUBaM
-X-Google-Smtp-Source: APiQypI1DX3eCch75C6Hn90dygVJhYx78BvFMSqdyOf8gzAZY8AhtRlaie/49UnEKT9YDIvxRgsPd91QzsedFygLntitGz8xkyOo
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=La50agcb/2KWA0YXVPyR15X/cVxbH5EFFNzow2CasCk=;
+        b=HgUjPHaZJQFiu+ytmxA43STDBUhbLYugfCaqNnEqtSiTmtm97gzblXlpIKUU7tJ1Og
+         2oXQVuGOileeVAQfW8ulyXtX0MPOYfiAh29J8N8vCNt+8Xu0eMBIrYoYqClcrnMJgBoW
+         PQ7C+IK5Ngv3l2s0qbsv6uo2EhBPuDgUOxK2B+YU78zUl9er4U8JApi6il4Yy6307Ub6
+         iKd/+xmJriICmgNOOe66Z/EtgTWzOPyHqSbxRpE36y70zirO1hPGKnPAMa9x7ncTy3vv
+         cpXKe24CuKODEnD410Sr4n6yXbShnhNKCPbcM7qGZ9Z3EMuAJ00Z64mLcBOlwNopw++4
+         pCMw==
+X-Gm-Message-State: AGi0PubZQybiQNQmGSC3MuFS3CaUBqppQRU83uOOLTodPeOJFGFvRODf
+        igLQVkXfMs9Tk9E28dhvwEJzyA==
+X-Google-Smtp-Source: APiQypJQcvb09jM8vKcT10ou779L5BrE/iVeMVqorUgMs0rxNdmOzAZ2huH75ZLiRKpYDW7+F1nNsw==
+X-Received: by 2002:a63:a50c:: with SMTP id n12mr16740745pgf.274.1586758905511;
+        Sun, 12 Apr 2020 23:21:45 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id d203sm2351825pfd.79.2020.04.12.23.21.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 Apr 2020 23:21:44 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 11:51:41 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+Message-ID: <20200413062141.a6hmwipexhv3sctq@vireshk-i7>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
+ <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
+ <d233b26b-6b50-7d41-9f33-a5dc151e0e7d@nvidia.com>
+ <20200406025549.qfwzlk3745y3r274@vireshk-i7>
+ <3ab4136c-8cca-c2f9-d286-b82dac23e720@nvidia.com>
+ <20200408055301.jhvu5bc2luu3b5qr@vireshk-i7>
+ <08307e54-0e14-14a3-7d6a-d59e1e04a683@nvidia.com>
+ <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
+ <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:93cf:: with SMTP id z73mr14821825jah.136.1586758513747;
- Sun, 12 Apr 2020 23:15:13 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 23:15:13 -0700
-In-Reply-To: <000000000000bb471d05a2f246d7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008e73c805a326018b@google.com>
-Subject: Re: WARNING in hwsim_new_radio_nl
-From:   syzbot <syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes@sipsolutions.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On 09-04-20, 16:51, Sumit Gupta wrote:
+> We are using "read_counters_work" as local variable. So every invocation the
+> function will have its own copy of counters for corresponding cpu. That's
+> why are doing INIT_WORK_ONSTACK here.
 
-HEAD commit:    4f8a3cc1 Merge tag 'x86-urgent-2020-04-12' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=110243b3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bfbde87e8e65624
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4aee3f42d7584d76761
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100825afe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10df613fe00000
+Why? To support parallel calls to reading the freq ?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
+> > > > > > > > > +     queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
+> > > > > > > > > +     flush_work(&read_counters_work.work);
+> > > > > > > > 
+> > > > > > > > Why can't this be done in current context ?
+> > > > > > > > 
+> > > > > > > We used work queue instead of smp_call_function_single() to have long delay.
+> > > > > > 
+> > > > > > Please explain completely, you have raised more questions than you
+> > > > > > answered :)
+> > > > > > 
+> > > > > > Why do you want to have long delays ?
+> > > > > > 
+> > > > > Long delay value is used to have the observation window long enough for
+> > > > > correctly reconstructing the CPU frequency considering noise.
+> > > > > In next patch version, changed delay value to 500us which in our tests is
+> > > > > considered reliable.
+> > > > 
+> > > > I understand that you need to put a udelay() while reading the freq from
+> > > > hardware, that is fine, but why do you need a workqueue for that? Why can't you
+> > > > just read the values directly from the same context ?
+> > > > 
+> > > The register to read frequency is per core and not accessible to other
+> > > cores. So, we have to execute the function remotely as the target core to
+> > > read frequency might be different from current.
+> > > The functions for that are smp_call_function_single or queue_work_on.
+> > > We used queue_work_on() to avoid long delay inside ipi interrupt context
+> > > with interrupts disabled.
+> > 
+> > Okay, I understand this now, finally :)
+> > 
+> > But if the interrupts are disabled during some call, won't workqueues face the
+> > same problem ?
+> > 
+> Yes, we are trying to minimize the case.
 
-netlink: 98586 bytes leftover after parsing attributes in process `syz-executor425'.
-------------[ cut here ]------------
-precision 33020 too large
-WARNING: CPU: 1 PID: 6998 at lib/vsprintf.c:2471 set_precision lib/vsprintf.c:2471 [inline]
-WARNING: CPU: 1 PID: 6998 at lib/vsprintf.c:2471 vsnprintf+0x1467/0x1aa0 lib/vsprintf.c:2547
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 6998 Comm: syz-executor425 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:set_precision lib/vsprintf.c:2471 [inline]
-RIP: 0010:vsnprintf+0x1467/0x1aa0 lib/vsprintf.c:2547
-Code: a6 bb fd 48 8d 5c 24 48 e9 8e fc ff ff e8 01 a6 bb fd c6 05 bf 06 b0 05 01 48 c7 c7 c1 d3 f2 88 44 89 fe 31 c0 e8 29 ba 8d fd <0f> 0b e9 b7 f6 ff ff e8 dd a5 bb fd c6 05 9a 06 b0 05 01 48 c7 c7
-RSP: 0018:ffffc90001647780 EFLAGS: 00010246
-RAX: 2f9f2ace1f35b900 RBX: ffffc900016477c8 RCX: ffff88809d86c2c0
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: 0000000000000286
-RBP: 80fc0000ffffff02 R08: dffffc0000000000 R09: fffffbfff1628ea5
-R10: fffffbfff1628ea5 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffffff88ea3058 R15: 00000000000080fc
- kvasprintf+0x59/0xf0 lib/kasprintf.c:22
- kasprintf+0x6a/0x90 lib/kasprintf.c:59
- hwsim_new_radio_nl+0x95c/0xf30 drivers/net/wireless/mac80211_hwsim.c:3672
- genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
- genl_rcv_msg+0x1054/0x1530 net/netlink/genetlink.c:735
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x4f9/0x7c0 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x2a6/0x360 net/socket.c:2449
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x4401f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffecc373af8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
-R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+But how do you know workqueues will perform better than
+smp_call_function_single() ? Just asking for clarity on this as normally
+everyone tries to do smp_call_function_single().
 
+-- 
+viresh
