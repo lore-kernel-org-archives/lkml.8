@@ -2,112 +2,143 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB5BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10C0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B4A20737
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF85620732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TVnoFVdP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jt+OFGnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgDMKEq (ORCPT
+        id S1728360AbgDMKEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728140AbgDMKEl (ORCPT
+        Mon, 13 Apr 2020 06:04:54 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60148 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728130AbgDMKEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 06:04:41 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9453CC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:58:18 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id o81so3266141wmo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=KmcsA4T+S+WWzjH6BirzHHu1f070Cb4n75Vt4bzQ7mw=;
-        b=TVnoFVdP7i6NzzFLwMjWxM3xlqFbcIBq1o9J7E/bTBQ0uzOW8+UegM9N09q07Gb8Pt
-         MtHvv7jPmDm/EdqTc8LOg/VtKYICEGws/lMAkblH+kM813ZU0JoJaasghx3IwTGcKd0E
-         42OvmNEcHZQ5VCaiHTIO84mRy6CrDZH8EYAeCVp6AgaElvoo718tEt+wJ/84V0XUhhxN
-         f4duhfvRg/ia9fT3MeUk6BGznNj5Tixq/bRylfXGr/Iior1h1ImD3+qM5aYCgzxIx0Zi
-         yW2DdRaVcQZ3x6NikAgM+x5H/bYYq4FjWTKQPFlyunUiyUqYCPVn2Bmk98TFUkVTHkTB
-         0DAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586772280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gvtpikoyRBKdoFcJ8GEU4zwmH9E/dKn5BixvwyCzFc4=;
+        b=Jt+OFGnKk4d16E/qOD+X7Vz8+deENVuQf1EA1HF/4vgvQLjRZyZc4etnTS9pIbvqS6SP5q
+        Sr6QYjVVCVtJJwNmfRLLKHS9iP8b7m8P/+lHWjzdZD1d4ki7H+6CTKkrqxOsbDTIHmEcUQ
+        n4mmL7sFwTgZQKLFlrLSjl1zv4E+uz4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-kV3_HmjJMSSrsk5-hkenyA-1; Mon, 13 Apr 2020 06:04:38 -0400
+X-MC-Unique: kV3_HmjJMSSrsk5-hkenyA-1
+Received: by mail-wr1-f69.google.com with SMTP id m15so6510584wrb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 03:04:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KmcsA4T+S+WWzjH6BirzHHu1f070Cb4n75Vt4bzQ7mw=;
-        b=Rzwds2e1mW4LGNtE/n1VjlPi5/WNfzWQAnvOVeNIjoFdgvpUrxbF0FbZ/hH3EouF01
-         EO5H9bBPrFMsvnEFPgW5Xp8CPK7EyDArRdSbu86WJfRZ40FxqC9U0IZIZTi3rY7K/hQQ
-         K9iFus/Db0NgOwFemFkWsgDeUSJZDKg8aifLH9SKPqnl/HHmmNMPk8Rvdg9qit/7HdfP
-         ajX0Ngfm8372VHWONkMGUZQnbVIJol2SAhzwMz5nNNZo3UBiwWgqgExRy/tGLZnJsGip
-         n/AiXrhyjHOmE5acVNn5IATXkuiWHvptuLRkzmQkrZKZ2A7LhdPu623S8X/yJCbTqY7R
-         zMIQ==
-X-Gm-Message-State: AGi0PuYpsfigWyUJZ1pnOAUTbyOF49ctd9iXNw6r1qgSuJNHVfBfGAMy
-        4gEiV6qOpB/Mk9AaCTOdoLYGOQ==
-X-Google-Smtp-Source: APiQypJWhZgB3lIgt3ffPi7fAbvHp4h7OWcPtzktkowmrfegct/r94XOEfrUl2q5rZ1a2eCTjGu2EA==
-X-Received: by 2002:a1c:7d15:: with SMTP id y21mr17172416wmc.57.1586771896214;
-        Mon, 13 Apr 2020 02:58:16 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id v21sm13594491wmj.8.2020.04.13.02.58.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Apr 2020 02:58:15 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 0/9] crypto: sun8i-ce: support TRNG, PRNG and hashes
-Date:   Mon, 13 Apr 2020 09:58:00 +0000
-Message-Id: <1586771889-3299-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gvtpikoyRBKdoFcJ8GEU4zwmH9E/dKn5BixvwyCzFc4=;
+        b=sc+1fPionAIfvXUPpsPSVEI56dLpatx+/cKKe8TqNzJzVwO4jtJb8UxVGS6z0whm2y
+         hnau0A8qJ3S/7vuD6Jo2FbzTk2YQPph6uwD90aH5TiHVUZM4+upiR9tPl5XOIhOyGitm
+         Pdl5nHKmQ+gAqYy0mCpcc746nBS7GlwNuFY9e4SyylyIxXdhw0PGPEL84bhfqYIqWlMC
+         6T94CRYD/3/S+a4vn/R3/kMxGjqgknOOgaOtShNHM+xeHb48yPO9RDDQw2IxRbN7U/+T
+         O3guLn7Lp0/O1htUPvXhMiWq6q0YAxDbmigMZIHvAE9/HJWp4ozAHPWTDH5vtqCNl7MU
+         UFaQ==
+X-Gm-Message-State: AGi0PubjLEKuJjWhNGiAoYzdH/T1dLlssQnsbv7b1qDyC8qsorb9Dfe+
+        ZRLj/HJahzaceicWgeiLURXbnHftEWk/Admef5ovdw31ceMD6G0BZzQP3fLwZUq9qLJ9SBxhvw8
+        fTZ3FTVOlak+fvFAmQn7Bdhh1
+X-Received: by 2002:adf:c7c8:: with SMTP id y8mr17506956wrg.305.1586772277044;
+        Mon, 13 Apr 2020 03:04:37 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKLf/U31JZjFRkBRGJHsrPosoMp6/myT/NeT+ZxS/TXQH3VpqNomwC6Nks6u5GBINnLmnW9Sg==
+X-Received: by 2002:adf:c7c8:: with SMTP id y8mr17506398wrg.305.1586772268328;
+        Mon, 13 Apr 2020 03:04:28 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id v131sm14332473wmb.19.2020.04.13.03.04.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 03:04:27 -0700 (PDT)
+Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
+Date:   Mon, 13 Apr 2020 12:04:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Hi Jarkko,
 
-The main goal of this serie is to add support for TRNG, PRNG and hashes
-to the sun8i-ce.
-The whole serie is tested with CRYPTO_EXTRA_TESTS enabled and loading
-tcrypt.
-The PRNG and TRNG are tested with rngtest.
+On 4/12/20 7:04 PM, Jarkko Sakkinen wrote:
+> Call devm_free_irq() if we have to revert to polling in order not to
+> unnecessarily reserve the IRQ for the life-cycle of the driver.
+> 
+> Cc: stable@vger.kernel.org # 4.5.x
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>   drivers/char/tpm/tpm_tis_core.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index 27c6ca031e23..ae6868e7b696 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+>   		if (irq) {
+>   			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+>   						 irq);
+> -			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
+> +			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+>   				dev_err(&chip->dev, FW_BUG
+>   					"TPM interrupt not working, polling instead\n");
+> +				devm_free_irq(chip->dev.parent, priv->irq,
+> +					      chip);
+> +			}
 
-Note that the first patch is common with the recent sun8i-ss PRNG+hashes serie.
+My initial plan was actually to do something similar, but if the probe code
+is actually ever fixed to work as intended again then this will lead to a
+double free as then the IRQ-test path of tpm_tis_send() will have called
+disable_interrupts() which already calls devm_free_irq().
 
-Regards
+You could check for chip->irq != 0 here to avoid that.
 
-Corentin Labbe (9):
-  crypto: rng - add missing __crypto_rng_cast to the rng header
-  crypto: sun8i-ce: move iv data to request context
-  crypto: sun8i-ce: split into prepare/run/unprepare
-  crypto: sun8i-ce: handle different error registers
-  crypto: sun8i-ce: rename has_t_dlen_in_bytes to cipher_t_dlen_in_bytes
-  crypto: sun8i-ce: support hash algorithms
-  crypto: sun8i-ce: Add stat_bytes debugfs
-  crypto: sun8i-ce: Add support for the PRNG
-  crypto: sun8i-ce: Add support for the TRNG
+But it all is rather messy, which is why I went with the "#if 0" approach
+in my patch.
 
- drivers/crypto/allwinner/Kconfig              |  26 ++
- drivers/crypto/allwinner/sun8i-ce/Makefile    |   3 +
- .../allwinner/sun8i-ce/sun8i-ce-cipher.c      |  99 ++++-
- .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 365 ++++++++++++++-
- .../crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 415 ++++++++++++++++++
- .../crypto/allwinner/sun8i-ce/sun8i-ce-prng.c | 191 ++++++++
- .../crypto/allwinner/sun8i-ce/sun8i-ce-trng.c | 123 ++++++
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 135 +++++-
- include/crypto/rng.h                          |   5 +
- 9 files changed, 1323 insertions(+), 39 deletions(-)
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-prng.c
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-trng.c
+Also we will currently ALWAYS hit the "TPM interrupt not working, polling instead"
+error because the TPM_CHIP_FLAG_IRQ never gets set. So if we are going to do an
+interim fix (and we should) we should really also silence that error.
 
--- 
-2.24.1
+Regards,
+
+Hans
+
+p.s.
+
+I'm currently in contact with Lenovo trying to figure out what is going on
+here with the always firing IRQ on the X1 8th gen, I guess the fix for that
+might also help with the T490 issue.
+
+
 
