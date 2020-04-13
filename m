@@ -6,115 +6,108 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9D0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80535C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5872F206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE2220774
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgDMIQI (ORCPT
+        id S1728208AbgDMJX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:16:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgDMIQG (ORCPT
+        Mon, 13 Apr 2020 05:23:28 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:60327 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbgDMJX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:16:06 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB97C00860B
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 01:16:06 -0700 (PDT)
-IronPort-SDR: 5x/rSgGPJGvOiv9Fcn7nGN3Y1PazUWR1RISwSnpOO7Xj0c+Kpk1rAmWMnFNAe12U3sjtjexQk3
- RdCQEQ+Jc6Mw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 01:16:06 -0700
-IronPort-SDR: LMtMC2kw108QPa4vZkYR1RcM22cb0TDcUaSzwuq3e3b9zFGeYHIfbCaV+ODipKT4ZoPeMi8wlc
- XpDLiqh5W78w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="245088427"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Apr 2020 01:16:04 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
-        Mac Chiang <mac.chiang@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: bdw-rt5650: incorrect rate of PCM data
-Date:   Mon, 13 Apr 2020 16:09:18 +0800
-Message-Id: <1586765358-18474-1-git-send-email-brent.lu@intel.com>
+        Mon, 13 Apr 2020 05:23:28 -0400
+Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id B6290262307;
+        Mon, 13 Apr 2020 17:23:13 +0800 (CST)
+From:   Wang Qing <wangqing@vivo.com>
+To:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, wangqing@vivo.com
+Cc:     opensource.kernel@vivo.com
+Subject: RE:[PATCH] ARM64: fixed dump_backtrace() when task running on another cpu
+Date:   Mon, 13 Apr 2020 17:23:08 +0800
+Message-Id: <1586769788-5954-1-git-send-email-wangqing@vivo.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586425106-7369-1-git-send-email-wangqing@vivo.com>
+References: <1586425106-7369-1-git-send-email-wangqing@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSlVCTkNCQkJCQkpPSk1CSFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OSI6HAw*Tjg1MAsfSTQNKhQ9
+        CwgwFBRVSlVKTkNNTE1CTEJIQklIVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
+        VUtVSEpVSklJWVdZCAFZQUhISUM3Bg++
+X-HM-Tid: 0a7172d993279375kuwsb6290262307
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a constrain to exclude 3-channel capture since only 2 and 4
-channel capture are supported on the platform.
+>Hi,
+>
+>On Thu, Apr 09, 2020 at 05:38:16PM +0800, Wang Qing wrote:
+>> We cannot get FP and PC when the task is running on another CPU,
+>> task->thread.cpu_context is the last time the task was switched out,
+>> it's better to give a reminder than to provide wrong information.
+>> 
+>> Signed-off-by: Wang Qing <wangqing@vivo.com>
+>
+>Are you seeing this happen anywhere in particular today?
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
----
- sound/soc/intel/boards/bdw-rt5650.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+This problem is not so obvious, because it will not cause any exceptions
+but will show "old" stack always ending with switch_to, I finally confirmed
+the problem through debugging.
 
-diff --git a/sound/soc/intel/boards/bdw-rt5650.c b/sound/soc/intel/boards/bdw-rt5650.c
-index af2f502..eedbdad 100644
---- a/sound/soc/intel/boards/bdw-rt5650.c
-+++ b/sound/soc/intel/boards/bdw-rt5650.c
-@@ -83,6 +83,36 @@ static struct snd_soc_jack_pin mic_jack_pin = {
- 	.mask	= SND_JACK_MICROPHONE,
- };
- 
-+static const unsigned int channels[] = {
-+	2, 4,
-+};
-+
-+static const struct snd_pcm_hw_constraint_list constraints_channels = {
-+	.count = ARRAY_SIZE(channels),
-+	.list = channels,
-+	.mask = 0,
-+};
-+
-+static int bdw_fe_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+
-+	/*
-+	 * On this platform for PCM device we support,
-+	 * 2 or 4 channel capture
-+	 */
-+	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-+		snd_pcm_hw_constraint_list(runtime, 0,
-+					   SNDRV_PCM_HW_PARAM_CHANNELS,
-+					   &constraints_channels);
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_ops bdw_rt5650_fe_ops = {
-+	.startup = bdw_fe_startup,
-+};
-+
- static int broadwell_ssp0_fixup(struct snd_soc_pcm_runtime *rtd,
- 			struct snd_pcm_hw_params *params)
- {
-@@ -234,6 +264,7 @@ static struct snd_soc_dai_link bdw_rt5650_dais[] = {
- 		.name = "System PCM",
- 		.stream_name = "System Playback",
- 		.dynamic = 1,
-+		.ops = &bdw_rt5650_fe_ops,
- #if !IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
- 		.init = bdw_rt5650_rtd_init,
- #endif
--- 
-2.7.4
+For example:Task blocked in spinlock/interrupt/busy loop, I want to print
+the backtrace when detected(like PSI in Android), the printing is wrong(old).
+
+>
+>> ---
+>>  arch/arm64/kernel/traps.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>> 
+>> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+>> index cf402be..c04e3e8 100644
+>> --- a/arch/arm64/kernel/traps.c
+>> +++ b/arch/arm64/kernel/traps.c
+>> @@ -106,6 +106,14 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>>  		start_backtrace(&frame,
+>>  				(unsigned long)__builtin_frame_address(0),
+>>  				(unsigned long)dump_backtrace);
+>> +	} else if (tsk->on_cpu) {
+>> +		/*
+>> +		 * The task is running in another cpu, so the call stack
+>> +		 * is changing and we cannot get it.
+>> +		 */
+>> +		pr_warn("tsk: %s is running in CPU%d, Don't call trace!\n",
+>> +			tsk->comm, tsk->cpu);
+>
+>I believe that we can race with a concurrent write to tsk->cpu in both
+>cases above. We could use READ_ONCE() to get a snapshot, but we can
+>still race and miss cases where the task was runnning as we backtrace
+>it.
+>
+>Thanks,
+>Mark.
+
+I will use task_cpu(tsk) instead of tsk->cpu, and add task_running_oncpu() in
+include/linux/sched.h instead of tsk->on_cpu, but as you said, by this patch,
+we can still race and miss cases where the task was runnning as we backtrace.
+
+But from the user's perspective, printing wrong backtrace is confused when
+we call this function while task already running. However, it's reasonable to
+print the last backtrace when task enter running during the function is called.
+
+Thanks,
+Wang Qing.
+
+>
+>> +		return;
+>>  	} else {
+>>  		/*
+>>  		 * task blocked in __switch_to
+>> -- 
+>> 2.7.4
+>> 
 
