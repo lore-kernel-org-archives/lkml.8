@@ -2,105 +2,137 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E74C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7BEC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBEBF20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A074020732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586810243;
+	bh=Qu9I/yBNG3sewZzG5+9vFbf7zJlTdJKivbayYPi68CY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L1sbNgFq62mr4FMkBE4C8VAhD1RfoyCArFq1UCUUMxRbOBnpjytK0OwialhSAKBJE
+	 98UVEm7309OaDTMj+DS2K7aRHr1RIHF7g9AlJSTeC3f5zqaPeoqvU2QCYpM4gXT3cS
+	 0HdJuHxD+n0JU63FaoKky4eOpS6rTBftYETFea8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733290AbgDMUdF (ORCPT
+        id S2388442AbgDMUhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:33:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:45986 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgDMUdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:33:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C14930E;
-        Mon, 13 Apr 2020 13:33:02 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADB4E3F6C4;
-        Mon, 13 Apr 2020 13:33:00 -0700 (PDT)
-References: <245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com> <6f372bce-151e-79e1-2fda-d8b2bcf777d6@linux.alibaba.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peng Wang <rocking@linux.alibaba.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Simplify the code of should_we_balance()
-Message-ID: <jhjzhbf6t2p.mognet@arm.com>
-In-reply-to: <6f372bce-151e-79e1-2fda-d8b2bcf777d6@linux.alibaba.com>
-Date:   Mon, 13 Apr 2020 21:32:37 +0100
+        Mon, 13 Apr 2020 16:37:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388425AbgDMUhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:37:20 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2594C0A3BDC;
+        Mon, 13 Apr 2020 13:37:19 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c63so10985726qke.2;
+        Mon, 13 Apr 2020 13:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=po4Tg7l56X8JxsrIEn5K0LIpr3zSAdM72o29rNOLQgI=;
+        b=Hp3t8cqWgCww90WpjPKr38jrO+Iv/5BhpGdDiqycmqPAjfiEHYcvd5UP+Hru8q4vYK
+         5ENEFzBOozslgB+SOVFMh506HJmYv83+HUK+pGlakZZEK29BukuaKwWLLZipZk0y8uix
+         pYRMSO7TkhPysMN4UP1Jkb+L77SeMC6kL/zgYNREylPfk1ftXsiNnNgb+rdGlgxbvlM6
+         kO5HsmQUrQMRcI1Ve9/sNhKx/YLTy2NcPMpfGAyCWuPZSOqJCA2GWCi7+YeEAkHWi/0V
+         2N07GpCpeAWwbhCSJ/dFViu+7wUIRA/lhNYLKz9V5YtIHRWvkCEWHop7qMBqctVBzA4l
+         1VpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=po4Tg7l56X8JxsrIEn5K0LIpr3zSAdM72o29rNOLQgI=;
+        b=NrkM1f94XVv8k5HuM02oxy+YAa/qvhs3xno86lpA73a0i+ebgD+oJmbXtejJ694ipu
+         ZwZBVd1XHQMcBlWOOyW2DhqopH6cF97mjm/LFkfN5lFx8z/COBnlWonEIg9CmF4Ydjgl
+         DlReYuQZYbKi4xA4hmx7ZPcTWg+cXYjh0oWKQEObL+yPgYR8ugsmxKjrh7PfHg2IZ9AC
+         HyRsqPcFueZyL67lhvfZPuxT1ho2WEqm/g00dDlzVMib6Y5n7QlfRPkCG1g0yWlAreax
+         jr7l+bdWZVZVuluzv2AlN6pMJuURnWP+Ue7accFWDuLLFbFZ6pdE2KGL5jjAkClQ2IGi
+         Mhhg==
+X-Gm-Message-State: AGi0PuYqvbFvCS0BUrbZQBWOZMASg5hC5YsXmR87dvQF/GJ750xzBAfg
+        ccXi+KgHkrslDoo8qL2ePuk=
+X-Google-Smtp-Source: APiQypI1sBRWAvVsFGeAvZvDZ/uuO4AZV3fNnGoE4m3RLFGj+2KNntBYYyQ3Pbxs5eyriUzcF+avwA==
+X-Received: by 2002:ae9:e606:: with SMTP id z6mr7159623qkf.320.1586810238863;
+        Mon, 13 Apr 2020 13:37:18 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id b13sm5959814qka.20.2020.04.13.13.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 13:37:17 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 16:37:16 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 5/8] kernfs: let objects opt-in to propagating from the
+ initial namespace
+Message-ID: <20200413203716.GK60335@mtj.duckdns.org>
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+ <20200408152151.5780-6-christian.brauner@ubuntu.com>
+ <20200413190239.GG60335@mtj.duckdns.org>
+ <20200413193950.tokh5m7wsyrous3c@wittgenstein>
+ <20200413194550.GJ60335@mtj.duckdns.org>
+ <20200413195915.yo2l657nmtkwripb@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413195915.yo2l657nmtkwripb@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 12/04/20 09:42, Peng Wang wrote:
-> On 4/11/20 5:20 PM, Peng Wang wrote:
->> We only consider group_balance_cpu() after there is no idle
->> cpu. So, just do comparison before return at these two cases.
->>
+On Mon, Apr 13, 2020 at 09:59:15PM +0200, Christian Brauner wrote:
+> Right, pid namespaces deal with a single random identifier about which
+> userspace makes no assumptions other than that it's a positive number so
+> generating aliases is fine. In addition pid namespaces are nicely
 
-It's not really changing much, but if it helps making it a bit more
-readable, why not. Small nit below.
+I don't see any fundamental differences between pids and device numbers. One
+of the reasons pid namespace does aliasing instead of just showing subsets is
+because applications can have expectations on what the specific numbers should
+be - e.g. for checkpoint-restarting.
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> hierarchical. I fear that we might introduce unneeded complexity if we
+> go this way and start generating aliases for devices that userspace
 
->> Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
->> ---
->>   kernel/sched/fair.c | 16 +++++-----------
->>   1 file changed, 5 insertions(+), 11 deletions(-)
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 1ea3ddd..81b2c647 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -9413,7 +9413,7 @@ static int active_load_balance_cpu_stop(void *data);
->>   static int should_we_balance(struct lb_env *env)
->>   {
->>      struct sched_group *sg = env->sd->groups;
->> -	int cpu, balance_cpu = -1;
->> +	int cpu;
->>
->>      /*
->>       * Ensure the balancing environment is consistent; can happen
->> @@ -9434,18 +9434,12 @@ static int should_we_balance(struct lb_env *env)
->>              if (!idle_cpu(cpu))
->>                      continue;
->>
->> -		balance_cpu = cpu;
->> -		break;
->> +		/* Are we the first idle CPU? */
->> +		return cpu == env->dst_cpu;
->>      }
->>
->> -	if (balance_cpu == -1)
->> -		balance_cpu = group_balance_cpu(sg);
->> -
->> -	/*
->> -	 * First idle CPU or the first CPU(busiest) in this sched group
->> -	 * is eligible for doing load balancing at this and above domains.
->> -	 */
->> -	return balance_cpu == env->dst_cpu;
->> +	/* Are we the first balance CPU of this group? */
+It adds complexity for sure but the other side of the scale is losing
+visiblity into what devices are on the system, which can become really nasty
+in practice, so I do think it can probably justify some additional complexity
+especially if it's something which can be used by different devices. Even just
+for block, if we end up expanding ns support to regular block devices for some
+reason, it's kinda dreadful to think a situation where all devices can't be
+discovered at the system level.
 
-Nit: That should be either "the balance CPU" or "the first CPU in the group
-balance mask"
+> already knows about and has expectations of. We also still face some of
+> the other problems I mentioned.
+> I do think that what you say might make sense to explore in more detail
+> for a new device class (or type under a given class) that userspace does
+> not yet know about and were we don't regress anything.
 
->> +	return group_balance_cpu(sg) == env->dst_cpu;
->>   }
->>
->>   /*
->>
->
-> +juri.lelli@redhat.com
+I don't quite follow why adding namespace support would break existing users.
+Wouldn't namespace usage be opt-in?
+
+Thanks.
+
+-- 
+tejun
