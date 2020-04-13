@@ -2,134 +2,206 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975FDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08975C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727882072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84EF20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVh1MHnI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crec7vuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732755AbgDMRUw (ORCPT
+        id S1732795AbgDMR3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
+        Mon, 13 Apr 2020 13:29:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732579AbgDMRUu (ORCPT
+        by vger.kernel.org with ESMTP id S1732781AbgDMR3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:20:50 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98C5C0A3BDC;
-        Mon, 13 Apr 2020 10:20:49 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k11so10316307wrp.5;
-        Mon, 13 Apr 2020 10:20:49 -0700 (PDT)
+        Mon, 13 Apr 2020 13:29:06 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285DBC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:29:05 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id b12so10151900ion.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kWgwtw6mnshP7OT2kiE97Ap+wsoZZptwcvaDrs1tDsI=;
-        b=bVh1MHnIU7qEHoYKTXnX8K/41raLAhstyBAr9OgkIlaMU8CkeYDVbSuj2MVqY6E5dC
-         qLA+7Z8aDDgXtfRRRqEt0JirV+9D3Kq0As4DptSjqE9XC0ru6jAEs0RursW6IqmT1Zig
-         sI5edIfwkeSg6nTxBG35L3EVBdv/yJQ/xXc/2hlNlq1c87BhsJFy0UQbTYqwrCW9wi+m
-         +UMcaGJA1UvnpJqFD/eQh1Kb4j9Rttzq1LN53LMaa6FQiRsPQtUzk7u8/c6uuQi/fWnZ
-         FUJhWMCikBA3WxTFmBgTIrX+2cTVVd4s1z5j5ATbYWQ5BQnVkFcCL7dNGbK7P1nIsN/d
-         axFw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GM+yN/jrRse2ioNNBGH5SQs0AMwRsnLkkraZtwr6CoY=;
+        b=crec7vuGJUFCG6HZ8oF3y83LTntbWyX/4L3lni+1zG/o8PgBmLyzOfBzHz6qnL6tSj
+         l+l9LpJa679B/LnAqWaJbhsxb0d64hdqsZynPhb15VhGNyDcRY1PXsrHUhtdjUmWVg8Q
+         BoLClymw6kYrW57hEemjU1COZwxtRQblFLIk3pQ/9niAAjic0MmlV1XKp3uVhmTOztSm
+         RVtNmVRhhkhq9mv5/2jadImmx1g3pbw5HgNahHuaR0pgx62+o8zJbvUPEd32xhCzpPhp
+         0JZOomS+hLdgBCw5s+ilGopXLcC2B/SNRaDgAANB1wwl859qVd5EE5qE3lvt23NCS+8j
+         wPJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kWgwtw6mnshP7OT2kiE97Ap+wsoZZptwcvaDrs1tDsI=;
-        b=Ryse9ZksgEQsHvy42kpIfmiCut9nMkbLvkhedcFApneXqfMbKjjRGT2dBss9OhBdKY
-         clNF4UZtfNhAfHFfPHQ9n5RZ9i5SogpdMPcsSWcnF0uE19hI+yrbJUGpiwQCVBZk51Qz
-         rzsKLAE+RNZgsrdmhF3WrDAkFgxJGbpESOB/1bnNGlAc+B4v6wCNlPxi3E/JtsUuYKXb
-         L+7BfTYC6iWdMVnGM2ZIzfl0V9xvv6RjIOPg7u8rEQ2XPkzqSncdRyOA5YFPMmw/beFY
-         a+7b+mTzXy/GN+KpRdFiai7kHFrEvwKgvu7NB8A0e5eFZrn8oXHiy35eYfiaPmwAUup1
-         u2Rg==
-X-Gm-Message-State: AGi0PubrV/S4wvGM7Ky18UmX0W9CSLYZMUFXsHFtE6Db3as99yGKwGOK
-        D4G6qV3F1sqd1H+yJQlZ4WM=
-X-Google-Smtp-Source: APiQypIs6QMkRZ3InN+DdxIArcJcpkp8vBmkZ8YZyLT4LbLHkZc845IeZsR13A1TTF2jkLK0weALmQ==
-X-Received: by 2002:a5d:698f:: with SMTP id g15mr5867707wru.135.1586798448730;
-        Mon, 13 Apr 2020 10:20:48 -0700 (PDT)
-Received: from linux-gy6r.site ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id d13sm6835546wmb.39.2020.04.13.10.20.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 10:20:48 -0700 (PDT)
-Subject: Re: [PATCH v7 5/5] media: mtk-mdp: Use correct aliases name
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Daniel Kurtz <djkurtz@chromium.org>
-References: <20200210063523.133333-1-hsinyi@chromium.org>
- <20200210063523.133333-6-hsinyi@chromium.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-X-Pep-Version: 2.0
-Message-ID: <7f08c5a8-8635-7e97-9585-601ac9c21ded@gmail.com>
-Date:   Mon, 13 Apr 2020 19:20:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GM+yN/jrRse2ioNNBGH5SQs0AMwRsnLkkraZtwr6CoY=;
+        b=Ej3OuMZ0/BryG8o11psThFsjx2esZ+GBJIS2pf8GreXgl49DBWaB5KnaBL4l4qNEYh
+         gBqEoz1QwLULfvtGgNe7O0UI91er4ULtqtiC+8FLtun6hPAf6ez33RwRKDrAokoUA0m0
+         W75Kxq7wAHPQPEFbv7B/mpZ09OjveyPsNi53loFKIYweKgK4DnOcnwDvYE7bLpcd7KHN
+         tW8YQxb9kQpcXkXHIF7C+1eMcI0UGzozcMFZRXf5DxjcWDAdqtSJ2hJf344m2fwhOgg8
+         zTYuAcH7+9nZwQ5bKzWdRuPLaSItaoPFneaO4fdnlsUfYjxOxLgkUE+nEtvcjWH8eTRU
+         dumA==
+X-Gm-Message-State: AGi0Pubnlvpd/NOndMV+0Xk1MfVJKivC+yTc/Qj1SsqeqTQXdfvHr/wD
+        hvOGggl6r9y1MQjVQ6yK+hdRgVgl9Uvc5kKmP3U=
+X-Google-Smtp-Source: APiQypKD2Hi/qjbQxc6mLnbTEZOd0gAygUhDFJ/V70Ab1dMABhoQoHZbNNKFfSGHsAh5K6aqiqL9tKd0WPc9fHRfcWw=
+X-Received: by 2002:a5d:9494:: with SMTP id v20mr17384079ioj.101.1586798944353;
+ Mon, 13 Apr 2020 10:29:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200210063523.133333-6-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <20200411200632.4045-1-peron.clem@gmail.com> <20200411200632.4045-2-peron.clem@gmail.com>
+ <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com> <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
+ <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com>
+ <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com> <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
+In-Reply-To: <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 13 Apr 2020 19:28:53 +0200
+Message-ID: <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
+To:     Steven Price <steven.price@arm.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Steven,
 
+On Mon, 13 Apr 2020 at 18:35, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> Hi Steven,
+>
+> On Mon, 13 Apr 2020 at 17:55, Steven Price <steven.price@arm.com> wrote:
+> >
+> > On 13/04/2020 15:31, Cl=C3=A9ment P=C3=A9ron wrote:
+> > > Hi,
+> > >
+> > > On Mon, 13 Apr 2020 at 16:18, Cl=C3=A9ment P=C3=A9ron <peron.clem@gma=
+il.com> wrote:
+> > >>
+> > >> Hi Steven,
+> > >>
+> > >> On Mon, 13 Apr 2020 at 15:18, Steven Price <steven.price@arm.com> wr=
+ote:
+> > >>>
+> > >>> On 11/04/2020 21:06, Cl=C3=A9ment P=C3=A9ron wrote:
+> > >>>> OPP table can defined both frequency and voltage.
+> > >>>>
+> > >>>> Register the mali regulator if it exist.
+> > >>>>
+> > >>>> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > >>>> ---
+> > >>>>    drivers/gpu/drm/panfrost/panfrost_devfreq.c | 34 ++++++++++++++=
+++++---
+> > >>>>    drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
+> > >>>>    2 files changed, 31 insertions(+), 4 deletions(-)
+> > >>>>
+> > >>>> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers=
+/gpu/drm/panfrost/panfrost_devfreq.c
+> > >>>> index 62541f4edd81..2dc8e2355358 100644
+> > >>>> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> > >>>> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> > >>>> @@ -78,12 +78,26 @@ int panfrost_devfreq_init(struct panfrost_devi=
+ce *pfdev)
+> > >>>>        struct device *dev =3D &pfdev->pdev->dev;
+> > >>>>        struct devfreq *devfreq;
+> > >>>>        struct thermal_cooling_device *cooling;
+> > >>>> +     const char *mali =3D "mali";
+> > >>>> +     struct opp_table *opp_table =3D NULL;
+> > >>>> +
+> > >>>> +     /* Regulator is optional */
+> > >>>> +     opp_table =3D dev_pm_opp_set_regulators(dev, &mali, 1);
+> > >>>
+> > >>> This looks like it applies before 3e1399bccf51 ("drm/panfrost: Add
+> > >>> support for multiple regulators") which is currently in drm-misc-ne=
+xt
+> > >>> (and linux-next). You want something more like:
+> > >>
+> > >> Thanks for you review, indeed I didn't see that multiple regulators
+> > >> support has been added.
+> > >> Will update in v2.
+> > >>
+> > >>>
+> > >>>       opp_table =3D dev_pm_opp_set_regulators(dev,
+> > >>>                                             pfdev->comp->supply_nam=
+es,
+> > >>>                                             pfdev->comp->num_suppli=
+es);
+> > >>>
+> > >>> Otherwise a platform with multiple regulators won't work correctly.
+> > >>>
+> > >>> Also running on my firefly (RK3288) board I get the following warni=
+ng:
+> > >>>
+> > >>>      debugfs: Directory 'ffa30000.gpu-mali' with parent 'vdd_gpu' a=
+lready
+> > >>> present!
 
-On 2/10/20 7:35 AM, Hsin-Yi Wang wrote:
-> aliases property name must include only lowercase and '-'. Fix in dts
-> and driver.
->=20
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/me=
-dia/platform/mtk-mdp/mtk_mdp_comp.c
-> index 9afe8161a8c0..0c4788af78dd 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+I try to reproduce but it can't
+regulator is mount at :
+./regulator/vdd-gpu
+whereas OPP is mount :
+./opp/soc-1800000.gpu/opp:756000000/supply-0/
 
-When resubmitting this, please make sure to use
-scripts/get_maintainer.pl
+I see that firefly as 2 regulators with the same name :
+vdd_gpu from syr828
+(https://github.com/mopplayer/Firefly-RK3288-Kernel-With-Mali764/blob/maste=
+r/arch/arm/boot/dts/firefly-rk3288.dts#L453)
+vdd_gpu from rk808_dcdc2_reg
+(https://github.com/mopplayer/Firefly-RK3288-Kernel-With-Mali764/blob/maste=
+r/arch/arm/boot/dts/firefly-rk3288.dts#L841)
 
-The To and CC list are missing the relevant people and mailinglists,
-porbably that's why you never got a response. The patch is trivial feel
-free to add:
+So i think the issue is from the firefly device-tree.
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Regards,
+Clement
 
-> @@ -15,10 +15,10 @@
-> =20
-> =20
->  static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] =3D=
- {
-> -	"mdp_rdma",
-> -	"mdp_rsz",
-> -	"mdp_wdma",
-> -	"mdp_wrot",
-> +	"mdp-rdma",
-> +	"mdp-rsz",
-> +	"mdp-wdma",
-> +	"mdp-wrot",
->  };
-> =20
->  struct mtk_mdp_comp_match {
->=20
-
+> > >>>
+> > >>> This is due to the regulator debugfs entries getting created twice =
+(once
+> > >>> in panfrost_regulator_init() and once here).
+> > >>
+> > >> Is it a warning that should be consider as an error? Look's more an =
+info no?
+> > >> What should be the correct behavior if a device want to register two
+> > >> times the same regulator?
+> > >
+> > > Or we can change the name from vdd_XXX to opp_vdd_XXX ?
+> > > https://elixir.bootlin.com/linux/latest/source/drivers/opp/debugfs.c#=
+L45
+> >
+> > Yes, I'm not sure that it's actually a problem in practice. And it may
+> > well be correct to change this in the generic code rather than try to
+> > work around it in Panfrost. But we shouldn't spam the user with warning=
+s
+> > as that makes real issues harder to see.
+> >
+> > Your suggestion to change the name seems reasonable to me, but I don't
+> > fully understand the opp code, so we'd need some review from the OPP
+> > maintainers. Hopefully Viresh, Nishanth or Stephen can provide some ins=
+ight.
+>
+> Agree, I will send a v2 with the rename and see if OPP Maintainers agree.
+>
+> Regards,
+> Clement
+>
+> >
+> > Steve
