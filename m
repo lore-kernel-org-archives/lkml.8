@@ -2,126 +2,328 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4B9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B6BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F692073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E307820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="k145ZrB3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G5A3naqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgDMOng (ORCPT
+        id S1729126AbgDMOpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:43:36 -0400
-Received: from mout.gmx.net ([212.227.15.19]:32973 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgDMOnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:43:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586789010;
-        bh=0NCp+Vu36UV+Nep7pt3qtDDxRFXYEp54QmwUoOr/Bus=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=k145ZrB38WQIg90rT/myfy+BJRKoj2VMD+UkQl8+umJBjMzgqyN7kSodXMcd9f7MY
-         Mp0t0O8Cd7kC9pOKdoqL8/EWkJTYLcYiXKHoiDmGDGFs6l0PIKR0JeMCUUFOxC8HNf
-         mCBZCi1pIzBcWFvnxgFO/WsOgp13N2r57CPhsQR4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MLzBj-1jfoJ9109R-00HwcM; Mon, 13
- Apr 2020 16:43:30 +0200
-Date:   Mon, 13 Apr 2020 16:43:28 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>, devel@driverdev.osuosl.org,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] staging: vt6656: Refactor the assignment of the
- phy->signal variable
-Message-ID: <20200413144327.GD3101@ubuntu>
-References: <20200411122610.7901-1-oscar.carter@gmx.com>
- <20200411122610.7901-2-oscar.carter@gmx.com>
- <20200413125616.GA3127208@kroah.com>
- <20200413142517.GB3101@ubuntu>
- <20200413143258.GA3551837@kroah.com>
+        Mon, 13 Apr 2020 10:45:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59694 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728557AbgDMOpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:45:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586789111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LIIIpRe6mjSrtNEiLaRkIQTDbcU67t51lD1WUmbZpGs=;
+        b=G5A3naqWTgWH2X0n7qEeoBEPxD+2n+3u0PjUuApfckwnXjnsennhw4z++XRFyvml6n5kwK
+        fH8r0214sfM7oFRRoKg9usuRUm31uX3FzBLj4OmEDCGnaxIsIaezj3uzsqBO3doldKrFoa
+        xoLZ2HyU7ECnK6XxxTI3oB9DaCC+8F0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-4HCdmAWcMWaa4dPRDBIuEA-1; Mon, 13 Apr 2020 10:45:05 -0400
+X-MC-Unique: 4HCdmAWcMWaa4dPRDBIuEA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B033DDB60;
+        Mon, 13 Apr 2020 14:45:03 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-48.phx2.redhat.com [10.3.114.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 86D3C5C1B2;
+        Mon, 13 Apr 2020 14:44:59 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 10:44:57 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Josh Don <joshdon@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Paul Turner <pjt@google.com>,
+        Huaixin Chang <changhuaixin@linux.alibaba.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] sched: eliminate bandwidth race between throttling
+ and distribution
+Message-ID: <20200413144457.GA2517@lorien.usersys.redhat.com>
+References: <20200410225208.109717-1-joshdon@google.com>
+ <20200410225208.109717-2-joshdon@google.com>
+ <CABk29NtxG8t6wHM6MDVFun7jxqRpupWr0d5dK57N2ecFbdSumw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200413143258.GA3551837@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:GuMtJNikT7pEfs4/zNmaUdOgAvOacWcwwOOhytyCJSV9BYLhUfL
- kxaLu3dMC1n5UErexfEQpc8R9urBLUIOg/7w4wRspq28pXeUDUEatKEIvVuv5QPWmwFNUm/
- p0pMwnwSooeASoGzgpIPc+mg2Prw1yYkmJWAQvNYztU8G2Z/XDj8whE8H9nra14/nW3GENK
- Yw7i4mmFUUfcxppnj3eGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bjWEYbs8t+E=:LX7PI3mdFcGUTYfUB6shCu
- CwdHYh6OmqCF3GIOxuUzU7XywQZNZ9lF2IXPJbIm4rxE73d8fZrLJ0b/H4CobdwIWym3JoBiY
- r8bk5x/+ImhWT+njsntCiEervMp1QI91kLo7jVM/RqqKnTCqFI+oqOQBARPe6yGsyxROaLaY4
- XZWh8UMHOyh59qx8/xf/ya2vsgjORtTk+iGN6ABv5ZikdMXm67a4KRO6KDeKQiLEaHUYKFSAq
- 6yONGkJx2sH55rH0MHvETKT5gBHetdgPzAt2hrLbIqSZkadOwt6olkWvubIVgSoea6fnA7Jwc
- tqAAHUhdHhm7mu8JHQXdn3avsyG308+T4ZsMqG4O52dNstJUW8C0nUpgUv29BkI0REDGzBRaJ
- 918sHu2flYAxyHl6L0p8oYr0d6PeOFZyxRa4vkNUagHG+cjYfcw0dG5iThz1qVKmXMB5VMmo2
- nEcamVTDBBsm+POCEmWRkUzSnZfOJVL1uCvuxdmzmdN2sYx/WzU/Vc6f2mUoGOTMmt/ZVpzIe
- Ov5g6HQak96brV6u/zmGvRnTbTBp2ULoK4TzGDjZftEqWI5o6gk0XhW/JKFILrz22PJtB98RT
- RMH0pqBh27T5rLL1kTN+RKcCBjkWM6TA4TWzwbdkhKpz14iHaRcn8kOyNbvCoAo+KISFxMoDz
- qaP6MP8KzHIM/5z5UwgZjXKGKzGBgsMTOHLtCTlo/GiHFbhhEU6OdZYXSAVqnL54SjyPKvV8O
- yWRKRO56xO9cvSDc3NqqPgIppiIj6l0ON4p3+veLO/o3i51k7pyK9dJMsquK5qsX8a0ENmNM3
- imKqAOZ9SM1fXItqZL1fmzcFNRStjMuiKUVHM1L5Fg4DnqC6Y77KJ3cc+m6UPMDceAo6nzwFz
- AkNgQXXVnxLPH4WdzVFP4zUhThH243K7JOSmk2RlbRgXIqc5N18PvbhuwjY30p51FTDTY0uAy
- Snh7hlOcWAg+wL6kdQ8Uyh/iZaHogbc90BFkKCTjwKk8ouMNw+Qz2ursrO+2DpAF9juMN/ao4
- Z3+0vNPIsaAID27t79JZnJ3OJ87C481OTBWh9t7dwst4Cgs9LMjLesN0hNAYg1CsgdcNP42pV
- xmG8LEanCRytagh9Kvt220ofESAgQkiBjxuWB+v9TShoTZpbk1IXWnA1znE+Cjb6XsTw0QiDH
- hEbsHD8Yb7N+KR+qSLCW9jGMrjiISG2TGAzmBNwGb6ORkskm6l/7u9SeBjsyS6n26qtYdA/8Z
- S1YGw1D4HI4PGwl1W
+In-Reply-To: <CABk29NtxG8t6wHM6MDVFun7jxqRpupWr0d5dK57N2ecFbdSumw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 04:32:58PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Apr 13, 2020 at 04:25:17PM +0200, Oscar Carter wrote:
-> > On Mon, Apr 13, 2020 at 02:56:16PM +0200, Greg Kroah-Hartman wrote:
-> > > On Sat, Apr 11, 2020 at 02:26:09PM +0200, Oscar Carter wrote:
-> > > > Create a constant array with the values of the "phy->signal" for e=
-very
-> > > > rate. Remove all "phy->signal" assignments inside the switch state=
-ment
-> > > > and replace these with a single reading from the new vnt_phy_signa=
-l
-> > > > array.
-> > > >
-> > > > The constant array can be of one dimension because the OR mask wit=
-h
-> > > > BIT(3) or BIT(4) allow obtain a second value according to the rate=
-,
-> > > > the preamble_type and the pkt_type.
-> > > >
-> > > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > > > ---
-> > > >  drivers/staging/vt6656/baseband.c | 105 ++++++++-----------------=
------
-> > > >  1 file changed, 26 insertions(+), 79 deletions(-)
-> > >
-> > > This series did not apply to my tree, please rebase and resend.
-> >
-> > Rebase the patchs is a normal process in the development or am I doing=
- something
-> > wrong ?
->
-> It's normal when multiple people are working on the same area with lots
-> of patches flying around.  Not a problem, it doesn't bother me at all :)
+Hi Josh,
 
-Thanks for the clarification about this theme.
+On Sat, Apr 11, 2020 at 07:00:17PM -0700 Josh Don wrote:
+> +[1]pauld@redhat.com
+>=20
+> On Fri, Apr 10, 2020 at 3:52 PM Josh Don <[2]joshdon@google.com> wrote:
+>=20
+>     From: Paul Turner <[3]pjt@google.com>
+>=20
+>     There is a race window in which an entity begins throttling before =
+quota
+>     is added to the pool, but does not finish throttling until after we=
+ have
+>     finished with distribute_cfs_runtime(). This entity is not observed=
+ by
+>     distribute_cfs_runtime() because it was not on the throttled list a=
+t the
+>     time that distribution was running. This race manifests as rare
+>     period-length statlls for such entities.
+>=20
+>     Rather than heavy-weight the synchronization with the progress of
+>     distribution, we can fix this by aborting throttling if bandwidth h=
+as
+>     become available. Otherwise, we immediately add the entity to the
+>     throttled list so that it can be observed by a subsequent distribut=
+ion.
+>=20
+>     Additionally, we can remove the case of adding the throttled entity=
+ to
+>     the head of the throttled list, and simply always add to the tail.
+>     Thanks to 26a8b12747c97, distribute_cfs_runtime() no longer holds o=
+nto
+>     its own pool of runtime. This means that if we do hit the !assign a=
+nd
+>     distribute_running case, we know that distribution is about to end.
+>=20
+>     Signed-off-by: Paul Turner <[4]pjt@google.com>
+>     Co-developed-by: Ben Segall <[5]bsegall@google.com>
+>     Signed-off-by: Ben Segall <[6]bsegall@google.com>
+>     Signed-off-by: Josh Don <[7]joshdon@google.com>
 
->
-> thanks,
->
-> greg k-h
+This looks good to me, thanks for the cc.
 
-thanks,
+Reviewed-by: Phil Auld <pauld@redhat.com>
 
-oscar carter
+>     ---
+>     =A0kernel/sched/fair.c | 78 ++++++++++++++++++++++++++-------------=
+------
+>     =A01 file changed, 46 insertions(+), 32 deletions(-)
+>=20
+>     diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>     index 02f323b85b6d..3fb986c52825 100644
+>     --- a/kernel/sched/fair.c
+>     +++ b/kernel/sched/fair.c
+>     @@ -4587,17 +4587,15 @@ static inline struct cfs_bandwidth
+>     *tg_cfs_bandwidth(struct task_group *tg)
+>     =A0 =A0 =A0 =A0 return &tg->cfs_bandwidth;
+>     =A0}
+>=20
+>     -/* returns 0 on failure to allocate runtime */
+>     -static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>     +/* returns 0 on failure to allocate runtime, called with cfs_b->lo=
+ck held
+>     */
+>     +static int __assign_cfs_rq_runtime(struct cfs_bandwidth *cfs_b,
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ struct cfs_rq *cfs_rq, u64
+>     target_runtime)
+>     =A0{
+>     -=A0 =A0 =A0 =A0struct task_group *tg =3D cfs_rq->tg;
+>     -=A0 =A0 =A0 =A0struct cfs_bandwidth *cfs_b =3D tg_cfs_bandwidth(tg=
+);
+>     =A0 =A0 =A0 =A0 u64 amount =3D 0, min_amount;
+>=20
+>     =A0 =A0 =A0 =A0 /* note: this is a positive sum as runtime_remainin=
+g <=3D 0 */
+>     -=A0 =A0 =A0 =A0min_amount =3D sched_cfs_bandwidth_slice() - cfs_rq=
+->
+>     runtime_remaining;
+>     +=A0 =A0 =A0 =A0min_amount =3D target_runtime - cfs_rq->runtime_rem=
+aining;
+>=20
+>     -=A0 =A0 =A0 =A0raw_spin_lock(&cfs_b->lock);
+>     =A0 =A0 =A0 =A0 if (cfs_b->quota =3D=3D RUNTIME_INF)
+>     =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 amount =3D min_amount;
+>     =A0 =A0 =A0 =A0 else {
+>     @@ -4609,13 +4607,26 @@ static int assign_cfs_rq_runtime(struct cfs=
+_rq
+>     *cfs_rq)
+>     =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 cfs_b->idle =3D 0;
+>     =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+>     =A0 =A0 =A0 =A0 }
+>     -=A0 =A0 =A0 =A0raw_spin_unlock(&cfs_b->lock);
+>=20
+>     =A0 =A0 =A0 =A0 cfs_rq->runtime_remaining +=3D amount;
+>=20
+>     =A0 =A0 =A0 =A0 return cfs_rq->runtime_remaining > 0;
+>     =A0}
+>=20
+>     +/* returns 0 on failure to allocate runtime */
+>     +static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>     +{
+>     +=A0 =A0 =A0 =A0int ret;
+>     +=A0 =A0 =A0 =A0struct cfs_bandwidth *cfs_b =3D tg_cfs_bandwidth(cf=
+s_rq->tg);
+>     +
+>     +=A0 =A0 =A0 =A0raw_spin_lock(&cfs_b->lock);
+>     +=A0 =A0 =A0 =A0ret =3D __assign_cfs_rq_runtime(cfs_b, cfs_rq,
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0sched_cfs_bandwidth_slice());
+>     +=A0 =A0 =A0 =A0raw_spin_unlock(&cfs_b->lock);
+>     +
+>     +=A0 =A0 =A0 =A0return ret;
+>     +}
+>     +
+>     =A0static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64
+>     delta_exec)
+>     =A0{
+>     =A0 =A0 =A0 =A0 /* dock delta_exec before expiring quota (as it cou=
+ld span periods)
+>     */
+>     @@ -4704,13 +4715,33 @@ static int tg_throttle_down(struct task_gro=
+up *tg,
+>     void *data)
+>     =A0 =A0 =A0 =A0 return 0;
+>     =A0}
+>=20
+>     -static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
+>     +static bool throttle_cfs_rq(struct cfs_rq *cfs_rq)
+>     =A0{
+>     =A0 =A0 =A0 =A0 struct rq *rq =3D rq_of(cfs_rq);
+>     =A0 =A0 =A0 =A0 struct cfs_bandwidth *cfs_b =3D tg_cfs_bandwidth(cf=
+s_rq->tg);
+>     =A0 =A0 =A0 =A0 struct sched_entity *se;
+>     =A0 =A0 =A0 =A0 long task_delta, idle_task_delta, dequeue =3D 1;
+>     -=A0 =A0 =A0 =A0bool empty;
+>     +
+>     +=A0 =A0 =A0 =A0raw_spin_lock(&cfs_b->lock);
+>     +=A0 =A0 =A0 =A0/* This will start the period timer if necessary */
+>     +=A0 =A0 =A0 =A0if (__assign_cfs_rq_runtime(cfs_b, cfs_rq, 1)) {
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/*
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * We have raced with bandwidth bec=
+oming available, and if
+>     we
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * actually throttled the timer mig=
+ht not unthrottle us for
+>     an
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * entire period. We additionally n=
+eeded to make sure that
+>     any
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * subsequent check_cfs_rq_runtime =
+calls agree not to
+>     throttle
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * us, as we may commit to do cfs p=
+ut_prev+pick_next, so we
+>     ask
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * for 1ns of runtime rather than j=
+ust check cfs_b.
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dequeue =3D 0;
+>     +=A0 =A0 =A0 =A0} else {
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0list_add_tail_rcu(&cfs_rq->throttle=
+d_list,
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+&cfs_b->throttled_cfs_rq);
+>     +=A0 =A0 =A0 =A0}
+>     +=A0 =A0 =A0 =A0raw_spin_unlock(&cfs_b->lock);
+>     +
+>     +=A0 =A0 =A0 =A0if (!dequeue)
+>     +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return false;=A0 /* Throttle no lon=
+ger required. */
+>=20
+>     =A0 =A0 =A0 =A0 se =3D cfs_rq->tg->se[cpu_of(rq_of(cfs_rq))];
+>=20
+>     @@ -4744,29 +4775,13 @@ static void throttle_cfs_rq(struct cfs_rq *=
+cfs_rq)
+>     =A0 =A0 =A0 =A0 if (!se)
+>     =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 sub_nr_running(rq, task_delta);
+>=20
+>     -=A0 =A0 =A0 =A0cfs_rq->throttled =3D 1;
+>     -=A0 =A0 =A0 =A0cfs_rq->throttled_clock =3D rq_clock(rq);
+>     -=A0 =A0 =A0 =A0raw_spin_lock(&cfs_b->lock);
+>     -=A0 =A0 =A0 =A0empty =3D list_empty(&cfs_b->throttled_cfs_rq);
+>     -
+>     =A0 =A0 =A0 =A0 /*
+>     -=A0 =A0 =A0 =A0 * Add to the _head_ of the list, so that an alread=
+y-started
+>     -=A0 =A0 =A0 =A0 * distribute_cfs_runtime will not see us. If disri=
+bute_cfs_runtime
+>     is
+>     -=A0 =A0 =A0 =A0 * not running add to the tail so that later runque=
+ues don't get
+>     starved.
+>     +=A0 =A0 =A0 =A0 * Note: distribution will already see us throttled=
+ via the
+>     +=A0 =A0 =A0 =A0 * throttled-list.=A0 rq->lock protects completion.
+>     =A0 =A0 =A0 =A0 =A0*/
+>     -=A0 =A0 =A0 =A0if (cfs_b->distribute_running)
+>     -=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0list_add_rcu(&cfs_rq->throttled_lis=
+t, &cfs_b->
+>     throttled_cfs_rq);
+>     -=A0 =A0 =A0 =A0else
+>     -=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0list_add_tail_rcu(&cfs_rq->throttle=
+d_list, &cfs_b->
+>     throttled_cfs_rq);
+>     -
+>     -=A0 =A0 =A0 =A0/*
+>     -=A0 =A0 =A0 =A0 * If we're the first throttled task, make sure the=
+ bandwidth
+>     -=A0 =A0 =A0 =A0 * timer is running.
+>     -=A0 =A0 =A0 =A0 */
+>     -=A0 =A0 =A0 =A0if (empty)
+>     -=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0start_cfs_bandwidth(cfs_b);
+>     -
+>     -=A0 =A0 =A0 =A0raw_spin_unlock(&cfs_b->lock);
+>     +=A0 =A0 =A0 =A0cfs_rq->throttled =3D 1;
+>     +=A0 =A0 =A0 =A0cfs_rq->throttled_clock =3D rq_clock(rq);
+>     +=A0 =A0 =A0 =A0return true;
+>     =A0}
+>=20
+>     =A0void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+>     @@ -5121,8 +5136,7 @@ static bool check_cfs_rq_runtime(struct cfs_r=
+q
+>     *cfs_rq)
+>     =A0 =A0 =A0 =A0 if (cfs_rq_throttled(cfs_rq))
+>     =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return true;
+>=20
+>     -=A0 =A0 =A0 =A0throttle_cfs_rq(cfs_rq);
+>     -=A0 =A0 =A0 =A0return true;
+>     +=A0 =A0 =A0 =A0return throttle_cfs_rq(cfs_rq);
+>     =A0}
+>=20
+>     =A0static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer=
+ *timer)
+>     --
+>     2.26.0.110.g2183baf09c-goog
+>=20
+>=20
+>=20
+> References:
+>=20
+> [1] mailto:pauld@redhat.com
+> [2] mailto:joshdon@google.com
+> [3] mailto:pjt@google.com
+> [4] mailto:pjt@google.com
+> [5] mailto:bsegall@google.com
+> [6] mailto:bsegall@google.com
+> [7] mailto:joshdon@google.com
+
+--=20
+
