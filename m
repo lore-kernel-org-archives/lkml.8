@@ -2,989 +2,226 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2AEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1E5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 678A22054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E36A206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgDMKFx (ORCPT
+        id S1728662AbgDMKe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:05:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:29767 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbgDMKFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:05:02 -0400
-IronPort-SDR: 4Cjd4m88KJKw9E2aAvgw3iiu6U2zts4go4uWp2s3VLSjqpo1KCkuAY5B0CYX1vQXUru5eYIhcd
- zTUkXz7p+49w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 03:04:53 -0700
-IronPort-SDR: swKs3QkBtYmIJ1B8WR+lvUUNdcIfrrjn2PtPsifsaQR6GhUVTWcAf5LKmtKbB0i29q1rXtkE9x
- fLcc5Ujn1HBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="276856128"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Apr 2020 03:04:51 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 784E995; Mon, 13 Apr 2020 13:04:50 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 1/6] khugepaged: Add self test
-Date:   Mon, 13 Apr 2020 13:04:42 +0300
-Message-Id: <20200413100447.20073-2-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200413100447.20073-1-kirill.shutemov@linux.intel.com>
-References: <20200413100447.20073-1-kirill.shutemov@linux.intel.com>
+        Mon, 13 Apr 2020 06:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727806AbgDMKe6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:34:58 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE49CC0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 03:34:57 -0700 (PDT)
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id SAaw220085USYZQ01Aawpr; Mon, 13 Apr 2020 12:34:56 +0200
+Received: from geert (helo=localhost)
+        by ramsan with local-esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jNwQa-00005I-1M; Mon, 13 Apr 2020 12:34:56 +0200
+Date:   Mon, 13 Apr 2020 12:34:56 +0200 (CEST)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-kernel@vger.kernel.org
+cc:     linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: Build regressions/improvements in v5.7-rc1
+In-Reply-To: <20200413093100.24470-1-geert@linux-m68k.org>
+Message-ID: <alpine.DEB.2.21.2004131232220.32713@ramsan.of.borg>
+References: <20200413093100.24470-1-geert@linux-m68k.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test checks if khugepaged is able to recover huge page where we
-expect to do so. It only covers anon-THP for now.
+On Mon, 13 Apr 2020, Geert Uytterhoeven wrote:
+> Below is the list of build error/warning regressions/improvements in
+> v5.7-rc1[1] compared to v5.6[2].
+>
+> Summarized:
+>  - build errors: +132/-3
+>  - build warnings: +257/-79
+>
+> Happy fixing! ;-)
+>
+> Thanks to the linux-next team for providing the build service.
+>
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/8f3d9f354286745c751374f5f1fcafee6b3f3136/ (all 239 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/7111951b8d4973bda27ff663f2cf18b663d15b48/ (all 239 configs)
+>
+>
+> *** ERRORS ***
+>
+> 132 error regressions:
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/hash.h: error: implicit declaration of function 'pte_raw' [-Werror=implicit-function-declaration]:  => 192:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/hash.h: error: implicit declaration of function 'pte_raw'; did you mean 'pte_read'? [-Werror=implicit-function-declaration]:  => 192:8
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: 'SLICE_NUM_HIGH' undeclared here (not in a function):  => 698:2, 698:30
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: 'struct mmu_psize_def' has no member named 'ap':  => 207:28
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: 'struct mmu_psize_def' has no member named 'avpnm':  => 337:57
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: 'struct mmu_psize_def' has no member named 'penc':  => 411:49
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: 'struct mmu_psize_def' has no member named 'penc'; did you mean 'enc'?:  => 411:50
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: 'struct mmu_psize_def' has no member named 'sllp':  => 218:32, 219:26
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: redefinition of 'mmu_psize_to_shift':  => 195:28
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/mmu-hash.h: error: redefinition of 'shift_to_mmu_psize':  => 185:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: implicit declaration of function 'pgd_raw' [-Werror=implicit-function-declaration]:  => 35:3
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: implicit declaration of function 'pgd_raw'; did you mean 'pgd_val'? [-Werror=implicit-function-declaration]:  => 35:13
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: implicit declaration of function 'pud_raw' [-Werror=implicit-function-declaration]:  => 25:3
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: implicit declaration of function 'pud_raw'; did you mean 'pud_val'? [-Werror=implicit-function-declaration]:  => 25:13
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: redefinition of 'hugepd_ok':  => 44:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: redefinition of 'pgd_huge':  => 29:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: redefinition of 'pmd_huge':  => 9:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable-4k.h: error: redefinition of 'pud_huge':  => 19:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: expected ')' before '!=' token:  => 964:19, 921:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: expected ')' before '==' token:  => 979:19, 801:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: expected ')' before '^' token:  => 801:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: expected ')' before '__vmalloc_end':  => 291:21, 274:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: expected identifier or '(' before '!' token:  => 916:19, 904:19, 939:19, 959:19, 868:19, 873:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: expected identifier or '(' before 'struct':  => 291:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: implicit declaration of function '__pgd_raw' [-Werror=implicit-function-declaration]:  => 976:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: implicit declaration of function '__pgd_raw'; did you mean '__fdget_raw'? [-Werror=implicit-function-declaration]:  => 976:9
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: implicit declaration of function '__pmd_raw' [-Werror=implicit-function-declaration]:  => 1075:9, 1075:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: implicit declaration of function '__pte_raw' [-Werror=implicit-function-declaration]:  => 552:2, 552:9
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: implicit declaration of function '__pud_raw' [-Werror=implicit-function-declaration]:  => 935:9, 935:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pgd_t' was expected:  => 976:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pgd_t' {aka 'struct <anonymous>'} was expected:  => 976:9
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pmd_t' was expected:  => 1075:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pmd_t' {aka 'struct <anonymous>'} was expected:  => 1075:9
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pte_t' was expected:  => 675:2, 552:2, 971:2, 670:2, 1070:2, 647:2, 652:2, 642:2, 695:2, 660:2, 632:2, 665:2, 690:2, 627:2, 714:2, 930:2, 685:2, 637:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pte_t' {aka 'struct <anonymous>'} was expected:  => 1070:9, 695:9, 627:9, 685:9, 642:9, 930:9, 647:9, 690:9, 665:9, 660:9, 675:9, 670:9, 714:9, 552:9, 971:9, 637:9, 632:9, 652:9
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pud_t' was expected:  => 935:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: incompatible types when returning type 'int' but 'pud_t' {aka 'struct <anonymous>'} was expected:  => 935:9
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of '__ptep_set_access_flags':  => 789:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of '__ptep_test_and_clear_young':  => 371:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of '__set_pte_at':  => 815:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'huge_ptep_set_wrprotect':  => 437:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pfn_pte':  => 609:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pgd_clear':  => 954:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pgd_is_leaf':  => 1373:21, 1375:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pgd_pte':  => 969:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pmd_clear':  => 863:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pmd_is_leaf':  => 1359:21, 1361:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pmd_pte':  => 1068:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_access_permitted':  => 587:20, 586:30
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_ci':  => 853:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_clear':  => 474:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_devmap':  => 704:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_dirty':  => 480:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_exec':  => 495:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_exprotect':  => 630:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_hw_valid':  => 567:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkclean':  => 635:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkdirty':  => 663:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkexec':  => 645:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkhuge':  => 678:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkold':  => 640:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkprivileged':  => 688:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkpte':  => 650:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkspecial':  => 673:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkuser':  => 693:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkwrite':  => 655:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_mkyoung':  => 668:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_modify':  => 711:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_none':  => 808:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_pfn':  => 617:29
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_pgd':  => 974:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_present':  => 556:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_pud':  => 933:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_read':  => 421:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_special':  => 490:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_unmap':  => 1022:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_update':  => 353:29
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_user':  => 581:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_write':  => 416:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_wrprotect':  => 623:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pte_young':  => 485:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'ptep_get_and_clear':  => 451:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'ptep_get_and_clear_full':  => 459:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'ptep_set_wrprotect':  => 427:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pud_clear':  => 911:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pud_is_leaf':  => 1366:21, 1368:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: redefinition of 'pud_pte':  => 928:21
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: static declaration of 'map_kernel_page' follows non-static declaration:  => 1037:19
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: static declaration of 'vmemmap_create_mapping' follows non-static declaration:  => 1049:29
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/pgtable.h: error: static declaration of 'vmemmap_remove_mapping' follows non-static declaration:  => 1059:20
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/radix.h: error: implicit declaration of function 'pmd_raw' [-Werror=implicit-function-declaration]:  => 221:2
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/radix.h: error: implicit declaration of function 'pmd_raw'; did you mean 'pmd_val'? [-Werror=implicit-function-declaration]:  => 221:11
+>  + /kisskb/src/arch/powerpc/include/asm/book3s/64/tlbflush-radix.h: error: 'struct mmu_psize_def' has no member named 'ap':  => 11:30
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: 'struct kvm_vcpu_arch' has no member named 'book3s':  => 316:19
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: 'struct kvm_vcpu_arch' has no member named 'fault_dar':  => 396:19
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: 'struct kvm_vcpu_arch' has no member named 'fault_dar'; did you mean 'fault_dear'?:  => 396:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_cr':  => 343:19
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_ctr':  => 363:21
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_fault_dar':  => 394:21
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_gpr':  => 333:21
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_lr':  => 373:21
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_pc':  => 383:21
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_get_xer':  => 353:21
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_need_byteswap':  => 389:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_set_cr':  => 338:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_set_ctr':  => 358:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_set_gpr':  => 328:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_set_lr':  => 368:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_set_pc':  => 378:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_set_xer':  => 348:20
+>  + /kisskb/src/arch/powerpc/include/asm/kvm_book3s.h: error: redefinition of 'kvmppc_supports_magic_page':  => 405:20
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable-4k.h: error: expected ')' before '!=' token:  => 58:40
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable-4k.h: error: expected ')' before '==' token:  => 57:37
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable-4k.h: error: expected identifier or '(' before '!' token:  => 56:25
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected ')' before '!=' token:  => 163:40
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected ')' before '==' token:  => 333:50
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected ')' before '^' token:  => 333:36
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected identifier or '(' before '!' token:  => 146:27, 144:24, 160:25, 161:24, 143:25
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected identifier or '(' before 'struct':  => 77:21
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/pgtable.h: error: redefinition of 'pgd_huge':  => 291:19
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/pte-book3e.h: error: redefinition of 'pte_mkprivileged':  => 108:26
+>  + /kisskb/src/arch/powerpc/include/asm/nohash/pte-book3e.h: error: redefinition of 'pte_mkuser':  => 115:20
+>  + /kisskb/src/arch/powerpc/kvm/book3s_64_vio_hv.c: error: 'struct kvm_arch' has no member named 'spapr_tce_tables':  => 68:46, 68:2
 
-Currently the test shows few failures. They are going to be addressed by
-the following patches.
+ppc64_book3e_allmodconfig
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- tools/testing/selftests/vm/Makefile     |   1 +
- tools/testing/selftests/vm/khugepaged.c | 899 ++++++++++++++++++++++++
- 2 files changed, 900 insertions(+)
- create mode 100644 tools/testing/selftests/vm/khugepaged.c
+>  + /kisskb/src/arch/sh/mm/init.c: error: control reaches end of non-void function [-Werror=return-type]:  => 424:1
+>  + /kisskb/src/arch/sh/mm/init.c: error: expected ')' before 'return':  => 416:3
+>  + /kisskb/src/arch/sh/mm/init.c: error: expected expression before '}' token:  => 424:1
+>  + /kisskb/src/arch/sh/mm/init.c: error: unused variable 'nr_pages' [-Werror=unused-variable]:  => 412:16
+>  + /kisskb/src/arch/sh/mm/init.c: error: unused variable 'ret' [-Werror=unused-variable]:  => 413:6
+>  + /kisskb/src/arch/sh/mm/init.c: error: unused variable 'start_pfn' [-Werror=unused-variable]:  => 411:16
 
-diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
-index 7f9a8a8c31da..981d0dc21f9e 100644
---- a/tools/testing/selftests/vm/Makefile
-+++ b/tools/testing/selftests/vm/Makefile
-@@ -18,6 +18,7 @@ TEST_GEN_FILES += on-fault-limit
- TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += userfaultfd
-+TEST_GEN_FILES += khugepaged
- 
- ifneq (,$(filter $(ARCH),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
- TEST_GEN_FILES += va_128TBswitch
-diff --git a/tools/testing/selftests/vm/khugepaged.c b/tools/testing/selftests/vm/khugepaged.c
-new file mode 100644
-index 000000000000..34d945e71e2e
---- /dev/null
-+++ b/tools/testing/selftests/vm/khugepaged.c
-@@ -0,0 +1,899 @@
-+#define _GNU_SOURCE
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include <sys/mman.h>
-+#include <sys/wait.h>
-+
-+#ifndef MADV_PAGEOUT
-+#define MADV_PAGEOUT 21
-+#endif
-+
-+#define BASE_ADDR ((void *)(1UL << 30))
-+static unsigned long hpage_pmd_size;
-+static unsigned long page_size;
-+static int hpage_pmd_nr;
-+
-+#define THP_SYSFS "/sys/kernel/mm/transparent_hugepage/"
-+
-+enum thp_enabled {
-+	THP_ALWAYS,
-+	THP_MADVISE,
-+	THP_NEVER,
-+};
-+
-+static const char *thp_enabled_strings[] = {
-+	"always",
-+	"madvise",
-+	"never",
-+	NULL
-+};
-+
-+enum thp_defrag {
-+	THP_DEFRAG_ALWAYS,
-+	THP_DEFRAG_DEFER,
-+	THP_DEFRAG_DEFER_MADVISE,
-+	THP_DEFRAG_MADVISE,
-+	THP_DEFRAG_NEVER,
-+};
-+
-+static const char *thp_defrag_strings[] = {
-+	"always",
-+	"defer",
-+	"defer+madvise",
-+	"madvise",
-+	"never",
-+	NULL
-+};
-+
-+enum shmem_enabled {
-+	SHMEM_ALWAYS,
-+	SHMEM_WITHIN_SIZE,
-+	SHMEM_ADVISE,
-+	SHMEM_NEVER,
-+	SHMEM_DENY,
-+	SHMEM_FORCE,
-+};
-+
-+static const char *shmem_enabled_strings[] = {
-+	"always",
-+	"within_size",
-+	"advise",
-+	"never",
-+	"deny",
-+	"force",
-+	NULL
-+};
-+
-+struct khugepaged_settings {
-+	bool defrag;
-+	unsigned int alloc_sleep_millisecs;
-+	unsigned int scan_sleep_millisecs;
-+	unsigned int max_ptes_none;
-+	unsigned int max_ptes_swap;
-+	unsigned long pages_to_scan;
-+};
-+
-+struct settings {
-+	enum thp_enabled thp_enabled;
-+	enum thp_defrag thp_defrag;
-+	enum shmem_enabled shmem_enabled;
-+	bool debug_cow;
-+	bool use_zero_page;
-+	struct khugepaged_settings khugepaged;
-+};
-+
-+static struct settings default_settings = {
-+	.thp_enabled = THP_MADVISE,
-+	.thp_defrag = THP_DEFRAG_ALWAYS,
-+	.shmem_enabled = SHMEM_NEVER,
-+	.debug_cow = 0,
-+	.use_zero_page = 0,
-+	.khugepaged = {
-+		.defrag = 1,
-+		.alloc_sleep_millisecs = 10,
-+		.scan_sleep_millisecs = 10,
-+	},
-+};
-+
-+static struct settings saved_settings;
-+static bool skip_settings_restore;
-+
-+static int exit_status;
-+
-+static void success(const char *msg)
-+{
-+	printf(" \e[32m%s\e[0m\n", msg);
-+}
-+
-+static void fail(const char *msg)
-+{
-+	printf(" \e[31m%s\e[0m\n", msg);
-+	exit_status++;
-+}
-+
-+static int read_file(const char *path, char *buf, size_t buflen)
-+{
-+	int fd;
-+	ssize_t numread;
-+
-+	fd = open(path, O_RDONLY);
-+	if (fd == -1)
-+		return 0;
-+
-+	numread = read(fd, buf, buflen - 1);
-+	if (numread < 1) {
-+		close(fd);
-+		return 0;
-+	}
-+
-+	buf[numread] = '\0';
-+	close(fd);
-+
-+	return (unsigned int) numread;
-+}
-+
-+static int write_file(const char *path, const char *buf, size_t buflen)
-+{
-+	int fd;
-+	ssize_t numwritten;
-+
-+	fd = open(path, O_WRONLY);
-+	if (fd == -1)
-+		return 0;
-+
-+	numwritten = write(fd, buf, buflen - 1);
-+	close(fd);
-+	if (numwritten < 1)
-+		return 0;
-+
-+	return (unsigned int) numwritten;
-+}
-+
-+static int read_string(const char *name, const char *strings[])
-+{
-+	char path[PATH_MAX];
-+	char buf[256];
-+	char *c;
-+	int ret;
-+
-+	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
-+	if (ret >= PATH_MAX) {
-+		printf("%s: Pathname is too long\n", __func__);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	if (!read_file(path, buf, sizeof(buf))) {
-+		perror(path);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	c = strchr(buf, '[');
-+	if (!c) {
-+		printf("%s: Parse failure\n", __func__);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	c++;
-+	memmove(buf, c, sizeof(buf) - (c - buf));
-+
-+	c = strchr(buf, ']');
-+	if (!c) {
-+		printf("%s: Parse failure\n", __func__);
-+		exit(EXIT_FAILURE);
-+	}
-+	*c = '\0';
-+
-+	ret = 0;
-+	while (strings[ret]) {
-+		if (!strcmp(strings[ret], buf))
-+			return ret;
-+		ret++;
-+	}
-+
-+	printf("Failed to parse %s\n", name);
-+	exit(EXIT_FAILURE);
-+}
-+
-+static void write_string(const char *name, const char *val)
-+{
-+	char path[PATH_MAX];
-+	int ret;
-+
-+	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
-+	if (ret >= PATH_MAX) {
-+		printf("%s: Pathname is too long\n", __func__);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	if (!write_file(path, val, strlen(val) + 1)) {
-+		perror(path);
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
-+static const unsigned long read_num(const char *name)
-+{
-+	char path[PATH_MAX];
-+	char buf[21];
-+	int ret;
-+
-+	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
-+	if (ret >= PATH_MAX) {
-+		printf("%s: Pathname is too long\n", __func__);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	ret = read_file(path, buf, sizeof(buf));
-+	if (ret < 0) {
-+		perror("read_file(read_num)");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	return strtoul(buf, NULL, 10);
-+}
-+
-+static void write_num(const char *name, unsigned long num)
-+{
-+	char path[PATH_MAX];
-+	char buf[21];
-+	int ret;
-+
-+	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
-+	if (ret >= PATH_MAX) {
-+		printf("%s: Pathname is too long\n", __func__);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	sprintf(buf, "%ld", num);
-+	if (!write_file(path, buf, strlen(buf) + 1)) {
-+		perror(path);
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
-+static void write_settings(struct settings *settings)
-+{
-+	struct khugepaged_settings *khugepaged = &settings->khugepaged;
-+
-+	write_string("enabled", thp_enabled_strings[settings->thp_enabled]);
-+	write_string("defrag", thp_defrag_strings[settings->thp_defrag]);
-+	write_string("shmem_enabled",
-+			shmem_enabled_strings[settings->shmem_enabled]);
-+	write_num("debug_cow", settings->debug_cow);
-+	write_num("use_zero_page", settings->use_zero_page);
-+
-+	write_num("khugepaged/defrag", khugepaged->defrag);
-+	write_num("khugepaged/alloc_sleep_millisecs",
-+			khugepaged->alloc_sleep_millisecs);
-+	write_num("khugepaged/scan_sleep_millisecs",
-+			khugepaged->scan_sleep_millisecs);
-+	write_num("khugepaged/max_ptes_none", khugepaged->max_ptes_none);
-+	write_num("khugepaged/max_ptes_swap", khugepaged->max_ptes_swap);
-+	write_num("khugepaged/pages_to_scan", khugepaged->pages_to_scan);
-+}
-+
-+static void restore_settings(int sig)
-+{
-+	if (skip_settings_restore)
-+		goto out;
-+
-+	printf("Restore THP and khugepaged settings...");
-+	write_settings(&saved_settings);
-+	success("OK");
-+	if (sig)
-+		exit(EXIT_FAILURE);
-+out:
-+	exit(exit_status);
-+}
-+
-+static void save_settings(void)
-+{
-+	printf("Save THP and khugepaged settings...");
-+	saved_settings = (struct settings) {
-+		.thp_enabled = read_string("enabled", thp_enabled_strings),
-+		.thp_defrag = read_string("defrag", thp_defrag_strings),
-+		.shmem_enabled =
-+			read_string("shmem_enabled", shmem_enabled_strings),
-+		.debug_cow = read_num("debug_cow"),
-+		.use_zero_page = read_num("use_zero_page"),
-+	};
-+	saved_settings.khugepaged = (struct khugepaged_settings) {
-+		.defrag = read_num("khugepaged/defrag"),
-+		.alloc_sleep_millisecs =
-+			read_num("khugepaged/alloc_sleep_millisecs"),
-+		.scan_sleep_millisecs =
-+			read_num("khugepaged/scan_sleep_millisecs"),
-+		.max_ptes_none = read_num("khugepaged/max_ptes_none"),
-+		.max_ptes_swap = read_num("khugepaged/max_ptes_swap"),
-+		.pages_to_scan = read_num("khugepaged/pages_to_scan"),
-+	};
-+	success("OK");
-+
-+	signal(SIGTERM, restore_settings);
-+	signal(SIGINT, restore_settings);
-+	signal(SIGHUP, restore_settings);
-+	signal(SIGQUIT, restore_settings);
-+}
-+
-+static void adjust_settings(void)
-+{
-+
-+	printf("Adjust settings...");
-+	write_settings(&default_settings);
-+	success("OK");
-+}
-+
-+#define CHECK_HUGE_FMT "sed -ne " \
-+	"'/^%lx/,/^AnonHugePages/{/^AnonHugePages:\\s*%ld kB/ q1}' " \
-+	"/proc/%d/smaps"
-+
-+static bool check_huge(void *p)
-+{
-+	char *cmd;
-+	int ret;
-+
-+	ret = asprintf(&cmd, CHECK_HUGE_FMT,
-+			(unsigned long)p, hpage_pmd_size >> 10, getpid());
-+	if (ret < 0) {
-+		perror("asprintf(CHECK_FMT)");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	ret = system(cmd);
-+	free(cmd);
-+	if (ret < 0 || !WIFEXITED(ret)) {
-+		perror("system(check_huge)");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	return WEXITSTATUS(ret);
-+}
-+
-+#define CHECK_SWAP_FMT "sed -ne " \
-+	"'/^%lx/,/^Swap:/{/^Swap:\\s*%ld kB/ q1}' " \
-+	"/proc/%d/smaps"
-+
-+static bool check_swap(void *p, unsigned long size)
-+{
-+	char *cmd;
-+	int ret;
-+
-+	ret = asprintf(&cmd, CHECK_SWAP_FMT,
-+			(unsigned long)p, size >> 10, getpid());
-+	if (ret < 0) {
-+		perror("asprintf(CHECK_SWAP)");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	ret = system(cmd);
-+	free(cmd);
-+	if (ret < 0 || !WIFEXITED(ret)) {
-+		perror("system(check_swap)");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	return WEXITSTATUS(ret);
-+}
-+
-+static void *alloc_mapping(void)
-+{
-+	void *p;
-+
-+	p = mmap(BASE_ADDR, hpage_pmd_size, PROT_READ | PROT_WRITE,
-+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-+	if (p != BASE_ADDR) {
-+		printf("Failed to allocate VMA at %p\n", BASE_ADDR);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	return p;
-+}
-+
-+static void fill_memory(int *p, unsigned long start, unsigned long end)
-+{
-+	int i;
-+
-+	for (i = start / page_size; i < end / page_size; i++)
-+		p[i * page_size / sizeof(*p)] = i + 0xdead0000;
-+}
-+
-+static void validate_memory(int *p, unsigned long start, unsigned long end)
-+{
-+	int i;
-+
-+	for (i = start / page_size; i < end / page_size; i++) {
-+		if (p[i * page_size / sizeof(*p)] != i + 0xdead0000) {
-+			printf("Page %d is corrupted: %#x\n",
-+					i, p[i * page_size / sizeof(*p)]);
-+			exit(EXIT_FAILURE);
-+		}
-+	}
-+}
-+
-+#define TICK 500000
-+static bool wait_for_scan(const char *msg, char *p)
-+{
-+	int full_scans;
-+	int timeout = 6; /* 3 seconds */
-+
-+	/* Sanity check */
-+	if (check_huge(p)) {
-+		printf("Unexpected huge page\n");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	madvise(p, hpage_pmd_size, MADV_HUGEPAGE);
-+
-+	/* Wait until the second full_scan completed */
-+	full_scans = read_num("khugepaged/full_scans") + 2;
-+
-+	printf("%s...", msg);
-+	while (timeout--) {
-+		if (check_huge(p))
-+			break;
-+		if (read_num("khugepaged/full_scans") >= full_scans)
-+			break;
-+		printf(".");
-+		usleep(TICK);
-+	}
-+
-+	madvise(p, hpage_pmd_size, MADV_NOHUGEPAGE);
-+
-+	return !timeout;
-+}
-+
-+static void alloc_at_fault(void)
-+{
-+	struct settings settings = default_settings;
-+	char *p;
-+
-+	settings.thp_enabled = THP_ALWAYS;
-+	write_settings(&settings);
-+
-+	p = alloc_mapping();
-+	*p = 1;
-+	printf("Allocate huge page on fault...");
-+	if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	write_settings(&default_settings);
-+
-+	madvise(p, page_size, MADV_DONTNEED);
-+	printf("Split huge PMD on MADV_DONTNEED...");
-+	if (!check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_full(void)
-+{
-+	void *p;
-+
-+	p = alloc_mapping();
-+	fill_memory(p, 0, hpage_pmd_size);
-+	if (wait_for_scan("Collapse fully populated PTE table", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, hpage_pmd_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_empty(void)
-+{
-+	void *p;
-+
-+	p = alloc_mapping();
-+	if (wait_for_scan("Do not collapse empty PTE table", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		fail("Fail");
-+	else
-+		success("OK");
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_single_pte_entry(void)
-+{
-+	void *p;
-+
-+	p = alloc_mapping();
-+	fill_memory(p, 0, page_size);
-+	if (wait_for_scan("Collapse PTE table with single PTE entry present", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, page_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_max_ptes_none(void)
-+{
-+	int max_ptes_none = hpage_pmd_nr / 2;
-+	struct settings settings = default_settings;
-+	void *p;
-+
-+	settings.khugepaged.max_ptes_none = max_ptes_none;
-+	write_settings(&settings);
-+
-+	p = alloc_mapping();
-+
-+	fill_memory(p, 0, (hpage_pmd_nr - max_ptes_none - 1) * page_size);
-+	if (wait_for_scan("Do not collapse with max_ptes_none exeeded", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		fail("Fail");
-+	else
-+		success("OK");
-+	validate_memory(p, 0, (hpage_pmd_nr - max_ptes_none - 1) * page_size);
-+
-+	fill_memory(p, 0, (hpage_pmd_nr - max_ptes_none) * page_size);
-+	if (wait_for_scan("Collapse with max_ptes_none PTEs empty", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, (hpage_pmd_nr - max_ptes_none) * page_size);
-+
-+	munmap(p, hpage_pmd_size);
-+	write_settings(&default_settings);
-+}
-+
-+static void collapse_swapin_single_pte(void)
-+{
-+	void *p;
-+	p = alloc_mapping();
-+	fill_memory(p, 0, hpage_pmd_size);
-+
-+	printf("Swapout one page...");
-+	if (madvise(p, page_size, MADV_PAGEOUT)) {
-+		perror("madvise(MADV_PAGEOUT)");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (check_swap(p, page_size)) {
-+		success("OK");
-+	} else {
-+		fail("Fail");
-+		goto out;
-+	}
-+
-+	if (wait_for_scan("Collapse with swaping in single PTE entry", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, hpage_pmd_size);
-+out:
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_max_ptes_swap(void)
-+{
-+	int max_ptes_swap = read_num("khugepaged/max_ptes_swap");
-+	void *p;
-+
-+	p = alloc_mapping();
-+
-+	fill_memory(p, 0, hpage_pmd_size);
-+	printf("Swapout %d of %d pages...", max_ptes_swap + 1, hpage_pmd_nr);
-+	if (madvise(p, (max_ptes_swap + 1) * page_size, MADV_PAGEOUT)) {
-+		perror("madvise(MADV_PAGEOUT)");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (check_swap(p, (max_ptes_swap + 1) * page_size)) {
-+		success("OK");
-+	} else {
-+		fail("Fail");
-+		goto out;
-+	}
-+
-+	if (wait_for_scan("Do not collapse with max_ptes_swap exeeded", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		fail("Fail");
-+	else
-+		success("OK");
-+	validate_memory(p, 0, hpage_pmd_size);
-+
-+	fill_memory(p, 0, hpage_pmd_size);
-+	printf("Swapout %d of %d pages...", max_ptes_swap, hpage_pmd_nr);
-+	if (madvise(p, max_ptes_swap * page_size, MADV_PAGEOUT)) {
-+		perror("madvise(MADV_PAGEOUT)");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (check_swap(p, max_ptes_swap * page_size)) {
-+		success("OK");
-+	} else {
-+		fail("Fail");
-+		goto out;
-+	}
-+
-+	if (wait_for_scan("Collapse with max_ptes_swap pages swapped out", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, hpage_pmd_size);
-+out:
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_single_pte_entry_compound(void)
-+{
-+	void *p;
-+
-+	p = alloc_mapping();
-+
-+	printf("Allocate huge page...");
-+	madvise(p, hpage_pmd_size, MADV_HUGEPAGE);
-+	fill_memory(p, 0, hpage_pmd_size);
-+	if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	madvise(p, hpage_pmd_size, MADV_NOHUGEPAGE);
-+
-+	printf("Split huge page leaving single PTE mapping compount page...");
-+	madvise(p + page_size, hpage_pmd_size - page_size, MADV_DONTNEED);
-+	if (!check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	if (wait_for_scan("Collapse PTE table with single PTE mapping compount page", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, page_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_full_of_compound(void)
-+{
-+	void *p;
-+
-+	p = alloc_mapping();
-+
-+	printf("Allocate huge page...");
-+	madvise(p, hpage_pmd_size, MADV_HUGEPAGE);
-+	fill_memory(p, 0, hpage_pmd_size);
-+	if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	printf("Split huge page leaving single PTE page table full of compount pages...");
-+	madvise(p, page_size, MADV_NOHUGEPAGE);
-+	madvise(p, hpage_pmd_size, MADV_NOHUGEPAGE);
-+	if (!check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	if (wait_for_scan("Collapse PTE table full of compound pages", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, hpage_pmd_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_compound_extreme(void)
-+{
-+	void *p;
-+	int i;
-+
-+	p = alloc_mapping();
-+	for (i = 0; i < hpage_pmd_nr; i++) {
-+		printf("\rConstruct PTE page table full of different PTE-mapped compound pages %3d/%d...",
-+				i + 1, hpage_pmd_nr);
-+
-+		madvise(BASE_ADDR, hpage_pmd_size, MADV_HUGEPAGE);
-+		fill_memory(BASE_ADDR, 0, hpage_pmd_size);
-+		if (!check_huge(BASE_ADDR)) {
-+			printf("Failed to allocate huge page\n");
-+			exit(EXIT_FAILURE);
-+		}
-+		madvise(BASE_ADDR, hpage_pmd_size, MADV_NOHUGEPAGE);
-+
-+		p = mremap(BASE_ADDR - i * page_size,
-+				i * page_size + hpage_pmd_size,
-+				(i + 1) * page_size,
-+				MREMAP_MAYMOVE | MREMAP_FIXED,
-+				BASE_ADDR + 2 * hpage_pmd_size);
-+		if (p == MAP_FAILED) {
-+			perror("mremap+unmap");
-+			exit(EXIT_FAILURE);
-+		}
-+
-+		p = mremap(BASE_ADDR + 2 * hpage_pmd_size,
-+				(i + 1) * page_size,
-+				(i + 1) * page_size + hpage_pmd_size,
-+				MREMAP_MAYMOVE | MREMAP_FIXED,
-+				BASE_ADDR - (i + 1) * page_size);
-+		if (p == MAP_FAILED) {
-+			perror("mremap+alloc");
-+			exit(EXIT_FAILURE);
-+		}
-+	}
-+
-+	munmap(BASE_ADDR, hpage_pmd_size);
-+	fill_memory(p, 0, hpage_pmd_size);
-+	if (!check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	if (wait_for_scan("Collapse PTE table full of different compound pages", p))
-+		fail("Timeout");
-+	else if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	validate_memory(p, 0, hpage_pmd_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_fork(void)
-+{
-+	int wstatus;
-+	void *p;
-+
-+	p = alloc_mapping();
-+
-+	printf("Allocate small page...");
-+	fill_memory(p, 0, page_size);
-+	if (!check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	printf("Share small page over fork()...");
-+	if (!fork()) {
-+		/* Do not touch settings on child exit */
-+		skip_settings_restore = true;
-+		exit_status = 0;
-+
-+		if (!check_huge(p))
-+			success("OK");
-+		else
-+			fail("Fail");
-+
-+		fill_memory(p, page_size, 2 * page_size);
-+
-+		if (wait_for_scan("Collapse PTE table with single page shared with parent process", p))
-+			fail("Timeout");
-+		else if (check_huge(p))
-+			success("OK");
-+		else
-+			fail("Fail");
-+
-+		validate_memory(p, 0, page_size);
-+		munmap(p, hpage_pmd_size);
-+		exit(exit_status);
-+	}
-+
-+	wait(&wstatus);
-+	exit_status += WEXITSTATUS(wstatus);
-+
-+	printf("Check if parent still has small page...");
-+	if (!check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, page_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+static void collapse_fork_compound(void)
-+{
-+	int wstatus;
-+	void *p;
-+
-+	p = alloc_mapping();
-+
-+	printf("Allocate huge page...");
-+	madvise(p, hpage_pmd_size, MADV_HUGEPAGE);
-+	fill_memory(p, 0, hpage_pmd_size);
-+	if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+
-+	printf("Share huge page over fork()...");
-+	if (!fork()) {
-+		/* Do not touch settings on child exit */
-+		skip_settings_restore = true;
-+		exit_status = 0;
-+
-+		if (check_huge(p))
-+			success("OK");
-+		else
-+			fail("Fail");
-+
-+		printf("Split huge page PMD in child process...");
-+		madvise(p, page_size, MADV_NOHUGEPAGE);
-+		madvise(p, hpage_pmd_size, MADV_NOHUGEPAGE);
-+		if (!check_huge(p))
-+			success("OK");
-+		else
-+			fail("Fail");
-+		fill_memory(p, 0, page_size);
-+
-+		if (wait_for_scan("Collapse PTE table full of compound pages in child", p))
-+			fail("Timeout");
-+		else if (check_huge(p))
-+			success("OK");
-+		else
-+			fail("Fail");
-+
-+		validate_memory(p, 0, hpage_pmd_size);
-+		munmap(p, hpage_pmd_size);
-+		exit(exit_status);
-+	}
-+
-+	wait(&wstatus);
-+	exit_status += WEXITSTATUS(wstatus);
-+
-+	printf("Check if parent still has huge page...");
-+	if (check_huge(p))
-+		success("OK");
-+	else
-+		fail("Fail");
-+	validate_memory(p, 0, hpage_pmd_size);
-+	munmap(p, hpage_pmd_size);
-+}
-+
-+int main(void)
-+{
-+	setbuf(stdout, NULL);
-+
-+	page_size = getpagesize();
-+	hpage_pmd_size = read_num("hpage_pmd_size");
-+	hpage_pmd_nr = hpage_pmd_size / page_size;
-+
-+	default_settings.khugepaged.max_ptes_none = hpage_pmd_nr - 1;
-+	default_settings.khugepaged.max_ptes_swap = hpage_pmd_nr / 8;
-+	default_settings.khugepaged.pages_to_scan = hpage_pmd_nr * 8;
-+
-+	save_settings();
-+	adjust_settings();
-+
-+	alloc_at_fault();
-+	collapse_full();
-+	collapse_empty();
-+	collapse_single_pte_entry();
-+	collapse_max_ptes_none();
-+	collapse_swapin_single_pte();
-+	collapse_max_ptes_swap();
-+	collapse_single_pte_entry_compound();
-+	collapse_full_of_compound();
-+	collapse_compound_extreme();
-+	collapse_fork();
-+	collapse_fork_compound();
-+
-+	restore_settings(0);
-+}
--- 
-2.26.0
+shx3_defconfig (fix available)
 
+>  + /kisskb/src/drivers/vdpa/vdpa_sim/vdpa_sim.c: error: implicit declaration of function 'set_dma_ops' [-Werror=implicit-function-declaration]:  => 324:2
+
+um-all{yes,mod}config
+allmodconfig+64K_PAGES
+
+>  + error: modpost: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!:  => N/A
+
+sh-allmodconfig (seen before, __delay is an internal function, not to be
+called by drivers, cfr. "Undefined functions to get compile-time errors")
+
+>  + error: modpost: "sysrq_mask" [drivers/tty/serial/serial_core.ko] undefined!:  => N/A
+
+pmac32_defconfig{,+SMP,+KVM} (fix available)
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
