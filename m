@@ -2,128 +2,91 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737CEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368B2C2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F46C20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06869206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 10:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586772613;
-	bh=7qI04vutPCDuNF2NDS2Ze8iRiFNiOMPONsZJ3KLq4U8=;
+	s=default; t=1586772695;
+	bh=nzrj3q/99RKMEWoPxPrj8vKy1qxl7ogMiqqlHfIgacA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qir+728iexGXvyifnrmzkleY1Smn7r8+eawWU0u7xxRnpqXqwpqKAmPhPj5aIw6E4
-	 MQVIboS4sJySg0GZhbPh609sbC8DqIR8YJjUJ8iSrVonA6gCt1wIGcmd2pktULrIGM
-	 0sQp7yWcbmNQ2zHjTQwFsyd9LGWZwnw2nFFI7buk=
+	b=aYdTECeMRB6AXvVwdYze4WuFTEJv31wjA2//7c2g0DMUYQXhC8lXax6WwmmO8xUNq
+	 HTUakPzjrKvGYPH2VmqVUaxjKVLcvQMSRvvaGApoWiFSVT+2frU07SDCbvI7na3Acu
+	 B47kLsbCjIXp7JAxD2ZkYEU/ev2xe24fw12thd7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgDMKKM (ORCPT
+        id S1728526AbgDMKLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728131AbgDMKKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:10:11 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8BE1206E9;
-        Mon, 13 Apr 2020 10:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586772610;
-        bh=7qI04vutPCDuNF2NDS2Ze8iRiFNiOMPONsZJ3KLq4U8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DLEHL99NsAudonUlrw1+pxZYvpIGGNNDWZtHpEG9GBPMypfAfHIAGoPDgu90BJ1Dn
-         5DJgsijlCpKG/y7l4veviAiq+F1fyBpixJrpY4Y/ugRy6VrXza5kZqq0WvVFFa4uob
-         niLJ/2Jslsf3PJaSbH/jxweFIShaCVPtmF89GDbU=
-Received: by pali.im (Postfix)
-        id 82054895; Mon, 13 Apr 2020 12:10:07 +0200 (CEST)
-Date:   Mon, 13 Apr 2020 12:10:07 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'namjae.jeon@samsung.com'" <namjae.jeon@samsung.com>,
-        "'sj1557.seo@samsung.com'" <sj1557.seo@samsung.com>
-Subject: Re: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
- above U+FFFF
-Message-ID: <20200413101007.lbey6q5u6jz3ulmr@pali>
-References: <TY1PR01MB15782019FA3094015950830590C70@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200403204037.hs4ae6cl3osogrso@pali>
- <TY1PR01MB1578D63C6F303DE805D75DAA90C20@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200407100648.phkvxbmv2kootyt7@pali>
- <TY1PR01MB1578892F886C62868F87663B90C00@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200408090435.i3ufmbfinx5dyd7w@pali>
- <TY1PR01MB15784063EED4CEC93A2B501390DD0@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+        Mon, 13 Apr 2020 06:11:34 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36614 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgDMKLc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:11:32 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i7so11349490edq.3;
+        Mon, 13 Apr 2020 03:11:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IHzUNdwPsTQhqLll3sOK8O3xrvJdBlinyJZ6YxNwq5s=;
+        b=EQY2aTx9QZvn4hJbu8mvjayyvAl2zm1DV5RIyc+0eSB7YtkzKGD+3yq8EBkExqJRfC
+         cNa3Bvq2oP6c1RYsmbxZqno06TGcD876gAyiW3kkTVlI8zTARvb85T23jnI/uoDpb/6J
+         5LaVUJ6hVAkD3x3yJxyVui/7Cy5Dk06fEZsj4cKEPZ37YkGiqmY8C77mdqt//wiMQn5g
+         FMJpjqyFUr6HBdGFFjtoMD3sOqU1FGdGnjwafaRAmYFGG/OFD+vgAP2TV2nCziB2BApL
+         HCC3/9FpxxemsVpaYlACn+xh8fhbeCZBtUBf9o9mfCn8+Sc9WGmqY1jLwDgQ8idcG5cc
+         6ggA==
+X-Gm-Message-State: AGi0PuZlOxa39PVrwLnPR162rsr9V7Zesv/TSyDyJXUFdAxR2BW0wt8q
+        Yi7ttTXpTGbbFRKWxVkj75i2SD4R
+X-Google-Smtp-Source: APiQypLbUzeNvAIZR67vxpLwZzQRg3r3rXpBNYhH+Po0Qp1noxa7A8r1ABhf2bhfL8AcuoH9Rr3W4g==
+X-Received: by 2002:a05:6402:1383:: with SMTP id b3mr15439537edv.217.1586772689922;
+        Mon, 13 Apr 2020 03:11:29 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id g2sm1307883edm.77.2020.04.13.03.11.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Apr 2020 03:11:29 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 12:11:27 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: samsung: Correct setting of eint wakeup mask on
+ s5pv210
+Message-ID: <20200413101127.GA10535@kozik-lap>
+References: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TY1PR01MB15784063EED4CEC93A2B501390DD0@TY1PR01MB1578.jpnprd01.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 13 April 2020 08:13:45 Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp wrote:
-> > On Wednesday 08 April 2020 03:59:06 Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp wrote:
-> > > > So partial_name_hash() like I used it in this patch series is enough?
-> > >
-> > > I think partial_name_hash() is enough for 8/16/21bit characters.
-> > 
-> > Great!
-> > 
-> > Al, could you please take this patch series?
+On Sat, Apr 04, 2020 at 10:08:49AM -0700, Jonathan Bakker wrote:
+> Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
+> mask") started writing the eint wakeup mask from the pinctrl driver.
+> Unfortunately, it made the assumption that the private retention data
+> was always a regmap while in the case of s5pv210 it is a raw pointer
+> to the clock base (as the eint wakeup mask not in the PMU as with newer
+> Exynos platforms).
 > 
-> I think it's good.
-> 
-> 
-> > > Another point about the discrimination of 21bit characters:
-> > > I think that checking in exfat_toupper () can be more simplified.
-> > >
-> > >  ex: return a < PLANE_SIZE && sbi->vol_utbl[a] ? sbi->vol_utbl[a] : a;
-> > 
-> > I was thinking about it, but it needs more refactoring. Currently
-> > exfat_toupper() is used on other places for UTF-16 (u16 array) and therefore it cannot be extended to take more then 16
-> > bit value.
-> 
-> I’m also a little worried that exfat_toupper() is designed for only utf16.
-> Currently, it is converting from utf8 to utf32 in some places, and from utf8 to utf16 in others.
-> Another way would be to unify to utf16.
-> 
-> > But I agree that this is another step which can be improved.
-> 
-> Yes.
+> Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-exynos.c | 73 ++++++++++++++++--------
 
-There are two problems with it:
+Thanks, applied (with Cc-stable tag).
 
-We do not know how code points above U+FFFF could be converted to upper
-case. Basically from exfat specification can be deduced it only for
-U+0000 .. U+FFFF code points. We asked if we can get answer from MS, but
-I have not received any response yet.
+Best regards,
+Krzysztof
 
-Second problem is that all MS filesystems (vfat, ntfs and exfat) do not
-use UCS-2 nor UTF-16, but rather some mix between it. Basically any
-sequence of 16bit values (except those :/<>... vfat chars) is valid,
-even unpaired surrogate half. So surrogate pair (two 16bit values)
-represents one unicode code point (as in UTF-16), but one unpaired
-surrogate half is also valid and represent (invalid) unicode code point
-of its value. In unicode are not defined code points for values of
-single / half surrogate.
-
-Therefore if we talk about encoding UTF-16 vs UTF-32 we first need to
-fix a way how to handle those non-representative values in VFS encoding
-(iocharset=) as UTF-8 is not able to represent it too. One option is to
-extend UTF-8 to WTF-8 encoding [1] (yes, this is a real and make sense!)
-and then ideally change exfat_toupper() to UTF-32 without restriction
-for surrogate pairs values.
-
-Btw, same problem with UTF-16 also in vfat, ntfs and also in iso/joliet
-kernel drivers.
-
-[1] - https://simonsapin.github.io/wtf-8/
