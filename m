@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0348CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022C7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D02EE20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C552E206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ij6RHwAX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kuOz9s/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389191AbgDMVhO (ORCPT
+        id S2389197AbgDMVli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 17:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
+        Mon, 13 Apr 2020 17:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389040AbgDMVhD (ORCPT
+        by vger.kernel.org with ESMTP id S2388914AbgDMVlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 17:37:03 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53137C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 14:37:03 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r14so5105419pfl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 14:37:03 -0700 (PDT)
+        Mon, 13 Apr 2020 17:41:37 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A05FCC0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 14:41:37 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mn19so4357103pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 14:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=7qyucYgyQkYga8+f4et90BVzvXhduqRHKSj0Lf6wTRw=;
-        b=Ij6RHwAXXioOuRGQHNnZyMNnMYfsEskYPs+Wrp54L2nFCet3CZWAwNi/kASYJJe1+Y
-         D8Z+p4MK9ZuUQGoURj6e6No07DqBsDFmXu/+6uWRtv2Ybw+j//xJnlkZaAYU8vur5WhJ
-         6E03HRRhVpenOfmd77a1y/hy2AGZMjotHNFRA=
+        bh=/hy8nLHvdTBMRghLyVXwwmQ5YcXeiHdKIF9wDS2i7kI=;
+        b=kuOz9s/8Ctd97eNnQDhrbMEyE9BZYrACSMLZTK8jdUD/+7+Z+ozhqhuOxtl40MzpC2
+         YPWI+5e+b6GLgEdM1Yym3RekZXM+xGNnS7Y6fKaKSCnI+gF0GV7JjVw2G/aFr7pPHKcE
+         1FAAlqm2U2WK6q4YcKQBfI9gQy0sEBgNmCSk8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=7qyucYgyQkYga8+f4et90BVzvXhduqRHKSj0Lf6wTRw=;
-        b=p8Pk8qOmjHgMhq/vSjFEu/5HDA+yfbV5P+svW6TLOl+G+1n/i6GHdTAcnGHyR1V+Q/
-         3g6T+gyJHkPiQy4c44McyDxkDLW4HVRoQVUHM1XnIPfMSHYkns7eIfHDUBNa5DrtWBD/
-         PuGDfgtwpndfdcziU/w84RSj9hRdj5f2x0vOpI+hg1yIHjSPFHNQ3PEp1v0W75xbpEoA
-         TEJssx3BlA/29869UbuVwj63+4dSD2/AS90Pl7wZf8CWt6jakLkxKyR+7zYRbMU2I64f
-         XJC5B6+bqpnQGl3BWr8NkvXmhivDSDn6bTE7C3ih5mgNMCbwWYJ0qIaTTFb/7QEmHhhQ
-         RplQ==
-X-Gm-Message-State: AGi0PubIX3hHszCAyFmro/QlGA/DGIJp//w1gqInPJxEMh2kRHcxQi6C
-        IztKceRR9don/3jxeroxnHHWTQ==
-X-Google-Smtp-Source: APiQypJKwt5rWWZnyYPNyNuJRifLWgS79KfBhedY4qcp7dbbw6tHoD0a/FnxezPRt6r0I5G9WUnzYQ==
-X-Received: by 2002:a63:1853:: with SMTP id 19mr12063242pgy.108.1586813822914;
-        Mon, 13 Apr 2020 14:37:02 -0700 (PDT)
+        bh=/hy8nLHvdTBMRghLyVXwwmQ5YcXeiHdKIF9wDS2i7kI=;
+        b=lwGRt3PjPfYChms2xVc55U+ejyr4LGyEtvdiOQPS2q0PLdVXezMA+ysPOra//ORdOW
+         J8EBSXGtds0si/nmviMO6XmzkXj+VMrfP+hxProWeGbFWenlm2dlt6/sEtS9DC9Y4Izq
+         6zShOTfAEoP2VnpfDcFBZJHr46EsB3zfkrCmbiSiKORJwEFECf+Hmk5rvXQFoCPcRzYE
+         odTqDvAauhfw18TxcGWZggCbvuWFxoMTDCcrRXsVf4gcKhtM4LQM5zE9LKJRkHpkP+yD
+         n36dgOMuGplM2To8fNtp4ti+JPaiI184DysGWRlKYRotdW9xB5e/C2imZ+3tHUqldhN2
+         JFEw==
+X-Gm-Message-State: AGi0PuY7UDUaW3ykcwKRLXB6It4wFItQz2s9d0qxwWrF0unYrvJrHlx2
+        kRQVwv3pNPaNDBaHWGcJrHWBLA==
+X-Google-Smtp-Source: APiQypIi362EzWlhsp87E35Oet2vA8/7qkL8XRkNyQ5+K1ATgnf3YK/665PQSOiWUnuPlweJRACj9g==
+X-Received: by 2002:a17:902:322:: with SMTP id 31mr19463754pld.103.1586814097120;
+        Mon, 13 Apr 2020 14:41:37 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g197sm7948102pfb.54.2020.04.13.14.37.02
+        by smtp.gmail.com with ESMTPSA id fy21sm102409pjb.25.2020.04.13.14.41.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 14:37:02 -0700 (PDT)
+        Mon, 13 Apr 2020 14:41:36 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200413100321.v4.4.Ia348ade7c6ed1d0d952ff2245bc854e5834c8d9a@changeid>
-References: <20200413170415.32463-1-dianders@chromium.org> <20200413100321.v4.4.Ia348ade7c6ed1d0d952ff2245bc854e5834c8d9a@changeid>
-Subject: Re: [PATCH v4 04/10] drivers: qcom: rpmh-rsc: Remove get_tcs_of_type() abstraction
+In-Reply-To: <20200413100321.v4.5.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
+References: <20200413170415.32463-1-dianders@chromium.org> <20200413100321.v4.5.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
+Subject: Re: [PATCH v4 05/10] drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
         evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
@@ -72,20 +72,54 @@ To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>,
         Maulik Shah <mkshah@codeaurora.org>
-Date:   Mon, 13 Apr 2020 14:37:01 -0700
-Message-ID: <158681382152.84447.13632615241826216057@swboyd.mtv.corp.google.com>
+Date:   Mon, 13 Apr 2020 14:41:35 -0700
+Message-ID: <158681409564.84447.15749412606958274934@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-04-13 10:04:09)
-> The get_tcs_of_type() function doesn't provide any value.  It's not
-> conceptually difficult to access a value in an array, even if that
-> value is in a structure and we want a pointer to the value.  Having
-> the function in there makes me feel like it's doing something fancier
-> like looping or searching.  Remove it.
+Quoting Douglas Anderson (2020-04-13 10:04:10)
+> The "cmd_cache" in RPMH wasn't terribly sensible.  Specifically:
+>=20
+> - The current code doesn't realy detect "conflicts" properly any case
+
+s/realy/really/
+
+>   where the sequence being checked has more than one entry.  One
+>   simple way to see this in the current code is that if cmd[0].addr
+>   isn't found that cmd[1].addr is never checked.
+
+s/that/then/ ?
+
+> - The code attempted to use the "cmd_cache" to update an existing
+>   message in a sleep/wake TCS with new data.  The goal appeared to be
+>   to update part of a TCS while leaving the rest of the TCS alone.  We
+>   never actually do this.  We always fully invalidate and re-write
+>   everything.
+> - If/when we try to optimize things to not fully invalidate / re-write
+>   every time we update the TCSes we'll need to think it through very
+>   carefully.  Specifically requirement of find_match() that the new
+>   sequence of addrs must match exactly the old sequence of addrs seems
+>   inflexible.  It's also not documented in rpmh_write() and
+>   rpmh_write_batch().  In any case, if we do decide to require updates
+>   to keep the exact same sequence and length then presumably the API
+>   and data structures should be updated to understand groups more
+>   properly.  The current algorithm doesn't really keep track of the
+>   length of the old sequence and there are several boundary-condition
+>   bugs because of that.  Said another way: if we decide to do
+>   something like this in the future we should start from scratch and
+>   thus find_match() isn't useful to keep around.
+>=20
+> This patch isn't quite a no-op.  Specifically:
+>=20
+> - It should be a slight performance boost of not searching through so
+>   many arrays.
+> - The old code would have done something useful in one case: it would
+>   allow someone calling rpmh_write() to override the data that came
+>   from rpmh_write_batch().  I don't believe that actually happens in
+>   reality.
 >=20
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
