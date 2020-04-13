@@ -7,50 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE5FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AA1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C242084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D29D20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586796834;
-	bh=kSAaJSxOkuOk04irz80sSSxupzrhqgUhuBgPGCK6hXA=;
+	s=default; t=1586796840;
+	bh=7u1UGDhnVePV+qW7cNom8G+AZ8jZWB+9/jX9rjgUVbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqdTWNV+5GMDKyNFALZE9Kw5VWT9lUoLyqJJWl/wDbRYH1ZxHn1tGmSOSj03N0+fJ
-	 6JLpnDHgNxUh5A9PVes1J4BZnwj3nFn3pGss5X0wCLBukt4jveNQ0EymmpFulSTdXJ
-	 nNKezTYhRMBFWjK0qqKLaDDvZjqgM7mDxlmlgWqw=
+	b=c2wDOO/uCeFTsvL7murXFyESl94PclQieRrHS9SBgqCksJvPZAagWaELs+zg8KVGV
+	 dm2QbFWHYV1rHSM6P/u243aGxxwHRifO1uB6Zg1pqXlwDJSF0bNrmhPtjNtmsRRoAs
+	 oDAxdMu/iehwgdpXSv8s6nfzh9TW7ZE9kwTsCX5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbgDMQxx (ORCPT
+        id S1732073AbgDMQx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46094 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 12:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732040AbgDMQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:53:45 -0400
+        id S1732049AbgDMQxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:53:49 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB6A2084D;
-        Mon, 13 Apr 2020 16:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4478B2078B;
+        Mon, 13 Apr 2020 16:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586796823;
-        bh=kSAaJSxOkuOk04irz80sSSxupzrhqgUhuBgPGCK6hXA=;
+        s=default; t=1586796828;
+        bh=7u1UGDhnVePV+qW7cNom8G+AZ8jZWB+9/jX9rjgUVbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ov0w1va82SSg66+yLKDqYqwrF/O141eAijaIc27sAYlskVRn0ZkqnVcwpObgTFNPA
-         8jbgzzoZMwhqHc39pzqT2he/dEXwosCt/dOIE5uOowpTWEYRVU5jjKcqGo8lUmvd21
-         whgWabvuGojGWyk9vT5P4fnYrSbb7/646iiIkk0g=
+        b=eLphPcbdO4wHzl62wkh1eocRPsrlEO/2PSgvX7SMMh4zeY6fbemgX9gSKYC2DURQZ
+         ++P87pqeoyIwVzWcrxVCLsHN79ljKOvEx14EfC+9NQ/vXzw6Bmq6Y26bCMTcYdHqOw
+         1VaS1ChM2XTASjMnfpvRXMaN7TzSqnSonec2rM9c=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 18/26] perf script: Simplify auxiliary event printing functions
-Date:   Mon, 13 Apr 2020 13:51:55 -0300
-Message-Id: <20200413165203.1816-19-acme@kernel.org>
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH 19/26] perf bench: Add event synthesis benchmark
+Date:   Mon, 13 Apr 2020 13:51:56 -0300
+Message-Id: <20200413165203.1816-20-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
@@ -61,457 +68,231 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Ian Rogers <irogers@google.com>
 
-This simplifies the print functions for the following perf script
-options:
+Event synthesis may occur at the start or end (tail) of a perf command.
+In system-wide mode it can scan every process in /proc, which may add
+seconds of latency before event recording. Add a new benchmark that
+times how long event synthesis takes with and without data synthesis.
 
-	--show-task-events
-	--show-namespace-events
-	--show-cgroup-events
-	--show-mmap-events
-	--show-switch-events
-	--show-lost-events
-	--show-bpf-events
+An example execution looks like:
 
-Example:
-	# perf record --switch-events -a -e cycles -c 10000 sleep 1
- Before:
-	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events > out-before.txt
- After:
-	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events > out-after.txt
-	# diff -s out-before.txt out-after.txt
-	Files out-before.txt and out-after.tx are identical
+ $ perf bench internals synthesize
+ # Running 'internals/synthesize' benchmark:
+ Average synthesis took: 168.253800 usec
+ Average data synthesis took: 208.104700 usec
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200402141548.21283-1-adrian.hunter@intel.com
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrey Zhizhikin <andrey.z@gmail.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200402154357.107873-2-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 304 ++++++++----------------------------
- 1 file changed, 66 insertions(+), 238 deletions(-)
+ tools/perf/Documentation/perf-bench.txt |   8 ++
+ tools/perf/bench/Build                  |   2 +-
+ tools/perf/bench/bench.h                |   2 +-
+ tools/perf/bench/synthesize.c           | 101 ++++++++++++++++++++++++
+ tools/perf/builtin-bench.c              |   6 ++
+ 5 files changed, 117 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/bench/synthesize.c
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1f57a7ecdf3d..8bf3ba280312 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2040,7 +2040,7 @@ static int cleanup_scripting(void)
+diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
+index 0921a3c67381..bad16512c48d 100644
+--- a/tools/perf/Documentation/perf-bench.txt
++++ b/tools/perf/Documentation/perf-bench.txt
+@@ -61,6 +61,9 @@ SUBSYSTEM
+ 'epoll'::
+ 	Eventpoll (epoll) stressing benchmarks.
  
- static bool filter_cpu(struct perf_sample *sample)
- {
--	if (cpu_list)
-+	if (cpu_list && sample->cpu != (u32)-1)
- 		return !test_bit(sample->cpu, cpu_bitmap);
- 	return false;
- }
-@@ -2138,41 +2138,59 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 	return err;
- }
- 
--static int process_comm_event(struct perf_tool *tool,
--			      union perf_event *event,
--			      struct perf_sample *sample,
--			      struct machine *machine)
-+static int print_event_with_time(struct perf_tool *tool,
-+				 union perf_event *event,
-+				 struct perf_sample *sample,
-+				 struct machine *machine,
-+				 pid_t pid, pid_t tid, u64 timestamp)
- {
--	struct thread *thread;
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
- 	struct perf_session *session = script->session;
- 	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	int ret = -1;
-+	struct thread *thread = NULL;
- 
--	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing COMM event, skipping it.\n");
--		return -1;
-+	if (evsel && !evsel->core.attr.sample_id_all) {
-+		sample->cpu = 0;
-+		sample->time = timestamp;
-+		sample->pid = pid;
-+		sample->tid = tid;
- 	}
- 
--	if (perf_event__process_comm(tool, event, sample, machine) < 0)
--		goto out;
-+	if (filter_cpu(sample))
-+		return 0;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->comm.tid;
--		sample->pid = event->comm.pid;
--	}
--	if (!filter_cpu(sample)) {
-+	if (tid != -1)
-+		thread = machine__findnew_thread(machine, pid, tid);
++'internals'::
++	Benchmark internal perf functionality.
 +
-+	if (thread && evsel) {
- 		perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_COMM, stdout);
--		perf_event__fprintf(event, stdout);
-+					   event->header.type, stdout);
- 	}
--	ret = 0;
--out:
+ 'all'::
+ 	All benchmark subsystems.
+ 
+@@ -214,6 +217,11 @@ Suite for evaluating concurrent epoll_wait calls.
+ *ctl*::
+ Suite for evaluating multiple epoll_ctl calls.
+ 
++SUITES FOR 'internals'
++~~~~~~~~~~~~~~~~~~~~~~
++*synthesize*::
++Suite for evaluating perf's event synthesis performance.
 +
-+	perf_event__fprintf(event, stdout);
+ SEE ALSO
+ --------
+ linkperf:perf[1]
+diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+index e4e321b6f883..042827385c87 100644
+--- a/tools/perf/bench/Build
++++ b/tools/perf/bench/Build
+@@ -6,9 +6,9 @@ perf-y += futex-wake.o
+ perf-y += futex-wake-parallel.o
+ perf-y += futex-requeue.o
+ perf-y += futex-lock-pi.o
+-
+ perf-y += epoll-wait.o
+ perf-y += epoll-ctl.o
++perf-y += synthesize.o
+ 
+ perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-lib.o
+ perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
+diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+index 4aa6de1aa67d..4d669c803237 100644
+--- a/tools/perf/bench/bench.h
++++ b/tools/perf/bench/bench.h
+@@ -41,9 +41,9 @@ int bench_futex_wake_parallel(int argc, const char **argv);
+ int bench_futex_requeue(int argc, const char **argv);
+ /* pi futexes */
+ int bench_futex_lock_pi(int argc, const char **argv);
+-
+ int bench_epoll_wait(int argc, const char **argv);
+ int bench_epoll_ctl(int argc, const char **argv);
++int bench_synthesize(int argc, const char **argv);
+ 
+ #define BENCH_FORMAT_DEFAULT_STR	"default"
+ #define BENCH_FORMAT_DEFAULT		0
+diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+new file mode 100644
+index 000000000000..6291257bc9c9
+--- /dev/null
++++ b/tools/perf/bench/synthesize.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Benchmark synthesis of perf events such as at the start of a 'perf
++ * record'. Synthesis is done on the current process and the 'dummy' event
++ * handlers are invoked that support dump_trace but otherwise do nothing.
++ *
++ * Copyright 2019 Google LLC.
++ */
++#include <stdio.h>
++#include "bench.h"
++#include "../util/debug.h"
++#include "../util/session.h"
++#include "../util/synthetic-events.h"
++#include "../util/target.h"
++#include "../util/thread_map.h"
++#include "../util/tool.h"
++#include <linux/err.h>
++#include <linux/time64.h>
++#include <subcmd/parse-options.h>
 +
- 	thread__put(thread);
--	return ret;
++static unsigned int iterations = 10000;
 +
++static const struct option options[] = {
++	OPT_UINTEGER('i', "iterations", &iterations,
++		"Number of iterations used to compute average"),
++	OPT_END()
++};
++
++static const char *const usage[] = {
++	"perf bench internals synthesize <options>",
++	NULL
++};
++
++
++static int do_synthesize(struct perf_session *session,
++			struct perf_thread_map *threads,
++			struct target *target, bool data_mmap)
++{
++	const unsigned int nr_threads_synthesize = 1;
++	struct timeval start, end, diff;
++	u64 runtime_us;
++	unsigned int i;
++	double average;
++	int err;
++
++	gettimeofday(&start, NULL);
++	for (i = 0; i < iterations; i++) {
++		err = machine__synthesize_threads(&session->machines.host,
++						target, threads, data_mmap,
++						nr_threads_synthesize);
++		if (err)
++			return err;
++	}
++
++	gettimeofday(&end, NULL);
++	timersub(&end, &start, &diff);
++	runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
++	average = (double)runtime_us/(double)iterations;
++	printf("Average %ssynthesis took: %f usec\n",
++		data_mmap ? "data " : "", average);
 +	return 0;
 +}
 +
-+static int print_event(struct perf_tool *tool, union perf_event *event,
-+		       struct perf_sample *sample, struct machine *machine,
-+		       pid_t pid, pid_t tid)
++int bench_synthesize(int argc, const char **argv)
 +{
-+	return print_event_with_time(tool, event, sample, machine, pid, tid, 0);
++	struct perf_tool tool;
++	struct perf_session *session;
++	struct target target = {
++		.pid = "self",
++	};
++	struct perf_thread_map *threads;
++	int err;
++
++	argc = parse_options(argc, argv, options, usage, 0);
++
++	session = perf_session__new(NULL, false, NULL);
++	if (IS_ERR(session)) {
++		pr_err("Session creation failed.\n");
++		return PTR_ERR(session);
++	}
++	threads = thread_map__new_by_pid(getpid());
++	if (!threads) {
++		pr_err("Thread map creation failed.\n");
++		err = -ENOMEM;
++		goto err_out;
++	}
++	perf_tool__fill_defaults(&tool);
++
++	err = do_synthesize(session, threads, &target, false);
++	if (err)
++		goto err_out;
++
++	err = do_synthesize(session, threads, &target, true);
++
++err_out:
++	if (threads)
++		perf_thread_map__put(threads);
++
++	perf_session__delete(session);
++	return err;
 +}
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index c06fe21c8613..11c79a8d85d6 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -76,6 +76,11 @@ static struct bench epoll_benchmarks[] = {
+ };
+ #endif // HAVE_EVENTFD
+ 
++static struct bench internals_benchmarks[] = {
++	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
++	{ NULL,		NULL,					NULL			}
++};
 +
-+static int process_comm_event(struct perf_tool *tool,
-+			      union perf_event *event,
-+			      struct perf_sample *sample,
-+			      struct machine *machine)
-+{
-+	if (perf_event__process_comm(tool, event, sample, machine) < 0)
-+		return -1;
-+
-+	return print_event(tool, event, sample, machine, event->comm.pid,
-+			   event->comm.tid);
- }
- 
- static int process_namespaces_event(struct perf_tool *tool,
-@@ -2180,37 +2198,11 @@ static int process_namespaces_event(struct perf_tool *tool,
- 				    struct perf_sample *sample,
- 				    struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	int ret = -1;
--
--	thread = machine__findnew_thread(machine, event->namespaces.pid,
--					 event->namespaces.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing NAMESPACES event, skipping it.\n");
--		return -1;
--	}
--
- 	if (perf_event__process_namespaces(tool, event, sample, machine) < 0)
--		goto out;
-+		return -1;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->namespaces.tid;
--		sample->pid = event->namespaces.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_NAMESPACES, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	ret = 0;
--out:
--	thread__put(thread);
--	return ret;
-+	return print_event(tool, event, sample, machine, event->namespaces.pid,
-+			   event->namespaces.tid);
- }
- 
- static int process_cgroup_event(struct perf_tool *tool,
-@@ -2218,34 +2210,11 @@ static int process_cgroup_event(struct perf_tool *tool,
- 				struct perf_sample *sample,
- 				struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	int ret = -1;
--
--	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
--	if (thread == NULL) {
--		pr_debug("problem processing CGROUP event, skipping it.\n");
--		return -1;
--	}
--
- 	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
--		goto out;
-+		return -1;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_CGROUP, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	ret = 0;
--out:
--	thread__put(thread);
--	return ret;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			    sample->tid);
- }
- 
- static int process_fork_event(struct perf_tool *tool,
-@@ -2253,69 +2222,24 @@ static int process_fork_event(struct perf_tool *tool,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (perf_event__process_fork(tool, event, sample, machine) < 0)
- 		return -1;
- 
--	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing FORK event, skipping it.\n");
--		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = event->fork.time;
--		sample->tid = event->fork.tid;
--		sample->pid = event->fork.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_FORK, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--
--	return 0;
-+	return print_event_with_time(tool, event, sample, machine,
-+				     event->fork.pid, event->fork.tid,
-+				     event->fork.time);
- }
- static int process_exit_event(struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	int err = 0;
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
--	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing EXIT event, skipping it.\n");
-+	/* Print before 'exit' deletes anything */
-+	if (print_event_with_time(tool, event, sample, machine, event->fork.pid,
-+				  event->fork.tid, event->fork.time))
- 		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->fork.tid;
--		sample->pid = event->fork.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_EXIT, stdout);
--		perf_event__fprintf(event, stdout);
--	}
- 
--	if (perf_event__process_exit(tool, event, sample, machine) < 0)
--		err = -1;
--
--	thread__put(thread);
--	return err;
-+	return perf_event__process_exit(tool, event, sample, machine);
- }
- 
- static int process_mmap_event(struct perf_tool *tool,
-@@ -2323,33 +2247,11 @@ static int process_mmap_event(struct perf_tool *tool,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
- 		return -1;
- 
--	thread = machine__findnew_thread(machine, event->mmap.pid, event->mmap.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing MMAP event, skipping it.\n");
--		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->mmap.tid;
--		sample->pid = event->mmap.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_MMAP, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, event->mmap.pid,
-+			   event->mmap.tid);
- }
- 
- static int process_mmap2_event(struct perf_tool *tool,
-@@ -2357,33 +2259,11 @@ static int process_mmap2_event(struct perf_tool *tool,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
- 		return -1;
- 
--	thread = machine__findnew_thread(machine, event->mmap2.pid, event->mmap2.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing MMAP2 event, skipping it.\n");
--		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->mmap2.tid;
--		sample->pid = event->mmap2.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_MMAP2, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, event->mmap2.pid,
-+			   event->mmap2.tid);
- }
- 
- static int process_switch_event(struct perf_tool *tool,
-@@ -2391,10 +2271,7 @@ static int process_switch_event(struct perf_tool *tool,
- 				struct perf_sample *sample,
- 				struct machine *machine)
- {
--	struct thread *thread;
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 
- 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
- 		return -1;
-@@ -2405,20 +2282,8 @@ static int process_switch_event(struct perf_tool *tool,
- 	if (!script->show_switch_events)
- 		return 0;
- 
--	thread = machine__findnew_thread(machine, sample->pid,
--					 sample->tid);
--	if (thread == NULL) {
--		pr_debug("problem processing SWITCH event, skipping it.\n");
--		return -1;
--	}
--
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_SWITCH, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			   sample->tid);
- }
- 
- static int
-@@ -2427,23 +2292,8 @@ process_lost_event(struct perf_tool *tool,
- 		   struct perf_sample *sample,
- 		   struct machine *machine)
- {
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	struct thread *thread;
--
--	thread = machine__findnew_thread(machine, sample->pid,
--					 sample->tid);
--	if (thread == NULL)
--		return -1;
--
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_LOST, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			   sample->tid);
- }
- 
- static int
-@@ -2462,33 +2312,11 @@ process_bpf_events(struct perf_tool *tool __maybe_unused,
- 		   struct perf_sample *sample,
- 		   struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (machine__process_ksymbol(machine, event, sample) < 0)
- 		return -1;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		perf_event__fprintf(event, stdout);
--		return 0;
--	}
--
--	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
--	if (thread == NULL) {
--		pr_debug("problem processing MMAP event, skipping it.\n");
--		return -1;
--	}
--
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   event->header.type, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			   sample->tid);
- }
- 
- static void sig_handler(int sig __maybe_unused)
+ struct collection {
+ 	const char	*name;
+ 	const char	*summary;
+@@ -92,6 +97,7 @@ static struct collection collections[] = {
+ #ifdef HAVE_EVENTFD
+ 	{"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
+ #endif
++	{ "internals",	"Perf-internals benchmarks",			internals_benchmarks	},
+ 	{ "all",	"All benchmarks",				NULL			},
+ 	{ NULL,		NULL,						NULL			}
+ };
 -- 
 2.21.1
 
