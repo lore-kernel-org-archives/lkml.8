@@ -2,426 +2,205 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9304C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724E7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1FD2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D2620739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbgDMQzY (ORCPT
+        id S1732205AbgDMQzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:55:24 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:59634 "EHLO gloria.sntech.de"
+        Mon, 13 Apr 2020 12:55:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53967 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732186AbgDMQzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:55:22 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jO2Mb-0002yy-E2; Mon, 13 Apr 2020 18:55:13 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, xxm@rock-chips.com,
-        kever.yang@rock-chips.com
-Subject: Re: [PATCH v3] iio: adc: rockchip_saradc: Add support iio buffers
-Date:   Mon, 13 Apr 2020 18:55:12 +0200
-Message-ID: <4304017.Osc3njyXrW@diego>
-In-Reply-To: <20200413174434.55b2941a@archlinux>
-References: <20200412224251.2919182-1-heiko@sntech.de> <20200413174434.55b2941a@archlinux>
+        id S1732186AbgDMQza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:55:30 -0400
+IronPort-SDR: C11Z5nDMp16fmFrdOzg8IsGBcCEW7wZvQIPMXufjKasN8pVJqUA3R+iGE5W/4VreEez6e0ktuc
+ 9QYDy4iR9wnQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 09:55:29 -0700
+IronPort-SDR: tq8cPtPZvYxM9IxmAqBNXs+YnioHBOEmPz8zEpXMk1eestl6/SfErsM5V4o4YRUnXuU6QERM7u
+ VUvshEcY3DVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="243579583"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 13 Apr 2020 09:55:08 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jO2MV-0009Di-LC; Tue, 14 Apr 2020 00:55:07 +0800
+Date:   Tue, 14 Apr 2020 00:54:52 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Era Mayflower <mayflowerera@gmail.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: drivers/net/macsec.c:905:22: warning: Variable 'recovered_pn.lower'
+ is assigned a value that is never used. [unreadVariable]
+Message-ID: <202004140049.vN42FESb%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   8f3d9f354286745c751374f5f1fcafee6b3f3136
+commit: a21ecf0e033807b976967286e6c392f48ee2049f macsec: Support XPN frame handling - IEEE 802.1AEbw
+date:   4 weeks ago
 
-Am Montag, 13. April 2020, 18:44:34 CEST schrieb Jonathan Cameron:
-> On Mon, 13 Apr 2020 00:42:51 +0200
-> Heiko Stuebner <heiko@sntech.de> wrote:
-> 
-> > From: Simon Xue <xxm@rock-chips.com>
-> > 
-> > Add the ability to also support access via (triggered) buffers
-> > next to the existing direct mode.
-> > 
-> > Device in question is the Odroid Go Advance that connects a joystick
-> > to two of the saradc channels for X and Y axis and the new (and still
-> > pending) adc joystick driver of course wants to use triggered buffers
-> > from the iio subsystem.
-> > 
-> > Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> > [some simplifications and added commit description]
-> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> Comments inline.
-> 
-> The issue with mixing managed and unmanaged allocations needs tidying up.
-> Sorry if I missed that one before; I probably didn't open up the current
-> driver to sanity check it :(
-> 
-> Jonathan
-> 
-> > ---
-> > changes in v3:
-> > - split buffer struct into values and timestamp area similar to dln2-adc
-> >   and make sure timestamp gets 8-byte aligned - ALIGN uses 4 as it aligns
-> >   u16 elements not bytes - hopefully I got it right this time ;-)
-> > changes in v2:
-> > - use devm_iio_triggered_buffer_setup
-> > - calculate data array size from channel number (curtesy of at91-sama5d2_adc)
-> > 
-> >  drivers/iio/adc/Kconfig           |   2 +
-> >  drivers/iio/adc/rockchip_saradc.c | 146 ++++++++++++++++++++++--------
-> >  2 files changed, 112 insertions(+), 36 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > index 12bb8b7ca1ff..8d2dd60614c6 100644
-> > --- a/drivers/iio/adc/Kconfig
-> > +++ b/drivers/iio/adc/Kconfig
-> > @@ -809,6 +809,8 @@ config ROCKCHIP_SARADC
-> >  	tristate "Rockchip SARADC driver"
-> >  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-> >  	depends on RESET_CONTROLLER
-> > +	select IIO_BUFFER
-> > +	select IIO_TRIGGERED_BUFFER
-> >  	help
-> >  	  Say yes here to build support for the SARADC found in SoCs from
-> >  	  Rockchip.
-> > diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-> > index 582ba047c4a6..0713363a4b43 100644
-> > --- a/drivers/iio/adc/rockchip_saradc.c
-> > +++ b/drivers/iio/adc/rockchip_saradc.c
-> > @@ -15,7 +15,11 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/reset.h>
-> >  #include <linux/regulator/consumer.h>
-> > +#include <linux/iio/buffer.h>
-> >  #include <linux/iio/iio.h>
-> > +#include <linux/iio/trigger.h>
-> > +#include <linux/iio/trigger_consumer.h>
-> > +#include <linux/iio/triggered_buffer.h>
-> >  
-> >  #define SARADC_DATA			0x00
-> >  
-> > @@ -32,9 +36,12 @@
-> >  #define SARADC_DLY_PU_SOC_MASK		0x3f
-> >  
-> >  #define SARADC_TIMEOUT			msecs_to_jiffies(100)
-> > +#define SARADC_MAX_CHANNELS		6
-> > +
-> > +/* buffer elements are u16, timestamp needs to be 8-byte aligned */
-> > +#define SARADC_BUFFER_NUM_U16	ALIGN(SARADC_MAX_CHANNELS, 4)
-> I may be going crazy but I think that will get you the 'start' of the
-> timestamp, not the length including it.
-> 
-> We should be seeing 24 bytes here = 12 u16s.  Sanity check the value.
-> 
-> Running through the stack of defines.
-> #define ALIGN(x, a)		__ALIGN_KERNEL((x), (a))
-> #define __ALIGN_KERNEL(x, a)		__ALIGN_KERNEL_MASK(x, (typeof(x))(a) - 1)
-> #define __ALIGN_KERNEL_MASK(x, mask)	(((x) + (mask)) & ~(mask))
-> 
-> ALIGN(6, 4) == __ALIGN_KERNEL(6, 4)
->             == __ALIGN_KERNEL_MASK(6, 3)
->             == (((6 + 3) & ~3) 
-> which is 9 with the bottom two bits masked or b1001 & b1100 = 8 not 12
-> 
-> So I think you are looking for
-> ALIGN(SARADC_MAX_CHANNELS + sizeof(u64) / sizeof(u16), 4)
-> which will be ((10 + 3) & ~3) b1101 & b1100 = 12
-
-hmm, getting the start of the timestamp was actually what I intended ;-)
-The dln2-adc driver did that fancy struct definition for its data. which
-I stole, see the part from blow:
-
-> > +	struct {
-> > +		u16 values[SARADC_BUFFER_NUM_U16];
-> > +		int64_t timestamp;
-> > +	} data;
-
-So SARADC_BUFFER_NUM really is meant to only contain the
-number of actual buffer data - I guess I should explain that out better
-in the comment. Because defining this separate makes this so much
-more readable when we're not trying to implicitly add the timestamp
-space.
-
-And a size_of(data) for that struct then returned nicely these 24 bytes
-in my tests.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
 
 
-> >  
-> >  struct rockchip_saradc_data {
-> > -	int				num_bits;
-> >  	const struct iio_chan_spec	*channels;
-> >  	int				num_channels;
-> >  	unsigned long			clk_rate;
-> > @@ -49,8 +56,37 @@ struct rockchip_saradc {
-> >  	struct reset_control	*reset;
-> >  	const struct rockchip_saradc_data *data;
-> >  	u16			last_val;
-> > +	const struct iio_chan_spec *last_chan;
-> >  };
-> >  
-> > +static void rockchip_saradc_power_down(struct rockchip_saradc *info)
-> > +{
-> > +	/* Clear irq & power down adc */
-> > +	writel_relaxed(0, info->regs + SARADC_CTRL);
-> > +}
-> > +
-> > +static int rockchip_saradc_conversion(struct rockchip_saradc *info,
-> > +				   struct iio_chan_spec const *chan)
-> > +{
-> > +	reinit_completion(&info->completion);
-> > +
-> > +	/* 8 clock periods as delay between power up and start cmd */
-> > +	writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
-> > +
-> > +	info->last_chan = chan;
-> > +
-> > +	/* Select the channel to be used and trigger conversion */
-> > +	writel(SARADC_CTRL_POWER_CTRL
-> > +			| (chan->channel & SARADC_CTRL_CHN_MASK)
-> > +			| SARADC_CTRL_IRQ_ENABLE,
-> > +		   info->regs + SARADC_CTRL);
-> > +
-> > +	if (!wait_for_completion_timeout(&info->completion, SARADC_TIMEOUT))
-> > +		return -ETIMEDOUT;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
-> >  				    struct iio_chan_spec const *chan,
-> >  				    int *val, int *val2, long mask)
-> > @@ -62,24 +98,12 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
-> >  	case IIO_CHAN_INFO_RAW:
-> >  		mutex_lock(&indio_dev->mlock);
-> >  
-> > -		reinit_completion(&info->completion);
-> > -
-> > -		/* 8 clock periods as delay between power up and start cmd */
-> > -		writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
-> > -
-> > -		/* Select the channel to be used and trigger conversion */
-> > -		writel(SARADC_CTRL_POWER_CTRL
-> > -				| (chan->channel & SARADC_CTRL_CHN_MASK)
-> > -				| SARADC_CTRL_IRQ_ENABLE,
-> > -		       info->regs + SARADC_CTRL);
-> > -
-> > -		if (!wait_for_completion_timeout(&info->completion,
-> > -						 SARADC_TIMEOUT)) {
-> > -			writel_relaxed(0, info->regs + SARADC_CTRL);
-> > +		ret = rockchip_saradc_conversion(info, chan);
-> > +		if (ret) {
-> > +			rockchip_saradc_power_down(info);
-> >  			mutex_unlock(&indio_dev->mlock);
-> > -			return -ETIMEDOUT;
-> > +			return ret;
-> >  		}
-> > -
-> >  		*val = info->last_val;
-> >  		mutex_unlock(&indio_dev->mlock);
-> >  		return IIO_VAL_INT;
-> > @@ -91,7 +115,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
-> >  		}
-> >  
-> >  		*val = ret / 1000;
-> > -		*val2 = info->data->num_bits;
-> > +		*val2 = chan->scan_type.realbits;
-> >  		return IIO_VAL_FRACTIONAL_LOG2;
-> >  	default:
-> >  		return -EINVAL;
-> > @@ -104,10 +128,9 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
-> >  
-> >  	/* Read value */
-> >  	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
-> > -	info->last_val &= GENMASK(info->data->num_bits - 1, 0);
-> > +	info->last_val &= GENMASK(info->last_chan->scan_type.realbits - 1, 0);
-> >  
-> > -	/* Clear irq & power down adc */
-> > -	writel_relaxed(0, info->regs + SARADC_CTRL);
-> > +	rockchip_saradc_power_down(info);
-> >  
-> >  	complete(&info->completion);
-> >  
-> > @@ -118,51 +141,55 @@ static const struct iio_info rockchip_saradc_iio_info = {
-> >  	.read_raw = rockchip_saradc_read_raw,
-> >  };
-> >  
-> > -#define ADC_CHANNEL(_index, _id) {				\
-> > +#define ADC_CHANNEL(_index, _id, _res) {			\
-> >  	.type = IIO_VOLTAGE,					\
-> >  	.indexed = 1,						\
-> >  	.channel = _index,					\
-> >  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> >  	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> >  	.datasheet_name = _id,					\
-> > +	.scan_index = _index,					\
-> > +	.scan_type = {						\
-> > +		.sign = 'u',					\
-> > +		.realbits = _res,				\
-> > +		.storagebits = 16,				\
-> > +		.endianness = IIO_LE,				\
-> > +	},							\
-> >  }
-> >  
-> >  static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
-> > -	ADC_CHANNEL(0, "adc0"),
-> > -	ADC_CHANNEL(1, "adc1"),
-> > -	ADC_CHANNEL(2, "adc2"),
-> > +	ADC_CHANNEL(0, "adc0", 10),
-> > +	ADC_CHANNEL(1, "adc1", 10),
-> > +	ADC_CHANNEL(2, "adc2", 10),
-> >  };
-> >  
-> >  static const struct rockchip_saradc_data saradc_data = {
-> > -	.num_bits = 10,
-> >  	.channels = rockchip_saradc_iio_channels,
-> >  	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
-> >  	.clk_rate = 1000000,
-> >  };
-> >  
-> >  static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
-> > -	ADC_CHANNEL(0, "adc0"),
-> > -	ADC_CHANNEL(1, "adc1"),
-> > +	ADC_CHANNEL(0, "adc0", 12),
-> > +	ADC_CHANNEL(1, "adc1", 12),
-> >  };
-> >  
-> >  static const struct rockchip_saradc_data rk3066_tsadc_data = {
-> > -	.num_bits = 12,
-> >  	.channels = rockchip_rk3066_tsadc_iio_channels,
-> >  	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
-> >  	.clk_rate = 50000,
-> >  };
-> >  
-> >  static const struct iio_chan_spec rockchip_rk3399_saradc_iio_channels[] = {
-> > -	ADC_CHANNEL(0, "adc0"),
-> > -	ADC_CHANNEL(1, "adc1"),
-> > -	ADC_CHANNEL(2, "adc2"),
-> > -	ADC_CHANNEL(3, "adc3"),
-> > -	ADC_CHANNEL(4, "adc4"),
-> > -	ADC_CHANNEL(5, "adc5"),
-> > +	ADC_CHANNEL(0, "adc0", 10),
-> > +	ADC_CHANNEL(1, "adc1", 10),
-> > +	ADC_CHANNEL(2, "adc2", 10),
-> > +	ADC_CHANNEL(3, "adc3", 10),
-> > +	ADC_CHANNEL(4, "adc4", 10),
-> > +	ADC_CHANNEL(5, "adc5", 10),
-> >  };
-> >  
-> >  static const struct rockchip_saradc_data rk3399_saradc_data = {
-> > -	.num_bits = 10,
-> >  	.channels = rockchip_rk3399_saradc_iio_channels,
-> >  	.num_channels = ARRAY_SIZE(rockchip_rk3399_saradc_iio_channels),
-> >  	.clk_rate = 1000000,
-> > @@ -193,6 +220,42 @@ static void rockchip_saradc_reset_controller(struct reset_control *reset)
-> >  	reset_control_deassert(reset);
-> >  }
-> >  
-> > +static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
-> > +{
-> > +	struct iio_poll_func *pf = p;
-> > +	struct iio_dev *i_dev = pf->indio_dev;
-> > +	struct rockchip_saradc *info = iio_priv(i_dev);
-> > +	struct {
-> > +		u16 values[SARADC_BUFFER_NUM_U16];
-> > +		int64_t timestamp;
-> > +	} data;
-> > +	int ret;
-> > +	int i, j = 0;
-> > +
-> > +	mutex_lock(&i_dev->mlock);
-> > +
-> > +	for_each_set_bit(i, i_dev->active_scan_mask, i_dev->masklength) {
-> > +		const struct iio_chan_spec *chan = &i_dev->channels[i];
-> > +
-> > +		ret = rockchip_saradc_conversion(info, chan);
-> > +		if (ret) {
-> > +			rockchip_saradc_power_down(info);
-> > +			goto out;
-> > +		}
-> > +
-> > +		data.values[j] = info->last_val;
-> > +		j++;
-> > +	}
-> > +
-> > +	iio_push_to_buffers_with_timestamp(i_dev, &data, iio_get_time_ns(i_dev));
-> > +out:
-> > +	mutex_unlock(&i_dev->mlock);
-> > +
-> > +	iio_trigger_notify_done(i_dev->trig);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> >  static int rockchip_saradc_probe(struct platform_device *pdev)
-> >  {
-> >  	struct rockchip_saradc *info = NULL;
-> > @@ -221,6 +284,11 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
-> >  
-> >  	info->data = match->data;
-> >  
-> > +	if (info->data->num_channels > SARADC_MAX_CHANNELS) {
-> > +		dev_err(&pdev->dev, "max channels exceeded");
-> > +		return -EINVAL;
-> 
-> How can that happen?  Bug in the addition of a new device type?
-> If it's just paranoia against future code, perhaps add a comment to
-> say that.
+cppcheck warnings: (new ones prefixed by >>)
 
-yep that is "paranoia" for the case someone adds a fancy new 20 channel
-saradc variant and forgets to adapt the constant.
+   drivers/net/macsec.c:3550:7: warning: Local variable 'ret' shadows outer variable [shadowVariable]
+     int ret;
+         ^
+   drivers/net/macsec.c:3525:6: note: Shadowed declaration
+    int ret;
+        ^
+   drivers/net/macsec.c:3550:7: note: Shadow variable
+     int ret;
+         ^
+   drivers/net/macsec.c:3298:56: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+     dev_set_allmulti(real_dev, dev->flags & IFF_ALLMULTI ? 1 : -1);
+                                                          ^
+   drivers/net/macsec.c:3302:34: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+           dev->flags & IFF_PROMISC ? 1 : -1);
+                                    ^
+   drivers/net/macsec.c:571:30: warning: 'tmp' is of type 'void *'. When using void pointers in calculations, the behaviour is undefined. [arithOperationsOnVoidPointer]
+    *iv = (unsigned char *)(tmp + iv_offset);
+                                ^
+   drivers/net/macsec.c:572:35: warning: 'tmp' is of type 'void *'. When using void pointers in calculations, the behaviour is undefined. [arithOperationsOnVoidPointer]
+    *sg = (struct scatterlist *)(tmp + sg_offset);
+                                     ^
+>> drivers/net/macsec.c:905:22: warning: Variable 'recovered_pn.lower' is assigned a value that is never used. [unreadVariable]
+     recovered_pn.lower = hdr_pn;
+                        ^
+>> drivers/net/macsec.c:908:22: warning: Variable 'recovered_pn.upper' is assigned a value that is never used. [unreadVariable]
+      recovered_pn.upper++;
+                        ^
+   drivers/net/macsec.c:2195:10: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
+    int ret = 0;
+            ^
+   drivers/net/macsec.c:2278:10: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
+    int ret = 0;
+            ^
 
-I'll add a comment.
+vim +905 drivers/net/macsec.c
 
-> 
-> > +	}
-> > +
-> >  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	info->regs = devm_ioremap_resource(&pdev->dev, mem);
-> >  	if (IS_ERR(info->regs))
-> > @@ -315,6 +383,12 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
-> >  	indio_dev->channels = info->data->channels;
-> >  	indio_dev->num_channels = info->data->num_channels;
-> >  
-> > +	ret = devm_iio_triggered_buffer_setup(&indio_dev->dev, indio_dev, NULL,
-> > +					      rockchip_saradc_trigger_handler,
-> > +					      NULL);
-> > +	if (ret)
-> > +		goto err_clk;
-> > +
-> 
-> Please avoid mixing an matching between device managed an unmanaged interfaces.
-> It means the driver is not 'obviously correct' and hence harder to review.
-> 
-> Two choices here.  Either use devm_add_action_or_reset to automatically
-> disable each clock + regulator in the managed release path, drop all the error
-> handling and remove (note this should be a precursor patch), or use
-> iio_triggered_buffer_setup and manually call iio_triggered_buffer_cleanup
-> in the right place in the remove function.
+   867	
+   868	static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
+   869					      struct net_device *dev,
+   870					      struct macsec_rx_sa *rx_sa,
+   871					      sci_t sci,
+   872					      struct macsec_secy *secy)
+   873	{
+   874		int ret;
+   875		struct scatterlist *sg;
+   876		struct sk_buff *trailer;
+   877		unsigned char *iv;
+   878		struct aead_request *req;
+   879		struct macsec_eth_header *hdr;
+   880		u32 hdr_pn;
+   881		u16 icv_len = secy->icv_len;
+   882	
+   883		macsec_skb_cb(skb)->valid = false;
+   884		skb = skb_share_check(skb, GFP_ATOMIC);
+   885		if (!skb)
+   886			return ERR_PTR(-ENOMEM);
+   887	
+   888		ret = skb_cow_data(skb, 0, &trailer);
+   889		if (unlikely(ret < 0)) {
+   890			kfree_skb(skb);
+   891			return ERR_PTR(ret);
+   892		}
+   893		req = macsec_alloc_req(rx_sa->key.tfm, &iv, &sg, ret);
+   894		if (!req) {
+   895			kfree_skb(skb);
+   896			return ERR_PTR(-ENOMEM);
+   897		}
+   898	
+   899		hdr = (struct macsec_eth_header *)skb->data;
+   900		hdr_pn = ntohl(hdr->packet_number);
+   901	
+   902		if (secy->xpn) {
+   903			pn_t recovered_pn = rx_sa->next_pn_halves;
+   904	
+ > 905			recovered_pn.lower = hdr_pn;
+   906			if (hdr_pn < rx_sa->next_pn_halves.lower &&
+   907			    !pn_same_half(hdr_pn, rx_sa->next_pn_halves.lower))
+ > 908				recovered_pn.upper++;
+   909	
+   910			macsec_fill_iv_xpn(iv, rx_sa->ssci, recovered_pn.full64,
+   911					   rx_sa->key.salt);
+   912		} else {
+   913			macsec_fill_iv(iv, sci, hdr_pn);
+   914		}
+   915	
+   916		sg_init_table(sg, ret);
+   917		ret = skb_to_sgvec(skb, sg, 0, skb->len);
+   918		if (unlikely(ret < 0)) {
+   919			aead_request_free(req);
+   920			kfree_skb(skb);
+   921			return ERR_PTR(ret);
+   922		}
+   923	
+   924		if (hdr->tci_an & MACSEC_TCI_E) {
+   925			/* confidentiality: ethernet + macsec header
+   926			 * authenticated, encrypted payload
+   927			 */
+   928			int len = skb->len - macsec_hdr_len(macsec_skb_cb(skb)->has_sci);
+   929	
+   930			aead_request_set_crypt(req, sg, sg, len, iv);
+   931			aead_request_set_ad(req, macsec_hdr_len(macsec_skb_cb(skb)->has_sci));
+   932			skb = skb_unshare(skb, GFP_ATOMIC);
+   933			if (!skb) {
+   934				aead_request_free(req);
+   935				return ERR_PTR(-ENOMEM);
+   936			}
+   937		} else {
+   938			/* integrity only: all headers + data authenticated */
+   939			aead_request_set_crypt(req, sg, sg, icv_len, iv);
+   940			aead_request_set_ad(req, skb->len - icv_len);
+   941		}
+   942	
+   943		macsec_skb_cb(skb)->req = req;
+   944		skb->dev = dev;
+   945		aead_request_set_callback(req, 0, macsec_decrypt_done, skb);
+   946	
+   947		dev_hold(dev);
+   948		ret = crypto_aead_decrypt(req);
+   949		if (ret == -EINPROGRESS) {
+   950			return ERR_PTR(ret);
+   951		} else if (ret != 0) {
+   952			/* decryption/authentication failed
+   953			 * 10.6 if validateFrames is disabled, deliver anyway
+   954			 */
+   955			if (ret != -EBADMSG) {
+   956				kfree_skb(skb);
+   957				skb = ERR_PTR(ret);
+   958			}
+   959		} else {
+   960			macsec_skb_cb(skb)->valid = true;
+   961		}
+   962		dev_put(dev);
+   963	
+   964		aead_request_free(req);
+   965	
+   966		return skb;
+   967	}
+   968	
 
-I'll go with the devm_* approach, less complexity is better than adding more ;-)
-
-
-Heiko
-
-> >  	ret = iio_device_register(indio_dev);
-> >  	if (ret)
-> >  		goto err_clk;
-> 
-> 
-
-
-
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
