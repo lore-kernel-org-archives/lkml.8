@@ -2,294 +2,148 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601E4C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93775C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4034D2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7131C2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586796891;
-	bh=svwfgxzDf5lHzQLtGzuG7pZIp4RfU3t8qP+aoqULD/c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iwx22AMGBkTx3k/cAgsCISnbpmTtTxs1QPK4hP0VtqewQR3M4ZgP7sGoFP6zAFgWR
-	 69sp2YIPDvlafcQVJPapAxxgZmehFXoRc1RfVTZy9oiC6RLRdgKijKrGNmOJur6cC+
-	 1tJmaeiQdjiHQJFfv/R+QuaDHcmGcPjxx67uEhz0=
+	s=default; t=1586796898;
+	bh=9aCew5Em0TLlBtgwNkxdemTfwApurfab/CKuSXy17DA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JJK52BOW5MUA4uio/nRhLjI6tRnx+Uq+rthdX1vBQ/P45Sxfl6VjG8VWR9xCMNzsU
+	 v56WBf5enNN5zcSlWBvdPHDLOiOhZHA1VLYZ7NFs7gh8IkZbzAIQKlxlxcsuOTsv2g
+	 wD7sYp8BVfRPq1T+ljV4OOr/0rWBMx/U5TQL5SJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732165AbgDMQyt (ORCPT
+        id S1732177AbgDMQy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 12:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732004AbgDMQxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:53:33 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        id S1731989AbgDMQx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:53:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9BC21569;
-        Mon, 13 Apr 2020 16:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 297EB20739;
+        Mon, 13 Apr 2020 16:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586796812;
-        bh=svwfgxzDf5lHzQLtGzuG7pZIp4RfU3t8qP+aoqULD/c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y+UYUqQ6fMSoh0xJBA8oqakf1eUnA5ycXZNiCXlKGjNHockZ7C3J13fiQIPBuBfWf
-         4esKhWeJO7GLNn9sB4Bi1K5bFew2KhL0sIjPPF6SXxFKBP3etZ6M2aKEb7nQVwd7LW
-         BAjXPLezF94m2RipPr8sIoi7z4S5LpnMYVxv06iQ=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: [PATCH 15/26] doc/admin-guide: Update perf-security.rst with CAP_PERFMON information
-Date:   Mon, 13 Apr 2020 13:51:52 -0300
-Message-Id: <20200413165203.1816-16-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
-References: <20200413165203.1816-1-acme@kernel.org>
+        s=default; t=1586796807;
+        bh=9aCew5Em0TLlBtgwNkxdemTfwApurfab/CKuSXy17DA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QFYoiIUJOsJoJ1b0IsZ3K2fwQ6oxstALKCknujolFwdEWElKhfUMEfn2qTXoSiqW5
+         wrongT7Dh6Mjr2YxCydedo2LCfTy0AksKfH0rlm7xp6HBqNlZcgBBmYRT3E2rmj53z
+         dMKbAOO4PwyI1hRrBX86tCi82uP11ok/aVXJCiWQ=
+Date:   Mon, 13 Apr 2020 17:53:23 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     mani@kernel.org
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: iio: chemical: Add binding for CCS811
+ VOC sensor
+Message-ID: <20200413175323.7f41b766@archlinux>
+In-Reply-To: <20200412183658.6755-2-mani@kernel.org>
+References: <20200412183658.6755-1-mani@kernel.org>
+        <20200412183658.6755-2-mani@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+On Mon, 13 Apr 2020 00:06:56 +0530
+mani@kernel.org wrote:
 
-Update perf-security.rst documentation file with the information
-related to usage of CAP_PERFMON capability to secure performance
-monitoring and observability operations in system.
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> This commit adds devicetree binding for AMS CCS811 VOC sensor.
+> 
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Great to see this driver getting some more attention.
 
-Committer notes:
+A few things inline
 
-While testing 'perf top' under cap_perfmon I noticed that it needs
-some more capability and Alexey pointed out cap_ipc_lock, as needed by
-this kernel chunk:
+Thanks,
 
-  kernel/events/core.c: 6101
-       if ((locked > lock_limit) && perf_is_paranoid() &&
-               !capable(CAP_IPC_LOCK)) {
-               ret = -EPERM;
-               goto unlock;
-       }
+Jonathan
 
-So I added it to the documentation, and also mentioned that if the
-libcap version doesn't yet supports 'cap_perfmon', its numeric value can
-be used instead, i.e. if:
+> ---
+>  .../bindings/iio/chemical/ams,ccs811.yaml     | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> new file mode 100644
+> index 000000000000..564208af7b2b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-	# setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+Preferred that all new binding docs are dual licensed with BSD as well
+to allow there use by things other than the kernel.
 
-Fails, try:
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/chemical/ams,ccs811.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AMS CCS811 VOC Sensor
+> +
+> +maintainers:
+> +  - Narcisa Vasile <narcisaanamaria12@gmail.com>
+> +
+> +description: |
+> +  Ultra-Low Power Digital Gas Sensor for Monitoring Indoor Air Quality.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ams,ccs811
+> +  reg:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO connected to the nRESET line. This is an active low
+> +                 input to CCS811.
+> +    maxItems: 1
+> +
+> +  wakeup-gpios:
+> +    description: GPIO connected to the nWAKE line. This is an active low
+> +                 input to CCS811.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      ccs811@5b {
+Hmm. Not sure we have a generic name in the dt spec for voc sensor.
+Even so we should try for something appropriate.
 
-	# setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+Could go with voc@5b?
 
-I also added a paragraph stating that using an unpatched libcap will
-fail the check for CAP_PERFMON, as it checks the cap number against a
-maximum to see if it is valid, which makes it use as the default the
-'cycles:u' event, even tho a cap_perfmon capable perf binary can get
-kernel samples, to workaround that just use, e.g.:
-
-  # perf top -e cycles
-  # perf record -e cycles
-
-And it will sample kernel and user modes.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/17278551-9399-9ebe-d665-8827016a217d@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- Documentation/admin-guide/perf-security.rst | 86 +++++++++++++++------
- 1 file changed, 61 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
-index 72effa7c23b9..1307b5274a0f 100644
---- a/Documentation/admin-guide/perf-security.rst
-+++ b/Documentation/admin-guide/perf-security.rst
-@@ -1,6 +1,6 @@
- .. _perf_security:
- 
--Perf Events and tool security
-+Perf events and tool security
- =============================
- 
- Overview
-@@ -42,11 +42,11 @@ categories:
- Data that belong to the fourth category can potentially contain
- sensitive process data. If PMUs in some monitoring modes capture values
- of execution context registers or data from process memory then access
--to such monitoring capabilities requires to be ordered and secured
--properly. So, perf_events/Perf performance monitoring is the subject for
--security access control management [5]_ .
-+to such monitoring modes requires to be ordered and secured properly.
-+So, perf_events performance monitoring and observability operations are
-+the subject for security access control management [5]_ .
- 
--perf_events/Perf access control
-+perf_events access control
- -------------------------------
- 
- To perform security checks, the Linux implementation splits processes
-@@ -66,11 +66,25 @@ into distinct units, known as capabilities [6]_ , which can be
- independently enabled and disabled on per-thread basis for processes and
- files of unprivileged users.
- 
--Unprivileged processes with enabled CAP_SYS_ADMIN capability are treated
-+Unprivileged processes with enabled CAP_PERFMON capability are treated
- as privileged processes with respect to perf_events performance
--monitoring and bypass *scope* permissions checks in the kernel.
--
--Unprivileged processes using perf_events system call API is also subject
-+monitoring and observability operations, thus, bypass *scope* permissions
-+checks in the kernel. CAP_PERFMON implements the principle of least
-+privilege [13]_ (POSIX 1003.1e: 2.2.2.39) for performance monitoring and
-+observability operations in the kernel and provides a secure approach to
-+perfomance monitoring and observability in the system.
-+
-+For backward compatibility reasons the access to perf_events monitoring and
-+observability operations is also open for CAP_SYS_ADMIN privileged
-+processes but CAP_SYS_ADMIN usage for secure monitoring and observability
-+use cases is discouraged with respect to the CAP_PERFMON capability.
-+If system audit records [14]_ for a process using perf_events system call
-+API contain denial records of acquiring both CAP_PERFMON and CAP_SYS_ADMIN
-+capabilities then providing the process with CAP_PERFMON capability singly
-+is recommended as the preferred secure approach to resolve double access
-+denial logging related to usage of performance monitoring and observability.
-+
-+Unprivileged processes using perf_events system call are also subject
- for PTRACE_MODE_READ_REALCREDS ptrace access mode check [7]_ , whose
- outcome determines whether monitoring is permitted. So unprivileged
- processes provided with CAP_SYS_PTRACE capability are effectively
-@@ -82,14 +96,14 @@ performance analysis of monitored processes or a system. For example,
- CAP_SYSLOG capability permits reading kernel space memory addresses from
- /proc/kallsyms file.
- 
--perf_events/Perf privileged users
-+Privileged Perf users groups
- ---------------------------------
- 
- Mechanisms of capabilities, privileged capability-dumb files [6]_ and
--file system ACLs [10]_ can be used to create a dedicated group of
--perf_events/Perf privileged users who are permitted to execute
--performance monitoring without scope limits. The following steps can be
--taken to create such a group of privileged Perf users.
-+file system ACLs [10]_ can be used to create dedicated groups of
-+privileged Perf users who are permitted to execute performance monitoring
-+and observability without scope limits. The following steps can be
-+taken to create such groups of privileged Perf users.
- 
- 1. Create perf_users group of privileged Perf users, assign perf_users
-    group to Perf tool executable and limit access to the executable for
-@@ -108,30 +122,51 @@ taken to create such a group of privileged Perf users.
-    -rwxr-x---  2 root perf_users  11M Oct 19 15:12 perf
- 
- 2. Assign the required capabilities to the Perf tool executable file and
--   enable members of perf_users group with performance monitoring
-+   enable members of perf_users group with monitoring and observability
-    privileges [6]_ :
- 
- ::
- 
--   # setcap "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
--   # setcap -v "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-    perf: OK
-    # getcap perf
--   perf = cap_sys_ptrace,cap_sys_admin,cap_syslog+ep
-+   perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
-+
-+If the libcap installed doesn't yet support "cap_perfmon", use "38" instead,
-+i.e.:
-+
-+::
-+
-+   # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-+
-+Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
-+'perf top', alternatively use 'perf top -m N', to reduce the memory that
-+it uses for the perf ring buffer, see the memory allocation section below.
-+
-+Using a libcap without support for CAP_PERFMON will make cap_get_flag(caps, 38,
-+CAP_EFFECTIVE, &val) fail, which will lead the default event to be 'cycles:u',
-+so as a workaround explicitly ask for the 'cycles' event, i.e.:
-+
-+::
-+
-+  # perf top -e cycles
-+
-+To get kernel and user samples with a perf binary with just CAP_PERFMON.
- 
- As a result, members of perf_users group are capable of conducting
--performance monitoring by using functionality of the configured Perf
--tool executable that, when executes, passes perf_events subsystem scope
--checks.
-+performance monitoring and observability by using functionality of the
-+configured Perf tool executable that, when executes, passes perf_events
-+subsystem scope checks.
- 
- This specific access control management is only available to superuser
- or root running processes with CAP_SETPCAP, CAP_SETFCAP [6]_
- capabilities.
- 
--perf_events/Perf unprivileged users
-+Unprivileged users
- -----------------------------------
- 
--perf_events/Perf *scope* and *access* control for unprivileged processes
-+perf_events *scope* and *access* control for unprivileged processes
- is governed by perf_event_paranoid [2]_ setting:
- 
- -1:
-@@ -166,7 +201,7 @@ is governed by perf_event_paranoid [2]_ setting:
-      perf_event_mlock_kb locking limit is imposed but ignored for
-      unprivileged processes with CAP_IPC_LOCK capability.
- 
--perf_events/Perf resource control
-+Resource control
- ---------------------------------
- 
- Open file descriptors
-@@ -227,4 +262,5 @@ Bibliography
- .. [10] `<http://man7.org/linux/man-pages/man5/acl.5.html>`_
- .. [11] `<http://man7.org/linux/man-pages/man2/getrlimit.2.html>`_
- .. [12] `<http://man7.org/linux/man-pages/man5/limits.conf.5.html>`_
--
-+.. [13] `<https://sites.google.com/site/fullycapable>`_
-+.. [14] `<http://man7.org/linux/man-pages/man8/auditd.8.html>`_
--- 
-2.21.1
+> +        compatible = "ams,ccs811";
+> +        reg = <0x5b>;
+> +        reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
+> +        wakeup-gpios = <&gpioa 12 GPIO_ACTIVE_LOW>;
+> +      };
+> +    };
+> +
+> +...
 
