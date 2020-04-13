@@ -4,39 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFB4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F545206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2090206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733041AbgDMSjC (ORCPT
+        id S1733049AbgDMSjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:39:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733019AbgDMSi7 (ORCPT
+        Mon, 13 Apr 2020 14:39:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33346 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728326AbgDMSi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 14:38:59 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F957C008749;
-        Mon, 13 Apr 2020 11:38:59 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id F06E22A12DF
+        with ESMTPSA id 0BD5D2A12E4
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 4F0404800EA; Mon, 13 Apr 2020 20:38:55 +0200 (CEST)
+        id 567DA4800FD; Mon, 13 Apr 2020 20:38:55 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 1/4] power: supply: core: Constify usb_types
-Date:   Mon, 13 Apr 2020 20:38:50 +0200
-Message-Id: <20200413183853.1088823-2-sebastian.reichel@collabora.com>
+Subject: [PATCH 4/4] power: supply: core: Constify properties
+Date:   Mon, 13 Apr 2020 20:38:53 +0200
+Message-Id: <20200413183853.1088823-5-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200413183853.1088823-1-sebastian.reichel@collabora.com>
 References: <20200413183853.1088823-1-sebastian.reichel@collabora.com>
@@ -47,42 +44,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usb_types is a list of USB types supported by the
-hardware, which does not change at runtime. Let's
-mark it as const for improved security.
+properties is a list of properties supported by the
+driver. It is not modified by the power-supply core
+and drivers are not supposed to change it once the
+list has been registered. Let's mark it as const for
+improved security.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/power/supply/power_supply_sysfs.c | 2 +-
- include/linux/power_supply.h              | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/power_supply.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4eae60b..45dafc1820ff 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -78,7 +78,7 @@ static const char * const power_supply_scope_text[] = {
- };
- 
- static ssize_t power_supply_show_usb_type(struct device *dev,
--					  enum power_supply_usb_type *usb_types,
-+					  const enum power_supply_usb_type *usb_types,
- 					  ssize_t num_usb_types,
- 					  union power_supply_propval *value,
- 					  char *buf)
 diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..0392c9cc8f1c 100644
+index 0392c9cc8f1c..6a34df65d4d1 100644
 --- a/include/linux/power_supply.h
 +++ b/include/linux/power_supply.h
-@@ -223,7 +223,7 @@ struct power_supply_config {
- struct power_supply_desc {
- 	const char *name;
+@@ -225,7 +225,7 @@ struct power_supply_desc {
  	enum power_supply_type type;
--	enum power_supply_usb_type *usb_types;
-+	const enum power_supply_usb_type *usb_types;
+ 	const enum power_supply_usb_type *usb_types;
  	size_t num_usb_types;
- 	enum power_supply_property *properties;
+-	enum power_supply_property *properties;
++	const enum power_supply_property *properties;
  	size_t num_properties;
+ 
+ 	/*
 -- 
 2.25.1
 
