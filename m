@@ -2,219 +2,231 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BD2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DD2C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC9520735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C41E206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387488AbgDMR4p (ORCPT
+        id S2387497AbgDMR5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:56:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11989 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387436AbgDMR4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:56:44 -0400
-IronPort-SDR: qrPlIhJdYlEsZRL9hM/8umkntQYmNpI1E2QTKcNLGyG1EqcLPkbTfNtcaGdewWOomTw792EDK5
- fwtobT42/NYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 10:56:43 -0700
-IronPort-SDR: ybBueqj+4xLRWQU4b+M0VpnOSB2dXDEeAp9jGUn3Fcaw1R8sbFd1qzWLAcHuMCjFfafiCvlzuF
- bc9KTYT4OIeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="399682976"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 13 Apr 2020 10:56:42 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jO3K5-0008VL-T3; Tue, 14 Apr 2020 01:56:41 +0800
-Date:   Tue, 14 Apr 2020 01:56:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/kcsan] BUILD SUCCESS
- 3b02a051d25d9600e9d403ad3043aed7de00160e
-Message-ID: <5e94a7d2.f6Bk89AubGryLaUH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 13 Apr 2020 13:57:17 -0400
+Received: from smtprelay0138.hostedemail.com ([216.40.44.138]:43278 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387436AbgDMR5P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:57:15 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 106E9180A732A;
+        Mon, 13 Apr 2020 17:57:13 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toe75_5bd65cad73310
+X-Filterd-Recvd-Size: 7375
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 13 Apr 2020 17:57:10 +0000 (UTC)
+Message-ID: <c39854067e211fa6264faa82d0cd52d19466802d.camel@perches.com>
+Subject: Re: [PATCH] drm/i915/gvt: Use ARRAY_SIZE instead of hardcoded size
+From:   Joe Perches <joe@perches.com>
+To:     Jason Yan <yanaijie@huawei.com>, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 13 Apr 2020 10:55:03 -0700
+In-Reply-To: <20200413143224.22806-1-yanaijie@huawei.com>
+References: <20200413143224.22806-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
-branch HEAD: 3b02a051d25d9600e9d403ad3043aed7de00160e  Merge tag 'v5.7-rc1' into locking/kcsan, to resolve conflicts and refresh
+On Mon, 2020-04-13 at 22:32 +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> drivers/gpu/drm/i915/gvt/vgpu.c:127:30-31: WARNING: Use ARRAY_SIZE
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/vgpu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gvt/vgpu.c b/drivers/gpu/drm/i915/gvt/vgpu.c
+> index 1d5ff88078bd..7d361623ff67 100644
+> --- a/drivers/gpu/drm/i915/gvt/vgpu.c
+> +++ b/drivers/gpu/drm/i915/gvt/vgpu.c
+> @@ -124,7 +124,7 @@ int intel_gvt_init_vgpu_types(struct intel_gvt *gvt)
+>  	 */
+>  	low_avail = gvt_aperture_sz(gvt) - HOST_LOW_GM_SIZE;
+>  	high_avail = gvt_hidden_sz(gvt) - HOST_HIGH_GM_SIZE;
+> -	num_types = sizeof(vgpu_types) / sizeof(vgpu_types[0]);
+> +	num_types = ARRAY_SIZE(vgpu_types);
+>  
+>  	gvt->types = kcalloc(num_types, sizeof(struct intel_vgpu_type),
+>  			     GFP_KERNEL);
 
-elapsed time: 524m
+It's probably better to remove num_types altogether and just
+use ARRAY_SIZE in both places num_types is used.
 
-configs tested: 152
-configs skipped: 0
+Perhaps refactoring the function a bit more is also better.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Perhaps:
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-h8300                    h8300h-sim_defconfig
-sparc64                          allmodconfig
-s390                             allyesconfig
-arc                                 defconfig
-parisc                generic-64bit_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-mips                 randconfig-a001-20200413
-nds32                randconfig-a001-20200413
-riscv                randconfig-a001-20200413
-m68k                 randconfig-a001-20200413
-parisc               randconfig-a001-20200413
-alpha                randconfig-a001-20200413
-h8300                randconfig-a001-20200413
-nios2                randconfig-a001-20200413
-c6x                  randconfig-a001-20200413
-microblaze           randconfig-a001-20200413
-sparc64              randconfig-a001-20200413
-csky                 randconfig-a001-20200413
-openrisc             randconfig-a001-20200413
-s390                 randconfig-a001-20200413
-sh                   randconfig-a001-20200413
-xtensa               randconfig-a001-20200413
-x86_64               randconfig-b002-20200413
-x86_64               randconfig-c001-20200413
-x86_64               randconfig-c002-20200413
-x86_64               randconfig-c003-20200413
-i386                 randconfig-c001-20200413
-i386                 randconfig-c002-20200413
-i386                 randconfig-c003-20200413
-x86_64               randconfig-d001-20200413
-x86_64               randconfig-d002-20200413
-x86_64               randconfig-d003-20200413
-i386                 randconfig-d001-20200413
-i386                 randconfig-d002-20200413
-i386                 randconfig-d003-20200413
-x86_64               randconfig-e001-20200413
-i386                 randconfig-e002-20200413
-i386                 randconfig-e001-20200413
-x86_64               randconfig-e002-20200413
-i386                 randconfig-e003-20200413
-x86_64               randconfig-e003-20200413
-i386                 randconfig-f003-20200413
-i386                 randconfig-f002-20200413
-x86_64               randconfig-f003-20200413
-x86_64               randconfig-f001-20200413
-x86_64               randconfig-f002-20200413
-i386                 randconfig-f001-20200413
-x86_64               randconfig-g001-20200413
-x86_64               randconfig-g002-20200413
-x86_64               randconfig-g003-20200413
-i386                 randconfig-g001-20200413
-i386                 randconfig-g002-20200413
-i386                 randconfig-g003-20200413
-x86_64               randconfig-h001-20200413
-i386                 randconfig-h003-20200413
-i386                 randconfig-h002-20200413
-i386                 randconfig-h001-20200413
-x86_64               randconfig-h002-20200413
-ia64                 randconfig-a001-20200413
-arc                  randconfig-a001-20200413
-arm                  randconfig-a001-20200413
-sparc                randconfig-a001-20200413
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+o Use ARRAY_SIZE
+o Make vgpu_types static const to reduce data size and
+  move the definition into the function where it's used
+o Use temporaries to shorten the code indirections.
 
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/gpu/drm/i915/gvt/vgpu.c | 92 +++++++++++++++++++++--------------------
+ 1 file changed, 47 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gvt/vgpu.c b/drivers/gpu/drm/i915/gvt/vgpu.c
+index 1d5ff8..e56f59d 100644
+--- a/drivers/gpu/drm/i915/gvt/vgpu.c
++++ b/drivers/gpu/drm/i915/gvt/vgpu.c
+@@ -77,26 +77,6 @@ void populate_pvinfo_page(struct intel_vgpu *vgpu)
+ #define VGPU_WEIGHT(vgpu_num)	\
+ 	(VGPU_MAX_WEIGHT / (vgpu_num))
+ 
+-static struct {
+-	unsigned int low_mm;
+-	unsigned int high_mm;
+-	unsigned int fence;
+-
+-	/* A vGPU with a weight of 8 will get twice as much GPU as a vGPU
+-	 * with a weight of 4 on a contended host, different vGPU type has
+-	 * different weight set. Legal weights range from 1 to 16.
+-	 */
+-	unsigned int weight;
+-	enum intel_vgpu_edid edid;
+-	char *name;
+-} vgpu_types[] = {
+-/* Fixed vGPU type table */
+-	{ MB_TO_BYTES(64), MB_TO_BYTES(384), 4, VGPU_WEIGHT(8), GVT_EDID_1024_768, "8" },
+-	{ MB_TO_BYTES(128), MB_TO_BYTES(512), 4, VGPU_WEIGHT(4), GVT_EDID_1920_1200, "4" },
+-	{ MB_TO_BYTES(256), MB_TO_BYTES(1024), 4, VGPU_WEIGHT(2), GVT_EDID_1920_1200, "2" },
+-	{ MB_TO_BYTES(512), MB_TO_BYTES(2048), 4, VGPU_WEIGHT(1), GVT_EDID_1920_1200, "1" },
+-};
+-
+ /**
+  * intel_gvt_init_vgpu_types - initialize vGPU type list
+  * @gvt : GVT device
+@@ -106,9 +86,32 @@ static struct {
+  */
+ int intel_gvt_init_vgpu_types(struct intel_gvt *gvt)
+ {
+-	unsigned int num_types;
+ 	unsigned int i, low_avail, high_avail;
+ 	unsigned int min_low;
++	static const struct vgpu_types {
++		unsigned int low_mm;
++		unsigned int high_mm;
++		unsigned int fence;
++
++		/* A vGPU with a weight of 8 will get twice as much GPU
++		 * as a vGPU with a weight of 4 on a contended host,
++		 * different vGPU type has different weight set.
++		 * Legal weights range from 1 to 16.
++		 */
++		unsigned int weight;
++		enum intel_vgpu_edid edid;
++		char *name;
++	} vgpu_types[] = {
++		/* Fixed vGPU type table */
++		{ MB_TO_BYTES(64), MB_TO_BYTES(384), 4,
++		  VGPU_WEIGHT(8), GVT_EDID_1024_768, "8" },
++		{ MB_TO_BYTES(128), MB_TO_BYTES(512), 4,
++		  VGPU_WEIGHT(4), GVT_EDID_1920_1200, "4" },
++		{ MB_TO_BYTES(256), MB_TO_BYTES(1024), 4,
++		  VGPU_WEIGHT(2), GVT_EDID_1920_1200, "2" },
++		{ MB_TO_BYTES(512), MB_TO_BYTES(2048), 4,
++		  VGPU_WEIGHT(1), GVT_EDID_1920_1200, "1" },
++	};
+ 
+ 	/* vGPU type name is defined as GVTg_Vx_y which contains
+ 	 * physical GPU generation type (e.g V4 as BDW server, V5 as
+@@ -124,45 +127,44 @@ int intel_gvt_init_vgpu_types(struct intel_gvt *gvt)
+ 	 */
+ 	low_avail = gvt_aperture_sz(gvt) - HOST_LOW_GM_SIZE;
+ 	high_avail = gvt_hidden_sz(gvt) - HOST_HIGH_GM_SIZE;
+-	num_types = sizeof(vgpu_types) / sizeof(vgpu_types[0]);
+ 
+-	gvt->types = kcalloc(num_types, sizeof(struct intel_vgpu_type),
+-			     GFP_KERNEL);
++	gvt->types = kcalloc(ARRAY_SIZE(vgpu_types),
++			     sizeof(struct intel_vgpu_type), GFP_KERNEL);
+ 	if (!gvt->types)
+ 		return -ENOMEM;
+ 
+ 	min_low = MB_TO_BYTES(32);
+-	for (i = 0; i < num_types; ++i) {
+-		if (low_avail / vgpu_types[i].low_mm == 0)
++	for (i = 0; i < ARRAY_SIZE(vgpu_types); i++) {
++		struct intel_vgpu_type *type = &gvt->types[i];
++		const struct vgpu_types *vgpu = &vgpu_types[i];
++
++		if (low_avail / vgpu->low_mm == 0)
+ 			break;
+ 
+-		gvt->types[i].low_gm_size = vgpu_types[i].low_mm;
+-		gvt->types[i].high_gm_size = vgpu_types[i].high_mm;
+-		gvt->types[i].fence = vgpu_types[i].fence;
++		type->low_gm_size = vgpu->low_mm;
++		type->high_gm_size = vgpu->high_mm;
++		type->fence = vgpu->fence;
+ 
+-		if (vgpu_types[i].weight < 1 ||
+-					vgpu_types[i].weight > VGPU_MAX_WEIGHT)
++		if (vgpu->weight < 1 || vgpu->weight > VGPU_MAX_WEIGHT)
+ 			return -EINVAL;
+ 
+-		gvt->types[i].weight = vgpu_types[i].weight;
+-		gvt->types[i].resolution = vgpu_types[i].edid;
+-		gvt->types[i].avail_instance = min(low_avail / vgpu_types[i].low_mm,
+-						   high_avail / vgpu_types[i].high_mm);
++		type->weight = vgpu->weight;
++		type->resolution = vgpu->edid;
++		type->avail_instance = min(low_avail / vgpu->low_mm,
++					   high_avail / vgpu->high_mm);
+ 
+ 		if (IS_GEN(gvt->gt->i915, 8))
+-			sprintf(gvt->types[i].name, "GVTg_V4_%s",
+-				vgpu_types[i].name);
++			sprintf(type->name, "GVTg_V4_%s", vgpu->name);
+ 		else if (IS_GEN(gvt->gt->i915, 9))
+-			sprintf(gvt->types[i].name, "GVTg_V5_%s",
+-				vgpu_types[i].name);
++			sprintf(type->name, "GVTg_V5_%s", vgpu->name);
+ 
+ 		gvt_dbg_core("type[%d]: %s avail %u low %u high %u fence %u weight %u res %s\n",
+-			     i, gvt->types[i].name,
+-			     gvt->types[i].avail_instance,
+-			     gvt->types[i].low_gm_size,
+-			     gvt->types[i].high_gm_size, gvt->types[i].fence,
+-			     gvt->types[i].weight,
+-			     vgpu_edid_str(gvt->types[i].resolution));
++			     i, type->name,
++			     type->avail_instance,
++			     type->low_gm_size,
++			     type->high_gm_size, type->fence,
++			     type->weight,
++			     vgpu_edid_str(type->resolution));
+ 	}
+ 
+ 	gvt->num_types = i;
+
+
+
+
