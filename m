@@ -2,116 +2,194 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40860C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80377C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18BC62072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586795945;
-	bh=OoRhd3H2mZNy2v3zODygeRhXiEbly9vr7r5aIwvM+HE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jQRFfflMPnf+cdAqYqBHVMubnSBNmLJ8Ay78TtlbQ7D3ugZHyvVFQFew9HkOK/pcb
-	 wH+K/2Y5INPjtc3qhteFWB3Y9H94Sa6TdpdqbdRPNuJOaPS9Cckj7+gOj2WFkKW5oN
-	 w+qmpY34Sgqw3N3CPLxQojLT/b8yV0McukbmQDXw=
+	by mail.kernel.org (Postfix) with ESMTP id 61196206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731683AbgDMQjD (ORCPT
+        id S1731692AbgDMQkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34310 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 12:40:06 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49126 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731652AbgDMQjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:39:02 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949BE206DA;
-        Mon, 13 Apr 2020 16:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586795941;
-        bh=OoRhd3H2mZNy2v3zODygeRhXiEbly9vr7r5aIwvM+HE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zk8qzDU1IQ+8S+QvQhWMs74W6bhVLWxEUeR2CNxxy+o5BAY9TXg6p7nbw1gPyZ+6w
-         xoplIxSndGoIZJbpZjc90Es57ebeXpWD0L8VDMsPAa7zEO/X+0e/5QidCGEyD//joL
-         WnWqsUhYh3hhMglsrc/jxpa9jrkJpEkI9WBNZfpI=
-Date:   Mon, 13 Apr 2020 12:39:00 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Phil Sutter <phil@nwl.cc>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 27/35] netfilter: nf_tables: Allow set
- back-ends to report partial overlaps on insertion
-Message-ID: <20200413163900.GO27528@sasha-vm>
-References: <20200407000058.16423-1-sashal@kernel.org>
- <20200407000058.16423-27-sashal@kernel.org>
- <20200407021848.626df832@redhat.com>
+        id S1731652AbgDMQkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:40:05 -0400
+IronPort-SDR: NhB6EfIKI84naL2x5NaiEN29u2w03uI8mNH2L1d3WeFHplCHRldPPZJpiBaGc4OI2ZmYNGDMfP
+ /1qfQRfBAP+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 09:40:04 -0700
+IronPort-SDR: m8Ssf1Dmu8TfKlxFf6pAui845/UzmNRpBBuU8aVJNe256Sjasi1EkPZnKWr5Jw5IR5bxTnd/DC
+ gO/0rX34zrgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="256228897"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 13 Apr 2020 09:40:03 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jO27u-00038L-Fa; Tue, 14 Apr 2020 00:40:02 +0800
+Date:   Tue, 14 Apr 2020 00:39:55 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ 2fa9a3cf3055db07a4835eb7bd48c648cb17ac26
+Message-ID: <5e9495db.jOQHmU5FIQjN1zAg%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200407021848.626df832@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 02:18:48AM +0200, Stefano Brivio wrote:
->Hi Sasha,
->
->On Mon,  6 Apr 2020 20:00:49 -0400
->Sasha Levin <sashal@kernel.org> wrote:
->
->> From: Pablo Neira Ayuso <pablo@netfilter.org>
->>
->> [ Upstream commit 8c2d45b2b65ca1f215244be1c600236e83f9815f ]
->
->This patch, together with 28/35 and 29/35 in this series, and all the
->equivalent patches for 5.4 and 4.19, that is:
->	[PATCH AUTOSEL 5.5 27/35] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
->	[PATCH AUTOSEL 5.5 28/35] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
->	[PATCH AUTOSEL 5.5 29/35] netfilter: nft_set_rbtree: Detect partial overlaps on insertion
->	[PATCH AUTOSEL 5.4 24/32] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
->	[PATCH AUTOSEL 5.4 25/32] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
->	[PATCH AUTOSEL 5.4 26/32] netfilter: nft_set_rbtree: Detect partial overlaps on insertion
->	[PATCH AUTOSEL 4.19 08/13] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
->	[PATCH AUTOSEL 4.19 09/13] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
->	[PATCH AUTOSEL 4.19 10/13] netfilter: nft_set_rbtree: Detect partial overlaps on insertion
->
->should only be backported together with nf.git commit
->	72239f2795fa ("netfilter: nft_set_rbtree: Drop spurious condition for overlap detection on insertion")
->
->as they would otherwise introduce a regression. In general, those changes
->are not really relevant before 5.6, as nft_set_pipapo wasn't there and the
->main purpose here is to make the nft_set_rbtree back-end consistent with it:
->they also prevent a malfunction in nft_set_rbtree itself, but nothing that
->would be triggered using 'nft' alone, and no memory badnesses or critical
->issues whatsoever. So it's also safe to drop them, in my opinion.
->
->Also patches for 4.14 and 4.9:
->	[PATCH AUTOSEL 4.14 6/9] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
->	[PATCH AUTOSEL 4.9 3/5] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
->
->can safely be dropped, because there are no set back-ends there, without
->the following patches, that use this way of reporting a partial overlap.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
+branch HEAD: 2fa9a3cf3055db07a4835eb7bd48c648cb17ac26  x86/smpboot: Remove the last ICPU() macro
 
-I've just dropped them all as 72239f2795fa ("netfilter: nft_set_rbtree:
-Drop spurious condition for overlap detection on insertion") didn't make
-it into Linus's tree yet.
+elapsed time: 481m
 
->I'm used to not Cc: stable on networking patches (Dave's net.git),
->but I guess I should instead if they go through nf.git (Pablo's tree),
->right?
+configs tested: 127
+configs skipped: 71
 
-Yup, this confusion has caused for quite a few netfilter fixes to not
-land in -stable. If it goes through Pablo's tree (and unless he intructs
-otherwise), you should Cc stable.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-Thanks,
-Sasha
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+sparc                            allyesconfig
+arm                           sunxi_defconfig
+parisc                generic-32bit_defconfig
+openrisc                 simple_smp_defconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200413
+x86_64               randconfig-a002-20200413
+x86_64               randconfig-a003-20200413
+i386                 randconfig-a001-20200413
+i386                 randconfig-a002-20200413
+i386                 randconfig-a003-20200413
+c6x                  randconfig-a001-20200413
+h8300                randconfig-a001-20200413
+microblaze           randconfig-a001-20200413
+nios2                randconfig-a001-20200413
+sparc64              randconfig-a001-20200413
+csky                 randconfig-a001-20200413
+openrisc             randconfig-a001-20200413
+s390                 randconfig-a001-20200413
+sh                   randconfig-a001-20200413
+xtensa               randconfig-a001-20200413
+x86_64               randconfig-b001-20200413
+x86_64               randconfig-b002-20200413
+x86_64               randconfig-b003-20200413
+i386                 randconfig-b001-20200413
+i386                 randconfig-b002-20200413
+i386                 randconfig-b003-20200413
+x86_64               randconfig-c001-20200413
+x86_64               randconfig-c002-20200413
+x86_64               randconfig-c003-20200413
+i386                 randconfig-c001-20200413
+i386                 randconfig-c002-20200413
+i386                 randconfig-c003-20200413
+x86_64               randconfig-d001-20200413
+x86_64               randconfig-d002-20200413
+x86_64               randconfig-d003-20200413
+i386                 randconfig-d001-20200413
+i386                 randconfig-d002-20200413
+i386                 randconfig-d003-20200413
+x86_64               randconfig-e001-20200413
+x86_64               randconfig-e002-20200413
+x86_64               randconfig-e003-20200413
+i386                 randconfig-e001-20200413
+i386                 randconfig-e002-20200413
+i386                 randconfig-e003-20200413
+x86_64               randconfig-f001-20200413
+x86_64               randconfig-f002-20200413
+x86_64               randconfig-f003-20200413
+i386                 randconfig-f001-20200413
+i386                 randconfig-f002-20200413
+i386                 randconfig-f003-20200413
+x86_64               randconfig-g001-20200413
+x86_64               randconfig-g002-20200413
+x86_64               randconfig-g003-20200413
+i386                 randconfig-g001-20200413
+i386                 randconfig-g002-20200413
+i386                 randconfig-g003-20200413
+x86_64               randconfig-h001-20200413
+x86_64               randconfig-h002-20200413
+x86_64               randconfig-h003-20200413
+i386                 randconfig-h001-20200413
+i386                 randconfig-h002-20200413
+i386                 randconfig-h003-20200413
+arc                  randconfig-a001-20200413
+arm                  randconfig-a001-20200413
+arm64                randconfig-a001-20200413
+ia64                 randconfig-a001-20200413
+powerpc              randconfig-a001-20200413
+sparc                randconfig-a001-20200413
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
