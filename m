@@ -2,131 +2,115 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEEBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B915FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9F320678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEBE20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 09:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgDMJAJ (ORCPT
+        id S1728444AbgDMIfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 05:00:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58241 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgDMJAH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 05:00:07 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1jNuwj-00027A-Av
-        for linux-kernel@vger.kernel.org; Mon, 13 Apr 2020 09:00:01 +0000
-Received: by mail-wr1-f71.google.com with SMTP id o10so6359261wrj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:00:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dqaVgDuR+jsoqCcuhbWmbCJxWXz5zIXCT9Qm1oMFDEg=;
-        b=C6dZx3D7Enxto7WhH7tlYp6wPP4nz0IMozQFIy0ZNN7YIZM1s4d4CCdzyTxh9BfSOY
-         1YyEuJjiX/wGbhABg8AUevr/KNr1C4pZ7DJ9qveQW3sM72WT79FTeBgtWVK81q25EJnT
-         v89ZAffc2jqAFCvXNZp2hCCqO45o8lbUFS53qqWCaPGHCmO4IAjv2HpP15tSiZtxbI4q
-         nGuCoUQxEjajPw4B/jgtkxHhAepExZ14KMPoYFn0afIWh1Ks6FKaouseTookhJylK1xU
-         80aqdMU1vYR5SfSWXOqlMXzmOknvl2aWu38V2jNmxgMpQElzJVxLoOutsjzbrwDQmK5v
-         kEFw==
-X-Gm-Message-State: AGi0Pua+D1vgudSkbjWHMniqI/qol+EZOXK6R7NPBcGBhmeYpq7iLCfb
-        SCEEHjR6W5Ivi72/LNyZMa48GhoPUggLWtNOUpVKuvaerQY2ZShIGGzWQkTxzxJZvkMJ7lBuoaQ
-        w4GYVAQ5ScScHWwxKkStEwS75ifxxYcr0uE0cAuzDbA==
-X-Received: by 2002:a05:600c:29c2:: with SMTP id s2mr6231405wmd.111.1586768400904;
-        Mon, 13 Apr 2020 02:00:00 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI6ZEAMCe4PeQmXuzneBQEL00VI+kt+86GcGd2t8+RrOemXQ9+gOPyd/IPCHDxWNN6beyUQRA==
-X-Received: by 2002:a05:600c:29c2:: with SMTP id s2mr6231381wmd.111.1586768400509;
-        Mon, 13 Apr 2020 02:00:00 -0700 (PDT)
-Received: from localhost (host123-127-dynamic.36-79-r.retail.telecomitalia.it. [79.36.127.123])
-        by smtp.gmail.com with ESMTPSA id m15sm13477488wmc.35.2020.04.13.01.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 02:00:00 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 10:59:58 +0200
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Anchal Agarwal <anchalag@amazon.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: swap: introduce fixed-size readahead policy
-Message-ID: <20200413085958.GA777469@xps-13>
-References: <20200412150449.GA740985@xps-13>
- <87d08c89fl.fsf@yhuang-dev.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d08c89fl.fsf@yhuang-dev.intel.com>
+        Mon, 13 Apr 2020 04:35:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60863 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727795AbgDMIez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 04:34:55 -0400
+IronPort-SDR: odkCGTvyB8UjCzKWLrUJ3FfJP/p13xW+1OfF8VR58J2MkpPqiPebo3DuBHQMofM3IQmDbyAuUo
+ lr63i/9XxwIg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 01:34:55 -0700
+IronPort-SDR: XkPBaEPk3nYKkijQE0zTcybK4lHwfULNgyRdgi64MnHpbewtkjOe0HJmutO6/sflQDAWZZzaHC
+ qF1yJLGFfZAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="252813717"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by orsmga003.jf.intel.com with ESMTP; 13 Apr 2020 01:34:52 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: bdw-rt5650: remove 3-channel capture support
+Date:   Mon, 13 Apr 2020 16:28:53 +0800
+Message-Id: <1586766533-18557-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 09:24:14AM +0800, Huang, Ying wrote:
-> Andrea Righi <andrea.righi@canonical.com> writes:
-> 
-> > Introduce a new fixed-size swap-in readahead policy that can be selected
-> > at run-time.
-> >
-> > The global swap-in readahead policy takes in account the previous access
-> > patterns, using a scaling heuristic to determine the optimal readahead
-> > chunk dynamically.
-> >
-> > This works pretty well in most cases, but like any heuristic there are
-> > specific cases when this approach is not ideal, for example the swapoff
-> > scenario.
-> >
-> > During swapoff we just want to load back into memory all the swapped-out
-> > pages and for this specific use case a fixed-size readahead is more
-> > efficient.
-> >
-> > This patch introduces a new sysfs interface
-> > (/sys/kernel/mm/swap/swap_ra_policy) that can be set as following:
-> >
-> >  - 0: current scaling swap-in readahead policy (default)
-> >  - 1: fixed-size readahead policy (size is determined by
-> >       vm.page-cluster)
-> >
-> > The specific use case this patch is addressing is to improve swapoff
-> > performance when a VM has been hibernated, resumed and all memory needs
-> > to be forced back to RAM by disabling swap (see the test case below).
-> 
-> I don't know whether the use case is important or not.  Usually the
-> performance of swapoff doesn't matter.  Maybe you can provide some
-> information on this.
+Implement a constrain to exclude 3-channel capture since only 2 and 4
+channel capture are supported on the platform.
 
-In general yes, I agree, swapoff performance is not that important.
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+---
+ sound/soc/intel/boards/bdw-rt5650.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-This particular optimization has been tested a lot in the Ubuntu AWS
-kernel and it seems to speed up consistently the resume of hibernated
-EC2 instances (see also [1]).
+diff --git a/sound/soc/intel/boards/bdw-rt5650.c b/sound/soc/intel/boards/bdw-rt5650.c
+index af2f502..eedbdad 100644
+--- a/sound/soc/intel/boards/bdw-rt5650.c
++++ b/sound/soc/intel/boards/bdw-rt5650.c
+@@ -83,6 +83,36 @@ static struct snd_soc_jack_pin mic_jack_pin = {
+ 	.mask	= SND_JACK_MICROPHONE,
+ };
+ 
++static const unsigned int channels[] = {
++	2, 4,
++};
++
++static const struct snd_pcm_hw_constraint_list constraints_channels = {
++	.count = ARRAY_SIZE(channels),
++	.list = channels,
++	.mask = 0,
++};
++
++static int bdw_fe_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++
++	/*
++	 * On this platform for PCM device we support,
++	 * 2 or 4 channel capture
++	 */
++	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
++		snd_pcm_hw_constraint_list(runtime, 0,
++					   SNDRV_PCM_HW_PARAM_CHANNELS,
++					   &constraints_channels);
++
++	return 0;
++}
++
++static const struct snd_soc_ops bdw_rt5650_fe_ops = {
++	.startup = bdw_fe_startup,
++};
++
+ static int broadwell_ssp0_fixup(struct snd_soc_pcm_runtime *rtd,
+ 			struct snd_pcm_hw_params *params)
+ {
+@@ -234,6 +264,7 @@ static struct snd_soc_dai_link bdw_rt5650_dais[] = {
+ 		.name = "System PCM",
+ 		.stream_name = "System Playback",
+ 		.dynamic = 1,
++		.ops = &bdw_rt5650_fe_ops,
+ #if !IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
+ 		.init = bdw_rt5650_rtd_init,
+ #endif
+-- 
+2.7.4
 
-So we were considering to upstream this, if we find a way to make it
-more suitable for mainline inclusion.
-
-[1] https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html
-
-> 
-> Even if it's important, I don't think we really need to add another ABI.
-> You can just optimize the swapoff performance inside kernel.  And we may
-> not even need to add a new policy, just use cluster readahead and
-> increase swapin_readahead_hits in swapoff if cluster readahead is used.
-
-OK, instead of adding a new ABI I can make this optimization directly in
-the kernel, so that when swapoff runs it can automatically use the
-fixed-size cluster readahead and continue using the default readahead
-for everything else.
-
-I'll play a bit with this and will send a new patch.
-
-Thanks!
--Andrea
