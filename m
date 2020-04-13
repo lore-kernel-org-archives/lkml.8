@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463AFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BC3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248B520731
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8DC20731
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkKPLLGn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubMoQe/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387548AbgDMSBo (ORCPT
+        id S2387556AbgDMSBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44086 "EHLO
+        Mon, 13 Apr 2020 14:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387535AbgDMSBk (ORCPT
+        by vger.kernel.org with ESMTP id S2387542AbgDMSBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:01:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6792EC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:40 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o81so4525530wmo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:40 -0700 (PDT)
+        Mon, 13 Apr 2020 14:01:42 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59421C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:41 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so6774303wrq.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D5Z8dE6ImcAXCyeDIiVasuREmY3KTQoR9IpkKMh44/4=;
-        b=LkKPLLGnKbN6uNj8eGVWgc58SBnatJbKP+wJAlc3m98nOdSKl2ouCtfNLXlAtkth12
-         GFkXHBlZt8QmbmV+JxT8w4Kif9hmFtGAFZ0k0GvZ/EjEYKbXJcw/p5K2hVODx9321Vhw
-         RjMjMvcdrq0TEnUc+3UvDsF6v3vQWcTTK3eNM/6VKyuK3dRM6MceGY7YDy/kJCjlholR
-         TuaqoDN6aSgUa/t8yTm5rMKdJHdbN6xbFMNi4C6l2u+/iP43DYWvCDetXVk6Pz29/arU
-         krMsHVHEAEaXp/jVCpipG/nu603a428AlmHK8sQiZ4PAKjhA9PWlQcHT8HExUW8e8psS
-         vBeQ==
+        bh=oFzTWhcRCR5eyAjpAIHdWF4cXdPQYj4ClKz3tMRVpzg=;
+        b=ubMoQe/5WSJeHwx3UpJa1Mtt81fxLIXsxRkMHb8dBbGrt/rR4TfvT4oTPYOXc51Drx
+         RkyYS//7/mexHk+rA3Tzpw3w5SJpH3wLxkPJP2TGuOtlLnmmHKIiykPiCDaZY7IffzNM
+         j+NKAS3DVil6UgjAWVb3I38iXqsomo39z4HOk0VOTx7MsrEIu0hCUBFH7Ot2ugN0eHRV
+         ZbGZH5PFMX8UVeW7KbIiOtpeh0KCobADfgB1zQ3WYNrhPF5FOS50fj04ocg+bGtkPiof
+         YbnLb5Msqix7IKHFxWuiY6clvLfkEficis4v0shkoK2eSrvj1wBHIPZqcWE8R6tPpIAh
+         O8hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D5Z8dE6ImcAXCyeDIiVasuREmY3KTQoR9IpkKMh44/4=;
-        b=ENl0HCztfjwpR5ACfvd7vxPAyEmHKK6UcJNq2PDGthTTlTPJawimyqGLTPFeVE46zs
-         6fVkKY2sS0ppC8GpyHu9oWXNIknaW65Pdqb5c/67zXRYDT2+UxuyRUdnobWrhS0qLWg/
-         RVq1x33W0bXQVPfGlGViMb5anNHfxdEoIwWZAA3jCPQlgEx3H/KAiArwbW23tpaFVYXx
-         M9rtLha5j83DhNYZt1/7eVyM23VYuahWP7Z+fn39pJvp3n6NyIUYQJnqA4X7OrXRztt/
-         zowWmS6ZBqrEbKP4WeXNDWDLS1eLaeXuLI2sZ3tejBLtzDrRP+KmykeXb4966pjPcxff
-         arUQ==
-X-Gm-Message-State: AGi0PubQsDIRdX9f9bFPeYrOptXUBHbRrXHrsBm3ON29iJ2Czo2jPVzp
-        jZzZAoqAJbe9rnH+wX3LOGI=
-X-Google-Smtp-Source: APiQypJHyeTWGfUue3wbfzPGKb804c1ZjjAg1iFK5H3NhowtMKoC5CFnuvNJYZmxrslpuL3de8EmKA==
-X-Received: by 2002:a1c:4409:: with SMTP id r9mr20365172wma.165.1586800899152;
-        Mon, 13 Apr 2020 11:01:39 -0700 (PDT)
+        bh=oFzTWhcRCR5eyAjpAIHdWF4cXdPQYj4ClKz3tMRVpzg=;
+        b=HfSeyBnLqlFisHyTixjBCqlY5fS/JLKg0AhqH/jiEtDYU4KtK3+k1r5UCtWXd7ufHp
+         96U1RTOW/F79TVaExGb0hBk+601fmLhP3wNLwT2h0VC18flaj+fcX3FFfBDQQSOy5TBY
+         /Ej9m5bxtTFMsie+owokZcPCkdcBs77gE/Q2scuaWah6YvqN/2a4rARG+na7pLFmU6Eo
+         g0KmMjfwTA1emsnITDeLDNyoSQrJCz1gqGeOvHiiTiBVkBHrXHsGi+SnEJolo1roSA2I
+         6i7ks/CBsQUpjG7EXdVSL+Iumza4hd2ASALGj0orMyot6TIkr1kHs5Q/0+MaKEp+c8ai
+         Q0OQ==
+X-Gm-Message-State: AGi0PuZ41cSkttwhe9cpE7L5k4JGR0xgDOdsbMrQTbNnsk06k5pHut3I
+        18HuA0LNp1H0Sq2F1F6BWdw=
+X-Google-Smtp-Source: APiQypJFUfq9aZ17IeqNWqfsZUzSUieOZY1CTUKO7tYEePEY+8fTp0B1QWN0CbLQ/2XrrAhP7rcn9A==
+X-Received: by 2002:adf:cd12:: with SMTP id w18mr19420215wrm.311.1586800900161;
+        Mon, 13 Apr 2020 11:01:40 -0700 (PDT)
 Received: from localhost.localdomain (dslb-092-073-054-241.092.073.pools.vodafone-ip.de. [92.73.54.241])
-        by smtp.gmail.com with ESMTPSA id u3sm6476181wrt.93.2020.04.13.11.01.38
+        by smtp.gmail.com with ESMTPSA id u3sm6476181wrt.93.2020.04.13.11.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 11:01:38 -0700 (PDT)
+        Mon, 13 Apr 2020 11:01:39 -0700 (PDT)
 From:   Michael Straube <straube.linux@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 1/3] staging: rtl8188eu: rename define to upper case
-Date:   Mon, 13 Apr 2020 19:59:55 +0200
-Message-Id: <20200413175957.30165-2-straube.linux@gmail.com>
+Subject: [PATCH 2/3] staging: rtl8188eu: cleanup long line in fw.c
+Date:   Mon, 13 Apr 2020 19:59:56 +0200
+Message-Id: <20200413175957.30165-3-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200413175957.30165-1-straube.linux@gmail.com>
 References: <20200413175957.30165-1-straube.linux@gmail.com>
@@ -78,50 +78,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename 'FWDL_ChkSum_rpt' to 'FWDL_CHKSUM_RPT' as defines are normaly
-named all upper case. Also clears a camel case checkpatch warning.
+Add line break to avoid line length over 80 characters.
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/hal/fw.c                | 4 ++--
- drivers/staging/rtl8188eu/include/rtl8188e_spec.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8188eu/hal/fw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/staging/rtl8188eu/hal/fw.c b/drivers/staging/rtl8188eu/hal/fw.c
-index 486ee4bd4744..dbf7883f9ed7 100644
+index dbf7883f9ed7..432e6bea5ea1 100644
 --- a/drivers/staging/rtl8188eu/hal/fw.c
 +++ b/drivers/staging/rtl8188eu/hal/fw.c
-@@ -111,7 +111,7 @@ static int _rtl88e_fw_free_to_go(struct adapter *adapt)
- 
- 	do {
- 		value32 = usb_read32(adapt, REG_MCUFWDL);
--		if (value32 & FWDL_ChkSum_rpt)
-+		if (value32 & FWDL_CHKSUM_RPT)
- 			break;
- 	} while (counter++ < POLLING_READY_TIMEOUT_COUNT);
- 
-@@ -192,7 +192,7 @@ int rtl88eu_download_fw(struct adapter *adapt)
+@@ -192,7 +192,8 @@ int rtl88eu_download_fw(struct adapter *adapt)
  		rtl88e_firmware_selfreset(adapt);
  	}
  	_rtl88e_enable_fw_download(adapt, true);
--	usb_write8(adapt, REG_MCUFWDL, usb_read8(adapt, REG_MCUFWDL) | FWDL_ChkSum_rpt);
-+	usb_write8(adapt, REG_MCUFWDL, usb_read8(adapt, REG_MCUFWDL) | FWDL_CHKSUM_RPT);
+-	usb_write8(adapt, REG_MCUFWDL, usb_read8(adapt, REG_MCUFWDL) | FWDL_CHKSUM_RPT);
++	usb_write8(adapt, REG_MCUFWDL,
++		   usb_read8(adapt, REG_MCUFWDL) | FWDL_CHKSUM_RPT);
  	_rtl88e_write_fw(adapt, download_data, download_size);
  	_rtl88e_enable_fw_download(adapt, false);
  
-diff --git a/drivers/staging/rtl8188eu/include/rtl8188e_spec.h b/drivers/staging/rtl8188eu/include/rtl8188e_spec.h
-index dd943c831d91..be30c9434a29 100644
---- a/drivers/staging/rtl8188eu/include/rtl8188e_spec.h
-+++ b/drivers/staging/rtl8188eu/include/rtl8188e_spec.h
-@@ -817,7 +817,7 @@ So the following defines for 92C is not entire!!!!!!
- /* 2 MCUFWDL */
- #define MCUFWDL_EN			BIT(0)
- #define MCUFWDL_RDY			BIT(1)
--#define FWDL_ChkSum_rpt			BIT(2)
-+#define FWDL_CHKSUM_RPT			BIT(2)
- #define MACINI_RDY			BIT(3)
- #define BBINI_RDY			BIT(4)
- #define RFINI_RDY			BIT(5)
 -- 
 2.26.0
 
