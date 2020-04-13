@@ -2,75 +2,174 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4513C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15125C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 842D72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586782599;
-	bh=18DKhHBYMozZ6+lW7jqDESjmUuzWD027T7nLZuXSulA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l1k7PVQzbF614n+BBvqaUGtAiwkI4bXZ5SAqrkHGIWFuuTxPteKkZ9XkAnMK4IVj0
-	 9qeqaBN8JLGPSAEkrwaRMiCjXZH8rN4+4Bfr/8PjHtHd9BetWRF4ErS3FMhoZdpqzf
-	 cRFniLZnx/4e2ZpAdfg/ncDEEmw9dzWnpxr4Is0k=
+	by mail.kernel.org (Postfix) with ESMTP id DA8A52073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ToBrGW3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729645AbgDMM4i (ORCPT
+        id S1729657AbgDMM5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729574AbgDMM4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:56:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 13 Apr 2020 08:57:23 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38800 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728109AbgDMM5W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 08:57:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586782640;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=q2HkCug22wl+zkMkI5u3X+VGoJlmCsOhM366wAT+DK8=;
+        b=ToBrGW3j3ixA3LMNUngrDZ9+wbl0PBIhlYg2QiLXuyApI7J2dWRYQuU2a950fD+7KNzm9I
+        tvHqDis9Vm6mmSA1npARleLuk+ygvx3zJNtrN4N6wfsuDAFu/hU1rYTfv06oL9XsjGWoiJ
+        waPwWd28BKJ7VcrEgU2LIeDCCKmWC20=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-355-QWnzKfJHNmuYSBJfu7VIAQ-1; Mon, 13 Apr 2020 08:57:17 -0400
+X-MC-Unique: QWnzKfJHNmuYSBJfu7VIAQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905562073E;
-        Mon, 13 Apr 2020 12:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586782596;
-        bh=18DKhHBYMozZ6+lW7jqDESjmUuzWD027T7nLZuXSulA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tTmxOG7cTpjaO4DRNXaaDdmdKQtm89+iOD+zLf1aCkTwZxOxH8gXDbS9iRfXk01dy
-         UycFw0/GDO0TPtsqoYBFlhTgMhP4V8FzXpviTcCUfPm4ZGHFbzN16V3AdWFhT4UAh6
-         W1JCrSLvHOdfJwTdjnFYdEPjFvZb7faavh4D2alI=
-Date:   Mon, 13 Apr 2020 14:56:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v3 1/2] staging: vt6656: Use define instead of magic
- number for tx_rate
-Message-ID: <20200413125633.GB3127208@kroah.com>
-References: <20200407163915.7491-1-oscar.carter@gmx.com>
- <20200407163915.7491-2-oscar.carter@gmx.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74A4C1005509;
+        Mon, 13 Apr 2020 12:57:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4FB7A11D2C4;
+        Mon, 13 Apr 2020 12:57:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix DATA Tx to disable nofrag for UDP on AF_INET6
+ socket
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 13 Apr 2020 13:57:14 +0100
+Message-ID: <158678263441.2860393.4171676680352045929.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407163915.7491-2-oscar.carter@gmx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 06:39:14PM +0200, Oscar Carter wrote:
-> Use the define RATE_11M present in the file "device.h" instead of the
-> magic number 3. So the code is more clear.
-> 
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/staging/vt6656/baseband.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Fix the DATA packet transmission to disable nofrag for UDPv4 on an AF_INET6
+socket as well as UDPv6 when trying to transmit fragmentably.
 
-This patch did not apply to my tree, please rebase and resend.
+Without this, packets filled to the normal size used by the kernel AFS
+client of 1412 bytes be rejected by udp_sendmsg() with EMSGSIZE
+immediately.  The ->sk_error_report() notification hook is called, but
+rxrpc doesn't generate a trace for it.
 
-thanks,
+This is a temporary fix; a more permanent solution needs to involve
+changing the size of the packets being filled in accordance with the MTU,
+which isn't currently done in AF_RXRPC.  The reason for not doing so was
+that, barring the last packet in an rx jumbo packet, jumbos can only be
+assembled out of 1412-byte packets - and the plan was to construct jumbos
+on the fly at transmission time.
 
-greg k-h
+Also, there's no point turning on IPV6_MTU_DISCOVER, since IPv6 has to
+engage in this anyway since fragmentation is only done by the sender.  We
+can then condense the switch-statement in rxrpc_send_data_packet().
+
+Fixes: 75b54cb57ca3 ("rxrpc: Add IPv6 support")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ net/rxrpc/local_object.c |    9 ---------
+ net/rxrpc/output.c       |   44 ++++++++++++--------------------------------
+ 2 files changed, 12 insertions(+), 41 deletions(-)
+
+diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+index a6c1349e965d..01135e54d95d 100644
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -165,15 +165,6 @@ static int rxrpc_open_socket(struct rxrpc_local *local, struct net *net)
+ 			goto error;
+ 		}
+ 
+-		/* we want to set the don't fragment bit */
+-		opt = IPV6_PMTUDISC_DO;
+-		ret = kernel_setsockopt(local->socket, SOL_IPV6, IPV6_MTU_DISCOVER,
+-					(char *) &opt, sizeof(opt));
+-		if (ret < 0) {
+-			_debug("setsockopt failed");
+-			goto error;
+-		}
+-
+ 		/* Fall through and set IPv4 options too otherwise we don't get
+ 		 * errors from IPv4 packets sent through the IPv6 socket.
+ 		 */
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index bad3d2420344..90e263c6aa69 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -474,41 +474,21 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
+ 	skb->tstamp = ktime_get_real();
+ 
+ 	switch (conn->params.local->srx.transport.family) {
++	case AF_INET6:
+ 	case AF_INET:
+ 		opt = IP_PMTUDISC_DONT;
+-		ret = kernel_setsockopt(conn->params.local->socket,
+-					SOL_IP, IP_MTU_DISCOVER,
+-					(char *)&opt, sizeof(opt));
+-		if (ret == 0) {
+-			ret = kernel_sendmsg(conn->params.local->socket, &msg,
+-					     iov, 2, len);
+-			conn->params.peer->last_tx_at = ktime_get_seconds();
+-
+-			opt = IP_PMTUDISC_DO;
+-			kernel_setsockopt(conn->params.local->socket, SOL_IP,
+-					  IP_MTU_DISCOVER,
+-					  (char *)&opt, sizeof(opt));
+-		}
+-		break;
+-
+-#ifdef CONFIG_AF_RXRPC_IPV6
+-	case AF_INET6:
+-		opt = IPV6_PMTUDISC_DONT;
+-		ret = kernel_setsockopt(conn->params.local->socket,
+-					SOL_IPV6, IPV6_MTU_DISCOVER,
+-					(char *)&opt, sizeof(opt));
+-		if (ret == 0) {
+-			ret = kernel_sendmsg(conn->params.local->socket, &msg,
+-					     iov, 2, len);
+-			conn->params.peer->last_tx_at = ktime_get_seconds();
+-
+-			opt = IPV6_PMTUDISC_DO;
+-			kernel_setsockopt(conn->params.local->socket,
+-					  SOL_IPV6, IPV6_MTU_DISCOVER,
+-					  (char *)&opt, sizeof(opt));
+-		}
++		kernel_setsockopt(conn->params.local->socket,
++				  SOL_IP, IP_MTU_DISCOVER,
++				  (char *)&opt, sizeof(opt));
++		ret = kernel_sendmsg(conn->params.local->socket, &msg,
++				     iov, 2, len);
++		conn->params.peer->last_tx_at = ktime_get_seconds();
++
++		opt = IP_PMTUDISC_DO;
++		kernel_setsockopt(conn->params.local->socket,
++				  SOL_IP, IP_MTU_DISCOVER,
++				  (char *)&opt, sizeof(opt));
+ 		break;
+-#endif
+ 
+ 	default:
+ 		BUG();
+
+
