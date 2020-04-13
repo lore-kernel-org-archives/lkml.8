@@ -2,117 +2,81 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97A6C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7483CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8112072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586794487;
-	bh=I6EHlbscrcmXYTiKJFDDkY/yKiNbibAtfCLXIQN3Mag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1cBhBKc7BgZVz/C1eLjVH0IAeileRiPGg3HXiJ6fcy5QZZvr3j8owB3oWzhNqDgnB
-	 5vDSNugte8vK7C/Gwahw68+noWMsTQGkM5GpC/+SsxE/y7BaS33FML8jliHbG7QEe1
-	 vYX3Fex/BknqN0SjSE2mnmstaurlZpLV4bRAXitU=
+	by mail.kernel.org (Postfix) with ESMTP id 4713F20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:14:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WzR+R+R3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbgDMQOq (ORCPT
+        id S1731381AbgDMQOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbgDMQOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:14:45 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248C52072C;
-        Mon, 13 Apr 2020 16:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586794484;
-        bh=I6EHlbscrcmXYTiKJFDDkY/yKiNbibAtfCLXIQN3Mag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p8kt6Dz2dJE/X7OU1kzm6ZZp69UqLLhwJ+IBatdE32wRictLUBHXuozbmA2S3zt1E
-         hGx26ObMjgLKwEDXhs24O+YCll8qr2PsJ9vY8yMkwfbbwYmvFaFuHY/DLN2Bi0YPDe
-         5tM1Ahwv8WhS7YdZDHjJdcHGV6iJvQ+moEpKMoDc=
-Date:   Mon, 13 Apr 2020 17:14:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alexandru.tachici@analog.com>
-Subject: Re: [PATCH v3 2/2] iio: adc: ad7192: move ad7192_of_match table
- closer to the end of the file
-Message-ID: <20200413171441.13794dd9@archlinux>
-In-Reply-To: <20200413082044.81101-2-alexandru.ardelean@analog.com>
-References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
-        <20200413082044.81101-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 12:14:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42980 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731324AbgDMQOx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:14:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=3Ns4lMw5YQR9EKErAPG8tmaa2b+isBUf0B4fwtlYwFU=; b=WzR+R+R3s/LUj2oSupUIwJbMRz
+        8HCzqLqjtoRhaAM9TwuTR3+GdHmHgekZWUIhThRoPtbfvhdjEx6WIbKomtZ1otM5n3FFI5XMXb7Vu
+        Ar6fWdHCYaHutNF6BTLLJTdfbHxJcxLi4l/+S31TttnAOt2i6hLcHPI1ER6ruJ14vnXYN42NdfIvj
+        J/AhW4IUkl/ufZ2Bqks+z5XqnmmBQph2QdkB3QlkH7zDERLp+4XsWZO99jQ3Zowf/KLrSo87PElVZ
+        lyIbS1ed0np2kYohpHkpjzDPBYApgJmuqf2zOy1fReccIM5QFDGqeoHrBtSIGChw7STmnqs+W5VNC
+        Rn6495dw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jO1jL-00029B-Fr; Mon, 13 Apr 2020 16:14:39 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH TRIVIAL] printk: fix a typo
+Message-ID: <15022308-a15d-7843-4d5b-d72a58efe99c@infradead.org>
+Date:   Mon, 13 Apr 2020 09:14:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 11:20:44 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+From: Randy Dunlap <rdunlap@infradead.org>
 
-> The change is more cosmetic. There is no need to reference this table in
-> the probe function since 'of_device_get_match_data' is used, which obtains
-> this information from the driver object.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-I'm obviously not going to take this one as a fix.  It's a reasonable patch
-so feel free to remind me of it's existence once the fix has worked its
-way around to be in my togreg/testing branch.
+Fix typo/spello.
 
-Thanks,
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jiri Kosina <trivial@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+---
+ kernel/printk/printk_safe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7192.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-> index 7e8662c5cb0e..cef61f962e60 100644
-> --- a/drivers/iio/adc/ad7192.c
-> +++ b/drivers/iio/adc/ad7192.c
-> @@ -908,15 +908,6 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id ad7192_of_match[] = {
-> -	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-> -	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-> -	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-> -	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, ad7192_of_match);
-> -
->  static int ad7192_probe(struct spi_device *spi)
->  {
->  	struct ad7192_state *st;
-> @@ -1050,6 +1041,15 @@ static int ad7192_remove(struct spi_device *spi)
->  	return 0;
->  }
->  
-> +static const struct of_device_id ad7192_of_match[] = {
-> +	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-> +	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-> +	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-> +	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7192_of_match);
-> +
->  static struct spi_driver ad7192_driver = {
->  	.driver = {
->  		.name	= "ad7192",
+--- linux-next-20200413.orig/kernel/printk/printk_safe.c
++++ linux-next-20200413/kernel/printk/printk_safe.c
+@@ -20,7 +20,7 @@
+  * is later flushed into the main ring buffer via IRQ work.
+  *
+  * The alternative implementation is chosen transparently
+- * by examinig current printk() context mask stored in @printk_context
++ * by examining current printk() context mask stored in @printk_context
+  * per-CPU variable.
+  *
+  * The implementation allows to flush the strings also from another CPU.
 
