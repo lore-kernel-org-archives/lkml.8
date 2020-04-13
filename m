@@ -2,189 +2,162 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1A5C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A3E2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587052063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhljM/45"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="jPTarGOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbgDMRBj (ORCPT
+        id S1732335AbgDMRBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50526 "EHLO
+        Mon, 13 Apr 2020 13:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732295AbgDMRBd (ORCPT
+        by vger.kernel.org with ESMTP id S1732285AbgDMRBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:01:33 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74ABC0A3BDC;
-        Mon, 13 Apr 2020 10:01:32 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id i10so10844446wrv.10;
-        Mon, 13 Apr 2020 10:01:32 -0700 (PDT)
+        Mon, 13 Apr 2020 13:01:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37111C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:01:23 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a81so10643800wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:01:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=Y+OjZtirFhjkKohAUaG6BdVWbAOuDBo2mD5OAId8HZs=;
-        b=bhljM/45ZDJuZwpwJOb8QMjCZbnOZWPwXXJxlZtz0k8J78lyk63TMhqsI2IwWSibjY
-         RID2Cm5+ZEN13Xg4k+c30cv4cJAtDvJacnIbjdsjzoNB0ZZ2O9lrbtipsk2xP7mNwmdr
-         CMPnkCStQX4m84ySBmtfT9w2f9sA6d8L8pQFdfZ4CoihS06PKjWsQ4NO30P/boCyZa6T
-         jrcw3BJ6mIc9KSEjPrtgpzdk91dpL/AWRXRegYPqD3i7TmEX+W6u8bAHhCRcQ3zgfEwF
-         ClsJ9kncLd3QpUgx6qTFNScUmHL4unzU8Q1i/+BMwG1CWVhYoqL0T9Ls7vs1DJnYbJt5
-         xqLQ==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
+        b=jPTarGOLBHICzFk/SWQUkgD3hCg8XcoDG7CXapZcDsRzSzijrqOD5k+F4T12xMaXyT
+         qy3afrMlLzxdyUYDQD/VFUeJMY2vJM2FTJsF41V6LjKtYLUAGwWz+Dw5k35Jg8El7kjV
+         oU4O7AnoWuRySOg/5UWGOjBJt6Z1eyKHu9iPB1RsBO+LoZ4Wf4XU7m4SpzwS12daXbNc
+         uKitNPeGTVXI4iYSDyweG/hu7Zd/ijYe7VOdapbt43UJaQQ1Rj5C8VJUpIKWxPNPe3dS
+         R9LkPX1l7cup7CDxcynh6qxvwLYesIfX632SKaVRI3CRV3eiQvMsNsigSIoejQ41TSVw
+         qYNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=Y+OjZtirFhjkKohAUaG6BdVWbAOuDBo2mD5OAId8HZs=;
-        b=r47w7rR5h+H12sL16oLcZDA/Du3DrtvcnyBeVAjWFDQX+74PLtgqRN0SU7R8iWe2+A
-         1dvwoonW26RcQADuQieKJg5Q8M8q1WD89iI1/3EBYm899Tg40KDSjEvSw9a4aoHpvrng
-         /1tgTRXaobHCDkcMuie/EU1gLXgEZG5mtQU5DO8l2ByVaJO+deXiZOxjPXICXFGFTUSE
-         fJ6CXvnhxxuTXJ76GsVurN1o3JmgBjuBWwo0N1i5tp3cCbD89BbRj2ubHuo8z2Wvks9r
-         dZgp7DVCasKGNfkJna8tgoY3w3Kmh3nlEsjsTLReS7u8axeON+yvz2DcKBLbVZqfuiR8
-         EWaw==
-X-Gm-Message-State: AGi0PuaUUN44Q4H+HucioJyGJUhp4WfRLCe+uvvbcvLYE1b1NSKXSwIw
-        dW46mIq1eIw5sLG0QN+Eojw=
-X-Google-Smtp-Source: APiQypI9T8YXRsMySBlE238yvwAkH42wDN8DfS1TphylQPTaiG+dN9P9IJvuuprZXh4MbcrBMzk9Yw==
-X-Received: by 2002:a5d:4dcb:: with SMTP id f11mr8423368wru.174.1586797291380;
-        Mon, 13 Apr 2020 10:01:31 -0700 (PDT)
-Received: from [192.168.43.75] ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id t2sm8633601wmt.15.2020.04.13.10.01.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 10:01:30 -0700 (PDT)
-Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and latency
- target handling
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Tejun Heo <tj@kernel.org>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org, newella@fb.com,
-        josef@toxicpanda.com, ming.lei@redhat.com, bvanassche@acm.org
-References: <20200413162758.97252-1-tj@kernel.org>
- <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
-Date:   Mon, 13 Apr 2020 20:00:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
+        b=euFk34656qBTIUzGP/oGlJ1yjnfQoQHx/GRvCA5Xgs4HcgW8s+UC3PYLg4qzDepV9A
+         1DMegz4RJ3rrmJpNjwO1OP5WC0vqZ8IgWJQsvjVo9LpIx6sTSvcZdP6UzowPO+8rH3Vv
+         TQK1t6r0wOMyJJjUBV/rc6M8GIRpOhGRP6+kBjgdoeYNL7uT+NCbFdisbygrESF6Ykhn
+         xrdOxXMYMql7FhBFZUY2WAOtHwJnW9L43+ma0F1gdqzB7CIz5+T+5bjdc9/lQPF6rL38
+         iTmYgrS3/a5eO72NNHikGIN4afQ1BNLZ/DMROgRfxtTKs3Z9di0zCYjR5+nVhpnN3BwW
+         mg5A==
+X-Gm-Message-State: AGi0PuZ81HgxQPse0KxJ7xp+ByD6XdZIT48sLLCXaygwf6VWVT8p+H5H
+        ry+uE2lN66l8Fq+uaFk4tmp6pg==
+X-Google-Smtp-Source: APiQypJ3/fefwpYozAGXpApn99Y34/0sqtBcP3vpsYtKnQrt+DmUza+fQ0CSr/nrIVqQOXBCqD3zSw==
+X-Received: by 2002:a1c:bc05:: with SMTP id m5mr9645067wmf.143.1586797281510;
+        Mon, 13 Apr 2020 10:01:21 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:1f1b:192:29fe:7bf:41fe:904d])
+        by smtp.googlemail.com with ESMTPSA id q187sm15443268wma.41.2020.04.13.10.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 10:01:21 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
+Date:   Mon, 13 Apr 2020 19:01:06 +0200
+Message-Id: <20200413170107.246509-2-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200413170107.246509-1-robert.marko@sartura.hr>
+References: <20200413170107.246509-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
-In-Reply-To: <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ZESNvDEwJ4gUs6e0UsPpowCHJz6ut96Qf"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ZESNvDEwJ4gUs6e0UsPpowCHJz6ut96Qf
-Content-Type: multipart/mixed; boundary="YJcycZrC01yeR1rFUGN2cbIOj36u3pt4d";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Tejun Heo <tj@kernel.org>, axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@fb.com, cgroups@vger.kernel.org, newella@fb.com,
- josef@toxicpanda.com, ming.lei@redhat.com, bvanassche@acm.org
-Message-ID: <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
-Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and latency
- target handling
-References: <20200413162758.97252-1-tj@kernel.org>
- <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
-In-Reply-To: <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
+This patch adds the binding document for the IPQ40xx MDIO driver.
 
---YJcycZrC01yeR1rFUGN2cbIOj36u3pt4d
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+ .../bindings/net/qcom,ipq40xx-mdio.yaml       | 62 +++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
 
-On 13/04/2020 19:56, Pavel Begunkov wrote:
-> On 13/04/2020 19:27, Tejun Heo wrote:
->> Changes from v1[1]
->>
->> * Dropped 0002-block-add-request-io_data_len.patch and updated to use
->>   rq->stats_sectors instead as suggested by Pavel Begunkov.
->=20
-> rq->stats_sectors is set only when there is QUEUE_FLAG_STATS, see
-> blk_mq_start_request(). I don't see blk-iocost requiring it. Did I miss=
- something?
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+new file mode 100644
+index 000000000000..3e2ccf417fb6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
++
++maintainers:
++  - Robert Marko <robert.marko@sartura.hr>
++
++allOf:
++  - $ref: "mdio.yaml#"
++
++properties:
++  compatible:
++    const: qcom,ipq40xx-mdio
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    mdio@90000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      compatible = "qcom,ipq40xx-mdio";
++      reg = <0x90000 0x64>;
++      status = "disabled";
++
++      ethphy0: ethernet-phy@0 {
++        reg = <0>;
++      };
++
++      ethphy1: ethernet-phy@1 {
++        reg = <1>;
++      };
++
++      ethphy2: ethernet-phy@2 {
++        reg = <2>;
++      };
++
++      ethphy3: ethernet-phy@3 {
++        reg = <3>;
++      };
++
++      ethphy4: ethernet-phy@4 {
++        reg = <4>;
++      };
++    };
+-- 
+2.26.0
 
-And there is no reason to not initialise it unconditionally.
-
---=20
-Pavel Begunkov
-
-
---YJcycZrC01yeR1rFUGN2cbIOj36u3pt4d--
-
---ZESNvDEwJ4gUs6e0UsPpowCHJz6ut96Qf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl6Umq0ACgkQWt5b1Glr
-+6U03A/+I2I+IhvRJKZaVJ/TYjRLBm1UKE5ljXXgHE/tb96RkjvEh1NlKCGhNKn1
-Sd/8fIT0QJW23aZVFUYPwVAYUKkzbmyhUX9bE2nYjq2A7OckDshVBvrKpjzVAH1w
-8SBzWFKysTSAPdyGLN2V3/cRn8ioBAGTpZd57WQJs8668WYGKWgxovbrc/s/mkWx
-jF9e8PN5ZYg24clRLMK+5T0Z3w5K2VwNitmCiGXzj8K8sxPNz/v6a6p/cpSNKfZ4
-6eo+oOhg8o9wGRMiZtA2H9fE2wrY7xcg2sF8vLkvKq6pVz6yI29wk+FbLvQuYJYc
-Uhjy0USJV2Mp4ErgLzGD2iZIicPgCQUZoTm5Jgqyp4NWJUoOAquULy1pSm8hYdiX
-JOuDcKuo+7S/PMSDUwZiwUYAJfPScy/OxOrYiCiE5letmpty5JV1J79bZ32XGVyA
-/dVFVHrTPz1sCAS1F/RMAsERwsa7uXg1DUPelQifAr1wGJ81bQMfrtGbCR4/QU2P
-VsyuhDadwS22FmMX4eJKdsCLkAUOX8hhPj2TpDVgYrpB2O4i+hnruPp8oGcHeGsG
-2zeMHq5Ld9Ma5rTXlXhUNANsHGRONkg0lWUEF5CJ5/ViwEbfCZ9Tqu3fKBv6sJ7t
-NjrTqzZp5B4AdBb0AejSDIkmq4c9Y7tj102TsDs2vVFehf4p99w=
-=39Mc
------END PGP SIGNATURE-----
-
---ZESNvDEwJ4gUs6e0UsPpowCHJz6ut96Qf--
