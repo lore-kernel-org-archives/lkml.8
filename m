@@ -2,398 +2,313 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE51C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC624C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D95420692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586797208;
-	bh=ocGzwyhvt/PYPOB6+zxPTBWiQ899GAZEAY8iTUvNIUs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NrkKmDoITEjC3iVXyaiBKmJtocJ8vJ+K3YvAPairNL1duaXAaLhX3/iEOyMOZ5QAH
-	 rXij1zYTymMCjHvK1adEpHooffmI2JdmZ3PEz+jw2WKgkOtMbZZtqmP4HASZiNSGhZ
-	 v29F3EMsHZRtaFAyZhwzDqtmVgv0Q4V3QjjA80mQ=
+	by mail.kernel.org (Postfix) with ESMTP id C82AB20692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Kpa31S9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbgDMRAH (ORCPT
+        id S1732301AbgDMRB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:00:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732122AbgDMRAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:00:05 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F95F2063A;
-        Mon, 13 Apr 2020 17:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586797204;
-        bh=ocGzwyhvt/PYPOB6+zxPTBWiQ899GAZEAY8iTUvNIUs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bkW+EpneMfX+D9Fq74tsKvBc78hHopXaLraz2OzLalkawmS5DI/6HD6SbW2OYPnDh
-         FIuAI9QbsUfix589HVlHAulQ1glRXMUbG3bqg+pZMNZ661s5+e+B/g4c4k42pcOdNc
-         uERlxUqGbIItvHB+RblBOmESFU8ajXH0dMXm5q/8=
-Date:   Mon, 13 Apr 2020 17:59:59 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, xxm@rock-chips.com,
-        kever.yang@rock-chips.com
-Subject: Re: [PATCH v3] iio: adc: rockchip_saradc: Add support iio buffers
-Message-ID: <20200413175959.7766b9c8@archlinux>
-In-Reply-To: <4304017.Osc3njyXrW@diego>
-References: <20200412224251.2919182-1-heiko@sntech.de>
-        <20200413174434.55b2941a@archlinux>
-        <4304017.Osc3njyXrW@diego>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 13:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732280AbgDMRBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:01:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537A2C008748
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:01:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id i10so10843556wrv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ifz7eEgQDkI/yAEt03RoeGqs19nYSssxU5j/gJ4Dim0=;
+        b=Kpa31S9WV4DB2epJ0brmlqCYF1LhiH7z0L6PGh4Wbzcd03Fn0R+4GpBmxvFEB7UwNs
+         tfXfQdPF8/Hp/4af5lAokIt68Wyxat3WatIWk7ZEitiTrGuHw2acegBAEv0i/7Hn0iuy
+         ZSPISg9Pl1NZZW2DtFYy5nSyOoczsqC5qAUIGoV9LT7y7SwQGQZ5a4RcFT1bcdGDEYKv
+         7CH50QYVjnEq1z3Mvr4EV4bIV4wAY6Btp5ypPFZETulZ0qzAG6e0LAgVC6tKR3VCE58z
+         Y9E0wIaZm1/uVvZIw3Nc8wtYDlya9c8AWTu7VRTCXRgJRDBptbDHNrPZtl608d5u+QJY
+         2vwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ifz7eEgQDkI/yAEt03RoeGqs19nYSssxU5j/gJ4Dim0=;
+        b=jEsgAdrukZwMv7MJmkEEquFCPIjvKLRyKQpUKR9U5ck6Jg0TbjIydwudvivIEyqutH
+         weF5VuIHTmjAC9svGeMIihLMeJgF4j74xwvd4rv8sGTv8FnBnj1AyimZdll1pXBU6jrO
+         B8ByV+onWllqioXmKZLTENk74AA0mBYggToLYk5tCdMP6GZQq3OLVsi1iYCDWwFu0MxU
+         6EHA2ZYWi8kkHnPMoCQPnusAW9hrDaZWJGqxGxahf9tBk8tmtjERSg+sHzV07q8DSST0
+         d6iRv7GYWaeu6FVG/IDY2FMayEJUUm4TxTSYwdtyumSBra6G9Jtm3/4nRB9X+9gEZ0V+
+         MYFw==
+X-Gm-Message-State: AGi0PuaQD8kDmzYtqxayZUosL1CUTv2w9UGhB6u5yCDjGgyGxg2m3QpU
+        Srhwtp/hwvmJatcz29+alPkxuw==
+X-Google-Smtp-Source: APiQypI5L7HxfafpOR4GRvpAW8MC8kqY/R8iWGtx4F0odEFkYwngaQANZQgPqx5hNnsILB/TjEYY0w==
+X-Received: by 2002:adf:e3ca:: with SMTP id k10mr2020584wrm.53.1586797278826;
+        Mon, 13 Apr 2020 10:01:18 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:1f1b:192:29fe:7bf:41fe:904d])
+        by smtp.googlemail.com with ESMTPSA id q187sm15443268wma.41.2020.04.13.10.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 10:01:18 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Date:   Mon, 13 Apr 2020 19:01:05 +0200
+Message-Id: <20200413170107.246509-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 18:55:12 +0200
-Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+This patch adds the driver for the MDIO interface
+inside of Qualcomm IPQ40xx series SoC-s.
 
-> Hi Jonathan,
->=20
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+ drivers/net/phy/Kconfig        |   7 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq40xx.c | 180 +++++++++++++++++++++++++++++++++
+ 3 files changed, 188 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq40xx.c
 
-Hi Heiko,
-
-> > > +/* buffer elements are u16, timestamp needs to be 8-byte aligned */
-> > > +#define SARADC_BUFFER_NUM_U16	ALIGN(SARADC_MAX_CHANNELS, 4) =20
-> > I may be going crazy but I think that will get you the 'start' of the
-> > timestamp, not the length including it.
-> >=20
-> > We should be seeing 24 bytes here =3D 12 u16s.  Sanity check the value.
-> >=20
-> > Running through the stack of defines.
-> > #define ALIGN(x, a)		__ALIGN_KERNEL((x), (a))
-> > #define __ALIGN_KERNEL(x, a)		__ALIGN_KERNEL_MASK(x, (typeof(x))(a) - 1)
-> > #define __ALIGN_KERNEL_MASK(x, mask)	(((x) + (mask)) & ~(mask))
-> >=20
-> > ALIGN(6, 4) =3D=3D __ALIGN_KERNEL(6, 4)
-> >             =3D=3D __ALIGN_KERNEL_MASK(6, 3)
-> >             =3D=3D (((6 + 3) & ~3)=20
-> > which is 9 with the bottom two bits masked or b1001 & b1100 =3D 8 not 12
-> >=20
-> > So I think you are looking for
-> > ALIGN(SARADC_MAX_CHANNELS + sizeof(u64) / sizeof(u16), 4)
-> > which will be ((10 + 3) & ~3) b1101 & b1100 =3D 12 =20
->=20
-> hmm, getting the start of the timestamp was actually what I intended ;-)
-> The dln2-adc driver did that fancy struct definition for its data. which
-> I stole, see the part from blow:
-
-Crossed emails. I realised I was being an idiot but had already clicked sen=
-d :)
-
->=20
-> > > +	struct {
-> > > +		u16 values[SARADC_BUFFER_NUM_U16];
-> > > +		int64_t timestamp;
-> > > +	} data; =20
->=20
-> So SARADC_BUFFER_NUM really is meant to only contain the
-> number of actual buffer data - I guess I should explain that out better
-> in the comment. Because defining this separate makes this so much
-> more readable when we're not trying to implicitly add the timestamp
-> space.
->=20
-> And a size_of(data) for that struct then returned nicely these 24 bytes
-> in my tests.
->=20
->=20
-> > > =20
-> > >  struct rockchip_saradc_data {
-> > > -	int				num_bits;
-> > >  	const struct iio_chan_spec	*channels;
-> > >  	int				num_channels;
-> > >  	unsigned long			clk_rate;
-> > > @@ -49,8 +56,37 @@ struct rockchip_saradc {
-> > >  	struct reset_control	*reset;
-> > >  	const struct rockchip_saradc_data *data;
-> > >  	u16			last_val;
-> > > +	const struct iio_chan_spec *last_chan;
-> > >  };
-> > > =20
-> > > +static void rockchip_saradc_power_down(struct rockchip_saradc *info)
-> > > +{
-> > > +	/* Clear irq & power down adc */
-> > > +	writel_relaxed(0, info->regs + SARADC_CTRL);
-> > > +}
-> > > +
-> > > +static int rockchip_saradc_conversion(struct rockchip_saradc *info,
-> > > +				   struct iio_chan_spec const *chan)
-> > > +{
-> > > +	reinit_completion(&info->completion);
-> > > +
-> > > +	/* 8 clock periods as delay between power up and start cmd */
-> > > +	writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
-> > > +
-> > > +	info->last_chan =3D chan;
-> > > +
-> > > +	/* Select the channel to be used and trigger conversion */
-> > > +	writel(SARADC_CTRL_POWER_CTRL
-> > > +			| (chan->channel & SARADC_CTRL_CHN_MASK)
-> > > +			| SARADC_CTRL_IRQ_ENABLE,
-> > > +		   info->regs + SARADC_CTRL);
-> > > +
-> > > +	if (!wait_for_completion_timeout(&info->completion, SARADC_TIMEOUT))
-> > > +		return -ETIMEDOUT;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
-> > >  				    struct iio_chan_spec const *chan,
-> > >  				    int *val, int *val2, long mask)
-> > > @@ -62,24 +98,12 @@ static int rockchip_saradc_read_raw(struct iio_de=
-v *indio_dev,
-> > >  	case IIO_CHAN_INFO_RAW:
-> > >  		mutex_lock(&indio_dev->mlock);
-> > > =20
-> > > -		reinit_completion(&info->completion);
-> > > -
-> > > -		/* 8 clock periods as delay between power up and start cmd */
-> > > -		writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
-> > > -
-> > > -		/* Select the channel to be used and trigger conversion */
-> > > -		writel(SARADC_CTRL_POWER_CTRL
-> > > -				| (chan->channel & SARADC_CTRL_CHN_MASK)
-> > > -				| SARADC_CTRL_IRQ_ENABLE,
-> > > -		       info->regs + SARADC_CTRL);
-> > > -
-> > > -		if (!wait_for_completion_timeout(&info->completion,
-> > > -						 SARADC_TIMEOUT)) {
-> > > -			writel_relaxed(0, info->regs + SARADC_CTRL);
-> > > +		ret =3D rockchip_saradc_conversion(info, chan);
-> > > +		if (ret) {
-> > > +			rockchip_saradc_power_down(info);
-> > >  			mutex_unlock(&indio_dev->mlock);
-> > > -			return -ETIMEDOUT;
-> > > +			return ret;
-> > >  		}
-> > > -
-> > >  		*val =3D info->last_val;
-> > >  		mutex_unlock(&indio_dev->mlock);
-> > >  		return IIO_VAL_INT;
-> > > @@ -91,7 +115,7 @@ static int rockchip_saradc_read_raw(struct iio_dev=
- *indio_dev,
-> > >  		}
-> > > =20
-> > >  		*val =3D ret / 1000;
-> > > -		*val2 =3D info->data->num_bits;
-> > > +		*val2 =3D chan->scan_type.realbits;
-> > >  		return IIO_VAL_FRACTIONAL_LOG2;
-> > >  	default:
-> > >  		return -EINVAL;
-> > > @@ -104,10 +128,9 @@ static irqreturn_t rockchip_saradc_isr(int irq, =
-void *dev_id)
-> > > =20
-> > >  	/* Read value */
-> > >  	info->last_val =3D readl_relaxed(info->regs + SARADC_DATA);
-> > > -	info->last_val &=3D GENMASK(info->data->num_bits - 1, 0);
-> > > +	info->last_val &=3D GENMASK(info->last_chan->scan_type.realbits - 1=
-, 0);
-> > > =20
-> > > -	/* Clear irq & power down adc */
-> > > -	writel_relaxed(0, info->regs + SARADC_CTRL);
-> > > +	rockchip_saradc_power_down(info);
-> > > =20
-> > >  	complete(&info->completion);
-> > > =20
-> > > @@ -118,51 +141,55 @@ static const struct iio_info rockchip_saradc_ii=
-o_info =3D {
-> > >  	.read_raw =3D rockchip_saradc_read_raw,
-> > >  };
-> > > =20
-> > > -#define ADC_CHANNEL(_index, _id) {				\
-> > > +#define ADC_CHANNEL(_index, _id, _res) {			\
-> > >  	.type =3D IIO_VOLTAGE,					\
-> > >  	.indexed =3D 1,						\
-> > >  	.channel =3D _index,					\
-> > >  	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),		\
-> > >  	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE),	\
-> > >  	.datasheet_name =3D _id,					\
-> > > +	.scan_index =3D _index,					\
-> > > +	.scan_type =3D {						\
-> > > +		.sign =3D 'u',					\
-> > > +		.realbits =3D _res,				\
-> > > +		.storagebits =3D 16,				\
-> > > +		.endianness =3D IIO_LE,				\
-> > > +	},							\
-> > >  }
-> > > =20
-> > >  static const struct iio_chan_spec rockchip_saradc_iio_channels[] =3D=
- {
-> > > -	ADC_CHANNEL(0, "adc0"),
-> > > -	ADC_CHANNEL(1, "adc1"),
-> > > -	ADC_CHANNEL(2, "adc2"),
-> > > +	ADC_CHANNEL(0, "adc0", 10),
-> > > +	ADC_CHANNEL(1, "adc1", 10),
-> > > +	ADC_CHANNEL(2, "adc2", 10),
-> > >  };
-> > > =20
-> > >  static const struct rockchip_saradc_data saradc_data =3D {
-> > > -	.num_bits =3D 10,
-> > >  	.channels =3D rockchip_saradc_iio_channels,
-> > >  	.num_channels =3D ARRAY_SIZE(rockchip_saradc_iio_channels),
-> > >  	.clk_rate =3D 1000000,
-> > >  };
-> > > =20
-> > >  static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels=
-[] =3D {
-> > > -	ADC_CHANNEL(0, "adc0"),
-> > > -	ADC_CHANNEL(1, "adc1"),
-> > > +	ADC_CHANNEL(0, "adc0", 12),
-> > > +	ADC_CHANNEL(1, "adc1", 12),
-> > >  };
-> > > =20
-> > >  static const struct rockchip_saradc_data rk3066_tsadc_data =3D {
-> > > -	.num_bits =3D 12,
-> > >  	.channels =3D rockchip_rk3066_tsadc_iio_channels,
-> > >  	.num_channels =3D ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
-> > >  	.clk_rate =3D 50000,
-> > >  };
-> > > =20
-> > >  static const struct iio_chan_spec rockchip_rk3399_saradc_iio_channel=
-s[] =3D {
-> > > -	ADC_CHANNEL(0, "adc0"),
-> > > -	ADC_CHANNEL(1, "adc1"),
-> > > -	ADC_CHANNEL(2, "adc2"),
-> > > -	ADC_CHANNEL(3, "adc3"),
-> > > -	ADC_CHANNEL(4, "adc4"),
-> > > -	ADC_CHANNEL(5, "adc5"),
-> > > +	ADC_CHANNEL(0, "adc0", 10),
-> > > +	ADC_CHANNEL(1, "adc1", 10),
-> > > +	ADC_CHANNEL(2, "adc2", 10),
-> > > +	ADC_CHANNEL(3, "adc3", 10),
-> > > +	ADC_CHANNEL(4, "adc4", 10),
-> > > +	ADC_CHANNEL(5, "adc5", 10),
-> > >  };
-> > > =20
-> > >  static const struct rockchip_saradc_data rk3399_saradc_data =3D {
-> > > -	.num_bits =3D 10,
-> > >  	.channels =3D rockchip_rk3399_saradc_iio_channels,
-> > >  	.num_channels =3D ARRAY_SIZE(rockchip_rk3399_saradc_iio_channels),
-> > >  	.clk_rate =3D 1000000,
-> > > @@ -193,6 +220,42 @@ static void rockchip_saradc_reset_controller(str=
-uct reset_control *reset)
-> > >  	reset_control_deassert(reset);
-> > >  }
-> > > =20
-> > > +static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
-> > > +{
-> > > +	struct iio_poll_func *pf =3D p;
-> > > +	struct iio_dev *i_dev =3D pf->indio_dev;
-> > > +	struct rockchip_saradc *info =3D iio_priv(i_dev);
-> > > +	struct {
-> > > +		u16 values[SARADC_BUFFER_NUM_U16];
-> > > +		int64_t timestamp;
-> > > +	} data;
-> > > +	int ret;
-> > > +	int i, j =3D 0;
-> > > +
-> > > +	mutex_lock(&i_dev->mlock);
-> > > +
-> > > +	for_each_set_bit(i, i_dev->active_scan_mask, i_dev->masklength) {
-> > > +		const struct iio_chan_spec *chan =3D &i_dev->channels[i];
-> > > +
-> > > +		ret =3D rockchip_saradc_conversion(info, chan);
-> > > +		if (ret) {
-> > > +			rockchip_saradc_power_down(info);
-> > > +			goto out;
-> > > +		}
-> > > +
-> > > +		data.values[j] =3D info->last_val;
-> > > +		j++;
-> > > +	}
-> > > +
-> > > +	iio_push_to_buffers_with_timestamp(i_dev, &data, iio_get_time_ns(i_=
-dev));
-> > > +out:
-> > > +	mutex_unlock(&i_dev->mlock);
-> > > +
-> > > +	iio_trigger_notify_done(i_dev->trig);
-> > > +
-> > > +	return IRQ_HANDLED;
-> > > +}
-> > > +
-> > >  static int rockchip_saradc_probe(struct platform_device *pdev)
-> > >  {
-> > >  	struct rockchip_saradc *info =3D NULL;
-> > > @@ -221,6 +284,11 @@ static int rockchip_saradc_probe(struct platform=
-_device *pdev)
-> > > =20
-> > >  	info->data =3D match->data;
-> > > =20
-> > > +	if (info->data->num_channels > SARADC_MAX_CHANNELS) {
-> > > +		dev_err(&pdev->dev, "max channels exceeded");
-> > > +		return -EINVAL; =20
-> >=20
-> > How can that happen?  Bug in the addition of a new device type?
-> > If it's just paranoia against future code, perhaps add a comment to
-> > say that. =20
->=20
-> yep that is "paranoia" for the case someone adds a fancy new 20 channel
-> saradc variant and forgets to adapt the constant.
->=20
-> I'll add a comment.
->=20
-> >  =20
-> > > +	}
-> > > +
-> > >  	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >  	info->regs =3D devm_ioremap_resource(&pdev->dev, mem);
-> > >  	if (IS_ERR(info->regs))
-> > > @@ -315,6 +383,12 @@ static int rockchip_saradc_probe(struct platform=
-_device *pdev)
-> > >  	indio_dev->channels =3D info->data->channels;
-> > >  	indio_dev->num_channels =3D info->data->num_channels;
-> > > =20
-> > > +	ret =3D devm_iio_triggered_buffer_setup(&indio_dev->dev, indio_dev,=
- NULL,
-> > > +					      rockchip_saradc_trigger_handler,
-> > > +					      NULL);
-> > > +	if (ret)
-> > > +		goto err_clk;
-> > > + =20
-> >=20
-> > Please avoid mixing an matching between device managed an unmanaged int=
-erfaces.
-> > It means the driver is not 'obviously correct' and hence harder to revi=
-ew.
-> >=20
-> > Two choices here.  Either use devm_add_action_or_reset to automatically
-> > disable each clock + regulator in the managed release path, drop all th=
-e error
-> > handling and remove (note this should be a precursor patch), or use
-> > iio_triggered_buffer_setup and manually call iio_triggered_buffer_clean=
-up
-> > in the right place in the remove function. =20
->=20
-> I'll go with the devm_* approach, less complexity is better than adding m=
-ore ;-)
->=20
->=20
-> Heiko
->=20
-> > >  	ret =3D iio_device_register(indio_dev);
-> > >  	if (ret)
-> > >  		goto err_clk; =20
-> >=20
-> >  =20
->=20
->=20
->=20
->=20
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..614d08635012 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,13 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ40XX
++	tristate "Qualcomm IPQ40xx MDIO interface"
++	depends on HAS_IOMEM && OF
++	help
++	  This driver supports the MDIO interface found in Qualcomm
++	  IPQ40xx series Soc-s.
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..c89fc187fd74 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+new file mode 100644
+index 000000000000..8068f1e6a077
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq40xx.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++
++#define MDIO_CTRL_0_REG		0x40
++#define MDIO_CTRL_1_REG		0x44
++#define MDIO_CTRL_2_REG		0x48
++#define MDIO_CTRL_3_REG		0x4c
++#define MDIO_CTRL_4_REG		0x50
++#define MDIO_CTRL_4_ACCESS_BUSY		BIT(16)
++#define MDIO_CTRL_4_ACCESS_START		BIT(8)
++#define MDIO_CTRL_4_ACCESS_CODE_READ		0
++#define MDIO_CTRL_4_ACCESS_CODE_WRITE	1
++#define CTRL_0_REG_DEFAULT_VALUE	0x150FF
++
++#define IPQ40XX_MDIO_RETRY	1000
++#define IPQ40XX_MDIO_DELAY	10
++
++struct ipq40xx_mdio_data {
++	struct mii_bus	*mii_bus;
++	void __iomem	*membase;
++	struct device	*dev;
++};
++
++static int ipq40xx_mdio_wait_busy(struct ipq40xx_mdio_data *am)
++{
++	int i;
++
++	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
++		unsigned int busy;
++
++		busy = readl(am->membase + MDIO_CTRL_4_REG) &
++			MDIO_CTRL_4_ACCESS_BUSY;
++		if (!busy)
++			return 0;
++
++		/* BUSY might take to be cleard by 15~20 times of loop */
++		udelay(IPQ40XX_MDIO_DELAY);
++	}
++
++	dev_err(am->dev, "%s: MDIO operation timed out\n", am->mii_bus->name);
++
++	return -ETIMEDOUT;
++}
++
++static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
++{
++	struct ipq40xx_mdio_data *am = bus->priv;
++	int value = 0;
++	unsigned int cmd = 0;
++
++	lockdep_assert_held(&bus->mdio_lock);
++
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	/* issue the phy address and reg */
++	writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
++
++	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
++
++	/* issue read command */
++	writel(cmd, am->membase + MDIO_CTRL_4_REG);
++
++	/* Wait read complete */
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	/* Read data */
++	value = readl(am->membase + MDIO_CTRL_3_REG);
++
++	return value;
++}
++
++static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
++							 u16 value)
++{
++	struct ipq40xx_mdio_data *am = bus->priv;
++	unsigned int cmd = 0;
++
++	lockdep_assert_held(&bus->mdio_lock);
++
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	/* issue the phy address and reg */
++	writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
++
++	/* issue write data */
++	writel(value, am->membase + MDIO_CTRL_2_REG);
++
++	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_WRITE;
++	/* issue write command */
++	writel(cmd, am->membase + MDIO_CTRL_4_REG);
++
++	/* Wait write complete */
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++static int ipq40xx_mdio_probe(struct platform_device *pdev)
++{
++	struct ipq40xx_mdio_data *am;
++	struct resource *res;
++
++	am = devm_kzalloc(&pdev->dev, sizeof(*am), GFP_KERNEL);
++	if (!am)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "no iomem resource found\n");
++		return -ENXIO;
++	}
++
++	am->membase = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(am->membase)) {
++		dev_err(&pdev->dev, "unable to ioremap registers\n");
++		return PTR_ERR(am->membase);
++	}
++
++	am->mii_bus = devm_mdiobus_alloc(&pdev->dev);
++	if (!am->mii_bus)
++		return  -ENOMEM;
++
++	writel(CTRL_0_REG_DEFAULT_VALUE, am->membase + MDIO_CTRL_0_REG);
++
++	am->mii_bus->name = "ipq40xx_mdio";
++	am->mii_bus->read = ipq40xx_mdio_read;
++	am->mii_bus->write = ipq40xx_mdio_write;
++	am->mii_bus->priv = am;
++	am->mii_bus->parent = &pdev->dev;
++	snprintf(am->mii_bus->id, MII_BUS_ID_SIZE, "%s", dev_name(&pdev->dev));
++
++	am->dev = &pdev->dev;
++	platform_set_drvdata(pdev, am);
++
++	return of_mdiobus_register(am->mii_bus, pdev->dev.of_node);
++}
++
++static int ipq40xx_mdio_remove(struct platform_device *pdev)
++{
++	struct ipq40xx_mdio_data *am = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(am->mii_bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq40xx_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq40xx-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq40xx_mdio_dt_ids);
++
++static struct platform_driver ipq40xx_mdio_driver = {
++	.probe = ipq40xx_mdio_probe,
++	.remove = ipq40xx_mdio_remove,
++	.driver = {
++		.name = "ipq40xx-mdio",
++		.of_match_table = ipq40xx_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq40xx_mdio_driver);
++
++MODULE_DESCRIPTION("IPQ40XX MDIO interface driver");
++MODULE_AUTHOR("Qualcomm Atheros");
++MODULE_LICENSE("Dual BSD/GPL");
+-- 
+2.26.0
 
