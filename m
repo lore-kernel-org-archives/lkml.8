@@ -2,131 +2,122 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FDCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DCAC2BB86
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1EC720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF45D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586811174;
+	bh=hcLUBAjHWZDbxuBDsEVoulKW3srDsvBGJUVKF0VLiFo=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=dNJGRZ7CERG0K5KQLiRXQoXGAK+6OiHwZ//XBUAxRcBR3rTMmo13RPrqacehLJRsT
+	 MLbnzoMoklV6z3ME1ILqTUT1gqLkdgPfv1ks5V1F3xiEfpkAR+5a+zhkSau5WTg2OQ
+	 qmH/fdaJW2/BUu6nFKLzZu8tidHfIrF2cWEpEhMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388601AbgDMUs4 (ORCPT
+        id S2388618AbgDMUwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:48:56 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34186 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388526AbgDMUsv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:48:51 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 60CA22A132F
-Received: by earth.universe (Postfix, from userid 1000)
-        id 7C6B13C08C7; Mon, 13 Apr 2020 22:48:47 +0200 (CEST)
-Date:   Mon, 13 Apr 2020 22:48:47 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v8 4/6] power: supply: Add support for mps mp2629 battery
- charger
-Message-ID: <20200413204847.ni7dsrn5tslrorqn@earth.universe>
-References: <20200413173656.28522-1-sravanhome@gmail.com>
- <20200413173656.28522-5-sravanhome@gmail.com>
- <CAHp75VeYFY1CW4AH+D4HAgzppMZ5J8dL8kKPYmcwsXNVGNSYjQ@mail.gmail.com>
- <6cfab0a6-c3eb-bd9b-6572-b49e3205524f@gmail.com>
+        Mon, 13 Apr 2020 16:52:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388526AbgDMUwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:52:53 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E5B20656;
+        Mon, 13 Apr 2020 20:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586811172;
+        bh=hcLUBAjHWZDbxuBDsEVoulKW3srDsvBGJUVKF0VLiFo=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=y1LSEo2YTL/bQ+YKW0FKzLXHQ4arq9jT7KRn1akCHZZNZCKW0PMRIN2dDnZaf7H4C
+         z7As1OA6GyPSxjx6oRnCsC4eIXAIRvbi8pHeeqZHs+ttJamz7R1KpjS7NHY2mIc+Gv
+         sRigipQDqDfY4cqnp2kBd1IW7UAmdtp7rihs/oDU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mr33cvt5svcy3hmn"
-Content-Disposition: inline
-In-Reply-To: <6cfab0a6-c3eb-bd9b-6572-b49e3205524f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200410185934.o4aucef2xhbradlp@ubsrv2.baikal.int>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru> <20200306132831.89B658030706@mail.baikalelectronics.ru> <20200315142207.GA8424@roeck-us.net> <20200410185934.o4aucef2xhbradlp@ubsrv2.baikal.int>
+Subject: Re: [PATCH 5/7] watchdog: dw_wdt: Support devices with asynch clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Date:   Mon, 13 Apr 2020 13:52:51 -0700
+Message-ID: <158681117129.84447.14839907555361565766@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---mr33cvt5svcy3hmn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Apr 13, 2020 at 10:28:19PM +0200, saravanan sekar wrote:
-> Hi Andy,
+Quoting Sergey Semin (2020-04-10 11:59:34)
+> Michael, Stephen, could you take a look at the issue we've got here?
 >=20
-> On 13/04/20 10:10 pm, Andy Shevchenko wrote:
-> > On Mon, Apr 13, 2020 at 8:37 PM Saravanan Sekar <sravanhome@gmail.com> =
-wrote:
-> > > The mp2629 provides switching-mode battery charge management for
-> > > single-cell Li-ion or Li-polymer battery. Driver supports the
-> > > access/control input source and battery charging parameters.
-> > ...
-> >=20
-> > > +static int mp2629_charger_probe(struct platform_device *pdev)
-> > > +{
-> > > +       irq =3D platform_get_irq(to_platform_device(pdev->dev.parent)=
-, 0);
-> > Why not to use temporary variable dev?
-> >=20
-> > This should be platform_get_irq_optional().
+> Guenter, my comment is below.
 >=20
-> Platform_get_irq in turn calls platform_get_irq_optional. It was suggested
-> by Lee and is it mandatory to change it?
+> On Sun, Mar 15, 2020 at 07:22:07AM -0700, Guenter Roeck wrote:
+> > On Fri, Mar 06, 2020 at 04:27:45PM +0300, Sergey.Semin@baikalelectronic=
+s.ru wrote:
+> > > @@ -358,10 +375,27 @@ static int dw_wdt_drv_probe(struct platform_dev=
+ice *pdev)
+> > >             goto out_disable_clk;
+> > >     }
+> > > =20
+> > > +   /*
+> > > +    * Request APB clocks if device is configured with async clocks m=
+ode.
+> > > +    * In this case both tclk and pclk clocks are supposed to be spec=
+ified.
+> > > +    * Alas we can't know for sure whether async mode was really acti=
+vated,
+> > > +    * so the pclk reference is left optional. If it it's failed to be
+> > > +    * found we consider the device configured in synchronous clocks =
+mode.
+> > > +    */
+> > > +   dw_wdt->pclk =3D devm_clk_get_optional(dev, "pclk");
+> > > +   if (IS_ERR(dw_wdt->pclk)) {
+> > > +           ret =3D PTR_ERR(dw_wdt->pclk);
+> > > +           goto out_disable_clk;
+> > > +   }
+> > > +
+> > > +   ret =3D clk_prepare_enable(dw_wdt->pclk);
+> >=20
+> > Not every implementation of clk_enable() checks for a NULL parameter.
+> > Some return an error. This can not be trusted to work on all platforms /
+> > architectures.
+>=20
+> Hm, this was unexpected twist. I've submitted not a single patch with opt=
+ional
+> clock API usage. It was first time I've got a comment like this, that the
+> API isn't cross-platform. As I see it this isn't the patch problem, but t=
+he
+> platforms/common clock bug. The platforms code must have been submitted b=
+efore
+> the optional clock API was introduced or the API hasn't been properly
+> implemented or we don't understand something.
+>=20
+> Stephen, Michael could you clarify the situation with the
+> cross-platformness of the optional clock API.
+>=20
 
-platform_get_irq is fine.
+NULL is a valid clk to return from clk_get(). And the documentation of
+clk_enable() says that "If the clock can not be enabled/disabled, this
+should return success". Given that a NULL pointer can't do much of
+anything I think any platform that returns an error in this situation is
+deviating from the documentation of the clk API.
 
-> > > +       if (irq) {
-
-But this must be
-
-if (irq > 0)
-
-or you will also try to continue with error codes.
-
-> > > +               ret =3D devm_request_irq(dev, irq, mp2629_irq_handler,
-> > > +                                IRQF_TRIGGER_RISING, "mp2629-charger=
-",
-> > > +                                charger);
-> > > +               if (ret) {
-> > > +                       dev_err(dev, "failed to request gpio IRQ\n");
-> > > +                       goto iio_fail;
-> > > +               }
-> > > +       }
-> > > +}
-
--- Sebastian
-
---mr33cvt5svcy3hmn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6U0C8ACgkQ2O7X88g7
-+pp/Ag//YmXQ4Axy8vgozTsLCfwYOWz6Cyg5LfVbnQzgc36I0X9NcH4CUT4VYJfH
-PJx/mk5BusfFIXg+fF4Q02QDwmg3iphkka9buegvGafESzimOObozq9+bmGOp7VT
-HtXrxvydNs8QXplo09gD+8tkzUJ0dbiwfCU0S5TY3c1n7xo86gejqOOTYhXLJv2G
-xYDSjUeLcX04ttyZsck6bYaK0wrDMrQmJqn1bnCDYCHYa9bytDGIIPx+NSr0mKeU
-TqqnzbH4dEx2BlhPUGUA4v7q5p4BtLVj43nc2JRE5JpKsQgnTTLwvYRkLZGOg0cP
-9w4NCqL9UZCL15TSTpok8Hfq0XXmSu0/vfPuuPpmNuAlhChkFQ2kXnypQCW9dcsz
-tGwfa92Atb1XVNNdDew85Ab2557iHzF4kHrsUipn4DFthyVSV10kLiiKc9mCTzsT
-9155zGcJWySzqwJ6b2YsTP77iYqbCEWstYewvhtNnmUbPkIMJ2XNnGtR2MBlPtbO
-gdwrQ/fioGkhivS8de/7/okczvY8iuVjG57fOsarjvly//XVOZngt4QkiEc+Xqfh
-Lw8EuiJWvLkfTLglWw6bdC6suqa6gvsNhXD493iXYUn0HTXIG0EKeEvgqvV3EyiB
-np8CQSB98e9BDmwJonJI8UmBmJw5Q2OsEKcsEX5meYzc6T0+2F0=
-=VWLZ
------END PGP SIGNATURE-----
-
---mr33cvt5svcy3hmn--
+Does any platform that uses this driver use one of these non-common clk
+framework implementations? All of this may not matter if they all use
+the CCF.
