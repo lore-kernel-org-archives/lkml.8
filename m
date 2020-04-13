@@ -2,158 +2,247 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378D4C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96646C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F07420732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uD8A8qgO"
+	by mail.kernel.org (Postfix) with ESMTP id 7727220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgDMIf5 (ORCPT
+        id S1728089AbgDMIf3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:35:57 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:47085 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgDMIfw (ORCPT
+        Mon, 13 Apr 2020 04:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:40890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729270AbgDMIK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:35:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id w12so7507682otm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 01:35:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AvGw2BENomW5mAjLN7te1eswf7XokhztvBZamCcaYj0=;
-        b=uD8A8qgO9EqAhRj5jnTHJFUY7v3Kp1X0ZbRX5+kzzkRJbOVFzZMvIiC0vrd8AEbXu6
-         j4U+LKqu1BGr1U7Iyv+gVYNLgnS1VGVayNBYCS2IHfvT2MLP6CobSya5jv/iUGy3TLgI
-         nm1wc59YKGg1s266n/VVhr39Z0sn1jSlMGTUPUvRSslX08GMWK3H9oihKMZDUGRoCDcD
-         xIAoJTdKpJInqVJYXUnt5AxEf7Yhxw6+V3EFPF7Fd1q8HNMdrOnUyEE4AQi1AgQodiaM
-         2vFiaW3n8RvkIVFYrU1b0b3Z7ncEW4wNV2ia112RomwbVmIeuZQ8f08i5g2dGbk/dqaj
-         Tb2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AvGw2BENomW5mAjLN7te1eswf7XokhztvBZamCcaYj0=;
-        b=UDh2hX9CzP6n5IIfoDBKd7M/2LjNWrGYx8xlBcADYKlpMJ5Oi9TiAOwJvclHw0DyWB
-         H0SwziWHWMgeDigfDMOtIBQzyRVYHImkBL5CuIHb433s6xxUlbO7bLxt1+2zNEIjVb0p
-         NmTSugV6a8l+xF5p5Krmrdc0QxTz6qtAMKOtanuygje6VwKkp3VQtcxCAh2jXd602nfr
-         GMLuPN9GAwkeULHX/9aZXj15n7sS42lSwh886SVZFIwGVe/zPZDBqEzfReCIkMuT+1gp
-         zlcvGMuiCmTBGmgSR0Zu0e42m0SexpXmLjQjyEv5TN5p4mcrZvERXOppBQ1itraD787b
-         Tvpw==
-X-Gm-Message-State: AGi0PubItOrbjX0Y/+MNZE0vvGGmMTJmgZS3BduqnYMprELeBE1aWsNd
-        snkWPutYlJRlq8Ha+K6emnwjw81Bl15vOxn6o1xpcg==
-X-Google-Smtp-Source: APiQypLGyU2+5UH8I4pQFfkdm4IeQucZnCldFkCGft+bJP32qprqeDoFkHg65jEskDU5xzjopyRhE7fXAcHOLPADm9w=
-X-Received: by 2002:a9d:4b84:: with SMTP id k4mr3987928otf.233.1586766950301;
- Mon, 13 Apr 2020 01:35:50 -0700 (PDT)
+        Mon, 13 Apr 2020 04:10:57 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46C1C008614;
+        Mon, 13 Apr 2020 01:05:41 -0700 (PDT)
+IronPort-SDR: ha4EJ32RX904sG6UZcb/TKC/t7FXcD/RHkwXSEvnyeAMJWvTZoQvL2VupYozyzFtfx9h+3WFrG
+ dvgxMtdZ4sEQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 01:05:41 -0700
+IronPort-SDR: Zrv3vmGuHm3eVd7+E73kIdPVJuY98wnKxI2PNWS7zhNYGZiZWxiEd7FpvamAYsWAmgUyW4j2DH
+ 9iF03aO0xusw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="331770783"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga001.jf.intel.com with ESMTP; 13 Apr 2020 01:05:40 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 13 Apr 2020 01:05:38 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 13 Apr 2020 01:05:38 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 13 Apr 2020 01:05:37 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.146]) with mapi id 14.03.0439.000;
+ Mon, 13 Apr 2020 16:05:35 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
+Subject: RE: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Topic: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Index: AQHWAEVGCz5QQWvL/U+nYnlD7MiZ7Khl/jEAgACVNICAAJ/EgIAF8c6ggAA/A4CAAMnRgIAAzpAAgAb/OoCAAMrPQIAAC1kA
+Date:   Mon, 13 Apr 2020 08:05:33 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+ <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+ <20200403112545.6c115ba3@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+ <20200407095801.648b1371@w520.home> <20200408040021.GS67127@otc-nc-03>
+ <20200408101940.3459943d@w520.home>
+ <20200413031043.GA18183@araj-mobl1.jf.intel.com> 
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <CANpmjNMR4BgfCxL9qXn0sQrJtQJbEPKxJ5_HEa2VXWi6UY4wig@mail.gmail.com>
- <AC8A5393-B817-4868-AA85-B3019A1086F9@lca.pw> <CANpmjNPqQHKUjqAzcFym5G8kHX0mjProOpGu8e4rBmuGRykAUg@mail.gmail.com>
- <C4FED226-E3DE-44AE-BBED-2B56B9F5B12F@lca.pw>
-In-Reply-To: <C4FED226-E3DE-44AE-BBED-2B56B9F5B12F@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 13 Apr 2020 10:35:38 +0200
-Message-ID: <CANpmjNPSLkiEer3xQHHxJm_4o5Em0i3bvM7TMmNO46Vzv2cwWQ@mail.gmail.com>
-Subject: Re: KCSAN + KVM = host reset
-To:     Qian Cai <cai@lca.pw>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020 at 21:57, Qian Cai <cai@lca.pw> wrote:
->
->
->
-> > On Apr 10, 2020, at 7:35 AM, Marco Elver <elver@google.com> wrote:
+> From: Tian, Kevin
+> Sent: Monday, April 13, 2020 3:55 PM
+> 
+> > From: Raj, Ashok <ashok.raj@linux.intel.com>
+> > Sent: Monday, April 13, 2020 11:11 AM
 > >
-> > On Fri, 10 Apr 2020 at 13:25, Qian Cai <cai@lca.pw> wrote:
-> >>
-> >>
-> >>
-> >>> On Apr 10, 2020, at 5:47 AM, Marco Elver <elver@google.com> wrote:
-> >>>
-> >>> That would contradict what you said about it working if KCSAN is
-> >>> "off". What kernel are you attempting to use in the VM?
+> > On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:
+> > > On Tue, 7 Apr 2020 21:00:21 -0700
+> > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> > >
+> > > > Hi Alex
+> > > >
+> > > > + Bjorn
+> > >
+> > >  + Don
+> > >
+> > > > FWIW I can't understand why PCI SIG went different ways with ATS,
+> > > > where its enumerated on PF and VF. But for PASID and PRI its only
+> > > > in PF.
+> > > >
+> > > > I'm checking with our internal SIG reps to followup on that.
+> > > >
+> > > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > > > > > Is there vendor guarantee that hidden registers will locate at the
+> > > > > > same offset between PF and VF config space?
+> > > > >
+> > > > > I'm not sure if the spec really precludes hidden registers, but the
+> > > > > fact that these registers are explicitly outside of the capability
+> > > > > chain implies they're only intended for device specific use, so I'd say
+> > > > > there are no guarantees about anything related to these registers.
+> > > >
+> > > > As you had suggested in the other thread, we could consider
+> > > > using the same offset as in PF, but even that's a better guess
+> > > > still not reliable.
+> > > >
+> > > > The other option is to maybe extend driver ops in the PF to expose
+> > > > where the offsets should be. Sort of adding the quirk in the
+> > > > implementation.
+> > > >
+> > > > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is
+> > resisting
+> > > > making VF's first class citizen, we might ask them to add some verbiage
+> > > > to suggest leave the same offsets as PF open to help emulation software.
+> > >
+> > > Even if we know where to expose these capabilities on the VF, it's not
+> > > clear to me how we can actually virtualize the capability itself.  If
+> > > the spec defines, for example, an enable bit as r/w then software that
+> > > interacts with that register expects the bit is settable.  There's no
+> > > protocol for "try to set the bit and re-read it to see if the hardware
+> > > accepted it".  Therefore a capability with a fixed enable bit
+> > > representing the state of the PF, not settable by the VF, is
+> > > disingenuous to the spec.
 > >
-> > Ah, sorry this was a typo,
-> >  s/working if KCSAN/not working if KCSAN/
+> > I think we are all in violent agreement. A lot of times the pci spec gets
+> > defined several years ahead of real products and no one remembers
+> > the justification on why they restricted things the way they did.
 > >
-> >> Well, I said set KCSAN debugfs to =E2=80=9Coff=E2=80=9D did not help, =
-i.e., it will reset the host running kvm.sh. It is the vanilla ubuntu 18.04=
- kernel in VM.
-> >>
-> >> github.com/cailca/linux-mm/blob/master/kvm.sh
+> > Maybe someone early product wasn't quite exposing these features to the
+> > VF
+> > and hence the spec is bug compatible :-)
 > >
-> > So, if you say that CONFIG_KCSAN_INTERRUPT_WATCHER=3Dn works, that
-> > contradicts it not working when KCSAN is "off". Because if KCSAN is
-> > off, it never sets up any watchpoints, and whether or not
-> > KCSAN_INTERRUPT_WATCHER is selected or not shouldn't matter. Does that
-> > make more sense?
->
-> Yes, you are right. CONFIG_KCSAN_INTERRUPT_WATCHER=3Dn does not
-> make it work. It was a mistake when I tested it because there was a stale=
- svm.o
-> leftover from the previous run, and then it will not trigger a rebuild (a=
- bug?) when
-> only modify the Makefile to remove KCSAN_SANITIZE :=3D n. Sorry for the m=
-isleading
-> information. I should be checking if svm.o was really recompiled in the f=
-irst place.
->
-> Anyway, I=E2=80=99ll send a patch to add __no_kcsan for svm_vcpu_run() be=
-cause I tried
-> to narrow down more with a kcsan_[disable|enable]_current() pair, but it =
-does NOT
-> work even by enclosing the almost whole function below until Marcro has m=
-ore ideas?
+> > >
+> > > If what we're trying to do is expose that PASID and PRI are enabled on
+> > > the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+> > > without the ability to control it is not the right approach.  Maybe we
+> >
+> > As long as the capability enable is only provided when the PF has enabled
+> > the feature. Then it seems the hardware seems to do the right thing.
+> >
+> > Assume we expose PASID/PRI only when PF has enabled it. It will be the
+> > case since the PF driver needs to exist, and IOMMU would have set the
+> > PASID/PRI/ATS on PF.
+> >
+> > If the emulation is purely spoofing the capability. Once vIOMMU driver
+> > enables PASID, the context entries for the VF are completely independent
+> > from the PF context entries.
+> >
+> > vIOMMU would enable PASID, and we just spoof the PASID capability.
+> >
+> > If vIOMMU or guest for some reason does disable_pasid(), then the
+> > vIOMMU driver can disaable PASID on the VF context entries. So the VF
+> > although the capability is blanket enabled on PF, IOMMU gaurantees the
+> > transactions are blocked.
+> >
+> >
+> > In the interim, it seems like the intent of the virtual capability
+> > can be honored via help from the IOMMU for the controlling aspect..
+> >
+> > Did i miss anything?
+> 
+> Above works for emulating the enable bit (under the assumption that
+> PF driver won't disable pasid when vf is assigned). However, there are
+> also "Execute permission enable" and "Privileged mode enable" bits in
+> PASID control registers. I don't know how those bits could be cleanly
+> emulated when the guest writes a value different from PF's...
 
-This is expected. Instrumentation is not removed if you add
-kcsan_{disable,enable}_current() (it has the same effect as a
-localized "off"). Since it seems just the instrumentation and
-associated calls before every memory access is enough, this won't
-work. The attribute __no_kcsan removes instrumentation entirely from
-the function. If the non-instrumented code should be reduced, it is
-conceivable to take the problematic portion of code and factor it into
-a function that has attribute '__no_kcsan_or_inline'.
+sent too quick. the IOMMU also includes control bits for allowing/
+blocking execute requests and supervisor requests. We can rely on 
+IOMMU to block those requests to emulate the disabled cases of
+all three control bits in the pasid cap.
 
-Thanks,
--- Marco
+Thanks
+Kevin
 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 2be5bbae3a40..e58b2d5a575c 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3286,6 +3286,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
->         svm->vmcb->save.rsp =3D vcpu->arch.regs[VCPU_REGS_RSP];
->         svm->vmcb->save.rip =3D vcpu->arch.regs[VCPU_REGS_RIP];
->
-> +       kcsan_disable_current();
->         /*
->          * A vmexit emulation is required before the vcpu can be executed
->          * again.
-> @@ -3410,6 +3411,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
->                 svm_handle_mce(svm);
->
->         mark_all_clean(svm->vmcb);
-> +       kcsan_enable_current();
->  }
->  STACK_FRAME_NON_STANDARD(svm_vcpu_run);
->
->
->
->
->
->
+> 
+> Similar problem also exists when talking about PRI emulation, e.g.
+> to enable PRI the software usually waits until the 'stopped' bit
+> is set (indicating all previously issued requests have completed). How
+> to emulate this bit accurately when one guest toggles the enable bit
+> while the PF and other VFs are actively issuing page requests through
+> the shared page request interface? from pcie spec I didn't find a way
+> to catch when all previously-issued requests from a specific VF have
+> completed. Can a conservative big-enough timeout value help here?
+> I don't know... similar puzzle also exists for emulating the 'reset'
+> control bit which is supposed to clear the pending request state for
+> the whole page request interface.
+> 
+> I feel the main problem in pcie spec is that, while they invent SR-IOV
+> to address I/O virtualization requirement (where strict isolation is
+> required), they blurred the boundary by leaving some shared resource
+> cross PF and VFs which imply sort of cooperation between PF and VF
+> drivers. On bare metal such cooperation is easy to build, by enabling/
+> disabling a capability en mass, by using the same set of setting, etc.
+> However it doesn't consider the virtualization case where a VF is
+> assigned to the guest which considers the VF as a standard PCI/PCIe
+> endpoint thus such cooperation is missing. A vendor capability could
+> help fix the gap here but making it adopted by major guest OSes will
+> take time. But honestly speaking I don't know other good alternative
+> now... :/
+> 
+> >
+> > > need new capabilities exposing these as slave features that cannot be
+> > > controlled?  We could define our own vendor capability for this, but of
+> > > course we have both the where to put it in config space issue, as well
+> > > as the issue of trying to push an ad-hoc standard.  vfio could expose
+> > > these as device features rather than emulating capabilities, but that
+> > > still leaves a big gap between vfio in the hypervisor and the driver in
+> > > the guest VM.  That might still help push the responsibility and policy
+> > > for how to expose it to the VM as a userspace problem though.
+> >
+> > I think this is a good long term solution, but if the vIOMMU implenentations
+> > can carry us for the time being, we can probably defer them unless
+> > we are stuck.
+> >
+> > >
+> > > I agree though, I don't know why the SIG would preclude implementing
+> > > per VF control of these features.  Thanks,
+> > >
+> >
+> > Cheers,
+> > Ashok
+> 
+> Thanks
+> Kevin
