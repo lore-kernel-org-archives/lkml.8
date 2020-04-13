@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF90CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF52C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899B420692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C85820692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 19:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BvE9X5S9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pCeStENd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733153AbgDMTXw (ORCPT
+        id S1733161AbgDMT0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 15:23:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
+        Mon, 13 Apr 2020 15:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727849AbgDMTXv (ORCPT
+        by vger.kernel.org with ESMTP id S1727849AbgDMT03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 15:23:51 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8BAC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:23:51 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id e16so3962995pjp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:23:51 -0700 (PDT)
+        Mon, 13 Apr 2020 15:26:29 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA07C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:26:28 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a13so4969580pfa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 12:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8lE32io1NRyqSa7MHqCZDRttxoRhAaBAKKn04pJslSA=;
-        b=BvE9X5S9Y0cIXImu51NYc31tHh4aVt0KseCDiyJkR7OZzY2JlIRDMkyDZdTNOPuC4R
-         9IYJkyCLyatQ9MCEd+g3PH5wq3a+NdnlcnQwJGnU5WCj0BtJz72G8SPSDblVjuOUBKvh
-         yhtI9Co6zz/+w4Y2ZsWWLZBcNOjxZAl0nlqk8AeM04HBptMq3I/aR+OocaBYkQ8aIM1n
-         jmagVkld4noTl+Up7eXZH2LGLT23dOn9qhWpW7udKYuYLNiClPgVQu0sh/zlvqTdjr7c
-         AkUSLYive4wNiDPW4Iix+C1+FjWDB6jiNv3afz3djTNXVT9cjCdb3G9SfKdliIBkFdtZ
-         CXhQ==
+        bh=KdK0zPwtveoXwIU/pJ0It4FhLQkN9xabxjzAbXM7HUg=;
+        b=pCeStENdG/6hj1L+u+cxwBd+lxmKze8JFGF8eG5T6Rojz3ubtHvutlqKjh1KPf6A1O
+         aVJALpWYIoX41Wh69ZxBMS5ZrlWERrkzwlEgCrDO/r+22JmIYx76G5gf1ZTL97p90L07
+         RaKonfqiZWxrjLkWbK3up26Zr9TpJVztjD7fmUypSnBONt4CK8hKMTgKAlUz4vTqWPR9
+         m1vmfM8NjyP7tp1Wr6BPswfx8rXp27YDEOmnMAHKaw2g6gy0HL1RmN/M2oftUt8BZq+N
+         xfxfpd+p8cC/w61Ukhm/QDEtNS9d35nxOgPWvBQrgI3bs8FgJwfqoHaCQNESYpmQj60s
+         LIBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8lE32io1NRyqSa7MHqCZDRttxoRhAaBAKKn04pJslSA=;
-        b=rlI3Jezwpl5SOgyRH5JLm1lto+ymmrt6sBLR7Fh/ePG4+l+/kE++3hyoJa64SyKSjc
-         4ZJ4bfZ6a3VPPapR6g3l8wNzEq1vB17fvSROV3QqFfDi/lcwbiEunVsKoZmviaa7NYoy
-         Ulo3jdt/Mx6gGAb0wI91j1djBVxzGNzRpDFm2f42t9xoPVp0ozR6Saln9UOth5Ur31f2
-         iP9OfMli+Xl7JnFaaHfWwuO7kHKP9Ff1B7NY+CcPIg59qxdvMcrdaR2ltOzd8R0W5nIX
-         gRX2egAHZSCQl5/8efTWmOvYP6a977Dh8eeIrMWymxQl3eKdVZamMwqwaZrHCevlVyZr
-         i6gQ==
-X-Gm-Message-State: AGi0Pubt/dCn4zQ7sWTthQyFNG/U9Tz27lu53eUJl2gET7JoJDkQzxrR
-        adz43Ug/LhpA2Jlr9AtAYnKHWv/ThyTdBCVVg6mk4Q==
-X-Google-Smtp-Source: APiQypKO1KUFCBfb3oR8QeV6GdNn+LL1TlznBqs1HPMQVZ+C86o3a66gINbmsxoBZH/I8gA95LPPPkmkWiOv+MWhxzc=
-X-Received: by 2002:a17:90a:266c:: with SMTP id l99mr13602789pje.186.1586805830250;
- Mon, 13 Apr 2020 12:23:50 -0700 (PDT)
+        bh=KdK0zPwtveoXwIU/pJ0It4FhLQkN9xabxjzAbXM7HUg=;
+        b=mM3gUyG0aJ4k307CgB47AsJz2pOfb9KT8v1JKIYOT8sAnZaGr4+j34qjqLztTjS/b2
+         CE5MdZ2f0nUGJYVA55+daJwajKORqdVAYEMNGC69w40OQNfdrtVI0/40AD7Zvb1wYy7e
+         TL/ntuG5fHIo0pni5yri31iZCjRh4CI+XUZ8DoWLPRokvElz4z/XAmEFIpFHuHA4J6xS
+         twDjHVUUcpAu2Bp0WRxK+ELv99DOWywYW2xv+Dv1SpZQYEaqngeOXVmMnHAs+aGdFybs
+         39Kocx3LPDpIcWiyUeMQZxe9v2guzQvgUjXABfmnNbeN3a7oYRJvYAhFcuj+R0I9bDj8
+         4JFg==
+X-Gm-Message-State: AGi0PuYKDPa66wfV5S6LvGMwM8dXHEdFQzslB7mK1XTI+LYp/EY7FvaK
+        kG5xJLE+t/JDV7BgLy4NJ+cOI7KpAl2Jon+Ml+P7CA==
+X-Google-Smtp-Source: APiQypIUhqWcYiDcyMcc+YPUUWgJ1hH3x1WwMExIHnVSN2oF/LeLDnug09prydJRjw+z6TLAVtOg78Y4PPWpvE+OoMg=
+X-Received: by 2002:a63:6546:: with SMTP id z67mr6229011pgb.10.1586805988175;
+ Mon, 13 Apr 2020 12:26:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200409232728.231527-1-caij2003@gmail.com> <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
- <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com> <20200410123301.GX25745@shell.armlinux.org.uk>
-In-Reply-To: <20200410123301.GX25745@shell.armlinux.org.uk>
+References: <20200409232728.231527-1-caij2003@gmail.com> <20200410165948.GD448831@lunn.ch>
+ <20200410183420.GE25745@shell.armlinux.org.uk>
+In-Reply-To: <20200410183420.GE25745@shell.armlinux.org.uk>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 13 Apr 2020 12:23:38 -0700
-Message-ID: <CAKwvOd=-u3grX3O4CtBayJYhv=mmsxMrRTF=AMcKMbphN5Xkgg@mail.gmail.com>
+Date:   Mon, 13 Apr 2020 12:26:16 -0700
+Message-ID: <CAKwvOd=SusRJxzKqq=tBGgjq0tdcgeA1ukK79PyMjadWB8w=Qw@mail.gmail.com>
 Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
 To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Jian Cai <caij2003@gmail.com>,
+Cc:     Andrew Lunn <andrew@lunn.ch>, Jian Cai <caij2003@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Peter Smith <Peter.Smith@arm.com>,
         Stefan Agner <stefan@agner.ch>,
@@ -81,13 +80,14 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sami Tolvanen <samitolvanen@google.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Jian Cai <jiancai@google.com>,
         Doug Anderson <armlinux@m.disordat.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Patrick Bellasi <patrick.bellasi@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Tejun Heo <tj@kernel.org>,
@@ -98,37 +98,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 5:33 AM Russell King - ARM Linux admin
+On Fri, Apr 10, 2020 at 11:34 AM Russell King - ARM Linux admin
 <linux@armlinux.org.uk> wrote:
 >
-> For older CPUs, it doesn't matter what the latest ARM ARM says, the
-> appropriate version of the ARM ARM is the one relevant for the CPU
-> architecture.  This is a mistake frequently made, and it's been pointed
-> out by Arm Ltd in the past (before ARMv6 even came on the scene) that
-> keeping older revisions is necessary if you want to be interested in
-> the older architectures.
+> On Fri, Apr 10, 2020 at 06:59:48PM +0200, Andrew Lunn wrote:
+> > On Thu, Apr 09, 2020 at 04:27:26PM -0700, Jian Cai wrote:
+> > > iwmmxt.S contains XScale instructions
+> >
+> > Dumb question....
+> >
+> > Are these Xscale instructions? My understanding is that they are an
+> > instruction set of their own, implementing something similar to IA-32
+> > MMX.
+> >
+> > Would it be more accurate to say CLANG does not support the iwmmxt
+> > instruction set?
+>
+> Yes, because the XScale core on its own (otherwise known as 80200)
+> doesn't support iWMMXT.
+>
+> It's worth pointing out that the iWMMXT instruction set uses the
+> co-processor #1 instruction space as defined by the ARMv5 ARM ARM,
+> which is also the FPA (floating point accelerator) instruction
+> space - which is the FP instruction set prior to VFP.
 
-As if it never existed *waves hands*.  Interesting.  Does ARM still
-distribute these older reference manuals? Do you keep copies of the
-older revisions?
+Reusing instruction encoding space? :-X  I'll have to look and see how
+we define cases like this in LLVM.
 
 >
-> However, there's an additional complication here: DEC's license from
-> Arm Ltd back in the days of StrongARM allowed them to make changes to
-> the architecture - that was passed over to Intel when they bought that
-> part of DEC.  Consequently, these "non-Arm vendor" cores contain
-> extensions that are not part of the ARM ARM.  iWMMXT is one such
-> example, which first appeared in the Intel PXA270 SoC (an ARMv5
-> derived CPU).
+> The LDFP and similar instructions that binutils decodes the opcodes
+> as are FPA instructions, and the LDC2 instructions are their "generic
+> co-processor" versions where there's no FPA instruction that matches
+> the op-code.
 >
-> In fact, several of the features found in later versions of the ARM
-> architecture came from DEC and Intel enhancements.
+> I'll also point out that the reason the iWMMXT code has never been
+> ported to Thumb2 is because there are no equivalents for the
+> co-processor instructions in the Thumb2 instruction set defined in
+> ARMv5.  Hence why the file has a .arm.  So, the fact the file hasn't
+> changed for a long time and hasn't been updated with "improvements"
+> such as Thumb2 kernels is because that's completely irrelevent to
+> the ISA.
 >
-> If your compiler/assembler only implements what is in the latest ARM
-> ARM, then it is not going to be suitable for these older CPUs and
-> alternate vendor "ARM compatible" CPUs.
+> It is an example of code that has become stable and mature, and
+> requires no maintanence with GNU toolchains.
 
-This is a neat piece of history, thanks for sharing.
+I agree.  I think this is something we can mark broken for our
+toolchain in Kconfig for the time being, and revisit once we have more
+resources to implement (leaving the sources as is).
+
 -- 
 Thanks,
 ~Nick Desaulniers
