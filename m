@@ -2,157 +2,117 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A373C352B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF1EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7FF20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE81206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJwMvVoX"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="juG10l2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388199AbgDMUB4 (ORCPT
+        id S2388212AbgDMUDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34542 "EHLO
+        Mon, 13 Apr 2020 16:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388135AbgDMUBz (ORCPT
+        by vger.kernel.org with ESMTP id S2388135AbgDMUDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:01:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A92C0A3BDC;
-        Mon, 13 Apr 2020 13:01:54 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d17so4963584pgo.0;
-        Mon, 13 Apr 2020 13:01:54 -0700 (PDT)
+        Mon, 13 Apr 2020 16:03:09 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08163C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:03:09 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l25so10852439qkk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J3cCNpgRJA9avR4kz32VesjN9UmFQ5b6+1OU9lUWCYU=;
-        b=PJwMvVoXHoh4ZCGjOlCpUMNzvy6UrIjQWAHhMIjj+JVy8Pu82RfBsUSKYmE/Rf2mqN
-         qhfFm/q/wzwzjvL69WZlhzM+tYdCmkg8xvV92ag8NduUlZikQ3Qo7MkcM/aGSRaZbbm1
-         PR2isRezDgLdCJC5x3+1TtkUhf0BRkive2D9kL3EzKQAx01uFitZpemacjOiiim14BMp
-         tjGWSfV4s9rj3B5jnS7OnBZUjOIzfUMOk3OakXnSLWgFL9Z3FX27RCNxf7PHl6M0iI/V
-         +yipALkcxF2pRKWEcAZJmqTu5yyFZW6mySMJYsLgaA2xL+ZKQsP3zbkU7iAKVZfeGPR2
-         Wtzw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OEtNtfUfCfknsSkfuodbs8GxJYII1GNua8MgFwL7K04=;
+        b=juG10l2QIUDc0d5n1SeOUdB0siwuJQOGCU6pnQRUaf/usairEJnMWI4NCHxVUL2frR
+         HT8Dj0G2KFCEAuDZkPEiGVv3NLV5ooo7kJcA7V4T4xV81925vc++8cQ5KHVSBI1+By+5
+         +/+66XSDZZW/XkKLCzanTlv78m+KRuVYwmVlKC0N09gqxCMtKrGm1srU2i7+Kw1dkX5x
+         DPoyq7kDqoEsqgMu8qGEr3vtIBlmiQWaBKBOz/tbp3ah+kvBa7aU6x3A1gaLlMlwJUeg
+         hUM97swfra3YIkYNCDFX0ZcS8Au+7KacD3c88l4X9gBMGqiNfPjeT92Va5NYJ5lvz0rD
+         aygw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J3cCNpgRJA9avR4kz32VesjN9UmFQ5b6+1OU9lUWCYU=;
-        b=hcbU4jkh7+TZLPMa3PISJiXHvs2MKz+L+Jx6LQl4TLE1xElOwxtMUxG4Zbgj7//yh6
-         JUSgoD4ua2G0pnPqICDNfYY+HqdjILl/9+B30CmAldq/NGP5u5aStbL1bU2O8D3nAMQ8
-         6IPr0bJhenp2N84N9IMyQxrQiYuo0HCJwgXrOnMTlSpw+k9BYECN1tJGKJeYfm95JIke
-         I56ulz215XNQ529zVcg6IxCcLlhnngUqe7Ro+OmYezynDQEVypCWT9pBESXGkR94sAvl
-         l0dP1AHc5g+c030WmEkk8dL9OxdG9/1oZ0OTZfmyGWykiK85KOa3vODjsyk3MNP3JwQD
-         GA0w==
-X-Gm-Message-State: AGi0PuZ7VqmGcNnVpF2WsXEX/bGKqIxTmfhUqMTifQUsQybPJVDUgWke
-        svoj6ABPfERd/parWL56oaKdhqbL6vGK9gfGpL4=
-X-Google-Smtp-Source: APiQypLkGIBDSBR9xdnow1niyB7RFnE2uJpuzzz/4DpzWuW9cHiK0axj6hAF/dmJp5AW88qWObxtfQMY8x9vdx7+l7M=
-X-Received: by 2002:a63:5511:: with SMTP id j17mr2845081pgb.4.1586808114381;
- Mon, 13 Apr 2020 13:01:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OEtNtfUfCfknsSkfuodbs8GxJYII1GNua8MgFwL7K04=;
+        b=eJ1QFx/jg6ln3BrBLWdwsn95d4nrXPnqC3UwZRiXhVSmcmWxzyixpGrowQJiy2xZuE
+         HHYXm7GePnuuKwFUUJmSXmO4CrB3peFMDwaFeUf1vnvZharcMxp5Xkl17c/M25UUg+Fo
+         SLtz5ESXlHCxi97Z2zizzx3SvJNGWv/NxxZH6wlnYDtgIShdaYjCuXYYgfebq3AY6Nrn
+         HFyM1BDPP+kQC1yiUzqYEmxpwlhqJIwkMFCkjMwzCa0TnyFm3w5/X+/VQlrk+Z8SWU/A
+         HtptY1L9ayHhQKJOWn0rQrYhGPmF0kRl0excZNdQqquQS9qPY84w/pxiqoaerSqNdpeY
+         B73w==
+X-Gm-Message-State: AGi0PuaY1/vXEoC87+fsp8XUapG1k2WTmyn5k85sVlJcH2uH6ztuFP2u
+        wSl+9tPpzvgcdAcrfjDdga2Iug==
+X-Google-Smtp-Source: APiQypJVwvSR1oEkK4bhCoeIIw8batoCJN92/jh4PNjnx+deBvO5XKiPj+RRAmN7IK2twvZnNWUNMA==
+X-Received: by 2002:a37:d93:: with SMTP id 141mr7293908qkn.32.1586808188246;
+        Mon, 13 Apr 2020 13:03:08 -0700 (PDT)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id x66sm9119423qka.121.2020.04.13.13.03.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 13:03:07 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 16:03:06 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 25/28] mm: remove vmalloc_user_node_flags
+Message-ID: <20200413200306.GC99267@cmpxchg.org>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-26-hch@lst.de>
+ <CAEf4BzZOC2tLrqt_Km=WQb=9xiya2e31i6K3oJuzgYQt6wp1LQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200413173656.28522-1-sravanhome@gmail.com>
-In-Reply-To: <20200413173656.28522-1-sravanhome@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 13 Apr 2020 23:01:43 +0300
-Message-ID: <CAHp75VdLPorP735K1jGSm=XphZ1P3i2YLc-zHWf-S=fWsBOyVg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] Add battery charger driver support for MP2629
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZOC2tLrqt_Km=WQb=9xiya2e31i6K3oJuzgYQt6wp1LQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 8:37 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
+On Thu, Apr 09, 2020 at 03:25:03PM -0700, Andrii Nakryiko wrote:
+> cc Johannes who suggested this API call originally
 
-When somebody gives you a tag, take care and add that tag to all
-patches where it applies (if you don't drastically change the code, it
-applies to all mentioned in the corresponding reply).
+I forgot why we did it this way - probably just cruft begetting more
+cruft. Either way, Christoph's cleanup makes this look a lot better.
 
-> changes in v8:
->  - fixed order of call in probe/remove in iio adc
->  - add ABI documentation for mp2629 power supply
->
-> changes in v7:
->  - fixed probe/remove order, managed and unmanaged call mix use in adc.
->  - Documentation dual license, i2c node with controller address
->
-> changes in v6:
->  - removed includes types.h in mfd, of_device.h in adc.
->  - fixed review comments parentheses, err check, kstrtouint
->
-> changes in v5:
->  - removed platfrom data stored in mfd and directly accessed mfd struct in child
->  - fixed spell check and capitalization in mfd and documentation
->
-> changes in v4:
->  - fixed capitalization in mfg Kconfig and documentation
->
-> changes in v3:
->  - regmap for children passed using platform data and remove mfd driver info
->    access directly from children
->
-> changes in v2:
->  - removed EXPORT_SYMBOL of register set/get helper
->  - regmap bit filed used, fixed other review comments
->
-> This patch series add support for Battery charger control driver for Monolithic
-> Power System's MP2629 chipset, includes MFD driver for ADC battery & input
-> power supply measurement and battery charger control driver.
->
-> Thanks,
-> Saravanan
->
-> Saravanan Sekar (6):
->   dt-bindings: mfd: add document bindings for mp2629
->   mfd: mp2629: Add support for mps battery charger
->   iio: adc: mp2629: Add support for mp2629 ADC driver
->   power: supply: Add support for mps mp2629 battery charger
->   power: supply: mp2629: Add impedance compenstation config
->   MAINTAINERS: Add entry for mp2629 Battery Charger driver
->
->  .../ABI/testing/sysfs-class-power-mp2629      |   8 +
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
->  MAINTAINERS                                   |   5 +
->  drivers/iio/adc/Kconfig                       |  10 +
->  drivers/iio/adc/Makefile                      |   1 +
->  drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
->  drivers/mfd/Kconfig                           |   9 +
->  drivers/mfd/Makefile                          |   2 +
->  drivers/mfd/mp2629.c                          |  86 +++
->  drivers/power/supply/Kconfig                  |  10 +
->  drivers/power/supply/Makefile                 |   1 +
->  drivers/power/supply/mp2629_charger.c         | 687 ++++++++++++++++++
->  include/linux/mfd/mp2629.h                    |  28 +
->  13 files changed, 1115 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->  create mode 100644 drivers/iio/adc/mp2629_adc.c
->  create mode 100644 drivers/mfd/mp2629.c
->  create mode 100644 drivers/power/supply/mp2629_charger.c
->  create mode 100644 include/linux/mfd/mp2629.h
->
-> --
-> 2.17.1
->
+> On Wed, Apr 8, 2020 at 5:03 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > Open code it in __bpf_map_area_alloc, which is the only caller.  Also
+> > clean up __bpf_map_area_alloc to have a single vmalloc call with
+> > slightly different flags instead of the current two different calls.
+> >
+> > For this to compile for the nommu case add a __vmalloc_node_range stub
+> > to nommu.c.
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
