@@ -6,31 +6,30 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2549C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A9C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B7D2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6687A2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YPJ7DoQI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NrwbG2DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgDMMcf (ORCPT
+        id S1729498AbgDMMcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:32:35 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38334 "EHLO
+        Mon, 13 Apr 2020 08:32:15 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38224 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgDMMcc (ORCPT
+        with ESMTP id S1728392AbgDMMcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:32:32 -0400
+        Mon, 13 Apr 2020 08:32:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1586781134; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1586781132; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hVWhGN40RSlSv5uwpog3K158+gjiBbBlgbkIIpZ+xZQ=;
-        b=YPJ7DoQISxOOPlHi9Czzn/d0KYRrVte1bRSD9EUo1tXaDntVEfroaVsTcEw1zRZo6ES3X3
-        5vzT4s3fkdUd/Vzfn0FqLV48c19ZVNzVYhTCMeQ4nxDPKgYl80X8kwHF5Db4ssRWaXEqRC
-        4tOSzgQktT/TXGd/p8vWu9KWzf1efec=
+         in-reply-to:references; bh=QlPjAfIdxHj090lbf0AL7B7989su6jjJKS5OiMvvzVo=;
+        b=NrwbG2DMnHeYDYnmBQ+HqRUSGSlIHH5XnXzPDiJSIODzVNKjXubrbXIDykEIIjbfE6HeUO
+        KQN54fBp1Br1FWhIXSqUMOQsevNi/WkNXZmfd/hNylSTL81Cn6T+mpymu0HCTYkhfOnWts
+        ho5GTCRvVdlClxVX7Bu5/SwzucQPvy4=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
@@ -38,11 +37,9 @@ To:     Ulf Hansson <ulf.hansson@linaro.org>,
 Cc:     od@zcrc.me, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/3] mmc: jz4740: Use pm_ptr() macro
-Date:   Mon, 13 Apr 2020 14:32:07 +0200
-Message-Id: <20200413123207.74552-3-paul@crapouillou.net>
-In-Reply-To: <20200413123207.74552-1-paul@crapouillou.net>
-References: <20200413123207.74552-1-paul@crapouillou.net>
+Subject: [PATCH v2 1/3] PM: introduce pm_ptr() macro
+Date:   Mon, 13 Apr 2020 14:32:05 +0200
+Message-Id: <20200413123207.74552-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,57 +47,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the newly introduced pm_ptr() macro to simplify the code.
+This macro is analogous to the infamous of_match_ptr(). If CONFIG_PM
+is enabled, this macro will resolve to its argument, otherwise to NULL.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
-    v2: Use pm_ptr() macro instead of pm_sleep_ptr()
+    v2: Remove pm_sleep_ptr() macro
 
- drivers/mmc/host/jz4740_mmc.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ include/linux/pm.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-index fbae87d1f017..2d41e7e5ec43 100644
---- a/drivers/mmc/host/jz4740_mmc.c
-+++ b/drivers/mmc/host/jz4740_mmc.c
-@@ -1099,24 +1099,18 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
- 	return 0;
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index e057d1fa2469..1c0eec06905d 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -374,6 +374,12 @@ const struct dev_pm_ops name = { \
+ 	SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
  }
  
--#ifdef CONFIG_PM_SLEEP
--
--static int jz4740_mmc_suspend(struct device *dev)
-+static int __maybe_unused jz4740_mmc_suspend(struct device *dev)
- {
- 	return pinctrl_pm_select_sleep_state(dev);
- }
- 
--static int jz4740_mmc_resume(struct device *dev)
-+static int __maybe_unused jz4740_mmc_resume(struct device *dev)
- {
- 	return pinctrl_select_default_state(dev);
- }
- 
- static SIMPLE_DEV_PM_OPS(jz4740_mmc_pm_ops, jz4740_mmc_suspend,
- 	jz4740_mmc_resume);
--#define JZ4740_MMC_PM_OPS (&jz4740_mmc_pm_ops)
--#else
--#define JZ4740_MMC_PM_OPS NULL
--#endif
- 
- static struct platform_driver jz4740_mmc_driver = {
- 	.probe = jz4740_mmc_probe,
-@@ -1124,7 +1118,7 @@ static struct platform_driver jz4740_mmc_driver = {
- 	.driver = {
- 		.name = "jz4740-mmc",
- 		.of_match_table = of_match_ptr(jz4740_mmc_of_match),
--		.pm = JZ4740_MMC_PM_OPS,
-+		.pm = pm_ptr(&jz4740_mmc_pm_ops),
- 	},
- };
- 
++#ifdef CONFIG_PM
++#define pm_ptr(_ptr) (_ptr)
++#else
++#define pm_ptr(_ptr) NULL
++#endif
++
+ /*
+  * PM_EVENT_ messages
+  *
 -- 
 2.25.1
 
