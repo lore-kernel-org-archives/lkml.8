@@ -2,187 +2,150 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F6FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463FEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3FA20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FE220731
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X/PQXIcO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yuZ5KYO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387752AbgDMSww (ORCPT
+        id S1733137AbgDMS51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:52:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23666 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733123AbgDMSwr (ORCPT
+        Mon, 13 Apr 2020 14:57:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727828AbgDMS5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:52:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586803965;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VEsVmmOO6axAzAyQkoOiM6SYAejl43B4iZY1NJSfZ0s=;
-        b=X/PQXIcOfIYPUtd4oNDcqWHc7d061cJM8MgabI4OD6ZI0VA5X1svV1Kz7i9ZE4xmdZDHed
-        Lqckcj7sm5eGgEvkSLHX1mXS/DztJFA6F28SZriblvmhaajrrogAdKlLLGWJd+1snpvbxp
-        DIjPxwbuPVor8ejf4BqkEXlxFeysxZ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-oP2NfmJ9OTKgGCR2_NkE1A-1; Mon, 13 Apr 2020 14:52:41 -0400
-X-MC-Unique: oP2NfmJ9OTKgGCR2_NkE1A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D7A5107ACCA;
-        Mon, 13 Apr 2020 18:52:40 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B36129F99A;
-        Mon, 13 Apr 2020 18:52:29 +0000 (UTC)
-Subject: Re: [PATCH 03/10] KVM: selftests: Add util to delete memory region
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Andrew Jones <drjones@redhat.com>
-References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
- <20200410231707.7128-4-sean.j.christopherson@intel.com>
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-Message-ID: <cf3c04ac-f4f2-e1f0-4fd7-c30c28dd3563@redhat.com>
-Date:   Mon, 13 Apr 2020 15:52:27 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 13 Apr 2020 14:57:24 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653DBC008748
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:57:24 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 131so7350005lfh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=nnFhaYdn8r144w8Y8HQM6rwFTDCQ2TRjM0zl6Xk6Hbs=;
+        b=yuZ5KYO8vk9sY0oppJp4fk/tUdUNLVbdp3hmeGyTprfOlJbFWhbbynnrM66UJJ56V2
+         Lc1PZ2+dFgQoAxrRphjf//X9FZmzv4LM8Qq0gkeouKl/S6KN3uZJNUvQfHfRunEJxNYj
+         v5sUTFrv8iOAHopDd+BHqDZfphZw0VeOjEIOJ1oi3RbdPdinTPvbsTowuWioIPtKUXsl
+         yD+8BlrQozryzTNEvyeWojrRr6bikU+Uk+qi86EclWtq0n5/ITyPNH2cmUaUGA8ALmX6
+         VCto1hUfqsfWu3OeJkD4ONBv+xKHCKoTyixraQrAx2RiBRvJuqfhYVEnLorg67EJuctM
+         nbxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=nnFhaYdn8r144w8Y8HQM6rwFTDCQ2TRjM0zl6Xk6Hbs=;
+        b=ucw0gkzBREmj6ScwP/xGYQOIX22QRkKGy0lbQCYm7pY3mK6T9O8v2f5VigO68wfIO8
+         o3Bzbv5Qq4N7Xl4MzGFyJKvdWhaaH4xhYRSrvOFzXoZRh4DwktU/g/qqct7y+7yhM9kr
+         Da/9GUhM3JdnTQDRH++Ppgx/Rjpsd/HE2ZK73WvCV9ujmhEImdOk64L6RChjrekPIDhp
+         XscZ++14fXefTcrhc679QeIc6DvDyRP514RD08TWfUvQnPvk5xjNiOYe2walbyTbC68Z
+         2fVnYEWvjMZbLsxDtXy8E6Od8JXB0FyanGZxsxMNYR0mzi3ZLluJFRXC7BW4yKIfF4wD
+         J1iQ==
+X-Gm-Message-State: AGi0PuZG6PGS+WZ8DEFVbmayrGJtuiF3Cje3Qfx3aJv0QyJ3QkJlEl9B
+        v3gWl2yHCbVnIUaRx68tQUymbfAr7PYgXwHdMbwatA==
+X-Google-Smtp-Source: APiQypIMkmyGlF3uCVpf3EjDwPW+WmpqbHG8XbB06TkJ1rIxipqbhKw8fK48Vz7k9u3QMh/yUAngrRulqJXAEhL6d+4=
+X-Received: by 2002:a05:6512:d1:: with SMTP id c17mr11465758lfp.167.1586804242634;
+ Mon, 13 Apr 2020 11:57:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200410231707.7128-4-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 14 Apr 2020 00:27:10 +0530
+Message-ID: <CA+G9fYsDgghO+4zMY-AF2RgUmAfjZyA+tjeg5m5F1rEgEtw5fg@mail.gmail.com>
+Subject: BUG: spinlock bad magic - lock: msm_uart_ports
+To:     linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        agross@kernel.org,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The kernel BUG reported on arm64 Dragonboard 410c (APQ 8016 SBC)
+while booting Linux mainline kernel 5.6.0
 
-On 4/10/20 8:17 PM, Sean Christopherson wrote:
-> Add a utility to delete a memory region, it will be used by x86's
-> set_memory_region_test.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   .../testing/selftests/kvm/include/kvm_util.h  |  1 +
->   tools/testing/selftests/kvm/lib/kvm_util.c    | 56 +++++++++++++------
->   2 files changed, 40 insertions(+), 17 deletions(-)
+The kernel configs (with extra fragments) and full boot log links
+provided below.
 
-LGTM.
+boot log:
+-----------
+[ 0.000000] Linux version 5.6.0 (oe-user@oe-host) (gcc version 7.3.0
+(GCC), GNU ld (GNU Binutils) 2.30.0.20180208) #1 SMP PREEMPT Sun Apr
+12 11:44:21 UTC 2020
+[ 0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+[ 0.000000] efi: UEFI not found.
+<>
+[    2.550066] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    2.564493] SuperH (H)SCI(F) driver initialized
+[    2.568321] msm_serial 78af000.serial: msm_serial: detected port #1
+[    2.568457] msm_serial 78af000.serial: uartclk = 19200000
+[    2.568724] 78af000.serial: ttyMSM1 at MMIO 0x78af000 (irq = 9,
+base_baud = 1200000) is a MSM
+[    2.572081] msm_serial 78b0000.serial: msm_serial: detected port #0
+[    2.572210] msm_serial 78b0000.serial: uartclk = 7372800
+[    2.572423] 78b0000.serial: ttyMSM0 at MMIO 0x78b0000 (irq = 10,
+base_baud = 460800) is a MSM
+[    2.572508] BUG: spinlock bad magic on CPU#3, swapper/0/1
+[    2.572534]  lock: msm_uart_ports+0x0/0x7e0, .magic: 00000000,
+.owner: <none>/-1, .owner_cpu: 0
+[    2.572552] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.6.0 #1
+[    2.572565] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    2.572578] Call trace:
+[    2.572594]  dump_backtrace+0x0/0x1e0
+[    2.572609]  show_stack+0x24/0x30
+[    2.572627]  dump_stack+0xe8/0x150
+[    2.572643]  spin_dump+0x84/0xb8
+[    2.572658]  do_raw_spin_lock+0xf8/0x120
+[    2.572675]  _raw_spin_lock_irqsave+0x68/0x80
+[    2.572692]  uart_add_one_port+0x3ac/0x4e8
+[    2.572709]  msm_serial_probe+0x168/0x208
+[    2.572725]  platform_drv_probe+0x58/0xa8
+[    2.572739]  really_probe+0x290/0x498
+[    2.572754]  driver_probe_device+0x12c/0x148
+[    2.572768]  device_driver_attach+0x74/0x98
+[    2.572782]  __driver_attach+0xc4/0x178
+[    2.572798]  bus_for_each_dev+0x84/0xd8
+[    2.572811]  driver_attach+0x30/0x40
+[    2.572827]  bus_add_driver+0x170/0x258
+[    2.572841]  driver_register+0x64/0x118
+[    2.572856]  __platform_driver_register+0x54/0x60
+[    2.572872]  msm_serial_init+0x40/0x70
+[    2.572887]  do_one_initcall+0x94/0x460
+[    2.572904]  kernel_init_freeable+0x274/0x2dc
+[    2.572920]  kernel_init+0x18/0x110
+[    2.572936]  ret_from_fork+0x10/0x18
+[    2.572966] msm_serial: console setup on port #0
+[    3.664259] printk: console [ttyMSM0] enabled
 
-Reviewed-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+Full test log,
+https://lkft.validation.linaro.org/scheduler/job/1361080#L3679
+https://lkft.validation.linaro.org/scheduler/job/1361079#L3730
 
->
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 2f329e785c58..d4c3e4d9cd92 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -114,6 +114,7 @@ int _vcpu_ioctl(struct kvm_vm *vm, uint32_t vcpuid, unsigned long ioctl,
->   void vm_ioctl(struct kvm_vm *vm, unsigned long ioctl, void *arg);
->   void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
->   void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
-> +void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
->   void vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpuid);
->   vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
->   			  uint32_t data_memslot, uint32_t pgd_memslot);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 105ee9bc09f0..ab5b7ea60f4b 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -433,34 +433,38 @@ void kvm_vm_release(struct kvm_vm *vmp)
->   		"  vmp->kvm_fd: %i rc: %i errno: %i", vmp->kvm_fd, ret, errno);
->   }
->   
-> +static void __vm_mem_region_delete(struct kvm_vm *vm,
-> +				   struct userspace_mem_region *region)
-> +{
-> +	int ret;
-> +
-> +	list_del(&region->list);
-> +
-> +	region->region.memory_size = 0;
-> +	ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION, &region->region);
-> +	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
-> +		    "rc: %i errno: %i", ret, errno);
-> +
-> +	sparsebit_free(&region->unused_phy_pages);
-> +	ret = munmap(region->mmap_start, region->mmap_size);
-> +	TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i", ret, errno);
-> +
-> +	free(region);
-> +}
-> +
->   /*
->    * Destroys and frees the VM pointed to by vmp.
->    */
->   void kvm_vm_free(struct kvm_vm *vmp)
->   {
->   	struct userspace_mem_region *region, *tmp;
-> -	int ret;
->   
->   	if (vmp == NULL)
->   		return;
->   
->   	/* Free userspace_mem_regions. */
-> -	list_for_each_entry_safe(region, tmp, &vmp->userspace_mem_regions, list) {
-> -		list_del(&region->list);
-> -
-> -		region->region.memory_size = 0;
-> -		ret = ioctl(vmp->fd, KVM_SET_USER_MEMORY_REGION,
-> -			&region->region);
-> -		TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
-> -			"rc: %i errno: %i", ret, errno);
-> -
-> -		sparsebit_free(&region->unused_phy_pages);
-> -		ret = munmap(region->mmap_start, region->mmap_size);
-> -		TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i",
-> -			    ret, errno);
-> -
-> -		free(region);
-> -	}
-> +	list_for_each_entry_safe(region, tmp, &vmp->userspace_mem_regions, list)
-> +		__vm_mem_region_delete(vmp, region);
->   
->   	/* Free sparsebit arrays. */
->   	sparsebit_free(&vmp->vpages_valid);
-> @@ -775,6 +779,24 @@ void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa)
->   		    ret, errno, slot, new_gpa);
->   }
->   
-> +/*
-> + * VM Memory Region Delete
-> + *
-> + * Input Args:
-> + *   vm - Virtual Machine
-> + *   slot - Slot of the memory region to delete
-> + *
-> + * Output Args: None
-> + *
-> + * Return: None
-> + *
-> + * Delete a memory region.
-> + */
-> +void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot)
-> +{
-> +	__vm_mem_region_delete(vm, memslot2region(vm, slot));
-> +}
-> +
->   /*
->    * VCPU mmap Size
->    *
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2607/config
+dtb:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2607/Image.gz--5.6+git0+b753101a4a-r0-apq8016-sbc-20200412114028-2607.dtb
 
+--
+Linaro LKFT
+https://lkft.linaro.org
