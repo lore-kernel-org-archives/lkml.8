@@ -7,254 +7,158 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37DBC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7EFC352B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82FA42076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0B720739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586796749;
-	bh=BeMfiKoM1HPrk5N7B8y8DbFVG2B/mSoTaSD4GFKpvrc=;
+	s=default; t=1586796761;
+	bh=41LZqW8d5XmQTbyN0N2s8HTXUkkGdeEX8LK2FJmvOYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBp9LltOeywggcjFOwGvEVdcceSkJRUGBd1TjukL6eiRVVQuYqxRx8AGDdAR/EGaR
-	 mR/PV71S/SLb8rAjviXzGJzoizg+bcaYZmustYRHaW0RRZBEB56t7zStZn9WdPbPjI
-	 k+xBv41LQUGR8Iae/kZGseMXWqOZFXL9XdRIFK1s=
+	b=Llf64S/thoyG+M+sCiJ3JuLUvdOzx75Ii45hno0NUX5gWH5BYQDR4xr6KRBGai4/2
+	 bfKb4snuKcfbxoqAVavcX5W0JoFxWRU5/WX6FA5008Gsll6JAByVUrdlT5c0Mx8VE0
+	 NQThS6/z+1jbh8dYeeqlTbSpm+CG3uc9Un0yD+LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbgDMQw2 (ORCPT
+        id S1731882AbgDMQwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43488 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 12:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731841AbgDMQwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:52:18 -0400
+        id S1731861AbgDMQwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:52:31 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6053F20857;
-        Mon, 13 Apr 2020 16:52:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F40820936;
+        Mon, 13 Apr 2020 16:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586796737;
-        bh=BeMfiKoM1HPrk5N7B8y8DbFVG2B/mSoTaSD4GFKpvrc=;
+        s=default; t=1586796750;
+        bh=41LZqW8d5XmQTbyN0N2s8HTXUkkGdeEX8LK2FJmvOYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vi/57LaIktpx/gQm/uAHCS5vcvbTuDtY+Y/bTAy7INWqGoBM7EMBt7bMd0L0940zy
-         gyLUrt9LbNQxkL9WrADK5gtdIDp4f2fHBUxdU9K11PtxUjDpF8KeytrDpZMmc9RIiR
-         ipQLuUz64lB6egLl2ax8EM6D2Ak7kaVpRF2xvNQE=
+        b=aqDhael/cpL2+Li0ojNOUt6KrXK+PzepxDPKHGqHdTvqg+KL6AXbgdK8kghhOoihL
+         OU4y5tzttQt9Mz5qzpY/uZLISWh/pCRPaA0ElhXv9i9mej37hwQIALn9iX7SmfVbXO
+         IFm5ThRxXoHCU3a7IGY3dzmkF4k39WBcy7HdzM50=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 01/26] perf tools: Synthesize bpf_trampoline/dispatcher ksymbol event
-Date:   Mon, 13 Apr 2020 13:51:38 -0300
-Message-Id: <20200413165203.1816-2-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 04/26] tools arch x86: Sync the msr-index.h copy with the kernel sources
+Date:   Mon, 13 Apr 2020 13:51:41 -0300
+Message-Id: <20200413165203.1816-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Synthesize bpf images (trampolines/dispatchers) on start, as ksymbol
-events from /proc/kallsyms. Having this perf can recognize samples from
-those images and perf report and top shows them correctly.
+To pick up the changes in:
 
-The rest of the ksymbol handling is already in place from for the bpf
-programs monitoring, so only the initial state was needed.
+  6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
 
-perf report output:
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h' differs from latest version at 'arch/x86/include/asm/msr-index.h'
+  diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
 
-  # Overhead  Command     Shared Object                  Symbol
+Which causes these changes in tooling:
 
-    12.37%  test_progs  [kernel.vmlinux]                 [k] entry_SYSCALL_64
-    11.80%  test_progs  [kernel.vmlinux]                 [k] syscall_return_via_sysret
-     9.63%  test_progs  bpf_prog_bcf7977d3b93787c_prog2  [k] bpf_prog_bcf7977d3b93787c_prog2
-     6.90%  test_progs  bpf_trampoline_24456             [k] bpf_trampoline_24456
-     6.36%  test_progs  [kernel.vmlinux]                 [k] memcpy_erms
+  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > before
+  $ cp arch/x86/include/asm/msr-index.h tools/arch/x86/include/asm/msr-index.h
+  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > after
+  $ diff -u before after
+  --- before	2020-04-01 12:11:14.789344795 -0300
+  +++ after	2020-04-01 12:11:56.907798879 -0300
+  @@ -10,6 +10,7 @@
+   	[0x00000029] = "KNC_EVNTSEL1",
+   	[0x0000002a] = "IA32_EBL_CR_POWERON",
+   	[0x0000002c] = "EBC_FREQUENCY_ID",
+  +	[0x00000033] = "TEST_CTRL",
+   	[0x00000034] = "SMI_COUNT",
+   	[0x0000003a] = "IA32_FEAT_CTL",
+   	[0x0000003b] = "IA32_TSC_ADJUST",
+  @@ -27,6 +28,7 @@
+   	[0x000000c2] = "IA32_PERFCTR1",
+   	[0x000000cd] = "FSB_FREQ",
+   	[0x000000ce] = "PLATFORM_INFO",
+  +	[0x000000cf] = "IA32_CORE_CAPS",
+   	[0x000000e2] = "PKG_CST_CONFIG_CONTROL",
+   	[0x000000e7] = "IA32_MPERF",
+   	[0x000000e8] = "IA32_APERF",
+  $
 
-Committer notes:
+  $ make -C tools/perf O=/tmp/build/perf install-bin
+  <SNIP>
+    CC       /tmp/build/perf/trace/beauty/tracepoints/x86_msr.o
+    LD       /tmp/build/perf/trace/beauty/tracepoints/perf-in.o
+    LD       /tmp/build/perf/trace/beauty/perf-in.o
+    LD       /tmp/build/perf/perf-in.o
+    LINK     /tmp/build/perf/perf
+  <SNIP>
 
-Use scnprintf() instead of strncpy() to overcome this on fedora:32,
-rawhide and OpenMandriva Cooker:
+Now one can do:
 
-    CC       /tmp/build/perf/util/bpf-event.o
-  In file included from /usr/include/string.h:495,
-                   from /git/linux/tools/lib/bpf/libbpf_common.h:12,
-                   from /git/linux/tools/lib/bpf/bpf.h:31,
-                   from util/bpf-event.c:4:
-  In function 'strncpy',
-      inlined from 'process_bpf_image' at util/bpf-event.c:323:2,
-      inlined from 'kallsyms_process_symbol' at util/bpf-event.c:358:9:
-  /usr/include/bits/string_fortified.h:106:10: error: '__builtin_strncpy' specified bound 256 equals destination size [-Werror=stringop-truncation]
-    106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
+	perf trace -e msr:* --filter=msr==IA32_CORE_CAPS
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: David S. Miller <davem@redhat.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200312195610.346362-14-jolsa@kernel.org/
+or:
+
+	perf trace -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
+
+And see only those MSRs being accessed via:
+
+  # perf trace -v -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
+  New filter for msr:read_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+  New filter for msr:write_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+  New filter for msr:rdpmc: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/lkml/20200401153325.GC12534@kernel.org/
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-event.c | 93 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ tools/arch/x86/include/asm/msr-index.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index a3207d900339..0cd41a862952 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -6,6 +6,9 @@
- #include <bpf/libbpf.h>
- #include <linux/btf.h>
- #include <linux/err.h>
-+#include <linux/string.h>
-+#include <internal/lib.h>
-+#include <symbol/kallsyms.h>
- #include "bpf-event.h"
- #include "debug.h"
- #include "dso.h"
-@@ -290,11 +293,82 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	return err ? -1 : 0;
- }
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index d5e517d1c3dd..12c9684d59ba 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -41,6 +41,10 @@
  
-+struct kallsyms_parse {
-+	union perf_event	*event;
-+	perf_event__handler_t	 process;
-+	struct machine		*machine;
-+	struct perf_tool	*tool;
-+};
+ /* Intel MSRs. Some also available on other CPUs */
+ 
++#define MSR_TEST_CTRL				0x00000033
++#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT	29
++#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT)
 +
-+static int
-+process_bpf_image(char *name, u64 addr, struct kallsyms_parse *data)
-+{
-+	struct machine *machine = data->machine;
-+	union perf_event *event = data->event;
-+	struct perf_record_ksymbol *ksymbol;
-+	int len;
+ #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
+ #define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
+ #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
+@@ -70,6 +74,11 @@
+  */
+ #define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
+ 
++/* Abbreviated from Intel SDM name IA32_CORE_CAPABILITIES */
++#define MSR_IA32_CORE_CAPS			  0x000000cf
++#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT  5
++#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT)
 +
-+	ksymbol = &event->ksymbol;
-+
-+	*ksymbol = (struct perf_record_ksymbol) {
-+		.header = {
-+			.type = PERF_RECORD_KSYMBOL,
-+			.size = offsetof(struct perf_record_ksymbol, name),
-+		},
-+		.addr      = addr,
-+		.len       = page_size,
-+		.ksym_type = PERF_RECORD_KSYMBOL_TYPE_BPF,
-+		.flags     = 0,
-+	};
-+
-+	len = scnprintf(ksymbol->name, KSYM_NAME_LEN, "%s", name);
-+	ksymbol->header.size += PERF_ALIGN(len + 1, sizeof(u64));
-+	memset((void *) event + event->header.size, 0, machine->id_hdr_size);
-+	event->header.size += machine->id_hdr_size;
-+
-+	return perf_tool__process_synth_event(data->tool, event, machine,
-+					      data->process);
-+}
-+
-+static int
-+kallsyms_process_symbol(void *data, const char *_name,
-+			char type __maybe_unused, u64 start)
-+{
-+	char disp[KSYM_NAME_LEN];
-+	char *module, *name;
-+	unsigned long id;
-+	int err = 0;
-+
-+	module = strchr(_name, '\t');
-+	if (!module)
-+		return 0;
-+
-+	/* We are going after [bpf] module ... */
-+	if (strcmp(module + 1, "[bpf]"))
-+		return 0;
-+
-+	name = memdup(_name, (module - _name) + 1);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	name[module - _name] = 0;
-+
-+	/* .. and only for trampolines and dispatchers */
-+	if ((sscanf(name, "bpf_trampoline_%lu", &id) == 1) ||
-+	    (sscanf(name, "bpf_dispatcher_%s", disp) == 1))
-+		err = process_bpf_image(name, start, data);
-+
-+	free(name);
-+	return err;
-+}
-+
- int perf_event__synthesize_bpf_events(struct perf_session *session,
- 				      perf_event__handler_t process,
- 				      struct machine *machine,
- 				      struct record_opts *opts)
- {
-+	const char *kallsyms_filename = "/proc/kallsyms";
-+	struct kallsyms_parse arg;
- 	union perf_event *event;
- 	__u32 id = 0;
- 	int err;
-@@ -303,6 +377,8 @@ int perf_event__synthesize_bpf_events(struct perf_session *session,
- 	event = malloc(sizeof(event->bpf) + KSYM_NAME_LEN + machine->id_hdr_size);
- 	if (!event)
- 		return -1;
-+
-+	/* Synthesize all the bpf programs in system. */
- 	while (true) {
- 		err = bpf_prog_get_next_id(id, &id);
- 		if (err) {
-@@ -335,6 +411,23 @@ int perf_event__synthesize_bpf_events(struct perf_session *session,
- 			break;
- 		}
- 	}
-+
-+	/* Synthesize all the bpf images - trampolines/dispatchers. */
-+	if (symbol_conf.kallsyms_name != NULL)
-+		kallsyms_filename = symbol_conf.kallsyms_name;
-+
-+	arg = (struct kallsyms_parse) {
-+		.event   = event,
-+		.process = process,
-+		.machine = machine,
-+		.tool    = session->tool,
-+	};
-+
-+	if (kallsyms__parse(kallsyms_filename, &arg, kallsyms_process_symbol)) {
-+		pr_err("%s: failed to synthesize bpf images: %s\n",
-+		       __func__, strerror(errno));
-+	}
-+
- 	free(event);
- 	return err;
- }
+ #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
+ #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
+ #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
 -- 
 2.21.1
 
