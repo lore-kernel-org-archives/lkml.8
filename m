@@ -2,118 +2,66 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6A7C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7956C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CE920735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586792267;
-	bh=lQ8kyjkpMTyR85fSUdpR9VATKBOfxGyqeQRWXIWSwHw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SSR6v24t/yMI/hE/meB683gnk9EqhABbHt4kP1X9W1ykm6/LjmG64L7rMi1K/k5VU
-	 FAe5y2fN7bAWiAWDzUczb2pN0iUNrg4WpHLeagFJ3nUnWEv9DciqyH4mLgpg57XF/U
-	 ispGhTJDBxX/hMVUmuXx3v+Yn4hoyycWgrQfFEuw=
+	by mail.kernel.org (Postfix) with ESMTP id AD1612072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbgDMPhq (ORCPT
+        id S1729461AbgDMPlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbgDMPhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:37:45 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F8B32072C;
-        Mon, 13 Apr 2020 15:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586792265;
-        bh=lQ8kyjkpMTyR85fSUdpR9VATKBOfxGyqeQRWXIWSwHw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NfgsGatWPdOuSoVilt1i+8H0bYzRjSVvm2+qN90yARaeKWT9voanCYZ0YuSmgXyNH
-         Bvt10f/cQ0+5gdY4GvfKOLicT01q51fsLe62EYzgnMV82Ot0jabjgwRcoq43YTH+R8
-         9X6PgLY6pG97BuQuPDt88moH3eYsx9hmLw8Duu5k=
-Date:   Mon, 13 Apr 2020 16:37:39 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Aishwarya R <aishwaryarj100@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: fsl-imx25-gcq: Use
- devm_platform_ioremap_resource
-Message-ID: <20200413163739.38474d8a@archlinux>
-In-Reply-To: <20200412135023.3831-1-aishwaryarj100@gmail.com>
-References: <20200409151306.308-1-aishwaryarj100@gmail.com>
-        <20200412135023.3831-1-aishwaryarj100@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 11:41:44 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:16856 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728597AbgDMPln (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:41:43 -0400
+Received: from localhost.localdomain ([93.22.151.169])
+        by mwinf5d63 with ME
+        id SFhg2200F3fYTYl03Fhgp5; Mon, 13 Apr 2020 17:41:41 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 13 Apr 2020 17:41:41 +0200
+X-ME-IP: 93.22.151.169
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] spi: sc18is602: Fix a typo in MODULE_DESCRIPTION
+Date:   Mon, 13 Apr 2020 17:40:43 +0200
+Message-Id: <20200413154043.23064-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 19:20:20 +0530
-Aishwarya R <aishwaryarj100@gmail.com> wrote:
+This should be 'SC18IS602', not 'SC18IC602'
 
-> From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-> 
-> Use the helper function that wraps the calls to
-> platform_get_resource() and devm_ioremap_resource()
-> together.It reduces boilerplate and suggested by coccinelle.
-> 
-> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-Again see earlier patches for comments but applied anyway to
-save myself time.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/spi/spi-sc18is602.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/fsl-imx25-gcq.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-> index fa71489195c6..b0a4dc88ba9b 100644
-> --- a/drivers/iio/adc/fsl-imx25-gcq.c
-> +++ b/drivers/iio/adc/fsl-imx25-gcq.c
-> @@ -294,7 +294,6 @@ static int mx25_gcq_probe(struct platform_device *pdev)
->  	struct mx25_gcq_priv *priv;
->  	struct mx25_tsadc *tsadc = dev_get_drvdata(pdev->dev.parent);
->  	struct device *dev = &pdev->dev;
-> -	struct resource *res;
->  	void __iomem *mem;
->  	int ret;
->  	int i;
-> @@ -305,8 +304,7 @@ static int mx25_gcq_probe(struct platform_device *pdev)
->  
->  	priv = iio_priv(indio_dev);
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	mem = devm_ioremap_resource(dev, res);
-> +	mem = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(mem))
->  		return PTR_ERR(mem);
->  
+diff --git a/drivers/spi/spi-sc18is602.c b/drivers/spi/spi-sc18is602.c
+index 5497eeb3bf3e..ee0f3edf49cd 100644
+--- a/drivers/spi/spi-sc18is602.c
++++ b/drivers/spi/spi-sc18is602.c
+@@ -345,6 +345,6 @@ static struct i2c_driver sc18is602_driver = {
+ 
+ module_i2c_driver(sc18is602_driver);
+ 
+-MODULE_DESCRIPTION("SC18IC602/603 SPI Master Driver");
++MODULE_DESCRIPTION("SC18IS602/603 SPI Master Driver");
+ MODULE_AUTHOR("Guenter Roeck");
+ MODULE_LICENSE("GPL");
+-- 
+2.20.1
 
