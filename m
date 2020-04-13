@@ -2,120 +2,130 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22679C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EFDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6B6206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586780138;
-	bh=I6u5nJX+v3gJqSQyOJNA0fIQf+n4hfhFOsPbgSruo7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rAtzIqtqv22BV48LLG8znqbqbGjNCKN+sdeUfC+AAW3hS4J77TO3XIJ0+m4QnLc3m
-	 KDECSFAFpSHjV0JoTWmr+EZhVRsbYlk3eNZ2/2JZ++KTfYXi1kZpOLzTIgaGnCoHYS
-	 C46YMpyf2yuUJbZ9wh6onPTIRZP4c0U1DloSBru8=
+	by mail.kernel.org (Postfix) with ESMTP id 72B892075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UXRNWbgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgDMMPg (ORCPT
+        id S1729443AbgDMMPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:15:36 -0400
-Received: from mail-ed1-f41.google.com ([209.85.208.41]:32794 "EHLO
-        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgDMMPf (ORCPT
+        Mon, 13 Apr 2020 08:15:47 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53022 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbgDMMPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:15:35 -0400
-Received: by mail-ed1-f41.google.com with SMTP id z65so11755223ede.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 05:15:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9YJKgQFf9t5/ZOVeXCDhEo4n2HKOssPBhy3fPCqfEpo=;
-        b=X0zjaddkShwVvPzKqJpFUSjjWdZeH7jHyoQI0x5l+6vyKBPQfb9zBVIWwnqxmEfvMw
-         0pvzulUpL9dNwbAuJ5Gb1nuuG4eGB8lzbqRr2gH2g10ZrmjoIx4qgp4OqVk114jPc31H
-         4CNfbNpto8g7l7lwOAbwrQc6MPYeshfIOmoNsXgpidssf8/x8m8Fg+x68dABwrAt1v5p
-         QAasmKnYBWQppjJKYH3Vk5ovscjTUHt20FfSEuS1tBfnxm2ehlPVFw6dBnBrzUgJn1hK
-         ybs/ns0IG2KpVvU57pjNMXXG7b7W3LEq32fcn2bZvZF+bV3dcuy388S8WAIWNCQUC8at
-         i8Ww==
-X-Gm-Message-State: AGi0Pub2L6mFNLu6mcE8UwN4vtYYiLCnhalP/NVI/5t9kseMc3DGPyJC
-        WzJVgn2rabN+SEkOx2DL3bs=
-X-Google-Smtp-Source: APiQypJNxCoN/5n4rPjzHYpBIZwWKiVt224/0H4faLSZIwXiff05UKjmeUMQzAzxJRMUy4LNfII+SQ==
-X-Received: by 2002:a17:906:e01:: with SMTP id l1mr15105365eji.76.1586780132912;
-        Mon, 13 Apr 2020 05:15:32 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id k18sm1570960ejq.84.2020.04.13.05.15.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Apr 2020 05:15:32 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 14:15:30 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: ASoC: s3c-i2s-v2 regression, was: [GIT PULL] sound updates for
- 5.6-rc1
-Message-ID: <20200413121530.GA5200@kozik-lap>
-References: <s5h5zgwouw8.wl-tiwai@suse.de>
- <CAK8P3a1La1gbSp0A9JaQ5KavGELQ8NsKQvCdAdya24agJzTOJA@mail.gmail.com>
+        Mon, 13 Apr 2020 08:15:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1586780129; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cVBbu8tSD0a/uokh95yriTzXYfGPwFyZfrsThitWENM=;
+        b=UXRNWbgCMWuSCP5liVA/FqMSR5OKxwu8/Q3i4hgd77oHqmOLoxrsqAMQ/2Ea//8aJQyB76
+        im10upnfNTmKUiNJfOGPV56NP3krBSl54DI5TgJfJLE0c5e2jY15zz5v3CPATTVZrxUZeK
+        ME3Kw+U/dnmhNPKAtKfD9syAawRrxsc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 3/3] pwm: jz4740: Add support for the JZ4725B
+Date:   Mon, 13 Apr 2020 14:14:45 +0200
+Message-Id: <20200413121445.72996-3-paul@crapouillou.net>
+In-Reply-To: <20200413121445.72996-1-paul@crapouillou.net>
+References: <20200413121445.72996-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1La1gbSp0A9JaQ5KavGELQ8NsKQvCdAdya24agJzTOJA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 10:41:52AM +0200, Arnd Bergmann wrote:
-> On Tue, Jan 28, 2020 at 9:21 AM Takashi Iwai <tiwai@suse.de> wrote:
-> 
-> > Kuninori Morimoto (66):
-> >       ASoC: bcm: cygnus-ssp: move .suspend/.resume to component
-> >       ASoC: atmel: atmel_ssc_dai: move .suspend/.resume to component
-> >       ASoC: cirrus: ep93xx-i2s: move .suspend/.resume to component
-> >       ASoC: jz4740: jz4740-i2s: move .suspend/.resume to component
-> >       ASoC: mediatek: move .suspend/.resume to component
-> >       ASoC: samsung: s3c24xx-i2s: move .suspend/.resume to component
-> >       ASoC: samsung: spdif: move .suspend/.resume to component
-> >       ASoC: sti: sti_uniperif: move .suspend/.resume to component
-> >       ASoC: ti: omap-mcpdm: move .suspend/.resume to component
-> >       ASoC: uniphier: move .suspend/.resume to component
-> >       ASoC: dwc: dwc-i2s: move .suspend/.resume to component
-> >       ASoC: samsung: i2s: move .suspend/.resume to component
-> >       ASoC: ux500: ux500_msp_dai: remove unused DAI .suspend/.resume
-> >       ASoC: pxa: pxa-ssp: move .suspend/.resume to component
-> >       ASoC: pxa: pxa2xx-i2s: move .suspend/.resume to component
-> >       ASoC: soc-core: remove DAI suspend/resume
-> 
-> I only found it now during randconfig testing, but it seems that there is
-> (at least) one patching in this conversion series that was part of linux-5.6:
-> 
-> sound/soc/samsung/s3c-i2s-v2.c: In function 's3c_i2sv2_register_component':
-> sound/soc/samsung/s3c-i2s-v2.c:726:9: error: 'struct
-> snd_soc_dai_driver' has no member named 'suspend'
->   726 |  dai_drv->suspend = s3c2412_i2s_suspend;
->       |         ^~
-> sound/soc/samsung/s3c-i2s-v2.c:727:9: error: 'struct
-> snd_soc_dai_driver' has no member named 'resume'
->   727 |  dai_drv->resume = s3c2412_i2s_resume;
->       |         ^~
-> 
-> I tried fixing it myself but could not see an obvious solution. Can someone
-> else who understands this code better than me have a look?
+The PWM hardware in the JZ4725B works the same as in the JZ4740, but has
+only six channels available.
 
-This can be triggered after enabling SND_SOC_SAMSUNG and
-SND_SOC_SAMSUNG_JIVE_WM8750.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-I can fix it but only compile-tested.
+Notes:
+    I did not add documentation for the new jz4725b-pwm compatible
+    string on purpose. The reason is that the documentation file
+    for the Timer/Counter Unit (TCU) of Ingenic SoCs will be
+    completely rewritten from .txt to YAML in a separate patchset.
 
-Best regards,
-Krzysztof
+ drivers/pwm/pwm-jz4740.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index f566f9d248d6..bb27934fb6c2 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -22,6 +22,10 @@
+ 
+ #define NUM_PWM 8
+ 
++struct soc_info {
++	unsigned int num_pwms;
++};
++
+ struct jz4740_pwm_chip {
+ 	struct pwm_chip chip;
+ 	struct regmap *map;
+@@ -36,7 +40,7 @@ static bool jz4740_pwm_can_use_chn(struct jz4740_pwm_chip *jz,
+ 				   unsigned int channel)
+ {
+ 	/* Enable all TCU channels for PWM use by default except channels 0/1 */
+-	u32 pwm_channels_mask = GENMASK(NUM_PWM - 1, 2);
++	u32 pwm_channels_mask = GENMASK(jz->chip.npwm - 1, 2);
+ 
+ 	device_property_read_u32(jz->chip.dev->parent,
+ 				 "ingenic,pwm-channels-mask",
+@@ -214,6 +218,7 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct jz4740_pwm_chip *jz4740;
++	const struct soc_info *info = device_get_match_data(dev);
+ 
+ 	jz4740 = devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
+ 	if (!jz4740)
+@@ -227,8 +232,8 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
+ 
+ 	jz4740->chip.dev = dev;
+ 	jz4740->chip.ops = &jz4740_pwm_ops;
+-	jz4740->chip.npwm = NUM_PWM;
+ 	jz4740->chip.base = -1;
++	jz4740->chip.npwm = info ? info->num_pwms : NUM_PWM;
+ 	jz4740->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	jz4740->chip.of_pwm_n_cells = 3;
+ 
+@@ -244,9 +249,18 @@ static int jz4740_pwm_remove(struct platform_device *pdev)
+ 	return pwmchip_remove(&jz4740->chip);
+ }
+ 
++static const struct soc_info __maybe_unused jz4740_soc_info = {
++	.num_pwms = 8,
++};
++
++static const struct soc_info __maybe_unused jz4725b_soc_info = {
++	.num_pwms = 6,
++};
++
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_pwm_dt_ids[] = {
+-	{ .compatible = "ingenic,jz4740-pwm", },
++	{ .compatible = "ingenic,jz4740-pwm", .data = &jz4740_soc_info },
++	{ .compatible = "ingenic,jz4725b-pwm", .data = &jz4725b_soc_info },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, jz4740_pwm_dt_ids);
+-- 
+2.25.1
 
