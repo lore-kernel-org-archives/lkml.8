@@ -2,187 +2,64 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35107C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F870C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 151BA20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B54120732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbgDMPxe (ORCPT
+        id S1731150AbgDMPyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:53:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23003 "EHLO mga05.intel.com"
+        Mon, 13 Apr 2020 11:54:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36716 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730923AbgDMPxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:53:31 -0400
-IronPort-SDR: +3V5bGy9diZ/WUc47UtQVOPLdy3RvpUz8enl4F/x1qmMJA439Pl2fytohnLi2YWq+vqDzO+48q
- 6WHZz4r/Q6mg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:53:27 -0700
-IronPort-SDR: OdZguRshJhPs+cTxV/tPWG8TIeOnFVJ2u5n/nZNKVJpmOpxpT7j2PQ/KiSZolC9qxXx2g+nh/z
- CfE7wE398vOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="252910113"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga003.jf.intel.com with ESMTP; 13 Apr 2020 08:53:26 -0700
-Date:   Mon, 13 Apr 2020 08:53:26 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     fstests <fstests@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] xfs/XXX: Add xfs/XXX
-Message-ID: <20200413155325.GA1560218@iweiny-DESK2.sc.intel.com>
-References: <20200413054419.1560503-1-ira.weiny@intel.com>
- <CAOQ4uxguVRysAuVEtQmPj+x=RDtDnGCtNeGvbvXNuvppwagwDg@mail.gmail.com>
+        id S1730923AbgDMPyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:54:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6C375AC84;
+        Mon, 13 Apr 2020 15:54:15 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 17:54:14 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] dmi update for v5.7
+Message-ID: <20200413175414.3eebd408@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxguVRysAuVEtQmPj+x=RDtDnGCtNeGvbvXNuvppwagwDg@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:54:36AM +0300, Amir Goldstein wrote:
-> On Mon, Apr 13, 2020 at 9:06 AM <ira.weiny@intel.com> wrote:
-> >
-> > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > Add XXX to test per file DAX operations.
-> 
-> Please change commit title to "xfs: Add test for per file DAX operations"
-> The title Add xfs/XXX is not useful even if XXX where a number.
+Hi Linus,
 
-Thanks and...  yes this really should have been marked RFC as the requirements
-have been in flux and I never meant for this to be merged until the kernel
-patches are merged.  Hence keeping the number XXX.
+Please pull dmi subsystem updates/fixes for Linux v5.7 from:
 
-RFC would have been better.
+git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git dmi-for-linus
 
-I've update v8.  thanks!
+ drivers/firmware/dmi-id.c       |  6 ++++++
+ drivers/firmware/dmi_scan.c     | 30 ++++++++++++++++++++++++++++++
+ include/linux/mod_devicetable.h |  2 ++
+ scripts/mod/file2alias.c        |  2 ++
+ 4 files changed, 40 insertions(+)
 
-> 
-> But the kernel patch suggests that there is an intention to make
-> this behavior also applicable to ext4??
-> If that is the case I would recommend making this a generic tests
-> which requires filesystem support for -o dax=XXX
+---------------
 
-I have a patch set for ext4 which is not quite passing this.  I'm not sure what
-is going on yet.
+Erwan Velu (1):
+      firmware/dmi: Report DMI Bios & EC firmware release
 
-Once that is working I was going to move this to generic.  (The documentation
-in the kernel patch set also reflects ext4 being different from xfs for the
-time being.)
+PS: I apologize for missing the merge window this time. Thankfully this
+is only one commit so hopefully you can still accept it.
 
-This is mainly because I'm not sure if ext4 will make 5.8 or not.  Would you
-prefer making this generic now?  I assume there is some way to mark generic
-tests for a subset of FS's?  I have not figured that out yet.
-
-> 
-> >
-> > The following is tested[*]
-> >
-> >  1. There exists an in-kernel access mode flag S_DAX that is set when
-> >     file accesses go directly to persistent memory, bypassing the page
-> >     cache.  Applications must call statx to discover the current S_DAX
-> >     state (STATX_ATTR_DAX).
-> >
-> >  2. There exists an advisory file inode flag FS_XFLAG_DAX that is
-> >     inherited from the parent directory FS_XFLAG_DAX inode flag at file
-> >     creation time.  This advisory flag can be set or cleared at any
-> >     time, but doing so does not immediately affect the S_DAX state.
-> >
-> >     Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
-> >     and the fs is on pmem then it will enable S_DAX at inode load time;
-> >     if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> >
-> >  3. There exists a dax= mount option.
-> >
-> >     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> >
-> >     "-o dax=always" means "always set S_DAX (at least on pmem),
-> >                     and ignore FS_XFLAG_DAX."
-> >
-> >     "-o dax"        is an alias for "dax=always".
-> >
-> >     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> >
-> >  4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
-> >     be set or cleared at any time.  The flag state is copied into any
-> >     files or subdirectories when they are created within that directory.
-> >
-> >  5. Programs that require a specific file access mode (DAX or not DAX)
-> >     can do one of the following:
-> >
-> >     (a) Create files in directories that the FS_XFLAG_DAX flag set as
-> >         needed; or
-> >
-> >     (b) Have the administrator set an override via mount option; or
-> >
-> >     (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
-> >         must then cause the kernel to evict the inode from memory.  This
-> >         can be done by:
-> >
-> >         i>  Closing the file and re-opening the file and using statx to
-> >             see if the fs has changed the S_DAX flag; and
-> >
-> >         ii> If the file still does not have the desired S_DAX access
-> >             mode, either unmount and remount the filesystem, or close
-> >             the file and use drop_caches.
-> >
-> >  6. It's not unreasonable that users who want to squeeze every last bit
-> >     of performance out of the particular rough and tumble bits of their
-> >     storage also be exposed to the difficulties of what happens when the
-> >     operating system can't totally virtualize those hardware
-> >     capabilities.  Your high performance sports car is not a Toyota
-> >     minivan, as it were.
-> >
-> > [*] https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
-> >
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> >
-> > ---
-> > Changes from v6 (kernel patch set):
-> >         Start versions tracking the kernel patch set.
-> >         Update for new requirements
-> >
-> > Changes from V1 (xfstests patch):
-> >         Add test to ensure moved files preserve their flag
-> >         Check chattr of non-dax flags (check bug found by Darrick)
-> > ---
-> ...
-> > --- a/tests/xfs/group
-> > +++ b/tests/xfs/group
-> > @@ -511,3 +511,4 @@
-> >  511 auto quick quota
-> >  512 auto quick acl attr
-> >  513 auto mount
-> > +999 auto
-> 
-> The test looks also 'quick'
-
-Sure! Updated in v8
-
-Thanks for the review!
-Ira
-
-> 
-> Thanks,
-> Amir.
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
