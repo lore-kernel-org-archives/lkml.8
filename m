@@ -2,332 +2,205 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E82C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33148C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0621620739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0962F2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586796767;
-	bh=fIP1EnGc+dJREis2adfa0bXIZspf/NyorcPmYVK97Wk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gQ4nG8nFo1/nUGB+KZLLsvLqcJ2Ovn/5JgGGMqPxFWSgftsLk1imtvaW2f5Kq++sf
-	 fJqL839oeraChrG2Uflhi/q/FulQ0okRickXX9BvmtEM1XqrtZUMigjZWjBMmVlzQN
-	 xagvSEmODilcqYhpNhRo2bOBtCy3JZFrqOALgiJg=
+	s=default; t=1586796772;
+	bh=bsha3xY0b0htxjAC74+rhyzPRn3pa6BRck29iTQylnQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2wWJdvbx9ZaG2APvMp3uHHlGHBRTOFysG9VY7sqNkQnmVPTDBMfulnO6P0Ww1NGYg
+	 BuByFfBu87Bi5qY+3GCg+67oGjJ/o4yFCadmnkgsbOd2DzPCOGFA/c6pOs3OrFlorf
+	 ung2sXdRDI2cIlK9oFcnkZHeFZyMwqnSSUaiddFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgDMQwq (ORCPT
+        id S1731905AbgDMQwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 12:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731860AbgDMQwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:52:31 -0400
-Received: from localhost (unknown [104.132.1.66])
+        id S1731870AbgDMQwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:52:37 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF8D420780;
-        Mon, 13 Apr 2020 16:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDACE20857;
+        Mon, 13 Apr 2020 16:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586796750;
-        bh=fIP1EnGc+dJREis2adfa0bXIZspf/NyorcPmYVK97Wk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QinK3yvxaKxBWs351Z56idas0VjMMWyagUdFrjGb4j40DoKBGcjeXY6XOsXJ4nMyu
-         eiy/5d0uwRnfJyB4EAfHtyw6IE1DvOciaJx73rwIWe2qKoe4Phmf2VMknHF0zAhops
-         Z/N41AVpPNqe5O+SpsovHcPeIVJdUW+J7sPg3pJU=
-Date:   Mon, 13 Apr 2020 09:52:29 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] f2fs: fix long latency due to discard during umount
-Message-ID: <20200413165229.GA39092@google.com>
-References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
- <20200331184655.GB198665@google.com>
- <20200401092201.GB20234@codeaurora.org>
- <20200403171943.GC68460@google.com>
- <20200408090024.GC20234@codeaurora.org>
- <20200409022928.GD110440@google.com>
- <20200409114756.GD20234@codeaurora.org>
+        s=default; t=1586796756;
+        bh=bsha3xY0b0htxjAC74+rhyzPRn3pa6BRck29iTQylnQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vOyCN8Q/sTPseoZteALKxvDyyep46Pk//XGWf/kI2kc1EPeNnPoD4sOZfyN4nQwX1
+         hiZGsr9uPWoQ78JTlSCk/cJQxMKOJd1zwIEpqQ/A1Ez6Z+Y8kkcSIIyCuFOaxF7ekd
+         8hOgvv4ax+kGpDQmcHQE+8VVh6cuU6QrVP87kDNk=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Song Liu <songliubraving@fb.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Subject: [PATCH 05/26] capabilities: Introduce CAP_PERFMON to kernel and user space
+Date:   Mon, 13 Apr 2020 13:51:42 -0300
+Message-Id: <20200413165203.1816-6-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
+References: <20200413165203.1816-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409114756.GD20234@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09, Sahitya Tummala wrote:
-> On Wed, Apr 08, 2020 at 07:29:28PM -0700, Jaegeuk Kim wrote:
-> > On 04/08, Sahitya Tummala wrote:
-> > > Hi Jaegeuk,
-> > > 
-> > > On Fri, Apr 03, 2020 at 10:19:43AM -0700, Jaegeuk Kim wrote:
-> > > > On 04/01, Sahitya Tummala wrote:
-> > > > > Hi Jaegeuk,
-> > > > > 
-> > > > > On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
-> > > > > > On 03/30, Sahitya Tummala wrote:
-> > > > > > > F2FS already has a default timeout of 5 secs for discards that
-> > > > > > > can be issued during umount, but it can take more than the 5 sec
-> > > > > > > timeout if the underlying UFS device queue is already full and there
-> > > > > > > are no more available free tags to be used. In that case, submit_bio()
-> > > > > > > will wait for the already queued discard requests to complete to get
-> > > > > > > a free tag, which can potentially take way more than 5 sec.
-> > > > > > > 
-> > > > > > > Fix this by submitting the discard requests with REQ_NOWAIT
-> > > > > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > > > > > > scenario without waiting in the context of submit_bio(). The FS can
-> > > > > > > then handle these requests by retrying again within the stipulated
-> > > > > > > discard timeout period to avoid long latencies.
-> > > > > > 
-> > > > > > Sorry, Sahitya, but, do we really need to do like this? How about just
-> > > > > > controlling # of outstanding discarding bios in __issue_discard_cmd()?
-> > > > > 
-> > > > > Do you mean something like this?
-> > > > > 
-> > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > > > index 1a62b27..860dd43 100644
-> > > > > --- a/fs/f2fs/segment.c
-> > > > > +++ b/fs/f2fs/segment.c
-> > > > > @@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
-> > > > >         } else if (discard_type == DPOLICY_FSTRIM) {
-> > > > >                 dpolicy->io_aware = false;
-> > > > >         } else if (discard_type == DPOLICY_UMOUNT) {
-> > > > > -               dpolicy->max_requests = UINT_MAX;
-> > > > > +               dpolicy->max_requests = 30;
-> > > > 
-> > > > Can we use max queue depth of the block device?
-> > > 
-> > > I think it should be limited to 8 or 16 as Chao suggested, so that we can have
-> > > better control on the given timeout value? Thoughts?
-> > 
-> > Where is 8 or 16 coming from? What about SSD? Sorry, it's unclear to me.
-> 
-> With this patch we now wait for a batch of discard requests in __issue_discard_cmd()
-> with a upper timeout of 5 sec. So, I thought that having a smaller batch of
-> discard requests would help us to avoid queuing more requests and end up waiting
-> for more time in __wait_all_discard_cmd(). Today we have DEF_MAX_DISCARD_REQUEST
-> as 8 for default max discard requests. If it too less, may be for umount
-> we can use 16 instead. But the idea is to avoid more wait time.
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Ok, then, it seems we can just remove this line to use dpolicy->max_requests,
-and retry issuing all the discard commands like below. Later, I thnk it'd be
-fine to tune the max_requests based on bd_queue->queue_depth.
+Introduce the CAP_PERFMON capability designed to secure system
+performance monitoring and observability operations so that CAP_PERFMON
+can assist CAP_SYS_ADMIN capability in its governing role for
+performance monitoring and observability subsystems.
 
-> 
-> If you would like to propose to use max queue depth, we can get it from bdev as 
-> sbi->sb->s_bdev->bd_queue->queue_depth. Is it okay to use it in our FS? or you
-> think it should be hardcoded to 32 (as most UFS/eMMC devices will have this as
-> its queue depth)? Please let me know.
-> 
-> Thanks,
-> 
-> > 
-> > > 
-> > > Thanks,
-> > > 
-> > > > 
-> > > > >                 dpolicy->io_aware = false;
-> > > > >                 /* we need to issue all to keep CP_TRIMMED_FLAG */
-> > > > >                 dpolicy->granularity = 1;
-> > > > > @@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >         struct list_head *pend_list;
-> > > > >         struct discard_cmd *dc, *tmp;
-> > > > >         struct blk_plug plug;
-> > > > > -       int i, issued = 0;
-> > > > > +       int i, issued;
-> > > > >         bool io_interrupted = false;
-> > > > > 
-> > > > >         if (dpolicy->timeout != 0)
-> > > > >                 f2fs_update_time(sbi, dpolicy->timeout);
-> > > > > 
-> > > > > +retry:
-> > > > > +       issued = 0;
-> > > > >         for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> > > > >                 if (dpolicy->timeout != 0 &&
-> > > > >                                 f2fs_time_over(sbi, dpolicy->timeout))
-> > > > > @@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >                         break;
-> > > > >         }
-> > > > > 
-> > > > > +       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
-> > > > > +               __wait_all_discard_cmd(sbi, dpolicy);
-> > > > > +               goto retry;
-> > > > > +       }
-> > > > > +
-> > > > >         if (!issued && io_interrupted)
-> > > > >                 issued = -1;
-> > > > > 
-> > > > > Thanks,
-> > > > > 
-> > > > > > 
-> > > > > > > 
-> > > > > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > > > > > > ---
-> > > > > > > v3:
-> > > > > > > -Handle the regression reported by Chao with v2.
-> > > > > > > -simplify the logic to split the dc with multiple bios incase any bio returns
-> > > > > > >  EAGAIN and retry those new dc within 5 sec timeout.
-> > > > > > > 
-> > > > > > >  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
-> > > > > > >  1 file changed, 51 insertions(+), 14 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > > > > > index fb3e531..55d18c7 100644
-> > > > > > > --- a/fs/f2fs/segment.c
-> > > > > > > +++ b/fs/f2fs/segment.c
-> > > > > > > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
-> > > > > > >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
-> > > > > > >  	unsigned long flags;
-> > > > > > >  
-> > > > > > > -	dc->error = blk_status_to_errno(bio->bi_status);
-> > > > > > > -
-> > > > > > >  	spin_lock_irqsave(&dc->lock, flags);
-> > > > > > > +	if (!dc->error)
-> > > > > > > +		dc->error = blk_status_to_errno(bio->bi_status);
-> > > > > > > +
-> > > > > > >  	dc->bio_ref--;
-> > > > > > > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
-> > > > > > > -		dc->state = D_DONE;
-> > > > > > > -		complete_all(&dc->wait);
-> > > > > > > +	if (!dc->bio_ref) {
-> > > > > > > +		if (dc->error || dc->state == D_SUBMIT) {
-> > > > > > > +			dc->state = D_DONE;
-> > > > > > > +			complete_all(&dc->wait);
-> > > > > > > +		}
-> > > > > > >  	}
-> > > > > > >  	spin_unlock_irqrestore(&dc->lock, flags);
-> > > > > > >  	bio_put(bio);
-> > > > > > > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > > > > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> > > > > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > > > > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > > > > +	int flag;
-> > > > > > >  	block_t lstart, start, len, total_len;
-> > > > > > >  	int err = 0;
-> > > > > > >  
-> > > > > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > > > > > > +
-> > > > > > >  	if (dc->state != D_PREP)
-> > > > > > >  		return 0;
-> > > > > > >  
-> > > > > > > @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  		dc->bio_ref++;
-> > > > > > >  		spin_unlock_irqrestore(&dc->lock, flags);
-> > > > > > >  
-> > > > > > > -		atomic_inc(&dcc->queued_discard);
-> > > > > > > -		dc->queued++;
-> > > > > > > -		list_move_tail(&dc->list, wait_list);
-> > > > > > > -
-> > > > > > >  		/* sanity check on discard range */
-> > > > > > >  		__check_sit_bitmap(sbi, lstart, lstart + len);
-> > > > > > >  
-> > > > > > > @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> > > > > > >  		bio->bi_opf |= flag;
-> > > > > > >  		submit_bio(bio);
-> > > > > > > +		if (flag & REQ_NOWAIT) {
-> > > > > > > +			if (dc->error == -EAGAIN) {
-> > > > > > > +				spin_lock_irqsave(&dc->lock, flags);
-> > > > > > > +				dc->len -= len;
-> > > > > > > +				if (!dc->len) {
-> > > > > > > +					dc->len = total_len;
-> > > > > > > +					dc->state = D_PREP;
-> > > > > > > +					reinit_completion(&dc->wait);
-> > > > > > > +				} else {
-> > > > > > > +					dcc->undiscard_blks -= total_len;
-> > > > > > > +					if (dc->state == D_PARTIAL)
-> > > > > > > +						dc->state = D_SUBMIT;
-> > > > > > > +				}
-> > > > > > > +				err = dc->error;
-> > > > > > > +				dc->error = 0;
-> > > > > > > +				spin_unlock_irqrestore(&dc->lock, flags);
-> > > > > > > +				break;
-> > > > > > > +			}
-> > > > > > > +		}
-> > > > > > > +
-> > > > > > > +		atomic_inc(&dcc->queued_discard);
-> > > > > > > +		dc->queued++;
-> > > > > > > +		list_move_tail(&dc->list, wait_list);
-> > > > > > >  
-> > > > > > >  		atomic_inc(&dcc->issued_discard);
-> > > > > > >  
-> > > > > > > @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  		len = total_len;
-> > > > > > >  	}
-> > > > > > >  
-> > > > > > > -	if (!err && len)
-> > > > > > > -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
-> > > > > > > +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
-> > > > > > > +		__update_discard_tree_range(sbi, bdev, lstart, start,
-> > > > > > > +					total_len);
-> > > > > > >  	return err;
-> > > > > > >  }
-> > > > > > >  
-> > > > > > > @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  	struct list_head *pend_list;
-> > > > > > >  	struct discard_cmd *dc, *tmp;
-> > > > > > >  	struct blk_plug plug;
-> > > > > > > -	int i, issued = 0;
-> > > > > > > +	int i, err, issued = 0;
-> > > > > > >  	bool io_interrupted = false;
-> > > > > > > +	bool retry;
-> > > > > > >  
-> > > > > > >  	if (dpolicy->timeout != 0)
-> > > > > > >  		f2fs_update_time(sbi, dpolicy->timeout);
-> > > > > > >  
-> > > > > > > +retry:
-> > > > > > > +	retry = false;
-> > > > > > >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> > > > > > >  		if (dpolicy->timeout != 0 &&
-> > > > > > >  				f2fs_time_over(sbi, dpolicy->timeout))
-> > > > > > > @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  				break;
-> > > > > > >  			}
-> > > > > > >  
-> > > > > > > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > > > > > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > > > > > +			if (err == -EAGAIN) {
-> > > > > > > +				congestion_wait(BLK_RW_ASYNC,
-> > > > > > > +						DEFAULT_IO_TIMEOUT);
-> > > > > > > +				retry = true;
-> > > > > > > +			}
-> > > > > > >  
-> > > > > > >  			if (issued >= dpolicy->max_requests)
-> > > > > > >  				break;
-> > > > > > > @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > > > >  			break;
-> > > > > > >  	}
-> > > > > > >  
-> > > > > > > +	if (retry)
-> > > > > > > +		goto retry;
-> > > > > > > +
-> > > > > > >  	if (!issued && io_interrupted)
-> > > > > > >  		issued = -1;
-> > > > > > >  
-> > > > > > > -- 
-> > > > > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > > > > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-> > > > > 
-> > > > > -- 
-> > > > > --
-> > > > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> > > > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-> > > 
-> > > -- 
-> > > --
-> > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-> 
-> -- 
-> --
-> Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+CAP_PERFMON hardens system security and integrity during performance
+monitoring and observability operations by decreasing attack surface that
+is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
+to system performance monitoring and observability operations under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
+chances to misuse the credentials and makes the operation more secure.
+
+Thus, CAP_PERFMON implements the principle of least privilege for
+performance monitoring and observability operations (POSIX IEEE 1003.1e:
+2.2.2.39 principle of least privilege: A security design principle that
+  states that a process or program be granted only those privileges
+(e.g., capabilities) necessary to accomplish its legitimate function,
+and only for the time that such privileges are actually required)
+
+CAP_PERFMON meets the demand to secure system performance monitoring and
+observability operations for adoption in security sensitive, restricted,
+multiuser production environments (e.g. HPC clusters, cloud and virtual compute
+environments), where root or CAP_SYS_ADMIN credentials are not available to
+mass users of a system, and securely unblocks applicability and scalability
+of system performance monitoring and observability operations beyond root
+and CAP_SYS_ADMIN use cases.
+
+CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
+monitoring and observability operations and balances amount of CAP_SYS_ADMIN
+credentials following the recommendations in the capabilities man page [1]
+for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
+developers, below." For backward compatibility reasons access to system
+performance monitoring and observability subsystems of the kernel remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
+usage for secure system performance monitoring and observability operations
+is discouraged with respect to the designed CAP_PERFMON capability.
+
+Although the software running under CAP_PERFMON can not ensure avoidance
+of related hardware issues, the software can still mitigate these issues
+following the official hardware issues mitigation procedure [2]. The bugs
+in the software itself can be fixed following the standard kernel development
+process [3] to maintain and harden security of system performance monitoring
+and observability operations.
+
+[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: James Morris <jamorris@linux.microsoft.com>
+Acked-by: Serge E. Hallyn <serge@hallyn.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Igor Lubashev <ilubashe@akamai.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-man@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: selinux@vger.kernel.org
+Link: http://lore.kernel.org/lkml/5590d543-82c6-490a-6544-08e6a5517db0@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ include/linux/capability.h          | 4 ++++
+ include/uapi/linux/capability.h     | 8 +++++++-
+ security/selinux/include/classmap.h | 4 ++--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index ecce0f43c73a..027d7e4a853b 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+ extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+ extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+ extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
++static inline bool perfmon_capable(void)
++{
++	return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
++}
+ 
+ /* audit system wants to get cap info from files as well */
+ extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index 272dc69fa080..e58c9636741b 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -367,8 +367,14 @@ struct vfs_ns_cap_data {
+ 
+ #define CAP_AUDIT_READ		37
+ 
++/*
++ * Allow system performance and observability privileged operations
++ * using perf_events, i915_perf and other kernel subsystems
++ */
++
++#define CAP_PERFMON		38
+ 
+-#define CAP_LAST_CAP         CAP_AUDIT_READ
++#define CAP_LAST_CAP         CAP_PERFMON
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
+diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+index 986f3ac14282..d233ab3f1533 100644
+--- a/security/selinux/include/classmap.h
++++ b/security/selinux/include/classmap.h
+@@ -27,9 +27,9 @@
+ 	    "audit_control", "setfcap"
+ 
+ #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+-		"wake_alarm", "block_suspend", "audit_read"
++		"wake_alarm", "block_suspend", "audit_read", "perfmon"
+ 
+-#if CAP_LAST_CAP > CAP_AUDIT_READ
++#if CAP_LAST_CAP > CAP_PERFMON
+ #error New capability defined, please update COMMON_CAP2_PERMS.
+ #endif
+ 
+-- 
+2.21.1
+
