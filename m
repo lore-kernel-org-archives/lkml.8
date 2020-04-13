@@ -2,118 +2,156 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0DFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03014C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98AAE2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D464720692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cxTrCDfa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U7ikXblV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbgDMQYO (ORCPT
+        id S1731524AbgDMQZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:24:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40272 "EHLO
+        Mon, 13 Apr 2020 12:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731410AbgDMQYN (ORCPT
+        by vger.kernel.org with ESMTP id S1731515AbgDMQZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:24:13 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB8EC0A3BDC;
-        Mon, 13 Apr 2020 09:24:13 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id d77so9823129wmd.3;
-        Mon, 13 Apr 2020 09:24:12 -0700 (PDT)
+        Mon, 13 Apr 2020 12:25:33 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E37C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:25:33 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k18so3550401pll.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qXtx8pTfrIn1zXbbdxMLKHupYMldDuB/xcfzgVD2/4Y=;
-        b=cxTrCDfaNSVq0KbO/slYbodm5PO63GOaSaGZztgQHMlusGJ1U3HDI8tD/veoZUH4qE
-         yL/Z6fblhdhVeEl1x0F45BFvkrUr+4hP5qXNd6NRt9HynyYtkfoYeafz/4MA08Co6J/4
-         KPE2obMJ51RnPX1/89IZRfApghGoq1QEYJJQWu++VXpMhU0WlZEf2IQ83HqcOzaT8kMe
-         fwOC1CTerFYmi93xpDSSxrGaduA5NzlGhv6boSv8q5vmiT7xL5BeHP7eCVDbOFOEnDLc
-         0SaNBZEbYQb/LdVbxKRHN5m/657N1/RI0MgQR86iaw53YkO880Lym0IxfPoy92XZQZlW
-         mqCA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JwAO8xsQIwVha/87e1cz/mK2hxAGtEnUvhnRC7uNihg=;
+        b=U7ikXblVAvb3djXivI6h+WdkdCl/w8DkMjW+939N5zQqYiKTgapLFuvy+uKG1MN+A+
+         uOZtiYYZ46ikWI4iaUGn7ossQ/xj/GtPFiJhl2cvQGymKMCkKVshu9pKlH/w40kUlf2I
+         uRCYO2+Lju8w6ys525kr+p7h3t3GZ11fpR6ig=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qXtx8pTfrIn1zXbbdxMLKHupYMldDuB/xcfzgVD2/4Y=;
-        b=PavAtqy7UYk3MsV/Q3VyEoaHW3RP1m3Uka+U9AJ8PbPB/QaKwdZbAylE+e1TZRYCXe
-         cx7ULlvet+risjPcMTZi555O4xFXVOgaqi54FG7WOLpfBtm0AA1pi1bnuqGbpFFlXV4I
-         jhpNYBdQJcXa53C4gW3sT9hzRUdWjHhp7nmVlAxD14iCXtEx6NOgIyTjHT6D7w84LKtP
-         2LbHNtg7VlFzkQNlAtM576w8yRuFcNsWHn+WxBhbrry5HjFX5NEQlxJ1LVK5UESomID+
-         pufTnDBEX+t35biqzi3DBHJKZNW2FVDf4BhUPiGRXjXetfPCIQL9CZ9o3mZmRqHtp2tn
-         InGg==
-X-Gm-Message-State: AGi0PuaY+yGz4UdNkxcNNfmOP7MQ0lUFZNShUaZgHXjyJd54804PMKgk
-        4K8v3ssFx/4xVaVHo+42AZI=
-X-Google-Smtp-Source: APiQypIub1H5T2wOlisyD5+cKtMSkwzxwYBxJAfApq0itvUcldvHMbGePzvT4NrF0LKC4F434xY7ZQ==
-X-Received: by 2002:a1c:4d18:: with SMTP id o24mr18365679wmh.141.1586795051744;
-        Mon, 13 Apr 2020 09:24:11 -0700 (PDT)
-Received: from linux-gy6r.site ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id j68sm15754725wrj.32.2020.04.13.09.24.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 09:24:11 -0700 (PDT)
-Subject: Re: [PATCH] arm: dts: mt7623: add phy-mode property for gmac2
-To:     sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        john@phrozen.org
-References: <70e3eff31ecd500ed4862d9de28325a4dbd15105.1583648927.git.sean.wang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-X-Pep-Version: 2.0
-Message-ID: <e53c4dda-411b-4664-a6ab-94d9033d4814@gmail.com>
-Date:   Mon, 13 Apr 2020 18:24:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JwAO8xsQIwVha/87e1cz/mK2hxAGtEnUvhnRC7uNihg=;
+        b=fYLEokfOjXfHGIipOL/00YIZiJiDat9B7clRpU0UhM73Qeag9whznbo/Z2iSPt/G1w
+         pI7NZFJB+VEuQ2gvhpRQeNnSNKtWI16NjO2hT6zIYcgpXdyHql3may7hQh6VbAlg2tV7
+         4MYfOAiZl/zl6zLvH2ziF+VL0FxcBeA0satGDvKxOyRw5qkAg+73JRX5w1m1ay3LsDI6
+         vRhUhdDztotA2IlMiRNCRirzqfuowG9tPfekt3jT1s48Mu4PxyZn+yXPgsAIGp6aVZ38
+         zvIB1T0qfGh1djZgob8c4UfWqX3dzQ5wP+UoZgYXg6P6/XihYdxcsiVVyIXUkPEBC6yh
+         LRoA==
+X-Gm-Message-State: AGi0Puahoi7kdS2dlS4Ak0VwuNEQ8mLoaEhlBa4VDbtXtQ4doXg6rQ6n
+        JG5X6ZAihMZSnHeomIcgDQOY4J9Owng=
+X-Google-Smtp-Source: APiQypK3pOQisc1e6Bfnk05jixfozTyE2Vw3OJ+nvZ31oIa0sQ+YeHv9MnXlWjairAS3SwoxJBbtzQ==
+X-Received: by 2002:a17:90a:757:: with SMTP id s23mr22619308pje.166.1586795132812;
+        Mon, 13 Apr 2020 09:25:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 71sm9372363pfw.180.2020.04.13.09.25.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 09:25:32 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 09:25:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, macro@linux-mips.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] MIPS: Truncate link address into 32bit for 32bit
+ kernel
+Message-ID: <202004130925.F1B57BC7@keescook>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <70e3eff31ecd500ed4862d9de28325a4dbd15105.1583648927.git.sean.wang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 13, 2020 at 02:26:49PM +0800, Jiaxun Yang wrote:
+> LLD failed to link vmlinux with 64bit load address for 32bit ELF
+> while bfd will strip 64bit address into 32bit silently.
+> To fix LLD build, we should truncate load address provided by platform
+> into 32bit for 32bit kernel.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-On 3/8/20 7:34 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
->=20
-> Add phy-mode property required by phylink on gmac2
->=20
-> Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK suppor=
-t")
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+-Kees
 
-Applied to v5.7-next/arm32
-
-Thanks!
-
+> Link: https://github.com/ClangBuiltLinux/linux/issues/786
+> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+> Cc: Fangrui Song <maskray@google.com>
+> Cc: Nathan Chancellor <natechancellor@gmail.com>
+> --
+> V2: Take MaskRay's shell magic.
+> 
+> V3: After spent an hour on dealing with special character issue in
+> Makefile, I gave up to do shell hacks and write a util in C instead.
+> Thanks Maciej for pointing out Makefile variable problem.
+> 
+> v4: Finally we managed to find a Makefile method to do it properly
+> thanks to Kees. As it's too far from the initial version, I removed
+> Review & Test tag from Nick and Fangrui and Cc instead.
 > ---
->  arch/arm/boot/dts/mt7623n-rfb-emmc.dts | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts=
-/mt7623n-rfb-emmc.dts
-> index b7606130ade9..0447748f9fa0 100644
-> --- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> +++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> @@ -138,6 +138,7 @@ fixed-link {
->  	mac@1 {
->  		compatible =3D "mediatek,eth-mac";
->  		reg =3D <1>;
-> +		phy-mode =3D "rgmii";
->  		phy-handle =3D <&phy5>;
->  	};
-> =20
->=20
+>  arch/mips/Makefile             | 12 +++++++++++-
+>  arch/mips/kernel/vmlinux.lds.S |  2 +-
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+> index e1c44aed8156..18495568f03e 100644
+> --- a/arch/mips/Makefile
+> +++ b/arch/mips/Makefile
+> @@ -288,9 +288,19 @@ ifdef CONFIG_64BIT
+>    endif
+>  endif
+>  
+> +# When linking a 32-bit executable the LLVM linker cannot cope with a
+> +# 32-bit load address that has been sign-extended to 64 bits.  Simply
+> +# remove the upper 32 bits then, as it is safe to do so with other
+> +# linkers.
+> +ifdef CONFIG_64BIT
+> +	load-ld			= $(load-y)
+> +else
+> +	load-ld			= $(subst 0xffffffff,0x,$(load-y))
+> +endif
+> +
+>  KBUILD_AFLAGS	+= $(cflags-y)
+>  KBUILD_CFLAGS	+= $(cflags-y)
+> -KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
+> +KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(load-ld)
+>  KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+>  
+>  bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
+> diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+> index a5f00ec73ea6..5226cd8e4bee 100644
+> --- a/arch/mips/kernel/vmlinux.lds.S
+> +++ b/arch/mips/kernel/vmlinux.lds.S
+> @@ -55,7 +55,7 @@ SECTIONS
+>  	/* . = 0xa800000000300000; */
+>  	. = 0xffffffff80300000;
+>  #endif
+> -	. = VMLINUX_LOAD_ADDRESS;
+> +	. = VMLINUX_LINK_ADDRESS;
+>  	/* read-only */
+>  	_text = .;	/* Text and read-only data */
+>  	.text : {
+> -- 
+> 2.26.0.rc2
+> 
 
+-- 
+Kees Cook
