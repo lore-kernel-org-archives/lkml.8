@@ -2,82 +2,122 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A799C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB216C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B31D20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B9A20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vcuqo/Zg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aN6LfMf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgDMOHh (ORCPT
+        id S1730360AbgDMOIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:07:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36620 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730285AbgDMOHf (ORCPT
+        Mon, 13 Apr 2020 10:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730285AbgDMOIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:07:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586786855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YhNF3hI0xae/6/dg2QNRSGwFQztJmmvyxBBDiwMMhPM=;
-        b=Vcuqo/ZgOmKVkPUv3K8vnQ+/aPHXiXyLHOQley86Pr0zLcB/ozpw/EPCz/J03AyXT9ulM1
-        wAsM73ivIm+JEAAINnZS0Fec2eTQDIzNMVpgJIxnLyuoOpWiHivrGqbNqHJMuXzjz5F8fq
-        3SUuxfipNJM9sxjv4igxRgvJzJOFTW8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-199-b9q1jI89PgqqV41xqp8qrw-1; Mon, 13 Apr 2020 10:07:31 -0400
-X-MC-Unique: b9q1jI89PgqqV41xqp8qrw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B41F8801A02;
-        Mon, 13 Apr 2020 14:07:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C30B60BE0;
-        Mon, 13 Apr 2020 14:07:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200409130434.6736-1-ardb@kernel.org>
-References: <20200409130434.6736-1-ardb@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     dhowells@redhat.com, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
+        Mon, 13 Apr 2020 10:08:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2386DC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:08:51 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f13so10237117wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EOjjtmiSBry9sWf71C/iCFNq7MksgHVjzrQLc6ngrDY=;
+        b=aN6LfMf7c1/78sc1j3yHc6/q7n/6Gr9qwFHzOGxLMZK3tsVvoc0+7N4KxTmQoj9KSp
+         IgdnQtO1kg3PAyn1GxvUnr9nqBFlbVyqvydryKf0GppHMi9yv2tOg40Lzfajv6OUdIeV
+         FGGsVz5LkXKgjcM0ngQjnUlsUfCyx9idTaWLB980gM9nN6K/f2+QTwPWoPy/vYViyyIM
+         Zp3G1fgo63UFYBImjby3R3SFUebQCexOpUAXGxy/N8k3g22R4NF4vfH/cA/7CuzrnEEp
+         jHk9pbuGCNG3npJBuKzHesUPvu+caEZJmD1vpyQkjJZ/HQQV++9zONklY1HEEqWn6kiK
+         5dLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EOjjtmiSBry9sWf71C/iCFNq7MksgHVjzrQLc6ngrDY=;
+        b=Sx0S55GNMRApXJfBEKIcF5nQixrSJ71WAcBK1dLIX6lZx78DxW9uJzQZZx+NKAueVV
+         fDWh6dFJ0sXSyooTOD27wjjvqz8WQG+fjvZ7KvvJa0gxm+leKKLqm32SScb/zDZ/QTPh
+         JKK/5+rkwdzCCFvJdv9p/4JQo4SSC1QLOr2uzbFsE+yxsHDLnv22kh0RrspuOXd9NWcq
+         UFv13nLu8YjGI6gHN8+o60vNofei45TWfsDozjsNoCUQ99n5hpEomCGm8iwdgsG+kUbF
+         SltlK3ycq9+gUkJlB5CepHABeJnaOwVPh7oXlFkYlxi3FazUFKAjE930oFm0NRDL+WPV
+         gGQQ==
+X-Gm-Message-State: AGi0Pub5AYrCG2hvyD/VNLbdIv6d5wRQ2J3kbWlizWZsW2F2L/DCshHN
+        LCixSkWRjqFHVioedtZYnxfCQJordaHBLNJ1gLsmtw==
+X-Google-Smtp-Source: APiQypL79byYSl0+g7iFCftAmFHwg4Q6R884B+OgwhqBafAtbxh6J/bmKWXIfY0ohGdvGPFMgV1tWUBwq2uk3W+XxFI=
+X-Received: by 2002:adf:f844:: with SMTP id d4mr282394wrq.362.1586786929901;
+ Mon, 13 Apr 2020 07:08:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2936362.1586786844.1@warthog.procyon.org.uk>
-Date:   Mon, 13 Apr 2020 15:07:24 +0100
-Message-ID: <2936363.1586786844@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200411141740.14584-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200411141740.14584-1-tangbin@cmss.chinamobile.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 13 Apr 2020 10:08:38 -0400
+Message-ID: <CADnq5_MD6LkOEJC-hKKQSAmFAHY7LMZ2WU_ER-ttNrP20AxoQA@mail.gmail.com>
+Subject: Re: [PATCH] drm/dp_mst: Fix drm_dp_mst_topology.c selftest
+ compilation warning
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've been seeing the:
+On Mon, Apr 13, 2020 at 5:29 AM Tang Bin <tangbin@cmss.chinamobile.com> wrote:
+>
+> The struct drm_dp_desc contains struct drm_dp_dpcd_ident, and the struct
+> drm_dp_dpcd_ident contains the array, so zero-initialization requires a
+> more couple of braces. In the ARM compiler environment, the compile
+> warning pointing it out:
+>     drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_dp_mst_dsc_aux_for_port':
+>     drivers/gpu/drm/drm_dp_mst_topology.c:5494:9: warning: missing braces around initializer [-Wmissing-braces]
+>       struct drm_dp_desc desc = { 0 };
+>
 
-        exit_boot() failed!
-        efi_main() failed!
+This seems to vary based on compilers.  Maybe a memset would be better.
 
-thing.  This fixes it.
+Alex
 
-Tested-by: David Howells <dhowells@redhat.com>
-
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 70c4b7a..4d8d1fd 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -5494,7 +5494,7 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(struct drm_dp_mst_port *port)
+>  {
+>         struct drm_dp_mst_port *immediate_upstream_port;
+>         struct drm_dp_mst_port *fec_port;
+> -       struct drm_dp_desc desc = { 0 };
+> +       struct drm_dp_desc desc = { { { 0 } } };
+>         u8 endpoint_fec;
+>         u8 endpoint_dsc;
+>
+> --
+> 2.7.4
+>
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
