@@ -2,68 +2,105 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC8AC352B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E9DC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7902082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6A920732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsJNe0fB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgDMLx1 (ORCPT
+        id S1729320AbgDMMAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 07:53:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2308 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727887AbgDMLxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 07:53:25 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0F6CC73AB70BC23B8CE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 19:53:23 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 13 Apr 2020 19:53:15 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC:     Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH-next] genirq: use true for bool variable
-Date:   Mon, 13 Apr 2020 19:59:34 +0800
-Message-ID: <1586779174-102219-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Mon, 13 Apr 2020 08:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728558AbgDMMAu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 08:00:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C3BC03BC81;
+        Mon, 13 Apr 2020 05:00:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so5560536wrq.2;
+        Mon, 13 Apr 2020 05:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=RBJ/82khCb7w6F9uDzE2PbYYqeQUKGyIpJAUYpqNKF4=;
+        b=GsJNe0fBOEgYAfjdnslyVvoC/js7vUPKIw0Bgmny6X9rtvRxR4O63StFcb8M3t/cbn
+         dkcOuXB7e127Zc2j6rBvehWVxrUNIN5OyAA/JWvQQ+AerGoG2kmwgXA8IJRrJZW+U6d7
+         9aDfC4kNAZ06MxbIYMJltKCgGZgCZmfTAwmrvxhuoTNnwUPxOfSd5swZtF1zIJsCcOEM
+         LBv3SsbCbnHQHhIJ0Uq4/fuZfhYwmwZDls6ZmZZa6I4HGaivcnMrL5fD/POT1OQukjfL
+         5GUu52r4pwktExzbSeRxM4XkyALb5/DMbhmTeuWFH+ri0daBUhFUIIwHEV//g0a1JXHa
+         Apxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=RBJ/82khCb7w6F9uDzE2PbYYqeQUKGyIpJAUYpqNKF4=;
+        b=qwJuqXT4PBGopvkIQVUrf+ZbOrPFERmarEw4V9v0JnkwNVoe6LsSlChVmsvHPKVhE+
+         ncqzjqztZMp4FAdWmeK9cIazIYxezzOfxMxDefzXi0jnkODjD37kbZuk5qD620F3j4Z4
+         J1uHVsDGcVU+rshRRlEvaEz385Mt+q4nURXvhGricw241cFaUyG9/u0hZnHWMILOAthV
+         YHW3/FStBftLgEvfMtiMXqceZS4yyGgSdXYRkZ99Pfa26LE3R9Dm6lO71wNXYpbWae3i
+         Z6DANwumFIpA+NVh+SToP86fqix0nQgk/LNvPFa9rdPeoDEIjJRhCwJtqYFZjZoycoOZ
+         4O4w==
+X-Gm-Message-State: AGi0Pube5g1+5TxpgetQf4C5R5JIYalQkGEIMHKVkZKvs+xRfoikwmjT
+        pBAW3yon2NMXAA5UnO1KvWc=
+X-Google-Smtp-Source: APiQypKDPM7kNBa5oaqSMMFFVeqs0gfTJlQ9GtmtfAaxc2WuSh+Un8+F1RME4b+yHb37sCo73UY9bA==
+X-Received: by 2002:adf:a11a:: with SMTP id o26mr14294203wro.284.1586779247648;
+        Mon, 13 Apr 2020 05:00:47 -0700 (PDT)
+Received: from felia ([2001:16b8:2da9:2f00:3165:1687:284f:4993])
+        by smtp.gmail.com with ESMTPSA id x11sm14651007wru.62.2020.04.13.05.00.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 05:00:46 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Mon, 13 Apr 2020 14:00:39 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Borislav Petkov <bp@alien8.de>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] MAINTAINERS: rectify EDAC-SIFIVE entry
+In-Reply-To: <20200413081556.GB3772@zn.tnic>
+Message-ID: <alpine.DEB.2.21.2004131358020.7282@felia>
+References: <20200413073447.9284-1-lukas.bulwahn@gmail.com> <20200413081556.GB3772@zn.tnic>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
 
-kernel/irq/spurious.c:434:1-11: WARNING: Assignment of 0/1 to bool variable
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- kernel/irq/spurious.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, 13 Apr 2020, Borislav Petkov wrote:
+> 
+> Looking at that a bit - I think the right thing to do is to remove that
+> sifive_l2_cache.c file from the EDAC-SIFIVE file pattern because the
+> edac driver is simply using the L2 thing to register on its notifier
+> chain, i.e., using an external facility, like all the drivers do. And the
+> l2_cache thing is not part of the edac driver.
+> 
 
-diff --git a/kernel/irq/spurious.c b/kernel/irq/spurious.c
-index f865e5f..70ba6d5 100644
---- a/kernel/irq/spurious.c
-+++ b/kernel/irq/spurious.c
-@@ -431,7 +431,7 @@ bool noirqdebug __read_mostly;
- 
- int noirqdebug_setup(char *str)
- {
--	noirqdebug = 1;
-+	noirqdebug = true;
- 	printk(KERN_INFO "IRQ lockup detection disabled\n");
- 
- 	return 1;
--- 
-2.6.2
+Thanks for the pointer.
 
+I adjusted the patch, first accidently sent a broken PATCH v2 (which 
+shall be ignored), but this PATCH v3 shall be picked:
+
+https://lore.kernel.org/lkml/20200413115255.7100-1-lukas.bulwahn@gmail.com/
+
+
+Lukas
