@@ -2,170 +2,176 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FD1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500CFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:10:52 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D0820678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSycNdF5"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 12D0820678
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	by mail.kernel.org (Postfix) with ESMTP id 1F9A420678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:10:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 1F9A420678
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgDMDBf (ORCPT
+        id S1728496AbgDMDKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 23:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:45806 "EHLO
+        Sun, 12 Apr 2020 23:10:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:47282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgDMDBe (ORCPT
+        with ESMTP id S1728460AbgDMDKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 23:01:34 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA571C0A3BE0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:01:34 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id bu9so3774358qvb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:01:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=iBamg6b+a8xdsXs8Iaan2CedZk8W62JWzS+doU1fNjA=;
-        b=kSycNdF5dc1ojI+1otX03hnu3Kr1uHBZTSwUPC6GcLWDJedYRNgEV6CnMHk8kzkjpp
-         zV9nE9uqJoU+5/7nEtJAf3rq/SlhPDHpGWI6UzNqzvuM20C7deThGBzBJ6ZHmBIBhLVA
-         W8aOQ08IyXJVcf1+XDY+v4cyjq9f2uJncDmdP5GXqeYBssLLleqIxN9EYvw93wOCb3M/
-         smcwu6+MzNYS7ftckYDsoTN+JXvcwzMo/dbYV9euHdA53EmNFRvVGA7JZ9rrXP8b9HLL
-         CFv5xDzqO/mahGDkgwLxCI2piNsr69dTkCimmkzB7jebycPIp2ggPO4ZQi1XydPNayvQ
-         V6Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iBamg6b+a8xdsXs8Iaan2CedZk8W62JWzS+doU1fNjA=;
-        b=M0z5C7b7NZvzR4eEGX/M/RitrquGxvf3v+LQhEzY51ZculcDUgQhE4C+zztF8stHzL
-         /VOxg33fBvwLHioaYxB26IKes7EK3wt19NYL/keMMtELzy2j6JJMVFWPPW6uVUMmezvV
-         xiAEZtaSLBW2zyCz2nQempQHacKWtgXE4k9CR/6QG//MOIUl1i3G+l01eBeUGf8txFv5
-         I1eybHZ0oiYofI+iAFEJFSRkPd+cVDMLzsNM9fglvUCn0kUM6BaKjR3M/OxNytfaSng0
-         kUCXDX2VDZOqMu3+wkIli74Nr5tL1rBMbmgJbsThY93z10HGaBTpQZ+RZKubGBy0lRkk
-         IzJQ==
-X-Gm-Message-State: AGi0Pub9dzfC+N7fXl4/mb1qgDPccbNpb2q0MaFJxD3XYNWwxrjuG066
-        gLAd+U7Bj0fMKiSGUh/LbhM=
-X-Google-Smtp-Source: APiQypKyKsPE1udzaBgRtq8WySzkjFESxDLp4oQm6bTnXYTS0SwxGjyCLpqbAl18kaFeFN0CD/oiPA==
-X-Received: by 2002:a05:6214:183:: with SMTP id q3mr15807286qvr.234.1586746894071;
-        Sun, 12 Apr 2020 20:01:34 -0700 (PDT)
-Received: from localhost.localdomain ([189.78.178.135])
-        by smtp.gmail.com with ESMTPSA id i20sm7208754qkl.135.2020.04.12.20.01.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 20:01:33 -0700 (PDT)
-From:   Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
-To:     gregkh@linuxfoundation.org, navid.emamdoost@gmail.com,
-        sylphrenadin@gmail.com, nishkadg.linux@gmail.com,
-        stephen@brennan.io, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: [PATCH 2/2] staging: rtl8192u: Renames variables in setKey function
-Date:   Mon, 13 Apr 2020 03:01:29 +0000
-Message-Id: <20200413030129.861-2-c.cantanheide@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200413030129.861-1-c.cantanheide@gmail.com>
-References: <20200413030129.861-1-c.cantanheide@gmail.com>
+        Sun, 12 Apr 2020 23:10:48 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1D9C0A3BE0;
+        Sun, 12 Apr 2020 20:10:48 -0700 (PDT)
+IronPort-SDR: kngcP6d9NdQgTb9DbNEHooMgzAltwAOvLqfwv1ljxf6LqHCRLYlN62nU2c2jobKXkBUCMwhi4U
+ mx5cxM3X7suw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 20:10:46 -0700
+IronPort-SDR: X4MPwuF9i86nDYyxkd58AVJS6C0MtVzVwtfwzSZA07B1eyXHmQ/3nWj3eREjzKxRZ0o2YeJ2g5
+ uneGmWVHiayA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,377,1580803200"; 
+   d="scan'208";a="256053141"
+Received: from araj-mobl1.jf.intel.com ([10.255.32.166])
+  by orsmga006.jf.intel.com with ESMTP; 12 Apr 2020 20:10:44 -0700
+Date:   Sun, 12 Apr 2020 20:10:43 -0700
+From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200413031043.GA18183@araj-mobl1.jf.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+ <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+ <20200403112545.6c115ba3@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+ <20200407095801.648b1371@w520.home>
+ <20200408040021.GS67127@otc-nc-03>
+ <20200408101940.3459943d@w520.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408101940.3459943d@w520.home>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Renames the local variables of the setKey
-function, making them explicit.
+On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:
+> On Tue, 7 Apr 2020 21:00:21 -0700
+> "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> 
+> > Hi Alex
+> > 
+> > + Bjorn
+> 
+>  + Don
+> 
+> > FWIW I can't understand why PCI SIG went different ways with ATS, 
+> > where its enumerated on PF and VF. But for PASID and PRI its only
+> > in PF. 
+> > 
+> > I'm checking with our internal SIG reps to followup on that.
+> > 
+> > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > > > Is there vendor guarantee that hidden registers will locate at the
+> > > > same offset between PF and VF config space?   
+> > > 
+> > > I'm not sure if the spec really precludes hidden registers, but the
+> > > fact that these registers are explicitly outside of the capability
+> > > chain implies they're only intended for device specific use, so I'd say
+> > > there are no guarantees about anything related to these registers.  
+> > 
+> > As you had suggested in the other thread, we could consider
+> > using the same offset as in PF, but even that's a better guess
+> > still not reliable.
+> > 
+> > The other option is to maybe extend driver ops in the PF to expose
+> > where the offsets should be. Sort of adding the quirk in the 
+> > implementation. 
+> > 
+> > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is resisting 
+> > making VF's first class citizen, we might ask them to add some verbiage
+> > to suggest leave the same offsets as PF open to help emulation software.
+> 
+> Even if we know where to expose these capabilities on the VF, it's not
+> clear to me how we can actually virtualize the capability itself.  If
+> the spec defines, for example, an enable bit as r/w then software that
+> interacts with that register expects the bit is settable.  There's no
+> protocol for "try to set the bit and re-read it to see if the hardware
+> accepted it".  Therefore a capability with a fixed enable bit
+> representing the state of the PF, not settable by the VF, is
+> disingenuous to the spec.
 
-Signed-off-by: Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
----
- drivers/staging/rtl8192u/r8192U_core.c | 48 +++++++++++++-------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+I think we are all in violent agreement. A lot of times the pci spec gets
+defined several years ahead of real products and no one remembers
+the justification on why they restricted things the way they did.
 
-diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
-index 87c02aee3854..cc02c3b1eb91 100644
---- a/drivers/staging/rtl8192u/r8192U_core.c
-+++ b/drivers/staging/rtl8192u/r8192U_core.c
-@@ -4877,48 +4877,48 @@ void EnableHWSecurityConfig8192(struct net_device *dev)
- 	write_nic_byte(dev, SECR,  SECR_value);
- }
- 
--void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
--	    u8 *macaddr, u8 defaultkey, u32 *keycontent)
-+void setKey(struct net_device *dev, u8 entry_no, u8 key_idx, u16 key_type,
-+	    u8 *mac_addr, u8 default_key, u32 *key_content)
- {
--	u32 target_command = CAM_CONTENT_COUNT * entryno |  BIT(31) | BIT(16);
--	u32 target_content = 0;
--	u16 us_config = 0;
-+	u32 cmd = CAM_CONTENT_COUNT * entry_no |  BIT(31) | BIT(16);
-+	u32 content = 0;
-+	u16 config = 0;
- 	u8 i;
- 
--	if (entryno >= TOTAL_CAM_ENTRY)
-+	if (entry_no >= TOTAL_CAM_ENTRY)
- 		RT_TRACE(COMP_ERR, "cam entry exceeds in %s\n", __func__);
- 
- 	RT_TRACE(COMP_SEC,
- 		 "====>to %s, dev:%p, EntryNo:%d, KeyIndex:%d, KeyType:%d, MacAddr%pM\n",
--		 __func__, dev, entryno, keyindex, keytype, macaddr);
-+		 __func__, dev, entry_no, key_idx, key_type, mac_addr);
- 
--	if (defaultkey)
--		us_config |= BIT(15) | (keytype << 2);
-+	if (default_key)
-+		config |= BIT(15) | (key_type << 2);
- 	else
--		us_config |= BIT(15) | (keytype << 2) | keyindex;
-+		config |= BIT(15) | (key_type << 2) | key_idx;
- 
--	target_content = macaddr[0] << 16 |
--			 macaddr[0] << 24 |
--			(u32)us_config;
-+	content = mac_addr[0] << 16 |
-+		  mac_addr[0] << 24 |
-+		 (u32)config;
- 
--	write_nic_dword(dev, WCAMI, target_content);
--	write_nic_dword(dev, RWCAM, target_command++);
-+	write_nic_dword(dev, WCAMI, content);
-+	write_nic_dword(dev, RWCAM, cmd++);
- 
- 	/* MAC */
--	target_content = macaddr[2]	  |
--			 macaddr[3] <<  8 |
--			 macaddr[4] << 16 |
--			 macaddr[5] << 24;
--	write_nic_dword(dev, WCAMI, target_content);
--	write_nic_dword(dev, RWCAM, target_command++);
-+	content = mac_addr[2]	    |
-+		  mac_addr[3] <<  8 |
-+		  mac_addr[4] << 16 |
-+		  mac_addr[5] << 24;
-+	write_nic_dword(dev, WCAMI, content);
-+	write_nic_dword(dev, RWCAM, cmd++);
- 
- 	/* Key Material */
--	if (!keycontent)
-+	if (!key_content)
- 		return;
- 
- 	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
--		write_nic_dword(dev, WCAMI, *keycontent++);
--		write_nic_dword(dev, RWCAM, target_command++);
-+		write_nic_dword(dev, WCAMI, *key_content++);
-+		write_nic_dword(dev, RWCAM, cmd++);
- 	}
- }
- 
--- 
-2.20.1
+Maybe someone early product wasn't quite exposing these features to the VF
+and hence the spec is bug compatible :-)
 
+> 
+> If what we're trying to do is expose that PASID and PRI are enabled on
+> the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+> without the ability to control it is not the right approach.  Maybe we
+
+As long as the capability enable is only provided when the PF has enabled
+the feature. Then it seems the hardware seems to do the right thing.
+
+Assume we expose PASID/PRI only when PF has enabled it. It will be the
+case since the PF driver needs to exist, and IOMMU would have set the 
+PASID/PRI/ATS on PF.
+
+If the emulation is purely spoofing the capability. Once vIOMMU driver
+enables PASID, the context entries for the VF are completely independent
+from the PF context entries. 
+
+vIOMMU would enable PASID, and we just spoof the PASID capability.
+
+If vIOMMU or guest for some reason does disable_pasid(), then the 
+vIOMMU driver can disaable PASID on the VF context entries. So the VF
+although the capability is blanket enabled on PF, IOMMU gaurantees the
+transactions are blocked.
+
+
+In the interim, it seems like the intent of the virtual capability
+can be honored via help from the IOMMU for the controlling aspect.. 
+
+Did i miss anything? 
+
+> need new capabilities exposing these as slave features that cannot be
+> controlled?  We could define our own vendor capability for this, but of
+> course we have both the where to put it in config space issue, as well
+> as the issue of trying to push an ad-hoc standard.  vfio could expose
+> these as device features rather than emulating capabilities, but that
+> still leaves a big gap between vfio in the hypervisor and the driver in
+> the guest VM.  That might still help push the responsibility and policy
+> for how to expose it to the VM as a userspace problem though.
+
+I think this is a good long term solution, but if the vIOMMU implenentations
+can carry us for the time being, we can probably defer them unless
+we are stuck.
+
+> 
+> I agree though, I don't know why the SIG would preclude implementing
+> per VF control of these features.  Thanks,
+> 
+
+Cheers,
+Ashok
