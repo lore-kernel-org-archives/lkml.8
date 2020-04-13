@@ -2,116 +2,185 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E16DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD22EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:54:55 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192C20737
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:51:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org F192C20737
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
+	by mail.kernel.org (Postfix) with ESMTP id A2B7520735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:54:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org A2B7520735
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=pengaru.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgDMFvh (ORCPT
+        id S1726965AbgDMFyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 01:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:44456 "EHLO
+        Mon, 13 Apr 2020 01:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:44976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgDMFvg (ORCPT
+        with ESMTP id S1725842AbgDMFyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 01:51:36 -0400
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FF7C008654;
-        Sun, 12 Apr 2020 22:12:27 -0700 (PDT)
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B717B5D6576156E76FA3;
-        Mon, 13 Apr 2020 13:12:22 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
- 13:12:12 +0800
-To:     <viro@zeniv.linux.org.uk>, <rostedt@goodmis.org>,
-        <mingo@redhat.com>, "Jens Axboe" <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <jack@suse.cz>, <tj@kernel.org>, <bigeasy@linutronix.de>,
-        linfeilong <linfeilong@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        renxudong <renxudong1@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH] buffer: remove useless comment and WB_REASON_FREE_MORE_MEM,
- reason.
-Message-ID: <5844aa66-de1e-278b-5491-b7e6839640e9@huawei.com>
-Date:   Mon, 13 Apr 2020 13:12:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Apr 2020 01:54:54 -0400
+X-Greylist: delayed 339 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 12 Apr 2020 22:54:53 PDT
+Received: from shells.gnugeneration.com (shells.gnugeneration.com [66.240.222.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A77A2C0A3BE0;
+        Sun, 12 Apr 2020 22:54:53 -0700 (PDT)
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id 752141A402DF; Sun, 12 Apr 2020 22:49:14 -0700 (PDT)
+Date:   Sun, 12 Apr 2020 22:49:14 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     =?utf-8?B?UsOpbWk=?= Denis-Courmont <remi@remlab.net>
+Cc:     netdev@vger.kernel.org, courmisch@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: kernel BUG at net/phonet/socket.c:LINE!
+Message-ID: <20200413054914.euz7g2fcxsr74lfm@shells.gnugeneration.com>
+References: <00000000000062b41d05a2ea82b0@google.com>
+ <20200411004320.py2cashe4edsjdzp@shells.gnugeneration.com>
+ <1806223.auBmcZeozp@basile.remlab.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1806223.auBmcZeozp@basile.remlab.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+On Sat, Apr 11, 2020 at 10:36:59AM +0300, Rémi Denis-Courmont wrote:
+> 	Hi,
+> 
+> Le lauantaina 11. huhtikuuta 2020, 3.43.20 EEST Vito Caputo a écrit :
+> > I stared a bit at the code surrounding this report, and maybe someone more
+> > familiar with the network stack can clear something up for me real quick:
+> > > RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
+> > 
+> > net/phonet/socket.c:
+> > 202 static int pn_socket_autobind(struct socket *sock)
+> > 203 {
+> > 204         struct sockaddr_pn sa;
+> > 205         int err;
+> > 206
+> > 207         memset(&sa, 0, sizeof(sa));
+> > 208         sa.spn_family = AF_PHONET;
+> > 209         err = pn_socket_bind(sock, (struct sockaddr *)&sa,
+> > 210                                 sizeof(struct sockaddr_pn));
+> > 211         if (err != -EINVAL)
+> > 212                 return err;
+> > 213         BUG_ON(!pn_port(pn_sk(sock->sk)->sobject));
+> > 214         return 0; /* socket was already bound */
+> > 215 }
+> > 
+> > line 213 is the BUG_ON for !sock->sk->sobject, a phonet-specific member:
+> > 
+> > include/net/phonet/phonet.h:
+> >  23 struct pn_sock {
+> >  24         struct sock     sk;
+> >  25         u16             sobject;
+> >  26         u16             dobject;
+> >  27         u8              resource;
+> >  28 };
+> > 
+> > pn_socket_autobind() expects that to be non-null whenever pn_socket_bind()
+> > returns -EINVAL, which seems odd, but the comment claims it's already bound,
+> > let's look at pn_socket_bind():
+> > 
+> > net/phonet/socket.c:
+> > 156 static int pn_socket_bind(struct socket *sock, struct sockaddr *addr,
+> > int len) 157 {
+> > 158         struct sock *sk = sock->sk;
+> > 159         struct pn_sock *pn = pn_sk(sk);
+> > 160         struct sockaddr_pn *spn = (struct sockaddr_pn *)addr;
+> > 161         int err;
+> > 162         u16 handle;
+> > 163         u8 saddr;
+> > 164
+> > 165         if (sk->sk_prot->bind)
+> > 166                 return sk->sk_prot->bind(sk, addr, len);
+> > 167
+> > 168         if (len < sizeof(struct sockaddr_pn))
+> > 169                 return -EINVAL;
+> > 170         if (spn->spn_family != AF_PHONET)
+> > 171                 return -EAFNOSUPPORT;
+> > 172
+> > 173         handle = pn_sockaddr_get_object((struct sockaddr_pn *)addr);
+> > 174         saddr = pn_addr(handle);
+> > 175         if (saddr && phonet_address_lookup(sock_net(sk), saddr))
+> > 176                 return -EADDRNOTAVAIL;
+> > 177
+> > 178         lock_sock(sk);
+> > 179         if (sk->sk_state != TCP_CLOSE || pn_port(pn->sobject)) {
+> > 180                 err = -EINVAL; /* attempt to rebind */
+> > 181                 goto out;
+> > 182         }
+> > 183         WARN_ON(sk_hashed(sk));
+> > 184         mutex_lock(&port_mutex);
+> > 185         err = sk->sk_prot->get_port(sk, pn_port(handle));
+> > 186         if (err)
+> > 187                 goto out_port;
+> > 188
+> > 189         /* get_port() sets the port, bind() sets the address if
+> > applicable */ 190         pn->sobject = pn_object(saddr,
+> > pn_port(pn->sobject));
+> > 191         pn->resource = spn->spn_resource;
+> > 192
+> > 193         /* Enable RX on the socket */
+> > 194         err = sk->sk_prot->hash(sk);
+> > 195 out_port:
+> > 196         mutex_unlock(&port_mutex);
+> > 197 out:
+> > 198         release_sock(sk);
+> > 199         return err;
+> > 200 }
+> > 
+> > 
+> > The first return branch in there simply hands off the bind to and
+> > indirection sk->sk_prot->bind() if present.  This smells ripe for breaking
+> > the assumptions of that BUG_ON().
+> 
+> I believe that this is in line with the design of the socket stack within the 
+> Linux kernel. 'struct proto_ops' carries the protocol family operations, then 
+> 'struct proto' carries the protocol operations.
+> 
+> Admittedly, Phonet only had one datagram and one stream protocol ever written, 
+> as the hardware development ceased. So in practice, there is a 1:1 mapping 
+> between the two, and sk_prot.bind is always NULL.
+> 
+> > I'm assuming there's no point for such an indirection if not to enable a
+> > potentially non-phonet-ops hook, otherwise we'd just be do the bind.
+> 
+> In my understanding, that's *not* what sk_prot is for, no. It's rather meant 
+> to specialize the socket calls on a per-protocol basis.
+> 
+> For instance, UDP and UDP-Lite share their address family 'struct proto_ops' 
+> (either inet_dgram_ops or inet6_dgram_ops) but they have different 
+> 'struct proto'.
+> 
+> > If not, isn't this plain recursive?  Color me confused.  Will other bind()
+> > implementations return -EINVAL when already bound with sobject set? no.
+> 
+> As far as I can find, there are no cases where the bind pointer would not be 
+> NULL in upstream kernel. This can only happen if an out-of-tree module defines 
+> its own protocol within the Phonet family.
+> 
 
-free_more_memory func has been completely removed in commit bc48f001de12
-("buffer: eliminate the need to call free_more_memory() in __getblk_slow()")
+Ok, so we can disregard that bit as benign apparently.
 
-So comment and `WB_REASON_FREE_MORE_MEM` reason about free_more_memory
-are no longer needed.
+> > Furthermore, -EINVAL is also returned when len < sizeof(struct sockaddr_pn),
+> > maybe the rebind case should return -EADDRINUSE instead of -EINVAL?
+> 
+> bind() semantics require returning EINVAL if the socket address size is, well, 
+> invalid.
+> 
+> If we are to distinguish the two error scenarii, then it's the rebind  case 
+> that needs a different error, but EINVAL is consistent with INET.
+> 
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
----
- fs/buffer.c                      | 2 +-
- include/linux/backing-dev-defs.h | 1 -
- include/trace/events/writeback.h | 1 -
- 3 files changed, 1 insertion(+), 3 deletions(-)
+Isn't the existing code is bugged if treating -EINVAL as valid and a rebind?
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index b8d28370cfd7..07ab0405f3f5 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -973,7 +973,7 @@ grow_dev_page(struct block_device *bdev, sector_t block,
- 	struct page *page;
- 	struct buffer_head *bh;
- 	sector_t end_block;
--	int ret = 0;		/* Will call free_more_memory() */
-+	int ret = 0;
- 	gfp_t gfp_mask;
+The invalid size will return a NULL sobject but -EINVAL, triggering the BUG_ON.
 
- 	gfp_mask = mapping_gfp_constraint(inode->i_mapping, ~__GFP_FS) | gfp;
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 4fc87dee005a..ee577a83cfe6 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -54,7 +54,6 @@ enum wb_reason {
- 	WB_REASON_SYNC,
- 	WB_REASON_PERIODIC,
- 	WB_REASON_LAPTOP_TIMER,
--	WB_REASON_FREE_MORE_MEM,
- 	WB_REASON_FS_FREE_SPACE,
- 	/*
- 	 * There is no bdi forker thread any more and works are done
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-index d94def25e4dc..85a33bea76f1 100644
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -36,7 +36,6 @@
- 	EM( WB_REASON_SYNC,			"sync")			\
- 	EM( WB_REASON_PERIODIC,			"periodic")		\
- 	EM( WB_REASON_LAPTOP_TIMER,		"laptop_timer")		\
--	EM( WB_REASON_FREE_MORE_MEM,		"free_more_memory")	\
- 	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
- 	EMe(WB_REASON_FORKER_THREAD,		"forker_thread")
-
--- 
-2.19.1
-
-
+Thanks,
+Vito Caputo
