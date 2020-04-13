@@ -2,122 +2,158 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A08C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378D4C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 782F820732
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F07420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 08:35:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uD8A8qgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgDMIfk (ORCPT
+        id S1727944AbgDMIf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 04:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729339AbgDMIUT (ORCPT
+        Mon, 13 Apr 2020 04:35:57 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:47085 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgDMIfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 04:20:19 -0400
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F19EC008612;
-        Mon, 13 Apr 2020 01:20:19 -0700 (PDT)
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03D8IFTw003688;
-        Mon, 13 Apr 2020 04:20:19 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30bat4p92t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Apr 2020 04:20:19 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03D8KI2D001797
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 13 Apr 2020 04:20:18 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 13 Apr 2020 04:20:17 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 13 Apr 2020 04:20:17 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 13 Apr 2020 04:20:17 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03D8KEka026212;
-        Mon, 13 Apr 2020 04:20:15 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <alexandru.tachici@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 2/2] iio: adc: ad7192: move ad7192_of_match table closer to the end of the file
-Date:   Mon, 13 Apr 2020 11:20:44 +0300
-Message-ID: <20200413082044.81101-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200413082044.81101-1-alexandru.ardelean@analog.com>
-References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+        Mon, 13 Apr 2020 04:35:52 -0400
+Received: by mail-ot1-f65.google.com with SMTP id w12so7507682otm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 01:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AvGw2BENomW5mAjLN7te1eswf7XokhztvBZamCcaYj0=;
+        b=uD8A8qgO9EqAhRj5jnTHJFUY7v3Kp1X0ZbRX5+kzzkRJbOVFzZMvIiC0vrd8AEbXu6
+         j4U+LKqu1BGr1U7Iyv+gVYNLgnS1VGVayNBYCS2IHfvT2MLP6CobSya5jv/iUGy3TLgI
+         nm1wc59YKGg1s266n/VVhr39Z0sn1jSlMGTUPUvRSslX08GMWK3H9oihKMZDUGRoCDcD
+         xIAoJTdKpJInqVJYXUnt5AxEf7Yhxw6+V3EFPF7Fd1q8HNMdrOnUyEE4AQi1AgQodiaM
+         2vFiaW3n8RvkIVFYrU1b0b3Z7ncEW4wNV2ia112RomwbVmIeuZQ8f08i5g2dGbk/dqaj
+         Tb2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AvGw2BENomW5mAjLN7te1eswf7XokhztvBZamCcaYj0=;
+        b=UDh2hX9CzP6n5IIfoDBKd7M/2LjNWrGYx8xlBcADYKlpMJ5Oi9TiAOwJvclHw0DyWB
+         H0SwziWHWMgeDigfDMOtIBQzyRVYHImkBL5CuIHb433s6xxUlbO7bLxt1+2zNEIjVb0p
+         NmTSugV6a8l+xF5p5Krmrdc0QxTz6qtAMKOtanuygje6VwKkp3VQtcxCAh2jXd602nfr
+         GMLuPN9GAwkeULHX/9aZXj15n7sS42lSwh886SVZFIwGVe/zPZDBqEzfReCIkMuT+1gp
+         zlcvGMuiCmTBGmgSR0Zu0e42m0SexpXmLjQjyEv5TN5p4mcrZvERXOppBQ1itraD787b
+         Tvpw==
+X-Gm-Message-State: AGi0PubItOrbjX0Y/+MNZE0vvGGmMTJmgZS3BduqnYMprELeBE1aWsNd
+        snkWPutYlJRlq8Ha+K6emnwjw81Bl15vOxn6o1xpcg==
+X-Google-Smtp-Source: APiQypLGyU2+5UH8I4pQFfkdm4IeQucZnCldFkCGft+bJP32qprqeDoFkHg65jEskDU5xzjopyRhE7fXAcHOLPADm9w=
+X-Received: by 2002:a9d:4b84:: with SMTP id k4mr3987928otf.233.1586766950301;
+ Mon, 13 Apr 2020 01:35:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-13_02:2020-04-12,2020-04-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004130074
+References: <CANpmjNMR4BgfCxL9qXn0sQrJtQJbEPKxJ5_HEa2VXWi6UY4wig@mail.gmail.com>
+ <AC8A5393-B817-4868-AA85-B3019A1086F9@lca.pw> <CANpmjNPqQHKUjqAzcFym5G8kHX0mjProOpGu8e4rBmuGRykAUg@mail.gmail.com>
+ <C4FED226-E3DE-44AE-BBED-2B56B9F5B12F@lca.pw>
+In-Reply-To: <C4FED226-E3DE-44AE-BBED-2B56B9F5B12F@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 13 Apr 2020 10:35:38 +0200
+Message-ID: <CANpmjNPSLkiEer3xQHHxJm_4o5Em0i3bvM7TMmNO46Vzv2cwWQ@mail.gmail.com>
+Subject: Re: KCSAN + KVM = host reset
+To:     Qian Cai <cai@lca.pw>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change is more cosmetic. There is no need to reference this table in
-the probe function since 'of_device_get_match_data' is used, which obtains
-this information from the driver object.
+On Fri, 10 Apr 2020 at 21:57, Qian Cai <cai@lca.pw> wrote:
+>
+>
+>
+> > On Apr 10, 2020, at 7:35 AM, Marco Elver <elver@google.com> wrote:
+> >
+> > On Fri, 10 Apr 2020 at 13:25, Qian Cai <cai@lca.pw> wrote:
+> >>
+> >>
+> >>
+> >>> On Apr 10, 2020, at 5:47 AM, Marco Elver <elver@google.com> wrote:
+> >>>
+> >>> That would contradict what you said about it working if KCSAN is
+> >>> "off". What kernel are you attempting to use in the VM?
+> >
+> > Ah, sorry this was a typo,
+> >  s/working if KCSAN/not working if KCSAN/
+> >
+> >> Well, I said set KCSAN debugfs to =E2=80=9Coff=E2=80=9D did not help, =
+i.e., it will reset the host running kvm.sh. It is the vanilla ubuntu 18.04=
+ kernel in VM.
+> >>
+> >> github.com/cailca/linux-mm/blob/master/kvm.sh
+> >
+> > So, if you say that CONFIG_KCSAN_INTERRUPT_WATCHER=3Dn works, that
+> > contradicts it not working when KCSAN is "off". Because if KCSAN is
+> > off, it never sets up any watchpoints, and whether or not
+> > KCSAN_INTERRUPT_WATCHER is selected or not shouldn't matter. Does that
+> > make more sense?
+>
+> Yes, you are right. CONFIG_KCSAN_INTERRUPT_WATCHER=3Dn does not
+> make it work. It was a mistake when I tested it because there was a stale=
+ svm.o
+> leftover from the previous run, and then it will not trigger a rebuild (a=
+ bug?) when
+> only modify the Makefile to remove KCSAN_SANITIZE :=3D n. Sorry for the m=
+isleading
+> information. I should be checking if svm.o was really recompiled in the f=
+irst place.
+>
+> Anyway, I=E2=80=99ll send a patch to add __no_kcsan for svm_vcpu_run() be=
+cause I tried
+> to narrow down more with a kcsan_[disable|enable]_current() pair, but it =
+does NOT
+> work even by enclosing the almost whole function below until Marcro has m=
+ore ideas?
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/ad7192.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+This is expected. Instrumentation is not removed if you add
+kcsan_{disable,enable}_current() (it has the same effect as a
+localized "off"). Since it seems just the instrumentation and
+associated calls before every memory access is enough, this won't
+work. The attribute __no_kcsan removes instrumentation entirely from
+the function. If the non-instrumented code should be reduced, it is
+conceivable to take the problematic portion of code and factor it into
+a function that has attribute '__no_kcsan_or_inline'.
 
-diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-index 7e8662c5cb0e..cef61f962e60 100644
---- a/drivers/iio/adc/ad7192.c
-+++ b/drivers/iio/adc/ad7192.c
-@@ -908,15 +908,6 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static const struct of_device_id ad7192_of_match[] = {
--	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
--	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
--	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
--	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
--	{}
--};
--MODULE_DEVICE_TABLE(of, ad7192_of_match);
--
- static int ad7192_probe(struct spi_device *spi)
- {
- 	struct ad7192_state *st;
-@@ -1050,6 +1041,15 @@ static int ad7192_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id ad7192_of_match[] = {
-+	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-+	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-+	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-+	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ad7192_of_match);
-+
- static struct spi_driver ad7192_driver = {
- 	.driver = {
- 		.name	= "ad7192",
--- 
-2.17.1
+Thanks,
+-- Marco
 
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 2be5bbae3a40..e58b2d5a575c 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3286,6 +3286,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+>         svm->vmcb->save.rsp =3D vcpu->arch.regs[VCPU_REGS_RSP];
+>         svm->vmcb->save.rip =3D vcpu->arch.regs[VCPU_REGS_RIP];
+>
+> +       kcsan_disable_current();
+>         /*
+>          * A vmexit emulation is required before the vcpu can be executed
+>          * again.
+> @@ -3410,6 +3411,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+>                 svm_handle_mce(svm);
+>
+>         mark_all_clean(svm->vmcb);
+> +       kcsan_enable_current();
+>  }
+>  STACK_FRAME_NON_STANDARD(svm_vcpu_run);
+>
+>
+>
+>
+>
+>
