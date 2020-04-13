@@ -2,103 +2,122 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD8CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 04:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CD8C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:02:29 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E373920735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 04:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D36206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="h24HO9c4"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org E373920735
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	dkim=pass (2048-bit key) header.d=easyb-ch.20150623.gappssmtp.com header.i=@easyb-ch.20150623.gappssmtp.com header.b="sKSBJtsC"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 01D36206E9
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=easyb.ch
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgDME4A (ORCPT
+        id S1728795AbgDMFC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 00:56:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:36208 "EHLO
+        Mon, 13 Apr 2020 01:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:37224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgDME4A (ORCPT
+        with ESMTP id S1728783AbgDMFC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 00:56:00 -0400
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 556E9C0A3BE0;
-        Sun, 12 Apr 2020 21:56:00 -0700 (PDT)
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3D9206A1;
-        Mon, 13 Apr 2020 04:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586753759;
-        bh=ntRtM/0XRAKESl58dPv8YFdKb0z/yYug4RvgbiDPSAY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h24HO9c4n/g0j4mIV/Nln3QBeWywG0Xui2ZucpyyvlaRblXFDymGGT5dtcV4wgsqO
-         KSHEvuR1ApPvx70Wz2xIsy44vCBQlP3Z+WTzHL7hVFO9zO/B7sspw1bsbv7VTQmLAk
-         MeGiBuAxN903NVm9i0yn2OyCcdU/tQr1zNM20nXs=
-Date:   Mon, 13 Apr 2020 07:55:55 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     bp@alien8.de, kuba@kernel.org, thomas.lendacky@amd.com,
-        keyur@os.amperecomputing.com, pcnet32@frontier.com,
-        vfalico@gmail.com, j.vosburgh@gmail.com, linux-acenic@sunsite.dk,
-        mripard@kernel.org, heiko@sntech.de, mark.einon@gmail.com,
-        chris.snook@gmail.com, linux-rockchip@lists.infradead.org,
-        iyappan@os.amperecomputing.com, irusskikh@marvell.com,
-        dave@thedillows.org, netanel@amazon.com,
-        quan@os.amperecomputing.com, jcliburn@gmail.com,
-        LinoSanfilippo@gmx.de, linux-arm-kernel@lists.infradead.org,
-        andreas@gaisler.com, andy@greyhouse.net, netdev@vger.kernel.org,
-        thor.thayer@linux.intel.com, linux-kernel@vger.kernel.org,
-        ionut@badula.org, akiyano@amazon.com, jes@trained-monkey.org,
-        nios2-dev@lists.rocketboards.org, wens@csie.org
-Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
-Message-ID: <20200413045555.GE334007@unreal>
-References: <20200224085311.460338-1-leon@kernel.org>
- <20200224085311.460338-4-leon@kernel.org>
- <20200411155623.GA22175@zn.tnic>
- <20200412.210341.1711540878857604145.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200412.210341.1711540878857604145.davem@davemloft.net>
+        Mon, 13 Apr 2020 01:02:27 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A5FC0086B6
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 22:02:24 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s8so8995915wrt.7
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 22:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=easyb-ch.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Uqitgnmn7ZCl0pMBz3WS3gLsMoIlng512epuA2Wtd/8=;
+        b=sKSBJtsCloD3LSgreeEK44eNxCI0BWQDTRrsWkePiQTbjionW0UytbDp0pn1kbOYRh
+         v4G2uToQMrAEg6CM4JRucUjfitktldAGC7zsUTaBQBcCAZq6u2d5frmyQNietMffpJyX
+         UDC8mIBANdaKy/mFbuIT6fNd9ODu1L36YdUi7C9b2uKItbyl549DdEzWVKE9aKaGhhHx
+         FXnlD3+1cHX4X6XTaDHq7jCoy4zBTgXR0XADL/UHbI8QMcMriuO8eiIBP+kEDM4VRLRb
+         E5YTO48GnfP3I6fu52HXeAHa7jLV3L+4ccU8m7B5H+QII8IeVm40qRbK66+D9z8B4yep
+         uicQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Uqitgnmn7ZCl0pMBz3WS3gLsMoIlng512epuA2Wtd/8=;
+        b=SAFhqgnXrFYcK+6F/ziV5mWlDdCtnWkdDv2WCGKsCF1Pabu1iLJEx79CWhLGJlHfo7
+         jlptkj/9IuOhyI0W3TNuFGpaB2tDMGvBeyfIcXhrwH1UN7ytU4OTV1DWnfCcXdTL6yfV
+         UbTWH25eQvwSbvKoptR9y9vNOvCY15hm4s9KTm+LuOVllF9TQOC2Jfl56eGN4KisvsW7
+         ytxcn4kS7m8+8l2dqvYw3ekM8bsFUXdaf2j7u2ewPIbygejrli3UmF0VAxuDZYlJlW12
+         HhoztaKcYNBhBQJM4S0cUi7xxhrvO2ecUEB0315SL/458uhOREYAAtP0Iiy6By3W17Xf
+         I4JQ==
+X-Gm-Message-State: AGi0Pub9gFqdh4bURKPX3DDGPwpV8SxKp2HXE59ToBIVgaCzmEx8Hc59
+        eMnzbTCLlBThZP/kMXJmaiSENA==
+X-Google-Smtp-Source: APiQypLbyb568HVT5hQ6wehhmaAyAaPlxe8QRbk2/eNkRJT431aBvydNGYoyK+gWeCPpIbmv/vC6Mw==
+X-Received: by 2002:a5d:6a46:: with SMTP id t6mr16353193wrw.93.1586754143460;
+        Sun, 12 Apr 2020 22:02:23 -0700 (PDT)
+Received: from ?IPv6:2001:1715:4e3a:130:710e:1dde:8fec:143e? ([2001:1715:4e3a:130:710e:1dde:8fec:143e])
+        by smtp.gmail.com with ESMTPSA id c190sm13151557wme.10.2020.04.12.22.02.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 Apr 2020 22:02:23 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
+Subject: Re: [PATCH] selftests/tpm2: Change exception handling to be Python 3
+ compatible
+From:   Ezra Buehler <ezra@easyb.ch>
+In-Reply-To: <20200412170719.GA324408@linux.intel.com>
+Date:   Mon, 13 Apr 2020 07:02:20 +0200
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <531D50E8-E8FC-402E-9226-6000E8B6E960@easyb.ch>
+References: <20200412143656.72955-1-jarkko.sakkinen@linux.intel.com>
+ <1FE03B4F-C42C-4B5F-A4B5-8169705911FA@easyb.ch>
+ <20200412170719.GA324408@linux.intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.9.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 09:03:41PM -0700, David Miller wrote:
-> From: Borislav Petkov <bp@alien8.de>
-> Date: Sat, 11 Apr 2020 17:56:23 +0200
->
-> > From: Borislav Petkov <bp@suse.de>
-> >
-> > Change the include order so that MODULE_ARCH_VERMAGIC from the arch
-> > header arch/x86/include/asm/module.h gets used instead of the fallback
-> > from include/linux/vermagic.h and thus fix:
-> >
-> >   In file included from ./include/linux/module.h:30,
-> >                    from drivers/net/ethernet/3com/3c515.c:56:
-> >   ./arch/x86/include/asm/module.h:73: warning: "MODULE_ARCH_VERMAGIC" redefined
-> >      73 | # define MODULE_ARCH_VERMAGIC MODULE_PROC_FAMILY
-> >         |
-> >   In file included from drivers/net/ethernet/3com/3c515.c:25:
-> >   ./include/linux/vermagic.h:28: note: this is the location of the previous definition
-> >      28 | #define MODULE_ARCH_VERMAGIC ""
-> >         |
-> >
-> > Fixes: 6bba2e89a88c ("net/3com: Delete driver and module versions from 3com drivers")
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
->
-> I'm so confused, that commit in the Fixes: tag is _removing_ code but adding
-> new #include directives?!?!
->
-> Is vermagic.h really needed in these files?
+Hi Jarkko,
 
-You are completely right, it is not needed at all in those files.
+On 12 Apr 2020, at 19:07, Jarkko Sakkinen =
+<jarkko.sakkinen@linux.intel.com> wrote:
+>=20
+> On Sun, Apr 12, 2020 at 05:02:27PM +0200, Ezra Buehler wrote:
+>> Hi Jarkkon,
+>>=20
+>>> On 12 Apr 2020, at 16:36, Jarkko Sakkinen =
+<jarkko.sakkinen@linux.intel.com> wrote:
+>>> +        except ProtocolError(e):
+>>=20
+>> Should this not be
+>>=20
+>>        except ProtocolError as e:
+>=20
+> Unless there is a functional difference, does it matter?
+>=20
+> /Jarkko
 
-Thanks
+Well, your patch confuses me a lot. It looks to me like you are passing
+the undefined `e` variable to the constructor.
+
+When I run flake8 on it I get following error (among others):
+
+    F821 undefined name 'e'
+
+What I suggested is the standard syntax:
+https://docs.python.org/3/tutorial/errors.html
+
+Did you test this? You should get an error as soon as an exception
+occurs.
+
+Cheers,
+Ezra.
+
