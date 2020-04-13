@@ -2,198 +2,187 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC40AC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F6FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5F220739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3FA20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgxuuZRw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X/PQXIcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbgDMSwk (ORCPT
+        id S2387752AbgDMSww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733112AbgDMSwh (ORCPT
+        Mon, 13 Apr 2020 14:52:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23666 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733123AbgDMSwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:52:37 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA52EC0A3BDC;
-        Mon, 13 Apr 2020 11:52:37 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id 103so10181773otv.0;
-        Mon, 13 Apr 2020 11:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xC3x0yRcgUpqkBQhYGspeGLwB9d9vOWv+kQdwmDFIYk=;
-        b=IgxuuZRwoOsuo5lS8HrLEy3dHrJ8MoK5xyRYnt9I1YdQ8MnuA3vJjpXRLYDJACtokz
-         2BRT2ctu0wRwrbuPq+G/Nvno2QYLro6FeqP6aZ2JN9k6NBfmjtwNFwvbbWpe41rZV7Ct
-         Bh3aJ/sJcCUZe7OoTrQzOV2Ez5z9+9jEdUzggJ1U6Zciz28QpxP4JeoadZCHcDY7ES7l
-         LQWUR92cASEYS4r+YcT/6F3sofRQjDi34BOm88Gl3gI1jE6Z94gCCdl85lvVBUyYTOdE
-         UpFzsvG0XhQEAtC0AqwUjSY2g+u/iwFTvG9DXe4pTXCs8J6svRaYYmc3UdP/NVO2OET8
-         EsTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xC3x0yRcgUpqkBQhYGspeGLwB9d9vOWv+kQdwmDFIYk=;
-        b=pVnXTYy2A9pJ2JnCEuEnt7ncFaV3GzOVzuT0dvUEXqcyPDuqr1kjZRm7ABKuGZhYRq
-         Eff/ix0eekPQw8f6akDhbPa6euz+ESEPDA/JU39CE4m8syW28tyDIgN3RwpWfs/y4F83
-         ayxxgTINZMMI0vicEeKUDv3rfET4nA+OuhQtardZK1OvbuwRft5FkC6dMQUoNmcPJZMv
-         MFf7QDaFiAchOzDXByzCPJbVYMe0VSZ+GOfVXor01a8As/AY0h2KB42ZYT/Cc6+J7pz/
-         +NbFGWTBO719rYYy2Voo98S+sR6Wh44z/jAGh4BnQuDNdr6ChygwHt0NQ8YBcCw9KAcN
-         s65w==
-X-Gm-Message-State: AGi0PuZPuY67UcRWu3zvyii14WV5B+Do0TKCEf7PlY8XXNr9UEXNO/Lo
-        5NDAMv7/tNjfWQ+ZTfHiBXM=
-X-Google-Smtp-Source: APiQypIASkLqrCad3LTHgKfEnGZ92poqy7f3+DANLMdN/Fse/aVtD4kzlXdMBHfPe+6h3+/HEWN0wg==
-X-Received: by 2002:a4a:9c41:: with SMTP id c1mr15471481ook.43.1586803956871;
-        Mon, 13 Apr 2020 11:52:36 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id w19sm4948336otj.57.2020.04.13.11.52.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Apr 2020 11:52:36 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 11:52:34 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, macro@linux-mips.org,
-        clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] MIPS: Truncate link address into 32bit for 32bit
- kernel
-Message-ID: <20200413185234.GA12413@ubuntu-s3-xlarge-x86>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+        Mon, 13 Apr 2020 14:52:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586803965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VEsVmmOO6axAzAyQkoOiM6SYAejl43B4iZY1NJSfZ0s=;
+        b=X/PQXIcOfIYPUtd4oNDcqWHc7d061cJM8MgabI4OD6ZI0VA5X1svV1Kz7i9ZE4xmdZDHed
+        Lqckcj7sm5eGgEvkSLHX1mXS/DztJFA6F28SZriblvmhaajrrogAdKlLLGWJd+1snpvbxp
+        DIjPxwbuPVor8ejf4BqkEXlxFeysxZ8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-oP2NfmJ9OTKgGCR2_NkE1A-1; Mon, 13 Apr 2020 14:52:41 -0400
+X-MC-Unique: oP2NfmJ9OTKgGCR2_NkE1A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D7A5107ACCA;
+        Mon, 13 Apr 2020 18:52:40 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B36129F99A;
+        Mon, 13 Apr 2020 18:52:29 +0000 (UTC)
+Subject: Re: [PATCH 03/10] KVM: selftests: Add util to delete memory region
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>
+References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
+ <20200410231707.7128-4-sean.j.christopherson@intel.com>
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+Message-ID: <cf3c04ac-f4f2-e1f0-4fd7-c30c28dd3563@redhat.com>
+Date:   Mon, 13 Apr 2020 15:52:27 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200410231707.7128-4-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiaxun,
 
-On Mon, Apr 13, 2020 at 02:26:49PM +0800, Jiaxun Yang wrote:
-> LLD failed to link vmlinux with 64bit load address for 32bit ELF
-> while bfd will strip 64bit address into 32bit silently.
-> To fix LLD build, we should truncate load address provided by platform
-> into 32bit for 32bit kernel.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/786
-> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-> Cc: Fangrui Song <maskray@google.com>
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> --
-> V2: Take MaskRay's shell magic.
-> 
-> V3: After spent an hour on dealing with special character issue in
-> Makefile, I gave up to do shell hacks and write a util in C instead.
-> Thanks Maciej for pointing out Makefile variable problem.
-> 
-> v4: Finally we managed to find a Makefile method to do it properly
-> thanks to Kees. As it's too far from the initial version, I removed
-> Review & Test tag from Nick and Fangrui and Cc instead.
+On 4/10/20 8:17 PM, Sean Christopherson wrote:
+> Add a utility to delete a memory region, it will be used by x86's
+> set_memory_region_test.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  arch/mips/Makefile             | 12 +++++++++++-
->  arch/mips/kernel/vmlinux.lds.S |  2 +-
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-> index e1c44aed8156..18495568f03e 100644
-> --- a/arch/mips/Makefile
-> +++ b/arch/mips/Makefile
-> @@ -288,9 +288,19 @@ ifdef CONFIG_64BIT
->    endif
->  endif
->  
-> +# When linking a 32-bit executable the LLVM linker cannot cope with a
-> +# 32-bit load address that has been sign-extended to 64 bits.  Simply
-> +# remove the upper 32 bits then, as it is safe to do so with other
-> +# linkers.
-> +ifdef CONFIG_64BIT
-> +	load-ld			= $(load-y)
-> +else
-> +	load-ld			= $(subst 0xffffffff,0x,$(load-y))
-> +endif
+>   .../testing/selftests/kvm/include/kvm_util.h  |  1 +
+>   tools/testing/selftests/kvm/lib/kvm_util.c    | 56 +++++++++++++------
+>   2 files changed, 40 insertions(+), 17 deletions(-)
+
+LGTM.
+
+Reviewed-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+
+>
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index 2f329e785c58..d4c3e4d9cd92 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -114,6 +114,7 @@ int _vcpu_ioctl(struct kvm_vm *vm, uint32_t vcpuid, unsigned long ioctl,
+>   void vm_ioctl(struct kvm_vm *vm, unsigned long ioctl, void *arg);
+>   void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
+>   void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
+> +void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
+>   void vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpuid);
+>   vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
+>   			  uint32_t data_memslot, uint32_t pgd_memslot);
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 105ee9bc09f0..ab5b7ea60f4b 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -433,34 +433,38 @@ void kvm_vm_release(struct kvm_vm *vmp)
+>   		"  vmp->kvm_fd: %i rc: %i errno: %i", vmp->kvm_fd, ret, errno);
+>   }
+>   
+> +static void __vm_mem_region_delete(struct kvm_vm *vm,
+> +				   struct userspace_mem_region *region)
+> +{
+> +	int ret;
 > +
->  KBUILD_AFLAGS	+= $(cflags-y)
->  KBUILD_CFLAGS	+= $(cflags-y)
-> -KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-> +KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(load-ld)
->  KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
->  
->  bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
-> diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-> index a5f00ec73ea6..5226cd8e4bee 100644
-> --- a/arch/mips/kernel/vmlinux.lds.S
-> +++ b/arch/mips/kernel/vmlinux.lds.S
-> @@ -55,7 +55,7 @@ SECTIONS
->  	/* . = 0xa800000000300000; */
->  	. = 0xffffffff80300000;
->  #endif
-> -	. = VMLINUX_LOAD_ADDRESS;
-> +	. = VMLINUX_LINK_ADDRESS;
->  	/* read-only */
->  	_text = .;	/* Text and read-only data */
->  	.text : {
-> -- 
-> 2.26.0.rc2
-> 
+> +	list_del(&region->list);
+> +
+> +	region->region.memory_size = 0;
+> +	ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION, &region->region);
+> +	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
+> +		    "rc: %i errno: %i", ret, errno);
+> +
+> +	sparsebit_free(&region->unused_phy_pages);
+> +	ret = munmap(region->mmap_start, region->mmap_size);
+> +	TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i", ret, errno);
+> +
+> +	free(region);
+> +}
+> +
+>   /*
+>    * Destroys and frees the VM pointed to by vmp.
+>    */
+>   void kvm_vm_free(struct kvm_vm *vmp)
+>   {
+>   	struct userspace_mem_region *region, *tmp;
+> -	int ret;
+>   
+>   	if (vmp == NULL)
+>   		return;
+>   
+>   	/* Free userspace_mem_regions. */
+> -	list_for_each_entry_safe(region, tmp, &vmp->userspace_mem_regions, list) {
+> -		list_del(&region->list);
+> -
+> -		region->region.memory_size = 0;
+> -		ret = ioctl(vmp->fd, KVM_SET_USER_MEMORY_REGION,
+> -			&region->region);
+> -		TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
+> -			"rc: %i errno: %i", ret, errno);
+> -
+> -		sparsebit_free(&region->unused_phy_pages);
+> -		ret = munmap(region->mmap_start, region->mmap_size);
+> -		TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i",
+> -			    ret, errno);
+> -
+> -		free(region);
+> -	}
+> +	list_for_each_entry_safe(region, tmp, &vmp->userspace_mem_regions, list)
+> +		__vm_mem_region_delete(vmp, region);
+>   
+>   	/* Free sparsebit arrays. */
+>   	sparsebit_free(&vmp->vpages_valid);
+> @@ -775,6 +779,24 @@ void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa)
+>   		    ret, errno, slot, new_gpa);
+>   }
+>   
+> +/*
+> + * VM Memory Region Delete
+> + *
+> + * Input Args:
+> + *   vm - Virtual Machine
+> + *   slot - Slot of the memory region to delete
+> + *
+> + * Output Args: None
+> + *
+> + * Return: None
+> + *
+> + * Delete a memory region.
+> + */
+> +void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot)
+> +{
+> +	__vm_mem_region_delete(vm, memslot2region(vm, slot));
+> +}
+> +
+>   /*
+>    * VCPU mmap Size
+>    *
 
-This version does not quite work:
-
-ld.lld: error: section .text at 0xFFFFFFFF80990000 of size 0x388C exceeds available address space
-ld.lld: error: section .MIPS.abiflags at 0xFFFFFFFF80993890 of size 0x18 exceeds available address space
-ld.lld: error: section .rodata.str1.1 at 0xFFFFFFFF809938A8 of size 0x164 exceeds available address space
-ld.lld: error: section .eh_frame at 0xFFFFFFFF80993A0C of size 0x2C exceeds available address space
-ld.lld: error: section .data at 0xFFFFFFFF80993A40 of size 0x38EFD0 exceeds available address space
-ld.lld: error: section .got at 0xFFFFFFFF80D22A10 of size 0x8 exceeds available address space
-ld.lld: error: section .bss at 0xFFFFFFFF80E22A20 of size 0x402010 exceeds available address space
-ld.lld: error: section .sbss at 0xFFFFFFFF81224A30 of size 0x8 exceeds available address space
-make[2]: *** [/home/nathan/src/linux/arch/mips/boot/compressed/Makefile:104: vmlinuz] Error 1
-
-I think something like this is needed but I do not know if it is proper.
-
-Cheers,
-Nathan
-
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 18495568f03e..68c0f22fefc0 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -304,6 +304,7 @@ KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(loa
- KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
- 
- bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
-+		  VMLINUX_LINK_ADDRESS=$(load-ld) \
- 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
- 		  PLATFORM="$(platform-y)" \
- 		  ITS_INPUTS="$(its-y)"
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index 0df0ee8a298d..3d391256ab7e 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
- VMLINUZ_LOAD_ADDRESS := $(zload-y)
- else
- VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
--		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
-+		$(obj)/vmlinux.bin $(VMLINUX_LINK_ADDRESS))
- endif
- UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
- 
