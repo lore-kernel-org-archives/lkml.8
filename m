@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BC3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A097C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8DC20731
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0AA20731
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 18:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubMoQe/5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJexAu2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387556AbgDMSBq (ORCPT
+        id S2387564AbgDMSBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44088 "EHLO
+        Mon, 13 Apr 2020 14:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387542AbgDMSBm (ORCPT
+        by vger.kernel.org with ESMTP id S2387544AbgDMSBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 14:01:42 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59421C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:41 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x18so6774303wrq.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:41 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABA0C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:42 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r26so10880504wmh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 11:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oFzTWhcRCR5eyAjpAIHdWF4cXdPQYj4ClKz3tMRVpzg=;
-        b=ubMoQe/5WSJeHwx3UpJa1Mtt81fxLIXsxRkMHb8dBbGrt/rR4TfvT4oTPYOXc51Drx
-         RkyYS//7/mexHk+rA3Tzpw3w5SJpH3wLxkPJP2TGuOtlLnmmHKIiykPiCDaZY7IffzNM
-         j+NKAS3DVil6UgjAWVb3I38iXqsomo39z4HOk0VOTx7MsrEIu0hCUBFH7Ot2ugN0eHRV
-         ZbGZH5PFMX8UVeW7KbIiOtpeh0KCobADfgB1zQ3WYNrhPF5FOS50fj04ocg+bGtkPiof
-         YbnLb5Msqix7IKHFxWuiY6clvLfkEficis4v0shkoK2eSrvj1wBHIPZqcWE8R6tPpIAh
-         O8hw==
+        bh=uV6IGqg+WAl5sD9tlqG1PW+JWwQKMrghYa4BIYKJU24=;
+        b=dJexAu2jDuMX0jl4rYd2sdGDwzHIwdvHk/Lhoatp1rprblsm5mi77X2jzzFwr6oeed
+         5f37h6elb3RZjVl7KIvhRhC1BLkkEmd8I2VcGikQfxgisUl2s+jd45Rh3TZB3GhlQMUu
+         jh8ppMIGVwcoEYd4L5WlMLfc4uRMLP0mukR5qGtVWhgBqVN+jo8qvO6IUIz8sxXCjL2X
+         3CbcynVAVoCbM4TYOZvPY/bdiQZR3xluesyV5tAOjS8yErTs1PqqdbPWty6e6b7EpPMI
+         2atwzno6Aqt9eW9yqp5eol/knft3rvIzhJ5Fb8U9BWJIIzN5GBb3oQxEcoxHVFguicwN
+         1gaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oFzTWhcRCR5eyAjpAIHdWF4cXdPQYj4ClKz3tMRVpzg=;
-        b=HfSeyBnLqlFisHyTixjBCqlY5fS/JLKg0AhqH/jiEtDYU4KtK3+k1r5UCtWXd7ufHp
-         96U1RTOW/F79TVaExGb0hBk+601fmLhP3wNLwT2h0VC18flaj+fcX3FFfBDQQSOy5TBY
-         /Ej9m5bxtTFMsie+owokZcPCkdcBs77gE/Q2scuaWah6YvqN/2a4rARG+na7pLFmU6Eo
-         g0KmMjfwTA1emsnITDeLDNyoSQrJCz1gqGeOvHiiTiBVkBHrXHsGi+SnEJolo1roSA2I
-         6i7ks/CBsQUpjG7EXdVSL+Iumza4hd2ASALGj0orMyot6TIkr1kHs5Q/0+MaKEp+c8ai
-         Q0OQ==
-X-Gm-Message-State: AGi0PuZ41cSkttwhe9cpE7L5k4JGR0xgDOdsbMrQTbNnsk06k5pHut3I
-        18HuA0LNp1H0Sq2F1F6BWdw=
-X-Google-Smtp-Source: APiQypJFUfq9aZ17IeqNWqfsZUzSUieOZY1CTUKO7tYEePEY+8fTp0B1QWN0CbLQ/2XrrAhP7rcn9A==
-X-Received: by 2002:adf:cd12:: with SMTP id w18mr19420215wrm.311.1586800900161;
-        Mon, 13 Apr 2020 11:01:40 -0700 (PDT)
+        bh=uV6IGqg+WAl5sD9tlqG1PW+JWwQKMrghYa4BIYKJU24=;
+        b=InRZ/u5N3yBZoWtAnRfeQUA04V8Sa9eZifOSCOcFuwlMrhSFsxvNayrn3ktNOAtzGN
+         ABz78a/rZDx4xOq7U4Im08LNa9bcdyIQBIZLD5/YtDbhlHmVhXTB5ymo9MNJZLPp8X2/
+         F8IGc49heAh8Eg+3uedYI3+KqbbIihVkTnQmxmq5cU9em8NiTP+fsJXxO/EzzElRQ4pC
+         GDaHEeCpW9xzWTbF8GVHE/SjWb1cAOn+IxbWfUjkr4bd0wtAFhkjd3qh9Fj9YxrYKoU1
+         pFGmFiiWMoVwQuGAFr/ptvFHSQXH66M/RoSTY9HNITsdkE06wSjGUR9x2fA+HNweqssC
+         FkSw==
+X-Gm-Message-State: AGi0PubyFJFTf1PPij7rnKxzvTlw1Ay5tBAwO8Q3KbqvBry7fiO9ZGts
+        7VCVU3J05t7m/fyj9b5gZTgfvHgH
+X-Google-Smtp-Source: APiQypIoqF43KSnGa6mk8iXCnWjpUFXwZc1RhPx7wMxVw/tfrwty0MU1HN5fHTmbCRvw0ITtznnPEw==
+X-Received: by 2002:a1c:147:: with SMTP id 68mr20305503wmb.28.1586800901150;
+        Mon, 13 Apr 2020 11:01:41 -0700 (PDT)
 Received: from localhost.localdomain (dslb-092-073-054-241.092.073.pools.vodafone-ip.de. [92.73.54.241])
-        by smtp.gmail.com with ESMTPSA id u3sm6476181wrt.93.2020.04.13.11.01.39
+        by smtp.gmail.com with ESMTPSA id u3sm6476181wrt.93.2020.04.13.11.01.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 11:01:39 -0700 (PDT)
+        Mon, 13 Apr 2020 11:01:40 -0700 (PDT)
 From:   Michael Straube <straube.linux@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 2/3] staging: rtl8188eu: cleanup long line in fw.c
-Date:   Mon, 13 Apr 2020 19:59:56 +0200
-Message-Id: <20200413175957.30165-3-straube.linux@gmail.com>
+Subject: [PATCH 3/3] staging: rtl8188eu: make const char array static
+Date:   Mon, 13 Apr 2020 19:59:57 +0200
+Message-Id: <20200413175957.30165-4-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200413175957.30165-1-straube.linux@gmail.com>
 References: <20200413175957.30165-1-straube.linux@gmail.com>
@@ -78,27 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add line break to avoid line length over 80 characters.
+Make const char array 'fw_name' static. Clears a checkpatch warning
+and reduces object file size by 17 bytes (gcc 9.3.1 x86_64).
+
+WARNING: const array should probably be static const
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/hal/fw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8188eu/hal/fw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/staging/rtl8188eu/hal/fw.c b/drivers/staging/rtl8188eu/hal/fw.c
-index dbf7883f9ed7..432e6bea5ea1 100644
+index 432e6bea5ea1..3d1d29e9f8e0 100644
 --- a/drivers/staging/rtl8188eu/hal/fw.c
 +++ b/drivers/staging/rtl8188eu/hal/fw.c
-@@ -192,7 +192,8 @@ int rtl88eu_download_fw(struct adapter *adapt)
- 		rtl88e_firmware_selfreset(adapt);
- 	}
- 	_rtl88e_enable_fw_download(adapt, true);
--	usb_write8(adapt, REG_MCUFWDL, usb_read8(adapt, REG_MCUFWDL) | FWDL_CHKSUM_RPT);
-+	usb_write8(adapt, REG_MCUFWDL,
-+		   usb_read8(adapt, REG_MCUFWDL) | FWDL_CHKSUM_RPT);
- 	_rtl88e_write_fw(adapt, download_data, download_size);
- 	_rtl88e_enable_fw_download(adapt, false);
- 
+@@ -146,7 +146,7 @@ int rtl88eu_download_fw(struct adapter *adapt)
+ 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapt);
+ 	struct device *device = dvobj_to_dev(dvobj);
+ 	const struct firmware *fw;
+-	const char fw_name[] = "rtlwifi/rtl8188eufw.bin";
++	static const char fw_name[] = "rtlwifi/rtl8188eufw.bin";
+ 	struct rtl92c_firmware_header *pfwheader = NULL;
+ 	u8 *download_data, *fw_data;
+ 	size_t download_size;
 -- 
 2.26.0
 
