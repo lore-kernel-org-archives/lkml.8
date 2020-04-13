@@ -2,114 +2,178 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B364C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DBCC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5CB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586797719;
-	bh=dSJitMmT2q9eJVBftj++q8S9ECxt3wih5JHAEChm3Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z6RtXII1K6SVoQ/R+gi3JBTMbRUioLd3BD21qmrbrmKWPGhkCtSKTFVj/tBHKiW1I
-	 w8QuVxvnmoK0WGY5KoUPgAvrqhd2lZXr8Wg0EnisZ+Kzx0Xi0JNzWsI8j39j5kM2Vs
-	 frAi/eQU0qGueL4O+7TaanggMlPQZbGr8pn1pL94=
+	by mail.kernel.org (Postfix) with ESMTP id D0A872063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:12:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H5NA28x/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgDMRIi (ORCPT
+        id S1732555AbgDMRMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
+        Mon, 13 Apr 2020 13:12:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732216AbgDMRIg (ORCPT
+        by vger.kernel.org with ESMTP id S1727981AbgDMRMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:08:36 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5A7C0A3BDC;
-        Mon, 13 Apr 2020 10:08:36 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id c63so10205175qke.2;
-        Mon, 13 Apr 2020 10:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NFNHfE7F1rrYFA5HLaqChE2dtGQCPN6coS8rdPNSigI=;
-        b=hMvMIFkUh4+zKif04z4ScUfhsqi7SEl+A+mrbPrruG/ETMUk9MSMbdQuV+ZR7jkh3N
-         J0dtg9bsXCxgugxr47p9P970lB3mLeXEl1+dvVvePWz0RAdaz/HKS9DkxqtVRssfjzz3
-         WsnPlYz8DMA4ziVwz9BT6kPhHkaQ8UbLHH2o2QrG37vg6K6zL+C9Ns0+E3cpCa5Yr6lg
-         pz39Lh4j6AOWTYBZOFbnjAsgZLTLjjKlGPKFSXrK0D+nlVPiGu2cLa8a1KZImJ/aDOPm
-         /ruh8zkhxm/8oyNqJEz8FUOmopUR6CjUyrxGuMhEJAdkGzvu14q107uAQLarg3nczumZ
-         0XFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=NFNHfE7F1rrYFA5HLaqChE2dtGQCPN6coS8rdPNSigI=;
-        b=MYBix4g1OLEFk4vUV9ZmyXEkFTVaWF2Y3H2BEr/PUps1PZS9L/4sU6uLFUJEkBXgdm
-         sijL4nrE7bJRoRIYXHtvQSQ4HX64Q9azx6p3d3aHfocfwug56GylxJxCFlbRLXEXt826
-         9oHKNux45oRaODMA3FxOLYK2Pha7FIieK6YBm0sLZNiklDmAZN1rAFpTM+V9+qChPmiH
-         MyLD9zggnWn52k0+XQm45Z+QvgUvIwES/r/7FHi2Cu2b6zWPTeMSAB1ts7LjjZcUky+l
-         UvSrRZLEXQC733WBRCqlCM2YlakDRO0M8FUEvMFnETaV+a1ExeeyKO09io3oLEttfvTO
-         Wh8A==
-X-Gm-Message-State: AGi0PuZ6kEGfKJk/PTLymcBTTrggOTgpILGdbddIrqf0qMupzNW1BhJm
-        t1y9gXnfpfZMR2Brt5D1/WzrvsM7eHc=
-X-Google-Smtp-Source: APiQypKWVxTe+Ph/kO8cRDXhMu8/9u7uP6NoCX9nQn0sCCiaMfEPf6vI0h5KVn2HrndC6UnLtdAfwA==
-X-Received: by 2002:a37:4981:: with SMTP id w123mr11308375qka.497.1586797715786;
-        Mon, 13 Apr 2020 10:08:35 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id x7sm3570637qkx.36.2020.04.13.10.08.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 10:08:34 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 13:08:33 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com,
-        ming.lei@redhat.com, bvanassche@acm.org
-Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and
- latency target handling
-Message-ID: <20200413170833.GD60335@mtj.duckdns.org>
-References: <20200413162758.97252-1-tj@kernel.org>
- <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
- <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
+        Mon, 13 Apr 2020 13:12:50 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C483EC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:12:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=FrPpZW/67FvMCf81HynQ34ZVElAUVoMxfBwwvRHldqc=; b=H5NA28x/59qsKkhajuuSe6yvaT
+        QDX94bCrmayuMAAS+QILAUHrXuyhxTwkrB3OgOydqUxHJyziPKLKg5PXiKEpUNzLKHg78/IVX1ZHa
+        ho0Ch+1jbQtmyvefXIrSxdEeW0u5ASs6Jw+8OjBlNJ1iAiWkl5krD5Bcb6GjbmbE1fwbYu+gfV7B+
+        dl1rAmik7YdyJbLY/Bz3z/jyBF4RFt+FUlOavWSTC+KyvJW4AQ0LJBCQvvyZeK9jbg9tN93fQFTzc
+        dg1Jy+Nhs0zyPNxUxZ9HqWwhjM3GT4+WN2YbI2MotLI6ih9IRr0SW/RMJe++d8zkPzaD2OhU8Xw1g
+        EPhemz8Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jO2dd-0006f0-Qr; Mon, 13 Apr 2020 17:12:49 +0000
+Subject: Re: [PATCH v2,2/3] driver: rpmon: qmi message version 01
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com
+References: <20200411095301.18780-1-wenhu.wang@vivo.com>
+ <20200412112405.24116-1-wenhu.wang@vivo.com>
+ <20200412112405.24116-3-wenhu.wang@vivo.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dbc89d13-a7ce-347f-0f7a-4b500b31f4fc@infradead.org>
+Date:   Mon, 13 Apr 2020 10:12:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
+In-Reply-To: <20200412112405.24116-3-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 08:00:29PM +0300, Pavel Begunkov wrote:
-> On 13/04/2020 19:56, Pavel Begunkov wrote:
-> > On 13/04/2020 19:27, Tejun Heo wrote:
-> >> Changes from v1[1]
-> >>
-> >> * Dropped 0002-block-add-request-io_data_len.patch and updated to use
-> >>   rq->stats_sectors instead as suggested by Pavel Begunkov.
-> > 
-> > rq->stats_sectors is set only when there is QUEUE_FLAG_STATS, see
-> > blk_mq_start_request(). I don't see blk-iocost requiring it. Did I miss something?
+Hi--
+
+On 4/12/20 4:24 AM, Wang Wenhu wrote:
+> Implements a RPMON_QMI message set for connection checking service.
+> RPMON_QMI defines its message types modularly. Each rpmon service
+> binds to a message set and introduced as a module. This version 1.0
+> message set could be used for connection checking of remote processors.
 > 
-> And there is no reason to not initialise it unconditionally.
+> RPMON_QMI messages depend on QCOM_QMI_HELPERS and should be updated
+> together with QMI related modules, and if so, RPMON_QMI_MAG_V2 would
+> be introduced as a new module, in parallel with RPMON_QMI_MAG_V1.
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+> Changes since v1:
+>  - Addressed review comments from Randy
+> 
+> ---
+>  drivers/rpmon/Kconfig            |  13 ++
+>  drivers/rpmon/Makefile           |   1 +
+>  drivers/rpmon/rpmon_qmi.h        |  77 ++++++++++
+>  drivers/rpmon/rpmon_qmi_msg_v1.c | 242 +++++++++++++++++++++++++++++++
+>  4 files changed, 333 insertions(+)
+>  create mode 100644 drivers/rpmon/rpmon_qmi.h
+>  create mode 100644 drivers/rpmon/rpmon_qmi_msg_v1.c
+> 
 
-The updated patch turns on accounting when iocost is enabled on a queue.
+> diff --git a/drivers/rpmon/rpmon_qmi_msg_v1.c b/drivers/rpmon/rpmon_qmi_msg_v1.c
+> new file mode 100644
+> index 000000000000..3fe6d6a4cf31
+> --- /dev/null
+> +++ b/drivers/rpmon/rpmon_qmi_msg_v1.c
+> @@ -0,0 +1,242 @@
 
-  @@ -2267,6 +2295,7 @@ static ssize_t ioc_qos_write(struct kernfs_open_file *of, char *input,
-   	spin_lock_irq(&ioc->lock);
- 
-   	if (enable) {
-  +		blk_stat_enable_accounting(ioc->rqos.q);
-   		blk_queue_flag_set(QUEUE_FLAG_RQ_ALLOC_TIME, ioc->rqos.q);
-   		ioc->enabled = true;
-   	} else {
+I am hoping that your patch:
+[PATCH] soc: qmi: move tlv-micros to header file
 
-Thanks.
+will eventually allow the .tlv_type constants below to become #define values.
+
+Otherwise these changes (patch 2/3) look good.  Thanks.
+
+> +static struct qmi_elem_info register_req_v01_ei[] = {
+> +	{
+> +		.data_type      = QMI_OPT_FLAG,
+> +		.elem_len       = 1,
+> +		.elem_size      = sizeof(uint8_t),
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = 0x10,
+> +		.offset         = offsetof(struct rpmon_register_req,
+> +					   name_valid),
+> +	},
+> +	{
+> +		.data_type      = QMI_STRING,
+> +		.elem_len       = RP_NAME_LEN,
+> +		.elem_size      = sizeof(char),
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = 0x10,
+> +		.offset         = offsetof(struct rpmon_register_req,
+> +					   name),
+> +	},
+> +	{
+> +		.data_type      = QMI_OPT_FLAG,
+> +		.elem_len       = 1,
+> +		.elem_size      = sizeof(uint8_t),
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = 0x11,
+> +		.offset         = offsetof(struct rpmon_register_req,
+> +					   timeout_valid),
+> +	},
+> +	{
+> +		.data_type      = QMI_UNSIGNED_4_BYTE,
+> +		.elem_len       = 1,
+> +		.elem_size      = sizeof(u32),
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = 0x11,
+> +		.offset         = offsetof(struct rpmon_register_req,
+> +					   timeout),
+> +	},
+> +	{
+> +		.data_type      = QMI_EOTI,
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = QMI_COMMON_TLV_TYPE,
+> +	},
+> +};
+> +
+> +static struct qmi_elem_info conn_check_resp_v01_ei[] = {
+> +	{
+> +		.data_type      = QMI_OPT_FLAG,
+> +		.elem_len       = 1,
+> +		.elem_size      = sizeof(uint8_t),
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = 0x10,
+> +		.offset         = offsetof(struct rpmon_conn_check_resp,
+> +					   result_valid),
+> +	},
+> +	{
+> +		.data_type      = QMI_SIGNED_4_BYTE_ENUM,
+> +		.elem_len       = 1,
+> +		.elem_size      = sizeof(enum rpmon_exec_result),
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = 0x10,
+> +		.offset         = offsetof(struct rpmon_conn_check_resp,
+> +					   result),
+> +	},
+> +	{
+> +		.data_type      = QMI_EOTI,
+> +		.array_type     = NO_ARRAY,
+> +		.tlv_type       = QMI_COMMON_TLV_TYPE,
+> +	},
+> +};
+
+
 
 -- 
-tejun
+~Randy
+
