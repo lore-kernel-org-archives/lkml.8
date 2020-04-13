@@ -2,101 +2,86 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E789C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0348C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:42:41 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6291D20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:42:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 6291D20735
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	by mail.kernel.org (Postfix) with ESMTP id EC2E220735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 07:42:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org EC2E220735
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgDMHmO (ORCPT
+        id S1729420AbgDMHmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 03:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:34866 "EHLO
+        Mon, 13 Apr 2020 03:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:34924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgDMHmN (ORCPT
+        with ESMTP id S1727480AbgDMHmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 03:42:13 -0400
-Received: from mail-ot1-f67.google.com (mail-ot1-f67.google.com [209.85.210.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 713AAC008651;
-        Mon, 13 Apr 2020 00:42:13 -0700 (PDT)
-Received: by mail-ot1-f67.google.com with SMTP id i27so5394400ota.7;
-        Mon, 13 Apr 2020 00:42:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d708XQKpnHs/u2LgctRBUUp8mQtOH0Q66KFRsQSWh+Q=;
-        b=Bbv7QTfdArRZ9fPYMwMyRqaxMpDGu8B+jX5XXByAQCHi1AjPpp6oQeFsR9lOPtkQiC
-         ASHH0TO0tCw/ToX2RNMDyN/VHAicN3eQC/2YeOXLxm6gAWVOsOMSzfXcODEHYk0m7BHX
-         bXYE3PQ2HqCtEzJAQyqoI24MdJgmIQMCAFfDnhWrtFHx+WmVdStyPWVtdTNiW9Opz6VO
-         ZXztHNbw4dKWI5jvarPWZXaqdxkSrBMaZDfBT/Nnc15CHi54chsZSMTwtIV4BlpwM92B
-         y5gHRocJseyCpkKZ+llGBwZqj5nDRnoNrbDeYRkUdte7bWTVaRnVkQdecZom7HE+8e3o
-         bfXQ==
-X-Gm-Message-State: AGi0PuYrKfQJcfM4QZFowIfBVvCRwXlt5TgNGnTgg2gu8zeD9SZx81tp
-        uVKDQi1s02pWYVrP2uob89gcCJJbYgB/X/DetXE=
-X-Google-Smtp-Source: APiQypIRnInq/orWeaoAPrkHsOfmBEXAmFtHcWXt7jzY5yBQE+fHrQJiHteCrRoPj6ZkngX8ciKhcGkSv1Z7yb3ea/Q=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr13431915otk.250.1586763732609;
- Mon, 13 Apr 2020 00:42:12 -0700 (PDT)
+        Mon, 13 Apr 2020 03:42:39 -0400
+Received: from cmccmta3.chinamobile.com (cmccmta3.chinamobile.com [221.176.66.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AF34CC008651
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 00:42:28 -0700 (PDT)
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9417d64cf-33710; Mon, 13 Apr 2020 15:42:14 +0800 (CST)
+X-RM-TRANSID: 2eea5e9417d64cf-33710
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e9417d50e3-b038b;
+        Mon, 13 Apr 2020 15:42:14 +0800 (CST)
+X-RM-TRANSID: 2ee65e9417d50e3-b038b
+Subject: Re: [PATCH] binderfs: Fix binderfs.c selftest compilation warning
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arve@android.com, maco@android.com, tkjos@android.com,
+        joel@joelfernandes.org, christian@brauner.io,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200411145151.5576-1-tangbin@cmss.chinamobile.com>
+ <20200412074629.GB2707594@kroah.com>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <54f2439e-e74f-fc45-96c4-c7744fff6162@cmss.chinamobile.com>
+Date:   Mon, 13 Apr 2020 15:44:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200413014743.16353-1-masahiroy@kernel.org>
-In-Reply-To: <20200413014743.16353-1-masahiroy@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Apr 2020 09:42:01 +0200
-Message-ID: <CAMuHMdWyouYStBj=kjJuMwgi1ZNQkBC8J+ums7id6t2exOj=WA@mail.gmail.com>
-Subject: Re: [PATCH] sh: fix build error in mm/init.c
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200412074629.GB2707594@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 7:44 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> The closing parenthesis is missing.
->
-> Fixes: bfeb022f8fe4 ("mm/memory_hotplug: add pgprot_t to mhp_params")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Hi greg：
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 2020/4/12 15:46, Greg KH wrote:
+> On Sat, Apr 11, 2020 at 10:51:51PM +0800, Tang Bin wrote:
+>> Fix missing braces compilation warning in the ARM
+>> compiler environment:
+>>      drivers/android/binderfs.c: In function 'binderfs_fill_super':
+>>      drivers/android/binderfs.c:650:9: warning: missing braces around initializer [-Wmissing-braces]
+>>        struct binderfs_device device_info = { 0 };
+>>      drivers/android/binderfs.c:650:9: warning: (near initialization for ‘device_info.name’) [-Wmissing-braces]
+> What compiler and version is giving this warning?  It's odd we have not
+> seen this yet...
+My environment:
 
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -412,7 +412,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         unsigned long nr_pages = size >> PAGE_SHIFT;
->         int ret;
->
-> -       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot)
-> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
->                 return -EINVAL;
->
->         /* We only have ZONE_NORMAL, so this is easy.. */
+   PC : Ubuntu 16.04
 
-Gr{oetje,eeting}s,
+   Hardware : I.MX6ULL
 
-                        Geert
+   Tool Chain : arm-linux-gnueabihf-gcc (Linaro GCC 4.9-2017.01) 4.9.4
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+Thank you for your patience.
+
+Tang Bin
+
+
+
+
