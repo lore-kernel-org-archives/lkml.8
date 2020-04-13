@@ -2,146 +2,222 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893EAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BCEC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:41:51 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4189D20737
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:41:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 4189D20737
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=toshiba.co.jp
+	by mail.kernel.org (Postfix) with ESMTP id E065720737
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:41:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org E065720737
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgDMFlq (ORCPT
+        id S1728995AbgDMFl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 01:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42700 "EHLO
+        Mon, 13 Apr 2020 01:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729023AbgDMFlg (ORCPT
+        with ESMTP id S1728974AbgDMFl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 01:41:36 -0400
-Received: from mo-csw.securemx.jp (mo-csw1114.securemx.jp [210.130.202.156])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBAA1C008666;
-        Sun, 12 Apr 2020 22:16:20 -0700 (PDT)
-Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 03D5GBsT009900; Mon, 13 Apr 2020 14:16:11 +0900
-X-Iguazu-Qid: 2wHI1scKF74gMrXPIv
-X-Iguazu-QSIG: v=2; s=0; t=1586754971; q=2wHI1scKF74gMrXPIv; m=+uUkiahhM+/kgfStACiTUqhYbVkSDDOVc5sBHqetGWY=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1110) id 03D5GACG010275;
-        Mon, 13 Apr 2020 14:16:10 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 03D5GAkk027566;
-        Mon, 13 Apr 2020 14:16:10 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id 03D5G9ko014743;
-        Mon, 13 Apr 2020 14:16:10 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GrpxuhPyD/f0XZ2wKYdlmev2pFXYV+jk4VXlUDLSP+0RM1DLeq31/raSpIkeaqSlfJEiasDesybJwbKaOj4B1MIZfYjKsaqrDPHC5dRoEu7/dCTrhcBKR5oE+bPRHbV4QNTWDHXD7R396vug4yy/cQlu4VnJbgVk9NWXD/z9rMXJeQ9l1GtdZq6vYh1P1aMCzjZ0kFyPLeL00DkDOpdO7seO/+NJizO/UZ3tIusZA7uegsSTZzsHwP6P+wh50q09f1J5P70jD7hwwyGNdu2F7Y9UItlg9wZqRX1UZm9078MqR8WvXvwyqqwtJSIQ1H105qnKdOxrFktvDlDwSGmFBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z4oTgdYn4CaiSwQyNcfkY5y8wtGC54XEKZzfbvtAKp8=;
- b=D8RMZ9OpKo35+6a+yJgR9BwmPnp2LjByhPakpMzPt9u09A06UJ1Di14aEw2MFJqcObaC5zq4I/JiHXaTIFnJiuiktQo35YQpbOki/vG/+4jl/hXTL+H+wTu2BCS2TU5vtnKGriW5Jafw//ELsaizU2vN69ZXg9+WIBJWRJQ3pzU9fZfTnm0Q2tOVSuYHbGmMvd5tFnlgGHzby5xCrfkLb10oqQTlMY+zwyW2BB1tNAV7ApUWa1zSdT61A3oL2/9D6Q6c4fPRLzo4dF+GvPRfCqqdlxhZDeFKUm+vfPie3Ov2t5gUDUot4ygb5eQYGR6xnO2pA73URHoU1t1tiTsKiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
- header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
-From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, <clew@codeaurora.org>,
-        <aneela@codeaurora.org>, <bjorn.andersson@linaro.org>,
-        <lee.jones@linaro.org>
-Subject: RE: [PATCH 4.14 36/38] rpmsg: glink: Remove chunk size word align
- warning
-Thread-Topic: [PATCH 4.14 36/38] rpmsg: glink: Remove chunk size word align
- warning
-Thread-Index: AQHWD/ySKswUQRH7EkmmljOG6xvi9qh2gwjA
-Date:   Mon, 13 Apr 2020 05:16:05 +0000
-X-TSB-HOP: ON
-Message-ID: <OSAPR01MB3667845337B13FB2398B8AB892DD0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
-References: <20200411115437.795556138@linuxfoundation.org>
- <20200411115441.303886448@linuxfoundation.org>
-In-Reply-To: <20200411115441.303886448@linuxfoundation.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nobuhiro1.iwamatsu@toshiba.co.jp; 
-x-originating-ip: [209.137.146.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d24c923c-0c18-4e17-4805-08d7df69c432
-x-ms-traffictypediagnostic: OSAPR01MB4962:
-x-microsoft-antispam-prvs: <OSAPR01MB4962CB5416EDCA65FFA5BA1D92DD0@OSAPR01MB4962.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:53;
-x-forefront-prvs: 037291602B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB3667.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(346002)(136003)(396003)(64756008)(86362001)(66556008)(71200400001)(5660300002)(9686003)(8676002)(55016002)(81156014)(4326008)(66476007)(8936002)(76116006)(52536014)(33656002)(54906003)(26005)(66446008)(66946007)(110136005)(2906002)(6506007)(478600001)(316002)(53546011)(186003)(7696005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: toshiba.co.jp does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oxrhzQIt5FqpwFLJTSFfTtvPqEFJRghgWn7/cM8GgVYR+RGUoFXdv5b+9HT8RWnn6LNzYD7u311ebzIQJ7KE2Uwbx1cHDVp4sm6tMJw+LUkSVwhPEMvKwKskhjlRgBX7Dl734N3pyJOHZdhs+asiedNY1zLg+AEqEPfk4G0nnUU66pKuKpF0dr1L2X8cXIS0htsJLeoee/xzBD+ZOzkohNhJMC3Cwj2q297jopXdTzYIRL2O0qDjIXggKeaaZSyYMxIEXAwNLbVadzl23jL8WhnIXmpFXMdoZqLKuR1kNovkLK+OQHhxn3bKQ8ybZQfW9zk8YF25343YB6ypryx1yaQ+QivVrFJljpgAC0taVtkFrObK0mja6dRRPeOnaziVKXZQv5pAHB87jk/FY+MPbAj/tcRx8nNflc80TGH7Rw2TSlL4VCdbymZw5eGM6jCq
-x-ms-exchange-antispam-messagedata: fKFN1Drq64hP8AotDAOUCPkfLVEJNJb5eOEPIj++uKptf9WP7kNI1GOSEAMiFXV8qQ9fJWw13mv3GdarBI63jgMYf/s5FOjsX3uovWZx921cxUiye04+9DUdvL7ythvOyFwUsQYrqnBjF9FdTJChsg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 13 Apr 2020 01:41:26 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53EBC008675;
+        Sun, 12 Apr 2020 22:41:25 -0700 (PDT)
+IronPort-SDR: +MzHVRby3pbGUIjNpBf9JNfPkUnLyXgNQxHKke/BLsNwC69ncUlthU2YJ+nYHcEDi4kAkQrgnu
+ 8twZ6FdJX3tQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 22:41:25 -0700
+IronPort-SDR: o7EWjfV6nqBbvdw1rbYYURTtjAq5djiV8GM1NNGWNwZyd5h+1J0iU9Fj8BG9UaEfXm8PL45DV9
+ Xr/w3aOAPh7A==
+X-IronPort-AV: E=Sophos;i="5.72,377,1580803200"; 
+   d="scan'208";a="241572490"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 22:41:24 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH V7 6/9] fs/xfs: Combine xfs_diflags_to_linux() and xfs_diflags_to_iflags()
+Date:   Sun, 12 Apr 2020 22:40:43 -0700
+Message-Id: <20200413054046.1560106-7-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200413054046.1560106-1-ira.weiny@intel.com>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d24c923c-0c18-4e17-4805-08d7df69c432
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2020 05:16:05.1484
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YP9VCOwUIpNOpcGMV4z9VPhwMffy7OoxjyT7/7mVhCivCEQmj5jA7jzjP4OIPVnaj+uWWyhAU8quo9E88cFtluK+QdS6lxEcRSPGek0bCOncDBLZyiT1Bwni5HBy/NUA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB4962
-X-OriginatorOrg: toshiba.co.jp
-MSSCP.TransferMailToMossAgent: 103
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogc3RhYmxlLW93bmVy
-QHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnN0YWJsZS1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9u
-IEJlaGFsZiBPZiBHcmVnIEtyb2FoLUhhcnRtYW4NCj4gU2VudDogU2F0dXJkYXksIEFwcmlsIDEx
-LCAyMDIwIDk6MDkgUE0NCj4gVG86IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
-IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBzdGFibGVA
-dmdlci5rZXJuZWwub3JnOyBDaHJpcyBMZXcgPGNsZXdAY29kZWF1cm9yYS5vcmc+OyBBcnVuDQo+
-IEt1bWFyIE5lZWxha2FudGFtIDxhbmVlbGFAY29kZWF1cm9yYS5vcmc+OyBCam9ybiBBbmRlcnNz
-b24gPGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnPjsgTGVlIEpvbmVzDQo+IDxsZWUuam9uZXNA
-bGluYXJvLm9yZz4NCj4gU3ViamVjdDogW1BBVENIIDQuMTQgMzYvMzhdIHJwbXNnOiBnbGluazog
-UmVtb3ZlIGNodW5rIHNpemUgd29yZCBhbGlnbiB3YXJuaW5nDQo+IA0KPiBGcm9tOiBDaHJpcyBM
-ZXcgPGNsZXdAY29kZWF1cm9yYS5vcmc+DQo+IA0KPiBjb21taXQgZjBiZWI0YmE5YjE4NWQ0OTdj
-OGVmZTdiMzQ5MzYzNzAwMDkyYWVlMCB1cHN0cmVhbS4NCj4gDQo+IEl0IGlzIHBvc3NpYmxlIGZv
-ciB0aGUgY2h1bmsgc2l6ZXMgY29taW5nIGZyb20gdGhlIG5vbiBSUE0gcmVtb3RlIHByb2NzDQo+
-IHRvIG5vdCBiZSB3b3JkIGFsaWduZWQuIFJlbW92ZSB0aGUgYWxpZ25tZW50IHdhcm5pbmcgYW5k
-IGNvbnRpbnVlIHRvDQo+IHJlYWQgZnJvbSB0aGUgRklGTyBzbyBleGVjdXRpb24gaXMgbm90IHN0
-YWxsZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBMZXcgPGNsZXdAY29kZWF1cm9yYS5v
-cmc+DQo+IFNpZ25lZC1vZmYtYnk6IEFydW4gS3VtYXIgTmVlbGFrYW50YW0gPGFuZWVsYUBjb2Rl
-YXVyb3JhLm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogQmpvcm4gQW5kZXJzc29uIDxiam9ybi5hbmRl
-cnNzb25AbGluYXJvLm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNA
-bGluYXJvLm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hA
-bGludXhmb3VuZGF0aW9uLm9yZz4NCg0KVGhpcyBjb21taXQgYWxzbyBzZWVtcyB0byByZXF1aXJl
-IHRoZSBmb2xsb3dpbmcgY29tbWl0czoNCg0KY29tbWl0IDkyODAwMmE1ZTlkYWIyZGRjMWEwZmUz
-ZTAwNzM5ZTg5YmUzMGRjNmINCkF1dGhvcjogQXJ1biBLdW1hciBOZWVsYWthbnRhbSA8YW5lZWxh
-QGNvZGVhdXJvcmEub3JnPg0KRGF0ZTogICBXZWQgT2N0IDMgMTc6MDg6MjAgMjAxOCArMDUzMA0K
-DQogICAgcnBtc2c6IGdsaW5rOiBzbWVtOiBTdXBwb3J0IHJ4IHBlYWsgZm9yIHNpemUgbGVzcyB0
-aGFuIDQgYnl0ZXMNCiAgICANCiAgICBUaGUgY3VycmVudCByeCBwZWFrIGZ1bmN0aW9uIGZhaWxz
-IHRvIHJlYWQgdGhlIGRhdGEgaWYgc2l6ZSBpcw0KICAgIGxlc3MgdGhhbiA0Ynl0ZXMuDQogICAg
-DQogICAgVXNlIG1lbWNweV9mcm9taW8gdG8gc3VwcG9ydCBkYXRhIHJlYWRzIG9mIHNpemUgbGVz
-cyB0aGFuIDQgYnl0ZXMuDQogICAgDQogICAgQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCiAg
-ICBGaXhlczogZjBiZWI0YmE5YjE4ICgicnBtc2c6IGdsaW5rOiBSZW1vdmUgY2h1bmsgc2l6ZSB3
-b3JkIGFsaWduIHdhcm5pbmciKQ0KICAgIFNpZ25lZC1vZmYtYnk6IEFydW4gS3VtYXIgTmVlbGFr
-YW50YW0gPGFuZWVsYUBjb2RlYXVyb3JhLm9yZz4NCiAgICBTaWduZWQtb2ZmLWJ5OiBCam9ybiBB
-bmRlcnNzb24gPGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnPg0KDQpUaGlzIGZpeGVzIGNvbW1p
-dCBuZWVkIHRvIGFwcGx5IDQuMTkuDQoNCkJlc3QgcmVnYXJkcywNCiAgTm9idWhpcm8NCg0KPiAN
-Cj4gLS0tDQo+ICBkcml2ZXJzL3JwbXNnL3Fjb21fZ2xpbmtfbmF0aXZlLmMgfCAgICAzIC0tLQ0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDMgZGVsZXRpb25zKC0pDQo+IA0KPiAtLS0gYS9kcml2ZXJzL3Jw
-bXNnL3Fjb21fZ2xpbmtfbmF0aXZlLmMNCj4gKysrIGIvZHJpdmVycy9ycG1zZy9xY29tX2dsaW5r
-X25hdGl2ZS5jDQo+IEBAIC04MTEsOSArODExLDYgQEAgc3RhdGljIGludCBxY29tX2dsaW5rX3J4
-X2RhdGEoc3RydWN0IHFjbw0KPiAgCQlyZXR1cm4gLUVBR0FJTjsNCj4gIAl9DQo+IA0KPiAtCWlm
-IChXQVJOKGNodW5rX3NpemUgJSA0LCAiSW5jb21pbmcgZGF0YSBtdXN0IGJlIHdvcmQgYWxpZ25l
-ZFxuIikpDQo+IC0JCXJldHVybiAtRUlOVkFMOw0KPiAtDQo+ICAJcmNpZCA9IGxlMTZfdG9fY3B1
-KGhkci5tc2cucGFyYW0xKTsNCj4gIAlzcGluX2xvY2tfaXJxc2F2ZSgmZ2xpbmstPmlkcl9sb2Nr
-LCBmbGFncyk7DQo+ICAJY2hhbm5lbCA9IGlkcl9maW5kKCZnbGluay0+cmNpZHMsIHJjaWQpOw0K
-PiANCg0K
+From: Ira Weiny <ira.weiny@intel.com>
+
+The functionality in xfs_diflags_to_linux() and xfs_diflags_to_iflags() are
+nearly identical.  The only difference is that *_to_linux() is called after
+inode setup and disallows changing the DAX flag.
+
+Combining them can be done with a flag which indicates if this is the initial
+setup to allow the DAX flag to be properly set only at init time.
+
+So remove xfs_diflags_to_linux() and call the modified xfs_diflags_to_iflags()
+directly.
+
+While we are here simplify xfs_diflags_to_iflags() to take struct xfs_inode and
+use xfs_ip2xflags() to ensure future diflags are included correctly.
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+Changes from V6:
+	Move unrelated hunk to previous patch.
+	Change logic for better code generation.
+
+Changes from V5:
+	The functions are no longer identical so we can only combine
+	them rather than deleting one completely.  This is reflected in
+	the new init parameter.
+---
+ fs/xfs/xfs_inode.h |  1 +
+ fs/xfs/xfs_ioctl.c | 33 +--------------------------------
+ fs/xfs/xfs_iops.c  | 42 +++++++++++++++++++++++-------------------
+ 3 files changed, 25 insertions(+), 51 deletions(-)
+
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 492e53992fa9..e76ed9ca17f7 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -466,6 +466,7 @@ int	xfs_break_layouts(struct inode *inode, uint *iolock,
+ /* from xfs_iops.c */
+ extern void xfs_setup_inode(struct xfs_inode *ip);
+ extern void xfs_setup_iops(struct xfs_inode *ip);
++extern void xfs_diflags_to_iflags(struct xfs_inode *ip, bool init);
+ 
+ /*
+  * When setting up a newly allocated inode, we need to call
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index d42de92cb283..c6cd92ef4a05 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1100,37 +1100,6 @@ xfs_flags2diflags2(
+ 	return di_flags2;
+ }
+ 
+-STATIC void
+-xfs_diflags_to_linux(
+-	struct xfs_inode	*ip)
+-{
+-	struct inode		*inode = VFS_I(ip);
+-	unsigned int		xflags = xfs_ip2xflags(ip);
+-
+-	if (xflags & FS_XFLAG_IMMUTABLE)
+-		inode->i_flags |= S_IMMUTABLE;
+-	else
+-		inode->i_flags &= ~S_IMMUTABLE;
+-	if (xflags & FS_XFLAG_APPEND)
+-		inode->i_flags |= S_APPEND;
+-	else
+-		inode->i_flags &= ~S_APPEND;
+-	if (xflags & FS_XFLAG_SYNC)
+-		inode->i_flags |= S_SYNC;
+-	else
+-		inode->i_flags &= ~S_SYNC;
+-	if (xflags & FS_XFLAG_NOATIME)
+-		inode->i_flags |= S_NOATIME;
+-	else
+-		inode->i_flags &= ~S_NOATIME;
+-#if 0	/* disabled until the flag switching races are sorted out */
+-	if (xflags & FS_XFLAG_DAX)
+-		inode->i_flags |= S_DAX;
+-	else
+-		inode->i_flags &= ~S_DAX;
+-#endif
+-}
+-
+ static int
+ xfs_ioctl_setattr_xflags(
+ 	struct xfs_trans	*tp,
+@@ -1168,7 +1137,7 @@ xfs_ioctl_setattr_xflags(
+ 	ip->i_d.di_flags = xfs_flags2diflags(ip, fa->fsx_xflags);
+ 	ip->i_d.di_flags2 = di_flags2;
+ 
+-	xfs_diflags_to_linux(ip);
++	xfs_diflags_to_iflags(ip, false);
+ 	xfs_trans_ichgtime(tp, ip, XFS_ICHGTIME_CHG);
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 	XFS_STATS_INC(mp, xs_ig_attrchg);
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index 37bd15b55878..856ad823e754 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -1284,26 +1284,30 @@ xfs_inode_enable_dax(
+ #endif /* CONFIG_FS_DAX */
+ 
+ 
+-STATIC void
++void
+ xfs_diflags_to_iflags(
+-	struct inode		*inode,
+-	struct xfs_inode	*ip)
++	struct xfs_inode	*ip,
++	bool init)
+ {
+-	uint16_t		flags = ip->i_d.di_flags;
+-
+-	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC |
+-			    S_NOATIME | S_DAX);
+-
+-	if (flags & XFS_DIFLAG_IMMUTABLE)
+-		inode->i_flags |= S_IMMUTABLE;
+-	if (flags & XFS_DIFLAG_APPEND)
+-		inode->i_flags |= S_APPEND;
+-	if (flags & XFS_DIFLAG_SYNC)
+-		inode->i_flags |= S_SYNC;
+-	if (flags & XFS_DIFLAG_NOATIME)
+-		inode->i_flags |= S_NOATIME;
+-	if (xfs_inode_enable_dax(ip))
+-		inode->i_flags |= S_DAX;
++	struct inode            *inode = VFS_I(ip);
++	unsigned int            xflags = xfs_ip2xflags(ip);
++	unsigned int            flags = 0;
++
++	ASSERT(!(IS_DAX(inode) && init));
++
++	if (xflags & FS_XFLAG_IMMUTABLE)
++		flags |= S_IMMUTABLE;
++	if (xflags & FS_XFLAG_APPEND)
++		flags |= S_APPEND;
++	if (xflags & FS_XFLAG_SYNC)
++		flags |= S_SYNC;
++	if (xflags & FS_XFLAG_NOATIME)
++		flags |= S_NOATIME;
++	if (init && xfs_inode_enable_dax(ip))
++		flags |= S_DAX;
++
++	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME);
++	inode->i_flags |= flags;
+ }
+ 
+ /*
+@@ -1332,7 +1336,7 @@ xfs_setup_inode(
+ 	inode->i_gid    = xfs_gid_to_kgid(ip->i_d.di_gid);
+ 
+ 	i_size_write(inode, ip->i_d.di_size);
+-	xfs_diflags_to_iflags(inode, ip);
++	xfs_diflags_to_iflags(ip, true);
+ 
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		/*
+-- 
+2.25.1
+
