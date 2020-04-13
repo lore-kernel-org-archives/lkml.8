@@ -2,83 +2,111 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6752EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E762FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:45:30 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCCF206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:40:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 2DCCF206D8
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=arm.com
+	by mail.kernel.org (Postfix) with ESMTP id 8707E20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:45:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 8707E20678
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgDMDkE (ORCPT
+        id S1728614AbgDMDp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 23:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:52068 "EHLO
+        Sun, 12 Apr 2020 23:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:52962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbgDMDkE (ORCPT
+        with ESMTP id S1727513AbgDMDp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 23:40:04 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30619C0A3BE0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:40:04 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB47630E;
-        Sun, 12 Apr 2020 20:40:03 -0700 (PDT)
-Received: from [10.163.1.49] (unknown [10.163.1.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DFCC3F6C4;
-        Sun, 12 Apr 2020 20:40:00 -0700 (PDT)
-Subject: Re: [PATCH 5/6] arm64/cpufeature: Drop TraceFilt feature exposure
- from ID_DFR0 register
-To:     Will Deacon <will@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        james.morse@arm.com, maz@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
- <1580215149-21492-6-git-send-email-anshuman.khandual@arm.com>
- <bb4d5175-1c72-a1a6-1e79-116991717fdf@arm.com>
- <20200409125255.GA13078@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <42122aa6-9cce-c45e-d67f-f672badce675@arm.com>
-Date:   Mon, 13 Apr 2020 09:09:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200409125255.GA13078@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 12 Apr 2020 23:45:28 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48FCEC0A3BE0;
+        Sun, 12 Apr 2020 20:45:28 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0TvK0H1G_1586749524;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvK0H1G_1586749524)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 13 Apr 2020 11:45:24 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
+        james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com
+Subject: [PATCH] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+Date:   Mon, 13 Apr 2020 11:45:23 +0800
+Message-Id: <20200413034523.110548-1-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+kvm_arch_vcpu_ioctl_run() is only called in the file kvm_main.c,
+where vcpu->run is the kvm_run parameter, so it has been replaced.
 
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+---
+ arch/x86/kvm/x86.c | 8 ++++----
+ virt/kvm/arm/arm.c | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-On 04/09/2020 06:23 PM, Will Deacon wrote:
-> On Fri, Mar 20, 2020 at 06:19:21PM +0000, Suzuki K Poulose wrote:
->> On 01/28/2020 12:39 PM, Anshuman Khandual wrote:
->>> ID_DFR0 based TraceFilt feature should not be exposed.
->>
->> ... to guests.
->>
->>  Hence lets drop it.
->>
->> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> Hmm, doesn't dropping cause it to become NONSTRICT? In general, I'd prefer
-> that we list all fields in these tables, rather than have implicit behaviour
-> in their absence.
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3bf2ecafd027..70e3f4abbd4d 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8726,18 +8726,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+ 		r = -EAGAIN;
+ 		if (signal_pending(current)) {
+ 			r = -EINTR;
+-			vcpu->run->exit_reason = KVM_EXIT_INTR;
++			kvm_run->exit_reason = KVM_EXIT_INTR;
+ 			++vcpu->stat.signal_exits;
+ 		}
+ 		goto out;
+ 	}
+ 
+-	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
++	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+ 		r = -EINVAL;
+ 		goto out;
+ 	}
+ 
+-	if (vcpu->run->kvm_dirty_regs) {
++	if (kvm_run->kvm_dirty_regs) {
+ 		r = sync_regs(vcpu);
+ 		if (r != 0)
+ 			goto out;
+@@ -8767,7 +8767,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+ 
+ out:
+ 	kvm_put_guest_fpu(vcpu);
+-	if (vcpu->run->kvm_valid_regs)
++	if (kvm_run->kvm_valid_regs)
+ 		store_regs(vcpu);
+ 	post_kvm_run_save(vcpu);
+ 	kvm_sigset_deactivate(vcpu);
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 48d0ec44ad77..ab9d7966a4c8 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 		return ret;
+ 
+ 	if (run->exit_reason == KVM_EXIT_MMIO) {
+-		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
++		ret = kvm_handle_mmio_return(vcpu, run);
+ 		if (ret)
+ 			return ret;
+ 	}
+-- 
+2.17.1
 
-Just trying to understand, so we should just leave it unchanged.
-
-ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0)
-
-> 
-> Will
-> 
