@@ -2,75 +2,199 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AEEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D6BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E68EE20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04D420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=spuri.io header.i=@spuri.io header.b="MW3vL5s7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0DC8fAQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbgDMPv5 (ORCPT
+        id S1731126AbgDMPxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:51:57 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:22768 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730923AbgDMPv4 (ORCPT
+        Mon, 13 Apr 2020 11:53:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44608 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730923AbgDMPxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:51:56 -0400
-Date:   Mon, 13 Apr 2020 15:51:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spuri.io;
-        s=protonmail; t=1586793113;
-        bh=rbra6vqOd3+0qys2zYRIijWqxNP8uT07e7frk2jM4G8=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=MW3vL5s7Ri/9vo39Esj9Es1VQu2rb9sR5VfbgJ7db6SF6w8akaXktT4pwCZKPdTlE
-         o5pZ775qU8FtneMProovZJbhR2d/NdscIy48OUlR9sP3+U8m0OCnQ2Z4B+nZn8itjD
-         9xRoLQSf4/CxtqX/3e0dj0zUSI6HPTMNf24yiWTU=
-To:     dave.stevenson@raspberrypi.com
-From:   Sameer Puri <purisame@spuri.io>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: Sameer Puri <purisame@spuri.io>
-Subject: [PATCH] media: i2c: imx219: remove redundant writes
-Message-ID: <20200413155134.250243-1-purisame@spuri.io>
+        Mon, 13 Apr 2020 11:53:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DFoQDZ005867;
+        Mon, 13 Apr 2020 15:53:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=srCDAz5N4+WCiR6E5PKm1RCPVKwnD6BJ37Mx//acQQM=;
+ b=0DC8fAQmJXap+e5oJFoGTMaAK4p6Lkib+qycnp8LUrhcDt4tWwlaRhwAwlielnMurWtl
+ aIMPBGTaRB1d0WNlAmpr3F+K/0ZF4LJ348Itq+2n//W7Ngez5yJbFyrum12DJ+OyECIe
+ 54YYTtLFlQZrFVjouVo9y30eAsdDta1TX/dmKkLe3lKpdKzBsso5WZoWrYxF6bgUw4fi
+ 1CQ7L33Jyspiu8vhpmsw9v4O3Io/WJWCCfuogVs3Ovdqqraaf3w6Dm+m81LXLsBPpMlz
+ sZZNLrqgdJefzttwiLyXdl7tTZQO4VeNBNU4tr9wvvEOBuS2X5m8/y8LMDqK4RoK7WpM aQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30b5ukyb0e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 15:53:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03DFr24D155451;
+        Mon, 13 Apr 2020 15:53:04 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 30cta7byj4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Apr 2020 15:53:04 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03DFqqSD024615;
+        Mon, 13 Apr 2020 15:52:53 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Apr 2020 08:52:52 -0700
+Date:   Mon, 13 Apr 2020 08:52:51 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V7 5/9] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200413155251.GU6742@magnolia>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
+ <20200413054046.1560106-6-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413054046.1560106-6-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
+ spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=1 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004130119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These writes to 0x162, 0x163 already appear earlier in the struct for
-the 1920x1080 mode and do not need to be repeated.
+On Sun, Apr 12, 2020 at 10:40:42PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> that it is enabled for DAX.
+> 
+> Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> and underlying storage support dax.
+> 
+> Add a new function xfs_inode_enable_dax() which reflects if the inode
+> should be enabled for DAX.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from v6:
+> 	Change enable checks to be sequential logic.
+> 	Update for 2 bit tri-state option.
+> 	Make 'static' consistent.
+> 	Don't set S_DAX if !CONFIG_FS_DAX
+> 
+> Changes from v5:
+> 	Update to reflect the new tri-state mount option
+> 
+> Changes from v3:
+> 	Update functions and names to be more clear
+> 	Update commit message
+> 	Merge with
+> 		'fs/xfs: Clean up DAX support check'
+> 		don't allow IS_DAX() on a directory
+> 		use STATIC macro for static
+> 		make xfs_inode_supports_dax() static
+> ---
+>  fs/xfs/xfs_iops.c | 34 +++++++++++++++++++++++++++++-----
+>  1 file changed, 29 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..37bd15b55878 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1244,12 +1244,11 @@ xfs_inode_supports_dax(
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  
+>  	/* Only supported on non-reflinked files. */
+> -	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
+> +	if (xfs_is_reflink_inode(ip))
+>  		return false;
+>  
+> -	/* DAX mount option or DAX iflag must be set. */
+> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> +	/* Only supported on regular files. */
+> +	if (!S_ISREG(VFS_I(ip)->i_mode))
+>  		return false;
 
-Signed-off-by: Sameer Puri <purisame@spuri.io>
----
- drivers/media/i2c/imx219.c | 2 --
- 1 file changed, 2 deletions(-)
+Why separate the !S_ISREG and the is_reflink_inode checks?
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index cb03bdec1f9c..53dafb7f5f2c 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -253,8 +253,6 @@ static const struct imx219_reg mode_1920_1080_regs[] =
-=3D {
- =09{0x4793, 0x10},
- =09{0x4797, 0x0e},
- =09{0x479b, 0x0e},
--=09{0x0162, 0x0d},
--=09{0x0163, 0x78},
- };
-=20
- static const struct imx219_reg mode_1640_1232_regs[] =3D {
+The part about "Change the use of xfs_inode_supports_dax() to reflect
+only if the inode and underlying storage support dax" would be a lot
+more straightforward if this hunk only removed the DIFLAG2_DAX check.
 
-base-commit: 8f3d9f354286745c751374f5f1fcafee6b3f3136
---=20
-2.26.0
+The rest of the patch looks ok.
 
+--D
 
+>  
+>  	/* Block size must match page size */
+> @@ -1260,6 +1259,31 @@ xfs_inode_supports_dax(
+>  	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
+>  }
+>  
+> +#ifdef CONFIG_FS_DAX
+> +static bool
+> +xfs_inode_enable_dax(
+> +	struct xfs_inode *ip)
+> +{
+> +	if (ip->i_mount->m_flags & XFS_MOUNT_NODAX)
+> +		return false;
+> +	if (!xfs_inode_supports_dax(ip))
+> +		return false;
+> +	if (ip->i_mount->m_flags & XFS_MOUNT_DAX)
+> +		return true;
+> +	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> +		return true;
+> +	return false;
+> +}
+> +#else /* !CONFIG_FS_DAX */
+> +static bool
+> +xfs_inode_enable_dax(
+> +	struct xfs_inode *ip)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_FS_DAX */
+> +
+> +
+>  STATIC void
+>  xfs_diflags_to_iflags(
+>  	struct inode		*inode,
+> @@ -1278,7 +1302,7 @@ xfs_diflags_to_iflags(
+>  		inode->i_flags |= S_SYNC;
+>  	if (flags & XFS_DIFLAG_NOATIME)
+>  		inode->i_flags |= S_NOATIME;
+> -	if (xfs_inode_supports_dax(ip))
+> +	if (xfs_inode_enable_dax(ip))
+>  		inode->i_flags |= S_DAX;
+>  }
+>  
+> -- 
+> 2.25.1
+> 
