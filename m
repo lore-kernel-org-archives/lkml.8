@@ -7,126 +7,107 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16086C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D944206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91EC20731
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:59:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tayvGblV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fhx/J80D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387518AbgDMR6n (ORCPT
+        id S2387528AbgDMR7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:58:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43620 "EHLO
+        Mon, 13 Apr 2020 13:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387498AbgDMR6l (ORCPT
+        by vger.kernel.org with ESMTP id S2387519AbgDMR7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:58:41 -0400
+        Mon, 13 Apr 2020 13:59:18 -0400
 Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E2C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:58:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id l1so4826020pff.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:58:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3D6C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:59:18 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id v23so4857669pfm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 10:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=0keu4PMkXs5TE6dOL0jOplSK+Gz3D/D04Bdh0nv5W9k=;
-        b=tayvGblV1EfBLNq0bf+Hjdu/L2wKd2UceRTwQ1v19v8RV3smljbw0OA/W+X5dFWJVr
-         a2+IlQV/BBPuG11edlV+cV365l4aNIk9ep5IDta3jXd09Pu/3xh7uszaCGrFncBaU+Ui
-         EUtGI95pwilWwoK6P+j5LWHGJSFzkwWVgW9/IIOy+WgqrwcjgyseljiidiZJEKCTYBQf
-         KBxn8OO7/b02pl9El+PV0wyK2PT0DEJMObQq8E5N9NJT+JJKwC3F7pTNYIW+oUYUbq5G
-         6reA87/CXmwnAs2eWMkVK9bfoYolzEwoiHvWtDH1NwjoAuIpL2pmeYVDU5rCm6QWVU5W
-         Tahg==
+        bh=RzcS9dRjplQeBWpxQLCXEXIw7gitZm1gAW9ZRZ00JbM=;
+        b=Fhx/J80DpVsmu+cLUqjdPvmyDwYoktkYfDZhsVCejMCrmvXSQYuN7q8RGV+/7FJTSe
+         gxwHjIBkE523cnzRzXNRG+vlC7YTx94UEN92lZ5uGaiq79mzJZZ4OWqoIRA5528eEicC
+         Oy4mfHD1Lyl/ve65vY9KultzKvFwUwGqw7Ugka5chw485gmoZY0NpkwljOGbiMuYq6C+
+         wEUGe0U0SMjku1d1aPq7Mx9xoguMM96PnmkiERyOC4UVkG58aFCw9wW93fhJaxS0Ko7y
+         Ssl2SHPS90PVKzLedehqy0QS53VnlbU1dQKNJCkZt9i3l/znPWvXcjWQPqy7Lx36yrGl
+         K4lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0keu4PMkXs5TE6dOL0jOplSK+Gz3D/D04Bdh0nv5W9k=;
-        b=krTV3N46rg5+WRPhxu6JCLgAMKEkzwrs3N8199W5j5OiGlXXWjYz4M/S9O9nWqJ7Sn
-         c6PNWX/A7X0iZt5x4E+PcsAKAH4wrKU615RuEIwucz5mbPfottPpoLo2dJK4gEEwNQZ6
-         V6wqu9ANGqvX6IE+zIFJEDeottdD1YPsec6kepwbGsM4tpgBQsH9YUy4mu5j1TCWK+oH
-         JNY5wm73eo9NMqKnpZ2tZ2uUfB4oTpPOJH143V2VNqEF4pSZBTuUreNV+ow0QbJOtTK/
-         7IIhGsCVNqWNGi7btjVw91DZ5vRkh4cJZ01bIj4YzXRaA9bRQxr4mm4rXAwY9RcZ5qee
-         Or4g==
-X-Gm-Message-State: AGi0PubdDi+lKMh97yQ/ToC7yzHSLiRu3vaYu9AKZsqjFIHzS+aBVUCe
-        BcLoH+aOelale7G71ifLPOt8TQ==
-X-Google-Smtp-Source: APiQypJ4hG26wy+uvhPhK5njQ4Mt6FjcLeTkBC1tThGtSZgPZMfB0noJ/QWQnqj6exVsBvFvBuy8Tw==
-X-Received: by 2002:a62:7786:: with SMTP id s128mr19494733pfc.144.1586800720395;
-        Mon, 13 Apr 2020 10:58:40 -0700 (PDT)
+        bh=RzcS9dRjplQeBWpxQLCXEXIw7gitZm1gAW9ZRZ00JbM=;
+        b=VCp00XIX+D4R6z5jvGmh+1XhvqedHgf+vTSSoawhHwVK0NZY5UXfjiV+vnnWKLFrCq
+         SjDTON728KB8cC+27uR2xoWeAWxPO15HJbniONa9pKUQCu8iMv5GyZLizb3bdJ/ucjyM
+         Do/ugd6bdSWh0jb026y9GQ04GP94eObOsNFwDxoRdjefMPoTic033o+eNjprTt/oQZwo
+         pkVtAT5sZnI/qdR5+glD1Rlri7W7xDKSoTwTYp2eiUWwL/7eLfIfDn6x1a7UvFpP3jhM
+         XCmSHM1nQRD+6K3HProf0EVbW1qheLCZfx7OYQtRfwh6C/lOlxDi9sDS060oBrL3tv7D
+         AC7g==
+X-Gm-Message-State: AGi0PubYbxFGjN/wfMXrJ8NPrzZ0RgQle5Mxa5ikgOIYEJCsfzdV7nBv
+        9nxk4jm9Tn+RSe7X+l1Y+yADXA==
+X-Google-Smtp-Source: APiQypJqwg/RDqB4fxKPMLKyDOESIeZ68eCl9+qIGJMwBOEmADpmfodFX3xhci9FLB6X0hLQj/YpGw==
+X-Received: by 2002:a62:1552:: with SMTP id 79mr18771642pfv.215.1586800757596;
+        Mon, 13 Apr 2020 10:59:17 -0700 (PDT)
 Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id k14sm9306208pfg.15.2020.04.13.10.58.39
+        by smtp.gmail.com with ESMTPSA id s22sm9544676pfh.18.2020.04.13.10.59.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 10:58:39 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 11:58:37 -0600
+        Mon, 13 Apr 2020 10:59:17 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 11:59:15 -0600
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     Jason Yan <yanaijie@huawei.com>
 Cc:     suzuki.poulose@arm.com, mike.leach@linaro.org,
         alexander.shishkin@linux.intel.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] coresight: cti: make some symbols static
-Message-ID: <20200413175837.GE28804@xps15>
-References: <20200413082224.23090-1-yanaijie@huawei.com>
+Subject: Re: [PATCH] coresight: etb10: make coresight_etb_groups static
+Message-ID: <20200413175915.GF28804@xps15>
+References: <20200413082237.23177-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413082224.23090-1-yanaijie@huawei.com>
+In-Reply-To: <20200413082237.23177-1-yanaijie@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 04:22:24PM +0800, Jason Yan wrote:
+On Mon, Apr 13, 2020 at 04:22:37PM +0800, Jason Yan wrote:
 > Fix the following sparse warning:
 > 
-> drivers/hwtracing/coresight/coresight-cti.c:22:1: warning: symbol
-> 'ect_net' was not declared. Should it be static?
-> drivers/hwtracing/coresight/coresight-cti.c:625:32: warning: symbol
-> 'cti_ops_ect' was not declared. Should it be static?
-> drivers/hwtracing/coresight/coresight-cti.c:630:28: warning: symbol
-> 'cti_ops' was not declared. Should it be static?
+> drivers/hwtracing/coresight/coresight-etb10.c:720:30: warning: symbol
+> 'coresight_etb_groups' was not declared. Should it be static?
 > 
 > Reported-by: Hulk Robot <hulkci@huawei.com>
 > Signed-off-by: Jason Yan <yanaijie@huawei.com>
 > ---
->  drivers/hwtracing/coresight/coresight-cti.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/hwtracing/coresight/coresight-etb10.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index 9e262f5a85e3..7fc1fc8d7738 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -19,7 +19,7 @@
->   */
->  
->  /* net of CTI devices connected via CTM */
-> -LIST_HEAD(ect_net);
-> +static LIST_HEAD(ect_net);
->  
->  /* protect the list */
->  static DEFINE_MUTEX(ect_mutex);
-> @@ -622,12 +622,12 @@ int cti_disable(struct coresight_device *csdev)
->  	return cti_disable_hw(drvdata);
->  }
->  
-> -const struct coresight_ops_ect cti_ops_ect = {
-> +static const struct coresight_ops_ect cti_ops_ect = {
->  	.enable = cti_enable,
->  	.disable = cti_disable,
+> diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+> index 3810290e6d07..03e3f2590191 100644
+> --- a/drivers/hwtracing/coresight/coresight-etb10.c
+> +++ b/drivers/hwtracing/coresight/coresight-etb10.c
+> @@ -717,7 +717,7 @@ static const struct attribute_group coresight_etb_mgmt_group = {
+>  	.name = "mgmt",
 >  };
 >  
-> -const struct coresight_ops cti_ops = {
-> +static const struct coresight_ops cti_ops = {
->  	.ect_ops = &cti_ops_ect,
->  };
+> -const struct attribute_group *coresight_etb_groups[] = {
+> +static const struct attribute_group *coresight_etb_groups[] = {
+>  	&coresight_etb_group,
+>  	&coresight_etb_mgmt_group,
+>  	NULL,
 
 Applied - thanks,
 Mathieu
 
->  
 > -- 
 > 2.21.1
 > 
