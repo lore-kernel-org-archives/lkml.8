@@ -2,104 +2,72 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A61BC352BE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC68C38A29
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1410220776
+	by mail.kernel.org (Postfix) with ESMTP id 32D2A20787
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="T0yOasC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgDMJZE (ORCPT
+        id S1729058AbgDMLfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 05:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728222AbgDMJYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 05:24:43 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75473C008769
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:18:22 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id k21so8087017ljh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 02:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=lHubTvQBvGK3a1f0dL5uuc3R9QqieZy5ygx33SyVyOU=;
-        b=T0yOasC4EK+K/uSP6q/VHtsWfhYkDjRADF7V9g4F5+Z4DUWC5frjadvL0F6P0vsPe/
-         ktgqKhj3YQk6Z/Vu29R3XivuTQsAlMUbGlD9RbD/i5QgrMhdJJEmMf5MGsF+UjZiJ6gH
-         63TaszCvMTswnknyawfP/PU/lt66yzBxp8dwd9WKCqUeOHQQ/Vi1le4ng01Kw6hCaJ/r
-         BAJpA6jmFGMDM+ppj4MAPHGRZOR3qQ6xwqur4z1ZcXugdhBHcgHFp8zUGLPSy4S0FxlR
-         NGHoeaL4W/NWuJqRAV1ddVOGub1Bc3b7HNdYnZyUMkVJG6ev9+STqZuby5um6fFpqqJy
-         lm9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lHubTvQBvGK3a1f0dL5uuc3R9QqieZy5ygx33SyVyOU=;
-        b=Y6Cxl+hp3vIkfl8oKZhja7Ig4mDueaCxcPKTaWsbbZMPjRQvSqOMEuRAB3sGrIvj6J
-         0Hgz5PHLRdxHezjaBfOrHJyYBIWcqD5SCGRfTfVnq3OzRUZ+kLS0uyYVXkzTFS/Ql/vu
-         D45AB5N8BALtoQ+M72GAhePue39OtUP4WS1VhiJmlIr82feU5xhfUfYwAz5QNkxFQPQP
-         g0ZiPxN8wUtwkKnPnN5Zaoyw8/E4X7qws7gIncWRVX1fFkVkwAoXQDtUyhKKfO32QucY
-         cG9rM0nVeonxU0QZqjVgrGCVz2YtJrjuaQG+kqV78e4bihw+dtqHHx1hb/crMc7RZ7K0
-         yFzw==
-X-Gm-Message-State: AGi0PuZ6gwru726KtweJeHghZ9LLqP3SR4duOC04hTX/B2gCeuSJeT8j
-        UIvqB7lp1MOi+OTKY8qUn24KUqyC3y5TfQ==
-X-Google-Smtp-Source: APiQypImlQL77/NsGdTM2O6q1MEpHE6CFMfh4ANSEsdt5fRmb4aUSjEpYhVF5ciGCXbqj8qUKhLhhg==
-X-Received: by 2002:a2e:b6c2:: with SMTP id m2mr9982617ljo.59.1586769500639;
-        Mon, 13 Apr 2020 02:18:20 -0700 (PDT)
-Received: from localhost.localdomain ([159.224.5.60])
-        by smtp.googlemail.com with ESMTPSA id e16sm8339049ljh.18.2020.04.13.02.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 02:18:20 -0700 (PDT)
-From:   Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Cc:     Luis Oliveira <lolivei@synopsys.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Subject: [PATCH 0/4] ov5647 driver improvement
-Date:   Mon, 13 Apr 2020 12:17:43 +0300
-Message-Id: <cover.1586758372.git.roman.kovalivskyi@globallogic.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Apr 2020 07:35:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58936 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728960AbgDMLfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 07:35:17 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E76FF3C5A2E54BFF94E0;
+        Mon, 13 Apr 2020 19:35:11 +0800 (CST)
+Received: from huawei.com (10.175.102.37) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
+ 19:35:03 +0800
+From:   Li Bin <huawei.libin@huawei.com>
+To:     <dgilbert@interlog.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>
+Subject: [PATCH] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Mon, 13 Apr 2020 19:29:21 +0800
+Message-ID: <1586777361-17339-1-git-send-email-huawei.libin@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver for ov5647 camera sensor lacks some important functionality, such
-as ability to query device format and resolution or operations with
-power down mode. Patches from Raspberry kernel source tree[1] fixes
-those issues and improves quality of mentioned driver.
+If the dxfer_len is greater than 256M that the request is invalid,
+it should call sg_remove_request in sg_common_write.
 
-[1] - https://github.com/raspberrypi/linux
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+---
+ drivers/scsi/sg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Dave Stevenson (4):
-  media: ov5647: Add set_fmt and get_fmt calls.
-  media: ov5647: Add support for PWDN GPIO.
-  media: ov5647: Add support for non-continuous clock mode
-  media: ov5647: Use gpiod_set_value_cansleep
-
- drivers/media/i2c/ov5647.c | 67 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 4e6af592..9c0ee19 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -793,8 +793,10 @@ static int get_sg_io_pack_id(int *pack_id, void __user *buf, size_t count)
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
+ 
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
+ 
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 -- 
-2.17.1
+1.7.12.4
 
