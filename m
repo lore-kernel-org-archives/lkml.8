@@ -2,173 +2,114 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_ABUSE_SURBL,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BCCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B364C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1BBA2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODN8uGXY"
+	by mail.kernel.org (Postfix) with ESMTP id 7A5CB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 17:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586797719;
+	bh=dSJitMmT2q9eJVBftj++q8S9ECxt3wih5JHAEChm3Sc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z6RtXII1K6SVoQ/R+gi3JBTMbRUioLd3BD21qmrbrmKWPGhkCtSKTFVj/tBHKiW1I
+	 w8QuVxvnmoK0WGY5KoUPgAvrqhd2lZXr8Wg0EnisZ+Kzx0Xi0JNzWsI8j39j5kM2Vs
+	 frAi/eQU0qGueL4O+7TaanggMlPQZbGr8pn1pL94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbgDMRHx (ORCPT
+        id S1732545AbgDMRIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52636 "EHLO
+        Mon, 13 Apr 2020 13:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732482AbgDMRHv (ORCPT
+        by vger.kernel.org with ESMTP id S1732216AbgDMRIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:07:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B9FC0A3BDC;
-        Mon, 13 Apr 2020 10:07:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f13so10865184wrm.13;
-        Mon, 13 Apr 2020 10:07:51 -0700 (PDT)
+        Mon, 13 Apr 2020 13:08:36 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5A7C0A3BDC;
+        Mon, 13 Apr 2020 10:08:36 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id c63so10205175qke.2;
+        Mon, 13 Apr 2020 10:08:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cPp1KyZf/lmOsFiy9zdMoMIN4AP8ao5Ga2p4X+esbbo=;
-        b=ODN8uGXY9MjhcbVeYG4bRd9JJzIU3gZlXe/bp/G195Lyf/H4koZ43Qr1gAucL9SiRa
-         abBo1ucbP7IyrS/YZhELu11UI8jRtNkPrzfnnDlrfvvfbYRZzDJ3OWnAjwoK5k0ysZOl
-         G4kiu46X+r0tmetlrJJ7zqQe31bSD6AnjXXw0741UqnTMtAOQ0OQlQ8kBt40CG72Ahv1
-         3BCK86dUsMciNvFlR8EwNqreYTNDjRL8IL0HNU/6jeOKtgiRUmSZqckheIfsdB3SWnDT
-         rpzeIXqjIG21PMG0EH0TYLszpeGdj8OeLDC92Z3052Ixq2VkOW987xHWfmdgrNlWocMM
-         gQyw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NFNHfE7F1rrYFA5HLaqChE2dtGQCPN6coS8rdPNSigI=;
+        b=hMvMIFkUh4+zKif04z4ScUfhsqi7SEl+A+mrbPrruG/ETMUk9MSMbdQuV+ZR7jkh3N
+         J0dtg9bsXCxgugxr47p9P970lB3mLeXEl1+dvVvePWz0RAdaz/HKS9DkxqtVRssfjzz3
+         WsnPlYz8DMA4ziVwz9BT6kPhHkaQ8UbLHH2o2QrG37vg6K6zL+C9Ns0+E3cpCa5Yr6lg
+         pz39Lh4j6AOWTYBZOFbnjAsgZLTLjjKlGPKFSXrK0D+nlVPiGu2cLa8a1KZImJ/aDOPm
+         /ruh8zkhxm/8oyNqJEz8FUOmopUR6CjUyrxGuMhEJAdkGzvu14q107uAQLarg3nczumZ
+         0XFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cPp1KyZf/lmOsFiy9zdMoMIN4AP8ao5Ga2p4X+esbbo=;
-        b=aq3G9xRdgxXAm/he+PbHzLC8duOco4CwnjfaQLDN9HbVlwE17DzKaq0FErwMjpP1wg
-         AAw9CvZv/VcKdzcgyHdFicd9fvVxDfM8zEai+gBmBpJicslGUCWyJvDU4bcNXkdxveYi
-         TCkl57PXpmTtmivxr6ijthF8FP5fRis2aJ+izz/H3yXAzu56axVKtAGB4PT/VZ2omjOj
-         iOEDAceUA/T5zUzAU0lHQNCAQJGZ/91mw2HfQUh2dfH/mwpuHL4G8BQB3ir5Iij33Dlt
-         AxhRHsLn4IeGyW/kep6bK2t2ctoKS2DiyxWG3PIHhHY9gecoZifTDomdtWn873JC8lJX
-         GupA==
-X-Gm-Message-State: AGi0PuY7wl0JTWc1fnib1y5v67ufg8k5j6CnfFAEa+pGO8lgUt417N2x
-        wcQJ0fbKqXpqCXCe9deeR80=
-X-Google-Smtp-Source: APiQypIYTXMDlbbadKCR2So0u2zqsQZ78M0RQqvQJVW3owAmKNqBMcl9cd6Cmjnzji5CHysLJ4LzXQ==
-X-Received: by 2002:adf:afe4:: with SMTP id y36mr20068052wrd.205.1586797669906;
-        Mon, 13 Apr 2020 10:07:49 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id b4sm10640960wrv.42.2020.04.13.10.07.47
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=NFNHfE7F1rrYFA5HLaqChE2dtGQCPN6coS8rdPNSigI=;
+        b=MYBix4g1OLEFk4vUV9ZmyXEkFTVaWF2Y3H2BEr/PUps1PZS9L/4sU6uLFUJEkBXgdm
+         sijL4nrE7bJRoRIYXHtvQSQ4HX64Q9azx6p3d3aHfocfwug56GylxJxCFlbRLXEXt826
+         9oHKNux45oRaODMA3FxOLYK2Pha7FIieK6YBm0sLZNiklDmAZN1rAFpTM+V9+qChPmiH
+         MyLD9zggnWn52k0+XQm45Z+QvgUvIwES/r/7FHi2Cu2b6zWPTeMSAB1ts7LjjZcUky+l
+         UvSrRZLEXQC733WBRCqlCM2YlakDRO0M8FUEvMFnETaV+a1ExeeyKO09io3oLEttfvTO
+         Wh8A==
+X-Gm-Message-State: AGi0PuZ6kEGfKJk/PTLymcBTTrggOTgpILGdbddIrqf0qMupzNW1BhJm
+        t1y9gXnfpfZMR2Brt5D1/WzrvsM7eHc=
+X-Google-Smtp-Source: APiQypKWVxTe+Ph/kO8cRDXhMu8/9u7uP6NoCX9nQn0sCCiaMfEPf6vI0h5KVn2HrndC6UnLtdAfwA==
+X-Received: by 2002:a37:4981:: with SMTP id w123mr11308375qka.497.1586797715786;
+        Mon, 13 Apr 2020 10:08:35 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id x7sm3570637qkx.36.2020.04.13.10.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 10:07:49 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 19:07:39 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH 00/11] VMBus channel interrupt reassignment
-Message-ID: <20200413170739.GA28863@andrea>
-References: <20200406001514.19876-1-parri.andrea@gmail.com>
- <20200413154836.rfvkbcg654pc5t5n@debian>
+        Mon, 13 Apr 2020 10:08:34 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 13:08:33 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com,
+        ming.lei@redhat.com, bvanassche@acm.org
+Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and
+ latency target handling
+Message-ID: <20200413170833.GD60335@mtj.duckdns.org>
+References: <20200413162758.97252-1-tj@kernel.org>
+ <dd55f890-740c-16b5-77bd-4c6fdb710b3d@gmail.com>
+ <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413154836.rfvkbcg654pc5t5n@debian>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6f69d35c-c593-f140-c351-c7fd2c13069e@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 04:48:36PM +0100, Wei Liu wrote:
-> On Mon, Apr 06, 2020 at 02:15:03AM +0200, Andrea Parri (Microsoft) wrote:
-> > Hi all,
+On Mon, Apr 13, 2020 at 08:00:29PM +0300, Pavel Begunkov wrote:
+> On 13/04/2020 19:56, Pavel Begunkov wrote:
+> > On 13/04/2020 19:27, Tejun Heo wrote:
+> >> Changes from v1[1]
+> >>
+> >> * Dropped 0002-block-add-request-io_data_len.patch and updated to use
+> >>   rq->stats_sectors instead as suggested by Pavel Begunkov.
 > > 
-> > This is a follow-up on the RFC submission [1].  The series introduces
-> > changes in the VMBus drivers to reassign the CPU that a VMbus channel
-> > will interrupt.  This feature can be used for load balancing or other
-> > purposes (e.g. CPU offlining).  The submission integrates feedback in
-> > the RFC to amend the handling of the 'array of channels' (patch #3).
-> > 
-> > Thanks,
-> >   Andrea
-> > 
-> > [1] https://lkml.kernel.org/r/20200325225505.23998-1-parri.andrea@gmail.com
-> > 
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > 
-> > Andrea Parri (Microsoft) (11):
-> >   Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
-> >   Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific
-> >     CPU
-> >   Drivers: hv: vmbus: Replace the per-CPU channel lists with a global
-> >     array of channels
-> >   hv_netvsc: Disable NAPI before closing the VMBus channel
-> >   hv_utils: Always execute the fcopy and vss callbacks in a tasklet
-> >   Drivers: hv: vmbus: Use a spin lock for synchronizing channel
-> >     scheduling vs. channel removal
-> >   PCI: hv: Prepare hv_compose_msi_msg() for the
-> >     VMBus-channel-interrupt-to-vCPU reassignment functionality
-> >   Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
-> >     logic
-> >   Drivers: hv: vmbus: Synchronize init_vp_index() vs. CPU hotplug
-> >   Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL message
-> >     type
-> >   scsi: storvsc: Re-init stor_chns when a channel interrupt is
-> >     re-assigned
-> > 
+> > rq->stats_sectors is set only when there is QUEUE_FLAG_STATS, see
+> > blk_mq_start_request(). I don't see blk-iocost requiring it. Did I miss something?
 > 
-> Applied to hyperv-next. Thanks.
-> 
-> This hunk in patch 10 doesn't apply cleanly because it conflicts with
-> Vitaly's patch.
-> 
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 3785beead503d..1058c814ab06e 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -1377,7 +1377,7 @@ channel_message_table[CHANNELMSG_COUNT] = {
->         { CHANNELMSG_19,                        0, NULL },
->         { CHANNELMSG_20,                        0, NULL },
->         { CHANNELMSG_TL_CONNECT_REQUEST,        0, NULL },
-> -       { CHANNELMSG_22,                        0, NULL },
-> +       { CHANNELMSG_MODIFYCHANNEL,             0, NULL },
->         { CHANNELMSG_TL_CONNECT_RESULT,         0, NULL },
->  };
-> 
-> I have fixed it up. New hunk looks like:
-> 
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index a6b21838e2de..9c62eb5e4135 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -1380,7 +1380,7 @@ channel_message_table[CHANNELMSG_COUNT] = {
->         { CHANNELMSG_19,                        0, NULL, 0},
->         { CHANNELMSG_20,                        0, NULL, 0},
->         { CHANNELMSG_TL_CONNECT_REQUEST,        0, NULL, 0},
-> -       { CHANNELMSG_22,                        0, NULL, 0},
-> +       { CHANNELMSG_MODIFYCHANNEL,             0, NULL, 0},
->         { CHANNELMSG_TL_CONNECT_RESULT,         0, NULL, 0},
->  };
+> And there is no reason to not initialise it unconditionally.
 
-The fix looks good to me.  Thank you Wei!
+The updated patch turns on accounting when iocost is enabled on a queue.
 
-Thanks,
-  Andrea
+  @@ -2267,6 +2295,7 @@ static ssize_t ioc_qos_write(struct kernfs_open_file *of, char *input,
+   	spin_lock_irq(&ioc->lock);
+ 
+   	if (enable) {
+  +		blk_stat_enable_accounting(ioc->rqos.q);
+   		blk_queue_flag_set(QUEUE_FLAG_RQ_ALLOC_TIME, ioc->rqos.q);
+   		ioc->enabled = true;
+   	} else {
+
+Thanks.
+
+-- 
+tejun
