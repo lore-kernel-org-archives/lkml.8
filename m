@@ -2,161 +2,142 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E3CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1848EC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16F6A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cENTxk7d"
+	by mail.kernel.org (Postfix) with ESMTP id E6A4E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586809941;
+	bh=+mQbQlOhLguCM06H0KI6FH4Hkb+h5MuoB07rdeEjuVU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Wyv8texDab5YR0XHg4ljrUX4w9xOdIxaK2dCPULtqZBbnWk8pRcpEKn3tRu7gmGwM
+	 jBVFrnKQdq0Q1cCuW6dU3UNyhI7Dcvd4c9qqsWqLeDBKaGh3mlYLfvXjA/sb2/Qant
+	 ULVTh1y27KbF97VvHpLaFQn8JP4buAmXOML/D5Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbgDMU3q (ORCPT
+        id S1733281AbgDMUcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388360AbgDMU3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:29:41 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A9FC0A3BDC;
-        Mon, 13 Apr 2020 13:29:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id d17so4714969wrg.11;
-        Mon, 13 Apr 2020 13:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8BfIzUWdiVQe4Jj9AQRNcFKuHbyDbHGczPPHYN6AjJY=;
-        b=cENTxk7dj8Az0Oe75wCTUqG9Fi1xkjE/MjFwUfmhWC7qr/NUb23H52Sh5vftg9PzLu
-         J7yz1B8CCtq9siwynIDGenmwOvcvAvdZLbo0uLURU31/34M3pjojKmwzSbnCgyv2Zmmi
-         //E+8RKFkV1+5Rmd0tkozGMRYHO89Oc8iwaEJnjYHBYJyLA99QhcA7Tvd5HdDZTEzqFe
-         RN2vrPWA0g9H6fc8Bz/2ClzGkboxYBwOz6VfNIsEPwmxTs1XcQwAenYOIzZXqCo22CjE
-         W7pJ6B0lkpC1tcc+AvBXBY3jj1IQZG5VRbl8GlksyVQWYXgYWY5GGB1XQ4i3F19BJ3sa
-         zNVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8BfIzUWdiVQe4Jj9AQRNcFKuHbyDbHGczPPHYN6AjJY=;
-        b=icUgrnIu6xDyGKLBVger9il+6QhecRs+2MzxvqUlVj+zoYauXQoxJYnw0/YrP8nq+p
-         BXb/zLaHzTtLtfrTocUCmxl+0tvAPWjp0gZVP1FAcGbpNuxlsyLksREZWZU8WLVgJVXH
-         OHt4MbLU+dzkpNZ0wOTCxSxKr0Pd5EBrohpk469+U1F1ndWlzPr3aeqhpq3fDglBA5a8
-         t8AelCbqrh+/QyvXVkNVxE75l/wzq9h5u4hXYn/1KyRZIvfEtFVhp2kdmXJrVgES8VoD
-         7GLsRyb8SsFYBIH/6icZttZcwEMdC5bCfFQlZ/biHBDijhipsbyTkhdnHkCPmo5gNh4p
-         CMsQ==
-X-Gm-Message-State: AGi0PuYSZLqFbM+0p8/qD1mdOwqrRJ1AGE2aDb+c+EQAsWxiq64Hwp26
-        4GMnH2VmnvVv7mmUBCSWaQChF618
-X-Google-Smtp-Source: APiQypLsJF5WLvTEvMrT5U7AZrFDlyb19XjNZxp2K4r1IBS9+O/OjLXgVvOtKKu9QQrRYKnW2HjkcA==
-X-Received: by 2002:adf:a18c:: with SMTP id u12mr16561167wru.325.1586809779912;
-        Mon, 13 Apr 2020 13:29:39 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 138sm16572774wmb.14.2020.04.13.13.29.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 13:29:39 -0700 (PDT)
-Subject: Re: [PATCH 1/4] devicetree: bindings: pci: document tx-deempth tx
- swing and rx-eq property
-To:     Ansuel Smith <ansuelsmth@gmail.com>, devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Lucas Stach <l.stach@pengutronix.de>
-References: <20200410004738.19668-1-ansuelsmth@gmail.com>
- <20200410004738.19668-2-ansuelsmth@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
-Date:   Mon, 13 Apr 2020 13:29:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200410004738.19668-2-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 13 Apr 2020 16:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727877AbgDMUcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:32:19 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6759320663;
+        Mon, 13 Apr 2020 20:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586809937;
+        bh=+mQbQlOhLguCM06H0KI6FH4Hkb+h5MuoB07rdeEjuVU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JRwIbOGNGd8SeaX+wyxXDZubqAgLXv/8ybo1QArs9ziR+GHtb7zTJemIeScafcvWW
+         LxmpdDhEj6KVjPXvAOVmlbMXDvdRReKcrM9cw4iY6uB9VjkpZlW/LqI/bRlcspqFnG
+         YzPBIqi8dyJ7fIG41nnsDRzA4ozEIZL/oSod9Nig=
+Date:   Mon, 13 Apr 2020 13:32:16 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     syzbot <syzbot+2854d22c7dd957a6519a@syzkaller.appspotmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com, Evan Green <evgreen@chromium.org>,
+        Martijn Coenen <maco@android.com>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: WARNING in unaccount_page_cache_page (2)
+Message-Id: <20200413133216.df03bc0a952276abdaa610cd@linux-foundation.org>
+In-Reply-To: <0000000000002ce79705a3275559@google.com>
+References: <0000000000002ce79705a3275559@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 13 Apr 2020 00:50:11 -0700 syzbot <syzbot+2854d22c7dd957a6519a@syzkaller.appspotmail.com> wrote:
+
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    ae46d2aa mm/gup: Let __get_user_pages_locked() return -EIN..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12b60343e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2854d22c7dd957a6519a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+2854d22c7dd957a6519a@syzkaller.appspotmail.com
+
+(cc's added)
+
+Looks like the loop backing device's pagecache still has a dirty page,
+despite us having just run sync_blockdev().  It may well be a race of
+some form - do we have any description of what the test is doing?
 
 
-On 4/9/2020 5:47 PM, Ansuel Smith wrote:
-> Document tx-deempth, tx swing and rx-eq property property used on some
-> device (qcom ipq806x or imx6q) to tune and fix init error of the pci
-> bridge.
-
-Those properties are not specific to the host bridge per-se, but to the
-PCIe PHY, therefore, one would expect to find those properties within
-the PCIe PHY node if it exists. Given you want this binding to be
-generic, this is an important thing to correct here.
--- 
-Florian
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 8402 at mm/filemap.c:222 unaccount_page_cache_page+0x631/0xd60 mm/filemap.c:222
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 8402 Comm: syz-executor.4 Not tainted 5.6.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:221
+>  __warn.cold+0x2f/0x35 kernel/panic.c:582
+>  report_bug+0x27b/0x2f0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:175 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:170 [inline]
+>  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:unaccount_page_cache_page+0x631/0xd60 mm/filemap.c:222
+> Code: 02 00 0f 85 3a 06 00 00 48 8b 1b 31 ff 48 c1 eb 03 83 e3 01 48 89 de e8 9d 01 e2 ff 48 85 db 0f 84 d9 fb ff ff e8 ff ff e1 ff <0f> 0b 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 80 3c 02
+> RSP: 0018:ffffc90001287688 EFLAGS: 00010012
+> RAX: 0000000000040000 RBX: 0000000000000001 RCX: ffffc90011a34000
+> RDX: 000000000000ec1b RSI: ffffffff81913191 RDI: 0000000000000007
+> RBP: ffffea0001165dc0 R08: ffff88804a3ce240 R09: fffff9400022cbb9
+> R10: ffffea0001165dc7 R11: fffff9400022cbb8 R12: 0000000000000000
+> R13: ffff8880a3f6bbe0 R14: ffffea0001165dc0 R15: ffffea00022cd088
+>  delete_from_page_cache_batch+0x1a6/0xec0 mm/filemap.c:355
+>  truncate_inode_pages_range+0x58b/0x1760 mm/truncate.c:366
+>  kill_bdev+0xd1/0x100 fs/block_dev.c:87
+>  loop_set_status+0x315/0x1370 drivers/block/loop.c:1272
+>  loop_set_status_old+0x223/0x310 drivers/block/loop.c:1468
+>  lo_ioctl+0x308/0x1410 drivers/block/loop.c:1612
+>  __blkdev_driver_ioctl block/ioctl.c:322 [inline]
+>  blkdev_ioctl+0x25b/0x660 block/ioctl.c:718
+>  block_ioctl+0xf9/0x140 fs/block_dev.c:1996
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45c889
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f83d100ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00007f83d100b6d4 RCX: 000000000045c889
+> RDX: 0000000020000440 RSI: 0000000000004c02 RDI: 0000000000000003
+> RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 00000000000003f4 R14: 00000000004c6902 R15: 000000000076bf0c
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
