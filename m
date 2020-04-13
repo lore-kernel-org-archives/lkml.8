@@ -2,196 +2,136 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FED6C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9032AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:57:22 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA3F20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D7120735
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 06:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ylx+UI57"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org CCA3F20735
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DM3AkMK5"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 45D7120735
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=nxp.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgDMGxA (ORCPT
+        id S1728902AbgDMG5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 02:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:54704 "EHLO
+        Mon, 13 Apr 2020 02:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:55412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbgDMGxA (ORCPT
+        with ESMTP id S1728874AbgDMG5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 02:53:00 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07FCC008651;
-        Sun, 12 Apr 2020 23:52:58 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h25so7702940lja.10;
-        Sun, 12 Apr 2020 23:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=obx+dgHWtJ+1SmS5nRQdHXALDhbm+OoO8gaF5G34Y6g=;
-        b=Ylx+UI57UMaItJSNaHrmSCBTsp8MTvIoeG+yFhELcHVTOCotrj+JnfujPbwWPlz8mu
-         mPOwVLUV3ZUX8lyK+/4pPbyD1ChVeJ8BPnIkO/KaDNfZrCbOGmu4Myc3zjz5AaVvSxoq
-         YW6AfSVO3t69PQUMY3lAsn+4ILrolNOIr03CQkyJFtEX+B7ezjYdjcha3Q7FoqI58KN7
-         WEg1Sb63OY82K1DTm9Oh6Mkq94lKJrguk7AOZy4Cf1R1FCz0FF8y3GRbcPtSu+LpQL90
-         d10Ekjk0/ufHkPCsJknjlK5sbBaumnoq5OVtpwlwpsCsWwBhQgL2LvVY0pMTjr9WIbF+
-         hIIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=obx+dgHWtJ+1SmS5nRQdHXALDhbm+OoO8gaF5G34Y6g=;
-        b=A3qaPLrvZfLhSwBNtviJx0zaaFtzADW/4AaZBgjWFtxMMRBqYH8QZN6Q023f6Bsi+Y
-         DoDW2wyFLgubpgJUcHUZTBTO8kOjRboQfgEShaZAypYSi6Iz6FNEydHIHZkmG7h+VQOZ
-         ZUFsq6kiKf0LUUfe7NrACHsEFI+Bm/23YdmLmrecX3F4GKj74Dx3D5deOZIa/iDUKrvI
-         hEYi3c12ILCkeJT+Ug2OLtB2JJtxstYFcxuWDzxbf9+fyvkb9at+KmsMXhamga8OMTZD
-         r0bL7A+n3vy1fVkXLMcgGGKxN6cORFPLCaSq765eDuGpWqqLGUX/XS10KlWZmLARmabW
-         m5ZA==
-X-Gm-Message-State: AGi0Pubzlus3bkDuaN5M5F0rxOy8IF1GtxODdZ/tvXjTjaEXfdXanAG1
-        AGPA1m88dWRnfH0CLf5AG6QXgWIXPzJzxGtZLuc=
-X-Google-Smtp-Source: APiQypKuExun26bef57tFMBC0VASpQa9TO67TMeZBmY+f4n/zZ8Cd8v7LctbSsl2eIyIEMKAZtGbpKcis4zSbRUqjiY=
-X-Received: by 2002:a2e:330e:: with SMTP id d14mr9669168ljc.153.1586760777124;
- Sun, 12 Apr 2020 23:52:57 -0700 (PDT)
+        Mon, 13 Apr 2020 02:57:20 -0400
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30070.outbound.protection.outlook.com [40.107.3.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A68C008651
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 23:57:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aQbbYf7Yi/5RnYO02v+ETZ308iJY1S9zJwtuY7oLfbvHxaweu23kPtfh22m3sCQMas+4mEtCbz2NgNRx0Qhig7dgLu0EFsZr3VID76In+qnRNp8DXgIjkrp/puzKTMqJg2tam5VZWLynGaHpKRLAn3XjiRGpSsz2DiWMStUML6owvIAdrnk0j0rEw1SubtaGG3trfZ0WmNMMgXNxrgza3U0srItywHvuM9CJb0p6o11J3OBANuxEi27cD1XTw/eSvDfiQ1szou/1fdx0O9FtVTjSrfQ8lZKTaB/xArRv4162as5WuKevu04BnBCiwNp4McEdhF9trwEqqO86q/m5pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=09WZImW7F9OTt+B2YoruiXvoWL/Kck0AR+coDSsPfcU=;
+ b=CjHCrkTN4zJzQEp/VScLUx9AerJuhieWPcmA1h3htX3voGI0voswS8DYNTCHKWasYdPnUcmEX1/rt6eTYU8qYT2D/GW5hLEANlEGjIruz3jIe8pLMtgmQD3qiAYBs5md/LjNpQkFDoUGM9bfPmOL28ePHVEiXtRAUYfOLrqBU5GYcaK5iyHYRIThgoHrnJG56a3B9qz+HaNkQFGfSg8R0/2QBgY9/o7XvPfx63gQdfwwtWFOr84pCGkF4oDNhxjn/lTH3RGS6ZAUrjxrXgE+KfB0k1gEi1ArUslSyrNgbEtTNDZtzdH6gDCVHNrStJzXmMqidnuReeQo1DjCYR6Xlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=09WZImW7F9OTt+B2YoruiXvoWL/Kck0AR+coDSsPfcU=;
+ b=DM3AkMK5Tx1fFb1INlqhTpv8WBl0JHLL+irl5AhEEBLAl/38JZFsMx4SD1y90SfAoSwyxp5gpnNLYM4G0Bp86T0S5FrzJfs3PaNfvSxKjxbw01gOfb1+NpptSHS9T7/yHfwpBtDfu7AEz998C8ED6V+lIy7lZ4RuhcQo65QhL2w=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
+ by AM0PR04MB4708.eurprd04.prod.outlook.com (2603:10a6:208:cc::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Mon, 13 Apr
+ 2020 06:57:17 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.026; Mon, 13 Apr 2020
+ 06:57:17 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
+        robh+dt@kernel.org
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, abel.vesa@nxp.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
+Date:   Mon, 13 Apr 2020 14:49:04 +0800
+Message-Id: <1586760548-23046-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0143.apcprd06.prod.outlook.com
+ (2603:1096:1:1f::21) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-References: <9ed34afa9fb42e0c234065cac5401d7826942b55.1586744073.git.baolin.wang7@gmail.com>
- <202004131350.ewIW96s2%lkp@intel.com>
-In-Reply-To: <202004131350.ewIW96s2%lkp@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 13 Apr 2020 14:52:45 +0800
-Message-ID: <CADBw62oRnPr6K0C_1QsQdpZGMJvaQ4dymnVDxgfPsRt9m=t72A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] mmc: host: sdhci: Implement the request_atomic() API
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0143.apcprd06.prod.outlook.com (2603:1096:1:1f::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2900.15 via Frontend Transport; Mon, 13 Apr 2020 06:57:13 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 98149ba4-7ad5-4fce-b404-08d7df77e75c
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4708:|AM0PR04MB4708:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4708314FE0D8F04EDC37050788DD0@AM0PR04MB4708.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 037291602B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(366004)(36756003)(8676002)(81156014)(8936002)(69590400007)(52116002)(16526019)(6666004)(26005)(2906002)(86362001)(6506007)(186003)(478600001)(4326008)(6486002)(66476007)(66556008)(5660300002)(66946007)(2616005)(956004)(9686003)(316002)(6512007)(4744005)(966005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: q+l2f3L4XTzSPd8/4TUuDh0hkbqA/QM09i3iwkd/ogcAlc6UrfxbH7iwkrddas1/2chQThIKwMExbC+Nza9r29/sJwYCSUpUok2Qpsf5OmpMVDC8pIee4S3gOY/kaDXN3qUicpY+cJgZwWnFSq9HPIVHVsHPTu533gnbrSFvgYXsklWB9i0YdsO8qB2LtnW4YL7p+fYNeT6Jhag8ZZ/IpUOybAAuTu+Lf2VlLIjPoa+gUxRbbmPBmyi1gscqTDdecHsakf7civ2W9fh/N4D8AqrCFwckgQoIh/rTeUiXytmS4PyDN7lZU+oFBADuL7NDRHjc4tqup6mcZ1fUpapoFHAnU9U+IVexQn9HqXvFPNsYDCJe0BB4GgsYCSeUe3quorBHF3AE0GNbc/z/nuQesg/Jyde7hqqtNH/Nnrjq3iMk5B9NpURbRyRE/G1RwjFye/fZ24morwBFCOO4t2gNAchr6mDgpqxtoibyeFjL5I9XoV/sCtFr2kDU4fIvyDgm63/DmVMv2K4jL/4fNvuxBwahppmCrnW0VLhS6i5nnQ03CPRGbJQOVyCLjutriieYsybTjrqw6EuVd5wZZf+FwA==
+X-MS-Exchange-AntiSpam-MessageData: IjMjryRuqgdc/ODpPYPhetG07/fAFtrNKP8IyOLHdsxrZqGXZye/F3vhJr7k28EUAi47U/9j8EfuxC3hIiJ9QoI2/VBarjVN3CoSle+j2msOZ8WtUYi1tQcf02yWkLD2tZuLrVbpTcwyLMhoYUJNXQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98149ba4-7ad5-4fce-b404-08d7df77e75c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2020 06:57:17.5576
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u/kbEL03FihgcdmpZIDcGZkg3DXMAtCRjj49/DZA9BRlRazvIYpIalC/HzEChMMUOWcqlWWwQkMeSuf50Smvjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4708
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Peng Fan <peng.fan@nxp.com>
 
-On Mon, Apr 13, 2020 at 1:42 PM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Baolin,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v5.7-rc1 next-20200412]
-> [cannot apply to arm-soc/for-next]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/Introduce-the-request_atomic-for-the-host/20200413-105346
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 8f3d9f354286745c751374f5f1fcafee6b3f3136
-> config: x86_64-randconfig-s2-20200413 (attached as .config)
-> compiler: gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
+V2:
+ Fix dt_bindings check
 
-This patch set is based on Adrian's patch set. Thanks.
-https://www.spinics.net/lists/linux-mmc/msg58529.html
-
->
-> All error/warnings (new ones prefixed by >>):
->
->    In file included from include/linux/build_bug.h:5:0,
->                     from include/linux/bitfield.h:10,
->                     from drivers/mmc/host/sdhci.c:12:
->    drivers/mmc/host/sdhci.c: In function 'sdhci_request_atomic':
->    drivers/mmc/host/sdhci.c:2076:6: error: implicit declaration of function 'sdhci_present_error' [-Werror=implicit-function-declaration]
->      if (sdhci_present_error(host, mrq->cmd, true)) {
->          ^
->    include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
->     #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
->                                                        ^
-> >> drivers/mmc/host/sdhci.c:2076:2: note: in expansion of macro 'if'
->      if (sdhci_present_error(host, mrq->cmd, true)) {
->      ^
->    drivers/mmc/host/sdhci.c:2081:8: error: implicit declaration of function 'sdhci_manual_cmd23' [-Werror=implicit-function-declaration]
->      cmd = sdhci_manual_cmd23(host, mrq) ? mrq->sbc : mrq->cmd;
->            ^
->    drivers/mmc/host/sdhci.c:2090:2: error: invalid use of void expression
->      if (!sdhci_send_command(host, cmd))
->      ^
->    drivers/mmc/host/sdhci.c:2090:2: error: invalid use of void expression
->    In file included from include/linux/build_bug.h:5:0,
->                     from include/linux/bitfield.h:10,
->                     from drivers/mmc/host/sdhci.c:12:
-> >> include/linux/compiler.h:61:16: error: invalid use of void expression
->      static struct ftrace_branch_data  \
->                    ^
->    include/linux/compiler.h:58:69: note: in expansion of macro '__trace_if_value'
->     #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
->                                                                         ^
->    include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
->     #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
->                                ^
->    drivers/mmc/host/sdhci.c:2090:2: note: in expansion of macro 'if'
->      if (!sdhci_send_command(host, cmd))
->      ^
->    cc1: some warnings being treated as errors
->
-> vim +/if +2076 drivers/mmc/host/sdhci.c
->
->   2066
->   2067  int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
->   2068  {
->   2069          struct sdhci_host *host = mmc_priv(mmc);
->   2070          struct mmc_command *cmd;
->   2071          unsigned long flags;
->   2072          int ret = 0;
->   2073
->   2074          spin_lock_irqsave(&host->lock, flags);
->   2075
-> > 2076          if (sdhci_present_error(host, mrq->cmd, true)) {
->   2077                  sdhci_finish_mrq(host, mrq);
->   2078                  goto out_finish;
->   2079          }
->   2080
->   2081          cmd = sdhci_manual_cmd23(host, mrq) ? mrq->sbc : mrq->cmd;
->   2082
->   2083          /*
->   2084           * The HSQ may send a command in interrupt context without polling
->   2085           * the busy signaling, which means we should return BUSY if controller
->   2086           * has not released inhibit bits to allow HSQ trying to send request
->   2087           * again in non-atomic context. So we should not finish this request
->   2088           * here.
->   2089           */
->   2090          if (!sdhci_send_command(host, cmd))
->   2091                  ret = -EBUSY;
->   2092          else
->   2093                  sdhci_led_activate(host);
->   2094
->   2095  out_finish:
->   2096          spin_unlock_irqrestore(&host->lock, flags);
->   2097          return ret;
->   2098  }
->   2099  EXPORT_SYMBOL_GPL(sdhci_request_atomic);
->   2100
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+This is a splited part from V2:
+ARM: imx7ulp: add cpufreq using cpufreq-dt
+https://patchwork.kernel.org/cover/11390589/
+Nothing changed
 
 
+The original V2 patchset is to support i.MX7ULP cpufreq,
+still waiting the virtual clk being accepted. so to decouple,
+this patchset only takes the run mode part.
+
+Peng Fan (4):
+  dt-bindings: fsl: add i.MX7ULP PMC binding doc
+  ARM: dts: imx7ulp: add pmc node
+  ARM: imx: imx7ulp: support HSRUN mode
+  ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
+
+ .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx7ulp.dtsi                     | 10 +++++++
+ arch/arm/mach-imx/common.h                         |  1 +
+ arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14 ++++++++--
+ arch/arm/mach-imx/pm-imx7ulp.c                     | 25 +++++++++++++++++
+ 5 files changed, 79 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
 
 -- 
-Baolin Wang
+2.16.4
+
