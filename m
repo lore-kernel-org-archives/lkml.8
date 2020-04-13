@@ -2,99 +2,116 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8F8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E16DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:51:38 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207F8206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:46:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 207F8206E9
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=davemloft.net
+	by mail.kernel.org (Postfix) with ESMTP id F192C20737
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 05:51:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org F192C20737
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgDMFqh (ORCPT
+        id S1726336AbgDMFvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 01:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43624 "EHLO
+        Mon, 13 Apr 2020 01:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:44456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgDMFqg (ORCPT
+        with ESMTP id S1725842AbgDMFvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 01:46:36 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA989C0A3BE0;
-        Sun, 12 Apr 2020 22:07:46 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C46A5127B6241;
-        Sun, 12 Apr 2020 22:07:42 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 22:07:39 -0700 (PDT)
-Message-Id: <20200412.220739.516022706077351913.davem@davemloft.net>
-To:     leon@kernel.org
-Cc:     bp@alien8.de, kuba@kernel.org, thomas.lendacky@amd.com,
-        keyur@os.amperecomputing.com, pcnet32@frontier.com,
-        vfalico@gmail.com, j.vosburgh@gmail.com, linux-acenic@sunsite.dk,
-        mripard@kernel.org, heiko@sntech.de, mark.einon@gmail.com,
-        chris.snook@gmail.com, linux-rockchip@lists.infradead.org,
-        iyappan@os.amperecomputing.com, irusskikh@marvell.com,
-        dave@thedillows.org, netanel@amazon.com,
-        quan@os.amperecomputing.com, jcliburn@gmail.com,
-        LinoSanfilippo@gmx.de, linux-arm-kernel@lists.infradead.org,
-        andreas@gaisler.com, andy@greyhouse.net, netdev@vger.kernel.org,
-        thor.thayer@linux.intel.com, linux-kernel@vger.kernel.org,
-        ionut@badula.org, akiyano@amazon.com, jes@trained-monkey.org,
-        nios2-dev@lists.rocketboards.org, wens@csie.org
-Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200413045555.GE334007@unreal>
-References: <20200411155623.GA22175@zn.tnic>
-        <20200412.210341.1711540878857604145.davem@davemloft.net>
-        <20200413045555.GE334007@unreal>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 13 Apr 2020 01:51:36 -0400
+Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FF7C008654;
+        Sun, 12 Apr 2020 22:12:27 -0700 (PDT)
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B717B5D6576156E76FA3;
+        Mon, 13 Apr 2020 13:12:22 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Apr 2020
+ 13:12:12 +0800
+To:     <viro@zeniv.linux.org.uk>, <rostedt@goodmis.org>,
+        <mingo@redhat.com>, "Jens Axboe" <axboe@kernel.dk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <jack@suse.cz>, <tj@kernel.org>, <bigeasy@linutronix.de>,
+        linfeilong <linfeilong@huawei.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        renxudong <renxudong1@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] buffer: remove useless comment and WB_REASON_FREE_MORE_MEM,
+ reason.
+Message-ID: <5844aa66-de1e-278b-5491-b7e6839640e9@huawei.com>
+Date:   Mon, 13 Apr 2020 13:12:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 12 Apr 2020 22:07:44 -0700 (PDT)
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leon@kernel.org>
-Date: Mon, 13 Apr 2020 07:55:55 +0300
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-> On Sun, Apr 12, 2020 at 09:03:41PM -0700, David Miller wrote:
->> From: Borislav Petkov <bp@alien8.de>
->> Date: Sat, 11 Apr 2020 17:56:23 +0200
->>
->> > From: Borislav Petkov <bp@suse.de>
->> >
->> > Change the include order so that MODULE_ARCH_VERMAGIC from the arch
->> > header arch/x86/include/asm/module.h gets used instead of the fallback
->> > from include/linux/vermagic.h and thus fix:
->> >
->> >   In file included from ./include/linux/module.h:30,
->> >                    from drivers/net/ethernet/3com/3c515.c:56:
->> >   ./arch/x86/include/asm/module.h:73: warning: "MODULE_ARCH_VERMAGIC" redefined
->> >      73 | # define MODULE_ARCH_VERMAGIC MODULE_PROC_FAMILY
->> >         |
->> >   In file included from drivers/net/ethernet/3com/3c515.c:25:
->> >   ./include/linux/vermagic.h:28: note: this is the location of the previous definition
->> >      28 | #define MODULE_ARCH_VERMAGIC ""
->> >         |
->> >
->> > Fixes: 6bba2e89a88c ("net/3com: Delete driver and module versions from 3com drivers")
->> > Signed-off-by: Borislav Petkov <bp@suse.de>
->>
->> I'm so confused, that commit in the Fixes: tag is _removing_ code but adding
->> new #include directives?!?!
->>
->> Is vermagic.h really needed in these files?
-> 
-> You are completely right, it is not needed at all in those files.
+free_more_memory func has been completely removed in commit bc48f001de12
+("buffer: eliminate the need to call free_more_memory() in __getblk_slow()")
 
-Ok let's just remove it to fix this.
+So comment and `WB_REASON_FREE_MORE_MEM` reason about free_more_memory
+are no longer needed.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+ fs/buffer.c                      | 2 +-
+ include/linux/backing-dev-defs.h | 1 -
+ include/trace/events/writeback.h | 1 -
+ 3 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/fs/buffer.c b/fs/buffer.c
+index b8d28370cfd7..07ab0405f3f5 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -973,7 +973,7 @@ grow_dev_page(struct block_device *bdev, sector_t block,
+ 	struct page *page;
+ 	struct buffer_head *bh;
+ 	sector_t end_block;
+-	int ret = 0;		/* Will call free_more_memory() */
++	int ret = 0;
+ 	gfp_t gfp_mask;
+
+ 	gfp_mask = mapping_gfp_constraint(inode->i_mapping, ~__GFP_FS) | gfp;
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 4fc87dee005a..ee577a83cfe6 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -54,7 +54,6 @@ enum wb_reason {
+ 	WB_REASON_SYNC,
+ 	WB_REASON_PERIODIC,
+ 	WB_REASON_LAPTOP_TIMER,
+-	WB_REASON_FREE_MORE_MEM,
+ 	WB_REASON_FS_FREE_SPACE,
+ 	/*
+ 	 * There is no bdi forker thread any more and works are done
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index d94def25e4dc..85a33bea76f1 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -36,7 +36,6 @@
+ 	EM( WB_REASON_SYNC,			"sync")			\
+ 	EM( WB_REASON_PERIODIC,			"periodic")		\
+ 	EM( WB_REASON_LAPTOP_TIMER,		"laptop_timer")		\
+-	EM( WB_REASON_FREE_MORE_MEM,		"free_more_memory")	\
+ 	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
+ 	EMe(WB_REASON_FORKER_THREAD,		"forker_thread")
+
+-- 
+2.19.1
+
+
