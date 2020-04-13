@@ -2,156 +2,128 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03014C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400AAC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D464720692
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U7ikXblV"
+	by mail.kernel.org (Postfix) with ESMTP id 1E1C72072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586795287;
+	bh=NwsyGlOaHGFjEm70+MYO3Zl35xjiMlhb86u6KF6hDwU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XMmE3J/BdnzHtYE1eRyG+bA6zNv5qp34JE3cTnulY4AES4jpReie0K3u6/QuCWZd3
+	 ABo1WLovP3MSOOMCR4h0BaSGNULAgNR2Gqvv0OcJzt35f54diaZw3WXZJKUQL0Spwl
+	 g7HY1o0MXu7sZ/dEXF+PIb6NJtv1IksqLnXnVkHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgDMQZg (ORCPT
+        id S1731542AbgDMQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40674 "EHLO
+        Mon, 13 Apr 2020 12:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731515AbgDMQZd (ORCPT
+        by vger.kernel.org with ESMTP id S1731412AbgDMQ2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:25:33 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E37C0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:25:33 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k18so3550401pll.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:25:33 -0700 (PDT)
+        Mon, 13 Apr 2020 12:28:04 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8034C0A3BDC;
+        Mon, 13 Apr 2020 09:28:04 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id p19so4668693qve.0;
+        Mon, 13 Apr 2020 09:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JwAO8xsQIwVha/87e1cz/mK2hxAGtEnUvhnRC7uNihg=;
-        b=U7ikXblVAvb3djXivI6h+WdkdCl/w8DkMjW+939N5zQqYiKTgapLFuvy+uKG1MN+A+
-         uOZtiYYZ46ikWI4iaUGn7ossQ/xj/GtPFiJhl2cvQGymKMCkKVshu9pKlH/w40kUlf2I
-         uRCYO2+Lju8w6ys525kr+p7h3t3GZ11fpR6ig=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kgnSzHTYieIvS0nv69ZyDoepjTsOMDuCzo7OjVc7aYQ=;
+        b=smPWj6uFcGxjikAWXyCjZk81xcoBdlfI1r09+XQvuTJU0NLeoa4fGgalgQF+RXTNVy
+         y1njgc2Q/+NJQ0bP9d+A4RWbHFmyg87LdSZFCrMsQklZXF0qGm0o+DrodsL92rbOzmQt
+         G++EEpyVSa7lrtjupMHe3jNU0DHa4m/9VLsmROB5eD7iH9264C7ozZdcegrzUOLyZdtf
+         gxkJ2V7ipVx6uZHtM4rZhdRT0FWPvqy6KrzG2GaXP1Vshw+r7ngWejmoHgX4AmOkdfKW
+         m0/9Rgj4TtgIZPy6zYwPOfcR2/iBwH+FsKwNnZSIhRaMQ1mw6mpDcjIGk14FL7TXXbHs
+         zUvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JwAO8xsQIwVha/87e1cz/mK2hxAGtEnUvhnRC7uNihg=;
-        b=fYLEokfOjXfHGIipOL/00YIZiJiDat9B7clRpU0UhM73Qeag9whznbo/Z2iSPt/G1w
-         pI7NZFJB+VEuQ2gvhpRQeNnSNKtWI16NjO2hT6zIYcgpXdyHql3may7hQh6VbAlg2tV7
-         4MYfOAiZl/zl6zLvH2ziF+VL0FxcBeA0satGDvKxOyRw5qkAg+73JRX5w1m1ay3LsDI6
-         vRhUhdDztotA2IlMiRNCRirzqfuowG9tPfekt3jT1s48Mu4PxyZn+yXPgsAIGp6aVZ38
-         zvIB1T0qfGh1djZgob8c4UfWqX3dzQ5wP+UoZgYXg6P6/XihYdxcsiVVyIXUkPEBC6yh
-         LRoA==
-X-Gm-Message-State: AGi0Puahoi7kdS2dlS4Ak0VwuNEQ8mLoaEhlBa4VDbtXtQ4doXg6rQ6n
-        JG5X6ZAihMZSnHeomIcgDQOY4J9Owng=
-X-Google-Smtp-Source: APiQypK3pOQisc1e6Bfnk05jixfozTyE2Vw3OJ+nvZ31oIa0sQ+YeHv9MnXlWjairAS3SwoxJBbtzQ==
-X-Received: by 2002:a17:90a:757:: with SMTP id s23mr22619308pje.166.1586795132812;
-        Mon, 13 Apr 2020 09:25:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 71sm9372363pfw.180.2020.04.13.09.25.31
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=kgnSzHTYieIvS0nv69ZyDoepjTsOMDuCzo7OjVc7aYQ=;
+        b=nLbcj1HrAhZiktjRKQ031190SZRSrJrWNkv20w/1ZVpvWrQQ6FZLm38f4Q7fJX8ZaO
+         2CeXVzYV4HdUfeuW289qKVp7irccVoKpwGVE0ByKAj5fNHstuE9qsO7vFaEjr2XtXGVr
+         metNoPHNn+8QmfKzhLhnWpKyW5Qv9rRy8SA7daNklMq6c7V58v5RMBCm+zXYXTaator9
+         bf3FTQt9GmV4R0EyQC8I2b4MkCCXc97W4qhpDaGd/uXz4enwNaJkKzDdgTJ4YBl/PzbT
+         z4NwY1dQFfrPPuQvexjwed1dCCPvmgzQST7RiD2Hav8WeQypNxIxQzwEto4MJtia/Mwd
+         ywHw==
+X-Gm-Message-State: AGi0PuZ8is7N7n1fqRhon1cA2nL6hXWmHrd5zh+KIqqU434zH0aSpzRf
+        YqLu0d+YOczEz00Taxl1WAN8v+p8OM4=
+X-Google-Smtp-Source: APiQypK0bsdgehmkOlSLmilSS/dJhSxcisE/CExycgHt6ch98CJaB28q8OCjtYvK6J5fG7hZVvQSYw==
+X-Received: by 2002:ad4:56a5:: with SMTP id bd5mr17410173qvb.37.1586795283771;
+        Mon, 13 Apr 2020 09:28:03 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id g67sm8725917qkf.96.2020.04.13.09.28.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 09:25:32 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 09:25:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, macro@linux-mips.org,
-        clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] MIPS: Truncate link address into 32bit for 32bit
- kernel
-Message-ID: <202004130925.F1B57BC7@keescook>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+        Mon, 13 Apr 2020 09:28:02 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org, newella@fb.com,
+        josef@toxicpanda.com, asml.silence@gmail.com, ming.lei@redhat.com,
+        bvanassche@acm.org
+Subject: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and latency target handling
+Date:   Mon, 13 Apr 2020 12:27:54 -0400
+Message-Id: <20200413162758.97252-1-tj@kernel.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 02:26:49PM +0800, Jiaxun Yang wrote:
-> LLD failed to link vmlinux with 64bit load address for 32bit ELF
-> while bfd will strip 64bit address into 32bit silently.
-> To fix LLD build, we should truncate load address provided by platform
-> into 32bit for 32bit kernel.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Changes from v1[1]
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+* Dropped 0002-block-add-request-io_data_len.patch and updated to use
+  rq->stats_sectors instead as suggested by Pavel Begunkov.
 
--Kees
+This patchset improves the following two iocost control behaviors.
 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/786
-> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-> Cc: Fangrui Song <maskray@google.com>
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> --
-> V2: Take MaskRay's shell magic.
-> 
-> V3: After spent an hour on dealing with special character issue in
-> Makefile, I gave up to do shell hacks and write a util in C instead.
-> Thanks Maciej for pointing out Makefile variable problem.
-> 
-> v4: Finally we managed to find a Makefile method to do it properly
-> thanks to Kees. As it's too far from the initial version, I removed
-> Review & Test tag from Nick and Fangrui and Cc instead.
-> ---
->  arch/mips/Makefile             | 12 +++++++++++-
->  arch/mips/kernel/vmlinux.lds.S |  2 +-
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-> index e1c44aed8156..18495568f03e 100644
-> --- a/arch/mips/Makefile
-> +++ b/arch/mips/Makefile
-> @@ -288,9 +288,19 @@ ifdef CONFIG_64BIT
->    endif
->  endif
->  
-> +# When linking a 32-bit executable the LLVM linker cannot cope with a
-> +# 32-bit load address that has been sign-extended to 64 bits.  Simply
-> +# remove the upper 32 bits then, as it is safe to do so with other
-> +# linkers.
-> +ifdef CONFIG_64BIT
-> +	load-ld			= $(load-y)
-> +else
-> +	load-ld			= $(subst 0xffffffff,0x,$(load-y))
-> +endif
-> +
->  KBUILD_AFLAGS	+= $(cflags-y)
->  KBUILD_CFLAGS	+= $(cflags-y)
-> -KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-> +KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(load-ld)
->  KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
->  
->  bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
-> diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-> index a5f00ec73ea6..5226cd8e4bee 100644
-> --- a/arch/mips/kernel/vmlinux.lds.S
-> +++ b/arch/mips/kernel/vmlinux.lds.S
-> @@ -55,7 +55,7 @@ SECTIONS
->  	/* . = 0xa800000000300000; */
->  	. = 0xffffffff80300000;
->  #endif
-> -	. = VMLINUX_LOAD_ADDRESS;
-> +	. = VMLINUX_LINK_ADDRESS;
->  	/* read-only */
->  	_text = .;	/* Text and read-only data */
->  	.text : {
-> -- 
-> 2.26.0.rc2
-> 
+* iocost was failing to punish heavy shared IO generators (file metadata, memory
+  reclaim) through use_delay mechanism - use_delay automatically decays which
+  works well for iolatency but doesn't match how iocost behaves. This led to
+  e.g. memory bombs which generate a lot of swap IOs to use over their allotted
+  amount. This is fixed by adding non-decaying use_delay mechanism.
 
--- 
-Kees Cook
+* The same latency targets were being applied regardless of the IO sizes. While
+  this works fine for loose targets, it gets in the way when trying to tigthen
+  them - a latency target adequate for a 4k IO is too short for a 1 meg IO.
+  iocost now discounts the size portion of cost when testing whether a given IO
+  met or missed its latency target.
+
+While at it, it also makes minor changse to iocost_monitor.py.
+
+This patchset contains the following five patches.
+
+ 0001-blk-iocost-switch-to-fixed-non-auto-decaying-use_del.patch
+ 0002-blk-iocost-account-for-IO-size-when-testing-latencie.patch
+ 0003-iocost_monitor-exit-successfully-if-interval-is-zero.patch
+ 0004-iocost_monitor-drop-string-wrap-around-numbers-when-.patch
+
+and is also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git iocost-delay-latency-v2
+
+diffstat follows. Thanks.
+
+ block/Kconfig                  |    1 
+ block/blk-cgroup.c             |    6 ++++
+ block/blk-iocost.c             |   56 +++++++++++++++++++++++++++++------------
+ include/linux/blk-cgroup.h     |   43 ++++++++++++++++++++++++-------
+ tools/cgroup/iocost_monitor.py |   48 +++++++++++++++++++----------------
+ 5 files changed, 106 insertions(+), 48 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20200408201450.3959560-1-tj@kernel.org
+
