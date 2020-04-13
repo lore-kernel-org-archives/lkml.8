@@ -2,140 +2,101 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17651C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303CCC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4EF20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEA420644
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 21:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YiSTF1it"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCUthXOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389311AbgDMVwv (ORCPT
+        id S2389327AbgDMVxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 17:52:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36237 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389263AbgDMVwp (ORCPT
+        Mon, 13 Apr 2020 17:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389316AbgDMVxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 17:52:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586814763;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wxqewLP4iDn0WQn56N4JoZnVO/VnkSCHun6WFS8TA58=;
-        b=YiSTF1itxBYaI5wO7TETGkIrXeUy0/LoIQiEcy0yHumBGtM7y7vGK0BTK2iA+/5YtSFH3M
-        Avs7PzTwX2BPPsVBWyUAm82FkGAXby4fAu8PPiA0mSHIhVnopp13nPjzlntDXtjpLzyiiF
-        du4UJa47mfgu+2257AjBKlpKj4wgUCw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-R_QYnAHVPD67nMQL-Amo0w-1; Mon, 13 Apr 2020 17:52:38 -0400
-X-MC-Unique: R_QYnAHVPD67nMQL-Amo0w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1B928018AA;
-        Mon, 13 Apr 2020 21:52:32 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-28.rdu2.redhat.com [10.10.115.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB5E15C1B2;
-        Mon, 13 Apr 2020 21:52:24 +0000 (UTC)
-Subject: Re: [PATCH 2/2] crypto: Remove unnecessary memzero_explicit()
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-3-longman@redhat.com>
- <efd6ceb1f182aa7364e9706422768a1c1335aee4.camel@perches.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <7e13a94b-2e92-850f-33f7-0f42cfcd9009@redhat.com>
-Date:   Mon, 13 Apr 2020 17:52:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 13 Apr 2020 17:53:02 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3109CC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 14:53:01 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a81so11655719wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 14:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8bBfsyF1VnA0cKxAcKLlCIJxhfaA+R7OwaF4oqvEAYA=;
+        b=eCUthXOwxMffnOIqflw2IQSqLcsHKwp4Pltp5HYZXQ4zho5w5FHmZql3uCivXzUWdf
+         oBpJaG+DaG5QxCpqzlIKoBrGqvFOd38Juny1eqUEN6816sou6WEyLteZufCt5z+TJ/AO
+         X4poODJfVMql0zn/+nuOIhS4/9cafu0N75GCAEKMbCNa+675oIJOZM0eZCFBsmbWNL+S
+         Ae26hqpsKq6AnhgfQ97ro+Z6DNUVgJu1LWSfHsBwrpUbDDw53GA/ITiNDU/6y2nqINfI
+         NyJDlH7uhe9bue+bXHHmr13OOYm885KbeKn9zb5rYXFuPmHsvXDjwhxT2sz3xz5mHxpt
+         4IPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8bBfsyF1VnA0cKxAcKLlCIJxhfaA+R7OwaF4oqvEAYA=;
+        b=NYD0UkAxU2GiiVGDiThZq3oRAAW3oKHtIbzGsBoZHjHq5R+5RgUcjf6SR445zemgpU
+         DgnTkpdr7wiS7BGcRgf9DJlHIrj2EGo2Iqo4kT/f2av9T2vxkea1fTiOGdWjv3xwj5Gb
+         4yVqo/hGtCiBS3rr4dDczAhlw4AwFRr537Upjk1ZC14BHjgqFHG/KWLivTuOOhiw1Mbq
+         ZwqXiA0qqpH2Zu9SeQ0iWtQXUTtexVLvWYyRsAvv0irHpxTp6iIMtHAw9LLbrqCJYASi
+         Y8QD5u/ZZ2oWPEOqQvpSI/XufQFsan58bh0X+bAqDC5DF8I3YpgbbqyMKQtShsRHK+7/
+         SD1Q==
+X-Gm-Message-State: AGi0PuYA8i+YONbrCB3XQFg2xGsYh6jorbMKJAUErdu1uLehkas21K+t
+        sjAAm3JKoEpL/rlQOhRVzoY=
+X-Google-Smtp-Source: APiQypIGXAB/N+85j0VAxukuJmGY9h8Tv8exBNIABHZmUjSCM7xKGKHtWcvx4oB58soriuP4rhj/aw==
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr20303735wmh.65.1586814779881;
+        Mon, 13 Apr 2020 14:52:59 -0700 (PDT)
+Received: from localhost.localdomain (dslb-092-073-054-241.092.073.pools.vodafone-ip.de. [92.73.54.241])
+        by smtp.gmail.com with ESMTPSA id q18sm9732790wmj.11.2020.04.13.14.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 14:52:59 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8712: correct spelling mistake in comment
+Date:   Mon, 13 Apr 2020 23:51:09 +0200
+Message-Id: <20200413215109.15749-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <efd6ceb1f182aa7364e9706422768a1c1335aee4.camel@perches.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/13/20 5:31 PM, Joe Perches wrote:
-> On Mon, 2020-04-13 at 17:15 -0400, Waiman Long wrote:
->> Since kfree_sensitive() will do an implicit memzero_explicit(), there
->> is no need to call memzero_explicit() before it. Eliminate those
->> memzero_explicit() and simplify the call sites.
-> 2 bits of trivia:
->
->> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> []
->> @@ -391,10 +388,7 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
->>  		dev_dbg(ce->dev, "ERROR: Invalid keylen %u\n", keylen);
->>  		return -EINVAL;
->>  	}
->> -	if (op->key) {
->> -		memzero_explicit(op->key, op->keylen);
->> -		kfree(op->key);
->> -	}
->> +	kfree_sensitive(op->key);
->>  	op->keylen = keylen;
->>  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
->>  	if (!op->key)
-> It might be a defect to set op->keylen before the kmemdup succeeds.
-It could be. I can move it down after the op->key check.
->> @@ -416,10 +410,7 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
->>  	if (err)
->>  		return err;
->>  
->> -	if (op->key) {
->> -		memzero_explicit(op->key, op->keylen);
->> -		kfree(op->key);
->> -	}
->> +	free_sensitive(op->key, op->keylen);
-> Why not kfree_sensitive(op->key) ?
+Correct a spelling mistake discovered by checkpatch.
+attatch -> attach
 
-Oh, it is a bug. I will send out v2 to fix that.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8712/usb_halinit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for spotting it.
-
-Cheers,
-Longman
-
-
->
->
+diff --git a/drivers/staging/rtl8712/usb_halinit.c b/drivers/staging/rtl8712/usb_halinit.c
+index 6cc4a704c3a0..313c569748e9 100644
+--- a/drivers/staging/rtl8712/usb_halinit.c
++++ b/drivers/staging/rtl8712/usb_halinit.c
+@@ -58,7 +58,7 @@ u8 r8712_usb_hal_bus_init(struct _adapter *adapter)
+ 		r8712_write8(adapter, SYS_ISO_CTRL + 1, val8);
+ 		val8 = r8712_read8(adapter, SYS_ISO_CTRL + 1);
+ 		val8 = val8 & 0xEF;
+-		/* attatch AFE PLL to MACTOP/BB/PCIe Digital */
++		/* attach AFE PLL to MACTOP/BB/PCIe Digital */
+ 		r8712_write8(adapter, SYS_ISO_CTRL + 1, val8);
+ 		val8 = r8712_read8(adapter, AFE_XTAL_CTRL + 1);
+ 		val8 = val8 & 0xFB;
+-- 
+2.26.0
 
