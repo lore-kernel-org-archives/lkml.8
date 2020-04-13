@@ -2,114 +2,129 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D3CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB74C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 653632072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DFC20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFN6Q/Qg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UzD96LVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgDMPSI (ORCPT
+        id S1729993AbgDMPSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgDMPSF (ORCPT
+        Mon, 13 Apr 2020 11:18:44 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46095 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729618AbgDMPSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:18:05 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728EAC0A3BDC;
-        Mon, 13 Apr 2020 08:18:05 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so4549030ljd.3;
-        Mon, 13 Apr 2020 08:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GdKC161+a5UeWpGOznjCxdPHuVYqeTMUmqQiY/jkoXQ=;
-        b=TFN6Q/Qgniz7+QYsjrimIJAqCoe+peI4ByNh8FPtgWl+IxMFdtouuBQ3DdCfB3D8PN
-         oFoEqruP2xgPxXpyoHNn7qkhyEfX/knBklwQHC5cEDT3c8wCkZh5Ant45cCoCf7L+MnY
-         H9jUYnfTNe6PyAgtlZ+i/fuxbnZVf4Dbs1zi4RBwYbjaTw5yYEp0ctKxn78YOe65eoPN
-         rx8ERcL3GJNubbv3oJRiJylWBD6nwN0AzKmhs876f815+Z0TA5E5rUylFvQ6uRI0yiFm
-         WPyD5sUC/vewP9l6d/8A9aE7jafPavBULRPl6+/Xcp/ROcHhElXempcZia6FYjyLEN61
-         iDoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GdKC161+a5UeWpGOznjCxdPHuVYqeTMUmqQiY/jkoXQ=;
-        b=OqQxRhw8KrDurPNG806ifDojrf3ea2/cBx4r9mb714hzMQlTzy1xUxgmLO3hV3ZgKC
-         KcVStm+r4W233qsXsaYw8nKSylNphoWhZFYY2GsyezDGenOG0Ukx8scM8rhAdS9jqlbW
-         xu0flqlLuCTpO40OOze2VQD2KOoFzPjkGlWjFd8mDBiZW97cFhmvG7Cm+8DkEnn0gItW
-         uCr6796aXbV9WsS57jOF46LDT619aaaaAyTOCNZldgOwjxXAuY7Bd9/imSdjL4SWyhhW
-         jFYhX3xNRFmcQGSQonS7xAu7w7Qi5YH2VcDYnwmFsHJLBhl41m0Pm76ROqLUhA59fVPl
-         1aEA==
-X-Gm-Message-State: AGi0PuZgnnIWZdX0accSqktqutm6EVcEdjaAXEWjuEaAHJO/kyV5JkkS
-        5920Gch3ORFL2ETbDrUD3YjlvtLX
-X-Google-Smtp-Source: APiQypKxQ/EghHVYpg1HOEBLhbZ8HlHRew/LfP6ed1H+YL6pEvyGOKxv7C+tCEfvFdT33UG6L9Hk1g==
-X-Received: by 2002:a05:651c:120e:: with SMTP id i14mr7500365lja.12.1586791083641;
-        Mon, 13 Apr 2020 08:18:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id 64sm8427382lfh.32.2020.04.13.08.18.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 08:18:02 -0700 (PDT)
-Subject: Re: [PATCH v2 17/22] memory: tegra30-emc: Register as interconnect
- provider
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20200330010904.27643-1-digetx@gmail.com>
- <20200330010904.27643-18-digetx@gmail.com>
- <d8e39d8b-b3f3-4a30-cb5a-67fcbe18a957@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8d072775-aec8-5a55-8fd7-7166e2a34c95@gmail.com>
-Date:   Mon, 13 Apr 2020 18:18:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 13 Apr 2020 11:18:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586791120;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6IDYaW1WhdG5Kf+TEtHbOlCE2l5auMcw46MIZ63bnRI=;
+        b=UzD96LVS7Hn0byI+FM0cWJ8e5nI8Bt7ljnqG0C1po9kN6s99MMe4qK/hqimK4d7CQ/VTpg
+        BWmAy22+z36mbGYEBHsv2VWJGS7tXjfVdd5l6ygQozXLdh/Jm9LV/LovobC7I61B/ZxyTB
+        IN9Uq9RPoyvDW+IqCH3tzdTbZwlXBsY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-Q1LX0PKLOwmFMcChcNX7tw-1; Mon, 13 Apr 2020 11:18:38 -0400
+X-MC-Unique: Q1LX0PKLOwmFMcChcNX7tw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 637491005509;
+        Mon, 13 Apr 2020 15:18:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 58E3E272D1;
+        Mon, 13 Apr 2020 15:18:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] afs: Fixes [try #2]
 MIME-Version: 1.0
-In-Reply-To: <d8e39d8b-b3f3-4a30-cb5a-67fcbe18a957@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3061362.1586791115.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 13 Apr 2020 16:18:35 +0100
+Message-ID: <3061363.1586791115@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.04.2020 15:44, Georgi Djakov пишет:
-...
-> All the above seems like a duplicate of what we already have in the previous
-> patch for tegra20-emc. Can we have a single driver for both? Maybe extract the
-> above as a separate interconnect provider driver.
+Hi Linus,
 
-Perhaps we could do it later on, once the work on the drivers will
-settle down. I think it should be okay to have some minor duplication
-for now, we already have some other small things duplicated in these
-drivers.
+Here are some fixes for the afs filesystem:
 
->>  static int tegra_emc_probe(struct platform_device *pdev)
->>  {
->>  	struct platform_device *mc;
->> @@ -1344,6 +1452,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
->>  	platform_set_drvdata(pdev, emc);
->>  	tegra_emc_debugfs_init(emc);
->>  
->> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
->> +		err = tegra_emc_interconnect_init(emc);
-> 
-> How about registering a platform device that will use the same driver to handle
-> the interconnect functionality for both tegra20 and tegra30?
+ (1) Fix the decoding of fetched file status records so that the xdr
+     pointer is advanced under all circumstances.
 
-It should be possible. But it also should be possible to make all these
-drivers modular, which I'm going to try out.
+ (2) Fix the decoding of a fetched file status record that indicates an
+     inline abort (ie. an error) so that it sets the flag saying the
+     decoder stored the abort code.
+
+ (3) Fix the decoding of the result of the rename operation so that it
+     doesn't skip the decoding of the second fetched file status (ie. that
+     of the dest dir) in the case that the source and dest dirs were the
+     same as this causes the xdr pointer not to be advanced, leading to
+     incorrect decoding of subsequent parts of the reply.
+
+ (4) Fix the dump of a bad YFSFetchStatus record to dump the full length.
+
+ (5) Fix a race between local editing of directory contents and accessing
+     the dir for reading or d_revalidate by using the same lock in both.
+
+ (6) Fix afs_d_revalidate() to not accidentally reverse the version on a
+     dentry when it's meant to be bringing it forward.
+
+David
+---
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f313=
+6:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/afs-fixes-20200413
+
+for you to fetch changes up to 40fc81027f892284ce31f8b6de1e497f5b47e71f:
+
+  afs: Fix afs_d_validate() to set the right directory version (2020-04-13=
+ 15:09:01 +0100)
+
+----------------------------------------------------------------
+AFS fixes
+
+----------------------------------------------------------------
+David Howells (6):
+      afs: Fix missing XDR advance in xdr_decode_{AFS,YFS}FSFetchStatus()
+      afs: Fix decoding of inline abort codes from version 1 status record=
+s
+      afs: Fix rename operation status delivery
+      afs: Fix length of dump of bad YFSFetchStatus record
+      afs: Fix race between post-modification dir edit and readdir/d_reval=
+idate
+      afs: Fix afs_d_validate() to set the right directory version
+
+ fs/afs/dir.c       | 108 +++++++++++++++++++++++++++++++++---------------=
+-----
+ fs/afs/dir_silly.c |  22 +++++++----
+ fs/afs/fsclient.c  |  27 ++++++++------
+ fs/afs/yfsclient.c |  26 +++++++------
+ 4 files changed, 112 insertions(+), 71 deletions(-)
+
