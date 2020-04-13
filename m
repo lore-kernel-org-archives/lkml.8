@@ -2,103 +2,106 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9223C2BB86
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5388FC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D7D206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C295206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586810527;
-	bh=kxbheWDVEC+sYcLjtV1JraGtfmOPNpZNbHfUCcj7ko4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YkzHE/nPdu9gviu/mpslCLghYLOogQlL1iqiDGrn3AK60bHMcTpOa47tpFmk9ysa0
-	 y6pXlFOvheBYK7ugheqa06NvWTcXT9oyW10sirl92b1JahM2H4dP5Z2sc0ein4Gof5
-	 LaOLavk+KS39csalXbvFMReTDwuLwezoDUQM7TBY=
+	s=default; t=1586810570;
+	bh=nA2rxmtDBBmgWKbbBmRcjwmmhyHuBE4mnSr6pOW6nHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QAb17FonaIORMcud9JkpOg8Nabgdc1NTLVWiJUCbKS727Zlb6Yggw40ISDhNOl74E
+	 KO80QJsX0t4B+Lh2UT2XkRVDLhk/lgHcGm+7NYh8W7x+790e0Br1MNYBrd9IZwQhsw
+	 TWBk7QywtYDhoyyf1iWAx9Trlcj5izeRBDouvD/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388494AbgDMUmG (ORCPT
+        id S2388505AbgDMUmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:42:06 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43196 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388484AbgDMUmE (ORCPT
+        Mon, 13 Apr 2020 16:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388484AbgDMUmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:42:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g14so2307237otg.10;
-        Mon, 13 Apr 2020 13:42:04 -0700 (PDT)
+        Mon, 13 Apr 2020 16:42:46 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E392C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:42:46 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id w26so5100704qvd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1mj+zoPGRVqWrxi/vvLzrvA5AEZNWCyvl7tzM/qPtFc=;
+        b=LnaJmW1uo4IPSACFJhtZVeJJPJqKj/pM31yQfUa02ZWgGNFDHIiEM2viym6/A4Jwip
+         H/SvYmxHQi7Z9abTF87JeF0/6e2mBCiXgPdzGlMOGf8h7briaICgskM7jliuRQ8A62ek
+         F2JsJozQ9zM2I25fdUTTgm/ODu7EFug955vlNzj4qco1jLzNs3uLWWGp1R3Hii6Qncmc
+         JAk/A5lVYsfI91a+fJc0JECEocip8W6LuGOibiUay5oFDSNhb+KzC0O6e32Uip/MxbET
+         0y6tz9QOvyz0V1i914snrtmCmeF+/7VTjiY78yznKfZLzCgk0Rwzy2RP13YdOLjkIIWV
+         ao/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yRFeWFWwCCqcI7eucZBwMTgLizIVM/dXU/cAgTGHHJU=;
-        b=o6GIIBMi34TbSemOhYMpQ7ieZPJyfbq9RuEPJiR5KzHnGtNdci/m7it+3uxA17tHnW
-         WGsR2xkz4FuqKXpYfzw6zmZdqO6VN5Gn6BXsfkxbVt3H3GakeF6NELRb/7V9j9VA0173
-         GDCdIY1mDuJzifEyLAMmiq3kHVx2/fgeHuO70GVmlfgFIgQQTd9bAq+JMNjGwsfAOkFe
-         dsks9IF3c4rKFUgNJIAJ9sShirBe3ISylUyZVj+wvEnThuC3iDIVNvk2uf7KqSpwT/GM
-         8Y5iqm5krVwD6y2gd7eh8Zt0wY8qBawWfCnD1iKVLvLarj4Itu3jjfmMcDy5eSCvR/O/
-         cZqg==
-X-Gm-Message-State: AGi0PuYAT1QyJ56L8HD0nbSUzfC7XVQQLFZk4+raIdYHcpJAiChCKt+U
-        ODVCGvNAk4BcudclkXSxIdlYCyagRcIXctUGRnE=
-X-Google-Smtp-Source: APiQypI13k4FU1rbI9tpqx/S5x8UC7FNBJy1Jg19qDl8KNTYGy87R/Z3yXkK5FpGGQWLFWdMSwAqJ3+6G1dte6N0Zx4=
-X-Received: by 2002:a05:6830:215a:: with SMTP id r26mr15152484otd.118.1586810523587;
- Mon, 13 Apr 2020 13:42:03 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=1mj+zoPGRVqWrxi/vvLzrvA5AEZNWCyvl7tzM/qPtFc=;
+        b=C3TrsazqwMQuzL0QMhYAht/VrlPAGQOzw3AYWyMlBKdD9tDGK6vLRevFl+tyoBCBBM
+         VrAsSwXbD2wqJyaTEV2OTTUjLkSkcjuwvSFrjEOjRUULpPI0wQ9GY9JIR3XkSCs33N0W
+         3XtDJ6kGi8Bo5vgI61+nd9hhI7LE1DB0zx2LKx1e/zPQD3wkmfK4MXTBiaTQ4nj5c3KH
+         tOhDvywuaf6KAY8SHx65ZVqKr8bqf+xzR/M70czite/vPrfHHx+0UnGyRfGJLjt4XSbr
+         YuBI3v5PPVxJjofxkReghxPWDzpBNlFoEwrf6bqrdUuvF+Tux+xGCTdOCpdg4eCG9wGD
+         47gw==
+X-Gm-Message-State: AGi0Pubwz31Szyc0rhnlpbYbZQdfEE23tkYRQ6XIKhxmSn2BNVirU4UD
+        sy/kIWzzyrPux9k4G+gUuXQ=
+X-Google-Smtp-Source: APiQypIyKqzTfr7aXMKcUHjgucIatzgk06mFeQ4P6AU7xMuMjtSMR7m3JauQN/p39x+cCVx/GxM3fg==
+X-Received: by 2002:a0c:df02:: with SMTP id g2mr5818617qvl.115.1586810565321;
+        Mon, 13 Apr 2020 13:42:45 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id 63sm3743142qkl.64.2020.04.13.13.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 13:42:44 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 16:42:43 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] drm/vblank: Add vblank works
+Message-ID: <20200413204243.GL60335@mtj.duckdns.org>
+References: <20200318004159.235623-1-lyude@redhat.com>
+ <20200318004159.235623-2-lyude@redhat.com>
+ <20200318134657.GV2363188@phenom.ffwll.local>
+ <e4fb0c39ec024d60587e5e1e70b171b99eb537f4.camel@redhat.com>
+ <faf63d8a9ed23c16af69762f59d0dca6b2bf085f.camel@redhat.com>
+ <96cb912809f99d04cd5cdd46c77b66b8c1163380.camel@redhat.com>
 MIME-Version: 1.0
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
-In-Reply-To: <20200413134611.478441-1-enric.balletbo@collabora.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 13 Apr 2020 22:41:51 +0200
-Message-ID: <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96cb912809f99d04cd5cdd46c77b66b8c1163380.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 3:46 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> This driver attaches to the ChromeOS ACPI device and then exports the values
-> reported by the ACPI in a sysfs directory. These values are not exported
-> via the standard ACPI tables, hence a specific driver is needed to do
-> it.
+Hello,
 
-So how exactly are they exported?
+On Mon, Apr 13, 2020 at 04:18:57PM -0400, Lyude Paul wrote:
+> Hi Tejun! Sorry to bother you, but have you had a chance to look at any of
+> this yet? Would like to continue moving this forward
 
-> The ACPI values are presented in the string form (numbers as decimal
-> values) or binary blobs, and can be accessed as the contents of the
-> appropriate read only files in the standard ACPI devices sysfs directory tree.
+Sorry, wasn't following this thread. Have you looked at kthread_worker?
 
-My understanding based on a cursory look at the patch is that there is
-an ACPI device with _HID equal to "GGL0001"  and one or more special
-methods under it that return values which you want to export over
-sysfs as binary attributes.  They appear to be read-only.
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/kthread.h#n71
 
-I guess that these data are to be consubed by user space?
+And, thanks a lot for the vblank explanation. I really enjoyed readin it. :)
+
+-- 
+tejun
