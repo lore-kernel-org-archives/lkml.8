@@ -2,116 +2,237 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3073C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65396C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73DA2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1Z5+kKh"
+	by mail.kernel.org (Postfix) with ESMTP id 43E7920732
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586794381;
+	bh=PiJCskkBH4HQmJKrq6l2BUxAKLvdz6RRfLLB9w3jJOM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nQPvw41imFy5qI9gCGeXHrdahDiKKJNlosmVNa+dHtPhKoOkacBogVwnmup0aalAx
+	 FOmWS3Zc5OqIdK/ryyJrGcx6Du3SxrgM7HqFqDaELjQnOKz3c8joB+HM2Fa0qhujxg
+	 hIPF3B1KNcQasdtW+jLfaSPYstFGWVGhdm25yw/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731320AbgDMQMi (ORCPT
+        id S1731334AbgDMQM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731261AbgDMQMh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:12:37 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEEFC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:12:37 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id kx8so3962247pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=fDNE3d6mNUJZ48JEkXp4cIY6H74jiPrBKw5gp9a7Fs8=;
-        b=I1Z5+kKh4OG4NI0RnJGh4hAXQSmKixqK0/ZtT+V/E1y/JONoKSMxkXDmwXpAfVUz9r
-         HCq5fTUca2UWzaCsujqnOn3cHKcVMzGblJQff89Fg7EH3KDqO6DIVF1otfjCeMdQBaD6
-         KalcJIn4NMTl2ImQ+5hoV6y+UX3RTtYPk9B0bw6zpyhoI9hA/tkcwcgcw4P0Ga187lUj
-         Jg6tkz81l7gS6mPJD2417aQ7CrsgOVbP+drlbhUTMHf/V1EKJVXODgFTGOYR51pYO9z6
-         9X7tuOo1wCT4rMAYQZO3Y5NiUPyd6ZADPhOYiTCDYn+4N/Esyx98Z9VllCXYO1QCuFXY
-         gIpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=fDNE3d6mNUJZ48JEkXp4cIY6H74jiPrBKw5gp9a7Fs8=;
-        b=QP+kb55dljOSZe3NxDMDdyh0HgNxXNDVw2Y/QHhKO/YJAFwF0VBH0LAOaNdj9SRnuh
-         iXtpe6LiIDbrA15jyJ2zudjKRS4hH53aLjaY//dBbOKIdk+intqbJGvHq+Ga9aN6DtWq
-         4hLuPbSuP4u1NG4rFwvldhSHYhOSbRFg06JQaKwPhzUvCDHQa1WoSuyU8rKFuYbgfTRB
-         pWwnTc5Y3gdSFdlUPgsjwxSoP4pyp8fxWqOumtwBEjs9kxG8Dl4A9zs684T2wXJ6A2d4
-         eA3JE5Q/zeFFUL6ETKs7ndfisHVfNmKoDq4DUORXlFk54jesc76HQ6YJJkAxSdObSfhc
-         1BfQ==
-X-Gm-Message-State: AGi0Puag2w9Jva/l2s52yjnqOf2guFhL1LduiOKvjtdjkPUwAu4cO5nP
-        7593id60z53tdbs5YPef9zs=
-X-Google-Smtp-Source: APiQypIGgX8jar649ulqr3NbnDbLLAjHgdD2FwNMz8+gXeP4m4l0ak10Ae1rKAmbur6uSwcAvJB7kQ==
-X-Received: by 2002:a17:90a:8c83:: with SMTP id b3mr21876434pjo.141.1586794356873;
-        Mon, 13 Apr 2020 09:12:36 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u15sm4415133pjm.47.2020.04.13.09.12.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Apr 2020 09:12:36 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH] RISC-V: stacktrace: Declare sp_in_global outside ifdef
-Date:   Mon, 13 Apr 2020 09:12:34 -0700
-Message-Id: <20200413161234.78346-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Apr 2020 12:12:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731261AbgDMQM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:12:56 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C22EA2063A;
+        Mon, 13 Apr 2020 16:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586794375;
+        bh=PiJCskkBH4HQmJKrq6l2BUxAKLvdz6RRfLLB9w3jJOM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R0+4nAcRn19VFnyDoemwSPHdWrk2+ibRP2cCMe54Ax+eEkaLOH/HHthNQdQxqFWlI
+         BAb45HSy3I0sObAAk4VaxQVGh4R1oi7KiL93fGwWboPEoSi0u5TbGzhxRpLn+1hqCF
+         nvGmpWTb4eC43ldhTNkcfJIGviC5qh1UWrHtbkeo=
+Date:   Mon, 13 Apr 2020 17:12:51 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alexandru.tachici@analog.com>
+Subject: Re: [PATCH v3 1/2] iio: adc: ad7192: fix null pointer de-reference
+ crash during probe
+Message-ID: <20200413171251.5407db5b@archlinux>
+In-Reply-To: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-riscv:allnoconfig and riscv:tinyconfig fail to compile.
+On Mon, 13 Apr 2020 11:20:43 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-arch/riscv/kernel/stacktrace.c: In function 'walk_stackframe':
-arch/riscv/kernel/stacktrace.c:78:8: error: 'sp_in_global' undeclared
+> When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+> assignment:
+>    'indio_dev->name = spi_get_device_id(spi)->name;'
+> 
+> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+> during probe with null de-ref.
+> 
+> This change fixes this by introducing an ad7192_chip_info struct, and
+> defines all part-names [that should be assigned to indio_dev->name] in a
+> 'ad7192_chip_info_tbl' table.
+> 
+> With this change, the old 'st->devid' is also moved to be a
+> 'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
+> 'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
+> values in the new 'ad7192_chip_info_tbl'.
+> 
+> This should fix the bug, and maintain the ABI for the 'indio_dev->name'
+> field.
+> 
+> Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied to the fixes-togreg branch of iio.git.
 
-sp_in_global is declared inside CONFIG_FRAME_POINTER but used outside
-of it.
+Thanks,
 
-Fixes: 52e7c52d2ded ("RISC-V: Stop relying on GCC's register allocator's hueristics")
-Cc: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-Apologies for the noise if this has already been fixed somewhere.
+Jonathan
 
- arch/riscv/kernel/stacktrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 02087fe539c6..6c854875ac74 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -12,6 +12,8 @@
- #include <linux/stacktrace.h>
- #include <linux/ftrace.h>
- 
-+register unsigned long sp_in_global __asm__("sp");
-+
- #ifdef CONFIG_FRAME_POINTER
- 
- struct stackframe {
-@@ -19,8 +21,6 @@ struct stackframe {
- 	unsigned long ra;
- };
- 
--register unsigned long sp_in_global __asm__("sp");
--
- void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 			     bool (*fn)(unsigned long, void *), void *arg)
- {
--- 
-2.17.1
+> ---
+> 
+> Changelog v2 -> v3:
+> * reworked patch to introduce a chip_info struct for the part-name
+> * added 2nd patch to move of-table closer to the end of the file; this
+>   patch is more cosmetic; has no fixes tag, but is on top of the previous
+> 
+> Changelog v1 -> v2:
+> * fix colon for Fixes tag
+> * updated commit title a bit; to make it longer
+> 
+>  drivers/iio/adc/ad7192.c | 61 ++++++++++++++++++++++++++++++----------
+>  1 file changed, 46 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+> index 8ec28aa8fa8a..7e8662c5cb0e 100644
+> --- a/drivers/iio/adc/ad7192.c
+> +++ b/drivers/iio/adc/ad7192.c
+> @@ -125,10 +125,10 @@
+>  #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
+>  
+>  /* ID Register Bit Designations (AD7192_REG_ID) */
+> -#define ID_AD7190		0x4
+> -#define ID_AD7192		0x0
+> -#define ID_AD7193		0x2
+> -#define ID_AD7195		0x6
+> +#define CHIPID_AD7190		0x4
+> +#define CHIPID_AD7192		0x0
+> +#define CHIPID_AD7193		0x2
+> +#define CHIPID_AD7195		0x6
+>  #define AD7192_ID_MASK		0x0F
+>  
+>  /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
+> @@ -161,7 +161,20 @@ enum {
+>     AD7192_SYSCALIB_FULL_SCALE,
+>  };
+>  
+> +enum {
+> +	ID_AD7190,
+> +	ID_AD7192,
+> +	ID_AD7193,
+> +	ID_AD7195,
+> +};
+> +
+> +struct ad7192_chip_info {
+> +	unsigned int			chip_id;
+> +	const char			*name;
+> +};
+> +
+>  struct ad7192_state {
+> +	const struct ad7192_chip_info	*chip_info;
+>  	struct regulator		*avdd;
+>  	struct regulator		*dvdd;
+>  	struct clk			*mclk;
+> @@ -172,7 +185,6 @@ struct ad7192_state {
+>  	u32				conf;
+>  	u32				scale_avail[8][2];
+>  	u8				gpocon;
+> -	u8				devid;
+>  	u8				clock_sel;
+>  	struct mutex			lock;	/* protect sensor state */
+>  	u8				syscalib_mode[8];
+> @@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+>  
+>  	id &= AD7192_ID_MASK;
+>  
+> -	if (id != st->devid)
+> +	if (id != st->chip_info->chip_id)
+>  		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
+>  			 id);
+>  
+> @@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+>  		st->mode |= AD7192_MODE_REJ60;
+>  
+>  	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
+> -	if (refin2_en && st->devid != ID_AD7195)
+> +	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
+>  		st->conf |= AD7192_CONF_REFSEL;
+>  
+>  	st->conf &= ~AD7192_CONF_CHOP;
+> @@ -859,11 +871,30 @@ static const struct iio_chan_spec ad7193_channels[] = {
+>  	IIO_CHAN_SOFT_TIMESTAMP(14),
+>  };
+>  
+> +static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
+> +	[ID_AD7190] = {
+> +		.chip_id = CHIPID_AD7190,
+> +		.name = "ad7190",
+> +	},
+> +	[ID_AD7192] = {
+> +		.chip_id = CHIPID_AD7192,
+> +		.name = "ad7192",
+> +	},
+> +	[ID_AD7193] = {
+> +		.chip_id = CHIPID_AD7193,
+> +		.name = "ad7193",
+> +	},
+> +	[ID_AD7195] = {
+> +		.chip_id = CHIPID_AD7195,
+> +		.name = "ad7195",
+> +	},
+> +};
+> +
+>  static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  {
+>  	struct ad7192_state *st = iio_priv(indio_dev);
+>  
+> -	switch (st->devid) {
+> +	switch (st->chip_info->chip_id) {
+>  	case ID_AD7193:
+>  		indio_dev->channels = ad7193_channels;
+>  		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
+> @@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  }
+>  
+>  static const struct of_device_id ad7192_of_match[] = {
+> -	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
+> -	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
+> -	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
+> -	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
+> +	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
+> +	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
+> +	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
+> +	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, ad7192_of_match);
+> @@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
+>  	}
+>  
+>  	spi_set_drvdata(spi, indio_dev);
+> -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
+> +	st->chip_info = of_device_get_match_data(&spi->dev);
+>  	indio_dev->dev.parent = &spi->dev;
+> -	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->name = st->chip_info->name;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+>  	ret = ad7192_channels_config(indio_dev);
+>  	if (ret < 0)
+>  		goto error_disable_dvdd;
+>  
+> -	if (st->devid == ID_AD7195)
+> +	if (st->chip_info->chip_id == CHIPID_AD7195)
+>  		indio_dev->info = &ad7195_info;
+>  	else
+>  		indio_dev->info = &ad7192_info;
 
