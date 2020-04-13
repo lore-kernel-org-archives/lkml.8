@@ -2,138 +2,242 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B7EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E062BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 595AF2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:36:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qubes-os.org header.i=frederic.pierret@qubes-os.org header.b="Vw6Awvh5"
+	by mail.kernel.org (Postfix) with ESMTP id BAAD02075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 12:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586781967;
+	bh=Q88wqHNzQKBDgruvG1lMwGi4VZ6og9fmuqRNVMz7MMI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TTn4YeNDxTVwstNv/ATotG8DvTSxIUMFhEdEuuvfT1NlDM3J9nintw2BiZqbdz+EC
+	 jbqMh0lo/cq6Qmv+t7m/czx5/BomoBGKIJg99VvLBs79+Ulpj5/VNGQr0RHDACUqO4
+	 /DwjO9V89GH+pPvEgTlWrD7HZhwAHHUMrUM2Z5SQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgDMMgj (ORCPT
+        id S1729530AbgDMMqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:36:39 -0400
-Received: from sender4-of-o53.zoho.com ([136.143.188.53]:21336 "EHLO
-        sender4-of-o53.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbgDMMgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:36:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586781352; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=URT4ApyJH9amVLiaLSYaw57F9uCpTWyKxsPl34oflcpUmtg2p4WEWREBPNpMbTbnK1x3emOOWzNfG4I6m556+BGi/dxKmMA4uPJtmeBnmzxqlhHbK2jI1dO//XNcSsJzn81VxfqbYA5G60VD/DLVsCkF5Eij6K/9d7WBF/Wq4bE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1586781352; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=B++eaGNam0FxBVZre8TLB+VO2JQ+stYGRCXlTtSwji0=; 
-        b=PI0hG2vGh1Jacd3QytBJxwOaEe72zlJRPnLxGu+3h/5jWT8h4tTHkbcyA7M1vZhw1FPOrghFM95VspEGEMuXDfankhybKPGPevnpKs0Xtr7kRLhR7hJasqerOEFAr9CN1/h1W147K8ImoZti5ZMFflyURZdtqVThdCSJaMhRBPE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=qubes-os.org;
-        spf=pass  smtp.mailfrom=frederic.pierret@qubes-os.org;
-        dmarc=pass header.from=<frederic.pierret@qubes-os.org> header.from=<frederic.pierret@qubes-os.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586781352;
-        s=s; d=qubes-os.org; i=frederic.pierret@qubes-os.org;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=B++eaGNam0FxBVZre8TLB+VO2JQ+stYGRCXlTtSwji0=;
-        b=Vw6Awvh5xzJpfznhRXSvdmRdaTs0ecMplK9U9YbHWel0dJPtTWXZg6bMj3pnJMZU
-        2pwabRVZYXIdimTTxYgmkGbT9lfiW+n34pHw5jAze9UJ28ySBvUhSq9lMfn56QGL66O
-        1YavpT7oYIr47FHLWkWOooX1csDP2RVHnLw2l08Y=
-Received: from localhost.localdomain (92.188.110.153 [92.188.110.153]) by mx.zohomail.com
-        with SMTPS id 1586781351454814.489105458741; Mon, 13 Apr 2020 05:35:51 -0700 (PDT)
-From:   =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>
-To:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>
-Message-ID: <20200413123535.10884-1-frederic.pierret@qubes-os.org>
-Subject: [PATCH] xen x86: fix early boot crash with gcc-10
-Date:   Mon, 13 Apr 2020 14:35:35 +0200
-X-Mailer: git-send-email 2.25.2
+        Mon, 13 Apr 2020 08:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727797AbgDMMqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 08:46:02 -0400
+Received: from localhost.localdomain (unknown [194.230.155.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BC152073E;
+        Mon, 13 Apr 2020 12:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586781961;
+        bh=Q88wqHNzQKBDgruvG1lMwGi4VZ6og9fmuqRNVMz7MMI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L8aiwc3cUlny6YqqbsXt3SGnVODs9mXyrLBUJ0oc1ogJGdWAmHEB0Tm3p2dkuZDwk
+         4GRrDOrzhXbj+lIdGiJ1NxICPXIero4lPLUPgN+qfzS5zalsK7/vKYzvdmWSs7ntKV
+         ytYhyp2xQ6Fj1d7MVfOq4UOV5WyzY5Bd+ywAGxzw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] ASoC: samsung: s3c24xx-i2s: Fix build after removal of DAI suspend/resume
+Date:   Mon, 13 Apr 2020 14:45:48 +0200
+Message-Id: <20200413124548.28197-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change fixes boot failure on VM where kernel (at least v5.4 and v5.6)
-is built with gcc-10 and STACKPROTECTOR_STRONG enabled:
+Commit 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
+removed the DAI side suspend/resume hooks and switched entirely to
+component suspend/resume.  However the Samsung SoC s3c-i2s-v2 driver was
+not updated.
 
-```
-Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: =
-cpu_bringup_and_idle+0x93/0xa0
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.4.31-1.qubes.x86_64 #1
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/201=
-4
-Call Trace:
-  dump_stack+0x64/0x88
-   panic+0x10b/0x2ed
-   ? cpu_bringup_and_idle+0x93/0xa0
-   __stack_chk_fail+0x15/0x20
-   cpu_bringup_and_idle+0x93/0xa
-```
-The change makes successfully booting the VM. The VM is hosted by
-KVM hypervisor and is running Xen into.
+Move the suspend/resume hooks from s3c-i2s-v2.c to s3c2412-i2s.c while
+changing dai to component which allows to keep the struct
+snd_soc_component_driver const.
 
-Based on work done by Sergei Trofimovich: https://lkml.org/lkml/2020/3/26/1=
-133
+This fixes build errors:
 
-Signed-off-by: Fr=C3=A9d=C3=A9ric Pierret (fepitre) <frederic.pierret@qubes=
--os.org>
+    sound/soc/samsung/s3c-i2s-v2.c: In function ‘s3c_i2sv2_register_component’:
+    sound/soc/samsung/s3c-i2s-v2.c:730:9: error: ‘struct snd_soc_dai_driver’ has no member named ‘suspend’
+      dai_drv->suspend = s3c2412_i2s_suspend;
+
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
 ---
- arch/x86/xen/smp_pv.c          | 2 +-
- include/linux/compiler-gcc.h   | 1 +
- include/linux/compiler_types.h | 4 ++++
- 3 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index 8fb8a50a28b4..5c8ee4a5bb0c 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -88,7 +88,7 @@ static void cpu_bringup(void)
- =09local_irq_enable();
+Only compile tested.
+---
+ sound/soc/samsung/s3c-i2s-v2.c  | 57 ---------------------------------
+ sound/soc/samsung/s3c2412-i2s.c | 56 ++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 57 deletions(-)
+
+diff --git a/sound/soc/samsung/s3c-i2s-v2.c b/sound/soc/samsung/s3c-i2s-v2.c
+index 358887848293..5e95c30fb2ba 100644
+--- a/sound/soc/samsung/s3c-i2s-v2.c
++++ b/sound/soc/samsung/s3c-i2s-v2.c
+@@ -656,60 +656,6 @@ void s3c_i2sv2_cleanup(struct snd_soc_dai *dai,
  }
-=20
--asmlinkage __visible void cpu_bringup_and_idle(void)
-+asmlinkage __visible void __no_stack_protector cpu_bringup_and_idle(void)
- {
- =09cpu_bringup();
- =09boot_init_stack_canary();
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index d7ee4c6bad48..fb67c743138c 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -172,3 +172,4 @@
- #endif
-=20
- #define __no_fgcse __attribute__((optimize("-fno-gcse")))
-+#define __no_stack_protector __attribute__((optimize("-fno-stack-protector=
-")))
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.=
-h
-index e970f97a7fcb..069c981eddb0 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -203,6 +203,10 @@ struct ftrace_likely_data {
- #define asm_inline asm
- #endif
-=20
-+#ifndef __no_stack_protector
-+# define __no_stack_protector
+ EXPORT_SYMBOL_GPL(s3c_i2sv2_cleanup);
+ 
+-#ifdef CONFIG_PM
+-static int s3c2412_i2s_suspend(struct snd_soc_dai *dai)
+-{
+-	struct s3c_i2sv2_info *i2s = to_info(dai);
+-	u32 iismod;
+-
+-	if (dai->active) {
+-		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
+-		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
+-		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
+-
+-		/* some basic suspend checks */
+-
+-		iismod = readl(i2s->regs + S3C2412_IISMOD);
+-
+-		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
+-			pr_warn("%s: RXDMA active?\n", __func__);
+-
+-		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
+-			pr_warn("%s: TXDMA active?\n", __func__);
+-
+-		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
+-			pr_warn("%s: IIS active\n", __func__);
+-	}
+-
+-	return 0;
+-}
+-
+-static int s3c2412_i2s_resume(struct snd_soc_dai *dai)
+-{
+-	struct s3c_i2sv2_info *i2s = to_info(dai);
+-
+-	pr_info("dai_active %d, IISMOD %08x, IISCON %08x\n",
+-		dai->active, i2s->suspend_iismod, i2s->suspend_iiscon);
+-
+-	if (dai->active) {
+-		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
+-		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
+-		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
+-
+-		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
+-		       i2s->regs + S3C2412_IISFIC);
+-
+-		ndelay(250);
+-		writel(0x0, i2s->regs + S3C2412_IISFIC);
+-	}
+-
+-	return 0;
+-}
+-#else
+-#define s3c2412_i2s_suspend NULL
+-#define s3c2412_i2s_resume  NULL
+-#endif
+-
+ int s3c_i2sv2_register_component(struct device *dev, int id,
+ 			   const struct snd_soc_component_driver *cmp_drv,
+ 			   struct snd_soc_dai_driver *dai_drv)
+@@ -727,9 +673,6 @@ int s3c_i2sv2_register_component(struct device *dev, int id,
+ 	if (!ops->delay)
+ 		ops->delay = s3c2412_i2s_delay;
+ 
+-	dai_drv->suspend = s3c2412_i2s_suspend;
+-	dai_drv->resume = s3c2412_i2s_resume;
+-
+ 	return devm_snd_soc_register_component(dev, cmp_drv, dai_drv, 1);
+ }
+ EXPORT_SYMBOL_GPL(s3c_i2sv2_register_component);
+diff --git a/sound/soc/samsung/s3c2412-i2s.c b/sound/soc/samsung/s3c2412-i2s.c
+index 787a3f6e9f24..b35d828c1cfe 100644
+--- a/sound/soc/samsung/s3c2412-i2s.c
++++ b/sound/soc/samsung/s3c2412-i2s.c
+@@ -117,6 +117,60 @@ static int s3c2412_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM
++static int s3c2412_i2s_suspend(struct snd_soc_component *component)
++{
++	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
++	u32 iismod;
++
++	if (component->active) {
++		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
++		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
++		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
++
++		/* some basic suspend checks */
++
++		iismod = readl(i2s->regs + S3C2412_IISMOD);
++
++		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
++			pr_warn("%s: RXDMA active?\n", __func__);
++
++		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
++			pr_warn("%s: TXDMA active?\n", __func__);
++
++		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
++			pr_warn("%s: IIS active\n", __func__);
++	}
++
++	return 0;
++}
++
++static int s3c2412_i2s_resume(struct snd_soc_component *component)
++{
++	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
++
++	pr_info("component_active %d, IISMOD %08x, IISCON %08x\n",
++		component->active, i2s->suspend_iismod, i2s->suspend_iiscon);
++
++	if (component->active) {
++		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
++		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
++		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
++
++		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
++		       i2s->regs + S3C2412_IISFIC);
++
++		ndelay(250);
++		writel(0x0, i2s->regs + S3C2412_IISFIC);
++	}
++
++	return 0;
++}
++#else
++#define s3c2412_i2s_suspend NULL
++#define s3c2412_i2s_resume  NULL
 +#endif
 +
- #ifndef __no_fgcse
- # define __no_fgcse
- #endif
---=20
-2.25.1
-
+ #define S3C2412_I2S_RATES \
+ 	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 | SNDRV_PCM_RATE_16000 | \
+ 	SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \
+@@ -146,6 +200,8 @@ static struct snd_soc_dai_driver s3c2412_i2s_dai = {
+ 
+ static const struct snd_soc_component_driver s3c2412_i2s_component = {
+ 	.name		= "s3c2412-i2s",
++	.suspend	= s3c2412_i2s_suspend,
++	.resume		= s3c2412_i2s_resume,
+ };
+ 
+ static int s3c2412_iis_dev_probe(struct platform_device *pdev)
+-- 
+2.17.1
 
