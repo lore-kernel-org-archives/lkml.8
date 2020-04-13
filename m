@@ -2,111 +2,179 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9564C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3600C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AA42075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:16:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XE17EoIQ"
+	by mail.kernel.org (Postfix) with ESMTP id 90D402075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586787413;
+	bh=Vw7/lgKzVIySJoptLvxm2L8NXyCaTQDUCMP6KAE8xNc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qWn+xTbfAYj4xd6XNkLCIBlnnsRiS2LYdXhnQL4QgCzcz/YUEMtMGBqle1Hu8g+xK
+	 xG6yRKov8gfnOsFIfaBmq1/X1NYEGLxUvQsoCcf+Nk2Z1jgbkg5t00yhOPhCrk24kX
+	 SgVMpoO77Q9JmRrNczVaJe4dU0hxKJY7aaEmn2hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgDMOQX (ORCPT
+        id S1730497AbgDMOQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:16:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41919 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730468AbgDMOQP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586787373;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1FXBt/UFCukR9oL8jqZar//KnIeZ8VrgN9z1x/j3tC8=;
-        b=XE17EoIQZydLF5H2/+kLUYIyDWB+pQHZ5qq17MzLns+AcB4E/T1RcvrHl2TtgGpqebHaGl
-        yVcFq1iu0lEg4oPSKIr1sA+A9SuHf3wwJ8DQehncvvJIMGU2GZ+p/9l8hWysJFq70BY/2c
-        1n7m4m38KgzKCqlX8fiXyBQmVPBd064=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-dgVnC2kYPcKY4i0vNM3AKA-1; Mon, 13 Apr 2020 10:16:12 -0400
-X-MC-Unique: dgVnC2kYPcKY4i0vNM3AKA-1
-Received: by mail-qk1-f197.google.com with SMTP id k16so8524272qkk.16
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 07:16:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1FXBt/UFCukR9oL8jqZar//KnIeZ8VrgN9z1x/j3tC8=;
-        b=cDI+9WY20AgjjjbNvJw0zxMHhH/uoNrpszU2/FuvNE4f5ARLTPp6AL/nmv8AO6Es1y
-         f7sYyLnV4ibqCnDhjp6F0UbDGoisRYGlev9ig2QOdiPjYbMI35VZtV0rRz/XUTL95NJ8
-         jYJsRErYsPK4pvqiAl9wB5R2GnCif9ip74YMkCrV0orRDr/uJIBn824GxvRrE9KVzFlL
-         jAXdYli64j3SSuaAuGWlF6TvW8wrnw1VhTU34/nDGpA7TcJPuBvJLXLJp+/BEQO4zb5m
-         EQGhS7HSwLEY9GI0QIP/03s2f61FQXeo1UDddqXoKsglBsKobIKcGese/loFpZZuuV79
-         gzfQ==
-X-Gm-Message-State: AGi0PuYuTgobMVsMuvXatxaHbEYWfx/6TDBZdUx5PEfr18q5w8cdBRzz
-        WV76GtQH3Oi4bXYguU+BWeEZv7Te7/H0rBBoNmy4bqnQYIIvMbq5UfW68/BBU9OilmiYnKl2lc/
-        z2AaOi20hUQM/v+CO5v6BOxse
-X-Received: by 2002:ac8:710c:: with SMTP id z12mr11260268qto.193.1586787370880;
-        Mon, 13 Apr 2020 07:16:10 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIhL4isRvrYPeeHxLJY1EauygV6cxeMMoZdt6uCmP3o0zJ8IaRp2h7ptuOgHnbEfTO3Qydwqw==
-X-Received: by 2002:ac8:710c:: with SMTP id z12mr11260247qto.193.1586787370655;
-        Mon, 13 Apr 2020 07:16:10 -0700 (PDT)
-Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id j2sm4633938qtp.5.2020.04.13.07.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 07:16:10 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     peterx@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] mm/userfaultfd: Disable userfaultfd-wp on x86_32
-Date:   Mon, 13 Apr 2020 10:16:08 -0400
-Message-Id: <20200413141608.109211-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Apr 2020 10:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730487AbgDMOQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:16:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 666802075E;
+        Mon, 13 Apr 2020 14:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586787410;
+        bh=Vw7/lgKzVIySJoptLvxm2L8NXyCaTQDUCMP6KAE8xNc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=0iZ5XR7PyIUQhu+QNDdy68pIXJ23rBz/0ijQrW8vC+sQ0B0QKH10RQxGZhrgj/Glt
+         nx3761t44792hNiYLgV/+7wWtUybKqrD54qdubRXVCARrRftTliagKuKCDxQJsSeX1
+         cLp2Q7LKpoESvDRM1HIaGF2meAGkrtZC/2zM/Pbs=
+Date:   Mon, 13 Apr 2020 16:16:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.219
+Message-ID: <20200413141648.GA3538921@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userfaultfd-wp is not yet working on 32bit hosts, but it's
-accidentally enabled previously.  Disable it.
+I'm announcing the release of the 4.4.219 kernel.
 
-Fixes: 5a281062af1d ("userfaultfd: wp: add WP pagetable tracking to x86")
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+All users of the 4.4 kernel series must upgrade.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 8d078642b4be..7a7d2db366a3 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -149,7 +149,7 @@ config X86
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
--	select HAVE_ARCH_USERFAULTFD_WP		if USERFAULTFD
-+	select HAVE_ARCH_USERFAULTFD_WP         if X86_64 && USERFAULTFD
- 	select HAVE_ARCH_VMAP_STACK		if X86_64
- 	select HAVE_ARCH_WITHIN_STACK_FRAMES
- 	select HAVE_ASM_MODVERSIONS
--- 
-2.24.1
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Documentation/accounting/getdelays.c                 |    2 
+ Makefile                                             |    2 
+ drivers/char/random.c                                |    6 
+ drivers/clk/qcom/clk-rcg2.c                          |    2 
+ drivers/gpu/drm/bochs/bochs_hw.c                     |    6 
+ drivers/gpu/drm/drm_dp_mst_topology.c                |    1 
+ drivers/infiniband/core/cma.c                        |    1 
+ drivers/net/can/slcan.c                              |    4 
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    2 
+ drivers/net/xen-netfront.c                           |   11 -
+ drivers/power/axp288_charger.c                       |    4 
+ drivers/staging/rdma/hfi1/sysfs.c                    |   13 +
+ drivers/usb/gadget/function/f_printer.c              |    8 -
+ drivers/usb/gadget/function/f_uac2.c                 |   12 -
+ kernel/padata.c                                      |    4 
+ mm/mempolicy.c                                       |    6 
+ net/bluetooth/rfcomm/tty.c                           |    4 
+ net/ipv4/fib_trie.c                                  |    3 
+ net/ipv4/ip_tunnel.c                                 |    6 
+ net/l2tp/l2tp_core.c                                 |  149 +++++++++++++++----
+ net/l2tp/l2tp_core.h                                 |    4 
+ net/l2tp/l2tp_eth.c                                  |   10 -
+ net/l2tp/l2tp_ip.c                                   |   17 +-
+ net/l2tp/l2tp_ip6.c                                  |   28 ++-
+ net/l2tp/l2tp_ppp.c                                  |  110 +++++++-------
+ net/sctp/ipv6.c                                      |   20 +-
+ net/sctp/protocol.c                                  |   28 ++-
+ sound/soc/jz4740/jz4740-i2s.c                        |    2 
+ 28 files changed, 284 insertions(+), 181 deletions(-)
+
+Avihai Horon (1):
+      RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+
+Daniel Jordan (1):
+      padata: always acquire cpu_hotplug_lock before pinst->lock
+
+David Ahern (1):
+      tools/accounting/getdelays.c: fix netlink attribute length
+
+Gao Feng (1):
+      l2tp: Refactor the codes with existing macros instead of literal number
+
+Gerd Hoffmann (1):
+      drm/bochs: downgrade pci_request_region failure from error to warning
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.219
+
+Guillaume Nault (5):
+      l2tp: fix race in l2tp_recv_common()
+      l2tp: ensure session can't get removed during pppol2tp_session_ioctl()
+      l2tp: fix duplicate session creation
+      l2tp: ensure sessions are freed after their PPPOL2TP socket
+      l2tp: fix race between l2tp_session_delete() and l2tp_tunnel_closeall()
+
+Gustavo A. R. Silva (1):
+      power: supply: axp288_charger: Fix unchecked return value
+
+Hans Verkuil (1):
+      drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
+
+Jason A. Donenfeld (1):
+      random: always use batched entropy for get_random_u{32,64}
+
+Jisheng Zhang (1):
+      net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+
+Kaike Wan (1):
+      IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
+
+Krzysztof Opasiak (2):
+      usb: gadget: uac2: Drop unused device qualifier descriptor
+      usb: gadget: printer: Drop unused device qualifier descriptor
+
+Marcelo Ricardo Leitner (1):
+      sctp: fix possibly using a bad saddr with a given dst
+
+Paul Cercueil (1):
+      ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
+
+Qian Cai (1):
+      ipv4: fix a RCU-list lock in fib_triestat_seq_show
+
+Qiujun Huang (1):
+      Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+
+Randy Dunlap (1):
+      mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
+
+Richard Palethorpe (1):
+      slcan: Don't transmit uninitialized stack data in padding
+
+Ross Lagerwall (2):
+      xen-netfront: Fix mismatched rtnl_unlock
+      xen-netfront: Update features after registering netdev
+
+Shmulik Ladkani (1):
+      net: l2tp: Make l2tp_ip6 namespace aware
+
+Taniya Das (1):
+      clk: qcom: rcg: Return failure for RCG update
+
+William Dauchy (1):
+      net, ip_tunnel: fix interface lookup with no key
+
+phil.turnbull@oracle.com (1):
+      l2tp: Correctly return -EBADF from pppol2tp_getname.
 
