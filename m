@@ -2,177 +2,192 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95388C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB79C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE812072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F97206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 16:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adJ67/s1"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZaDP9ZQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731633AbgDMQfj (ORCPT
+        id S1731642AbgDMQfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731558AbgDMQff (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:35:35 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C993C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:35:35 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id b12so9943201ion.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 09:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8sqX19cKLRZEs4UkUnCQ2kQv2g8+YoFcNjNVuM8O2kQ=;
-        b=adJ67/s1+CyO4xnndcjPcPXTmXBDUBrejTxddwjhL3Iq7kEvbV3OSjK3vT1j+Gtl+v
-         Vsk3VSUZSs+PLnIhtkDJzB52BS5h1l4DZGNjFTBSd+E8+GYLFQSOo8zEbIU/vM0n1IC4
-         0A9eZWXcgI44h/q4QAsNUXWGuivCedl4GwtsrVsww1SZADKQNL0pSSytEvKJvjAg+LB8
-         6HGEWUNWURvrEJ6qoViiG5dx1VAU+NGQPHsmwype1UD5FIr6WHktO2sa3D63YtCrNa0+
-         q23fAAt8V/IxvrtOPFG9O4xwjDsxcFodwolcP2QGleACOTSeEvwBIL2yUfo1cG1K2bNB
-         72NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8sqX19cKLRZEs4UkUnCQ2kQv2g8+YoFcNjNVuM8O2kQ=;
-        b=FOUSJlpcbFdfapTyWZddvy3uPnFA1bEDxumagYH3obvtmkZc5iYGEhoeH9wy8c8UB9
-         Up/s/CDh6N2JDGwEAxlLcgDxR3nqoicKFRn27uE8PBqlQUo33WedNimIKAURSZggx41R
-         Z316sA/eotDyApjXgU6xy0++TZDLR9tN3P63379B9GQxc7yL2kkmxkPSZb+Cannau0mY
-         Nn08zrGKN2TnWh56tJID2GOgg/0LuFXtb3wGGzAIVsmyTHdwppTUiG4SwVVwLg8L7plp
-         BKkDnRZZjVikqyJnvDbmGxC/iNVq1406s94cHPQvlk1hchsuoBDfw/TPgoCMg+HR71eO
-         KJ8A==
-X-Gm-Message-State: AGi0PuZ32qDYeWpt960JnX9xbnt9JJmxSKb8pYXBHRE7CM2x51Q/FB9O
-        IRaxFOUrU32lcNtGd8LfyRwRaaC32JjeGZpIxOE=
-X-Google-Smtp-Source: APiQypL9OM4cxON/ZjCb6YFq62C+scAbNM4g/Yf4PVR93wCxiDfal6C4bIsJsVTBJSmeKzNEqRqNc9sP4jXGN3BMiIE=
-X-Received: by 2002:a02:2944:: with SMTP id p65mr16109022jap.89.1586795734257;
- Mon, 13 Apr 2020 09:35:34 -0700 (PDT)
+        Mon, 13 Apr 2020 12:35:53 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58844 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731558AbgDMQfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:35:51 -0400
+Received: from zn.tnic (p200300EC2F06C900B81659E8D550758A.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:c900:b816:59e8:d550:758a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7EEE31EC027A;
+        Mon, 13 Apr 2020 18:35:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586795745;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oPglS7eAaMJB5fCUABSjjyJ2Kgcsb+azvJZUN+3081I=;
+        b=ZaDP9ZQWN8IvAcl21tcODQBHumgs4IPqIDNtTNdWSYJu/aanV+/J5X1VUw3DUt4J7NAgY8
+        nhLpj65P42DD6BTGrr4ERaBhQ3FHhd1npK+tmnmjlUsSWQKFT99xkeutd1xfGzOjYZlt+I
+        tRMjzrt9O7rHu+Is5YNnE03vEnxXBKU=
+Date:   Mon, 13 Apr 2020 18:35:40 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jakub Jelinek <jakub@redhat.com>, Michael Matz <matz@suse.de>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200413163540.GD3772@zn.tnic>
+References: <20200326223501.GK11398@zn.tnic>
+ <20200328084858.421444-1-slyfox@gentoo.org>
 MIME-Version: 1.0
-References: <20200411200632.4045-1-peron.clem@gmail.com> <20200411200632.4045-2-peron.clem@gmail.com>
- <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com> <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
- <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com> <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com>
-In-Reply-To: <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 13 Apr 2020 18:35:23 +0200
-Message-ID: <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
-To:     Steven Price <steven.price@arm.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200328084858.421444-1-slyfox@gentoo.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+On Sat, Mar 28, 2020 at 08:48:58AM +0000, Sergei Trofimovich wrote:
+> @@ -207,8 +207,11 @@ static int cpu0_logical_apicid;
+>  static int enable_start_cpu0;
+>  /*
+>   * Activate a secondary processor.
+> + *
+> + * Note: 'boot_init_stack_canary' changes canary value. Omit
+> + * stack protection to avoid canary check (and boot) failure.
+>   */
+> -static void notrace start_secondary(void *unused)
+> +static void __no_stack_protector notrace start_secondary(void *unused)
 
-On Mon, 13 Apr 2020 at 17:55, Steven Price <steven.price@arm.com> wrote:
->
-> On 13/04/2020 15:31, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > On Mon, 13 Apr 2020 at 16:18, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
-.com> wrote:
-> >>
-> >> Hi Steven,
-> >>
-> >> On Mon, 13 Apr 2020 at 15:18, Steven Price <steven.price@arm.com> wrot=
-e:
-> >>>
-> >>> On 11/04/2020 21:06, Cl=C3=A9ment P=C3=A9ron wrote:
-> >>>> OPP table can defined both frequency and voltage.
-> >>>>
-> >>>> Register the mali regulator if it exist.
-> >>>>
-> >>>> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> >>>> ---
-> >>>>    drivers/gpu/drm/panfrost/panfrost_devfreq.c | 34 ++++++++++++++++=
-++---
-> >>>>    drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
-> >>>>    2 files changed, 31 insertions(+), 4 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/g=
-pu/drm/panfrost/panfrost_devfreq.c
-> >>>> index 62541f4edd81..2dc8e2355358 100644
-> >>>> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> >>>> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> >>>> @@ -78,12 +78,26 @@ int panfrost_devfreq_init(struct panfrost_device=
- *pfdev)
-> >>>>        struct device *dev =3D &pfdev->pdev->dev;
-> >>>>        struct devfreq *devfreq;
-> >>>>        struct thermal_cooling_device *cooling;
-> >>>> +     const char *mali =3D "mali";
-> >>>> +     struct opp_table *opp_table =3D NULL;
-> >>>> +
-> >>>> +     /* Regulator is optional */
-> >>>> +     opp_table =3D dev_pm_opp_set_regulators(dev, &mali, 1);
-> >>>
-> >>> This looks like it applies before 3e1399bccf51 ("drm/panfrost: Add
-> >>> support for multiple regulators") which is currently in drm-misc-next
-> >>> (and linux-next). You want something more like:
-> >>
-> >> Thanks for you review, indeed I didn't see that multiple regulators
-> >> support has been added.
-> >> Will update in v2.
-> >>
-> >>>
-> >>>       opp_table =3D dev_pm_opp_set_regulators(dev,
-> >>>                                             pfdev->comp->supply_names=
-,
-> >>>                                             pfdev->comp->num_supplies=
-);
-> >>>
-> >>> Otherwise a platform with multiple regulators won't work correctly.
-> >>>
-> >>> Also running on my firefly (RK3288) board I get the following warning=
-:
-> >>>
-> >>>      debugfs: Directory 'ffa30000.gpu-mali' with parent 'vdd_gpu' alr=
-eady
-> >>> present!
-> >>>
-> >>> This is due to the regulator debugfs entries getting created twice (o=
-nce
-> >>> in panfrost_regulator_init() and once here).
-> >>
-> >> Is it a warning that should be consider as an error? Look's more an in=
-fo no?
-> >> What should be the correct behavior if a device want to register two
-> >> times the same regulator?
-> >
-> > Or we can change the name from vdd_XXX to opp_vdd_XXX ?
-> > https://elixir.bootlin.com/linux/latest/source/drivers/opp/debugfs.c#L4=
-5
->
-> Yes, I'm not sure that it's actually a problem in practice. And it may
-> well be correct to change this in the generic code rather than try to
-> work around it in Panfrost. But we shouldn't spam the user with warnings
-> as that makes real issues harder to see.
->
-> Your suggestion to change the name seems reasonable to me, but I don't
-> fully understand the opp code, so we'd need some review from the OPP
-> maintainers. Hopefully Viresh, Nishanth or Stephen can provide some insig=
-ht.
+Hmm, so we did this per-function marking only but that explodes on
+32-bit, see splat at the end. gcc guys, any ideas?
 
-Agree, I will send a v2 with the rename and see if OPP Maintainers agree.
+The null pointer deref happens this way:
 
-Regards,
-Clement
+The __no_stack_protector annotated function start_secondary() calls
+trace_hardirqs_on(). On entry, that function pushes the frame pointer on
+the stack:
 
->
-> Steve
+trace_hardirqs_on:
+        pushl   %ebp    #
+        movl    %esp, %ebp      #,
+        subl    $20, %esp       #,
+        movl    %ebx, -12(%ebp) #,
+        movl    %esi, -8(%ebp)  #,
+        movl    %edi, -4(%ebp)  #,
+
+
+Singlestepping the whole thing in gdb looks like this:
+
+Dump of assembler code from 0xc1158610 to 0xc1158624:
+=> 0xc1158610 <trace_hardirqs_on+0>:    55      push   %ebp		<---
+   0xc1158611 <trace_hardirqs_on+1>:    89 e5   mov    %esp,%ebp
+
+and ebp has:
+
+...
+ebp            0x0      0x0		<---
+esi            0x200002 2097154
+edi            0x1      1
+eip            0xc1158610
+...
+
+Later in the function, it will do __builtin_return_address(n), which
+turns into:
+
+# kernel/trace/trace_preemptirq.c:26:                   trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+        movl    0(%ebp), %eax   #, tmp133
+
+<--- it loads the previously pushed 0 on the stack into %eax
+
+# kernel/trace/trace_preemptirq.c:27:           tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+        movl    4(%eax), %edx   #, tmp130
+
+<--- derefs it here. Boom.
+
+So, could it be that marking this one function like this:
+
+static void __attribute__((optimize("-fno-stack-protector"))) __attribute__((no_instrument_function)) start_secondary(void *unused)
+{
+
+would cause %ebp to be 0 for whatever reason on 32-bit?
+
+
+
+Interestingly enough, if I use the first variant we had where we built
+the whole compilation unit with -fno-stack-protector, the issue is gone
+and %ebp has the correct value:
+
+ebp            0xf1163fac       0xf1163fac
+esi            0x200002 2097154
+edi            0x1      1
+eip            0xc11585c0       0xc11585c0 <trace_hardirqs_on>
+eflags         0x200086 [ PF SF ID ]
+cs             0x60     96
+ss             0x68     104
+ds             0x7b     123
+es             0x7b     123
+fs             0xd8     216
+gs             0xe0     224
+=> 0xc11585c0 <trace_hardirqs_on>:      push   %ebp
+0xf1163f84:     0x00000000c104b016      0x0000000000000000
+0xf1163f94:     0x0000000000000001      0x0000000000000002
+0xf1163fa4:     0x0000000001000800      0xc10001e400000000
+0xf1163fb4:     0x0000000000000000      0x0000000000000000
+0xf1163fc4:     0x0000000000000000      0x0000000000000000
+Dump of assembler code from 0xc11585c0 to 0xc11585d4:
+=> 0xc11585c0 <trace_hardirqs_on+0>:    55      push   %ebp
+   0xc11585c1 <trace_hardirqs_on+1>:    89 e5   mov    %esp,%ebp
+
+
+Any ideas whether 32-bit behaves like this here?
+
+Thx.
+
+[    0.269147] smpboot: CPU 1 Converting physical 0 to logical die 1
+[    0.269147] BUG: kernel NULL pointer dereference, address: 00000004
+[    0.269147] #PF: supervisor read access in kernel mode
+[    0.269147] #PF: error_code(0x0000) - not-present page
+[    0.269147] *pdpt = 0000000000000000 *pde = f000ff53f000ff53 
+[    0.269147] Oops: 0000 [#1] PREEMPT SMP
+[    0.269147] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.7.0-rc1+ #3
+[    0.269147] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
+[    0.269147] EIP: trace_hardirqs_on+0x5e/0x110
+[    0.269147] Code: 00 00 64 c7 05 f8 20 c2 c1 00 00 00 00 8b 45 04 e8 e7 3b f7 ff 8b 5d f4 8b 75 f8 8b 7d fc c9 c3 8d 74 26 00 8b 15 00 b4 b3 c1 <8b> 48 04 8b 5d 04 85 d2 7e c4 64 a1 d4 a2 c0 c1 0f a3 05 1c 89 b4
+[    0.269147] EAX: 00000000 EBX: f1163f98 ECX: 00000000 EDX: 00000000
+[    0.269147] ESI: 00200002 EDI: 00000001 EBP: f1163f84 ESP: f1163f70
+[    0.269147] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210046
+[    0.269147] CR0: 80050033 CR2: 00000004 CR3: 01c2e000 CR4: 003406f0
+[    0.269147] Call Trace:
+[    0.269147]  ? _raw_spin_unlock+0x27/0x50
+[    0.269147]  start_secondary+0x159/0x220
+[    0.269147]  ? startup_32_smp+0x164/0x168
+[    0.269147] Modules linked in:
+[    0.269147] CR2: 0000000000000004
+[    0.269147] ---[ end trace e721c1dd98762fde ]---
+[    0.269147] EIP: trace_hardirqs_on+0x5e/0x110
+[    0.269147] Code: 00 00 64 c7 05 f8 20 c2 c1 00 00 00 00 8b 45 04 e8 e7 3b f7 ff 8b 5d f4 8b 75 f8 8b 7d fc c9 c3 8d 74 26 00 8b 15 00 b4 b3 c1 <8b> 48 04 8b 5d 04 85 d2 7e c4 64 a1 d4 a2 c0 c1 0f a3 05 1c 89 b4
+[    0.269147] EAX: 00000000 EBX: f1163f98 ECX: 00000000 EDX: 00000000
+[    0.269147] ESI: 00200002 EDI: 00000001 EBP: f1163f84 ESP: f1163f70
+[    0.269147] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210046
+[    0.269147] CR0: 80050033 CR2: 00000004 CR3: 01c2e000 CR4: 003406f0
+[    0.269147] Kernel panic - not syncing: Attempted to kill the idle task!
+[    0.269147] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
