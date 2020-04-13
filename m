@@ -6,80 +6,95 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A65C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1F82072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518F120692
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 13:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbgDMNNj (ORCPT
+        id S1728708AbgDMKlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 09:13:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:45768 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728750AbgDMNNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:13:36 -0400
-IronPort-SDR: niPVWaW2RkcRfRqeeUygZIHkyiZDaStXBQD3OHnQ3oUOEs39NVonbUjucnIy2ftT/4+3JceP09
- rrLxn4B8IvnA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 06:13:35 -0700
-IronPort-SDR: EBarXwOJVuLuIhZVVqFQ5Ln6ll8U7Rpxf8g0h9ogMC3BvyKdu46ZUNzdUW5NOpgy6c7bXX4gTX
- 0FE9zkRtP9Gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="399603024"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga004.jf.intel.com with ESMTP; 13 Apr 2020 06:13:34 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Anchal Agarwal <anchalag@amazon.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm: swap: use fixed-size readahead during swapoff
-References: <20200413111810.GA801367@xps-13>
-Date:   Mon, 13 Apr 2020 21:13:33 +0800
-In-Reply-To: <20200413111810.GA801367@xps-13> (Andrea Righi's message of "Mon,
-        13 Apr 2020 13:18:10 +0200")
-Message-ID: <875ze37cle.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 13 Apr 2020 06:41:36 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:34533 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727776AbgDMKlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:41:36 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EF8DB200005;
+        Mon, 13 Apr 2020 10:41:32 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 12:41:32 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     mark.rutland@arm.com, a.zummo@towertech.it, jason@lakedaemon.net,
+        devicetree@vger.kernel.org, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com,
+        robh+dt@kernel.org, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 5/5] rtc: at91sam9: add microchip,sam9x60-rtt
+Message-ID: <20200413104132.GD3628@piout.net>
+References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ <1586536019-12348-6-git-send-email-claudiu.beznea@microchip.com>
+ <20200410174113.GZ3628@piout.net>
+ <fa6366a0-e1a7-a7b3-e743-2517437b2b3d@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa6366a0-e1a7-a7b3-e743-2517437b2b3d@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrea Righi <andrea.righi@canonical.com> writes:
+On 13/04/2020 08:50:02+0000, Claudiu.Beznea@microchip.com wrote:
+> part of 1/5 is still necessary.
+> 
 
-> The global swap-in readahead policy takes in account the previous access
-> patterns, using a scaling heuristic to determine the optimal readahead
-> chunk dynamically.
->
-> This works pretty well in most cases, but like any heuristic there are
-> specific cases when this approach is not ideal, for example the swapoff
-> scenario.
->
-> During swapoff we just want to load back into memory all the swapped-out
-> pages and for this specific use case a fixed-size readahead is more
-> efficient.
->
-> The specific use case this patch is addressing is to improve swapoff
-> performance when a VM has been hibernated, resumed and all memory needs
-> to be forced back to RAM by disabling swap (see the test case below).
+indeed.
 
-Why do you need to swapoff after resuming?  The swap device isn't used
-except hibernation?  I guess the process is,
+> Regarding the fallback to "atmel,at91sam9260-rtt" I am aware of that. I
+> chose this approach because this IP is a bit different than the one with
+> "atmel,at91sam9260-rtt" compatible, meaning it has a features that the old
+> one has not. I'm talking about [1] which I cannot see on a SAM9G45 [2]
+> where RTT IP uses "atmel,at91sam9260-rtt" as compatible.
+> 
+> Is true it may be necessary in the future when new features may be
+> implemented. Taking this into account, would you like to get rid of the new
+> compatible in code and keep it only in device tree?
+> 
 
-1) add swap device to VM
-2) hibernate
-3) resume
-4) swapoff
+What I said is not that the new compatible is not necessary at all but
+that it can be avoided in the aic code.
 
-Some pages are swapped out in step 2?  If os, can we just set
-/proc/sys/vm/swappiness to 0 to avoid swapping in step 2?
+> [1]
+> http://ww1.microchip.com/downloads/en/DeviceDoc/SAM9X60-Data-Sheet-DS60001579B.pdf#_OPENTOPIC_TOC_PROCESSING_d137e64502
+> [2]
+> http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6438-32-bit-ARM926-Embedded-Microprocessor-SAM9G45_Datasheet.pdf
+> 
+> > 
+> > I think 2/5 may be useful in the future but as far as the aic fixup
+> > is concerned, both IPs are identical.
+> > 
+> >>  - reg: should encode the memory region of the RTT controller
+> >>  - interrupts: rtt alarm/event interrupt
+> >>  - clocks: should contain the 32 KHz slow clk that will drive the RTT block.
+> >> --
+> >> 2.7.4
+> >>
+> > 
+> > --
+> > Alexandre Belloni, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
 
-Best Regards,
-Huang, Ying
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
