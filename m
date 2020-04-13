@@ -2,176 +2,783 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500CFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB711C2BB55
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:14:11 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9A420678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:10:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 1F9A420678
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
+	by mail.kernel.org (Postfix) with ESMTP id 7E9CE20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 03:14:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 7E9CE20678
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgDMDKt (ORCPT
+        id S1728512AbgDMDOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 23:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:47282 "EHLO
+        Sun, 12 Apr 2020 23:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:47832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgDMDKs (ORCPT
+        with ESMTP id S1728460AbgDMDOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 23:10:48 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1D9C0A3BE0;
-        Sun, 12 Apr 2020 20:10:48 -0700 (PDT)
-IronPort-SDR: kngcP6d9NdQgTb9DbNEHooMgzAltwAOvLqfwv1ljxf6LqHCRLYlN62nU2c2jobKXkBUCMwhi4U
- mx5cxM3X7suw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 20:10:46 -0700
-IronPort-SDR: X4MPwuF9i86nDYyxkd58AVJS6C0MtVzVwtfwzSZA07B1eyXHmQ/3nWj3eREjzKxRZ0o2YeJ2g5
- uneGmWVHiayA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,377,1580803200"; 
-   d="scan'208";a="256053141"
-Received: from araj-mobl1.jf.intel.com ([10.255.32.166])
-  by orsmga006.jf.intel.com with ESMTP; 12 Apr 2020 20:10:44 -0700
-Date:   Sun, 12 Apr 2020 20:10:43 -0700
-From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Message-ID: <20200413031043.GA18183@araj-mobl1.jf.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
- <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
- <20200402165954.48d941ee@w520.home>
- <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
- <20200403112545.6c115ba3@w520.home>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
- <20200407095801.648b1371@w520.home>
- <20200408040021.GS67127@otc-nc-03>
- <20200408101940.3459943d@w520.home>
+        Sun, 12 Apr 2020 23:14:09 -0400
+Received: from ZXSHCAS2.zhaoxin.com (unknown [203.148.12.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10DAC0A3BE0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 20:14:08 -0700 (PDT)
+Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 13 Apr
+ 2020 11:14:03 +0800
+Received: from zx.zhaoxin.com (10.28.64.103) by zxbjmbx2.zhaoxin.com
+ (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 13 Apr
+ 2020 11:14:02 +0800
+From:   CodyYao-oc <CodyYao-oc@zhaoxin.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <cooperyan@zhaoxin.com>, <codyyao@zhaoxin.com>,
+        CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Subject: [PATCH] x86/perf: Add hardware performance events support for Zhaoxin CPU.
+Date:   Mon, 13 Apr 2020 11:14:29 +0800
+Message-ID: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408101940.3459943d@w520.home>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain
+X-Originating-IP: [10.28.64.103]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ zxbjmbx2.zhaoxin.com (10.29.252.164)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:
-> On Tue, 7 Apr 2020 21:00:21 -0700
-> "Raj, Ashok" <ashok.raj@intel.com> wrote:
-> 
-> > Hi Alex
-> > 
-> > + Bjorn
-> 
->  + Don
-> 
-> > FWIW I can't understand why PCI SIG went different ways with ATS, 
-> > where its enumerated on PF and VF. But for PASID and PRI its only
-> > in PF. 
-> > 
-> > I'm checking with our internal SIG reps to followup on that.
-> > 
-> > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
-> > > > Is there vendor guarantee that hidden registers will locate at the
-> > > > same offset between PF and VF config space?   
-> > > 
-> > > I'm not sure if the spec really precludes hidden registers, but the
-> > > fact that these registers are explicitly outside of the capability
-> > > chain implies they're only intended for device specific use, so I'd say
-> > > there are no guarantees about anything related to these registers.  
-> > 
-> > As you had suggested in the other thread, we could consider
-> > using the same offset as in PF, but even that's a better guess
-> > still not reliable.
-> > 
-> > The other option is to maybe extend driver ops in the PF to expose
-> > where the offsets should be. Sort of adding the quirk in the 
-> > implementation. 
-> > 
-> > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is resisting 
-> > making VF's first class citizen, we might ask them to add some verbiage
-> > to suggest leave the same offsets as PF open to help emulation software.
-> 
-> Even if we know where to expose these capabilities on the VF, it's not
-> clear to me how we can actually virtualize the capability itself.  If
-> the spec defines, for example, an enable bit as r/w then software that
-> interacts with that register expects the bit is settable.  There's no
-> protocol for "try to set the bit and re-read it to see if the hardware
-> accepted it".  Therefore a capability with a fixed enable bit
-> representing the state of the PF, not settable by the VF, is
-> disingenuous to the spec.
+Zhaoxin CPU has provided facilities for monitoring performance
+via PMU(Performance Monitor Unit), but the functionality is unused so far.
+Therefore, add support for zhaoxin pmu to make performance related
+hardware events available.
 
-I think we are all in violent agreement. A lot of times the pci spec gets
-defined several years ahead of real products and no one remembers
-the justification on why they restricted things the way they did.
+Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ arch/x86/events/Makefile               |   2 +
+ arch/x86/events/core.c                 |   4 +
+ arch/x86/events/perf_event.h           |   9 +
+ arch/x86/events/zhaoxin/Makefile       |   2 +
+ arch/x86/events/zhaoxin/core.c         | 625 +++++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/perfctr-watchdog.c |   6 +
+ 6 files changed, 648 insertions(+)
+ create mode 100644 arch/x86/events/zhaoxin/Makefile
+ create mode 100644 arch/x86/events/zhaoxin/core.c
 
-Maybe someone early product wasn't quite exposing these features to the VF
-and hence the spec is bug compatible :-)
+diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
+index 9e07f55..6f1d1fd 100644
+--- a/arch/x86/events/Makefile
++++ b/arch/x86/events/Makefile
+@@ -3,3 +3,5 @@ obj-y					+= core.o probe.o
+ obj-y					+= amd/
+ obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
++obj-$(CONFIG_CPU_SUP_CENTAUR)		+= zhaoxin/
++obj-$(CONFIG_CPU_SUP_ZHAOXIN)		+= zhaoxin/
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index a619763..9e63ee5 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1839,6 +1839,10 @@ static int __init init_hw_perf_events(void)
+ 		err = amd_pmu_init();
+ 		x86_pmu.name = "HYGON";
+ 		break;
++	case X86_VENDOR_ZHAOXIN:
++	case X86_VENDOR_CENTAUR:
++		err = zhaoxin_pmu_init();
++		break;
+ 	default:
+ 		err = -ENOTSUPP;
+ 	}
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index f1cd1ca..f6bbdca 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1133,3 +1133,12 @@ static inline int is_ht_workaround_enabled(void)
+ 	return 0;
+ }
+ #endif /* CONFIG_CPU_SUP_INTEL */
++
++#if ((defined CONFIG_CPU_SUP_CENTAUR) || (defined CONFIG_CPU_SUP_ZHAOXIN))
++int zhaoxin_pmu_init(void);
++#else
++static inline int zhaoxin_pmu_init(void)
++{
++	return 0;
++}
++#endif /*CONFIG_CPU_SUP_CENTAUR or CONFIG_CPU_SUP_ZHAOXIN*/
+diff --git a/arch/x86/events/zhaoxin/Makefile b/arch/x86/events/zhaoxin/Makefile
+new file mode 100644
+index 0000000..642c1174
+--- /dev/null
++++ b/arch/x86/events/zhaoxin/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-y	+= core.o
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+new file mode 100644
+index 0000000..77ed8a6
+--- /dev/null
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -0,0 +1,625 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Per cpu state
++ *
++ * Used to coordinate shared registers among events on a single PMU.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/stddef.h>
++#include <linux/types.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/export.h>
++#include <linux/nmi.h>
++
++#include <asm/cpufeature.h>
++#include <asm/hardirq.h>
++#include <asm/apic.h>
++
++#include "../perf_event.h"
++
++/*
++ * Zhaoxin PerfMon, used on zxc and later.
++ */
++static u64 zx_pmon_event_map[PERF_COUNT_HW_MAX] __read_mostly = {
++
++	[PERF_COUNT_HW_CPU_CYCLES]        = 0x0082,
++	[PERF_COUNT_HW_INSTRUCTIONS]      = 0x00c0,
++	[PERF_COUNT_HW_CACHE_REFERENCES]  = 0x0515,
++	[PERF_COUNT_HW_CACHE_MISSES]      = 0x051a,
++	[PERF_COUNT_HW_BUS_CYCLES]        = 0x0083,
++};
++
++static struct event_constraint zxc_event_constraints[] __read_mostly = {
++
++	FIXED_EVENT_CONSTRAINT(0x0082, 1), /* unhalted core clock cycles */
++	EVENT_CONSTRAINT_END
++};
++
++static struct event_constraint zxd_event_constraints[] __read_mostly = {
++
++	FIXED_EVENT_CONSTRAINT(0x00c0, 0), /* retired instructions */
++	FIXED_EVENT_CONSTRAINT(0x0082, 1), /* unhalted core clock cycles */
++	FIXED_EVENT_CONSTRAINT(0x0083, 2), /* unhalted bus clock cycles */
++	EVENT_CONSTRAINT_END
++};
++
++static __initconst const u64 zxd_hw_cache_event_ids
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
++[C(L1D)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0042,
++		[C(RESULT_MISS)] = 0x0538,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0x0043,
++		[C(RESULT_MISS)] = 0x0562,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(L1I)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0300,
++		[C(RESULT_MISS)] = 0x0301,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0x030a,
++		[C(RESULT_MISS)] = 0x030b,
++	},
++},
++[C(LL)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(DTLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0042,
++		[C(RESULT_MISS)] = 0x052c,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0x0043,
++		[C(RESULT_MISS)] = 0x0530,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0x0564,
++		[C(RESULT_MISS)] = 0x0565,
++	},
++},
++[C(ITLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x00c0,
++		[C(RESULT_MISS)] = 0x0534,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(BPU)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0700,
++		[C(RESULT_MISS)] = 0x0709,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(NODE)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++};
++
++static __initconst const u64 zxe_hw_cache_event_ids
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
++[C(L1D)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0568,
++		[C(RESULT_MISS)] = 0x054b,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0x0669,
++		[C(RESULT_MISS)] = 0x0562,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(L1I)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0300,
++		[C(RESULT_MISS)] = 0x0301,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0x030a,
++		[C(RESULT_MISS)] = 0x030b,
++	},
++},
++[C(LL)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0,
++		[C(RESULT_MISS)] = 0x0,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0x0,
++		[C(RESULT_MISS)] = 0x0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0x0,
++		[C(RESULT_MISS)] = 0x0,
++	},
++},
++[C(DTLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0568,
++		[C(RESULT_MISS)] = 0x052c,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0x0669,
++		[C(RESULT_MISS)] = 0x0530,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0x0564,
++		[C(RESULT_MISS)] = 0x0565,
++	},
++},
++[C(ITLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x00c0,
++		[C(RESULT_MISS)] = 0x0534,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(BPU)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0028,
++		[C(RESULT_MISS)] = 0x0029,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++[C(NODE)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)] = -1,
++	},
++},
++};
++
++static void zhaoxin_pmu_disable_all(void)
++{
++	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
++}
++
++static void zhaoxin_pmu_enable_all(int added)
++{
++	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, x86_pmu.intel_ctrl);
++}
++
++static inline u64 zhaoxin_pmu_get_status(void)
++{
++	u64 status;
++
++	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, status);
++
++	return status;
++}
++
++static inline void zhaoxin_pmu_ack_status(u64 ack)
++{
++	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
++}
++
++static inline void zxc_pmu_ack_status(u64 ack)
++{
++	/*
++	 * ZXC needs global control enabled in order to clear status bits.
++	 */
++	zhaoxin_pmu_enable_all(0);
++	zhaoxin_pmu_ack_status(ack);
++	zhaoxin_pmu_disable_all();
++}
++
++static void zhaoxin_pmu_disable_fixed(struct hw_perf_event *hwc)
++{
++	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
++	u64 ctrl_val, mask;
++
++	mask = 0xfULL << (idx * 4);
++
++	rdmsrl(hwc->config_base, ctrl_val);
++	ctrl_val &= ~mask;
++	wrmsrl(hwc->config_base, ctrl_val);
++}
++
++static void zhaoxin_pmu_disable_event(struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
++		zhaoxin_pmu_disable_fixed(hwc);
++		return;
++	}
++
++	x86_pmu_disable_event(event);
++}
++
++static void zhaoxin_pmu_enable_fixed(struct hw_perf_event *hwc)
++{
++	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
++	u64 ctrl_val, bits, mask;
++
++	/*
++	 * Enable IRQ generation (0x8),
++	 * and enable ring-3 counting (0x2) and ring-0 counting (0x1)
++	 * if requested:
++	 */
++	bits = 0x8ULL;
++	if (hwc->config & ARCH_PERFMON_EVENTSEL_USR)
++		bits |= 0x2;
++	if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
++		bits |= 0x1;
++
++	bits <<= (idx * 4);
++	mask = 0xfULL << (idx * 4);
++
++	rdmsrl(hwc->config_base, ctrl_val);
++	ctrl_val &= ~mask;
++	ctrl_val |= bits;
++	wrmsrl(hwc->config_base, ctrl_val);
++}
++
++static void zhaoxin_pmu_enable_event(struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
++		zhaoxin_pmu_enable_fixed(hwc);
++		return;
++	}
++
++	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
++}
++
++/*
++ * This handler is triggered by the local APIC, so the APIC IRQ handling
++ * rules apply:
++ */
++static int zhaoxin_pmu_handle_irq(struct pt_regs *regs)
++{
++	struct perf_sample_data data;
++	struct cpu_hw_events *cpuc;
++	int bit;
++	u64 status;
++	bool is_zxc = false;
++	int handled = 0;
++
++	cpuc = this_cpu_ptr(&cpu_hw_events);
++	apic_write(APIC_LVTPC, APIC_DM_NMI);
++	zhaoxin_pmu_disable_all();
++	status = zhaoxin_pmu_get_status();
++	if (!status)
++		goto done;
++
++	if (boot_cpu_data.x86 == 0x06 &&
++		(boot_cpu_data.x86_model == 0x0f ||
++			boot_cpu_data.x86_model == 0x19))
++		is_zxc = true;
++again:
++
++	/*Clearing status works only if the global control is enable on zxc.*/
++	if (is_zxc)
++		zxc_pmu_ack_status(status);
++	else
++		zhaoxin_pmu_ack_status(status);
++
++	inc_irq_stat(apic_perf_irqs);
++
++	/*
++	 * CondChgd bit 63 doesn't mean any overflow status. Ignore
++	 * and clear the bit.
++	 */
++	if (__test_and_clear_bit(63, (unsigned long *)&status)) {
++		if (!status)
++			goto done;
++	}
++
++	for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
++		struct perf_event *event = cpuc->events[bit];
++
++		handled++;
++
++		if (!test_bit(bit, cpuc->active_mask))
++			continue;
++
++		x86_perf_event_update(event);
++		perf_sample_data_init(&data, 0, event->hw.last_period);
++
++		if (!x86_perf_event_set_period(event))
++			continue;
++
++		if (perf_event_overflow(event, &data, regs))
++			x86_pmu_stop(event, 0);
++	}
++
++	/*
++	 * Repeat if there is more work to be done:
++	 */
++	status = zhaoxin_pmu_get_status();
++	if (status)
++		goto again;
++
++done:
++	zhaoxin_pmu_enable_all(0);
++	return handled;
++}
++
++static u64 zhaoxin_pmu_event_map(int hw_event)
++{
++	return zx_pmon_event_map[hw_event];
++}
++
++static struct event_constraint *
++zhaoxin_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
++			struct perf_event *event)
++{
++	struct event_constraint *c;
++
++	if (x86_pmu.event_constraints) {
++		for_each_event_constraint(c, x86_pmu.event_constraints) {
++			if ((event->hw.config & c->cmask) == c->code)
++				return c;
++		}
++	}
++
++	return &unconstrained;
++}
++
++PMU_FORMAT_ATTR(event,	"config:0-7");
++PMU_FORMAT_ATTR(umask,	"config:8-15");
++PMU_FORMAT_ATTR(edge,	"config:18");
++PMU_FORMAT_ATTR(inv,	"config:23");
++PMU_FORMAT_ATTR(cmask,	"config:24-31");
++
++static struct attribute *zx_arch_formats_attr[] = {
++	&format_attr_event.attr,
++	&format_attr_umask.attr,
++	&format_attr_edge.attr,
++	&format_attr_inv.attr,
++	&format_attr_cmask.attr,
++	NULL,
++};
++
++static ssize_t zhaoxin_event_sysfs_show(char *page, u64 config)
++{
++	u64 event = (config & ARCH_PERFMON_EVENTSEL_EVENT);
++
++	return x86_event_sysfs_show(page, config, event);
++}
++
++static const struct x86_pmu zhaoxin_pmu __initconst = {
++	.name			= "zhaoxin",
++	.handle_irq		= zhaoxin_pmu_handle_irq,
++	.disable_all		= zhaoxin_pmu_disable_all,
++	.enable_all		= zhaoxin_pmu_enable_all,
++	.enable			= zhaoxin_pmu_enable_event,
++	.disable		= zhaoxin_pmu_disable_event,
++	.hw_config		= x86_pmu_hw_config,
++	.schedule_events	= x86_schedule_events,
++	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
++	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
++	.event_map		= zhaoxin_pmu_event_map,
++	.max_events		= ARRAY_SIZE(zx_pmon_event_map),
++	.apic			= 1,
++	/*
++	 * For zxd/zxe, read/write operation for PMCx MSR is 48 bits.
++	 */
++	.max_period		= (1ULL << 47) - 1,
++	.get_event_constraints	= zhaoxin_get_event_constraints,
++
++	.format_attrs		= zx_arch_formats_attr,
++	.events_sysfs_show	= zhaoxin_event_sysfs_show,
++};
++
++static const struct { int id; char *name; } zx_arch_events_map[] __initconst = {
++	{ PERF_COUNT_HW_CPU_CYCLES, "cpu cycles" },
++	{ PERF_COUNT_HW_INSTRUCTIONS, "instructions" },
++	{ PERF_COUNT_HW_BUS_CYCLES, "bus cycles" },
++	{ PERF_COUNT_HW_CACHE_REFERENCES, "cache references" },
++	{ PERF_COUNT_HW_CACHE_MISSES, "cache misses" },
++	{ PERF_COUNT_HW_BRANCH_INSTRUCTIONS, "branch instructions" },
++	{ PERF_COUNT_HW_BRANCH_MISSES, "branch misses" },
++};
++
++static __init void zhaoxin_arch_events_quirk(void)
++{
++	int bit;
++
++	/* disable event that reported as not presend by cpuid */
++	for_each_set_bit(bit, x86_pmu.events_mask,
++			ARRAY_SIZE(zx_arch_events_map)) {
++
++		zx_pmon_event_map[zx_arch_events_map[bit].id] = 0;
++		pr_warn("CPUID marked event: \'%s\' unavailable\n",
++				zx_arch_events_map[bit].name);
++	}
++}
++
++__init int zhaoxin_pmu_init(void)
++{
++	union cpuid10_edx edx;
++	union cpuid10_eax eax;
++	union cpuid10_ebx ebx;
++	struct event_constraint *c;
++	unsigned int unused;
++	int version;
++
++	pr_info("Welcome to zhaoxin pmu!\n");
++
++	/*
++	 * Check whether the Architectural PerfMon supports
++	 * hw_event or not.
++	 */
++	cpuid(10, &eax.full, &ebx.full, &unused, &edx.full);
++
++	if (eax.split.mask_length < ARCH_PERFMON_EVENTS_COUNT - 1)
++		return -ENODEV;
++
++	version = eax.split.version_id;
++	if (version == 2) {
++		x86_pmu = zhaoxin_pmu;
++		pr_info("Version check pass!\n");
++	} else
++		return -ENODEV;
++
++	x86_pmu.version			= version;
++	x86_pmu.num_counters		= eax.split.num_counters;
++	x86_pmu.cntval_bits		= eax.split.bit_width;
++	x86_pmu.cntval_mask		= (1ULL << eax.split.bit_width) - 1;
++	x86_pmu.events_maskl		= ebx.full;
++	x86_pmu.events_mask_len		= eax.split.mask_length;
++
++	x86_pmu.num_counters_fixed = edx.split.num_counters_fixed;
++	x86_add_quirk(zhaoxin_arch_events_quirk);
++
++	switch (boot_cpu_data.x86) {
++	case 0x06:
++		if (boot_cpu_data.x86_model == 0x0f ||
++			boot_cpu_data.x86_model == 0x19) {
++
++			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
++
++			x86_pmu.event_constraints = zxc_event_constraints;
++			zx_pmon_event_map[PERF_COUNT_HW_INSTRUCTIONS] = 0;
++			zx_pmon_event_map[PERF_COUNT_HW_CACHE_REFERENCES] = 0;
++			zx_pmon_event_map[PERF_COUNT_HW_CACHE_MISSES] = 0;
++			zx_pmon_event_map[PERF_COUNT_HW_BUS_CYCLES] = 0;
++
++			pr_cont("ZXC events, ");
++		} else
++			return -ENODEV;
++		break;
++	case 0x07:
++		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
++		X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
++
++		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_BACKEND] =
++		X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
++
++		switch (boot_cpu_data.x86_model) {
++		case 0x1b:
++			memcpy(hw_cache_event_ids, zxd_hw_cache_event_ids,
++				sizeof(hw_cache_event_ids));
++
++			x86_pmu.event_constraints = zxd_event_constraints;
++
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
++				= 0x0700;
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
++				= 0x0709;
++
++			pr_cont("ZXD events, ");
++			break;
++		case 0x3b:
++			memcpy(hw_cache_event_ids, zxe_hw_cache_event_ids,
++				sizeof(hw_cache_event_ids));
++
++			x86_pmu.event_constraints = zxd_event_constraints;
++
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
++				= 0x0028;
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
++				= 0x0029;
++
++			pr_cont("ZXE events, ");
++			break;
++		default:
++			return -ENODEV;
++		}
++		break;
++	default:
++		return -ENODEV;
++	}
++
++	x86_pmu.intel_ctrl = (1 << (x86_pmu.num_counters)) - 1;
++	x86_pmu.intel_ctrl |=
++		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
++
++	if (x86_pmu.event_constraints) {
++		for_each_event_constraint(c, x86_pmu.event_constraints) {
++			c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
++			c->weight += x86_pmu.num_counters;
++		}
++	}
++
++	return 0;
++}
++
+diff --git a/arch/x86/kernel/cpu/perfctr-watchdog.c b/arch/x86/kernel/cpu/perfctr-watchdog.c
+index 9556930..63a5828 100644
+--- a/arch/x86/kernel/cpu/perfctr-watchdog.c
++++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
+@@ -63,6 +63,9 @@ static inline unsigned int nmi_perfctr_msr_to_bit(unsigned int msr)
+ 		case 15:
+ 			return msr - MSR_P4_BPU_PERFCTR0;
+ 		}
++	case X86_VENDOR_ZHAOXIN:
++	case X86_VENDOR_CENTAUR:
++		return msr - MSR_ARCH_PERFMON_PERFCTR0;
+ 	}
+ 	return 0;
+ }
+@@ -92,6 +95,9 @@ static inline unsigned int nmi_evntsel_msr_to_bit(unsigned int msr)
+ 		case 15:
+ 			return msr - MSR_P4_BSU_ESCR0;
+ 		}
++	case X86_VENDOR_ZHAOXIN:
++	case X86_VENDOR_CENTAUR:
++		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
+ 	}
+ 	return 0;
+ 
+-- 
+2.7.4
 
-> 
-> If what we're trying to do is expose that PASID and PRI are enabled on
-> the PF to a VF driver, maybe duplicating the PF capabilities on the VF
-> without the ability to control it is not the right approach.  Maybe we
-
-As long as the capability enable is only provided when the PF has enabled
-the feature. Then it seems the hardware seems to do the right thing.
-
-Assume we expose PASID/PRI only when PF has enabled it. It will be the
-case since the PF driver needs to exist, and IOMMU would have set the 
-PASID/PRI/ATS on PF.
-
-If the emulation is purely spoofing the capability. Once vIOMMU driver
-enables PASID, the context entries for the VF are completely independent
-from the PF context entries. 
-
-vIOMMU would enable PASID, and we just spoof the PASID capability.
-
-If vIOMMU or guest for some reason does disable_pasid(), then the 
-vIOMMU driver can disaable PASID on the VF context entries. So the VF
-although the capability is blanket enabled on PF, IOMMU gaurantees the
-transactions are blocked.
-
-
-In the interim, it seems like the intent of the virtual capability
-can be honored via help from the IOMMU for the controlling aspect.. 
-
-Did i miss anything? 
-
-> need new capabilities exposing these as slave features that cannot be
-> controlled?  We could define our own vendor capability for this, but of
-> course we have both the where to put it in config space issue, as well
-> as the issue of trying to push an ad-hoc standard.  vfio could expose
-> these as device features rather than emulating capabilities, but that
-> still leaves a big gap between vfio in the hypervisor and the driver in
-> the guest VM.  That might still help push the responsibility and policy
-> for how to expose it to the VM as a userspace problem though.
-
-I think this is a good long term solution, but if the vIOMMU implenentations
-can carry us for the time being, we can probably defer them unless
-we are stuck.
-
-> 
-> I agree though, I don't know why the SIG would preclude implementing
-> per VF control of these features.  Thanks,
-> 
-
-Cheers,
-Ashok
