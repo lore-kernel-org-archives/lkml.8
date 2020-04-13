@@ -2,151 +2,132 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FD4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33719C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A07B620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H9kHoKxU"
+	by mail.kernel.org (Postfix) with ESMTP id 188CD20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 20:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725272AbgDMU46 (ORCPT
+        id S1733303AbgDMU6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388654AbgDMU4x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:56:53 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 644D8C0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:56:52 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id b12so10887818ion.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 13:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uC+i7PG2W1Z3WS3zlyBPsJpZoWvsgugoZpuCkaGAEfc=;
-        b=H9kHoKxUM8IqcV3Lai4EB3JozuSrdW7Rr2pzohz0PiboVHQ2TtcxbPt/y4AlgNDefw
-         DLvqJoHzjgVD4ieBgwu+i6lEo4yLJ5ICs6wHAKpSGIPGDPueQMca1gY/rdRf52WTqFQi
-         VFhc5dzmAv8QUWXFr0LZEgYGORXHgoT5Ab25CcmqPJ6RJDy136RYgtSJtxqddeE/8Yld
-         Vho+C92ZjqRD8Ts6aEAus+wj7+U9GjQWu9BPZnRza5Jl400meamsIbcd4iCk1kw2BqLs
-         PoxPiB3oXQYb3P0rZK7IrYU8Ml4zvzzlx2PtgWvbVeVKlvW07S8+MrTUz/SRj7OBKq3E
-         CsFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uC+i7PG2W1Z3WS3zlyBPsJpZoWvsgugoZpuCkaGAEfc=;
-        b=OdDORIBejo79QtvY56tTJKDtrIN2u1yW17ytbFqPF2zMXShANAxQeyRCEQ97x2sBHY
-         buWBhB0ONaXCWiDBZl1l6OD9wAZKDx5HCAPsMA8FJxq2IIYU5oWDmOq0wmv/sh0vNe13
-         jTqnNUklWS0zh117s5D9myFo8WmUvcaRw9LVMunw0EiTvfeGOGYt7E+RkzWxjwhKmA3e
-         Y7NB6b3Kc5/MZkpRIzyQyORrbTrgB/yh3DBGHNBVotYyiCg+6lf4/axxQ69DYCPWRaD7
-         7q08nEDayvi/xy9hgFs83KggVIb1bElG6QxEGaKoyYLo4ag6XjBer1sjXQO6VRw203CY
-         QvfA==
-X-Gm-Message-State: AGi0PuZ891C3XufKeD8e8HaD8uT7hZRDGMxqADsoUMo4g3Atl6Y+V2RG
-        yb8EuTXApLZ9FSZaqlReGTHbi02voCha0g==
-X-Google-Smtp-Source: APiQypKQJqyf72+XOzIeELgnvQn8R2zl/6Kv1AVqMXBC6w+Xla0gafqGuB/BLiEaY5/Puhl0aFOCTQ==
-X-Received: by 2002:a02:bb91:: with SMTP id g17mr17264505jan.88.1586811411124;
-        Mon, 13 Apr 2020 13:56:51 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id g26sm1893203ile.3.2020.04.13.13.56.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 13:56:50 -0700 (PDT)
-Subject: Re: [PATCH 4/4] remoteproc: Get rid of tedious error path
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     s-anna@ti.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200413193401.27234-1-mathieu.poirier@linaro.org>
- <20200413193401.27234-5-mathieu.poirier@linaro.org>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <7e1d808b-b4ae-72c6-266b-684894e41731@linaro.org>
-Date:   Mon, 13 Apr 2020 15:56:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 13 Apr 2020 16:58:24 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8591 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727121AbgDMU6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 16:58:22 -0400
+IronPort-SDR: QYuP59TDzcZMn+8VjanUFqBbPqGzm6ycl4IAn+R1Lp5WuZQ2zMJ78LCme4POGFGXQTqmHsa7fK
+ dWBGnggPLhtA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 13:58:21 -0700
+IronPort-SDR: oa1YgajQmXRj8z50iScEKqqdsdg8+wY7nIw2YG5BQhw+6QTuhRz7hr/FkrOca5h8bNqpZbim3H
+ LPbyCrmgZFeQ==
+X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
+   d="scan'208";a="453301654"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 13:58:20 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
+        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [PATCH V2 0/4] x86/resctrl: Enable user to view and select thread throttling mode
+Date:   Mon, 13 Apr 2020 13:57:59 -0700
+Message-Id: <cover.1586801373.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20200413193401.27234-5-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/13/20 2:34 PM, Mathieu Poirier wrote:
-> Get rid of tedious error management by moving firmware and operation
-> allocation after calling device_initialize().  That way we take advantage
-> of the automatic call to rproc_type_release() to cleanup after ourselves
-> when put_device() is called.
+V1 upstream submission available from:
+https://lore.kernel.org/lkml/cover.1585765499.git.reinette.chatre@intel.com
 
-Looks good to me.
+A notable change since V1 is the inclusion of two additional patches from
+Fenghua Yu that introduce the new per-thread MBA feature. These changes are
+added to this series because they are small and closely related to the
+original submission. The per-thread MBA feature is a hardware advancement
+that requires no software interface changes. The patches added just enumerate
+the feature and expose it to userspace by showing "per-thread" in the new
+resctrl file "thread_throttle_mode" to help user applications fine tune
+performance.
 
-Reviewed-by: Alex Elder <elder@linaro.org>
+There are currently a few resctrl changes outstanding for upstream inclusion.
+To support their consideration all outstanding resctrl patches can be
+viewed at https://github.com/rchatre/linux.git (branch resctrl/next)
 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  drivers/remoteproc/remoteproc_core.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index c272d78f07e8..10009b95867a 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2061,12 +2061,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  	if (!rproc)
->  		return NULL;
->  
-> -	if (rproc_alloc_firmware(rproc, name, firmware))
-> -		goto free_rproc;
-> -
-> -	if (rproc_alloc_ops(rproc, ops))
-> -		goto free_firmware;
-> -
->  	rproc->name = name;
->  	rproc->priv = &rproc[1];
->  	rproc->auto_boot = true;
-> @@ -2079,12 +2073,17 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  	rproc->dev.driver_data = rproc;
->  	idr_init(&rproc->notifyids);
->  
-> +	if (rproc_alloc_firmware(rproc, name, firmware))
-> +		goto out;
-> +
-> +	if (rproc_alloc_ops(rproc, ops))
-> +		goto out;
-> +
->  	/* Assign a unique device index and name */
->  	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
->  	if (rproc->index < 0) {
->  		dev_err(dev, "ida_simple_get failed: %d\n", rproc->index);
-> -		put_device(&rproc->dev);
-> -		return NULL;
-> +		goto out;
->  	}
->  
->  	dev_set_name(&rproc->dev, "remoteproc%d", rproc->index);
-> @@ -2105,11 +2104,8 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  	rproc->state = RPROC_OFFLINE;
->  
->  	return rproc;
-> -
-> -free_firmware:
-> -	kfree(rproc->firmware);
-> -free_rproc:
-> -	kfree(rproc);
-> +out:
-> +	put_device(&rproc->dev);
->  	return NULL;
->  }
->  EXPORT_SYMBOL(rproc_alloc);
-> 
+Changes since V1 (also documented within patches to which they apply):
+- Rebased on top of James Morse's CDP fix
+(https://lore.kernel.org/lkml/20200221162105.154163-1-james.morse@arm.com)
+- Remove RF_UNINITIALIZED (having uninitialized be represented with ones
+  creates too much confusion), replace with an explicit check of rft->fflags
+  in rdtgroup_add_files() (Fenghua Yu)
+- Rename MBA_THREAD_THROTTLE_MODE to MBA_THROTTLE_MODE_MASK to clarify its
+  use as a mask (Tony Luck)
+- Introduce explicit MBA_THROTTLE_MODE_MAX instead of implying it is the
+  opposite of min and use these values (min and max) explicitly whenever
+  testing/setting the throttle mode value (Tony Luck)
+- Add __init attribute to thread_throttle_mode_init_intel_rw() and
+  thread_throttle_mode_init_intel_ro() since they are only needed during
+  initialization (Fenghua Yu)
+- Remove MBA_CFG MSR reads and error checking so that the patch is simpler
+  and easier to review (Fenghua Yu)
+- Ensure CPU hotplug lock is taken when writing register on multiple CPUs (Fenghua Yu)
+- Use CPU mask already maintained as part of domains to determine which
+  CPUs to update MBA register on (Fenghua Yu)
+- Maintain MBA configuration register contents to support use case when not
+  all CPUs of a package are online when configuration is set from user
+  space
+- Use seq_puts() instead of seq_printf() when simple strings are printed
+- Set MBA configuration to default when resctrl is unmounted
+- Complete rewrite of "thread_throttle_mode" documentation (Tony Luck)
+- Remove unnecessary checks on user input (Andy Shevchenko)
+- Change code style surrounding usage of sysfs_match_string() (Andy Shevchenko)
+
+From V1 submission:
+
+The first patch in this series introduces a new resctrl file,
+"thread_throttle_mode", on Intel systems that exposes to the
+user how per-thread values are allocated to a core. This is added in
+support of newer Intel systems that can be configured to allocate
+either maximum or minimum throttling of the per-thread CLOS values
+to the core.
+
+Details about the feature can be found in the commit description and
+in Chapter 9 of the most recent Intel ISE available from
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
+
+The first patch parses user input with the appropriate sysfs API that has
+not previously been used in resctrl. The second (in V2 the fourth) patch is
+added as a subsequent cleanup that switches existing resctrl string parsing
+code to also use this appropriate API.
+
+Fenghua Yu (2):
+  x86/resctrl: Enumerate per-thread MBA
+  x86/resctrl: Enable per-thread MBA
+
+Reinette Chatre (2):
+  x86/resctrl: Enable user to view and select thread throttling mode
+  x86/resctrl: Use appropriate API for strings terminated by newline
+
+ Documentation/x86/resctrl_ui.rst       |  16 +-
+ arch/x86/include/asm/cpufeatures.h     |   1 +
+ arch/x86/kernel/cpu/cpuid-deps.c       |   1 +
+ arch/x86/kernel/cpu/resctrl/core.c     |  32 ++++
+ arch/x86/kernel/cpu/resctrl/internal.h |  13 ++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 231 +++++++++++++++++++++++--
+ arch/x86/kernel/cpu/scattered.c        |   1 +
+ 7 files changed, 277 insertions(+), 18 deletions(-)
+
+-- 
+2.21.0
 
