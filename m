@@ -2,81 +2,113 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23E9C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A320DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C137C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A57A2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:12:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7eqRinw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgDMPMk (ORCPT
+        id S1730937AbgDMPMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:12:40 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:31754 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729680AbgDMPMe (ORCPT
+        Mon, 13 Apr 2020 11:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729696AbgDMPMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:12:34 -0400
-Received: from localhost.localdomain ([93.22.151.169])
-        by mwinf5d63 with ME
-        id SFCX2200J3fYTYl03FCY5q; Mon, 13 Apr 2020 17:12:32 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 13 Apr 2020 17:12:32 +0200
-X-ME-IP: 93.22.151.169
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] clk: renesas: r9a06g032: Fix some typo in comments
-Date:   Mon, 13 Apr 2020 06:17:09 +0200
-Message-Id: <20200413041709.3630-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Mon, 13 Apr 2020 11:12:37 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5BDC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:12:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id u13so10025406wrp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=miTpPmRVhDhvijKW/x5oMYTRNn8wvs0mLO5J0nr2084=;
+        b=U7eqRinwsYrq6IXBxzyvvKAcVM+VYOkoiiIpkOLjJI/+uGkiQ2ae19esSWNmX7/55x
+         HLE1SQmDAHBajHl1h3Zvpge1o1RT3GQVhMVRodlQW3VO5iGEcuqlvLsRnqh6mH1AdUYj
+         vagO0XSwWvclpM/77+sVeGD6j9xh08Wsz+91K3i9dj20TbwbY4DX0Qn994aJVc5XwUVK
+         M0o3YAn9eyqIVMFO923iGZfMpmTUdxTDGhleGVq4wnNC+1pZDSMSTPfdFATABJHIQwPx
+         dthoumPisb59N7MwkZXcwAHOOnNbLsLCO1EA7iiaSQ4Wto8XAePzLitKlTn3lj43zuDR
+         rKWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=miTpPmRVhDhvijKW/x5oMYTRNn8wvs0mLO5J0nr2084=;
+        b=cE+Iqj8mbqmPOjaLalxZPiHA/UkdTQlQ3ZDOCpXFjH+66ZDWzx7sJ2fbHWwv/KQ6Yv
+         RnsNQzk+hx4MNgEtggPwnH5wCI4BWqyrBJDEpcI1UUXxvh1S9L7zNMJLYTMfqmluNqqw
+         B/ykSMZZVE7fKcGZOJjhqdHwUM/Suhfq9HF2YrI1rN5DubldU+y+5z1o31AZWym1kL0b
+         0LFPpY4X7Ya1pFQzBnkL9u8XC1qtAB2E5h2Xr9DBsblJeq/Q5mMZ8gEmBpnL75pXZ083
+         W3bGPrZLtBNRt5yTejNxJLD4vxv134SNKvlnqf0vQqSeythhU1pESQiQNUvlHKuPCxS1
+         4Wcg==
+X-Gm-Message-State: AGi0PubhKxezHTYEP5/vNFMJCEZjBy2pSOUXK/DGKKOJM+GjrXVDufZj
+        CL8TqpqiESTP0zu1VgA27VHc2efWkRUueJtJSHM=
+X-Google-Smtp-Source: APiQypIlLep4ObkUpbnYLb9374cQ+lM33eeD4kNIbr7Zh/DtnITfyepbEUmDzUasVC3tnJvdqsT5XjWr66ibsXXlM/s=
+X-Received: by 2002:a5d:498d:: with SMTP id r13mr14736737wrq.374.1586790755179;
+ Mon, 13 Apr 2020 08:12:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200409012815.22309-1-mail@aurabindo.in>
+In-Reply-To: <20200409012815.22309-1-mail@aurabindo.in>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 13 Apr 2020 11:12:23 -0400
+Message-ID: <CADnq5_O+xg1Lro4UP3+_4GdkDQk-HzJaXMWzWWSn0ZiYG9Xt7A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] drm/amd/amdgpu: Add print format prefix
+To:     Aurabindo Pillai <mail@aurabindo.in>
+Cc:     Christian Koenig <christian.koenig@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file seems to be for R9A06G032 only. So replace reference to
-R9A09G032 by R9A06G032 to avoid confusion.
+On Wed, Apr 8, 2020 at 9:42 PM Aurabindo Pillai <mail@aurabindo.in> wrote:
+>
+> Changes in v2
+>
+> * Add dev_fmt format prefix
+> * Removed hardcoded module names in pr_* and dev_* prints
+>
+> Aurabindo Pillai (3):
+>   drm/amd/amdgpu: add prefix for pr_* prints
+>   drm/amd/amdgpu: add print prefix for dev_* variants
+>   drm/amd/amdgpu: remove hardcoded module name in prints
 
-AFAIK, R9A09G032 does'nt exist.
+Applied.  thanks!
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/clk/renesas/r9a06g032-clocks.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Alex
 
-diff --git a/drivers/clk/renesas/r9a06g032-clocks.c b/drivers/clk/renesas/r9a06g032-clocks.c
-index 1907ee195a08..d900f6bf53d0 100644
---- a/drivers/clk/renesas/r9a06g032-clocks.c
-+++ b/drivers/clk/renesas/r9a06g032-clocks.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * R9A09G032 clock driver
-+ * R9A06G032 clock driver
-  *
-  * Copyright (C) 2018 Renesas Electronics Europe Limited
-  *
-@@ -338,8 +338,8 @@ clk_rdesc_get(struct r9a06g032_priv *clocks,
- }
- 
- /*
-- * This implements the R9A09G032 clock gate 'driver'. We cannot use the system's
-- * clock gate framework as the gates on the R9A09G032 have a special enabling
-+ * This implements the R9A06G032 clock gate 'driver'. We cannot use the system's
-+ * clock gate framework as the gates on the R9A06G032 have a special enabling
-  * sequence, therefore we use this little proxy.
-  */
- struct r9a06g032_clk_gate {
--- 
-2.20.1
-
+>
+>  drivers/gpu/drm/amd/amdgpu/amdgpu.h              | 12 ++++++++++++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c |  6 +++---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c       |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c          |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c            |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c            |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c            |  2 +-
+>  7 files changed, 21 insertions(+), 9 deletions(-)
+>
+> --
+> 2.26.0
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
