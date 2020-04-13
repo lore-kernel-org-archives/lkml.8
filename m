@@ -2,154 +2,114 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99046C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D3CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741DF2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653632072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgn2+OLL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFN6Q/Qg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgDMPRm (ORCPT
+        id S1729924AbgDMPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50412 "EHLO
+        Mon, 13 Apr 2020 11:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgDMPRj (ORCPT
+        with ESMTP id S1729618AbgDMPSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:17:39 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E50CC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:17:39 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a81so10314761wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 08:17:39 -0700 (PDT)
+        Mon, 13 Apr 2020 11:18:05 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728EAC0A3BDC;
+        Mon, 13 Apr 2020 08:18:05 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u15so4549030ljd.3;
+        Mon, 13 Apr 2020 08:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6/tAY7sG8rHBuZ3JGryCCYr3n1OexDLH2uk6dgjjXOE=;
-        b=fgn2+OLLH1broPdcc/n91zxjUbINV+YKFu4617b9ChwUBY6ku2GPh+UQi2KCrydpZB
-         uRIvV/qTyrtYa4cQ1idlbrH6Ip/SgQn/5Y25JeGcMcFhD1k1oiCapG75nbieQLXwAUUr
-         36RAl2O6RlM7irJ5YAyVp/c7cE/Om8fPq6/CpLkO9hWs4fKKJGfNyOoDc7eeCqHYVmhM
-         R664MVppEBLiwZ38BGlII8hlYSRFZhcrqifVX4of3ZzyovydCJbhejctPy8lgwtkC6gE
-         197raXN3Ci+GKsXKp+qGBwiDY4f0ymNPhfnp9JGw87hsWJRfi6jG44I6/Q2r9JM6pl96
-         HRmA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GdKC161+a5UeWpGOznjCxdPHuVYqeTMUmqQiY/jkoXQ=;
+        b=TFN6Q/Qgniz7+QYsjrimIJAqCoe+peI4ByNh8FPtgWl+IxMFdtouuBQ3DdCfB3D8PN
+         oFoEqruP2xgPxXpyoHNn7qkhyEfX/knBklwQHC5cEDT3c8wCkZh5Ant45cCoCf7L+MnY
+         H9jUYnfTNe6PyAgtlZ+i/fuxbnZVf4Dbs1zi4RBwYbjaTw5yYEp0ctKxn78YOe65eoPN
+         rx8ERcL3GJNubbv3oJRiJylWBD6nwN0AzKmhs876f815+Z0TA5E5rUylFvQ6uRI0yiFm
+         WPyD5sUC/vewP9l6d/8A9aE7jafPavBULRPl6+/Xcp/ROcHhElXempcZia6FYjyLEN61
+         iDoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6/tAY7sG8rHBuZ3JGryCCYr3n1OexDLH2uk6dgjjXOE=;
-        b=MHiKWJ7q+OCdWq6RQCLSaqioo8Dlf8wYwKPq2Co1RiPoQtgaEeoGGFjLsaQHM3dv7K
-         hmG5UdcMQnijxZoGXw37RyfNgh3rhwvSwKreo8eIewOkpVAeuBrTZm1Ks+6l3QggP32y
-         PmoID3gJkH6Cc/VtYuBRYhIpq1jYJyk3Z4P/d7AjNtUNWTnrBYFE44CsAGVT7o+i/CMP
-         NSrus6Zv4jUReZZnk2tXbjjJUaWbli0OZ6z6Od8BQ99/k4asHQ+q7Dd1cQ5D2BSfElB/
-         3r+CM3UnBOSf5WgPhUCCPXqX1rrwWQ6RqGIne+FqIraYwioOZ+a1n6Q+oxgkU7z77/e1
-         Sikg==
-X-Gm-Message-State: AGi0Pub/tx1ADcJFBUHSTNXOVxpb8UD899TsSjR8TJ0Gjxh5RBbtzcsg
-        fz3+4itFP9kVlH8eAXBD15ml47OpjTBUsLI1Gz7uLg==
-X-Google-Smtp-Source: APiQypJNiuhBu6h6TpUjqMxFco+WMWQExJxvPAtxUopumix9qPR3H5TS8oFTUN/GexIoDeqyEf4Iuan45+cHdKuBg7Y=
-X-Received: by 2002:a1c:6344:: with SMTP id x65mr19446547wmb.56.1586791058036;
- Mon, 13 Apr 2020 08:17:38 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GdKC161+a5UeWpGOznjCxdPHuVYqeTMUmqQiY/jkoXQ=;
+        b=OqQxRhw8KrDurPNG806ifDojrf3ea2/cBx4r9mb714hzMQlTzy1xUxgmLO3hV3ZgKC
+         KcVStm+r4W233qsXsaYw8nKSylNphoWhZFYY2GsyezDGenOG0Ukx8scM8rhAdS9jqlbW
+         xu0flqlLuCTpO40OOze2VQD2KOoFzPjkGlWjFd8mDBiZW97cFhmvG7Cm+8DkEnn0gItW
+         uCr6796aXbV9WsS57jOF46LDT619aaaaAyTOCNZldgOwjxXAuY7Bd9/imSdjL4SWyhhW
+         jFYhX3xNRFmcQGSQonS7xAu7w7Qi5YH2VcDYnwmFsHJLBhl41m0Pm76ROqLUhA59fVPl
+         1aEA==
+X-Gm-Message-State: AGi0PuZgnnIWZdX0accSqktqutm6EVcEdjaAXEWjuEaAHJO/kyV5JkkS
+        5920Gch3ORFL2ETbDrUD3YjlvtLX
+X-Google-Smtp-Source: APiQypKxQ/EghHVYpg1HOEBLhbZ8HlHRew/LfP6ed1H+YL6pEvyGOKxv7C+tCEfvFdT33UG6L9Hk1g==
+X-Received: by 2002:a05:651c:120e:: with SMTP id i14mr7500365lja.12.1586791083641;
+        Mon, 13 Apr 2020 08:18:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id 64sm8427382lfh.32.2020.04.13.08.18.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 08:18:02 -0700 (PDT)
+Subject: Re: [PATCH v2 17/22] memory: tegra30-emc: Register as interconnect
+ provider
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+References: <20200330010904.27643-1-digetx@gmail.com>
+ <20200330010904.27643-18-digetx@gmail.com>
+ <d8e39d8b-b3f3-4a30-cb5a-67fcbe18a957@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8d072775-aec8-5a55-8fd7-7166e2a34c95@gmail.com>
+Date:   Mon, 13 Apr 2020 18:18:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200413143300.23244-1-yanaijie@huawei.com>
-In-Reply-To: <20200413143300.23244-1-yanaijie@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 13 Apr 2020 11:17:26 -0400
-Message-ID: <CADnq5_NY20m3Y4C3J6jhuzHC-pXj0pSYLgOCVKxrAOA0n=txQw@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: remove defined but not used variables in ci_dpm.c
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d8e39d8b-b3f3-4a30-cb5a-67fcbe18a957@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+13.04.2020 15:44, Georgi Djakov пишет:
+...
+> All the above seems like a duplicate of what we already have in the previous
+> patch for tegra20-emc. Can we have a single driver for both? Maybe extract the
+> above as a separate interconnect provider driver.
 
-Alex
+Perhaps we could do it later on, once the work on the drivers will
+settle down. I think it should be okay to have some minor duplication
+for now, we already have some other small things duplicated in these
+drivers.
 
-On Mon, Apr 13, 2020 at 10:06 AM Jason Yan <yanaijie@huawei.com> wrote:
->
-> Fix the following gcc warning:
->
-> drivers/gpu/drm/radeon/ci_dpm.c:82:36: warning: =E2=80=98defaults_saturn_=
-pro=E2=80=99
-> defined but not used [-Wunused-const-variable=3D]
->  static const struct ci_pt_defaults defaults_saturn_pro =3D
->                                     ^~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/radeon/ci_dpm.c:68:36: warning: =E2=80=98defaults_bonaire=
-_pro=E2=80=99
-> defined but not used [-Wunused-const-variable=3D]
->  static const struct ci_pt_defaults defaults_bonaire_pro =3D
->                                     ^~~~~~~~~~~~~~~~~~~~
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/gpu/drm/radeon/ci_dpm.c | 14 --------------
->  1 file changed, 14 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_=
-dpm.c
-> index a9257bed3484..134aa2b01f90 100644
-> --- a/drivers/gpu/drm/radeon/ci_dpm.c
-> +++ b/drivers/gpu/drm/radeon/ci_dpm.c
-> @@ -65,13 +65,6 @@ static const struct ci_pt_defaults defaults_bonaire_xt=
- =3D
->         { 0x17C, 0x172, 0x180, 0x1BC, 0x1B3, 0x1BD, 0x206, 0x200, 0x203, =
-0x25D, 0x25A, 0x255, 0x2C3, 0x2C5, 0x2B4 }
->  };
->
-> -static const struct ci_pt_defaults defaults_bonaire_pro =3D
-> -{
-> -       1, 0xF, 0xFD, 0x19, 5, 45, 0, 0x65062,
-> -       { 0x8C,  0x23F, 0x244, 0xA6,  0x83,  0x85,  0x86,  0x86,  0x83,  =
-0xDB,  0xDB,  0xDA,  0x67,  0x60,  0x5F  },
-> -       { 0x187, 0x193, 0x193, 0x1C7, 0x1D1, 0x1D1, 0x210, 0x219, 0x219, =
-0x266, 0x26C, 0x26C, 0x2C9, 0x2CB, 0x2CB }
-> -};
-> -
->  static const struct ci_pt_defaults defaults_saturn_xt =3D
->  {
->         1, 0xF, 0xFD, 0x19, 5, 55, 0, 0x70000,
-> @@ -79,13 +72,6 @@ static const struct ci_pt_defaults defaults_saturn_xt =
-=3D
->         { 0x187, 0x187, 0x187, 0x1C7, 0x1C7, 0x1C7, 0x210, 0x210, 0x210, =
-0x266, 0x266, 0x266, 0x2C9, 0x2C9, 0x2C9 }
->  };
->
-> -static const struct ci_pt_defaults defaults_saturn_pro =3D
-> -{
-> -       1, 0xF, 0xFD, 0x19, 5, 55, 0, 0x30000,
-> -       { 0x96,  0x21D, 0x23B, 0xA1,  0x85,  0x87,  0x83,  0x84,  0x81,  =
-0xE6,  0xE6,  0xE6,  0x71,  0x6A,  0x6A  },
-> -       { 0x193, 0x19E, 0x19E, 0x1D2, 0x1DC, 0x1DC, 0x21A, 0x223, 0x223, =
-0x26E, 0x27E, 0x274, 0x2CF, 0x2D2, 0x2D2 }
-> -};
-> -
->  static const struct ci_pt_config_reg didt_config_ci[] =3D
->  {
->         { 0x10, 0x000000ff, 0, 0x0, CISLANDS_CONFIGREG_DIDT_IND },
-> --
-> 2.21.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>>  static int tegra_emc_probe(struct platform_device *pdev)
+>>  {
+>>  	struct platform_device *mc;
+>> @@ -1344,6 +1452,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
+>>  	platform_set_drvdata(pdev, emc);
+>>  	tegra_emc_debugfs_init(emc);
+>>  
+>> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
+>> +		err = tegra_emc_interconnect_init(emc);
+> 
+> How about registering a platform device that will use the same driver to handle
+> the interconnect functionality for both tegra20 and tegra30?
+
+It should be possible. But it also should be possible to make all these
+drivers modular, which I'm going to try out.
