@@ -2,251 +2,198 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FC7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801BAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A580620678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570A8206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 11:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PNwKUYk0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDtG40OM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgDMLgy (ORCPT
+        id S1729109AbgDMLjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 07:36:54 -0400
-Received: from mail-mw2nam12on2059.outbound.protection.outlook.com ([40.107.244.59]:6049
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728313AbgDMLgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 07:36:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xmgq4QjKrBqgurlMqk9HEta9HG6ptuUfCEbJeoAKpwkUsu/bFX4nyjbL87Z7MkDeoFsNaqvKznAoJKBF5mYCHUh8hovEBNwmRCW3A+zpz7vjWfX6wpvnpn7C5gkhjfcES6/F9QFEeH0Oyj3MyMy0UOsv3VTmw+35r3XfvITUDA/PXvpY5F1wKPjpjJjBmsA7zRl0K0fKK32zbDu/OM7xkq/gqMb3BrhCGtAyHiocx32HU1YB5w0+5KONnyDMOBh8RrhcJe+2TtOgiankcNjoyd1hU2Rph5mqBhXAfHN64aUobQo6XRIDKfbaxBUT9TMEo1MyJHKkNv3YU0/Ss4TnKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qeu9ibXc8CccpEbwOpyh5Cip4IXCP1g6qHpjdYYNqLc=;
- b=VpVyJrtVui9YCpCVj7grtUwYrsVEgDpoLAi/uGSQuZ4CLHPcaq6cTxcA1sxbMhrATNJib1wbBtY92FXtja3jeFK9YoFuvrPybl33QvXETgiZFfBWGSeDgQTJG4cJrVnOjNBQvMuOGaEmuzHc0AyZ8lTQpShMHEYLvt7cbfUaAaPsWVDZMTREB5HZrtnuf74XpOd4ylDXjfi0Qomsyh9LFx/P+eTlPuNm/cf8OVEHS/C+umAHuBrwES62OBelZrjxuKkgMWQnXOndN6NKtfSesUuCNJHVUp9rnBA5F+g6xtwE1/haI+rygfvEAkJxmTTSe+AsbVs3I68aY+l1mdPxzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 13 Apr 2020 07:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgDMLjm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 07:39:42 -0400
+X-Greylist: delayed 345 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 07:39:42 EDT
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8616C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:33:53 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i19so8944546ioh.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 04:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qeu9ibXc8CccpEbwOpyh5Cip4IXCP1g6qHpjdYYNqLc=;
- b=PNwKUYk0osS8yI/hhFbqS/e28M1Cw0SiivcQmtNIUZ/L3KKfb+q+mAvsnxzjUURqwTaPeDV5RlKrFeyTPcZpJhlDKVeTHO8bkeEvSKFd7rSiHQR8VqGdPm5kl05Ln41F3PtIZuxo0KZ10GNKsVspOPjmMLYm/CFL8vluf5+vsXw=
-Received: from DM6PR12MB3721.namprd12.prod.outlook.com (2603:10b6:5:1c2::18)
- by DM6PR12MB3034.namprd12.prod.outlook.com (2603:10b6:5:3e::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Mon, 13 Apr
- 2020 11:36:48 +0000
-Received: from DM6PR12MB3721.namprd12.prod.outlook.com
- ([fe80::f8bd:4765:eb5b:a7a5]) by DM6PR12MB3721.namprd12.prod.outlook.com
- ([fe80::f8bd:4765:eb5b:a7a5%2]) with mapi id 15.20.2900.028; Mon, 13 Apr 2020
- 11:36:48 +0000
-From:   "Russell, Kent" <Kent.Russell@amd.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
-Subject: RE: BUG: kernel NULL pointer dereference, address: 0000000000000026
- after switching to 5.7 kernel
-Thread-Topic: BUG: kernel NULL pointer dereference, address: 0000000000000026
- after switching to 5.7 kernel
-Thread-Index: AQHWD3HLXM/9NgQNd0a0XsOuOKdRiqhzsBoAgANAbPA=
-Date:   Mon, 13 Apr 2020 11:36:48 +0000
-Message-ID: <DM6PR12MB37217D5D8593BDA0C2FF2DC385DD0@DM6PR12MB3721.namprd12.prod.outlook.com>
-References: <CABXGCsN=SNp7Ub3KHmsGrg+5R1g13HMea2+Jw+hTer3g74q21Q@mail.gmail.com>
- <4a9ae285-f126-c83b-b55f-36bd7a4403a0@gmail.com>
-In-Reply-To: <4a9ae285-f126-c83b-b55f-36bd7a4403a0@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;
- MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-04-13T11:36:46Z;
- MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;
- MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal Use Only -
- Unrestricted;
- MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=5587be65-f313-4dcf-9d31-00003ec6ac42;
- MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=1
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_enabled: true
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_setdate: 2020-04-13T11:36:46Z
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_method: Standard
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_name: Internal Use Only -
- Unrestricted
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_actionid: 19af52f7-611a-45ad-9f26-0000b4c35179
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_contentbits: 0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Kent.Russell@amd.com; 
-x-originating-ip: [165.204.54.211]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4f29cbbf-f9e1-437a-ab5f-08d7df9ef39e
-x-ms-traffictypediagnostic: DM6PR12MB3034:|DM6PR12MB3034:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3034A0B169DA721604AB272C85DD0@DM6PR12MB3034.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 037291602B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3721.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(136003)(376002)(39860400002)(346002)(396003)(6636002)(55016002)(9686003)(5660300002)(66556008)(76116006)(66946007)(66446008)(66476007)(52536014)(64756008)(71200400001)(26005)(186003)(81156014)(8676002)(8936002)(33656002)(53546011)(6506007)(966005)(83080400001)(66574012)(478600001)(110136005)(45080400002)(2906002)(86362001)(316002)(7696005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0JLsiEQ69oNu2JbOIMLBGm9RDFeFpDLKM7MsWUlXR3v0wO6RIr/9bM8vBbK0UzhPvXL2weOFrBIWJZDhaUkKkGEfXdRXFkrLPw/E8L8H5k0S0hXBa+WjYhLulehQnWl62U+bXPi4SBXjuN6o+C8WjC8geW0ybt6cAUt8kxFtN/LveVKoIyhi+JAtONz3mnvGQHzAbTd6CNTSw+uRCtZljeOMtuOALPgDgcfAGNliX17MHx7b6yPm0hIlIvP9/D23FKEBUvYfBmB/f0IlY1k3Fl3dQrWFdWxftUEtkrZWpvX4Fkqeym+pC6wVf0x1Ojp+9pzFtgN4GR42sT5mFq7n0klxV2qI4cXmuuFgPP8PXPD0KqcuR7lSkT9pAkLojn5bJT9Dwd/2flBbETUBl1dwbicsdxs2NrNtyP0WDSVE+6Iv/acyxZ5YfZOs4Ws3X+B4lsh0GMXxFA1ogfZPnnHRTRp8CKyDbfPrH2X3yJ/LnNmXwxtnA4Q0W84kYG67BQg7fAYnsNpd2k4xJ6tcRywdjA==
-x-ms-exchange-antispam-messagedata: PNJ8lwH320hv8OUnmfrnEezbJBsd+4SnDTFffoZ4UFSaSipPuPALGqeRM5FRtSHvavSI4oC3DLf0mADuYRTUtqISER/6NnXaPGuQEuU43vA0CRLBH34+3rvmP8efNvjXXiKMrZ8mBpBG0coRrbh3oQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5U6Bj9i0gIdPLwBp8umxYd6pZYRi0c0EHgLRbpxB/0g=;
+        b=GDtG40OM3G/EoT7QXGL3chbN9AWZSWjjq58w7Ef6mKvOI4jF2oYjTEIUk0ru20aldK
+         /lSfgXoAfrTHq2/Zo9Q7f/ysCmGmtaOqrTu7fMAFtiOLwN/fqMu4qk55reZNLOvr8Rj1
+         qJaLn/09uXRJQVNh5TV8BxPepfyJfHB5lmzbYaZFvfgJa9gTI/RlP+z2USb4mT764Cea
+         CdmShFIkekf/BGQ7gKW2h5UxBdaSvPcOnFIJVNJCaXR1/8/vsgMlUxzOCxIFQI6a51YL
+         2UoCHKs5jI0D6Z6rluRrFAZaEZwt1F6TbqORC9VlcQoqqHm7ck19SyxR07sAflaAX9bq
+         Kc/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5U6Bj9i0gIdPLwBp8umxYd6pZYRi0c0EHgLRbpxB/0g=;
+        b=n14yMkf7B0uFgDSEWoWVIBM/K0aPhx2QJvkzWekewLJpDWx5p+MG/RE0Ddrgz4kqfS
+         WLMz3lfkcuoghDPtwSvH4thcz0hr5+EHwRq+GWgoBIkhOkAiMLDuUO0GqdmQIEOOx0wg
+         YxX0TirLjiZEnR90ldhAW/MUYBsD8Q/cy8DA6u+p6e9DZ82Z6KNLM0Nf9KRmC2nhp3r2
+         dWEU+xbPwLXG54qRtkcSEU+NpJLgjL+476KwOh7LseEzHXQyd/702C2ZR+e7UQqzOTuw
+         IvX69FcK4z/7N1mcXHSMdEu6aNSFqZ1dJV2XoUxYGou/PlnnTq70KbpzQKAn5oVa4Rig
+         yrhg==
+X-Gm-Message-State: AGi0PubNYT15jqiKcV0nvMRMFBzVg6Qtub0z/F2aD5RfucQng2d1XhGr
+        jnvJ2PhktEbXHKV44rUwiVnb9NoOsluX9WTR6js=
+X-Google-Smtp-Source: APiQypJzjdhs6nLAwZfjeWYqnN0hdrSRFvDI0iSrW/3hMiqbzXHO6BNDEmKxFnIy8YsoiHy2E7nMG3suuYfOou9mllE=
+X-Received: by 2002:a02:6a5c:: with SMTP id m28mr15207535jaf.144.1586777632939;
+ Mon, 13 Apr 2020 04:33:52 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f29cbbf-f9e1-437a-ab5f-08d7df9ef39e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2020 11:36:48.0443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KRWzAN5k7rsB1j6ZlIrkA85VCBET9Zpw7iTnpQJ9pYVGV8loO1Q1+MD+JFbzQnvm/JBmyLt6m7ewmgAYuMb8Bg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3034
+References: <20200411200632.4045-1-peron.clem@gmail.com> <20200411200632.4045-2-peron.clem@gmail.com>
+In-Reply-To: <20200411200632.4045-2-peron.clem@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 13 Apr 2020 13:33:41 +0200
+Message-ID: <CAJiuCcfOOwxSQkPg7MicKQovweSNu-VMpK3Ek4tJd1z4Jv6Jnw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
+To:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEludGVybmFsIERpc3RyaWJ1dGlvbiBPbmx5XQ0KDQpZ
-b3UgY2FuIGFkZCBhIFJldmlld2VkLUJ5IGFuZCBUZXN0ZWQtQnkgZm9yIG1lIG9uIHRoaXMgcGF0
-Y2gsIHVubGVzcyB5b3Ugd2FudCBtZSB0byBzZW5kIGl0IG91dCBpbnN0ZWFkLCB0aGVuIHlvdSBj
-YW4gcmV2aWV3IGl0Lg0KDQogS2VudA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-IEZyb206IGFtZC1nZnggPGFtZC1nZngtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5vcmc+IE9u
-IEJlaGFsZiBPZiANCj4gQ2hyaXN0aWFuIEvDtm5pZw0KPiBTZW50OiBTYXR1cmRheSwgQXByaWwg
-MTEsIDIwMjAgNTo1NyBBTQ0KPiBUbzogTWlraGFpbCBHYXZyaWxvdiA8bWlraGFpbC52LmdhdnJp
-bG92QGdtYWlsLmNvbT47IGFtZC1nZnggbGlzdCANCj4gPGFtZC0gZ2Z4QGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZz47IGRyaS1kZXZlbCANCj4gPGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+
-OyBMaW51eCBMaXN0IEtlcm5lbCBNYWlsaW5nIA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZz47IEdyb2R6b3Zza3ksIEFuZHJleSANCj4gPEFuZHJleS5Hcm9kem92c2t5QGFtZC5jb20+
-OyBSdXNzZWxsLCBLZW50IDxLZW50LlJ1c3NlbGxAYW1kLmNvbT4NCj4gU3ViamVjdDogUmU6IEJV
-Rzoga2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSwgYWRkcmVzczoNCj4gMDAwMDAwMDAw
-MDAwMDAyNiBhZnRlciBzd2l0Y2hpbmcgdG8gNS43IGtlcm5lbA0KPiANCj4gWWVhaCwgdGhhdCBp
-cyBhIGtub3duIGlzc3VlLg0KPiANCj4gWW91IGNvdWxkIHRyeSB0aGUgYXR0YWNoZWQgcGF0Y2gs
-IGJ1dCBwbGVhc2UgYmUgYXdhcmUgdGhhdCBpdCBpcyBub3QgDQo+IGV2ZW4gY29tcGlsZSB0ZXN0
-ZWQgYmVjYXVzZSBvZiB0aGUgRWFzdGVyIGhvbGlkYXlzIGhlcmUuDQo+IA0KPiBUaGFua3MsDQo+
-IENocmlzdGlhbi4NCj4gDQo+IEFtIDEwLjA0LjIwIHVtIDIxOjUxIHNjaHJpZWIgTWlraGFpbCBH
-YXZyaWxvdjoNCj4gPiBIaSBmb2xrcy4NCj4gPiBBZnRlciB1cGdyYWRlIGtlcm5lbCB0byA1Ljcg
-SSBzZWUgZXZlcnkgYm9vdCBpbiBrZXJuZWwgbG9nIGZvbGxvd2luZyANCj4gPiBlcnJvciBtZXNz
-YWdlczoNCj4gPg0KPiA+IFsgICAgMi41Njk1MTNdIFtkcm1dIEZvdW5kIFVWRCBmaXJtd2FyZSBF
-TkM6IDEuMiBERUM6IC40MyBGYW1pbHkgSUQ6IDE5DQo+ID4gWyAgICAyLjU2OTUzOF0gW2RybV0g
-UFNQIGxvYWRpbmcgVVZEIGZpcm13YXJlDQo+ID4gWyAgICAyLjU3MDAzOF0gQlVHOiBrZXJuZWwg
-TlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBhZGRyZXNzOg0KPiAwMDAwMDAwMDAwMDAwMDI2DQo+
-ID4gWyAgICAyLjU3MDA0NV0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNzIGluIGtlcm5lbCBt
-b2RlDQo+ID4gWyAgICAyLjU3MDA1MF0gI1BGOiBlcnJvcl9jb2RlKDB4MDAwMCkgLSBub3QtcHJl
-c2VudCBwYWdlDQo+ID4gWyAgICAyLjU3MDA1NV0gUEdEIDAgUDREIDANCj4gPiBbICAgIDIuNTcw
-MDYwXSBPb3BzOiAwMDAwIFsjMV0gU01QIE5PUFRJDQo+ID4gWyAgICAyLjU3MDA2NV0gQ1BVOiA1
-IFBJRDogNjY3IENvbW06IHV2ZF9lbmNfMS4xIE5vdCB0YWludGVkDQo+ID4gNS43LjAtMC5yYzAu
-Z2l0Ni4xLjIuZmMzMy54ODZfNjQgIzENCj4gPiBbICAgIDIuNTcwMDcyXSBIYXJkd2FyZSBuYW1l
-OiBTeXN0ZW0gbWFudWZhY3R1cmVyIFN5c3RlbSBQcm9kdWN0DQo+ID4gTmFtZS9ST0cgU1RSSVgg
-WDU3MC1JIEdBTUlORywgQklPUyAxNDA1IDExLzE5LzIwMTkNCj4gPiBbICAgIDIuNTcwMDg1XSBS
-SVA6IDAwMTA6X19rdGhyZWFkX3Nob3VsZF9wYXJrKzB4NS8weDMwDQo+ID4gWyAgICAyLjU3MDA5
-MF0gQ29kZTogMDAgZTkgZmUgZmUgZmYgZmYgZTggY2EgM2EgMDggMDAgZTkgNDkgZmUgZmYgZmYN
-Cj4gPiA0OCA4OSBkZiBlOCBkZCAzOCAwOCAwMCA4NCBjMCAwZiA4NCA2YSBmZiBmZiBmZiBlOSBh
-NiBmZSBmZiBmZiAwZiAxZg0KPiA+IDQ0IDAwIDAwIDxmNj4gNDcgMjYgMjAgNzQgMTIgNDggOGIg
-ODcgODggMDkgMDAgMDAgNDggOGIgMDAgNDggYzEgZTggDQo+ID4gMDINCj4gPiA4MyBlMA0KPiA+
-IFsgICAgMi41NzAxMDNdIFJTUDogMDAxODpmZmZmYWQ4MTQxNzIzZTUwIEVGTEFHUzogMDAwMTAy
-NDYNCj4gPiBbICAgIDIuNTcwMTA3XSBSQVg6IDdmZmZmZmZmZmZmZmZmZmYgUkJYOiBmZmZmOGE4
-ZDFkMTE2ZWQ4IFJDWDoNCj4gMDAwMDAwMDAwMDAwMDAwMA0KPiA+IFsgICAgMi41NzAxMTJdIFJE
-WDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IDAwMDAwMDAwZmZmZmZmZmYgUkRJOg0KPiAwMDAwMDAw
-MDAwMDAwMDAwDQo+ID4gWyAgICAyLjU3MDExNl0gUkJQOiBmZmZmOGE4ZDI4YzExMzAwIFIwODog
-MDAwMDAwMDAwMDAwMDAwMCBSMDk6DQo+IDAwMDAwMDAwMDAwMDAwMDANCj4gPiBbICAgIDIuNTcw
-MTIwXSBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMDAwIFIxMjoNCj4g
-ZmZmZjhhOGQxZDE1MmU0MA0KPiA+IFsgICAgMi41NzAxMjVdIFIxMzogZmZmZjhhOGQxZDExNzI4
-MCBSMTQ6IGZmZmY4YThkMWQxMTZlZDggUjE1Og0KPiBmZmZmOGE4ZDFjYTY4MDAwDQo+ID4gWyAg
-ICAyLjU3MDEzMV0gRlM6ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY4YThkM2FhMDAw
-MDAoMDAwMCkNCj4gPiBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQo+ID4gWyAgICAyLjU3MDEzN10g
-Q1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPiA+IFsg
-ICAgMi41NzAxNDJdIENSMjogMDAwMDAwMDAwMDAwMDAyNiBDUjM6IDAwMDAwMDA3ZTNkYzYwMDAg
-Q1I0Og0KPiAwMDAwMDAwMDAwMzQwNmUwDQo+ID4gWyAgICAyLjU3MDE0N10gQ2FsbCBUcmFjZToN
-Cj4gPiBbICAgIDIuNTcwMTU3XSAgZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYisweDQyLzB4MTMw
-IFtncHVfc2NoZWRdDQo+ID4gWyAgICAyLjU3MDE2Nl0gIGRybV9zY2hlZF9tYWluKzB4NmYvMHg1
-MzAgW2dwdV9zY2hlZF0NCj4gPiBbICAgIDIuNTcwMTczXSAgPyBsb2NrZGVwX2hhcmRpcnFzX29u
-KzB4MTFlLzB4MWIwDQo+ID4gWyAgICAyLjU3MDE3OV0gID8gZHJtX3NjaGVkX2dldF9jbGVhbnVw
-X2pvYisweDEzMC8weDEzMCBbZ3B1X3NjaGVkXQ0KPiA+IFsgICAgMi41NzAxODVdICBrdGhyZWFk
-KzB4MTMxLzB4MTUwDQo+ID4gWyAgICAyLjU3MDE4OV0gID8gX19rdGhyZWFkX2JpbmRfbWFzaysw
-eDYwLzB4NjANCj4gPiBbICAgIDIuNTcwMTk2XSAgcmV0X2Zyb21fZm9yaysweDI3LzB4NTANCj4g
-PiBbICAgIDIuNTcwMjAzXSBNb2R1bGVzIGxpbmtlZCBpbjogZmplcygtKSBhbWRncHUoKykgYW1k
-X2lvbW11X3YyDQo+ID4gZ3B1X3NjaGVkIHR0bSBkcm1fa21zX2hlbHBlciBkcm0gY3JjMzJjX2lu
-dGVsIGlnYiBudm1lIG52bWVfY29yZSBkY2EgDQo+ID4gaTJjX2FsZ29fYml0IHdtaSBwaW5jdHJs
-X2FtZCBicl9uZXRmaWx0ZXIgYnJpZGdlIHN0cCBsbGMgZnVzZQ0KPiA+IFsgICAgMi41NzAyMjNd
-IENSMjogMDAwMDAwMDAwMDAwMDAyNg0KPiA+IFsgICAgMi41NzAyMjhdIC0tLVsgZW5kIHRyYWNl
-IDgwYzI1ZDMyNmUxZTBkN2MgXS0tLQ0KPiA+IFsgICAgMi41NzAyMzNdIFJJUDogMDAxMDpfX2t0
-aHJlYWRfc2hvdWxkX3BhcmsrMHg1LzB4MzANCj4gPiBbICAgIDIuNTcwMjM4XSBDb2RlOiAwMCBl
-OSBmZSBmZSBmZiBmZiBlOCBjYSAzYSAwOCAwMCBlOSA0OSBmZSBmZiBmZg0KPiA+IDQ4IDg5IGRm
-IGU4IGRkIDM4IDA4IDAwIDg0IGMwIDBmIDg0IDZhIGZmIGZmIGZmIGU5IGE2IGZlIGZmIGZmIDBm
-IDFmDQo+ID4gNDQgMDAgMDAgPGY2PiA0NyAyNiAyMCA3NCAxMiA0OCA4YiA4NyA4OCAwOSAwMCAw
-MCA0OCA4YiAwMCA0OCBjMSBlOCANCj4gPiAwMg0KPiA+IDgzIGUwDQo+ID4gWyAgICAyLjU3MDI1
-MF0gUlNQOiAwMDE4OmZmZmZhZDgxNDE3MjNlNTAgRUZMQUdTOiAwMDAxMDI0Ng0KPiA+IFsgICAg
-Mi41NzAyNTVdIFJBWDogN2ZmZmZmZmZmZmZmZmZmZiBSQlg6IGZmZmY4YThkMWQxMTZlZDggUkNY
-Og0KPiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gWyAgICAyLjU3MDI2MF0gUkRYOiAwMDAwMDAwMDAw
-MDAwMDAwIFJTSTogMDAwMDAwMDBmZmZmZmZmZiBSREk6DQo+IDAwMDAwMDAwMDAwMDAwMDANCj4g
-PiBbICAgIDIuNTcwMjY1XSBSQlA6IGZmZmY4YThkMjhjMTEzMDAgUjA4OiAwMDAwMDAwMDAwMDAw
-MDAwIFIwOToNCj4gMDAwMDAwMDAwMDAwMDAwMA0KPiA+IFsgICAgMi41NzAyNzFdIFIxMDogMDAw
-MDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAwMDAgUjEyOg0KPiBmZmZmOGE4ZDFkMTUy
-ZTQwDQo+ID4gWyAgICAyLjU3MDI3Nl0gUjEzOiBmZmZmOGE4ZDFkMTE3MjgwIFIxNDogZmZmZjhh
-OGQxZDExNmVkOCBSMTU6DQo+IGZmZmY4YThkMWNhNjgwMDANCj4gPiBbICAgIDIuNTcwMjgxXSBG
-UzogIDAwMDAwMDAwMDAwMDAwMDAoMDAwMCkgR1M6ZmZmZjhhOGQzYWEwMDAwMCgwMDAwKQ0KPiA+
-IGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4gPiBbICAgIDIuNTcwMjg3XSBDUzogIDAwMTAgRFM6
-IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQo+ID4gWyAgICAyLjU3MDI5Ml0g
-Q1IyOiAwMDAwMDAwMDAwMDAwMDI2IENSMzogMDAwMDAwMDdlM2RjNjAwMCBDUjQ6DQo+IDAwMDAw
-MDAwMDAzNDA2ZTANCj4gPiBbICAgIDIuNTcwMjk5XSBCVUc6IHNsZWVwaW5nIGZ1bmN0aW9uIGNh
-bGxlZCBmcm9tIGludmFsaWQgY29udGV4dCBhdA0KPiA+IGluY2x1ZGUvbGludXgvcGVyY3B1LXJ3
-c2VtLmg6NDkNCj4gPiBbICAgIDIuNTcwMzA2XSBpbl9hdG9taWMoKTogMCwgaXJxc19kaXNhYmxl
-ZCgpOiAxLCBub25fYmxvY2s6IDAsIHBpZDoNCj4gPiA2NjcsIG5hbWU6IHV2ZF9lbmNfMS4xDQo+
-ID4gWyAgICAyLjU3MDMxMV0gSU5GTzogbG9ja2RlcCBpcyB0dXJuZWQgb2ZmLg0KPiA+IFsgICAg
-Mi41NzAzMTVdIGlycSBldmVudCBzdGFtcDogMTQNCj4gPiBbICAgIDIuNTcwMzE5XSBoYXJkaXJx
-cyBsYXN0ICBlbmFibGVkIGF0ICgxMyk6IFs8ZmZmZmZmZmZiMWI4Yzk3Nj5dDQo+ID4gX3Jhd19z
-cGluX3VubG9ja19pcnFyZXN0b3JlKzB4NDYvMHg2MA0KPiA+IFsgICAgMi41NzAzMzBdIGhhcmRp
-cnFzIGxhc3QgZGlzYWJsZWQgYXQgKDE0KTogWzxmZmZmZmZmZmIxMDA0OTMyPl0NCj4gPiB0cmFj
-ZV9oYXJkaXJxc19vZmZfdGh1bmsrMHgxYS8weDFjDQo+ID4gWyAgICAyLjU3MDMzOF0gc29mdGly
-cXMgbGFzdCAgZW5hYmxlZCBhdCAoMCk6IFs8ZmZmZmZmZmZiMTBlMDRmNj5dDQo+ID4gY29weV9w
-cm9jZXNzKzB4NzA2LzB4MWJjMA0KPiA+IFsgICAgMi41NzAzNDVdIHNvZnRpcnFzIGxhc3QgZGlz
-YWJsZWQgYXQgKDApOiBbPDAwMDAwMDAwMDAwMDAwMDA+XSAweDANCj4gPiBbICAgIDIuNTcwMzUx
-XSBDUFU6IDUgUElEOiA2NjcgQ29tbTogdXZkX2VuY18xLjEgVGFpbnRlZDogRyAgICAgIEQNCj4g
-PiAgICAgICAgNS43LjAtMC5yYzAuZ2l0Ni4xLjIuZmMzMy54ODZfNjQgIzENCj4gPiBbICAgIDIu
-NTcwMzU4XSBIYXJkd2FyZSBuYW1lOiBTeXN0ZW0gbWFudWZhY3R1cmVyIFN5c3RlbSBQcm9kdWN0
-DQo+ID4gTmFtZS9ST0cgU1RSSVggWDU3MC1JIEdBTUlORywgQklPUyAxNDA1IDExLzE5LzIwMTkN
-Cj4gPiBbICAgIDIuNTcwMzY1XSBDYWxsIFRyYWNlOg0KPiA+IFsgICAgMi41NzAzNzNdICBkdW1w
-X3N0YWNrKzB4OGIvMHhjOA0KPiA+IFsgICAgMi41NzAzODBdICBfX19taWdodF9zbGVlcC5jb2xk
-KzB4YjYvMHhjNg0KPiA+IFsgICAgMi41NzAzODVdICBleGl0X3NpZ25hbHMrMHgxYy8weDJkMA0K
-PiA+IFsgICAgMi41NzAzOTBdICBkb19leGl0KzB4YjEvMHhjMzANCj4gPiBbICAgIDIuNTcwMzk1
-XSAgPyBrdGhyZWFkKzB4MTMxLzB4MTUwDQo+ID4gWyAgICAyLjU3MDQwMF0gIHJld2luZF9zdGFj
-a19kb19leGl0KzB4MTcvMHgyMA0KPiA+IFsgICAgMi41NzA1NTldIFtkcm1dIEZvdW5kIFZDRSBm
-aXJtd2FyZSBWZXJzaW9uOiA1Ny42IEJpbmFyeSBJRDogNA0KPiA+IFsgICAgMi41NzA1NzJdIFtk
-cm1dIFBTUCBsb2FkaW5nIFZDRSBmaXJtd2FyZQ0KPiA+IFsgICAgMy4xNDY0NjJdIFtkcm1dIHJl
-c2VydmUgMHg0MDAwMDAgZnJvbSAweDgzZmU4MDAwMDAgZm9yIFBTUCBUTVINCj4gPg0KPiA+ICQg
-L3Vzci9zcmMva2VybmVscy9gdW5hbWUgLXJgL3NjcmlwdHMvZmFkZHIybGluZSANCj4gPiAvbGli
-L2RlYnVnL2xpYi9tb2R1bGVzL2B1bmFtZSAtcmAvdm1saW51eCBfX2t0aHJlYWRfc2hvdWxkX3Bh
-cmsrMHg1DQo+ID4gX19rdGhyZWFkX3Nob3VsZF9wYXJrKzB4NS8weDMwOg0KPiA+IHRvX2t0aHJl
-YWQgYXQga2VybmVsL2t0aHJlYWQuYzo3NQ0KPiA+IChpbmxpbmVkIGJ5KSBfX2t0aHJlYWRfc2hv
-dWxkX3BhcmsgYXQga2VybmVsL2t0aHJlYWQuYzoxMDkNCj4gPg0KPiA+IEkgdGhpbmsgdGhpcyBp
-c3N1ZSByZWxhdGVkIHRvIGFtZGdwdSBkcml2ZXIuDQo+ID4gQ2FuIGFueW9uZSBsb29rIGludG8g
-aXQ/DQo+ID4NCj4gPiBUaGFua3MuDQo+ID4NCj4gPiBGdWxsIGtlcm5lbCBsb2cgaGVyZToNCj4g
-PiBodHRwczovL25hbTExLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0
-cHMlM0ElMkYlMkZwYQ0KPiA+IHN0DQo+ID4NCj4gZWJpbi5jb20lMkZSclNwNktZTCZhbXA7ZGF0
-YT0wMiU3QzAxJTdDa2VudC5ydXNzZWxsJTQwYW1kLmNvbSU3Qw0KPiBlNjUyYmINCj4gPg0KPiBk
-NWRmNjU0NGM2MmM0ZDA4ZDdkZGZlYThhYyU3QzNkZDg5NjFmZTQ4ODRlNjA4ZTExYTgyZDk5NGUx
-ODNkJTdDDQo+IDAlN0MwJQ0KPiA+DQo+IDdDNjM3MjIxOTU4MjY5MzQzNjIyJmFtcDtzZGF0YT00
-SXFZNzNoWSUyQkJPRUN2QTdxaVlBajd6SUdQYndIZUkNCj4gdjR4b1p1DQo+ID4gSlpXWGpnJTNE
-JmFtcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiAtLQ0KPiA+IEJlc3QgUmVnYXJkcywNCj4gPiBNaWtl
-IEdhdnJpbG92Lg0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fDQo+ID4gYW1kLWdmeCBtYWlsaW5nIGxpc3QNCj4gPiBhbWQtZ2Z4QGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZw0KPiA+IGh0dHBzOi8vbmFtMTEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9v
-ay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmxpDQo+ID4gc3QNCj4gPiBzLmZyZWVkZXNrdG9wLm9y
-ZyUyRm1haWxtYW4lMkZsaXN0aW5mbyUyRmFtZC0NCj4gZ2Z4JmFtcDtkYXRhPTAyJTdDMDElN0Nr
-ZQ0KPiA+DQo+IG50LnJ1c3NlbGwlNDBhbWQuY29tJTdDZTY1MmJiZDVkZjY1NDRjNjJjNGQwOGQ3
-ZGRmZWE4YWMlN0MzZGQ4OTYxDQo+IGZlNDg4DQo+ID4NCj4gNGU2MDhlMTFhODJkOTk0ZTE4M2Ql
-N0MwJTdDMCU3QzYzNzIyMTk1ODI2OTM0MzYyMiZhbXA7c2RhdGE9VTANCj4gMEVMQlJtWmQNCj4g
-PiA1JTJCeTRQbkpxZSUyQjZGbVFEcm82bHVaZHhpeTF1R0lEV09zJTNEJmFtcDtyZXNlcnZlZD0w
-DQo=
+Hi Panfrost and OPP Maintainers,
+
+On Sat, 11 Apr 2020 at 22:06, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> OPP table can defined both frequency and voltage.
+>
+> Register the mali regulator if it exist.
+
+After this patch, Panfrost update properly both voltage and frequency.
+But the GPU is still not properly down-clocked when temperature is high.
+
+I try to add a cooling map like this :
+https://github.com/clementperon/linux/commit/955961c7c035abbf44e74f608fe8f0=
+59c06a2fbe
+
+But got the following error:
+[    2.712082] panfrost 1800000.gpu: [drm:panfrost_devfreq_init
+[panfrost]] Failed to register cooling device
+
+Do you see what I'm missing?
+
+Thanks for your help,
+Clement
+
+
+
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 34 ++++++++++++++++++---
+>  drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
+>  2 files changed, 31 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/dr=
+m/panfrost/panfrost_devfreq.c
+> index 62541f4edd81..2dc8e2355358 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> @@ -78,12 +78,26 @@ int panfrost_devfreq_init(struct panfrost_device *pfd=
+ev)
+>         struct device *dev =3D &pfdev->pdev->dev;
+>         struct devfreq *devfreq;
+>         struct thermal_cooling_device *cooling;
+> +       const char *mali =3D "mali";
+> +       struct opp_table *opp_table =3D NULL;
+> +
+> +       /* Regulator is optional */
+> +       opp_table =3D dev_pm_opp_set_regulators(dev, &mali, 1);
+> +       if (IS_ERR(opp_table)) {
+> +               ret =3D PTR_ERR(opp_table);
+> +               if (ret !=3D -ENODEV) {
+> +                       DRM_DEV_ERROR(dev, "Failed to set regulator: %d\n=
+", ret);
+> +                       return ret;
+> +               }
+> +       }
+> +       pfdev->devfreq.opp_table =3D opp_table;
+>
+>         ret =3D dev_pm_opp_of_add_table(dev);
+> -       if (ret =3D=3D -ENODEV) /* Optional, continue without devfreq */
+> -               return 0;
+> -       else if (ret)
+> -               return ret;
+> +       if (ret) {
+> +               if (ret =3D=3D -ENODEV) /* Optional, continue without dev=
+freq */
+> +                       ret =3D 0;
+> +               goto err_opp_reg;
+> +       }
+>
+>         panfrost_devfreq_reset(pfdev);
+>
+> @@ -119,6 +133,12 @@ int panfrost_devfreq_init(struct panfrost_device *pf=
+dev)
+>  err_opp:
+>         dev_pm_opp_of_remove_table(dev);
+>
+> +err_opp_reg:
+> +       if (pfdev->devfreq.opp_table) {
+> +               dev_pm_opp_put_regulators(pfdev->devfreq.opp_table);
+> +               pfdev->devfreq.opp_table =3D NULL;
+> +       }
+> +
+>         return ret;
+>  }
+>
+> @@ -126,7 +146,13 @@ void panfrost_devfreq_fini(struct panfrost_device *p=
+fdev)
+>  {
+>         if (pfdev->devfreq.cooling)
+>                 devfreq_cooling_unregister(pfdev->devfreq.cooling);
+> +
+>         dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
+> +
+> +       if (pfdev->devfreq.opp_table) {
+> +               dev_pm_opp_put_regulators(pfdev->devfreq.opp_table);
+> +               pfdev->devfreq.opp_table =3D NULL;
+> +       }
+>  }
+>
+>  void panfrost_devfreq_resume(struct panfrost_device *pfdev)
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm=
+/panfrost/panfrost_device.h
+> index 06713811b92c..f6b0c779dfe5 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -86,6 +86,7 @@ struct panfrost_device {
+>         struct {
+>                 struct devfreq *devfreq;
+>                 struct thermal_cooling_device *cooling;
+> +               struct opp_table *opp_table;
+>                 ktime_t busy_time;
+>                 ktime_t idle_time;
+>                 ktime_t time_last_update;
+> --
+> 2.20.1
+>
