@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8131AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3174C352B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59A5B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD57620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 14:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586787860;
-	bh=XwjaU8G0T1LgzlcwBXrSR9R3Ijs8UK29rMYyBAMmFb0=;
+	s=default; t=1586787861;
+	bh=Jw8CToBNxqhP0LZZ015ew8C1ps35bePadIPNe5joEAI=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tNu+JLZ7KZcgfC6n1vF99VPtHQQuqpQm2HTGTBsBmOZ6LxLhZgO00T13cMuQ/zslN
-	 8RVPy2fgQRGIe8W8NEcy0zi7YAaBupLNEhTQ9Bq/X+g9GlITu8zJUeo/CygNq0TQq5
-	 UwgwjKFNrAo2TEoKgIPOtC334qjZrqRTAk5NBZpo=
+	b=fCiZRnqqsz3m1XzrU3e1VaqztzWkkBi9qTIr+YuIrvhEt5l4eN45saIjkcRUg9zQ3
+	 0R0PMxTJczg0i9waeY0BX/B8mNZDHG8wsv8H2Rti2DD9ZPKq1MBkeMn7XnIrhZnWlD
+	 a4YlHX4q0qBtvlGr2HWX2DpPv1YkPm64wS5+df8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbgDMOYS (ORCPT
+        id S1730707AbgDMOX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51422 "EHLO mail.kernel.org"
+        Mon, 13 Apr 2020 10:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbgDMOYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:24:05 -0400
+        id S1730678AbgDMOXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:23:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E62220786;
-        Mon, 13 Apr 2020 14:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D586620774;
+        Mon, 13 Apr 2020 14:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586787843;
-        bh=XwjaU8G0T1LgzlcwBXrSR9R3Ijs8UK29rMYyBAMmFb0=;
+        s=default; t=1586787825;
+        bh=Jw8CToBNxqhP0LZZ015ew8C1ps35bePadIPNe5joEAI=;
         h=Date:From:To:Cc:Subject:From;
-        b=plN3nBzXftwz9fam6dLSrOqI+Iv3IljiJ5w0oAmNBp7bQQGQs9uVQcfxirAcZ/fxh
-         sSGhW0pU5uSXN90H5iSKd5GhJLQG78X22LoEiIvRgoPsNv4c81MwJNp96fwihDDvwS
-         s4g49dtDIRmiEeZa/9f+da5Qy1q27iW7U2tRf+Nk=
-Date:   Mon, 13 Apr 2020 16:24:01 +0200
+        b=AKjC0EbZVV9Q4hROQLMSGY92t9FZWgeOjZ49yXglSdcBRXVmLX+11C5wprDeAq++v
+         F5K1Zz0w0hnZQsf/29eteRKk6oqqg+4y+S1f/0T9y/BJmmgwwzyfNGWTTFJC4nMsMU
+         QeDbgW3h6Xj/ajz7FzpmCDoBlB9QpYhaxLI3zzi0=
+Date:   Mon, 13 Apr 2020 16:23:43 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.6.4
-Message-ID: <20200413142401.GA3548491@kroah.com>
+Subject: Linux 5.5.17
+Message-ID: <20200413142343.GA3548396@kroah.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,18 +57,18 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---nFreZHaLTZJo0R7j
+--bg08WKrSYDhXBjb5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-I'm announcing the release of the 5.6.4 kernel.
+I'm announcing the release of the 5.5.17 kernel.
 
-All users of the 5.6 kernel series must upgrade.
+All users of the 5.5 kernel series must upgrade.
 
-The updated 5.6.y git tree can be found at:
+The updated 5.5.y git tree can be found at:
 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-5.6.y
+x-5.5.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
 ummary
@@ -80,6 +80,7 @@ greg k-h
 ------------
 
  Makefile                                              |    2=20
+ arch/arm/mach-imx/Kconfig                             |    2=20
  arch/s390/include/asm/lowcore.h                       |    4=20
  arch/s390/include/asm/processor.h                     |    1=20
  arch/s390/include/asm/setup.h                         |    7=20
@@ -102,6 +103,7 @@ greg k-h
  drivers/infiniband/hw/mlx5/main.c                     |    6=20
  drivers/infiniband/sw/siw/siw_cm.c                    |  137 ++++---------=
 -----
+ drivers/iommu/intel-iommu.c                           |   15 -
  drivers/mtd/ubi/fastmap-wl.c                          |   15 +
  drivers/net/can/slcan.c                               |    4=20
  drivers/net/dsa/bcm_sf2.c                             |    9 -
@@ -118,9 +120,13 @@ greg k-h
  drivers/platform/x86/intel_int0002_vgpio.c            |   10 +
  drivers/usb/dwc3/gadget.c                             |    2=20
  drivers/video/fbdev/core/fbcon.c                      |    3=20
- fs/io_uring.c                                         |   13 -
+ fs/ceph/super.c                                       |   57 ++++---
+ fs/ceph/super.h                                       |    2=20
  include/linux/acpi.h                                  |    5=20
  include/linux/mlx5/mlx5_ifc.h                         |    6=20
+ include/linux/swab.h                                  |    1=20
+ include/uapi/linux/swab.h                             |   10 +
+ lib/find_bit.c                                        |   16 --
  mm/slub.c                                             |    2=20
  net/bluetooth/rfcomm/tty.c                            |    4=20
  net/ipv6/addrconf.c                                   |    4=20
@@ -128,10 +134,16 @@ greg k-h
  sound/soc/codecs/tas2562.c                            |    2=20
  sound/soc/jz4740/jz4740-i2s.c                         |    2=20
  tools/accounting/getdelays.c                          |    2=20
- 48 files changed, 450 insertions(+), 225 deletions(-)
+ 54 files changed, 500 insertions(+), 265 deletions(-)
 
 Alex Vesker (1):
       IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
+
+Anson Huang (1):
+      ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D
+
+Arnd Bergmann (1):
+      ARM: imx: only select ARM_ERRATA_814220 for ARMv7-A
 
 Avihai Horon (1):
       RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
@@ -141,6 +153,10 @@ Bart Van Assche (1):
 
 Bernard Metzler (1):
       RDMA/siw: Fix passive connection establishment
+
+Christian Borntraeger (1):
+      include/uapi/linux/swab.h: fix userspace breakage, use __BITS_PER_LON=
+G for swap
 
 Chuanhong Guo (1):
       net: dsa: mt7530: fix null pointer dereferencing in port5 setup
@@ -157,7 +173,7 @@ Florian Fainelli (2):
       net: dsa: bcm_sf2: Ensure correct sub-node is parsed
 
 Greg Kroah-Hartman (1):
-      Linux 5.6.4
+      Linux 5.5.17
 
 Hans de Goede (2):
       ACPI: PM: Add acpi_[un]register_wakeup_handler()
@@ -169,11 +185,11 @@ Heiner Kallweit (1):
 Herat Ramani (1):
       cxgb4: fix MPS index overwrite when setting MAC address
 
-Hillf Danton (1):
-      io-uring: drop completion when removing file
-
 Hou Tao (1):
       ubi: fastmap: Free unused fastmap anchor peb during detach
+
+Ilya Dryomov (1):
+      ceph: canonicalize server path in place
 
 Jarod Wilson (1):
       ipv6: don't auto-add link-local address to lag ports
@@ -197,6 +213,9 @@ Kaike Wan (2):
 
 Kees Cook (1):
       slub: improve bit diffusion for freelist ptr obfuscation
+
+Lu Baolu (1):
+      iommu/vt-d: Allow devices with RMRRs to use identity domain
 
 Martin Kaiser (1):
       hwrng: imx-rngc - fix an error path
@@ -235,25 +254,31 @@ Thinh Nguyen (1):
 Will Deacon (1):
       tun: Don't put_page() for all negative return values from XDP program
 
+Xiubo Li (1):
+      ceph: remove the extra slashes in the server path
 
---nFreZHaLTZJo0R7j
+Yury Norov (1):
+      uapi: rename ext2_swab() to swab() and share globally in swab.h
+
+
+--bg08WKrSYDhXBjb5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl6UdgEACgkQONu9yGCS
-aT6d0A//XfPK2A277RQ5CBjK0zAWMtryoEtN+B0H7RIpaQHE3YsIy47vMzOeEwL6
-8MdzDq8odEY5AZcw3BvRK+QnP46qRpS9SFGXJAx0cim0V6EOpQ17kRanDHoyhKGX
-wFgjcQTGLKgDAj1cSFUzSR8xWWHA2gMl9Zk3wNQsdZVD2UW8Km+udYZnOH6VnDoG
-sx8g3cSw3DgELc0k57iGg/kJBoSwfzUCAUgPTXAnohreX5F+wweI1o6Mt3hlpXBD
-Zofx/mGuZaziQ6JSKF1utfYSRMXWrFqkQZ9/Urk691BMLR6qcjDORE9EMsg0cRJ7
-MOvB0ktoUsWO+uTQ7RVzipICFl0BDV4VPROFjhOHlLfrt6M5SzgqRBWGSY6fAYYF
-NLaO7T5iLgyoQMysPYn0lOUysaKQEdmacF7x63UHGZiu5842D0JxkrrmHOuJXDPm
-PDiFRX4VVf2sEpFKGndvA162Iwk8MKUsOhQpFc3tcEfM4pXtjpmNnxQwqENk1Wwp
-iBgQXViUI/Mb48SWJnhUadtTF5PIEVB2Zoc+q/GGdzqzRZ/MuU4c/dMUQ9SMFqsU
-PE9wtbwRqhd1viLMQWYS42JAPB0Sy91OV7Rbyo+AcfqmE4QZhFzb0U44pxKK9fGq
-7VzvQJPmgy1UETn/HQKvgXOTQ5CrFnkpLmDpWU4Yb2qvCbVh784=
-=IwR5
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl6Ude8ACgkQONu9yGCS
+aT73AhAApNCPZhMBC3IVpU3vD5AWt8Zzm4JGIPb7T2/r2cebiAueZMGlyCT2Enap
+NLJZZiBVMVhsi8oQUxFeZi+pqUXfLevvARs8cNqTJ7hEuRH5sIvEDwVlq8ZqxkPk
+7Ssyg8bkaU1aV97qAN6nxKoWPCS6OJTgHMVBuGW9lX3gIwTGEr25JKpcLtQtIpSL
+cKH0g9/YTKLkNM2wA1hwQR7rxNbF4b8nFZZrdQPiT+OLcqwld9MWMqAU6PWxqtZD
+bvxpf3tsqtDiRtvQJ15FOUOz0skkdHiidMzy3XGPEXLfCk5J6ALLIJ4c3Bmd0OO4
+X2sVkeSg5mhs4ENk031O7bR1o7OUG3JM901MK9w0eGj3RjaKcQlYdo4HL0yqNdvL
+sRau5GGnqwCQTiTJtSMfJhbBkFkAYCXOlBcXXygwNNbYid5s7V0qy7EF59oSZAaZ
+2O5x+Od3FnONwrOxhCUeSYo3//jufV9Zu224syz/6++32dUcc+Ybsv7Sx5q2jtRB
+DtJfKr36dyVZ+4dm9rjrgG7WOKcc78nwIzW6HoNOutgEMWGz9aHuvd2ZaqtyxbSb
+x/HJeOGixJGzzmv8OxYmdHL0Xg5VIAZ3rSb4V87EGVuLilG47aKc3u23uFcuYrzc
+MUKgPBesl6obYCRxdQrPZomw6VcMryUx1+pMbu7YVs/GflIMTBI=
+=FxUT
 -----END PGP SIGNATURE-----
 
---nFreZHaLTZJo0R7j--
+--bg08WKrSYDhXBjb5--
