@@ -2,74 +2,102 @@ Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEE4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E20C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:52:22 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8AF20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:34:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org DA8AF20708
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=huawei.com
+	by mail.kernel.org (Postfix) with ESMTP id 6965820709
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 00:52:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 6965820709
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=suse.de
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgDMAer (ORCPT
+        id S1726899AbgDMAwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Apr 2020 20:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:50208 "EHLO
+        Sun, 12 Apr 2020 20:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:53016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgDMAeq (ORCPT
+        with ESMTP id S1726879AbgDMAwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Apr 2020 20:34:46 -0400
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B5FC0A3BE0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Apr 2020 17:34:47 -0700 (PDT)
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0234DAA1B2BB9BF8950A;
-        Mon, 13 Apr 2020 08:34:45 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 13 Apr
- 2020 08:34:40 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid page count leak
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <c50f4bff-1c14-931d-ee07-a2f5dc336785@web.de>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <d228c74b-0d33-e22c-56c8-f2bfd691c985@huawei.com>
-Date:   Mon, 13 Apr 2020 08:34:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 12 Apr 2020 20:52:19 -0400
+Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113E9C0A3BE0;
+        Sun, 12 Apr 2020 17:52:20 -0700 (PDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B2654AEC3;
+        Mon, 13 Apr 2020 00:52:17 +0000 (UTC)
+Subject: Re: linux-next: manual merge of the realtek tree with Linus' tree
+To:     Joe Perches <joe@perches.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>
+References: <20200413085034.5e77f236@canb.auug.org.au>
+ <dbdc1f6b-faf8-7d0d-7730-4ae3f5610dde@suse.de>
+ <8194c2197b9d57f6c37cc6417c9dc9b310732e6b.camel@perches.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <539791a5-9b5f-4969-4dda-6f10ea11b9cd@suse.de>
+Date:   Mon, 13 Apr 2020 02:52:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <c50f4bff-1c14-931d-ee07-a2f5dc336785@web.de>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <8194c2197b9d57f6c37cc6417c9dc9b310732e6b.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/11 3:19, Markus Elfring wrote:
->> In below error path, we missed to release reference count of pages
->> in compressed cluster, fix it.
->> - f2fs_mpage_readpages()
->>  - f2fs_read_multi_pages()
-> 
-> I suggest to improve the commit message.
-> 
-> Would you like to add the tag “Fixes” to the change description?
+Hello Joe,
 
-Sure, will update in v2, thanks.
-
-Thanks,
-
+Am 13.04.20 um 02:27 schrieb Joe Perches:
+> One of the lines changed was from 2017.
 > 
-> Regards,
-> Markus
-> .
+> d6656fa4 (Andreas Färber     2017-10-05 03:59:15 +0200 2263) F: arch/arm/mach-realtek/
 > 
+> Is that commit ever going forward?
+> 
+> commit d6656fa4c6215b293d23ed7242ced83a2fce1fec
+> Author: Andreas Färber <afaerber@suse.de>
+> Date:   Thu Oct 5 03:59:15 2017 +0200
+> 
+>      ARM: Prepare Realtek RTD1195
+>      
+>      Introduce ARCH_REALTEK Kconfig option also for 32-bit Arm.
+>      
+>      Override the text offset to cope with boot ROM occupying first 0xa800
+>      bytes and further reservations up to 0xf4000 (compare Device Tree).
+>      
+>      Add a custom machine_desc to enforce memory carveout for I/O registers.
+>      
+>      Signed-off-by: Andreas Färber <afaerber@suse.de>
+
+It was in a late pull request for 5.6 but missed it; Olof wanted to 
+merge it for 5.7 instead, but apparently that didn't happen either, so 
+I've rebased it for 5.8 earlier today.
+
+For the record, the conflict came from someone reordering entries in my 
+MAINTAINERS section, without notifying me.
+
+Note that I have even older gems hidden in my branches: Infineon 
+XMC4500, Spansion/Cypress/Infineon FM4, Andromeda Box Edge, ... All 
+requires time and desk space.
+
+Regards,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
