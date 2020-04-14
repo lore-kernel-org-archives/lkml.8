@@ -4,41 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F92C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8028C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6FB6206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C6D20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391137AbgDNP5a (ORCPT
+        id S2391155AbgDNP6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:57:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45260 "EHLO
+        Tue, 14 Apr 2020 11:58:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45264 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387417AbgDNP5Z (ORCPT
+        with ESMTP id S1732332AbgDNP5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:57:25 -0400
+        Tue, 14 Apr 2020 11:57:49 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 0D0582A04F7
-Subject: Re: [PATCH 3/4] power: supply: generic-adc-battery: Prepare for const
- properties
+        with ESMTPSA id D5F312A04F7
+Subject: Re: [PATCH 4/4] power: supply: core: Constify properties
 To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sebastian Reichel <sre@kernel.org>
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel@collabora.com
 References: <20200413183853.1088823-1-sebastian.reichel@collabora.com>
- <20200413183853.1088823-4-sebastian.reichel@collabora.com>
+ <20200413183853.1088823-5-sebastian.reichel@collabora.com>
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <7ae59eca-35b2-59ed-8fc9-212fdb8decc5@collabora.com>
-Date:   Tue, 14 Apr 2020 17:57:19 +0200
+Message-ID: <48f5fbce-2eb3-a4dc-8f0f-bde0be0bea6f@collabora.com>
+Date:   Tue, 14 Apr 2020 17:57:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200413183853.1088823-4-sebastian.reichel@collabora.com>
+In-Reply-To: <20200413183853.1088823-5-sebastian.reichel@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -50,83 +49,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Hi Sebastian,
 
 On 13/4/20 20:38, Sebastian Reichel wrote:
-> This prepares the driver to work with the properties entry
-> in power_supply_desc marked as const.
+> properties is a list of properties supported by the
+> driver. It is not modified by the power-supply core
+> and drivers are not supposed to change it once the
+> list has been registered. Let's mark it as const for
+> improved security.
 > 
 > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
 Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
 > ---
->  drivers/power/supply/generic-adc-battery.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
+>  include/linux/power_supply.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/power/supply/generic-adc-battery.c b/drivers/power/supply/generic-adc-battery.c
-> index bc462d1ec963..caa829738ef7 100644
-> --- a/drivers/power/supply/generic-adc-battery.c
-> +++ b/drivers/power/supply/generic-adc-battery.c
-> @@ -241,6 +241,7 @@ static int gab_probe(struct platform_device *pdev)
->  	struct power_supply_desc *psy_desc;
->  	struct power_supply_config psy_cfg = {};
->  	struct gab_platform_data *pdata = pdev->dev.platform_data;
-> +	enum power_supply_property *properties;
->  	int ret = 0;
->  	int chan;
->  	int index = ARRAY_SIZE(gab_props);
-> @@ -268,16 +269,16 @@ static int gab_probe(struct platform_device *pdev)
->  	 * copying the static properties and allocating extra memory for holding
->  	 * the extra configurable properties received from platform data.
->  	 */
-> -	psy_desc->properties = kcalloc(ARRAY_SIZE(gab_props) +
-> -					ARRAY_SIZE(gab_chan_name),
-> -					sizeof(*psy_desc->properties),
-> -					GFP_KERNEL);
-> -	if (!psy_desc->properties) {
-> +	properties = kcalloc(ARRAY_SIZE(gab_props) +
-> +			     ARRAY_SIZE(gab_chan_name),
-> +			     sizeof(*properties),
-> +			     GFP_KERNEL);
-> +	if (!properties) {
->  		ret = -ENOMEM;
->  		goto first_mem_fail;
->  	}
->  
-> -	memcpy(psy_desc->properties, gab_props, sizeof(gab_props));
-> +	memcpy(properties, gab_props, sizeof(gab_props));
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 0392c9cc8f1c..6a34df65d4d1 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -225,7 +225,7 @@ struct power_supply_desc {
+>  	enum power_supply_type type;
+>  	const enum power_supply_usb_type *usb_types;
+>  	size_t num_usb_types;
+> -	enum power_supply_property *properties;
+> +	const enum power_supply_property *properties;
+>  	size_t num_properties;
 >  
 >  	/*
->  	 * getting channel from iio and copying the battery properties
-> @@ -294,13 +295,11 @@ static int gab_probe(struct platform_device *pdev)
->  			int index2;
->  
->  			for (index2 = 0; index2 < index; index2++) {
-> -				if (psy_desc->properties[index2] ==
-> -				    gab_dyn_props[chan])
-> +				if (properties[index2] == gab_dyn_props[chan])
->  					break;	/* already known */
->  			}
->  			if (index2 == index)	/* really new */
-> -				psy_desc->properties[index++] =
-> -					gab_dyn_props[chan];
-> +				properties[index++] = gab_dyn_props[chan];
->  			any = true;
->  		}
->  	}
-> @@ -317,6 +316,7 @@ static int gab_probe(struct platform_device *pdev)
->  	 * as come channels may be not be supported by the device.So
->  	 * we need to take care of that.
->  	 */
-> +	psy_desc->properties = properties;
->  	psy_desc->num_properties = index;
->  
->  	adc_bat->psy = power_supply_register(&pdev->dev, psy_desc, &psy_cfg);
-> @@ -358,7 +358,7 @@ static int gab_probe(struct platform_device *pdev)
->  			iio_channel_release(adc_bat->channel[chan]);
->  	}
->  second_mem_fail:
-> -	kfree(psy_desc->properties);
-> +	kfree(properties);
->  first_mem_fail:
->  	return ret;
->  }
 > 
