@@ -2,121 +2,122 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E2BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24484C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2ECA2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:41:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocqZqq6s"
+	by mail.kernel.org (Postfix) with ESMTP id 0664720857
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439473AbgDNLll (ORCPT
+        id S2439488AbgDNLl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439459AbgDNLlg (ORCPT
+        Tue, 14 Apr 2020 07:41:57 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:14790 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439471AbgDNLlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:41:36 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06D3C061A0C;
-        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t4so4540275plq.12;
-        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=8Esq4uJjc7hCqZPSyfuH3UXfV8N/MZeW3NHhinZ8EQA=;
-        b=ocqZqq6sP10NyE5Oqrsyu24BO4bUv9d+CybYLvjUEA0qRTbQq8IAo2pJTWQfIqu4RO
-         sPTYsA+WN55nEjfpiAKwJ3efgvE0y02zIRGr4QJLeGvUEOTkWEwmF8lPwgWo+rxrPEs5
-         VDTf42M1YbD+ARAsRZhdeD47bvnZpwfdPk63IxzHlEP4FOS+xZOTFLokGOmvq6qCsYSC
-         9tfWtMbUwXgESksl6KkJnUtYDYhwxUwpcnrbpFt8xAH3B/hJvFo4WpPegEXCjs4dhUzZ
-         W26SU5gqovyT9qgqJ6qWu6cT8BV0oBUpmf+pSVOyif6EAbW821Qd95yr49cfUdak8sxQ
-         mhEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=8Esq4uJjc7hCqZPSyfuH3UXfV8N/MZeW3NHhinZ8EQA=;
-        b=WGFvk2eopzzhnzAKMqczAIyD6wLlBVfs7PY3INiZdxfU4MPoGd4n3TTWjqarVcnweU
-         C5Yt9OmQcvvdATPOIYsmM1eOXWh0r4RUve1Me1zIlD6+oqn2mXTKOVexUMrQ1Ov+/o0X
-         ynOXyCsBNxbUJlVv0/wwC/ZkXbv4XCxbcLcSRlPLyTi6IEgqAjHU7pp70Qm47VbQa8ws
-         Jf3MRlCZfJv0WkX8lIv3Wu3p5whHDO113j81OCw19rXVwykUvjsP5Uc/P1H7L3FI/5BQ
-         MUYifou97+SfNF2BarIGH0Re0WqMR+xW+pdPB0CanvoGes7kyAcQxhxrkQnC/O1YhLYa
-         EaMw==
-X-Gm-Message-State: AGi0PuYM1E+KZqhuTkSMqNpb470s3CdfuWvXcLewXGUJuc9u8cjggT1f
-        v1t7DbgwdN962Kd9Oo4Vx+k=
-X-Google-Smtp-Source: APiQypLIBjtk6RQd/AotCq9xnqN6ML09PMuOg/nS9Dm4xLrHmr38av9P0xvvmudk1+K5veWBSwJi4w==
-X-Received: by 2002:a17:90a:2281:: with SMTP id s1mr27766299pjc.68.1586864495571;
-        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
-Received: from localhost ([203.18.28.220])
-        by smtp.gmail.com with ESMTPSA id 132sm11155833pfc.183.2020.04.14.04.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 21:39:53 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
-        <20200413125303.423864-5-npiggin@gmail.com>
-        <20200413134106.GN21484@bombadil.infradead.org>
-In-Reply-To: <20200413134106.GN21484@bombadil.infradead.org>
-MIME-Version: 1.0
-Message-Id: <1586863931.xb4yeowkao.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 07:41:52 -0400
+X-Greylist: delayed 385 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Apr 2020 07:41:51 EDT
+Received: from ubuntu.localdomain (unknown [157.0.31.122])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 8F71F4E1434;
+        Tue, 14 Apr 2020 19:35:23 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Bernard Zhao <bernard@vivo.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Oak Zeng <Oak.Zeng@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Alex Sierra <alex.sierra@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Kent Russell <kent.russell@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com
+Subject: [PATCH] Optimized division operation to shift operation
+Date:   Tue, 14 Apr 2020 04:35:08 -0700
+Message-Id: <1586864113-30682-1-git-send-email-bernard@vivo.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VOS01LS0tLT0pCTUpNTFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxw6Ajo*Tjg1TwoNNAg1Fz4v
+        Lk0KFDJVSlVKTkNNQ01PSklIQk5OVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSUlZV1kIAVlBT0NPSTcG
+X-HM-Tid: 0a717878efd19376kuws8f71f4e1434
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Matthew Wilcox's message of April 13, 2020 11:41 pm:
-> On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
->> +static int vmap_pages_range_noflush(unsigned long start, unsigned long =
-end,
->> +				    pgprot_t prot, struct page **pages,
->> +				    unsigned int page_shift)
->> +{
->> +	if (page_shift =3D=3D PAGE_SIZE) {
->=20
-> ... I think you meant 'page_shift =3D=3D PAGE_SHIFT'
+On some processors, the / operate will call the compiler`s div lib,
+which is low efficient, We can replace the / operation with shift,
+so that we can replace the call of the division library with one
+shift assembly instruction.
 
-Thanks, good catch. I obviously didn't test the fallback path (the
-other path works for small pages, it just goes one at a time).
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+ drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 4 ++--
+ drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 4 ++--
+ drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-> Overall I like this series, although it's a bit biased towards CPUs
-> which have page sizes which match PMD/PUD sizes.  It doesn't offer the
-> possibility of using 64kB page sizes on ARM, for example.
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+index b205039..66cd078 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+@@ -175,10 +175,10 @@ static int gmc_v6_0_mc_load_microcode(struct amdgpu_device *adev)
+ 	amdgpu_ucode_print_mc_hdr(&hdr->header);
+ 
+ 	adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
+-	regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
++	regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
+ 	new_io_mc_regs = (const __le32 *)
+ 		(adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
+-	ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
++	ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
+ 	new_fw_data = (const __le32 *)
+ 		(adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+index 9da9596..ca26d63 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+@@ -193,10 +193,10 @@ static int gmc_v7_0_mc_load_microcode(struct amdgpu_device *adev)
+ 	amdgpu_ucode_print_mc_hdr(&hdr->header);
+ 
+ 	adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
+-	regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
++	regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
+ 	io_mc_regs = (const __le32 *)
+ 		(adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
+-	ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
++	ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
+ 	fw_data = (const __le32 *)
+ 		(adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+index 27d83204..295039c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+@@ -318,10 +318,10 @@ static int gmc_v8_0_tonga_mc_load_microcode(struct amdgpu_device *adev)
+ 	amdgpu_ucode_print_mc_hdr(&hdr->header);
+ 
+ 	adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
+-	regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
++	regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
+ 	io_mc_regs = (const __le32 *)
+ 		(adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
+-	ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
++	ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
+ 	fw_data = (const __le32 *)
+ 		(adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
+ 
+-- 
+2.7.4
 
-No, it's just an incremental step on existing huge vmap stuff in
-tree, so such a thing would be out of scope.
-
-> But it's a
-> step in the right direction.
->=20
-
-I don't know about moving kernel maps away from a generic Linux page
-table format. I quite like moving to it and making it as generic as
-possible.
-
-On the other hand, I also would like to make some arch-specific
-allowances for certain special cases that may not fit within the
-standard page table format, but it might be a much more specific and
-limited interface than the general vmalloc stuff.
-
-Thanks,
-Nick
