@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB5C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82F6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 686432075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CF62075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B/my2Tdq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DI14kD1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732521AbgDNNhs (ORCPT
+        id S2502793AbgDNNPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
+        Tue, 14 Apr 2020 09:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502810AbgDNNPa (ORCPT
+        with ESMTP id S2502712AbgDNNOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:15:30 -0400
+        Tue, 14 Apr 2020 09:14:45 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 480EAC061A0F;
-        Tue, 14 Apr 2020 06:15:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 863FEC061A0C;
+        Tue, 14 Apr 2020 06:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=AL2UqXVJJHqpYowkgnsEWwQarq+t+/weZMnyt1+pBt0=; b=B/my2Tdq0VZf/1/JSQ7y29BtMV
-        aRLAeQEoSa/sLerLGjrs28Y3wb1WmC9cEDez+gx8tic5JHxbVRtWrlF/YDKBOgAQALGPluzUuNMKE
-        jATdiVUDrZlyT0o7TD0i+M/EDHYwKXnsIhzxQibRrVW7bzWI4b+MElGbDE92UCwCunUfZP1duL2Xp
-        ItK5JL9JgOK9mP76R2aMyVUr5i+bR06mfl7Fd5MHbxWeKWwctrP8LLxwyr0L0qtCMSvOroer0qD7o
-        WktytOMl8uWeYAYC7UV1s0LGFdAIF44rITzkxVHoSkqibeoL6lZOxnu50leC8IqClOas/3f9OgNGi
-        WuDBhHrg==;
+        bh=mANdo6j2epctno1InF04j4Dw77xmPp8h8wAaCdRF8Vw=; b=DI14kD1XeS0W5KhA0t6BAHp3rd
+        S0XmRj6BN9qLSnyQW4BWceI286H+sdL6l5wXQlp/PagEahqNQoc/Vte3z0dkmoN7WyC3QSq5Nos84
+        1U7uvNkXXTqwdBB+sCYnGPpQyVchL29JLw12DGWfGNnoC2a1smEJ/BbCn+9fMvEZQqpo4LGRxbyRi
+        q3g7FqT9277low0bB3O+WlMpXc/HBUbKaqELKnzXOdaelj3NHsFnhWBELU6D3sN43uGKnUsH35Fcl
+        69oCltdRCL44kh1m43h+mvk3bQT0DCP+qBXhKFALQJtSDK19n3cB04OZpdAgN00ZPPjcchQ1N/Gd9
+        4u8hovcQ==;
 Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOLP9-0007sF-W9; Tue, 14 Apr 2020 13:15:08 +0000
+        id 1jOLOU-0006eH-Ny; Tue, 14 Apr 2020 13:14:27 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -61,9 +61,9 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 22/29] mm: remove the prot argument to __vmalloc_node
-Date:   Tue, 14 Apr 2020 15:13:41 +0200
-Message-Id: <20200414131348.444715-23-hch@lst.de>
+Subject: [PATCH 10/29] mm: rename CONFIG_PGTABLE_MAPPING to CONFIG_ZSMALLOC_PGTABLE_MAPPING
+Date:   Tue, 14 Apr 2020 15:13:29 +0200
+Message-Id: <20200414131348.444715-11-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200414131348.444715-1-hch@lst.de>
 References: <20200414131348.444715-1-hch@lst.de>
@@ -75,124 +75,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is always PAGE_KERNEL now.
+Rename the Kconfig variable to clarify the scope.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Minchan Kim <minchan@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- mm/vmalloc.c | 35 ++++++++++++++---------------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
+ arch/arm/configs/omap2plus_defconfig | 2 +-
+ include/linux/zsmalloc.h             | 2 +-
+ mm/Kconfig                           | 2 +-
+ mm/zsmalloc.c                        | 8 ++++----
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 466a449b3a15..de7952959e82 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2401,8 +2401,7 @@ void *vmap(struct page **pages, unsigned int count,
- EXPORT_SYMBOL(vmap);
- 
- static void *__vmalloc_node(unsigned long size, unsigned long align,
--			    gfp_t gfp_mask, pgprot_t prot,
--			    int node, const void *caller);
-+			    gfp_t gfp_mask, int node, const void *caller);
- static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 				 pgprot_t prot, int node)
- {
-@@ -2420,7 +2419,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 	/* Please note that the recursion is strictly bounded. */
- 	if (array_size > PAGE_SIZE) {
- 		pages = __vmalloc_node(array_size, 1, nested_gfp|highmem_mask,
--				PAGE_KERNEL, node, area->caller);
-+				node, area->caller);
- 	} else {
- 		pages = kmalloc_node(array_size, nested_gfp, node);
- 	}
-@@ -2539,13 +2538,11 @@ EXPORT_SYMBOL_GPL(__vmalloc_node_range);
-  * @size:	    allocation size
-  * @align:	    desired alignment
-  * @gfp_mask:	    flags for the page level allocator
-- * @prot:	    protection mask for the allocated pages
-  * @node:	    node to use for allocation or NUMA_NO_NODE
-  * @caller:	    caller's return address
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 3cc3ca5fa027..583d8abd80a4 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -81,7 +81,7 @@ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_BINFMT_MISC=y
+ CONFIG_CMA=y
+ CONFIG_ZSMALLOC=m
+-CONFIG_PGTABLE_MAPPING=y
++CONFIG_ZSMALLOC_PGTABLE_MAPPING=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+diff --git a/include/linux/zsmalloc.h b/include/linux/zsmalloc.h
+index 2219cce81ca4..0fdbf653b173 100644
+--- a/include/linux/zsmalloc.h
++++ b/include/linux/zsmalloc.h
+@@ -20,7 +20,7 @@
+  * zsmalloc mapping modes
   *
-- * Allocate enough pages to cover @size from the page level
-- * allocator with @gfp_mask flags.  Map them into contiguous
-- * kernel virtual space, using a pagetable protection of @prot.
-+ * Allocate enough pages to cover @size from the page level allocator with
-+ * @gfp_mask flags.  Map them into contiguous kernel virtual space.
-  *
-  * Reclaim modifiers in @gfp_mask - __GFP_NORETRY, __GFP_RETRY_MAYFAIL
-  * and __GFP_NOFAIL are not supported
-@@ -2556,16 +2553,15 @@ EXPORT_SYMBOL_GPL(__vmalloc_node_range);
-  * Return: pointer to the allocated memory or %NULL on error
+  * NOTE: These only make a difference when a mapped object spans pages.
+- * They also have no effect when PGTABLE_MAPPING is selected.
++ * They also have no effect when ZSMALLOC_PGTABLE_MAPPING is selected.
   */
- static void *__vmalloc_node(unsigned long size, unsigned long align,
--			    gfp_t gfp_mask, pgprot_t prot,
--			    int node, const void *caller)
-+			    gfp_t gfp_mask, int node, const void *caller)
- {
- 	return __vmalloc_node_range(size, align, VMALLOC_START, VMALLOC_END,
--				gfp_mask, prot, 0, node, caller);
-+				gfp_mask, PAGE_KERNEL, 0, node, caller);
+ enum zs_mapmode {
+ 	ZS_MM_RW, /* normal read-write mapping */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index c1acc34c1c35..09a9edfb8461 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -705,7 +705,7 @@ config ZSMALLOC
+ 	  returned by an alloc().  This handle must be mapped in order to
+ 	  access the allocated space.
+ 
+-config PGTABLE_MAPPING
++config ZSMALLOC_PGTABLE_MAPPING
+ 	bool "Use page table mapping to access object in zsmalloc"
+ 	depends on ZSMALLOC
+ 	help
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 2f836a2b993f..ac0524330b9b 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -293,7 +293,7 @@ struct zspage {
+ };
+ 
+ struct mapping_area {
+-#ifdef CONFIG_PGTABLE_MAPPING
++#ifdef CONFIG_ZSMALLOC_PGTABLE_MAPPING
+ 	struct vm_struct *vm; /* vm area for mapping object that span pages */
+ #else
+ 	char *vm_buf; /* copy buffer for objects that span pages */
+@@ -1113,7 +1113,7 @@ static struct zspage *find_get_zspage(struct size_class *class)
+ 	return zspage;
  }
  
- void *__vmalloc(unsigned long size, gfp_t gfp_mask)
+-#ifdef CONFIG_PGTABLE_MAPPING
++#ifdef CONFIG_ZSMALLOC_PGTABLE_MAPPING
+ static inline int __zs_cpu_up(struct mapping_area *area)
  {
--	return __vmalloc_node(size, 1, gfp_mask, PAGE_KERNEL, NUMA_NO_NODE,
-+	return __vmalloc_node(size, 1, gfp_mask, NUMA_NO_NODE,
- 				__builtin_return_address(0));
- }
- EXPORT_SYMBOL(__vmalloc);
-@@ -2573,15 +2569,15 @@ EXPORT_SYMBOL(__vmalloc);
- static inline void *__vmalloc_node_flags(unsigned long size,
- 					int node, gfp_t flags)
- {
--	return __vmalloc_node(size, 1, flags, PAGE_KERNEL,
--					node, __builtin_return_address(0));
-+	return __vmalloc_node(size, 1, flags, node,
-+				__builtin_return_address(0));
+ 	/*
+@@ -1151,7 +1151,7 @@ static inline void __zs_unmap_object(struct mapping_area *area,
+ 	unmap_kernel_range(addr, PAGE_SIZE * 2);
  }
  
+-#else /* CONFIG_PGTABLE_MAPPING */
++#else /* CONFIG_ZSMALLOC_PGTABLE_MAPPING */
  
- void *__vmalloc_node_flags_caller(unsigned long size, int node, gfp_t flags,
- 				  void *caller)
+ static inline int __zs_cpu_up(struct mapping_area *area)
  {
--	return __vmalloc_node(size, 1, flags, PAGE_KERNEL, node, caller);
-+	return __vmalloc_node(size, 1, flags, node, caller);
+@@ -1233,7 +1233,7 @@ static void __zs_unmap_object(struct mapping_area *area,
+ 	pagefault_enable();
  }
  
- /**
-@@ -2656,8 +2652,8 @@ EXPORT_SYMBOL(vmalloc_user);
-  */
- void *vmalloc_node(unsigned long size, int node)
- {
--	return __vmalloc_node(size, 1, GFP_KERNEL, PAGE_KERNEL,
--					node, __builtin_return_address(0));
-+	return __vmalloc_node(size, 1, GFP_KERNEL, node,
-+			__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vmalloc_node);
+-#endif /* CONFIG_PGTABLE_MAPPING */
++#endif /* CONFIG_ZSMALLOC_PGTABLE_MAPPING */
  
-@@ -2670,9 +2666,6 @@ EXPORT_SYMBOL(vmalloc_node);
-  * allocator and map them into contiguous kernel virtual space.
-  * The memory allocated is set to zero.
-  *
-- * For tight control over page level allocator and protection flags
-- * use __vmalloc_node() instead.
-- *
-  * Return: pointer to the allocated memory or %NULL on error
-  */
- void *vzalloc_node(unsigned long size, int node)
-@@ -2745,8 +2738,8 @@ void *vmalloc_exec(unsigned long size)
-  */
- void *vmalloc_32(unsigned long size)
+ static int zs_cpu_prepare(unsigned int cpu)
  {
--	return __vmalloc_node(size, 1, GFP_VMALLOC32, PAGE_KERNEL,
--			      NUMA_NO_NODE, __builtin_return_address(0));
-+	return __vmalloc_node(size, 1, GFP_VMALLOC32, NUMA_NO_NODE,
-+			__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vmalloc_32);
- 
 -- 
 2.25.1
 
