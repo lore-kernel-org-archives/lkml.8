@@ -2,126 +2,108 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4F7C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30864C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA80206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586884900;
-	bh=hqDprYjabFxBscfVEG0+5dvJzqZCcHd1opdmPnhd2Ak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hQUOrPbstvA18OopFL8Gy1C7BSfrKRlGVCgu7HKrogtCsYYEBBOAaJsiIgCCzWUHf
-	 dMl3ue9p4LLWHTeIDYVEc2rGjqxT3ZAun0Kjd2SyU7uCQ7eTPe6xN+uYlTqiBd83hH
-	 gFaEKH3MN4h9V69KDIRAsOmlXWEAUOisdnrArCug=
+	by mail.kernel.org (Postfix) with ESMTP id F218520678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hiueGBkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407637AbgDNRVi (ORCPT
+        id S2407645AbgDNRXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407622AbgDNRVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:21:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE77120678;
-        Tue, 14 Apr 2020 17:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586884892;
-        bh=hqDprYjabFxBscfVEG0+5dvJzqZCcHd1opdmPnhd2Ak=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h+nY5DfVYhJx8o/ujjNNyx0kjonVY+DPsN2UhfHMYXXuk8Og3wt4jhCpynBMBQsd2
-         p21D/wQE6MCWwIlH0ZmgjFqR0D+M4Je8cOa8cweBdHkm6ikP4EFafxr6YWy1ePAAbi
-         0NzuUD49CAh9h2IhLW6bGuhkMptucBaXFvPmYvhk=
-Date:   Tue, 14 Apr 2020 18:21:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Tue, 14 Apr 2020 13:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407600AbgDNRXc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:23:32 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968B8C061A0C;
+        Tue, 14 Apr 2020 10:23:30 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 131so356537lfh.11;
+        Tue, 14 Apr 2020 10:23:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DRrYyXQg46xRoqmJ8FML2EKoxj0EcjNg9UzSVd5o+KM=;
+        b=hiueGBkkLdKSSbi5XfXTTt994KiRowt4CtPMc31ckVOjo25feOSt1YYXe+qTrB4LDi
+         jNfvQEqlrcmq1Ps06Yg2fgFtTX9NIzg/nFeKjH28cPk4yJjruxQtZ+uQdVvA9+Cb1wCa
+         ubyLXYIddaJbWeqgDV3t9B7rPf4gXDj4tpjOFn/vgrZyLbudG0E0F+OIiS6g53gYqU+s
+         viTtaL8Dkn4pg5X0Md1rgVHyAI41bIKzAOARnFgIPCgQZOYO64uOQi56BckYqNAILLb9
+         vQkehwqoxo/7QC2lHTjNKp29o8fCmm3rbHBzWs948bACi2H3zJLuzMwRBw6dcTrUs3Wc
+         anjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DRrYyXQg46xRoqmJ8FML2EKoxj0EcjNg9UzSVd5o+KM=;
+        b=A++lKAijsJRlb44Y262xBI20tLPd5aJQw01Y5Uls+arnQCpqCvy87dGFc32V1PK6Cr
+         eyFVl+De8A91Ah/7/vHypFaibkh8AVo1qPdRlnaRw3//hq9SvrjNLpk1vhFhoHRl0kgi
+         dTZUGQ50N5Cb/C7meVk2gdx6BP/ArRX0ZQQYvRf11ik+uUxqpbzPdNGLMqULwt6AtWAe
+         hTU5mtkMHXSwfHSJ/YN3BBzgoVV3NtYJMsuniOs21gFx9wCvIJoDCJsW3fqnVm76ecPW
+         Hfc7egTSSsY3O2e0yUEcaQcPDyAdst7ZEsVQtDv3RiZrdoblvM5CeUl19w1ENjypGftM
+         RY8A==
+X-Gm-Message-State: AGi0PuahYYNCMi75M+wq1QiymftiRXDPwct+/pwrGm+1moINbdqccjEY
+        CyLrKUvYPQdJdZo1m9cuF2nF7OI0voEs6Q==
+X-Google-Smtp-Source: APiQypIp3l9KI0s54qNwUlCgu4EaIoGTXSqRboDfsP19bPTqJOGlln8McKWlcgB4Kqy8FhIjAFtDqg==
+X-Received: by 2002:a19:f610:: with SMTP id x16mr516833lfe.79.1586885008627;
+        Tue, 14 Apr 2020 10:23:28 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id b73sm10746213lfg.86.2020.04.14.10.23.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 10:23:27 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-Message-ID: <20200414172129.GJ5412@sirena.org.uk>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
- <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH v2 0/3] regulator: max77826: Add MAX77826 support
+Date:   Tue, 14 Apr 2020 20:22:47 +0300
+Message-Id: <20200414172250.2363235-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQAwcd5tHl0Qlnzi"
-Content-Disposition: inline
-In-Reply-To: <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly other
+devices. It is produced by Maxim Integrated and contains 15 LDOs a buck and
+a buck boost regulator.
 
---LQAwcd5tHl0Qlnzi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+v1: https://lkml.org/lkml/2020/4/13/489
 
-On Tue, Apr 14, 2020 at 12:07:01PM +0200, Michael Walle wrote:
-> Am 2020-04-14 11:50, schrieb Bartosz Golaszewski:
+changes in v2:
+- change compatible string from maxim,max77826-regulator to maxim,max77826
+- reword DT bindings patch message
 
-> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
-> > IS_ERR() returning true?
+Iskren Chernev (3):
+  regulator: max77826: Add max77826 regulator driver
+  regulator: Document bindings for max77826
+  ARM: dts: qcom: msm8974-klte: Add max77826 pmic node
 
-> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
-> the type the regmap API has for its "reg" property). It could be a
-> pointer of course but then the user would have to allocate additional
-> memory.
+ .../bindings/regulator/maxim,max77826.yaml    |  69 ++++
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 110 +++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  11 +
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/max77826-regulator.c        | 301 ++++++++++++++++++
+ 6 files changed, 502 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
+ create mode 100644 drivers/regulator/max77826-regulator.c
 
-You could define REGMAP_INVALID_ADDR to be (unsigned int)(-1) or some
-other suitably implausible address and use that as a value.  It's
-possible that there might be a collision with a real address on some
-device but it should be sufficiently unlikely to be useful, especially
-if it's not something regmap in general goes and evaluates.  For extra
-safety we could have an API for allowing users to query the register
-validity information regmap has (or can be given) and gpiolib could then
-use that to figure out if the value was actually a dummy value but
-that's probably overdoing it.
+--
+2.26.0
 
---LQAwcd5tHl0Qlnzi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V8RkACgkQJNaLcl1U
-h9AnZwf8CXCh0WrZ2WtwfdTJ1yX5W12AkMOk5xoWSFXC9PzRicdAquQGHN0U0Qan
-v2iy9fXKFP9/vjkpNOP0q8hzXFoFbxcDvTTPUcPJV9Xd/bJ/X2OTXn7qKKLxIA0q
-8i5t5KXA1+3upDL3nzJvH/dZULUUz7vP7m1SrwkowgS4asnOJVMfa8vGJLbnxhT5
-m9MjUO206PwDS/sUpsK36S+4ccbV5Nzdq50Ce9sWr4szpQnKtAFb0Z8Q9eriTl15
-hJxwRBCZJLqzXLYIGVC0eJPv9YrbG3YLM+x+Hb6oxzOuHRWU5B/Kv8n01YeHW5A1
-Zk21Hdv+mJcVD0qTQ1dNFzb4QzAp5Q==
-=mDDb
------END PGP SIGNATURE-----
-
---LQAwcd5tHl0Qlnzi--
