@@ -2,146 +2,156 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67618C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E6EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451572076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586882649;
-	bh=ebMzOpuIt9dXZbE+2Z/ikNbXxDt+34cNjVaGtOHoy0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K9hlYgCYWnXceAGTPGEzE9XGhdjoT2naOaCPIdPMNTHRI5L/jqvmluE8PODulXlP4
-	 hI76QHSYSzAp8AHIoSuSOvXqMnPfwLoesCycGtvmr9ogjEa6yawPdjBpK9rn6whRSF
-	 9rqILuG7oyxWHo1zTe4fL6xdt9nn/g5BslAVorW0=
+	by mail.kernel.org (Postfix) with ESMTP id 2ABCE20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="eBt3Xy89"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437396AbgDNQoH (ORCPT
+        id S2437663AbgDNQox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:44:07 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38898 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437160AbgDNQoB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:44:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so278401otl.5;
-        Tue, 14 Apr 2020 09:44:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mdJGN+n2VYiCEYSu8u8xlSZpkqPfV2n6FeIMEPtdiVw=;
-        b=jRawnFkhpMXRAk9E226hLegLZOwJm+sg5V2l2IliKC7kTYlv3AjUbLNF2Q/3Db2pG8
-         /kBLzUav3peM7gUMIYvigwE7gudFjwgnz5cgfkvZaBIEmTKPPMwy21G9B/mNL19P0q+u
-         RnRmLqPM6octnPqaWHTIeyAzVkUP1eqT5CxQ+EQLFFSo5E3Mut6TtUNXCoiT+xikwlw8
-         o4EOKK1f3egKel9MXtX8QR4O0SnZQ7KJJxhMuX5CycDZ1j950fQCO+wXDhRdANxD+A/N
-         sCw5YYCzQa4ob6TORHTfkpqBzF6UeZV4grvYJZmGRw3Ll8N3V0Kt80ikIwcC8Gae8mtE
-         LH9w==
-X-Gm-Message-State: AGi0PuYsill/UOYWVcuAPTo1VL4eUTb985sb7O5B8uo3WEl08upTdoj1
-        qt2ARle7JPS4CPTrL/Hnyw==
-X-Google-Smtp-Source: APiQypINczSaAx3RvBdTvMgP/hZFPK9N4KYJKAMcgw+8KVN2riIwZXpaqEpmPb+hOROqaiW2MJnmaw==
-X-Received: by 2002:a4a:a98b:: with SMTP id w11mr19105677oom.80.1586882640106;
-        Tue, 14 Apr 2020 09:44:00 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w15sm6274633ooq.24.2020.04.14.09.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:43:59 -0700 (PDT)
-Received: (nullmailer pid 11212 invoked by uid 1000);
-        Tue, 14 Apr 2020 16:43:57 -0000
-Date:   Tue, 14 Apr 2020 11:43:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        lukasz.luba@arm.com, daniel.lezcano@linaro.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: thermal: Get rid of thermal.txt and replace
- references
-Message-ID: <20200414164357.GA11178@bogus>
-References: <cbd70c2f0f5ddae0d8e418fcb1e03101e408f6c2.1585753313.git.amit.kucheria@linaro.org>
+        Tue, 14 Apr 2020 12:44:53 -0400
+Received: from mga02.intel.com ([134.134.136.20]:29554 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437378AbgDNQou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:44:50 -0400
+IronPort-SDR: cElgBHbZoUVDjzqHqCjF8x9eufpZtY3tzpGX0uK5TGfQ/3usRan2B9I+EcFlbZFIq0KP/hN8o2
+ EMWuKYE2MqnQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 09:44:49 -0700
+IronPort-SDR: vHPgi0iUoqhhkAhsOgx7mwv++pRCCbr3d1hxcXdJT/Bym4ITO0JUR5vnqm3Nq0kFgXJ3Tmdx+v
+ 3GMjwG6jvTog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="256570575"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga006.jf.intel.com with ESMTP; 14 Apr 2020 09:44:49 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Apr 2020 09:44:49 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 14 Apr 2020 09:44:48 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 14 Apr 2020 09:44:48 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.59) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 14 Apr 2020 09:44:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oPSNYxBkCoMFXUPo4Is+TO3qmr5DdcvXv6OTeuDOZLSyYDBIMqZgQ85Ud5oD9ATkQqLcd56HI2uOvmYWN5cvIoiUK+0lf6IKYm6yAJWcrJszcZc1O4oqOt7p9m6hOdwEZ6PNd3S9C8ILsg4LJ125VdA836kYTeeZeMIxiZa6THfcejDDlWsQM6UqPubNeRJXFbLj4c7q2QyQi7yqFbWPIoUwXAWnVPK84YcyFyjhYNG+7/S4IUZGOSo9wsNR5ayn7IekaLL9qFNIhk7ccaSLfVz9z88kQ9qlNzML8g/7oSb/+HejgpCSvdtArMMLdyPsLBjUZeZh24MdpLvhvpkkaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Q/lhBrBJu8/RvJtrramEbrdHedUUhic/cp747EdAGs=;
+ b=DCCdv8w/T5bZ5/QSAYOcpgc9fnw8P0GZuV6cdpUV5tOtBItNu8ZdzjM103PPxOE1k/xrERKKVjH9u9KSeEwyJkBfoldrihANu7WUYuaur2E5sqzhgSnfu2UJ+7hxjr6xP9nsx5oZp9G+wOswaxp6yJxp2OV1Qgh+9ZMq2MJMPFNR5k+n+gTXLBRtz7k/BIcs2Ouq+Bibx9mgRS0sUqEnP0op4Pl/uNBJs9C/F9qzjLbJejesx4RNeJ9e3GaBw1yp+0una9RKTDml+GwnVm2273dsibNcLUsqszb8sEnv0weLA3g3WHGQpLPQoUUigy2wXPk/+2+Z/LLqnu51S6mxew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Q/lhBrBJu8/RvJtrramEbrdHedUUhic/cp747EdAGs=;
+ b=eBt3Xy89HTZyyrc5sx/McWJ0dG1rFiQnW5j/3wo6K31vcuPR2qdsugZrBok7HHNynaSG/sXKVu1xJQb9BqHZtEn+X3ZSfESSmTDfBvofXHoAcpdFU7DbodcpYTLDkC9HYI7VMPWzHTN0TGMRLXPffhSz3CIHIPK16BdS60QuWzI=
+Received: from SN6PR11MB3136.namprd11.prod.outlook.com (2603:10b6:805:da::30)
+ by SN6PR11MB2558.namprd11.prod.outlook.com (2603:10b6:805:5d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Tue, 14 Apr
+ 2020 16:44:43 +0000
+Received: from SN6PR11MB3136.namprd11.prod.outlook.com
+ ([fe80::4df5:24e2:ee20:6a01]) by SN6PR11MB3136.namprd11.prod.outlook.com
+ ([fe80::4df5:24e2:ee20:6a01%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 16:44:43 +0000
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [RFC,net-next,v2, 1/1] net: stmmac: Enable SERDES power up/down
+ sequence
+Thread-Topic: [RFC,net-next,v2, 1/1] net: stmmac: Enable SERDES power up/down
+ sequence
+Thread-Index: AQHWDoZeGoUeZLGEa0qZ7cIYQH4yK6h3ItoAgAG3dtA=
+Date:   Tue, 14 Apr 2020 16:44:43 +0000
+Message-ID: <SN6PR11MB31369FDE9E86EB85448E1AC688DA0@SN6PR11MB3136.namprd11.prod.outlook.com>
+References: <20200409154823.26480-1-weifeng.voon@intel.com>
+ <20200409154823.26480-2-weifeng.voon@intel.com>
+ <BN8PR12MB3266DAEBA9F314B0D1515B4DD3DD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+In-Reply-To: <BN8PR12MB3266DAEBA9F314B0D1515B4DD3DD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weifeng.voon@intel.com; 
+x-originating-ip: [192.198.147.215]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2f62c045-a715-4d81-ba44-08d7e0932261
+x-ms-traffictypediagnostic: SN6PR11MB2558:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB2558780EB351906EA8BF682A88DA0@SN6PR11MB2558.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3136.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(376002)(136003)(396003)(366004)(346002)(186003)(5660300002)(9686003)(4326008)(81156014)(8936002)(107886003)(55016002)(8676002)(52536014)(66946007)(2906002)(4744005)(26005)(66476007)(66556008)(64756008)(66446008)(7696005)(71200400001)(6506007)(110136005)(316002)(478600001)(76116006)(86362001)(33656002)(54906003)(142933001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2x9+GE7s91j/rJEjL0fGzzUY6d4R3lZ4sta+E8x8hABG/xYhIkpiwbKOJn4rbSAUDKyOUa3/VhCsUfgL/W5NNL7XFx2bj10FMETXN/NF091chjJGAbOYn+DHQH/4KnxJwYo7Ek0K4RllhJ3jARJertIFEcnUWqxhaIVbPzjICX+Q3vVehnTGcNqK9y3RIg4oUN8JfMbSgcfH1Vn+4pAsiMMosvlK6+GD41yyz2Lu6KdEFlV7JTeSDjrUg3XPVhpcdIcKU3rGRBb7x0vQJtxEMvhvYf9ws30zs5FwDmA9w8NhiMfPEnSceFpVYwbxgAlj49fDobilmlo4WY16UQNUThUYm+yvxQIHOyCklT8LvVRQGJK9hCLyQj9xAd7QIxNk3mBp5s8fkB6APJbDgj7vddIutITybOchjWXYj5ZOUdzvStfd37DN9f8a910zQ9lg6PshoT/I+waZFUnibdngHPOACwgXA+KS6IsSvuuRuYuhoFApmUebYo7lEQl4QYdS
+x-ms-exchange-antispam-messagedata: qN6MBdEco89xtmNAmyPEFxTJSShUSdGj3wkYdEN/9vvlJ0aiGNhwhBnpscOCKHI7bVQqA3yoecNNmN/VYiUf7tqmPQRBToVtVll09lScvC9k0cYlBFaqIVMsaCUe/eRR0MHYdPGutGSWnyJxHTO8EQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbd70c2f0f5ddae0d8e418fcb1e03101e408f6c2.1585753313.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f62c045-a715-4d81-ba44-08d7e0932261
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 16:44:43.7089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uaAnf/wi8+7AGTmB+PwvnhUUoRMPk3AC1B+BUQTHpJg4D9hf6Bf8sWRZBRKg6DL7dpWBCAKCQlDZTSlyQ0k0MQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2558
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  1 Apr 2020 20:35:50 +0530, Amit Kucheria wrote:
-> Now that we have yaml bindings for the thermal subsystem, get rid of the
-> old bindings (thermal.txt).
-> 
-> Replace all references to thermal.txt in the Documentation with a link
-> to the appropriate YAML bindings using the following search and replace
-> pattern:
->  - If the reference is specific to the thermal-sensor-cells property,
->  replace with a pointer to thermal-sensor.yaml
->  - If the reference is to the cooling-cells property, replace with a
->  pointer to thermal-cooling-devices.yaml
->  - If the reference is generic thermal bindings, replace with a
->  reference to thermal*.yaml.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
->  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
->  .../arm/marvell/ap80x-system-controller.txt   |   2 +-
->  .../arm/marvell/cp110-system-controller.txt   |   2 +-
->  .../bindings/cpufreq/cpufreq-dt.txt           |   3 +-
->  .../bindings/cpufreq/cpufreq-mediatek.txt     |   4 +-
->  .../devicetree/bindings/hwmon/gpio-fan.txt    |   3 +-
->  .../devicetree/bindings/hwmon/lm90.txt        |   4 +-
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     |   2 +-
->  .../bindings/thermal/amazon,al-thermal.txt    |   2 +-
->  .../bindings/thermal/brcm,avs-ro-thermal.yaml |   2 +-
->  .../bindings/thermal/brcm,bcm2835-thermal.txt |   2 +-
->  .../bindings/thermal/hisilicon-thermal.txt    |   2 +-
->  .../bindings/thermal/max77620_thermal.txt     |   6 +-
->  .../bindings/thermal/mediatek-thermal.txt     |   2 +-
->  .../thermal/nvidia,tegra124-soctherm.txt      |  10 +-
->  .../thermal/nvidia,tegra186-bpmp-thermal.txt  |   2 +-
->  .../bindings/thermal/qcom-spmi-temp-alarm.txt |   2 +-
->  .../bindings/thermal/rockchip-thermal.txt     |   2 +-
->  .../bindings/thermal/tango-thermal.txt        |   2 +-
->  .../bindings/thermal/thermal-generic-adc.txt  |   2 +-
->  .../devicetree/bindings/thermal/thermal.txt   | 586 ------------------
->  .../bindings/thermal/uniphier-thermal.txt     |   2 +-
->  23 files changed, 33 insertions(+), 615 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
-> 
+> From: Voon Weifeng <weifeng.voon@intel.com>
+> Date: Apr/09/2020, 16:48:23 (UTC+00:00)
+>=20
+> > diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h index
+> > fbafb353e9be..89c8729bbe5b 100644
+> > --- a/include/linux/stmmac.h
+> > +++ b/include/linux/stmmac.h
+> > @@ -147,6 +147,7 @@ struct plat_stmmacenet_data {
+> >  	int bus_id;
+> >  	int phy_addr;
+> >  	int interface;
+> > +	int intel_adhoc_addr;
+>=20
+> No, this is not right to add. Just use the bsp_priv field.
+>=20
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Noted and thanks. I will change this and submit for v5.7.
+Weifeng
+
+> ---
+> Thanks,
+> Jose Miguel Abreu
