@@ -2,222 +2,159 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6216C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D598AC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9968C20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:58:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qx7Bq6xa"
+	by mail.kernel.org (Postfix) with ESMTP id ADEC920768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586876455;
+	bh=PyGNoZXq5+exzC523eUm+nhmPmjTtFnqohNw8wmnJJM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pvjIWksdeIArNaUaBZCe6ODhiKAAD7+5FJpsWBOuUJ85POJx4i4ydSE1J0cswGTz1
+	 JNsx+SOVvh+O++u9mEptfQXGUtKcTZNp9r/lHjhbk8x7SnP3N/mnvlvQodYVVebdh8
+	 oXtGb/SA/0gLgoXeunmU/vHHLU1YRnfe8svUauJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405468AbgDNO6C (ORCPT
+        id S2405516AbgDNPAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:58:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44518 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405178AbgDNO57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:57:59 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EErWXr024436;
-        Tue, 14 Apr 2020 14:57:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=b2jGMBSv5VYKK0ycmsBoTfvINxl10Rp8bqgANURivvc=;
- b=qx7Bq6xaDh/gt8p9w5Ak7EornJUpICn9xM5fA/BuKQelxzbHP8dCd8vdTARhWmdDr5Ik
- Zh4qispLg81l1IeMtGBXPwKWtCo1Qq8gF265hMmpqlr9uZcLagztJhh9qbPY6jWPc15V
- ihPR7urHZSMgqrBj9K2saoP6j84U/K1VfVO1BOGcRlcgGjwMS0LkBbiD7JTG9Q11raFn
- Qq3IDO2kGF/YbLIj5lRJMthrCri4CL6pEvzB4t528B9crb0n0mgksYqfTobKM3YP6Khy
- 1atLPanPkT11yHEC3T1DsFe6T6JJon//dCy5jGQ1PTS27ifSC86wIc1qz3ThTlr+3Qkx 2A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30b6hpn885-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 14:57:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EEr0X1032261;
-        Tue, 14 Apr 2020 14:57:21 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30bqm21sp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 14:57:21 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EEv7dK011357;
-        Tue, 14 Apr 2020 14:57:07 GMT
-Received: from tomti.i.net-space.pl (/10.175.170.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 07:57:07 -0700
-Date:   Tue, 14 Apr 2020 16:57:01 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Dave Young <dyoung@redhat.com>, pjones@redhat.com,
-        Leif Lindholm <leif@nuviainc.com>,
-        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
-Message-ID: <20200414145701.p5ifnnimmuzgfqfh@tomti.i.net-space.pl>
-References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
- <20200406180614.429454-1-nivedita@alum.mit.edu>
- <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
- <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
- <20200409143910.GA727557@rani.riverdale.lan>
- <CAMj1kXEm=E6B+kjZktG=sBPLQ=_HFfUz6KFLskNGzRnuMjn0gA@mail.gmail.com>
- <20200409163530.GA785575@rani.riverdale.lan>
- <20200410144758.GC936997@rani.riverdale.lan>
- <CAMj1kXHMQgnmdoA+qKLGa=gYg4J2p-DU3-K1LiM=AT61pi+Fvw@mail.gmail.com>
+        Tue, 14 Apr 2020 11:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405178AbgDNPAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:00:51 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CC920768;
+        Tue, 14 Apr 2020 15:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586876450;
+        bh=PyGNoZXq5+exzC523eUm+nhmPmjTtFnqohNw8wmnJJM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2GJUYmDwKNnmE3WkSRBcjNbq+V23jzNiGC9wp5G3p1oFZ2amlwOlvi54vjI08inQS
+         NPimYpm/AdGNe6QFoM5RZKCjVRo4x5BiMskHfTVoaJrvONdG0LFMu/r9P6jJL2xY9P
+         3FE8YPmO2NcLqjKj/Tojr8ZArSsQiiOggMNlz+qQ=
+Received: by mail-qk1-f174.google.com with SMTP id 20so5457456qkl.10;
+        Tue, 14 Apr 2020 08:00:50 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubqma5gfb0iZPjXXvFPXkylzXiNIxJTJ9fcosZEGNfULNpE9hnl
+        10b4oEEZxJyDHac23OM7W+CQqZFkQNoiqFY3fA==
+X-Google-Smtp-Source: APiQypLRMASVueInkjzFQaZZRiXafGEKrxTIjrVFeP+woU+5m5/tsSGNTKR7OAYdIkFYvdD4p65K5fwOq1irjLdd/kg=
+X-Received: by 2002:a37:c43:: with SMTP id 64mr19794718qkm.119.1586876449180;
+ Tue, 14 Apr 2020 08:00:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHMQgnmdoA+qKLGa=gYg4J2p-DU3-K1LiM=AT61pi+Fvw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 clxscore=1011 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140121
+References: <20191211232345.24810-1-robh@kernel.org> <5386e959-f9c4-2748-ed08-34ab361aee2c@nvidia.com>
+ <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com> <93314ff5-aa89-cd99-393c-f75f31d9d6e5@nvidia.com>
+In-Reply-To: <93314ff5-aa89-cd99-393c-f75f31d9d6e5@nvidia.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Apr 2020 10:00:36 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL84LvUrNy095E_sC2UJnB3SFBgsw6wjOKmFM249BHMOA@mail.gmail.com>
+Message-ID: <CAL_JsqL84LvUrNy095E_sC2UJnB3SFBgsw6wjOKmFM249BHMOA@mail.gmail.com>
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Karol Herbst <karolherbst@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 05:26:34PM +0200, Ard Biesheuvel wrote:
-> On Fri, 10 Apr 2020 at 16:48, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > On Thu, Apr 09, 2020 at 12:35:30PM -0400, Arvind Sankar wrote:
-> > > On Thu, Apr 09, 2020 at 04:47:55PM +0200, Ard Biesheuvel wrote:
-> > > > On Thu, 9 Apr 2020 at 16:39, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > > >
-> > > > > On Wed, Apr 08, 2020 at 09:49:15AM +0200, Ard Biesheuvel wrote:
-> > > > > > (add Peter, Leif and Daniel)
-> > > > > >
-> > > > > > On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
-> > > > > > >
-> > > > > > > On 04/06/20 at 02:06pm, Arvind Sankar wrote:
-> > > > > > > > Commit
-> > > > > > > >
-> > > > > > > >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
-> > > > > > > >   bzImage")
-> > > > > > > >
-> > > > > > > > removed the .bss section from the bzImage.
-> > > > > > > >
-> > > > > > > > However, while a PE loader is required to zero-initialize the .bss
-> > > > > > > > section before calling the PE entry point, the EFI handover protocol
-> > > > > > > > does not currently document any requirement that .bss be initialized by
-> > > > > > > > the bootloader prior to calling the handover entry.
-> > > > > > > >
-> > > > > > > > When systemd-boot is used to boot a unified kernel image [1], the image
-> > > > > > > > is constructed by embedding the bzImage as a .linux section in a PE
-> > > > > > > > executable that contains a small stub loader from systemd together with
-> > > > > > > > additional sections and potentially an initrd. As the .bss section
-> > > > > > > > within the bzImage is no longer explicitly present as part of the file,
-> > > > > > > > it is not initialized before calling the EFI handover entry.
-> > > > > > > > Furthermore, as the size of the embedded .linux section is only the size
-> > > > > > > > of the bzImage file itself, the .bss section's memory may not even have
-> > > > > > > > been allocated.
-> > > > > > >
-> > > > > > > I did not follow up the old report, maybe I missed something. But not
-> > > > > > > sure why only systemd-boot is mentioned here.  I also have similar issue
-> > > > > > > with early efi failure.  With these two patches applied, it works well
-> > > > > > > then.
-> > > > > > >
-> > > > > > > BTW, I use Fedora 31 + Grub2
-> > > > > > >
-> > > > > >
-> > > > > > OK, so I take it this means that GRUB's PE/COFF loader does not
-> > > > > > zero-initialize BSS either? Does it honor the image size in memory if
-> > > > > > it exceeds the file size?
-> > > > >
-> > > > > Dave, that comment was because the previous report was for systemd-boot
-> > > > > stub.
-> > > > >
-> > > > > Ard, should I revise the commit message to make it clear it's not
-> > > > > restricted to systemd-boot but anything using handover entry may be
-> > > > > affected? Maybe just a "for example, when systemd-boot..." and then a
-> > > > > line to say grub2 with the EFI stub patches is also impacted?
-> > > > >
-> > > >
-> > > > Well, the fact the /some/ piece of software is used in production that
-> > > > relies on the ill-defined EFI handover protocol is sufficient
-> > > > justification, so I don't think it is hugely important to update it.
-> > > >
-> > > > > https://src.fedoraproject.org/rpms/grub2/blob/f31/f/0001-Add-support-for-Linux-EFI-stub-loading.patch#_743
-> > > > >
-> > > > > +  kernel_mem = grub_efi_allocate_pages_max(lh.pref_address,
-> > > > > +                                          BYTES_TO_PAGES(lh.init_size));
-> > > > >
-> > > > > Looking at this, grub does allocate init_size for the image, but it
-> > > > > doesn't zero it out.
-> > > > >
-> > > > > This call also looks wrong to me though. It allocates at max address of
-> > > > > pref_address, which, if it succeeds, will guarantee that the kernel gets
-> > > > > loaded entirely below pref_address == LOAD_PHYSICAL_ADDR. In native
-> > > > > mode, if it weren't for the EFI stub copying the kernel again, this
-> > > > > would cause the startup code to relocate the kernel into unallocated
-> > > > > memory. On a mixed-mode boot, this would cause the early page tables
-> > > > > setup prior to transitioning to 64-bit mode to be in unallocated memory
-> > > > > and potentially get clobbered by the EFI stub.
-> > > > >
-> > > > > The first try to allocate pref_address should be calling
-> > > > > grub_efi_allocate_fixed instead.
-> > > >
-> > > > Thanks Arvind. I'm sure the Fedora/RedHat folks on cc should be able
-> > > > to get these logged somewhere.
-> > >
-> > > Ok. For dracut, the process for building the unified kernel image needs
-> > > a check to make sure the kernel can fit in the space provided for it --
-> > > there is 16MiB of space and the distro bzImage's are up to 10-11MiB in
-> > > size, so there's some slack left at present.
-> > >
-> > > Additionally, in mixed-mode, the unified kernel images are quite likely
-> > > to end up with early pgtables from startup_32 clobbering the initrd,
-> > > independently of the recent kernel changes. Hopefully no-one actually
-> > > uses these in mixed-mode.
-> >
-> > The grub EFI handover entry patch is busted in mixed-mode for another
-> > reason -- while it allocates init_size, it doesn't use the correct
-> > alignment. I tested on a Debian buster VM in mixed-mode (that was the
-> > one I was able to get to install/boot with mixed-mode), and the early
-> > pagetable from startup_32 ends up in unallocated memory due to the
-> > rounding up of the bzImage address to account for kernel alignment. This
-> > would be an existing problem prior to these patches.
-> >
-> > Should we try to handle this in the kernel? At some point KASLR is going
-> > to pick that memory for the kernel and overwrite the pagetables I would
-> > think, resulting in sporadic crashes that are almost unreproducible.
++Karol
+
+On Mon, Jan 13, 2020 at 5:12 AM Jon Hunter <jonathanh@nvidia.com> wrote:
 >
-> Upstream GRUB does not implement the EFI handover protocol at all, and
-> the distros all have their own GRUB forks that implement this along
-> with mixed mode, secure boot, shim, measured boot etc.
+>
+> On 10/01/2020 23:50, Rob Herring wrote:
+> > On Tue, Jan 7, 2020 at 4:22 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+> >>
+> >> Hi Rob,
+> >>
+> >> On 11/12/2019 23:23, Rob Herring wrote:
+> >>> The phandle cache was added to speed up of_find_node_by_phandle() by
+> >>> avoiding walking the whole DT to find a matching phandle. The
+> >>> implementation has several shortcomings:
+> >>>
+> >>>   - The cache is designed to work on a linear set of phandle values.
+> >>>     This is true for dtc generated DTs, but not for other cases such as
+> >>>     Power.
+> >>>   - The cache isn't enabled until of_core_init() and a typical system
+> >>>     may see hundreds of calls to of_find_node_by_phandle() before that
+> >>>     point.
+> >>>   - The cache is freed and re-allocated when the number of phandles
+> >>>     changes.
+> >>>   - It takes a raw spinlock around a memory allocation which breaks on
+> >>>     RT.
+> >>>
+> >>> Change the implementation to a fixed size and use hash_32() as the
+> >>> cache index. This greatly simplifies the implementation. It avoids
+> >>> the need for any re-alloc of the cache and taking a reference on nodes
+> >>> in the cache. We only have a single source of removing cache entries
+> >>> which is of_detach_node().
+> >>>
+> >>> Using hash_32() removes any assumption on phandle values improving
+> >>> the hit rate for non-linear phandle values. The effect on linear values
+> >>> using hash_32() is about a 10% collision. The chances of thrashing on
+> >>> colliding values seems to be low.
+> >>>
+> >>> To compare performance, I used a RK3399 board which is a pretty typical
+> >>> system. I found that just measuring boot time as done previously is
+> >>> noisy and may be impacted by other things. Also bringing up secondary
+> >>> cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+> >>> With no caching, calls to of_find_node_by_phandle() take about 20124 us
+> >>> for 1248 calls. There's an additional 288 calls before time keeping is
+> >>> up. Using the average time per hit/miss with the cache, we can calculate
+> >>> these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+> >>> and 13319 us with no cache or an uninitialized cache.
+> >>>
+> >>> Comparing the 3 implementations the time spent in
+> >>> of_find_node_by_phandle() is:
+> >>>
+> >>> no cache:        20124 us (+ 13319 us)
+> >>> 128 entry cache:  5134 us (+ 690 us)
+> >>> current cache:     819 us (+ 13319 us)
+> >>>
+> >>> We could move the allocation of the cache earlier to improve the
+> >>> current cache, but that just further complicates the situation as it
+> >>> needs to be after slab is up, so we can't do it when unflattening (which
+> >>> uses memblock).
+> >>>
+> >>> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> >>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> >>> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> >>> Cc: Frank Rowand <frowand.list@gmail.com>
+> >>> Signed-off-by: Rob Herring <robh@kernel.org>
+> >>
+> >> With next-20200106 I have noticed a regression on Tegra210 where it
+> >> appears that only one of the eMMC devices is being registered. Bisect is
+> >> pointing to this patch and reverting on top of next fixes the problem.
+> >> That is as far as I have got so far, so if you have any ideas, please
+> >> let me know. Unfortunately, there do not appear to be any obvious errors
+> >> from the bootlog.
+> >
+> > I guess that's tegra210-p2371-2180.dts because none of the others have
+> > 2 SD hosts enabled. I don't see anything obvious though. Are you doing
+> > any runtime mods to the DT?
+>
+> I have noticed that the bootloader is doing some runtime mods and so
+> checking if this is the cause. I will let you know, but most likely,
+> seeing as I cannot find anything wrong with this change itself.
 
-Exactly...
+Did you figure out the problem here? Karol sees a similar problem on
+Tegra210 with the gpu node regulator.
 
-> What you are saying is that GRUB forks turn out to exist that violate
-> both the PE/COFF specification and the Linux/x86 boot protocol in a
-> way that might break mixed mode, and nobody noticed until you happened
-> to find it by code inspection. While I appreciate the effort, I think
-> this is where I would like to draw the line, and say that there is
-> only so much we can do to work around bugs in out-of-tree forks of
-> other projects. So unless it can be done cleanly and without losing
-> any of the benefits of the recent cleanup and optimization work, I'd
-> say don't bother.
+It looks like /external-memory-controller@7001b000 has a duplicate
+phandle. Comparing the dtb in the filesystem with what the kernel
+gets, that node is added by the bootloader. So the bootloader is
+definitely creating a broken dtb.
 
-I fully agree!
-
-Daniel
+Rob
