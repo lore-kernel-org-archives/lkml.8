@@ -2,133 +2,202 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FE5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF5EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40DF20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6F5206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="A1/V73Z0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437572AbgDNJUQ (ORCPT
+        id S2437583AbgDNJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:20:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:51518 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbgDNJUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:20:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3E6C1FB;
-        Tue, 14 Apr 2020 02:20:09 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28B823F6C4;
-        Tue, 14 Apr 2020 02:20:07 -0700 (PDT)
-Subject: Re: [PATCH 1/4] sched/topology: Store root domain CPU capacity sum
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-2-dietmar.eggemann@arm.com>
- <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
- <42cc3878-4c57-96ba-3ebd-1b4d4ef87fae@arm.com>
- <CAKfTPtDS_qwPH+TwoFWPz6QRzG1N=t46ZvGN=w6zbOtnGAdOeQ@mail.gmail.com>
- <d2ace353-cdf3-c22a-2b19-7fa33281fe27@arm.com>
- <CAKfTPtC2yQeBnm3QfCnZCo5jbAF7VYqFpBGDuzAkdUysc8yvrA@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <b34be03b-280b-e084-6bc3-552ee58917af@arm.com>
-Date:   Tue, 14 Apr 2020 11:20:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 14 Apr 2020 05:20:27 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60119 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437568AbgDNJUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:20:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586856018; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=+XRnNV94uKt5nAFMee794EpLZKQMMlWET+oJDf9hq18=; b=A1/V73Z0//cvlP4im2fM+r8o+gCpxswZPaK+rbtupDoi9v+3wFCFoBtpSFmUOyRLqnOLy4ML
+ NwJI5G0AzlLjauOoSS2dW8HvCWeMQa6/kFS9mIVdLH5pmTtyYy/TbFdZgbTDIbhd+wSjMaQv
+ xxqJMZ1dzmvrKuth3U0EiaNfSWg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e958045.7fd359261b58-smtp-out-n02;
+ Tue, 14 Apr 2020 09:20:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0BC71C432C2; Tue, 14 Apr 2020 09:20:05 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.14.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02DDCC433CB;
+        Tue, 14 Apr 2020 09:19:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02DDCC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v17 0/6] Invoke rpmh_flush for non OSI targets
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1586703004-13674-1-git-send-email-mkshah@codeaurora.org>
+ <20200414053412.GJ20625@builder.lan>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <b4d25241-00e2-d730-31f1-3a32418a017e@codeaurora.org>
+Date:   Tue, 14 Apr 2020 14:49:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtC2yQeBnm3QfCnZCo5jbAF7VYqFpBGDuzAkdUysc8yvrA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200414053412.GJ20625@builder.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.20 16:13, Vincent Guittot wrote:
-> On Thu, 9 Apr 2020 at 15:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+Thanks Bjorn.
+
+Thanks,
+Maulik
+
+On 4/14/2020 11:04 AM, Bjorn Andersson wrote:
+> On Sun 12 Apr 07:49 PDT 2020, Maulik Shah wrote:
+>
+> I sorted them includes and applied the series.
+>
+> Thanks,
+> Bjorn
+>
+>> Changes in v17:
+>> - Address Stephen's comments on change 3 and change 4.
+>> - Add Stephen's Reviewed-by on change 5.
 >>
->> On 08.04.20 19:03, Vincent Guittot wrote:
->>> On Wed, 8 Apr 2020 at 18:31, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>>>
->>>> On 08.04.20 14:29, Vincent Guittot wrote:
->>>>> On Wed, 8 Apr 2020 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-
-[...]
-
->> And it looks like that asym_cpu_capacity_level() [topology.c] would fail
->> if we would use capacity_orig_of() instead of arch_scale_cpu_capacity().
-> 
-> Yes I agree.  See below
-> 
->> post_init_entity_util_avg() [fair.c] and sugov_get_util()
->> [cpufreq_schedutil.c] would be temporarily off until
->> update_cpu_capacity() has updated cpu_rq(cpu)->cpu_capacity_orig.
-> 
-> I think that we could even get rid of this update in
-> update_cpu_capacity(). cpu_capacity_orig should be set while building
-> the sched_domain topology because the topology itself is built based
-> on this max cpu  capacity with asym_cpu_capacity_level(). So changing
-> the capacity without rebuilding the domain could break the
-> sched_domain topology correctness.
-
-True. rq->cpu_capacity_orig could be set early in build_sched_domains(),
-before the call to asym_cpu_capacity_level() or within this function.
-
-> And we can't really set cpu_capacity_orig earlier during the boot
-> because the capacity of b.L is set late during the boot and a rebuild
-> of the sched_domain topology is then triggered.
-> 
+>> Changes in v16:
+>> - Use base address in probe only, drop change to save it in drv->base
+>> - Address Doug's comments on change 5,6 and 7.
+>> - Add Doug's Reviewed-by.
 >>
->> compute_energy() [fair.c] is guarded by sched_energy_enabled() from
->> being used at startup.
+>> Changes in v15:
+>> - Address Doug's comments on change 3 of v14 and add Reviewed-by
+>> - Split change 4 of v14 to save drv->base in a new change
+>> - Address Doug's comments on change 4, 5, 6 of v14
+>> - Add missing NOTIFY_OK for rpmh_flush() success case
+>> - First 5 changes in this series can be merged without change 6 and 7
 >>
->> scale_rt_capacity() could be changed in case we call it after the
->> cpu_rq(cpu)->cpu_capacity_orig = arch_scale_cpu_capacity(cpu) in
->> update_cpu_capacity().
-> 
-> With the removal of the update in update_cpu_capacity(), we don't have
-> a problem anymore, isn't it ?
+>> Changes in v14:
+>> - Address Doug's comments on change 3 from v13
+>> - Drop new APIs for start and end transaction from change 4 in v13
+>> - Update change 4 to use cpu pm notifications instead
+>> - Add [5] as change 5 to enable use of WAKE TCS when ACTIVE TCS count is 0
+>> - Add change 6 to Allow multiple WAKE TCS to be used as ACTIVE TCSes
+>> - First 4 changes can be merged even without change 5 and 6.
+>>
+>> Changes in v13:
+>> - Address Stephen's comment to maintain COMPILE_TEST
+>> - Address Doug's comments and add new APIs for start and end transaction
+>>
+>> Changes in v12:
+>> - Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
+>>
+>> Changes in v11:
+>> - Address Doug's comments on change 2 and 3
+>> - Include change to invalidate TCSes before flush from [4]
+>>
+>> Changes in v10:
+>> - Address Evan's comments to update commit message on change 2
+>> - Add Evan's Reviewed by on change 2
+>> - Remove comment from rpmh_flush() related to last CPU invoking it
+>> - Rebase all changes on top of next-20200302
+>>
+>> Changes in v9:
+>> - Keep rpmh_flush() to invoke from within cache_lock
+>> - Remove comments related to only last cpu invoking rpmh_flush()
+>>
+>> Changes in v8:
+>> - Address Stephen's comments on changes 2 and 3
+>> - Add Reviewed by from Stephen on change 1
+>>
+>> Changes in v7:
+>> - Address Srinivas's comments to update commit text
+>> - Add Reviewed by from Srinivas
+>>
+>> Changes in v6:
+>> - Drop 1 & 2 changes from v5 as they already landed in maintainer tree
+>> - Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
+>> - Rename subject to appropriate since power domain changes are dropped
+>> - Rebase other changes on top of next-20200221
+>>
+>> Changes in v5:
+>> - Add Rob's Acked by on dt-bindings change
+>> - Drop firmware psci change
+>> - Update cpuidle stats in dtsi to follow PC mode
+>> - Include change to update dirty flag when data is updated from [4]
+>> - Add change to invoke rpmh_flush when caches are dirty
+>>
+>> Changes in v4:
+>> - Add change to allow hierarchical topology in PC mode
+>> - Drop hierarchical domain idle states converter from v3
+>> - Address Merge sc7180 dtsi change to add low power modes
+>>
+>> Changes in v3:
+>> - Address Rob's comment on dt property value
+>> - Address Stephen's comments on rpmh-rsc driver change
+>> - Include sc7180 cpuidle low power mode changes from [1]
+>> - Include hierarchical domain idle states converter change from [2]
+>>
+>> Changes in v2:
+>> - Add Stephen's Reviewed-By to the first three patches
+>> - Addressed Stephen's comments on fourth patch
+>> - Include changes to connect rpmh domain to cpuidle and genpds
+>>
+>> Resource State Coordinator (RSC) is responsible for powering off/lowering
+>> the requirements from CPU subsystem for the associated hardware like buses,
+>> clocks, and regulators when all CPUs and cluster is powered down.
+>>
+>> RSC power domain uses last-man activities provided by genpd framework based
+>> on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
+>> idle states. As a part of domain poweroff, RSC can lower resource state
+>> requirements by flushing the cached sleep and wake state votes for various
+>> resources.
+>>
+>> [1] https://patchwork.kernel.org/patch/11218965
+>> [2] https://patchwork.kernel.org/patch/10941671
+>> [3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+>> [4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
+>> [5] https://patchwork.kernel.org/patch/10818129
+>>
+>> Maulik Shah (5):
+>>    arm64: dts: qcom: sc7180: Add cpuidle low power states
+>>    soc: qcom: rpmh: Update dirty flag only when data changes
+>>    soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new
+>>      data
+>>    soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+>>    soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
+>>
+>> Raju P.L.S.S.S.N (1):
+>>    soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
+>>
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi |  78 +++++++++++++
+>>   drivers/soc/qcom/rpmh-internal.h     |  25 ++--
+>>   drivers/soc/qcom/rpmh-rsc.c          | 220 +++++++++++++++++++++++++++--------
+>>   drivers/soc/qcom/rpmh.c              |  79 ++++++-------
+>>   4 files changed, 305 insertions(+), 97 deletions(-)
+>>
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
 
-True.
-
->> The Energy Model (and CPUfreq cooling) code would need
->> capacity_orig_of() exported. arch_scale_cpu_capacity() currently is
->> exported via include/linux/sched/topology.h.
-> 
-> Not sure that we need to export it outside scheduler, they can still
-> use arch_scale_cpu_capacity()
-
-OK, let's change this for the task scheduler only.
-
->> I guess Pelt and 'scale invariant Deadline bandwidth enforcement' should
->> continue using arch_scale_cpu_capacity() in sync with
->> arch_scale_freq_capacity().
-> 
-> Why can't they use capacity_orig_of ?
-> we keep using arch_scale_freq_capacity() because it's dynamic but we
-> don't really need to keep using arch_scale_cpu_capacity()
-
-OK, Pelt is task scheduler so it can be changed here as well.
-
-I'm going to create a patch following these ideas.
-
-[...]
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
