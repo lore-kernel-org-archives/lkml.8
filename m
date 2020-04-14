@@ -2,118 +2,96 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F407C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E18C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B672064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F082064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586897542;
+	bh=UNAynrifsyrl63+WA+Z6q40CoIdb4PxkQRzhNgu9FRk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=v8NvUyOuI+y27e2ovdgxA3U6vs+C3HGHPzUuIHa+cBcYCU51ZC9g1NLGjhqqInSeq
+	 CUt2xTHZPrw4PjrSG6FU7KcQa1Wqi1qzHh3E0h28Sse+U1q5X7SLVlcU23uz+bHuMF
+	 mC6UPv+I2pTUyK9dDR1c/Rn3KsaqiFj3CTpFcYFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633391AbgDNUti (ORCPT
+        id S2633413AbgDNUwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:49:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:21026 "EHLO mga05.intel.com"
+        Tue, 14 Apr 2020 16:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbgDNUtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:49:24 -0400
-IronPort-SDR: Pkf0MVaWl4FGcR/JSWZkC5PkHCiINzQ1/5+27WulJnkLMJ0LQyyiXEgQngnT7uxUFV6hTTlI9U
- 6VEUkwrukOjw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 13:49:23 -0700
-IronPort-SDR: z09oPnrrskOdKVIxrcy/Slo2HLk4de2A8to5xuDqqtfJZXnIOJSvU+cBOE8i2EWeMm4PVIqFQ7
- 07MK1U32Hfxw==
-X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
-   d="scan'208";a="298809985"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.134.69.31])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 13:49:22 -0700
-Message-ID: <81359df9983fb70bd40ddb3be9090e5521294529.camel@linux.intel.com>
-Subject: Re: [PATCH 3/3] x86/mce/therm_throt: allow disabling the thermal
- vector altogether
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Borislav Petkov <bp@suse.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        bberg@redhat.com, Tony Luck <tony.luck@intel.com>
-Date:   Tue, 14 Apr 2020 13:49:21 -0700
-In-Reply-To: <20200414202328.GK31763@zn.tnic>
-References: <20200407063345.4484-1-Jason@zx2c4.com>
-         <20200407063345.4484-3-Jason@zx2c4.com>
-         <0e189a4fe1e69b08afc859ce83623a0e5ea0c08b.camel@linux.intel.com>
-         <CAHmME9pigvAgK3Bje6DkFEcdyWwi7-C7D6QEo4YiH_cbJvxqhQ@mail.gmail.com>
-         <4b75ec34ccff5abdc0b1c04a5ac39455ddd4f49b.camel@linux.intel.com>
-         <CAHmME9rfXXPepanaxR6EBimSNkJp6KTuNLkYcSceGwZXp_j-Kw@mail.gmail.com>
-         <20200414202328.GK31763@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        id S2633395AbgDNUwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:52:13 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBAC52074D;
+        Tue, 14 Apr 2020 20:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586897533;
+        bh=UNAynrifsyrl63+WA+Z6q40CoIdb4PxkQRzhNgu9FRk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dm5y+ThhW+vRmynXiHvgCKGwq2G2cQ1F8s1xmhdUMO+psCFELoh54cRe4ZgdeZXBF
+         yR0JVYeIEDk5FZOQaN0kEmypiQH9DOkDH21WLrUw53Qzdc4Tw8Ya31r4SIKFlhC88M
+         BpFCZPAyaC07c2kpRZEM4NfjOGF3SAD3n/UF4JdE=
+Subject: Re: [PATCH] Revert "Kernel selftests: tpm2: check for tpm support"
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <20200412142309.71807-1-jarkko.sakkinen@linux.intel.com>
+ <3921a93f-120c-0201-4af5-591bf4e6a0b0@kernel.org>
+ <20200414193722.GD13000@linux.intel.com>
+ <20200414193800.GE13000@linux.intel.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ac896427-581d-6fd0-e088-3bc519b6ed66@kernel.org>
+Date:   Tue, 14 Apr 2020 14:52:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200414193800.GE13000@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 22:23 +0200, Borislav Petkov wrote:
-> + Tony.
-> 
-> On Tue, Apr 14, 2020 at 01:41:08PM -0600, Jason A. Donenfeld wrote:
-> > Generally it is desirable, and extremely common too. This thermal
-> > code
-> > -- which mostly functions to print some messages into kmsg -- is
-> > very
-> > verbose. This is not something I want to compile into smaller
-> > systems.
-> > This is the reason why kconfig has options in the first place. I'm
-> > not
-> > sure yet-another boottime flag makes sense for this.
-> 
-> I don't mind making the already existing option selectable and
-> leaving
-> it default y, i.e., keeping the current situation by default. And
-> people
-> who want to disable it, can then do so.
-> 
-> I do mind to having yet another config option though. No thanks -
-> they're already too many.
-> 
-> So it should be an all or nothing thing.
-> 
-> Poking quickly at that and
-> drivers/thermal/intel/x86_pkg_temp_thermal.c,
-> all those things do is report trip points. therm_throt reports how
-> long
-> the hw throttled due to hitting a trip point, etc.
-> 
-> IINM, of course so please correct me if I'm missing anything.
-> 
-> But if not and this all is only for reporting and doesn't have any
-> detrimental effects on the hardware when missing from the system,
-> then I
-> guess we could make CONFIG_X86_THERMAL_VECTOR user-selectable.
-
-We can make user selectable
-
-These drivers are used for reporting only.
-User space can select a trip temperature via x86_pkg_temp and get
-notification via uevent to start additional cooling system (additional
-fans, liquid coooling etc), so that processor don't have to go self
-throttling mode. Self throttling depending on processor series and
-firmware can be very aggressive.
-In client systems thermald will set a temperature and starts power
-control once it reaches passive temperature limit. But it can function
-without x86_pkg_temp also, so even if user disables thermal reporting
-it can still function.
- 
-Thanks,
-Srinivas
-
-
-> 
-> Thx.
+On 4/14/20 1:38 PM, Jarkko Sakkinen wrote:
+> On Tue, Apr 14, 2020 at 10:37:25PM +0300, Jarkko Sakkinen wrote:
+>> On Tue, Apr 14, 2020 at 09:12:05AM -0600, shuah wrote:
+>>> On 4/12/20 8:23 AM, Jarkko Sakkinen wrote:
+>>>> This reverts commit b32694cd0724d4ceca2c62cc7c3d3a8d1ffa11fc.
+>>>>
+>>>> The original comment
+>>>
+>>> commit I assume.
+>>>
+>>>   was neither reviewed nor tested. Thus, this the
+>>>> *only* possible action to take.
+>>>>
+>>>
+>>> Bummer. I will apply this right away.
+>>
+>> No worries, and fine with the change as long as I'm able to
+>> review and try it out :-) Sorry for the dull tone!
 > 
 
+I usually wait for test authors to do the review. This patch
+was sent a while back and I ended up picking it up. It stayed
+in next for a while. It is fixed now.
+
+> I mean refined change after this revert has been applied.
+> 
+Of course. I applied your revert to for my next pull request
+to linux-kselftest next
+
+thanks,
+-- Shuah
