@@ -2,232 +2,104 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087C0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED01C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D899220767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6162206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586900735;
+	bh=EYM9DzGXhALV2lxpMVZWWxznJSNpIBJFFRKkKAwCSwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SRMUp+fRkfN229S8lCBCmkaVpKZNDYYRXAa6txYkrs3M6OdenWQ0mbNOJL9P6PVy7
+	 N5ObDE7XwNKprorpsvvpOPEg6UvS7+F0XP6skLEWkVxOkS/RBqI6my83/F8MQRKUxm
+	 DgSlzPhRO4CtNNZTppG9n6l6AMHzklEDzHe4540Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634107AbgDNVpM (ORCPT
+        id S2634118AbgDNVpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634054AbgDNVnQ (ORCPT
+        Tue, 14 Apr 2020 17:45:32 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37088 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634022AbgDNVog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:43:16 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81717C061A0C;
-        Tue, 14 Apr 2020 14:43:16 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 2020A2A00D8
-Subject: Re: media/master bisection: v4l2-compliance-vivid.device-presence on
- qemu_x86_64
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <5e960bf5.1c69fb81.8a349.6851@mx.google.com>
- <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
- <20200414233347.2a844b85@coco.lan>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <86feeb83-37ac-cbd6-b792-b81d17d559c9@collabora.com>
-Date:   Tue, 14 Apr 2020 22:43:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 17:44:36 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z17so1331712oto.4;
+        Tue, 14 Apr 2020 14:44:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1rbtN7N+ptVDeQQdbAIqZEIk2V0QAROfk/PV0WHMjRE=;
+        b=ZosH/jfgJtUIf0XyZFDTyR2BJmAA3Ga6u2mvbdK0rzmgBr+ZEBmyNdMiEx3l3waieY
+         QPfEtQyJZzPIefcUZ+iKleSZqfM8lu1jnO6/pmSvrmeTYDDkbw+LeC8v6lBsMhmvl0+r
+         J07TIrZCOvXwpaGpAPjjyiU0mmpt1zMxPwAkXzCihx7bA2HQu/QTBeM3dFbdaqQta0tH
+         7KeaxCun9U5VO+FvGZ5v8eVDFn2oDzPIwrsyFsUyJ+rOPhngM0qDjQsqgcy8GCr5DmDg
+         no33Frb7fsHTyMSJF6mtr+cy8ew4y9C9rKbOu2BpvHwxIbXjMcfKrnUtRfRZTophb0pH
+         qWGg==
+X-Gm-Message-State: AGi0PuaYDwhCz2TjlxkpdOBR/rkmegSK2Kf5x1qZgr91JoRYYAHq1/z+
+        N+7GlfXQq8PYPumh0nWQbg==
+X-Google-Smtp-Source: APiQypL96hB6UYPUf5qDgTbGQ//SKC8rB0d/g8MUB8WJ16O3Kia4xlS7p8LgovR0p7mxbY0QwQJLCw==
+X-Received: by 2002:a9d:3988:: with SMTP id y8mr10467743otb.352.1586900675157;
+        Tue, 14 Apr 2020 14:44:35 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r67sm5788491oie.19.2020.04.14.14.44.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 14:44:34 -0700 (PDT)
+Received: (nullmailer pid 10522 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:44:33 -0000
+Date:   Tue, 14 Apr 2020 16:44:33 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys ARC HDMI TX
+ bindings
+Message-ID: <20200414214433.GA10013@bogus>
+References: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
+ <20200414144402.27643-3-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <20200414233347.2a844b85@coco.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414144402.27643-3-Eugeniy.Paltsev@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/04/2020 22:33, Mauro Carvalho Chehab wrote:
-> Em Tue, 14 Apr 2020 22:23:52 +0100
-> Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
+On Tue, 14 Apr 2020 17:44:02 +0300, Eugeniy Paltsev wrote:
+> This patch adds documentation of device tree bindings for the Synopsys
+> HDMI 2.0 TX encoder driver for ARC SoCs.
 > 
->> Please see the bisection report below about absence of the vivid
->> driver, which caused v4l2-compliance to fail to run.
->>
->> Presumably we need to update the configuration fragment used by
->> kernelci.org to enable platform drivers.  Until now we've been
->> using this:
->>
->>     CONFIG_MEDIA_SUPPORT=y
->>     CONFIG_MEDIA_CAMERA_SUPPORT=y
->>     CONFIG_VIDEO_DEV=y
->>     CONFIG_VIDEO_V4L2=y
->>     CONFIG_V4L_TEST_DRIVERS=y
->>     CONFIG_VIDEO_VIVID=y
->>     CONFIG_VIDEO_VIVID_MAX_DEVS=64
->>
->> Do we simply need to add this one in v5.7 onwards?
->>
->>     CONFIG_MEDIA_PLATFORM_SUPPORT=y
-> 
-> No, this shouldn't be needed.
-> 
-> Helen sent us a patch that should likely fix it:
-> 
-> 	https://git.linuxtv.org/media_tree.git/commit/?id=860b511766a3d95308a942ac09a34e4d1839e706
-> 
-> Could you please check if this solves the issue?
-
-I see, thanks.  This revision is being built and tested at the
-moment, I'll check the results when they land in my inbox.
-
-Guillaume
-
->> On 14/04/2020 20:16, kernelci.org bot wrote:
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>> * This automated bisection report was sent to you on the basis  *
->>> * that you may be involved with the breaking commit it has      *
->>> * found.  No manual investigation has been done to verify it,   *
->>> * and the root cause of the problem may be somewhere else.      *
->>> *                                                               *
->>> * If you do send a fix, please include this trailer:            *
->>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->>> *                                                               *
->>> * Hope this helps!                                              *
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>
->>> media/master bisection: v4l2-compliance-vivid.device-presence on qemu_x86_64
->>>
->>> Summary:
->>>   Start:      ba445b7ff43b3 media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
->>>   Plain log:  https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.txt
->>>   HTML log:   https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.html
->>>   Result:     06b93644f4d10 media: Kconfig: add an option to filter in/out platform drivers
->>>
->>> Checks:
->>>   revert:     PASS
->>>   verify:     PASS
->>>
->>> Parameters:
->>>   Tree:       media
->>>   URL:        https://git.linuxtv.org/media_tree.git
->>>   Branch:     master
->>>   Target:     qemu_x86_64
->>>   CPU arch:   x86_64
->>>   Lab:        lab-collabora
->>>   Compiler:   gcc-8
->>>   Config:     x86_64_defconfig+virtualvideo
->>>   Test case:  v4l2-compliance-vivid.device-presence
->>>
->>> Breaking commit found:
->>>
->>> -------------------------------------------------------------------------------
->>> commit 06b93644f4d102bdfc297159121acc1de794d68d
->>> Author: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->>> Date:   Tue Mar 24 10:27:15 2020 +0100
->>>
->>>     media: Kconfig: add an option to filter in/out platform drivers
->>>     
->>>     Most systems don't need support for those, while others only
->>>     need those, instead of the others.
->>>     
->>>     So, add an option to filter in/out platform drivers.
->>>     
->>>     Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->>>
->>> diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
->>> index 9dfea5c4b6ab7..2b6ea8beb9199 100644
->>> --- a/drivers/media/Kconfig
->>> +++ b/drivers/media/Kconfig
->>> @@ -87,6 +87,18 @@ config MEDIA_CEC_SUPPORT
->>>  	  Say Y when you have an HDMI receiver, transmitter or a USB CEC
->>>  	  adapter that supports HDMI CEC.
->>>  
->>> +config MEDIA_PLATFORM_SUPPORT
->>> +	bool "Platform-specific devices support"
->>> +	help
->>> +	  Enable support for complex cameras, codecs, and other hardware
->>> +	  that are integrated at the CPU, GPU or on Image Signalling Processor
->>> +	  and don't use PCI, USB or Firewire buses.
->>> +
->>> +	  This is found on Embedded hardware (SoC), on V4L2 codecs and
->>> +	  on some GPU and newer CPU chipsets.
->>> +
->>> +	  Say Y when you want to be able so see such devices.
->>> +
->>>  source "drivers/media/cec/Kconfig"
->>>  
->>>  source "drivers/media/mc/Kconfig"
->>> @@ -161,15 +173,14 @@ source "drivers/media/dvb-core/Kconfig"
->>>  
->>>  comment "Media drivers"
->>>  
->>> -#
->>> -# V4L platform/mem2mem drivers
->>> -#
->>> -
->>>  source "drivers/media/usb/Kconfig"
->>>  source "drivers/media/pci/Kconfig"
->>> +source "drivers/media/radio/Kconfig"
->>> +
->>> +if MEDIA_PLATFORM_SUPPORT
->>>  source "drivers/media/platform/Kconfig"
->>>  source "drivers/media/mmc/Kconfig"
->>> -source "drivers/media/radio/Kconfig"
->>> +endif
->>>  
->>>  comment "Supported FireWire (IEEE 1394) Adapters"
->>>  	depends on DVB_CORE && FIREWIRE
->>> -------------------------------------------------------------------------------
->>>
->>>
->>> Git bisection log:
->>>
->>> -------------------------------------------------------------------------------
->>> git bisect start
->>> # good: [2632e7b618a7730969f9782593c29ca53553aa22] media: venus: firmware: Ignore secure call error on first resume
->>> git bisect good 2632e7b618a7730969f9782593c29ca53553aa22
->>> # bad: [ba445b7ff43b3e45836a9a290efdc3a36ea63941] media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
->>> git bisect bad ba445b7ff43b3e45836a9a290efdc3a36ea63941
->>> # good: [29d9f30d4ce6c7a38745a54a8cddface10013490] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->>> git bisect good 29d9f30d4ce6c7a38745a54a8cddface10013490
->>> # good: [e109f506074152b7241bcbd3949a099e776cb802] Merge tag 'mtd/for-5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
->>> git bisect good e109f506074152b7241bcbd3949a099e776cb802
->>> # good: [aa1a8ce533324d12696a9f4b71dbc5eb561a2e04] Merge tag 'trace-v5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
->>> git bisect good aa1a8ce533324d12696a9f4b71dbc5eb561a2e04
->>> # good: [c7b6a566b98524baea6a244186e665d22b633545] mm/gup: Mark lock taken only after a successful retake
->>> git bisect good c7b6a566b98524baea6a244186e665d22b633545
->>> # good: [e4da01d8333e500e15a674d75885a9dfcfd31e77] Merge tag 'powerpc-5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
->>> git bisect good e4da01d8333e500e15a674d75885a9dfcfd31e77
->>> # good: [6900433e0fbca146d8170bdf876271cdf3053021] Merge tag 'for-linus-5.7-1' of git://github.com/cminyard/linux-ipmi
->>> git bisect good 6900433e0fbca146d8170bdf876271cdf3053021
->>> # good: [b753101a4ac0b906064a72feec43f5b80a1fe2e5] Merge tag 'kbuild-v5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
->>> git bisect good b753101a4ac0b906064a72feec43f5b80a1fe2e5
->>> # bad: [4b32216adb010a364f23a055c45e06e839b089f9] media: split test drivers from platform directory
->>> git bisect bad 4b32216adb010a364f23a055c45e06e839b089f9
->>> # good: [20e2aa812620439d010a3f78ba4e05bc0b3e2861] Merge tag 'perf-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->>> git bisect good 20e2aa812620439d010a3f78ba4e05bc0b3e2861
->>> # good: [0785249f8b93836986e9d1bdeefd2a2c13f160af] Merge tag 'timers-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->>> git bisect good 0785249f8b93836986e9d1bdeefd2a2c13f160af
->>> # good: [3b50142d8528e1efc1c07f69c540f926c58ab3ad] MAINTAINERS: sort field names for all entries
->>> git bisect good 3b50142d8528e1efc1c07f69c540f926c58ab3ad
->>> # bad: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
->>> git bisect bad 06b93644f4d102bdfc297159121acc1de794d68d
->>> # good: [d9d6e1f3d5bbca799910072b2110963250e0b9c6] media: dvb-usb: auto-select CYPRESS_FIRMWARE
->>> git bisect good d9d6e1f3d5bbca799910072b2110963250e0b9c6
->>> # first bad commit: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
->>> -------------------------------------------------------------------------------
->>>   
->>
-> 
-> 
-> 
-> Thanks,
-> Mauro
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  .../display/bridge/snps,arc-dw-hdmi.yaml      | 131 ++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
 > 
 
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.example.dt.yaml: example-0: 'hdmi@0x10000' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.example.dt.yaml: hdmi@0x10000: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+
+See https://patchwork.ozlabs.org/patch/1270389
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
