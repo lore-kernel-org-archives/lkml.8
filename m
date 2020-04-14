@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09904C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57FBC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D571B20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FB920767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TZqQWV94"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="soPE3YbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503488AbgDNSLS (ORCPT
+        id S2503505AbgDNSLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45006 "EHLO
+        Tue, 14 Apr 2020 14:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503472AbgDNSLC (ORCPT
+        by vger.kernel.org with ESMTP id S2503478AbgDNSLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:11:02 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7086C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:11:01 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id b14so466055pgi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:11:01 -0700 (PDT)
+        Tue, 14 Apr 2020 14:11:05 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69582C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:11:04 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id v71so13682929pjb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=BlvWvGdkN2WeiBN4fqdYccjrgT9VbdrAfRUdSyUXBZE=;
-        b=TZqQWV94Zuu65bh1l2U2we+9RQv0ecmGJ/H8OsjT+KUkAeOB0Im2t4v6FIP69dmojT
-         TXzddpdrsIGUDPp7azXpW1Eok3r27SblClzb6ZvGs0vf8ESCCFAlhjLouhoYbG4aZe0s
-         Zqfxgl0hZrH7160buCzm+WwdijtDQEdXVr0f6czTZed9sRSx9fA4Ot2E9x1vYhNhDwAK
-         IFt2XupTwy63RUFA9G7aULrBKkPBd3DuXNyfOmmCPzr/+WpJFwG24wcTbnA8wNXH0m26
-         cK/37ysy+da+dMHdJRpbtWL2Epdw0PvoUqjLQhy3nZicZqklG/9ungERiZxTOmT+VXyZ
-         tO/w==
+        bh=R8mSLoA4yKGeDKyGJ46zmAHwFa4kk4RkB3OQPR7SZNk=;
+        b=soPE3YbSyYsetKYuTK1j8cBgfL1ufL/chbR0V1Nlr/KGFsEhqXTx37PrP+FQqZ0VYS
+         NctD2fvmwY0Mz0T3Tcm3+G7nBpf9rZrXjJUeST7ysZvyAr/mrERTRZWTCT2/0UIRi5/Z
+         q3KMJmhn4tEpliFy/lSZC8i7J7aWbJfQN21+4ZFDhmKviV5dV+ltPNrogtJFbmI87/hL
+         dh42b3mlezccKwMiD+jM5ivV64HZ+tLkq/7I3cFlXr6jqHlMyidiBdgzeBrS9/3wb9yA
+         VoQgrEmq7kcUFtWJiiCr5r+X2ChTmphrOZS/2BOjmBmPijYVLcQ4/ngHh9BbhtWWjdSe
+         cODQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=BlvWvGdkN2WeiBN4fqdYccjrgT9VbdrAfRUdSyUXBZE=;
-        b=cuzVl8YKTezpCGE2pLABW/2Ptt9EBxaZnFJRhCeHzPJzhsMwAHpyLn+XEsXpwbRLAB
-         8Che1RFrwBu39Tk3MzeDylYEu8f50UqiZEmn1qrKGL0D/pU5QQ6opRmsat1bYyBgcsZX
-         YlqRjXB9rUGZnf2wPL3SUmDNsBkqeZBi5q4icmBO2KKBAi0sAm/6Ey/ZVxj98ks2unFo
-         kYqRvrtEGz6p5cRI4LUbDaNhxHp5tFeNlu7haTXB1OCff23oibrnHxSniKsr4BrrI8ox
-         pqsD+v/ANVVhhz64iE2TSd3UX/CA5jpTqzMPrvNN+i/aqtap279dEBA8Oq/3RWRq4/xf
-         WWUw==
-X-Gm-Message-State: AGi0PuaV+Gnk0QIEzjBSj6oXFycc4Bh2ELe68TMnNb5JhJUm73/dV8Ut
-        Hq3RiiH85R4KOgw4bBpBQhGOlYxXVSUD
-X-Google-Smtp-Source: APiQypJpp1FHKo9I4j4uknzvoQXqGMx6BkeFOtMVeAThGZ2kTspRZEZVLXgIe/H5UnbizK5QcpZHfol1Mqvg
-X-Received: by 2002:a63:e74f:: with SMTP id j15mr22888445pgk.153.1586887861370;
- Tue, 14 Apr 2020 11:11:01 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 11:10:51 -0700
+        bh=R8mSLoA4yKGeDKyGJ46zmAHwFa4kk4RkB3OQPR7SZNk=;
+        b=d9kp8cQQDOFv5UeAmslEVmtfwPMnhfs0mVim33grqch2O1ZFLhM5OwZ1TsEidkjQvx
+         B4PQ35CJaGkzio/TCWc/LvOmRyJ0CMISN4WY1JjMsJ8znr9nYsDJbdIXINFDZxFVRAIs
+         H11nf/zVwTSCWct09VF/6YLtzIK1Yo8hLmSqTlknN1TsiIYNcqEpiq4wKf81ATZoBQqb
+         xytUWm1taaJbKF6qGZ24Lpf0pC4RW5/kHnLo8Ci+r5UUSC9WwBNC3hJs4yo12ptvtkiU
+         HTCDZB44RvY3v+K/MvUvq1AASW9QF2/QppGCqzdImh3rV+k0Zgpz5CUezB6gwZXmnvwP
+         xm+w==
+X-Gm-Message-State: AGi0PuZOda25vFkynMeL2I1Sd/0jUXRq9ZuhMWUnEhuljxvUtDgM1+BV
+        EF1srt2DMoUCGC4HTxjgoBQ04OqNd4mF
+X-Google-Smtp-Source: APiQypKS42oeOJ/EEIPZ1vIkACtXeNF9CLv/+ToiDrm8HpPrn9vyCpP3q9r8jnr+W/V+4FlFShEz/09JUiYJ
+X-Received: by 2002:a17:90a:14c6:: with SMTP id k64mr1503515pja.39.1586887863831;
+ Tue, 14 Apr 2020 11:11:03 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 11:10:52 -0700
 In-Reply-To: <20200414181054.22435-1-irogers@google.com>
-Message-Id: <20200414181054.22435-2-irogers@google.com>
+Message-Id: <20200414181054.22435-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20200414181054.22435-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v9 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
+Subject: [PATCH v9 2/4] tools feature: add support for detecting libpfm4
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -97,35 +97,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will allow parent makefiles to pass values to asciidoc.
+From: Stephane Eranian <eranian@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+libpfm4 provides an alternate command line encoding of perf events.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/build/Makefile.feature       | 3 ++-
+ tools/build/feature/Makefile       | 6 +++++-
+ tools/build/feature/test-libpfm4.c | 9 +++++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
 
-diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index 31824d5269cc..6e54979c2124 100644
---- a/tools/perf/Documentation/Makefile
-+++ b/tools/perf/Documentation/Makefile
-@@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
- man7dir=$(mandir)/man7
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 3e0c019ef297..3abd4316cd4f 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -98,7 +98,8 @@ FEATURE_TESTS_EXTRA :=                  \
+          llvm                           \
+          llvm-version                   \
+          clang                          \
+-         libbpf
++         libbpf                         \
++         libpfm4
  
- ASCIIDOC=asciidoc
--ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-+ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
- ASCIIDOC_HTML = xhtml11
- MANPAGE_XSL = manpage-normal.xsl
- XMLTO_EXTRA =
-@@ -59,7 +59,7 @@ HTML_REF = origin/html
+ FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
  
- ifdef USE_ASCIIDOCTOR
- ASCIIDOC = asciidoctor
--ASCIIDOC_EXTRA = -a compat-mode
-+ASCIIDOC_EXTRA += -a compat-mode
- ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
- ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
- ASCIIDOC_HTML = xhtml5
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 621f528f7822..a6eded94a36b 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -68,7 +68,8 @@ FILES=                                          \
+          test-llvm-version.bin			\
+          test-libaio.bin			\
+          test-libzstd.bin			\
+-         test-file-handle.bin
++         test-file-handle.bin			\
++         test-libpfm4.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -325,6 +326,9 @@ $(OUTPUT)test-libzstd.bin:
+ $(OUTPUT)test-file-handle.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libpfm4.bin:
++	$(BUILD) -lpfm
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
+new file mode 100644
+index 000000000000..af49b259459e
+--- /dev/null
++++ b/tools/build/feature/test-libpfm4.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/types.h>
++#include <perfmon/pfmlib.h>
++
++int main(void)
++{
++	pfm_initialize();
++	return 0;
++}
 -- 
 2.26.0.110.g2183baf09c-goog
 
