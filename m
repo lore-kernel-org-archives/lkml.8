@@ -2,162 +2,237 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D72BC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54576C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5201420678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:37:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="KS5KSsAg"
+	by mail.kernel.org (Postfix) with ESMTP id 21A1920678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586882360;
+	bh=fh0CwTg9fVCUTMCmRwDo30VJ7gsfT2UR0AmvRtpphIQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=AvuEjnnRWz+PABSTlLd8LMAgMMFX04w2FWxqGqS5aBhiW9ruzYWxkAopGpG4AkSNO
+	 yvKjb316DZC9AtPBzL8UY+PdkOV6xhDfG1AenyuiiibyMm/PFNem4Vlf02oVCI5wJz
+	 CoT+c2iqZljTGv72bK5ARg3YytVJmibp2zT5bU1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391850AbgDNQhg (ORCPT
+        id S2404429AbgDNQjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:37:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391839AbgDNQhC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:37:02 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6653C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:37:01 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id s63so9763303qke.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DYImV4WFqfjPjnkhvl2nD8nYSEJboQaYtVJWAd3b//Q=;
-        b=KS5KSsAg991FP2nFTxhky8wQhQOu9BwakhqYU+efKhtive2f3PbE42bLxc5ZIjZRzc
-         PNWD/LEGWAtMm5/XDuYn/2V4ghpqNkIk8WmZzEJDhpzW4YQNMk1oJKjjSmLLHWlxNlwS
-         SRUHNobeIH59Sg0OvosYB0vVt4FtWC7jtzla2qHmPJoefzLEY2MgbK5IVRlVcrYE4yjp
-         pbtJ8ktGppKUT+kjFT9pc36mAcNXqgmuiq2LD/VFTMh5hdHNLBGM4atG+Z8QcePqRbK+
-         Va56KXOZ1ODNr3uJ0s9LW7EOHOBYLzqekZ1OIXQgckvam6fjqxNU8ywgqJZiDaF17jON
-         qxUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DYImV4WFqfjPjnkhvl2nD8nYSEJboQaYtVJWAd3b//Q=;
-        b=DzZGE7RAXT+YNlqMK5gr6to0+wlMRKteEeQPCg/QPu8dn6K/suR0feSZLNipWLA4W8
-         wUze3zTn58DJT9OBEyrR2jhs4F77k/ItjZBOPPN414wwdNSUntd8KjHWdZLVluZdTf6Z
-         hOMOQHyM3b+A0gRxia2OwbEZQtlChwZhexi514tGCbxhcbwDmoSHEohcnBFSp9JVqZ8s
-         PEd22XULmoXuwXx8lPq6PAqFtPHH4mhESIIlEudobeizNgditkE0FXR0aIhZpsi3fKr8
-         ZcxSX1nRiWGo7wYr4HmOgj5xUtm2sjNp7o/icFcCpitT1ZIFtzY7SqtYBGpb1UVqt/BK
-         7a4A==
-X-Gm-Message-State: AGi0PubSBZEKVC10DJi+a5tfy2oxSXOczKnc1bvz8d7nYb9l7tebsmrG
-        wQz3KMZnflQC33BAiA6+ldvREw==
-X-Google-Smtp-Source: APiQypJDaEd/nGS9BTaUv72nAKo3JSl8h//gwiZ42bd2PG7DF/jOIddhKGGPuIigNWUmnLczWkFCwg==
-X-Received: by 2002:a37:ac08:: with SMTP id e8mr3627259qkm.439.1586882220593;
-        Tue, 14 Apr 2020 09:37:00 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e623])
-        by smtp.gmail.com with ESMTPSA id u24sm2884840qkk.84.2020.04.14.09.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:36:59 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:36:58 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20200414163658.GB136578@cmpxchg.org>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
- <20200413180725.GA99267@cmpxchg.org>
- <42d5c2cb-3019-993f-eba7-33a1d69ef699@linux.alibaba.com>
+        Tue, 14 Apr 2020 12:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391830AbgDNQi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:38:58 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C23D20678;
+        Tue, 14 Apr 2020 16:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586882337;
+        bh=fh0CwTg9fVCUTMCmRwDo30VJ7gsfT2UR0AmvRtpphIQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eeFdZnCdLKvn1k846cWdOhUR8u4BkQgLABxQymSIwfnjsTJahYe3UzAO6QMUQ/OEf
+         DXiVWQriEBloZXhonjlKOLh/+e2VMDpmwzTRWchYvhcuLPYQqBTKvC6eGHgBNvSyOh
+         ya7cvVU35j0clIOn1S4K4ZmSrFBdISAQwpOZiDUY=
+Subject: Re: [PATCH] selftest: add a script to perform selftest compile tests
+To:     "Bird, Tim" <Tim.Bird@sony.com>, Tim Bird <tim@bird.org>
+Cc:     "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tbird20d@gmail.com" <tbird20d@gmail.com>, shuah <shuah@kernel.org>
+References: <86508e9d-4aff-d9a0-3783-971a4686ccd1@bird.org>
+ <9c2a8679-eb90-8dd1-43f6-40ce0a842c87@kernel.org>
+ <CY4PR13MB1527E216D153ADDFE747F485FDDA0@CY4PR13MB1527.namprd13.prod.outlook.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <56a085c6-96fa-d5ad-086f-359dd3008fed@kernel.org>
+Date:   Tue, 14 Apr 2020 10:38:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42d5c2cb-3019-993f-eba7-33a1d69ef699@linux.alibaba.com>
+In-Reply-To: <CY4PR13MB1527E216D153ADDFE747F485FDDA0@CY4PR13MB1527.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:19:01PM +0800, Alex Shi wrote:
+On 4/14/20 10:06 AM, Bird, Tim wrote:
+>> -----Original Message-----
+>> From: shuah <shuah@kernel.org>
+>>
+>> On 4/13/20 4:15 PM, Tim Bird wrote:
+>>> From: Tim Bird <tim.bird@sony.com>
+>>>
+>>> Add ksft-compile-test.sh.  This is a program used to test
+>>> cross-compilation and installation of selftest tests.
+>>>
+>>> See the test usage for help
+>>>
+>>> This program currently tests 3 scenarios out of a larger matrix
+>>> of possibly interesting scenarios.  For each scenario, it conducts
+>>> multiple tests for correctness.  This version tests:
+>>>    1) does the test compile
+>>
+>> Is it necessary to write this long a script? Could we just parse
+>> the "kselftest
+> ???
 > 
-> 
-> 在 2020/4/14 上午2:07, Johannes Weiner 写道:
-> > But isolation actually needs to lock out charging, or it would operate
-> > on the wrong list:
-> > 
-> > isolation:                                     commit_charge:
-> > if (TestClearPageLRU(page))
-> >                                                page->mem_cgroup = new
-> >   // page is still physically on
-> >   // the root_mem_cgroup's LRU. We're
-> >   // updating the wrong list:
-> >   memcg = page->mem_cgroup
-> >   spin_lock(memcg->lru_lock)
-> >   del_page_from_lru_list(page, memcg)
-> >   spin_unlock(memcg->lru_lock)
-> > 
-> > lrucare really is a mess. Even before this patch series, it makes
-> > things tricky and subtle and error prone.
-> > 
-> > The only reason we're doing it is for when there is swapping without
-> > swap tracking, in which case swap reahadead needs to put pages on the
-> > LRU but cannot charge them until we have a faulting vma later.
-> > 
-> > But it's not clear how practical such a configuration is. Both memory
-> > and swap are shared resources, and isolation isn't really effective
-> > when you restrict access to memory but then let workloads swap freely.
-> > 
-> > Plus, the overhead of tracking is tiny - 512k per G of swap (0.04%).
-> > 
-> > Maybe we should just delete MEMCG_SWAP and unconditionally track swap
-> > entry ownership when the memory controller is enabled. I don't see a
-> > good reason not to, and it would simplify the entire swapin path, the
-> > LRU locking, and the page->mem_cgroup stabilization rules.
-> 
-> Hi Johannes,
-> 
-> I think what you mean here is to keep swap_cgroup id even it was swaped,
-> then we read back the page from swap disk, we don't need to charge it.
-> So all other memcg charge are just happens on non lru list, thus we have
-> no isolation required in above awkward scenario.
 
-We don't need to change how swap recording works, we just need to
-always do it when CONFIG_MEMCG && CONFIG_SWAP.
+Sorry for the dangling sentence. :) Can we parse the make kselftest-all
+output instead?
 
-We can uncharge the page once it's swapped out. The only difference is
-that with a swap record, we know who owned the page and can charge
-readahead pages right awya, before setting PageLRU; whereas without a
-record, we read pages onto the LRU, and then wait until we hit a page
-fault with an mm to charge. That's why we have this lrucare mess.
+>>>    2) is the kernel source directory clean after the compile
+>>
+>> Can you use make mrproper and see if anything needs cleaning?
+> I'll check into this.  Does 'make mrproper' return an error code if
+> it found something that needed cleaning?  Or do I have to parse
+> stuff.  The actual code to check if the directory is clean is pretty
+> short.
+> 
+>>
+>>>    3) does the test install operation succeed
+>>>    4) does the test run script reference the test
+>>>
+>>
+>> I like the idea of being able to test, however I am not convinced
+>> you would need a whole new script for it.
+> 
+> The current build system is broken in a few different ways.
+> I have only enabled a few test cases out of the test matrix, to
+> be able to isolate some of the obvious problems from individual
+> target areas.  One of the reasons I wrote a full script was to more easily
+> enable additional tests, once functionality in the current build
+> system was fixed, to notify us of regressions going forward.
+> 
+>>
+
+I still want to see a way to use output from build and install
+steps and parse it, instead of a whole new script.
+
+>>
+>>> Signed-off-by: Tim Bird <tim.bird@sony.com>
+>>> ---
+>>>    MAINTAINERS                                  |   6 +
+>>>    tools/testing/selftests/ksft-compile-test.sh | 567 +++++++++++++++++++++++++++
+>>>    2 files changed, 573 insertions(+)
+>>>    create mode 100755 tools/testing/selftests/ksft-compile-test.sh
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index cc1d18c..a6289c7 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -9127,6 +9127,12 @@ S:	Maintained
+>>>    F:	tools/testing/selftests/
+>>>    F:	Documentation/dev-tools/kselftest*
+>>>
+>>> +KERNEL SELFTEST SELFTEST
+>>> +M:	Tim Bird <tim.bird@sony.com>
+>>> +L:	linux-kselftest@vger.kernel.org
+>>> +S:	Maintained
+>>> +F:	tools/testing/selftests/ksft-compile-test.sh
+>>> +
+>>
+>> Please don't add another entry to the MAINTAINERS file just
+>> for a shell script under tools/testing/selftests
+>>
+>> This doesn't make sense.
+> OK. I only added this to eliminate a checkpatch.pl warning.
+> It seems like overkill to me also, but I was trying to obey the tools.
+> :-)
+> 
+> Maybe that warning from checkpatch is too aggressive?
+> 
+
+Yeah. checkpatch warn in this case is reminder in case a new entry
+is needed. A new entry isn't necessary in most cases.
+
+>>
+>>>    KERNEL UNIT TESTING FRAMEWORK (KUnit)
+>>>    M:	Brendan Higgins <brendanhiggins@google.com>
+>>>    L:	linux-kselftest@vger.kernel.org
+>>> diff --git a/tools/testing/selftests/ksft-compile-test.sh b/tools/testing/selftests/ksft-compile-test.sh
+>>> new file mode 100755
+>>> index 0000000..e36e858
+>>> --- /dev/null
+>>> +++ b/tools/testing/selftests/ksft-compile-test.sh
+>>> @@ -0,0 +1,567 @@
+>>> +#!/bin/bash
+>>> +# SPDX-License-Identifier: GPL-2.0-only OR MIT
+>>> +#
+>>> +# ksft-compile-test.sh - test compiling Linux kernel selftests under lots of
+>>> +#   different configurations.  This is used to check that cross-compilation
+>>> +#   and install works properly for a newly submitted test target, and
+>>> +#   also that changes to existing test Makefiles don't regress with regard to
+>>> +#   this functionality.
+>>> +#
+>>> +# Copyright 2020 Sony Corporation
+>>> +#
+>>> +# Here are the things that Shuah Kahn asked for on 3/6/2020
+>>> +# 1. Cross-compilation & relocatable build support
+>>> +# 2. Generates objects in objdir/kselftest without cluttering main objdir
+>>> +# 3. Leave source directory clean
+>>> +# 4. Installs correctly in objdir/kselftest/kselftest_install and adds
+>>> +#        itself to run_kselftest.sh script generated during install.
+>>> +#
+>>
+>> I was asking for fixes to individual tests.
+> Well, I used this to find some things to fix.  I have some patches queued,
+> but I thought the tool might be useful for others.  I'll send the patches
+> instead of posting the tool.
+> 
+>>
+>>> +# Would be nice to make sure other features also work:
+>>> +# 5. can use absolute, relative, or current directory for output directory
+>>> +# 6. can use ~ in output directory path
+>>> +#
+>>
+>> I do think this can be achieved with a simpler script wrapper around
+>> existing commands and kselftest_install.sh instead of writing a whole
+>> new shell script.
+> 
+> Well, my pain point is the build system itself, not kselftest_install.sh.
+> There are still some bugs in the build system, and it appears that people
+> still sometimes submit new tests with subtle problems compiling under
+> different build configurations.
+> 
+
+Agreed. I think it is still a better idea to parse to find error and
+display them.
+
+> My goal was to be able to test a whole matrix of build configurations,
+> to detect these problems.  But making a generic system to test a matrix
+> of configurations requires more than just putting together a few wrapper
+> scripts.  However, I'm not as familiar with the existing commands as you
+> are, so maybe I missed some functionality I could reuse.
+> 
+
+Right. Hence the reason why I am asking if you explored using exiting
+parsing build and install output. Approaching this as a parsing also
+reduces maintenance overhead for this script. I am not questioning the
+value of the script, I am asking about the approach.
+
+> One of the significant problems here, IMO, is that since most kernel developers
+> don't cross-compile, it introduces a whole range of potential
+> errors in the build system that they can't really test for.
+>
+
+We have efforts such as lkft and soon kernelci do cross-compiles.
+powerpc tests have good coverage and so do arm. The problem is tests
+that can run on multiple architectures at times come in without good
+support.
+
+>I'm happy to leave this outside the kernel tree, and provide 'testing as a service'
+>  >by Fuego!) to find bugs in the kselftest build system.  In that case, 
+I'll just report
+>bugs that this finds (along with fixes where possible).
+Testing as service by Fuego and fixes to problems you find is great.
+
+thanks,
+-- Shuah
+
