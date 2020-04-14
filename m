@@ -2,111 +2,120 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484DDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05109C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6AC206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586864427;
-	bh=debxG6bzDjQdxVdojohF7AMnypZ9G0PLFfnJmNnNq9A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=s8qbL+IlnRwgFLpgLrCeVsWGxHBP4e4CMd+KZor/wPKWXUndbha3cDKc+G3VVwWLS
-	 kLuzACdJ8yc435gMQmPDDyjTBBWZYszbonisCnxJ4P66DKTwh+L091GOZa12JPiv2X
-	 bPSPKULr8102lnYehBh+GKDAUtL769OM9XFEVUBY=
+	by mail.kernel.org (Postfix) with ESMTP id DEB6A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgDNLkZ (ORCPT
+        id S2439452AbgDNLkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 07:40:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:53594 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439437AbgDNLkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:40:11 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF832076B;
-        Tue, 14 Apr 2020 11:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586864411;
-        bh=debxG6bzDjQdxVdojohF7AMnypZ9G0PLFfnJmNnNq9A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P7GiCHi8dZN63BaV9Rbh4ZE6dwEtsaWch+t43qdLhoVG3VCAcAxz2p44QsEIQmX3o
-         fZi152dqHCwKmDwhaq47wtn5mvomJp/bV/J5IJsG5drlplDOEYEU+bvlpi2vWP/J1+
-         NZRTWPK2OS/WnIkyTRtI1ha+slYPjnUpVacfDxN0=
-Date:   Tue, 14 Apr 2020 12:40:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     broonie@kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sc18is602: Fix a typo in MODULE_DESCRIPTION" to the spi tree
-In-Reply-To:  <20200413154043.23064-1-christophe.jaillet@wanadoo.fr>
-Message-Id:  <applied-20200413154043.23064-1-christophe.jaillet@wanadoo.fr>
-X-Patchwork-Hint: ignore
+        id S1729851AbgDNLkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:40:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9D7E1FB;
+        Tue, 14 Apr 2020 04:40:36 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD4743F6C4;
+        Tue, 14 Apr 2020 04:40:34 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:40:32 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        luca abeni <luca.abeni@santannapisa.it>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] sched/deadline: Improve admission control for
+ asymmetric CPU capacities
+Message-ID: <20200414114032.wigdlnegism6qqns@e107158-lin.cambridge.arm.com>
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-3-dietmar.eggemann@arm.com>
+ <jhjeesyw96u.mognet@arm.com>
+ <20200408153032.447e098d@nowhere>
+ <jhjblo2vx60.mognet@arm.com>
+ <31620965-e1e7-6854-ad46-8192ee4b41af@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <31620965-e1e7-6854-ad46-8192ee4b41af@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 04/09/20 19:29, Dietmar Eggemann wrote:
 
-   spi: sc18is602: Fix a typo in MODULE_DESCRIPTION
+[...]
 
-has been applied to the spi tree at
+> Maybe we can do a hybrid. We have rd->span and rd->sum_cpu_capacity and
+> with the help of an extra per-cpu cpumask we could just
+> 
+> DEFINE_PER_CPU(cpumask_var_t, dl_bw_mask);
+> 
+> dl_bw_cpus(int i) {
+> 
+>     struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
+>     ...
+>     cpumask_and(cpus, rd->span, cpu_active_mask);
+> 
+>     return cpumask_weight(cpus);
+> }
+> 
+> and
+> 
+> dl_bw_capacity(int i) {
+> 
+>     struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
+>     ...
+>     cpumask_and(cpus, rd->span, cpu_active_mask);
+>     if (cpumask_equal(cpus, rd->span))
+>         return rd->sum_cpu_capacity;
+> 
+>     for_each_cpu(i, cpus)
+>         cap += capacity_orig_of(i);
+> 
+>     return cap;
+> }
+> 
+> So only in cases in which rd->span and cpu_active_mask differ we would
+> have to sum up again.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+I haven't followed this discussion closely, so I could be missing something
+here.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+In sched_cpu_dying() we call set_rq_offline() which clears the cpu in
+rq->rd->online.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+So the way I read the code
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+	rd->online = cpumask_and(rd->span, cpu_active_mask)
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+But I could have easily missed some detail.
 
-Thanks,
-Mark
+Regardless, it seems to me that DL is working around something not right in the
+definition of rd->span or using the wrong variable.
 
-From 6d75145bf6b6558dea5ce3b4f83f3f66444bcac0 Mon Sep 17 00:00:00 2001
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Date: Mon, 13 Apr 2020 17:40:43 +0200
-Subject: [PATCH] spi: sc18is602: Fix a typo in MODULE_DESCRIPTION
+My 2p :-). I have to go back and read the discussion in more detail.
 
-This should be 'SC18IS602', not 'SC18IC602'
+Thanks
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200413154043.23064-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-sc18is602.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-sc18is602.c b/drivers/spi/spi-sc18is602.c
-index 5497eeb3bf3e..ee0f3edf49cd 100644
---- a/drivers/spi/spi-sc18is602.c
-+++ b/drivers/spi/spi-sc18is602.c
-@@ -345,6 +345,6 @@ static struct i2c_driver sc18is602_driver = {
- 
- module_i2c_driver(sc18is602_driver);
- 
--MODULE_DESCRIPTION("SC18IC602/603 SPI Master Driver");
-+MODULE_DESCRIPTION("SC18IS602/603 SPI Master Driver");
- MODULE_AUTHOR("Guenter Roeck");
- MODULE_LICENSE("GPL");
--- 
-2.20.1
-
+--
+Qais Yousef
