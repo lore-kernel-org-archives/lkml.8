@@ -6,187 +6,60 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E07C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6FBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D676A206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33ECF206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406416AbgDNHGP (ORCPT
+        id S2406426AbgDNHGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:06:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729537AbgDNHGI (ORCPT
+        Tue, 14 Apr 2020 03:06:32 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2382 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729537AbgDNHG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:06:08 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E74soA026452
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:06:06 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30d4kuwgdn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:06:05 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 14 Apr 2020 08:05:59 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 Apr 2020 08:05:54 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03E75vC858720506
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 07:05:57 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A288311C04A;
-        Tue, 14 Apr 2020 07:05:57 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE11211C054;
-        Tue, 14 Apr 2020 07:05:56 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.80.86])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Apr 2020 07:05:56 +0000 (GMT)
-Subject: Re: [RFC][Qusetion] the value of cleared_(ptes|pmds|puds|p4ds) in
- struct mmu_gather
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Zhenyu Ye <yezhenyu2@huawei.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     npiggin@gmail.com, will.deacon@arm.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, schwidefsky@de.ibm.com,
-        akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, arm@kernel.org, xiexiangyou@huawei.com
-References: <fbb00ac0-9104-8d25-f225-7b3d1b17a01f@huawei.com>
- <20200330121654.GL20696@hirez.programming.kicks-ass.net>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 14 Apr 2020 09:05:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 03:06:28 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9560e5542-4b799; Tue, 14 Apr 2020 15:06:13 +0800 (CST)
+X-RM-TRANSID: 2eea5e9560e5542-4b799
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e9560e4e57-5ddbd;
+        Tue, 14 Apr 2020 15:06:13 +0800 (CST)
+X-RM-TRANSID: 2ee65e9560e4e57-5ddbd
+Subject: Re: [PATCH] [PATCH v2] power:supply:88pm860x_battery:removeredundant
+ dev_err message
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200406050757.13796-1-tangbin@cmss.chinamobile.com>
+ <20200413230428.33zvqkw22sq25yk3@earth.universe>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <d9e8fdaa-dcfc-3680-9cc2-f5c90873cb09@cmss.chinamobile.com>
+Date:   Tue, 14 Apr 2020 15:08:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200330121654.GL20696@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200413230428.33zvqkw22sq25yk3@earth.universe>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041407-0028-0000-0000-000003F7EAAB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041407-0029-0000-0000-000024BD9629
-Message-Id: <a2eaf3a1-61c7-4598-55bf-4d4bca54a850@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_02:2020-04-13,2020-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 mlxscore=0
- phishscore=0 spamscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=855
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140052
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gerald,
+Hi Sebastian:
 
-can you have a look?
+On 2020/4/14 7:04, Sebastian Reichel wrote:
+> Thanks, queued.
 
-On 30.03.20 14:16, Peter Zijlstra wrote:
-> On Sat, Mar 28, 2020 at 12:30:50PM +0800, Zhenyu Ye wrote:
->> Hi all,
->>
->> commit a6d60245 "Track which levels of the page tables have been cleared"
->> added cleared_(ptes|pmds|puds|p4ds) in struct mmu_gather, and the values
->> of them are set in some places. For example:
->>
->> In include/asm-generic/tlb.h, pte_free_tlb() set the tlb->cleared_pmds:
->> ---8<---
->> #ifndef pte_free_tlb
->> #define pte_free_tlb(tlb, ptep, address)			\
->> 	do {							\
->> 		__tlb_adjust_range(tlb, address, PAGE_SIZE);	\
->> 		tlb->freed_tables = 1;				\
->> 		tlb->cleared_pmds = 1;				\
->> 		__pte_free_tlb(tlb, ptep, address);		\
->> 	} while (0)
->> #endif
->> ---8<---
->>
->>
->> However, in arch/s390/include/asm/tlb.h, pte_free_tlb() set the tlb->cleared_ptes:
->> ---8<---
->> static inline void pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
->>                                 unsigned long address)
->> {
->> 	__tlb_adjust_range(tlb, address, PAGE_SIZE);
->> 	tlb->mm->context.flush_mm = 1;
->> 	tlb->freed_tables = 1;
->> 	tlb->cleared_ptes = 1;
->> 	/*
->> 	 * page_table_free_rcu takes care of the allocation bit masks
->> 	 * of the 2K table fragments in the 4K page table page,
->> 	 * then calls tlb_remove_table.
->> 	 */
->> 	page_table_free_rcu(tlb, (unsigned long *) pte, address);
->> }
->> ---8<---
->>
->>
->> In my view, the cleared_(ptes|pmds|puds) and (pte|pmd|pud)_free_tlb
->> correspond one-to-one.  So we should set cleared_ptes in pte_free_tlb(),
->> then use it when needed.
-> 
-> So pte_free_tlb() clears a table of PTE entries, or a PMD level entity,
-> also see free_pte_range(). So the generic code makes sense to me. The
-> PTE level invalidations will have happened on tlb_remove_tlb_entry().
-> 
->> I'm very confused about this. Which is wrong? Or is there something
->> I understand wrong?
-> 
-> I agree the s390 case is puzzling, Martin does s390 need a PTE level
-> invalidate for removing a PTE table or was this a mistake?
-> 
+Thanks!
+
+Tang Bin
+
+>
+>
+>
+
 
