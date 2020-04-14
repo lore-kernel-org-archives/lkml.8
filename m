@@ -2,136 +2,138 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54405C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7080DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5012168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586872646;
-	bh=n9zV/CUm5fQ6kJG9xx9uBNkS1o6bnb2V/CMUwlWKrf0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xsR6OrF/1yzbmOqcwoY6KdaDYXnpYsWPLm1XS30ANbHiteRQ7gTmdSSXEdydm0Xku
-	 CXEZMQ4Gr1Sj4rJb7ucGQdUZyXHeLGR+UvA5sAI8Oi6E5xb8SMH7H31dYmECVxHR+S
-	 pKyRLUkGmqoS7MblyuJzMoJlaDG/Enhu038M/gkE=
+	by mail.kernel.org (Postfix) with ESMTP id 4697F20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3ptBY/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388531AbgDNN5V (ORCPT
+        id S2388555AbgDNN6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388513AbgDNN5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:57:16 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF22620656;
-        Tue, 14 Apr 2020 13:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586872636;
-        bh=n9zV/CUm5fQ6kJG9xx9uBNkS1o6bnb2V/CMUwlWKrf0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=b/kuN0mMrGpZr4ilxxpfussBIw4+VR3Qlk9Sl3WR2i289CFIIqOtaL7p7RASlKDZ9
-         vfPpAOPXooK8inL7i2YwIB/rSjj0cncaL/gt2OX7jThO1ap0y36WURbAwnGgHOf4ut
-         fLSxAyZq70gzsRO490XT4UfNLbRwPP3L1RQSmHh0=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jOM3u-003AqO-B3; Tue, 14 Apr 2020 14:57:14 +0100
-Date:   Tue, 14 Apr 2020 14:57:12 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Fangrui Song <maskray@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu, LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] arm64: kvm: Delete duplicated label: in invalid_vector
-Message-ID: <20200414145712.603e37d5@why>
-In-Reply-To: <CAKwvOdn35v5LkvhWugfLmK_FjVsd0RdPtBCRSqVaM9EP_1KU7w@mail.gmail.com>
-References: <20200413231016.250737-1-maskray@google.com>
-        <CAKwvOdn35v5LkvhWugfLmK_FjVsd0RdPtBCRSqVaM9EP_1KU7w@mail.gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 Apr 2020 09:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388513AbgDNN6b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:58:31 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24FAC061A0C;
+        Tue, 14 Apr 2020 06:58:30 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r26so14095107wmh.0;
+        Tue, 14 Apr 2020 06:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=shNjxK2XZi1SBgNMZlObJi0kerdnPGniLRexipno8Aw=;
+        b=i3ptBY/ez3Oo/1/XjdW66FOjERVUY+KxiP/0oUYA3/TRzcFzt6p+vzYFmA3kr0stYu
+         2HtKP6BexVXp6h6iZagIVX4IfEtcWFyjNYdOtfSgJy4M6Y/KtK0s2ppV+WVgeuTUY+6I
+         cbOmZv+cQGy775YaEyYWVr51UJc9PHzuMDRGEygWNzPZkZNHIoJ+I/8w0/Af8g2Dow+7
+         QSHVIYRdcw7ydzYMZPSb8Qc10WZB+8u63b0LjufKNjzWLWP/hQQtfDJgJzYHlKvcf54m
+         hzxQ2WD9uOGJmzDxc7aIWc8rAb3JZjpP7rPpkJbqwt9FhrnWZQ0nTFS59+pD6MJp5kR5
+         PiyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=shNjxK2XZi1SBgNMZlObJi0kerdnPGniLRexipno8Aw=;
+        b=ZpwHYUgv3R0K/bx7E6kOy8Ob8RnWTimBL+NyL8eXSm5fx/nazQTxlJNGH2ONfNAdli
+         D8pCJMXah7zapkBOMzjD889AeAcAH+BlAo5428Fr6aFfZP00qe6sm7zaNqW9vJX55eeL
+         AOTRkPJskuJRO1kakY7WdWgnoEW2uVixO4nJUNycDTHJWmGRrLpz5+CfqzCOmt/gyMhR
+         GPdyIxtFY4O9ms6HLnd+RUHqR+bnChJT7tCwEU/o/jKUlC2qbbLpfXwWTE85Xr8zTIzt
+         jBdV2YyywvaTkDegO1RaX77YcGrAzSIhSiGqxta9/4Yu7QwfxlgAlUVcfYSYoN3b9xpu
+         GF4A==
+X-Gm-Message-State: AGi0PubkXuuEVdEIQISZEsp072AspBSKltEiMeZ902taeTYY8Hs6Y8nx
+        J1Pge6g1Hl+TqO9QXzHLmj0=
+X-Google-Smtp-Source: APiQypJnpCKxrTz2rJ7RiPyVd3Z7CdK6nXF5XVpomjZm7GVdu8lqiAw3ETD0/uxvcPenl+bWtJRhbw==
+X-Received: by 2002:a1c:4b0a:: with SMTP id y10mr45278wma.24.1586872709606;
+        Tue, 14 Apr 2020 06:58:29 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id q18sm12282012wmj.11.2020.04.14.06.58.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 06:58:28 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 15:58:27 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
+Message-ID: <20200414135827.GB3593749@ulmo>
+References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: ndesaulniers@google.com, maskray@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, clang-built-linux@googlegroups.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
+Content-Disposition: inline
+In-Reply-To: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
 
-On Mon, 13 Apr 2020 16:37:10 -0700
-Nick Desaulniers <ndesaulniers@google.com> wrote:
+--/WwmFnJnmDyWGHa4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Apr 13, 2020 at 4:10 PM Fangrui Song <maskray@google.com> wrote:
-> >
-> > SYM_CODE_START defines \label , so it is redundant to define \label again.
-> > A redefinition at the same place is accepted by GNU as
-> > (https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=159fbb6088f17a341bcaaac960623cab881b4981)
-> > but rejected by the clang integrated assembler.
-> >
-> > Fixes: 617a2f392c92 ("arm64: kvm: Annotate assembly using modern annoations")  
-> 
-> Thanks for the patch!  I think a more accurate Fixes tag would be:
-> Fixes: 2b28162cf65a ("arm64: KVM: HYP mode entry points")
+On Sat, Apr 11, 2020 at 05:35:28PM +0200, Christophe JAILLET wrote:
+> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
+>=20
+> Fixes: 3ad1f3a33286 ("pwm: Implement some checks for lowlevel drivers")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/pwm/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 9973c442b455..bca04965bfe6 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -537,7 +537,7 @@ static void pwm_apply_state_debug(struct pwm_device *=
+pwm,
+> =20
+>  	if (!state->enabled && s2.enabled && s2.duty_cycle > 0)
+>  		dev_warn(chip->dev,
+> -			 "requested disabled, but yielded enabled with duty > 0");
+> +			 "requested disabled, but yielded enabled with duty > 0\n");
+> =20
+>  	/* reapply the state that the driver reported being configured. */
+>  	err =3D chip->ops->apply(chip, pwm, &s1);
 
-I'm not sure this commit is accurate. At that time, there was no other
-declaration for \label and dropping it would simply break compilation.
-I believe that Fangrui is correct in his analysis that 617a2f392c92 is
-the first broken commit.
-
-> With this patch applied, and your other arm64 integrated assembler
-> patch (https://lore.kernel.org/linux-arm-kernel/20200413033811.75074-1-maskray@google.com/T/#u),
-> I can now assemble arch/arm64/kvm/.
-
-Progress! ;-)
-
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> 
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/988
-> > Signed-off-by: Fangrui Song <maskray@google.com>
-> > ---
-> >  arch/arm64/kvm/hyp/hyp-entry.S | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
-> > index c2a13ab3c471..9c5cfb04170e 100644
-> > --- a/arch/arm64/kvm/hyp/hyp-entry.S
-> > +++ b/arch/arm64/kvm/hyp/hyp-entry.S
-> > @@ -198,7 +198,6 @@ SYM_CODE_END(__hyp_panic)
-> >  .macro invalid_vector  label, target = __hyp_panic
-> >         .align  2
-> >  SYM_CODE_START(\label)
-> > -\label:
-> >         b \target
-> >  SYM_CODE_END(\label)
-> >  .endm
-> > --
-> > 2.26.0.110.g2183baf09c-goog
-> >  
-> 
-> 
-
-I'll pick this up as soon as we've sorted the queue with the rest of
-the fixes.
+I don't think this is strictly necessary any longer since the logging
+functions are supposed to add these themselves nowadays. But I like the
+consistency of this, so I'll apply this anyway.
 
 Thanks,
+Thierry
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--/WwmFnJnmDyWGHa4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6VwYMACgkQ3SOs138+
+s6Fzlg//b9ON8vAP4sRTnLHsUC0mCmY2XcrY0P5eCKvrjAivAAswf7qGNpzKcBN1
+FUzY74P+qLClXRXFcciVxdGCaPzb+dynFkizSZC5wqBathkkFK3WMAjfFkjH2fe5
+2pLX7gpMvlrlneBVM52ZrR2KK4fAonlQe7Xq07vKQ6K8stWmQblhGZNKXlCaK4fi
+gkzWQKzHvWML6Bzu5Zrk21Z/BxPeT4gHl0jxo3ZnsHhv1ZveNkDHDLB1ybDjTaEj
+p+faT8bCf4bSPp8OlpnJpP6d0yzAxcDO6gDRCEH/jaBUaZDkHEgjsSDxkL5H+lkp
+s8N/kJ9q+0qSivxQyFLPTGyUoUm5C/xkT81UrwWEQMbouN7FVBelXVs9SLKfUSbA
+noAYtOMxz8V4AxtUNniYyzo1ir8gqB4kZTUmr+cn0mP68WJHvmTHe/ElmC/bn8uK
+N92cuJnV0s4A+5SrPi4mDpLA4FP8m2MBAsEDKd5j1tPfBY7HrHgdgZkNxSIiehNQ
++5rzl2LyBfx8rnz/Ljw02TpgJX/pNELNrM/Oa4jy3QoDiIlaUpoL5/d9QrIbt71d
+UlGep4cyvSvRlsY0CZDJhABtsjb6zLix/Rc6x0jCL45rwGVLilLbKgoHedCEllvu
+ueo5JO9bxbeHxPi+II1uGQ07LNd3TJyRZMVjSggpscDcfmfJCTc=
+=cwju
+-----END PGP SIGNATURE-----
+
+--/WwmFnJnmDyWGHa4--
