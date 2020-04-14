@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95524C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3E7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6388420575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3954320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889765;
-	bh=Qr/sUzlLBeiS7flY0fWa67V38Y7Io0QddHUGCTBCdz0=;
+	s=default; t=1586889775;
+	bh=lfSCUvZbahM1QeSSb7gds/7IyrvOA74gzlG0YM7J3PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1gPFiu/A7Bn68OEpPiX29Y1fUFtJ+/mHlMpq8B2JXB0JHgbmJwjhT08zuHcZ2kL6
-	 RGrzb8xGuopicdPf0tyzJeGebpLCwrkB5ZGbEqv5DW4AsdVDKraWc27G+OYvDsn6Wo
-	 j1PVsRzh9FGn6YaO/c0tetByrP33gHyP/HScc4mM=
+	b=zGX5EfK2pZfmB5z+zqsF/8BIp5Pv1Lj9RN83vc5P6ufohMKhqKP03t/gbPCJ+E3dO
+	 57L4eCN5Rop+QinB9xKkndeSo6ZmDwqGN0CmQoXyzKQl+tXJZzv9RP6JkYOfEkK8Vt
+	 JcrLxSFUUmIPuaCgXNKQ3mek//cNvWkf7AWYWr6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504211AbgDNSmo (ORCPT
+        id S2504217AbgDNSmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39010 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 14:42:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504176AbgDNSmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:42:11 -0400
+        id S2504184AbgDNSmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:42:17 -0400
 Received: from localhost.localdomain (unknown [157.50.36.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09D582074D;
-        Tue, 14 Apr 2020 18:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C7B2208FE;
+        Tue, 14 Apr 2020 18:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586889730;
-        bh=Qr/sUzlLBeiS7flY0fWa67V38Y7Io0QddHUGCTBCdz0=;
+        s=default; t=1586889737;
+        bh=lfSCUvZbahM1QeSSb7gds/7IyrvOA74gzlG0YM7J3PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wuUYtJ8paNt9+xhemECaglrMTbULZRC3febZULUIXOEiWsg4QK5aWc8ZGoaPPMyM1
-         vbMRkqPzAmaIgAaJ0eyO+O7No7q2RDMvoAOsb8PLgboJRFTsqVoi3ZWLXXJRhqriDD
-         lY6lBJKDmwnd2K9ZmWb9Oyd3+ES5cRI6QdRnhHCg=
+        b=kq9hj8bzUBKBAXYzKGghDESvE+FHwmEbLm3Uo1eZ7vJlewn1ZeIz02zPskSlR1lAH
+         Lv+7741CN1QAw45svmDXbfSzkRXBriwJ4b65yLNqtrViWmn9dgo43DcDx7bn16yRJj
+         ERq1lG1O7baibJqrwl5OwpcTR39ZM9U/6Tzb5lgg=
 From:   mani@kernel.org
 To:     jic23@kernel.org, robh+dt@kernel.org, narcisaanamaria12@gmail.com
 Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
         Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v3 2/3] iio: chemical: Add OF match table for CCS811 VOC sensor
-Date:   Wed, 15 Apr 2020 00:11:46 +0530
-Message-Id: <20200414184147.4857-3-mani@kernel.org>
+Subject: [PATCH v3 3/3] dt-bindings: serial: Add binding for software flow control in STM32 UART
+Date:   Wed, 15 Apr 2020 00:11:47 +0530
+Message-Id: <20200414184147.4857-4-mani@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414184147.4857-1-mani@kernel.org>
 References: <20200414184147.4857-1-mani@kernel.org>
@@ -58,35 +58,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Manivannan Sadhasivam <mani@kernel.org>
 
-Add devicetree OF match table support for CCS811 VOC sensor.
+Add devicetree binding for software flow control in STM32 UART
+controller. While at it, let's also fix one schema error reported by
+`make dtbs_check`.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- drivers/iio/chemical/ccs811.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../devicetree/bindings/serial/st,stm32-uart.yaml | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
-index 1500e4b0dfbd..3ecd633f9ed3 100644
---- a/drivers/iio/chemical/ccs811.c
-+++ b/drivers/iio/chemical/ccs811.c
-@@ -549,9 +549,16 @@ static const struct i2c_device_id ccs811_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ccs811_id);
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+index 238c44192d31..ea5797a1b403 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
++++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+@@ -38,13 +38,26 @@ properties:
+     description: enable hardware flow control
+     $ref: /schemas/types.yaml#/definitions/flag
  
-+static const struct of_device_id ccs811_dt_ids[] = {
-+	{ .compatible = "ams,ccs811" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
++  st,sw-flow-ctrl:
++    description: enable software flow control
++    $ref: /schemas/types.yaml#/definitions/flag
 +
- static struct i2c_driver ccs811_driver = {
- 	.driver = {
- 		.name = "ccs811",
-+		.of_match_table = ccs811_dt_ids,
- 	},
- 	.probe = ccs811_probe,
- 	.remove = ccs811_remove,
++  rts-gpios:
++    description: RTS pin used if st,sw-flow-ctrl is true
++    maxItems: 1
++
++  cts-gpios:
++    description: CTS pin used if st,sw-flow-ctrl is true
++    maxItems: 1
++
+   dmas:
+     minItems: 1
+     maxItems: 2
+ 
+   dma-names:
+     items:
+-      enum: [ rx, tx ]
++      - const: rx
++      - const: tx
+     minItems: 1
+     maxItems: 2
+ 
 -- 
 2.17.1
 
