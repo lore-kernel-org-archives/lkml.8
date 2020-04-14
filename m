@@ -2,162 +2,108 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AB9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCC02075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:03:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hDLGuK38"
+	by mail.kernel.org (Postfix) with ESMTP id 3CBB72084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502514AbgDNNDY (ORCPT
+        id S2502527AbgDNND4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:03:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57156 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2502485AbgDNNC1 (ORCPT
+        Tue, 14 Apr 2020 09:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2502515AbgDNNDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:02:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586869345;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8KYrjFdKV0F0kc/rQUca0FTze+6bSQcKKl07Ya/wHr0=;
-        b=hDLGuK38yVtcUBvM/ohTt4iK5EfqEQWi95kkyNyAg5Y2Yi+31Cd7DfMar0Mm9UCmpaRI0H
-        /QkMjRojuzzxmEamNvBixkLztFlw4EwPFe9jj5RtTcYgbycD1faTKX6bCIy+zAna2pg64d
-        ZbPAOyWXVyWtnY5N0veCaN0wlZrSDJc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-481-lQWz2TjjPiOvng-9rirdaw-1; Tue, 14 Apr 2020 09:02:23 -0400
-X-MC-Unique: lQWz2TjjPiOvng-9rirdaw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0566D18C35A2;
-        Tue, 14 Apr 2020 13:02:22 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1F1060C88;
-        Tue, 14 Apr 2020 13:02:10 +0000 (UTC)
-Subject: Re: [PATCH 01/10] KVM: selftests: Take vcpu pointer instead of id in
- vm_vcpu_rm()
-To:     Andrew Jones <drjones@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>
-References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
- <20200410231707.7128-2-sean.j.christopherson@intel.com>
- <b696c5b9-2507-8849-e196-37c83806cfdf@redhat.com>
- <20200413212659.GB21204@linux.intel.com>
- <20200414082556.nfdgec63kuqknpxc@kamzik.brq.redhat.com>
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-Message-ID: <023b0cb2-50d7-9145-d065-32436d429806@redhat.com>
-Date:   Tue, 14 Apr 2020 10:02:08 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 14 Apr 2020 09:03:43 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAB9C061A0C;
+        Tue, 14 Apr 2020 06:03:42 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id E67972A1860
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH] media: Kconfig: Don't expose API options
+Date:   Tue, 14 Apr 2020 10:02:10 -0300
+Message-Id: <20200414130210.18970-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-In-Reply-To: <20200414082556.nfdgec63kuqknpxc@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no need to expose API options; instead,
+drivers that support a given API are expected to just select it.
 
-On 4/14/20 5:25 AM, Andrew Jones wrote:
-> On Mon, Apr 13, 2020 at 02:26:59PM -0700, Sean Christopherson wrote:
->> On Mon, Apr 13, 2020 at 03:26:55PM -0300, Wainer dos Santos Moschetta wrote:
->>> On 4/10/20 8:16 PM, Sean Christopherson wrote:
->>>> The sole caller of vm_vcpu_rm() already has the vcpu pointer, take it
->>>> directly instead of doing an extra lookup.
->>>
->>> Most of (if not all) vcpu related functions in kvm_util.c receives an id, so
->>> this change creates an inconsistency.
->> Ya, but taking the id is done out of "necessity", as everything is public
->> and for whatever reason the design of the selftest framework is to not
->> expose 'struct vcpu' outside of the utils.  vm_vcpu_rm() is internal only,
->> IMO pulling the id out of the vcpu just to lookup the same vcpu is a waste
->> of time.
-> Agreed
+Happily, this is currently the case, so simply stop
+exposing the options.
 
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ drivers/media/Kconfig           | 2 +-
+ drivers/media/mc/Kconfig        | 3 +--
+ drivers/media/v4l2-core/Kconfig | 2 +-
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-Thanks Sean and Andrew for your comments. I'm not in position to 
-change/propose any design of kvm selftests but even though I aimed to 
-foster this discussion.
-
-So, please, consider my Reviewed-by...
-
-- Wainer
-
-
->
->> FWIW, I think the whole vcpuid thing is a bad interface, almost all the
->> tests end up defining an arbitrary number for the sole VCPU_ID, i.e. the
->> vcpuid interface just adds a pointless layer of obfuscation.  I haven't
->> looked through all the tests, but returning the vcpu and making the struct
->> opaque, same as kvm_vm, seems like it would yield more readable code with
->> less overhead.
-> Agreed
->
->> While I'm on a soapbox, hiding 'struct vcpu' and 'struct kvm_vm' also seems
->> rather silly, but at least that doesn't directly lead to funky code.
-> Agreed. While the concept has been slowly growing on me, I think accessor
-> functions for each of the structs members are growing even faster...
->
-> Thanks,
-> drew
->
->>> Disregarding the above comment, the changes look good to me. So:
->>>
->>> Reviewed-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
->>>
->>>
->>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>>> ---
->>>>   tools/testing/selftests/kvm/lib/kvm_util.c | 7 +++----
->>>>   1 file changed, 3 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
->>>> index 8a3523d4434f..9a783c20dd26 100644
->>>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
->>>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
->>>> @@ -393,7 +393,7 @@ struct vcpu *vcpu_find(struct kvm_vm *vm, uint32_t vcpuid)
->>>>    *
->>>>    * Input Args:
->>>>    *   vm - Virtual Machine
->>>> - *   vcpuid - VCPU ID
->>>> + *   vcpu - VCPU to remove
->>>>    *
->>>>    * Output Args: None
->>>>    *
->>>> @@ -401,9 +401,8 @@ struct vcpu *vcpu_find(struct kvm_vm *vm, uint32_t vcpuid)
->>>>    *
->>>>    * Within the VM specified by vm, removes the VCPU given by vcpuid.
->>>>    */
->>>> -static void vm_vcpu_rm(struct kvm_vm *vm, uint32_t vcpuid)
->>>> +static void vm_vcpu_rm(struct kvm_vm *vm, struct vcpu *vcpu)
->>>>   {
->>>> -	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
->>>>   	int ret;
->>>>   	ret = munmap(vcpu->state, sizeof(*vcpu->state));
->>>> @@ -427,7 +426,7 @@ void kvm_vm_release(struct kvm_vm *vmp)
->>>>   	int ret;
->>>>   	while (vmp->vcpu_head)
->>>> -		vm_vcpu_rm(vmp, vmp->vcpu_head->id);
->>>> +		vm_vcpu_rm(vmp, vmp->vcpu_head);
->>>>   	ret = close(vmp->fd);
->>>>   	TEST_ASSERT(ret == 0, "Close of vm fd failed,\n"
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index a8def1591352..eef4c6761ffb 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -173,7 +173,7 @@ config VIDEO_DEV
+ 	  radio devices and by some input devices.
+ 
+ config MEDIA_CONTROLLER
+-	bool "Media Controller API"
++	bool
+ 	default MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_DIGITAL_TV_SUPPORT || MEDIA_PLATFORM_SUPPORT
+ 	help
+ 	  Enable the media controller API used to query media devices internal
+diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
+index 002a918c4c75..0cdf885ce24d 100644
+--- a/drivers/media/mc/Kconfig
++++ b/drivers/media/mc/Kconfig
+@@ -2,7 +2,6 @@
+ 
+ #
+ # Media controller
+-#	Selectable only for webcam/grabbers, as other drivers don't use it
+ #
+ 
+ config MEDIA_CONTROLLER_DVB
+@@ -14,7 +13,7 @@ config MEDIA_CONTROLLER_DVB
+ 	  This is currently experimental.
+ 
+ config MEDIA_CONTROLLER_REQUEST_API
+-	bool "Enable Media controller Request API (EXPERIMENTAL)"
++	bool
+ 	depends on MEDIA_CONTROLLER && STAGING_MEDIA
+ 	help
+ 	  DO NOT ENABLE THIS OPTION UNLESS YOU KNOW WHAT YOU'RE DOING.
+diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
+index 3fa75352d04c..d034185856bb 100644
+--- a/drivers/media/v4l2-core/Kconfig
++++ b/drivers/media/v4l2-core/Kconfig
+@@ -17,7 +17,7 @@ config VIDEO_V4L2_I2C
+ 	default y
+ 
+ config VIDEO_V4L2_SUBDEV_API
+-	bool "V4L2 sub-device userspace API"
++	bool
+ 	depends on VIDEO_DEV && MEDIA_CONTROLLER
+ 	help
+ 	  Enables the V4L2 sub-device pad-level userspace API used to configure
+-- 
+2.26.0.rc2
 
