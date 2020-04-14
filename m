@@ -2,279 +2,120 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535FDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9479C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAC52063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gj0939cV"
+	by mail.kernel.org (Postfix) with ESMTP id A5FB8206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440382AbgDNPYg (ORCPT
+        id S2439665AbgDNP0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:24:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47543 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440370AbgDNPYL (ORCPT
+        Tue, 14 Apr 2020 11:26:14 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:49335 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729755AbgDNP0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:24:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586877849;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oQFaclXJcZ18GN/CxTEgak7w44eWrAL92ByRZ9j1osw=;
-        b=Gj0939cVTvYaIQOrqiL7x6rWjB42urHGXzIUq0AP+0Yx1M97XyQ4+daCzvqvsPQQZp5L9s
-        XJ3Agzr1uWvtNuSG/LcnQXe2vhiFBoE+sFu/EJ52hHQxAqhS4QRLF2Su3QQCLsykwXvKP9
-        N/gSEj3vPBzOKFNhqhum7oF5jyQFAv8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-9bfuwomlMXOWQZBrvv1r1A-1; Tue, 14 Apr 2020 11:24:05 -0400
-X-MC-Unique: 9bfuwomlMXOWQZBrvv1r1A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D2388018A6;
-        Tue, 14 Apr 2020 15:24:02 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CEF9CFDF8;
-        Tue, 14 Apr 2020 15:24:01 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 09:24:01 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Message-ID: <20200414092401.039edef6@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D81D456@SHSMSX104.ccr.corp.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-        <20200402165954.48d941ee@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
-        <20200403112545.6c115ba3@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
-        <20200407095801.648b1371@w520.home>
-        <20200408040021.GS67127@otc-nc-03>
-        <20200408101940.3459943d@w520.home>
-        <20200413031043.GA18183@araj-mobl1.jf.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
-        <20200413132122.46825849@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81D376@SHSMSX104.ccr.corp.intel.com>
-        <20200413212836.117b4c86@x1.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81D456@SHSMSX104.ccr.corp.intel.com>
+        Tue, 14 Apr 2020 11:26:01 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MlfCm-1iyQMg4B2Q-00ihuc; Tue, 14 Apr 2020 17:25:57 +0200
+Received: by mail-qt1-f177.google.com with SMTP id w24so10404110qts.11;
+        Tue, 14 Apr 2020 08:25:56 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYEawHzwf0tXCXIhqzyveDf/fKgTJRq7lmc/+qMlr9Ipu+OaO8G
+        0dGxzi9Jeq3U1wcV3mVJHRnr9OgzCouXCMt4z3U=
+X-Google-Smtp-Source: APiQypL2bnXf86E03hawsz8pxDqc8oMdZRSmBA+dTNzneuRbxAzCaV1aI5lbgXSqxBtoHIjMy0g/toQKbqbs9h0eD6I=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr16307053qtb.142.1586877955579;
+ Tue, 14 Apr 2020 08:25:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+ <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+ <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
+ <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+ <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+ <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+ <20200414152312.GF5100@ziepe.ca>
+In-Reply-To: <20200414152312.GF5100@ziepe.ca>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Apr 2020 17:25:39 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+Message-ID: <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:RfyQ2xDdl1ZlEgiL+Y7PvwDBC33min6ODLsofcFtD6lUaRExO0j
+ r8qU4Oxw/EwZ0jcE7ean97MitHxLRZ048iY3UOXaVjNOSKnU0Y7o523T7uNpODg4HluSYzY
+ 6Q71sv+dp75ckYuN1gISTUMofFGxPDFRqfpBSObbWeOxdeouDF9GnPoZuP9pCavduX6KCfd
+ a2goUqaqWN+WvjFVFe0IQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H4VJsjCrV9Y=:1ww5YkAP8BYP33jjCBtzZe
+ gAO+1ID6L/XYyf25eZrQfum6CG9xfTfdFeSUlx1AGSvB4KRT9QBiyMUC0eMaA8HPHGmLn4BHX
+ 0JYaYQii3d7kq01oXl+YG5NnH5GQ3seNgthXW7lEo6eNP5s6DTWZ1VpYcN0mJCwu9axrNz1bE
+ DuZRztf4DXqT5G5cafsLPex64cjAg7FQIY8C+d2mfrqDcy5s5/cRqIYK77fINjGGP/MNvEZWN
+ veDFHLYczUC4KgniBlp/EmkfiWkaADKUlj/8gLr4vqjyUMYwNSj/eSEyYtlCjI29ZV3NQJFbk
+ tyPFgS3MZARIorz4Qpc7UYtL4MU6UG1QXVsd1jYci9KBR4Kq0AaLFDLQXBUtR2x8OO8k5V9PH
+ 6qnQJZZFtfHbP7wObk9LM+CvBpI7XqIlc/n/sTawfpMVPgYNxFnYtmPCbE5UV7UBloLW0YE5c
+ /SMOKjNLjRSTsmePktSG4S87NiGZxocpW3wE369nqChe01muVtomXN49usjPyhBdKdz1/B9kT
+ VRqIdr4uL8mH0dTF/Ol3WiyHoMClteYldixTsV5nCu+EASX9wduTld5BJNlgT/juwXS1AjceG
+ WDIVO/74jqtUbyupvdXS28wWsA4fRaHju9l7oanMXY4SP3h+qoC5baYYdoP6dXOWjl4UWfYKn
+ lSEoaKVUaLdHqwHdl1BWYq0xm34uPzZrf6eBiHBkJki6KZjLz+7M2+QjRL6+9JoVWm+9BUJsd
+ OEY227ILu/yh2AM0ARpOcVUYyDfSITw00i2yYqNkIAZ5fVlg85b7AfIz7QnwUX9bvO4TMyFFH
+ rDilYgJhpmyVd2yS3WJb5TVhbuQyM0NdtEn6Aj9rSTtQH47ahA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 03:42:42 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On Tue, Apr 14, 2020 at 5:23 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Tue, Apr 14, 2020 at 04:27:41PM +0200, Arnd Bergmann wrote:
+> > On Tue, Apr 14, 2020 at 3:29 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > On Fri, Apr 10, 2020 at 07:04:27PM +0000, Saeed Mahameed wrote:
+> > which in turn leads to mlx5_core.ko *not* containing mlx5_vxlan.o,
+> > and in turn causing that link error against
+> > mlx5_vxlan_create/mlx5_vxlan_destroy, unless the IS_ENABLED()
+> > is changed to IS_REACHABLE().
+>
+> What about the reverse if mlx5_core is 'm' and VLXAN is 'y'?
+>
+>  mlx5_core-m := mlx5_core.o
+>  mlx5_core-y += mlx5_vxlan.o
+>
+> Magically works out?
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Tuesday, April 14, 2020 11:29 AM
-> > 
-> > On Tue, 14 Apr 2020 02:40:58 +0000
-> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> >   
-> > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > Sent: Tuesday, April 14, 2020 3:21 AM
-> > > >
-> > > > On Mon, 13 Apr 2020 08:05:33 +0000
-> > > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> > > >  
-> > > > > > From: Tian, Kevin
-> > > > > > Sent: Monday, April 13, 2020 3:55 PM
-> > > > > >  
-> > > > > > > From: Raj, Ashok <ashok.raj@linux.intel.com>
-> > > > > > > Sent: Monday, April 13, 2020 11:11 AM
-> > > > > > >
-> > > > > > > On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:  
-> > > > > > > > On Tue, 7 Apr 2020 21:00:21 -0700
-> > > > > > > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
-> > > > > > > >  
-> > > > > > > > > Hi Alex
-> > > > > > > > >
-> > > > > > > > > + Bjorn  
-> > > > > > > >
-> > > > > > > >  + Don
-> > > > > > > >  
-> > > > > > > > > FWIW I can't understand why PCI SIG went different ways with  
-> > ATS,  
-> > > > > > > > > where its enumerated on PF and VF. But for PASID and PRI its  
-> > only  
-> > > > > > > > > in PF.
-> > > > > > > > >
-> > > > > > > > > I'm checking with our internal SIG reps to followup on that.
-> > > > > > > > >
-> > > > > > > > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson  
-> > wrote:  
-> > > > > > > > > > > Is there vendor guarantee that hidden registers will locate at  
-> > the  
-> > > > > > > > > > > same offset between PF and VF config space?  
-> > > > > > > > > >
-> > > > > > > > > > I'm not sure if the spec really precludes hidden registers, but  
-> > the  
-> > > > > > > > > > fact that these registers are explicitly outside of the capability
-> > > > > > > > > > chain implies they're only intended for device specific use, so  
-> > I'd  
-> > > > say  
-> > > > > > > > > > there are no guarantees about anything related to these  
-> > registers.  
-> > > > > > > > >
-> > > > > > > > > As you had suggested in the other thread, we could consider
-> > > > > > > > > using the same offset as in PF, but even that's a better guess
-> > > > > > > > > still not reliable.
-> > > > > > > > >
-> > > > > > > > > The other option is to maybe extend driver ops in the PF to  
-> > expose  
-> > > > > > > > > where the offsets should be. Sort of adding the quirk in the
-> > > > > > > > > implementation.
-> > > > > > > > >
-> > > > > > > > > I'm not sure how prevalent are PASID and PRI in VF devices. If  
-> > SIG is  
-> > > > > > > resisting  
-> > > > > > > > > making VF's first class citizen, we might ask them to add some  
-> > > > verbiage  
-> > > > > > > > > to suggest leave the same offsets as PF open to help emulation  
-> > > > software.  
-> > > > > > > >
-> > > > > > > > Even if we know where to expose these capabilities on the VF, it's  
-> > not  
-> > > > > > > > clear to me how we can actually virtualize the capability itself.  If
-> > > > > > > > the spec defines, for example, an enable bit as r/w then software  
-> > that  
-> > > > > > > > interacts with that register expects the bit is settable.  There's no
-> > > > > > > > protocol for "try to set the bit and re-read it to see if the hardware
-> > > > > > > > accepted it".  Therefore a capability with a fixed enable bit
-> > > > > > > > representing the state of the PF, not settable by the VF, is
-> > > > > > > > disingenuous to the spec.  
-> > > > > > >
-> > > > > > > I think we are all in violent agreement. A lot of times the pci spec  
-> > gets  
-> > > > > > > defined several years ahead of real products and no one  
-> > remembers  
-> > > > > > > the justification on why they restricted things the way they did.
-> > > > > > >
-> > > > > > > Maybe someone early product wasn't quite exposing these features  
-> > to  
-> > > > the  
-> > > > > > > VF
-> > > > > > > and hence the spec is bug compatible :-)
-> > > > > > >  
-> > > > > > > >
-> > > > > > > > If what we're trying to do is expose that PASID and PRI are enabled  
-> > on  
-> > > > > > > > the PF to a VF driver, maybe duplicating the PF capabilities on the  
-> > VF  
-> > > > > > > > without the ability to control it is not the right approach.  Maybe  
-> > we  
-> > > > > > >
-> > > > > > > As long as the capability enable is only provided when the PF has  
-> > > > enabled  
-> > > > > > > the feature. Then it seems the hardware seems to do the right thing.
-> > > > > > >
-> > > > > > > Assume we expose PASID/PRI only when PF has enabled it. It will be  
-> > the  
-> > > > > > > case since the PF driver needs to exist, and IOMMU would have set  
-> > the  
-> > > > > > > PASID/PRI/ATS on PF.
-> > > > > > >
-> > > > > > > If the emulation is purely spoofing the capability. Once vIOMMU  
-> > driver  
-> > > > > > > enables PASID, the context entries for the VF are completely  
-> > > > independent  
-> > > > > > > from the PF context entries.
-> > > > > > >
-> > > > > > > vIOMMU would enable PASID, and we just spoof the PASID  
-> > capability.  
-> > > > > > >
-> > > > > > > If vIOMMU or guest for some reason does disable_pasid(), then the
-> > > > > > > vIOMMU driver can disaable PASID on the VF context entries. So the  
-> > VF  
-> > > > > > > although the capability is blanket enabled on PF, IOMMU gaurantees  
-> > > > the  
-> > > > > > > transactions are blocked.
-> > > > > > >
-> > > > > > >
-> > > > > > > In the interim, it seems like the intent of the virtual capability
-> > > > > > > can be honored via help from the IOMMU for the controlling aspect..
-> > > > > > >
-> > > > > > > Did i miss anything?  
-> > > > > >
-> > > > > > Above works for emulating the enable bit (under the assumption that
-> > > > > > PF driver won't disable pasid when vf is assigned). However, there are
-> > > > > > also "Execute permission enable" and "Privileged mode enable" bits in
-> > > > > > PASID control registers. I don't know how those bits could be cleanly
-> > > > > > emulated when the guest writes a value different from PF's...  
-> > > > >
-> > > > > sent too quick. the IOMMU also includes control bits for allowing/
-> > > > > blocking execute requests and supervisor requests. We can rely on
-> > > > > IOMMU to block those requests to emulate the disabled cases of
-> > > > > all three control bits in the pasid cap.  
-> > > >
-> > > >
-> > > > So if the emulation of the PASID capability takes into account the
-> > > > IOMMU configuration to back that emulation, shouldn't we do that
-> > > > emulation in the hypervisor, ie. QEMU, rather than the kernel vfio
-> > > > layer?  Thanks,
-> > > >
-> > > > Alex  
-> > >
-> > > We need enforce it in physical IOMMU, to ensure that even the
-> > > VF may send requests which violate the guest expectation those
-> > > requests are always blocked by IOMMU. Kernel vfio identifies
-> > > such need when emulating the pasid cap and then forward the
-> > > request to host iommu driver.  
-> > 
-> > Implementing this in the kernel would be necessary if we needed to
-> > protect from the guest device doing something bad to the host or
-> > other devices.  Making sure the physical IOMMU is configured to meet
-> > guest expectations doesn't sound like it necessarily falls into that
-> > category.  We do that on a regular basis to program the DMA mappings.
-> > Tell me more about why the hypervisor can't handle this piece of
-> > guest/host synchronization on top of all the other things it
-> > synchronizes to make a VM.  Thanks,
-> >   
-> 
-> I care more about "execution permission" and "privileged mode".
-> It might be dangerous when the guest disallows the VF from sending
+Yes, Kbuild takes care of that case.
 
-"Dangerous" how?  We're generally ok with the user managing their own
-consistency, it's when the user can affect other users/devices that we
-require vfio in the kernel to actively manage something.  There's a very
-different scope to the vfio-pci kernel module implementing a fake
-capability and trying to make it behave indistinguishably from the real
-capability versus a userspace driver piecing together an emulation
-that's good enough for their purposes.  Thanks,
+> > > IIRC that isn't what the expression does, if vxlan is 'n' then
+> > >   n || !n == true
+> >
+> > It forces MLX5_CORE to 'm' or 'n' but not 'y' if VXLAN=m,
+> > but allows any option if VXLAN=y
+>
+> And any option if VXLAN=n ?
 
-Alex
+Correct.
 
-> DMA requests which have the execute or privileged bit set while the VF
-> can still do so w/o proper protection in the IOMMU. This is all about
-> vSVA for vfio devices, where the guest page table is directly linked in 
-> IOMMU and vfio doesn't participate in the specific DMA mappings. if
-> an emulated device includes a pasid cap, Qemu vIOMMU will handle 
-> it for sure.
-> 
-> Thanks
-> Kevin
-> 
-
+      Arnd
