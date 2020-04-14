@@ -2,87 +2,142 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F38C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A862C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B52AA20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284C420578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:01:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJ/qXXVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388757AbgDNOBX (ORCPT
+        id S2388769AbgDNOBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:01:23 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:51605 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388719AbgDNOBP (ORCPT
+        Tue, 14 Apr 2020 10:01:41 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41714 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388719AbgDNOBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:01:15 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MbRXj-1iqxJQ0zN3-00bsIH; Tue, 14 Apr 2020 16:01:13 +0200
-Received: by mail-qt1-f169.google.com with SMTP id c16so4381681qtv.1;
-        Tue, 14 Apr 2020 07:01:12 -0700 (PDT)
-X-Gm-Message-State: AGi0Pub8VFe2W+VnzrN30YSstRYzJJ+7jMaZrqvRlBc9Z3oRJH4a1njH
-        lWE6uozpmFAob3OVRZ6f2XTOvreGi/7xKi8djnc=
-X-Google-Smtp-Source: APiQypJnCxnYmw722mKV+S9ulqw05gvvCTLTPiReXurJiDepLa1M4UQL7fvv7Hr4QeMwCm32MRni4rllUWyjgXsOVOQ=
-X-Received: by 2002:aed:20e3:: with SMTP id 90mr15912388qtb.142.1586872871915;
- Tue, 14 Apr 2020 07:01:11 -0700 (PDT)
+        Tue, 14 Apr 2020 10:01:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586872884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bTcSJ4CEM5FZZK0mZvNwbCxZtyIONlR6rWwt1itPdho=;
+        b=QJ/qXXVL4Dyv3UPEaUNEfhYVO7bNHuwK8DBeNJtATmZFYpdC701ZIfnr2t/lKG5FmFzkf3
+        mdBlRQq2AZi8DDeJQIlcTfp3es3/l/1iQCfj1HD5v7sXJtPiBH/M5pX5sNO5Dz9KE/d/tx
+        1wWRfsgx2kna2AGEPaN5fBs5nBgx2zk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-TDXbBOUvPMmAHTqgAOUFjQ-1; Tue, 14 Apr 2020 10:01:22 -0400
+X-MC-Unique: TDXbBOUvPMmAHTqgAOUFjQ-1
+Received: by mail-wr1-f69.google.com with SMTP id m5so5611370wru.15
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 07:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bTcSJ4CEM5FZZK0mZvNwbCxZtyIONlR6rWwt1itPdho=;
+        b=KjxjAK/cFWgtHiAB+o3F4Jl5bwNuq92Mnguqtyh2dkpVN3Lhm36uJPNtfxWIkKvZbZ
+         ij6AIepQVEvbnVhiKV07W7QFpJLa7jVJPn0xxxaknjFSjLY2B/IfCIeXapof4Yauuk1R
+         RT0OBAacAC3ZUmrT1jWgy8pZkkmMRQmfcYTgLDkJRxPyCn1L8UqYeXU2pbDWTUom7SRB
+         1sc/kxf8ajJzxCiqGIDNMoGfR0AiGmqxvNLT6tPTaJg2bqY1kek+KjlCf/G4yLEOh4ff
+         92l2/IRbptvJkUy+T5mXLkEBOiHJ9CRW/8X6dukJjPHTG2PD6tY0k4e431ITngB1b9Mp
+         TgCQ==
+X-Gm-Message-State: AGi0PuaRN8wwaVP3/YBrfD8GRvv2E+uyeRibSAo8x9UeK2rASV9CSIsv
+        zni047B73x5pgkbiyK8/7Y+4yQgbR6P/6VEaBFVc78L1sj1/FqL2ctwYorDIzhG2cflfKYbkzBF
+        Rv0cCoFjn2ElaKcFx5oSlOIBc
+X-Received: by 2002:adf:8149:: with SMTP id 67mr24763150wrm.60.1586872881243;
+        Tue, 14 Apr 2020 07:01:21 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKnd+C4ZBXSnJavuTzZ4e+LrjBf7wiVQx7FcIAJZE5cNrvKm1lD7gJ7LVl6nG0eIXFpeE6BUQ==
+X-Received: by 2002:adf:8149:: with SMTP id 67mr24763118wrm.60.1586872881003;
+        Tue, 14 Apr 2020 07:01:21 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
+        by smtp.gmail.com with ESMTPSA id b11sm19265200wrq.26.2020.04.14.07.01.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 07:01:20 -0700 (PDT)
+Subject: Re: [RFC][PATCH 03/36] objtool: Enable compilation of objtool for all
+ architectures
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Miroslav Benes <mbenes@suse.cz>
+References: <cover.1586468801.git.mhelsley@vmware.com>
+ <a96d42818c7e8f2a8bd2e151b8c220193f4ae986.1586468801.git.mhelsley@vmware.com>
+ <e8a52162-dd38-6092-7217-cc5c088abadc@redhat.com>
+ <20200414094121.73f5c82a@gandalf.local.home>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <59db4518-2450-e6a3-5a69-e65b86c39489@redhat.com>
+Date:   Tue, 14 Apr 2020 15:01:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-4-hch@lst.de>
-In-Reply-To: <20200414070142.288696-4-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Apr 2020 16:00:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2iHD4tzaNunA2FFpxpQg9DFCKROnrtUR7=1scO76+oCw@mail.gmail.com>
-Message-ID: <CAK8P3a2iHD4tzaNunA2FFpxpQg9DFCKROnrtUR7=1scO76+oCw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] signal: replace __copy_siginfo_to_user32 with to_compat_siginfo
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ukxhwA5NdxBemLbDSsRcAhObRe1CWAeAW5tNRCWtLREQYVmahJA
- 5dQJGh5A9FGzCiCtH0lK2w1LTUaiBYNq+KRfQNzuBZynd1ydil7uVEpMcGhaJtOnrxuPlNT
- 1zkhd9ZqLQ6gf0jdqvW7baDPJTBh2RWXbabwVkzGsBOniz/vgITwUZcDH/mA96Q7gubEdtD
- q+uVbqmI/a9MkwfKYXn0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:G8s8f7/LAVs=:dMF36GmlK9xwLQ4VUvXmSf
- aEwBLKeNCK0/7rpqQtXnEK9U1lHn57P/gMUHzqRTjxGJyc7hkKHbWUfSOTg9H9h7mSMSSXb8P
- 0hht68vF+80E6P+mgvG0BQXnL3NEGl88tw0T0pdLZkYES48AEJoiWx/YKcJBxD6ph6BZq9Inj
- UBH3w9tp/FCL9J6/itE5dN67Fk0aVr0oYc0r5vdcCOpoVk06Wwcnvti6t4CJ/OEeU+Z4A3PzI
- hTW2XxhymmWA/ozfuXXriynzZ+bUD/mm02S3l0hPjECKPpmlxASIBtnF/FBO2saOYqj2pkI51
- Qq6PgSqNi3eJPnbL7FUHsl6v6GOORoxv2uZ2RAAiTCUrroRKneaH0EBZaQ+mMAsmftgSQYx54
- rzMsOOZzbH578VuuB45zP5F526O0GsQxcMjWmqlffk94FUc6wXWy8mew7GQ68+ILxa+E7FqZa
- P2D0tcp3BNF/FtfkroYdhw5vHz+CdABUnSC59VXyl4mlvbfscHf1JLY1olzt86xiLsNZkr+dD
- bOplD5YiY+xgDi501oJOQ979cV8pn2kZFHV/kcws3Mio6otsaLWJNzP+9GEJFS3la8JFJW/8X
- aNrql/tgp8cx3o4yhJvt9gHfw1Dfdyss8pk1QpszaYvUhhASUWjpqd7qN91DNJ9x4joReHdeY
- EJBnV8nadLzQz8q/rBRGW3n1dpGkgohxsGA1L2jX7RHb+H4AfTPc4zUuIwgz1jmhZEhdLVNBq
- N0Gj8Rsc9Z+XpEpOzyjq272Z3ShnMUAMBkQUCmmrNrysVpEVdfl9M7tAA2MIvA2/m7ZbGV3a3
- qrKkRlAeaBtsVMX3z7giUZi9TZWgeDfkQGv4CkBsNH0dyqH2XU=
+In-Reply-To: <20200414094121.73f5c82a@gandalf.local.home>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:01 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Move copying the siginfo to userspace into the callers, so that the
-> compat_siginfo conversion can be reused by the ELF coredump code without
-> set_fs magic.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Looks all good to me, but I noticed that the naming is now a bit
-inconsistent. to_compat_siginfo() is basically the reverse of
-post_copy_siginfo_from_user32(), but the names are very different.
 
-I suppose this can always be cleaned up later though, as your
-naming choice is more consistent with how things are in the
-rest of the kernel these days.
+On 4/14/20 2:41 PM, Steven Rostedt wrote:
+> On Tue, 14 Apr 2020 08:39:23 +0100
+> Julien Thierry <jthierry@redhat.com> wrote:
+> 
+>> My concern with this it that most of the structures and code in arch.h
+>> and check.c can/should be reused across architectures. So, when
+>> providing support for a new architecutre, the first thing that will be
+>> needed is to move those back under tools/objtool whithout disturbing the
+>> arches that don't yet provide support for "check" subcommand.
+> 
+> Are all the enums and structs in arch.h non-arch specific?
 
-    Arnd
+While some definitions are very x86 specific (in particular PUSH/POP 
+related definition), most other other things have similar concept in 
+other architectures.
+
+And the "non-generic" definition here do not necessarily interfere with 
+other architectures. E.g. if the instruction decoder never produces 
+INSN_PUSH or INSN_POP, the corresponding branches in the validation code 
+will simply not be taken.
+
+> 
+> Or would they need to be split?
+> 
+
+So far, for the arm64 work, I've left all those definitions where they 
+are. In the future, some cleanup could encourage to split for some "arch 
+specific" and "non-arch specific" instruction/stack-ops types, but this 
+is not a hard requirement for introducing new architechtures. And I'd 
+rather encourage to have complex arch specific instructions be divided 
+into several simpler instructions (e.g. PUSH is just sub stack pointer + 
+memory access) that could be reused for other architectures, as long as 
+that is possible of course.
+
+
+>>
+>> So, if it is decided that recordmcount should be an objtool subcommand,
+>> the code itself should probably stay under tools/objtool and then have
+>> different compilation configurations for objtool depending on the
+>> architecture (e.g. HAVE_OBJTOOL_CHECK, HAVE_OBJTOOL_ORC) or something of
+>> the sort.
+> 
+> That could work.
+> 
+> -- Steve
+> 
+
+-- 
+Julien Thierry
+
