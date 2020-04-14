@@ -2,102 +2,150 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D31C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA77C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198B220578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586872130;
-	bh=UimtK8BS+z6249dpjydCR1nS+KStjsmtkIoy2fTPFY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=otRqKKdEmrqUj3Qrm4DeUdjwQ8VFegT9ZuHmicMHurC5glQaA62kfdDjtwVguqbOV
-	 +10QFps/2WXtLMOrLD5RkwqgDtrjFXrBFoqpEg90yraD1NOhQcG2Lgu4BY94vyxhrK
-	 X9+sqRhaHFAzVJKD+r0+deuh7FnkW9f5x6K35Hho=
+	by mail.kernel.org (Postfix) with ESMTP id 675AC20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaO/qKQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388145AbgDNNsr (ORCPT
+        id S2388158AbgDNNs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgDNNsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:48:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgDNNsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 09:48:36 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE8CF20578;
-        Tue, 14 Apr 2020 13:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586872115;
-        bh=UimtK8BS+z6249dpjydCR1nS+KStjsmtkIoy2fTPFY8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h/EswtYrYPQqt8bEH5HANugKsgmAW70/E489d4ddJWgjb1Q5oIaYcwa3Is0HzHbn8
-         dK8StPcYEMKxlorlhotq11DEMcgwBrgaUObMq0izl9u3jcwijgxfKlwIFyiyygSryd
-         fNuO9j9wSNlibtxM6cNGuF6rEMyr8jZQyHgBswJc=
-Date:   Tue, 14 Apr 2020 14:48:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Muchun Song <songmuchun@bytedance.com>, mingo@redhat.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seqlock: Use while instead of if+goto in
- __read_seqcount_begin
-Message-ID: <20200414134830.GB28750@willie-the-truck>
-References: <20200409134558.90863-1-songmuchun@bytedance.com>
- <20200410115658.GB24814@willie-the-truck>
- <20200414110516.GO20713@hirez.programming.kicks-ass.net>
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B04CC061A0C;
+        Tue, 14 Apr 2020 06:48:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id h11so4666129plr.11;
+        Tue, 14 Apr 2020 06:48:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tRIC1+fbqgksFCXZuCIwbMy1gMACOqNnoWCEPyufkRo=;
+        b=GaO/qKQOZHoYDBE0SZJhbEGpsDQbuszrib3RZ+LJ4A9j8Jpt43q+nfImee6LnjJ+j/
+         aR8OOlq5dPwT1bFM7V+3RYw78okenlCnJXMsZYvnGOP95JFuWYxDxQQDLadVHaJ0jV8S
+         Dz0RnmM+GdP/zaU++I85DtwtYRhtfdbluCsGpJn9Oy15ByBq6ysdXVIDPMh825yh1wYd
+         pp4dIKSYES6/riRi0KecsSOdbDwZNIvFIiw7pELOFQEBy1kmKs7lbV1UKfikocbd84wz
+         xRLiaQuj4ssVo5PvKaRnZlYgWxbxmm/frB53eAnJVbTEcz17KjfIqMsWPK+e2OW/uYRY
+         G7rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tRIC1+fbqgksFCXZuCIwbMy1gMACOqNnoWCEPyufkRo=;
+        b=pB3BR3sE1ouzJsb/alituJQPzBoaHjSrbjUZhfJqU0fgRpxQ+8ELfzoIrgP3VQUJik
+         cGP5Cl5OOkPzIx7QRGE+JCiFONh6tb1TiPvcXsfPoMZC4JHILNe++mnssk8xERoDYor4
+         /3kmO+qQjeApeCql9Wpn8OgtW3vV9OSKzeh/TJi3ZDBK4wZqXEuLG60f+G1Vt9hhAyGV
+         oX+yBqwmVBa8BkB017PruuXZ220QxS4/WMuEXXEvsexbrXLSrrxOVv2g5jP8s4Lmm7gb
+         5PswPuPafgl4XoeVBtTXBaLintZ4Igpxw4S/LlG9HySHa14gt9IPZ/p+jD/xRddZUf6w
+         8Zag==
+X-Gm-Message-State: AGi0PuaYElEE9qPi1z5dWc/HLORv7eJAO/jRgWIqLCtl5LuLDu0UO4Ga
+        QU8xQQ8pjY4o9ugmnU3qqGk=
+X-Google-Smtp-Source: APiQypKxu4lvNh7B1YEtxxWsTvlQwDsLJQmCevNqmTW3KEEsrC0UcP+R0Mko5eh4rrhyjzXZHSxvwA==
+X-Received: by 2002:a17:90b:3444:: with SMTP id lj4mr185611pjb.37.1586872114531;
+        Tue, 14 Apr 2020 06:48:34 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id g3sm10233341pgd.64.2020.04.14.06.48.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 06:48:34 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, alain.volmat@st.com,
+        linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1] i2c: busses: convert to devm_platform_get_and_ioremap_resource
+Date:   Tue, 14 Apr 2020 21:48:27 +0800
+Message-Id: <20200414134827.18674-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414110516.GO20713@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 01:05:16PM +0200, Peter Zijlstra wrote:
-> On Fri, Apr 10, 2020 at 12:56:58PM +0100, Will Deacon wrote:
-> > On Thu, Apr 09, 2020 at 09:45:58PM +0800, Muchun Song wrote:
-> > > The creators of the C language gave us the while keyword. Let's use
-> > > that instead of synthesizing it from if+goto.
-> > > 
-> > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > > ---
-> > >  include/linux/seqlock.h | 6 +-----
-> > >  1 file changed, 1 insertion(+), 5 deletions(-)
-> > > 
-> > > diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-> > > index 8b97204f35a77..7bdea019814ce 100644
-> > > --- a/include/linux/seqlock.h
-> > > +++ b/include/linux/seqlock.h
-> > > @@ -125,12 +125,8 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
-> > >  {
-> > >  	unsigned ret;
-> > >  
-> > > -repeat:
-> > > -	ret = READ_ONCE(s->sequence);
-> > > -	if (unlikely(ret & 1)) {
-> > > +	while (unlikely((ret = READ_ONCE(s->sequence)) & 1))
-> > >  		cpu_relax();
-> > > -		goto repeat;
-> > > -	}
-> > >  	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
-> > >  	return ret;
-> > 
-> > Patch looks fine to me, but I'll leave it to Peter as I don't have a
-> > preference either way.
-> 
-> Linus sometimes prefers the goto variant as that better expresses the
-> exception model. But like Will, I don't particularly care. That said,
-> Will, would it make sense to use smp_cond_load_relaxed() here ?
+use devm_platform_get_and_ioremap_resource() to simplify code, which
+contains platform_get_resource() and devm_ioremap_resource(), it also
+get the resource for use by the following code.
 
-Oh yeah, good thinking. Didn't spot that one, but it should work well as
-long as smp_cond_load_relaxed() always implies a control dependency (surely
-it has to?)
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/i2c/busses/i2c-cadence.c      | 3 +--
+ drivers/i2c/busses/i2c-pca-platform.c | 3 +--
+ drivers/i2c/busses/i2c-rcar.c         | 4 +---
+ drivers/i2c/busses/i2c-stm32f7.c      | 3 +--
+ 4 files changed, 4 insertions(+), 9 deletions(-)
 
-Will
+diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+index 89d58f7d2a25..803c802611eb 100644
+--- a/drivers/i2c/busses/i2c-cadence.c
++++ b/drivers/i2c/busses/i2c-cadence.c
+@@ -906,8 +906,7 @@ static int cdns_i2c_probe(struct platform_device *pdev)
+ 		id->quirks = data->quirks;
+ 	}
+ 
+-	r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	id->membase = devm_ioremap_resource(&pdev->dev, r_mem);
++	id->membase = devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
+ 	if (IS_ERR(id->membase))
+ 		return PTR_ERR(id->membase);
+ 
+diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
+index 635dd697ac0b..546426a470cc 100644
+--- a/drivers/i2c/busses/i2c-pca-platform.c
++++ b/drivers/i2c/busses/i2c-pca-platform.c
+@@ -149,8 +149,7 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
+ 	if (!i2c)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	i2c->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	i2c->reg_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(i2c->reg_base))
+ 		return PTR_ERR(i2c->reg_base);
+ 
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 3b5397aa4ca6..a45c4bf1ec01 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -938,9 +938,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->clk);
+ 	}
+ 
+-	priv->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	priv->io = devm_ioremap_resource(dev, priv->res);
++	priv->io = devm_platform_get_and_ioremap_resource(pdev, 0, &priv->res);
+ 	if (IS_ERR(priv->io))
+ 		return PTR_ERR(priv->io);
+ 
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 330ffed011e0..cf48f8df4423 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1940,8 +1940,7 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 	if (!i2c_dev)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	i2c_dev->base = devm_ioremap_resource(&pdev->dev, res);
++	i2c_dev->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(i2c_dev->base))
+ 		return PTR_ERR(i2c_dev->base);
+ 	phy_addr = (dma_addr_t)res->start;
+-- 
+2.25.0
+
