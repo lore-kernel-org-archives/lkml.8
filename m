@@ -2,107 +2,88 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA1C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC07C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B742075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F012074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883989;
-	bh=N+wDVFj4k9qNnM4H4JBhjazm1jiklG8jskgZRqJY8vE=;
+	s=default; t=1586884029;
+	bh=6wP3SXzaj5y/uNWj5dh8vKyOd1Q18W8Clw3EcoEaWOQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OkAJEdzXfb4RIz+ffD68t2fclCPVBdbOs/c4hiWVtjWtlCafqbA6JLxQhfv4txQWI
-	 lZNnlfmuuaGLBRXG+4iUi/vgQXjFxeethNdbgqEMV9AizFCcMlyg1Rr9y9vdfEiZL2
-	 0nTfGvCkF7ymdgq3XIy0P+Mcl1BzxLPmC55KVGDk=
+	b=n/6hJca+EyX9Et/C8InWzfPtIWTqH/pNKCmD2YWE6LFIkZrIJSJqWOBHSHPGbi66e
+	 /F9BJYtPCfcYadTw634OuwFALYB2HFGGnEvEaQQEEBGW01PkNezqiocn/J/N/RKwLe
+	 5Y8zrRFgjsGXje3f0nw22ILpofppVaVdrG5ZwJJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407510AbgDNRG0 (ORCPT
+        id S2407527AbgDNRHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbgDNRGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:06:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5D820678;
-        Tue, 14 Apr 2020 17:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586883980;
-        bh=N+wDVFj4k9qNnM4H4JBhjazm1jiklG8jskgZRqJY8vE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GLTIl/JCaTkOhZA5OQwDfanxfbTEyIdCvGi1wIKXRvXuh3XsA+ROea7ZdVEIEMoUp
-         rkUKYqb5ScEV9JzmaLWwUPEzla8bLzvty9CCTcNG/rMrOF/dgEbtEBXh5A5+9KH9XJ
-         dgb4ux3lsK5o5RvJGS7cBTojbNGLUizRObK2g7/U=
-Date:   Tue, 14 Apr 2020 18:06:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-hwmon@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix dtc warnings on reg and ranges in
- examples
-Message-ID: <20200414170618.GG5412@sirena.org.uk>
-References: <20200409202458.24509-1-robh@kernel.org>
+        Tue, 14 Apr 2020 13:07:08 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36136 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729042AbgDNRG6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:06:58 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b13so382256oti.3;
+        Tue, 14 Apr 2020 10:06:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R7DvIE6xgB6bsjZY6OStsQ7vzWt/6mNtD60f488gFE0=;
+        b=gXCvYbn55D8xVCMLHfglEXzITOQetzVSAfCKD6TNpADR6FIj/VJLzIU9fjQ6GFaAxY
+         KILG10G3JyDlMeVK+kOyqeQwEw3Q1mHp68LB57NKB6oU4RGr5oqITp08WbwAP5Irnllh
+         rMghpCz1mERczcI9aktDsSWltM8p8Vmsh1AwpH8dL4RHKMkrQlEm7isVPrIQ/S6VjilL
+         YGXjVdsHzhHMO4fc804MI2nReGnwbREGLNH/yR5vOjA0xAcpBxTlJYFTMyU/LuzOUc8y
+         s1huHnfXxzyqCGtvpcVAqDhKWZkxIGFjy3Ayt0YZVJ1NJN9/xFdoWOy7Q2E2BkrZMOAr
+         6hyw==
+X-Gm-Message-State: AGi0PuYlyWPXq8uwJ7da4eChH5R8NEdUE9h+QZDAH/Wp2R35zM1K0Ve2
+        wNL7ei10ECL0Sh3yLSjQZvWT45Q=
+X-Google-Smtp-Source: APiQypLcWMJCxCvJhaBdIMDkx5zzMNBBqtXItGq/cEfJVplp7CnhWshFW1uiWYkqaLhu0iOA7MF6aw==
+X-Received: by 2002:a4a:92cd:: with SMTP id j13mr19440736ooh.96.1586884017955;
+        Tue, 14 Apr 2020 10:06:57 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y8sm3450729otg.6.2020.04.14.10.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 10:06:57 -0700 (PDT)
+Received: (nullmailer pid 11468 invoked by uid 1000);
+        Tue, 14 Apr 2020 17:06:56 -0000
+Date:   Tue, 14 Apr 2020 12:06:56 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] dt-bindings: Document Loongson RS780E PCH ACPI
+ Controller
+Message-ID: <20200414170656.GA11412@bogus>
+References: <20200402104851.368465-1-jiaxun.yang@flygoat.com>
+ <20200402104851.368465-3-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409202458.24509-1-robh@kernel.org>
-X-Cookie: I've only got 12 cards.
+In-Reply-To: <20200402104851.368465-3-jiaxun.yang@flygoat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu,  2 Apr 2020 18:48:41 +0800, Jiaxun Yang wrote:
+> 
+> This controller is attached under ISA Bus and can be found
+> in Loongson-3 systems with RS780E PCH.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../bindings/mips/loongson/rs780e-acpi.yaml   | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/loongson/rs780e-acpi.yaml
+> 
 
---kjpMrWxdCilgNbo1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Apr 09, 2020 at 02:24:58PM -0600, Rob Herring wrote:
-> A recent update to dtc and changes to the default warnings introduced
-> some new warnings in the DT binding examples:
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---kjpMrWxdCilgNbo1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7YkACgkQJNaLcl1U
-h9C0nggAgbznZBSepYyVohp/1H4rCte0Z/wk6K7EfPvfDL1M/M+F5oW6AU4YZ7Kq
-lnSn9hweJBFpxBwrrAv0lHakge/LpEQZ1Aqig/t9jd9NgwKqJWJ8Y2aKPx+Oli9k
-mdb6G44fbxVgVruXHd1n2XzJwpISNXksvKBTYWY63Gb7DRAfzSqlexWfysRbtI/O
-NgdIihQ9ti6mjE0Nxso/6KeZbooinBxVRntCOiinYSHraOWbfTn24MQXa70JtuVC
-m7cod5i1+C4PiKb+3m5aYIEQxvzN08qRxnnZFrnknqj+N0GcA1N9wVkJ06JhXrzn
-a84u535dpkRwCg+2Nf9leoevVqXUqw==
-=wm8m
------END PGP SIGNATURE-----
-
---kjpMrWxdCilgNbo1--
+Reviewed-by: Rob Herring <robh@kernel.org>
