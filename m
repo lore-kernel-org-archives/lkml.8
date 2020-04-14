@@ -2,176 +2,139 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77651C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6A8C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF3A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2913C20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586880581;
+	bh=92IsLYBmWN95MoOIca4RMfGjPAcw1IKPVPEKjp32bes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dcCImLUeCA7gNkSJ3AOyA4xZEm+fJvVJcYpKdU39imsszDGupfVomz4fgTNxXQnGX
+	 5P5GbwXWv4qO/aT1iGzF27Sjnv3iAcuyOWH0FOMu/goEVkBz8UxBSMwY3I7QxThoM+
+	 3k+i1QbajSZVRvgZ/mpGplc055jsI9GSPW1lQhug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388407AbgDNQIA (ORCPT
+        id S1733123AbgDNQJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:08:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:59090 "EHLO foss.arm.com"
+        Tue, 14 Apr 2020 12:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbgDNQHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:07:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FFAE30E;
-        Tue, 14 Apr 2020 09:07:53 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.30.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F323C3F6C4;
-        Tue, 14 Apr 2020 09:07:51 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 17:07:49 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Fangrui Song <maskray@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] arm64: Delete the space separator in __emit_inst
-Message-ID: <20200414160749.GL2486@C02TD0UTHF1T.local>
-References: <20200413033811.75074-1-maskray@google.com>
- <20200414095904.GB1278@C02TD0UTHF1T.local>
- <20200414154307.2cke3x5ocz3q2as4@google.com>
+        id S1732059AbgDNQJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:09:36 -0400
+Received: from linux-8ccs (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC5720656;
+        Tue, 14 Apr 2020 16:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586880575;
+        bh=92IsLYBmWN95MoOIca4RMfGjPAcw1IKPVPEKjp32bes=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ac5iWxiX16fyMzAsVdtABxx+uPrGaYPif+EvWbdKo3vaSAQKTs4GavzuqzXTDgcUD
+         Fqx1T4fSnNr9aDcq/qaWoWUt20C0kk0NH8NRSokf/Ycem6zqvFuF2ztPgItdjMUmQ2
+         XmyJVIq/vgwRBP6uSDXkYcvTcw7SNTWDzw8VgXbw=
+Date:   Tue, 14 Apr 2020 18:09:31 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        live-patching@vger.kernel.org
+Subject: Re: RFC: Handle hard module dependencies that are not symbol-based
+ (r8169 + realtek)
+Message-ID: <20200414160930.GA20229@linux-8ccs>
+References: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+ <20200409000200.2qsqcbrzcztk6gmu@ldmartin-desk1>
+ <6ed6259b-888d-605a-9a6f-526c18e7bb14@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200414154307.2cke3x5ocz3q2as4@google.com>
+In-Reply-To: <6ed6259b-888d-605a-9a6f-526c18e7bb14@gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:43:07AM -0700, Fangrui Song wrote:
-> 
-> On 2020-04-14, Mark Rutland wrote:
-> > Hi Fangrui,
-> > 
-> > On Sun, Apr 12, 2020 at 08:38:11PM -0700, Fangrui Song wrote:
-> > > Many instances of __emit_inst(x) expand to a directive. In a few places
-> > > it is used as a macro argument, e.g.
-> > > 
-> > >   arch/arm64/include/asm/sysreg.h
-> > >   #define __emit_inst(x)                       .inst (x)
-> > > 
-> > >   arch/arm64/include/asm/sysreg.h
-> > >   #define SET_PSTATE_PAN(x)            __emit_inst(0xd500401f | PSTATE_PAN | ((!!x) << PSTATE_Imm_shift))
-> > > 
-> > >   arch/arm64/kvm/hyp/entry.S
-> > >   ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
-> > > 
-> > > Clang integrated assembler parses `.inst (x)` as two arguments passing
-> > > to a macro. We delete the space separator so that `.inst(x)` will be
-> > > parsed as one argument.
-> > 
-> > I'm a little confused by the above; sorry if the below sounds stupid or
-> > pedantic, but I just want to make sure I've understood the problem
-> > correctly.
-> > 
-> > For the above, ALTERNATIVE() and SET_PSTATE_PAN() are both preprocessor
-> > macros, so I would expect those to be expanded before either the
-> > integrated assembler or an external assembler consumes any of the
-> > assembly (and both would see the same expanded text). Given that, I'm a
-> > bit confused as to why the integrated assembly would have an impact on
-> > preprocessing.
-> > 
-> > Does compiling the pre-processed source using the integrated assembler
-> > result in the same behaviour? Can we see the expanded text to make that
-> > clear?
-> > 
-> > ... at what stage exactly does this go wrong?
-> > 
-> > Thanks,
-> > Mark.
-> 
-> Hi Mark,
-> 
-> The C preprocessor expands arch/arm64/kvm/hyp/entry.S
->    ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
-> 
-> to:
->    alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-> 
-> `alternative_insn` is an assembler macro, not handled by the C preprocessor.
-> 
-> Both comma and space are separators, with an exception that content
-> inside a pair of parentheses/quotes is not split, so clang -cc1as or GNU
-> as x86 splits arguments this way:
-> 
->    nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
++++ Heiner Kallweit [10/04/20 00:25 +0200]:
+>On 09.04.2020 02:02, Lucas De Marchi wrote:
+>> On Wed, Apr 01, 2020 at 11:20:20PM +0200, Heiner Kallweit wrote:
+>>> Currently we have no way to express a hard dependency that is not
+>>> a symbol-based dependency (symbol defined in module A is used in
+>>> module B). Use case:
+>>> Network driver ND uses callbacks in the dedicated PHY driver DP
+>>> for the integrated PHY (namely read_page() and write_page() in
+>>> struct phy_driver). If DP can't be loaded (e.g. because ND is in
+>>> initramfs but DP is not), then phylib will use the generic
+>>> PHY driver GP. GP doesn't implement certain callbacks that are
+>>> needed by ND, therefore ND's probe has to bail out with an error
+>>> once it detects that DP is not loaded.
+>>> We have this problem with driver r8169 having such a dependency
+>>> on PHY driver realtek. Some distributions have tools for
+>>> configuring initramfs that consider hard dependencies based on
+>>> depmod output. Means so far somebody can add r8169.ko to initramfs,
+>>> and neither human being nor machine will have an idea that
+>>> realtek.ko needs to be added too.
+>>
+>> Could you expand on why softdep doesn't solve this problem
+>> with MODULE_SOFTDEP()
+>>
+>> initramfs tools can already read it and modules can already expose them
+>> (they end up in /lib/modules/$(uname -r)/modules.softdep and modprobe
+>> makes use of them)
+>>
+>Thanks for the feedback. I was under the impression that initramfs-tools
+>is affected, but you're right, it considers softdeps.
+>Therefore I checked the error reports again, and indeed they are about
+>Gentoo's "genkernel" tool only. See here:
+>https://bugzilla.kernel.org/show_bug.cgi?id=204343#c15
+>
+>If most kernel/initramfs tools consider softdeps, then I don't see
+>a need for the proposed change. But well, everything is good for
+>something, and I learnt something about the structure of kmod.
+>Sorry for the noise.
 
-Thanks for this; I understand now.
+Well, I wouldn't really call it noise :) I think there *could* be
+cases out there where a establishing a non-symbol-based hard
+dependency would be beneficial.
 
-Could we fold that into the commit message? I think this is much clearer
-than the current wording. The explicit description of separator
-behaviour, the pre-expansion of the CPP macros, and the example of how
-the assembler will split this really help.
+In the bug you linked, I think one could hypothetically run into the
+same oops if the realtek module fails to load for whatever reason, no?
+Since realtek is only a soft dependency of r8169, modprobe would
+consider realtek optional and would still try to load r8169 even if
+realtek had failed to load previously. Then wouldn't the same problem
+(described in the bugzilla) arise?  Maybe a hard dependency could
+possibly come in handy in this case, because a softdep unfortunately
+implies that r8169 can work without realtek loaded.
 
-> I actually feel that GNU as arm64's behavior is a little bit buggy. It
-> works just because GNU as has another preprocessing step `do_scrub_chars`
-> and its arm64 backend deletes the space before '('
-> 
->    alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-> 
-> The x86 backend keeps the space before the outmost '('
-> 
->   alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-> 
-> By reading its state machine, I think keeping the spaces will be the
-> most reasonable behavior.
+Another potential usecase - I think livepatch folks (CC'd) have
+contemplated establishing some type of hard dependency between patch
+module and the target module before. I have only briefly skimmed
+Petr's POC [1] and it looks like this patch module dependency is
+accomplished through a request_module() call during load_module()
+(specifically, in klp_module_coming()) so that the patch module gets
+loaded before the target module finishes loading.
 
-I think I agree. This deviation across architectures is unfortunate for
-such a low-level but common tool.
+I initially thought this dependency could be expressed through
+MODULE_HARDDEP(target_module) in the patch module source code, but it
+looks like livepatch might require something more fine-grained, since
+the current POC tries to load the patch module before the target
+module runs its init(). In addition, this method wouldn't prevent the
+target module from loading if the patch module fails to load..
 
-> If .inst were only used as arguments,
-> 
->    alternative_insn nop, ".inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8))", 4, 1
-> 
-> would be the best to avoid parsing issues.
-> 
-> > > 
-> > > Note, GNU as parsing `.inst (x)` as one argument is unintentional (for
-> > > example the x86 backend will parse the construct as two arguments).
-> > > See https://sourceware.org/bugzilla/show_bug.cgi?id=25750#c10
-> > > 
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/939
-> > > Cc: clang-built-linux@googlegroups.com
-> > > Signed-off-by: Fangrui Song <maskray@google.com>
-> > > ---
-> > >  arch/arm64/include/asm/sysreg.h | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> > > index ebc622432831..af21e2ec5e3e 100644
-> > > --- a/arch/arm64/include/asm/sysreg.h
-> > > +++ b/arch/arm64/include/asm/sysreg.h
-> > > @@ -49,7 +49,9 @@
-> > >  #ifndef CONFIG_BROKEN_GAS_INST
-> > > 
-> > >  #ifdef __ASSEMBLY__
-> > > -#define __emit_inst(x)			.inst (x)
-> > > +// The space separator is omitted so that __emit_inst(x) can be parsed as
-> > > +// either a directive or a macro argument.
-> > > +#define __emit_inst(x)			.inst(x)
-
-Can we make this a bit more explicit and say "assembler macro argument"?
-That way we can avoid any confusion with a CPP macro.
-
-With that (and with the details above folded into the commit message):
-
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+In any case, I appreciate the RFC and don't really have any gripes
+against having an analogous MODULE_HARDDEP() macro. If more similar
+cases crop up then it may be worth seriously pursuing, and then we'll
+at least have this RFC to start with :)
 
 Thanks,
-Mark.
 
-> > >  #else
-> > >  #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
-> > >  #endif
-> > > --
-> > > 2.26.0.110.g2183baf09c-goog
-> > > 
+Jessica
