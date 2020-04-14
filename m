@@ -2,165 +2,295 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED18C3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D644206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D85206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="WesUpgsj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouFvZ19W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505087AbgDNTlH (ORCPT
+        id S2504988AbgDNTip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59128 "EHLO
+        Tue, 14 Apr 2020 15:38:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505027AbgDNTjq (ORCPT
+        by vger.kernel.org with ESMTP id S2504928AbgDNThA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:39:46 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on20600.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8a::600])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CA7C061A0E;
-        Tue, 14 Apr 2020 12:03:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kzz6WKLYItK9cNoaIf3RK3AQB9L9+5msCkonXUnSoCBi/3xxF54NoCS4Ss+8gp5M8XVCUGT9F2XJO/I67vW1Z5hn0stxiZ6N+/mYMUpqjtApHv5gS2rBZu2UenI/JbD4k8E5BNLq92XGxDPqeE1E5P9IHfZtf5eyeKiagSJl0kK5CqefKh7thaLHWNYur/puCwQIMczt57GuCvLMRS45zlm36mRpxfVBqg+WYlDXG4FiIIZzQ9IPUQM0ujqbsvqQKjvPE2u+qjFKEkTCC3/+csYcvHGa3gKSFPrt9Ot6IT1D9f7BoXqkuFouLLqMRg5jIVfdolVxDNjE6QpDk5Y73g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YU/em2oqVpN+eqgIEjMDV+yMyZKqf55fjPa/p6CV7Q0=;
- b=iHpZaSJ1GsZeoZSrKphzQJqkLURxAcC11vMuFb0i7b5cBnMtfd9546Fi68lo7YQzHiJqASvv4mF2PTTilY6eHwrfkTAp1KU+lEquaw0N5cOp68jBd1tWJfzBmKylTDETnFOPwOQFVhQKGK3y1zJvL3K9JByqR7rtbl1rmIcck59ZUqiOBXYmgsyZ40Z85xEsc0ZZeYhsIt3yF+kR3ReyMqf3TJCpYrIQCQpBJHpdLnmADkg71zQ5jS/ciR+GegG1wWdQm71OdeXR0JLXoZcr2OnvVkBQ6+iy/bjxzjEQb23lOL0Pyqr75JrAKEzwph9W7skmZRotIPgBSEgndydBnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YU/em2oqVpN+eqgIEjMDV+yMyZKqf55fjPa/p6CV7Q0=;
- b=WesUpgsjQ3C4JOwNXFxG6dCIKykPUKlV+K0BlT9c9P8/EbM98xBplMu1QrWf3hj9mumdoE1FZGF4u3/vwNWXWbmSJj4X/cZhtDSDiWlymh12dYaioPt6ckb7OV8xUuB6dzHg1AfELJWb3koNOK+vE+E7RJZJljXJ44nEwAMae4c=
-Received: from BY5PR05MB7191.namprd05.prod.outlook.com (2603:10b6:a03:1d9::14)
- by BY5PR05MB6980.namprd05.prod.outlook.com (2603:10b6:a03:1ca::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.24; Tue, 14 Apr
- 2020 19:03:44 +0000
-Received: from BY5PR05MB7191.namprd05.prod.outlook.com
- ([fe80::7869:d443:6c46:e7e7]) by BY5PR05MB7191.namprd05.prod.outlook.com
- ([fe80::7869:d443:6c46:e7e7%9]) with mapi id 15.20.2921.024; Tue, 14 Apr 2020
- 19:03:44 +0000
-From:   Mike Stunes <mstunes@vmware.com>
-To:     Joerg Roedel <joro@8bytes.org>
-CC:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
- handler
-Thread-Topic: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
- handler
-Thread-Index: AQHWEo9rgGvn/WKAp0SMYIwlFMJeIg==
-Date:   Tue, 14 Apr 2020 19:03:44 +0000
-Message-ID: <A7DF63B4-6589-4386-9302-6B7F8BE0D9BA@vmware.com>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-41-joro@8bytes.org>
-In-Reply-To: <20200319091407.1481-41-joro@8bytes.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.60.0.2.5)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mstunes@vmware.com; 
-x-originating-ip: [2601:600:9e7f:eac1:d5ed:96a3:68a4:b0d7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6e7eb8d7-4b57-430e-afca-08d7e0a68dc8
-x-ms-traffictypediagnostic: BY5PR05MB6980:|BY5PR05MB6980:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR05MB69802B0E431DD7479D0CF15DC8DA0@BY5PR05MB6980.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 0373D94D15
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR05MB7191.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(71200400001)(66946007)(5660300002)(6506007)(53546011)(66446008)(33656002)(36756003)(6512007)(316002)(6486002)(64756008)(2616005)(76116006)(54906003)(2906002)(66556008)(8936002)(7416002)(81156014)(186003)(66476007)(8676002)(4326008)(86362001)(478600001)(6916009);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BJE39FT4nXFZHEX9l0EePiNr46M3gj+ipzLCY7IknoFcGGFCoJQuEYz0jnqSBltt74viJ/Bl5FqWG7mk2OcqfC+lQZC7rAcaVE7EeWTQfeUpTYNdjTferlcjbbUoor/eVC7gfUsomt4IGGIMBpVSIp0orb0mMi9ONn4jLGbYNU3igiVNMMbrqiUxYpqXAtnsPftYP0Czzp95KJ0Tme3V6PSQD2kLl0CDokg1+6JlldsIKgQivpy2nC6NMCvEVCYFjTohtDxTuDBQ20bdSXaDK8l9oQphLHlXiL8y2lWK+qC0F943dyIPR5FGErHxO/JZNV/ppLBQIQHK75NA9R9LOVoynpc+N1iCG17dIVAuQrSQ5wxXWIBQaqPcl2uQEkd7hgi5+9ZhtSUke0JaBt2aai0e/M6DJ1AMHU0ntwyyUgPlc2EQ+IVOFp9QyB5pilQz
-x-ms-exchange-antispam-messagedata: yBX4H57CQXhyyCLqbIQ1k2CYflyb+R7XL/5RTrhqqpJ8VGTggukmFKZHNhFaXdmQ3Tz99x8TcQCRrAgkqFEg7BciISPkic0ZJjir2Oi8Jo5THtfubgK1sL+GvcTo6WAeMFAQEymsRAdmeztQHfrO+39O0l+XvxP43qlOQGaV2hFxJ1tygpTmU3enKIc4AjdL9fFMDcEFFBcd9KebRn3AVQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CCC02F7E87773D41B51FCDF4C0FD1521@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 15:37:00 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42D2C061A10;
+        Tue, 14 Apr 2020 12:37:00 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id x2so11298160qtr.0;
+        Tue, 14 Apr 2020 12:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/x+59wQD9qt9jVTB3z6iHmEFF7JHhCgx/hYlUVzL/CE=;
+        b=ouFvZ19WZE6FIrXgBiOAvzefMfOTA/9N+8QZJGURxDuyXKcv674CLUt5FLv2dsTSRc
+         JnKnJbJCXwCHCDqlpSXiH+eSPtc8Yd/3mOt2U17swQm/cwdE+XWdXvN/7ZXz8QEGGQIZ
+         2lVWqWoTovre9qwlQ0YCkY+bHSZ2Ww11doNNQwHZT9BP9VHUqyh7RBlbtotKjtbIQ/vM
+         BEF80jJCX5zlygfAoRXYxh7lVoTURTLzyqhW1tz61uPlglogPsO7S8YnQX4Jiy8m40wP
+         N6FG+By+cWoD7To5sAQO/aFiDF8JP871D1FO0GIM7AVj+N46C0wouexCJpHSs2tbcS0W
+         3J0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/x+59wQD9qt9jVTB3z6iHmEFF7JHhCgx/hYlUVzL/CE=;
+        b=CP+LetDqujyEMxFab8O94lWHt4/yvwSs7OL6gG2EY6WkrkIxzMjr12T9UGQ5AwnjLU
+         VBBQKbluHQVokRXdW3fh8KhNIa53fBxvrIa8XuVRiLs5IJZTPR4ffV6kPsLByuDSqbaH
+         P/SbRnqOv9L51/ojHUNQNIMc80PLK6cL+mUhKhSD1wEnUOt21MoJoqOd8Go+r8V+2TVi
+         3mSnYOS430e3Khbek7IsEA4fMYRzeLyE1iunDQsEEs0hxvad/Escq+YFqnqbRI3oQXZL
+         8Koyi4H8Qf6rZCYGKHiLaSbb5i6fiGrreh+BEyKs3b8SH2b315J87EXvXTtrx9wufY/0
+         nEvQ==
+X-Gm-Message-State: AGi0PuYCquUTBWRKoUcDJz2n81jYDOLMiDYv2SdVv/EcKE62hQYEUZwp
+        M5LhewqR+hoxTkHr7J15OhOAswdC/jY=
+X-Google-Smtp-Source: APiQypKcNHIW372nQRoj76+O69JmPgnHAWxxkDjPGIyJ8esh/xMgfqvjqK8vvBNsnNBcGYah6Jp2rg==
+X-Received: by 2002:ac8:51cb:: with SMTP id d11mr17156350qtn.370.1586893019278;
+        Tue, 14 Apr 2020 12:36:59 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id t15sm11960197qtc.64.2020.04.14.12.36.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 12:36:58 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-clk@vger.kernel.org
+Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
+        Adam Ford <aford173@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] clk: vc5: Allow Versaclock driver to support multiple instances
+Date:   Tue, 14 Apr 2020 14:36:14 -0500
+Message-Id: <20200414193616.1368209-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e7eb8d7-4b57-430e-afca-08d7e0a68dc8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 19:03:44.3350
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cA02r/+UqGfjEdTgA53A6FJ4xXypy0l79HjPUTmgjFsFfLe1haiynBiHKnFMmKfUOAnbTRiojdqOgJVYhuvgfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR05MB6980
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mar 19, 2020, at 2:13 AM, Joerg Roedel <joro@8bytes.org> wrote:
->=20
-> From: Tom Lendacky <thomas.lendacky@amd.com>
->=20
-> The runtime handler needs a GHCB per CPU. Set them up and map them
-> unencrypted.
->=20
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
-> arch/x86/include/asm/mem_encrypt.h |  2 ++
-> arch/x86/kernel/sev-es.c           | 28 +++++++++++++++++++++++++++-
-> arch/x86/kernel/traps.c            |  3 +++
-> 3 files changed, 32 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index c17980e8db78..4bf5286310a0 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -197,6 +203,26 @@ static bool __init sev_es_setup_ghcb(void)
-> 	return true;
-> }
->=20
-> +void sev_es_init_ghcbs(void)
-> +{
-> +	int cpu;
-> +
-> +	if (!sev_es_active())
-> +		return;
-> +
-> +	/* Allocate GHCB pages */
-> +	ghcb_page =3D __alloc_percpu(sizeof(struct ghcb), PAGE_SIZE);
-> +
-> +	/* Initialize per-cpu GHCB pages */
-> +	for_each_possible_cpu(cpu) {
-> +		struct ghcb *ghcb =3D (struct ghcb *)per_cpu_ptr(ghcb_page, cpu);
-> +
-> +		set_memory_decrypted((unsigned long)ghcb,
-> +				     sizeof(*ghcb) >> PAGE_SHIFT);
-> +		memset(ghcb, 0, sizeof(*ghcb));
-> +	}
-> +}
-> +
+Currently, the Versaclock driver is only expecting one instance and
+uses hard-coded names for the various clock names.  Unfortunately,
+this is a problem when there is more than one instance of the driver,
+because the subsequent instantiations of the driver use the identical
+name.  Each clock after the fist fails to load, because the clock
+subsystem cannot handle two clocks with identical name.
 
-set_memory_decrypted needs to check the return value. I see it
-consistently return ENOMEM. I've traced that back to split_large_page
-in arch/x86/mm/pat/set_memory.c.
+This patch removes the hard-coded name arrays and uses kasprintf to
+assign clock names based on names of their respective node and parent
+node which gives each clock a unique identifying name.
+
+For a verasaclock node with a name like:
+   versaclock5: versaclock_som@6a
+
+The updated clock names would appear like:
+    versaclock_som.mux
+       versaclock_som.out0_sel_i2cb
+       versaclock_som.pfd
+          versaclock_som.pll
+             versaclock_som.fod3
+                versaclock_som.out4
+             versaclock_som.fod2
+                versaclock_som.out3
+             versaclock_som.fod1
+                versaclock_som.out2
+             versaclock_som.fod0
+                versaclock_som.out1
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+index fa96659f8023..6e4b09f1f074 100644
+--- a/drivers/clk/clk-versaclock5.c
++++ b/drivers/clk/clk-versaclock5.c
+@@ -161,30 +161,6 @@ struct vc5_driver_data {
+ 	struct vc5_hw_data	clk_out[VC5_MAX_CLK_OUT_NUM];
+ };
+ 
+-static const char * const vc5_mux_names[] = {
+-	"mux"
+-};
+-
+-static const char * const vc5_dbl_names[] = {
+-	"dbl"
+-};
+-
+-static const char * const vc5_pfd_names[] = {
+-	"pfd"
+-};
+-
+-static const char * const vc5_pll_names[] = {
+-	"pll"
+-};
+-
+-static const char * const vc5_fod_names[] = {
+-	"fod0", "fod1", "fod2", "fod3",
+-};
+-
+-static const char * const vc5_clk_out_names[] = {
+-	"out0_sel_i2cb", "out1", "out2", "out3", "out4",
+-};
+-
+ /*
+  * VersaClock5 i2c regmap
+  */
+@@ -750,12 +726,13 @@ static int vc5_probe(struct i2c_client *client,
+ 		return -EINVAL;
+ 	}
+ 
+-	init.name = vc5_mux_names[0];
++	init.name = kasprintf(GFP_KERNEL, "%pOFn.mux", client->dev.of_node);
+ 	init.ops = &vc5_mux_ops;
+ 	init.flags = 0;
+ 	init.parent_names = parent_names;
+ 	vc5->clk_mux.init = &init;
+ 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_mux);
++	kfree(init.name); /* clock framework made a copy of the name */
+ 	if (ret) {
+ 		dev_err(&client->dev, "unable to register %s\n", init.name);
+ 		goto err_clk;
+@@ -764,13 +741,16 @@ static int vc5_probe(struct i2c_client *client,
+ 	if (vc5->chip_info->flags & VC5_HAS_PFD_FREQ_DBL) {
+ 		/* Register frequency doubler */
+ 		memset(&init, 0, sizeof(init));
+-		init.name = vc5_dbl_names[0];
++		init.name = kasprintf(GFP_KERNEL, "%pOFn.dbl",
++				       client->dev.of_node);
+ 		init.ops = &vc5_dbl_ops;
+ 		init.flags = CLK_SET_RATE_PARENT;
+-		init.parent_names = vc5_mux_names;
++		init.parent_names = parent_names;
++		parent_names[0] = clk_hw_get_name(&vc5->clk_mux);
+ 		init.num_parents = 1;
+ 		vc5->clk_mul.init = &init;
+ 		ret = devm_clk_hw_register(&client->dev, &vc5->clk_mul);
++		kfree(init.name); /* clock framework made a copy of the name */
+ 		if (ret) {
+ 			dev_err(&client->dev, "unable to register %s\n",
+ 				init.name);
+@@ -780,16 +760,18 @@ static int vc5_probe(struct i2c_client *client,
+ 
+ 	/* Register PFD */
+ 	memset(&init, 0, sizeof(init));
+-	init.name = vc5_pfd_names[0];
++	init.name = kasprintf(GFP_KERNEL, "%pOFn.pfd", client->dev.of_node);
+ 	init.ops = &vc5_pfd_ops;
+ 	init.flags = CLK_SET_RATE_PARENT;
++	init.parent_names = parent_names;
+ 	if (vc5->chip_info->flags & VC5_HAS_PFD_FREQ_DBL)
+-		init.parent_names = vc5_dbl_names;
++		parent_names[0] = clk_hw_get_name(&vc5->clk_mul);
+ 	else
+-		init.parent_names = vc5_mux_names;
++		parent_names[0] = clk_hw_get_name(&vc5->clk_mux);
+ 	init.num_parents = 1;
+ 	vc5->clk_pfd.init = &init;
+ 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_pfd);
++	kfree(init.name); /* clock framework made a copy of the name */
+ 	if (ret) {
+ 		dev_err(&client->dev, "unable to register %s\n", init.name);
+ 		goto err_clk;
+@@ -797,15 +779,17 @@ static int vc5_probe(struct i2c_client *client,
+ 
+ 	/* Register PLL */
+ 	memset(&init, 0, sizeof(init));
+-	init.name = vc5_pll_names[0];
++	init.name = kasprintf(GFP_KERNEL, "%pOFn.pll", client->dev.of_node);
+ 	init.ops = &vc5_pll_ops;
+ 	init.flags = CLK_SET_RATE_PARENT;
+-	init.parent_names = vc5_pfd_names;
++	init.parent_names = parent_names;
++	parent_names[0] = clk_hw_get_name(&vc5->clk_pfd);
+ 	init.num_parents = 1;
+ 	vc5->clk_pll.num = 0;
+ 	vc5->clk_pll.vc5 = vc5;
+ 	vc5->clk_pll.hw.init = &init;
+ 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_pll.hw);
++	kfree(init.name); /* clock framework made a copy of the name */
+ 	if (ret) {
+ 		dev_err(&client->dev, "unable to register %s\n", init.name);
+ 		goto err_clk;
+@@ -815,15 +799,18 @@ static int vc5_probe(struct i2c_client *client,
+ 	for (n = 0; n < vc5->chip_info->clk_fod_cnt; n++) {
+ 		idx = vc5_map_index_to_output(vc5->chip_info->model, n);
+ 		memset(&init, 0, sizeof(init));
+-		init.name = vc5_fod_names[idx];
++		init.name = kasprintf(GFP_KERNEL, "%pOFn.fod%d",
++				       client->dev.of_node, idx);
+ 		init.ops = &vc5_fod_ops;
+ 		init.flags = CLK_SET_RATE_PARENT;
+-		init.parent_names = vc5_pll_names;
++		init.parent_names = parent_names;
++		parent_names[0] = clk_hw_get_name(&vc5->clk_pll.hw);
+ 		init.num_parents = 1;
+ 		vc5->clk_fod[n].num = idx;
+ 		vc5->clk_fod[n].vc5 = vc5;
+ 		vc5->clk_fod[n].hw.init = &init;
+ 		ret = devm_clk_hw_register(&client->dev, &vc5->clk_fod[n].hw);
++		kfree(init.name); /* clock framework made a copy of the name */
+ 		if (ret) {
+ 			dev_err(&client->dev, "unable to register %s\n",
+ 				init.name);
+@@ -833,15 +820,18 @@ static int vc5_probe(struct i2c_client *client,
+ 
+ 	/* Register MUX-connected OUT0_I2C_SELB output */
+ 	memset(&init, 0, sizeof(init));
+-	init.name = vc5_clk_out_names[0];
++	init.name = kasprintf(GFP_KERNEL, "%pOFn.out0_sel_i2cb",
++			       client->dev.of_node);
+ 	init.ops = &vc5_clk_out_ops;
+ 	init.flags = CLK_SET_RATE_PARENT;
+-	init.parent_names = vc5_mux_names;
++	init.parent_names = parent_names;
++	parent_names[0] = clk_hw_get_name(&vc5->clk_mux);
+ 	init.num_parents = 1;
+ 	vc5->clk_out[0].num = idx;
+ 	vc5->clk_out[0].vc5 = vc5;
+ 	vc5->clk_out[0].hw.init = &init;
+ 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_out[0].hw);
++	kfree(init.name); /* clock framework made a copy of the name */
+ 	if (ret) {
+ 		dev_err(&client->dev, "unable to register %s\n",
+ 			init.name);
+@@ -851,14 +841,15 @@ static int vc5_probe(struct i2c_client *client,
+ 	/* Register FOD-connected OUTx outputs */
+ 	for (n = 1; n < vc5->chip_info->clk_out_cnt; n++) {
+ 		idx = vc5_map_index_to_output(vc5->chip_info->model, n - 1);
+-		parent_names[0] = vc5_fod_names[idx];
++		parent_names[0] = clk_hw_get_name(&vc5->clk_fod[idx].hw);
+ 		if (n == 1)
+-			parent_names[1] = vc5_mux_names[0];
++			parent_names[1] = clk_hw_get_name(&vc5->clk_mux);
+ 		else
+-			parent_names[1] = vc5_clk_out_names[n - 1];
++			parent_names[1] = clk_hw_get_name(&vc5->clk_out[n-1].hw);
+ 
+ 		memset(&init, 0, sizeof(init));
+-		init.name = vc5_clk_out_names[idx + 1];
++		init.name = kasprintf(GFP_KERNEL, "%pOFn.out%d",
++				       client->dev.of_node, idx + 1);
+ 		init.ops = &vc5_clk_out_ops;
+ 		init.flags = CLK_SET_RATE_PARENT;
+ 		init.parent_names = parent_names;
+@@ -868,6 +859,7 @@ static int vc5_probe(struct i2c_client *client,
+ 		vc5->clk_out[n].hw.init = &init;
+ 		ret = devm_clk_hw_register(&client->dev,
+ 					   &vc5->clk_out[n].hw);
++		kfree(init.name); /* clock framework made a copy of the name */
+ 		if (ret) {
+ 			dev_err(&client->dev, "unable to register %s\n",
+ 				init.name);
+-- 
+2.25.1
+
