@@ -2,295 +2,142 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFD5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD3FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A8820787
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63702076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NKMoMvq3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6GM5cBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633315AbgDNUmh (ORCPT
+        id S2633325AbgDNUmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:42:37 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34088 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730487AbgDNUmU (ORCPT
+        Tue, 14 Apr 2020 16:42:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729251AbgDNUmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:42:20 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D7B05521;
-        Tue, 14 Apr 2020 22:42:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586896934;
-        bh=gUuaIJ3u+fel6jj4JqVEOGrL2STu9lBIgJke/U/dqJY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NKMoMvq3toxLJ00KSu+xAkx6PhAfgq5ehyu67cm63r7bdZK3F9M+Js50OYUTf5wd8
-         ZkgyL8zrnF//1II9JfEzZnO+35ZpPAjQnZmABcq7cU8O04VTa066J3H3sIaMy+amCC
-         0SIQj5mTegDI2a6TIb2y7j6rmdPML5PQiY9e61M0=
-Date:   Tue, 14 Apr 2020 23:42:02 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Rob Herring <robh@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v6 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-Message-ID: <20200414204202.GL19819@pendragon.ideasonboard.com>
-References: <20200414151955.311949-1-adrian.ratiu@collabora.com>
- <20200414151955.311949-6-adrian.ratiu@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200414151955.311949-6-adrian.ratiu@collabora.com>
+        Tue, 14 Apr 2020 16:42:45 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA33C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:42:45 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 71so787298pgg.23
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=2I4WctQI04EdVNnfO5lBoNqQ0BOagrVFsoryQp+bCLA=;
+        b=L6GM5cBJqkKVg5zJHTT3FNf5PifBt04sqQpo6G+cq90o8x9xVr9Zmhkf7uJMX6SA8l
+         C4oDGWtZ6a4Xt52qk9koWnkHKLhZXLh/CrxmKzWMMRN/BPDrTzweb2634OSKWci8MzbT
+         e5Te+HFfxMc5Qc3FVrCso5I1UKg/TUFv8LZysVg7D7Q7ozxQIuetn42l8vwgCezfuA8W
+         l42PmfDaeD+RWBh3pzpMpzfXeTDXRHWhossBAGJlq2/vHyiHIny2+STqv7glSmF9f+4B
+         nW4uCxMQWyQa+1yeSY2zYhj1faxNF3ckLdMnF8DXPzcDWVsYmLk3AgMDjG60L7jACpEt
+         k+Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=2I4WctQI04EdVNnfO5lBoNqQ0BOagrVFsoryQp+bCLA=;
+        b=EkFqdchVQa3JqkhZczUdcar6umlfGAdKt/GvgERRkln/qCShT+kX47lQVZ5LKZPKKL
+         +RZNbaHtWuybJfd7Y2U09Q16DN4E9MvHbZjPsgjwTI5Pj0gQ+q7v2cTJax/tfuWYW6Dl
+         SyFsMwmmYKlgqIClU6VxLkOVNTbKU6jQTvXYM96J/qqC4luGgyg4hY3GzxCRz4NBSUKg
+         lU37Jp4VqPQcXR7MbQS+Lq+5UC421jTfVtpe4T3MzHj7RZW1l1Kspms0ISLL29rjjHJz
+         vrzbtH7Ph1rIG6/Vz5LYQroq5uVBn6tZnvXRtZM99rVfc0uDYO/Au118cvIutr8c4A6O
+         7HDQ==
+X-Gm-Message-State: AGi0Puby+0cehpbcYpUp2d3pk3/YGN1WEEFy63KKhdqrS9q9tb7QNxfC
+        2HneiZ/kFDRXJJea1g/yr42NtDOdFmm+Eaos6mvWPQ==
+X-Google-Smtp-Source: APiQypJzWAJm5j7iwmdejE8yFesxbFduUzJRhz3WDXDmtbZpHCJ0E8FSgVtgYRMEJWgRaApGIHBybA+XIbEp/X+jPyRY3g==
+X-Received: by 2002:a17:90a:be18:: with SMTP id a24mr2099925pjs.92.1586896964526;
+ Tue, 14 Apr 2020 13:42:44 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 13:42:40 -0700
+Message-Id: <20200414204240.186377-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH v1] kobject: make sure parent is not released before children
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org,
+        sakari.ailus@linux.intel.com, andy.shevchenko@gmail.com,
+        hdegoede@redhat.com, rafael.j.wysocki@intel.com,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
+        shuah@kernel.org, anders.roxell@linaro.org,
+        lkft-triage@lists.linaro.org, linux@rasmusvillemoes.dk,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Thank you for the patch.
+Previously, kobjects were released before the associated kobj_types;
+this can cause a kobject deallocation to fail when the kobject has
+children; an example of this is in software_node_unregister_nodes(); it
+calls release on the parent before children meaning that children can be
+released after the parent, which may be needed for removal.
 
-On Tue, Apr 14, 2020 at 06:19:52PM +0300, Adrian Ratiu wrote:
-> This provides an example DT binding for the MIPI DSI host controller
-> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
-> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
-> Changes since v5:
->   - Fixed missing reg warning (Fabio)
->   - Updated dt-schema and fixed warnings (Rob)
-> 
-> Changes since v4:
->   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
->   and addressed received binding feedback (Rob)
-> 
-> Changes since v3:
->   - Added commit message (Neil)
->   - Converted to yaml format (Neil)
->   - Minor dt node + driver fixes (Rob)
->   - Added small panel example to the host controller binding
-> 
-> Changes since v2:
->   - Fixed commit tags (Emil)
-> ---
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 139 ++++++++++++++++++
->  1 file changed, 139 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> new file mode 100644
-> index 000000000000..10e289ea219a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> @@ -0,0 +1,139 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX6 DW MIPI DSI Host Controller
-> +
-> +maintainers:
-> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
-> +
-> +description: |
-> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
-> +  IP block with a companion PHY IP.
-> +
-> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-> +  the following device-specific properties.
+So, take a reference to the parent before we delete a node to ensure
+that the parent is not released before the children.
 
-Not necessarily a prerequisite for this patch, but it would be nice to
-get that converted to yaml, and included here with
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+Link: https://lore.kernel.org/linux-kselftest/CAFd5g44s5NQvT8TG_x4rwbqoa7zWzkV0TX+ETZoQdOB7OwXCPQ@mail.gmail.com/T/#m71f37f3985f2abd7209c8ca8e0fa4edc45e171d6
+Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
 
-allOf:
-  $ref: ../bridge/snps,dw-mipi-dsi.yaml#
+This patch is based on the diff written by Heikki linked above.
 
-(assuming that's how the file will be called).
+Heikki, can you either reply with a Signed-off-by? Otherwise, I can
+resend with me as the author and I will list you as the Co-developed-by.
 
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: fsl,imx6q-mipi-dsi
-> +      - const: snps,dw-mipi-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-> +      - description: DSI bus clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref
-> +      - const: pclk
-> +
-> +  fsl,gpr:
-> +    description: Phandle to the iomuxc-gpr region containing the multiplexer control register.
+Sorry for all the CCs: I just want to make sure everyone who was a party
+to the original bug sees this.
 
-Could you please wrap liens at a 80 columns boundary ?
+---
+ lib/kobject.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +      Documentation/devicetree/bindings/graph.txt
-> +    properties:
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d..5921e2470b46 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+  */
+ static void kobject_cleanup(struct kobject *kobj)
+ {
++	struct kobject *parent = kobj->parent;
+ 	struct kobj_type *t = get_ktype(kobj);
+ 	const char *name = kobj->name;
+ 
+@@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		kobject_uevent(kobj, KOBJ_REMOVE);
+ 	}
+ 
++	/* make sure the parent is not released before the (last) child */
++	kobject_get(parent);
++
+ 	/* remove from sysfs if the caller did not do it */
+ 	if (kobj->state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+@@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		t->release(kobj);
+ 	}
+ 
++	kobject_put(parent);
++
+ 	/* free name if we allocated it */
+ 	if (name) {
+ 		pr_debug("kobject: '%s': free name\n", name);
 
-You should add
-
-       '#address-cells':
-         const: 1
-
-       '#size-cells':
-         const: 0
-
-> +      port@0:
-> +        type: object
-> +        description:
-> +          DSI input port node, connected to the ltdc rgb output port.
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI output port node, connected to a panel or a bridge input port"
-
-
-Should this be "RGB output port node" ? And s/"/./
-
-And here you should add
-
-       additionalProperties: false
-
-> +
-> +patternProperties:
-> +  "^panel@[0-3]$":
-> +    type: object
-> +    description: |
-> +      A node containing the panel or bridge description as documented in
-> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> +    properties:
-> +      port:
-> +        type: object
-> +        description:
-> +          Panel or bridge port node, connected to the DSI output port (port@1)
-
-Does this belong here ? I think the port property for the panel needs to
-be described in the panel's binding instead.
-
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-
-These two properties are not pattern properties, right ? Should they be
-listed under the properties above ?
-
-> +
-> +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/imx6qdl-clock.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-
-Alphabetical order ?
-
-> +
-> +    dsi: dsi@21e0000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
-> +        reg = <0x021e0000 0x4000>;
-> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-> +        fsl,gpr = <&gpr>;
-> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
-> +        clock-names = "ref", "pclk";
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            port@1 {
-> +                reg = <1>;
-> +                dsi_out: endpoint {
-> +                    remote-endpoint = <&panel_in>;
-> +                };
-> +            };
-> +        };
-> +
-> +        panel@0 {
-> +            compatible = "sharp,ls032b3sx01";
-> +            reg = <0>;
-> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                port@0 {
-> +                    reg = <0>;
-> +                    panel_in: endpoint {
-> +                        remote-endpoint = <&dsi_out>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-
+base-commit: 8632e9b5645bbc2331d21d892b0d6961c1a08429
 -- 
-Regards,
+2.26.0.110.g2183baf09c-goog
 
-Laurent Pinchart
