@@ -2,240 +2,295 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EC6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C95C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A15132072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE742064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yJpe/IZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437966AbgDNJvX (ORCPT
+        id S2437977AbgDNJvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:51:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:51958 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437894AbgDNJtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:49:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7C541FB;
-        Tue, 14 Apr 2020 02:49:43 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6EC2C3F6C4;
-        Tue, 14 Apr 2020 02:49:40 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        James Morse <james.morse@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 16/16] arm64/cpufeature: Replace all open bits shift encodings with macros
-Date:   Tue, 14 Apr 2020 15:18:30 +0530
-Message-Id: <1586857710-17154-17-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
-References: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
+        Tue, 14 Apr 2020 05:51:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437938AbgDNJuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:50:24 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010CDC03C1A4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 02:50:23 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id t3so8674028qkg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 02:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/DhJ4EzT/qK/S+BlKlO4uoMzq/4I59+oyG4OzepvYlA=;
+        b=yJpe/IZa7MG2vVVoYih+Gt4OkeMZMIvXQy0ofjG6eCtenRILevCwunlUaag128HxX0
+         llUMyq9HY/d0RA/S0LzMJe749ahbdp6VIi1IRrO3LzEQMi9DEgG1QfFESgbczZg4zbqx
+         xmwE3xvH7zCCy39akXq6NFDYZmW4Y8zcHs2wRX9BnXCq4zt7G/xnAccSNXX/Y2c0b+dL
+         dxysTNdJ2ZLkdH4xkyQGJUTeHnfYgrJjHIAPmN000ubmzePf6Q4XA0WtiZvlRZiaUOiQ
+         wOsikaEjb1PlflvbiZOzGTYL+e6HEifR7zEi+mpmfAWgAKqALFp+lIxpz1jPSVhW7O+2
+         KjGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/DhJ4EzT/qK/S+BlKlO4uoMzq/4I59+oyG4OzepvYlA=;
+        b=gashXjBXGW8xIV6uyDLigdzevBL6eefY4I8P81/Gc+oJ0tYNEW+fiV3oI7hsoNQdVm
+         VsgswHuxxWS4Qxd2b9MC7hs4WhT7lIt/TRGB39X3q0GX0//VH1FffI4Iru6Dp2iFfnTt
+         5pIvrQ5NxftoD65wLqIjCBkdpRDlJimlcdfUY5Z6uSp6wBme8BDyML635PzIGxs0xYk6
+         GoavGi6XVYn2E8dqiiMlNjFf1fp2Sdqqwpa1xNZCS39rSzosCS9+QhfzoCm0E82/FRAH
+         nnYGimAxNRp2q7p0wQmDvcUAvC517LxpOBYJJyvblLas5ds375JcXDrVUSfy6ELkIUeV
+         tIWw==
+X-Gm-Message-State: AGi0PuaV6ApF0os9Rz6z/8eZOvAtnp9wy7yTVfKuBRpyg9N8PgflDtaL
+        nPrYh0+BKjdMf8Kewot7NpvmlsN6+07sBzQL3YmmNg==
+X-Google-Smtp-Source: APiQypLRnSNRTZ7adXEhjoANPp4O6Cddg20KUv7l9FAno3ZccIj+4u1/MYSt+Ss+59XVof24kucbUMpsSRx+R0RnkaI=
+X-Received: by 2002:a05:620a:1289:: with SMTP id w9mr5503980qki.263.1586857822917;
+ Tue, 14 Apr 2020 02:50:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
+ <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com> <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
+In-Reply-To: <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 14 Apr 2020 11:50:11 +0200
+Message-ID: <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many open bits shift encodings for various CPU ID registers that
-are scattered across cpufeature. This replaces them with register specific
-sensible macro definitions. This should not have any functional change.
+pon., 6 kwi 2020 o 12:10 Michael Walle <michael@walle.cc> napisa=C5=82(a):
+>
+>
+> Hi Bartosz, Hi Mark Brown,
+>
+> Am 2020-04-06 09:47, schrieb Bartosz Golaszewski:
+> > czw., 2 kwi 2020 o 22:37 Michael Walle <michael@walle.cc> napisa=C5=82(=
+a):
+> >>
+> >> There are quite a lot simple GPIO controller which are using regmap to
+> >> access the hardware. This driver tries to be a base to unify existing
+> >> code into one place. This won't cover everything but it should be a
+> >> good
+> >> starting point.
+> >>
+> >> It does not implement its own irq_chip because there is already a
+> >> generic one for regmap based devices. Instead, the irq_chip will be
+> >> instanciated in the parent driver and its irq domain will be associate
+> >> to this driver.
+> >>
+> >> For now it consists of the usual registers, like set (and an optional
+> >> clear) data register, an input register and direction registers.
+> >> Out-of-the-box, it supports consecutive register mappings and mappings
+> >> where the registers have gaps between them with a linear mapping
+> >> between
+> >> GPIO offset and bit position. For weirder mappings the user can
+> >> register
+> >> its own .xlate().
+> >>
+> >> Signed-off-by: Michael Walle <michael@walle.cc>
+> >
+> > Hi Michael,
+> >
+> > Thanks for doing this! When looking at other generic drivers:
+> > gpio-mmio and gpio-reg I can see there are some corner-cases and more
+> > specific configuration options we could add
+>
+> I didn't want to copy every bit without being able to test it.
+>
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+Sure, I didn't mean we need to do it now - just set it as the future goal.
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/sysreg.h | 28 +++++++++++++++++
- arch/arm64/kernel/cpufeature.c  | 53 +++++++++++++++++----------------
- 2 files changed, 55 insertions(+), 26 deletions(-)
+> > but it's not a blocker,
+> > we'll probably be extending this one as we convert more drivers to
+> > using it.
+>
+> correct, that was also my plan.
+>
+> > Personally I'd love to see gpio-mmio and gpio-reg removed
+> > and replaced by a single, generic regmap interface eventually.
+>
+> agreed.
+>
+>
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 9dd7cc52349a..4b85917fec71 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -761,6 +761,7 @@
- /* id_aa64dfr0 */
- #define ID_AA64DFR0_MTPMU_SHIFT		48
- #define ID_AA64DFR0_TRACEFILT_SHIFT	40
-+#define ID_AA64DFR0_DOUBLELOCK_SHIFT	36
- #define ID_AA64DFR0_PMSVER_SHIFT	32
- #define ID_AA64DFR0_CTX_CMPS_SHIFT	28
- #define ID_AA64DFR0_WRPS_SHIFT		20
-@@ -804,18 +805,40 @@
- #define ID_ISAR6_DP_SHIFT		4
- #define ID_ISAR6_JSCVT_SHIFT		0
- 
-+#define ID_MMFR0_INNERSHR_SHIFT		28
-+#define ID_MMFR0_FCSE_SHIFT		24
-+#define ID_MMFR0_AUXREG_SHIFT		20
-+#define ID_MMFR0_TCM_SHIFT		16
-+#define ID_MMFR0_SHARELVL_SHIFT		12
-+#define ID_MMFR0_OUTERSHR_SHIFT		8
-+#define ID_MMFR0_PMSA_SHIFT		4
-+#define ID_MMFR0_VMSA_SHIFT		0
-+
- #define ID_MMFR4_EVT_SHIFT		28
- #define ID_MMFR4_CCIDX_SHIFT		24
- #define ID_MMFR4_LSM_SHIFT		20
- #define ID_MMFR4_HPDS_SHIFT		16
- #define ID_MMFR4_CNP_SHIFT		12
- #define ID_MMFR4_XNX_SHIFT		8
-+#define ID_MMFR4_AC2_SHIFT		4
- #define ID_MMFR4_SPECSEI_SHIFT		0
- 
- #define ID_MMFR5_ETS_SHIFT		0
- 
- #define ID_PFR0_DIT_SHIFT		24
- #define ID_PFR0_CSV2_SHIFT		16
-+#define ID_PFR0_STATE3_SHIFT		12
-+#define ID_PFR0_STATE2_SHIFT		8
-+#define ID_PFR0_STATE1_SHIFT		4
-+#define ID_PFR0_STATE0_SHIFT		0
-+
-+#define ID_DFR0_PERFMON_SHIFT		24
-+#define ID_DFR0_MPROFDBG_SHIFT		20
-+#define ID_DFR0_MMAPTRC_SHIFT		16
-+#define ID_DFR0_COPTRC_SHIFT		12
-+#define ID_DFR0_MMAPDBG_SHIFT		8
-+#define ID_DFR0_COPSDBG_SHIFT		4
-+#define ID_DFR0_COPDBG_SHIFT		0
- 
- #define ID_PFR2_SSBS_SHIFT		4
- #define ID_PFR2_CSV3_SHIFT		0
-@@ -838,6 +861,11 @@
- #define MVFR1_FPDNAN_SHIFT		4
- #define MVFR1_FPFTZ_SHIFT		0
- 
-+#define MVFR2_FPMISC_SHIFT		4
-+#define MVFR2_SIMDMISC_SHIFT		0
-+
-+#define DCZID_DZP_SHIFT			4
-+#define DCZID_BS_SHIFT			0
- 
- #define ID_AA64MMFR0_TGRAN4_SHIFT	28
- #define ID_AA64MMFR0_TGRAN64_SHIFT	24
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index f7117c48fe5f..c0f9334d5b36 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -291,7 +291,7 @@ static const struct arm64_ftr_bits ftr_ctr[] = {
- 	 * make use of *minLine.
- 	 * If we have differing I-cache policies, report it as the weakest - VIPT.
- 	 */
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_EXACT, 14, 2, ICACHE_POLICY_VIPT),	/* L1Ip */
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_EXACT, CTR_L1IP_SHIFT, 2, ICACHE_POLICY_VIPT),	/* L1Ip */
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, CTR_IMINLINE_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
-@@ -302,21 +302,21 @@ struct arm64_ftr_reg arm64_ftr_reg_ctrel0 = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0xf),	/* InnerShr */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0),	/* FCSE */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 20, 4, 0),	/* AuxReg */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),	/* TCM */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),	/* ShareLvl */
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0xf),	/* OuterShr */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),	/* PMSA */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),	/* VMSA */
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_INNERSHR_SHIFT, 4, 0xf),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_FCSE_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_MMFR0_AUXREG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_TCM_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_SHARELVL_SHIFT, 4, 0),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_OUTERSHR_SHIFT, 4, 0xf),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_PMSA_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_VMSA_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
- static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
- 	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_MTPMU_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_TRACEFILT_SHIFT, 4, 0),
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 36, 28, 0),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_DOUBLELOCK_SHIFT, 28, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_PMSVER_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_CTX_CMPS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_WRPS_SHIFT, 4, 0),
-@@ -332,14 +332,14 @@ static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_mvfr2[] = {
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* FPMisc */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),		/* SIMDMisc */
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR2_FPMISC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR2_SIMDMISC_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
- static const struct arm64_ftr_bits ftr_dczid[] = {
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_EXACT, 4, 1, 1),		/* DZP */
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),	/* BS */
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_EXACT, DCZID_DZP_SHIFT, 1, 1),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, DCZID_BS_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
-@@ -371,7 +371,8 @@ static const struct arm64_ftr_bits ftr_id_mmfr4[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_HPDS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_CNP_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_XNX_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),	/* ac2 */
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_AC2_SHIFT, 4, 0),
-+
- 	/*
- 	 * SpecSEI = 1 indicates that the PE might generate an SError on an
- 	 * external abort on speculative read. It is safe to assume that an
-@@ -401,10 +402,10 @@ static const struct arm64_ftr_bits ftr_id_isar6[] = {
- static const struct arm64_ftr_bits ftr_id_pfr0[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_DIT_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_PFR0_CSV2_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),		/* State3 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),		/* State2 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* State1 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),		/* State0 */
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE3_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE2_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE1_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE0_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
-@@ -415,13 +416,13 @@ static const struct arm64_ftr_bits ftr_id_pfr2[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_dfr0[] = {
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0xf),	/* PerfMon */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_PERFMON_SHIFT, 4, 0xf),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_MPROFDBG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_MMAPTRC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_COPTRC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_MMAPDBG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_COPSDBG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_COPDBG_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
--- 
-2.20.1
+[snip!]
 
+> >> +
+> >> +/**
+> >> + * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
+> >> + *
+> >> + * Use a simple linear mapping to translate the offset to the
+> >> bitmask.
+> >> + */
+> >> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int
+> >> base,
+> >> +                            unsigned int offset,
+> >> +                            unsigned int *reg, unsigned int *mask)
+> >> +{
+> >> +       unsigned int line =3D offset % gpio->ngpio_per_reg;
+> >> +       unsigned int stride =3D offset / gpio->ngpio_per_reg;
+> >> +
+> >> +       *reg =3D base + stride * gpio->reg_stride;
+> >> +       *mask =3D BIT(line);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
+> >
+> > Why does this need to be exported?
+>
+> Mh, the idea was that a user could also set this xlate() by himself (for
+> whatever reason). But since it is the default, it is not really
+> necessary.
+> That being said, I don't care if its only local to this module.
+>
+
+Let's only export symbols that have external users then.
+
+[snip!]
+
+> >> +
+> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
+> >> +MODULE_LICENSE("GPL");
+> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+> >> new file mode 100644
+> >> index 000000000000..ad63955e0e43
+> >> --- /dev/null
+> >> +++ b/include/linux/gpio-regmap.h
+> >> @@ -0,0 +1,88 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0-only */
+> >> +
+> >> +#ifndef _LINUX_GPIO_REGMAP_H
+> >> +#define _LINUX_GPIO_REGMAP_H
+> >> +
+> >> +struct gpio_regmap_addr {
+> >> +       unsigned int addr;
+> >> +       bool valid;
+> >> +};
+> >
+> > I'm not quite sure what the meaning behind the valid field here is.
+> > When would we potentially set it to false?
+>
+> Some base addresses are optional, but on the other hand, a base address
+> of 0 could also be valid. So I cannot use 0 as an indicator whether a
+> base address is set or not. The generic mmio driver has some special
+> case for the ack base, where there is a use_ack flag which forces to
+> use the ack register even if its zero. So I've had a look at the kernel
+> if there is a better idiom for that, but I haven't found anything.
+>
+> So the best from a user perspective I've could come up with was:
+>
+>    ->base_reg =3D GPIO_REGMAP_ADDR(addr);
+>
+> I'm open for suggestions.
+>
+
+Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
+IS_ERR() returning true?
+
+> >
+> >> +#define GPIO_REGMAP_ADDR(_addr) \
+> >> +       ((struct gpio_regmap_addr) { .addr =3D _addr, .valid =3D true =
+})
+> >> +
+> >> +/**
+> >> + * struct gpio_regmap - Description of a generic regmap gpio_chip.
+> >> + *
+> >> + * @parent:            The parent device
+> >> + * @regmap:            The regmap use to access the registers
+> >
+> > s/use/used/
+> >
+> >> + *                     given, the name of the device is used
+> >> + * @label:             (Optional) Descriptive name for GPIO
+> >> controller.
+> >> + *                     If not given, the name of the device is used.
+> >> + * @ngpio:             Number of GPIOs
+> >> + * @reg_dat_base:      (Optional) (in) register base address
+> >> + * @reg_set_base:      (Optional) set register base address
+> >> + * @reg_clr_base:      (Optional) clear register base address
+> >> + * @reg_dir_in_base:   (Optional) out setting register base address
+> >> + * @reg_dir_out_base:  (Optional) in setting register base address
+> >> + * @reg_stride:                (Optional) May be set if the registers
+> >> (of the
+> >> + *                     same type, dat, set, etc) are not consecutive.
+> >> + * @ngpio_per_reg:     Number of GPIOs per register
+> >> + * @irq_domain:                (Optional) IRQ domain if the
+> >> controller is
+> >> + *                     interrupt-capable
+> >> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
+> >> + *                     offset to a register/bitmask pair. If not
+> >> + *                     given the default gpio_regmap_simple_xlate()
+> >> + *                     is used.
+> >> + * @to_irq:            (Optional) Maps GPIO offset to a irq number.
+> >> + *                     By default assumes a linear mapping of the
+> >> + *                     given irq_domain.
+> >> + * @driver_data:       Pointer to the drivers private data. Not used
+> >> by
+> >> + *                     gpio-regmap.
+> >> + *
+> >> + * The reg_mask_xlate translates a given base address and GPIO offset
+> >> to
+> >> + * register and mask pair. The base address is one of the given
+> >> reg_*_base.
+> >> + */
+> >> +struct gpio_regmap {
+> >
+> > I'd prefer to follow a pattern seen in other such APIs of calling this
+> > structure gpio_regmap_config and creating another private structure
+> > called gpio_regmap used in callbacks that would only contain necessary
+> > fields.
+>
+> something like the following?
+>
+> struct gpio_regmap *gpio_regmap_register(struct gpio_regmap_config *)
+>
+> but if that structure is private, how can a callback access individual
+> elements? Or do you mean private in "local to the gpio drivers"?
+>
+
+Either making the structure local to drivers/gpio or making it
+entirely opaque and providing accessor functions. Depending on how
+much of the structure one may want to access.
+
+> Also I was unsure about the naming, eg. some use
+> stuff_register()/stuff_unregister() and some stuff_add()/stuff_remove().
+>
+
+register/unregister is fine with me.
+
+Bart
