@@ -2,51 +2,68 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00610C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD86FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71212076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18CB2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405966AbgDNGZi (ORCPT
+        id S2405978AbgDNG1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 02:25:38 -0400
-Received: from verein.lst.de ([213.95.11.211]:37625 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405926AbgDNGZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 02:25:32 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B6489227A81; Tue, 14 Apr 2020 08:25:30 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 08:25:30 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V7 4/9] fs/xfs: Make DAX mount option a tri-state
-Message-ID: <20200414062530.GD23154@lst.de>
-References: <20200413054046.1560106-1-ira.weiny@intel.com> <20200413054046.1560106-5-ira.weiny@intel.com>
+        Tue, 14 Apr 2020 02:27:04 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:34064 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S2405926AbgDNG1C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 02:27:02 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id DBE58200FC84;
+        Tue, 14 Apr 2020 14:26:58 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7s0gEgjn3c4C; Tue, 14 Apr 2020 14:26:58 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id B6B95200FC83;
+        Tue, 14 Apr 2020 14:26:58 +0800 (HKT)
+Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
+        by s01.gtsys.com.hk (Postfix) with ESMTP id A5B96C01A1D;
+        Tue, 14 Apr 2020 14:26:58 +0800 (HKT)
+Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
+        id 7F44C201602; Tue, 14 Apr 2020 14:26:58 +0800 (HKT)
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+To:     chris.ruehl@gtsys.com.hk
+Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Steve Winslow <swinslow@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: patch set ltc2632
+Date:   Tue, 14 Apr 2020 14:26:43 +0800
+Message-Id: <20200414062648.19013-1-chris.ruehl@gtsys.com.hk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413054046.1560106-5-ira.weiny@intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 10:40:41PM -0700, ira.weiny@intel.com wrote:
-> +#define XFS_MOUNT_DAX		(1ULL << 62)
-> +#define XFS_MOUNT_NODAX		(1ULL << 63)
+Patchset to extend ltc2632 spi driver to support the similar chip set
+ltc2634.
+* Patch v2 1/3 update documentation struct ltc2632_chip_info
+* Patch v2 2/3 patch ltc2632.c,Kconfig,ltc2632.txt(devtree)
+* Patch v2 3/3 convert ltc2632.txt to yaml format named lltc,ltc2632.yaml
 
-Replace this with XFS_MOUNT_DAX_ALWAYS and XFS_MOUNT_DAX_NEVER?
+Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+---
+
