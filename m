@@ -2,217 +2,121 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80D6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A00C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDD52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E093320768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586830539;
+	bh=jf+A5BOVOt2DrD15bo3uMAmUl8iVMb/SY+JfZlmUKnA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XDQsnXdAFJ76c2LUNqQV+A1pRCoL3bmS4TIpRfno4lu4YXR8BloGGxJxZ6wvH3RlW
+	 8802c6CbVpUXlMF0ayo5thfPyt/KYYuGi6Xyu6Y/YtKqb7OpfCujNm1dv7rvVuPHiG
+	 cG7dTCmy9oYmtCbW8OQFr+J94b3OVgqKM0VszPcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404031AbgDNCPb (ORCPT
+        id S2404040AbgDNCPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:15:31 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:58175 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403967AbgDNCP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 22:15:26 -0400
-X-Originating-IP: 50.39.163.217
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 95571240002;
-        Tue, 14 Apr 2020 02:15:20 +0000 (UTC)
-Date:   Mon, 13 Apr 2020 19:15:16 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH v4 1/3] fs: Support setting a minimum fd for "lowest
- available fd" allocation
-Message-ID: <05c9a6725490c5a5c4ee71be73326c2fedf35ba5.1586830316.git.josh@joshtriplett.org>
-References: <cover.1586830316.git.josh@joshtriplett.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1586830316.git.josh@joshtriplett.org>
+        Mon, 13 Apr 2020 22:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403967AbgDNCPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 22:15:33 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AB2A2072D;
+        Tue, 14 Apr 2020 02:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586830532;
+        bh=jf+A5BOVOt2DrD15bo3uMAmUl8iVMb/SY+JfZlmUKnA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iv3CEqU1ivakHxCxU9TGDqQnv1OHMGi48YIRuRnWsPWVUKwVJjTmhfCvk3OVLkOtC
+         ZWqG1ZckUNOqWjpjcJvcVAYnKucUZMBQKXORY0MtQPKOSudQYbj9sJWVpDt2/Zb0wL
+         U8AXxbLZTa+CTIio8Ky1EpGdd1ulfgenE8C6Pe/M=
+Date:   Mon, 13 Apr 2020 19:15:32 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@kernel.org>, NeilBrown <neilb@suse.de>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
+Message-Id: <20200413191532.6b234b50caea9134fb95a151@linux-foundation.org>
+In-Reply-To: <efbdbe8f-f4fe-cfc8-4f15-1e19ee0bf416@nvidia.com>
+References: <20200403083543.11552-1-mhocko@kernel.org>
+        <20200403083543.11552-2-mhocko@kernel.org>
+        <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com>
+        <87blo8xnz2.fsf@notabene.neil.brown.name>
+        <20200406070137.GC19426@dhcp22.suse.cz>
+        <4f861f07-4b47-8ddc-f783-10201ea302d3@nvidia.com>
+        <alpine.DEB.2.21.2004061626540.45667@chino.kir.corp.google.com>
+        <efbdbe8f-f4fe-cfc8-4f15-1e19ee0bf416@nvidia.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some applications want to prevent the usual "lowest available fd"
-allocation from allocating certain file descriptors. For instance, they
-may want to prevent allocation of a closed fd 0, 1, or 2 other than via
-dup2/dup3, or reserve some low file descriptors for other purposes.
 
-Add a prctl to increase the minimum fd and return the previous minimum.
+I've rather lost the plot with this little patch.  Is the below
+suitable, or do we think that changes are needed?
 
-System calls that allocate a specific file descriptor, such as
-dup2/dup3, ignore this minimum.
 
-exec resets the minimum fd, to prevent one program from interfering with
-another program's expectations about fd allocation.
+From: Michal Hocko <mhocko@suse.com>
+Subject: mm: clarify __GFP_MEMALLOC usage
 
-Test program:
+It seems that the existing documentation is not explicit about the
+expected usage and potential risks enough.  While it is calls out that
+users have to free memory when using this flag it is not really apparent
+that users have to careful to not deplete memory reserves and that they
+should implement some sort of throttling wrt.  freeing process.
 
-    #include <err.h>
-    #include <fcntl.h>
-    #include <stdio.h>
-    #include <sys/prctl.h>
+This is partly based on Neil's explanation [1].
 
-    int main(int argc, char *argv[])
-    {
-        if (prctl(PR_INCREASE_MIN_FD, 100, 0, 0, 0) < 0)
-            err(1, "prctl");
-        int fd = open("/dev/null", O_RDONLY);
-        if (fd < 0)
-            err(1, "open");
-        printf("%d\n", fd); // prints 100
-        return 0;
-    }
+Let's also call out that a pre allocated pool allocator should be
+considered.
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+[1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
+
+[akpm@linux-foundation.org: coding style fixes]
+Link: http://lkml.kernel.org/r/20200403083543.11552-2-mhocko@kernel.org
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Neil Brown <neilb@suse.de>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: John Hubbard <jhubbard@nvidia.com>
+[mhocko@kernel.org: update]
+  Link: http://lkml.kernel.org/r/20200406070137.GC19426@dhcp22.suse.cz
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- fs/file.c                  | 23 +++++++++++++++++------
- include/linux/fdtable.h    |  1 +
- include/linux/file.h       |  1 +
- include/uapi/linux/prctl.h |  3 +++
- kernel/sys.c               |  5 +++++
- 5 files changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/fs/file.c b/fs/file.c
-index c8a4e4c86e55..ba06140d89af 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -286,7 +286,6 @@ struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
- 	spin_lock_init(&newf->file_lock);
- 	newf->resize_in_progress = false;
- 	init_waitqueue_head(&newf->resize_wait);
--	newf->next_fd = 0;
- 	new_fdt = &newf->fdtab;
- 	new_fdt->max_fds = NR_OPEN_DEFAULT;
- 	new_fdt->close_on_exec = newf->close_on_exec_init;
-@@ -295,6 +294,7 @@ struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
- 	new_fdt->fd = &newf->fd_array[0];
- 
- 	spin_lock(&oldf->file_lock);
-+	newf->next_fd = newf->min_fd = oldf->min_fd;
- 	old_fdt = files_fdtable(oldf);
- 	open_files = count_open_files(old_fdt);
- 
-@@ -487,9 +487,7 @@ int __alloc_fd(struct files_struct *files,
- 	spin_lock(&files->file_lock);
- repeat:
- 	fdt = files_fdtable(files);
--	fd = start;
--	if (fd < files->next_fd)
--		fd = files->next_fd;
-+	fd = max3(start, files->min_fd, files->next_fd);
- 
- 	if (fd < fdt->max_fds)
- 		fd = find_next_fd(fdt, fd);
-@@ -514,7 +512,7 @@ int __alloc_fd(struct files_struct *files,
- 		goto repeat;
- 
- 	if (start <= files->next_fd)
--		files->next_fd = fd + 1;
-+		files->next_fd = max(fd + 1, files->min_fd);
- 
- 	__set_open_fd(fd, fdt);
- 	if (flags & O_CLOEXEC)
-@@ -555,7 +553,7 @@ static void __put_unused_fd(struct files_struct *files, unsigned int fd)
- {
- 	struct fdtable *fdt = files_fdtable(files);
- 	__clear_open_fd(fd, fdt);
--	if (fd < files->next_fd)
-+	if (fd < files->next_fd && fd >= files->min_fd)
- 		files->next_fd = fd;
- }
- 
-@@ -684,6 +682,7 @@ void do_close_on_exec(struct files_struct *files)
- 
- 	/* exec unshares first */
- 	spin_lock(&files->file_lock);
-+	files->min_fd = 0;
- 	for (i = 0; ; i++) {
- 		unsigned long set;
- 		unsigned fd = i * BITS_PER_LONG;
-@@ -865,6 +864,18 @@ bool get_close_on_exec(unsigned int fd)
- 	return res;
- }
- 
-+unsigned int increase_min_fd(unsigned int num)
-+{
-+	struct files_struct *files = current->files;
-+	unsigned int old_min_fd;
-+
-+	spin_lock(&files->file_lock);
-+	old_min_fd = files->min_fd;
-+	files->min_fd += num;
-+	spin_unlock(&files->file_lock);
-+	return old_min_fd;
-+}
-+
- static int do_dup2(struct files_struct *files,
- 	struct file *file, unsigned fd, unsigned flags)
- __releases(&files->file_lock)
-diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-index f07c55ea0c22..d1980443d8b3 100644
---- a/include/linux/fdtable.h
-+++ b/include/linux/fdtable.h
-@@ -60,6 +60,7 @@ struct files_struct {
-    */
- 	spinlock_t file_lock ____cacheline_aligned_in_smp;
- 	unsigned int next_fd;
-+	unsigned int min_fd; /* min for "lowest available fd" allocation */
- 	unsigned long close_on_exec_init[1];
- 	unsigned long open_fds_init[1];
- 	unsigned long full_fds_bits_init[1];
-diff --git a/include/linux/file.h b/include/linux/file.h
-index 142d102f285e..b67986f818d2 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -88,6 +88,7 @@ extern bool get_close_on_exec(unsigned int fd);
- extern int __get_unused_fd_flags(unsigned flags, unsigned long nofile);
- extern int get_unused_fd_flags(unsigned flags);
- extern void put_unused_fd(unsigned int fd);
-+extern unsigned int increase_min_fd(unsigned int num);
- 
- extern void fd_install(unsigned int fd, struct file *file);
- 
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 07b4f8131e36..916327272d21 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -238,4 +238,7 @@ struct prctl_mm_map {
- #define PR_SET_IO_FLUSHER		57
- #define PR_GET_IO_FLUSHER		58
- 
-+/* Increase minimum file descriptor for "lowest available fd" allocation */
-+#define PR_INCREASE_MIN_FD		59
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index d325f3ab624a..daa0ce43cecc 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2514,6 +2514,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 
- 		error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
- 		break;
-+	case PR_INCREASE_MIN_FD:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = increase_min_fd((unsigned int)arg2);
-+		break;
- 	default:
- 		error = -EINVAL;
- 		break;
--- 
-2.26.0
+ include/linux/gfp.h |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/include/linux/gfp.h~mm-clarify-__gfp_memalloc-usage
++++ a/include/linux/gfp.h
+@@ -110,6 +110,11 @@ struct vm_area_struct;
+  * the caller guarantees the allocation will allow more memory to be freed
+  * very shortly e.g. process exiting or swapping. Users either should
+  * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
++ * Users of this flag have to be extremely careful to not deplete the reserve
++ * completely and implement a throttling mechanism which controls the
++ * consumption of the reserve based on the amount of freed memory.
++ * Usage of a pre-allocated pool (e.g. mempool) should be always considered
++ * before using this flag.
+  *
+  * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
+  * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
+_
 
