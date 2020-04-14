@@ -2,189 +2,98 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77693C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC142074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4843C2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586897956;
-	bh=GYIm3oRtzkOhfzRvwaslo+C0b0DbLNOXs+e7b+LgPDQ=;
+	s=default; t=1586898092;
+	bh=iAaI96UO9jO0nmyHDUvCt1c5ZT2a84A5TIYscM+YLpc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0ZEXIaElfDdn3b7vHgR8xGAPIrtMFxmjlO/A17Jz3qglZdj92SKfRDhOt78n1r+j0
-	 +K/SwNQaLgvvMtQx4OsvNVq2yfBh0+gDRuGWqiZg0/KtLPfODGFTbYlJdREPigUG69
-	 mz68maAL1OK8w2xRX4cres1aNhxclY12vvYNeffc=
+	b=oIlGosMgU3a6VqoYFOSqBs4MrU8iv7DZ+n2trvFlvOpxzlk+P07C59DY5HkbzZOR+
+	 LvUSXqVjWKt/cak3tsm1HCIjqC4NJoo37k2IOIYKMLASf2HIkMe0rT4ayBN+/lhTw2
+	 +Wq2tgn1Qk1z+T1qPbBmBaZi4lSysVvjLPJv5v4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633535AbgDNU7C (ORCPT
+        id S2633556AbgDNVBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:59:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43486 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633447AbgDNU64 (ORCPT
+        Tue, 14 Apr 2020 17:01:23 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43223 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633541AbgDNVBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:58:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id l1so494778pff.10;
-        Tue, 14 Apr 2020 13:58:55 -0700 (PDT)
+        Tue, 14 Apr 2020 17:01:08 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j16so11700668oih.10;
+        Tue, 14 Apr 2020 14:01:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2BFbh/NVyd/nEEqnIV7FAkYPsjDu10E1KJ7JMizEGUs=;
-        b=ZWg9atuX4nJmFaJPPy+n7lOuSBx7FEJ8gvZo1CcZo74d88FAoma5A71qE1KOBH/PvC
-         DV5Vkof9X6SLYKwo9ORSz80qzDn3LK6aDCrt5IIvD36s0A/1Z+6nq1FiUXwylFO/Xh+b
-         CjnbGHZdIjgxWp/2vTphtjenOw2vnr8c/Us3Gr2cqqjvppUOaj8xR5IIhejNomuZpHiw
-         1Z3ccIpUfz0eM79HJrNGR/yGx+4F+bHrtYKjaBCxqBIkWO1OOqh6NWRKO3IQqQoWcPDp
-         FV2Z0vcA0th/lS+ARwUj6to88XraeBz9oQn9/8pVvtf1oULyC5QeYb6gbdtEheRNEWrl
-         qsig==
-X-Gm-Message-State: AGi0PuZP3OMe13UFWnBtH2hOsMkorDZ5tzBBAGZNdF8AXpYQ9Xfsxvk/
-        2W475FGPTuz3PvZtSPcj420=
-X-Google-Smtp-Source: APiQypKmhyUPwU3E+eaaqWqZ9C3MBCiwt3U/HU4Vjk70huVm8L0B8YcyK+w2BA/5pI1GVFdjIpQH2g==
-X-Received: by 2002:a63:d454:: with SMTP id i20mr22395308pgj.209.1586897935063;
-        Tue, 14 Apr 2020 13:58:55 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a1sm11817266pfl.188.2020.04.14.13.58.53
+        bh=2tnI9OFnswT+j7ufoqi84C+8316n65ZdA2j48i1vU10=;
+        b=uOzhGkswrjuWE4gpstlr+MZoBaKrHDK0U0WXesXuKFu6b3hpWtJi+nIufd7BrKPi7z
+         li/4h0edLbp9DQ2oXRwz03PUTEE1F/dDUZ4aY/sH/ztcz5DKRZKbt8CEUzP8sdp5xIGH
+         awyyMgZxrR2VCTU9vdYcnbWbNsJ4bUhYgbjlBmT/OpQccOdJ67QRq2x9fmYpfX7/WgsH
+         hQZhWsnME4pqerew1tnKCpSI82qjEkhMW3/v+LsfV/w26Qgg86ldr/BFWNT769tvgO7j
+         bp6YCP+YxoZX7MSQ83BiXtXHjRzV6Jmq9OL/L5AOwNdm6GNcgJjkNrQR1kfC66btbP6n
+         Xm/Q==
+X-Gm-Message-State: AGi0PuZRLHdfVWXfv29L25uwF1kf3GIqcKe9SKwPOBry2vx6Qqo7fuUE
+        PdHFxfjRoXaMhS0e9Jk3Bm2du2M=
+X-Google-Smtp-Source: APiQypI88cfV+Vx4EqdyKBvxYVVd0MKPigaGXZDKD8HyL53QwsqxG0yMTlV8exKkTgUJ2NGdCF/Omw==
+X-Received: by 2002:aca:c385:: with SMTP id t127mr16945398oif.49.1586898066938;
+        Tue, 14 Apr 2020 14:01:06 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s10sm332886oig.56.2020.04.14.14.01.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:58:53 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DA82440277; Tue, 14 Apr 2020 20:58:52 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 20:58:52 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 5/5] block: revert back to synchronous request_queue
- removal
-Message-ID: <20200414205852.GP11244@42.do-not-panic.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-6-mcgrof@kernel.org>
- <20200414154725.GD25765@infradead.org>
+        Tue, 14 Apr 2020 14:01:06 -0700 (PDT)
+Received: (nullmailer pid 2708 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:01:04 -0000
+Date:   Tue, 14 Apr 2020 16:01:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yuti Amonkar <yamonkar@cadence.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 08/33] docs: dt: fix broken reference to
+ phy-cadence-torrent.yaml
+Message-ID: <20200414210104.GA2508@bogus>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+ <3f1cf6d74e392f3ee9f894d82cb7ee29d04c1b6d.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414154725.GD25765@infradead.org>
+In-Reply-To: <3f1cf6d74e392f3ee9f894d82cb7ee29d04c1b6d.1586881715.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:47:25AM -0700, Christoph Hellwig wrote:
-> On Tue, Apr 14, 2020 at 04:19:02AM +0000, Luis Chamberlain wrote:
-> > Commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
-> > v4.12 moved the work behind blk_release_queue() into a workqueue after a
-> > splat floated around which indicated some work on blk_release_queue()
-> > could sleep in blk_exit_rl(). This splat would be possible when a driver
-> > called blk_put_queue() or blk_cleanup_queue() (which calls blk_put_queue()
-> > as its final call) from an atomic context.
-> > 
-> > blk_put_queue() decrements the refcount for the request_queue
-> > kobject, and upon reaching 0 blk_release_queue() is called. Although
-> > blk_exit_rl() is now removed through commit db6d9952356 ("block: remove
-> > request_list code"), we reserve the right to be able to sleep within
-> > blk_release_queue() context. If you see no other way and *have* be
-> > in atomic context when you driver calls the last blk_put_queue()
-> > you can always just increase your block device's reference count with
-> > bdgrab() as this can be done in atomic context and the request_queue
-> > removal would be left to upper layers later. We document this bit of
-> > tribal knowledge as well now, and adjust kdoc format a bit.
-> > 
-> > We revert back to synchronous request_queue removal because asynchronous
-> > removal creates a regression with expected userspace interaction with
-> > several drivers. An example is when removing the loopback driver and
-> > issues ioctl from userspace to do so, upon return and if successful one
-> > expects the device to be removed. Moving to asynchronous request_queue
-> > removal could have broken many scripts which relied on the removal to
-> > have been completed if there was no error.
-> > 
-> > Using asynchronous request_queue removal however has helped us find
-> > other bugs, in the future we can test what could break with this
-> > arrangement by enabling CONFIG_DEBUG_KOBJECT_RELEASE.
-> > 
-> > Cc: Bart Van Assche <bvanassche@acm.org>
-> > Cc: Omar Sandoval <osandov@fb.com>
-> > Cc: Hannes Reinecke <hare@suse.com>
-> > Cc: Nicolai Stange <nstange@suse.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > Cc: yu kuai <yukuai3@huawei.com>
-> > Suggested-by: Nicolai Stange <nstange@suse.de>
-> > Fixes: dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
-> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > ---
-> >  block/blk-core.c       | 19 ++++++++++++++++++-
-> >  block/blk-sysfs.c      | 38 +++++++++++++++++---------------------
-> >  include/linux/blkdev.h |  2 --
-> >  3 files changed, 35 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/block/blk-core.c b/block/blk-core.c
-> > index 5aaae7a1b338..8346c7c59ee6 100644
-> > --- a/block/blk-core.c
-> > +++ b/block/blk-core.c
-> > @@ -301,6 +301,17 @@ void blk_clear_pm_only(struct request_queue *q)
-> >  }
-> >  EXPORT_SYMBOL_GPL(blk_clear_pm_only);
-> >  
-> > +/**
-> > + * blk_put_queue - decrement the request_queue refcount
-> > + *
-> > + * Decrements the refcount to the request_queue kobject, when this reaches
-> > + * 0 we'll have blk_release_queue() called. You should avoid calling
-> > + * this function in atomic context but if you really have to ensure you
-> > + * first refcount the block device with bdgrab() / bdput() so that the
-> > + * last decrement happens in blk_cleanup_queue().
-> > + *
-> > + * @q: the request_queue structure to decrement the refcount for
-> > + */
-> >  void blk_put_queue(struct request_queue *q)
-> >  {
-> >  	kobject_put(&q->kobj);
-> > @@ -328,10 +339,16 @@ EXPORT_SYMBOL_GPL(blk_set_queue_dying);
-> >  
-> >  /**
-> >   * blk_cleanup_queue - shutdown a request queue
-> > - * @q: request queue to shutdown
-> >   *
-> >   * Mark @q DYING, drain all pending requests, mark @q DEAD, destroy and
-> >   * put it.  All future requests will be failed immediately with -ENODEV.
-> > + *
-> > + * You should not call this function in atomic context. If you need to
-> > + * refcount a request_queue in atomic context, instead refcount the
-> > + * block device with bdgrab() / bdput().
+On Tue, 14 Apr 2020 18:48:34 +0200, Mauro Carvalho Chehab wrote:
+> This file was removed, and another file was added instead of
+> it, on two separate commits.
 > 
-> I think this needs a WARN_ON thrown in to enforece the calling context.
-
-I considered adding a might_sleep() but upon review with Bart, he noted
-that this function already has a mutex_lock(), and if you look under the
-hood of mutex_lock(), it has a might_sleep() at the very top. The
-warning then is implicit.
-
-> > + *
-> > + * @q: request queue to shutdown
+> Splitting a single logical change (doc conversion) on two
+> patches is a bad thing, as it makes harder to discover what
+> crap happened.
 > 
-> Moving the argument documentation seems against the usual kerneldoc
-> style.
+> Anyway, this patch fixes the broken reference, making it
+> pointing to the new location of the file.
+> 
+> Fixes: 922003733d42 ("dt-bindings: phy: Remove Cadence MHDP PHY dt binding")
+> Fixes: c6d8eef38b7f ("dt-bindings: phy: Add Cadence MHDP PHY bindings in YAML format.")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Would you look at that, Documentation/doc-guide/kernel-doc.rst does
-say to keep the argument at the top as it was in place before, OK will
-revert that. Sorry, I used include/net/mac80211.h as my base for style.
+Applied, thanks.
 
-> Otherwise this look good, I hope it sticks :)
-
-I hope that the kdocs / might_sleep() sprinkled should make it stick now.
-But hey, this uncovered wonderful obscure bugs, it was fun. I'll add a
-selftest also later to ensure we don't regress on some of this later
-once again.
-
-  Luis
+Rob
