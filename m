@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B262C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01468C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E522063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40CE2063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731308AbgDNNVp (ORCPT
+        id S1731343AbgDNNWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:21:45 -0400
-Received: from 8bytes.org ([81.169.241.247]:35392 "EHLO theia.8bytes.org"
+        Tue, 14 Apr 2020 09:22:18 -0400
+Received: from 8bytes.org ([81.169.241.247]:35236 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502768AbgDNNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2502906AbgDNNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 09:16:07 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 3FB4A736; Tue, 14 Apr 2020 15:15:56 +0200 (CEST)
+        id 470097E3; Tue, 14 Apr 2020 15:15:57 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -46,9 +46,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 25/33] iommu/rockchip: Convert to probe/release_device() call-backs
-Date:   Tue, 14 Apr 2020 15:15:34 +0200
-Message-Id: <20200414131542.25608-26-joro@8bytes.org>
+Subject: [PATCH v2 30/33] iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+Date:   Tue, 14 Apr 2020 15:15:39 +0200
+Message-Id: <20200414131542.25608-31-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 References: <20200414131542.25608-1-joro@8bytes.org>
@@ -59,76 +59,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the Rockchip IOMMU driver to use the probe_device() and
-release_device() call-backs of iommu_ops, so that the iommu core code
-does the group and sysfs setup.
+On Exynos platforms there can be more than one SYSMMU (IOMMU) for one
+DMA master device. Since the IOMMU core code expects only one hardware
+IOMMU, use the first SYSMMU in the list.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/rockchip-iommu.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+ drivers/iommu/exynos-iommu.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index b33cdd5aad81..d25c2486ca07 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -1054,40 +1054,28 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
- 	kfree(rk_domain);
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index 186ff5cc975c..09cdd163560a 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -1261,6 +1261,11 @@ static int exynos_iommu_add_device(struct device *dev)
+ 	}
+ 	iommu_group_put(group);
+ 
++	/* There is always at least one entry, see exynos_iommu_of_xlate() */
++	data = list_first_entry(&owner->controllers,
++				struct sysmmu_drvdata, owner_node);
++	iommu_device_link(&data->iommu, dev);
++
+ 	return 0;
  }
  
--static int rk_iommu_add_device(struct device *dev)
-+static struct iommu_device *rk_iommu_probe_device(struct device *dev)
- {
--	struct iommu_group *group;
--	struct rk_iommu *iommu;
- 	struct rk_iommudata *data;
-+	struct rk_iommu *iommu;
+@@ -1286,6 +1291,11 @@ static void exynos_iommu_remove_device(struct device *dev)
  
- 	data = dev->archdata.iommu;
- 	if (!data)
--		return -ENODEV;
-+		return ERR_PTR(-ENODEV);
- 
- 	iommu = rk_iommu_from_dev(dev);
- 
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
--	iommu_group_put(group);
--
--	iommu_device_link(&iommu->iommu, dev);
- 	data->link = device_link_add(dev, iommu->dev,
- 				     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
- 
--	return 0;
-+	return &iommu->iommu;
+ 	list_for_each_entry(data, &owner->controllers, owner_node)
+ 		device_link_del(data->link);
++
++	/* There is always at least one entry, see exynos_iommu_of_xlate() */
++	data = list_first_entry(&owner->controllers,
++				struct sysmmu_drvdata, owner_node);
++	iommu_device_unlink(&data->iommu, dev);
  }
  
--static void rk_iommu_remove_device(struct device *dev)
-+static void rk_iommu_release_device(struct device *dev)
- {
--	struct rk_iommu *iommu;
- 	struct rk_iommudata *data = dev->archdata.iommu;
- 
--	iommu = rk_iommu_from_dev(dev);
--
- 	device_link_del(data->link);
--	iommu_device_unlink(&iommu->iommu, dev);
--	iommu_group_remove_device(dev);
- }
- 
- static struct iommu_group *rk_iommu_device_group(struct device *dev)
-@@ -1126,8 +1114,8 @@ static const struct iommu_ops rk_iommu_ops = {
- 	.detach_dev = rk_iommu_detach_device,
- 	.map = rk_iommu_map,
- 	.unmap = rk_iommu_unmap,
--	.add_device = rk_iommu_add_device,
--	.remove_device = rk_iommu_remove_device,
-+	.probe_device = rk_iommu_probe_device,
-+	.release_device = rk_iommu_release_device,
- 	.iova_to_phys = rk_iommu_iova_to_phys,
- 	.device_group = rk_iommu_device_group,
- 	.pgsize_bitmap = RK_IOMMU_PGSIZE_BITMAP,
+ static int exynos_iommu_of_xlate(struct device *dev,
 -- 
 2.17.1
 
