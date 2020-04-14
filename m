@@ -2,109 +2,125 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8C3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1656BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47942072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87B4206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586865204;
-	bh=D43Bu/ZLpshHkAJBUbBrh5xBrdOB1DSsVsdvcQSwfNo=;
+	s=default; t=1586865332;
+	bh=LkQ0dcrf9MyjqTc7cSRslR0WVvMeZfNCFsl59el83SY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y9HVOxRuMoNhzKHse7NfxH1ZVTYx0l+3ZigCbm5TLu26ZWEYnrOAmJaZMiME5VwNR
-	 iQcqsXEuNjqLdyqiOqAqI12fupqqfH+ZAL/2U5skrWaVv9QJygSTnUrZM7in7/e4kO
-	 x/xpggoq2YOB9oWuIpABaKkpa83q1nvWj0XYSOpU=
+	b=hU7wieZUtz0QyMK6SFjCf4JHxtrSs12H8lN6XCSDPo9HOPMd78/RTmbMkBboLzgZU
+	 6rPAkw04kWnfHXscCCWtH2bLdPCrKl4QuPCEL038128gbi/W+2I19oEIk/YymZ/+0G
+	 MZQdyQuoYkaxkWeIdgiThUpbFsEzqDEodyqePMfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439673AbgDNLxV (ORCPT
+        id S2439681AbgDNLzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60270 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 07:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439662AbgDNLxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:53:16 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
+        id S2439662AbgDNLz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:55:27 -0400
+Received: from localhost (unknown [106.51.106.133])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59A81206D5;
-        Tue, 14 Apr 2020 11:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D53E206D5;
+        Tue, 14 Apr 2020 11:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586865196;
-        bh=D43Bu/ZLpshHkAJBUbBrh5xBrdOB1DSsVsdvcQSwfNo=;
+        s=default; t=1586865326;
+        bh=LkQ0dcrf9MyjqTc7cSRslR0WVvMeZfNCFsl59el83SY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Clj8lQN7P3dEhHGhulq35t2RhO+AitzH5UFcJfbxLwpvj5tOrA7liaLMG5iPlzNOo
-         w1KOI6Z7f9B0dKQoiXz+FUYHBBE2CCLrhsqn+0YQDaR72qpxhr3QoTU269zf1iz6RJ
-         zlSfCPGL/h7PtgJ08tEvoNSYoYk9pg+sRLjFV6QQ=
-Date:   Tue, 14 Apr 2020 17:23:06 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
- sensor
-Message-ID: <20200414115306.GA28064@Mani-XPS-13-9360>
-References: <20200412183658.6755-1-mani@kernel.org>
- <20200412183658.6755-4-mani@kernel.org>
- <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
+        b=mnNY+rROPD2XsMKTOhtq44rZfwnnvF4NyAxYxKm+A9t8kvy1azy+gRdcDjHTLqj+O
+         gDGylWU5KlgywVfu0+tYfHRNfE8K4VQobZs87stg/aQ3aWnK3L0qbaAIburMe67YpT
+         XzBjPCItCIPIsUN9OTtHNWZ39tnvq9r+2+8D+9uY=
+Date:   Tue, 14 Apr 2020 17:25:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] ASoC: wsa881x: mark read_only_wordlength flag
+Message-ID: <20200414115512.GG72691@vkoul-mobl>
+References: <20200414110347.23829-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200414110347.23829-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 11:23:03PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 13, 2020 at 10:23 AM <mani@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> >
-> > Add devicetree OF match table support for CCS811 VOC sensor.
-> 
-> ...
-> 
-> > +#include <linux/of.h>
-> 
-> Why?
-> 
+On 14-04-20, 12:03, Srinivas Kandagatla wrote:
+> WSA881x works in PDM mode so the wordlength is fixed, which also makes
+> the only field "WordLength" in DPN_BlockCtrl1 register a read-only.
+> Writing to this register will throw up errors with Qualcomm Controller.
+> So use ro_blockctrl1_reg flag to mark this field as read-only so that
+> core will not write to this register.
 
-As replied to Jonathan, will drop this and of_match_ptr.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Thanks,
-Mani
-
-> ...
 > 
-> > +static const struct of_device_id ccs811_dt_ids[] = {
-> > +       { .compatible = "ams,ccs811" },
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Hi Mark,
 > 
-> Since it has no ugly ifdeffery...
+> For some reason this patch was missed during last merge window,
+> Other patch in this series is already in mainline.
+> Without this patch audio is not functional on DB845c and other SDM845
+> based platforms.
 > 
-> >  static struct i2c_driver ccs811_driver = {
-> >         .driver = {
-> >                 .name = "ccs811",
-> > +               .of_match_table = of_match_ptr(ccs811_dt_ids),
+> Can you please take this for next possible rc.
 > 
-> ...use of of_match_ptr() brings a compiler warning.
+> Thanks,
+> srini
 > 
-> Drop of_match_ptr() for good. And thus drop redundant of.h.
+>  sound/soc/codecs/wsa881x.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> >         },
-> 
+> diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
+> index f2d6f2f81f14..d39d479e2378 100644
+> --- a/sound/soc/codecs/wsa881x.c
+> +++ b/sound/soc/codecs/wsa881x.c
+> @@ -394,6 +394,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}, {
+>  		/* COMP */
+>  		.num = 2,
+> @@ -401,6 +402,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}, {
+>  		/* BOOST */
+>  		.num = 3,
+> @@ -408,6 +410,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}, {
+>  		/* VISENSE */
+>  		.num = 4,
+> @@ -415,6 +418,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}
+>  };
+>  
 > -- 
-> With Best Regards,
-> Andy Shevchenko
+> 2.21.0
+
+-- 
+~Vinod
