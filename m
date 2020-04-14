@@ -2,124 +2,119 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD97CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75D6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93AF92074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586882167;
-	bh=2fMLCgNMiZFmx0Qt1Q1vqSQe2+/NjRgn2Y1LBwTa5SU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZrBLXlvoDIVpbODe2MhkZyYc0873R3SCoUZq3MqHJqyTYzUk9bVn5+sU90PZbptPF
-	 ZHERUFST3i7K9TzhU13iB50wMZAIdFvEcI9Ov7qhHxr43elkpVtuJN1E3DWwQIVSFY
-	 5BDMxmNFMhXmW8T1CYp1i6TWA0ZEhANtsL40GKHk=
+	by mail.kernel.org (Postfix) with ESMTP id A2CE620678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="odqJ3CG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391812AbgDNQgE (ORCPT
+        id S2391820AbgDNQgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:36:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391800AbgDNQfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:35:55 -0400
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED80E2075E;
-        Tue, 14 Apr 2020 16:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882155;
-        bh=2fMLCgNMiZFmx0Qt1Q1vqSQe2+/NjRgn2Y1LBwTa5SU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gd+0HVdq52wpdUq6+a9/eByVgBfUR7p7zTcZjbc+yPyV0pJoJp1EV7kFvUdCa1Rfn
-         6e6XpTWhWYbAQf8Pu6dhlPXnNk84cxwlgb2kvHYlsqTuoE4Xxh+PdTbGnBcnDhIgu6
-         KYwdiwwI8Kj5HztyuuSw7gAUUVrz2xWQeI/p5t7c=
-Received: by mail-io1-f41.google.com with SMTP id f19so13884292iog.5;
-        Tue, 14 Apr 2020 09:35:54 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYVm1w10wEKYMqzvXSNM7tXzR+stnIA+5vZMi4c/ohDVVijFtxQ
-        hMdzjkVAqDxiibbGty+vhHfzj2K0f4ZyDEnEV+g=
-X-Google-Smtp-Source: APiQypKEUymaYVGzyU19WNpTfuxoJxKR5JcXxbfn4/yW0MOIADW8ku2Y9fFXDHocj0oRicKhmLLiQugDVgqQVYF0p3Q=
-X-Received: by 2002:a02:7785:: with SMTP id g127mr21321483jac.134.1586882154307;
- Tue, 14 Apr 2020 09:35:54 -0700 (PDT)
+        Tue, 14 Apr 2020 12:36:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46846 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391804AbgDNQgA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:36:00 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EGN4uj068794;
+        Tue, 14 Apr 2020 16:35:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=+yPSkB6MIowJQszHtIzPH9Ov/fiqm3RcXe6FOdMkD8Q=;
+ b=odqJ3CG+AUp9pXI/W0yO++ae/10q/N6Z7mt6A75QMaW+bskDJpSC8wZl9FWJV1sjbOUD
+ 7pUd7PzzqK48OYdpH/7hC21QxgaC5sgUDkynNzZwNBSOz+Ni2NY03pCooKiFdbhnzBhU
+ PeLp2iGy1FFfZE7gA3IPGaTt0/3ruOJxAPAqWOybdwJfKs/jJSAr3l8JWgqm4e+qGOcl
+ /eJBuW0FXnr40BS53DxDxBIEknOxP7E6k6/EAqDNFxupPdHa0vbGfE6Hyd88e/zjkP0g
+ +rUCoO85e3Nv4aOevHYOUDJ4HwV3BsexiP1kml7W3z5vzMnsjv27NmINNNqky9maINPn Sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30b5ar5wjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 16:35:46 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EGR8Ru161303;
+        Tue, 14 Apr 2020 16:35:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30ctaamadh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 16:35:45 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EGZiZu031320;
+        Tue, 14 Apr 2020 16:35:44 GMT
+Received: from linux-1.home (/92.157.90.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 09:35:44 -0700
+Subject: Re: [PATCH V3 5/9] objtool: Add return address unwind hints
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
+ <20200414103618.12657-6-alexandre.chartre@oracle.com>
+ <20200414161636.GP20713@hirez.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <546b2d81-39ca-00e1-4df2-d4eaa18496a4@oracle.com>
+Date:   Tue, 14 Apr 2020 18:40:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
- <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com> <CADDKRnAvC7U6kWdiqmib40cJ7r41COyic4LTdO9utsp4GOJnvA@mail.gmail.com>
-In-Reply-To: <CADDKRnAvC7U6kWdiqmib40cJ7r41COyic4LTdO9utsp4GOJnvA@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 14 Apr 2020 18:35:43 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEDJ67oJJjKtDC--VXmr+z8-voPhHnRnaMCEfo5Pc6Sqg@mail.gmail.com>
-Message-ID: <CAMj1kXEDJ67oJJjKtDC--VXmr+z8-voPhHnRnaMCEfo5Pc6Sqg@mail.gmail.com>
-Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
-To:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414161636.GP20713@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 at 18:32, J=C3=B6rg Otte <jrg.otte@gmail.com> wrote:
->
-> Am Di., 14. Apr. 2020 um 12:50 Uhr schrieb Ard Biesheuvel <ardb@kernel.or=
-g>:
-> >
-> > On Tue, 14 Apr 2020 at 12:40, J=C3=B6rg Otte <jrg.otte@gmail.com> wrote=
-:
-> > >
-> > > Booting my notebook with kernel V57-rc1 I get following
-> > > display:
-> > >
-> > > exit_boot() failed!
-> > > efi_main() failed!
-> > > StartImage failed: Buffer Too Small
-> > >
-> > > Booting Kernel V5.6 works well.
-> > >
-> > > From dmesg (kernel V5.6):
-> > > efi: EFI v2.31 by Phoenix Technologies Ltd.
-> > > efi:  ACPI=3D0xdcffe000  ACPI 2.0=3D0xdcffe014  SMBIOS=3D0xdce80000  =
-RNG=3D0xdc3cd198
-> > > efi: seeding entropy pool
-> > > efi: [Firmware Bug]: Invalid EFI memory map entries:
-> > > efi: mem47: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > > efi: mem48: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > > efi: mem49: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > > efi: mem50: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > > efi: mem51: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > > efi: Removing 5 invalid memory map entries.
-> > >
-> >
-> > Thanks for the report.
-> >
-> > Can you try booting with efi=3Dno_disable_early_pci_dma passed via the
-> > kernel command line? [*]
-> >
-> Yes, that works!
->
-> > If that does not help, can you try to reproduce with this branch?
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Def=
-i/urgent
->
-> Should I give that branch a try anyway?
->
 
-Your test proves that BSS is not being cleared correctly, so I have
-the answer I was looking for. However, I would appreciate it if you
-could test that branch, just to double check.
+On 4/14/20 6:16 PM, Peter Zijlstra wrote:
+> On Tue, Apr 14, 2020 at 12:36:14PM +0200, Alexandre Chartre wrote:
+>> Add the UNWIND_HINT_RADDR_DELETE and UNWIND_HINT_RADDR_ALTER unwind
+>> hint macros to flag instructions which remove or modify return
+>> addresses.
+> 
+> I'm confused by this thing; why? AFAICT the rest of the patches are
+> actually simpler without this one.
+> 
 
-Thanks,
-Ard.
+This is required to indicate to objtool that assembly instructions are
+changing return addresses. For example, in patch 8:
+
+For retpoline:
+
+@@ -88,6 +96,7 @@
+  	lfence
+  	jmp	.Lspec_trap_\@
+  .Ldo_rop_\@:
++	UNWIND_HINT_RADDR_ALTER
+  	mov	\reg, (%_ASM_SP)
+  	ret
+  .endm
+
+The unwind hint indicates that the return address has been altered, so the
+code won't return to the return address which was on the stack.
+
+Also for RSB stuffing, this is used to indicated that the stack adjustment
+instruction (add $(BITS_PER_LONG/8) * 2, sp) is actually removing the last
+two return addresses.
+
+alex.
