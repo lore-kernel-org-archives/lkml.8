@@ -2,134 +2,137 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587D0C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26829C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 347462075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020F8206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fiCLrYaO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDTo166r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439900AbgDNMJC (ORCPT
+        id S1729276AbgDNMJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:09:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48247 "EHLO
+        Tue, 14 Apr 2020 08:09:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44616 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2439885AbgDNMIr (ORCPT
+        with ESMTP id S2439886AbgDNMIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:08:47 -0400
+        Tue, 14 Apr 2020 08:08:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586866127;
+        s=mimecast20190719; t=1586866132;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=74+NBoVwwCLwEv4kMoUPHSjG1LhHKGIGgc4Wi5obL7E=;
-        b=fiCLrYaOPtAL+ZwjRWeAoBFizH7OChoQksKU42NfTiVI6gB9TK9ZEoa0QcU4kwPfH9LBtS
-        arR66xpfRTJlCM0S96GLg+/WdMg0j0URxcAGm60GlYinI7BCaLAVWw0N8qe9Ytcs5CCoE3
-        TU0my530BdneElZR5acNzkgcfhzCpSw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-Y2yg9mD4OOSFZal4e00_7Q-1; Tue, 14 Apr 2020 08:08:45 -0400
-X-MC-Unique: Y2yg9mD4OOSFZal4e00_7Q-1
-Received: by mail-wm1-f72.google.com with SMTP id u11so1410534wmc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:08:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=74+NBoVwwCLwEv4kMoUPHSjG1LhHKGIGgc4Wi5obL7E=;
-        b=fpntWM/HRzEzdFRnR4J0qyDflnBaYjotZF9H+4FicelitFB3RDVHjrrQnZBfHSRLl4
-         lVVr6av1XVbvJ+IEaKPcfitrtXr32yoy44znJnpz/zqgnRQLok68gEgvSkXqn+3rpOJU
-         k0bIwJ+QXAVUdxsXK0LBtS1byMF7upo5OOoJ7AOPK5gbQytya0R3E2MmNah75UsaArsY
-         lYk2gLG2yW+D7RkujfIGnKVSTYjy/9gbpDlsoJTBseoqTLGSMRCamCpO2BEtLsZGalkI
-         gS9ZbYeBAc7wDOTx8ZJAHl/MCoThJedHhPuVCxomzBj3eL6nb0YuafGwTcljN5rTmW18
-         J4wA==
-X-Gm-Message-State: AGi0PuZG6ozskVWpGl8kgvV16RQeN0GgsVncHuiTW62mIzsR1f/wslzx
-        w+CWCSEzAaksJTO/UjMDK0A1W2kLlcmZsN/tZG4e2YdNB6j7y0skVyojoyjZOmfCMihb2wx4ZOd
-        +kHXq0u07IcXPefwNl7seCqn7
-X-Received: by 2002:adf:edcc:: with SMTP id v12mr6902487wro.317.1586866124226;
-        Tue, 14 Apr 2020 05:08:44 -0700 (PDT)
-X-Google-Smtp-Source: APiQypInYtHPsLVtRyg24LFQXGyoaVYx3cqklTOGEvqf6qsZ9/7yOIVtIBJpnmfTL5QQ8Q+LS63Gtw==
-X-Received: by 2002:adf:edcc:: with SMTP id v12mr6902444wro.317.1586866123656;
-        Tue, 14 Apr 2020 05:08:43 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id c18sm18447731wrx.5.2020.04.14.05.08.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 05:08:43 -0700 (PDT)
-Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>
-References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9aa81292-70c2-c12a-ded1-1164faac0024@redhat.com>
-Date:   Tue, 14 Apr 2020 14:08:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        bh=BICdmTDYO4rOQ/Tod0xREH+kF4MdkX3G6Bj84FXcA2A=;
+        b=EDTo166rMiV8sUGNcp2ueAfmN7W3GKhL7ul+S+9h75gN7SApN2jnP6fCXFo5smFBhY+uAW
+        McZu3fcJpkZYyxSXBRe4viDLyNxLvTsk7Lnv4qoj08zi2dPnFbpoc9id/9Fr/XF1fIC7xD
+        3tGIsRZgMUaCg7TLECvSCm8RGde6NnE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-yO-Soot9MZmg4CXOz5LTNg-1; Tue, 14 Apr 2020 08:08:48 -0400
+X-MC-Unique: yO-Soot9MZmg4CXOz5LTNg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76A9A800D5C;
+        Tue, 14 Apr 2020 12:08:46 +0000 (UTC)
+Received: from gondolin (ovpn-113-32.ams2.redhat.com [10.36.113.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D519410013A1;
+        Tue, 14 Apr 2020 12:08:40 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 14:08:38 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20200414140838.54f777b8.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-4-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-4-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue,  7 Apr 2020 15:20:03 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-On 4/8/20 6:09 PM, Andy Shevchenko wrote:
-> When I started looking into the intel_cht_int33fe driver for an example of use
-> software node API, I have noticed that it's hard to get and code a bit messy.
-> Here is a clean up, main part of which is to introduce node groups and API to
-> register and unregister them. This and some pre-existing APIs can be used in
-> the driver.
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. The intent of
+> this callback is to provide a driver with the means to prevent a root user
+> from inadvertently taking a queue away from a guest and giving it to the
+> host while the guest is still using it. The callback will
+> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+> attributes would result in one or more AP queues being removed from its
+> driver. If the callback responds in the affirmative for any driver
+> queried, the change to the apmask or aqmask will be rejected with a device
+> in use error.
 > 
-> So, because of cross-subsystem nature of this series, I may recommend to create
-> myself the immutable branch which can be pulled to Rafael's and Greg's trees
-> respectively. I'm also open for other proposals how to proceed.
-
-The series looks good to me and I've also tested it on one of
-the devices using the intel_cht_int33fe driver and everything seems
-to work fine, so for the whole series:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver manages AP queues passed through to one or more
+> guests and we don't want to unexpectedly take AP resources away from
+> guests which are most likely independently administered.
 > 
-> Andy Shevchenko (6):
->    device property: export set_secondary_fwnode() to modules
->    software node: Allow register and unregister software node groups
->    platform/x86: intel_cht_int33fe: Convert software node array to group
->    platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
->    platform/x86: intel_cht_int33fe: Switch to use
->      acpi_dev_hid_uid_match()
->    platform/x86: intel_cht_int33fe: Fix spelling issues
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
+>  drivers/s390/crypto/ap_bus.h |   4 +
+>  2 files changed, 142 insertions(+), 6 deletions(-)
 > 
->   drivers/base/core.c                           |   1 +
->   drivers/base/swnode.c                         |  48 ++++++++
->   .../platform/x86/intel_cht_int33fe_typec.c    | 106 +++++++++---------
->   include/linux/property.h                      |   3 +
->   4 files changed, 108 insertions(+), 50 deletions(-)
-> 
+> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+> index 5256e3ce84e5..af15c095e76a 100644
+> --- a/drivers/s390/crypto/ap_bus.c
+> +++ b/drivers/s390/crypto/ap_bus.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/ctype.h>
+> +#include <linux/module.h>
+>  
+>  #include "ap_bus.h"
+>  #include "ap_debug.h"
+> @@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
+>  	newmap = kmalloc(size, GFP_KERNEL);
+>  	if (!newmap)
+>  		return -ENOMEM;
+> -	if (mutex_lock_interruptible(lock)) {
+> -		kfree(newmap);
+> -		return -ERESTARTSYS;
+> +	if (lock) {
+> +		if (mutex_lock_interruptible(lock)) {
+> +			kfree(newmap);
+> +			return -ERESTARTSYS;
+> +		}
+
+This whole function is a bit odd. It seems all masks we want to
+manipulate are always guarded by the ap_perms_mutex, and the need for
+allowing lock == NULL comes from wanting to call this function with the
+ap_perms_mutex already held.
+
+That would argue for a locked/unlocked version of this function... but
+looking at it, why do we lock the way we do? The one thing this
+function (prior to this patch) does outside of the holding of the mutex
+is the allocation and freeing of newmap. But with this patch, we do the
+allocation and freeing of newmap while holding the mutex. Something
+seems a bit weird here.
+
+>  	}
+>  
+>  	if (*str == '+' || *str == '-') {
 
