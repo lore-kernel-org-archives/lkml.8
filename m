@@ -2,200 +2,255 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41B3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A1FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB07A20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XjqpawvA"
+	by mail.kernel.org (Postfix) with ESMTP id 620E92076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586843330;
+	bh=dxNtBJSmXqe1DZ37vfP7M6NMjflxtXyP+i0cD5Aa+2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JqvBSVst850x3JFHcMeQ3eYry/YXlJU0Qgh3ZGAm/N1VuKNOKSnxMpFn8U0WTbozp
+	 LB06qc/Iqt78OBf+BixPk4E76r0AW30YY5sJap9qOIKO7XSpEdQEJz8X2yj55IZA4T
+	 vwfEUqXCAGZ8ATotLfR7tBA4dsYvlMTIIX5ly2rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405601AbgDNFsm (ORCPT
+        id S2405609AbgDNFss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:48:42 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7250 "EHLO pegase1.c-s.fr"
+        Tue, 14 Apr 2020 01:48:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729064AbgDNFsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:48:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 491ZKd03TGz9txjw;
-        Tue, 14 Apr 2020 07:48:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=XjqpawvA; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id CFRg9po7RoTN; Tue, 14 Apr 2020 07:48:36 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 491ZKc5qf7z9txjv;
-        Tue, 14 Apr 2020 07:48:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586843316; bh=la9sDQY/dxZgqFKLruaF3b+j+rnTidsUGNC7IrNFJSE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XjqpawvAzKt6Jdvmq1FWMyWVqehzEkusRFhdD7YTIcd/OQAws19RU59vKRvS3c2gN
-         1SLUR5ipesIbSxHVk2ust7Q5r7YGWHhAU/6SOoCr7Km83GYmIMqOELpMV9mCqsk3hd
-         5afhfDxKoYYGO/aejZeGstqfUXr64p0GWi6sqT0I=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A9D098B77D;
-        Tue, 14 Apr 2020 07:48:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id FBpeMWwl2jQz; Tue, 14 Apr 2020 07:48:37 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A96748B752;
-        Tue, 14 Apr 2020 07:48:36 +0200 (CEST)
-Subject: Re: [PATCH v3 12/16] powerpc/watchpoint: Use builtin ALIGN*() macros
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        id S1729111AbgDNFsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 01:48:41 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A18BF20678;
+        Tue, 14 Apr 2020 05:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586843320;
+        bh=dxNtBJSmXqe1DZ37vfP7M6NMjflxtXyP+i0cD5Aa+2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H2bHlPj1rxVQDB8ViSd6AtK99uicW+XH+EiQmjfYXctvIn8im47nHNpVKnmx5eCAd
+         wl7+tWouzn2ek62ML1pkv1BnXTJArgo1cTJVTW2nkbJc5bBHiC2n77qR0z74c1Yx6W
+         RHnRPI5y2hUIlvld4l6sVRmEy+2CwyZ2yiWcSVoQ=
+Date:   Tue, 14 Apr 2020 08:48:36 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
         linux-kernel@vger.kernel.org
-References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
- <20200414031659.58875-13-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a2d7abe8-44e0-9780-6603-00f16300c2ca@c-s.fr>
-Date:   Tue, 14 Apr 2020 07:48:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between
+ console and hrtimer locks
+Message-ID: <20200414054836.GA956407@unreal>
+References: <20200407170925.1775019-1-leon@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200414031659.58875-13-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407170925.1775019-1-leon@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+Any feedback?
+https://lore.kernel.org/lkml/20200407170925.1775019-1-leon@kernel.org/
 
-Le 14/04/2020 à 05:16, Ravi Bangoria a écrit :
-> Currently we calculate hw aligned start and end addresses manually.
-> Replace them with builtin ALIGN_DOWN() and ALIGN() macros.
-> 
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Thanks
+
+On Tue, Apr 07, 2020 at 08:09:25PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+>
+> clockevents_switch_state() calls printk() from under hrtimer_bases.lock.
+> That causes lock inversion on scheduler locks because printk() can call
+> into the scheduler. Lockdep puts it as:
+>
+>  [  728.464312] ====================================================================================================
+>  [  735.312580] TSC deadline timer enabled
+>  [  735.324143]
+>  [  735.324146] ======================================================
+>  [  735.324148] WARNING: possible circular locking dependency detected
+>  [  735.324150] 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1 Not tainted
+>  [  735.324152] ------------------------------------------------------
+>  [  735.324154] swapper/3/0 is trying to acquire lock:
+>  [  735.324155] ffffffff8442c858 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0x13/0x70
+>  [  735.324162]
+>  [  735.324164] but task is already holding lock:
+>  [  735.324165] ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
+>  [  735.324171]
+>  [  735.324173] which lock already depends on the new lock.
+>  [  735.324174]
+>  [  735.324175]
+>  [  735.324177] the existing dependency chain (in reverse order) is:
+>  [  735.324179]
+>  [  735.324180] -> #4 (hrtimer_bases.lock){-.-.}-{2:2}:
+>  [  735.324186]        _raw_spin_lock_irqsave+0x3c/0x4b
+>  [  735.324187]        lock_hrtimer_base+0x71/0x120
+>  [  735.324189]        hrtimer_start_range_ns+0xc6/0xaa0
+>  [  735.324191]        __enqueue_rt_entity+0xc44/0xf50
+>  [  735.324192]        enqueue_rt_entity+0x79/0xc0
+>  [  735.324194]        enqueue_task_rt+0x5c/0x2e0
+>  [  735.324195]        activate_task+0x15a/0x2c0
+>  [  735.324197]        ttwu_do_activate+0xcf/0x120
+>  [  735.324199]        sched_ttwu_pending+0x160/0x230
+>  [  735.324200]        scheduler_ipi+0x1c0/0x530
+>  [  735.324202]        reschedule_interrupt+0xf/0x20
+>  [  735.324204]        tick_nohz_idle_enter+0x16c/0x250
+>  [  735.324205]        do_idle+0x90/0x530
+>  [  735.324207]        cpu_startup_entry+0x19/0x20
+>  [  735.324208]        start_secondary+0x2ee/0x3e0
+>  [  735.324210]        secondary_startup_64+0xa4/0xb0
+>  [  735.324211]
+>  [  735.324212] -> #3 (&rt_b->rt_runtime_lock){-...}-{2:2}:
+>  [  735.324218]        _raw_spin_lock+0x25/0x30
+>  [  735.324219]        rq_online_rt+0x288/0x550
+>  [  735.324221]        set_rq_online+0x11f/0x190
+>  [  735.324223]        sched_cpu_activate+0x1d4/0x390
+>  [  735.324225]        cpuhp_invoke_callback+0x1c5/0x1560
+>  [  735.324226]        cpuhp_thread_fun+0x3f8/0x6f0
+>  [  735.324228]        smpboot_thread_fn+0x305/0x5f0
+>  [  735.324229]        kthread+0x2f8/0x3b0
+>  [  735.324231]        ret_from_fork+0x24/0x30
+>  [  735.324232]
+>  [  735.324233] -> #2 (&rq->lock){-.-.}-{2:2}:
+>  [  735.324238]        _raw_spin_lock+0x25/0x30
+>  [  735.324240]        task_fork_fair+0x34/0x430
+>  [  735.324241]        sched_fork+0x48a/0xa60
+>  [  735.324243]        copy_process+0x15df/0x5970
+>  [  735.324244]        _do_fork+0x106/0xcd0
+>  [  735.324246]        kernel_thread+0x9e/0xe0
+>  [  735.324247]        rest_init+0x28/0x330
+>  [  735.324249]        start_kernel+0x6ac/0x6ed
+>  [  735.324251]        secondary_startup_64+0xa4/0xb0
+>  [  735.324252]
+>  [  735.324253] -> #1 (&p->pi_lock){-.-.}-{2:2}:
+>  [  735.324258]        _raw_spin_lock_irqsave+0x3c/0x4b
+>  [  735.324260]        try_to_wake_up+0x9a/0x1700
+>  [  735.324261]        up+0x7a/0xb0
+>  [  735.324263]        __up_console_sem+0x3c/0x70
+>  [  735.324264]        console_unlock+0x4f4/0xab0
+>  [  735.324266]        con_font_op+0x907/0x1010
+>  [  735.324267]        vt_ioctl+0x10a6/0x2890
+>  [  735.324269]        tty_ioctl+0x257/0x1240
+>  [  735.324270]        ksys_ioctl+0x3e9/0x1190
+>  [  735.324272]        __x64_sys_ioctl+0x6f/0xb0
+>  [  735.324273]        do_syscall_64+0xe7/0x12c0
+>  [  735.324275]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>  [  735.324276]
+>  [  735.324277] -> #0 ((console_sem).lock){-...}-{2:2}:
+>  [  735.324283]        __lock_acquire+0x374a/0x5210
+>  [  735.324284]        lock_acquire+0x1b9/0x920
+>  [  735.324286]        _raw_spin_lock_irqsave+0x3c/0x4b
+>  [  735.324288]        down_trylock+0x13/0x70
+>  [  735.324289]        __down_trylock_console_sem+0x33/0xa0
+>  [  735.324291]        console_trylock+0x13/0x60
+>  [  735.324292]        vprintk_emit+0xec/0x370
+>  [  735.324294]        printk+0x9c/0xc3
+>  [  735.324296]        lapic_timer_set_oneshot+0x4e/0x60
+>  [  735.324297]        clockevents_switch_state+0x1e1/0x360
+>  [  735.324299]        tick_program_event+0xae/0xc0
+>  [  735.324301]        hrtimer_start_range_ns+0x4b6/0xaa0
+>  [  735.324302]        tick_nohz_idle_stop_tick+0x67c/0xa90
+>  [  735.324304]        do_idle+0x326/0x530
+>  [  735.324305]        cpu_startup_entry+0x19/0x20
+>  [  735.324307]        start_secondary+0x2ee/0x3e0
+>  [  735.324309]        secondary_startup_64+0xa4/0xb0
+>  [  735.324310]
+>  [  735.324311] other info that might help us debug this:
+>  [  735.324312]
+>  [  735.324314] Chain exists of:
+>  [  735.324315]   (console_sem).lock --> &rt_b->rt_runtime_lock --> hrtimer_bases.lock
+>  [  735.324322]
+>  [  735.324324]  Possible unsafe locking scenario:
+>  [  735.324325]
+>  [  735.324327]        CPU0                    CPU1
+>  [  735.324328]        ----                    ----
+>  [  735.324329]   lock(hrtimer_bases.lock);
+>  [  735.324333]                                lock(&rt_b->rt_runtime_lock);
+>  [  735.324337]                                lock(hrtimer_bases.lock);
+>  [  735.324341]   lock((console_sem).lock);
+>  [  735.324344]
+>  [  735.324345]  *** DEADLOCK ***
+>  [  735.324346]
+>  [  735.324348] 1 lock held by swapper/3/0:
+>  [  735.324349]  #0: ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
+>  [  735.324356]
+>  [  735.324357] stack backtrace:
+>  [  735.324360] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1
+>  [  735.324363] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+>  [  735.324364] Call Trace:
+>  [  735.324366]  dump_stack+0xb7/0x10b
+>  [  735.324367]  check_noncircular+0x37f/0x460
+>  [  735.324369]  ? arch_stack_walk+0x7c/0xd0
+>  [  735.324370]  ? print_circular_bug+0x4e0/0x4e0
+>  [  735.324372]  ? mark_lock+0x1a4/0xb60
+>  [  735.324373]  ? __lock_acquire+0x374a/0x5210
+>  [  735.324375]  __lock_acquire+0x374a/0x5210
+>  [  735.324376]  ? register_lock_class+0x17e0/0x17e0
+>  [  735.324378]  ? register_lock_class+0x17e0/0x17e0
+>  [  735.324380]  lock_acquire+0x1b9/0x920
+>  [  735.324381]  ? down_trylock+0x13/0x70
+>  [  735.324383]  ? check_flags.part.29+0x450/0x450
+>  [  735.324384]  ? lock_downgrade+0x760/0x760
+>  [  735.324386]  ? vprintk_emit+0xec/0x370
+>  [  735.324387]  _raw_spin_lock_irqsave+0x3c/0x4b
+>  [  735.324389]  ? down_trylock+0x13/0x70
+>  [  735.324390]  down_trylock+0x13/0x70
+>  [  735.324392]  __down_trylock_console_sem+0x33/0xa0
+>  [  735.324393]  console_trylock+0x13/0x60
+>  [  735.324395]  vprintk_emit+0xec/0x370
+>  [  735.324396]  printk+0x9c/0xc3
+>  [  735.324398]  ? kmsg_dump_rewind_nolock+0xd9/0xd9
+>  [  735.324399]  lapic_timer_set_oneshot+0x4e/0x60
+>  [  735.324401]  clockevents_switch_state+0x1e1/0x360
+>  [  735.324402]  ? enqueue_hrtimer+0x116/0x310
+>  [  735.324404]  tick_program_event+0xae/0xc0
+>  [  735.324406]  hrtimer_start_range_ns+0x4b6/0xaa0
+>  [  735.324407]  ? hrtimer_run_softirq+0x210/0x210
+>  [  735.324409]  ? rcu_read_lock_sched_held+0xab/0xe0
+>  [  735.324410]  ? rcu_read_lock_bh_held+0xe0/0xe0
+>  [  735.324412]  tick_nohz_idle_stop_tick+0x67c/0xa90
+>  [  735.324413]  ? tsc_verify_tsc_adjust+0x71/0x290
+>  [  735.324415]  do_idle+0x326/0x530
+>  [  735.324416]  ? arch_cpu_idle_exit+0x40/0x40
+>  [  735.324418]  cpu_startup_entry+0x19/0x20
+>  [  735.324419]  start_secondary+0x2ee/0x3e0
+>  [  735.324421]  ? set_cpu_sibling_map+0x2f70/0x2f70
+>  [  735.324423]  secondary_startup_64+0xa4/0xb0
+>  [  760.028504] ====================================================================================================
+>
+> Fix by using deferred variant of printk which doesn't call to the scheduler.
+>
+> Fixes: 279f1461432c ("x86: apic: Use tsc deadline for oneshot when available")
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 > ---
->   arch/powerpc/include/asm/hw_breakpoint.h  |  5 +++--
->   arch/powerpc/kernel/hw_breakpoint.c       | 12 ++++++------
->   arch/powerpc/kernel/process.c             |  8 ++++----
->   arch/powerpc/kernel/ptrace/ptrace-noadv.c |  2 +-
->   4 files changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-> index d472b2eb757e..add5aa076919 100644
-> --- a/arch/powerpc/include/asm/hw_breakpoint.h
-> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
-> @@ -34,10 +34,11 @@ struct arch_hw_breakpoint {
->   #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
->   				 HW_BRK_TYPE_HYP)
->   
-> +/* Minimum granularity */
->   #ifdef CONFIG_PPC_8xx
-> -#define HW_BREAKPOINT_ALIGN 0x3
-> +#define HW_BREAKPOINT_SIZE  0x4
->   #else
-> -#define HW_BREAKPOINT_ALIGN 0x7
-> +#define HW_BREAKPOINT_SIZE  0x8
->   #endif
->   
->   #define DABR_MAX_LEN	8
-> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-> index 319a761b7412..02ffd14f4519 100644
-> --- a/arch/powerpc/kernel/hw_breakpoint.c
-> +++ b/arch/powerpc/kernel/hw_breakpoint.c
-> @@ -145,10 +145,10 @@ int arch_bp_generic_fields(int type, int *gen_bp_type)
->    *    <---8 bytes--->
->    *
->    * In this case, we should configure hw as:
-> - *   start_addr = address & ~HW_BREAKPOINT_ALIGN
-> + *   start_addr = address & ~(HW_BREAKPOINT_SIZE - 1)
->    *   len = 16 bytes
->    *
-> - * @start_addr and @end_addr are inclusive.
-> + * @start_addr is inclusive but @end_addr is exclusive.
->    */
->   static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
->   {
-> @@ -156,14 +156,14 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
->   	u16 hw_len;
->   	unsigned long start_addr, end_addr;
->   
-> -	start_addr = hw->address & ~HW_BREAKPOINT_ALIGN;
-> -	end_addr = (hw->address + hw->len - 1) | HW_BREAKPOINT_ALIGN;
-> -	hw_len = end_addr - start_addr + 1;
-> +	start_addr = ALIGN_DOWN(hw->address, HW_BREAKPOINT_SIZE);
-> +	end_addr = ALIGN(hw->address + hw->len, HW_BREAKPOINT_SIZE);
-> +	hw_len = end_addr - start_addr;
->   
->   	if (dawr_enabled()) {
->   		max_len = DAWR_MAX_LEN;
->   		/* DAWR region can't cross 512 bytes boundary */
-> -		if ((start_addr >> 9) != (end_addr >> 9))
-> +		if ((start_addr >> 9) != ((end_addr - 1) >> 9))
-
-What about:
-	if (ALIGN(start_addr, SZ_512M) != ALIGN(end - 1, SZ_512M))
-
->   			return -EINVAL;
->   	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
->   		/* 8xx can setup a range without limitation */
-> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-> index aab82ab80dfa..06679adac447 100644
-> --- a/arch/powerpc/kernel/process.c
-> +++ b/arch/powerpc/kernel/process.c
-> @@ -800,12 +800,12 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
->   	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
->   			       LCTRL1_CRWF_RW;
->   	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
-> -	unsigned long start_addr = brk->address & ~HW_BREAKPOINT_ALIGN;
-> -	unsigned long end_addr = (brk->address + brk->len - 1) | HW_BREAKPOINT_ALIGN;
-> +	unsigned long start_addr = ALIGN_DOWN(brk->address, HW_BREAKPOINT_SIZE);
-> +	unsigned long end_addr = ALIGN(brk->address + brk->len, HW_BREAKPOINT_SIZE);
->   
->   	if (start_addr == 0)
->   		lctrl2 |= LCTRL2_LW0LA_F;
-> -	else if (end_addr == ~0U)
-> +	else if (end_addr - 1 == ~0U)
-
-What about:
-	else if (end_addr == 0)
-
->   		lctrl2 |= LCTRL2_LW0LA_E;
->   	else
->   		lctrl2 |= LCTRL2_LW0LA_EandF;
-> @@ -821,7 +821,7 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
->   		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
->   
->   	mtspr(SPRN_CMPE, start_addr - 1);
-> -	mtspr(SPRN_CMPF, end_addr + 1);
-> +	mtspr(SPRN_CMPF, end_addr);
->   	mtspr(SPRN_LCTRL1, lctrl1);
->   	mtspr(SPRN_LCTRL2, lctrl2);
->   
-> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> index 08cb8c1b504c..697c7e4b5877 100644
-> --- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> @@ -216,7 +216,7 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
->   	if ((unsigned long)bp_info->addr >= TASK_SIZE)
->   		return -EIO;
->   
-> -	brk.address = bp_info->addr & ~HW_BREAKPOINT_ALIGN;
-> +	brk.address = ALIGN_DOWN(bp_info->addr, HW_BREAKPOINT_SIZE);
->   	brk.type = HW_BRK_TYPE_TRANSLATE;
->   	brk.len = DABR_MAX_LEN;
->   	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
-> 
-
-Christophe
+> It is far away from my main expertise and I'm not sure that the solution
+> is correct, but it definitely fixed our regression.
+> ---
+>  arch/x86/kernel/apic/apic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+> index d254cebdd3c3..6706b2cd9aec 100644
+> --- a/arch/x86/kernel/apic/apic.c
+> +++ b/arch/x86/kernel/apic/apic.c
+> @@ -353,7 +353,7 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
+>  		 */
+>  		asm volatile("mfence" : : : "memory");
+>
+> -		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
+> +		printk_deferred_once(KERN_DEBUG "TSC deadline timer enabled\n");
+>  		return;
+>  	}
+>
+> --
+> 2.25.1
+>
