@@ -2,76 +2,143 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34625C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30931C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 137C220644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1437720644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438997AbgDNLSK (ORCPT
+        id S2439005AbgDNLS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:18:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:10775 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbgDNLSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:18:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2370 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2438988AbgDNLSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 07:18:03 -0400
-IronPort-SDR: svRA+yTn53LwaZbY5y/PuGL2RpUfEsOLOfT86lsRFDglgwu1bwOQQdR3x5TVgvw6cJA9/BnKus
- oH+bVJ4HW3HQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 04:18:03 -0700
-IronPort-SDR: ja267ebaQ9w4t55QmJPranFoVXx+4cvcrpwcVGbI8B0YFKIgy+eSJqoJfG4sOiZogYLjr/HyON
- pRcKinROhUmQ==
-X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
-   d="scan'208";a="427028399"
-Received: from mdoerbec-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.76])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 04:18:00 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Simon Ser <contact@emersion.fr>, Yussuf Khalil <dev@pp3345.net>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel\@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 5/5] drm/i915: Replace "Broadcast RGB" with "RGB quantization range" property
-In-Reply-To: <daCvJk4O6rHOwEometGSPENJupb6adPr583_dLEetvftUQPbK4198VDijHGzM9uTm9bP3TEyGCZvxKe5PSvqWBg5xhXkL_7EiAQlmEPKWQI=@emersion.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200413214024.46500-1-dev@pp3345.net> <20200413214024.46500-6-dev@pp3345.net> <daCvJk4O6rHOwEometGSPENJupb6adPr583_dLEetvftUQPbK4198VDijHGzM9uTm9bP3TEyGCZvxKe5PSvqWBg5xhXkL_7EiAQlmEPKWQI=@emersion.fr>
-Date:   Tue, 14 Apr 2020 14:17:57 +0300
-Message-ID: <87ftd6mi3e.fsf@intel.com>
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1D8E5BC680AC97D09CAD;
+        Tue, 14 Apr 2020 19:17:58 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Apr 2020
+ 19:17:50 +0800
+Subject: Re: [PATCH 1/2] KVM: arm64: vgic-v3: Retire all pending LPIs on vcpu
+ destroy
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <wanghaibin.wang@huawei.com>, <yezengruan@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200414030349.625-1-yuzenghui@huawei.com>
+ <20200414030349.625-2-yuzenghui@huawei.com> <20200414115417.451f8b66@why>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <a1c67c96-56f0-2976-ba1b-0991972254b3@huawei.com>
+Date:   Tue, 14 Apr 2020 19:17:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200414115417.451f8b66@why>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020, Simon Ser <contact@emersion.fr> wrote:
-> On Monday, April 13, 2020 11:40 PM, Yussuf Khalil <dev@pp3345.net> wrote:
->
->> DRM now has a globally available "RGB quantization range" connector
->> property. i915's "Broadcast RGB" that fulfils the same purpose is now
->> considered deprecated, so drop it in favor of the DRM property.
->
-> For a UAPI point-of-view, I'm not sure this is fine. Some user-space
-> might depend on this property, dropping it would break such user-space.
+Hi Marc,
 
-Agreed.
+On 2020/4/14 18:54, Marc Zyngier wrote:
+> On Tue, 14 Apr 2020 11:03:47 +0800
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
+> 
+> Hi Zenghui,
+> 
+>> It's likely that the vcpu fails to handle all virtual interrupts if
+>> userspace decides to destroy it, leaving the pending ones stay in the
+>> ap_list. If the un-handled one is a LPI, its vgic_irq structure will
+>> be eventually leaked because of an extra refcount increment in
+>> vgic_queue_irq_unlock().
+>>
+>> This was detected by kmemleak on almost every guest destroy, the
+>> backtrace is as follows:
+>>
+>> unreferenced object 0xffff80725aed5500 (size 128):
+>> comm "CPU 5/KVM", pid 40711, jiffies 4298024754 (age 166366.512s)
+>> hex dump (first 32 bytes):
+>> 00 00 00 00 00 00 00 00 08 01 a9 73 6d 80 ff ff ...........sm...
+>> c8 61 ee a9 00 20 ff ff 28 1e 55 81 6c 80 ff ff .a... ..(.U.l...
+>> backtrace:
+>> [<000000004bcaa122>] kmem_cache_alloc_trace+0x2dc/0x418
+>> [<0000000069c7dabb>] vgic_add_lpi+0x88/0x418
+>> [<00000000bfefd5c5>] vgic_its_cmd_handle_mapi+0x4dc/0x588
+>> [<00000000cf993975>] vgic_its_process_commands.part.5+0x484/0x1198
+>> [<000000004bd3f8e3>] vgic_its_process_commands+0x50/0x80
+>> [<00000000b9a65b2b>] vgic_mmio_write_its_cwriter+0xac/0x108
+>> [<0000000009641ebb>] dispatch_mmio_write+0xd0/0x188
+>> [<000000008f79d288>] __kvm_io_bus_write+0x134/0x240
+>> [<00000000882f39ac>] kvm_io_bus_write+0xe0/0x150
+>> [<0000000078197602>] io_mem_abort+0x484/0x7b8
+>> [<0000000060954e3c>] kvm_handle_guest_abort+0x4cc/0xa58
+>> [<00000000e0d0cd65>] handle_exit+0x24c/0x770
+>> [<00000000b44a7fad>] kvm_arch_vcpu_ioctl_run+0x460/0x1988
+>> [<0000000025fb897c>] kvm_vcpu_ioctl+0x4f8/0xee0
+>> [<000000003271e317>] do_vfs_ioctl+0x160/0xcd8
+>> [<00000000e7f39607>] ksys_ioctl+0x98/0xd8
+>>
+>> Fix it by retiring all pending LPIs in the ap_list on the destroy path.
+>>
+>> p.s. I can also reproduce it on a normal guest shutdown. It is because
+>> userspace still send LPIs to vcpu (through KVM_SIGNAL_MSI ioctl) while
+>> the guest is being shutdown and unable to handle it. A little strange
+>> though and haven't dig further...
+> 
+> What userspace are you using? You'd hope that the VMM would stop
+> processing I/Os when destroying the guest. But we still need to handle
+> it anyway, and I thing this fix makes sense.
 
-> Can we make this property deprecated but still keep it for backwards
-> compatibility?
+I'm using Qemu (master) for debugging. Looks like an interrupt
+corresponding to a virtio device configuration change, triggered after
+all other devices had freed their irqs. Not sure if it's expected.
 
-Would be nice to make the i915 specific property an "alias" for the new
-property, however I'm not sure how you'd make that happen. Otherwise
-juggling between the two properties is going to be a nightmare.
+>>
+>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>> ---
+>>   virt/kvm/arm/vgic/vgic-init.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+>> index a963b9d766b7..53ec9b9d9bc4 100644
+>> --- a/virt/kvm/arm/vgic/vgic-init.c
+>> +++ b/virt/kvm/arm/vgic/vgic-init.c
+>> @@ -348,6 +348,12 @@ void kvm_vgic_vcpu_destroy(struct kvm_vcpu *vcpu)
+>>   {
+>>   	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+>>   
+>> +	/*
+>> +	 * Retire all pending LPIs on this vcpu anyway as we're
+>> +	 * going to destroy it.
+>> +	 */
+>> +	vgic_flush_pending_lpis(vcpu);
+>> +
+>>   	INIT_LIST_HEAD(&vgic_cpu->ap_list_head);
+>>   }
+>>   
+> 
+> I guess that at this stage, the INIT_LIST_HEAD() is superfluous, right?
 
-BR,
-Jani.
+I was just thinking that the ap_list_head may not be empty (besides LPI,
+with other active or pending interrupts), so leave it unchanged.
 
+> Otherwise, looks good. If you agree with the above, I can fix that
+> locally, no need to resend this patch.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks,
+Zenghui
+
