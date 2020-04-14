@@ -2,108 +2,102 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F9DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F70C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99CAA206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:40:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CzCmIF6l"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC5E20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505049AbgDNTkh (ORCPT
+        id S2505060AbgDNTky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:40:37 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38807 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505002AbgDNTjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:39:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586893141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RUlH4sbSgo9eT5+QKvwXQtoxUNAaT+Wa5wO2eVFJNO0=;
-        b=CzCmIF6lBbpPKVMqXaJFh30Je7aWjdzUydqhA07g5S5X/vsrbl50w1J6S3zIpXR6Tq+7f2
-        /euGa9BafelOVgNMrwmIsgUj/VrpxWzXIwfzrebY7ikgVfMrtMU0va1G5i42OwnIL0St/2
-        fl0AhcPciZQqWWKQ2WDI3BT/ygQe2MA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-UVDK63RMMBK0YMgqki-D8Q-1; Tue, 14 Apr 2020 15:08:18 -0400
-X-MC-Unique: UVDK63RMMBK0YMgqki-D8Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 253AE800D53;
-        Tue, 14 Apr 2020 19:08:17 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7103B126518;
-        Tue, 14 Apr 2020 19:08:16 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 14:08:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
- module_disable_ro()
-Message-ID: <20200414190814.glra2gceqgy34iyx@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <20200414182726.GF2483@worktop.programming.kicks-ass.net>
+        Tue, 14 Apr 2020 15:40:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59971 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505034AbgDNTjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 15:39:53 -0400
+IronPort-SDR: 9udZDNIetMdTLDgz92JTZohTV9yhzUFIF+4Nhm+xer3tMBOnifQQ7riCGJ2P8cRNbMY+KL2a3V
+ nQXRO/cMtRqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 12:39:53 -0700
+IronPort-SDR: jwBrX7DN0JzzBuuEtGDysHoEvsUWmL3iCQ9lRJ3paKFP8WejhWaNT7aV8D+b7r6QtnNSTXCBDR
+ 1utJOvtdJe3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
+   d="scan'208";a="245503305"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Apr 2020 12:39:53 -0700
+Date:   Tue, 14 Apr 2020 12:39:53 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] mm/gup: dereference page table entry using helper
+Message-ID: <20200414193952.GC1853609@iweiny-DESK2.sc.intel.com>
+References: <1586877001-19138-1-git-send-email-agordeev@linux.ibm.com>
+ <20200414163234.GG5100@ziepe.ca>
+ <20200414185829.GB1853609@iweiny-DESK2.sc.intel.com>
+ <20200414190620.GJ5100@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414182726.GF2483@worktop.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200414190620.GJ5100@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:27:26PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 14, 2020 at 11:28:36AM -0500, Josh Poimboeuf wrote:
-> > Better late than never, these patches add simplifications and
-> > improvements for some issues Peter found six months ago, as part of his
-> > non-writable text code (W^X) cleanups.
+On Tue, Apr 14, 2020 at 04:06:20PM -0300, Jason Gunthorpe wrote:
+> On Tue, Apr 14, 2020 at 11:58:29AM -0700, Ira Weiny wrote:
+> > On Tue, Apr 14, 2020 at 01:32:34PM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Apr 14, 2020 at 05:10:01PM +0200, Alexander Gordeev wrote:
+> > > > Commit 0005d20 ("mm/gup: Move page table entry dereference
+> > > > into helper function") wrapped access to page table entries
+> > > > larger than sizeof(long) into a race-aware accessor. One of
+> > > > the two dereferences in gup_fast path was however overlooked.
+> > > > 
+> > > > CC: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > > CC: linux-mm@kvack.org
+> > > > Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> > > >  mm/gup.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/mm/gup.c b/mm/gup.c
+> > > > index d53f7dd..eceb98b 100644
+> > > > +++ b/mm/gup.c
+> > > > @@ -2208,7 +2208,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+> > > >  		if (!head)
+> > > >  			goto pte_unmap;
+> > > >  
+> > > > -		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+> > > > +		if (unlikely(pte_val(pte) != pte_val(gup_get_pte(ptep)))) {
+> > > 
+> > > It doesn't seem like this needs the special helper as it is just
+> > > checking that the pte hasn't changed, it doesn't need to be read
+> > > exactly.
+> > > 
+> > > But it probably should technically still be a READ_ONCE. Although I
+> > > think the atomic inside try_grab_compound_head prevents any real
+> > > problems.
+> > 
+> > I think we should go for consistency here and use the helper function.
 > 
-> Excellent stuff, thanks!!
->
-> I'll go brush up these two patches then:
-> 
->   https://lkml.kernel.org/r/20191018074634.801435443@infradead.org
->   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> It seems quite expensive to do two more unncessary barriers..
 
-Ah right, I meant to bring that up.  I actually played around with those
-patches.  While it would be nice to figure out a way to converge the
-ftrace module init, I didn't really like the first patch.
+But won't a failure to read the 'real' pte result in falling back to GUP slow?
 
-It bothers me that both the notifiers and the module init() both see the
-same MODULE_STATE_COMING state, but only in the former case is the text
-writable.
+Not sure which is worse?
 
-I think it's cognitively simpler if MODULE_STATE_COMING always means the
-same thing, like the comments imply, "fully formed" and thus
-not-writable:
+And most arch's don't suffer from this...
 
-enum module_state {
-	MODULE_STATE_LIVE,	/* Normal state. */
-	MODULE_STATE_COMING,	/* Full formed, running module_init. */
-	MODULE_STATE_GOING,	/* Going away. */
-	MODULE_STATE_UNFORMED,	/* Still setting it up. */
-};
-
-And, it keeps tighter constraints on what a notifier can do, which is a
-good thing if we can get away with it.
-
-> and write a patch that makes the x86 code throw a wobbly on W+X.
-> 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Thanks!
-
--- 
-Josh
+Ira
 
