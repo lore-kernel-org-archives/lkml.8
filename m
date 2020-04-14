@@ -2,79 +2,116 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FFBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB896C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB70A2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC59206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404974AbgDND6e (ORCPT
+        id S1725887AbgDNEAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:58:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:28404 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgDND6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:58:33 -0400
-IronPort-SDR: mVizNHimP+AA0W3IDIwixoCC4+MzhRyTMhb/1oedvcxiLuCdZi73c1a2qfzsVb088Zz9UMWgKa
- KPmgkrewzdCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 20:58:32 -0700
-IronPort-SDR: JseA+t55qyGfgktfkjwhkxM3T7at/tzuRb3HlUAVR/pCbOrzGjjpgoCpsQS6571lHNNUkSbkLF
- TnIGNDBL8oxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="363260045"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Apr 2020 20:58:32 -0700
-Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 13 Apr 2020 20:58:32 -0700
-Received: from orsmsx109.amr.corp.intel.com ([169.254.11.20]) by
- ORSMSX125.amr.corp.intel.com ([169.254.3.103]) with mapi id 14.03.0439.000;
- Mon, 13 Apr 2020 20:58:32 -0700
-From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-To:     "mjg59@google.com" <mjg59@google.com>
-CC:     "Zhang, Rui" <rui.zhang@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Aram, Nisha" <nisha.aram@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 1/3] thermal/int340x_thermal: Export GDDV
-Thread-Topic: [PATCH V2 1/3] thermal/int340x_thermal: Export GDDV
-Thread-Index: AQHWEhD2NMV5m6DKX0a90M6geYk4vA==
-Date:   Tue, 14 Apr 2020 03:58:31 +0000
-Message-ID: <9f6bf5e6261f2a7dac6c4413ac54a1cf4315e3e7.camel@intel.com>
-References: <20200414020953.255364-1-matthewgarrett@google.com>
-         <1ba40c555115e5a2770e95b974096016fbfc3606.camel@intel.com>
-         <CACdnJut0MkQerQbMeaqDz81iaeQRvdgqw2MpTvNOi_1ch06qGw@mail.gmail.com>
-In-Reply-To: <CACdnJut0MkQerQbMeaqDz81iaeQRvdgqw2MpTvNOi_1ch06qGw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-x-originating-ip: [10.251.1.193]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <922D928C5F27B348AD9EB342C3FE71F3@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 14 Apr 2020 00:00:34 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:13176 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgDNEAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 00:00:34 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 9C8F94E2131;
+        Tue, 14 Apr 2020 12:00:17 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc:     rdunlap@infradead.org, kernel@vivo.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Wang Wenhu <wenhu.wang@vivo.com>
+Subject: [PATCH v3,0/3] drivers: rpmon: new driver Remote Processor Monitor
+Date:   Mon, 13 Apr 2020 20:59:46 -0700
+Message-Id: <20200414035949.107225-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200412112405.24116-1-wenhu.wang@vivo.com>
+References: <20200412112405.24116-1-wenhu.wang@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSlVOQ05LS0tLSENKT01CTFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NDo6SBw5PTgxQwoeVjMQPhoa
+        TgwaCzdVSlVKTkNNQ0hNQ0lLSktMVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQU9LQkw3Bg++
+X-HM-Tid: 0a7176d848409376kuws9c8f94e2131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA0LTEzIGF0IDIwOjUzIC0wNzAwLCBNYXR0aGV3IEdhcnJldHQgd3JvdGU6
-DQo+IE9uIE1vbiwgQXByIDEzLCAyMDIwIGF0IDg6MzMgUE0gUGFuZHJ1dmFkYSwgU3Jpbml2YXMN
-Cj4gPHNyaW5pdmFzLnBhbmRydXZhZGFAaW50ZWwuY29tPiB3cm90ZToNCj4gPiBBbnl0aGluZyBj
-aGFuZ2VkIGluIHYyIHNlcmllcz8NCj4gDQo+IFNvcnJ5LCBmb3Jnb3QgdG8gZXhwbGFpbiB0aGUg
-ZGlmZnMuIFBhdGNoIDIgaW4gVjIgd2FzIHBhc3NpbmcgdGhlDQo+IHdyb25nIHZhbHVlIHRvIHN5
-c2ZzX2F0dHJfaW5pdCgpLCBidXQgSSBkaWRuJ3Qgbm90aWNlIGR1cmluZyB0ZXN0aW5nDQo+IGJl
-Y2F1c2UgdGhhdCdzIGEgbWFjcm8gdGhhdCBkb2VzIG5vdGhpbmcgdW5sZXNzIGEgc3BlY2lmaWMg
-ZGVidWcgZmxhZw0KPiBpcyBzZXQuIFRoZSBrZXJuZWwgYnVpbGQgYm90IG5vdGljZWQuIE9ubHkg
-ZGlmZmVyZW5jZSBpcyBwYXNzaW5nIHRoZQ0KPiBjb3JyZWN0IGFyZ3VtZW50IHRoZXJlLg0KVGhh
-bmtzLg0KSSB3aWxsIGdpdmUgYSB0cnkgbmV4dCB3ZWVrLg0KDQotU3Jpbml2YXMNCg==
+RPMON is a driver framework. It supports remote processor monitor
+from user level. The basic components are a character device
+with sysfs interfaces for user space communication and different
+kinds of message drivers introduced modularly, which are used to
+communicate with remote processors.
+
+As for user space, one can get notifications of different events
+of remote processors, like their registrations, through standard
+file read operation of the file descriptors related to the exported
+character devices. Actions can also be taken into account via
+standard write operations to the devices. Besides, the sysfs class
+attributes could be accessed conveniently.
+
+Message drivers act as engines to communicate with remote processors.
+Currently RPMON_QMI is available which uses QMI infrastructures
+on Qualcomm SoC Platforms.
+
+RPMON_QMI implements a kind of communication routine for RPMON to
+communicate with remote processors through QMI infrastructure.
+RPMON_QMI itself is designed as a modular framework that would
+introduce different kind of message sets which are binding to
+different services.
+
+RPMON_QMI creates a device of rpmon_device type for each remote
+processor endpoint. All the endpoint devices share an unique set
+of QMI suite.
+
+RPMON_QMI_MSG_V01 implements a RPMON_QMI message set for connection check.
+RPMON_QMI defines its message types modularly. Each rpmon service
+binds to a message set and introduced as a module. This version 1.0
+message set could be used for connection checking of remote processors.
+
+RPMON_QMI messages depend on QCOM_QMI_HELPERS and should be updated
+together with QMI related modules.
+
+Changes since v1:
+ - Addressed review comments from Randy
+Changes since v2:
+ - Added Cc list
+ - Commit log typo fixing
+ - Use the ARRAY_SIZE instead of calculations of multiple sizeof()
+ - Use micros for qmi message tly_type fields
+
+Wang Wenhu (3):
+  driver: rpmon: new driver Remote Processor Monitor
+  driver: rpmon: qmi message version 01
+  driver: rpmon: add rpmon_qmi driver
+
+ drivers/Kconfig                  |   2 +
+ drivers/Makefile                 |   1 +
+ drivers/rpmon/Kconfig            |  54 ++++
+ drivers/rpmon/Makefile           |   3 +
+ drivers/rpmon/rpmon.c            | 506 +++++++++++++++++++++++++++++++
+ drivers/rpmon/rpmon_qmi.c        | 431 ++++++++++++++++++++++++++
+ drivers/rpmon/rpmon_qmi.h        |  76 +++++
+ drivers/rpmon/rpmon_qmi_msg_v1.c | 258 ++++++++++++++++
+ include/linux/rpmon.h            |  68 +++++
+ 9 files changed, 1399 insertions(+)
+ create mode 100644 drivers/rpmon/Kconfig
+ create mode 100644 drivers/rpmon/Makefile
+ create mode 100644 drivers/rpmon/rpmon.c
+ create mode 100644 drivers/rpmon/rpmon_qmi.c
+ create mode 100644 drivers/rpmon/rpmon_qmi.h
+ create mode 100644 drivers/rpmon/rpmon_qmi_msg_v1.c
+ create mode 100644 include/linux/rpmon.h
+
+-- 
+2.17.1
+
