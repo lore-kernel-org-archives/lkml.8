@@ -2,120 +2,183 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A0CC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F0DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB3A206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17689206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:58:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yl/1AbAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505335AbgDNT63 (ORCPT
+        id S2505342AbgDNT6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:58:29 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62397 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505317AbgDNT6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:58:17 -0400
-IronPort-SDR: iWC8AtW5tZSY/zT8y1nVewR3JcuaoC7zTX7ARFhpd5cV/FbBvd2joj14j6KwcIUWoSGVEIVMSU
- 5qeL+b4vZH3A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 12:58:12 -0700
-IronPort-SDR: pdkL40ELjhuGUKWhIbAR8yzLKgEiDVcAac7aIY1qps6kzICYdSwEa96h/zysx5ct0vNL07nkcF
- bqYXZDkhB8ZA==
-X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
-   d="scan'208";a="332280312"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.134.69.31])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 12:58:11 -0700
-Message-ID: <24c4ac84671b97b5092413689b4bf224b73bc51b.camel@linux.intel.com>
-Subject: Re: [PATCH 3/3] x86/mce/therm_throt: allow disabling the thermal
- vector altogether
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        bberg@redhat.com, bp@suse.de
-Date:   Tue, 14 Apr 2020 12:58:04 -0700
-In-Reply-To: <CAHmME9rfXXPepanaxR6EBimSNkJp6KTuNLkYcSceGwZXp_j-Kw@mail.gmail.com>
-References: <20200407063345.4484-1-Jason@zx2c4.com>
-         <20200407063345.4484-3-Jason@zx2c4.com>
-         <0e189a4fe1e69b08afc859ce83623a0e5ea0c08b.camel@linux.intel.com>
-         <CAHmME9pigvAgK3Bje6DkFEcdyWwi7-C7D6QEo4YiH_cbJvxqhQ@mail.gmail.com>
-         <4b75ec34ccff5abdc0b1c04a5ac39455ddd4f49b.camel@linux.intel.com>
-         <CAHmME9rfXXPepanaxR6EBimSNkJp6KTuNLkYcSceGwZXp_j-Kw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Tue, 14 Apr 2020 15:58:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53384 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505237AbgDNT6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 15:58:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EJrX81023001;
+        Tue, 14 Apr 2020 19:57:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=QClYHgr+9BhJGdZR+Dsv1ZrmLXwWc1xNA/wZJVLWvKU=;
+ b=yl/1AbADQUscbGwLHYu8U9vzcZLQ7NEWedTYV2gzcaaDjiLwUKpQztyrdeh220Mvc/xn
+ Y4bvFD0l5bxqeMdrdU/wmMkxzxYjSwgFV8ueQi5ksrtDOqpRDila4ZN0CQ3VAjOfeS+V
+ BXjeqJKbxztVSsFq/n1yGb5QKCndrqLi+T6x33qYrxBSMqYTAgoQjAk/zmj4kll1w1Tv
+ SRgfAuwO+83FDqPv3V2mYB9OBrOeuomCzaFuilNtu5hWD4NOVtEOTsb9BQogOJWZcJJ6
+ NbAKj7HaAT9YX6nvOAgJuSRQcAg5cZx3cToEwvGn1PmNdn8ekPV/tP0/O1A6zNVjEwqS QA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30b6hpq0qy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 19:57:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EJvlKT014315;
+        Tue, 14 Apr 2020 19:57:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30bqcjnyy8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 19:57:58 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03EJvu3Q026932;
+        Tue, 14 Apr 2020 19:57:56 GMT
+Received: from localhost (/10.159.239.16)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 12:57:55 -0700
+Date:   Tue, 14 Apr 2020 12:57:54 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V7 9/9] Documentation/dax: Update Usage section
+Message-ID: <20200414195754.GH6742@magnolia>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
+ <20200413054046.1560106-10-ira.weiny@intel.com>
+ <CAPcyv4g1gGWUuzVyOgOtkRTxzoSKOjVpAOmW-UDtmud9a3CUUA@mail.gmail.com>
+ <20200414161509.GF6742@magnolia>
+ <CAPcyv4hr+NKbpAU4UhKcmHfvDq1+GTM+y+K28XGbkDYBP=Kaag@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hr+NKbpAU4UhKcmHfvDq1+GTM+y+K28XGbkDYBP=Kaag@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 phishscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 13:41 -0600, Jason A. Donenfeld wrote:
-> On Tue, Apr 14, 2020 at 8:45 AM Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> > On Mon, 2020-04-13 at 22:21 -0600, Jason A. Donenfeld wrote:
-> > > On Mon, Apr 13, 2020 at 9:38 PM Srinivas Pandruvada
-> > > <srinivas.pandruvada@linux.intel.com> wrote:
-> > > > On Tue, 2020-04-07 at 00:33 -0600, Jason A. Donenfeld wrote:
-> > > > > The thermal IRQ handler uses 1.21% CPU on my system when it's
-> > > > > hot
-> > > > > from
-> > > > > compiling things. Indeed looking at /proc/interrupts reveals
-> > > > > quite a
-> > > > > lot
-> > > > I am curious why you are hitting threshold frequently?
-> > > > What is rdmsr 0x1a2
-> > > 
-> > > 5640000
-> > You are getting too many interrupts at 95C. You should look at your
-> > cooling system.
-> > 
-> > > > > of events coming in. Beyond logging them, the existing
-> > > > > drivers on
-> > > > > the
-> > > > > system don't appear to do very much that I'm interested in.
-> > > > > So,
-> > > > > add a
-> > > > > way to disable this entirely so that I can regain precious
-> > > > > CPU
-> > > > > cycles.
-> > > > It is showing amount of time system is running in a constrained
-> > > > environment. Lots of real time and HPC folks really care about
-> > > > this.
-> > > 
-> > > Which is why this patch adds an option, not a full removal or
-> > > something. Real time and HPC people can keep their expensive
-> > > interrupt. Other people with different varieties of system
-> > > disable
-> > > it.
-> > Generally compile time flag is not desirable. If it is what
-> > required
-> > then we should have boot time flag something in lines of existing
-> > "int_pln_enable" option.
+On Tue, Apr 14, 2020 at 12:04:57PM -0700, Dan Williams wrote:
+> On Tue, Apr 14, 2020 at 9:15 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> >
+> > On Mon, Apr 13, 2020 at 10:21:26PM -0700, Dan Williams wrote:
+> > > On Sun, Apr 12, 2020 at 10:41 PM <ira.weiny@intel.com> wrote:
+> > > >
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > >
+> > > > Update the Usage section to reflect the new individual dax selection
+> > > > functionality.
+> > > >
+> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > >
+> > > > ---
+> > > > Changes from V6:
+> > > >         Update to allow setting FS_XFLAG_DAX any time.
+> > > >         Update with list of behaviors from Darrick
+> > > >         https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
+> > > >
+> > > > Changes from V5:
+> > > >         Update to reflect the agreed upon semantics
+> > > >         https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> > > > ---
+> > > >  Documentation/filesystems/dax.txt | 166 +++++++++++++++++++++++++++++-
+> > > >  1 file changed, 163 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+> > > > index 679729442fd2..af14c1b330a9 100644
+> > > > --- a/Documentation/filesystems/dax.txt
+> > > > +++ b/Documentation/filesystems/dax.txt
+> > > > @@ -17,11 +17,171 @@ For file mappings, the storage device is mapped directly into userspace.
+> > > >  Usage
+> > > >  -----
+> > > >
+> > > > -If you have a block device which supports DAX, you can make a filesystem
+> > > > +If you have a block device which supports DAX, you can make a file system
+> > > >  on it as usual.  The DAX code currently only supports files with a block
+> > > >  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
+> > > > -size when creating the filesystem.  When mounting it, use the "-o dax"
+> > > > -option on the command line or add 'dax' to the options in /etc/fstab.
+> > > > +size when creating the file system.
+> > > > +
+> > > > +Currently 2 filesystems support DAX, ext4 and xfs.  Enabling DAX on them is
+> > > > +different at this time.
+> > > > +
+> > > > +Enabling DAX on ext4
+> > > > +--------------------
+> > > > +
+> > > > +When mounting the filesystem, use the "-o dax" option on the command line or
+> > > > +add 'dax' to the options in /etc/fstab.
+> > > > +
+> > > > +
+> > > > +Enabling DAX on xfs
+> > > > +-------------------
+> > > > +
+> > > > +Summary
+> > > > +-------
+> > > > +
+> > > > + 1. There exists an in-kernel access mode flag S_DAX that is set when
+> > > > +    file accesses go directly to persistent memory, bypassing the page
+> > > > +    cache.
+> > >
+> > > I had reserved some quibbling with this wording, but now that this is
+> > > being proposed as documentation I'll let my quibbling fly. "dax" may
+> > > imply, but does not require persistent memory nor does it necessarily
+> > > "bypass page cache". For example on configurations that support dax,
+> > > but turn off MAP_SYNC (like virtio-pmem), a software flush is
+> > > required. Instead, if we're going to define "dax" here I'd prefer it
+> > > be a #include of the man page definition that is careful (IIRC) to
+> > > only talk about semantics and not backend implementation details. In
+> > > other words, dax is to page-cache as direct-io is to page cache,
+> > > effectively not there, but dig a bit deeper and you may find it.
+> >
+> > Uh, which manpage?  Are you talking about the MAP_SYNC documentation?
 > 
-> Generally it is desirable, and extremely common too. This thermal
-> code
-> -- which mostly functions to print some messages into kmsg -- is very
-> verbose. This is not something I want to compile into smaller
-> systems.
-> This is the reason why kconfig has options in the first place. I'm
-> not
-> sure yet-another boottime flag makes sense for this.
+> No, I was referring to the proposed wording for STATX_ATTR_DAX.
+> There's no reason for this description to say anything divergent from
+> that description.
 
-Can you send log which is still showing verbose prints with the latest
-kernel? I can see interrupts will still fire.
+Ahh, ok.  Something like this, then:
 
-If it is, then temperature trend is still above 95C and cooling systems
-is not in control. In another window, print in loop (with sleep 1)
-/sys/class/thermal/thermal_zone*/temp
-for the zone for which "type == x86_pkg_temp"
+ 1. There exists an in-kernel access mode flag S_DAX.  When set, the
+    file is in the DAX (cpu direct access) state.  DAX state attempts to
+    minimize software cache effects for both I/O and memory mappings of
+    this file.  The S_DAX state is exposed to userspace via the
+    STATX_ATTR_DAX statx flag.
 
+    See the STATX_ATTR_DAX in the statx(2) manpage for more information.
 
-
-
+--D
