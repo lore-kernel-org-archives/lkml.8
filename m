@@ -2,110 +2,112 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A98AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD76C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 348FA206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BA52074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="a40M9wPT"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="hRvZ3q3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633960AbgDNVf1 (ORCPT
+        id S2633969AbgDNVff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:35:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        Tue, 14 Apr 2020 17:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731763AbgDNVfU (ORCPT
+        by vger.kernel.org with ESMTP id S1731763AbgDNVfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:35:20 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61889C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:35:19 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id b13so1312389oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:35:19 -0700 (PDT)
+        Tue, 14 Apr 2020 17:35:30 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C33C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:35:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q22so1494045ljg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JnHk7VpBnwNwlRi2040XE6uitJWwqet8iTZkvolguqg=;
-        b=a40M9wPTOSLU/0cGOlCpSJUUPUFrgOrvTKgRLRSYfYuZOzrVhoSZry+eneW9qww53t
-         SJYvk3ffq/pNk5fcbHTaFpS7TJJ91ShgYNe3DoajUkQmvbG9EJ9oNB6WGbuwhKNxwbjO
-         0uTt2TfuG++4SEP63a8g+exO08GnaRLoDo8EI=
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jj2SfzpXG2vA6JlDKL4eiWHkk7cpfBu8IVq5OsaqiRc=;
+        b=hRvZ3q3jq55HSrnCkkzeAGXrTsL41FHYn1NHzaoFXqmZ2lbV/tDRtYA+szFTAYL++r
+         +x40YLtlUaHAd0iY4V7aUVJBSpUjdhHbK+Ld9VHczwxKML3hUcGWw0ke84L2CkBFo000
+         gjhpcvbO/YAYp6A++dcyJNSPMVxBKIwqXTmDUVQgVKJ2CaIXgOWoboB525DBWT77p6l4
+         NkaQk9XmEvimNONPKimGJtViDpiChtH18vH/T084/VMRr3ARuNqGl8ay1zi8SPoFTqBQ
+         I0g5HXhNV0/ysU2bhAtPYjL/p/hTk01RxBXAeBWVWh7whYa4ydVyzwlInaoAz4kMLG9k
+         YJDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JnHk7VpBnwNwlRi2040XE6uitJWwqet8iTZkvolguqg=;
-        b=K72mbdPp4YNsY3TTMsfL9RJlvovzQE6FqcvkF7EafYYh102143OZfIqJkd6PMXH/2n
-         bdvyAoQIzTEfFhaoFfSfPv1iNnjRH6H32MfzqAnUlm4/mCrFuvN66jvyyMyIzusKbhNY
-         pUzRYrAy79f9NK8cA+ht0PMwXhuxwKhbevCTC8JTrkhv73NRRPwzfLHOc1A+I5VQfY4o
-         drZqz+8Qc/GDnn0lMKmnv98pZFs4+Wge9deHYL3HHT8thiVGwh0lFzZbTXjPAU3mZ1m3
-         ZHLaZnMnsC7/+W4to0Buphg7obpFNPksD2HsJRSey9zwF/ddtxPBx8lqLAgIkvPfS08R
-         86oA==
-X-Gm-Message-State: AGi0PuZSLdRqaFIkFu4flojgzV1I7s1BhZ/4BEE5Y+S7GN35NtAEFfV4
-        JKuhk5ZIi0bXO24Gq7AyUSAQ4XTDbGjmGGxVqlGDoQ==
-X-Google-Smtp-Source: APiQypI6qQXAlBRHe5B9IMx4CI1nKnHqx8bIn0YBS5VQ3pwSBEPndm25wfn72CSzgVVXy729HPVi7V+ESKzncERVfQw=
-X-Received: by 2002:a4a:dbc7:: with SMTP id t7mr19942420oou.57.1586900118509;
- Tue, 14 Apr 2020 14:35:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jj2SfzpXG2vA6JlDKL4eiWHkk7cpfBu8IVq5OsaqiRc=;
+        b=rtilguCrjV+x4DgQo6JBh2ABxjsbFuxg0fboB8YLJ6D0aQ4YbHflYe9mwzoCVMQW/I
+         THiygfLN3p0GqWo4Zkdbg7ffIMCvdbv2kCGmtMBKy5nEVEjO1uNQXd+SjHLnxOqshqZs
+         n8Dpzr36HzjNRhTumDPMqMK1TCFvvrk0RxFmOm9mcc0+jaL38ZKOOF38g9hx2Nd/ZLBt
+         czaek7ZqVdGFANYYpMwaxMpNgR/UIrKlGcaTHbr97QgB+DDiWak8CuILA7asRBprvmf1
+         rq7qv/9gs+rqAXF0nIHbcaepjxDfzEjPoIH2asspn6a77s0vC2pvIgJa62RDdCuwOEuI
+         33Cw==
+X-Gm-Message-State: AGi0PuajhKon78Wr7GqEW7wRu/xcJsmmkwqudwQcj2NRhsYvusejYem4
+        Y27LyOyJK8I4yQGNLt1LFJ/wcw==
+X-Google-Smtp-Source: APiQypLVgR917IPyg1HTf6YZfxptuXp5hCiH3thAs8A9VHxzojJCJhEzYrQLLbyXF5YtOE7TyA1xuQ==
+X-Received: by 2002:a2e:a310:: with SMTP id l16mr1283122lje.255.1586900128696;
+        Tue, 14 Apr 2020 14:35:28 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id x17sm9863062ljc.33.2020.04.14.14.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 14:35:27 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id B619D1029A3; Wed, 15 Apr 2020 00:35:26 +0300 (+03)
+Date:   Wed, 15 Apr 2020 00:35:26 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3, RESEND 5/8] khugepaged: Allow to collapse a page
+ shared across fork
+Message-ID: <20200414213526.ecn3zcgnqxoveddq@box>
+References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
+ <20200413125220.663-6-kirill.shutemov@linux.intel.com>
+ <0efcc512-6f12-1ff0-9885-871172fac766@nvidia.com>
 MIME-Version: 1.0
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
- <20200414113639.GS20730@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200414113639.GS20730@hirez.programming.kicks-ass.net>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Tue, 14 Apr 2020 17:35:07 -0400
-Message-ID: <CANaguZDwK6bXvJabt5gS=kLMVsGNf97u50+1-v_t8bJxCrJ6sQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 03/13] sched: Core-wide rq->lock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0efcc512-6f12-1ff0-9885-871172fac766@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Aside from the fact that it's probably much saner to write this as:
->
->         rq->core_enabled = static_key_enabled(&__sched_core_enabled);
->
-> I'm fairly sure I didn't write this part. And while I do somewhat see
-> the point of disabling core scheduling for a core that has only a single
-> thread on, I wonder why we care.
->
-I think this change was to fix some crashes which happened due to
-uninitialized rq->core if a sibling was offline during boot and is
-onlined after coresched was enabled.
+On Mon, Apr 13, 2020 at 01:48:22PM -0700, John Hubbard wrote:
 
-https://lwn.net/ml/linux-kernel/20190424111913.1386-1-vpillai@digitalocean.com/
+[Thanks for all your suggestions and corrections]
 
-I tried to fix it by initializing coresched members during a cpu online
-and tearing it down on a cpu offline. This was back in v3 and do not
-remember the exact details. I shall revisit this and see if there is a
-better way to fix the race condition above.
+> > +	if (IS_ENABLED(CONFIG_DEBUG_VM) && expected_refcount > refcount) {
+> > +		pr_err("expected_refcount: %d, refcount: %d\n",
+> > +				expected_refcount, refcount);
+> > +		dump_page(page, "Unexpected refcount");
+> 
+> 
+> I see two issues with the pr_err() and the dump_page() call:
+> 
+> 1. You probably want to rate limit this, otherwise you'll have a big
+> problem if lots of pages are pinned!
 
-Thanks,
-Vineeth
+Nope. Only if kernel is buggy. See below.
+
+> 2. Actually, I don't think you'd want to print anything at all here, even with
+> rate limiting, because doing so presumes that "unexpected" means "wrong". And I
+> think this patch doesn't expect to have GUP pins (or pin_user_pages() pins, ha),
+> but that doesn't mean that they're wrong to have.
+
+See condition. We only do it if refcount is *below* expected refcount. It
+should never happen. Pinned page would have refcount above expected.
+
+-- 
+ Kirill A. Shutemov
