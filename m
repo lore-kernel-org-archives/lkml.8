@@ -2,128 +2,111 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58CC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63DAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA89D2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836E92076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QX3DN5JY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZdrGsV0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633122AbgDNU2x (ORCPT
+        id S2633127AbgDNUaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:28:53 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30544 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633117AbgDNU2D (ORCPT
+        Tue, 14 Apr 2020 16:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729298AbgDNUaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:28:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586896081;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=gFhKg1i0fnRjhPnvNhhvH31RVPmlylOwcXirBGzACwY=;
-        b=QX3DN5JYUf9GWzqn0d31av65ZTIqf/RONt2+tehFWyY3RVdbM/DHEw35DgP+pxvtExhKVc
-        tmbr657l6HSEgZwA8z239lg4EsXAl/aEzMItZflZghjJ2honDtyIh1coOkV3ATduEO1mbn
-        KAsQI0nHGopGsVE68Gv+r8PZgtq0m3A=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-xHizUbkgN0Onx25ibWtCJQ-1; Tue, 14 Apr 2020 16:26:18 -0400
-X-MC-Unique: xHizUbkgN0Onx25ibWtCJQ-1
-Received: by mail-qv1-f72.google.com with SMTP id z16so974157qvo.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:26:18 -0700 (PDT)
+        Tue, 14 Apr 2020 16:30:14 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F299C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:30:12 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d24so371364pll.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=EU1CMnDF0oiIvYhvVzGp363PBNEY9tYmy0a2rAKNwoI=;
+        b=ZdrGsV0cP/ZdooyYQY2bxpt1/Pmxw5+CBoSmTkVcWnQHK/RoDdjRHkuHwta0LRGBq8
+         UWlw/GRg98scGb1JnZmLeeMy3Lp/hac+38y+zaEeIkkxRVrNR8R59LAcM4i0HFAELmmJ
+         DM71JzzvNFh2E4fH+4tWL2DTL//zVToPVnNJQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=gFhKg1i0fnRjhPnvNhhvH31RVPmlylOwcXirBGzACwY=;
-        b=X60Fwmft6oDkwW7VTRSdupWN7g4Qsuuf3W3epfUxbgNMQDqlkgZE1epPr3y/XQwbcX
-         smEysJfsYgCm++nHP6ljJwLcXvS0kGTmsvi4G9FGQ5UHu+fK2DLLhPCy90sXV2FgEgTc
-         76rVxWfAYa0J0WyUkD/vbHQD/NE//MSCII+pLH9F/Iu4eeZcWHLRrw90i+z4FTKDIK/P
-         4kO/czj9yGznY6DjqNGL7e4l4lubN4t0ggfwc5olmwtLYRCoIRNzlNwY1OmCbOSGlYip
-         0QCjE6V6w7OTZdKysjTgZbua214q/b8DmzZFUAmzJP5w9P6hiysUT55hV+ZYGuTpJ65A
-         OA+A==
-X-Gm-Message-State: AGi0Puap7fATEhzWWijPW2rknHIHwYipgKEzY80LjIlJc1ZXw+MM/j+7
-        NtWYD5Bye9pE0DNMK5Iznbwb/8ZN42lG/5QDHYv6HUOlacWJGyS/iMmErrnZt1pWnk5O3yBS/cb
-        1I1n0vKcsP81CAhizCzEybmn4
-X-Received: by 2002:ad4:55eb:: with SMTP id bu11mr1771408qvb.192.1586895977467;
-        Tue, 14 Apr 2020 13:26:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLL/739Bunp9PWRhInCCopdTucT0TPb7bitw7FUwX4bvc+D2WRR+F0MR9Hi3wsAxrEA6InUdg==
-X-Received: by 2002:ad4:55eb:: with SMTP id bu11mr1771387qvb.192.1586895977300;
-        Tue, 14 Apr 2020 13:26:17 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id g187sm10909209qkf.115.2020.04.14.13.26.16
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=EU1CMnDF0oiIvYhvVzGp363PBNEY9tYmy0a2rAKNwoI=;
+        b=ERF/bbIAJVm+hp9Ozg9P65sSxS+POut1VzeyUfqeK9+y4IA58pYtqXxubUVsBeZInY
+         3M8exPvX+yR5EQvZHMwauaw4AdjIXGtqe6rQ7ZvUEinl1saRYOGqWJI1EFFrJZJ6qaCI
+         QkRnsRmLSi+sXKztdKXfImkUQlNQ9xmZfvELPvVEmsBbUf9SCYj73V7Q8uQ9h0oR0zeB
+         XSz07cjYQMNNMf78sDGlPmU8r6WErjCrEW7w414JzKqrB3AQWxsfE+UifQOsXziqS3Z0
+         XJjItYCdoSTGA53j9J41l2f3qiGf/AfNgdLB2ttu5XWI3d4qC9EZ1bQMDH3P9TFj+dOe
+         XPsw==
+X-Gm-Message-State: AGi0PuZYqLQqT1c/GVBquoTqa1UGSoT3sqZzV1ad/Xm3VAWZfI1QHyh/
+        peDQw4Wc7FhUBgqrXJNiWZoarr0Eqyw=
+X-Google-Smtp-Source: APiQypLuFXMQzrk14UAbS5YwhZQZ9DQ73n74mA98ygWJ2GhKXStkN8CGmjRRV+N7xjH3ED4F0PjlGw==
+X-Received: by 2002:a17:90a:d153:: with SMTP id t19mr1924549pjw.188.1586896211797;
+        Tue, 14 Apr 2020 13:30:11 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u24sm8732425pgo.65.2020.04.14.13.30.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:26:16 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 13:26:15 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhang.jia@linux.alibaba.com" <zhang.jia@linux.alibaba.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: Re: [PATCH] tpm: fix wrong return value in tpm_pcr_extend
-Message-ID: <20200414202615.stnurisucqxblenj@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhang.jia@linux.alibaba.com" <zhang.jia@linux.alibaba.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-References: <20200414114226.96691-1-tianjia.zhang@linux.alibaba.com>
- <76d46ffbad294a6385779c29c4e5cafd@huawei.com>
- <20200414193542.GB13000@linux.intel.com>
+        Tue, 14 Apr 2020 13:30:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200414193542.GB13000@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414131010.v2.2.I8550512081c89ec7a545018a7d2d9418a27c1a7a@changeid>
+References: <20200414131010.v2.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid> <20200414131010.v2.2.I8550512081c89ec7a545018a7d2d9418a27c1a7a@changeid>
+Subject: Re: [PATCH v2 2/2] soc: qcom: rpmh-rsc: Timeout after 1 second in write_tcs_reg_sync()
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mkshah@codeaurora.org, joe@perches.com, mka@chromium.org,
+        evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Date:   Tue, 14 Apr 2020 13:30:10 -0700
+Message-ID: <158689621032.105027.15399009553185990099@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Apr 14 20, Jarkko Sakkinen wrote:
->On Tue, Apr 14, 2020 at 11:55:43AM +0000, Roberto Sassu wrote:
->> > -----Original Message-----
->> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
->> > owner@vger.kernel.org] On Behalf Of Tianjia Zhang
->> > Sent: Tuesday, April 14, 2020 1:42 PM
->> > To: peterhuewe@gmx.de; jarkko.sakkinen@linux.intel.com; jgg@ziepe.ca;
->> > arnd@arndb.de; gregkh@linuxfoundation.org; zhang.jia@linux.alibaba.com
->> > Cc: linux-integrity@vger.kernel.org; linux-kernel@vger.kernel.org;
->> > tianjia.zhang@linux.alibaba.com
->> > Subject: [PATCH] tpm: fix wrong return value in tpm_pcr_extend
->> >
->> > For the algorithm that does not match the bank, a positive
->> > value EINVAL is returned here. I think this is a typo error.
->> > It is necessary to return an error value.
->>
->> Yes, thanks.
->>
->> Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
->
->Happen to have the commit ID at hand for fixes?
->
->Thanks.
->
->/Jarkko
->
+Quoting Douglas Anderson (2020-04-14 13:10:16)
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index f988e9cc2c30..02fc114ffb4f 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -174,12 +175,13 @@ static void write_tcs_reg(const struct rsc_drv *drv=
+, int reg, int tcs_id,
+>  static void write_tcs_reg_sync(const struct rsc_drv *drv, int reg, int t=
+cs_id,
+>                                u32 data)
+>  {
+> +       u32 new_data;
+> +
+>         writel(data, tcs_reg_addr(drv, reg, tcs_id));
+> -       for (;;) {
+> -               if (data =3D=3D readl(tcs_reg_addr(drv, reg, tcs_id)))
+> -                       break;
+> -               udelay(1);
+> -       }
+> +       if (readl_poll_timeout_atomic(tcs_reg_addr(drv, reg, tcs_id), new=
+_data,
+> +                                     new_data =3D=3D data, 1, USEC_PER_S=
+EC))
+> +               pr_err("%s: error writing %#x to %d:%d\n", drv->name,
 
-9f75c8224631 ("KEYS: trusted: correctly initialize digests and fix locking issue")
+Shouldn't the register be hex? That seems to be how the registers are
+represented. But I guess tcs_id is decimal and can't be translated to be
+meaningful enough to indicate which TCS it is like the sleep or wake
+one.
 
+> +                      data, tcs_id, reg);
+>  }
