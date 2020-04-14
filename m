@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70D2C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D69DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9380820737
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A93820737
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586837982;
-	bh=hY7cXaqKZkHpkAUvflNVAu1tv2xIynJSqL2ycOlCRbI=;
+	s=default; t=1586837988;
+	bh=WK0Djy2DbNnX7XgN1voKF0kaelb+5aAIBEsPUY369d0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmjlJR3m5b+ZYBajtkcC6GrxCHmvyws65npd7hIa+FloGDPX4p7aKeukisIJNpKhj
-	 RonjMgl2msDmLtpJcFiUaW6gr/REIQAKwJDeFMQVPDzwco49EgI+Fbyv2kTBEL8ElF
-	 rgL5bmjvIBdCmdncraKR69Ep7EfihAc6J+4WTKWw=
+	b=Ubbrs8Mavxvjet9LmbQWy2JqjKLiVrBwiuG7RS5cf3juMF8uD2hkrxrBJOBl+J0t5
+	 lSWjPHDs1pvrQ6PADf+X/pXMz2ygIiNO70OIvu3BaFk3WiWGMtqzYL6M3CV4b4c6HJ
+	 ouRkem5hnD7/CIMA8qlZDbx7UH/k2ITj1mkBvimM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405293AbgDNETl (ORCPT
+        id S2405301AbgDNETq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 00:19:41 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39451 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405229AbgDNETI (ORCPT
+        Tue, 14 Apr 2020 00:19:46 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53327 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405226AbgDNETH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 00:19:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k18so4199635pll.6;
-        Mon, 13 Apr 2020 21:19:08 -0700 (PDT)
+        Tue, 14 Apr 2020 00:19:07 -0400
+Received: by mail-pj1-f67.google.com with SMTP id cl8so3568836pjb.3;
+        Mon, 13 Apr 2020 21:19:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NmUdDstD3GuaW3cnQoQAeoBXgYPgT0T/dDdxzI7Fmbk=;
-        b=LzmablTY1kDvE+nUb5xx4QvGVP+7JaFXK0ZSvAC+5eFkTO5hr4sEq+c0tkSMlJOQBM
-         hFDAmE9Msl0jotMUmumN75q12nfDeOc35/jLUOC/G/s0wEtbCah4NQrCSjbizydoWbNE
-         ltW92IwA+LYdnWMuOIdLnjg3HtTZmaoIh9GP8OxTtMXtuuNwPTDOkIYjP3Xb0S636Gh5
-         +EAugLWzeEg4nNyxVNnnbyG357fBOGU5o5ESxdkheCL2TdRH2AUFBXS1rTOJEyO1Zohq
-         m5/AWdkqA+NM4XF02ZB2t6K+OvXpBGfwfgBhiB74rAXD4oNHvkTs0UTGBSSRHfTJtXOk
-         SH/g==
-X-Gm-Message-State: AGi0PuZ/PE8pM1PAf9fPvfRMcWUc3Vwq+WeG+R+510D/KPrEUHIulUKa
-        7zbjIKWAM0n2yjVPWEFizEI=
-X-Google-Smtp-Source: APiQypIsVkYIkhxCV56xtOZaGPp9eSaAdDaWC4rfpGfLdLU2ldMd52BYaibw40sfHKHEpTAKk4IcLg==
-X-Received: by 2002:a17:90a:82:: with SMTP id a2mr27017334pja.47.1586837947821;
-        Mon, 13 Apr 2020 21:19:07 -0700 (PDT)
+        bh=GOqFz/6SfoYIxdIaKsZbQKuFZCTl+d+PmNjeRcAeYWw=;
+        b=FYGcpJmOjbezTz22wbul39ZMILTTgMIifA26EiIiCom8QQ29f9m6alYVnFvqjfJAoY
+         INLniVquV5SH0p1m9/a1AH7UnUPnswOH1KkV8g5je0f0XhWr7hauReCWdqc60hH3LKrO
+         wVk5y7yZR9waZ/WBRI4NvNAjkFF8fvARHx6dBY4wPhgMauTDVohc/HPpqaCrvmpEgu8l
+         LUSC1NgFTytqUPhdKht89a1GH4ZotbalWcI6By/7MoLoCbYKgslQga0S87tLRdWny3bT
+         LmSRN9XOkgNwkuM5zRqPOeJ/gskm4hcIxrTBf35vfPzb7kGouwsfR0t5FlP3IMcZsIXR
+         ZcmA==
+X-Gm-Message-State: AGi0PubkN3PSd8iKUdhJ1v70Y1vj2sTiruOk9ZEXA/5l3Mo/GsjyWF8w
+        DNzPo9d4AdR6zDxBAnnisgk=
+X-Google-Smtp-Source: APiQypIp2fwAykCaBVO3uyfeOBBSTJASxml0yVcrV1SDyvghPVLTQxgkubQP+6PzT2wAG+Ag3J1d9w==
+X-Received: by 2002:a17:902:c814:: with SMTP id u20mr1357265plx.85.1586837946598;
+        Mon, 13 Apr 2020 21:19:06 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j1sm3878077pgk.23.2020.04.13.21.19.04
+        by smtp.gmail.com with ESMTPSA id x7sm7854126pjg.26.2020.04.13.21.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 13 Apr 2020 21:19:04 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0A76D418C0; Tue, 14 Apr 2020 04:19:04 +0000 (UTC)
+        id D6D8B40605; Tue, 14 Apr 2020 04:19:03 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -63,9 +63,9 @@ Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
         Omar Sandoval <osandov@fb.com>,
         Hannes Reinecke <hare@suse.com>,
         Michal Hocko <mhocko@kernel.org>
-Subject: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Date:   Tue, 14 Apr 2020 04:19:00 +0000
-Message-Id: <20200414041902.16769-4-mcgrof@kernel.org>
+Subject: [PATCH 1/5] block: move main block debugfs initialization to its own file
+Date:   Tue, 14 Apr 2020 04:18:58 +0000
+Message-Id: <20200414041902.16769-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200414041902.16769-1-mcgrof@kernel.org>
 References: <20200414041902.16769-1-mcgrof@kernel.org>
@@ -76,12 +76,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ensure that the request_queue is refcounted during its full
-ioctl cycle. This avoids possible races against removal, given
-blk_get_queue() also checks to ensure the queue is not dying.
+make_request-based drivers and and request-based drivers share some
+some debugfs code. By moving this into its own file it makes it easier
+to expand and audit this shared code.
 
-This small race is possible if you defer removal of the request_queue
-and userspace fires off an ioctl for the device in the meantime.
+This patch contains no functional changes.
 
 Cc: Bart Van Assche <bvanassche@acm.org>
 Cc: Omar Sandoval <osandov@fb.com>
@@ -90,36 +89,92 @@ Cc: Nicolai Stange <nstange@suse.de>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Michal Hocko <mhocko@kernel.org>
 Cc: yu kuai <yukuai3@huawei.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- kernel/trace/blktrace.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ block/Makefile      |  1 +
+ block/blk-core.c    |  9 +--------
+ block/blk-debugfs.c | 15 +++++++++++++++
+ block/blk.h         |  7 +++++++
+ 4 files changed, 24 insertions(+), 8 deletions(-)
+ create mode 100644 block/blk-debugfs.c
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 15086227592f..17e144d15779 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -701,6 +701,9 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
- 	if (!q)
- 		return -ENXIO;
+diff --git a/block/Makefile b/block/Makefile
+index 206b96e9387f..1d3ab20505d8 100644
+--- a/block/Makefile
++++ b/block/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_BLOCK) := bio.o elevator.o blk-core.o blk-sysfs.o \
+ 			blk-mq-sysfs.o blk-mq-cpumap.o blk-mq-sched.o ioctl.o \
+ 			genhd.o ioprio.o badblocks.o partitions/ blk-rq-qos.o
  
-+	if (!blk_get_queue(q))
-+		return -ENXIO;
-+
- 	mutex_lock(&q->blk_trace_mutex);
++obj-$(CONFIG_DEBUG_FS)		+= blk-debugfs.o
+ obj-$(CONFIG_BOUNCE)		+= bounce.o
+ obj-$(CONFIG_BLK_SCSI_REQUEST)	+= scsi_ioctl.o
+ obj-$(CONFIG_BLK_DEV_BSG)	+= bsg.o
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 7e4a1da0715e..5aaae7a1b338 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -48,10 +48,6 @@
+ #include "blk-pm.h"
+ #include "blk-rq-qos.h"
  
- 	switch (cmd) {
-@@ -729,6 +732,9 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
- 	}
+-#ifdef CONFIG_DEBUG_FS
+-struct dentry *blk_debugfs_root;
+-#endif
+-
+ EXPORT_TRACEPOINT_SYMBOL_GPL(block_bio_remap);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(block_rq_remap);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(block_bio_complete);
+@@ -1796,10 +1792,7 @@ int __init blk_dev_init(void)
  
- 	mutex_unlock(&q->blk_trace_mutex);
-+
-+	blk_put_queue(q);
-+
- 	return ret;
+ 	blk_requestq_cachep = kmem_cache_create("request_queue",
+ 			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
+-
+-#ifdef CONFIG_DEBUG_FS
+-	blk_debugfs_root = debugfs_create_dir("block", NULL);
+-#endif
++	blk_debugfs_register();
+ 
+ 	return 0;
  }
+diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
+new file mode 100644
+index 000000000000..19091e1effc0
+--- /dev/null
++++ b/block/blk-debugfs.c
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Shared request-based / make_request-based functionality
++ */
++#include <linux/kernel.h>
++#include <linux/blkdev.h>
++#include <linux/debugfs.h>
++
++struct dentry *blk_debugfs_root;
++
++void blk_debugfs_register(void)
++{
++	blk_debugfs_root = debugfs_create_dir("block", NULL);
++}
+diff --git a/block/blk.h b/block/blk.h
+index 0a94ec68af32..86a66b614f08 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -487,5 +487,12 @@ struct request_queue *__blk_alloc_queue(int node_id);
+ int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 		struct page *page, unsigned int len, unsigned int offset,
+ 		bool *same_page);
++#ifdef CONFIG_DEBUG_FS
++void blk_debugfs_register(void);
++#else
++static inline void blk_debugfs_register(void)
++{
++}
++#endif /* CONFIG_DEBUG_FS */
  
+ #endif /* BLK_INTERNAL_H */
 -- 
 2.25.1
 
