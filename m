@@ -2,93 +2,149 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B948CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20D8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C09A206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586895531;
-	bh=es7UZcs6U7qjwp1MVb2MYyfcItfJMPKc5QpxSzQhGyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hySCdNRay9DCq8XyMlvXvDNPrRWQKFox+qkwgR+aNwoHczQx8a+lCOVZeOr0VgCvx
-	 i9QPlFUlHK+HJy4RwTs/dc3RZDU2MhtFsNYtX40nSK/IOGeLhxZaU7J1f3vAhC9+bT
-	 VtthIZE1FKKnYvN771W5OcvTF9HQ2QtGB2VgF5rk=
+	by mail.kernel.org (Postfix) with ESMTP id 78360206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vs2SfulZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633005AbgDNUSt (ORCPT
+        id S2633013AbgDNUSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:18:49 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35893 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632995AbgDNUSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:18:42 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u13so15570952wrp.3;
-        Tue, 14 Apr 2020 13:18:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VJK0Vudxo6/y/Xzt9pmWLOReg2AXAw6WAxsb6cK2B/Y=;
-        b=ItJshrp3HoaZSpcfEuqFDRomRVtr+s3oUL1iG52vnhdTofihJpNg2reeyvbIqHE+HY
-         ozsPvx7FTNL+ab4FEHtIkhphJjEVOltgZUk4hQS65FE/hOgA1Zv0akk6Pk9FgmMB3JgS
-         tj9/1UHtNYspUea5DKvyB7D2ZgU2r2KuVmd81el+bGCmL1wxgP6IhA9rSiSjhiEB41hW
-         QMJB1uyGs9qdWDKDOsvwNvdRgRj3Dkjxq3pNEnRiU9T5Ptq3iUepHrYd0ggb2NbN4aFh
-         TTKV/H11EcK26BDg1IrP0Ll+T4tlqB7L5EUkf2mwy+w+TCKO83GfhO9wClwqka/VO57/
-         dk2g==
-X-Gm-Message-State: AGi0PuY+xkFfs+P74PgPpw7Nuz8XFThs2zF6bql05oMjD/qX9TyyYmhn
-        i1GtEcnlWKXkx3c61mR2xqs=
-X-Google-Smtp-Source: APiQypI2wicuVpNhjwF5+CR27bkQ8vTSDr5qPsWXW74pMMzNU0KX7GDOUgj1ALCYmwp6aRY+m7xobQ==
-X-Received: by 2002:adf:fe03:: with SMTP id n3mr24655532wrr.315.1586895520195;
-        Tue, 14 Apr 2020 13:18:40 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id w11sm19415437wmi.32.2020.04.14.13.18.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:18:39 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 21:18:37 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com, stable@vger.kernel.org
-Subject: Re: [PATCH v3] Drivers: hv: vmbus: Fix Suspend-to-Idle for
- Generation-2 VM
-Message-ID: <20200414201837.yvmrz5nl5gxgjmqt@debian>
-References: <1586663435-36243-1-git-send-email-decui@microsoft.com>
+        Tue, 14 Apr 2020 16:18:54 -0400
+Received: from mail-dm6nam11on2058.outbound.protection.outlook.com ([40.107.223.58]:17642
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2632975AbgDNUSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:18:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Irjxsq4C6qm1qt7GoNw4KPs35LVaUwYud6D+8DkoDwEPeNJMR94QL9OhS5HiZLWPMOsa7mZfPN7G09O80B3nlWsFz6iMUiQYrgj5bHtWVbEU4TGiX5SZLptax/JPtCgz6Kj1n1SLMU73Pwe3nmqGXf+qltaMTvgYSwI0xotL/pJwtQEsKZ9L6e16tqxcybKRNdBEdvmmbgvziRlVIeCvpE1Hp85NNt78Zrd7gpXollPxn1gpaDxpNzoA3Vj6iYa80xKeRHC9v+ZnxEWGj9MGPNO4RmpEFLVACT+bE4yC0g7nowHY2VUmXmHhDChVMyCJ3QM68MJ8C+yvhiYOCklFAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6LSJ+GFqYf37nL0QD2n8SQP6nSPYLBlFMkuoebIc7n0=;
+ b=AgX4NmDkdSnw0YRXGmYfK4KzJ5Dr98bJiPgQYF+GZcqagD7Qxw1bsEkQXD/e8C5g4CTbx+ti3kHf/Fc8XzNxx407RDgUspgQbT5Emly5JfdeDOkyFV7O5I8DYjUXxX10+AfoYoWLx8JL/DbpnSKsnp7dzX3AxZMTAziPRceMJsS2gs5SOFbkAhNjnbWy4Fewx1n3+D7yXHJ51F9X5At7Pf36rnIgyFxK0xKbzmuZEZrRzQ+N7NH3aiyTJI5IcaIA/Kp7WCTq0citIe/BLWsAl8OJSH2lQLZ46a9EFn01OvzrUf7K61UPAPfUzyvFe9PVYZYUlyq8zKxKnhw0WW6rUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6LSJ+GFqYf37nL0QD2n8SQP6nSPYLBlFMkuoebIc7n0=;
+ b=vs2SfulZw6HKxypJ7YSm8qN5Gj8mwS24RuNuN2G83JI09XUv8o7IU535AJs23x2mt1d2w4qoa0P35HUBu7Roah022W3gyIni1nIRbqBcfkgyeVUqi0ijk5mPt7ZTuWwenZH/l3YV9Wj4y/mIq/Q4AoHn2m1XZfcUcj5qDulSdB0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+ by DM6PR12MB3369.namprd12.prod.outlook.com (2603:10b6:5:117::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
+ 2020 20:18:40 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 20:18:40 +0000
+Subject: Re: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
+ handler
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-41-joro@8bytes.org>
+ <A7DF63B4-6589-4386-9302-6B7F8BE0D9BA@vmware.com>
+ <09757a84-1d81-74d5-c425-cff241f02ab9@amd.com>
+ <fbc91dfc-7851-c7d8-ccdb-16c014526801@intel.com>
+ <27da7cf5-5ff4-a10c-a506-de77aeff8dd6@amd.com>
+Message-ID: <fab36c45-3cdc-3ec0-a76d-4a2a2fbfdfc8@amd.com>
+Date:   Tue, 14 Apr 2020 15:18:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <27da7cf5-5ff4-a10c-a506-de77aeff8dd6@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR04CA0096.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::37) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586663435-36243-1-git-send-email-decui@microsoft.com>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from office-linux.texastahm.com (67.79.209.213) by SN6PR04CA0096.namprd04.prod.outlook.com (2603:10b6:805:f2::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.18 via Frontend Transport; Tue, 14 Apr 2020 20:18:38 +0000
+X-Originating-IP: [67.79.209.213]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f3fbe02e-aa70-46df-e1c0-08d7e0b105a2
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3369:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB336911CEB9181C878EE6B408ECDA0@DM6PR12MB3369.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0373D94D15
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(396003)(39860400002)(31696002)(8936002)(2616005)(81156014)(31686004)(8676002)(6486002)(478600001)(186003)(86362001)(16526019)(26005)(4744005)(7416002)(6512007)(54906003)(53546011)(956004)(6506007)(66476007)(316002)(5660300002)(2906002)(52116002)(36756003)(4326008)(66946007)(110136005)(66556008);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dJLZ4sUAadPewVYoEvDRLakPJxqb8Cg44TncB67WKhuj1j/UdJUkgacuTWLwvKKacrq5xKWT3jNZKBedqFbAW/97YfqHiG3kGrIdV4uXvJdohbpwGxSrXd8vzdTzsDrVb+jPI8f0as7mL1Mn3/MRIzNm57Ke3KXPV51G9GFcUdii0yMLgivkfjYbGZux5RgrwK7VUITDu6bAc4r+UJf5SJkc1vLQoNbDff5a+lIVViLxfp13OHIJ7eoruu6MGn7y7mYDUgQB2v/R9WVhv2pgscpZrCeGbU40sKIH/7qg7TZ10ZjFhEZOcNhMRBhbMkvitKusaI7bZJHWliIaJnH6/6NJ8e0OcXB8B7+FqyebYWQMX3G9pQqSaBw/aDaFRmRyNxs0bY8MpoBaSpkGVay0dYNUn1/VTrSs+51MRgvRyt+P/am9a2ijD1tljIWxNpQr
+X-MS-Exchange-AntiSpam-MessageData: SVinSn76/xQxl5el555qMLqsPAqxfletWLwb1f5+JTxrmWYn7UIooyUEAl04kduqOKI+bIEWfbap9LAAStg4DNzLf6wYboVUuiavoMN16stLqZUWTWcW+PQH69s/Svx2tLRzOlGOx3snlWp6jfnkVQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3fbe02e-aa70-46df-e1c0-08d7e0b105a2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 20:18:40.6597
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NexKPymXl9HUzj8c12xbH7RcY851eEovXyME3a22AVXyGrg/sRzLBf6t4fzjDz/fmzQS7vnu4YMMlDqWo52q2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3369
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 08:50:35PM -0700, Dexuan Cui wrote:
-> Before the hibernation patchset (e.g. f53335e3289f), in a Generation-2
-> Linux VM on Hyper-V, the user can run "echo freeze > /sys/power/state" to
-> freeze the system, i.e. Suspend-to-Idle. The user can press the keyboard
-> or move the mouse to wake up the VM.
+On 4/14/20 3:16 PM, Tom Lendacky wrote:
 > 
-> With the hibernation patchset, Linux VM on Hyper-V can hibernate to disk,
-> but Suspend-to-Idle is broken: when the synthetic keyboard/mouse are
-> suspended, there is no way to wake up the VM.
 > 
-> Fix the issue by not suspending and resuming the vmbus devices upon
-> Suspend-to-Idle.
+> On 4/14/20 3:12 PM, Dave Hansen wrote:
+>> On 4/14/20 1:04 PM, Tom Lendacky wrote:
+>>>> set_memory_decrypted needs to check the return value. I see it
+>>>> consistently return ENOMEM. I've traced that back to split_large_page
+>>>> in arch/x86/mm/pat/set_memory.c.
+>>>
+>>> At that point the guest won't be able to communicate with the
+>>> hypervisor, too. Maybe we should BUG() here to terminate further
+>>> processing?
+>>
+>> Escalating an -ENOMEM into a crashed kernel seems a bit extreme.
+>> Granted, the guest may be in an unrecoverable state, but the host
+>> doesn't need to be too.
+>>
 > 
-> Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> The host wouldn't be. This only happens in a guest, so it would be just 
+> causing the guest kernel to panic early in the boot.
 
-Applied to hyperv-fixes. Thanks.
+And I should add that it would only impact an SEV-ES guest.
 
-Wei.
+Thanks,
+Tom
+
+> 
+> Thanks,
+> Tom
+> 
