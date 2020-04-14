@@ -2,106 +2,93 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA96C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB78C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30140206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E6B206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QvZ7pCmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405852AbgDNGQ7 (ORCPT
+        id S2405867AbgDNGRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 02:16:59 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:4045 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405829AbgDNGQ5 (ORCPT
+        Tue, 14 Apr 2020 02:17:17 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60967 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405854AbgDNGRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 02:16:57 -0400
-IronPort-SDR: GF+nhx7pQG5Eg2UGkLUudbnUbCQzLoEq+k3j4XEYypW5RCLFBgcA1kgW9dhsR/G1jrHiUQ2pfu
- y4tcVGbk6/oBJWG/HWuxHpiLGKh9Ujh2QzIpFKwO4FTUc9if6Jr1WeBNWUL8yJBUeC7UTcoM4I
- EU3QbUOhpMpT4IGo408k+3dMtD18YNm202DnGiZZMz/bjvXUZXWPNiP6Af9mYJeKv8p8sA8IAg
- RkJvlbQEnfZRQhOTMM1/o3dSLhfBAtguxNZPkYk9V2FZOW2VIEAUIFEJj87g44rsDN4GvnGP68
- L2Y=
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="46834943"
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by labrats.qualcomm.com with ESMTP; 13 Apr 2020 23:14:56 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 13 Apr 2020 23:14:54 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id CE87E3B21; Mon, 13 Apr 2020 23:14:54 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support)
-Subject: [PATCH v2 1/1] scsi: ufs: full reinit upon resume if link was off
-Date:   Mon, 13 Apr 2020 23:14:48 -0700
-Message-Id: <1586844892-22720-1-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 14 Apr 2020 02:17:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586845030;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DOrTl4YvBq5Mc/4tt5fmz7abkbkAWLtGCwVC/yQsB/U=;
+        b=QvZ7pCmq0TCfuHCewRZ1S6GuNsFlu4mdFcjkULnxnhnz+To2zSqZG01T55tdhA/5Y6/Crg
+        zBond/FWYHfhXAseF2iUpbedKMUAAyxp6YvkEetGBeJ4cUwD3hz2UaTTabEpnkzpp1wAxf
+        wM/U3VYcLyjbUuOo+JwV6kCh/Z9riBc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-5IYuHBlQO_yDrdlI2Zhw9g-1; Tue, 14 Apr 2020 02:17:06 -0400
+X-MC-Unique: 5IYuHBlQO_yDrdlI2Zhw9g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CAFD800D5C;
+        Tue, 14 Apr 2020 06:17:05 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.193.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 247D65D9CD;
+        Tue, 14 Apr 2020 06:16:57 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 08:16:54 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        pbonzini@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        krish.sadhukhan@oracle.com
+Subject: Re: [PATCH v5 0/2] selftests: kvm: Introduce the mem_slot_test test
+Message-ID: <20200414061654.qhuo3hsslz32qwgc@kamzik.brq.redhat.com>
+References: <20200409220905.26573-1-wainersm@redhat.com>
+ <20200410204509.GK22482@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410204509.GK22482@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Asutosh Das <asutoshd@codeaurora.org>
+On Fri, Apr 10, 2020 at 01:45:09PM -0700, Sean Christopherson wrote:
+> On Thu, Apr 09, 2020 at 07:09:03PM -0300, Wainer dos Santos Moschetta wrote:
+> > This series introduces a new KVM selftest (mem_slot_test) that goal
+> > is to verify memory slots can be added up to the maximum allowed. An
+> > extra slot is attempted which should occur on error.
+> > 
+> > The patch 01 is needed so that the VM fd can be accessed from the
+> > test code (for the ioctl call attempting to add an extra slot).
+> > 
+> > I ran the test successfully on x86_64, aarch64, and s390x.  This
+> > is why it is enabled to build on those arches.
+> 
+> Any objection to folding these patches into a series I have to clean up
+> set_memory_region_test (which was mentioned in a prior version) and add
+> this as a testcase to set_memory_region_test instead of creating a whole
+> new test?
+> 
+> A large chunk of set_memory_region_test will still be x86_64 only, but
+> having the test reside in common code will hopefully make it easier to
+> extend to other architectures.
+>
 
-During suspend, if the link is put to off, it would require
-a full initialization during resume. This patch resets and
-restores both the host and the card during initialization,
-otherwise, host only reset and restore may fail occasionally.
+Yes, that would be my preference as well. Eventually I decided it could be
+done later, but I still prefer it being done from the beginning.
 
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Acked-by: Stanley Chu <stanley.chu@mediatek.com>
-
-Change since v1:
-- Incorporated Alim's comments.
-
----
- drivers/scsi/ufs/ufshcd.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 64e42ef..90313c8 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -8048,9 +8048,13 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 		else
- 			goto vendor_suspend;
- 	} else if (ufshcd_is_link_off(hba)) {
--		ret = ufshcd_host_reset_and_restore(hba);
- 		/*
--		 * ufshcd_host_reset_and_restore() should have already
-+		 * A full initialization of the host and the device is
-+		 * required since the link was put to off during suspend.
-+		 */
-+		ret = ufshcd_reset_and_restore(hba);
-+		/*
-+		 * ufshcd_reset_and_restore() should have already
- 		 * set the link state as active
- 		 */
- 		if (ret || !ufshcd_is_link_active(hba))
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Thanks,
+drew 
 
