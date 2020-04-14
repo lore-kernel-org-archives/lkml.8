@@ -2,82 +2,92 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4359C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8ED8206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586849746;
-	bh=eDG8jUkXKP6GlO4ycCt674m7P7qKoklsMoL0hVpzxxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ncmzopn4R8cGTKCR7NVh2gkDaP57qeD36KFFsaO1CxVNznPSUR4R05CvKtKFF2/cp
-	 tcrUyjbNDTsZ2yFUXZ06PQDPMwvSLeBt2otw5vK/foAE8tNHzwDzSMsBHD8pDpwtAq
-	 3Z3neT1XejlCsClFEqvdY1bBUxz+9zDslbUQ/A/E=
+	by mail.kernel.org (Postfix) with ESMTP id 7E61B20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406698AbgDNHfn (ORCPT
+        id S2406706AbgDNHgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406666AbgDNHfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:35:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7F8320575;
-        Tue, 14 Apr 2020 07:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586849731;
-        bh=eDG8jUkXKP6GlO4ycCt674m7P7qKoklsMoL0hVpzxxM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wYpObs6ZvcIHIqra9ac5XXuKQw9De9kpn9vnNiIoKTMwYHwj7d75RlybGU0rHYkS2
-         GBkEQDQLojwrekj1wP0m4GkbLsYiskX1vlMuBEkCTCDwxdBbZUrHXOtj56NEeXD8ZS
-         ZBfE8rf3bz6SHKnSbROfmWD1AvCPivayZI/XrU9w=
-Date:   Tue, 14 Apr 2020 09:35:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Tue, 14 Apr 2020 03:36:08 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2048 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406685AbgDNHfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:35:50 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D5C64DEAE293C60B34A0;
+        Tue, 14 Apr 2020 08:35:45 +0100 (IST)
+Received: from [127.0.0.1] (10.47.2.216) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 14 Apr
+ 2020 08:35:44 +0100
+Subject: Re: [PATCH 6/9] scsi: libsas: Add missing annotation for
+ sas_ata_qc_issue()
+To:     Jules Irenge <jbi.octave@gmail.com>, <linux-kernel@vger.kernel.org>
+CC:     <boqun.feng@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Allison Randal <allison@lohutok.net>,
         Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 1/5] block: move main block debugfs initialization to its
- own file
-Message-ID: <20200414073528.GA4111599@kroah.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-2-mcgrof@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+        Jason Yan <yanaijie@huawei.com>
+References: <0/9> <20200411001933.10072-1-jbi.octave@gmail.com>
+ <20200411001933.10072-7-jbi.octave@gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <66630a8b-436e-5210-3654-dc3c4a17a05d@huawei.com>
+Date:   Tue, 14 Apr 2020 08:35:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414041902.16769-2-mcgrof@kernel.org>
+In-Reply-To: <20200411001933.10072-7-jbi.octave@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.2.216]
+X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:18:58AM +0000, Luis Chamberlain wrote:
-> make_request-based drivers and and request-based drivers share some
-> some debugfs code. By moving this into its own file it makes it easier
-> to expand and audit this shared code.
+On 11/04/2020 01:19, Jules Irenge wrote:
+> Sparse reports a warning at sas_ata_qc_issue()
 > 
-> This patch contains no functional changes.
+> warning: context imbalance in sas_ata_qc_issue() - unexpected unlock
+> The root cause is the missing annotation at sas_ata_qc_issue()
 > 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Omar Sandoval <osandov@fb.com>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Nicolai Stange <nstange@suse.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: yu kuai <yukuai3@huawei.com>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> Add the missing __must_hold(ap->lock) annotation
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+that looks ok...
+
+Reviewed-by: John Garry <john.garry@huawei.com>
+
+> ---
+>   drivers/scsi/libsas/sas_ata.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/scsi/libsas/sas_ata.c b/drivers/scsi/libsas/sas_ata.c
+> index c5a828a041e0..5d716d388707 100644
+> --- a/drivers/scsi/libsas/sas_ata.c
+> +++ b/drivers/scsi/libsas/sas_ata.c
+> @@ -160,6 +160,7 @@ static void sas_ata_task_done(struct sas_task *task)
+>   }
+>   
+>   static unsigned int sas_ata_qc_issue(struct ata_queued_cmd *qc)
+> +	__must_hold(ap->lock)
+>   {
+>   	struct sas_task *task;
+>   	struct scatterlist *sg;
+> 
+
