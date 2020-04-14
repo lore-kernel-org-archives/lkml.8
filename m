@@ -2,101 +2,80 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFC3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40CEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A662076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbyVR3i6"
+	by mail.kernel.org (Postfix) with ESMTP id 9D19420578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405129AbgDNOsc (ORCPT
+        id S2405155AbgDNOtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404893AbgDNOsT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:48:19 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7320DC061A0C;
-        Tue, 14 Apr 2020 07:48:19 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h69so3556867pgc.8;
-        Tue, 14 Apr 2020 07:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=L6wwBLpMMetY/zxOEci/JVLuRBV/3LI/LldPvH06RfY=;
-        b=jbyVR3i63K7T908IixpVArje1gguIVF9o17an2Ju6P4xd56heYoFmO/WcdvYUGOw83
-         7DsRgEXQ7GdDOshFt28h6IZryHi6pCoL9TxpwNMwOPQ1WwJTF7JTL9c2RLAhjn11+Qtp
-         81zgUeMjSRjvbeaU+lfmouqsrC6Fr6iqJFDEiznZAV1GOr4656U3Wr5nQootJ2ZQFOWS
-         HzUhnCiHoZIIV8+m2lFOeHdd0TIJ4MPu25GdxxAiCtY8PSM3nTP3iBUlJWWpsDaARXRV
-         7mWxg96+Qw9Kqu5tSPqHXEfSOUh6hwqt5xIdzBQ9ngUs43LWc7bZzpLIK5dfh+q7KRpc
-         C80A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=L6wwBLpMMetY/zxOEci/JVLuRBV/3LI/LldPvH06RfY=;
-        b=igIZC2ygC1bklltKSTFjfvS57G7cwdVoxJHQ8tO904m9P4HtlpRvG9ixt6nAOUmRsU
-         sZ3DqUgWbHU26vnhwcvUUAQtgzvKiHhMILqlSefUP4OmTIQ7FkI+BSP1ScMoOZYZ1Y8k
-         BLoxwxc5tATVeqFPH81Gh8qwVZuUC3v62z0J9jAOcMzqBG9zoS41vlrWB4jT2SEU4eSr
-         YDxKkVYhfInGk9Ss4WxBHsRTOADWok7GAKrNNmBqgEvmdIPhHe+sRTbyk48eyhuh8Z5z
-         FZgLgGRIBeqJ2KpTIhu4nSdU+YS23oaQ9+E8/ELH6KU9vZszzZEqvYtA8CkZallnjdrr
-         Nwcg==
-X-Gm-Message-State: AGi0PuahLJdpzme9o5s3J/bpqDr6KEYCF10jVsGSw9YP47wJDORRt2GX
-        HBf9A9PVfh1nZlcSrsl09BI=
-X-Google-Smtp-Source: APiQypK52jNzLdOIfO1gpMRdMkm3ocgjZEpddsb7bx1IdjG1eoLljeSOsDojocPs+NcHrGI7xJxuPA==
-X-Received: by 2002:a65:688c:: with SMTP id e12mr1438881pgt.194.1586875698800;
-        Tue, 14 Apr 2020 07:48:18 -0700 (PDT)
-Received: from localhost ([203.18.28.220])
-        by smtp.gmail.com with ESMTPSA id k12sm10439963pgj.33.2020.04.14.07.48.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 07:48:17 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 00:48:13 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
-        <20200413125303.423864-5-npiggin@gmail.com>
-        <20200414072316.GA5503@infradead.org>
-        <1586864403.0qfilei2ft.astroid@bobo.none>
-        <20200414130203.GA20867@infradead.org>
-In-Reply-To: <20200414130203.GA20867@infradead.org>
+        Tue, 14 Apr 2020 10:49:25 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35551 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404893AbgDNOtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:49:21 -0400
+IronPort-SDR: pkS1TwrRBC51v1wJiV3bw7VddVSGzmdtIQPHGaRnkDRxeTHa/5cTetYRnJNyVxI0N5xEVt40OB
+ 2T6aL7sz8fww==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 07:49:17 -0700
+IronPort-SDR: GjIpOW2k/RoVuVkcRzkpJCSVz5Lypre4fXwzI8Gc2K2Rc8HR7bI//zLWy4VqwzS6dJnAlznyXw
+ +4jhBO1FUTxQ==
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="399973646"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.251.11.11])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 07:49:16 -0700
+Message-ID: <64f368b6bfde0611d3a1bc24884242bc4fb4cecd.camel@linux.intel.com>
+Subject: Re: [PATCH 1/3] x86/mce/therm_throt: remove unused
+ platform_thermal_notify function pointer
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        X86 ML <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        bberg@redhat.com, bp@suse.de
+Date:   Tue, 14 Apr 2020 07:49:15 -0700
+In-Reply-To: <CAHmME9rOzmF4K965U69tFZi2SS3rW9SHed2bJ=_PD+xu8LqMYw@mail.gmail.com>
+References: <20200407063345.4484-1-Jason@zx2c4.com>
+         <bad9e0bd5504df83092c7add2d84331e164b60cc.camel@linux.intel.com>
+         <CAHmME9rOzmF4K965U69tFZi2SS3rW9SHed2bJ=_PD+xu8LqMYw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Message-Id: <1586875675.f8q1grbltc.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Christoph Hellwig's message of April 14, 2020 11:02 pm:
-> On Tue, Apr 14, 2020 at 10:13:44PM +1000, Nicholas Piggin wrote:
->> Which case? Usually the answer would be because you don't want to use
->> contiguous physical memory and/or you don't want to use the linear=20
->> mapping.
->=20
-> But with huge pages you do by definition already use large contiguous
-> areas.  So you want allocations larger than "small" huge pages but not
-> using gigantic pages using vmalloc?
+On Mon, 2020-04-13 at 22:21 -0600, Jason A. Donenfeld wrote:
+> On Mon, Apr 13, 2020 at 9:56 PM Srinivas Pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> > On Tue, 2020-04-07 at 00:33 -0600, Jason A. Donenfeld wrote:
+> > > A long time ago platform_thermal_notify was added as some generic
+> > > mechanism for platform drivers to hook thermal events. It seems
+> > > as
+> > > though this has been entirely superseded, and nothing uses it.
+> > > Remove
+> > > the plumbing for this, since this code runs in an interrupt hot
+> > > path.
+> > Good idea.
+> 
+> Will you take this into your tree?
+I am not the maintainer of this tree. So I don't decide this. I can
+just give my opinion.
 
-Yes.
+>  If not, how do your thermal patches
+> usually go in? A reviewed-by might be useful in that case.
+For this patch:
 
-Thanks,
-Nick
+Reviewed-by: Pandruvada, Srinivas <srinivas.pandruvada@linux.intel.com>
+
+> 
+> Jason
+
