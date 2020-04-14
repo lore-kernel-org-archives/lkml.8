@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C75C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77B9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0356F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C7E206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JXYdttdn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qNNie7Om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502825AbgDNNPg (ORCPT
+        id S2502839AbgDNNPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54938 "EHLO
+        Tue, 14 Apr 2020 09:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502728AbgDNNOw (ORCPT
+        with ESMTP id S2502748AbgDNNO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:14:52 -0400
+        Tue, 14 Apr 2020 09:14:59 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D748C061A0F;
-        Tue, 14 Apr 2020 06:14:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B129C061A0F;
+        Tue, 14 Apr 2020 06:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ounqfI9CXMUIXqEGvecn2fVMevKBON5/GtrMu/96rgE=; b=JXYdttdnaHgBP+lrnbNQv+l484
-        AiTLXkeT89LiTTe8UjKuAOXDWRuFGAcQ/0CnDrMoy9ZGKz4sk7r96NGt6CuvaRdpA66qBYAJs0u4x
-        u7ZGjCB5NfHcOgUfTmMxihPOpHU3YzO7ATv3rEodE1mB0A6EDcsMfLgynRGNEoH0URG1N67vsvQ19
-        2xBcQNMtObO5UAoeqB1qDJY5ftdJr1rvZS8JlFIjADihw193xCv/FJPXcuqN0qXZ02y6IQK+CKIx5
-        yQbDGbmNwBHeYmOIds2Y0zr7VGGy4VAfNmsEEGLFdUk7woS9f96wHe5hQkcMuG6kN1pDBO+UDwMcB
-        358La5gQ==;
+        bh=MpeupzvgpEqnfkrgU67Yb1a4x+y3iqN0nzmL/bt6hXs=; b=qNNie7Om2OVo5RfG/yvHOZ5B6f
+        YvJRXnbW9/6E6MwFckGLJXrvDnIv9l8M9gc4UOGmpnybKChZUWz3d2aGtx4Uw9clqXpEyMLwkDFxO
+        vqizncH9flXaVBQAvFGQ6C1oAfh3TZpQHLdcWc2THIuGUxjbG4nP9Ao84blj707cvMTH1crz0qDkV
+        gFOCLdcNSV/TR1D0Y9L9P8wo7AyraAHJOzvOXV/aR4wt1yFBFAbgLugghJeYvYojjdxDQ+Zb60qn4
+        7qGwDGaSlKpu5JX96H75W0kD7avku7EHd7u0Qd7e5x6AEMkNL0Rl1yBQRQ0uQU4zO8kF9JD/6MFCr
+        sHBbh3YQ==;
 Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOLOY-0006i4-0d; Tue, 14 Apr 2020 13:14:30 +0000
+        id 1jOLOi-0006vf-4M; Tue, 14 Apr 2020 13:14:40 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -61,9 +61,9 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/29] mm: only allow page table mappings for built-in zsmalloc
-Date:   Tue, 14 Apr 2020 15:13:30 +0200
-Message-Id: <20200414131348.444715-12-hch@lst.de>
+Subject: [PATCH 14/29] mm: rename vmap_page_range to map_kernel_range
+Date:   Tue, 14 Apr 2020 15:13:33 +0200
+Message-Id: <20200414131348.444715-15-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200414131348.444715-1-hch@lst.de>
 References: <20200414131348.444715-1-hch@lst.de>
@@ -75,56 +75,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to unexport map_vm_area and unmap_kernel_range, which are
-rather deep internal and should not be available to modules, as they for
-example allow fine grained control of mapping permissions, and also
-allow splitting the setup of a vmalloc area and the actual mapping and
-thus expose vmalloc internals.
-
-zsmalloc is typically built-in and continues to work (just like the
-percpu-vm code using a similar patter), while modular zsmalloc also
-continues to work, but must use copies.
+This matches the map_kernel_range_noflush API.  Also change to pass
+a size instead of the end, similar to the noflush version.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- mm/Kconfig   | 2 +-
- mm/vmalloc.c | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ mm/vmalloc.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 09a9edfb8461..5c0362bd8d56 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -707,7 +707,7 @@ config ZSMALLOC
- 
- config ZSMALLOC_PGTABLE_MAPPING
- 	bool "Use page table mapping to access object in zsmalloc"
--	depends on ZSMALLOC
-+	depends on ZSMALLOC=y
- 	help
- 	  By default, zsmalloc uses a copy-based object mapping method to
- 	  access allocations that span two pages. However, if a particular
 diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3375f9508ef6..9183fc0d365a 100644
+index 55df5dc6a9fc..a3d810def567 100644
 --- a/mm/vmalloc.c
 +++ b/mm/vmalloc.c
-@@ -2046,7 +2046,6 @@ void unmap_kernel_range(unsigned long addr, unsigned long size)
- 	vunmap_page_range(addr, end);
- 	flush_tlb_kernel_range(addr, end);
+@@ -272,13 +272,13 @@ int map_kernel_range_noflush(unsigned long addr, unsigned long size,
+ 	return nr;
  }
--EXPORT_SYMBOL_GPL(unmap_kernel_range);
  
+-static int vmap_page_range(unsigned long start, unsigned long end,
++static int map_kernel_range(unsigned long start, unsigned long size,
+ 			   pgprot_t prot, struct page **pages)
+ {
+ 	int ret;
+ 
+-	ret = map_kernel_range_noflush(start, end - start, prot, pages);
+-	flush_cache_vmap(start, end);
++	ret = map_kernel_range_noflush(start, size, prot, pages);
++	flush_cache_vmap(start, start + size);
+ 	return ret;
+ }
+ 
+@@ -1866,7 +1866,7 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node, pgprot_t pro
+ 
+ 	kasan_unpoison_vmalloc(mem, size);
+ 
+-	if (vmap_page_range(addr, addr + size, prot, pages) < 0) {
++	if (map_kernel_range(addr, size, prot, pages) < 0) {
+ 		vm_unmap_ram(mem, count);
+ 		return NULL;
+ 	}
+@@ -2030,10 +2030,9 @@ void unmap_kernel_range(unsigned long addr, unsigned long size)
  int map_vm_area(struct vm_struct *area, pgprot_t prot, struct page **pages)
  {
-@@ -2058,7 +2057,6 @@ int map_vm_area(struct vm_struct *area, pgprot_t prot, struct page **pages)
+ 	unsigned long addr = (unsigned long)area->addr;
+-	unsigned long end = addr + get_vm_area_size(area);
+ 	int err;
+ 
+-	err = vmap_page_range(addr, end, prot, pages);
++	err = map_kernel_range(addr, get_vm_area_size(area), prot, pages);
  
  	return err > 0 ? 0 : err;
  }
--EXPORT_SYMBOL_GPL(map_vm_area);
- 
- static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
- 	struct vmap_area *va, unsigned long flags, const void *caller)
 -- 
 2.25.1
 
