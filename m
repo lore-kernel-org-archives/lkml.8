@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1893EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D940C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED01D2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A242063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbgDNNXf (ORCPT
+        id S2440162AbgDNNXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:23:35 -0400
-Received: from 8bytes.org ([81.169.241.247]:35386 "EHLO theia.8bytes.org"
+        Tue, 14 Apr 2020 09:23:44 -0400
+Received: from 8bytes.org ([81.169.241.247]:35368 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502900AbgDNNQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2502898AbgDNNQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 09:16:06 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B127F6A7; Tue, 14 Apr 2020 15:15:55 +0200 (CEST)
+        id 0F20F5FF; Tue, 14 Apr 2020 15:15:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -46,9 +46,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 22/33] iommu/mediatek: Convert to probe/release_device() call-backs
-Date:   Tue, 14 Apr 2020 15:15:31 +0200
-Message-Id: <20200414131542.25608-23-joro@8bytes.org>
+Subject: [PATCH v2 14/33] iommu/amd: Remove dev_data->passthrough
+Date:   Tue, 14 Apr 2020 15:15:23 +0200
+Message-Id: <20200414131542.25608-15-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 References: <20200414131542.25608-1-joro@8bytes.org>
@@ -59,73 +59,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the Mediatek IOMMU driver to use the probe_device() and
-release_device() call-backs of iommu_ops, so that the iommu core code
-does the group and sysfs setup.
+Make use of generic IOMMU infrastructure to gather the same information
+carried in dev_data->passthrough and remove the struct member.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/mtk_iommu.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/iommu/amd_iommu.c       | 10 +++++-----
+ drivers/iommu/amd_iommu_types.h |  1 -
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 5f4d6df59cf6..2be96f1cdbd2 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -441,38 +441,26 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
- 	return pa;
- }
- 
--static int mtk_iommu_add_device(struct device *dev)
-+static struct iommu_device *mtk_iommu_probe_device(struct device *dev)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 3e0d27f7622e..0b4b4faa876d 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2047,8 +2047,8 @@ static int pdev_iommuv2_enable(struct pci_dev *pdev)
+ static int attach_device(struct device *dev,
+ 			 struct protection_domain *domain)
  {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct mtk_iommu_data *data;
--	struct iommu_group *group;
+-	struct pci_dev *pdev;
+ 	struct iommu_dev_data *dev_data;
++	struct pci_dev *pdev;
+ 	unsigned long flags;
+ 	int ret;
  
- 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
--		return -ENODEV; /* Not a iommu client device */
-+		return ERR_PTR(-ENODEV); /* Not a iommu client device */
+@@ -2067,8 +2067,10 @@ static int attach_device(struct device *dev,
  
- 	data = dev_iommu_priv_get(dev);
--	iommu_device_link(&data->iommu, dev);
+ 	pdev = to_pci_dev(dev);
+ 	if (domain->flags & PD_IOMMUV2_MASK) {
++		struct iommu_domain *def_domain = iommu_get_dma_domain(dev);
++
+ 		ret = -EINVAL;
+-		if (!dev_data->passthrough)
++		if (def_domain->type != IOMMU_DOMAIN_IDENTITY)
+ 			goto out;
  
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
--
--	iommu_group_put(group);
--	return 0;
-+	return &data->iommu;
- }
+ 		if (dev_data->iommu_v2) {
+@@ -2189,9 +2191,7 @@ static int amd_iommu_add_device(struct device *dev)
  
--static void mtk_iommu_remove_device(struct device *dev)
-+static void mtk_iommu_release_device(struct device *dev)
- {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct mtk_iommu_data *data;
+ 	/* Domains are initialized for this device - have a look what we ended up with */
+ 	domain = iommu_get_domain_for_dev(dev);
+-	if (domain->type == IOMMU_DOMAIN_IDENTITY)
+-		dev_data->passthrough = true;
+-	else if (domain->type == IOMMU_DOMAIN_DMA)
++	if (domain->type == IOMMU_DOMAIN_DMA)
+ 		iommu_setup_dma_ops(dev, IOVA_START_PFN << PAGE_SHIFT, 0);
  
- 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
- 		return;
- 
--	data = dev_iommu_priv_get(dev);
--	iommu_device_unlink(&data->iommu, dev);
--
--	iommu_group_remove_device(dev);
- 	iommu_fwspec_free(dev);
- }
- 
-@@ -526,8 +514,8 @@ static const struct iommu_ops mtk_iommu_ops = {
- 	.flush_iotlb_all = mtk_iommu_flush_iotlb_all,
- 	.iotlb_sync	= mtk_iommu_iotlb_sync,
- 	.iova_to_phys	= mtk_iommu_iova_to_phys,
--	.add_device	= mtk_iommu_add_device,
--	.remove_device	= mtk_iommu_remove_device,
-+	.probe_device	= mtk_iommu_probe_device,
-+	.release_device	= mtk_iommu_release_device,
- 	.device_group	= mtk_iommu_device_group,
- 	.of_xlate	= mtk_iommu_of_xlate,
- 	.pgsize_bitmap	= SZ_4K | SZ_64K | SZ_1M | SZ_16M,
+ out:
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index ca8c4522045b..d0d7b6a0c3d8 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -640,7 +640,6 @@ struct iommu_dev_data {
+ 	struct pci_dev *pdev;
+ 	u16 devid;			  /* PCI Device ID */
+ 	bool iommu_v2;			  /* Device can make use of IOMMUv2 */
+-	bool passthrough;		  /* Device is identity mapped */
+ 	struct {
+ 		bool enabled;
+ 		int qdep;
 -- 
 2.17.1
 
