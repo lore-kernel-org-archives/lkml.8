@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CFEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C831C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BDA20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D4520644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586899972;
-	bh=7PFsi1xvzYVZoaCa9uiNYX672sFrV56eIDLTk1BtspU=;
+	s=default; t=1586899979;
+	bh=+4zzU2fuJ9s9+cU9NhMA4XEGvV70Ry3qcTYCVF/73gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Shz18K567+B3SeYG9z0EDbKCQBMs/0GyM+zJ8mInF6m7w3UUMz+wWyoyVXMCm3WNa
-	 RCTRq3cmtBCwzVnrOvoSiu+Kwvm5yCSDm6x8xWu6TZk3uDtXEWNgPGsgTXyKkBVoQQ
-	 pvozoadKH5YZMo16ZgHEkgWcfiT6vQ5h0ox/hMnE=
+	b=ekOmTlvieNRgpEI3cZ3ZoD514ABdcwFh0MPKuBc2kXAndwIYkVI1o9fyax0kAQSqJ
+	 1UCvcpjXcRMDzTuE6PDQUHb4gIiiJRY2jqgGDkhmoT1vOnfY1RYWj/FZhy0RPEZ9VR
+	 FjaMiOOURlBrVORdxQ+wgu4JANljbVVu8c7j36qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633914AbgDNVcr (ORCPT
+        id S2633913AbgDNVc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 17:32:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633855AbgDNVbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:31:42 -0400
+        id S2633858AbgDNVbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 17:31:44 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 548AD2074D;
-        Tue, 14 Apr 2020 21:31:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDBBC2076B;
+        Tue, 14 Apr 2020 21:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586899901;
-        bh=7PFsi1xvzYVZoaCa9uiNYX672sFrV56eIDLTk1BtspU=;
+        s=default; t=1586899903;
+        bh=+4zzU2fuJ9s9+cU9NhMA4XEGvV70Ry3qcTYCVF/73gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xx7GmJBT4ZOUEVA+T9roxrH0h7NnqUqVJz7MSHrqgrYTR5P5mfTORJHvNPHo7CsTT
-         xVkpRQq5NiOEiJCoJwWXlmo04MW3La1H7oAVSkTx8U+1Sc/Zih2FC9B9zOX2ZViOHU
-         fVNQhywIJO1UOW+0gxqwbwuQdInNzZ0938DXIeqQ=
+        b=PFMFUepTALEYUPqJXI/PzspEAX4Pv39fFv/FXh0r88qaYB0hLf1esUplItP5A4JOw
+         4EezN0pOI2paWuXZj7UuomuNpYnE5R0311Na6W8nQfCz4E+2zs2RmutkgKwRMDQjDP
+         rM1Et8rMdPVTGoY3YFsP/xzC3b3vBAVNRmOxQHmA=
 From:   Will Deacon <will@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Doug Anderson <dianders@chromium.org>, kernel-team@android.com
-Subject: [PATCH 7/8] arm64: cpufeature: Relax checks for AArch32 support at EL[0-2]
-Date:   Tue, 14 Apr 2020 22:31:13 +0100
-Message-Id: <20200414213114.2378-8-will@kernel.org>
+Subject: [PATCH 8/8] arm64: cpufeature: Add an overview comment for the cpufeature framework
+Date:   Tue, 14 Apr 2020 22:31:14 +0100
+Message-Id: <20200414213114.2378-9-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200414213114.2378-1-will@kernel.org>
 References: <20200414213114.2378-1-will@kernel.org>
@@ -62,55 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't need to be quite as strict about mismatched AArch32 support,
-which is good because the friendly hardware folks have been busy
-mismatching this to their hearts' content.
-
-  * We don't care about EL2 or EL3 (there are silly comments concerning
-    the latter, so remove those)
-
-  * EL1 support is gated by the ARM64_HAS_32BIT_EL1 capability and handled
-    gracefully when a mismatch occurs
-
-  * EL1 support is gated by the ARM64_HAS_32BIT_EL0 capability and handled
-    gracefully when a mismatch occurs
-
-Relax the AArch32 checks to FTR_NONSTRICT.
+Now that Suzuki isn't within throwing distance, I thought I'd better add
+a rough overview comment to cpufeature.c so that it doesn't take me days
+to remember how it works next time.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 43 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9e0321e3e581..680a453ca8c4 100644
+index 680a453ca8c4..421ca99dc8fc 100644
 --- a/arch/arm64/kernel/cpufeature.c
 +++ b/arch/arm64/kernel/cpufeature.c
-@@ -172,11 +172,10 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_GIC_SHIFT, 4, 0),
- 	S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_ASIMD_SHIFT, 4, ID_AA64PFR0_ASIMD_NI),
- 	S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_FP_SHIFT, 4, ID_AA64PFR0_FP_NI),
--	/* Linux doesn't care about the EL3 */
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL3_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL2_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL0_SHIFT, 4, ID_AA64PFR0_EL0_64BIT_ONLY),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL2_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_EL0_SHIFT, 4, ID_AA64PFR0_EL0_64BIT_ONLY),
- 	ARM64_FTR_END,
- };
+@@ -3,6 +3,49 @@
+  * Contains CPU feature definitions
+  *
+  * Copyright (C) 2015 ARM Ltd.
++ *
++ * A note for the weary kernel hacker: the code here is confusing and hard to
++ * follow! That's partly because it's solving a nasty problem, but also because
++ * there's a little bit of over-abstraction that tends to obscure what's going
++ * on behind a maze of helper functions and macros.
++ *
++ * The basic problem is that hardware folks have started gluing together CPUs
++ * with distinct architectural features; in some cases even creating SoCs where
++ * user-visible instructions are available only on a subset of the available
++ * cores. We try to address this by snapshotting the feature registers of the
++ * boot CPU and comparing these with the feature registers of each secondary
++ * CPU when bringing them up. If there is a mismatch, then we update the
++ * snapshot state to indicate the lowest-common denominator of the feature,
++ * known as the "safe" value. This snapshot state can be queried to view the
++ * "sanitised" value of a feature register.
++ *
++ * The sanitised register values are used to decide which capabilities we
++ * have in the system. These may be in the form of traditional "hwcaps"
++ * advertised to userspace or internal "cpucaps" which are used to configure
++ * things like alternative patching and static keys. While a feature mismatch
++ * may result in a TAINT_CPU_OUT_OF_SPEC kernel taint, a capability mismatch
++ * may prevent a CPU from being onlined at all.
++ *
++ * Some implementation details worth remembering:
++ *
++ * - Mismatched features are *always* sanitised to a "safe" value, which
++ *   usually indicates that the feature is not supported.
++ *
++ * - A mismatched feature marked with FTR_STRICT will cause a "SANITY CHECK"
++ *   warning when onlining an offending CPU and the kernel will be tainted
++ *   with TAINT_CPU_OUT_OF_SPEC.
++ *
++ * - Features marked as FTR_VISIBLE have their sanitised value visible to
++ *   userspace. FTR_VISIBLE features in registers that are only visible
++ *   to EL0 by trapping *must* have a corresponding HWCAP so that late
++ *   onlining of CPUs cannot lead to features disappearing at runtime.
++ *
++ * - A "feature" is typically a 4-bit register field. A "capability" is the
++ *   high-level description derived from the sanitised field value.
++ *
++ * - Read the Arm ARM (DDI 0487F.a) section D13.1.3 ("Principles of the ID
++ *   scheme for fields in ID registers") to understand when feature fields
++ *   may be signed or unsigned (FTR_SIGNED and FTR_UNSIGNED accordingly).
+  */
  
-@@ -867,9 +866,6 @@ void update_cpu_features(int cpu,
- 	taint |= check_update_ftr_reg(SYS_ID_AA64MMFR2_EL1, cpu,
- 				      info->reg_id_aa64mmfr2, boot->reg_id_aa64mmfr2);
- 
--	/*
--	 * EL3 is not our concern.
--	 */
- 	taint |= check_update_ftr_reg(SYS_ID_AA64PFR0_EL1, cpu,
- 				      info->reg_id_aa64pfr0, boot->reg_id_aa64pfr0);
- 	taint |= check_update_ftr_reg(SYS_ID_AA64PFR1_EL1, cpu,
+ #define pr_fmt(fmt) "CPU features: " fmt
 -- 
 2.26.0.110.g2183baf09c-goog
 
