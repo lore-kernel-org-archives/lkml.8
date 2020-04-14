@@ -2,114 +2,140 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F17FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A55C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7639F206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4204E206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYW4YTrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405490AbgDNFYk (ORCPT
+        id S2405506AbgDNF0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:24:40 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:27979 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgDNFYi (ORCPT
+        Tue, 14 Apr 2020 01:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405499AbgDNF0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:24:38 -0400
-IronPort-SDR: cwVzQoT1a708KngoN6/rGhZ6Goc8X6sBW3XGm5tzr0FZOeyHoFcHrELRpDi4BOEi1N0idHz+Vt
- gBtYgQDR26w/pzWrL2X0D7kBSUOAsBxZw5iSk+s5I9918FJ8YXBJgcOqypDacKYT1twNQPd86L
- aC2H8hZa5B2/CyxzxGgIFJKIu//jbdb1zFHQw05Rl+0lRwBVUEaLXV8iR5dtkdRxDkBCTOurTq
- ywwuYWCejNDmweW0QR//0xeGP84mQrcNlxJHX0U8kz7aaaH2yiBM/nhKBXMyEkeOGlCrkb7P37
- Gvo=
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="46834635"
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by labrats.qualcomm.com with ESMTP; 13 Apr 2020 22:24:37 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 13 Apr 2020 22:24:36 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id 000D03B21; Mon, 13 Apr 2020 22:24:36 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/1] scsi: pm: Balance pm_only counter of request queue during system resume
-Date:   Mon, 13 Apr 2020 22:24:34 -0700
-Message-Id: <1586841875-15667-1-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 14 Apr 2020 01:26:35 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2E6C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:26:34 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id m12so15338291edl.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uuPdzsYrCELKJnGVxoANM1PIXJOyrUjt5nhJHbZTcKo=;
+        b=IYW4YTrYfy+kuwOU/lYSO3bgdbsS6ahDQGbWQz2pVXyf3gpqKiVGpSqAGXtloLGD2M
+         WA6XxacLcQak2MEzhhTV0X5U/dR3yiLyx5qEePcdC4cRvL0T7jdFdGi3CGg8DESOCPws
+         lsm3aaw0P2r+rWFW6Jf015OyCD5/EKke57c2kACRLYYaHvTXrpOJn8pSD0QXt63mP9H2
+         NunKHb4PkJIIeZPyu3B0BstWYB74PnnGOaUD6TXxgbVwrVMYLY1FJV/Hp2oxnAh234Zl
+         xFnItRaPtPJptW3rvZuQD06WVCaVjjK96ry+TXpdxrM5IgHrbsgb77anjgstT6SY1QLw
+         ZSug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uuPdzsYrCELKJnGVxoANM1PIXJOyrUjt5nhJHbZTcKo=;
+        b=nzgT4Cf9t8uFtydDqSs9ec8O1yPk7D0jK4G28BPfmf6UIUQa1q/q/K78ZN/ehyjdVO
+         ynTjiCRPTZ5kj4iE/CGHkO5QUJ2obKkFkifeVXbHsz4IRtNebeMBJDxxVxY54EI3QZKc
+         SkkjFuDxXTex8LTX7NHIZUHuwA9lzojz59eOafiKD7w7WNT4HqsoGqd860MU9bsqeGZ5
+         wLIGSCRQNSkEibRL7/VWhkyazWZQduq9HYOPl49PIy1XDcOq62sJ1uCdhBTrCq1KCiKT
+         fSl91sQ04meFGy2l5UGYiJNdV36oB7WAMOxaxh77UBrRek8f6yufMfgNCcHzDm28oFL1
+         5rlg==
+X-Gm-Message-State: AGi0PuYhPVeftPBVp0kLmLoX9TJwKpo7kJwAqSa/+GwleMtS536Erd9c
+        +RC6ujTLl2nZNFpZK7JrN4DPb6E9TC0d6l5T/toLvw==
+X-Google-Smtp-Source: APiQypI+OHSx7I0zAFNl0j3kM4YuBCc2AJy2aRhhIsVV8UZqht0LfkdSl9kXkAtfkBw1fMhlpmo+n7+6X8Ap0UyfKBQ=
+X-Received: by 2002:a50:d71e:: with SMTP id t30mr969087edi.246.1586841992805;
+ Mon, 13 Apr 2020 22:26:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-3-git-send-email-rnayak@codeaurora.org> <20200409174511.GS199755@google.com>
+ <CABymUCNdX=K1vFuC0Rt-u0h-CRYcKtXogyOkAiGZpDfKSVAYqA@mail.gmail.com> <13907000-e3b0-12d6-0768-fd8a7ab100d9@codeaurora.org>
+In-Reply-To: <13907000-e3b0-12d6-0768-fd8a7ab100d9@codeaurora.org>
+From:   Jun Nie <jun.nie@linaro.org>
+Date:   Tue, 14 Apr 2020 13:26:21 +0800
+Message-ID: <CABymUCM+WjSxKhhvqbBSxub_3wxvnJ8aOVgtWD9JOoxA3MuY2A@mail.gmail.com>
+Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, sboyd@kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During system resume, scsi_resume_device() decreases a request queue's
-pm_only counter if the scsi device was quiesced before. But after that,
-if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
-still held (non-zero). Current scsi resume hook only sets the RPM status
-of the scsi device and its request queue to RPM_ACTIVE, but leaves the
-pm_only counter unchanged. This may make the request queue's pm_only
-counter remain non-zero after resume hook returns, hence those who are
-waiting on the mq_freeze_wq would never be woken up. Fix this by calling
-blk_post_runtime_resume() if pm_only is non-zero to balance the pm_only
-counter which is held by the scsi device's RPM ops.
+Rajendra Nayak <rnayak@codeaurora.org> =E4=BA=8E2020=E5=B9=B44=E6=9C=8813=
+=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=8810:22=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+>
+>
+> On 4/10/2020 2:06 PM, Jun Nie wrote:
+> >>> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct u=
+art_port *uport,
+> >>>                goto out_restart_rx;
+> >>>
+> >>>        uport->uartclk =3D clk_rate;
+> >>> -     clk_set_rate(port->se.clk, clk_rate);
+> >>> +     dev_pm_opp_set_rate(uport->dev, clk_rate);
+> >
+> > Hi Rajendra,
+>
+> Hi Jun,
+>
+> > I see lowest rpmhpd_opp_low_svs opp is for 75MHz. It is a bit higher
+> > for a serial.
+> > I am just curious about this.
+>
+> Well these OPP tables are technically what we call as fmax tables, which =
+means
+> you can get the clock to a max of 75MHz at that perf level. You need to g=
+o
+> to the next perf level if you want to go higher.
+> That however does not mean that serial cannot run at clocks lower than 75=
+Mhz.
+>
+> > I also want to confirm that the rpmhpd_opp_low_svs voltage restriction
+> > is for serial
+> > controller, not for clock controller? Because I see there is similar
+> > restriction to clock
+> > controller on another platform, the restriction is for branch clock,
+> > not leaf clock that
+> > consumer device will get.
+>
+> yes, its a serial controller restriction and not of the clock provider.
+> On your note on the branch clock vs leaf clock I am not sure I understand
+> the point you are making.
 
-(struct request_queue)0xFFFFFF815B69E938
-	pm_only = (counter = 2),
-	rpm_status = 0,
-	dev = 0xFFFFFF815B0511A0,
+For the leaf clock, I mean the clock that consumer get with devm_clk_get().=
+ The
+branch clock means it is not for consumer directly, and its child
+clock or grandchild
+clock is for consumer. In that case, the restriction has to be done in
+clock driver,
+not in clock consumer driver. Sorry for confusing you. I just want to
+know more about
+what function this patch set provide. Because I am working on the
+clock controller
+restriction of fmax/voltage. Thanks!
 
-((struct device)0xFFFFFF815B0511A0)).power
-	is_suspended = FALSE,
-	runtime_status = RPM_ACTIVE,
-
-(struct scsi_device)0xffffff815b051000
-	request_queue = 0xFFFFFF815B69E938,
-	sdev_state = SDEV_RUNNING,
-	quiesced_by = 0x0,
-
-B::v.f_/task_0xFFFFFF810C246940
--000|__switch_to(prev = 0xFFFFFF810C246940, next = 0xFFFFFF80A49357C0)
--001|context_switch(inline)
--001|__schedule(?)
--002|schedule()
--003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
--004|generic_make_request(?)
--005|submit_bio(bio = 0xFFFFFF80A8195B80)
-
-Signed-off-by: Can Guo <cang@codeaurora.org>
-
-Change since v1:
-- Added more debugging context info
-
----
- drivers/scsi/scsi_pm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
-index 3717eea..4804029 100644
---- a/drivers/scsi/scsi_pm.c
-+++ b/drivers/scsi/scsi_pm.c
-@@ -93,8 +93,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 		 */
- 		if (!err && scsi_is_sdev_device(dev)) {
- 			struct scsi_device *sdev = to_scsi_device(dev);
--
--			blk_set_runtime_active(sdev->request_queue);
-+			if (blk_queue_pm_only(sdev->request_queue))
-+				blk_post_runtime_resume(sdev->request_queue, 0);
-+			else
-+				blk_set_runtime_active(sdev->request_queue);
- 		}
- 	}
- 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Jun
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
