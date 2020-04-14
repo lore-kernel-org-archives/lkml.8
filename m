@@ -2,327 +2,112 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA335C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2B9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF0020656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnVBhoFn"
+	by mail.kernel.org (Postfix) with ESMTP id 3F07F2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586882983;
+	bh=djdizYUF8P2UkZPkY2sLJI5bKLZqZSwRhGddHALE768=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K55LHy6NF+fCvZrzIM+baT701w9mrJAVulRcJYHpr2b56jCLtyxsotCPimxwYVq2R
+	 geQNnm7wxbDZUF3at1WZ0TfnUhfE87JxkuWeWbLslJD3D+8ZS2lapfvA8cZrm7nh4L
+	 55DCx79gk1bH78Z6uslfKtrHyZynhvG6Pr8R3O50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440286AbgDNQsf (ORCPT
+        id S2440502AbgDNQtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440039AbgDNQsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:48:30 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F17DC061A0C;
-        Tue, 14 Apr 2020 09:48:30 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ay6so2890483pjb.0;
-        Tue, 14 Apr 2020 09:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Bi99qAi48G22a67oDOvX8KlGshqRvGxoHEsTVpbL5dI=;
-        b=ZnVBhoFn9z6HnvVhPA2/ThWZMjWCRzaYIE2bVZUXtpl+C66EYzX9Wp++J9SWLione8
-         F2L0laXw2dDaWO9Bl7OP9A4iWzKY77iNVPYMrC1AEg+3WaTWPz3KD+fBuXCKEMMU4NF0
-         bKd1xbPKc/Zei4IovL/Q9LPqiD/JAU2k11MPv4CGkWJlONShx7fFCwT+4YFiPRdPnY+d
-         +a459hGG/a3wfRPoKcEuLnaGivSBkWZaVqs0YZjiOWxUvieSBVWx9MCzHWF5zRqBeXxp
-         pFC+aWw65lElbbslhoDbM9KEWng9M6BgiTBT4MZn75EUVaiMhx8lsuH8oOqqZV+Mln+M
-         B3uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Bi99qAi48G22a67oDOvX8KlGshqRvGxoHEsTVpbL5dI=;
-        b=Sh03drzfAE9B9AlNS+TkEPQbOGLVYW+mUahnDrN8wiKaMHfBX2yWHqpIa+e+zotK+e
-         0G3lU2wUy2jsBi0YYqODp+/6SsB+qs0K7R5jHUg4LRUvz+lyLn2qEwtwgfSzbi02rq4r
-         rPVJFEYnlLyLLoS3Lv3KR7UD8gE2x2xsSrRcYeYAWU01cyCT9cnxPnzLEVL/qok01mk8
-         fyaiB2FL2H/q6PuA/yxKhQQy6kDyXtlPaaTJe0hcLeDsGkUMg+T/NIFXnRldoA0j5T30
-         5/49tKJbkRIfqrfydZEUpngUmCG40ihaOT5qbiSP7fKmm2xaiFU1DOygrQAWX2uQUWkF
-         2YdA==
-X-Gm-Message-State: AGi0PuaYDxY9IQxhypOMP8Z6E5j2MfHN6h3pWUrSLqEMQ2Dg1hmRQEsR
-        oa1jT+PC+XKvSNCQLqDejJEfPPw0Y1E=
-X-Google-Smtp-Source: APiQypKNH3cxL/ORhZQPKFOs/upSB/tmbxxcoa+otSGlYdN27fy20e0G4BeN8qzoDDcGl0cUjV6SvA==
-X-Received: by 2002:a17:902:b785:: with SMTP id e5mr715454pls.31.1586882909728;
-        Tue, 14 Apr 2020 09:48:29 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.50.207])
-        by smtp.gmail.com with ESMTPSA id k24sm11292993pfk.164.2020.04.14.09.48.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 09:48:28 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH 1/1] HID: mcp2221: add GPIO functionality support
-Date:   Tue, 14 Apr 2020 22:18:14 +0530
-Message-Id: <1586882894-19905-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 14 Apr 2020 12:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440039AbgDNQtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:03 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44AB9206E9;
+        Tue, 14 Apr 2020 16:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586882942;
+        bh=djdizYUF8P2UkZPkY2sLJI5bKLZqZSwRhGddHALE768=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e4XN7WrjzpxG9AxvfJtBCH8/8FERTXOgG4DArjaXR++OXdzc+YPkwLuTMQVz4OV4G
+         Gz9LaIllvV4K9BGSq6PaQh51cUPHGGNWBEf22Yvu5f94d+NCG3cYb58MFw1iKFmko9
+         yirlOlxbKT/MKPM+iL4CiFWy7/GCKCYT60RvtjGs=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOOk8-0068ky-Gi; Tue, 14 Apr 2020 18:49:00 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 01/33] scripts: kernel-doc: proper handle @foo->bar()
+Date:   Tue, 14 Apr 2020 18:48:27 +0200
+Message-Id: <48b46426d7bf6ff7529f20e5718fbf4e9758e62c.1586881715.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586881715.git.mchehab+huawei@kernel.org>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MCP2221 has 4 pins that can be used as GPIO or configured
-for alternate functionality such as clock generation and
-IRQ detection. This patch adds support for GPIO functionality.
+The pattern @foo->bar() is valid, as it can be used by a
+function pointer inside a struct passed as a parameter.
 
-To set direction of a pin or to toggle its state after it
-has been configured as GPIO, driver sends command to mcp2221
-and parses response received from mcp2221. Based on this
-response either 0 or appropriate error code is returned to
-GPIO framework.
+Right now, it causes a warning:
 
-To get the direction or current state of a pin, driver
-sends command and read response from the device. Based on
-the response received from device direction or value
-is sent to the GPIO framework.
+	./drivers/firewire/core-transaction.c:606: WARNING: Inline strong start-string without end-string.
 
-Command from driver to mcp2221 device are output report.
-Response received from mcp2221 is input report.
+In this specific case, the kernel-doc markup is:
 
-Datasheet (page 45-48) contains details about how to decode
-the response received from device:
-http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
+	/**
+	 * fw_core_remove_address_handler() - unregister an address handler
+	 * @handler: callback
+	 *
+	 * To be called in process context.
+	 *
+	 * When fw_core_remove_address_handler() returns, @handler->callback() is
+	 * guaranteed to not run on any CPU anymore.
+	 */
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+With seems valid on my eyes. So, instead of trying to hack
+the kernel-doc markup, let's teach it about how to handle
+such things. This should likely remove lots of other similar
+warnings as well.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/hid/hid-mcp2221.c | 169 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
+ scripts/kernel-doc | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
-index d958475..e1b93ce3 100644
---- a/drivers/hid/hid-mcp2221.c
-+++ b/drivers/hid/hid-mcp2221.c
-@@ -15,6 +15,7 @@
- #include <linux/hid.h>
- #include <linux/hidraw.h>
- #include <linux/i2c.h>
-+#include <linux/gpio/driver.h>
- #include "hid-ids.h"
- 
- /* Commands codes in a raw output report */
-@@ -27,6 +28,8 @@ enum {
- 	MCP2221_I2C_PARAM_OR_STATUS	= 0x10,
- 	MCP2221_I2C_SET_SPEED = 0x20,
- 	MCP2221_I2C_CANCEL = 0x10,
-+	MCP2221_GPIO_SET = 0x50,
-+	MCP2221_GPIO_GET = 0x51,
- };
- 
- /* Response codes in a raw input report */
-@@ -42,6 +45,8 @@ enum {
- 	MCP2221_I2C_WRADDRL_SEND = 0x21,
- 	MCP2221_I2C_ADDR_NACK = 0x25,
- 	MCP2221_I2C_READ_COMPL = 0x55,
-+	MCP2221_ALT_F_NOT_GPIOV = 0xEE,
-+	MCP2221_ALT_F_NOT_GPIOD = 0xEF,
- };
- 
- /*
-@@ -59,6 +64,9 @@ struct mcp2221 {
- 	int rxbuf_idx;
- 	int status;
- 	u8 cur_i2c_clk_div;
-+	struct gpio_chip *gc;
-+	u8 gp_idx;
-+	u8 gpio_dir;
- };
- 
- /*
-@@ -526,6 +534,110 @@ static const struct i2c_algorithm mcp_i2c_algo = {
- 	.functionality = mcp_i2c_func,
- };
- 
-+static int mcp_gpio_get(struct gpio_chip *gc,
-+				unsigned int offset)
-+{
-+	int ret;
-+	struct mcp2221 *mcp = gpiochip_get_data(gc);
-+
-+	mcp->txbuf[0] = MCP2221_GPIO_GET;
-+
-+	mcp->gp_idx = (offset + 1) * 2;
-+
-+	mutex_lock(&mcp->lock);
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 1);
-+	mutex_unlock(&mcp->lock);
-+
-+	return ret;
-+}
-+
-+static void mcp_gpio_set(struct gpio_chip *gc,
-+				unsigned int offset, int value)
-+{
-+	struct mcp2221 *mcp = gpiochip_get_data(gc);
-+
-+	memset(mcp->txbuf, 0, 18);
-+	mcp->txbuf[0] = MCP2221_GPIO_SET;
-+
-+	mcp->gp_idx = ((offset + 1) * 4) - 1;
-+
-+	mcp->txbuf[mcp->gp_idx - 1] = 1;
-+	mcp->txbuf[mcp->gp_idx] = !!value;
-+
-+	mutex_lock(&mcp->lock);
-+	mcp_send_data_req_status(mcp, mcp->txbuf, 18);
-+	mutex_unlock(&mcp->lock);
-+}
-+
-+static int mcp_gpio_dir_set(struct mcp2221 *mcp,
-+				unsigned int offset, u8 val)
-+{
-+	memset(mcp->txbuf, 0, 18);
-+	mcp->txbuf[0] = MCP2221_GPIO_SET;
-+
-+	mcp->gp_idx = (offset + 1) * 5;
-+
-+	mcp->txbuf[mcp->gp_idx - 1] = 1;
-+	mcp->txbuf[mcp->gp_idx] = val;
-+
-+	return mcp_send_data_req_status(mcp, mcp->txbuf, 18);
-+}
-+
-+static int mcp_gpio_direction_input(struct gpio_chip *gc,
-+				unsigned int offset)
-+{
-+	int ret;
-+	struct mcp2221 *mcp = gpiochip_get_data(gc);
-+
-+	mutex_lock(&mcp->lock);
-+	ret = mcp_gpio_dir_set(mcp, offset, 0);
-+	mutex_unlock(&mcp->lock);
-+
-+	return ret;
-+}
-+
-+static int mcp_gpio_direction_output(struct gpio_chip *gc,
-+				unsigned int offset, int value)
-+{
-+	int ret;
-+	struct mcp2221 *mcp = gpiochip_get_data(gc);
-+
-+	mutex_lock(&mcp->lock);
-+	ret = mcp_gpio_dir_set(mcp, offset, 1);
-+	mutex_unlock(&mcp->lock);
-+
-+	/* Can't configure as output, bailout early */
-+	if (ret)
-+		return ret;
-+
-+	mcp_gpio_set(gc, offset, value);
-+
-+	return 0;
-+}
-+
-+static int mcp_gpio_get_direction(struct gpio_chip *gc,
-+				unsigned int offset)
-+{
-+	int ret;
-+	struct mcp2221 *mcp = gpiochip_get_data(gc);
-+
-+	mcp->txbuf[0] = MCP2221_GPIO_GET;
-+
-+	mcp->gp_idx = (offset + 1) * 2;
-+
-+	mutex_lock(&mcp->lock);
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 1);
-+	mutex_unlock(&mcp->lock);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (mcp->gpio_dir)
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
- /* Gives current state of i2c engine inside mcp2221 */
- static int mcp_get_i2c_eng_state(struct mcp2221 *mcp,
- 				u8 *data, u8 idx)
-@@ -638,6 +750,39 @@ static int mcp2221_raw_event(struct hid_device *hdev,
- 		complete(&mcp->wait_in_report);
- 		break;
- 
-+	case MCP2221_GPIO_GET:
-+		switch (data[1]) {
-+		case MCP2221_SUCCESS:
-+			if ((data[mcp->gp_idx] == MCP2221_ALT_F_NOT_GPIOV) ||
-+				(data[mcp->gp_idx + 1] == MCP2221_ALT_F_NOT_GPIOD)) {
-+				mcp->status = -ENOENT;
-+			} else {
-+				mcp->status = !!data[mcp->gp_idx];
-+				mcp->gpio_dir = !!data[mcp->gp_idx + 1];
-+			}
-+			break;
-+		default:
-+			mcp->status = -EAGAIN;
-+		}
-+		complete(&mcp->wait_in_report);
-+		break;
-+
-+	case MCP2221_GPIO_SET:
-+		switch (data[1]) {
-+		case MCP2221_SUCCESS:
-+			if ((data[mcp->gp_idx] == MCP2221_ALT_F_NOT_GPIOV) ||
-+				(data[mcp->gp_idx - 1] == MCP2221_ALT_F_NOT_GPIOV)) {
-+				mcp->status = -ENOENT;
-+			} else {
-+				mcp->status = 0;
-+			}
-+			break;
-+		default:
-+			mcp->status = -EAGAIN;
-+		}
-+		complete(&mcp->wait_in_report);
-+		break;
-+
- 	default:
- 		mcp->status = -EIO;
- 		complete(&mcp->wait_in_report);
-@@ -702,8 +847,32 @@ static int mcp2221_probe(struct hid_device *hdev,
- 	}
- 	i2c_set_adapdata(&mcp->adapter, mcp);
- 
-+	/* Setup GPIO chip */
-+	mcp->gc = devm_kzalloc(&hdev->dev, sizeof(*mcp->gc), GFP_KERNEL);
-+	if (!mcp->gc) {
-+		ret = -ENOMEM;
-+		goto err_gc;
-+	}
-+
-+	mcp->gc->label = "mcp2221_gpio";
-+	mcp->gc->direction_input = mcp_gpio_direction_input;
-+	mcp->gc->direction_output = mcp_gpio_direction_output;
-+	mcp->gc->get_direction = mcp_gpio_get_direction;
-+	mcp->gc->set = mcp_gpio_set;
-+	mcp->gc->get = mcp_gpio_get;
-+	mcp->gc->ngpio = 4;
-+	mcp->gc->base = -1;
-+	mcp->gc->can_sleep = 1;
-+	mcp->gc->parent = &hdev->dev;
-+
-+	ret = devm_gpiochip_add_data(&hdev->dev, mcp->gc, mcp);
-+	if (ret)
-+		goto err_gc;
-+
- 	return 0;
- 
-+err_gc:
-+	i2c_del_adapter(&mcp->adapter);
- err_i2c:
- 	hid_hw_close(mcp->hdev);
- err_hstop:
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index f2d73f04e71d..d15c8ea95d93 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -214,6 +214,7 @@ my $type_constant2 = '\%([-_\w]+)';
+ my $type_func = '(\w+)\(\)';
+ my $type_param = '\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)';
+ my $type_fp_param = '\@(\w+)\(\)';  # Special RST handling for func ptr params
++my $type_fp_param2 = '\@(\w+->\S+)\(\)';  # Special RST handling for structs with func ptr params
+ my $type_env = '(\$\w+)';
+ my $type_enum = '\&(enum\s*([_\w]+))';
+ my $type_struct = '\&(struct\s*([_\w]+))';
+@@ -249,6 +250,7 @@ my @highlights_rst = (
+                        [$type_member_func, "\\:c\\:type\\:`\$1\$2\$3\\\\(\\\\) <\$1>`"],
+                        [$type_member, "\\:c\\:type\\:`\$1\$2\$3 <\$1>`"],
+ 		       [$type_fp_param, "**\$1\\\\(\\\\)**"],
++		       [$type_fp_param2, "**\$1\\\\(\\\\)**"],
+                        [$type_func, "\$1()"],
+                        [$type_enum, "\\:c\\:type\\:`\$1 <\$2>`"],
+                        [$type_struct, "\\:c\\:type\\:`\$1 <\$2>`"],
 -- 
-2.7.4
+2.25.2
 
