@@ -2,95 +2,124 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5078BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348FBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27F0C20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586857916;
-	bh=UjAhtjsT9rMrkz4Nk/bCMqZ4k1bEVfRcJ4ozupVxmNU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uzxTFvoOSFBmn66gg4Ur7fQ+q98P6F2opjxRxLshqsFgqTAYfIvcM3fBPSq5jQNAK
-	 qtHfFY7JiSYvT/2kgJd7NxkbfJrBQ7xQfkqOHRFy70CzOvrHkBmzr8yeUT+gWqJOlq
-	 +7pSIps+YOJVNCC21BeBw18FdjpSdvsF1pTNkB6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 143122072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="viGb6zZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438002AbgDNJvx (ORCPT
+        id S2438010AbgDNJv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437931AbgDNJuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:50:20 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C3272072D;
-        Tue, 14 Apr 2020 09:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586857819;
-        bh=UjAhtjsT9rMrkz4Nk/bCMqZ4k1bEVfRcJ4ozupVxmNU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FkdEBg58ZembEkKLyFNmOM6x5hbkt0evo5m40h9TeX5R33VL9j0/g0IQ8EM5cioJ5
-         AZ40YFxPIDPWN0GKPHoPSmd2E+QhjHEBo2DVyxFvoF6fWpxWxuH335dWnk8K+TV7ri
-         23z0WKJ5ZGWC3egja4Yvnk5aN9SnPdWk8dGY9gA0=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jOICv-0036Cw-P9; Tue, 14 Apr 2020 10:50:17 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 0/2] GICv4.1 fixes for 5.7
-Date:   Tue, 14 Apr 2020 10:50:11 +0100
-Message-Id: <20200414095013.2821418-1-maz@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 14 Apr 2020 05:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437964AbgDNJvV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:51:21 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095D2C072EDA;
+        Tue, 14 Apr 2020 02:51:21 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id i7so16272422edq.3;
+        Tue, 14 Apr 2020 02:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=rqmlYsX6Ig4L8f/9zje28ecRn6nWF5ISzXFA0f6dr0c=;
+        b=viGb6zZafzgvsPdJTt7sP+eFNtVC8uu2+ZAIqSTgeeAvLzmPWA4CODCd0ljvR5Mkyj
+         0/DrJxUV+SG8Mssk8pLboXdVGKZuPVBoDFNOuM6LlPNcngb0k7P1C+W/OAA4qC1aiXjT
+         W2iAGZGg9n06w5NyzaG3bAcQ6/9SwU1Npv91z70nN7ERPJC6eHX6QdBxqtZwXY54b289
+         QXJHAu9vZDTJ+2OuozqeK3srjPu4TNxPC68Ztmz4yQ+A8g+XitMb+MDfSF0GozO7ogeX
+         SxRZYIIAQg77rcd3OLEM2jPtO0PwI62BqlpB/ktRuEMufdDDVie1GBJ+62ahrbGK84hR
+         R8fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=rqmlYsX6Ig4L8f/9zje28ecRn6nWF5ISzXFA0f6dr0c=;
+        b=tgUZwmAbrZjCF+6mqJCXlNmfrb6PNDsDSfHVaHv9RkQU/2kbrNNShfBsMfiFEGbuNF
+         ekv1AAKPrJ19BO1D0PsncyvuYZyajcV6booW1qlH9UxfeVrhAnOg/0Ad8M+45nUrpnny
+         RYAPVtX5jy9i2TlyvRYlk1ZAib5dGE/H39PoZXvFeaVSRmWTFmp2ic0ZEODhBI9zZAUF
+         LVSVveNLh1ZUqOa2UNWvkoqv0ZCmP2zCtqobgAxOUTt07jJyj/dG+Mr+Z/g2si9Td6YV
+         nhUvXGlwkp5OzF54MK2vQkPNd5gswu/txJeuHKzvdBjTigLHgS9N3s1RWPRWAH8fF8by
+         Kxtw==
+X-Gm-Message-State: AGi0PubFsUtjNuEcjG3BcLsNfyCPHQ6Ooty7bp7+YsQ/049jXxL0sS7v
+        gax6Ya4deHfXicmPp0Y3EOUFH0jtiBa4zXRFnCc=
+X-Google-Smtp-Source: APiQypKp8eHSjjE16jhChIfVgTCOhYk4SKLhW5qt7sQqopmQ2+MHareRjtFeA98UxsEX++pwQZfXhSUDGga/1kTQGPE=
+X-Received: by 2002:a17:906:add7:: with SMTP id lb23mr11378783ejb.6.1586857879752;
+ Tue, 14 Apr 2020 02:51:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, yuzenghui@huawei.com, eric.auger@redhat.com, jason@lakedaemon.net, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <96bedbaf-49ea-f24b-b7b1-fb9a57fb6c7d@gmail.com>
+ <20200411154031.642557-1-avagin@gmail.com> <CAKgNAki6uBHVTBdJvj7hzbho9Z94MWRV7ab8npduogQohRndBQ@mail.gmail.com>
+ <20200413154746.39275d0981f69e57a7ecab3e@linux-foundation.org>
+In-Reply-To: <20200413154746.39275d0981f69e57a7ecab3e@linux-foundation.org>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Tue, 14 Apr 2020 11:51:08 +0200
+Message-ID: <CAKgNAkha+=3Lxq+AVsRqPNb9FxVEG4rx1wr=HfoV3RfosKi=Tw@mail.gmail.com>
+Subject: Re: [PATCH v2] timens: show clock symbolic names in /proc/pid/timens_offsets
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here's a couple of GICv4.1 fixes for issues that have been found
-during the 5.7 merge window.
+On Tue, 14 Apr 2020 at 00:47, Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Sun, 12 Apr 2020 07:51:47 +0200 "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> wrote:
+>
+> > Hi Andrei,
+> >
+> > On Sat, 11 Apr 2020 at 17:40, Andrei Vagin <avagin@gmail.com> wrote:
+> > >
+> > > Michael Kerrisk suggested to replace numeric clock IDs on symbolic
+> > > names.
+> > >
+> > > Now the content of these files looks like this:
+> > > $ cat /proc/774/timens_offsets
+> > > monotonic      864000         0
+> > > boottime      1728000         0
+> >
+> > Thanks.
+> >
+> > Assuming no-one has objections to the patch, please do mark for stable@.
+> >
+>
+> `grep -r timens_offsets Documentation' comes up blank.  Is
+> /proc/pid/timens_offsets documented anywhere?  If not, it should be!
+> And this patch should update that documentation.
+>
+> I assume the time namespace feature itself is documented under clone(2)?
 
-The first one implements the "Dirty+Valid" feature, where the
-hypervisor can wait for the GIC to have finish parsing the VPT before
-entering the guest. The feature was optional in GICv4.0, but is now
-mandatory in GICv4.1, so let's take advantage of it.
+We're good, so far. There's time_namespaces(7) [1] and documentation
+of CLONE_NEWTIME in unshare(2) [2].
 
-The second patch fixes an issue where the kernel shouts about the
-effective affinity of VSGIs not being updated, which is the absolute
-truth. Let's fix it.
-
-I plan to send these fixes as part of a bigger pull request for -rc2.
+CLONE_NEWTIME support for clone3() is still a work in progress [3].
 
 Thanks,
 
-	M.
+Michael
 
-Marc Zyngier (2):
-  irqchip/gic-v4.1: Add support for VPENDBASER's Dirty+Valid signaling
-  irqchip/gic-v4.1: Update effective affinity of virtual SGIs
+[1] http://man7.org/linux/man-pages/man7/time_namespaces.7.html
+[2] http://man7.org/linux/man-pages/man2/unshare.2.html
+[3] https://lore.kernel.org/lkml/20200317083043.226593-1-areber@redhat.com/
 
- drivers/irqchip/irq-gic-v3-its.c   | 20 ++++++++++++++++++++
- drivers/irqchip/irq-gic-v3.c       | 11 +++++++----
- include/linux/irqchip/arm-gic-v3.h |  2 ++
- 3 files changed, 29 insertions(+), 4 deletions(-)
 
--- 
-2.25.1
-
+--
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
