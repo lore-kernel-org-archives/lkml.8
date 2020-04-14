@@ -2,137 +2,169 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4DEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33067C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7744A2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0892072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qi+aAYqV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mmXkF1Ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406982AbgDNIIg (ORCPT
+        id S2407006AbgDNIJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
+        Tue, 14 Apr 2020 04:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406964AbgDNIIM (ORCPT
+        by vger.kernel.org with ESMTP id S2406964AbgDNIJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:08:12 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57351C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:08:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k11so12590292wrp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:08:07 -0700 (PDT)
+        Tue, 14 Apr 2020 04:09:03 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC0FC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:09:02 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id i26so11023563pfk.20
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:09:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Of87X/gGHd7WK7J8InDBiy0jDOtLSnaghXrcb3fjgfk=;
-        b=Qi+aAYqVu1eN15qmGiNzA8fNa4lIaXjb7w8Ocp8Gc0hvk+JIaKlkVXzyxUG8n0kj+r
-         UO5wQRuYWMusYRen73PY8mnpxj7c2gEagVixnKH7uYpOo25BzIAhsiy4AwByxwVKgDTX
-         3usXFCaxp+gOky+4ixr3sYj7SJeR2HTcyBG8WdE5NSYpwB+WADiE6Jvju2AScK2TrryU
-         m0Nbcv9ajXflZubAOOw8jM1w57tWTxiDu8rNj7uzuriDtcDYZAa3eT9hU0TcjfE4Hm8v
-         K5mfMgvUSBew+h/w06khwgn9kCDZAA34fzfhg7vHcnzLGX4BOXe2yx/so+jE4QPF1o8e
-         YT5g==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=NSjekJEL9dfitQBDMlYCs94wAxGHyeVP0lyLYkmsTXc=;
+        b=mmXkF1TiPnLArNENdITTbIK7PKEuRC0AWfk37LwCXOlAJi5whkVBaXbVlSthCWmVAp
+         gprYNFHBDQOKwlHBdcRMXZvSpOLbn4DSE/YkC+XaFlVLdQfiXqhsyr5PnsfeQFzyqdB2
+         ZkKZUhxsDmTr286OImNRkE5EVZRJuzd1Df6fqdbii8zhXu1WXcY0/OIFdDwpjUIn7KNi
+         jOoSbcvXclS2ileGlm4eHyvhEDOR8fnKc+umRQS9MgG+YQvk6TOfedJKHkubEPdqOB6W
+         bEqS/aaEsA2iYjWu2+7pKsxGiI0/gzpTZ+/PxnNljZV2PgZv+FJHYwyhYkZykwFk3AkU
+         AgUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Of87X/gGHd7WK7J8InDBiy0jDOtLSnaghXrcb3fjgfk=;
-        b=pLbUjqbUO8k/GbdbwSwHx02GVxit1hdc0i8RWmpRrx/wIxNqzcML/+Hvgu2fDhxIdn
-         J0Zz02yAtSa4qXr2xvOk203WK/HvLv/nSEUKhH1lczfCtCw7bbpxgFDVU/Q44bYcVIKC
-         8cmrr5d8uuAK9no8MssAkA77tR+9vu1Ij8VPuKXjKLXv4llzkTaXe8agIc3OE2NpmMyG
-         N7IZy4paHyu/bfZgDDEU7vuhDaxbc0FWwMQ2hepYf4BtBEi53rJ0pRQlcF0D5ThYF83T
-         KPpmXeZRTAOrd6Q/P6qsfPKkMA7w2zO9+5bFmDWHU8THH4uCGiyVtsGlHmttdk7/XEfu
-         Emkw==
-X-Gm-Message-State: AGi0PuZ26fggaeWh5rCpaqRrowjMFIx0NKlz1ARJiKU+qAoegoHtvAQf
-        lqKI9h57Xqx3GuHBTZ1PtRmC5A==
-X-Google-Smtp-Source: APiQypLIN3SbXV7PM0uFFyvMDh857863ygqy9yht/XtufvHAtOL8FPNIeAgdp7UPDBUQOVQgcQy0GQ==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr10371255wrq.222.1586851685895;
-        Tue, 14 Apr 2020 01:08:05 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id f63sm17383374wma.47.2020.04.14.01.08.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 01:08:05 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 09:09:05 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v8 2/3] mfd: add Gateworks System Controller core driver
-Message-ID: <20200414080905.GC2167633@dell>
-References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
- <1585341214-25285-3-git-send-email-tharvey@gateworks.com>
- <CAJ+vNU1GWFKv8f-ihhoVTWgD8G5UyupOek1fmBPaU0QXKC1qHw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ+vNU1GWFKv8f-ihhoVTWgD8G5UyupOek1fmBPaU0QXKC1qHw@mail.gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=NSjekJEL9dfitQBDMlYCs94wAxGHyeVP0lyLYkmsTXc=;
+        b=ajfjK87+2qxvfqha/ntNA2hmRjO1IDmz8jtv9FYsjMDg0i3sBTtINXFoEOnwRSHfjA
+         o44gPLvZbXwJ/FEBM0iW5JJ7cPjWG4vaguqdduuFsZ+9ZW/g77aC9A5VIZzQNlLPykIZ
+         CPnQS+5YavTM5xcK0F4vrn9xVtnA0qxn4EA14B8MeFf/3uvqVHzZ6WkMioSTc+Be4nlI
+         aeM1SrJXboh6M9QN34X4G8nxeDQeRstWRCIkyJCVTFW3wZhLzYV1+MesCJW8MzRjshUH
+         lRRsm8dkUnigZfonOA1QSg53mD6MAKn5UUSMRtSPtWir/YWlhhY5E5cYEhsT9OJqZuS2
+         KwQw==
+X-Gm-Message-State: AGi0PublW4Shjnv2fpddtPThpnVKyVaeKeSTRIPFOHG0nky7ggjcOG8A
+        cwxtMfFFXpUfbpiSHANnUQD7vqP2ZhgB
+X-Google-Smtp-Source: APiQypI8baE5/Q7SqmnUzI3AwP72Y2H9nKVzkJ7fBqelS6PhL2rYS2Ti9BIkayNWGf2zD1m0exBOQ/IlWhvs
+X-Received: by 2002:a63:2901:: with SMTP id p1mr20524245pgp.444.1586851742111;
+ Tue, 14 Apr 2020 01:09:02 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 16:08:40 +0800
+Message-Id: <20200414160758.v1.1.Idab9dcdc7da549ed1fd5c66341fb8baffaee8d10@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH v1] Bluetooth: L2CAP: add support for waiting disconnection resp
+From:   Archie Pusaka <apusaka@google.com>
+To:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Cc:     Archie Pusaka <apusaka@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Apr 2020, Tim Harvey wrote:
+From: Archie Pusaka <apusaka@chromium.org>
 
-> On Fri, Mar 27, 2020 at 1:33 PM Tim Harvey <tharvey@gateworks.com> wrote:
-> >
-> > The Gateworks System Controller (GSC) is an I2C slave controller
-> > implemented with an MSP430 micro-controller whose firmware embeds the
-> > following features:
-> >  - I/O expander (16 GPIO's) using PCA955x protocol
-> >  - Real Time Clock using DS1672 protocol
-> >  - User EEPROM using AT24 protocol
-> >  - HWMON using custom protocol
-> >  - Interrupt controller with tamper detect, user pushbotton
-> >  - Watchdog controller capable of full board power-cycle
-> >  - Power Control capable of full board power-cycle
-> >
-> > see http://trac.gateworks.com/wiki/gsc for more details
-> >
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> > ---
-> >  MAINTAINERS                 |   8 ++
-> >  drivers/mfd/Kconfig         |  10 ++
-> >  drivers/mfd/Makefile        |   1 +
-> >  drivers/mfd/gateworks-gsc.c | 288 ++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/gsc.h     |  73 +++++++++++
-> >  5 files changed, 380 insertions(+)
-> >  create mode 100644 drivers/mfd/gateworks-gsc.c
-> >  create mode 100644 include/linux/mfd/gsc.h
+Whenever we disconnect a L2CAP connection, we would immediately
+report a disconnection event (EPOLLHUP) to the upper layer, without
+waiting for the response of the other device.
 
-[...]
+This patch offers an option to wait until we receive a disconnection
+response before reporting disconnection event, by using the "how"
+parameter in l2cap_sock_shutdown(). Therefore, upper layer can opt
+to wait for disconnection response by shutdown(sock, SHUT_WR).
 
-Please clip your responses.
+This can be used to enforce proper disconnection order in HID,
+where the disconnection of the interrupt channel must be complete
+before attempting to disconnect the control channel.
 
-> Lee,
-> 
-> Do you have time to look at this? Rob has reviewed the dt-bindings and
-> Guenter has reviewed the hwmon driver so this is the only patch
-> remaining in the series that needs review/sign-off.
+Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+---
 
-It's on the list.
+ net/bluetooth/l2cap_sock.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-Please bear in mind that the merge-window has been open for the past 2
-weeks.  Usually reviewing cadence slows down during this period.  It
-should be ramping up again this week.
-
+diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
+index 1cea42ee1e922..a995d2c51fa7f 100644
+--- a/net/bluetooth/l2cap_sock.c
++++ b/net/bluetooth/l2cap_sock.c
+@@ -1271,14 +1271,21 @@ static int l2cap_sock_shutdown(struct socket *sock, int how)
+ 	struct l2cap_conn *conn;
+ 	int err = 0;
+ 
+-	BT_DBG("sock %p, sk %p", sock, sk);
++	BT_DBG("sock %p, sk %p, how %d", sock, sk, how);
++
++	/* 'how' parameter is mapped to sk_shutdown as follows:
++	 * SHUT_RD   (0) --> RCV_SHUTDOWN  (1)
++	 * SHUT_WR   (1) --> SEND_SHUTDOWN (2)
++	 * SHUT_RDWR (2) --> SHUTDOWN_MASK (3)
++	 */
++	how++;
+ 
+ 	if (!sk)
+ 		return 0;
+ 
+ 	lock_sock(sk);
+ 
+-	if (sk->sk_shutdown)
++	if ((sk->sk_shutdown & how) == how)
+ 		goto shutdown_already;
+ 
+ 	BT_DBG("Handling sock shutdown");
+@@ -1301,11 +1308,20 @@ static int l2cap_sock_shutdown(struct socket *sock, int how)
+ 		 * has already been actioned to close the L2CAP
+ 		 * link such as by l2cap_disconnection_req().
+ 		 */
+-		if (sk->sk_shutdown)
+-			goto has_shutdown;
++		if ((sk->sk_shutdown & how) == how)
++			goto shutdown_matched;
+ 	}
+ 
+-	sk->sk_shutdown = SHUTDOWN_MASK;
++	/* Try setting the RCV_SHUTDOWN bit, return early if SEND_SHUTDOWN
++	 * is already set
++	 */
++	if ((how & RCV_SHUTDOWN) && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
++		sk->sk_shutdown |= RCV_SHUTDOWN;
++		if ((sk->sk_shutdown & how) == how)
++			goto shutdown_matched;
++	}
++
++	sk->sk_shutdown |= SEND_SHUTDOWN;
+ 	release_sock(sk);
+ 
+ 	l2cap_chan_lock(chan);
+@@ -1335,7 +1351,7 @@ static int l2cap_sock_shutdown(struct socket *sock, int how)
+ 		err = bt_sock_wait_state(sk, BT_CLOSED,
+ 					 sk->sk_lingertime);
+ 
+-has_shutdown:
++shutdown_matched:
+ 	l2cap_chan_put(chan);
+ 	sock_put(sk);
+ 
+@@ -1363,7 +1379,7 @@ static int l2cap_sock_release(struct socket *sock)
+ 
+ 	bt_sock_unlink(&l2cap_sk_list, sk);
+ 
+-	err = l2cap_sock_shutdown(sock, 2);
++	err = l2cap_sock_shutdown(sock, SHUT_RDWR);
+ 	chan = l2cap_pi(sk)->chan;
+ 
+ 	l2cap_chan_hold(chan);
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.26.0.110.g2183baf09c-goog
+
