@@ -2,121 +2,162 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51946C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE55C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350D02074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586890530;
-	bh=D4uD8lJngE4r0vCQv58R/Cgz9fWEBtk9Yx3Wo3ClZqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dSlzArf/YZj0waJvGveqBvPjKsJ8uxl0cdxXgEbrCXq+bKgPYwKZ+JrD3wFuqxMCy
-	 1jMbWmgc1xqmmEpU1aFBAR2pkGhnARi5dj82nqPQz4fU7AorVNqsS9WDuBsdEdzbEs
-	 eS9/XX7vxvuXzSuVIHKy8VxCNn9zzLG7BzpypAmo=
+	by mail.kernel.org (Postfix) with ESMTP id 86F982074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504507AbgDNSz2 (ORCPT
+        id S2504517AbgDNS5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53334 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 14:57:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56824 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732445AbgDNSz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:55:26 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420B42074D;
-        Tue, 14 Apr 2020 18:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586890525;
-        bh=D4uD8lJngE4r0vCQv58R/Cgz9fWEBtk9Yx3Wo3ClZqs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tUBphm2Rb7rh1cocNFCF1O3d+uVd8Mn+1KwUOvaIashLzhYAJJs6WNDl3X86yG9DI
-         9aLh5UjxG3LWYb5CqkQZi3z3ge5ZDoA2lJw2UnrACJBojsjTRDcGYSATVnqgk+gwd7
-         hv1wN/PhGiKOWf6tqhg7U4DyL5tiqkU8Ii2fGoQY=
-Date:   Tue, 14 Apr 2020 19:55:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
-Message-ID: <20200414185523.GO5412@sirena.org.uk>
-References: <20200411200632.4045-1-peron.clem@gmail.com>
- <20200411200632.4045-2-peron.clem@gmail.com>
- <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com>
- <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
- <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com>
- <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com>
- <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
- <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
- <000f26f4-3640-797f-c7f6-4b31a5e2669e@arm.com>
- <CAJiuCccF3tmbmMWNh0nC5WRJ1_iPdj6f1oH1zYMSue_pFrXsPQ@mail.gmail.com>
+        id S2504506AbgDNS4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:56:53 -0400
+IronPort-SDR: XKRUMzP2ZUuR01+PDeGHlM8UEzYAhRXanBGl9PpguoWY/fZMHWS2R22UQcOwe0YjKjm9DTwt/X
+ pIbX8GjuunSA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 11:56:52 -0700
+IronPort-SDR: UvQ/6ztvx0TCdplr43il0ubV3TgVSB9HK70EVXAFQGacC/VD68NiP7tpbEUWfOhxxsG2vqe09c
+ L4Ihwya5KPEA==
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="427167435"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.255.230.158]) ([10.255.230.158])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 11:56:51 -0700
+Subject: Re: [RFC PATCH v2 0/2] x86/resctrl: Start abstraction for a second
+ arch
+To:     James Morse <james.morse@arm.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "Moger, Babu" <Babu.Moger@amd.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <fa703609-4eed-7266-c389-a5dbba14d2ce@intel.com>
+Date:   Tue, 14 Apr 2020 11:56:48 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WoqaC9TUMqqIOlla"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCccF3tmbmMWNh0nC5WRJ1_iPdj6f1oH1zYMSue_pFrXsPQ@mail.gmail.com>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi James,
 
---WoqaC9TUMqqIOlla
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/31/1969 4:00 PM, James Morse wrote:
+> Hi folks,
+> 
+> These two patches are the tip of the MPAM iceberg.
+> 
+> Arm have some CPU support for dividing caches into portions, and
+> applying bandwidth limits at various points in the SoC. The collective term
+> for these features is MPAM: Memory Partitioning and Monitoring.
+> 
+> MPAM is similar enough to Intel RDT, that it should use the defacto linux
+> interface: resctrl. This filesystem currently lives under arch/x86, and is
+> tightly coupled to the architecture.
+> Ultimately, my plan is to split the existing resctrl code up to have an
+> arch<->fs abstraction, then move all the bits out to fs/resctrl. From there
+> MPAM can be wired up.
+> 
+> These two patches are step one: Split the two structs that resctrl uses
+> to have an arch<->fs split. These sit on top of the cleanup posted here:
+> lore.kernel.org/r/20200214182401.39008-1-james.morse@arm.com
+> 
+> I'm after strong opinions like "No! struct mbm_state is obviously arch
+> specific.". Making the hardware configuration belong to the arch code
+> instead of resctrl is so that it can be scaled on arm64, where MPAM
+> allows terrifyingly large portion bitmaps for the caches.
+> 
+> 
+> 
+> Last time these were posted, the request was for the spec, and to see
+> the whole fully assembled iceberg.
+> 
+> The spec is here:
+> https://static.docs.arm.com/ddi0598/ab/DDI0598A_b_MPAM_supp_armv8a.pdf
+> 
+> For a slightly dated view of the whole tree:
+> 1. Don peril sensitive sunglasses
+> 2. https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/log/?h=mpam/snapshot/feb
+> 
+> The tree is generally RFC-quality. It gets more ragged once you get out of
+> the x86 code. I anticipate all the arm64 code being rewritten before its
+> considered for merging.
+> 
+> (I haven't reposted the CDP origami as before, as I think that series
+> will be clearer if I re-order the patches ... it may even be shorter)
+> 
+> 
+> Does it all work? Almost. Monitor groups are proving to be a problem, I
+> can't see a way of getting these working without a user-visible change of
+> behaviour.
+> MPAMs counters aren't 1:1 with RMIDs, so supporting MBM_* on
+> any likely hardware will have to be via something other than resctrl.
+> 
 
-On Tue, Apr 14, 2020 at 08:20:23PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Liam and Mark,
+Before jumping to the details within the patches of this work ...
 
-You might want to flag stuff like this in the subject line, I very
-nearly deleted this without opening it since most of the email I get
-about panfrost appears to be coming from me having sent patches rather
-than being relevant.
+Could you please summarize the salient points from the spec, pointing
+readers to the spec for more information? A start would be how resctrl
+is expected to support MPAM. Could you highlight where does resctrl
+interface or assumptions currently fall short? How is the planned MPAM
+integration addressing these shortcomings?
 
-> We are having an issue with Panfrost driver registering two times the
-> same regulator and giving an error when trying to create the debugfs
-> folder.
+Some higher level questions I have after scanning the spec and patches are:
 
-> Could you clarify if it is allowed for a device to register two times
-> the same regulator?
+* The spec contains many details of how MPAM supports virtualization. Is
+it expected that all of this would be supported with resctrl? For
+example, while some registers may be abstracted it seems some interface
+may be needed to configure the virt to phy PARTID mappings. Information
+about how resctrl is envisioned to support MPAM's virtualization would
+help a lot.
 
-> I check Documentation/power/regulator/regulator.rst but this point is
-> not specified.
+* Looking at the commits (1385052cce87a8aed5dc0e96967cedd9e74a17e0 -
+"x86/resctrl: Group staged configuration into a separate struct") I
+found mention of a change in the schemata. Highlighting any planned
+resctrl interface changes would be very helpful.
 
-We don't actively prevent it and I can't think what other than debugfs
-might run into problems (and that's just a warning) but it does seem
-like a weird thing to want to do and like it's pointing to some
-confusion in your code with two different parts of the device
-controlling the same supply independently.  What's the use case here?
+* Apart from actual interface changes, highlighting planned behavior
+changes and motivation for them would also be helpful … for example
+force enabling of CDP on all cache levels is a red flag to me.
 
---WoqaC9TUMqqIOlla
-Content-Type: application/pgp-signature; name="signature.asc"
+* I am curious about how the configurability of MPAM will be handled. It
+seems as though MPAM is highly configurable, how is this expected to be
+handled in resctrl? For example, this message and KNOWN_ISSUES among the
+patches mentions an ABI issue that RMID is independent from CLOSID in
+RDT but PMG (like RMID) is dependent on PARTID (like CLOSID) in MPAM.
+There is a MATCH_PARTID configuration option in MPAM that makes PMG not
+depend on PARTID and thus seem to bring closer to RDT. I am surely not
+indicating that MPAM should be made to behave like RDT but it does seem
+that MPAM is very configurable. Is it the intention to support all ways
+in which MPAM can be used and if so is the plan for resctrl so support
+making these configuration changes and then support them? For example,
+would you want resctrl to support all variations where MATCH_PARTID ==
+[0|1] and MATCH_PMG == [0|1]? My intention here is not to delve into
+these details in particular, instead I hope to use it as an example of
+what I mean when curious about how (if at all) resctrl is envisioned to
+support the configurability of MPAM.
 
------BEGIN PGP SIGNATURE-----
+It seems to me that MPAM may need more than what is currently available
+from resctrl but it is hard for me to digest a 276 page spec and 150
+patch series to fully understand what needs to be support and how to do
+so. I look forward to learning more about the goals of what needs to be
+supported and your vision for resctrl to do so.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6WBxoACgkQJNaLcl1U
-h9AufQf/b6efImc7LvBHGoIjbHuK7UiFNve0LJJqjKwvdUwdpOp/m+WzrHWaNAvO
-5JNbL9U5h7T5oGh5A9AiToEysk1Fo7St5WLmbEJBXqD8Nhg9yQU/3OtCTgHi+2LP
-gx3nA1upkwg3OVkAt5RO1jX70kRXebrAPGy4FgGUyiLhNKnK6Nqf8FXnVzhy6Szl
-wH1/jGJlNphErY6s9t9nQLHSY8uS2h2AVvRHA8m5TJeGCGVcfr9iH8r/lLgfIWZI
-9SiBZkDSSPsqPOaUylAF2QPyGRx8hNQrJX0Ih4MFsuts0JW1YUO1iNTW6HGj7gL9
-8c4/u0KEtqVMiq2q6PnG7cfk2XlkNA==
-=+uTF
------END PGP SIGNATURE-----
+Thank you
 
---WoqaC9TUMqqIOlla--
+Reinette
