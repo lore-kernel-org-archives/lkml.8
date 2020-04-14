@@ -2,178 +2,170 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46689C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FBDC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 291232076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528752075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:25:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSVZFx1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391462AbgDNQYu (ORCPT
+        id S2391499AbgDNQZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391445AbgDNQYa (ORCPT
+        Tue, 14 Apr 2020 12:25:13 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58923 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391445AbgDNQZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:24:30 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DB4C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:24:30 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 99A302A1ADC
-Subject: Re: [PATCH v2 1/2] platform/chrome: cros_ec_ishtp: skip old cros_ec
- responses
-To:     Mathew King <mathewk@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Jett Rink <jettrink@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-References: <20200410162305.76638-1-mathewk@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <c0e0c052-17bd-fea7-a4a8-07b4afbe56bd@collabora.com>
-Date:   Tue, 14 Apr 2020 18:24:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 14 Apr 2020 12:25:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586881498;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yW8t58m2bp1NhazlqC7/k8J+nPWsrZBYDWUsjTyk2qQ=;
+        b=iSVZFx1LdZzlXzoSX3TMwvZk2Ifhrb7SKzZcOWGst1uS0qKQy8q3w3VSWR/4Eoi3rBu9qt
+        ETnC2uNUsR4TAhZnqEV7gbdo3HuFrIR4QDDRt5bzbPnJrHKZEkQ69gJs8SNC6WiMrLU9Il
+        vjg2zlItsqSgLEW3T56umH6CcYavH+s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-m_CJjLwlPvyXxruKyZ4cKA-1; Tue, 14 Apr 2020 12:24:56 -0400
+X-MC-Unique: m_CJjLwlPvyXxruKyZ4cKA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12123107ACC4;
+        Tue, 14 Apr 2020 16:24:50 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-118-173.rdu2.redhat.com [10.10.118.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E02D118DEE;
+        Tue, 14 Apr 2020 16:24:36 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] crypto: Remove unnecessary memzero_explicit()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+References: <20200413211550.8307-1-longman@redhat.com>
+ <20200413222846.24240-1-longman@redhat.com>
+ <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e194a51f-a5e5-a557-c008-b08cac558572@redhat.com>
+Date:   Tue, 14 Apr 2020 12:24:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200410162305.76638-1-mathewk@chromium.org>
+In-Reply-To: <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jett and Mathew,
+On 4/14/20 2:08 AM, Christophe Leroy wrote:
+>
+>
+> Le 14/04/2020 =C3=A0 00:28, Waiman Long a =C3=A9crit=C2=A0:
+>> Since kfree_sensitive() will do an implicit memzero_explicit(), there
+>> is no need to call memzero_explicit() before it. Eliminate those
+>> memzero_explicit() and simplify the call sites. For better correctness=
+,
+>> the setting of keylen is also moved down after the key pointer check.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>> =C2=A0 .../allwinner/sun8i-ce/sun8i-ce-cipher.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 19 +++++-------------
+>> =C2=A0 .../allwinner/sun8i-ss/sun8i-ss-cipher.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 20 +++++--------------
+>> =C2=A0 drivers/crypto/amlogic/amlogic-gxl-cipher.c=C2=A0=C2=A0 | 12 ++=
++--------
+>> =C2=A0 drivers/crypto/inside-secure/safexcel_hash.c=C2=A0 |=C2=A0 3 +-=
+-
+>> =C2=A0 4 files changed, 14 insertions(+), 40 deletions(-)
+>>
+>> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> index aa4e8fdc2b32..8358fac98719 100644
+>> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> @@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sun8i_cipher_tfm_ctx *op =3D cry=
+pto_tfm_ctx(tfm);
+>> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (op->key) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memzero_explicit(op->key, =
+op->keylen);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(op->key);
+>> -=C2=A0=C2=A0=C2=A0 }
+>> +=C2=A0=C2=A0=C2=A0 kfree_sensitive(op->key);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 crypto_free_sync_skcipher(op->fallback_=
+tfm);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_put_sync_suspend(op->ce->dev=
+);
+>> =C2=A0 }
+>> @@ -391,14 +388,11 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher
+>> *tfm, const u8 *key,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_dbg(ce->dev=
+, "ERROR: Invalid keylen %u\n", keylen);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0 if (op->key) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memzero_explicit(op->key, =
+op->keylen);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(op->key);
+>> -=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0 op->keylen =3D keylen;
+>> +=C2=A0=C2=A0=C2=A0 kfree_sensitive(op->key);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 op->key =3D kmemdup(key, keylen, GFP_KE=
+RNEL | GFP_DMA);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!op->key)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> +=C2=A0=C2=A0=C2=A0 op->keylen =3D keylen;
+>
+> Does it matter at all to ensure op->keylen is not set when of->key is
+> NULL ? I'm not sure.
+>
+> But if it does, then op->keylen should be set to 0 when freeing op->key=
+.=20
 
-Thank you for the patch
+My thinking is that if memory allocation fails, we just don't touch
+anything and return an error code. I will not explicitly set keylen to 0
+in this case unless it is specified in the API documentation.
 
-On 10/4/20 18:23, Mathew King wrote:
-> From: Jett Rink <jettrink@chromium.org>
-> 
-> The ISHTP layer can give us old responses that we already gave up on. We
-> do not want to interpret these old responses as the current response we
-> are waiting for.
-> 
-> The cros_ish should only have one request in flight at a time. We send
-> the request and wait for the response from the ISH. If the ISH is too
-> slow to respond we give up on that request and we can send a new
-> request. The ISH may still send the response to the request that timed
-> out and without this we treat the old response as the response to the
-> current command. This is a condition that should not normally happen but
-> it has been observed with a bad ISH image. So add a token to the request
-> header which is copied into the response header when the ISH processes
-> the message to ensure that response is for the current request.
-> 
-> Signed-off-by: Jett Rink <jettrink@chromium.org>
-> Signed-off-by: Mathew King <mathewk@chromium.org>
+Cheers,
+Longman
 
-Queued for 5.8
-
-> ---
-> v2: - Change from using id to token
->     - Reword the commit message
-> ---
->  drivers/platform/chrome/cros_ec_ishtp.c | 32 ++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-> index 93a71e93a2f1..e673a7f738fc 100644
-> --- a/drivers/platform/chrome/cros_ec_ishtp.c
-> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
-> @@ -48,7 +48,8 @@ static const guid_t cros_ish_guid =
->  struct header {
->  	u8 channel;
->  	u8 status;
-> -	u8 reserved[2];
-> +	u8 token;
-> +	u8 reserved;
->  } __packed;
->  
->  struct cros_ish_out_msg {
-> @@ -90,6 +91,7 @@ static DECLARE_RWSEM(init_lock);
->   * data exceeds this value, we log an error.
->   * @size: Actual size of data received from firmware.
->   * @error: 0 for success, negative error code for a failure in process_recv().
-> + * @token: Expected token for response that we are waiting on.
->   * @received: Set to true on receiving a valid firmware	response to host command
->   * @wait_queue: Wait queue for host to wait for firmware response.
->   */
-> @@ -98,6 +100,7 @@ struct response_info {
->  	size_t max_size;
->  	size_t size;
->  	int error;
-> +	u8 token;
->  	bool received;
->  	wait_queue_head_t wait_queue;
->  };
-> @@ -162,6 +165,7 @@ static int ish_send(struct ishtp_cl_data *client_data,
->  		    u8 *out_msg, size_t out_size,
->  		    u8 *in_msg, size_t in_size)
->  {
-> +	static u8 next_token;
->  	int rv;
->  	struct header *out_hdr = (struct header *)out_msg;
->  	struct ishtp_cl *cros_ish_cl = client_data->cros_ish_cl;
-> @@ -174,8 +178,11 @@ static int ish_send(struct ishtp_cl_data *client_data,
->  	client_data->response.data = in_msg;
->  	client_data->response.max_size = in_size;
->  	client_data->response.error = 0;
-> +	client_data->response.token = next_token++;
->  	client_data->response.received = false;
->  
-> +	out_hdr->token = client_data->response.token;
-> +
->  	rv = ishtp_cl_send(cros_ish_cl, out_msg, out_size);
->  	if (rv) {
->  		dev_err(cl_data_to_dev(client_data),
-> @@ -249,17 +256,23 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
->  
->  	switch (in_msg->hdr.channel) {
->  	case CROS_EC_COMMAND:
-> -		/* Sanity check */
-> -		if (!client_data->response.data) {
-> +		if (client_data->response.received) {
->  			dev_err(dev,
-> -				"Receiving buffer is null. Should be allocated by calling function\n");
-> -			client_data->response.error = -EINVAL;
-> -			goto error_wake_up;
-> +				"Previous firmware message not yet processed\n");
-> +			goto end_error;
->  		}
->  
-> -		if (client_data->response.received) {
-> +		if (client_data->response.token != in_msg->hdr.token) {
-> +			dev_err_ratelimited(dev,
-> +					    "Dropping old response token %d\n",
-> +					    in_msg->hdr.token);
-> +			goto end_error;
-> +		}
-> +
-> +		/* Sanity check */
-> +		if (!client_data->response.data) {
->  			dev_err(dev,
-> -				"Previous firmware message not yet processed\n");
-> +				"Receiving buffer is null. Should be allocated by calling function\n");
->  			client_data->response.error = -EINVAL;
->  			goto error_wake_up;
->  		}
-> @@ -289,9 +302,10 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
->  		memcpy(client_data->response.data,
->  		       rb_in_proc->buffer.data, data_len);
->  
-> +error_wake_up:
->  		/* Set flag before waking up the caller */
->  		client_data->response.received = true;
-> -error_wake_up:
-> +
->  		/* Wake the calling thread */
->  		wake_up_interruptible(&client_data->response.wait_queue);
->  
-> 
