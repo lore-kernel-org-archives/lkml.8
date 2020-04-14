@@ -2,135 +2,295 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E82C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFD5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2F4F2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A8820787
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3+2T5N+"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NKMoMvq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633306AbgDNUme (ORCPT
+        id S2633315AbgDNUmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729251AbgDNUmQ (ORCPT
+        Tue, 14 Apr 2020 16:42:37 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34088 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730487AbgDNUmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:42:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958F5C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=f6MlGhTrcfhE1matnY+gFa+jGAtYKA2T1KF8VNUMpDE=; b=e3+2T5N+0nfY8EtcHFc1NCkWQG
-        FaeuviunEq6Wm0GkCubBuH66TIFCjGuHLfcqqEzA31UTQtFMnKL0IMjud4r7RsPGNlTTGlZO2GpG4
-        KTnhLkSX/o5DC+G53S0e8WNc4ZeiNbYx64khP15zkcWFLOAExY7Rqcz8J1f3z4RK6vK0Jf8YVhgLt
-        zuQPLCXMwyeDiX4kZG0FZzqXogloO2Uk8ZgibofNW5e4wFZ2KrTstwcJoE5WxgtvsswTmmj72JIgi
-        UirhkeJ1Me/WQjy1XlUriJ27VDRV2KXfC2tbSuM7DjbTAUCEv50/ksza4Gie2K9Mxmtz2p9m/Ts7T
-        QneatjUg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOSNm-0001ZJ-Rr; Tue, 14 Apr 2020 20:42:11 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8F899980FA9; Tue, 14 Apr 2020 22:42:08 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 22:42:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Barret Rhoden <brho@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Subject: Re: perf: add cond_resched() to task_function_call()
-Message-ID: <20200414204208.GI2483@worktop.programming.kicks-ass.net>
-References: <20200414190351.16893-1-brho@google.com>
+        Tue, 14 Apr 2020 16:42:20 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D7B05521;
+        Tue, 14 Apr 2020 22:42:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586896934;
+        bh=gUuaIJ3u+fel6jj4JqVEOGrL2STu9lBIgJke/U/dqJY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NKMoMvq3toxLJ00KSu+xAkx6PhAfgq5ehyu67cm63r7bdZK3F9M+Js50OYUTf5wd8
+         ZkgyL8zrnF//1II9JfEzZnO+35ZpPAjQnZmABcq7cU8O04VTa066J3H3sIaMy+amCC
+         0SIQj5mTegDI2a6TIb2y7j6rmdPML5PQiY9e61M0=
+Date:   Tue, 14 Apr 2020 23:42:02 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Rob Herring <robh@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v6 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+Message-ID: <20200414204202.GL19819@pendragon.ideasonboard.com>
+References: <20200414151955.311949-1-adrian.ratiu@collabora.com>
+ <20200414151955.311949-6-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200414190351.16893-1-brho@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414151955.311949-6-adrian.ratiu@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 03:03:51PM -0400, Barret Rhoden wrote:
-> Under rare circumstances, task_function_call() can repeatedly fail and
-> cause a soft lockup.
+Hi Adrian,
+
+Thank you for the patch.
+
+On Tue, Apr 14, 2020 at 06:19:52PM +0300, Adrian Ratiu wrote:
+> This provides an example DT binding for the MIPI DSI host controller
+> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
 > 
-> There is a slight race where the process is no longer running on the cpu
-> we targeted by the time remote_function() runs.  The code will simply
-> try again.  If we are very unlucky, this will continue to fail, until a
-> watchdog fires.  This can happen in a heavily loaded, multi-core virtual
-> machine.
-
-Sigh,.. virt again :/
-
-> Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-> Signed-off-by: Barret Rhoden <brho@google.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 > ---
->  kernel/events/core.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> Changes since v5:
+>   - Fixed missing reg warning (Fabio)
+>   - Updated dt-schema and fixed warnings (Rob)
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 55e44417f66d..65c2c05e24c2 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -99,7 +99,7 @@ static void remote_function(void *data)
->   *
->   * returns: @func return value, or
->   *	    -ESRCH  - when the process isn't running
-> - *	    -EAGAIN - when the process moved away
-> + *	    -ENXIO  - when the cpu the process was on has gone offline
->   */
+> Changes since v4:
+>   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
+>   and addressed received binding feedback (Rob)
+> 
+> Changes since v3:
+>   - Added commit message (Neil)
+>   - Converted to yaml format (Neil)
+>   - Minor dt node + driver fixes (Rob)
+>   - Added small panel example to the host controller binding
+> 
+> Changes since v2:
+>   - Fixed commit tags (Emil)
+> ---
+>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 139 ++++++++++++++++++
+>  1 file changed, 139 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> new file mode 100644
+> index 000000000000..10e289ea219a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> @@ -0,0 +1,139 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX6 DW MIPI DSI Host Controller
+> +
+> +maintainers:
+> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
+> +
+> +description: |
+> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
+> +  IP block with a companion PHY IP.
+> +
+> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
+> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
+> +  the following device-specific properties.
 
-Hurm.. I don't think that was actually intended behaviour. As long as
-the task lives we ought to retry. Luckily I don't think the current code
-cares much, it'll loop again on the caller side.
+Not necessarily a prerequisite for this patch, but it would be nice to
+get that converted to yaml, and included here with
 
-With the exception of perf_cgroup_attach() that is, that might actually
-be broken because of this.
+allOf:
+  $ref: ../bridge/snps,dw-mipi-dsi.yaml#
 
->  static int
->  task_function_call(struct task_struct *p, remote_function_f func, void *info)
-> @@ -112,11 +112,15 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
->  	};
->  	int ret;
->  
-> -	do {
-> -		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
-> +	while (1) {
-> +		ret = smp_call_function_single(task_cpu(p), remote_function,
-> +					       &data, 1);
->  		if (!ret)
->  			ret = data.ret;
-> -	} while (ret == -EAGAIN);
-> +		if (ret != -EAGAIN)
-> +			break;
-> +		cond_resched();
-> +	}
+(assuming that's how the file will be called).
 
-So how about we make that:
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: fsl,imx6q-mipi-dsi
+> +      - const: snps,dw-mipi-dsi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
+> +      - description: DSI bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: pclk
+> +
+> +  fsl,gpr:
+> +    description: Phandle to the iomuxc-gpr region containing the multiplexer control register.
 
-	for (;;) {
-		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
-		ret = !ret ? data.ret : -EAGAIN;
+Could you please wrap liens at a 80 columns boundary ?
 
-		if (ret != -EAGAIN)
-			break;
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +    properties:
 
-		cond_resched();
-	}
+You should add
 
-Or something like that, hmmm?
+       '#address-cells':
+         const: 1
+
+       '#size-cells':
+         const: 0
+
+> +      port@0:
+> +        type: object
+> +        description:
+> +          DSI input port node, connected to the ltdc rgb output port.
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          DSI output port node, connected to a panel or a bridge input port"
+
+
+Should this be "RGB output port node" ? And s/"/./
+
+And here you should add
+
+       additionalProperties: false
+
+> +
+> +patternProperties:
+> +  "^panel@[0-3]$":
+> +    type: object
+> +    description: |
+> +      A node containing the panel or bridge description as documented in
+> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> +    properties:
+> +      port:
+> +        type: object
+> +        description:
+> +          Panel or bridge port node, connected to the DSI output port (port@1)
+
+Does this belong here ? I think the port property for the panel needs to
+be described in the panel's binding instead.
+
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+
+These two properties are not pattern properties, right ? Should they be
+listed under the properties above ?
+
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+
+Alphabetical order ?
+
+> +
+> +    dsi: dsi@21e0000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+> +        reg = <0x021e0000 0x4000>;
+> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+> +        fsl,gpr = <&gpr>;
+> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
+> +        clock-names = "ref", "pclk";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi_out: endpoint {
+> +                    remote-endpoint = <&panel_in>;
+> +                };
+> +            };
+> +        };
+> +
+> +        panel@0 {
+> +            compatible = "sharp,ls032b3sx01";
+> +            reg = <0>;
+> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                port@0 {
+> +                    reg = <0>;
+> +                    panel_in: endpoint {
+> +                        remote-endpoint = <&dsi_out>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
