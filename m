@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1C8C38A29
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523B1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6DB62078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309F020787
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9qjGgNF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="APyb7RCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436670AbgDNPIQ (ORCPT
+        id S2440266AbgDNPIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:08:16 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48407 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440207AbgDNPHj (ORCPT
+        Tue, 14 Apr 2020 11:08:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46397 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2440227AbgDNPIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:07:39 -0400
+        Tue, 14 Apr 2020 11:08:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876857;
+        s=mimecast20190719; t=1586876878;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=INlX+midPsx7wqrA0NFJAKd632joNwDmrb4gJuxyGYU=;
-        b=O9qjGgNFEJugcorVEXGQNLpkBLN9td4+FmxBSNv7bwB4XKq73m4l7w7KZbdaZMKC/wbgs6
-        Q82ez2GRW4efzeauxD8uBU7tGmCDHaaz5b8Aqc3LgpSWaSEqa68Ams9wDgy57sZJILVmuo
-        yry6Kpisdko4dUxmnxtOJWuI6OxEryY=
+        bh=lr2hx0ovKzPSgkmlzTqsTyKLkb7WnJkFJ806uC26PBw=;
+        b=APyb7RCUWPJdtmWi91nak15tOZUiO1aeVLV0DO52/+n+XzyDzqZ+3IaAySAeWE6dScP8RC
+        volbI5B8sW314AxckHZjPjZqWXvv1HfAekEo3+8+aDa8lIKgxCNGLZYRDQol48o4Dn9F8M
+        BEMUa8ojq1KhcW7ogXOgG/ckMrCKrhk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-gmxawsndMralhsD4PsULcw-1; Tue, 14 Apr 2020 11:07:27 -0400
-X-MC-Unique: gmxawsndMralhsD4PsULcw-1
+ us-mta-87-S082tG5SNXeKg2DlYw57vw-1; Tue, 14 Apr 2020 11:07:52 -0400
+X-MC-Unique: S082tG5SNXeKg2DlYw57vw-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B37398017FD;
-        Tue, 14 Apr 2020 15:07:24 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F12091005509;
+        Tue, 14 Apr 2020 15:07:49 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BEE819C69;
-        Tue, 14 Apr 2020 15:07:19 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B15719C69;
+        Tue, 14 Apr 2020 15:07:45 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
         jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
         peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
         zhangfei.gao@foxmail.com, bbhushan2@marvell.com
-Subject: [PATCH v11 06/13] iommu/smmuv3: Implement attach/detach_pasid_table
-Date:   Tue, 14 Apr 2020 17:06:00 +0200
-Message-Id: <20200414150607.28488-7-eric.auger@redhat.com>
+Subject: [PATCH v11 10/13] iommu/smmuv3: Nested mode single MSI doorbell per domain enforcement
+Date:   Tue, 14 Apr 2020 17:06:04 +0200
+Message-Id: <20200414150607.28488-11-eric.auger@redhat.com>
 In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
 References: <20200414150607.28488-1-eric.auger@redhat.com>
 MIME-Version: 1.0
@@ -68,152 +68,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On attach_pasid_table() we program STE S1 related info set
-by the guest into the actual physical STEs. At minimum
-we need to program the context descriptor GPA and compute
-whether the stage1 is translated/bypassed or aborted.
+In nested mode we enforce the rule that all devices belonging
+to the same iommu_domain share the same msi_domain.
+
+Indeed if there were several physical MSI doorbells being used
+within a single iommu_domain, it becomes really difficult to
+resolve the nested stage mapping translating into the correct
+physical doorbell. So let's forbid this situation.
 
 Signed-off-by: Eric Auger <eric.auger@redhat.com>
-
 ---
-v7 -> v8:
-- remove smmu->features check, now done on domain finalize
-
-v6 -> v7:
-- check versions and comment the fact we don't need to take
-  into account s1dss and s1fmt
-v3 -> v4:
-- adapt to changes in iommu_pasid_table_config
-- different programming convention at s1_cfg/s2_cfg/ste.abort
-
-v2 -> v3:
-- callback now is named set_pasid_table and struct fields
-  are laid out differently.
-
-v1 -> v2:
-- invalidate the STE before changing them
-- hold init_mutex
-- handle new fields
----
- drivers/iommu/arm-smmu-v3.c | 98 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ drivers/iommu/arm-smmu-v3.c | 41 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index dd3c12034e84..21bcf2536320 100644
+index 38854c3e4083..f157d1de614b 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -3293,6 +3293,102 @@ static void arm_smmu_get_resv_regions(struct devi=
-ce *dev,
- 	iommu_dma_get_resv_regions(dev, head);
+@@ -2896,6 +2896,37 @@ static void arm_smmu_detach_dev(struct arm_smmu_ma=
+ster *master)
+ 	arm_smmu_install_ste_for_dev(master);
  }
 =20
-+static int arm_smmu_attach_pasid_table(struct iommu_domain *domain,
-+				       struct iommu_pasid_table_config *cfg)
++static bool arm_smmu_share_msi_domain(struct iommu_domain *domain,
++				      struct device *dev)
 +{
 +	struct arm_smmu_domain *smmu_domain =3D to_smmu_domain(domain);
++	struct irq_domain *irqd =3D dev_get_msi_domain(dev);
 +	struct arm_smmu_master *master;
-+	struct arm_smmu_device *smmu;
 +	unsigned long flags;
-+	int ret =3D -EINVAL;
++	bool share =3D false;
 +
-+	if (cfg->format !=3D IOMMU_PASID_FORMAT_SMMUV3)
-+		return -EINVAL;
++	if (!irqd)
++		return true;
 +
-+	if (cfg->version !=3D PASID_TABLE_CFG_VERSION_1 ||
-+	    cfg->smmuv3.version !=3D PASID_TABLE_SMMUV3_CFG_VERSION_1)
-+		return -EINVAL;
++	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
++	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
++		struct irq_domain *d =3D dev_get_msi_domain(master->dev);
 +
-+	mutex_lock(&smmu_domain->init_mutex);
-+
-+	smmu =3D smmu_domain->smmu;
-+
-+	if (!smmu)
-+		goto out;
-+
-+	if (smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-+		goto out;
-+
-+	switch (cfg->config) {
-+	case IOMMU_PASID_CONFIG_ABORT:
-+		kfree(smmu_domain->s1_cfg);
-+		smmu_domain->s1_cfg =3D NULL;
-+		smmu_domain->abort =3D true;
-+		break;
-+	case IOMMU_PASID_CONFIG_BYPASS:
-+		kfree(smmu_domain->s1_cfg);
-+		smmu_domain->s1_cfg =3D NULL;
-+		smmu_domain->abort =3D false;
-+		break;
-+	case IOMMU_PASID_CONFIG_TRANSLATE:
-+		/* we do not support S1 <-> S1 transitions */
-+		if (smmu_domain->s1_cfg)
-+			goto out;
-+
-+		/*
-+		 * we currently support a single CD so s1fmt and s1dss
-+		 * fields are also ignored
-+		 */
-+		if (cfg->pasid_bits)
-+			goto out;
-+
-+		smmu_domain->s1_cfg =3D kzalloc(sizeof(*smmu_domain->s1_cfg),
-+					      GFP_KERNEL);
-+		if (!smmu_domain->s1_cfg) {
-+			ret =3D -ENOMEM;
-+			goto out;
++		if (!d)
++			continue;
++		if (irqd !=3D d) {
++			dev_info(dev, "Nested mode forbids to attach devices "
++				 "using different physical MSI doorbells "
++				 "to the same iommu_domain");
++			goto unlock;
 +		}
-+
-+		smmu_domain->s1_cfg->cdcfg.cdtab_dma =3D cfg->base_ptr;
-+		smmu_domain->abort =3D false;
-+		break;
-+	default:
-+		goto out;
 +	}
-+	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-+	list_for_each_entry(master, &smmu_domain->devices, domain_head)
-+		arm_smmu_install_ste_for_dev(master);
-+	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-+	ret =3D 0;
-+out:
-+	mutex_unlock(&smmu_domain->init_mutex);
-+	return ret;
-+}
-+
-+static void arm_smmu_detach_pasid_table(struct iommu_domain *domain)
-+{
-+	struct arm_smmu_domain *smmu_domain =3D to_smmu_domain(domain);
-+	struct arm_smmu_master *master;
-+	unsigned long flags;
-+
-+	mutex_lock(&smmu_domain->init_mutex);
-+
-+	if (smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-+		goto unlock;
-+
-+	kfree(smmu_domain->s1_cfg);
-+	smmu_domain->s1_cfg =3D NULL;
-+	smmu_domain->abort =3D true;
-+
-+	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-+	list_for_each_entry(master, &smmu_domain->devices, domain_head)
-+		arm_smmu_install_ste_for_dev(master);
-+	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-+
++	share =3D true;
 +unlock:
-+	mutex_unlock(&smmu_domain->init_mutex);
++	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
++	return share;
 +}
 +
- static struct iommu_ops arm_smmu_ops =3D {
- 	.capable		=3D arm_smmu_capable,
- 	.domain_alloc		=3D arm_smmu_domain_alloc,
-@@ -3311,6 +3407,8 @@ static struct iommu_ops arm_smmu_ops =3D {
- 	.of_xlate		=3D arm_smmu_of_xlate,
- 	.get_resv_regions	=3D arm_smmu_get_resv_regions,
- 	.put_resv_regions	=3D generic_iommu_put_resv_regions,
-+	.attach_pasid_table	=3D arm_smmu_attach_pasid_table,
-+	.detach_pasid_table	=3D arm_smmu_detach_pasid_table,
- 	.pgsize_bitmap		=3D -1UL, /* Restricted during device attach */
- };
+ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct devic=
+e *dev)
+ {
+ 	int ret =3D 0;
+@@ -2937,6 +2968,16 @@ static int arm_smmu_attach_dev(struct iommu_domain=
+ *domain, struct device *dev)
+ 		ret =3D -EINVAL;
+ 		goto out_unlock;
+ 	}
++	/*
++	 * In nested mode we must check all devices belonging to the
++	 * domain share the same physical MSI doorbell. Otherwise nested
++	 * stage MSI binding is not supported.
++	 */
++	if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_NESTED &&
++		!arm_smmu_share_msi_domain(domain, dev)) {
++		ret =3D -EINVAL;
++		goto out_unlock;
++	}
+=20
+ 	master->domain =3D smmu_domain;
 =20
 --=20
 2.20.1
