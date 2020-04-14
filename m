@@ -2,94 +2,147 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2BDC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DD6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4167206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586886077;
-	bh=t/deTsl6/TeGzwQZ/UF53ZuXQ4kDyH5rS9H05EbtuQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KiRAbgUDIhONAP8xpoBlvki+jub/hZfXGistnGUAIX2MKM64h9941BbFi7UffwuAh
-	 bH2wjcnJl1qBkylM1ce+gQxr2Z3ofr3nfbexZAAO1TweBq3BN2vDYuSZzjc0Pf0nD0
-	 GhRcI669Z/CsRL68pCgY+CK4BcU+cONVpf2nREa4=
+	by mail.kernel.org (Postfix) with ESMTP id 8951D206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:42:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J308Rnrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440503AbgDNRlQ (ORCPT
+        id S1730599AbgDNRmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:41:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39608 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbgDNRlK (ORCPT
+        Tue, 14 Apr 2020 13:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728863AbgDNRly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:41:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 8so917211oiy.6;
-        Tue, 14 Apr 2020 10:41:09 -0700 (PDT)
+        Tue, 14 Apr 2020 13:41:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D533C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:41:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t4so199957plq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b73GV4Vy2UdnTiTlwt7UyB1U6O78KTyM8pwwpV6UwBE=;
+        b=J308RnrtSxmBZyD2q+SfqV2Auks0oi6JBzBiS+P2tcpUJ+WDmIasD3yN6rMcvngydH
+         +zVvfYwrvLUlpW06jcUs6O/G/lJbGxYE8Oy8ZpBIw2A19HWpfwR/B/8LtNobi4UZNvrf
+         +D/SdIiKchH0MKEvqcImwOxFAfLCj7tQL9r/g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oy5Pa2pThiwkYu8G4GkTHJjme1DMBn7sY2MflS7Zuig=;
-        b=qOacL+1yiiU3D1dvAGnDear7Q4j/mFwaYsyB6Yfax93e5m7QfWYnZghKZP3FaiTo+q
-         jpJ7kixQOc1OD/2k1pwKmm4VpCQrmKJ8uYviGrhNgvHFUa5JXyTZDP6FU/iVQtC62KKw
-         mHFoD/JgMO7F+OZGinDbPwwznZ5BgG2JGlxw+xk3SCyZullR76jAeKkTabgljqDShMVs
-         IOKrujU68Vc/WCWAorM6TVRYwEJxt70guJ4+wskWDBEWU3ofbsMC8f645zGtn4E1FgFI
-         QfXdx7mIb9YeUvgP/SgYHYfyc5KHIQxY8z1hyS2L1sMNfHMdDZ90E7A2BpDDbbRR7TRE
-         KgGA==
-X-Gm-Message-State: AGi0PubZkdiyUkyGPMVUrAO6KraT+05wQs1hcLN/I6oIpqyyTALgVaJG
-        ud0zWi7dG40dp9uFI3kIzA==
-X-Google-Smtp-Source: APiQypKD41PgBlcTSotaK7Yjth1ocx/nKnHfnnEGSNYS9OULrLgLODfCIhLnCRAsdGgLQ4hyeSvY7w==
-X-Received: by 2002:aca:ef82:: with SMTP id n124mr15636268oih.73.1586886069014;
-        Tue, 14 Apr 2020 10:41:09 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e22sm3984048otk.59.2020.04.14.10.41.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b73GV4Vy2UdnTiTlwt7UyB1U6O78KTyM8pwwpV6UwBE=;
+        b=LV4OObTXSwGdlhGxdOX7N2pLeRDUceKvnm+lIxBFXhtf7Hyj2S44M1YApHFB7P5De6
+         e6cfkut+R8tDV36Cl3lSqo0r9dcjqPCbBKi1DeCIl8xb43F2rcUz38VXLLrhsB75ltZw
+         MJRSMMM30ENEw8pEX85qpZHZujwlBw6ur1mPEEwGs9F36YlpaLE/S7Goq0zONK4RejJB
+         0UthPwcO9DAvpd+yCl6vLV4lFnsGVxfksG0zTj/NsEF/D0OwhBSVDwC32KixwabbgAna
+         /GsDinXTOJluvjw+lY7pNj4Fa4eUxNGLrY7S8wsalaae4o2SKrIf8VZdGr4JcQgrXGU8
+         aPbg==
+X-Gm-Message-State: AGi0PubCjEbV+C6gKPg3udnTIN8icS8r4TDFMrdiHh1c2ipT3+CZV9uo
+        JLoqoT6EIrWWKc4aMe1xLOcNng==
+X-Google-Smtp-Source: APiQypK4uvD/+aVArtBTd3SKMVNcV+YPbATjoo20kaBFE0JmY5BbeYCqWNEwnhAF+rN19ABDiuoDFQ==
+X-Received: by 2002:a17:90b:3615:: with SMTP id ml21mr1413294pjb.145.1586886113870;
+        Tue, 14 Apr 2020 10:41:53 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id e26sm11652207pfj.61.2020.04.14.10.41.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:41:08 -0700 (PDT)
-Received: (nullmailer pid 6218 invoked by uid 1000);
-        Tue, 14 Apr 2020 17:41:07 -0000
-Date:   Tue, 14 Apr 2020 12:41:07 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: Re: [PATCH v14 1/3] dt-bindings: display: mediatek: control dpi pins
- mode to avoid leakage
-Message-ID: <20200414174107.GA6165@bogus>
-References: <20200403080350.95826-1-jitao.shi@mediatek.com>
- <20200403080350.95826-2-jitao.shi@mediatek.com>
+        Tue, 14 Apr 2020 10:41:53 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mkshah@codeaurora.org, mka@chromium.org, swboyd@chromium.org,
+        joe@perches.com, evgreen@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: qcom: rpmh-rsc: Factor "tcs_reg_addr" and "tcs_cmd_addr" calculation
+Date:   Tue, 14 Apr 2020 10:41:34 -0700
+Message-Id: <20200414104120.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403080350.95826-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 16:03:48 +0800, Jitao Shi wrote:
-> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
-> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
-> disabled.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+We can make some of the register access functions more readable by
+factoring out the calculations a little bit.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/soc/qcom/rpmh-rsc.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index 732316bb67dc..de1f9c7732e1 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -136,36 +136,45 @@
+  *  +---------------------------------------------------+
+  */
+ 
++static inline void __iomem *
++tcs_reg_addr(struct rsc_drv *drv, int reg, int tcs_id)
++{
++	return drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg;
++}
++
++static inline void __iomem *
++tcs_cmd_addr(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
++{
++	return tcs_reg_addr(drv, reg, tcs_id) + RSC_DRV_CMD_OFFSET * cmd_id;
++}
++
+ static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
+ {
+-	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+-			     RSC_DRV_CMD_OFFSET * cmd_id);
++	return readl_relaxed(tcs_cmd_addr(drv, reg, tcs_id, cmd_id));
+ }
+ 
+ static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id)
+ {
+-	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++	return readl_relaxed(tcs_reg_addr(drv, reg, tcs_id));
+ }
+ 
+ static void write_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id,
+ 			  u32 data)
+ {
+-	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+-		       RSC_DRV_CMD_OFFSET * cmd_id);
++	writel_relaxed(data, tcs_cmd_addr(drv, reg, tcs_id, cmd_id));
+ }
+ 
+ static void write_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, u32 data)
+ {
+-	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++	writel_relaxed(data, tcs_reg_addr(drv, reg, tcs_id));
+ }
+ 
+ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
+ 			       u32 data)
+ {
+-	writel(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++	writel(data, tcs_reg_addr(drv, reg, tcs_id));
+ 	for (;;) {
+-		if (data == readl(drv->tcs_base + reg +
+-				  RSC_DRV_TCS_OFFSET * tcs_id))
++		if (data == readl(tcs_reg_addr(drv, reg, tcs_id)))
+ 			break;
+ 		udelay(1);
+ 	}
+-- 
+2.26.0.110.g2183baf09c-goog
+
