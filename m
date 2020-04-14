@@ -2,107 +2,88 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0EEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D41C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6E72076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889905;
-	bh=oMbI+vt8Em625llNVbyJzSoSXiN6bAXE8KfBVvF18nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0388KZCQa0e2ICoCB53Dc1u/gaYj1GY9QtRRIKMjyi8UY5KpNH2foSifveo6lYTPW
-	 njUfwVXZryOcrzKcCMYlU0DrwfJcOKigfCOOkJcsknFMQP1qwW6vTvE1cFJkOt5wmJ
-	 HuxhnDcBD4+p+/iOEV0DC9yG0msn7eG7F5/eZENQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3EFE62074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504289AbgDNSpD (ORCPT
+        id S2504303AbgDNSpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42806 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 14:45:20 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:45529 "EHLO smtp.infotech.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504270AbgDNSo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:44:56 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.36.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA4B52074D;
-        Tue, 14 Apr 2020 18:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586889895;
-        bh=oMbI+vt8Em625llNVbyJzSoSXiN6bAXE8KfBVvF18nI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ol3Q/qI4y0XWlUteUtqOpWGcqR7/YGWZ9ZfgbJoqSr4yrE8Bygoxmnn1A3P7sDEHR
-         TXLTgGKZ61VF+LiQ9V7ZN+38mnWW6nqYQ95r4CtJOaDOFRVSJXZ0uGGcJA0LWVS14Z
-         cER7Yp7IfUb5Zn6hPYI91xCbt15M6MHy3ShTW2h8=
-Date:   Wed, 15 Apr 2020 00:14:44 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     jic23@kernel.org, robh+dt@kernel.org, narcisaanamaria12@gmail.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Subject: Re: [PATCH v3 0/3] Add Reset and Wakeup support for CCS811
-Message-ID: <20200414184444.GA5041@Mani-XPS-13-9360>
-References: <20200414184147.4857-1-mani@kernel.org>
+        id S2504293AbgDNSpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:45:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id E9ED72041CF;
+        Tue, 14 Apr 2020 20:45:10 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id g5dzQnLMwoIU; Tue, 14 Apr 2020 20:45:05 +0200 (CEST)
+Received: from [192.168.48.23] (host-23-251-188-50.dyn.295.ca [23.251.188.50])
+        by smtp.infotech.no (Postfix) with ESMTPA id 08CA2204154;
+        Tue, 14 Apr 2020 20:45:03 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH] scsi:sg: add sg_remove_request in sg_write
+To:     Wu Bo <wubo40@huawei.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liuzhiqiang26@huawei.com, linfeilong@huawei.com
+References: <610618d9-e983-fd56-ed0f-639428343af7@huawei.com>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <4ece8e46-f9e4-e582-157a-7ab0268c04aa@interlog.com>
+Date:   Tue, 14 Apr 2020 14:44:51 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414184147.4857-1-mani@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <610618d9-e983-fd56-ed0f-639428343af7@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:11:44AM +0530, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
+On 2020-04-13 10:13 p.m., Wu Bo wrote:
+> From: Wu Bo <wubo40@huawei.com>
 > 
-> Hello,
-> 
-> This patchset adds external reset and wakeup support for CCS811 VOC
-> gas sensor. The nRESET and nWAKE pins available on the device are
-> utilised to provide these functionalities.
-> 
-> The patchset has been validated using CCS811 connected to STM32MP1 based
-> board over I2C.
-> 
-> While at it, the devicetree yaml binding and OF match table for this sensor
-> are also added.
-> 
-> Thanks,
-> Mani
-> 
-> Changes in v3:
-> 
-> * Added ccs811_set_wake(false) to all error paths before calling it actually
-> * Added Andy's reviewed-by tag
-> * Added comment for reset procedure and dropped error print for gpio request
-> 
-> Changes in v2:
-> 
-> * Fixed DT binding schema and switched to dual license (GPL/BSD)
-> * Returned actual error code from devm_gpiod_get_optional()
-> * Dropped of.h include and of_match_ptr()
-> 
-> Manivannan Sadhasivam (3):
->   iio: chemical: Add support for external Reset and Wakeup in CCS811
->   iio: chemical: Add OF match table for CCS811 VOC sensor
->   dt-bindings: serial: Add binding for software flow control in STM32
+> If the __copy_from_user function return failed,
+> it should call sg_remove_request in sg_write.
 
-Err... please ignore this series. I'll resend it.
+This is a fix.
 
-Thanks,
-Mani
-
->     UART
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+> Signed-off-by: Wu Bo <wubo40@huawei.com>
+> ---
+>   drivers/scsi/sg.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
->  .../bindings/serial/st,stm32-uart.yaml        |  15 ++-
->  drivers/iio/chemical/ccs811.c                 | 112 ++++++++++++++++--
->  2 files changed, 115 insertions(+), 12 deletions(-)
-> 
+> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+> index 4e6af59..ff3f532 100644
+> --- a/drivers/scsi/sg.c
+> +++ b/drivers/scsi/sg.c
+> @@ -685,8 +685,10 @@ static int get_sg_io_pack_id(int *pack_id, void __user 
+> *buf, size_t count)
+>          hp->flags = input_size; /* structure abuse ... */
+>          hp->pack_id = old_hdr.pack_id;
+>          hp->usr_ptr = NULL;
+> -       if (copy_from_user(cmnd, buf, cmd_size))
+> +       if (copy_from_user(cmnd, buf, cmd_size)) {
+> +               sg_remove_request(sfp, srp);
+>                  return -EFAULT;
+> +       }
+>          /*
+>           * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
+>           * but is is possible that the app intended SG_DXFER_TO_DEV, because there
 > -- 
-> 2.17.1
+> 1.8.3.1
 > 
+
