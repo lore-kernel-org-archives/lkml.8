@@ -2,172 +2,95 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BBBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA17CC38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C9D2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E45E2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eKicQk6/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oq/OEGlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407355AbgDNPSh (ORCPT
+        id S2407365AbgDNPSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405604AbgDNPCn (ORCPT
+        Tue, 14 Apr 2020 11:18:47 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53734 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438173AbgDNPSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:02:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CCFEC03C1A9;
-        Tue, 14 Apr 2020 08:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=dnVcRUhp6I8Fi+gnKN7PeXxunGICLabZNDbma7rvUfA=; b=eKicQk6/N/qhm5ukpvL2quJ1kW
-        DThpXoVleuAK3Mor0LuN1OZ94FRCUT6ua7lH0Om5eK1Mb2qi6ebAYHd2nE6AEk6sAqOa7lEtYgU4e
-        o33uYsR6eg+d5Y6seoRjMUW82tBsoef8wG8rNx46ZZouvaRd353Jn4jXL5alqFhL8OxDFphIf6H2X
-        o7PwvGYa6Y8leC3WI+gd2xpgcsyngNSgy6h7udZIgkEsDTBQN/wJfaP8ApB2i7kaafitCBy0bllNL
-        Qrs6Lcqs6qd6BabzSEVs/9BubjFjdEuYSm4hJkOFxeM5+4XJ2WKpitkjyjDafNlV5sDN7fWj2xFFw
-        +7Ll1QFw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jON59-0006Nv-Nk; Tue, 14 Apr 2020 15:02:35 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCH v11 01/25] mm: Move readahead prototypes from mm.h
-Date:   Tue, 14 Apr 2020 08:02:09 -0700
-Message-Id: <20200414150233.24495-2-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200414150233.24495-1-willy@infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
+        Tue, 14 Apr 2020 11:18:11 -0400
+Received: from [192.168.0.109] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D5D1620B4749;
+        Tue, 14 Apr 2020 08:18:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D5D1620B4749
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1586877490;
+        bh=4IIImuaLvQT2iR/sNQJatsIB6K/I65B+tYihxbsMJ7k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oq/OEGlfP9okH1qtZ31v4IyXkYxGMGV7aIw+XPesurrFtdWZY9SCu7Fc3ITFnt2rj
+         YOzyLo111+2jN2fVKEuGOBQLYErHisIizP+eSbQ4WxxLsVKII0XDO4Xn+NLSBblFhG
+         pGYKmpc/zhu60ng8DKVag8Cp7EGrJA3LOnb7yPSI=
+Subject: Re: [PATCH 2/2] ima: simplify function process_buffer_measurement
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, zhangliguang@linux.alibaba.com,
+        zhang.jia@linux.alibaba.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200414114850.98622-1-tianjia.zhang@linux.alibaba.com>
+ <20200414114850.98622-3-tianjia.zhang@linux.alibaba.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <a18c37b9-7534-86c4-3bae-111ac1fa4053@linux.microsoft.com>
+Date:   Tue, 14 Apr 2020 08:18:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414114850.98622-3-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On 4/14/20 4:48 AM, Tianjia Zhang wrote:
 
-The readahead code is part of the page cache so should be found in the
-pagemap.h file.  force_page_cache_readahead is only used within mm,
-so move it to mm/internal.h instead.  Remove the parameter names where
-they add no value, and rename the ones which were actively misleading.
+> Remove duplicate judgment code to make it more suitable for linux
+> code style.
+> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>   security/integrity/ima/ima_main.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 9d0abedeae77..55cbbe97ce6e 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -750,15 +750,15 @@ void process_buffer_measurement(const void *buf, int size,
+>   		goto out;
+>   
+>   	ret = ima_store_template(entry, violation, NULL, buf, pcr);
+> -
+> -	if (ret < 0)
+> -		ima_free_template_entry(entry);
+> -
+> -out:
+>   	if (ret < 0)
+> -		pr_devel("%s: failed, result: %d\n", __func__, ret);
+> +		goto out_free_entry;
+>   
+>   	return;
+> +
+> +out_free_entry:
+> +	ima_free_template_entry(entry);
+> +out:
+> +	pr_devel("%s: failed, result: %d\n", __func__, ret);
+>   }
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
----
- block/blk-core.c        |  1 +
- include/linux/mm.h      | 19 -------------------
- include/linux/pagemap.h |  8 ++++++++
- mm/fadvise.c            |  2 ++
- mm/internal.h           |  2 ++
- 5 files changed, 13 insertions(+), 19 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 7e4a1da0715e..f9b4457fd78d 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -20,6 +20,7 @@
- #include <linux/blk-mq.h>
- #include <linux/highmem.h>
- #include <linux/mm.h>
-+#include <linux/pagemap.h>
- #include <linux/kernel_stat.h>
- #include <linux/string.h>
- #include <linux/init.h>
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5a323422d783..581e56275bc4 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2601,25 +2601,6 @@ extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
- int __must_check write_one_page(struct page *page);
- void task_dirty_inc(struct task_struct *tsk);
- 
--/* readahead.c */
--#define VM_READAHEAD_PAGES	(SZ_128K / PAGE_SIZE)
--
--int force_page_cache_readahead(struct address_space *mapping, struct file *filp,
--			pgoff_t offset, unsigned long nr_to_read);
--
--void page_cache_sync_readahead(struct address_space *mapping,
--			       struct file_ra_state *ra,
--			       struct file *filp,
--			       pgoff_t offset,
--			       unsigned long size);
--
--void page_cache_async_readahead(struct address_space *mapping,
--				struct file_ra_state *ra,
--				struct file *filp,
--				struct page *pg,
--				pgoff_t offset,
--				unsigned long size);
--
- extern unsigned long stack_guard_gap;
- /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
- extern int expand_stack(struct vm_area_struct *vma, unsigned long address);
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index a8f7bd8ea1c6..6c61535aa7ff 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -615,6 +615,14 @@ int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
- void delete_from_page_cache_batch(struct address_space *mapping,
- 				  struct pagevec *pvec);
- 
-+#define VM_READAHEAD_PAGES	(SZ_128K / PAGE_SIZE)
-+
-+void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
-+		struct file *, pgoff_t index, unsigned long req_count);
-+void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
-+		struct file *, struct page *, pgoff_t index,
-+		unsigned long req_count);
-+
- /*
-  * Like add_to_page_cache_locked, but used to add newly allocated pages:
-  * the page is new, so we can just run __SetPageLocked() against it.
-diff --git a/mm/fadvise.c b/mm/fadvise.c
-index 4f17c83db575..3efebfb9952c 100644
---- a/mm/fadvise.c
-+++ b/mm/fadvise.c
-@@ -22,6 +22,8 @@
- 
- #include <asm/unistd.h>
- 
-+#include "internal.h"
-+
- /*
-  * POSIX_FADV_WILLNEED could set PG_Referenced, and POSIX_FADV_NOREUSE could
-  * deactivate the pages and clear PG_Referenced.
-diff --git a/mm/internal.h b/mm/internal.h
-index b5634e78f01d..25fee17c7334 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -49,6 +49,8 @@ void unmap_page_range(struct mmu_gather *tlb,
- 			     unsigned long addr, unsigned long end,
- 			     struct zap_details *details);
- 
-+int force_page_cache_readahead(struct address_space *, struct file *,
-+		pgoff_t index, unsigned long nr_to_read);
- extern unsigned int __do_page_cache_readahead(struct address_space *mapping,
- 		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
- 		unsigned long lookahead_size);
--- 
-2.25.1
-
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
