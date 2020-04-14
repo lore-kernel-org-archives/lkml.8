@@ -2,138 +2,158 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35CAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AF220767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25EE2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WpGA60xA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hWzfu5AS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505504AbgDNUJV (ORCPT
+        id S2632732AbgDNUK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:09:21 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:34807 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505445AbgDNUJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:09:18 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f26f0e78;
-        Tue, 14 Apr 2020 19:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=pAmOQHaOEgfqZI+i6EXjutI5JI0=; b=WpGA60
-        xAHYTARIO3swYDmA4JV0vCZkvEcHJ3GZyWQMM+IB6CJmjPVeukhIiA9sY/HKsLih
-        J2i4kEHnUyxZl+OyPcXhgzQ50NsInr3ol6OBwQKU84rInXfFLHQnF37tdzgY5c0I
-        B+7NNxYWyl1WpcJ29TU1jh5HyjAwr3cIsfZxoq1gSOj/wpDfLU99y2hEr8SPHKPs
-        PoKv4ec3dJAwV1xhIbPIHw7KYBAJYzNhpFEuvzgqfJYINOzPKOSpPtqEopaXF59f
-        uPvKy8IgT+uQvZZOgIjbDly0iXkmrB4xmFxYuxk3ILvT4pRL6vODIgDpV0pCVPw8
-        eiB2j9cw6YXpqbFA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c8bef353 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 14 Apr 2020 19:59:24 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id b18so1054276ilf.2;
-        Tue, 14 Apr 2020 13:09:16 -0700 (PDT)
-X-Gm-Message-State: AGi0Puag8TqoJOZE4tDFn8R/te/5kVMQmHlAYiw3xUQ9xc22p+2iPRfv
-        2mXv3L2udu69XttBEDZMIPYpt5Cqh/NciMpCSx0=
-X-Google-Smtp-Source: APiQypJZ0K1mNpMSy98DlJSx/G/Z6de7g5ow7ZKNiKa5yFTU8yGzF8WbxCEpjqHPzJ5mTQ/IUejV7KubA9PAo/tUM7A=
-X-Received: by 2002:a92:9fc2:: with SMTP id z63mr1980508ilk.64.1586894955909;
- Tue, 14 Apr 2020 13:09:15 -0700 (PDT)
+        Tue, 14 Apr 2020 16:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731019AbgDNUKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:10:48 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA35C03C1A8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:10:48 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m21so424869pff.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T+HbRhlvMIy8BtU4nbArvVaIdClKnKmx3fk08M3A1Tw=;
+        b=hWzfu5ASeq+x9poLZFbihzZcfvSnpNkS+Mz8exkiNPYNVn4CB0LRIMoQ8XVMmx/MDX
+         f0Gdn/FI8JmEvsP5vjMIWV/y1KjMxPL5cmGSwUrr+F+HlheXIU/a3C4Y5gqOM414QDia
+         fzXT/xQQueQmZJOZ4N4QWVV9GQtc/iJcngSXY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T+HbRhlvMIy8BtU4nbArvVaIdClKnKmx3fk08M3A1Tw=;
+        b=eQ6Kko3LevyQJLzfHZL3CnwB5dujuaIqnIVEdM2iPKCuy5qlriX0HRU7sj0Y0sRmLj
+         vM3Fwc7zjHGTQuDzdzPBO6lyEMAE/z4tWdE9ExJ5G79+QsKtcYq4NYgaKv/QrUsp+NuJ
+         sKQb7IsRtsk8QtBGjUfH0sjLmbu7LD+bDELt1+eY+fU8GPPB7Ytlgf/xxX1UrqOQV1RC
+         KygLrEzcXqD4dtOCdxs5Zr7wnKb6wDG6k6mcL4KV0Oa6lsbuwULFlVv36Bd5PNMsdyZJ
+         5rdKvdFS3JXy6Ax9ZjxDZlmOHbbPqn7nUqSo1xIDuTNVJ5BaPr6eJDRPDXFF6AFLOfr1
+         b1mA==
+X-Gm-Message-State: AGi0PuazbJXmjJc1sVYCUVnVSPAUdaFBbbM8jomc+DsH3zjWZjC2krdM
+        ZvhUyNBi3n7odC0BSX25tfOtRA==
+X-Google-Smtp-Source: APiQypL57AogodJ/QRvyi59rvr6fP+Vcz3T49k0rmzFDNnw/tjrJwbmpCI3GG7bsGOIeV3OfL3GYcg==
+X-Received: by 2002:a62:160b:: with SMTP id 11mr25627935pfw.189.1586895047051;
+        Tue, 14 Apr 2020 13:10:47 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 135sm12189805pfu.207.2020.04.14.13.10.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 13:10:46 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mkshah@codeaurora.org, joe@perches.com, swboyd@chromium.org,
+        mka@chromium.org, evgreen@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] soc: qcom: rpmh-rsc: Factor "tcs_reg_addr" and "tcs_cmd_addr" calculation
+Date:   Tue, 14 Apr 2020 13:10:15 -0700
+Message-Id: <20200414131010.v2.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 MIME-Version: 1.0
-References: <20200407063345.4484-1-Jason@zx2c4.com> <20200407063345.4484-3-Jason@zx2c4.com>
- <0e189a4fe1e69b08afc859ce83623a0e5ea0c08b.camel@linux.intel.com>
- <CAHmME9pigvAgK3Bje6DkFEcdyWwi7-C7D6QEo4YiH_cbJvxqhQ@mail.gmail.com>
- <4b75ec34ccff5abdc0b1c04a5ac39455ddd4f49b.camel@linux.intel.com>
- <CAHmME9rfXXPepanaxR6EBimSNkJp6KTuNLkYcSceGwZXp_j-Kw@mail.gmail.com> <24c4ac84671b97b5092413689b4bf224b73bc51b.camel@linux.intel.com>
-In-Reply-To: <24c4ac84671b97b5092413689b4bf224b73bc51b.camel@linux.intel.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 14 Apr 2020 14:09:05 -0600
-X-Gmail-Original-Message-ID: <CAHmME9p1v7mMkMf1j4FQpNm5MWAO+TeQdvn0bh_XPjpXwyJkLg@mail.gmail.com>
-Message-ID: <CAHmME9p1v7mMkMf1j4FQpNm5MWAO+TeQdvn0bh_XPjpXwyJkLg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/mce/therm_throt: allow disabling the thermal
- vector altogether
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        bberg@redhat.com, bp@suse.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 1:58 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Tue, 2020-04-14 at 13:41 -0600, Jason A. Donenfeld wrote:
-> > On Tue, Apr 14, 2020 at 8:45 AM Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com> wrote:
-> > > On Mon, 2020-04-13 at 22:21 -0600, Jason A. Donenfeld wrote:
-> > > > On Mon, Apr 13, 2020 at 9:38 PM Srinivas Pandruvada
-> > > > <srinivas.pandruvada@linux.intel.com> wrote:
-> > > > > On Tue, 2020-04-07 at 00:33 -0600, Jason A. Donenfeld wrote:
-> > > > > > The thermal IRQ handler uses 1.21% CPU on my system when it's
-> > > > > > hot
-> > > > > > from
-> > > > > > compiling things. Indeed looking at /proc/interrupts reveals
-> > > > > > quite a
-> > > > > > lot
-> > > > > I am curious why you are hitting threshold frequently?
-> > > > > What is rdmsr 0x1a2
-> > > >
-> > > > 5640000
-> > > You are getting too many interrupts at 95C. You should look at your
-> > > cooling system.
-> > >
-> > > > > > of events coming in. Beyond logging them, the existing
-> > > > > > drivers on
-> > > > > > the
-> > > > > > system don't appear to do very much that I'm interested in.
-> > > > > > So,
-> > > > > > add a
-> > > > > > way to disable this entirely so that I can regain precious
-> > > > > > CPU
-> > > > > > cycles.
-> > > > > It is showing amount of time system is running in a constrained
-> > > > > environment. Lots of real time and HPC folks really care about
-> > > > > this.
-> > > >
-> > > > Which is why this patch adds an option, not a full removal or
-> > > > something. Real time and HPC people can keep their expensive
-> > > > interrupt. Other people with different varieties of system
-> > > > disable
-> > > > it.
-> > > Generally compile time flag is not desirable. If it is what
-> > > required
-> > > then we should have boot time flag something in lines of existing
-> > > "int_pln_enable" option.
-> >
-> > Generally it is desirable, and extremely common too. This thermal
-> > code
-> > -- which mostly functions to print some messages into kmsg -- is very
-> > verbose. This is not something I want to compile into smaller
-> > systems.
-> > This is the reason why kconfig has options in the first place. I'm
-> > not
-> > sure yet-another boottime flag makes sense for this.
->
-> Can you send log which is still showing verbose prints with the latest
-> kernel? I can see interrupts will still fire.
->
-> If it is, then temperature trend is still above 95C and cooling systems
-> is not in control. In another window, print in loop (with sleep 1)
-> /sys/class/thermal/thermal_zone*/temp
-> for the zone for which "type == x86_pkg_temp"
+We can make some of the register access functions more readable by
+factoring out the calculations a little bit.
 
-It sounds like you're interested in debugging the cooling system of my
-[brand new Thinkpad P1 gen 2] laptop. I appreciate the concern, but
-that's really not the purpose of this patch. The purpose of this patch
-is to enable disabling the sizable thermal interrupt code, that does
-absolutely nothing for a wide variety of systems that do not want that
-code in their kernel. In other words, I don't think the particular
-thinkpad cooling aspects have anything to do with the need to add the
-trivial Kconfig option to not compile this code. I realize it's your
-code and you might really like it, but that doesn't mean everyone
-wants it in their kernel image.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v2:
+- Make drv parameter const.
+
+ drivers/soc/qcom/rpmh-rsc.c | 41 +++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index 732316bb67dc..f988e9cc2c30 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -136,36 +136,47 @@
+  *  +---------------------------------------------------+
+  */
+ 
+-static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
++static inline void __iomem *
++tcs_reg_addr(const struct rsc_drv *drv, int reg, int tcs_id)
+ {
+-	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+-			     RSC_DRV_CMD_OFFSET * cmd_id);
++	return drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg;
+ }
+ 
+-static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id)
++static inline void __iomem *
++tcs_cmd_addr(const struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
+ {
+-	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++	return tcs_reg_addr(drv, reg, tcs_id) + RSC_DRV_CMD_OFFSET * cmd_id;
+ }
+ 
+-static void write_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id,
+-			  u32 data)
++static u32 read_tcs_cmd(const struct rsc_drv *drv, int reg, int tcs_id,
++			int cmd_id)
++{
++	return readl_relaxed(tcs_cmd_addr(drv, reg, tcs_id, cmd_id));
++}
++
++static u32 read_tcs_reg(const struct rsc_drv *drv, int reg, int tcs_id)
+ {
+-	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+-		       RSC_DRV_CMD_OFFSET * cmd_id);
++	return readl_relaxed(tcs_reg_addr(drv, reg, tcs_id));
+ }
+ 
+-static void write_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, u32 data)
++static void write_tcs_cmd(const struct rsc_drv *drv, int reg, int tcs_id,
++			  int cmd_id, u32 data)
++{
++	writel_relaxed(data, tcs_cmd_addr(drv, reg, tcs_id, cmd_id));
++}
++
++static void write_tcs_reg(const struct rsc_drv *drv, int reg, int tcs_id,
++			  u32 data)
+ {
+-	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++	writel_relaxed(data, tcs_reg_addr(drv, reg, tcs_id));
+ }
+ 
+-static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
++static void write_tcs_reg_sync(const struct rsc_drv *drv, int reg, int tcs_id,
+ 			       u32 data)
+ {
+-	writel(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++	writel(data, tcs_reg_addr(drv, reg, tcs_id));
+ 	for (;;) {
+-		if (data == readl(drv->tcs_base + reg +
+-				  RSC_DRV_TCS_OFFSET * tcs_id))
++		if (data == readl(tcs_reg_addr(drv, reg, tcs_id)))
+ 			break;
+ 		udelay(1);
+ 	}
+-- 
+2.26.0.110.g2183baf09c-goog
+
