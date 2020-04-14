@@ -2,128 +2,86 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56092C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91FAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A102075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPCaSFzn"
+	by mail.kernel.org (Postfix) with ESMTP id BD6AC20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439966AbgDNMPe (ORCPT
+        id S2439974AbgDNMQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729799AbgDNMPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:15:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E6DC061A0C;
-        Tue, 14 Apr 2020 05:15:18 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r4so5912589pgg.4;
-        Tue, 14 Apr 2020 05:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=WHNX39DWF5Hlf3u8CwKDc+Fsn/bhcoFrdGg2YrrvOo0=;
-        b=YPCaSFzn0oIdss6PgqWqExMDv2Ya4MqFKlIMtqX30ds70r7RnGgcscEiuorDHOmIxt
-         bkg/vokkN/rRhBD6LJ9mw3mjhOahMg1Uwg9Qx2UNZFWTj0IMg9WnUDxB+ULJSCbA1ldn
-         KSpVK42kxhB9z/aw0NH4UBeJI+KqGuxcHQoEPZCHcqOEDmAKdAwLZgWjuAma+5C/4TbG
-         JmUnZp5MHDPoBd4ygsIhvDZ8ijEsX/e2wJi1VmDzroDN1oJ8TnkuqyUyr4ayZCZKIFK0
-         GcKo9BxipK0dpFhF+pZwLrt75E6HD72Q17JUhc4ZADldaZQrqxB3dU1lD6phiCSp3nG2
-         3WbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=WHNX39DWF5Hlf3u8CwKDc+Fsn/bhcoFrdGg2YrrvOo0=;
-        b=YBYS45sJ7ypatJRpv4s/T2c+nXi2fCmSxhDLYPnkTW627qjLBZ7HLRFT9haK9u/MfG
-         4BOaTPgvM0qbey/PbNkFwjnwS2MecToI5OXy54qxKxBVoa79X32W5b6kIMYDoz3Mv3pI
-         q68PwV/ORPGuxRQBF4BA086idEwV5WIBsdzJzNTR/wE+Ag0JCFTdx+10qsowAbBX2hR7
-         A78zxkUnL37sWoLPJ0A9buYQiL3iNv4l3Ny/mrRs0KFomQQ/YKJ6EnwO686hpI0bRNa3
-         aKzvz4VZuQG5yV362mOpVtRQ2zP7DsF9K5jR+gcpoNIvKIbBvtpWRHihgb7JInZuvStU
-         4Bgw==
-X-Gm-Message-State: AGi0Pua6lulmws6TDsoYrDK92i/dHHSqJ26cXq6ayZ5m/1GBvcNnJpkU
-        F9ZgxuqyYov6OQDk9ILmdv8=
-X-Google-Smtp-Source: APiQypIal3O38c4Mqwm4P9dpr8g1+GmgXzDHXceCqIscl9w/plzTRFxfjFtpP2vU89kIf2d05y9VAA==
-X-Received: by 2002:a63:1820:: with SMTP id y32mr11205009pgl.182.1586866517492;
-        Tue, 14 Apr 2020 05:15:17 -0700 (PDT)
-Received: from localhost ([203.18.28.220])
-        by smtp.gmail.com with ESMTPSA id h11sm10999819pfn.125.2020.04.14.05.15.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 05:15:16 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 22:13:44 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
-        <20200413125303.423864-5-npiggin@gmail.com>
-        <20200414072316.GA5503@infradead.org>
-In-Reply-To: <20200414072316.GA5503@infradead.org>
+        Tue, 14 Apr 2020 08:16:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:54178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729799AbgDNMQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:16:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E1C11FB;
+        Tue, 14 Apr 2020 05:16:18 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AA2C3F6C4;
+        Tue, 14 Apr 2020 05:16:17 -0700 (PDT)
+Subject: Re: [PATCH] arm64: panic on synchronous external abort in kernel
+ context
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Xie XiuQi <xiexiuqi@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+        tanxiaofei@huawei.com, wangxiongfeng2@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200410015245.23230-1-xiexiuqi@huawei.com>
+ <20200414105923.GA2486@C02TD0UTHF1T.local>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <adc93578-5cfc-09c3-0b88-b265e310ef97@arm.com>
+Date:   Tue, 14 Apr 2020 13:16:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Message-Id: <1586864403.0qfilei2ft.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414105923.GA2486@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Christoph Hellwig's message of April 14, 2020 5:23 pm:
-> On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
->> For platforms that define HAVE_ARCH_HUGE_VMAP and support PMD vmap mappi=
-ngs,
->> have vmalloc attempt to allocate PMD-sized pages first, before falling b=
-ack
->> to small pages. Allocations which use something other than PAGE_KERNEL
->> protections are not permitted to use huge pages yet, not all callers exp=
-ect
->> this (e.g., module allocations vs strict module rwx).
->>=20
->> This gives a 6x reduction in dTLB misses for a `git diff` (of linux), fr=
-om
->> 45600 to 6500 and a 2.2% reduction in cycles on a 2-node POWER9.
->>=20
->> This can result in more internal fragmentation and memory overhead for a
->> given allocation. It can also cause greater NUMA unbalance on hashdist
->> allocations.
->>=20
->> There may be other callers that expect small pages under vmalloc but use
->> PAGE_KERNEL, I'm not sure if it's feasible to catch them all. An
->> alternative would be a new function or flag which enables large mappings=
-,
->> and use that in callers.
->=20
-> Why do we even use vmalloc in this case rather than just doing a huge
-> page allocation?
+Hi Xie,
 
-Which case? Usually the answer would be because you don't want to use
-contiguous physical memory and/or you don't want to use the linear=20
-mapping.
+On 14/04/2020 11:59, Mark Rutland wrote:
+> On Fri, Apr 10, 2020 at 09:52:45AM +0800, Xie XiuQi wrote:
+>> We should panic even panic_on_oops is not set, when we can't recover
+>> from synchronous external abort in kernel context.
 
-> What callers are you intersted in?
+Hmm, fault-from-kernel-context doesn't mean the fault affects the kernel. If the kernel is
+reading or writing from user-space memory for a syscall, its the user-space memory that is
+affected. This thread can't make progress, so we kill it.
+If its a kernel thread or we were in irq context, we panic().
 
-The dentry and inode caches for this test, obviously.
+I don't think you really want all faults that happen as a result of a kernel access to be
+fatal!
 
-Lots of other things could possibly benefit though, other system=20
-hashes like networking, but lot of other vmalloc callers that might
-benefit right away, some others could use some work to batch up
-allocation sizes to benefit.
+[...]
+
+> What exactly are you trying to catch here? If you are seeing a problem
+> in practice, can you please share your log from a crash?
+
+Yes please!
+
+
+I suspect you want to make memory_failure() smarter about faults that affect the kernel
+text or data. If so, please do it in memory_failure() where it benefits all architectures,
+and all methods of reporting errors.
+(we may need a 'synchronous' hint to memory_failure(), it expects everything to be
+asynchronous).
+
+If its not memory, we should extend the RAS handling to know what this error is, and that
+it is fatal. (e.g. PE state is infected)
+
 
 Thanks,
-Nick
+
+James
