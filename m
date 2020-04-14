@@ -2,222 +2,142 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D058C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F029DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2728A2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE58C20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="L40tEEcj";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iUWJLBuL"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="stA0CpFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390725AbgDNBTQ (ORCPT
+        id S2390740AbgDNBVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 21:19:16 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:58028 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728066AbgDNBTN (ORCPT
+        Mon, 13 Apr 2020 21:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgDNBVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 21:19:13 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0637BC0086;
-        Tue, 14 Apr 2020 01:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1586827152; bh=PtnNdaOntwdHe1x8AQMVgdwjxEA0YmKVoPX/egM36AI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=L40tEEcj8js+c/LfcUuj8oYD6t2NzrdrvodZzEPgqB6JSUsSFFZVYZq7qwRQoeZ8V
-         QJmKCw7x3CA2uG+nX2BPZGe1iGRw6nfKyZZLoeyC9Eew2sTwwV0JhBUuuUwPKoZbS1
-         o+nOto/jFMuaWrzz8+fxVjAot1DUDIwT1fWOEirk7jEallxL1fW9xSknRO1rPKgtVy
-         yECAORCxLLoJwaG6rDpI4o5UT3Zr4ET6dLB0zvTDTtrol1SRNX35fFppI1vEDNzUay
-         x70drAXgvIRvowzCS1O6GH+iBXM9qVihHFNID30D5gqbvkvbv7Z59ShWt2k/KcEupX
-         5JptU47mUh0Yw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 1FFA8A008A;
-        Tue, 14 Apr 2020 01:19:09 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 13 Apr 2020 18:19:09 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 13 Apr 2020 18:19:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dram8n0p9fsEiHJXQ7MJn/y+p1/xQ8mFWoI6UKmWuRCiB4o76edUbEyKw2Z/kQ1pdjdgqkeRlFYyoNkO7CsWo8atGrj/UDksWLq5LHl1SyVQmMjOF00RBASz+ERCK+KHR17ssetGVj1lgfF44XydIc8UGDRVnzoWGLeqwR7SmVbg+DQY11RTAqwgbGrXi11Q8GAoeCJiyUrKGhWtRufC3VPY7qc0nYf+sLD/BOqcsAPOlLJif9bYz6oOywAgZbq1wcpdHQja+5VPcVr84afeDlvsDu8AJC7mO1epS08DF7cY8aDkhf1TyzZCMl/9AFsl6Dk95CGfsZwKrTTzqgP44w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PtnNdaOntwdHe1x8AQMVgdwjxEA0YmKVoPX/egM36AI=;
- b=OLYosYi860YW27coSBrN5rIjzR5I9OqI/dtX/dYizIHE6O08sjPYNcREBmM1bfsCAFkuVDpJqFGiY3DCt/DZG/B8pIhp4IQtTnebfGJuKXY9YrIS3cdeDiFr24OxYeoc0RNzAyDzVDC/R1zO4XbqkNtvvruARKIdaUbCtn1hQQZJFg9tQz5Dc7ubrbJflVSvMYf5FNss0iY9OExpCZBt/q/bokIkPJnuoN8vcdSsPja4IWpaXogkuNK8XSvB98tiKSwnu/8DWqm/dBRp/D+55MTP4R0ehPM0KL1rGAYLgdno5ct13YFDnZBVS4VuRFbZZh2dWEm1udENN2qgoZ+JiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PtnNdaOntwdHe1x8AQMVgdwjxEA0YmKVoPX/egM36AI=;
- b=iUWJLBuL87yJEKe3aZIlvQ2ioyjA2BTD7A8uMecezjMfamfwh8bhlhgqwpJtH6BGz/vuwUNVP8sZrfONEOBqgHld8D07cm92/uQv3st76Qo5F+vs0wv7akxe/Q6OPwAd/IteKexiAspLNV+i38kbbFx5rVv96keizTlPOoL1igE=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
- by BYAPR12MB2613.namprd12.prod.outlook.com (2603:10b6:a03:69::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Tue, 14 Apr
- 2020 01:19:07 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 01:19:07 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-CC:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: Patch "asm-generic/bitops/lock.h: Rewrite using atomic_fetch_"
- causes kernel crash
-Thread-Topic: Patch "asm-generic/bitops/lock.h: Rewrite using atomic_fetch_"
- causes kernel crash
-Thread-Index: AQHWEfqwZ/jjxftyLUC7pQJHdoRBAw==
-Date:   Tue, 14 Apr 2020 01:19:06 +0000
-Message-ID: <d9b26292-4b40-f282-b1f6-5ee238358f0e@synopsys.com>
-References: <1535567633.4465.23.camel@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA23075012B090BEA@us01wembx1.internal.synopsys.com>
- <20180830094411.GX24124@hirez.programming.kicks-ass.net>
- <20180830095148.GB5942@arm.com> <1535629996.4465.44.camel@synopsys.com>
- <20180830141713.GN24082@hirez.programming.kicks-ass.net>
- <20180830142354.GB13005@arm.com>
- <20180830142920.GO24082@hirez.programming.kicks-ass.net>
- <20180830144344.GW24142@hirez.programming.kicks-ass.net>
-In-Reply-To: <20180830144344.GW24142@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [2601:641:c100:83a0:7c06:2fd:ae14:dd9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a8791ee-ab26-413b-57f3-08d7e011d3ec
-x-ms-traffictypediagnostic: BYAPR12MB2613:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB2613A32DC0F7B058476891A5B6DA0@BYAPR12MB2613.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0373D94D15
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3592.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(376002)(396003)(366004)(39860400002)(136003)(6486002)(36756003)(186003)(31686004)(6512007)(478600001)(71200400001)(31696002)(64756008)(66446008)(66556008)(76116006)(81156014)(66946007)(54906003)(8676002)(66476007)(110136005)(6506007)(8936002)(86362001)(4326008)(2906002)(2616005)(5660300002)(316002)(53546011)(41533002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UARJD4GPPkQ65xp2YZluSm5OiNRLu3loQItdibZg/LlYv2Ma1Eg3F3po140zpdNSJ7snJZovh5wUCdArblAK4V3/3QWwa15rHSR4mIRKSOwWSdCt3p9M/0gSFhV0W9E//V99k7gfxsLfILjVIXOTGosJk3OsSCFLmD0ZylitsIlNUgS9KgeWLcAWWCdQNvIxACvFqFWktDn2rg2Z1121YNJ+CbjQd51EC4j0YxnTCdRZX1WKFXK47nGtkfbb2FLWcVyUehOeYH20nd1FbXjDYK7VFQqwRiacNy+q/JQkCwrDaFs2vxdFJWOVDoC3MazSXUwEnznqCLOk9zoC5c5q6HD8nWM7joupP1g4LBdAJwXq/nrkejSRgv3dZqVXnqLJv+NDHUUHWRdnQBa3T9fbYst6hJ5jfYbx50EpXbkvHM0iJhisdXK02VmdwpcPD5eKtMhQLRv0bLYA48AmPtAGI0hjtOzi6QH+b1g9EYa5uJf04Gsx2TLHTc36H1dBwgAp
-x-ms-exchange-antispam-messagedata: Z8CqEliFiUJL3sEsnYRPsv44mciXNfc2q/o7cP9SbhuowYTrY82YaEjvuUKHlDb9y0xwboCeNhClqzK5v8/rM0b05bmTwjbeRZ6uHug0zkE23SzQ8lH7jVKgEhmKWt93sTN90o6Q1QhAavdyDPvHE18qMyRL/m9aYd2cstPoVqj55wYwYRCg7SVpgOSVgTJNGdCe1wAIiGMDhccpVwxGZg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D1A41C114C659A49A5C62FC67F388E00@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 Apr 2020 21:21:41 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E961FC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 18:21:39 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id z90so8868209qtd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 18:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ucg4luoxBe5p5/9cUQj1RfBcJ3voR9LqlqIX5ioc/8o=;
+        b=stA0CpFPzED8+cDmFDlFOPUc9NOX+a+UVO1kgT140a7AuOQYxHz7mttPD82mqFuEwq
+         W6S8EKZqQIcIz7gfWoLTX5HQL7saCVNRntogBQD+C/1AVTlxYLmT0ZBLzeinkr5a6qCV
+         sUhjkUmFi/hCVurWWSuId2T8rZesUg9lce+xk21coIwuFzF7FiH6svj7C45L2kmkfSQM
+         dw8Eo1+or04uZukAobNvXInrGC8xprR+ScPVIwaI6PkvhHo1j62yxQLJ6rt6nVmBqeFM
+         R8o0PM0fdOiOw6dgRa9brPEw0U5ZK9zu1C4otfg/4MSSerAj1zvvRc6XvPjVhV6l/V1C
+         HFjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ucg4luoxBe5p5/9cUQj1RfBcJ3voR9LqlqIX5ioc/8o=;
+        b=UzLMSKpJkEnT+K5urUnmPXoB5IJlbq2bGH0jPkuTBmj3BBQpBvbVBQqcx4/iPlsSGW
+         uUoBbiw9US555zHAk9MS0+9A5u0E5Yju52pMOe7cmXLnxCQJJyOMZrM17yHHUNh7Dtps
+         49H+a3i92Pz6HboTzRvdQmXm2WAzw1TetrreyVlg9OeVmLI3bQvU148KQB/jZ8/B5i57
+         /0oP4yKeXFQzCNIkhIba61Lo+s7cU1pAAA3WVLW0t55r1j8vSOp5YQOP2FUPKpIpIvjt
+         6fOxH5Blx1DukIYdCQiRd08TUrDhNFs5bIqkWbSvMNQuV1dRQ/4Ll5CA5Xg6fu0JaJjX
+         xp6g==
+X-Gm-Message-State: AGi0PuY0ZUqs6bMkch3ZpHyUW/R5ex2uJibO79EjHntRL5bS81SotAVt
+        JNuZDSyyFuQpA29G1jEJOdObWA==
+X-Google-Smtp-Source: APiQypKUMU9nNqLUSqQ6nEaJqBlYNc1SVRRFUNeid6/LPY7Ts/1eHVhK+OYeZuZdmAr1ZMHR5h92vw==
+X-Received: by 2002:ac8:370c:: with SMTP id o12mr13960452qtb.380.1586827298833;
+        Mon, 13 Apr 2020 18:21:38 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id b13sm6380638qka.20.2020.04.13.18.21.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 18:21:38 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2] kbuild: ensure mrproper removes arch/$(SUBARCH)/include/generated/
+Date:   Mon, 13 Apr 2020 22:21:32 -0300
+Message-Id: <20200414012132.32721-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a8791ee-ab26-413b-57f3-08d7e011d3ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 01:19:06.8703
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YjH0t/sZeR0JTDOCZqAuED7NEGeqSyPo7QU4Veo/YhpCk77It0JEjqvwfKZv4feLkr8AoECQfalnabW2cdyyJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2613
-X-OriginatorOrg: synopsys.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8zMC8xOCA3OjQzIEFNLCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gT24gVGh1LCBBdWcg
-MzAsIDIwMTggYXQgMDQ6Mjk6MjBQTSArMDIwMCwgUGV0ZXIgWmlqbHN0cmEgd3JvdGU6DQo+DQo+
-PiBBbHNvLCBvbmNlIGl0IGFsbCB3b3JrcywgdGhleSBzaG91bGQgbG9vayBhdCBzd2l0Y2hpbmcg
-dG8gX3JlbGF4ZWQNCj4+IGF0b21pY3MgZm9yIExML1NDLg0KPiBBIGxpdHRsZSBzb21ldGhpbmcg
-bGlrZSBzby4uIHNob3VsZCBzYXZlIGEgZmV3IHNtcF9tYigpLg0KDQpGaW5hbGx5IGdvdCB0byB0
-aGlzIC0gdGltZSBmb3Igc29tZSBzcHJpbmcgY2xlYW5pbmcgOy0pDQoNCg0KPiAtLS0NCj4NCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2F0b21pYy5oIGIvYXJjaC9hcmMvaW5j
-bHVkZS9hc20vYXRvbWljLmgNCj4gaW5kZXggNGUwMDcyNzMwMjQxLi43MTRiNTRjMzA4YjAgMTAw
-NjQ0DQo+IC0tLSBhL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2F0b21pYy5oDQo+ICsrKyBiL2FyY2gv
-YXJjL2luY2x1ZGUvYXNtL2F0b21pYy5oDQo+IEBAIC00NCw3ICs0NCw3IEBAIHN0YXRpYyBpbmxp
-bmUgdm9pZCBhdG9taWNfIyNvcChpbnQgaSwgYXRvbWljX3QgKnYpCQkJXA0KPiAgfQkJCQkJCQkJ
-CVwNCj4gIA0KPiAgI2RlZmluZSBBVE9NSUNfT1BfUkVUVVJOKG9wLCBjX29wLCBhc21fb3ApCQkJ
-CVwNCj4gLXN0YXRpYyBpbmxpbmUgaW50IGF0b21pY18jI29wIyNfcmV0dXJuKGludCBpLCBhdG9t
-aWNfdCAqdikJCVwNCj4gK3N0YXRpYyBpbmxpbmUgaW50IGF0b21pY18jI29wIyNfcmV0dXJuX3Jl
-bGF4ZWQoaW50IGksIGF0b21pY190ICp2KQlcDQo+ICB7CQkJCQkJCQkJXA0KDQpUaGlzIGJlaW5n
-IHJlbGF4ZWQsIHNob3Vkbid0IGl0IGFsc28gcmVtb3ZlIHRoZSBzbXBfbWIoKSBiZWZvcmUgdGhl
-IG9wZXJhdGlvbiBhbmQNCmxlYXZlIHRoZSBnZW5lcmljIGNvZGUgdG8gYWRkIG9uZSAvIG1vcmUg
-c21wX21iKCkgYXMgYXBwcm9wcmlhdGUgZm9yIGZ1bGx5DQpvcmRlcmVkLCBhY3F1aXJlIGFuZCBy
-ZWxlYXNlIHZhcmlhbnRzID8NCg0KPiAgCXVuc2lnbmVkIGludCB2YWw7CQkJCQkJXA0KPiAgCQkJ
-CQkJCQkJXA0KPiBAQCAtNjksOCArNjksMTEgQEAgc3RhdGljIGlubGluZSBpbnQgYXRvbWljXyMj
-b3AjI19yZXR1cm4oaW50IGksIGF0b21pY190ICp2KQkJXA0KPiAgCXJldHVybiB2YWw7CQkJCQkJ
-CVwNCj4gIH0NCj4gIA0KPiArI2RlZmluZSBhdG9taWNfYWRkX3JldHVybl9yZWxheGVkCWF0b21p
-Y19hZGRfcmV0dXJuX3JlbGF4ZWQNCj4gKyNkZWZpbmUgYXRvbWljX3N1Yl9yZXR1cm5fcmVsYXhl
-ZAlhdG9taWNfc3ViX3JldHVybl9yZWxheGVkDQo+ICsNCj4gICNkZWZpbmUgQVRPTUlDX0ZFVENI
-X09QKG9wLCBjX29wLCBhc21fb3ApCQkJCVwNCj4gLXN0YXRpYyBpbmxpbmUgaW50IGF0b21pY19m
-ZXRjaF8jI29wKGludCBpLCBhdG9taWNfdCAqdikJCQlcDQo+ICtzdGF0aWMgaW5saW5lIGludCBh
-dG9taWNfZmV0Y2hfIyNvcCMjX3JlbGF4ZWQoaW50IGksIGF0b21pY190ICp2KQlcDQo+ICB7CQkJ
-CQkJCQkJXA0KPiAgCXVuc2lnbmVkIGludCB2YWwsIG9yaWc7CQkJCQkJXA0KPiAgCQkJCQkJCQkJ
-XA0KPiBAQCAtOTYsNiArOTksMTQgQEAgc3RhdGljIGlubGluZSBpbnQgYXRvbWljX2ZldGNoXyMj
-b3AoaW50IGksIGF0b21pY190ICp2KQkJCVwNCj4gIAlyZXR1cm4gb3JpZzsJCQkJCQkJXA0KPiAg
-fQ0KPiAgDQo+ICsjZGVmaW5lIGF0b21pY19mZXRjaF9hZGRfcmVsYXhlZAlhdG9taWNfZmV0Y2hf
-YWRkX3JlbGF4ZWQNCj4gKyNkZWZpbmUgYXRvbWljX2ZldGNoX3N1Yl9yZWxheGVkCWF0b21pY19m
-ZXRjaF9zdWJfcmVsYXhlZA0KPiArDQo+ICsjZGVmaW5lIGF0b21pY19mZXRjaF9hbmRfcmVsYXhl
-ZAlhdG9taWNfZmV0Y2hfYW5kX3JlbGF4ZWQNCj4gKyNkZWZpbmUgYXRvbWljX2ZldGNoX2FuZG5v
-dF9yZWxheGVkCWF0b21pY19mZXRjaF9hbmRub3RfcmVsYXhlZA0KPiArI2RlZmluZSBhdG9taWNf
-ZmV0Y2hfb3JfcmVsYXhlZAkJYXRvbWljX2ZldGNoX29yX3JlbGF4ZWQNCj4gKyNkZWZpbmUgYXRv
-bWljX2ZldGNoX3hvcl9yZWxheGVkCWF0b21pY19mZXRjaF94b3JfcmVsYXhlZA0KPiArDQo+ICAj
-ZWxzZQkvKiAhQ09ORklHX0FSQ19IQVNfTExTQyAqLw0KPiAgDQo+ICAjaWZuZGVmIENPTkZJR19T
-TVANCj4gQEAgLTM3OSw3ICszOTAsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgYXRvbWljNjRfIyNv
-cChsb25nIGxvbmcgYSwgYXRvbWljNjRfdCAqdikJCVwNCj4gIH0JCQkJCQkJCQlcDQo+ICANCj4g
-ICNkZWZpbmUgQVRPTUlDNjRfT1BfUkVUVVJOKG9wLCBvcDEsIG9wMikJCSAgICAgICAgCVwNCj4g
-LXN0YXRpYyBpbmxpbmUgbG9uZyBsb25nIGF0b21pYzY0XyMjb3AjI19yZXR1cm4obG9uZyBsb25n
-IGEsIGF0b21pYzY0X3QgKnYpCVwNCj4gK3N0YXRpYyBpbmxpbmUgbG9uZyBsb25nIGF0b21pYzY0
-XyMjb3AjI19yZXR1cm5fcmVsYXhlZChsb25nIGxvbmcgYSwgYXRvbWljNjRfdCAqdikJXA0KPiAg
-ewkJCQkJCQkJCVwNCj4gIAl1bnNpZ25lZCBsb25nIGxvbmcgdmFsOwkJCQkJCVwNCj4gIAkJCQkJ
-CQkJCVwNCj4gQEAgLTQwMSw4ICs0MTIsMTEgQEAgc3RhdGljIGlubGluZSBsb25nIGxvbmcgYXRv
-bWljNjRfIyNvcCMjX3JldHVybihsb25nIGxvbmcgYSwgYXRvbWljNjRfdCAqdikJXA0KPiAgCXJl
-dHVybiB2YWw7CQkJCQkJCVwNCj4gIH0NCj4gIA0KPiArI2RlZmluZSBhdG9taWM2NF9hZGRfcmV0
-dXJuX3JlbGF4ZWQJYXRvbWljNjRfYWRkX3JldHVybl9yZWxheGVkDQo+ICsjZGVmaW5lIGF0b21p
-YzY0X3N1Yl9yZXR1cm5fcmVsYXhlZAlhdG9taWM2NF9zdWJfcmV0dXJuX3JlbGF4ZWQNCj4gKw0K
-PiAgI2RlZmluZSBBVE9NSUM2NF9GRVRDSF9PUChvcCwgb3AxLCBvcDIpCQkgICAgICAgIAkJXA0K
-PiAtc3RhdGljIGlubGluZSBsb25nIGxvbmcgYXRvbWljNjRfZmV0Y2hfIyNvcChsb25nIGxvbmcg
-YSwgYXRvbWljNjRfdCAqdikJXA0KPiArc3RhdGljIGlubGluZSBsb25nIGxvbmcgYXRvbWljNjRf
-ZmV0Y2hfIyNvcCMjX3JlbGF4ZWQobG9uZyBsb25nIGEsIGF0b21pYzY0X3QgKnYpCVwNCj4gIHsJ
-CQkJCQkJCQlcDQo+ICAJdW5zaWduZWQgbG9uZyBsb25nIHZhbCwgb3JpZzsJCQkJCVwNCj4gIAkJ
-CQkJCQkJCVwNCj4gQEAgLTQyNCw2ICs0MzgsMTQgQEAgc3RhdGljIGlubGluZSBsb25nIGxvbmcg
-YXRvbWljNjRfZmV0Y2hfIyNvcChsb25nIGxvbmcgYSwgYXRvbWljNjRfdCAqdikJXA0KPiAgCXJl
-dHVybiBvcmlnOwkJCQkJCQlcDQo+ICB9DQo+ICANCj4gKyNkZWZpbmUgYXRvbWljNjRfZmV0Y2hf
-YWRkX3JlbGF4ZWQJYXRvbWljNjRfZmV0Y2hfYWRkX3JlbGF4ZWQNCj4gKyNkZWZpbmUgYXRvbWlj
-NjRfZmV0Y2hfc3ViX3JlbGF4ZWQJYXRvbWljNjRfZmV0Y2hfc3ViX3JlbGF4ZWQNCj4gKw0KPiAr
-I2RlZmluZSBhdG9taWM2NF9mZXRjaF9hbmRfcmVsYXhlZAlhdG9taWM2NF9mZXRjaF9hbmRfcmVs
-YXhlZA0KPiArI2RlZmluZSBhdG9taWM2NF9mZXRjaF9hbmRub3RfcmVsYXhlZAlhdG9taWM2NF9m
-ZXRjaF9hbmRub3RfcmVsYXhlZA0KPiArI2RlZmluZSBhdG9taWM2NF9mZXRjaF9vcl9yZWxheGVk
-CWF0b21pYzY0X2ZldGNoX29yX3JlbGF4ZWQNCj4gKyNkZWZpbmUgYXRvbWljNjRfZmV0Y2hfeG9y
-X3JlbGF4ZWQJYXRvbWljNjRfZmV0Y2hfeG9yX3JlbGF4ZWQNCj4gKw0KPiAgI2RlZmluZSBBVE9N
-SUM2NF9PUFMob3AsIG9wMSwgb3AyKQkJCQkJXA0KPiAgCUFUT01JQzY0X09QKG9wLCBvcDEsIG9w
-MikJCQkJCVwNCj4gIAlBVE9NSUM2NF9PUF9SRVRVUk4ob3AsIG9wMSwgb3AyKQkJCQlcDQo+IEBA
-IC00MzQsNiArNDU2LDEyIEBAIHN0YXRpYyBpbmxpbmUgbG9uZyBsb25nIGF0b21pYzY0X2ZldGNo
-XyMjb3AobG9uZyBsb25nIGEsIGF0b21pYzY0X3QgKnYpCVwNCj4gIA0KPiAgQVRPTUlDNjRfT1BT
-KGFkZCwgYWRkLmYsIGFkYykNCj4gIEFUT01JQzY0X09QUyhzdWIsIHN1Yi5mLCBzYmMpDQo+ICsN
-Cj4gKyN1bmRlZiBBVE9NSUM2NF9PUFMNCj4gKyNkZWZpbmUgQVRPTUlDNjRfT1BTKG9wLCBvcDEs
-IG9wMikJCQkJCVwNCj4gKwlBVE9NSUM2NF9PUChvcCwgb3AxLCBvcDIpCQkJCQlcDQo+ICsJQVRP
-TUlDNjRfRkVUQ0hfT1Aob3AsIG9wMSwgb3AyKQ0KPiArDQoNCkZvciBjbGFyaXR5IEkgc3BsaXQg
-b2ZmIHRoaXMgaHVuayBpbnRvIGEgc2VwZXJhdGUgcGF0Y2ggYXMgaXQgZWxpZGVzIGdlbmVyYXRp
-b24gb2YNCnVudXNlZCBiaXR3aXNlIG9wcy4NCg0KPiAgQVRPTUlDNjRfT1BTKGFuZCwgYW5kLCBh
-bmQpDQo+ICBBVE9NSUM2NF9PUFMoYW5kbm90LCBiaWMsIGJpYykNCj4gIEFUT01JQzY0X09QUyhv
-ciwgb3IsIG9yKQ0KPg0KDQo=
+In the following use case, when compiling the kernel for the UML
+architecture, for example:
+
+ * `make ARCH=um defconfig && make ARCH=um -j8`,
+
+SUBARCH files are generated, however when we run the command:
+
+ * `mrproper ARCH=um`
+
+the files `arch/$(SUBARCH)/include/generated/ aren't cleaned up.
+
+This generates compilation errors by running the following command:
+
+ * `make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um`
+
+This PATCH fix that problem.
+
+This makes it possible to compile on different architectures that use the
+SUBARCH variable, in different build directories and root directory of the
+linux directory. This is important because we can compile without the object
+files being overwritten. This reduces the re-compilation time in this use case.
+
+Besides that, in the workflow of developing unit tests, using kunit, and
+compiling in different architectures to develop or test a PATCH, this use case
+applies.
+
+ * This bug was introduced in this commit a788b2ed81abe
+
+ * Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
+
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+---
+v2:
+ * Explains what this PATCH does and the importance as suggested
+   by Brendan Higgins.
+---
+ Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 70def4907036..e1a79796032e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -532,7 +532,8 @@ outputmakefile:
+ ifdef building_out_of_srctree
+ 	$(Q)if [ -f $(srctree)/.config -o \
+ 		 -d $(srctree)/include/config -o \
+-		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
++		 -d $(srctree)/arch/$(SRCARCH)/include/generated -o \
++		 -d $(srctree)/arch/$(SUBARCH)/include/generated ]; then \
+ 		echo >&2 "***"; \
+ 		echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
+ 		echo >&2 "*** in $(abs_srctree)";\
+@@ -1388,6 +1389,7 @@ CLEAN_FILES += modules.builtin modules.builtin.modinfo modules.nsdeps
+ # Directories & files removed with 'make mrproper'
+ MRPROPER_DIRS  += include/config include/generated          \
+ 		  arch/$(SRCARCH)/include/generated .tmp_objdiff \
++		  arch/$(SUBARCH)/include/generated \
+ 		  debian/ snap/ tar-install/
+ MRPROPER_FILES += .config .config.old .version \
+ 		  Module.symvers \
+-- 
+2.25.1
+
