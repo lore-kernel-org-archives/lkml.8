@@ -2,128 +2,216 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39A0C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EA7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8AEE206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE8A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CdxfULn1"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MoY8/pLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439395AbgDNLhX (ORCPT
+        id S2439403AbgDNLh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:37:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439354AbgDNLhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:37:15 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111DDC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5fWEtgrTH9zO0zIcoo+/a88VwILs4L6u8exqS9T3p3Q=; b=CdxfULn1HuYr2DH0TtLsK1gNPW
-        okFN71fsxOtk+nhi/fEjZeFESbU9pMlpnAZf2UGJ/WhVZ8Hp3W/uIUId5L8DF5auMRNvtojwvdTfj
-        tbwUEWv0f2FKXHsIgdla7khVMn3bUygjYF2Pp/56Ei9qKJPQ/dI3pExkzr4hPhwpjfMqclkXMfTC0
-        Of9NXq83F+NUCjcaerVe8hVaYG+7vhsId9uU4TcVP/bitBBkkAFXg6aWQ/ZQiVy8SdpUgw0Vgfzoo
-        +mvHZyh2dJbEtzg/RfZtig9UfdsYQ3QllU6jgj43QtIF5GX3Nkn2L8NUDzcoo+7oiq/eMWApdTczB
-        4eHT7bKQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOJru-0005Ei-Hd; Tue, 14 Apr 2020 11:36:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 47DD7305EEC;
-        Tue, 14 Apr 2020 13:36:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B4692038BC5C; Tue, 14 Apr 2020 13:36:39 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 13:36:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     vpillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org
-Subject: Re: [RFC PATCH 03/13] sched: Core-wide rq->lock
-Message-ID: <20200414113639.GS20730@hirez.programming.kicks-ass.net>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
+        Tue, 14 Apr 2020 07:37:28 -0400
+Received: from mail-dm6nam10on2085.outbound.protection.outlook.com ([40.107.93.85]:6101
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2439385AbgDNLhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:37:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=io9BAtG3H1YfJ45T/uE78+32Q3LYhPerjDkSeC8MjeurxVwcA8V92CVVl172lXns17r5QaWv3G7ayhTmuDKL99HWpE1GzsnsfQru5zB+2KlLpF26aiTuABlMw/eni8kUnkONx7Jw69iW9+4/UNk/+wNrJVdNIaKGlfVBdT7j9myAFcz4HSN1kh/B8m+2G0iWU9D4c0z+XDdu9tdWc7LmvHG7E+llCHyKeo5qPQL1IAinUL5q34dvtkzKMf2ehUeSKrHXoO1QzXzE8SiQIfFEUgvEW5fhzHWPEEF3yyGAC/7SBjrMv69Rcj2uV4RZQ55tDuI+bm+FgPbhNiXPQyXzzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W58NGb60rPxmpQMJFRujTlW0RuEw+4y30s1zwErSVRA=;
+ b=nc+M1wJ27SXtBIMU13Ct1Hzw62UEkp3fGR3qt37/Nx84QomH4I5e/EBoHm3KQXaNHcqLNMAUtMwN2STqTJMIDlJawwqZHzJasZNm2AOtzWe0tPDb1HY+KrFAWg3DEAjrU09lRoUpfZtYxlcVqnUh04H8qGHt54ZWA75i8+v2epvnbt/frvHg5Q5UTBr25UCK2o8zl908DbZQIHGWAXhNb2Jo65edh+WOvpeRMRAYDD2MD5zCbZaV+P2BLWzpKsxERJNIIb6znry2KQp8pQiJJcLLu1scaLwf/zzjm7l3W1TAViMbkN5XvmjHf+ko7SQqw03OeXeG7WWIOg7Naf1H9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W58NGb60rPxmpQMJFRujTlW0RuEw+4y30s1zwErSVRA=;
+ b=MoY8/pLYRXS+2eBc6vL32mERG/YvdUiReX+TJ+0mKtanZERhIyh7m2Og37RxsQ93YrCrENHP+Ym4qXdtCUCZrzodeHgXXb0+4mfZ/zBU3Ux5ZBzDE4WYjI66TVBLXGQ3jPbdWi2RKzJ5D2ZBlCcAkNF9doAG4v+3AhY9beUTO5o=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (2603:10b6:208:d0::22)
+ by MN2PR12MB3856.namprd12.prod.outlook.com (2603:10b6:208:168::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Tue, 14 Apr
+ 2020 11:37:15 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::f19a:d981:717:3cb6]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::f19a:d981:717:3cb6%2]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 11:37:14 +0000
+Subject: Re: Re: [PATCH] spi: spi-amd: Add AMD SPI controller driver support
+To:     Mark Brown <broonie@kernel.org>,
+        Sanjay R Mehta <sanju.mehta@amd.com>
+Cc:     Nehal-bakulchandra.Shah@amd.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1586719711-46010-1-git-send-email-sanju.mehta@amd.com>
+ <20200414111646.GC5412@sirena.org.uk>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <95455440-393d-f8aa-c213-dd746f184744@amd.com>
+Date:   Tue, 14 Apr 2020 17:07:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+In-Reply-To: <20200414111646.GC5412@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN1PR0101CA0033.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:c::19) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.32.32] (165.204.159.242) by PN1PR0101CA0033.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Tue, 14 Apr 2020 11:37:12 +0000
+X-Originating-IP: [165.204.159.242]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3e8f57c0-76b9-4ef2-05ba-08d7e0682da3
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3856:|MN2PR12MB3856:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3856A750496336902C8638EAE5DA0@MN2PR12MB3856.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0373D94D15
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3455.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(66476007)(66946007)(6636002)(478600001)(2616005)(316002)(110136005)(5660300002)(53546011)(52116002)(16526019)(956004)(66556008)(6666004)(186003)(31696002)(26005)(16576012)(6486002)(4326008)(8936002)(81156014)(31686004)(8676002)(2906002)(36756003);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2KOq8Zxbq1glTDl4ppQP4k9J6/6xSW/bvfpmIKP+lCoG/n73BNMQD1ecOJsEuXpGe0GqmZPG1ZkiEnVSNjg4SVkRctLbnfe5vbkmuN6YP1+CaMMvS6wxeMGr3KYmxzV6N163xB7dHbbSymBR1oWbPqQruc/yueV/5+YkdlxF4RzXkz8BkXXWwzmdlqqj1GHdIBhFeJo1LeFluo8OWNyx7gvFwEYeKfCh3WUCH+UZ5NHjut0IM4HEFOFG59CLMAKQXMKvCF7Rc5OqzJQGzGwp9zK1o1QO3HtoAbnUq0y+jfK51ZlNA6ZxkwZzvnlvK3A8pmjNIbRqawISuQtepCSlKedtfyeGM6FU57slI9vzN2MBB1hZsb312QVTqlNoAitFIcentkfb8pDGXj6ld/Hqa0oMD/449HV8JIkuc5D7azog7NmUJmRKp48PxYGAsi46
+X-MS-Exchange-AntiSpam-MessageData: CxMKmbEeVWSaEXGHpmIFt11nPAabdY9a6TpHOVZwdExbYnnkoAG5EXn41jYe0k2yXBJiWI2ENAPKmveEPyM4/m1kC/y1WRzoQ8Bmb/CrRvs7P2JXg1BC+UPwJwDywLLUleh01oIgSUOrmyIcgPBILA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e8f57c0-76b9-4ef2-05ba-08d7e0682da3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 11:37:14.7721
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: apS5xAKkqXhgNNutY59gCOGCxjbNAOu0ZJEmoode9y/TWdFYVJEoT8OozWgRLJa1Gf0ye/xI6eD6ceXN2cp9yw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3856
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:59:53PM +0000, vpillai wrote:
-> @@ -6400,8 +6464,15 @@ int sched_cpu_activate(unsigned int cpu)
->  	/*
->  	 * When going up, increment the number of cores with SMT present.
->  	 */
-> -	if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-> +	if (cpumask_weight(cpu_smt_mask(cpu)) == 2) {
->  		static_branch_inc_cpuslocked(&sched_smt_present);
-> +#ifdef CONFIG_SCHED_CORE
-> +		if (static_branch_unlikely(&__sched_core_enabled)) {
-> +			rq->core_enabled = true;
-> +		}
-> +#endif
-> +	}
-> +
->  #endif
->  	set_cpu_active(cpu, true);
->  
-> @@ -6447,8 +6518,16 @@ int sched_cpu_deactivate(unsigned int cpu)
->  	/*
->  	 * When going down, decrement the number of cores with SMT present.
->  	 */
-> -	if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-> +	if (cpumask_weight(cpu_smt_mask(cpu)) == 2) {
-> +#ifdef CONFIG_SCHED_CORE
-> +		struct rq *rq = cpu_rq(cpu);
-> +		if (static_branch_unlikely(&__sched_core_enabled)) {
-> +			rq->core_enabled = false;
-> +		}
-> +#endif
->  		static_branch_dec_cpuslocked(&sched_smt_present);
-> +
-> +	}
->  #endif
->  
->  	if (!sched_smp_initialized)
 
-Aside from the fact that it's probably much saner to write this as:
 
-	rq->core_enabled = static_key_enabled(&__sched_core_enabled);
+On 4/14/2020 4:46 PM, Mark Brown wrote:
+> On Sun, Apr 12, 2020 at 02:28:31PM -0500, Sanjay R Mehta wrote:
+> 
+>> +++ b/drivers/spi/spi-amd.c
+>> @@ -0,0 +1,341 @@
+>> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+>> +/*
+>> + * AMD SPI controller driver
+>> + *
+> 
+> Please make the entire comment a C++ one so things look more
+> intentional.
+> 
+>> +#define DRIVER_NAME		"amd_spi"
+> 
+> This is unused.
+> 
+>> +/* M_CMD OP codes for SPI */
+>> +#define SPI_XFER_TX		1
+>> +#define SPI_XFER_RX		2
+> 
+> These constants should be namespaced, they're likely to collide with
+> generic additions.
+> 
+>> +static void amd_spi_execute_opcode(struct spi_master *master)
+>> +{
+>> +	struct amd_spi *amd_spi = spi_master_get_devdata(master);
+>> +	bool spi_busy;
+>> +
+>> +	/* Set ExecuteOpCode bit in the CTRL0 register */
+>> +	amd_spi_setclear_reg32(master, AMD_SPI_CTRL0_REG, AMD_SPI_EXEC_CMD,
+>> +			       AMD_SPI_EXEC_CMD);
+>> +
+>> +	/* poll for SPI bus to become idle */
+>> +	spi_busy = (ioread32((u8 __iomem *)amd_spi->io_remap_addr +
+>> +		    AMD_SPI_CTRL0_REG) & AMD_SPI_BUSY) == AMD_SPI_BUSY;
+>> +	while (spi_busy) {
+>> +		set_current_state(TASK_INTERRUPTIBLE);
+>> +		schedule();
+>> +		set_current_state(TASK_RUNNING);
+>> +		spi_busy = (ioread32((u8 __iomem *)amd_spi->io_remap_addr +
+>> +			    AMD_SPI_CTRL0_REG) & AMD_SPI_BUSY) == AMD_SPI_BUSY;
+>> +	}
+> 
+> This is a weird way to busy wait - usually you'd use a cpu_relax()
+> rather than a schedule().  There's also no timeout here so we could busy
+> wait for ever if something goes wrong.
+> 
+>> +static int amd_spi_master_setup(struct spi_device *spi)
+>> +{
+>> +	struct spi_master *master = spi->master;
+>> +	struct amd_spi *amd_spi = spi_master_get_devdata(master);
+>> +
+>> +	amd_spi->chip_select = spi->chip_select;
+>> +	amd_spi_select_chip(master);
+> 
+> This looks like it will potentially affect devices other than the
+> current one.  setup() may be called while other devices are active it
+> shouldn't do that.
+> 
+>> +		} else if (m_cmd & SPI_XFER_RX) {
+>> +			/* Store no. of bytes to be received from
+>> +			 * FIFO
+>> +			 */
+>> +			rx_len = xfer->len;
+>> +			buffer = (u8 *)xfer->rx_buf;
+> 
+>> +		/* Read data from FIFO to receive buffer  */
+>> +		for (i = 0; i < rx_len; i++)
+>> +			buffer[i] = ioread8((u8 __iomem *)amd_spi->io_remap_addr
+>> +					    + AMD_SPI_FIFO_BASE
+>> +					    + tx_len + i);
+> 
+> This will only work for messages with a single receive transfer, if
+> there are multiple transfers then you'll need to store multiple buffers
+> and their lengths.
+> 
+>> +static int amd_spi_master_transfer(struct spi_master *master,
+>> +				   struct spi_message *msg)
+>> +{
+>> +	struct amd_spi *amd_spi = spi_master_get_devdata(master);
+>> +
+>> +	/*
+>> +	 * Extract spi_transfers from the spi message and
+>> +	 * program the controller.
+>> +	 */
+>> +	amd_spi_fifo_xfer(amd_spi, msg);
+>> +
+>> +	return 0;
+>> +}
+> 
+> This function is completely redundant, just inline amd_spi_fifo_xfer().
+> It also ignores all errors which isn't great.
+> 
+>> +	/* Initialize the spi_master fields */
+>> +	master->bus_num = 0;
+>> +	master->num_chipselect = 4;
+>> +	master->mode_bits = 0;
+>> +	master->flags = 0;
+> 
+> This device is single duplex so should flag that.
+> 
+>> +	err = spi_register_master(master);
+>> +	if (err) {
+>> +		dev_err(dev, "error registering SPI controller\n");
+>> +		goto err_iounmap;
+> 
+> It's best to print the error code to help people debug things.
 
-I'm fairly sure I didn't write this part. And while I do somewhat see
-the point of disabling core scheduling for a core that has only a single
-thread on, I wonder why we care.
+Thanks Mark for the feedback. Will make all the suggested changes.
+> 
 
-The thing is, this directly leads to the utter horror-show that is patch
-6.
-
-It should be perfectly possible to core schedule a core with only a
-single thread on. It might be a tad silly to do, but it beats the heck
-out of the trainwreck created here.
-
-So how did this happen?
