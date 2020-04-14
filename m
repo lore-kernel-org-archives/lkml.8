@@ -2,133 +2,131 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973D8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B993AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3B62076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB2A2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439181AbgDNLau (ORCPT
+        id S2439210AbgDNLbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:30:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:53398 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbgDNL3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:29:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1035D1FB;
-        Tue, 14 Apr 2020 04:29:06 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D553F6C4;
-        Tue, 14 Apr 2020 04:29:03 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:29:01 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] sched/deadline: Implement fallback mechanism for
- !fit case
-Message-ID: <20200414112901.3fhdoefgbxwv2bu4@e107158-lin.cambridge.arm.com>
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-5-dietmar.eggemann@arm.com>
- <20200409102557.h4humnsa5dlwvlym@e107158-lin.cambridge.arm.com>
- <20200409150010.468951df@sweethome>
- <20200409145359.y276yeikn7dp6jmx@e107158-lin.cambridge.arm.com>
- <b72f72c1-6043-c44f-31f5-fb4137bd5d52@arm.com>
+        Tue, 14 Apr 2020 07:31:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2316 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2439123AbgDNL3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:29:03 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4C70C735B70B8CB2A2C5;
+        Tue, 14 Apr 2020 19:28:57 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 14 Apr 2020 19:28:47 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <will@kernel.org>, <catalin.marinas@arm.com>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [RFC PATCH v3 1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
+Date:   Tue, 14 Apr 2020 19:28:34 +0800
+Message-ID: <20200414112835.1121-2-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200414112835.1121-1-yezhenyu2@huawei.com>
+References: <20200414112835.1121-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b72f72c1-6043-c44f-31f5-fb4137bd5d52@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/20 20:43, Dietmar Eggemann wrote:
-> On 09.04.20 16:55, Qais Yousef wrote:
-> > Hi Luca
-> > 
-> > On 04/09/20 15:00, luca abeni wrote:
-> 
-> [...]
-> 
-> >> There is already a tunable for the SCHED_DEADLINE admission test
-> >> (/proc/sys/kernel/sched_rt_{runtime,period}_us, if I understand well
-> >> what you are suggesting). The problem is that it is not easy to find a
-> >> value for this tunable that guarantees the hard respect of all
-> >> deadlines.
-> > 
-> > I don't think it's similar to what I was referring to. But my knowledge about
-> > DL could have failed me to fully appreciate what you're saying.
-> > 
-> > This tunable for RT prevents a single task from using 100% CPU time. I think
-> > DL uses it in a similar manner.
-> > 
-> > What I meant by overcommiting, is allowing more DL tasks than the system can
-> > guarantee to meet their deadlines.
-> > 
-> > For example, in the context of capacity awareness, if you have 2 big cores, but
-> > 4 DL tasks request a bandwidth that can only be satisfied by the big cores,
-> > then 2 of them will miss their deadlines (almost) consistently, IIUC.
-> 
-> __dl_overflow() now uses
-> 
->     X = cap_scale(dl_b->bw, rd_capacity(cpu)) instead of X = cpus
-> 
-> in
-> 
->     dl_b->bw * X < dl_b->total_bw - old_bw + new_bw;
-> 
-> 
-> As an example, Arm64 Hikey64 with 4 LITTLE and 4 big CPUs uses now
-> (4x462 + 4x1024)/1024 = 5944/1024 ~ 5,80 instead of 8 CPUs.
-> 
-> On mainline, the rt-app tests:
-> 
-> "tasks" : {
->  "thread0" : {
->   "policy" : "SCHED_DEADLINE",
->   "instance" : 8,
->   "timer" : {"ref" : "unique0", "period" : 16000, "mode" : "absolute" },
->   "run" : 10000,
->   "dl-runtime" :11000,
->   "dl-period" : 16000,
->   "dl-deadline" : 16000
->   }
-> }
-> 
-> is admitted on this board whereas with the patchset some of the tasks
-> are rejected:
-> 
-> [rt-app] <crit> [7] sched_setattr returned -1
-> sched_setattr: failed to set deadline attributes: Device or resource busy
-> 
-> ---
-> 
-> IMHO, one of the 3 places where DL Admission Control hooks into is:
-> 
->     __sched_setscheduler -> sched_dl_overflow() ->__dl_overflow()
-> 
-> [...]
+ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+range of input addresses. This patch detect this feature.
 
-Thanks Dietmar! I should have looked at the code with more intent.
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+---
+ arch/arm64/include/asm/cpucaps.h |  3 ++-
+ arch/arm64/include/asm/sysreg.h  |  4 ++++
+ arch/arm64/kernel/cpufeature.c   | 11 +++++++++++
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
---
-Qais Yousef
+diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+index 8eb5a088ae65..950095a72617 100644
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -61,7 +61,8 @@
+ #define ARM64_HAS_AMU_EXTN			51
+ #define ARM64_HAS_ADDRESS_AUTH			52
+ #define ARM64_HAS_GENERIC_AUTH			53
++#define ARM64_HAS_TLBI_RANGE			54
+ 
+-#define ARM64_NCAPS				54
++#define ARM64_NCAPS				55
+ 
+ #endif /* __ASM_CPUCAPS_H */
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index ebc622432831..ac1b98650234 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -592,6 +592,7 @@
+ 
+ /* id_aa64isar0 */
+ #define ID_AA64ISAR0_RNDR_SHIFT		60
++#define ID_AA64ISAR0_TLBI_RANGE_SHIFT	56
+ #define ID_AA64ISAR0_TS_SHIFT		52
+ #define ID_AA64ISAR0_FHM_SHIFT		48
+ #define ID_AA64ISAR0_DP_SHIFT		44
+@@ -605,6 +606,9 @@
+ #define ID_AA64ISAR0_SHA1_SHIFT		8
+ #define ID_AA64ISAR0_AES_SHIFT		4
+ 
++#define ID_AA64ISAR0_TLBI_RANGE_NI	0x0
++#define ID_AA64ISAR0_TLBI_RANGE		0x2
++
+ /* id_aa64isar1 */
+ #define ID_AA64ISAR1_I8MM_SHIFT		52
+ #define ID_AA64ISAR1_DGH_SHIFT		48
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9fac745aa7bb..31bcfd0722b5 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -124,6 +124,7 @@ static bool __system_matches_cap(unsigned int n);
+  */
+ static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_RNDR_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TLBI_RANGE_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TS_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_FHM_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_DP_SHIFT, 4, 0),
+@@ -1779,6 +1780,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.min_field_value = 1,
+ 	},
+ #endif
++	{
++		.desc = "TLB range maintenance instruction",
++		.capability = ARM64_HAS_TLBI_RANGE,
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.matches = has_cpuid_feature,
++		.sys_reg = SYS_ID_AA64ISAR0_EL1,
++		.field_pos = ID_AA64ISAR0_TLBI_RANGE_SHIFT,
++		.sign = FTR_UNSIGNED,
++		.min_field_value = ID_AA64ISAR0_TLBI_RANGE,
++	},
+ 	{},
+ };
+ 
+-- 
+2.19.1
+
+
