@@ -2,98 +2,83 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24808C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C949C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99962072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586861891;
-	bh=HC/z7X/QOJ8n4Wel61R5j+aAnU/kKVm52z0JLKdp0dI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VXScN/7If8MjVImtUGKkaiAXeRdQj7QUbNPppA/FFV53F99926nA4Z61I0Wve0GlJ
-	 71mPZ/oZVvTBB0S4IsQqfg0XF8wxnlqqAIotN5JLMZTFXEGN3j5HWXuzv1XeBJoTA9
-	 ogn8nzPNLSQeVlZ1C4PuxVdEOx9GX+XUsE59XqcE=
+	by mail.kernel.org (Postfix) with ESMTP id 21AC92072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlwuiYsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438812AbgDNK6J (ORCPT
+        id S2438821AbgDNK6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438770AbgDNK52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:57:28 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Tue, 14 Apr 2020 06:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438778AbgDNK5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:57:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D08C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ioUSb5eLCjLXsiwhi2nCGeKhCogbLivgMWTv1Ym13DM=; b=XlwuiYsTpfXR5BZDiAMMgWRHvN
+        VsDPbUizxQZ61MEh3nK5Y/Had7WLD4cbUdzDNn2Jv2opvZMt968Ac7LT6O1BrApYqMguohLpf2qQB
+        0HnjrwKL/ZCv6SJIdHGTf4CnxZYL+aA3u3rGMGa0vyEjx06akgcFZOLfaX8BtsAMd5fw2ySconUPs
+        x22wUGf/dPhj74CcOQkEVA8ZrWWnRKafpyOlYyNlFdluvCoyblSOw91WHiRXNwtQcuE/yLhRgkNrx
+        urY4JOBASJplVGfnP++ZJ6lPOJfXuw9vK2UkBt3vAvlBpzTU2Fl4ZOsAT6PrHRtT70W4eiZjdXCfz
+        efoA8uSQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOJFt-0003qB-FF; Tue, 14 Apr 2020 10:57:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A74206D5;
-        Tue, 14 Apr 2020 10:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586861848;
-        bh=HC/z7X/QOJ8n4Wel61R5j+aAnU/kKVm52z0JLKdp0dI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SzjGmVqJ/kf8kEdv3afqCuLT3+MrPHN0Fboi86rFJN8W8mAe9WXxfRJdn0vaU1Ad5
-         LU49xOnYCFOPDfF5bu2fwWU2COv/EELobDLaumXwjNWBUGLVxmkrNScdekGPIVNb7G
-         00wKGGh73UoT+IpvnTqKZanz2v6TGDRmdVBb6v2g=
-Date:   Tue, 14 Apr 2020 11:57:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 0/3] regulator: max77826: Add MAX77826 support
-Message-ID: <20200414105725.GB5412@sirena.org.uk>
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CEF65305EEC;
+        Tue, 14 Apr 2020 12:57:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B18832038BC55; Tue, 14 Apr 2020 12:57:23 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 12:57:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peng Wang <rocking@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>, uri.lelli@redhat.com,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched/fair: Simplify the code of should_we_balance()
+Message-ID: <20200414105723.GN20713@hirez.programming.kicks-ass.net>
+References: <245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com>
+ <CAKfTPtBLc7Y-a-nuXF-p8wEaJQLiQn4crOg6R0Z4NBJ64yMLBg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413164440.1138178-1-iskren.chernev@gmail.com>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKfTPtBLc7Y-a-nuXF-p8wEaJQLiQn4crOg6R0Z4NBJ64yMLBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 09:25:00AM +0200, Vincent Guittot wrote:
+> On Sat, 11 Apr 2020 at 11:21, Peng Wang <rocking@linux.alibaba.com> wrote:
+> >
+> > We only consider group_balance_cpu() after there is no idle
+> > cpu. So, just do comparison before return at these two cases.
+> >
+> > Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+> 
+> With the small fix in the comment below
 
---61jdw2sOBCFtR2d/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Done
 
-On Mon, Apr 13, 2020 at 07:44:37PM +0300, Iskren Chernev wrote:
-> The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly=
- other
-> devices. It is produced by Maxim Integrated and contains 15 LDOs a buck a=
-nd
-> a buck boost regulator.
->=20
-> Iskren Chernev (3):
->   regulator: max77826: Add max77826 regulator driver
->   dt-bindings: regulator: Add document bindings for max77826
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Aside from the compatible string and the subject prefix on the DT
-binding patch this looks good to me.
-
---61jdw2sOBCFtR2d/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6VlxQACgkQJNaLcl1U
-h9D46Af/SJxcfNXW9eOmfK1epWMpCJsjv6HU6xLEC+756AfV+YFPeduENlTju/oX
-NCYmt5UxMC5JjjtTjdYgRhFQCUJfeyLxYP4GtMHLl3b11lzhykvkAyvBYw+/Pcim
-du97gWPk/ELVGejGc2Dgjp3OeyHqCPf3P5v2/44vHEtqBIHBDr8xhbTwrS+zLNsF
-sykjBqvvg1SdNFWrt1CXyuPzY9nePYDpiJw+vm/ePFg99EMWLUic6lYHhU3izbx0
-oU/w9PVg2SYuBjtql2799kt4cGcqBlf+iohZCkaTBJ+cCoKC4rshi45t8nWoM3PF
-QXXiMsXnT5SeQEs+pSByZ62t+I/8dQ==
-=PcSI
------END PGP SIGNATURE-----
-
---61jdw2sOBCFtR2d/--
+Thanks Guys!
