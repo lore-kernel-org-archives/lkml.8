@@ -2,82 +2,141 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1810C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDDDC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC1C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7892C206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jZxn3ODM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407120AbgDNIRY (ORCPT
+        id S2436492AbgDNIUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:17:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57892 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407079AbgDNIRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:17:15 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7CDE2362AE5C6C96C2F8;
-        Tue, 14 Apr 2020 16:16:59 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Apr 2020 16:15:35 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@gmail.com>,
-        <jmorris@namei.org>, <serge@hallyn.com>,
-        <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] IMA: fix memdup.cocci warnings
-Date:   Tue, 14 Apr 2020 16:21:59 +0800
-Message-ID: <1586852519-69161-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Tue, 14 Apr 2020 04:20:13 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:26205 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407073AbgDNITc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:19:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 491dgj2vRdz9tydc;
+        Tue, 14 Apr 2020 10:19:29 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=jZxn3ODM; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id K1nEimlO-mtz; Tue, 14 Apr 2020 10:19:29 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 491dgj1vNGz9tydZ;
+        Tue, 14 Apr 2020 10:19:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586852369; bh=RsyxMy7Y5Bx9LrA8rcOoGxnVO3hSnKKPR8y4ZmX75Pg=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=jZxn3ODMiqKMwokxZePb8whd4KMBgWkMXyPD466oQkWR634Y2xIL8wuE22W4AnZ6m
+         a09qAvAOhIs+HNIQj3+Pz5wbT6VgJg29uW7EBS3DldAp0OwGtv7aDO1OLfWwd/lJbE
+         aD71oy61jJmKtVJX2wcP8UjBxPfuWhMXI8no7LGg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 53FF78B797;
+        Tue, 14 Apr 2020 10:19:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 4G1S6cfpD57T; Tue, 14 Apr 2020 10:19:30 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 18D5B8B796;
+        Tue, 14 Apr 2020 10:19:30 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id E0D6F6578A; Tue, 14 Apr 2020 08:19:29 +0000 (UTC)
+Message-Id: <b6b9b7f710a21d9dc0ab60825ad10bb568835726.1586852082.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1586852082.git.christophe.leroy@c-s.fr>
+References: <cover.1586852082.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 13/13] powerpc/40x: Don't save CR in SPRN_SPRG_SCRATCH6
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
+        arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 14 Apr 2020 08:19:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+We have r12 available, use it to keep CR around and don't
+save it in SPRN_SPRG_SCRATCH6.
 
-security/integrity/ima/ima_policy.c:272:10-17: WARNING opportunity for kmemdup
-
-Use kmemdup rather than duplicating its implementation
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- security/integrity/ima/ima_policy.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/kernel/head_40x.S | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index c334e0d..185f8d7 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -269,7 +269,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 	struct ima_rule_entry *nentry;
- 	int i;
+diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
+index 804cbd0899ac..f9b880235aee 100644
+--- a/arch/powerpc/kernel/head_40x.S
++++ b/arch/powerpc/kernel/head_40x.S
+@@ -253,9 +253,8 @@ _ENTRY(saved_ksp_limit)
+ 	mtspr	SPRN_SPRG_SCRATCH1, r11
+ 	mtspr	SPRN_SPRG_SCRATCH3, r12
+ 	mtspr	SPRN_SPRG_SCRATCH4, r9
+-	mfcr	r11
++	mfcr	r12
+ 	mfspr	r9, SPRN_PID
+-	mtspr	SPRN_SPRG_SCRATCH6, r11
+ 	mtspr	SPRN_SPRG_SCRATCH5, r9
+ 	mfspr	r10, SPRN_DEAR		/* Get faulting address */
  
--	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
-+	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
- 	if (!nentry)
- 		return NULL;
- 
-@@ -277,7 +277,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 	 * Immutable elements are copied over as pointers and data; only
- 	 * lsm rules can change
+@@ -322,9 +321,8 @@ _ENTRY(saved_ksp_limit)
+ 	 * and call the heavyweights to help us out.
  	 */
--	memcpy(nentry, entry, sizeof(*nentry));
- 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
+ 	mfspr	r9, SPRN_SPRG_SCRATCH5
+-	mfspr	r11, SPRN_SPRG_SCRATCH6
+ 	mtspr	SPRN_PID, r9
+-	mtcr	r11
++	mtcr	r12
+ 	mfspr	r9, SPRN_SPRG_SCRATCH4
+ 	mfspr	r12, SPRN_SPRG_SCRATCH3
+ 	mfspr	r11, SPRN_SPRG_SCRATCH1
+@@ -340,9 +338,8 @@ _ENTRY(saved_ksp_limit)
+ 	mtspr	SPRN_SPRG_SCRATCH1, r11
+ 	mtspr	SPRN_SPRG_SCRATCH3, r12
+ 	mtspr	SPRN_SPRG_SCRATCH4, r9
+-	mfcr	r11
++	mfcr	r12
+ 	mfspr	r9, SPRN_PID
+-	mtspr	SPRN_SPRG_SCRATCH6, r11
+ 	mtspr	SPRN_SPRG_SCRATCH5, r9
+ 	mfspr	r10, SPRN_SRR0		/* Get faulting address */
  
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
+@@ -409,9 +406,8 @@ _ENTRY(saved_ksp_limit)
+ 	 * and call the heavyweights to help us out.
+ 	 */
+ 	mfspr	r9, SPRN_SPRG_SCRATCH5
+-	mfspr	r11, SPRN_SPRG_SCRATCH6
+ 	mtspr	SPRN_PID, r9
+-	mtcr	r11
++	mtcr	r12
+ 	mfspr	r9, SPRN_SPRG_SCRATCH4
+ 	mfspr	r12, SPRN_SPRG_SCRATCH3
+ 	mfspr	r11, SPRN_SPRG_SCRATCH1
+@@ -555,9 +551,8 @@ finish_tlb_load:
+ 	/* Done...restore registers and get out of here.
+ 	*/
+ 	mfspr	r9, SPRN_SPRG_SCRATCH5
+-	mfspr	r11, SPRN_SPRG_SCRATCH6
+ 	mtspr	SPRN_PID, r9
+-	mtcr	r11
++	mtcr	r12
+ 	mfspr	r9, SPRN_SPRG_SCRATCH4
+ 	mfspr	r12, SPRN_SPRG_SCRATCH3
+ 	mfspr	r11, SPRN_SPRG_SCRATCH1
 -- 
-2.6.2
+2.25.0
 
