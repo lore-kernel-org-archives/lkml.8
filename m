@@ -2,92 +2,92 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD2CC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B34C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5269A2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgbD7ia5"
+	by mail.kernel.org (Postfix) with ESMTP id AB9742076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586876994;
+	bh=GLM7ITcjNGNqxFgguUrT1MtQmHq3TEbDWtKuGuJeo2w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OZkGySivbM1BETbzienOSytxarSgnKl3Fm+RTGSuk5fySw0jGSCSxKO3ikR8/eNGA
+	 YR/Sa6oQXDFvrS93hDm4BHWPJGkg7Wcf9R0vKLxef0Mj7jbOikuyo6bTH5Bn7sDfyD
+	 5UuHGLsa7oAGYPhYl3SwpohCvNndcGlkyS/ol9U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437085AbgDNPJo (ORCPT
+        id S2437010AbgDNPJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:09:44 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24078 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436870AbgDNPIh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:08:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=KqvdvPMVZP9GhLam1e8X/uCXyRLGbaBc4BNhj+P59mw=;
-        b=ZgbD7ia5HG8w59z+nULOTPd3Ahtvkd5tp/bQ1dcCXP0U6IFeopFgLrNvIwG5dQVRMW0Yxn
-        Ou2fCeFLerM8VINSnYrn0yB7xZ0No84prUK2B5vHXYwHjBxdJJRO3pOiyl1qSXHuHASDRa
-        VNmSsNnSvGrALfrzBDphi8/46+I1TmY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-XZ3qLv-yOUejSdncIk2Eiw-1; Tue, 14 Apr 2020 11:08:34 -0400
-X-MC-Unique: XZ3qLv-yOUejSdncIk2Eiw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Apr 2020 11:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440299AbgDNPIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:08:43 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8EA1810CE780;
-        Tue, 14 Apr 2020 15:08:32 +0000 (UTC)
-Received: from localhost (ovpn-116-111.rdu2.redhat.com [10.10.116.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07F9627098;
-        Tue, 14 Apr 2020 15:08:31 +0000 (UTC)
-From:   Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.9.219-rt142
-Date:   Tue, 14 Apr 2020 15:06:33 -0000
-Message-ID: <158687679390.397792.8613444289630927615@tagon>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@suse.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id 5765A2076D;
+        Tue, 14 Apr 2020 15:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586876921;
+        bh=GLM7ITcjNGNqxFgguUrT1MtQmHq3TEbDWtKuGuJeo2w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UT9cWIzX59N5Dp/DAqfP+XZ9ucR8iFlnC1CvLDdSIp4fp9+3b+M5kKrb6OHu58a5k
+         ro20mPG3qeWc17ZkLZSq/fWkig8Y4RDmXLz7OPlVA2FwvSoddrfngn9nqbuD7N3I64
+         kfzwhd3jFwNLAUP6jq+NApr8mJRJnV98nhzlKozg=
+Date:   Tue, 14 Apr 2020 11:08:40 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Phil Sutter <phil@nwl.cc>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 27/35] netfilter: nf_tables: Allow set
+ back-ends to report partial overlaps on insertion
+Message-ID: <20200414150840.GD1068@sasha-vm>
+References: <20200407000058.16423-1-sashal@kernel.org>
+ <20200407000058.16423-27-sashal@kernel.org>
+ <20200407021848.626df832@redhat.com>
+ <20200413163900.GO27528@sasha-vm>
+ <20200413223858.17b0f487@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200413223858.17b0f487@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
+On Mon, Apr 13, 2020 at 10:38:58PM +0200, Stefano Brivio wrote:
+>On Mon, 13 Apr 2020 12:39:00 -0400
+>Sasha Levin <sashal@kernel.org> wrote:
+>
+>> On Tue, Apr 07, 2020 at 02:18:48AM +0200, Stefano Brivio wrote:
+>>
+>> >I'm used to not Cc: stable on networking patches (Dave's net.git),
+>> >but I guess I should instead if they go through nf.git (Pablo's tree),
+>> >right?
+>>
+>> Yup, this confusion has caused for quite a few netfilter fixes to not
+>> land in -stable. If it goes through Pablo's tree (and unless he intructs
+>> otherwise), you should Cc stable.
+>
+>Hah, thanks for clarifying.
+>
+>What do you think I should do specifically with 72239f2795fa
+>("netfilter: nft_set_rbtree: Drop spurious condition for overlap detection
+>on insertion")?
+>
+>I haven't Cc'ed stable on that one. Can I expect AUTOSEL to pick it up
+>anyway?
 
-I'm pleased to announce the 4.9.219-rt142 stable release.
+I'll make sure it gets queued up when it hits Linus's tree :)
 
-Note that 4.9-rt is in maintenance mode, so this is merely a merge of the
-upstream stable updates, with no changes to the PREEMPT_RT patches.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.9-rt
-  Head SHA1: a3ddf39c50c383f479faafde2e4e2167568724cb
-
-Or to build 4.9.219-rt142 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.9.219.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/patch-4.9.219-rt142.patch.xz
-
-
-You can also build from 4.9.218-rt141 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/incr/patch-4.9.218-rt141-rt142.patch.xz
-
-Enjoy!
-Clark
-
+-- 
+Thanks,
+Sasha
