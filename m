@@ -2,110 +2,109 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C283CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B149BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9FF20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1FD20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VOfdVdO0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OL87gJfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501941AbgDNM12 (ORCPT
+        id S2501925AbgDNM1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:27:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
+        Tue, 14 Apr 2020 08:27:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2501928AbgDNM1N (ORCPT
+        by vger.kernel.org with ESMTP id S2501912AbgDNM1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:27:13 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD45DC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:27:13 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id o127so13032385iof.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:27:13 -0700 (PDT)
+        Tue, 14 Apr 2020 08:27:01 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CBDC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:27:01 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g74so12851142qke.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:27:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lZl+SzAixlt/zspP8CIXqhi3WqXdw0DhseejXVx44uY=;
-        b=VOfdVdO0snAnBN6PceKWVDGj0o/mgGh/ur/Um8PrvA7IfdIXAgOxCId+c3VbdU5mV5
-         PFRg/STwB6ik9vzkbJ1cfkSgux3Ytvw8HeqrbGldySqfVxRhLOyviptUgCrE6qB7s44A
-         WI3zG5XJsIrZQkFxy2sWjMIXWvSBe9KF3i7D1FyEQwDGIFDhnDnYS1vi+ZMmnMeK6hpt
-         55M+qVYhnht8fgNf/bd8pkPuOivNm70zrAxljHbubeT0+envN4hB0KhMoQr5oNnZW+tg
-         3s/pTW9bP0CGd6IbHWc9Z0HJwiCDyG6HTQw2WCbtSc21Rl2MhGwbTmr7bIcT85soZpfz
-         7okw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oMYbOdpo+9J1ouSM2RLjgqda5qd9JwHSLPm5KH5iBRA=;
+        b=OL87gJfF0Lai5QA/wkTraFaZeOSO+QXBHPXq0YlRcK9vzbCcbJbbNygT9g3JoYpxX9
+         UmzBQJJBdQFeP5Ik+CjapitA0S0n7Gyj+lqyQv7FVz0I6aIl75ayTu0PXTUkVT50oymk
+         tCVguHZuWurqV7A5lm1gDhOiYLsEbWR/U7Z1fATYeLq0UDSi616BDI1FGmcybn5vJgxN
+         xaQr/YKAsAWKDoO5xR3wtcK3d3oKrUPZRp2ydp2mqDCXRSEXRD6cQT90GhQvHWzqzebr
+         0A/VTHHpJQSx3lnhSlYl6ugxjCZocDuLwfU6xPARV3Z9BLcrWicByovFwVB40bBq1JOm
+         8trg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lZl+SzAixlt/zspP8CIXqhi3WqXdw0DhseejXVx44uY=;
-        b=SHUFzOaJshhZSwKBPttaJXiWhmUJ/c17m9MUqa5hXut3IeLsBvU3NUu5IYRLeltaEW
-         AHsqU/TiFahbcYKhMJVG/k7Aowfj9LWQK0dj4fRuCjGHOL4fkI/tgHGNTplTljPBX/qf
-         xbgFDIGQDKEH5j629K4ozP03kNS+AeV7FLxPdmteF+mZiaMme0sTFGVvcs6d/xjmXryv
-         kq4SSd0RPv0plqa44TJHU06I5wj7XBphA9ysPkCQQ/ahF3dVLgDjYs/t5u516efE2cbx
-         zrlo0W7q/dUuJ86+0HQ1PalCvcW6Xcjm/ma5mEQ+qznLFCL4kGf1V+eK8LZZToV/FNBj
-         UIJQ==
-X-Gm-Message-State: AGi0Pua9gY+bbm3YCTr6Mya/DeUDNwyNPHluN5HBxKbW9eva/xw5TWgY
-        PGo95AGKorkZlLNcZFyltkmzwQ==
-X-Google-Smtp-Source: APiQypLg83FQI9KhxvuPMipPhJMLS+L2BK8ZKU8Cd24vD3HTM/7oNStucxBWjFmryrVSK6IH9K5u6A==
-X-Received: by 2002:a05:6602:1302:: with SMTP id h2mr21094447iov.186.1586867233023;
-        Tue, 14 Apr 2020 05:27:13 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id s22sm1069084iow.40.2020.04.14.05.27.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 05:27:12 -0700 (PDT)
-Subject: Re: [PATCH 1/4] remoteproc: Fix a bug in rproc_alloc()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-remoteproc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>
-References: <e459f807-4c61-257b-b7b5-dd767202c435@web.de>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <4b05d794-095b-7efe-c71c-42dca785ca49@linaro.org>
-Date:   Tue, 14 Apr 2020 07:27:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oMYbOdpo+9J1ouSM2RLjgqda5qd9JwHSLPm5KH5iBRA=;
+        b=NE4S+MzJRsUU/8Rz9wd5lxlWklcgy3GQ/+Gq4D0f8KEL0IpyL0zPKeksdl8hvhdi2n
+         T4y4LPIBFxdNFkhco1hQqLBdhzDJsYNyChgue5SIOdUk3cSix0iU78azbeEGNn2+0K92
+         8wX37Es19eS6WlaLFuwe8hA13jA7unaDn8rZBWTx/n7XOYipeMfsTVAnNJmNQ/hPjtFm
+         Hsdv0Y5Dp0+hK5yZ2tqDo/TxlQedvj+sMFqvVCnUcgXJxk05Xn8YE+vY/RgXp9YY22AH
+         p4txDj4GX4ixwhsToAbIMJFYpghinu5mj6Ve2b7nJGAsXCUsa1hAWEsrM1cKVWfE93ON
+         macQ==
+X-Gm-Message-State: AGi0PuYxxUTKaiKIm/dgMGgEkGIrIyMTuD4thNMYj4ZQO9B3P0jsrHwz
+        Zdq9qXWEGWVp1haG0Sr1blyJh/KbWbf/memJsXn9gMd8
+X-Google-Smtp-Source: APiQypKKyn+xF7HXSEHC+hxChronDvELDGTLZLon3xgVgEW+iP+8F2yjGXq99NGOy7nJFf4ORjyVpTF4K9uqCozhjpQ=
+X-Received: by 2002:a05:620a:1289:: with SMTP id w9mr6020359qki.263.1586867220834;
+ Tue, 14 Apr 2020 05:27:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e459f807-4c61-257b-b7b5-dd767202c435@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
+In-Reply-To: <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 14 Apr 2020 14:26:49 +0200
+Message-ID: <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 3:24 AM, Markus Elfring wrote:
->> I'm not actually sure this case causes an observable problem, but
->> it's incorrect.  Fix this by initializing the notifyids field before
->> calling ida_simple_get() in rproc_alloc().
-> 
-> I suggest to improve the commit message.
-> 
-> * Can the information “field initialisation” be more helpful than “bug”
->   in the patch subject?
+wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
+> > as it takes a mutex internally. Let's move the call before taking the
+> > spinlock and store the return value.
+> >
+> > This isn't perfect - there's a moment between calling
+> > pinctrl_gpio_can_use_line() and taking the spinlock where the situation
+> > can change but it isn't a regression either: previously this part wasn'=
+t
+> > protected at all and it only affects the information user-space is
+> > seeing.
+> >
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setting=
+ lineinfo")
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> I'm sorry that I lost track of this patch :(
+>
+> Do we still need something like this or has it been fixed
+> by some other patches?
+>
+> Yours,
+> Linus Walleij
 
-No objection, though I personally would have spelled it
-differently :)
+Nope, this is still an issue. Do you have a better idea than mine?
 
-> * Will the tag “Fixes” become relevant?
-
-This bug was present when this code was first added.
-Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
-
-Mathiew, feel free to add that.
-
-					-Alex
-
-
-> Regards,
-> Markus
-> 
-
+Bart
