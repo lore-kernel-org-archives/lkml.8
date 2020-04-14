@@ -2,91 +2,143 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCC7C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC43C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D68F2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DCF2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="OTU6wspY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="f/ERMo6H";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="qVRcl7y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437737AbgDNJq0 (ORCPT
+        id S2437752AbgDNJra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:46:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729503AbgDNJqZ (ORCPT
+        Tue, 14 Apr 2020 05:47:30 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:43284 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729436AbgDNJr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:46:25 -0400
-X-Greylist: delayed 173 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 02:46:24 PDT
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20C2C0A3BD0;
-        Tue, 14 Apr 2020 02:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586857583;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=wffEAJzLw5r0Krn8zuK2Pz6LtbsEFk3IEtvF5z6tdE0=;
-        b=OTU6wspYXuBjm1dcx+QStTAVoXJDAOeN+cvXm3Hr9L25TPRj5mR4rUDDl8XKzBhpyD
-        jsekrKKXz3D1zTRp1YGjMo0DrQ3+s1idXv4Muiswa9yZx/SCqoMbilqpsHj/cBfwde33
-        +f8Gi9k1QGBgu5eG94qUMxJnNXZChx0wHHOwFb+Crqm2AGgCqjkXAzBmQ9gwjY7fAQdj
-        hzgVc9hEt9UQZ6UmKXyyIxqopmPKZmXK6bL4otPlMUs2ofr5skNsupogxIEd6pZyAXie
-        oRpX7qdzqaLl8MkhDM0grel6MNDHoN9YXBA5HPRMEBMwypViyj9BIEcMupEzPvqGhgmc
-        Yafw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/CaIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w3E9hNd2c
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 14 Apr 2020 11:43:23 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 11:43:17 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/2] ARM: defconfig: u8500: Enable CONFIG_GP2AP002
-Message-ID: <20200414094317.GA5896@gerhold.net>
-References: <20200405173252.67614-1-stephan@gerhold.net>
- <20200405173252.67614-2-stephan@gerhold.net>
- <CACRpkdYW930B-riUi5OnmsDCJD_piJ+321rgB40bq93ndzSp5A@mail.gmail.com>
-MIME-Version: 1.0
+        Tue, 14 Apr 2020 05:47:26 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E9e6O6026959;
+        Tue, 14 Apr 2020 02:47:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=TvQVpbn4o3xIc7H71x2cghVVdIRQkk6QtU/PgCZUcVU=;
+ b=f/ERMo6Hzu5MfEoeChbt0NzTZ05f77oEEcWU5FfIPLaPhXVIMHXz9MZTxrlGtJXQz7Fa
+ j+r9y87NSFfMasOoqhmw4YPk+vzUcBX8MkdMdJYvpaVkAhmrPg7XMIqiIPwR5x2fQe5M
+ E9Pt5g3sfJPjesuxF43eN6lNnScX3rdKnuhvBooDIaN+0lzopj63BUsyALtolzeMRzXp
+ xttPe9ggOzFuuvw8dPKe0KsTpbr6GzPGC93okdJaMUSikArEOQvBxLs77BYRUKzOTFSf
+ uJ7Rad4U7kot69Nj7RQpyWbIz7X4KBQKVp7EnLnPpFZB6xW+GVPAT6DqueERhqrSFvKr vg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 30bb8qj7k8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 02:47:03 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 14 Apr
+ 2020 02:47:02 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 14 Apr 2020 02:47:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m7i5QaywhebbwweNDlk/Hi5R3pfq08X5Lhifz0pQP4i/Qp+YaywbeisYqsRK9ldfoQjTNFuu56wkt8DaLy2yTaE5L2OJlsIwlG4YrJquGaRewS9+4w84nN/NvCsL6aVmzejKG1+rws0FyAt1hkmDkkfF/ps/QuF2a2NCe4trUGwd5ckBJsHcvnXCb+w4mLFY/U6Z+PNVjD1oZEiFhYAGlMHOZAJyza1eCVEnnZSyZ0PQQk57ISaQU9tg2+lNPbpAhE3Z0SJWv43BCEeMdbJnH6MwdK9hdADfNfnuwqf0uqzy7PDSexbu042IvIRpYVoblsSHJWYq6Yhv0VZhfUQf0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TvQVpbn4o3xIc7H71x2cghVVdIRQkk6QtU/PgCZUcVU=;
+ b=YPWpCEuC4ieLMm4miV+F33MTKH6fjW9p8bCp58QeJWrGR0fsHRED4qfxMD4AbLKS0oNtVqiBWCVILHoPkMhqkwNfMA3tZAydDDhxEGCNp9DhxsCrZe2opWSZssGJ9UfbI+6d77aZmOHsIW8YY6pMsVfJj8Oibx/qbuNbqs7XbLFBsBqPRgktFGjJ0sxnIkzl/BHHgvQwc2Vv3+kQZVOcmZijIWt/VZ1GKCCKPn7NdHObaf9M84cRuBCjhI8oH8LYFlx8INgnMQK0/T7J4xmvjaMOOXDevjlLC71hkovCSeIkD6LRH/C7vniWxANQ323a7gq0BfYDXCwMuOl6pVu2Wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TvQVpbn4o3xIc7H71x2cghVVdIRQkk6QtU/PgCZUcVU=;
+ b=qVRcl7y6vYTAhv2jk7WFRnkbp/wvuC3p3060AYKjB7EVY1eFhWlb5u3jOgghXr2SoIdfkEczdQ9ss+pD+ZrrHIx/FOuRscQaDlHtPNHR5bu05bGviA4aUhvqtxPnS/yGD3QY6rzFw6LWU0d1RRp7ljbK7nK+j4uLJMI0v45igCo=
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2742.namprd18.prod.outlook.com (2603:10b6:a03:10d::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
+ 2020 09:47:00 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 09:46:59 +0000
+Date:   Tue, 14 Apr 2020 11:46:23 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC:     <jlu@pengutronix.de>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <tony.luck@intel.com>, <james.morse@arm.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] EDAC/armada_xp: Fix some log messages
+Message-ID: <20200414094622.45hrvmf6lz24trgx@rric.localdomain>
+References: <20200413041556.3514-1-christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYW930B-riUi5OnmsDCJD_piJ+321rgB40bq93ndzSp5A@mail.gmail.com>
+In-Reply-To: <20200413041556.3514-1-christophe.jaillet@wanadoo.fr>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0101CA0004.eurprd01.prod.exchangelabs.com
+ (2603:10a6:3:77::14) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0101CA0004.eurprd01.prod.exchangelabs.com (2603:10a6:3:77::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17 via Frontend Transport; Tue, 14 Apr 2020 09:46:57 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: db77304f-25c0-4b97-09de-08d7e058c6f4
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2742:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB274201CD2F3F2E6CB81D4903D9DA0@BYAPR18MB2742.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0373D94D15
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(136003)(39850400004)(376002)(346002)(396003)(186003)(52116002)(6666004)(66946007)(8936002)(6506007)(15650500001)(66556008)(66476007)(2906002)(4744005)(956004)(316002)(5660300002)(8676002)(53546011)(4326008)(478600001)(86362001)(7696005)(55016002)(16526019)(9686003)(1076003)(26005)(81156014)(6916009);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f+ESl1JY4XoxsdlRLRKBtnEbfkswFjzFV6oLdOy9bkQ/IAolDTeHBA11m1duNBGiuyYDcllWyv5P57OrlLNM/Inyx6eTr1MB08yW6R7akQAGRHKqTrJvI5Rw1rEvRfl5MLD0StAhLmHVW6rLSUsz/h89X0qhR7HizlbZoPx3f+252cqijxIJ1PF119OsVcQk09ZC0xir21WLjqClbbe1J3pxHug7sMjCBbgzN6kVz1xEXIhepVOmAedgrIfEHulfrzIw+xefp7KfPMfQmtyzKrewL3cltSkXSTsG3KvazP2CjQFj/aCEjUFycBfz+h5DyuNkSrmLzd7kvENrGuz19gAEUddQFU75dunOrj6Zr8z/ZlpbEzYlUpTC1Fq59V6IeOyFPSJmtGbtNy1RhptxjgOBOr8lc3KXEakORSabGBv1lfMJNamlfOHAX4IwQVrz
+X-MS-Exchange-AntiSpam-MessageData: Nb979xg7pP6EVhbBn9h9FM0PZnshs+l01dfCealoAWg9g4jqqFRSX0ivHBsRtp89bgVmhJKXP+ayexK7OCIaFvOnuqby2ZtUBZD1WlKiJ9OrWrasB0isUJgM330wkdc5om1HarrIknpYqlGmOMR2xg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: db77304f-25c0-4b97-09de-08d7e058c6f4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 09:46:59.8108
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n7yQOhK2wm72hBVljD5cOvW64Hmzmr24pyJmh0WRznCztobzeoIqWlZsnFC0BnNxFwpC5byn/yaw1JOeUpxekA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2742
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_02:2020-04-13,2020-04-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:08:38AM +0200, Linus Walleij wrote:
-> On Sun, Apr 5, 2020 at 7:34 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+On 13.04.20 06:15:56, Christophe JAILLET wrote:
+> Fix some spelling (s/Aramda/Armada/) in 1 log message and in 1 comment.
 > 
-> > sharp,gp2ap002s00f is used as a proximity sensor in
-> > samsung-golden and samsung-skomer.
-> >
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> While at it, add some trailing '\n' in some other log message.
 > 
-> Ooops I saw now that I already had this in my "Skomer and misc"
-> enablement patch. (rebasing my trees today).
-> 
-> I can put this in front of that patch and take it out of mine if you
-> prefer stepwise enablement.
-> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Do you mean the "ARM: defconfig: u8500: Enable new drivers for ux500"
-patch? It doesn't matter which commit/patch adds it, as long as it ends
-up in the u8500_defconfig :)
+Reviewed-by: Robert Richter <rrichter@marvell.com>
+
+> ---
+>  drivers/edac/armada_xp_edac.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+
+Note there are some other "Aramda" occurrences in the kernel:
+
+linux/master:Documentation/devicetree/bindings/rtc/armada-380-rtc.txt:  "marvell,armada-8k-rtc" for Aramda 7K/8K SoCs
+linux/master:arch/arm64/boot/dts/marvell/armada-8020.dtsi:/* The RTC requires external oscillator. But on Aramda 80x0, the RTC clock
+linux/master:arch/arm64/boot/dts/marvell/armada-8040.dtsi:/* The RTC requires external oscillator. But on Aramda 80x0, the RTC clock
+linux/master:drivers/mtd/nand/raw/Kconfig:        - 64-bit Aramda platforms (7k, 8k) (NFCv2)
 
 Thanks,
-Stephan
+
+-Robert
