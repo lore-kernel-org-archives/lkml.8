@@ -2,91 +2,99 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2631C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F88CC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8786A2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586890219;
-	bh=Qr/sUzlLBeiS7flY0fWa67V38Y7Io0QddHUGCTBCdz0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2CRg0jCiwt6f+O66jcKp/a9gH/Vvjb7Dwk+GapwmILLX+vuVC4+GI1FraCo8CqFjh
-	 uOrlfMksDNGqJzP11o12fhd7q67RPheZWbR4GS1NMYmJ2U3ZpE9xZi1u7aRGKv2vc6
-	 +IYuLGrf367L+l6ARZIrjX7hRQTHII8CiPLF83N8=
+	by mail.kernel.org (Postfix) with ESMTP id 81E9A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AEUBmdw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504443AbgDNSuP (ORCPT
+        id S2504452AbgDNSuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:50:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504413AbgDNSt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:49:57 -0400
-Received: from localhost.localdomain (unknown [157.50.36.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3E812074D;
-        Tue, 14 Apr 2020 18:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586890197;
-        bh=Qr/sUzlLBeiS7flY0fWa67V38Y7Io0QddHUGCTBCdz0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGQet9UXzHdqBwr1sEGjsHPwT9oVtzZeN9iYDmFX4nXarxzOvU+b6gTLCH3Dvzv54
-         mD6YhT5U5fqveMXtJPaWwUFBVafte2HxsOjRlEuXU1+pwDdI7/DOYQFiff0D5dXJaj
-         qnR9pu7AOBd6Nhw1aQ9a0DGy4fNrD8pEwH31uwmg=
-From:   mani@kernel.org
-To:     jic23@kernel.org, robh+dt@kernel.org, narcisaanamaria12@gmail.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [RESEND PATCH v3 3/3] iio: chemical: Add OF match table for CCS811 VOC sensor
-Date:   Wed, 15 Apr 2020 00:19:30 +0530
-Message-Id: <20200414184930.5576-4-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200414184930.5576-1-mani@kernel.org>
-References: <20200414184930.5576-1-mani@kernel.org>
+        Tue, 14 Apr 2020 14:50:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44224 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504407AbgDNStx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:49:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIeAUR125070;
+        Tue, 14 Apr 2020 18:49:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=q4qne1W5zGbbsc7dFpIdBBMnXKX3IuZywtcs1GLXfAk=;
+ b=AEUBmdw5FvchfI0MAffJp5KIT5P8nawjMtj2+vu0SSs2fyMVNPkQKhs+9E2nvpcygU9d
+ eJPWCPoP4EEtZ/Xm8zRIhmOCeiqhX5GrfR4Y8cIwgoF+Z7C+Wfky70YmUBDdtNnWRfzN
+ mLKOB+OF7VoHYojZEdjeCuhEAAb74n4AJQE/tWtJkZBYxxKGVcW29q+uosslRPh6no7L
+ lWRgeC4fYHVg//FEnvHkwHXtkpPBBkjTa3HdMFJSZ/wMUoqF59sHjH3Dh/N9x6o+A8GV
+ tmssRsqcYhSS3dUkf71nDK4vEfucSbVeRC3k93ye47JRQT0wgiysZSmefCCVZRJlu4QF jA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30b5um6q6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 18:49:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIc7PK008702;
+        Tue, 14 Apr 2020 18:49:35 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30bqphh50g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 18:49:35 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EInXgC004751;
+        Tue, 14 Apr 2020 18:49:33 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 11:49:32 -0700
+Date:   Tue, 14 Apr 2020 21:49:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, paul@crapouillou.net,
+        Joe Perches <joe@perches.com>, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
+Message-ID: <20200414184925.GA12862@kadam>
+References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
+ <20200414135827.GB3593749@ulmo>
+ <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=864 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
+ mlxlogscore=939 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+Huh...
 
-Add devicetree OF match table support for CCS811 VOC sensor.
+If you look at dev_vprintk_emit().  It looks like if
+create_syslog_header() returns a string then vprintk_store() will add
+a newline.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/iio/chemical/ccs811.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I guess that means that dev_printk() can't be used to pr_cont().  And
+probably that's deliberate because using pr_cont() after boot is racy
+anyway.
 
-diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
-index 1500e4b0dfbd..3ecd633f9ed3 100644
---- a/drivers/iio/chemical/ccs811.c
-+++ b/drivers/iio/chemical/ccs811.c
-@@ -549,9 +549,16 @@ static const struct i2c_device_id ccs811_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ccs811_id);
- 
-+static const struct of_device_id ccs811_dt_ids[] = {
-+	{ .compatible = "ams,ccs811" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
-+
- static struct i2c_driver ccs811_driver = {
- 	.driver = {
- 		.name = "ccs811",
-+		.of_match_table = ccs811_dt_ids,
- 	},
- 	.probe = ccs811_probe,
- 	.remove = ccs811_remove,
--- 
-2.17.1
+regards,
+dan carpenter
 
