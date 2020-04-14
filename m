@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A594EC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3947C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 867A420767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACABB20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qotcykh6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HfKnbKOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407812AbgDNSEq (ORCPT
+        id S2407820AbgDNSEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43934 "EHLO
+        Tue, 14 Apr 2020 14:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407786AbgDNSEd (ORCPT
+        by vger.kernel.org with ESMTP id S2407791AbgDNSEf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:04:33 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE87EC061BD3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:04:28 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id g11so405519pgd.20
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:04:28 -0700 (PDT)
+        Tue, 14 Apr 2020 14:04:35 -0400
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9391C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:04:33 -0700 (PDT)
+Received: by mail-pj1-x1049.google.com with SMTP id b8so13720186pjp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=BlvWvGdkN2WeiBN4fqdYccjrgT9VbdrAfRUdSyUXBZE=;
-        b=qotcykh6fSG/qm/7oyV0C2RLfqHJRLB9uNOcTZJ+xI0bwdHUs/bval7rxdFichn7Px
-         cds/LILyV/qc33RH3PO7JhsOVWmtrGHKMn0tlao0W+RD4sPbBDPtRyuJVZU3jOKAemyp
-         xHfGM0o/5HGClnix9GABq0SN2wa9BYukgEInsw6x9yC3nqGHbgPv2nLGv8SDphk9fffG
-         OYZvkRedZ3/oU3gQCVmkk5CY9c/P1UAWcN6OZXrkTBpkTbJWXsGFmOot6GCGVaiEZVmg
-         hFnLyW50k+bthEAP/4L+LRjcXMnPr1gtQbGvV19aAIrOBcj6YD5wuY14th6lm8XEQC+y
-         T7WQ==
+        bh=zcExPUIjugAT8xV6VI04RQsiRvISnNIvuUHEvy30OPQ=;
+        b=HfKnbKOLaWKtekBBcx+Z+GtVfjaSYTroUWjlxilDWDzfmYPSZk59O8SE+IJciqKHVf
+         fufD5nAwSCHuU3+8Nxxg/s/6pKui4wWczDXrggZqPcNPcTWtxmoPrw3jhN4ahrroxlXy
+         MrjSt7V+nOlvluQhJmfCkWXnsBMT/D0kCvsO5GNndfz3NkrXp0ZuDUN0DJMXqFqmTvwN
+         43yX3BZUrkb1FHQ6vAk7WPFfshwyUKDyf8up4vIhhY+hDOqwxiyZaSF7i+ixxPzLJh8x
+         1H2GIL6TGwewddo7seRKJLQxyFZqHbj3GzXBxBBM6M9Ik4cIpZGuWrT2jr6sZyYlFSuP
+         kJCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=BlvWvGdkN2WeiBN4fqdYccjrgT9VbdrAfRUdSyUXBZE=;
-        b=fglLH12Tli746MyI2HyazQXA1gSDVEPfDBEj86/0oQV7z04hWRXcoi2MqPhGCJYpOn
-         YQHgOSU8fUQLRtRo2Q0+2tWuwN8DGjQledMlomOHA8Tw6pCLIRcDovzm3ena7yVK7SlH
-         2fZPYS6vC6z2shCkupWSobGMK3RQhlkSnPf5DijLUYeLmohLsnQQsF8w1MiJsOAAU8WM
-         2UHmlB3L1IY2g3f8+3DlizZtCRDi5ZlPDiTjyOpM+9+l01R4o1GDR5mK5TtHIvxLrhpU
-         85FuHMtXyyTfoOLSfezBBm5cIQWuZLGVipyDbGMvi1d2b/68of1gW4TdtDnncTeIhkTe
-         l8CA==
-X-Gm-Message-State: AGi0PubNDulbG8MGT8S8n9CdPgYi1MJ9aHnGTlbLkSKukfNe1vs5huMZ
-        lbyUBLwtwXxrAI9oU3nvIBBW/5i/2Vtu
-X-Google-Smtp-Source: APiQypINK1iuhPngXC6+csiMJV8tSnHSd+p8i2SPRyYLIKD/yOPb21DGbW6f+TuBhNHqxPj6rbTeaTpyAK/t
-X-Received: by 2002:a17:90a:2709:: with SMTP id o9mr1509358pje.168.1586887468161;
- Tue, 14 Apr 2020 11:04:28 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 11:04:16 -0700
+        bh=zcExPUIjugAT8xV6VI04RQsiRvISnNIvuUHEvy30OPQ=;
+        b=KzXGdLnFjGPlKm/hxES53xnmYE1bOqxKHDTFPPpTQ430DfkJVVrh0z+PPU9Frk2ix7
+         ksX3UNqrpYVJ71ePZd7lLbEsrj8lB84z1Yp2dDSHqe7osfPNKMZp/Jkuwmf+cVUUNqKL
+         mxyLAHUeIqXwtif2nHU9QqJRGeWniVWm1slAY/VXWtfzmomyfnVy2iy6gVhCRM/HpE8u
+         w+LRFF4+s0tunJuP/P6+8nBZ5u9iPoguRVDpc/sU0B5WJHLmJqEnvLXS9LFJliIOQYG3
+         ZxrDLCkjwL0BKaEP7iPMXh7hXvqUm5WMyO3y/XbuGnaxGat6hSIKXNFUC20RoZd1QwNR
+         Tawg==
+X-Gm-Message-State: AGi0PuZsdCFQlwaE1dnBBbf/Y/d9vuayLn55hA1istpvWXwV9WYuEAfM
+        56PcgaONTJDYYSf0YdtEPaANStReJLHz
+X-Google-Smtp-Source: APiQypIwBsvHhx3R02hzQNaxE1lGw3YgC65YuUTUFdJUC1RhOyxqGP5d1zmwW3NbANczU7EPD8Gh+ukdK6eH
+X-Received: by 2002:a17:90a:d596:: with SMTP id v22mr1410766pju.169.1586887473287;
+ Tue, 14 Apr 2020 11:04:33 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 11:04:18 -0700
 In-Reply-To: <20200414180419.14398-1-irogers@google.com>
-Message-Id: <20200414180419.14398-2-irogers@google.com>
+Message-Id: <20200414180419.14398-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20200414180419.14398-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v9 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
+Subject: [PATCH v9 3/4] perf pmu: add perf_pmu__find_by_type helper
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -97,35 +97,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will allow parent makefiles to pass values to asciidoc.
+From: Stephane Eranian <eranian@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+This is used by libpfm4 during event parsing to locate the pmu for an
+event.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/pmu.c | 11 +++++++++++
+ tools/perf/util/pmu.h |  1 +
+ 2 files changed, 12 insertions(+)
 
-diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index 31824d5269cc..6e54979c2124 100644
---- a/tools/perf/Documentation/Makefile
-+++ b/tools/perf/Documentation/Makefile
-@@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
- man7dir=$(mandir)/man7
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index ef6a63f3d386..5e918ca740c6 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -869,6 +869,17 @@ static struct perf_pmu *pmu_find(const char *name)
+ 	return NULL;
+ }
  
- ASCIIDOC=asciidoc
--ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-+ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
- ASCIIDOC_HTML = xhtml11
- MANPAGE_XSL = manpage-normal.xsl
- XMLTO_EXTRA =
-@@ -59,7 +59,7 @@ HTML_REF = origin/html
++struct perf_pmu *perf_pmu__find_by_type(unsigned int type)
++{
++	struct perf_pmu *pmu;
++
++	list_for_each_entry(pmu, &pmus, list)
++		if (pmu->type == type)
++			return pmu;
++
++	return NULL;
++}
++
+ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
+ {
+ 	/*
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 5fb3f16828df..de3b868d912c 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -65,6 +65,7 @@ struct perf_pmu_alias {
+ };
  
- ifdef USE_ASCIIDOCTOR
- ASCIIDOC = asciidoctor
--ASCIIDOC_EXTRA = -a compat-mode
-+ASCIIDOC_EXTRA += -a compat-mode
- ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
- ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
- ASCIIDOC_HTML = xhtml5
+ struct perf_pmu *perf_pmu__find(const char *name);
++struct perf_pmu *perf_pmu__find_by_type(unsigned int type);
+ int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
+ 		     struct list_head *head_terms,
+ 		     struct parse_events_error *error);
 -- 
 2.26.0.110.g2183baf09c-goog
 
