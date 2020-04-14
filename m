@@ -2,91 +2,180 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96112C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FCEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E0920575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A254320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fj6dRfJu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EmYWhnqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgDNNdr (ORCPT
+        id S1727943AbgDNNeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:33:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
+        Tue, 14 Apr 2020 09:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgDNNc1 (ORCPT
+        with ESMTP id S2502814AbgDNNPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:32:27 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4049C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:32:26 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id k21so12523712ljh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PL1qV4rNoqECyojOXOX+qjKZBMB6ykqsNqwBvbzionM=;
-        b=fj6dRfJueU93JLtAj9ltpUVcudfQ6pO7neITBQlY+zpG6krZTSQsunTafyhAjXMpK1
-         Sva0c3U/fX3f3JvRVWlfEIjYPScaxmnLuqclj6a4NdeGwNoSsX2Wx7a4ip0eao289Fin
-         qdlAqvJJ87cbEOmfSRuC0b6WBxWBG3XOhX3UEvBIQ5g/FveRd43VMRP/M/6XQ5BUEwvo
-         WV6IdOdd+U8qFKYDOswpjJRsY5rzgV7i/KMHghU7RIoA5esKeHDdjaQ8qGMa2oXJgBxF
-         Vsqkmia17d6EDjMNq96T9083nVCoQfNq2qhcBJ48p+TTv1D6CSER0536aoUNEUAxSXhM
-         MjSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PL1qV4rNoqECyojOXOX+qjKZBMB6ykqsNqwBvbzionM=;
-        b=g0pPH5U2R8Am89Ww3Kh6Q6L0ivkr/LntyEYhqy6wdmgJ8QABZWJdEJSd18E8MPNPvt
-         HBwRSmYUrzvkh/C6hCh5ZcOJeTruE8UwUbexju0J/+cJSiblHPR5RXdyoxD3FK0dW2uH
-         /Tt0TkNIpQjN8sHbn6nlQQ3Mpk+XGuAxKfGGQcziWF+sdAlHdIq/59YnSt+ByTNZeA+P
-         Qi39Z+bhseosOmzqIQAwtsfP37dcXKJwkjpBcuoOefi7bRXsCclYD0nCtRS2kMn+xom/
-         XJ/kloaA7TDKnDAPhWM20jNlaKx3sy9Tt2cxuPaAWj7WYeYYXlzJfUB9VF2eG/YkQoTz
-         p4cg==
-X-Gm-Message-State: AGi0PuZLCIl/5zWcKxRzng3NgZky28Avu3eVQI/typuc/d2xVsUu8GaZ
-        nfSzVSX+CqmYcAiljvgS6ab5orQ1W2Hu5UMFFHA=
-X-Google-Smtp-Source: APiQypL9ubPg9X2xTig9P1oQmBHUPak5Twtx59MPEa+o38OQeAQhiuoTlIIp3kNs2Qco2pjx0xEiKcJuOZkCLhAy8Dc=
-X-Received: by 2002:a05:651c:30b:: with SMTP id a11mr137759ljp.164.1586871145310;
- Tue, 14 Apr 2020 06:32:25 -0700 (PDT)
+        Tue, 14 Apr 2020 09:15:32 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E93C0610D5;
+        Tue, 14 Apr 2020 06:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=u3nIu92+yzd2DkZyrdIwKviaxx6KjPltBpD1EwU5vf4=; b=EmYWhnqLHvhUkXM+PJWi6bo1Ia
+        etHuuwEOyZ2ARE55ofJOGLAB1N8BvyKT8vIGa2G4/jTU0js9MGTzT1kGsl6VQE2hDtOz4b+YKwPpf
+        QREUVBWSt3gqmsjYdkAJ3XJxjT2G/4hnhFyaY/XmVFEjz3+CD1yDoxHysRiSwklc3Jgsd9DppXJiE
+        af8RLvbaw2aaJGLqEtnajEMjTD3n8ZpUzNKrdyFJN39yhWMzSfhQB5F0wXvWkTsBEryX4m1J5aZF9
+        wCf9fIGTCNnPEgYQbZP4R5Y9JSu6ffdMnd3b62bVSq02UmAN+uJ+7Y53ZjR1XeyQp4vxbc1bQJtbk
+        /QsUK7iA==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOLPD-0008Me-8R; Tue, 14 Apr 2020 13:15:11 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 23/29] mm: remove both instances of __vmalloc_node_flags
+Date:   Tue, 14 Apr 2020 15:13:42 +0200
+Message-Id: <20200414131348.444715-24-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200414131348.444715-1-hch@lst.de>
+References: <20200414131348.444715-1-hch@lst.de>
 MIME-Version: 1.0
-References: <1586870475-32532-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1586870475-32532-1-git-send-email-peng.fan@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 14 Apr 2020 10:32:54 -0300
-Message-ID: <CAOMZO5APoqzvptc9gY2r69MzZ=gjTnsr2UV519xJmKmEkcx3=g@mail.gmail.com>
-Subject: Re: [PATCH V2] mailbox: imx-mailbox: fix scu msg header size check
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        jassisinghbrar@gmail.com, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Yongcai Huang <Anson.Huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peng,
+The real version just had a few callers that can open code it and
+remove one layer of indirection.  The nommu stub was public but only
+had a single caller, so remove it and avoid a CONFIG_MMU ifdef in
+vmalloc.h.
 
-On Tue, Apr 14, 2020 at 10:30 AM <peng.fan@nxp.com> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> The i.MX8 SCU message header size is the number of "u32" elements,
-> not "u8", so fix the check.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ include/linux/vmalloc.h |  9 ---------
+ mm/nommu.c              |  3 ++-
+ mm/vmalloc.c            | 20 ++++++--------------
+ 3 files changed, 8 insertions(+), 24 deletions(-)
 
-Since this is a fix, please add a Fixes tag
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index c1b9d6eca05f..4a46d296e70d 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -115,17 +115,8 @@ extern void *__vmalloc_node_range(unsigned long size, unsigned long align,
+ 			unsigned long start, unsigned long end, gfp_t gfp_mask,
+ 			pgprot_t prot, unsigned long vm_flags, int node,
+ 			const void *caller);
+-#ifndef CONFIG_MMU
+-extern void *__vmalloc_node_flags(unsigned long size, int node, gfp_t flags);
+-static inline void *__vmalloc_node_flags_caller(unsigned long size, int node,
+-						gfp_t flags, void *caller)
+-{
+-	return __vmalloc_node_flags(size, node, flags);
+-}
+-#else
+ extern void *__vmalloc_node_flags_caller(unsigned long size,
+ 					 int node, gfp_t flags, void *caller);
+-#endif
+ 
+ extern void vfree(const void *addr);
+ extern void vfree_atomic(const void *addr);
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 2df549adb22b..9553efa59787 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -150,7 +150,8 @@ void *__vmalloc(unsigned long size, gfp_t gfp_mask)
+ }
+ EXPORT_SYMBOL(__vmalloc);
+ 
+-void *__vmalloc_node_flags(unsigned long size, int node, gfp_t flags)
++void *__vmalloc_node_flags_caller(unsigned long size, int node, gfp_t flags,
++		void *caller)
+ {
+ 	return __vmalloc(size, flags);
+ }
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index de7952959e82..3d59d848ad48 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2566,14 +2566,6 @@ void *__vmalloc(unsigned long size, gfp_t gfp_mask)
+ }
+ EXPORT_SYMBOL(__vmalloc);
+ 
+-static inline void *__vmalloc_node_flags(unsigned long size,
+-					int node, gfp_t flags)
+-{
+-	return __vmalloc_node(size, 1, flags, node,
+-				__builtin_return_address(0));
+-}
+-
+-
+ void *__vmalloc_node_flags_caller(unsigned long size, int node, gfp_t flags,
+ 				  void *caller)
+ {
+@@ -2594,8 +2586,8 @@ void *__vmalloc_node_flags_caller(unsigned long size, int node, gfp_t flags,
+  */
+ void *vmalloc(unsigned long size)
+ {
+-	return __vmalloc_node_flags(size, NUMA_NO_NODE,
+-				    GFP_KERNEL);
++	return __vmalloc_node(size, 1, GFP_KERNEL, NUMA_NO_NODE,
++				__builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(vmalloc);
+ 
+@@ -2614,8 +2606,8 @@ EXPORT_SYMBOL(vmalloc);
+  */
+ void *vzalloc(unsigned long size)
+ {
+-	return __vmalloc_node_flags(size, NUMA_NO_NODE,
+-				GFP_KERNEL | __GFP_ZERO);
++	return __vmalloc_node(size, 1, GFP_KERNEL | __GFP_ZERO, NUMA_NO_NODE,
++				__builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(vzalloc);
+ 
+@@ -2670,8 +2662,8 @@ EXPORT_SYMBOL(vmalloc_node);
+  */
+ void *vzalloc_node(unsigned long size, int node)
+ {
+-	return __vmalloc_node_flags(size, node,
+-			 GFP_KERNEL | __GFP_ZERO);
++	return __vmalloc_node(size, 1, GFP_KERNEL | __GFP_ZERO, node,
++				__builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(vzalloc_node);
+ 
+-- 
+2.25.1
+
