@@ -2,210 +2,55 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD98C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26EAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47642072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77E6206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406026AbgDNG1r (ORCPT
+        id S2406037AbgDNGat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 02:27:47 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:34246 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S2405991AbgDNG1m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 02:27:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 86D2C200D9F0;
-        Tue, 14 Apr 2020 14:27:37 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mexkF8vGfUOA; Tue, 14 Apr 2020 14:27:37 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 6C3D1200D9EE;
-        Tue, 14 Apr 2020 14:27:37 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 6754CC01A1D;
-        Tue, 14 Apr 2020 14:27:37 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 61B43201602; Tue, 14 Apr 2020 14:27:37 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     chris.ruehl@gtsys.com.hk
-Cc:     linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-Date:   Tue, 14 Apr 2020 14:27:21 +0800
-Message-Id: <20200414062735.19182-1-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Apr 2020 02:30:49 -0400
+Received: from verein.lst.de ([213.95.11.211]:37657 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405991AbgDNGas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 02:30:48 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E89D5227A81; Tue, 14 Apr 2020 08:30:43 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 08:30:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+Message-ID: <20200414063043.GF23154@lst.de>
+References: <20200324075402.GJ23447@lst.de> <41975da3-3a4a-fc3c-2b90-8d607cf220e6@ozlabs.ru> <20200325083740.GC21605@lst.de> <a705afc5-779d-baf4-e5d2-e2da04c82743@ozlabs.ru> <213b0c7d-f908-b4f4-466d-6240c3622cd6@ozlabs.ru> <20200406115016.GA10941@lst.de> <348046e7-7a38-62d6-4df0-e4a537b98926@ozlabs.ru> <20200406171706.GA3231@lst.de> <95395244-bdec-84d2-b81b-3040c076fe4d@ozlabs.ru> <44ad32a4-7ce5-4f4d-8237-53356f76f53a@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44ad32a4-7ce5-4f4d-8237-53356f76f53a@ozlabs.ru>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
+On Tue, Apr 14, 2020 at 04:21:27PM +1000, Alexey Kardashevskiy wrote:
+> > Good points, I'll post revised version when you post your v3 of this.
+> 
+> 
+> 
+> Any plans on posting v3 of this? Thanks,
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- .../bindings/iio/dac/lltc,ltc2632.yaml        | 78 +++++++++++++++++++
- .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
- 2 files changed, 78 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-new file mode 100644
-index 000000000000..af94481748b6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+# Copyright 2020 Christopher Ruehl <chris.ruehl@gtsys.com.hk>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
-+
-+maintainers:
-+  - Jonathan Cameron <jic23@kernel.org>
-+
-+description: |
-+  Bindings for the Linear Technology LTC2632/2634/2636 DAC
-+  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lltc,ltc2632-l12
-+      - lltc,ltc2632-l10
-+      - lltc,ltc2632-l8
-+      - lltc,ltc2632-h12
-+      - lltc,ltc2632-h10
-+      - lltc,ltc2632-h8
-+      - lltc,ltc2634-l12
-+      - lltc,ltc2634-l10
-+      - lltc,ltc2634-l8
-+      - lltc,ltc2634-h12
-+      - lltc,ltc2634-h10
-+      - lltc,ltc2634-h8
-+      - lltc,ltc2636-l12
-+      - lltc,ltc2636-l10
-+      - lltc,ltc2636-l8
-+      - lltc,ltc2636-h12
-+      - lltc,ltc2636-h10
-+      - lltc,ltc2636-h8
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 2000000
-+
-+  vref-supply:
-+    description:
-+	  Phandle to the external reference voltage supply. This should
-+      only be set if there is an external reference voltage connected to the VREF
-+      pin. If the property is not set the internal reference is used.
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    vref: regulator-vref {
-+        compatible = "regulator-fixed";
-+        regulator-name = "vref-ltc2632";
-+        regulator-min-microvolt = <1250000>;
-+        regulator-max-microvolt = <1250000>;
-+        regulator-always-on;
-+    };
-+
-+    spi_master {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dac: ltc2632@0 {
-+        compatible = "lltc,ltc2632";
-+        reg = <0>;    /* CS0 */
-+        spi-max-frequency = <1000000>;
-+        vref-supply = <&vref>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-deleted file mode 100644
-index 1ab9570cf219..000000000000
---- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--Linear Technology LTC2632/2634/2636 DAC
--
--Required properties:
-- - compatible: Has to contain one of the following:
--	lltc,ltc2632-l12
--	lltc,ltc2632-l10
--	lltc,ltc2632-l8
--	lltc,ltc2632-h12
--	lltc,ltc2632-h10
--	lltc,ltc2632-h8
--	lltc,ltc2634-l12
--	lltc,ltc2634-l10
--	lltc,ltc2634-l8
--	lltc,ltc2634-h12
--	lltc,ltc2634-h10
--	lltc,ltc2634-h8
--	lltc,ltc2636-l12
--	lltc,ltc2636-l10
--	lltc,ltc2636-l8
--	lltc,ltc2636-h12
--	lltc,ltc2636-h10
--	lltc,ltc2636-h8
--
--Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
--apply. In particular, "reg" and "spi-max-frequency" properties must be given.
--
--Optional properties:
--	- vref-supply: Phandle to the external reference voltage supply. This should
--	  only be set if there is an external reference voltage connected to the VREF
--	  pin. If the property is not set the internal reference is used.
--
--Example:
--
--	vref: regulator-vref {
--		compatible = "regulator-fixed";
--		regulator-name = "vref-ltc2632";
--		regulator-min-microvolt = <1250000>;
--		regulator-max-microvolt = <1250000>;
--		regulator-always-on;
--	};
--
--	spi_master {
--		dac: ltc2632@0 {
--			compatible = "lltc,ltc2632-l12";
--			reg = <0>; /* CS0 */
--			spi-max-frequency = <1000000>;
--			vref-supply = <&vref>; /* optional */
--		};
--	};
--- 
-2.20.1
-
+Just back from a long weekend.  I'll take a stab at it soon.
