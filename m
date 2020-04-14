@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B05C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C81DC38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE4462076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097392076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586901068;
-	bh=Oo08rplUN6V14FIQ9GAtsTCmZjmWkUplHwoMup6AiXI=;
+	s=default; t=1586901076;
+	bh=7tksp8DJqvv4aFKzOAsBYA42hPh+JG5SvGguvYOTEh4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ggbp2a8HNZm9PjNQxQ3peWPdXRfkSODzprG1tKx/0ITkDf7wx5mopVQpTO+c8GqK/
-	 bc5/q4s3CT0Iwg7KJnLYqxz3EQtCyCJRC5lqw2dLKbhkWIUh5zdH2D0EnV9Qed3equ
-	 6MhuN18TWy8NusuXYU2u+HxVWD0kA5C5g6/i/ES4=
+	b=1GOW+od14zFskZL0ojEL6Ad2HPNmWdemZI8Ik3VgUxZiJkFzB/5dsn7mX4wz7hr33
+	 gppZeIoOer+bnaVQ6Aakgl18hQdsM+icpfzIMASoPNX31yDXYQzbTFmhviOon+QK38
+	 V5NlwQ6yzy4B7oAzcZNrK2Fjq3t5PO+y/iK3qWoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440826AbgDNVuQ (ORCPT
+        id S2440949AbgDNVvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:50:16 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40458 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440744AbgDNVt1 (ORCPT
+        Tue, 14 Apr 2020 17:51:12 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37595 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440819AbgDNVuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:49:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id i27so1319218ota.7;
-        Tue, 14 Apr 2020 14:49:25 -0700 (PDT)
+        Tue, 14 Apr 2020 17:50:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z17so1346921oto.4;
+        Tue, 14 Apr 2020 14:50:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=W/TjB1Q11sWTVzxLeidMUrAAsdNgT3xJMiLjw9v2R1Y=;
-        b=MPh3Sim2/01iwfsDoElu6jVkOc7pPeAsUzvjOklfu0MBzbdRkR0x+dhXsbld8YnRDY
-         Ml4MdshDyWm+ANOjy8th4mU4vPeI/b27wupihGHtnErprzitIXh8KSlWyI7brt03iQab
-         jK0q/OcQ1/3ybvH+o95gL7SMXMqJYt11EmSEXdtWUOge4w086ByGSriE7uIm+5J/PMlG
-         p4VizC99W1SPiLoBhri9zt0UbdVQrXHJB/W2lZOxrzCIv7RGXWnsi0LG7OSUWE0w8hrc
-         9LCKfaXlEinSncaMfSXwpHNETQsFYOSgkWusR5jRBu6itM4KkskK2UVzKHS9RAkqqs37
-         FmYg==
-X-Gm-Message-State: AGi0PuZF1yvWAtO/Q7qOmV92vMmORAyNBNcOymUPvnTWuVhGvYYSMDK1
-        56uebtE9PsemItiKDIp2DA==
-X-Google-Smtp-Source: APiQypKEw4vNsyU9jnKpwrMnQzU8dMbD4t8KlH0bzOZ8rj/tBp5ezy6hGDMteBlIXMz2K417RWitKA==
-X-Received: by 2002:a9d:364b:: with SMTP id w69mr20010075otb.289.1586900964885;
-        Tue, 14 Apr 2020 14:49:24 -0700 (PDT)
+        bh=r6xzZ1b4JHWGtxEECvqX1ZeFiRv8Q65WRsOrzmnGvfQ=;
+        b=pbJpBVaGtsjyamyR7k92/WWs2lcU0j2mDUF6sDJo12fDCEpi267bV4fX/0qnokVSiB
+         EBLlEfm/DdYmMA2U2FgRDulbZWS4ITC0CbqL0hOGE1xPpGJJkOiFjUijqpxWKBa0NyC7
+         i/Jo9yq+rVSEifohUO1Njb5/RJLFD22WuJpvvQs1jFZ/bjWOZxCM2+mVTzPYmmxTNluV
+         6Z2iHFhPgWGoXqR3P4pTPG/y/UuqQGjyfvolooQZkWtLm2lkDgaz0cRqZd+PRERc2azR
+         +B8+KeUB+UxQMiDaW0SvJ9+whzWn64DADT0Fg4OegnCd43u1247T9P6Ios+Gq2kYCkNr
+         Fx2A==
+X-Gm-Message-State: AGi0PuZRFxoc0gFxuUUZDjpxzhITaHSzAzQFUhDFZ4xLrwK1oupYrg0w
+        erj9dyQSGWycQyS/N47QUQ==
+X-Google-Smtp-Source: APiQypI4T5IhspzuZMGUVQLSFU+HW4jJmxEf4RMXRC/Ht0Wg9mRzSEMEd8lT6Oa91uUR9Pib4mx+KA==
+X-Received: by 2002:a05:6830:1b64:: with SMTP id d4mr19628904ote.368.1586901018496;
+        Tue, 14 Apr 2020 14:50:18 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f1sm325327otq.41.2020.04.14.14.49.23
+        by smtp.gmail.com with ESMTPSA id t20sm2576523ott.51.2020.04.14.14.50.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:49:24 -0700 (PDT)
-Received: (nullmailer pid 21079 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:49:23 -0000
-Date:   Tue, 14 Apr 2020 16:49:23 -0500
+        Tue, 14 Apr 2020 14:50:17 -0700 (PDT)
+Received: (nullmailer pid 22631 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:50:16 -0000
+Date:   Tue, 14 Apr 2020 16:50:16 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
 Cc:     Tomas Novotny <tomas@novotny.cz>,
@@ -69,32 +69,30 @@ Cc:     Tomas Novotny <tomas@novotny.cz>,
         devicetree@vger.kernel.org,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v4 2/5] dt-bindings: iio: Introduce common properties for
- iio sensors
-Message-ID: <20200414214923.GA21041@bogus>
+Subject: Re: [PATCH v4 3/5] dt-bindings: iio: light: vcnl4000: Add
+ proximity-near-level
+Message-ID: <20200414215016.GA22563@bogus>
 References: <cover.1586094535.git.agx@sigxcpu.org>
- <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
+ <9bbbc30e5e8e67e50ddacb4cadc180fa5c7f7bd0.1586094535.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
+In-Reply-To: <9bbbc30e5e8e67e50ddacb4cadc180fa5c7f7bd0.1586094535.git.agx@sigxcpu.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Apr 2020 15:50:29 +0200, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> Introduce a file for common properties of iio sensors. So far this
-> contains the new proximity-near-level property for proximity sensors
-> that indicates when an object should be considered near.
+On Sun,  5 Apr 2020 15:50:30 +0200, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
+> This value indicates when userspace should consider an object
+> near to the sensor/device.
 > 
 > Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > ---
->  .../devicetree/bindings/iio/common.yaml       | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/common.yaml
+>  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml     | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
