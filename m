@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01468C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFF8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40CE2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B6F2063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731343AbgDNNWS (ORCPT
+        id S1731339AbgDNNWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:22:18 -0400
-Received: from 8bytes.org ([81.169.241.247]:35236 "EHLO theia.8bytes.org"
+        Tue, 14 Apr 2020 09:22:41 -0400
+Received: from 8bytes.org ([81.169.241.247]:35334 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502906AbgDNNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:16:07 -0400
+        id S2502896AbgDNNQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:16:06 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 470097E3; Tue, 14 Apr 2020 15:15:57 +0200 (CEST)
+        id 49BD8694; Tue, 14 Apr 2020 15:15:55 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -46,9 +46,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 30/33] iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
-Date:   Tue, 14 Apr 2020 15:15:39 +0200
-Message-Id: <20200414131542.25608-31-joro@8bytes.org>
+Subject: [PATCH v2 20/33] iommu/virtio: Convert to probe/release_device() call-backs
+Date:   Tue, 14 Apr 2020 15:15:29 +0200
+Message-Id: <20200414131542.25608-21-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 References: <20200414131542.25608-1-joro@8bytes.org>
@@ -59,43 +59,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-On Exynos platforms there can be more than one SYSMMU (IOMMU) for one
-DMA master device. Since the IOMMU core code expects only one hardware
-IOMMU, use the first SYSMMU in the list.
+Convert the VirtIO IOMMU driver to use the probe_device() and
+release_device() call-backs of iommu_ops, so that the iommu core code
+does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/exynos-iommu.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/iommu/virtio-iommu.c | 41 +++++++++---------------------------
+ 1 file changed, 10 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-index 186ff5cc975c..09cdd163560a 100644
---- a/drivers/iommu/exynos-iommu.c
-+++ b/drivers/iommu/exynos-iommu.c
-@@ -1261,6 +1261,11 @@ static int exynos_iommu_add_device(struct device *dev)
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index d5cac4f46ca5..bda300c2a438 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -865,24 +865,23 @@ static struct viommu_dev *viommu_get_by_fwnode(struct fwnode_handle *fwnode)
+ 	return dev ? dev_to_virtio(dev)->priv : NULL;
+ }
+ 
+-static int viommu_add_device(struct device *dev)
++static struct iommu_device *viommu_probe_device(struct device *dev)
+ {
+ 	int ret;
+-	struct iommu_group *group;
+ 	struct viommu_endpoint *vdev;
+ 	struct viommu_dev *viommu = NULL;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 
+ 	if (!fwspec || fwspec->ops != &viommu_ops)
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
+ 
+ 	viommu = viommu_get_by_fwnode(fwspec->iommu_fwnode);
+ 	if (!viommu)
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
+ 
+ 	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
+ 	if (!vdev)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	vdev->dev = dev;
+ 	vdev->viommu = viommu;
+@@ -896,45 +895,25 @@ static int viommu_add_device(struct device *dev)
+ 			goto err_free_dev;
  	}
- 	iommu_group_put(group);
  
-+	/* There is always at least one entry, see exynos_iommu_of_xlate() */
-+	data = list_first_entry(&owner->controllers,
-+				struct sysmmu_drvdata, owner_node);
-+	iommu_device_link(&data->iommu, dev);
-+
- 	return 0;
+-	ret = iommu_device_link(&viommu->iommu, dev);
+-	if (ret)
+-		goto err_free_dev;
++	return &viommu->iommu;
+ 
+-	/*
+-	 * Last step creates a default domain and attaches to it. Everything
+-	 * must be ready.
+-	 */
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group)) {
+-		ret = PTR_ERR(group);
+-		goto err_unlink_dev;
+-	}
+-
+-	iommu_group_put(group);
+-
+-	return PTR_ERR_OR_ZERO(group);
+-
+-err_unlink_dev:
+-	iommu_device_unlink(&viommu->iommu, dev);
+ err_free_dev:
+ 	generic_iommu_put_resv_regions(dev, &vdev->resv_regions);
+ 	kfree(vdev);
+ 
+-	return ret;
++	return ERR_PTR(ret);
  }
  
-@@ -1286,6 +1291,11 @@ static void exynos_iommu_remove_device(struct device *dev)
+-static void viommu_remove_device(struct device *dev)
++static void viommu_release_device(struct device *dev)
+ {
+-	struct viommu_endpoint *vdev;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
++	struct viommu_endpoint *vdev;
  
- 	list_for_each_entry(data, &owner->controllers, owner_node)
- 		device_link_del(data->link);
-+
-+	/* There is always at least one entry, see exynos_iommu_of_xlate() */
-+	data = list_first_entry(&owner->controllers,
-+				struct sysmmu_drvdata, owner_node);
-+	iommu_device_unlink(&data->iommu, dev);
+ 	if (!fwspec || fwspec->ops != &viommu_ops)
+ 		return;
+ 
+ 	vdev = dev_iommu_priv_get(dev);
+ 
+-	iommu_group_remove_device(dev);
+-	iommu_device_unlink(&vdev->viommu->iommu, dev);
+ 	generic_iommu_put_resv_regions(dev, &vdev->resv_regions);
+ 	kfree(vdev);
  }
- 
- static int exynos_iommu_of_xlate(struct device *dev,
+@@ -960,8 +939,8 @@ static struct iommu_ops viommu_ops = {
+ 	.unmap			= viommu_unmap,
+ 	.iova_to_phys		= viommu_iova_to_phys,
+ 	.iotlb_sync		= viommu_iotlb_sync,
+-	.add_device		= viommu_add_device,
+-	.remove_device		= viommu_remove_device,
++	.probe_device		= viommu_probe_device,
++	.release_device		= viommu_release_device,
+ 	.device_group		= viommu_device_group,
+ 	.get_resv_regions	= viommu_get_resv_regions,
+ 	.put_resv_regions	= generic_iommu_put_resv_regions,
 -- 
 2.17.1
 
