@@ -2,161 +2,133 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D933C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AECC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F592206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26142206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:54:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="G/l1ZTWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406909AbgDNHwc (ORCPT
+        id S2406917AbgDNHyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:52:32 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6964 "EHLO mga12.intel.com"
+        Tue, 14 Apr 2020 03:54:55 -0400
+Received: from mout.web.de ([212.227.17.12]:45421 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406887AbgDNHwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:52:24 -0400
-IronPort-SDR: x/PdOuiXyhwBKAgjAtZicQUnmQKAYBSqISUxKrEAmYiZezXHbYXRfQ+6JGIMmBua/wipdOpax5
- YJl1+sLG2RXg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 00:52:23 -0700
-IronPort-SDR: kLNbLWDZtX/iLzL1GgNr41X3oREmhHHxrleJ+6yjOatBdph8c2WqIFTqJOjaUbR63J81G4WgMs
- 5m1VCBO+whgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="363305205"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 14 Apr 2020 00:52:20 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 14 Apr 2020 10:52:19 +0300
-Date:   Tue, 14 Apr 2020 10:52:19 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH v3 3/3] platform/chrome: typec: Register port partner
-Message-ID: <20200414075219.GC2828150@kuha.fi.intel.com>
-References: <20200410002316.202107-1-pmalani@chromium.org>
- <20200410002316.202107-4-pmalani@chromium.org>
+        id S2406887AbgDNHyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:54:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586850852;
+        bh=hAQpUX7TTke6jwz7Bl++PDHIsePwoXNRIF38VkwFUaE=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=G/l1ZTWHKwuNuZWZbghnLQ/23KaJGCwclKP+NnkQQjQe5QH/NmXNAwqQ+YZdq3WRN
+         wBELouEXa1jiJ9q4RRClC8rdqjWbXtTTeJnsBV7L9amDZq4iiUGeVKojbcDR5U7cHu
+         TKL9uuvSMvQZ0moa2IYGO5HlAO1qe8VSF/qvpTMM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.66.171]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LtnvF-1jE7Yf1UhB-0117Rc; Tue, 14
+ Apr 2020 09:54:12 +0200
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        linux-kselftest@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Xiao Yang <ice_yangxiao@163.com>
+Subject: Re: [PATCH v2] tracing: Fix the race between registering 'snapshot'
+ event trigger and triggering 'snapshot' operation
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f4e4614b-e3df-e255-42d0-1148e39b3f8a@web.de>
+Date:   Tue, 14 Apr 2020 09:54:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410002316.202107-4-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lUbQ29bmhZJ0g5G+RZyoh8EgL+tJYj+dZipYNEU8WO1IqOSg0KA
+ 7TKwt8wVwfL86u/NH6QEwBz6VQDTOU36sJpMXVujRbEXzD2mXXA50H4KBiVI+rEt0/Ci8Lp
+ +C1XEq55EXsNH9XgFXNLmHOzAIkYDGpHwJJYv3I2helrl9Je0Dk9bIeza1GOyCa+CxbtPl9
+ rB2B98/+YtF2YP0kcus2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bhlk+O28LIA=:s/gtWVVApxLZpQILrAzXGC
+ 2blX8565DznK7m1PCzyLmEii6uegX7NXSIoXUDHESAQmvc6CY67SsWEL3CgIHBW3nq2X5mJyW
+ tcoyFfVda0oC6s2QD8A6foYtfANWSUsb5Nzfa9aNWrbtxnjNJ/1hsJOBCTP8z6zSDGYZG/KA7
+ A/9oCOJTagciDuLl18ImukSMRjmfRhbHzEa44dRab3ZSsuDDnO0kxBFaaefBMkPwu3jMRWeTv
+ W/sSMjiO30uYziaPostJXoCDkrxNE0dUI47hMVsRKRBFKw/ShZNWmYMmuBuLUQNoAUTuy9ffR
+ A8Qc4ePTHitaZcXnE8i22b8Uwd7Ru4urlXWBMHMf4J5QAaMp6z+wVrMKmJc0OmR53DOKJocqy
+ +kqQGtFWIR+9FS+ffUn78zJG0hNpWyznrUZ/KU+A4SjOwgbcmtjfpqC2g7eusRFNWNkQWZHfq
+ YqdZI1KLpi5s7yjYw+VPUC4uAGfw9zpxRZLuRRLkOxXLievx7bvyvsiubjMhkVVXCcUz8ZxAe
+ kd6O9wMiF8DuUlekp6IkyqArFOFPuT2Dh9yTY43NtcClswnMsf5cQ7cQu119GPwgGtMU3ohke
+ LIF4fXhBvvi+Pv8BcmvA7eDYiJdhuhie0M5+w2ECSygOzv44C5OdlNcvweNZj6DjuuQBbN6E+
+ Hu4OUB1HFDUP4Le92v6zzVTbK7g4ffHmcsAxdAROrmPJ0MQ3lMtXLVIeBuTnuTL6WUjvCHYPT
+ 7ijcGq4WEcTQzlpqfLgYx61t2Z322ezH605hPe9JoizIrexihjwHPZyqMaaJ88B7AaQTds6GD
+ v2IePgm0iheS3ZKeotjh/RF7Penel1+YTLCzt7/7YJw4oRpXePAeb/ltmoXggBbdX9hLSYgRU
+ 8HCMLgiVTj1FtimkL4ZRTHivIj23Wb4+ALr+esCXOM5BDc+vq7Gx2anW3T8tj3LAg7i5d5rfG
+ ASgd3ls3VUnYs1W1rcTQXTnma9eheX5GXFSnXEpL7GhS2pVIGuhCnxXNre44BrYVLmNdFni5F
+ qN/FUUcXuYLxqj527B+DLh/RM3D1BWAclwA1OB+/T4+aVWe9vRjKm0lB3BL1CrUVg/MYluPEV
+ Rm1epQmYlLFrqiUylATe5JP9QpykLJgBUNn+EdYOGl0MM1I5tij0hLX+oxIGmBxWdAhBbdg9v
+ dWdLCCOWGcMjiLV3MJhdqJk6BOXCNj+vdlL55C/D02pLmc1eMa+sq2pvu6QA9CJY02J3BTj2S
+ H6hn6tw5KSDTC+8+q
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:23:17PM -0700, Prashant Malani wrote:
-> Register (and unregister) the port partner when a connect (and
-> disconnect) is detected.
-> 
-> Co-developed-by: Jon Flatley <jflat@chromium.org>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigge=
+r()
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+I suggest to improve the change description.
 
-> ---
-> 
-> Changes in v3:
-> - No changes.
-> 
-> Changes in v2:
-> - Fixed error pointer return value.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 48 +++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 56ded09a60ffb..304e0b20f279b 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -22,6 +22,9 @@ struct cros_typec_port {
->  	struct typec_port *port;
->  	/* Initial capabilities for the port. */
->  	struct typec_capability caps;
-> +	struct typec_partner *partner;
-> +	/* Port partner PD identity info. */
-> +	struct usb_pd_identity p_identity;
->  };
->  
->  /* Platform-specific data for the Chrome OS EC Type C controller. */
-> @@ -190,6 +193,30 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
->  	return ret;
->  }
->  
-> +static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
-> +				  bool pd_en)
-> +{
-> +	struct cros_typec_port *port = typec->ports[port_num];
-> +	struct typec_partner_desc p_desc = {
-> +		.usb_pd = pd_en,
-> +	};
-> +	int ret = 0;
-> +
-> +	/*
-> +	 * Fill an initial PD identity, which will then be updated with info
-> +	 * from the EC.
-> +	 */
-> +	p_desc.identity = &port->p_identity;
-> +
-> +	port->partner = typec_register_partner(port->port, &p_desc);
-> +	if (IS_ERR_OR_NULL(port->partner)) {
-> +		ret = PTR_ERR(port->partner);
-> +		port->partner = NULL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
->  		int port_num, struct ec_response_usb_pd_control *resp)
->  {
-> @@ -212,6 +239,8 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
->  {
->  	struct typec_port *port = typec->ports[port_num]->port;
->  	enum typec_orientation polarity;
-> +	bool pd_en;
-> +	int ret;
->  
->  	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
->  		polarity = TYPEC_ORIENTATION_NONE;
-> @@ -226,6 +255,25 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
->  			TYPEC_SOURCE : TYPEC_SINK);
->  	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
->  			TYPEC_SOURCE : TYPEC_SINK);
-> +
-> +	/* Register/remove partners when a connect/disconnect occurs. */
-> +	if (resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED) {
-> +		if (typec->ports[port_num]->partner)
-> +			return;
-> +
-> +		pd_en = resp->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
-> +		ret = cros_typec_add_partner(typec, port_num, pd_en);
-> +		if (!ret)
-> +			dev_warn(typec->dev,
-> +				 "Failed to register partner on port: %d\n",
-> +				 port_num);
-> +	} else {
-> +		if (!typec->ports[port_num]->partner)
-> +			return;
-> +
-> +		typec_unregister_partner(typec->ports[port_num]->partner);
-> +		typec->ports[port_num]->partner = NULL;
-> +	}
->  }
->  
->  static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
-> -- 
-> 2.26.0.110.g2183baf09c-goog
+* Adjustment:
+  =E2=80=A6 operation (i. e. =E2=80=A6
 
-thanks,
+* Will the tag =E2=80=9CFixes=E2=80=9D become relevant?
 
--- 
-heikki
+Regards,
+Markus
