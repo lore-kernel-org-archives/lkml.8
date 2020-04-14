@@ -2,191 +2,263 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60014C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3762C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369EF2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0C62076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Dxy2k4OH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDhVu2wG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502047AbgDNMf6 (ORCPT
+        id S2502079AbgDNMgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:35:58 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60226 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502029AbgDNMfr (ORCPT
+        Tue, 14 Apr 2020 08:36:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2502064AbgDNMgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:35:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03ECI54q101846;
-        Tue, 14 Apr 2020 12:35:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=y60fSCG2nXRrowJmU8VdzYgVbRBn5fWc0JMdkv+EuI8=;
- b=Dxy2k4OH6mHEFSQyrfvHAoREOtd2VgID+YF/O9/WcuKsGrDCDD+OyMHviTlzFbdZSWyL
- +eC5JXZL+R2akjNx7bJ73f4wWH3vqUueLewZdsf6DKh2ZRmi/5ki45AjvYVnPPdcfH4K
- 45aJcolFwvCupJX/QPnYtf8fiyr5J/QCg+tfy/8kCGCSzlLbskY4eFK6pqng4y2J3Vj0
- ECfFgNN87QUlB6Cvq+RHMJO8eJqC6jJO44piUF8ibLNlF1tc2J6cCOCZ8w2Go7on7YJv
- /wdKmbY2lVSJ1q1FOkXtBfZP1KkHw36DB97+EumOCMI7iDeunTdaSKFoIeVlSjPr0oqB kA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30b5um4ars-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 12:35:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03ECHj6A180506;
-        Tue, 14 Apr 2020 12:33:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 30bqchhs56-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 12:33:37 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03ECXZUY019294;
-        Tue, 14 Apr 2020 12:33:35 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 05:33:34 -0700
-Date:   Tue, 14 Apr 2020 15:33:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
-Cc:     gregkh@linuxfoundation.org, navid.emamdoost@gmail.com,
-        sylphrenadin@gmail.com, nishkadg.linux@gmail.com,
-        stephen@brennan.io, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: Re: [PATCH 1/2] staging: rtl8192u: Refactoring setKey function
-Message-ID: <20200414123326.GG1163@kadam>
-References: <20200413030129.861-1-c.cantanheide@gmail.com>
+        Tue, 14 Apr 2020 08:36:40 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A2FC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:36:40 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y17so12967522iow.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=93PxLx/bBhSXZHPMANtDysGYDalKpS3C/enNpIgyfaA=;
+        b=oDhVu2wG3zhmPrmqPL0/4JjUoRVazgmBRZk4h1cE9oPa3GmmtDVTpeZGk19tYNQmwQ
+         lh+ajsWoGSL9FcZmIQKLE1LWXy6QcKZ6kddBJVw57rQtc5Bl89X72wPKbRQJuUpUrJdB
+         wRXOK4w8Nm5oT+D8fY9nFK4zscL2/OrKKm79fgyl0MoTymdV8KfbL7LStioAl+hg3yEA
+         PHSt5bq9omK9Ul9wZ6aDHoBm/K9TH/fAiH7Rr7ghh/hTCEH5ETC5K6zuABHAzzixS0ul
+         b8aocmIq9tM17Kxal9BPhFXJ9K1EI2LkLPzxT13IPcJrfYFLfxB2rC5hdE/+pkb680wN
+         Zgdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=93PxLx/bBhSXZHPMANtDysGYDalKpS3C/enNpIgyfaA=;
+        b=H/qw6bkIpweiBEPMkNSuAOBEceCGIPXqGrKhzpXJLoA1bb6912brjBfqYU16yGBAlp
+         RdyNYpcaiRf6Mjv9kc3IdFz9LDVTFu1JaqN+yxdZqvZjydOvbVfSca4Nmc1eJq/FoLSe
+         XYDVj3xZE36bEKzcdwNyw3S1FpjV6QMy8hG6heD9B2EJwbFcaAW5VDM61rM2Sh9XILK6
+         dT9V4LzRi7zJdJnqbhuBo/M/bdbZFD32HkQ4KDzlLfRVXfJUWfOVoEWJ7CntXAAv/WNM
+         aHlH+oo/aTJWwyEIGrlsjhCId9IRrxIlnIxz+S8P0Fsa/Y4mA46AVDGHC2FOd/aAzzwk
+         MBSA==
+X-Gm-Message-State: AGi0PubsTrc3BZUoVSUlSdcXalztwNbcTsMRv/MDmsQ9ce2R9Q/Ozj6b
+        atVq+gsnqCQg6deoCCH8P6cGctW1gaaxzA==
+X-Google-Smtp-Source: APiQypIHLgsSAAgr45LYobbDafEn2cSAk7E4X70gOIxDTh0w02hjQaH2p409t+miWUGfGpliZ4WtGw==
+X-Received: by 2002:a05:6638:3f1:: with SMTP id s17mr4751189jaq.44.1586867799011;
+        Tue, 14 Apr 2020 05:36:39 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id j20sm4442418iok.54.2020.04.14.05.36.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 05:36:38 -0700 (PDT)
+Subject: Re: [PATCH 2/4] remoteproc: Split firmware name allocation from
+ rproc_alloc()
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>, ohad@wizery.com,
+        s-anna@ti.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200413193401.27234-1-mathieu.poirier@linaro.org>
+ <20200413193401.27234-3-mathieu.poirier@linaro.org>
+ <bd8cc8d5-94c1-5767-d089-535731fc1055@linaro.org>
+ <20200414005506.GG20625@builder.lan>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <73c2c86d-cc4a-9706-458b-02a522528eaf@linaro.org>
+Date:   Tue, 14 Apr 2020 07:36:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413030129.861-1-c.cantanheide@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140103
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140103
+In-Reply-To: <20200414005506.GG20625@builder.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 03:01:28AM +0000, Camylla Goncalves Cantanheide wrote:
-> Changes of the local variable value and
-> modification in the seletive repetition structure.
+On 4/13/20 7:55 PM, Bjorn Andersson wrote:
+> On Mon 13 Apr 13:56 PDT 2020, Alex Elder wrote:
 > 
+>> On 4/13/20 2:33 PM, Mathieu Poirier wrote:
+>>> Make the firmware name allocation a function on its own in order to
+>>> introduce more flexibility to function rproc_alloc().
+>>>
+>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-This changelog isn't totally clear why you're doing this.  Just say:
-"I am refactorying setKey() to make it more clear.  I have unrolled the
-first two iterations through the loop.  This patch will not change
-runtime."
+. . .
 
-So long as it's clear what you're trying to do and why, that's the
-important thing with a commit message.
-
-> Signed-off-by: Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
-> ---
->  drivers/staging/rtl8192u/r8192U_core.c | 52 ++++++++++++--------------
->  1 file changed, 24 insertions(+), 28 deletions(-)
+>>> ---
+>>>  drivers/remoteproc/remoteproc_core.c | 66 ++++++++++++++++------------
+>>>  1 file changed, 39 insertions(+), 27 deletions(-)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>>> index 80056513ae71..4dee63f319ba 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -1979,6 +1979,33 @@ static const struct device_type rproc_type = {
+>>>  	.release	= rproc_type_release,
+>>>  };
+>>>  
+>>> +static int rproc_alloc_firmware(struct rproc *rproc,
+>>> +				const char *name, const char *firmware)
+>>> +{
+>>> +	char *p, *template = "rproc-%s-fw";
+>>> +	int name_len;
+>>
+>> Not a big deal (and maybe it's not consistent with other nearby
+>> style) but template and name_len could be defined inside the
+>> "if (!firmware)" block.
+>>
 > 
-> diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
-> index 9b8d85a4855d..87c02aee3854 100644
-> --- a/drivers/staging/rtl8192u/r8192U_core.c
-> +++ b/drivers/staging/rtl8192u/r8192U_core.c
-> @@ -4880,7 +4880,7 @@ void EnableHWSecurityConfig8192(struct net_device *dev)
->  void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
->  	    u8 *macaddr, u8 defaultkey, u32 *keycontent)
->  {
-> -	u32 target_command = 0;
-> +	u32 target_command = CAM_CONTENT_COUNT * entryno |  BIT(31) | BIT(16);
->  	u32 target_content = 0;
->  	u16 us_config = 0;
->  	u8 i;
-> @@ -4890,39 +4890,35 @@ void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
->  
->  	RT_TRACE(COMP_SEC,
->  		 "====>to %s, dev:%p, EntryNo:%d, KeyIndex:%d, KeyType:%d, MacAddr%pM\n",
-> -        	 __func__, dev, entryno, keyindex, keytype, macaddr);
-> +		 __func__, dev, entryno, keyindex, keytype, macaddr);
+> I prefer variables declared in the beginning of the function, so I'm
+> happy with this.
 
-Do this white space change in a separate patch.
+It should be obvious that this is fine with me.
 
->  
->  	if (defaultkey)
->  		us_config |= BIT(15) | (keytype << 2);
->  	else
->  		us_config |= BIT(15) | (keytype << 2) | keyindex;
->  
-> -	for (i = 0; i < CAM_CONTENT_COUNT; i++) {
-> -		target_command  = i + CAM_CONTENT_COUNT * entryno;
-> -		target_command |= BIT(31) | BIT(16);
-> -
-> -		if (i == 0) { /* MAC|Config */
-> -			target_content = (u32)(*(macaddr + 0)) << 16 |
-> -					(u32)(*(macaddr + 1)) << 24 |
-> -					(u32)us_config;
-> -
-> -			write_nic_dword(dev, WCAMI, target_content);
-> -			write_nic_dword(dev, RWCAM, target_command);
-> -		} else if (i == 1) { /* MAC */
-> -			target_content = (u32)(*(macaddr + 2))	 |
-> -					(u32)(*(macaddr + 3)) <<  8 |
-> -					(u32)(*(macaddr + 4)) << 16 |
-> -					(u32)(*(macaddr + 5)) << 24;
-> -			write_nic_dword(dev, WCAMI, target_content);
-> -			write_nic_dword(dev, RWCAM, target_command);
-> -		} else {
-> -			/* Key Material */
-> -			if (keycontent) {
-> -				write_nic_dword(dev, WCAMI,
-> -						*(keycontent + i - 2));
-> -				write_nic_dword(dev, RWCAM, target_command);
-> -                	}
-> -		}
-> +	target_content = macaddr[0] << 16 |
-> +			 macaddr[0] << 24 |
-> +			(u32)us_config;
-> +
-> +	write_nic_dword(dev, WCAMI, target_content);
-> +	write_nic_dword(dev, RWCAM, target_command++);
-> +
-> +	/* MAC */
-> +	target_content = macaddr[2]	  |
-> +			 macaddr[3] <<  8 |
-> +			 macaddr[4] << 16 |
-> +			 macaddr[5] << 24;
-> +	write_nic_dword(dev, WCAMI, target_content);
-> +	write_nic_dword(dev, RWCAM, target_command++);
-> +
-> +	/* Key Material */
-> +	if (!keycontent)
-> +		return;
-> +
-> +	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
-> +		write_nic_dword(dev, WCAMI, *keycontent++);
+>>> +	if (!firmware) {
+>>> +		/*
+>>> +		 * If the caller didn't pass in a firmware name then
+>>> +		 * construct a default name.
+>>> +		 */
+>>> +		name_len = strlen(name) + strlen(template) - 2 + 1;
+>>> +		p = kmalloc(name_len, GFP_KERNEL);
+>>
+>>
+>> I don't know if it would be an improvement, but you could
+>> check for a null p value below for both cases.  I.e.:
+>>
+>> 		if (p)
+>> 			snprintf(p, ...);
+>>
+> 
+> Moving the common NULL check and return out seems nice, but given that
+> we then have to have this positive conditional I think the end result is
+> more complex.
+> 
+> That said, if we're not just doing a verbatim copy from rproc_alloc() I
+> think we should make this function:
+> 
+> 	if (!firmware)
+> 		p = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
+> 	else
+> 		p = kstrdup_const(firmware, GFP_KERNEL);
 
-This code was wrong in the original as well, but now that I see the bug
-let's fix it.  CAM_CONTENT_COUNT is 8.  8 - 2 = 6.  We are writing 6
-u32 variables to write_nic_dword().  But the *keycontent buffer only has
-4 u32 variables so it is a buffer overflow.
+You know, I wanted to suggest this but I didn't know the
+name of the function (kasprintf()) and didn't take the time
+to find it.  I wholly agree with your suggestion.
 
-> +		write_nic_dword(dev, RWCAM, target_command++);
->  	}
->  }
+The only additional minor tweak I'd add is that I prefer
+using a non-negated condition where possible, though it
+doesn't always "look right."  So:
 
-regards,
-dan carpenter
+	if (firmware)
+		rproc->firmware = kstrdup_const(firmware, GFP_KERNEL);
+	else
+		rproc->firmware = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
 
+					-Alex
+
+> 	rproc->firmware = p;
+> 
+> 	return p ? 0 : -ENOMEM;
+> 
+> Regards,
+> Bjorn
+> 
+>> (more below)
+>>
+>>> +		if (!p)
+>>> +			return -ENOMEM;
+>>> +		snprintf(p, name_len, template, name);
+>>> +	} else {
+>>> +		p = kstrdup(firmware, GFP_KERNEL);
+>>> +		if (!p)
+>>> +			return -ENOMEM;
+>>> +	}
+>>> +
+>>
+>> 	if (!p)
+>> 		return -ENOMEM;
+>> 	
+>>> +	rproc->firmware = p;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  /**
+>>>   * rproc_alloc() - allocate a remote processor handle
+>>>   * @dev: the underlying device
+>>> @@ -2007,42 +2034,21 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>>>  			  const char *firmware, int len)
+>>>  {
+>>>  	struct rproc *rproc;
+>>> -	char *p, *template = "rproc-%s-fw";
+>>> -	int name_len;
+>>>  
+>>>  	if (!dev || !name || !ops)
+>>>  		return NULL;
+>>>  
+>>> -	if (!firmware) {
+>>> -		/*
+>>> -		 * If the caller didn't pass in a firmware name then
+>>> -		 * construct a default name.
+>>> -		 */
+>>> -		name_len = strlen(name) + strlen(template) - 2 + 1;
+>>> -		p = kmalloc(name_len, GFP_KERNEL);
+>>> -		if (!p)
+>>> -			return NULL;
+>>> -		snprintf(p, name_len, template, name);
+>>> -	} else {
+>>> -		p = kstrdup(firmware, GFP_KERNEL);
+>>> -		if (!p)
+>>> -			return NULL;
+>>> -	}
+>>> -
+>>>  	rproc = kzalloc(sizeof(struct rproc) + len, GFP_KERNEL);
+>>> -	if (!rproc) {
+>>> -		kfree(p);
+>>> +	if (!rproc)
+>>>  		return NULL;
+>>> -	}
+>>> +
+>>> +	if (rproc_alloc_firmware(rproc, name, firmware))
+>>> +		goto free_rproc;
+>>>  
+>>>  	rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+>>> -	if (!rproc->ops) {
+>>> -		kfree(p);
+>>> -		kfree(rproc);
+>>> -		return NULL;
+>>> -	}
+>>> +	if (!rproc->ops)
+>>> +		goto free_firmware;
+>>>  
+>>> -	rproc->firmware = p;
+>>>  	rproc->name = name;
+>>>  	rproc->priv = &rproc[1];
+>>>  	rproc->auto_boot = true;
+>>> @@ -2091,6 +2097,12 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>>>  	rproc->state = RPROC_OFFLINE;
+>>>  
+>>>  	return rproc;
+>>> +
+>>> +free_firmware:
+>>> +	kfree(rproc->firmware);
+>>> +free_rproc:
+>>> +	kfree(rproc);
+>>> +	return NULL;
+>>>  }
+>>>  EXPORT_SYMBOL(rproc_alloc);
+>>>  
+>>>
+>>
 
