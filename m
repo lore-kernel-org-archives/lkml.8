@@ -2,112 +2,97 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5A0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5FDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3CBD20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2FE20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:53:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586876001;
+	bh=tv4R4Kv4g8B0l2zpuIbUZpyLwIuD0Vzz4VJWL+g5//E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iYBAWsIfVcbY524fzkXCGFfdMPwSxYnTlcEUKVDL/2iehvkv7fL47Bddi+wKRpsBj
+	 J9OsG4ycVlV6VPR8SgMeyBGWQ1ch1smcdvdctti3I3Dgenug45n9FwykdqZGHyhD49
+	 m/rqMfVomGSS66w85tJ8v5LUuo3zoHi2D6M6xfRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405175AbgDNOub (ORCPT
+        id S2405312AbgDNOxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:50:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60134 "EHLO mga04.intel.com"
+        Tue, 14 Apr 2020 10:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404893AbgDNOu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:50:27 -0400
-IronPort-SDR: I+iW4+X83bVl2bFVTAE9e4ynnZh0nC9rRL8XLcAoqhpE6H+YNuhYNkS3pI3Z6YcZOZEDJveyC3
- 718uLcv2HpgA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 07:50:26 -0700
-IronPort-SDR: oa2zvcLMiMYunwJX3n9IURpRxFu+jBxtLqXxgNWnLVssizVt+6mI3tJD51M0AcDg3FlHIzddx0
- hJZpPg6b0YGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
-   d="scan'208";a="288238064"
-Received: from bjkulkar-mobl.amr.corp.intel.com (HELO [10.212.152.71]) ([10.212.152.71])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Apr 2020 07:50:24 -0700
-Subject: Re: [PATCH] ASoC: Intel: sst: ipc command timeout
-To:     Brent Lu <brent.lu@intel.com>, alsa-devel@alsa-project.org
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-References: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4f495cf1-4740-cf3b-196f-cc850c503b43@linux.intel.com>
-Date:   Tue, 14 Apr 2020 09:50:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S2405178AbgDNOxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:53:04 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E7C20787;
+        Tue, 14 Apr 2020 14:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586875984;
+        bh=tv4R4Kv4g8B0l2zpuIbUZpyLwIuD0Vzz4VJWL+g5//E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DpQH9u4F0GF0tMVItK3pYSbL4NuklFrH04SaZxWwL5AaLEOkDQqGnqv5AeDBCTtWT
+         XuHrv/YtN40Fd9wEkQCg0FD3SWkyPvpV20CaxnWKhQXK3sbOhaXTlgn2DDOUNHXx+f
+         FWihgb2qQLFHpy8PgS1Y2iieb2PY4DNjqwaYMJu8=
+Date:   Tue, 14 Apr 2020 15:53:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 0/3] regulator: max77826: Add MAX77826 support
+Message-ID: <20200414145301.GE5412@sirena.org.uk>
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200414105725.GB5412@sirena.org.uk>
+ <f167d50f-c0d7-f359-a167-2782040ae7c3@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
+Content-Disposition: inline
+In-Reply-To: <f167d50f-c0d7-f359-a167-2782040ae7c3@gmail.com>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--gDGSpKKIBgtShtf+
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/10/20 3:18 AM, Brent Lu wrote:
-> After sending an ipc command to DSP, the host waits for the reply message
-> which will be read from SST_IPCD register in sst_byt_irq_thread() to
-> complete the transaction. Sometimes the value read from SST_IPCD register
-> is still the reply message for previous command instead of the waiting
-> command so ipc command timeout happens.
-> 
-> In an experiment we read the same SST_IPCD register again when the defect
-> happens and found the value of second read is different from previous one
-> and is the correct reply message. It suggests the DSP is okay but the way
-> we read the register may be the cause.
-> 
-> Currently the driver is using memcpy_fromio() to read the value of 64-bit
-> registers. This function is based on __builtin_memcpy() call and depends
-> on the implementation of compiler. Since this issue happens right after
-> the toolchain switched from clang 10 to clang 11, we replace the register
-> read with two readl() function calls to avoid all optimization from
-> compiler's library.
+On Tue, Apr 14, 2020 at 04:14:01PM +0300, Iskren Chernev wrote:
 
-I have mixed feelings about this.
+> > Aside from the compatible string and the subject prefix on the DT
+> > binding patch this looks good to me.
 
-One one hand, this looks simple enough.
+> About the subject -- I guess you mean the suffix is wrong, it should be:
 
-But on the other hand we have other users of memcpy_fromio(), including 
-SOF drivers, so what are the odds we have the same problems in other 
-places? Wouldn't it be safer to either change this function so that it's 
-behavior is not ambiguous or compiler-dependent, or fix the compiler?
+> =A0 dt-bindings: regulator: Document bindings for max77826
 
-> 
-> Signed-off-by: Brent Lu <brent.lu@intel.com>
-> ---
->   sound/soc/intel/common/sst-dsp.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/intel/common/sst-dsp.c b/sound/soc/intel/common/sst-dsp.c
-> index ec66be2..12af7aa 100644
-> --- a/sound/soc/intel/common/sst-dsp.c
-> +++ b/sound/soc/intel/common/sst-dsp.c
-> @@ -42,7 +42,7 @@ u64 sst_shim32_read64(void __iomem *addr, u32 offset)
->   {
->   	u64 val;
->   
-> -	memcpy_fromio(&val, addr + offset, sizeof(val));
-> +	sst_memcpy_fromio_32(NULL, &val, addr + offset, sizeof(val));
->   	return val;
->   }
->   EXPORT_SYMBOL_GPL(sst_shim32_read64);
-> 
+No, it should just be regulator:.
+
+--gDGSpKKIBgtShtf+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Vzk0ACgkQJNaLcl1U
+h9ARMwf/bwHr+jF3xwnTh1E+/hYfYVM2pXxt7TKtP2olD6Yqbp3H993TrgzlUBvo
+ZM04pDydRwUS9niN6fNyd5MfxIr7WWoFlRFNelqQil2aQUyF3RHPinsVb1xUoEgh
+0CPMGfa/FzKpUZy4Wbact47MVqZ12hjKyg354p+de/VaFVuL2VP/qGVFY/x/96aG
+QX4nkhiPqsmmES1kF6ofzAFfwBiTi1Ee1N9mMNeEgTTLc49dI3NKS/RVelp9vjFB
+n9CpV268Oxgk6bd3KIpYC7m/7MIVaYpfLHxvx68F+BwDlKeKRbxDjxsQX67wqg5N
+opnkynIRmQkTpRooSZN8hRZAxAeiwA==
+=QVYH
+-----END PGP SIGNATURE-----
+
+--gDGSpKKIBgtShtf+--
