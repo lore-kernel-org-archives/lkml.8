@@ -2,122 +2,118 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7608BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F4E20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5110320768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q60rX2pT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JF06wYtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438234AbgDNPSN (ORCPT
+        id S2438254AbgDNPSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407323AbgDNPRv (ORCPT
+        Tue, 14 Apr 2020 11:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405602AbgDNPCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:17:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A47F1C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:17:51 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id nu11so5329965pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:17:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dJ2gNbqVeV+hSWe91DtMlcIeX11rcaXW3r4FdWfxGYg=;
-        b=q60rX2pT/kSNyqXq1zY0YNp3nDuRWTEvtlfwSYVdmAmcPMbWysamMjc0m5EFxe2/oF
-         XQz+nS0rTtaEkabC2KU0gsxFvv7gT+eK3B0kdl45ueoLWikYNAluQC3+u0YuHV/qxjZu
-         cemXxKaCyiY0RZW6X/IW45+ZqzLU2l9pMivLPMyE3tNv/WP+1VmMv6IhVEhQOjA5S05A
-         NXICwUWeXGz7Xj/eFSvbnZmMlk4UOuwaMepjlo+eg11VPIBbNhjdHT4Ue0krYm1gcxPt
-         rfXWpPKwz4SdB9/xejf7nyigopz8ZnBItAfDQUjvJAtzkjXgdp9sHrGHMzlwsyffCB/4
-         +meQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dJ2gNbqVeV+hSWe91DtMlcIeX11rcaXW3r4FdWfxGYg=;
-        b=KAmuIiwCNVSXYYtE04GRXEbBMtQc5vaunDNwNChl0WMvujXgAZOoKZFexIa+7dCHOS
-         bBcBI1JvEZV7r9fMqi6qChwVno3fuy7IPllVFk9tFXh7QU9ZQYLPLoHLYlfxxEiswvgB
-         Q85wtIlb14LpkgOU7tws/bgRpiGhppjCh2TIpgYtKq0g5JsPk6SszAnEmVtIwj8EQDnK
-         cvqds3k6MA8sJaai9UkDUnk7Y7iVXGJE4lUX9br/VV3fBVq8GC7ZIZYqCr04dNjGGB8E
-         fU5Ol+TH2kWYa6WbbiccgGMJwdolTgno1lBNhNeo/uMylJwxaY5NMfleNHvi/ktRgXZd
-         PSJg==
-X-Gm-Message-State: AGi0PuY3zZ0AaTw5CVm/+uTSArni1CegyuoG/YOudHkhN1qQGl6p27Gf
-        R0dXq9VIRXWc5yYhe4uU2Ww=
-X-Google-Smtp-Source: APiQypLxLCyrfW0NagMyb2018P8jP6K/vZqSVtb2ts5tCcdoQlpub1U0h+VU6zqXUT4UODDJuW3ncw==
-X-Received: by 2002:a17:902:6503:: with SMTP id b3mr457263plk.20.1586877471101;
-        Tue, 14 Apr 2020 08:17:51 -0700 (PDT)
-Received: from localhost ([183.82.185.98])
-        by smtp.gmail.com with ESMTPSA id 198sm11641428pfa.87.2020.04.14.08.17.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 08:17:50 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 20:47:48 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>
-Cc:     Alan Kao <alankao@andestech.com>, Eric Lin <tesheng@andestech.com>,
-        Gary Guo <gary@garyguo.net>, alex@ghiti.fr,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>, atish.patra@wdc.com,
-        yash.shah@sifive.com, Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Greentime Hu <green.hu@gmail.com>, zong.li@sifive.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 0/3] Highmem support for 32-bit RISC-V
-Message-ID: <20200414151748.GA5624@afzalpc>
-References: <20200331093241.3728-1-tesheng@andestech.com>
- <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
- <20200408035118.GA1451@andestech.com>
- <CAK8P3a1JS3_2fWrhNTZx0eTWjJa-GTb4AscTPqydpSP5EB15Yw@mail.gmail.com>
+        Tue, 14 Apr 2020 11:02:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15786C03C1A8;
+        Tue, 14 Apr 2020 08:02:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=a3v6yDLu6YVVgdwzNLLzwkeJ8vT0YawbuKhMcViKfm0=; b=JF06wYtSwL1/xSUUuID+BwdjlM
+        1NYosnZkLH42PLmhP3iMKOqAlZszbhrqz4D+kq7FA2pgvQhft14Lm+6SRBGUSSv1a8P5HTEtG+7mV
+        xBnPeuqODdxGkFtC31NnJHGdcW2kl5gAuW5wuW6Zy5B4d/dCDTGZMWeKU50cYs0y6JG3WkZykQJhO
+        g1SQUuso+kDJd1ICcMsmBWTDTrfyPgb9Q924l433/98srGm/NmJYOv35sk3Oeeo9qSyvh/Ib97jci
+        IZdGfINaRsh/KW/SHDZpDVM2DvdFp5M5cIQlkjOqLiQXR4qs0QwF0saDh4eOiv7TFcJY6KvRbSjc8
+        GYuwfeNg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jON59-0006OS-Vg; Tue, 14 Apr 2020 15:02:35 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: [PATCH v11 08/25] mm: rename readahead loop variable to 'i'
+Date:   Tue, 14 Apr 2020 08:02:16 -0700
+Message-Id: <20200414150233.24495-9-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200414150233.24495-1-willy@infradead.org>
+References: <20200414150233.24495-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1JS3_2fWrhNTZx0eTWjJa-GTb4AscTPqydpSP5EB15Yw@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ rmk
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Hi Arnd,
+Change the type of page_idx to unsigned long, and rename it -- it's
+just a loop counter, not a page index.
 
-On Wed, Apr 08, 2020 at 04:40:17PM +0200, Arnd Bergmann wrote:
+Suggested-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+---
+ mm/readahead.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> No code yet, so far not much more than the ideas that I listed. We
-> are currently looking for someone interested in doing the work
-> or maybe sponsoring it if they have a strong interest.
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 8a65d6bd97e0..7ce320854bad 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -163,13 +163,13 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	struct page *page;
+ 	unsigned long end_index;	/* The last page we want to read */
+ 	LIST_HEAD(page_pool);
+-	int page_idx;
+ 	loff_t isize = i_size_read(inode);
+ 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+ 	struct readahead_control rac = {
+ 		.mapping = mapping,
+ 		.file = filp,
+ 	};
++	unsigned long i;
+ 
+ 	if (isize == 0)
+ 		return;
+@@ -179,8 +179,8 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	/*
+ 	 * Preallocate as many pages as we will need.
+ 	 */
+-	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
+-		pgoff_t page_offset = index + page_idx;
++	for (i = 0; i < nr_to_read; i++) {
++		pgoff_t page_offset = index + i;
+ 
+ 		if (page_offset > end_index)
+ 			break;
+@@ -201,7 +201,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 			break;
+ 		page->index = page_offset;
+ 		list_add(&page->lru, &page_pool);
+-		if (page_idx == nr_to_read - lookahead_size)
++		if (i == nr_to_read - lookahead_size)
+ 			SetPageReadahead(page);
+ 		rac._nr_pages++;
+ 	}
+-- 
+2.25.1
 
-If no one have yet taken it up, i am interested in doing the work, i
-will sponsor myself :). i will proceed at a slow pace without derailing
-my other things normal.
-
-To keep expectations realistic: i have not yet taken task of this
-complexity, it is more of a learning for me. My familiarity with Linux
-at the ARM architecture level is mostly on no-MMU (Cortex-M), have not
-worked so far seriously on MMU Linux at the ARM architectural level,
-though used to go through ARM ARM v7-AR at times.
-
-i have a few 32-bit ARM Cortex-A (A5, A8 & A9) boards, maximum RAM 1G,
-none have LPAE, seems i have to buy one for this purpose.
-
-And if someone else wants to do it, i will not take it up.
-
-Regards
-afzal
