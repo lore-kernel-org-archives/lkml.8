@@ -2,55 +2,82 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DB1C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1810C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD5E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC1C206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407109AbgDNIQ5 (ORCPT
+        id S2407120AbgDNIRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:16:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:38066 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407099AbgDNIQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:16:49 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1527168BEB; Tue, 14 Apr 2020 10:16:47 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 10:16:46 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Martijn Coenen <maco@android.com>
-Cc:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com,
-        bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH] loop: Call loop_config_discard() only after new config
- is applied.
-Message-ID: <20200414081646.GA26486@lst.de>
-References: <20200331114116.21642-1-maco@android.com>
+        Tue, 14 Apr 2020 04:17:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57892 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407079AbgDNIRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:17:15 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7CDE2362AE5C6C96C2F8;
+        Tue, 14 Apr 2020 16:16:59 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 14 Apr 2020 16:15:35 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@gmail.com>,
+        <jmorris@namei.org>, <serge@hallyn.com>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] IMA: fix memdup.cocci warnings
+Date:   Tue, 14 Apr 2020 16:21:59 +0800
+Message-ID: <1586852519-69161-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331114116.21642-1-maco@android.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:41:16PM +0200, Martijn Coenen wrote:
-> loop_set_status() calls loop_config_discard() to configure discard for
-> the loop device; however, the discard configuration depends on whether
-> the loop device uses encryption, and when we call it the encryption
-> configuration has not been updated yet. Move the call down so we apply
-> the correct discard configuration based on the new configuration.
-> 
-> Signed-off-by: Martijn Coenen <maco@android.com>
+Fixes coccicheck warning:
 
-Looks good,
+security/integrity/ima/ima_policy.c:272:10-17: WARNING opportunity for kmemdup
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Use kmemdup rather than duplicating its implementation
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ security/integrity/ima/ima_policy.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index c334e0d..185f8d7 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -269,7 +269,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	struct ima_rule_entry *nentry;
+ 	int i;
+ 
+-	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
++	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
+ 	if (!nentry)
+ 		return NULL;
+ 
+@@ -277,7 +277,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	 * Immutable elements are copied over as pointers and data; only
+ 	 * lsm rules can change
+ 	 */
+-	memcpy(nentry, entry, sizeof(*nentry));
+ 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
+ 
+ 	for (i = 0; i < MAX_LSM_RULES; i++) {
+-- 
+2.6.2
+
