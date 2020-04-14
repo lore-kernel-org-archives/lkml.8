@@ -2,380 +2,234 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0162FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AE7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D04642084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B138A2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgDNNFw (ORCPT
+        id S1730286AbgDNNGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:05:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:55022 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730153AbgDNNFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:05:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 151DD30E;
-        Tue, 14 Apr 2020 06:05:11 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ED77B3F73D;
-        Tue, 14 Apr 2020 06:05:09 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     coresight@lists.linaro.org, saiprakash.ranjan@codeaurora.org,
-        swboyd@chromium.org, linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v2] coresight: Fix support for sparsely populated ports
-Date:   Tue, 14 Apr 2020 14:05:05 +0100
-Message-Id: <20200414130505.574101-1-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 14 Apr 2020 09:06:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47487 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502549AbgDNNF2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:05:28 -0400
+Received: from mail-wr1-f72.google.com ([209.85.221.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jOLFk-0003iN-Et
+        for linux-kernel@vger.kernel.org; Tue, 14 Apr 2020 13:05:24 +0000
+Received: by mail-wr1-f72.google.com with SMTP id f2so199715wrm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:05:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+KnW4LJj0j2KwQVBjToQQXs5Y7CG2Nx5bqAdyxNE0Dw=;
+        b=j4B6y33Mis3vKnwaMo2F9lNwy26rrkJZfvYsGh0JxFTZl6+4V3vE4z+1iQNeA/k+xc
+         0sD5qx1Ut8vi2+U21nvtR9gmh2gN2KklqAZmZx58SwPX7aOlhMN/A8KYkZf1wW/f/YVT
+         Shsp1G6VOaIk+KgoTOiRcPien4yPhukcruk4YPpkjRlDcPiA91iA791gwXXiCyg4ouqz
+         AbWg5Vv1Zk/YxF++1emF/IysC6wVlOs96YVbUlOchnn/jJrU7tzmQWvn2Y3XEhRhPA47
+         nJt1clO2qUWCjQNFy3e1GeKSA59zVIVUB426iEX3yVdOLSYgSWGkjyjgKxlINTvct5vi
+         sjKw==
+X-Gm-Message-State: AGi0Pua1xzLpLX/gRgN+XO+L5ac3/2vSBiz+4W8SvJunfnO+M0Z3BOu+
+        4RdnExOvEphNLspCy9v7lefk1uwvkunX3z34tJEBoRqLK44tasmlnXXSBw6zgkJi+MBf4Y3OdXA
+        xcTpFrnLDOYoCEtvlES1m4ldZI8/HpC2heTeKwecrMA==
+X-Received: by 2002:adf:ea02:: with SMTP id q2mr6710189wrm.31.1586869523776;
+        Tue, 14 Apr 2020 06:05:23 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLb6P5gGJzAmIBulAT/+s6AnCdCcFWFOfWJdOzchWdVYExDBrlH3FfJ60yekarz85p6KoXxog==
+X-Received: by 2002:adf:ea02:: with SMTP id q2mr6710150wrm.31.1586869523195;
+        Tue, 14 Apr 2020 06:05:23 -0700 (PDT)
+Received: from localhost (host123-127-dynamic.36-79-r.retail.telecomitalia.it. [79.36.127.123])
+        by smtp.gmail.com with ESMTPSA id i17sm9114359wru.39.2020.04.14.06.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 06:05:22 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 15:05:20 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Anchal Agarwal <anchalag@amazon.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: swap: use fixed-size readahead during swapoff
+Message-ID: <20200414130520.GF810380@xps-13>
+References: <20200413111810.GA801367@xps-13>
+ <87a73f7d71.fsf@yhuang-dev.intel.com>
+ <20200413133150.GA810380@xps-13>
+ <87wo6i6efn.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo6i6efn.fsf@yhuang-dev.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some systems the firmware may not describe all the ports
-connected to a component (e.g, for security reasons). This
-could be especially problematic for "funnels" where we could
-end up in modifying memory beyond the allocated space for
-refcounts.
+On Tue, Apr 14, 2020 at 09:31:24AM +0800, Huang, Ying wrote:
+> Andrea Righi <andrea.righi@canonical.com> writes:
+> 
+> > On Mon, Apr 13, 2020 at 09:00:34PM +0800, Huang, Ying wrote:
+> >> Andrea Righi <andrea.righi@canonical.com> writes:
+> >> 
+> >> [snip]
+> >> 
+> >> > diff --git a/mm/swap_state.c b/mm/swap_state.c
+> >> > index ebed37bbf7a3..c71abc8df304 100644
+> >> > --- a/mm/swap_state.c
+> >> > +++ b/mm/swap_state.c
+> >> > @@ -20,6 +20,7 @@
+> >> >  #include <linux/migrate.h>
+> >> >  #include <linux/vmalloc.h>
+> >> >  #include <linux/swap_slots.h>
+> >> > +#include <linux/oom.h>
+> >> >  #include <linux/huge_mm.h>
+> >> >  
+> >> >  #include <asm/pgtable.h>
+> >> > @@ -507,6 +508,14 @@ static unsigned long swapin_nr_pages(unsigned long offset)
+> >> >  	max_pages = 1 << READ_ONCE(page_cluster);
+> >> >  	if (max_pages <= 1)
+> >> >  		return 1;
+> >> > +	/*
+> >> > +	 * If current task is using too much memory or swapoff is running
+> >> > +	 * simply use the max readahead size. Since we likely want to load a
+> >> > +	 * lot of pages back into memory, using a fixed-size max readhaead can
+> >> > +	 * give better performance in this case.
+> >> > +	 */
+> >> > +	if (oom_task_origin(current))
+> >> > +		return max_pages;
+> >> >  
+> >> >  	hits = atomic_xchg(&swapin_readahead_hits, 0);
+> >> >  	pages = __swapin_nr_pages(prev_offset, offset, hits, max_pages,
+> >> 
+> >> Thinks this again.  If my understanding were correct, the accessing
+> >> pattern during swapoff is sequential, why swap readahead doesn't work?
+> >> If so, can you root cause that firstly?
+> >
+> > Theoretically if the pattern is sequential the current heuristic should
+> > already select a big readahead size, but apparently it's not doing that.
+> >
+> > I'll repeat my tests tracing the readahead size during swapoff to see
+> > exactly what's going on here.
+> 
+> I haven't verify it.  It may be helpful to call lookup_swap_cache()
+> before swapin_readahead() in unuse_pte_range().  The theory behind it is
+> to update the swap readahead statistics via lookup_swap_cache().
 
-e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
-However the we could access refcnts[5] while checking for
-references, like :
+I did more tests trying to collect some useful information.
 
- [  526.110401] ==================================================================
- [  526.117988] BUG: KASAN: slab-out-of-bounds in funnel_enable+0x54/0x1b0
- [  526.124706] Read of size 4 at addr ffffff8135f9549c by task bash/1114
- [  526.131324]
- [  526.132886] CPU: 3 PID: 1114 Comm: bash Tainted: G S                5.4.25 #232
- [  526.140397] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
- [  526.147113] Call trace:
- [  526.149653]  dump_backtrace+0x0/0x188
- [  526.153431]  show_stack+0x20/0x2c
- [  526.156852]  dump_stack+0xdc/0x144
- [  526.160370]  print_address_description+0x3c/0x494
- [  526.165211]  __kasan_report+0x144/0x168
- [  526.169170]  kasan_report+0x10/0x18
- [  526.172769]  check_memory_region+0x1a4/0x1b4
- [  526.177164]  __kasan_check_read+0x18/0x24
- [  526.181292]  funnel_enable+0x54/0x1b0
- [  526.185072]  coresight_enable_path+0x104/0x198
- [  526.189649]  coresight_enable+0x118/0x26c
+In particular I've been focusing at tracing the distribution of the
+values returned by swapin_nr_pages() in different scenarios.
 
-  ...
+To do so I made swapin_nr_pages() trace-able and I used the following
+bcc command to measure the distrubution of the returned values:
 
- [  526.237782] Allocated by task 280:
- [  526.241298]  __kasan_kmalloc+0xf0/0x1ac
- [  526.245249]  kasan_kmalloc+0xc/0x14
- [  526.248849]  __kmalloc+0x28c/0x3b4
- [  526.252361]  coresight_register+0x88/0x250
- [  526.256587]  funnel_probe+0x15c/0x228
- [  526.260365]  dynamic_funnel_probe+0x20/0x2c
- [  526.264679]  amba_probe+0xbc/0x158
- [  526.268193]  really_probe+0x144/0x408
- [  526.271970]  driver_probe_device+0x70/0x140
+ # argdist-bpfcc -c -C 'r::swapin_nr_pages(unsigned long offset):unsigned long:$retval'
 
- ...
+I've collected this metric in the following scenarios:
+  - 5.6 vanilla
+  - 5.6 + lookup_swap_cache() before swapin_readahead() in
+    unuse_pte_range()
+  - 5.6 + atomic_inc(&swapin_readahead_hits) before swapin_readahead()
+    in unuse_pte_range()
+  - 5.6 + swapin_readahead_hits=last_readahead_pages (in the atomic way)
+    before swapin_readahead() in unuse_pte_range()
 
- [  526.316810]
- [  526.318364] Freed by task 0:
- [  526.321344] (stack is not available)
- [  526.325024]
- [  526.326580] The buggy address belongs to the object at ffffff8135f95480
- [  526.326580]  which belongs to the cache kmalloc-128 of size 128
- [  526.339439] The buggy address is located 28 bytes inside of
- [  526.339439]  128-byte region [ffffff8135f95480, ffffff8135f95500)
- [  526.351399] The buggy address belongs to the page:
- [  526.356342] page:ffffffff04b7e500 refcount:1 mapcount:0 mapping:ffffff814b00c380 index:0x0 compound_mapcount: 0
- [  526.366711] flags: 0x4000000000010200(slab|head)
- [  526.371475] raw: 4000000000010200 ffffffff05034008 ffffffff0501eb08 ffffff814b00c380
- [  526.379435] raw: 0000000000000000 0000000000190019 00000001ffffffff 0000000000000000
- [  526.387393] page dumped because: kasan: bad access detected
- [  526.393128]
- [  526.394681] Memory state around the buggy address:
- [  526.399619]  ffffff8135f95380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.407046]  ffffff8135f95400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.414473] >ffffff8135f95480: 04 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.421900]                             ^
- [  526.426029]  ffffff8135f95500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.433456]  ffffff8135f95580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.440883] ==================================================================
+Each kernel has been tested both with swappiness=0 and swappiness=60.
+Results are pretty much identical changing the swappiness, so I'm just
+reporting the default case here (w/ swappiness=60).
 
-To keep the code simple, we now track the maximum number of
-possible input/output connections to/from this component
-@ nr_inport and nr_outport in platform_data, respectively.
-Thus the output connections could be sparse and code is
-adjusted to skip the unspecified connections.
+Result
+======
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since v1:
- - Rebased onto Mathieu's coresight/next tree.
- - Added comments to explain the input port tracking
----
- .../hwtracing/coresight/coresight-platform.c  | 85 +++++++++++++------
- drivers/hwtracing/coresight/coresight.c       |  7 +-
- include/linux/coresight.h                     | 10 ++-
- 3 files changed, 72 insertions(+), 30 deletions(-)
+ = swapoff performance (elapsed time) =
 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 4b78e1ac5285..d58dcd0ab514 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -87,6 +87,7 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
- 					  int *nr_inport, int *nr_outport)
- {
- 	struct device_node *ep = NULL;
-+	struct of_endpoint endpoint;
- 	int in = 0, out = 0;
- 
- 	do {
-@@ -94,10 +95,16 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
- 		if (!ep)
- 			break;
- 
--		if (of_coresight_legacy_ep_is_input(ep))
--			in++;
--		else
--			out++;
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			continue;
-+
-+		if (of_coresight_legacy_ep_is_input(ep)) {
-+			in = (endpoint.port + 1 > in) ?
-+				endpoint.port + 1 : in;
-+		} else {
-+			out = (endpoint.port + 1) > out ?
-+				endpoint.port + 1 : out;
-+		}
- 
- 	} while (ep);
- 
-@@ -137,9 +144,16 @@ of_coresight_count_ports(struct device_node *port_parent)
- {
- 	int i = 0;
- 	struct device_node *ep = NULL;
-+	struct of_endpoint endpoint;
-+
-+	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
-+		/* Defer error handling to parsing */
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			continue;
-+		if (endpoint.port + 1 > i)
-+			i = endpoint.port + 1;
-+	}
- 
--	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
--		i++;
- 	return i;
- }
- 
-@@ -191,14 +205,12 @@ static int of_coresight_get_cpu(struct device *dev)
-  * Parses the local port, remote device name and the remote port.
-  *
-  * Returns :
-- *	 1	- If the parsing is successful and a connection record
-- *		  was created for an output connection.
-  *	 0	- If the parsing completed without any fatal errors.
-  *	-Errno	- Fatal error, abort the scanning.
-  */
- static int of_coresight_parse_endpoint(struct device *dev,
- 				       struct device_node *ep,
--				       struct coresight_connection *conn)
-+				       struct coresight_platform_data *pdata)
- {
- 	int ret = 0;
- 	struct of_endpoint endpoint, rendpoint;
-@@ -206,6 +218,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 	struct device_node *rep = NULL;
- 	struct device *rdev = NULL;
- 	struct fwnode_handle *rdev_fwnode;
-+	struct coresight_connection *conn;
- 
- 	do {
- 		/* Parse the local port details */
-@@ -232,6 +245,13 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 			break;
- 		}
- 
-+		conn = &pdata->conns[endpoint.port];
-+		if (conn->child_fwnode) {
-+			dev_warn(dev, "Duplicate output port %d\n",
-+				 endpoint.port);
-+			ret = -EINVAL;
-+			break;
-+		}
- 		conn->outport = endpoint.port;
- 		/*
- 		 * Hold the refcount to the target device. This could be
-@@ -244,7 +264,6 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
- 		conn->child_port = rendpoint.port;
- 		/* Connection record updated */
--		ret = 1;
- 	} while (0);
- 
- 	of_node_put(rparent);
-@@ -258,7 +277,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 					  struct coresight_platform_data *pdata)
- {
- 	int ret = 0;
--	struct coresight_connection *conn;
- 	struct device_node *ep = NULL;
- 	const struct device_node *parent = NULL;
- 	bool legacy_binding = false;
-@@ -287,8 +305,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
- 	}
- 
--	conn = pdata->conns;
--
- 	/* Iterate through each output port to discover topology */
- 	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
- 		/*
-@@ -300,15 +316,9 @@ static int of_get_coresight_platform_data(struct device *dev,
- 		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
- 			continue;
- 
--		ret = of_coresight_parse_endpoint(dev, ep, conn);
--		switch (ret) {
--		case 1:
--			conn++;		/* Fall through */
--		case 0:
--			break;
--		default:
-+		ret = of_coresight_parse_endpoint(dev, ep, pdata);
-+		if (ret)
- 			return ret;
--		}
- 	}
- 
- 	return 0;
-@@ -647,6 +657,16 @@ static int acpi_coresight_parse_link(struct acpi_device *adev,
- 		 *    coresight_remove_match().
- 		 */
- 		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
-+	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
-+		/*
-+		 * We are only interested in the port number
-+		 * for the input ports at this component.
-+		 * Store the port number in child_port.
-+		 */
-+		conn->child_port = fields[0].integer.value;
-+	} else {
-+		/* Invalid direction */
-+		return -EINVAL;
- 	}
- 
- 	return dir;
-@@ -692,10 +712,20 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
- 			return dir;
- 
- 		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
--			pdata->nr_outport++;
-+			if (ptr->outport > pdata->nr_outport)
-+				pdata->nr_outport = ptr->outport;
- 			ptr++;
- 		} else {
--			pdata->nr_inport++;
-+			WARN_ON(pdata->nr_inport == ptr->child_port);
-+			/*
-+			 * We do not track input port connections for a device.
-+			 * However we need the highest port number described,
-+			 * which can be recorded now and reuse this connection
-+			 * record for an output connection. Hence, do not move
-+			 * the ptr for input connections
-+			 */
-+			if (ptr->child_port > pdata->nr_inport)
-+				pdata->nr_inport = ptr->child_port;
- 		}
- 	}
- 
-@@ -704,8 +734,13 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
- 		return rc;
- 
- 	/* Copy the connection information to the final location */
--	for (i = 0; i < pdata->nr_outport; i++)
--		pdata->conns[i] = conns[i];
-+	for (i = 0; conns + i < ptr; i++) {
-+		int port = conns[i].outport;
-+
-+		/* Duplicate output port */
-+		WARN_ON(pdata->conns[port].child_fwnode);
-+		pdata->conns[port] = conns[i];
-+	}
- 
- 	devm_kfree(&adev->dev, conns);
- 	return 0;
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 4f10cfa9dc18..f3efbb3b2b4d 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -1053,6 +1053,9 @@ static int coresight_orphan_match(struct device *dev, void *data)
- 	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
- 		conn = &i_csdev->pdata->conns[i];
- 
-+		/* Skip the port if FW doesn't describe it */
-+		if (!conn->child_fwnode)
-+			continue;
- 		/* We have found at least one orphan connection */
- 		if (conn->child_dev == NULL) {
- 			/* Does it match this newly added device? */
-@@ -1091,6 +1094,8 @@ static int coresight_fixup_device_conns(struct coresight_device *csdev)
- 	for (i = 0; i < csdev->pdata->nr_outport; i++) {
- 		struct coresight_connection *conn = &csdev->pdata->conns[i];
- 
-+		if (!conn->child_fwnode)
-+			continue;
- 		conn->child_dev =
- 			coresight_find_csdev_by_fwnode(conn->child_fwnode);
- 		if (conn->child_dev) {
-@@ -1126,7 +1131,7 @@ static int coresight_remove_match(struct device *dev, void *data)
- 	for (i = 0; i < iterator->pdata->nr_outport; i++) {
- 		conn = &iterator->pdata->conns[i];
- 
--		if (conn->child_dev == NULL)
-+		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
- 			continue;
- 
- 		if (csdev->dev.fwnode == conn->child_fwnode) {
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index ccd17304d7bd..e3e9f0e3a878 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -100,10 +100,12 @@ union coresight_dev_subtype {
- };
- 
- /**
-- * struct coresight_platform_data - data harvested from the DT specification
-- * @nr_inport:	number of input ports for this component.
-- * @nr_outport:	number of output ports for this component.
-- * @conns:	Array of nr_outport connections from this component
-+ * struct coresight_platform_data - data harvested from the firmware
-+ * specification.
-+ *
-+ * @nr_inport:	Number of elements for the input connections.
-+ * @nr_outport:	Number of elements for the output connections.
-+ * @conns:	Sparse array of nr_outport connections from this component.
-  */
- struct coresight_platform_data {
- 	int nr_inport;
--- 
-2.24.1
+ vanilla                 22.09s
+ lookup_swap_cache()     23.87s
+ hits++                  16.10s
+ hits=last_ra_pages       8.81s
 
+ = swapin_nr_pages() $retval distribution =
+
+5.6 vanilla:
+r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+	COUNT      EVENT
+	36948      $retval = 8
+	44151      $retval = 4
+	49290      $retval = 1
+	527771     $retval = 2
+
+5.6 lookup_swap_cache() before swapin_readahead():
+r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+	COUNT      EVENT
+	13093      $retval = 1
+	56703      $retval = 8
+	123067     $retval = 2
+	366118     $retval = 4
+
+5.6 atomic_inc(&swapin_readahead_hits) before swapin_readahead():
+r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+	COUNT      EVENT
+	2589       $retval = 1
+	8016       $retval = 2
+	40021      $retval = 8
+	566038     $retval = 4
+
+5.6 swapin_readahead_hits=last_readahead_pages before swapin_readahead():
+r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+	COUNT      EVENT
+	785        $retval = 2
+	1072       $retval = 1
+	21844      $retval = 4
+	644168     $retval = 8
+
+In the vanilla case, the readahead heuristic seems to choose 2 pages
+most of the time. This is because we are not properly considering the
+hits (hits are always 0 in the swapoff code path) and, as you correctly
+pointed out, we can fix this by calling lookup_swap_cache() in
+unuse_pte_range() before calling swapin_readahead().
+
+With this change the distribution of the readahead size moves more
+toward 4 pages, but we still have some 2s. That looks good, however it
+doesn't seem to speed up swapoff very much... maybe because calling
+lookup_swap_cache() introduces a small overhead? (still need to
+investigate about this theory).
+
+In the next test I've tried to always increment hits by 1 before calling
+swapin_readahead() in unuse_pte_range(). This is basically cheating,
+because I'm faking the hit ratio, forcing the heuristic to use a larger
+readahead size; in fact, the readahead size moves even more toward 4
+pages and swapoff performance are a little better now.
+
+Pushing even more the "cheating" I can pretend that the previous
+readahead was all hits (swapin_readahead_hits=last_readahead_pages), so
+I'm forcing the heuristic to move toward the max size and keep using it.
+The result here is pretty much identical to my fixed-size patch, because
+swapin_nr_pages() returns the max readahead size pretty much all the
+time during swapoff (8 pages or, more in general, vm.page-cluster).
+
+Personally I don't like very much forcing the heuristic in this way,
+it'd be nice if it would just work by accounting the proper hit ratio
+(so just by adding lookup_swap_cache() as you correctly suggested), but
+this solution doesn't seem to improve performance in reality. For this
+reason I still think we should consider the swapoff scenario like a
+special one and somehow bypass the readahead heuristic and always return
+the max readahead size.
+
+Looking at the hits of the previous step in the swapoff case just
+doesn't work, because we may have some misses, but they will become hits
+very soon, since we are reading all the swapped out pages back into
+memory. This is why using the max readahead size gives better
+swapoff performance.
+
+What do you think?
+
+Thanks,
+-Andrea
