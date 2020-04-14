@@ -2,94 +2,200 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B82C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41B3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0AE20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB07A20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVaijEY0"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XjqpawvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405592AbgDNFrQ (ORCPT
+        id S2405601AbgDNFsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgDNFrO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:47:14 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C9AC0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:47:14 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b8so5588784pfp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Yyr/qNo1z/Ovmw6kxXGXBktCqMugeZRWv59qM91CiOA=;
-        b=nVaijEY0Khf25YWcU/vvAqY+XMzsnljbCI2I5j+aiVBKczR5LkF+8sxkm5SBbhX5aZ
-         1q1pW1GYqvPU+ugpAKOGIEHUV/cgEwX+80sTA1fwTCGCEyv66OzBz3F/JBX0gOMOJWTT
-         FnlpcotnSepB1aEBICtOkIrsigsJLvszgOQqDyGniKZmwwZtJusMwrBu23RwS/isnnLK
-         pbcNiHcNfdaK/XnOKaP5h3ZUHn3/bUMIVK/7Bn/3RF690icAG4cTOJjP85n+7I4OIq8A
-         GPYYQVyaKlFPTZbDvBRr6v4M339iChqh+eiwLtj938gxGjT0VuAXhXXFa9SvwpLKdqV4
-         FZvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Yyr/qNo1z/Ovmw6kxXGXBktCqMugeZRWv59qM91CiOA=;
-        b=bdgqmUoSjn7OaxioVud2OCs+IDXL+lfFRvql5ydSb/mcXczgKI54F4PcZicsWBuneS
-         v3SqukqQK8g8Sx0gMTKTOTSX2IuwhIbEzcixChc9OmlbGp24lteSFMp3tvLmg+MAnhgg
-         302Az2WMCslLpzYxBmdFppLWErFzD8Zv4bKwTvZbeBNtr7Iz3P7LP2q+/eGKIO0XN/M0
-         dGe/h/H7E3ErkxvuB1nikPpCtGHRZa2SOPrjdUrOX5/11d4BYiq7Uxzl+SLD7yWFzF2b
-         +l4Q9fmJHDxMUVn4tQ7gyTB7iIBpoUXQT+Nslz8eoPxdzDsaPUJicWnbwdl+s2J708lR
-         z0Jw==
-X-Gm-Message-State: AGi0Pua7nIBSHgoREGfK72RjDlqf76nwhjAoiXffDEqakIrWv9kAK7PQ
-        WhV/kKEgPwjbc0p4efjalPA=
-X-Google-Smtp-Source: APiQypLSYJjkrg4P1ufAWzWXxjrGx0c9u8O3UJURRbxrfyFBnU3L77kCuBC1CAjqweSaN+YtPhDPUw==
-X-Received: by 2002:aa7:963b:: with SMTP id r27mr21049125pfg.71.1586843233693;
-        Mon, 13 Apr 2020 22:47:13 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id c3sm10082612pfa.160.2020.04.13.22.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 22:47:12 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 14:47:11 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH TRIVIAL] printk: fix a typo
-Message-ID: <20200414054711.GB12779@google.com>
-References: <15022308-a15d-7843-4d5b-d72a58efe99c@infradead.org>
+        Tue, 14 Apr 2020 01:48:42 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:7250 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729064AbgDNFsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 01:48:40 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 491ZKd03TGz9txjw;
+        Tue, 14 Apr 2020 07:48:37 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=XjqpawvA; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id CFRg9po7RoTN; Tue, 14 Apr 2020 07:48:36 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 491ZKc5qf7z9txjv;
+        Tue, 14 Apr 2020 07:48:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586843316; bh=la9sDQY/dxZgqFKLruaF3b+j+rnTidsUGNC7IrNFJSE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XjqpawvAzKt6Jdvmq1FWMyWVqehzEkusRFhdD7YTIcd/OQAws19RU59vKRvS3c2gN
+         1SLUR5ipesIbSxHVk2ust7Q5r7YGWHhAU/6SOoCr7Km83GYmIMqOELpMV9mCqsk3hd
+         5afhfDxKoYYGO/aejZeGstqfUXr64p0GWi6sqT0I=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A9D098B77D;
+        Tue, 14 Apr 2020 07:48:37 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FBpeMWwl2jQz; Tue, 14 Apr 2020 07:48:37 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A96748B752;
+        Tue, 14 Apr 2020 07:48:36 +0200 (CEST)
+Subject: Re: [PATCH v3 12/16] powerpc/watchpoint: Use builtin ALIGN*() macros
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+ <20200414031659.58875-13-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a2d7abe8-44e0-9780-6603-00f16300c2ca@c-s.fr>
+Date:   Tue, 14 Apr 2020 07:48:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15022308-a15d-7843-4d5b-d72a58efe99c@infradead.org>
+In-Reply-To: <20200414031659.58875-13-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/04/13 09:14), Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix typo/spello.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jiri Kosina <trivial@kernel.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
 
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-	-ss
+Le 14/04/2020 à 05:16, Ravi Bangoria a écrit :
+> Currently we calculate hw aligned start and end addresses manually.
+> Replace them with builtin ALIGN_DOWN() and ALIGN() macros.
+> 
+> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/hw_breakpoint.h  |  5 +++--
+>   arch/powerpc/kernel/hw_breakpoint.c       | 12 ++++++------
+>   arch/powerpc/kernel/process.c             |  8 ++++----
+>   arch/powerpc/kernel/ptrace/ptrace-noadv.c |  2 +-
+>   4 files changed, 14 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+> index d472b2eb757e..add5aa076919 100644
+> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+> @@ -34,10 +34,11 @@ struct arch_hw_breakpoint {
+>   #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
+>   				 HW_BRK_TYPE_HYP)
+>   
+> +/* Minimum granularity */
+>   #ifdef CONFIG_PPC_8xx
+> -#define HW_BREAKPOINT_ALIGN 0x3
+> +#define HW_BREAKPOINT_SIZE  0x4
+>   #else
+> -#define HW_BREAKPOINT_ALIGN 0x7
+> +#define HW_BREAKPOINT_SIZE  0x8
+>   #endif
+>   
+>   #define DABR_MAX_LEN	8
+> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+> index 319a761b7412..02ffd14f4519 100644
+> --- a/arch/powerpc/kernel/hw_breakpoint.c
+> +++ b/arch/powerpc/kernel/hw_breakpoint.c
+> @@ -145,10 +145,10 @@ int arch_bp_generic_fields(int type, int *gen_bp_type)
+>    *    <---8 bytes--->
+>    *
+>    * In this case, we should configure hw as:
+> - *   start_addr = address & ~HW_BREAKPOINT_ALIGN
+> + *   start_addr = address & ~(HW_BREAKPOINT_SIZE - 1)
+>    *   len = 16 bytes
+>    *
+> - * @start_addr and @end_addr are inclusive.
+> + * @start_addr is inclusive but @end_addr is exclusive.
+>    */
+>   static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
+>   {
+> @@ -156,14 +156,14 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
+>   	u16 hw_len;
+>   	unsigned long start_addr, end_addr;
+>   
+> -	start_addr = hw->address & ~HW_BREAKPOINT_ALIGN;
+> -	end_addr = (hw->address + hw->len - 1) | HW_BREAKPOINT_ALIGN;
+> -	hw_len = end_addr - start_addr + 1;
+> +	start_addr = ALIGN_DOWN(hw->address, HW_BREAKPOINT_SIZE);
+> +	end_addr = ALIGN(hw->address + hw->len, HW_BREAKPOINT_SIZE);
+> +	hw_len = end_addr - start_addr;
+>   
+>   	if (dawr_enabled()) {
+>   		max_len = DAWR_MAX_LEN;
+>   		/* DAWR region can't cross 512 bytes boundary */
+> -		if ((start_addr >> 9) != (end_addr >> 9))
+> +		if ((start_addr >> 9) != ((end_addr - 1) >> 9))
+
+What about:
+	if (ALIGN(start_addr, SZ_512M) != ALIGN(end - 1, SZ_512M))
+
+>   			return -EINVAL;
+>   	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
+>   		/* 8xx can setup a range without limitation */
+> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+> index aab82ab80dfa..06679adac447 100644
+> --- a/arch/powerpc/kernel/process.c
+> +++ b/arch/powerpc/kernel/process.c
+> @@ -800,12 +800,12 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
+>   	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
+>   			       LCTRL1_CRWF_RW;
+>   	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
+> -	unsigned long start_addr = brk->address & ~HW_BREAKPOINT_ALIGN;
+> -	unsigned long end_addr = (brk->address + brk->len - 1) | HW_BREAKPOINT_ALIGN;
+> +	unsigned long start_addr = ALIGN_DOWN(brk->address, HW_BREAKPOINT_SIZE);
+> +	unsigned long end_addr = ALIGN(brk->address + brk->len, HW_BREAKPOINT_SIZE);
+>   
+>   	if (start_addr == 0)
+>   		lctrl2 |= LCTRL2_LW0LA_F;
+> -	else if (end_addr == ~0U)
+> +	else if (end_addr - 1 == ~0U)
+
+What about:
+	else if (end_addr == 0)
+
+>   		lctrl2 |= LCTRL2_LW0LA_E;
+>   	else
+>   		lctrl2 |= LCTRL2_LW0LA_EandF;
+> @@ -821,7 +821,7 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
+>   		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
+>   
+>   	mtspr(SPRN_CMPE, start_addr - 1);
+> -	mtspr(SPRN_CMPF, end_addr + 1);
+> +	mtspr(SPRN_CMPF, end_addr);
+>   	mtspr(SPRN_LCTRL1, lctrl1);
+>   	mtspr(SPRN_LCTRL2, lctrl2);
+>   
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> index 08cb8c1b504c..697c7e4b5877 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> @@ -216,7 +216,7 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
+>   	if ((unsigned long)bp_info->addr >= TASK_SIZE)
+>   		return -EIO;
+>   
+> -	brk.address = bp_info->addr & ~HW_BREAKPOINT_ALIGN;
+> +	brk.address = ALIGN_DOWN(bp_info->addr, HW_BREAKPOINT_SIZE);
+>   	brk.type = HW_BRK_TYPE_TRANSLATE;
+>   	brk.len = DABR_MAX_LEN;
+>   	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
+> 
+
+Christophe
