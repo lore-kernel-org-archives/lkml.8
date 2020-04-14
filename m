@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE94C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76F3C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD682074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B395C206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883095;
-	bh=/HLIzKDPShz5RaDjsvp0+ObKOoCgb0n4Y+Ygpd+4qOc=;
+	s=default; t=1586883102;
+	bh=kjNU8gkJH0MuwVzru11aJkVZj5ZBZx/fNWrBzMDaFgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PEbqt2ri1oH32BYX7QbLjf0URc08y61B/IeTsawD9GPK8sVo+B3gsEz/b5U7+pgP
-	 FE/IzYqK7UVdCEWWqsaUHdZYR9ZJET8nhEKHptb6f18PA03Smad9bT1UervJsGLh5P
-	 86cgvwHUze71E3T4Yrxu+is8Wfh8pv2pHPfdfUiI=
+	b=Pjg8yesmXSPfamcm+AF+L+jPzO/Eiq/E15lNLTa8bypwAXZcSvLoOJJ1RvjEvDmLJ
+	 IE9tVeevj/g/CQDadEISCeggjAWietC7SdOa3w3x+axcuE4RSCdPbruECIfMesaGox
+	 V2ld7hHTJjCEm3CpquQ0JV9krWqPrkioAqzsHJvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440679AbgDNQvc (ORCPT
+        id S2441024AbgDNQvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440403AbgDNQtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2440391AbgDNQtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 12:49:20 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06E612085B;
-        Tue, 14 Apr 2020 16:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 567D22076C;
+        Tue, 14 Apr 2020 16:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882959;
-        bh=/HLIzKDPShz5RaDjsvp0+ObKOoCgb0n4Y+Ygpd+4qOc=;
+        s=default; t=1586882950;
+        bh=kjNU8gkJH0MuwVzru11aJkVZj5ZBZx/fNWrBzMDaFgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+deYr2vjnl3GJp9SEW0MiOhOm6KH7epX3MNvdNjyAdPAes90aO5j3TogOYg/mLsr
-         WwPj4Sy6QXhSzSDi393M8k6CNBkKXfi8BI3X4HYVwrWv7JFvk9qHSOjgJ90FS4G5Kt
-         i446vmsrlVkAfy85q02YZe2DzyOxySKcwX8Sgk0w=
+        b=OrlZkcWaTwuSoDJ5Sr0lNxMuyaLW87+joKMjI4013YrfOPVX66DkOznAp6eI+dCFo
+         P+vL/+GkMkVw2BUyYT/CITXiZtvsSU42KATNahDIbqh+qj6XiL3p62m5IiEeIAfSEb
+         AyTDMFhz45k/YelbeCOLntOoZhoCIfm8fU4xfAWA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: [PATCH 06/15] tools headers UAPI: Sync linux/mman.h with the kernel
-Date:   Tue, 14 Apr 2020 13:48:45 -0300
-Message-Id: <20200414164854.26026-7-acme@kernel.org>
+        Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 03/15] perf stat: Fix no metric header if --per-socket and --metric-only set
+Date:   Tue, 14 Apr 2020 13:48:42 -0300
+Message-Id: <20200414164854.26026-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -61,57 +64,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-To get the changes in:
+We received a report that was no metric header displayed if --per-socket
+and --metric-only were both set.
 
-  e346b3813067 ("mm/mremap: add MREMAP_DONTUNMAP to mremap()")
+It's hard for script to parse the perf-stat output. This patch fixes this
+issue.
 
-Add that to 'perf trace's mremap 'flags' decoder.
+Before:
 
-This silences this perf build warning:
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
+  ^C
+   Performance counter stats for 'system wide':
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/mman.h' differs from latest version at 'include/uapi/linux/mman.h'
-  diff -u tools/include/uapi/linux/mman.h include/uapi/linux/mman.h
+  S0        8                  2.6
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Brian Geffon <bgeffon@google.com>
+         2.215270071 seconds time elapsed
+
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
+  #           time socket cpus
+       1.000411692 S0        8                  2.2
+       2.001547952 S0        8                  3.4
+       3.002446511 S0        8                  3.4
+       4.003346157 S0        8                  4.0
+       5.004245736 S0        8                  0.3
+
+After:
+
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
+  ^C
+   Performance counter stats for 'system wide':
+
+                               CPI
+  S0        8                  2.1
+
+         1.813579830 seconds time elapsed
+
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
+  #           time socket cpus                  CPI
+       1.000415122 S0        8                  3.2
+       2.001630051 S0        8                  2.9
+       3.002612278 S0        8                  4.3
+       4.003523594 S0        8                  3.0
+       5.004504256 S0        8                  3.7
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200331180226.25915-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/mman.h | 5 +++--
- tools/perf/trace/beauty/mmap.c  | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/stat-shadow.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/linux/mman.h b/tools/include/uapi/linux/mman.h
-index fc1a64c3447b..923cc162609c 100644
---- a/tools/include/uapi/linux/mman.h
-+++ b/tools/include/uapi/linux/mman.h
-@@ -5,8 +5,9 @@
- #include <asm/mman.h>
- #include <asm-generic/hugetlb_encode.h>
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 0fd713d3674f..03ecb8cd0eec 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -803,8 +803,11 @@ static void generic_metric(struct perf_stat_config *config,
+ 				     out->force_header ?
+ 				     (metric_name ? metric_name : name) : "", 0);
+ 		}
+-	} else
+-		print_metric(config, ctxp, NULL, NULL, "", 0);
++	} else {
++		print_metric(config, ctxp, NULL, NULL,
++			     out->force_header ?
++			     (metric_name ? metric_name : name) : "", 0);
++	}
  
--#define MREMAP_MAYMOVE	1
--#define MREMAP_FIXED	2
-+#define MREMAP_MAYMOVE		1
-+#define MREMAP_FIXED		2
-+#define MREMAP_DONTUNMAP	4
- 
- #define OVERCOMMIT_GUESS		0
- #define OVERCOMMIT_ALWAYS		1
-diff --git a/tools/perf/trace/beauty/mmap.c b/tools/perf/trace/beauty/mmap.c
-index 9fa771a90d79..862c8331dded 100644
---- a/tools/perf/trace/beauty/mmap.c
-+++ b/tools/perf/trace/beauty/mmap.c
-@@ -69,6 +69,7 @@ static size_t syscall_arg__scnprintf_mremap_flags(char *bf, size_t size,
- 
- 	P_MREMAP_FLAG(MAYMOVE);
- 	P_MREMAP_FLAG(FIXED);
-+	P_MREMAP_FLAG(DONTUNMAP);
- #undef P_MREMAP_FLAG
- 
- 	if (flags)
+ 	for (i = 1; i < pctx.num_ids; i++)
+ 		zfree(&pctx.ids[i].name);
 -- 
 2.21.1
 
