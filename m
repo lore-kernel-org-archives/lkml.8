@@ -2,353 +2,351 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ADAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C7C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6552072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E4E2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439146AbgDNL3v (ORCPT
+        id S2439156AbgDNLaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:29:51 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39842 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439089AbgDNL2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:28:24 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jOJjh-00088x-JM; Tue, 14 Apr 2020 13:28:13 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        heiko@sntech.de, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        xxm@rock-chips.com, kever.yang@rock-chips.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v4 2/2] iio: adc: rockchip_saradc: Add support iio buffers
-Date:   Tue, 14 Apr 2020 13:27:56 +0200
-Message-Id: <20200414112756.3015153-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200414112756.3015153-1-heiko@sntech.de>
-References: <20200414112756.3015153-1-heiko@sntech.de>
+        Tue, 14 Apr 2020 07:30:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18080 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439121AbgDNL27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:28:59 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EB4jui015701;
+        Tue, 14 Apr 2020 07:28:46 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30bad8m8g3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 07:28:46 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03EB54Xc017625;
+        Tue, 14 Apr 2020 07:28:45 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30bad8m8fn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 07:28:45 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03EBMULn030882;
+        Tue, 14 Apr 2020 11:28:44 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 30b5h6g5ra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 11:28:44 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EBShNI55116192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 11:28:43 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA42B78064;
+        Tue, 14 Apr 2020 11:28:43 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F2E797805E;
+        Tue, 14 Apr 2020 11:28:42 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.109.81])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 11:28:42 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 72BE52E3019; Tue, 14 Apr 2020 12:38:20 +0530 (IST)
+Date:   Tue, 14 Apr 2020 12:38:20 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     skiboot@lists.ozlabs.org, oohall@gmail.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: Re: [PATCH v6 4/4] Advertise the self-save and self-restore
+ attributes in the device tree
+Message-ID: <20200414070820.GC24277@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200326070917.12744-1-psampat@linux.ibm.com>
+ <20200326070917.12744-5-psampat@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326070917.12744-5-psampat@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_02:2020-04-14,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 priorityscore=1501 suspectscore=2
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Xue <xxm@rock-chips.com>
+Hello Pratik,
 
-Add the ability to also support access via (triggered) buffers
-next to the existing direct mode.
+On Thu, Mar 26, 2020 at 12:39:17PM +0530, Pratik Rajesh Sampat wrote:
+> Support for self save and self restore interface is advertised in the
+> device tree, along with the list of SPRs it supports for each.
+> 
+> The Special Purpose Register identification is encoded in a 2048 bitmask
+> structure, where each bit signifies the identification key of that SPR
+> which is consistent with that of the POWER architecture set for that
+> register.
+> 
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+> ---
+>  .../ibm,opal/power-mgt/self-restore.rst       |  27 ++++
+>  .../ibm,opal/power-mgt/self-save.rst          |  27 ++++
+>  hw/slw.c                                      | 116 ++++++++++++++++++
+>  include/skiboot.h                             |   1 +
+>  4 files changed, 171 insertions(+)
+>  create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-restore.rst
+>  create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-save.rst
+> 
+> diff --git a/doc/device-tree/ibm,opal/power-mgt/self-restore.rst b/doc/device-tree/ibm,opal/power-mgt/self-restore.rst
+> new file mode 100644
+> index 00000000..2a2269f7
+> --- /dev/null
+> +++ b/doc/device-tree/ibm,opal/power-mgt/self-restore.rst
+> @@ -0,0 +1,27 @@
+> +ibm,opal/power-mgt/self-restore device tree entries
+> +===================================================
+> +
+> +This node exports the bitmask representing the special purpose registers that
+> +the self-restore API currently supports.
+> +
+> +Example:
+> +
+> +.. code-block:: dts
+> +
+> +  self-restore {
+> +        sprn-bitmask = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x42010000 0x0 0x0
+> +                        0x20000 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x0 0x100000 0x900000 0x0 0x0 0x530000 0x0 0x0 0x0
+> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x10000>;
+> +        phandle = <0x1c7>;
+> +  };
+> +
+> +sprn-bitmask
+> +------------
+> +
+> +This property is a bitmask of of all the existing SPRs and if the SPR is
+> +supported, the corresponding bit of the SPR number is set to 1.
+> +The representation of the bits are left-right, i.e the MSB of the first
+> +doubleword represants the 0th bit.
+> diff --git a/doc/device-tree/ibm,opal/power-mgt/self-save.rst b/doc/device-tree/ibm,opal/power-mgt/self-save.rst
+> new file mode 100644
+> index 00000000..c367720e
+> --- /dev/null
+> +++ b/doc/device-tree/ibm,opal/power-mgt/self-save.rst
+> @@ -0,0 +1,27 @@
+> +ibm,opal/power-mgt/self-save device tree entries
+> +===================================================
+> +
+> +This node exports the bitmask representing the special purpose registers that
+> +the self-save API currently supports.
+> +
+> +Example:
+> +
+> +.. code-block:: dts
+> +
+> +  self-save {
+> +        sprn-bitmask = <0x0 0x0 0x0 0x0 0x100000 0x0 0x0 0x0 0x42010000 0x0 0x0
+> +                        0x20000 0x0 0x0 0x0 0x10000 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x0 0x0 0x100000 0x840000 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+> +                        0x0 0x10000>;
+> +        phandle = <0x1c8>;
+> +  };
+> +
+> +sprn-bitmask
+> +------------
+> +
+> +This property is a bitmask of of all the existing SPRs and if the SPR is
+> +supported, the corresponding bit of the SPR number is set to 1.
+> +The representation of the bits are left-right, i.e the MSB of the first
+> +doubleword represants the 0th bit.
+> diff --git a/hw/slw.c b/hw/slw.c
+> index 6a09cc2c..9d1fe2c5 100644
+> --- a/hw/slw.c
+> +++ b/hw/slw.c
+> @@ -29,6 +29,7 @@
+>  #include <sbe_xip_image.h>
+> 
+>  static uint32_t slw_saved_reset[0x100];
+> +#define SPR_BITMAP_LENGTH	2048
+> 
+>  static bool slw_current_le = false;
+> 
+> @@ -750,6 +751,119 @@ static void slw_late_init_p9(struct proc_chip *chip)
+>  	}
+>  }
+> 
+> +/* Add device tree properties to determine self-save | restore */
+> +void add_cpu_self_save_restore_properties(void)
+> +{
+> +	struct dt_node *self_restore, *self_save, *power_mgt;
+> +	uint64_t *self_save_mask, *self_restore_mask;
+> +	bool self_save_supported = true;
+> +	uint64_t compVector = -1;
+> +	struct proc_chip *chip;
+> +	int i, rc;
+> +
+> +	const uint64_t self_restore_regs[] = {
+> +		P8_SPR_HRMOR,
+> +		P8_SPR_HMEER,
+> +		P8_SPR_PMICR,
+> +		P8_SPR_PMCR,
+> +		P8_SPR_HID0,
+> +		P8_SPR_HID1,
+> +		P8_SPR_HID4,
+> +		P8_SPR_HID5,
+> +		P8_SPR_HSPRG0,
+> +		P8_SPR_LPCR,
+> +		P8_MSR_MSR
+> +	};
+> +
+> +	const uint64_t self_save_regs[] = {
+> +		P9_STOP_SPR_DAWR,
+> +		P9_STOP_SPR_HSPRG0,
+> +		P9_STOP_SPR_LDBAR,
+> +		P9_STOP_SPR_LPCR,
+> +		P9_STOP_SPR_PSSCR,
+> +		P9_STOP_SPR_MSR,
+> +		P9_STOP_SPR_HRMOR,
+> +		P9_STOP_SPR_HMEER,
+> +		P9_STOP_SPR_PMCR,
+> +		P9_STOP_SPR_PTCR
+> +	};
+> +
+> +	chip = next_chip(NULL);
+> +	assert(chip);
+> +	rc = proc_stop_api_discover_capability((void *) chip->homer_base,
+> +					       &compVector);
+> +	if (rc == STOP_SAVE_ARG_INVALID_IMG) {
+> +		prlog(PR_DEBUG, "HOMER BASE INVALID\n");
+> +		return;
+> +	} else if (rc == STOP_SAVE_API_IMG_INCOMPATIBLE) {
+> +		prlog(PR_DEBUG, "STOP API running incompatible versions\n");
+> +		if ((compVector & SELF_RESTORE_VER_MISMATCH) == 0) {
+> +			prlog(PR_DEBUG, "Self-save API unsupported\n");
+> +			self_save_supported = false;
+> +		}
+> +	}
+> +
+> +	power_mgt = dt_find_by_path(dt_root, "/ibm,opal/power-mgt");
+> +	if (!power_mgt) {
+> +		prerror("OCC: dt node /ibm,opal/power-mgt not found\n");
 
-Device in question is the Odroid Go Advance that connects a joystick
-to two of the saradc channels for X and Y axis and the new (and still
-pending) adc joystick driver of course wants to use triggered buffers
-from the iio subsystem.
+The prerror/warning in this function should be prefixed with "SLW"
+instead of "OCC" here. This function has nothing to do with OCC.
 
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
-[some simplifications and added commit description]
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
-changes in v4:
-- comment for the channel-num sanity check in probe
-- move to struct for data+timestamp, that way we get the 8-byte
-  alignment automatically - checked by comparing sizeof results
-changes in v3:
-- split buffer struct into values and timestamp area similar to dln2-adc
-  and make sure timestamp gets 8-byte aligned - ALIGN uses 4 as it aligns
-  u16 elements not bytes - hopefully I got it right this time ;-)
-changes in v2:
-- use devm_iio_triggered_buffer_setup
-- calculate data array size from channel number (curtesy of at91-sama5d2_adc)
 
- drivers/iio/adc/Kconfig           |   2 +
- drivers/iio/adc/rockchip_saradc.c | 149 ++++++++++++++++++++++--------
- 2 files changed, 115 insertions(+), 36 deletions(-)
+> +		return;
+> +	}
+> +
+> +	self_restore = dt_new(power_mgt, "self-restore");
+> +	if (!self_restore) {
+> +		prerror("OCC: Failed to create self restore node");
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 12bb8b7ca1ff..8d2dd60614c6 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -809,6 +809,8 @@ config ROCKCHIP_SARADC
- 	tristate "Rockchip SARADC driver"
- 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
- 	depends on RESET_CONTROLLER
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for the SARADC found in SoCs from
- 	  Rockchip.
-diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-index 270eb7e83823..c8aacfe1b38e 100644
---- a/drivers/iio/adc/rockchip_saradc.c
-+++ b/drivers/iio/adc/rockchip_saradc.c
-@@ -15,7 +15,11 @@
- #include <linux/delay.h>
- #include <linux/reset.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
- 
- #define SARADC_DATA			0x00
- 
-@@ -32,9 +36,9 @@
- #define SARADC_DLY_PU_SOC_MASK		0x3f
- 
- #define SARADC_TIMEOUT			msecs_to_jiffies(100)
-+#define SARADC_MAX_CHANNELS		6
- 
- struct rockchip_saradc_data {
--	int				num_bits;
- 	const struct iio_chan_spec	*channels;
- 	int				num_channels;
- 	unsigned long			clk_rate;
-@@ -49,8 +53,37 @@ struct rockchip_saradc {
- 	struct reset_control	*reset;
- 	const struct rockchip_saradc_data *data;
- 	u16			last_val;
-+	const struct iio_chan_spec *last_chan;
- };
- 
-+static void rockchip_saradc_power_down(struct rockchip_saradc *info)
-+{
-+	/* Clear irq & power down adc */
-+	writel_relaxed(0, info->regs + SARADC_CTRL);
-+}
-+
-+static int rockchip_saradc_conversion(struct rockchip_saradc *info,
-+				   struct iio_chan_spec const *chan)
-+{
-+	reinit_completion(&info->completion);
-+
-+	/* 8 clock periods as delay between power up and start cmd */
-+	writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
-+
-+	info->last_chan = chan;
-+
-+	/* Select the channel to be used and trigger conversion */
-+	writel(SARADC_CTRL_POWER_CTRL
-+			| (chan->channel & SARADC_CTRL_CHN_MASK)
-+			| SARADC_CTRL_IRQ_ENABLE,
-+		   info->regs + SARADC_CTRL);
-+
-+	if (!wait_for_completion_timeout(&info->completion, SARADC_TIMEOUT))
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
- static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
- 				    struct iio_chan_spec const *chan,
- 				    int *val, int *val2, long mask)
-@@ -62,24 +95,12 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_RAW:
- 		mutex_lock(&indio_dev->mlock);
- 
--		reinit_completion(&info->completion);
--
--		/* 8 clock periods as delay between power up and start cmd */
--		writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
--
--		/* Select the channel to be used and trigger conversion */
--		writel(SARADC_CTRL_POWER_CTRL
--				| (chan->channel & SARADC_CTRL_CHN_MASK)
--				| SARADC_CTRL_IRQ_ENABLE,
--		       info->regs + SARADC_CTRL);
--
--		if (!wait_for_completion_timeout(&info->completion,
--						 SARADC_TIMEOUT)) {
--			writel_relaxed(0, info->regs + SARADC_CTRL);
-+		ret = rockchip_saradc_conversion(info, chan);
-+		if (ret) {
-+			rockchip_saradc_power_down(info);
- 			mutex_unlock(&indio_dev->mlock);
--			return -ETIMEDOUT;
-+			return ret;
- 		}
--
- 		*val = info->last_val;
- 		mutex_unlock(&indio_dev->mlock);
- 		return IIO_VAL_INT;
-@@ -91,7 +112,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
- 		}
- 
- 		*val = ret / 1000;
--		*val2 = info->data->num_bits;
-+		*val2 = chan->scan_type.realbits;
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 	default:
- 		return -EINVAL;
-@@ -104,10 +125,9 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
- 
- 	/* Read value */
- 	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
--	info->last_val &= GENMASK(info->data->num_bits - 1, 0);
-+	info->last_val &= GENMASK(info->last_chan->scan_type.realbits - 1, 0);
- 
--	/* Clear irq & power down adc */
--	writel_relaxed(0, info->regs + SARADC_CTRL);
-+	rockchip_saradc_power_down(info);
- 
- 	complete(&info->completion);
- 
-@@ -118,51 +138,55 @@ static const struct iio_info rockchip_saradc_iio_info = {
- 	.read_raw = rockchip_saradc_read_raw,
- };
- 
--#define ADC_CHANNEL(_index, _id) {				\
-+#define ADC_CHANNEL(_index, _id, _res) {			\
- 	.type = IIO_VOLTAGE,					\
- 	.indexed = 1,						\
- 	.channel = _index,					\
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
- 	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
- 	.datasheet_name = _id,					\
-+	.scan_index = _index,					\
-+	.scan_type = {						\
-+		.sign = 'u',					\
-+		.realbits = _res,				\
-+		.storagebits = 16,				\
-+		.endianness = IIO_LE,				\
-+	},							\
- }
- 
- static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
--	ADC_CHANNEL(0, "adc0"),
--	ADC_CHANNEL(1, "adc1"),
--	ADC_CHANNEL(2, "adc2"),
-+	ADC_CHANNEL(0, "adc0", 10),
-+	ADC_CHANNEL(1, "adc1", 10),
-+	ADC_CHANNEL(2, "adc2", 10),
- };
- 
- static const struct rockchip_saradc_data saradc_data = {
--	.num_bits = 10,
- 	.channels = rockchip_saradc_iio_channels,
- 	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
- 	.clk_rate = 1000000,
- };
- 
- static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
--	ADC_CHANNEL(0, "adc0"),
--	ADC_CHANNEL(1, "adc1"),
-+	ADC_CHANNEL(0, "adc0", 12),
-+	ADC_CHANNEL(1, "adc1", 12),
- };
- 
- static const struct rockchip_saradc_data rk3066_tsadc_data = {
--	.num_bits = 12,
- 	.channels = rockchip_rk3066_tsadc_iio_channels,
- 	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
- 	.clk_rate = 50000,
- };
- 
- static const struct iio_chan_spec rockchip_rk3399_saradc_iio_channels[] = {
--	ADC_CHANNEL(0, "adc0"),
--	ADC_CHANNEL(1, "adc1"),
--	ADC_CHANNEL(2, "adc2"),
--	ADC_CHANNEL(3, "adc3"),
--	ADC_CHANNEL(4, "adc4"),
--	ADC_CHANNEL(5, "adc5"),
-+	ADC_CHANNEL(0, "adc0", 10),
-+	ADC_CHANNEL(1, "adc1", 10),
-+	ADC_CHANNEL(2, "adc2", 10),
-+	ADC_CHANNEL(3, "adc3", 10),
-+	ADC_CHANNEL(4, "adc4", 10),
-+	ADC_CHANNEL(5, "adc5", 10),
- };
- 
- static const struct rockchip_saradc_data rk3399_saradc_data = {
--	.num_bits = 10,
- 	.channels = rockchip_rk3399_saradc_iio_channels,
- 	.num_channels = ARRAY_SIZE(rockchip_rk3399_saradc_iio_channels),
- 	.clk_rate = 1000000,
-@@ -202,6 +226,47 @@ static void rockchip_saradc_disable(void *data)
- 	regulator_disable(info->vref);
- }
- 
-+static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *i_dev = pf->indio_dev;
-+	struct rockchip_saradc *info = iio_priv(i_dev);
-+	/*
-+	 * @values: each channel takes an u16 value
-+	 * @timestamp: will be 8-byte aligned automatically
-+	 */
-+	struct {
-+		u16 values[SARADC_MAX_CHANNELS];
-+		int64_t timestamp;
-+	} data;
-+	int ret;
-+	int i, j = 0;
-+
-+	mutex_lock(&i_dev->mlock);
-+
-+	for_each_set_bit(i, i_dev->active_scan_mask, i_dev->masklength) {
-+		const struct iio_chan_spec *chan = &i_dev->channels[i];
-+
-+		ret = rockchip_saradc_conversion(info, chan);
-+		if (ret) {
-+			rockchip_saradc_power_down(info);
-+			goto out;
-+		}
-+
-+		data.values[j] = info->last_val;
-+		j++;
-+	}
-+
-+	iio_push_to_buffers_with_timestamp(i_dev, &data,
-+					   iio_get_time_ns(i_dev));
-+out:
-+	mutex_unlock(&i_dev->mlock);
-+
-+	iio_trigger_notify_done(i_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int rockchip_saradc_probe(struct platform_device *pdev)
- {
- 	struct rockchip_saradc *info = NULL;
-@@ -230,6 +295,12 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 
- 	info->data = match->data;
- 
-+	/* Sanity check for possible later IP variants with more channels */
-+	if (info->data->num_channels > SARADC_MAX_CHANNELS) {
-+		dev_err(&pdev->dev, "max channels exceeded");
-+		return -EINVAL;
-+	}
-+
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(info->regs))
-@@ -332,6 +403,12 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	indio_dev->channels = info->data->channels;
- 	indio_dev->num_channels = info->data->num_channels;
- 
-+	ret = devm_iio_triggered_buffer_setup(&indio_dev->dev, indio_dev, NULL,
-+					      rockchip_saradc_trigger_handler,
-+					      NULL);
-+	if (ret)
-+		return ret;
-+
- 	ret = devm_iio_device_register(&pdev->dev, indio_dev);
- 	if (ret)
- 		return ret;
--- 
-2.24.1
+Ditto.
 
+> +		return;
+> +	}
+> +
+> +	self_restore_mask = zalloc(SPR_BITMAP_LENGTH / 8);
+> +	if (!self_restore_mask)
+> +		return;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(self_restore_regs); i++) {
+> +		int bitmask_idx = self_restore_regs[i] / 64;
+> +		uint64_t bitmask_pos = self_restore_regs[i] % 64;
+> +		self_restore_mask[bitmask_idx] |= 1ul << bitmask_pos;
+> +	}
+> +
+> +	for (i = 0; i < (SPR_BITMAP_LENGTH / 64); i++) {
+> +		self_restore_mask[i] = cpu_to_be64(self_restore_mask[i]);
+> +	}
+> +
+> +	dt_add_property(self_restore, "sprn-bitmask", self_restore_mask,
+> +			SPR_BITMAP_LENGTH / 8);
+> +	dt_add_property_string(self_restore, "compatible",
+> +			       "ibm,opal-self-restore");
+> +	free(self_restore_mask);
+> +
+> +	if (proc_gen != proc_gen_p9 || !self_save_supported)
+
+We need a 
+prlog(PR_INFO, "SLW: self-save not supported on this platform");
+
+?
+
+> +		return;
+
+
+> +
+> +	self_save = dt_new(power_mgt, "self-save");
+> +	if (!self_save) {
+> +		prerror("OCC: Failed to create self save node");
+> +		return;
+> +	}
+> +
+> +	self_save_mask = zalloc(SPR_BITMAP_LENGTH / 8);
+> +	if (!self_save_mask)
+> +		return;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(self_save_regs); i++) {
+> +		int bitmask_idx = self_save_regs[i] / 64;
+> +		uint64_t bitmask_pos = self_save_regs[i] % 64;
+> +		self_save_mask[bitmask_idx] |= 1ul << bitmask_pos;
+> +	}
+> +
+> +	for (i = 0; i < (SPR_BITMAP_LENGTH / 64); i++) {
+> +		self_save_mask[i] = cpu_to_be64(self_save_mask[i]);
+> +	}
+> +
+> +	dt_add_property(self_save, "sprn-bitmask", self_save_mask,
+> +			SPR_BITMAP_LENGTH / 8);
+> +	dt_add_property_string(self_save, "compatible", "ibm,opal-self-save");
+> +	free(self_save_mask);
+> +}
+> +
+>  /* Add device tree properties to describe idle states */
+>  void add_cpu_idle_state_properties(void)
+>  {
+> @@ -1563,4 +1677,6 @@ void slw_init(void)
+>  		}
+>  	}
+>  	add_cpu_idle_state_properties();
+> +	if (has_deep_states)
+> +		add_cpu_self_save_restore_properties();
+>  }
+> diff --git a/include/skiboot.h b/include/skiboot.h
+> index 9ced240e..d3631dea 100644
+> --- a/include/skiboot.h
+> +++ b/include/skiboot.h
+> @@ -209,6 +209,7 @@ extern void early_uart_init(void);
+>  extern void homer_init(void);
+>  extern void slw_init(void);
+>  extern void add_cpu_idle_state_properties(void);
+> +extern void add_cpu_self_save_restore_properties(void);
+>  extern void lpc_rtc_init(void);
+
+Apart from these minor quibbles,
+
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+
+> 
+>  /* flash support */
+> -- 
+> 2.24.1
+> 
