@@ -2,85 +2,350 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EBDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02106C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D1920768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6AE2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fkdgU5Sa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I648GNRC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406725AbgDNPDq (ORCPT
+        id S2406530AbgDNPD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:03:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:41415 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406568AbgDNPDd (ORCPT
+        Tue, 14 Apr 2020 11:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405691AbgDNPCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:03:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586876613; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=pfxKUtYTsFHDcgDRbl7GC4N22kdCLkpizjWvQYmlPdk=;
- b=fkdgU5SaiwEF7pVyO9ODDF+2+RmKgOEsGHPqAxVoL+nfI5jpK3+iKCWgcodJSlO2O74A2l1j
- Mt3Uf3AqmsDmVyXEmI+0V4LWHYr6c1zVesBOBQIhFWUMpmuxNhiQkJmBfstib/KAG4l4ixAe
- gI4a5HgYoSZd5oh1+it9jj+gvfY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e95d0be.7ff5cce9b5a8-smtp-out-n02;
- Tue, 14 Apr 2020 15:03:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 024A9C44798; Tue, 14 Apr 2020 15:03:25 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B4ABC4478F;
-        Tue, 14 Apr 2020 15:03:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B4ABC4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Apr 2020 11:02:48 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174F7C025481;
+        Tue, 14 Apr 2020 08:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=PaU0E8Bve7jBa01t57OFuZRPqHzqqGYR2616on4MjoM=; b=I648GNRCBzYT7gQ6yz9m7/sBag
+        CJN7RxlseH/AG93dLqYaH/m3lPq7Cu1+WXh4tGkJvRouIcul6hMMA6jtzzECgp4trSlmaNqb1Rpb0
+        /rLUpkKxje/8ziFeMEVRN6apIBlITMJ3d8uFsGfh7G4K5WpQlAJqBa/PuTnMBrKyWETW4AB2uX19O
+        Pz5KCRDMvBb0LlLjJoa1YszkXQ94QCh6xz8ZJOWogtTiuZ7To7LF/rDJF08l/9sY5zZNI76RwHzfq
+        LNo66SwhstF5kEnFmMHpkMLv97mUEabIUithjIG+Ho5LWthn4hUgGDqtp//56XkwBc0pUgR6RWYPw
+        D7gz3f9A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jON59-0006ON-UX; Tue, 14 Apr 2020 15:02:35 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Zi Yan <ziy@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: [PATCH v11 07/25] mm: Rename various 'offset' parameters to 'index'
+Date:   Tue, 14 Apr 2020 08:02:15 -0700
+Message-Id: <20200414150233.24495-8-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200414150233.24495-1-willy@infradead.org>
+References: <20200414150233.24495-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] brcmfmac: fix wrong location to get firmware feature
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200330052528.10503-1-jh80.chung@samsung.com>
-References: <20200330052528.10503-1-jh80.chung@samsung.com>
-To:     Jaehoon Chung <jh80.chung@samsung.com>
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, Jaehoon Chung <jh80.chung@samsung.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200414150326.024A9C44798@smtp.codeaurora.org>
-Date:   Tue, 14 Apr 2020 15:03:25 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jaehoon Chung <jh80.chung@samsung.com> wrote:
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-> sup_wpa feature is getting after setting feature_disable flag.
-> If firmware is supported sup_wpa feature,  it's always enabled
-> regardless of feature_disable flag.
-> 
-> Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+The word 'offset' is used ambiguously to mean 'byte offset within
+a page', 'byte offset from the start of the file' and 'page offset
+from the start of the file'.  Use 'index' to mean 'page offset
+from the start of the file' throughout the readahead code.
 
-Patch applied to wireless-drivers-next.git, thanks.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+---
+ mm/readahead.c | 86 ++++++++++++++++++++++++--------------------------
+ 1 file changed, 42 insertions(+), 44 deletions(-)
 
-c57673852062 brcmfmac: fix wrong location to get firmware feature
-
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 9d9aa4ffc7d4..8a65d6bd97e0 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -156,7 +156,7 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+  * We really don't want to intermingle reads and writes like that.
+  */
+ void __do_page_cache_readahead(struct address_space *mapping,
+-		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
++		struct file *filp, pgoff_t index, unsigned long nr_to_read,
+ 		unsigned long lookahead_size)
+ {
+ 	struct inode *inode = mapping->host;
+@@ -180,7 +180,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	 * Preallocate as many pages as we will need.
+ 	 */
+ 	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
+-		pgoff_t page_offset = offset + page_idx;
++		pgoff_t page_offset = index + page_idx;
+ 
+ 		if (page_offset > end_index)
+ 			break;
+@@ -219,7 +219,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+  * memory at once.
+  */
+ void force_page_cache_readahead(struct address_space *mapping,
+-		struct file *filp, pgoff_t offset, unsigned long nr_to_read)
++		struct file *filp, pgoff_t index, unsigned long nr_to_read)
+ {
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+ 	struct file_ra_state *ra = &filp->f_ra;
+@@ -239,9 +239,9 @@ void force_page_cache_readahead(struct address_space *mapping,
+ 
+ 		if (this_chunk > nr_to_read)
+ 			this_chunk = nr_to_read;
+-		__do_page_cache_readahead(mapping, filp, offset, this_chunk, 0);
++		__do_page_cache_readahead(mapping, filp, index, this_chunk, 0);
+ 
+-		offset += this_chunk;
++		index += this_chunk;
+ 		nr_to_read -= this_chunk;
+ 	}
+ }
+@@ -322,21 +322,21 @@ static unsigned long get_next_ra_size(struct file_ra_state *ra,
+  */
+ 
+ /*
+- * Count contiguously cached pages from @offset-1 to @offset-@max,
++ * Count contiguously cached pages from @index-1 to @index-@max,
+  * this count is a conservative estimation of
+  * 	- length of the sequential read sequence, or
+  * 	- thrashing threshold in memory tight systems
+  */
+ static pgoff_t count_history_pages(struct address_space *mapping,
+-				   pgoff_t offset, unsigned long max)
++				   pgoff_t index, unsigned long max)
+ {
+ 	pgoff_t head;
+ 
+ 	rcu_read_lock();
+-	head = page_cache_prev_miss(mapping, offset - 1, max);
++	head = page_cache_prev_miss(mapping, index - 1, max);
+ 	rcu_read_unlock();
+ 
+-	return offset - 1 - head;
++	return index - 1 - head;
+ }
+ 
+ /*
+@@ -344,13 +344,13 @@ static pgoff_t count_history_pages(struct address_space *mapping,
+  */
+ static int try_context_readahead(struct address_space *mapping,
+ 				 struct file_ra_state *ra,
+-				 pgoff_t offset,
++				 pgoff_t index,
+ 				 unsigned long req_size,
+ 				 unsigned long max)
+ {
+ 	pgoff_t size;
+ 
+-	size = count_history_pages(mapping, offset, max);
++	size = count_history_pages(mapping, index, max);
+ 
+ 	/*
+ 	 * not enough history pages:
+@@ -363,10 +363,10 @@ static int try_context_readahead(struct address_space *mapping,
+ 	 * starts from beginning of file:
+ 	 * it is a strong indication of long-run stream (or whole-file-read)
+ 	 */
+-	if (size >= offset)
++	if (size >= index)
+ 		size *= 2;
+ 
+-	ra->start = offset;
++	ra->start = index;
+ 	ra->size = min(size + req_size, max);
+ 	ra->async_size = 1;
+ 
+@@ -378,13 +378,13 @@ static int try_context_readahead(struct address_space *mapping,
+  */
+ static void ondemand_readahead(struct address_space *mapping,
+ 		struct file_ra_state *ra, struct file *filp,
+-		bool hit_readahead_marker, pgoff_t offset,
++		bool hit_readahead_marker, pgoff_t index,
+ 		unsigned long req_size)
+ {
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+ 	unsigned long max_pages = ra->ra_pages;
+ 	unsigned long add_pages;
+-	pgoff_t prev_offset;
++	pgoff_t prev_index;
+ 
+ 	/*
+ 	 * If the request exceeds the readahead window, allow the read to
+@@ -396,15 +396,15 @@ static void ondemand_readahead(struct address_space *mapping,
+ 	/*
+ 	 * start of file
+ 	 */
+-	if (!offset)
++	if (!index)
+ 		goto initial_readahead;
+ 
+ 	/*
+-	 * It's the expected callback offset, assume sequential access.
++	 * It's the expected callback index, assume sequential access.
+ 	 * Ramp up sizes, and push forward the readahead window.
+ 	 */
+-	if ((offset == (ra->start + ra->size - ra->async_size) ||
+-	     offset == (ra->start + ra->size))) {
++	if ((index == (ra->start + ra->size - ra->async_size) ||
++	     index == (ra->start + ra->size))) {
+ 		ra->start += ra->size;
+ 		ra->size = get_next_ra_size(ra, max_pages);
+ 		ra->async_size = ra->size;
+@@ -421,14 +421,14 @@ static void ondemand_readahead(struct address_space *mapping,
+ 		pgoff_t start;
+ 
+ 		rcu_read_lock();
+-		start = page_cache_next_miss(mapping, offset + 1, max_pages);
++		start = page_cache_next_miss(mapping, index + 1, max_pages);
+ 		rcu_read_unlock();
+ 
+-		if (!start || start - offset > max_pages)
++		if (!start || start - index > max_pages)
+ 			return;
+ 
+ 		ra->start = start;
+-		ra->size = start - offset;	/* old async_size */
++		ra->size = start - index;	/* old async_size */
+ 		ra->size += req_size;
+ 		ra->size = get_next_ra_size(ra, max_pages);
+ 		ra->async_size = ra->size;
+@@ -443,29 +443,29 @@ static void ondemand_readahead(struct address_space *mapping,
+ 
+ 	/*
+ 	 * sequential cache miss
+-	 * trivial case: (offset - prev_offset) == 1
+-	 * unaligned reads: (offset - prev_offset) == 0
++	 * trivial case: (index - prev_index) == 1
++	 * unaligned reads: (index - prev_index) == 0
+ 	 */
+-	prev_offset = (unsigned long long)ra->prev_pos >> PAGE_SHIFT;
+-	if (offset - prev_offset <= 1UL)
++	prev_index = (unsigned long long)ra->prev_pos >> PAGE_SHIFT;
++	if (index - prev_index <= 1UL)
+ 		goto initial_readahead;
+ 
+ 	/*
+ 	 * Query the page cache and look for the traces(cached history pages)
+ 	 * that a sequential stream would leave behind.
+ 	 */
+-	if (try_context_readahead(mapping, ra, offset, req_size, max_pages))
++	if (try_context_readahead(mapping, ra, index, req_size, max_pages))
+ 		goto readit;
+ 
+ 	/*
+ 	 * standalone, small random read
+ 	 * Read as is, and do not pollute the readahead state.
+ 	 */
+-	__do_page_cache_readahead(mapping, filp, offset, req_size, 0);
++	__do_page_cache_readahead(mapping, filp, index, req_size, 0);
+ 	return;
+ 
+ initial_readahead:
+-	ra->start = offset;
++	ra->start = index;
+ 	ra->size = get_init_ra_size(req_size, max_pages);
+ 	ra->async_size = ra->size > req_size ? ra->size - req_size : ra->size;
+ 
+@@ -476,7 +476,7 @@ static void ondemand_readahead(struct address_space *mapping,
+ 	 * the resulted next readahead window into the current one.
+ 	 * Take care of maximum IO pages as above.
+ 	 */
+-	if (offset == ra->start && ra->size == ra->async_size) {
++	if (index == ra->start && ra->size == ra->async_size) {
+ 		add_pages = get_next_ra_size(ra, max_pages);
+ 		if (ra->size + add_pages <= max_pages) {
+ 			ra->async_size = add_pages;
+@@ -495,9 +495,8 @@ static void ondemand_readahead(struct address_space *mapping,
+  * @mapping: address_space which holds the pagecache and I/O vectors
+  * @ra: file_ra_state which holds the readahead state
+  * @filp: passed on to ->readpage() and ->readpages()
+- * @offset: start offset into @mapping, in pagecache page-sized units
+- * @req_size: hint: total size of the read which the caller is performing in
+- *            pagecache pages
++ * @index: Index of first page to be read.
++ * @req_count: Total number of pages being read by the caller.
+  *
+  * page_cache_sync_readahead() should be called when a cache miss happened:
+  * it will submit the read.  The readahead logic may decide to piggyback more
+@@ -506,7 +505,7 @@ static void ondemand_readahead(struct address_space *mapping,
+  */
+ void page_cache_sync_readahead(struct address_space *mapping,
+ 			       struct file_ra_state *ra, struct file *filp,
+-			       pgoff_t offset, unsigned long req_size)
++			       pgoff_t index, unsigned long req_count)
+ {
+ 	/* no read-ahead */
+ 	if (!ra->ra_pages)
+@@ -517,12 +516,12 @@ void page_cache_sync_readahead(struct address_space *mapping,
+ 
+ 	/* be dumb */
+ 	if (filp && (filp->f_mode & FMODE_RANDOM)) {
+-		force_page_cache_readahead(mapping, filp, offset, req_size);
++		force_page_cache_readahead(mapping, filp, index, req_count);
+ 		return;
+ 	}
+ 
+ 	/* do read-ahead */
+-	ondemand_readahead(mapping, ra, filp, false, offset, req_size);
++	ondemand_readahead(mapping, ra, filp, false, index, req_count);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_sync_readahead);
+ 
+@@ -531,21 +530,20 @@ EXPORT_SYMBOL_GPL(page_cache_sync_readahead);
+  * @mapping: address_space which holds the pagecache and I/O vectors
+  * @ra: file_ra_state which holds the readahead state
+  * @filp: passed on to ->readpage() and ->readpages()
+- * @page: the page at @offset which has the PG_readahead flag set
+- * @offset: start offset into @mapping, in pagecache page-sized units
+- * @req_size: hint: total size of the read which the caller is performing in
+- *            pagecache pages
++ * @page: The page at @index which triggered the readahead call.
++ * @index: Index of first page to be read.
++ * @req_count: Total number of pages being read by the caller.
+  *
+  * page_cache_async_readahead() should be called when a page is used which
+- * has the PG_readahead flag; this is a marker to suggest that the application
++ * is marked as PageReadahead; this is a marker to suggest that the application
+  * has used up enough of the readahead window that we should start pulling in
+  * more pages.
+  */
+ void
+ page_cache_async_readahead(struct address_space *mapping,
+ 			   struct file_ra_state *ra, struct file *filp,
+-			   struct page *page, pgoff_t offset,
+-			   unsigned long req_size)
++			   struct page *page, pgoff_t index,
++			   unsigned long req_count)
+ {
+ 	/* no read-ahead */
+ 	if (!ra->ra_pages)
+@@ -569,7 +567,7 @@ page_cache_async_readahead(struct address_space *mapping,
+ 		return;
+ 
+ 	/* do read-ahead */
+-	ondemand_readahead(mapping, ra, filp, true, offset, req_size);
++	ondemand_readahead(mapping, ra, filp, true, index, req_count);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_async_readahead);
+ 
 -- 
-https://patchwork.kernel.org/patch/11464609/
+2.25.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
