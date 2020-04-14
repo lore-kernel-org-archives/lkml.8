@@ -2,83 +2,98 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C949C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89DBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AC92072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlwuiYsT"
+	by mail.kernel.org (Postfix) with ESMTP id A256C2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586861906;
+	bh=1WrB2l0FmNWsKcNwWuK1uCKo6/mJ1BOM4N7ZW/C64zc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S2WVob0o1V6QeEt0tAUy/5f+zfCIwwvjPE/Kb5hhq1l4w5TAezy1e0x5Qy/csz/Ro
+	 SubmuYVNn2/FCzCjSpslIsGV9+nLsRZy8D8LmIHHP9jwdNg+hDyrDkN1Z1dwePYblU
+	 nxQiFpsAlKjT7OTl1BsiudJb70mFWHX9tOKbH/hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438821AbgDNK6R (ORCPT
+        id S2438830AbgDNK6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438778AbgDNK5j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:57:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D08C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ioUSb5eLCjLXsiwhi2nCGeKhCogbLivgMWTv1Ym13DM=; b=XlwuiYsTpfXR5BZDiAMMgWRHvN
-        VsDPbUizxQZ61MEh3nK5Y/Had7WLD4cbUdzDNn2Jv2opvZMt968Ac7LT6O1BrApYqMguohLpf2qQB
-        0HnjrwKL/ZCv6SJIdHGTf4CnxZYL+aA3u3rGMGa0vyEjx06akgcFZOLfaX8BtsAMd5fw2ySconUPs
-        x22wUGf/dPhj74CcOQkEVA8ZrWWnRKafpyOlYyNlFdluvCoyblSOw91WHiRXNwtQcuE/yLhRgkNrx
-        urY4JOBASJplVGfnP++ZJ6lPOJfXuw9vK2UkBt3vAvlBpzTU2Fl4ZOsAT6PrHRtT70W4eiZjdXCfz
-        efoA8uSQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOJFt-0003qB-FF; Tue, 14 Apr 2020 10:57:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 14 Apr 2020 06:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438799AbgDNK56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:57:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CEF65305EEC;
-        Tue, 14 Apr 2020 12:57:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B18832038BC55; Tue, 14 Apr 2020 12:57:23 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 12:57:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peng Wang <rocking@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>, uri.lelli@redhat.com,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched/fair: Simplify the code of should_we_balance()
-Message-ID: <20200414105723.GN20713@hirez.programming.kicks-ass.net>
-References: <245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com>
- <CAKfTPtBLc7Y-a-nuXF-p8wEaJQLiQn4crOg6R0Z4NBJ64yMLBg@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDEE6206D5;
+        Tue, 14 Apr 2020 10:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586861878;
+        bh=1WrB2l0FmNWsKcNwWuK1uCKo6/mJ1BOM4N7ZW/C64zc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jbgC1oMqt8PcwlQ0hf/ww976DFjpwMEMv0xnwgD8Q+MiXfcV4a61v4tmqivvVdyRR
+         iKTKvHCGhr0r62CdleENMgGKd5IQhQb+X7t5pv6azVoO+R05L39ubjKl37INHHr1rQ
+         hBWaBwG2Sg7nujknMO5AQrFWCMter3d8c2/zodV0=
+Date:   Tue, 14 Apr 2020 12:57:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.4 00/29] 4.4.219-rc1 review
+Message-ID: <20200414105756.GA284526@kroah.com>
+References: <20200411115407.651296755@linuxfoundation.org>
+ <63b31c56-b5c9-2ced-ee00-772fa9a1dcaf@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtBLc7Y-a-nuXF-p8wEaJQLiQn4crOg6R0Z4NBJ64yMLBg@mail.gmail.com>
+In-Reply-To: <63b31c56-b5c9-2ced-ee00-772fa9a1dcaf@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 09:25:00AM +0200, Vincent Guittot wrote:
-> On Sat, 11 Apr 2020 at 11:21, Peng Wang <rocking@linux.alibaba.com> wrote:
-> >
-> > We only consider group_balance_cpu() after there is no idle
-> > cpu. So, just do comparison before return at these two cases.
-> >
-> > Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+On Tue, Apr 14, 2020 at 11:35:53AM +0100, Jon Hunter wrote:
 > 
-> With the small fix in the comment below
+> On 11/04/2020 13:08, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.219 release.
+> > There are 29 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.219-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> 
+> Sorry this is late, but all tests are passing for Tegra ...
+> 
+> Test results for stable-v4.4:
+>     6 builds:	6 pass, 0 fail
+>     12 boots:	12 pass, 0 fail
+>     19 tests:	19 pass, 0 fail
+> 
+> Linux version:	4.4.219-rc1-g8cd74c57ff4a
+> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+>                 tegra30-cardhu-a04
+> 
 
-Done
+No problems, thanks for testing all of these and letting me know.
 
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-
-Thanks Guys!
+greg k-h
