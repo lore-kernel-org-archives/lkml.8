@@ -2,122 +2,145 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3963C352BE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7187C2BB1D
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C31142076C
+	by mail.kernel.org (Postfix) with ESMTP id A6D972076B
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WD0Si2lC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586900856;
+	bh=rMbn3USIs+ZPyYBG+bzKPuMyGNVpE23phhFil4hi5EY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zs0cTILdEvR4bm5TpDWWbLafmUu8fBCS6YqrmrBz3b3tDwEEQ05U4/t8PFLc8E733
+	 Hg/p3m/34IX3g+g7ixRu4HZXfXrZd5LxoXIggLtAUh8BPA1ZQKVnI5buRVbVjj35my
+	 7Ae5iKnzyLIwuP83kvTt/NENqnvw0w37LfoX5MYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440733AbgDNVrf (ORCPT
+        id S2440646AbgDNVqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:47:35 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32939 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634112AbgDNVpY (ORCPT
+        Tue, 14 Apr 2020 17:46:09 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43433 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634106AbgDNVpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:45:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586900722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZeGGFPup1XJHwyIEzNEDendxGJK59EpZeVXypI0W67g=;
-        b=WD0Si2lCjeir8dlGCL1E/27xgwA6HYew/SPgY5SpoPcmTUv49ZqzzOUotH6IfRx3tAR32Y
-        gEFfzbkNgLuOx+7lOE73JeylpJpldENfqjtkdsSO5wHlYH1WQQt6lEaRE7k+MbnteClRKx
-        qh+bPf20d3FDRdCpVtb5s/A0jo2kDuE=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-NGDt8pjtMOCm38yQoJc3eg-1; Tue, 14 Apr 2020 17:45:20 -0400
-X-MC-Unique: NGDt8pjtMOCm38yQoJc3eg-1
-Received: by mail-qv1-f69.google.com with SMTP id m20so1143386qvy.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:45:20 -0700 (PDT)
+        Tue, 14 Apr 2020 17:45:12 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g14so1294637otg.10;
+        Tue, 14 Apr 2020 14:45:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZeGGFPup1XJHwyIEzNEDendxGJK59EpZeVXypI0W67g=;
-        b=EVH/e8Lq7cVDUWmLwy7D+nsLACaJ1NbrIGrD5/wDEXbJXs3tJVkCKY6w0hLXthpEmS
-         cqAPvMxxC16EtHOa+az7bYSdrKYcch/0FBKDigeKw5NxodswwBtaJiaLAfBJQ5jjHLcr
-         nKwfajWarEF7tPeHKO72o7qI9D/1fTWQrREePkt7KJzAHSTxIEPDU700To7ZSMd6Cv0o
-         +DteufuReRxxnQO+6PVoiBktLxtNsf9G+V55SqrfUx6Bg9wUou4VwBpK16KV/hTz+Kxq
-         U3pDzZaK8Ut0O94/lVtyvrvkWmoUn8SBsvua0DrtbdqNoVr8a8ob8+PbEgR023cXVW0J
-         Jcsg==
-X-Gm-Message-State: AGi0PuacIZQAZnRsojYb5PJXUdAFnHQ87xur+9e036oM/t9iHCKev6Bg
-        pWNauJK1H2BUOHrtYmP6wF5JGMJm3sEQsons6UXe0Ivs1XSVfggWfXmbIDeFg/weW1efD6A2DKH
-        1aOZlT8yCz6NazMAK8CFkUBIH
-X-Received: by 2002:ac8:19fd:: with SMTP id s58mr13025714qtk.222.1586900719303;
-        Tue, 14 Apr 2020 14:45:19 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLnIUCv2QyX3WPwS8EK5rktDGhPYL53gRHXyaxrMeQgwGmL+C8SmB9EGuhtZKwhRNIFRi4DHA==
-X-Received: by 2002:ac8:19fd:: with SMTP id s58mr13025690qtk.222.1586900719028;
-        Tue, 14 Apr 2020 14:45:19 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id v5sm11448631qka.106.2020.04.14.14.45.17
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Go4RGtgIqyKHKCRRcfy17L5oN8SY3r4Jf8gKD8EXnBo=;
+        b=eX76WRCKBpppPEt1+rredZjszBhkGnJo0c5xNqOCBLK1dHSNhkf8Ft4lUqPwesFLsj
+         39yUwM6027e5nKQQ/WnMuxvPm+/TL0vpsme86VYQJkSpL3Jt/vG0Zt38qUZEMlj8ywZg
+         zPxWLLy6LH+wDNTmhOCDvkkxsRwfTx8FoZ/rR8D44wAH/wM6fERrEvXywAWwDGNGHyM+
+         XMTG7o37yIj+FDTiz0M5EXV5erDsG8YNZ7RXJbVBj/tyt1C5hQD7MBiKfXy6bLCz8CG1
+         NU4SqrSZarZk+0pL0J1/KXwTWAsuJCduqzPEmbegJ6yyErJoa/GgpojLJVAzwSiTYYAt
+         frEw==
+X-Gm-Message-State: AGi0PuZbTPDH1E4O63PMzdhYC8RR4SzeoS8gSKXD4Pw7qSUOrUFlqcZZ
+        m2u1kFw4Aj0OjQ2C0q6B2w==
+X-Google-Smtp-Source: APiQypLTtqcTnJWfsv36vUyoHTSuRXCgSB1Jwv9bbH0db5LUR+jzkUKlGIny0dvYJFig5ipNz4fcFg==
+X-Received: by 2002:a9d:a0d:: with SMTP id 13mr9279315otg.222.1586900711492;
+        Tue, 14 Apr 2020 14:45:11 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o26sm2206162otj.39.2020.04.14.14.45.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:45:18 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 17:45:16 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sonny Rao <sonnyrao@google.com>
-Subject: Re: Userfaultfd doesn't seem to break out of poll on fd close
-Message-ID: <20200414214516.GA182757@xz-x1>
-References: <CADyq12wPW69ovpW4akDY5PGBbrvnwsLO86=sSKTU4CB3dNwG3Q@mail.gmail.com>
+        Tue, 14 Apr 2020 14:45:10 -0700 (PDT)
+Received: (nullmailer pid 11414 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:45:09 -0000
+Date:   Tue, 14 Apr 2020 16:45:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     daniel.lezcano@linaro.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: thermal: Add the idle cooling device
+Message-ID: <20200414214509.GA10673@bogus>
+References: <20200414162634.1867-1-daniel.lezcano@linaro.org>
+ <20200414162634.1867-2-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADyq12wPW69ovpW4akDY5PGBbrvnwsLO86=sSKTU4CB3dNwG3Q@mail.gmail.com>
+In-Reply-To: <20200414162634.1867-2-daniel.lezcano@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 01:10:40PM -0700, Brian Geffon wrote:
-> Hi,
-> It seems that userfaultfd isn't woken from a poll when the file
-> descriptor is closed. It seems that it should be from the code in
-> userfault_ctx_release, but it appears that's not actually called
-> immediately. I have a simple standalone example that shows this
-> behavior. It's straight forward: one thread creates a userfaultfd and
-> then closes it after a second thread has entered a poll syscall, some
-> abbreviated strace output is below showing this and the code can be
-> seen here: https://gist.github.com/bgaff/9a8fbbe8af79c0e18502430d416df77e
+On Tue, 14 Apr 2020 18:26:27 +0200, Daniel Lezcano wrote:
+> Some devices are not able to cool down by reducing their voltage /
+> frequency because it could be not available or the system does not
+> allow voltage scaling. In this configuration, it is not possible to
+> use this strategy and the idle injection cooling device can be used
+> instead.
 > 
-> Given that it's probably very common to have a dedicated thread remain
-> blocked indefinitely in a poll(2) waiting for faults there must be a
-> way to break it out early when it's closed. Am I missing something?
+> One idle cooling device is now present for the CPU as implemented by
+> the combination of the idle injection framework belonging to the power
+> capping framework and the thermal cooling device. The missing part is
+> the DT binding providing a way to describe how the cooling device will
+> work on the system.
+> 
+> A first iteration was done by making the cooling device to point to
+> the idle state. Unfortunately it does not make sense because it would
+> need to duplicate the idle state description for each CPU in order to
+> have a different phandle and make the thermal internal framework
+> happy.
+> 
+> It was proposed to add an cooling-cells to <3>, unfortunately the
+> thermal framework is expecting a value of <2> as stated by the
+> documentation and it is not possible from the cooling device generic
+> code to loop this third value to the back end cooling device.
+> 
+> Another proposal was to add a child 'thermal-idle' node as the SCMI
+> does. This approach allows to have a self-contained configuration for
+> the idle cooling device without colliding with the cpufreq cooling
+> device which is based on the CPU node. In addition, it allows to have
+> the cpufreq cooling device and the idle cooling device to co-exist
+> together as shown in the example.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  - V2:
+>    - Fixed comment type
+>    - Added dual license
+>    - Fixed description s/begins to/should/
+>    - Changed name s/duration/duration-us/
+>    - Changed name s/latency/exit-latency-us/
+>    - Removed types for latency / duration
+>    - Fixed s/idle-thermal/thermal-idle/
+> ---
+>  .../bindings/thermal/thermal-idle.yaml        | 146 ++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+> 
 
-Hi, Brian,
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I might be wrong below, just to share my understanding...
+Documentation/devicetree/bindings/thermal/thermal-idle.yaml:  while scanning a block scalar
+  in "<unicode string>", line 39, column 20
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 44, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/thermal/thermal-idle.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/thermal/thermal-idle.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-idle.yaml: ignoring, error parsing file
+Makefile:1264: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-IMHO a well-behaved userspace should not close() on a file descriptor
-if it's still in use within another thread.  In this case, the poll()
-thread is still using the userfaultfd handle, so imo it's cleaner that
-the main thread should pthread_join() on the poll() thread before it
-closes the handle.  It can be easily achieved by attaching another
-eventfd to the struct pollfds array, and write to the eventfd when the
-main thread wants to quit so that the poll() will return on the write
-to the eventfd.
+See https://patchwork.ozlabs.org/patch/1270492
 
-On the other hand I'm thinking whether we can achieve what you said.
-IIUC userfaultfd_release() is only called when the file descriptor
-destructs itself.  But shouldn't the poll() take a refcount of that
-file descriptor too before waiting?  Not sure userfaultfd_release() is
-the place to kick then, because if so, close() will only decrease the
-fd refcount from 2->1, and I'm not sure userfaultfd_release() will be
-triggered.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Thanks,
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
--- 
-Peter Xu
-
+Please check and re-submit.
