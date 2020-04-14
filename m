@@ -2,124 +2,137 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF77C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C42C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B90206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A046C206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:51:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZN8YL00K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440953AbgDNPuj (ORCPT
+        id S2440974AbgDNPvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:50:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37980 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440940AbgDNPuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:50:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 15767ACBA;
-        Tue, 14 Apr 2020 15:50:14 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 983311E125F; Tue, 14 Apr 2020 17:50:13 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 17:50:13 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     jack@suse.cz, tytso@mit.edu, linux-ext4@vger.kernel.org,
-        adilger@dilger.ca, darrick.wong@oracle.com, hch@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, willy@infradead.org,
-        linux-unionfs@vger.kernel.org,
-        syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
-Subject: Re: [RFC 1/1] ext4: Fix overflow case for map.m_len in
- ext4_iomap_begin_*
-Message-ID: <20200414155013.GF28226@quack2.suse.cz>
-References: <00000000000048518b05a2fef23a@google.com>
- <dea98f0b07e16de219d8741c1fefc7cb476cb482.1586681010.git.riteshh@linux.ibm.com>
+        Tue, 14 Apr 2020 11:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2440940AbgDNPuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:50:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32978C061A0C;
+        Tue, 14 Apr 2020 08:50:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id z6so71927plk.10;
+        Tue, 14 Apr 2020 08:50:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rK/DPIM+PhgG+NfPlZb4h26D9g6G4NEcuKatIA25nFY=;
+        b=ZN8YL00KrvwjNN3o0Xy3OYzoXWH1ftglb4xlWG+XR24Hu36aMx8fKU+n1W20hDE5Wt
+         QIHdlVbk6m2mAECJEw/vNTg3Hr+bbac5+SC+prvlwGRD/Vq0K4S0VFsMeT3nZiGrM91i
+         NX5BzTugQSYS0gfQB82n3YslO9KrfT1Us6IAgbxNy76HpOr7Bu3M1rFTW2PkbSUfkJ/q
+         ES53E9aqQk6qR9yxdwmGbqPKYRSgxkSEVc9441DB/0K4aO5aTZFvPvhGZ6tMzbZMRf/L
+         RnBwq/Eo3HcVwq+w7766Q04U2xGnKgUVnDiSTvkHd9nyakXKEA/o8vtWpxZVU3Z5XSGN
+         8Pmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rK/DPIM+PhgG+NfPlZb4h26D9g6G4NEcuKatIA25nFY=;
+        b=mwb8R75SYejB+yXgJwX90WBMnNa+Nfl6cfx/CStPFUNCgbDQ2sIb05oTUIhF34SsuD
+         si8BZHrDNRUVTy570pmE495Y+lNDywezJUpp3niefQdPF4NEskms2fxb9qsIL9+W2kj+
+         InGc7Eq/cGQF1Gau0S1UQptN1C6QgeZCbGMeiMihk4KaL5/wcKNZyQAV6AX6/qKvV6VP
+         dKjg08wSBu/yomXiIRtQta1sCEAScJlOfkhJsUoJuWpu/DTiNoT75n3lj7DP1Yie2Q5c
+         BnVnquTj1GOKK4vkuR/AZDHSMqm4T9yWL8mUxxEyQl8WUjVQKIayu+ryM7HNxS6OkdTI
+         /7HA==
+X-Gm-Message-State: AGi0PuaYNDAZ+GJyUWZ9R3ddsSQMzU1yzw1/6+tY/2FBihSj1VwbLbwg
+        fJmrq8+0MluHbJy+uEfp74aG1/tC1dQ=
+X-Google-Smtp-Source: APiQypJ8sq0yjFOz+/bjuysuvDFYXmdVvFhPRmvIehfWCguLKKoJ/AO1mQz/MkEbdD4c2bz0v9CBrQ==
+X-Received: by 2002:a17:902:8e84:: with SMTP id bg4mr558607plb.50.1586879453605;
+        Tue, 14 Apr 2020 08:50:53 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id c15sm10273561pgk.66.2020.04.14.08.50.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 08:50:53 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 23:50:47 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, patrice.chotard@st.com, info@metux.net,
+        allison@lohutok.net, nehal-bakulchandra.shah@amd.com,
+        tglx@linutronix.de, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: img-scb: remove duplicate dev_err()
+Message-ID: <20200414155047.GA10848@nuc8i5>
+References: <20200414142650.29359-1-zhengdejin5@gmail.com>
+ <20200414143837.GV34613@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dea98f0b07e16de219d8741c1fefc7cb476cb482.1586681010.git.riteshh@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414143837.GV34613@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 12-04-20 14:54:35, Ritesh Harjani wrote:
-> EXT4_MAX_LOGICAL_BLOCK - map.m_lblk + 1 in case when
-> map.m_lblk (offset) is 0 could overflow an unsigned int
-> and become 0.
+On Tue, Apr 14, 2020 at 05:38:37PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 14, 2020 at 10:26:50PM +0800, Dejin Zheng wrote:
+> > it will print an error message by itself when platform_get_irq()
+> > goes wrong. so don't need dev_err() in here again.
 > 
-> Fix this.
+> In the future, please use something like this
+> 	scripts/get_maintainer.pl --git --git-min-percent=67
+> when retrieve Cc list for the mail.
+>
+Andy, Thank you for reminding me again, if I used it, There are only two
+email addresses. 
+
+scripts/get_maintainer.pl --git --git-min-percent=67 v1-0001-i2c-img-scb-remove-duplicate-dev_err.patch
+linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS)
+linux-kernel@vger.kernel.org (open list)
+
 > 
-> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
-> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+Thanks very much for your review.
 
-The patch looks good to me. You can add:
+BR,
+Dejin
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/ext4/inode.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> >  drivers/i2c/busses/i2c-img-scb.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+> > index 422097a31c95..2f6de763816a 100644
+> > --- a/drivers/i2c/busses/i2c-img-scb.c
+> > +++ b/drivers/i2c/busses/i2c-img-scb.c
+> > @@ -1344,10 +1344,8 @@ static int img_i2c_probe(struct platform_device *pdev)
+> >  		return PTR_ERR(i2c->base);
+> >  
+> >  	irq = platform_get_irq(pdev, 0);
+> > -	if (irq < 0) {
+> > -		dev_err(&pdev->dev, "can't get irq number\n");
+> > +	if (irq < 0)
+> >  		return irq;
+> > -	}
+> >  
+> >  	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+> >  	if (IS_ERR(i2c->sys_clk)) {
+> > -- 
+> > 2.25.0
+> > 
 > 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index e416096fc081..d630ec7a9c8e 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -3424,6 +3424,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	int ret;
->  	struct ext4_map_blocks map;
->  	u8 blkbits = inode->i_blkbits;
-> +	loff_t len;
->  
->  	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
->  		return -EINVAL;
-> @@ -3435,8 +3436,11 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	 * Calculate the first and last logical blocks respectively.
->  	 */
->  	map.m_lblk = offset >> blkbits;
-> -	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
-> +	len = min_t(loff_t, (offset + length - 1) >> blkbits,
->  			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
-> +	if (len > EXT4_MAX_LOGICAL_BLOCK)
-> +		len = EXT4_MAX_LOGICAL_BLOCK;
-> +	map.m_len = len;
->  
->  	if (flags & IOMAP_WRITE)
->  		ret = ext4_iomap_alloc(inode, &map, flags);
-> @@ -3524,6 +3528,7 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
->  	bool delalloc = false;
->  	struct ext4_map_blocks map;
->  	u8 blkbits = inode->i_blkbits;
-> +	loff_t len
->  
->  	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
->  		return -EINVAL;
-> @@ -3541,8 +3546,11 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
->  	 * Calculate the first and last logical block respectively.
->  	 */
->  	map.m_lblk = offset >> blkbits;
-> -	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
-> +	len = min_t(loff_t, (offset + length - 1) >> blkbits,
->  			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
-> +	if (len > EXT4_MAX_LOGICAL_BLOCK)
-> +		len = EXT4_MAX_LOGICAL_BLOCK;
-> +	map.m_len = len;
->  
->  	/*
->  	 * Fiemap callers may call for offset beyond s_bitmap_maxbytes.
 > -- 
-> 2.21.0
+> With Best Regards,
+> Andy Shevchenko
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> 
