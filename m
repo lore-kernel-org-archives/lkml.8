@@ -2,112 +2,108 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BF0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C781206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:00:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BIPGHUNs"
+	by mail.kernel.org (Postfix) with ESMTP id 3FADF2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437293AbgDNJAA (ORCPT
+        id S2437301AbgDNJAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:00:00 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44130 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437267AbgDNI7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:59:48 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E8xSgo128474;
-        Tue, 14 Apr 2020 08:59:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=EAe3usIbEQ4RwyhgiOl8ipkDOmr+UhDbllqJssxsJA4=;
- b=BIPGHUNsuFgB3JQzsbTIgWJmpoo6l+Ti18XZzCJK2OwznVScJXmo8t5IrEjN4R4mIZs5
- RsPDUi7RnbAsdwhMc3RAHJ0CCT/RxbVRYU7zzR9NlnrL1GN9MPuWRSljNI5hAJQr5w9a
- BxQYVplIcC2pAR1lJbHYlK9ZG5UNbhrsZdunZSjyOF2Es1vzUcYqCBoaZapcD7XE0pFt
- JsWX8rkaeYhwtbSwTSMqUgS160A/HnX9CfR2rNqLTpaQckaxsGGG7VhTRHadcvkucgH/
- LXtmABBJXq/1txgpEYNyvyFhmdSjsf8euZeDaDoyrBdnHoCU9gkYakEJqi4CPrlt36/e 2w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30b6hpk69e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 08:59:43 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E8v50K164561;
-        Tue, 14 Apr 2020 08:59:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30cta9mtp4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 08:59:42 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03E8xeg2025462;
-        Tue, 14 Apr 2020 08:59:40 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 01:59:39 -0700
-Date:   Tue, 14 Apr 2020 11:59:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Colin King <colin.king@canonical.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: mantis: remove redundant assignment to variable
- err
-Message-ID: <20200414085922.GA1163@kadam>
-References: <20200410113913.14430-1-colin.king@canonical.com>
- <CAAEAJfCQaCCoShLPTA+EWUhMXdF6bKAxcOCj2SR5nPXMmk7LQg@mail.gmail.com>
+        Tue, 14 Apr 2020 05:00:06 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58091 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437280AbgDNI7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:59:55 -0400
+IronPort-SDR: OWTwU1xjVLqcg4ZyAc2E8iauy2D8NQFFAgIh3Qtx/WjYin6vwrODWfG+c/kipqDgoUZ1FWqSd3
+ TVk/LWTcP/2w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 01:59:54 -0700
+IronPort-SDR: nTRY4F9FYKyL9PfVM6xsZ5/9u0TRKVZNswM5DrPWZ0E9d8IIUx3Jnr5XWmaDCrn73Jj4aa20Gd
+ 101o5HYFttVQ==
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="253141691"
+Received: from aslawinx-mobl1.ger.corp.intel.com (HELO [10.249.141.95]) ([10.249.141.95])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 01:59:50 -0700
+Subject: Re: [PATCH] ASoC: Intel: sst: ipc command timeout
+To:     Brent Lu <brent.lu@intel.com>, alsa-devel@alsa-project.org
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>
+References: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
+From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Message-ID: <d59774fc-bc95-d6c7-e354-a81e6490049a@linux.intel.com>
+Date:   Tue, 14 Apr 2020 10:59:47 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAEAJfCQaCCoShLPTA+EWUhMXdF6bKAxcOCj2SR5nPXMmk7LQg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140075
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 clxscore=1011 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140075
+In-Reply-To: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 07:53:51PM -0300, Ezequiel Garcia wrote:
-> There's a redundant err assignment right below here,
-> which you can also get rid of:
+
+
+On 4/10/2020 10:18 AM, Brent Lu wrote:
+> After sending an ipc command to DSP, the host waits for the reply message
+> which will be read from SST_IPCD register in sst_byt_irq_thread() to
+> complete the transaction. Sometimes the value read from SST_IPCD register
+> is still the reply message for previous command instead of the waiting
+> command so ipc command timeout happens.
 > 
-> -       err = mantis_frontend_power(mantis, POWER_ON);
-> +       mantis_frontend_power(mantis, POWER_ON);
+> In an experiment we read the same SST_IPCD register again when the defect
+> happens and found the value of second read is different from previous one
+> and is the correct reply message. It suggests the DSP is okay but the way
+> we read the register may be the cause.
 > 
-> I can't test this, but calling mantis_frontend_power twice
-> is possibly redundant.
-
-To me that code really looks like a hack-around for flakey hardware and
-I would be afraid to delete it.  But the "err =" could be removed.
-
+> Currently the driver is using memcpy_fromio() to read the value of 64-bit
+> registers. This function is based on __builtin_memcpy() call and depends
+> on the implementation of compiler. Since this issue happens right after
+> the toolchain switched from clang 10 to clang 11, we replace the register
+> read with two readl() function calls to avoid all optimization from
+> compiler's library.
 > 
-> Also, what's the gain from this cleanup? The driver is super
-> old, and it seems any modern compiler would be oblivious
-> of the redundant assignment.
+> Signed-off-by: Brent Lu <brent.lu@intel.com>
+> ---
+>   sound/soc/intel/common/sst-dsp.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/intel/common/sst-dsp.c b/sound/soc/intel/common/sst-dsp.c
+> index ec66be2..12af7aa 100644
+> --- a/sound/soc/intel/common/sst-dsp.c
+> +++ b/sound/soc/intel/common/sst-dsp.c
+> @@ -42,7 +42,7 @@ u64 sst_shim32_read64(void __iomem *addr, u32 offset)
+>   {
+>   	u64 val;
+>   
+> -	memcpy_fromio(&val, addr + offset, sizeof(val));
+> +	sst_memcpy_fromio_32(NULL, &val, addr + offset, sizeof(val));
+>   	return val;
+>   }
+>   EXPORT_SYMBOL_GPL(sst_shim32_read64);
+> 
 
-Eventually we would like to enable that warning by default but there are
-still thousands of pointless assignments so it will take years of
-small fixes like this.  Generally cleaning up warnings is good.
-
-regards,
-dan carpenter
-
+I'm not convinced that it is a correct fix. From your description it 
+seems to be a timing issue and you are just masking a problem, while 
+real problem is flow which allows to read data before confirming that 
+DSP finished processing.
