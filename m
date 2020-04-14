@@ -2,103 +2,128 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E583C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF68C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3659220768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AF42076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TET6vAJB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQ0+dCxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437440AbgDNPLh (ORCPT
+        id S2436958AbgDNPMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:11:37 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37150 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436868AbgDNPLb (ORCPT
+        Tue, 14 Apr 2020 11:12:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48028 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2440239AbgDNPIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:11:31 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EF3kr3007845;
-        Tue, 14 Apr 2020 17:11:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=o5lIOijZ0sBDI1z56uPx6r05q0wzqh69VOMPcYsYYzk=;
- b=TET6vAJBhoV6cQkC6NNV3nmXZSkyPqi/T3KqxtfXDzzyhwXjn7i24IujVy7CHIvbQEub
- l2JYjM3ld5bHY1R3iI5sCEMSBOMX3fteDFT7hHkwRNOm0TuxhBQcileaL7BgXdkPNHxo
- yO5jbqDjmcIIIuzruaPHWZXRp//AsR+3WiK9dmCwIM6aPcMIlBgdZu5v27k+t3TTxz+p
- xiI8vR06XEWSrFW/eClYUHeIE+ijgoHEEIzQX6d8aP8pOkinUYwYWokLL/cB2mwRUowi
- ElhW62kV0+on4+O9sH4dhWHdkw1QSjF/W5yRKlS2gYXKhGOaUFW9WM/jJtwtTumuLDon tw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30b5sjxe4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 17:11:09 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B4E1F100034;
-        Tue, 14 Apr 2020 17:11:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 96CB12B2F95;
-        Tue, 14 Apr 2020 17:11:03 +0200 (CEST)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 14 Apr
- 2020 17:11:03 +0200
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Tue, 14 Apr 2020 17:11:03 +0200
-From:   Christophe ROULLIER <christophe.roullier@st.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH V2 0/2] Convert stm32 dwmac to DT schema
-Thread-Topic: [PATCH V2 0/2] Convert stm32 dwmac to DT schema
-Thread-Index: AQHWCcDK5mbO73L43EK/JlozUfUcxahn5iUAgBDCpAA=
-Date:   Tue, 14 Apr 2020 15:11:03 +0000
-Message-ID: <df446a1a-c651-caa9-6086-9d84b11f3159@st.com>
-References: <20200403140415.29641-1-christophe.roullier@st.com>
- <20200403.161414.635525483978443770.davem@davemloft.net>
-In-Reply-To: <20200403.161414.635525483978443770.davem@davemloft.net>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B6C78A97C0A16440BDF6F6D6EEBB6B79@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 Apr 2020 11:08:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586876886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C8QBtK6nf8dMq00mzJuRC3wnQo9tCeCO/0M31V5xp/s=;
+        b=RQ0+dCxHObuPntbGT4RFXDFQP977UaTa/RWm3oBFe8dR4EiWxIhlMb+TZpFYB2DF30qlvS
+        8L53XbHfC3gtL2L0gmHUX96bRyNxA1WIK25DyyH7Chy1DlrNWAcqTVzVA2GLFUYck9Jp/o
+        TrBBsaQAvLk8+3W+uwJYj2CDPhd9Ck0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-VlwdYdX3OMyCDijdDEu_Xg-1; Tue, 14 Apr 2020 11:08:03 -0400
+X-MC-Unique: VlwdYdX3OMyCDijdDEu_Xg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D79413F8;
+        Tue, 14 Apr 2020 15:08:00 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54E8819C69;
+        Tue, 14 Apr 2020 15:07:50 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, will@kernel.org,
+        joro@8bytes.org, maz@kernel.org, robin.murphy@arm.com
+Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
+        shameerali.kolothum.thodi@huawei.com, alex.williamson@redhat.com,
+        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
+        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
+        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
+Subject: [PATCH v11 11/13] iommu/smmuv3: Enforce incompatibility between nested mode and HW MSI regions
+Date:   Tue, 14 Apr 2020 17:06:05 +0200
+Message-Id: <20200414150607.28488-12-eric.auger@redhat.com>
+In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
+References: <20200414150607.28488-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkdlbnRsZSByZW1pbmRlcg0KDQpUaGFua3MsDQoNCkNocmlzdG9waGUuDQoNCk9uIDA0
-LzA0LzIwMjAgMDE6MTQsIERhdmlkIE1pbGxlciB3cm90ZToNCj4gRnJvbTogQ2hyaXN0b3BoZSBS
-b3VsbGllciA8Y2hyaXN0b3BoZS5yb3VsbGllckBzdC5jb20+DQo+IERhdGU6IEZyaSwgMyBBcHIg
-MjAyMCAxNjowNDoxMyArMDIwMA0KPg0KPj4gQ29udmVydCBzdG0zMiBkd21hYyB0byBEVCBzY2hl
-bWENCj4+DQo+PiB2MS0+djI6IFJlbWFya3MgZnJvbSBSb2INCj4gSSBhbSBhc3N1bWluZyB0aGF0
-IHRoZSBEVCBmb2xrcyB3aWxsIHBpY2sgdGhpcyB1cC4=
+Nested mode currently is not compatible with HW MSI reserved regions.
+Indeed MSI transactions targeting this MSI doorbells bypass the SMMU.
+
+Let's check nested mode is not attempted in such configuration.
+
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+---
+ drivers/iommu/arm-smmu-v3.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index f157d1de614b..f4c793649152 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2927,6 +2927,23 @@ static bool arm_smmu_share_msi_domain(struct iommu=
+_domain *domain,
+ 	return share;
+ }
+=20
++static bool arm_smmu_has_hw_msi_resv_region(struct device *dev)
++{
++	struct iommu_resv_region *region;
++	bool has_msi_resv_region =3D false;
++	LIST_HEAD(resv_regions);
++
++	iommu_get_resv_regions(dev, &resv_regions);
++	list_for_each_entry(region, &resv_regions, list) {
++		if (region->type =3D=3D IOMMU_RESV_MSI) {
++			has_msi_resv_region =3D true;
++			break;
++		}
++	}
++	iommu_put_resv_regions(dev, &resv_regions);
++	return has_msi_resv_region;
++}
++
+ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct devic=
+e *dev)
+ {
+ 	int ret =3D 0;
+@@ -2971,10 +2988,12 @@ static int arm_smmu_attach_dev(struct iommu_domai=
+n *domain, struct device *dev)
+ 	/*
+ 	 * In nested mode we must check all devices belonging to the
+ 	 * domain share the same physical MSI doorbell. Otherwise nested
+-	 * stage MSI binding is not supported.
++	 * stage MSI binding is not supported. Also nested mode is not
++	 * compatible with MSI HW reserved regions.
+ 	 */
+ 	if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_NESTED &&
+-		!arm_smmu_share_msi_domain(domain, dev)) {
++		(!arm_smmu_share_msi_domain(domain, dev) ||
++		 arm_smmu_has_hw_msi_resv_region(dev))) {
+ 		ret =3D -EINVAL;
+ 		goto out_unlock;
+ 	}
+--=20
+2.20.1
+
