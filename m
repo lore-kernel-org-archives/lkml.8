@@ -2,161 +2,189 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471C4C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251F52064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:58:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Hwu3PZpm"
+	by mail.kernel.org (Postfix) with ESMTP id 2EC142074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586897956;
+	bh=GYIm3oRtzkOhfzRvwaslo+C0b0DbLNOXs+e7b+LgPDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0ZEXIaElfDdn3b7vHgR8xGAPIrtMFxmjlO/A17Jz3qglZdj92SKfRDhOt78n1r+j0
+	 +K/SwNQaLgvvMtQx4OsvNVq2yfBh0+gDRuGWqiZg0/KtLPfODGFTbYlJdREPigUG69
+	 mz68maAL1OK8w2xRX4cres1aNhxclY12vvYNeffc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633509AbgDNU6Q (ORCPT
+        id S2633535AbgDNU7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633447AbgDNU5J (ORCPT
+        Tue, 14 Apr 2020 16:59:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43486 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633447AbgDNU64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:57:09 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 13:57:08 PDT
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AE0C061A0C;
-        Tue, 14 Apr 2020 13:57:08 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 13C81521;
-        Tue, 14 Apr 2020 22:57:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586897827;
-        bh=+opjKMJynJ2yyGq/b6mxDNSq3e8f5ZXoGqlv0GJOl4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hwu3PZpm77wy9qhNgn34zcCfb8HT0nsEaRmSyepW5eBqDSjv/PUGzdc0Gw9UzJP7Q
-         1PlZPJcIoaT11Li8C2XvOTx875+2WLYsx57TjIbr1/JbQ2AHjXV91dvPFkDZJzugNy
-         FufJ5UISqswefu7BV6wUkjGeAC/ZTDCfDlEsCg8w=
-Date:   Tue, 14 Apr 2020 23:56:55 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200414205655.GO19819@pendragon.ideasonboard.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
- <20200407151401.GA5206@paasikivi.fi.intel.com>
- <20200414205552.GN19819@pendragon.ideasonboard.com>
+        Tue, 14 Apr 2020 16:58:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id l1so494778pff.10;
+        Tue, 14 Apr 2020 13:58:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2BFbh/NVyd/nEEqnIV7FAkYPsjDu10E1KJ7JMizEGUs=;
+        b=ZWg9atuX4nJmFaJPPy+n7lOuSBx7FEJ8gvZo1CcZo74d88FAoma5A71qE1KOBH/PvC
+         DV5Vkof9X6SLYKwo9ORSz80qzDn3LK6aDCrt5IIvD36s0A/1Z+6nq1FiUXwylFO/Xh+b
+         CjnbGHZdIjgxWp/2vTphtjenOw2vnr8c/Us3Gr2cqqjvppUOaj8xR5IIhejNomuZpHiw
+         1Z3ccIpUfz0eM79HJrNGR/yGx+4F+bHrtYKjaBCxqBIkWO1OOqh6NWRKO3IQqQoWcPDp
+         FV2Z0vcA0th/lS+ARwUj6to88XraeBz9oQn9/8pVvtf1oULyC5QeYb6gbdtEheRNEWrl
+         qsig==
+X-Gm-Message-State: AGi0PuZP3OMe13UFWnBtH2hOsMkorDZ5tzBBAGZNdF8AXpYQ9Xfsxvk/
+        2W475FGPTuz3PvZtSPcj420=
+X-Google-Smtp-Source: APiQypKmhyUPwU3E+eaaqWqZ9C3MBCiwt3U/HU4Vjk70huVm8L0B8YcyK+w2BA/5pI1GVFdjIpQH2g==
+X-Received: by 2002:a63:d454:: with SMTP id i20mr22395308pgj.209.1586897935063;
+        Tue, 14 Apr 2020 13:58:55 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id a1sm11817266pfl.188.2020.04.14.13.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 13:58:53 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DA82440277; Tue, 14 Apr 2020 20:58:52 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 20:58:52 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 5/5] block: revert back to synchronous request_queue
+ removal
+Message-ID: <20200414205852.GP11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-6-mcgrof@kernel.org>
+ <20200414154725.GD25765@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
+In-Reply-To: <20200414154725.GD25765@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
-
-On Tue, Apr 14, 2020 at 11:55:54PM +0300, Laurent Pinchart wrote:
-> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
-> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> >> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> >>> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> >>>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> >>>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> >>>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> >>>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> >>>>>> 24MHz. So instead making clock-frequency as dt-property just let the
-> >>>>>> driver enforce the required clock frequency.
-> >>>>> 
-> >>>>> Even if some current systems where the driver is used are using 24 MHz
-> >>>>> clock, that doesn't mean there wouldn't be systems using another frequency
-> >>>>> that the driver does not support right now.
-> >>>>> 
-> >>>>> The driver really should not set the frequency unless it gets it from DT,
-> >>>>> but I think the preferred means is to use assigned-clock-rates instead, and
-> >>>>> not to involve the driver with setting the frequency.
-> >>>>> 
-> >>>>> Otherwise we'll make it impossible to support other frequencies, at least
-> >>>>> without more or less random defaults.
-> >>>> 
-> >>>> We're running in circles here.
-> >>>> 
-> >>>> As the driver only supports 24MHz at the moment, the frequency should be
-> >>>> set by the driver, as it's a driver limitation. We can then work on
-> >>>> supporting additional frequencies, which will require DT to provide a
-> >>>> list of supported frequencies for the system, but that can be done on
-> >>>> top.
-> >>> 
-> >>> I guess it would be possible to use different external clock frequencies on
-> >>> a sensor in a given system but that seems to be a bit far fetched, to the
-> >>> extent I've never seen anyone doing that in practice.
-> >>> 
-> >>> Originally, the driver set the frequency based on the clock-frequency
-> >>> property. If we're removing that but use a fixed frequency instead, then
-> >>> how is that going to work going forward when someone adds support for other
-> >>> frequencies in the driver and has a system requiring that, while there are
-> >>> some other platforms relying on the driver setting a particular frequency?
-> >> 
-> >> The standard property for this is link-frequencies, not clock-frequency.
-> >> Deprecating clock-frequency now paves the way to use the standard
-> >> property later when/if someone implements support for additional
-> >> frequencies.
+On Tue, Apr 14, 2020 at 08:47:25AM -0700, Christoph Hellwig wrote:
+> On Tue, Apr 14, 2020 at 04:19:02AM +0000, Luis Chamberlain wrote:
+> > Commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
+> > v4.12 moved the work behind blk_release_queue() into a workqueue after a
+> > splat floated around which indicated some work on blk_release_queue()
+> > could sleep in blk_exit_rl(). This splat would be possible when a driver
+> > called blk_put_queue() or blk_cleanup_queue() (which calls blk_put_queue()
+> > as its final call) from an atomic context.
 > > 
-> > The external clock frequency and link frequency are different indeed, but
-> > they are related. The link frequency has been selected in a way that it is
-> > possible to generate that exact frequency using the chosen external clock
-> > frequency. If you change the external clock frequency, chances are good
-> > there is no PLL configuration to generate that link frequency.
-> 
-> But aren't we supposed to pick the clock frequency based on the link
-> frequency specified in DT ?
-> 
-> In any case, this policy needs to be carefully documented.
-
-And by this I mean in a central place, not leaving it to individual
-bindings.
-
-Maxime, we've previously discussed this issue privately on IRC, what's
-your opinion ?
-
-> >>> Although, if you're saying that this driver only needs to work with DT that
-> >>> comes with the kernel and you don't care about DT binary compatibility,
-> >>> this would be fine.
-> >> 
-> >> I believe this series to not break backward compatibility, as the driver
-> >> only works with a 24MHz clock, so I expect all DTs to specify that.
+> > blk_put_queue() decrements the refcount for the request_queue
+> > kobject, and upon reaching 0 blk_release_queue() is called. Although
+> > blk_exit_rl() is now removed through commit db6d9952356 ("block: remove
+> > request_list code"), we reserve the right to be able to sleep within
+> > blk_release_queue() context. If you see no other way and *have* be
+> > in atomic context when you driver calls the last blk_put_queue()
+> > you can always just increase your block device's reference count with
+> > bdgrab() as this can be done in atomic context and the request_queue
+> > removal would be left to upper layers later. We document this bit of
+> > tribal knowledge as well now, and adjust kdoc format a bit.
 > > 
-> > What you're still doing here is defining the DT bindings based on the
-> > current driver implementation, not the device properties.
+> > We revert back to synchronous request_queue removal because asynchronous
+> > removal creates a regression with expected userspace interaction with
+> > several drivers. An example is when removing the loopback driver and
+> > issues ioctl from userspace to do so, upon return and if successful one
+> > expects the device to be removed. Moving to asynchronous request_queue
+> > removal could have broken many scripts which relied on the removal to
+> > have been completed if there was no error.
+> > 
+> > Using asynchronous request_queue removal however has helped us find
+> > other bugs, in the future we can test what could break with this
+> > arrangement by enabling CONFIG_DEBUG_KOBJECT_RELEASE.
+> > 
+> > Cc: Bart Van Assche <bvanassche@acm.org>
+> > Cc: Omar Sandoval <osandov@fb.com>
+> > Cc: Hannes Reinecke <hare@suse.com>
+> > Cc: Nicolai Stange <nstange@suse.de>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: yu kuai <yukuai3@huawei.com>
+> > Suggested-by: Nicolai Stange <nstange@suse.de>
+> > Fixes: dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > ---
+> >  block/blk-core.c       | 19 ++++++++++++++++++-
+> >  block/blk-sysfs.c      | 38 +++++++++++++++++---------------------
+> >  include/linux/blkdev.h |  2 --
+> >  3 files changed, 35 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/block/blk-core.c b/block/blk-core.c
+> > index 5aaae7a1b338..8346c7c59ee6 100644
+> > --- a/block/blk-core.c
+> > +++ b/block/blk-core.c
+> > @@ -301,6 +301,17 @@ void blk_clear_pm_only(struct request_queue *q)
+> >  }
+> >  EXPORT_SYMBOL_GPL(blk_clear_pm_only);
+> >  
+> > +/**
+> > + * blk_put_queue - decrement the request_queue refcount
+> > + *
+> > + * Decrements the refcount to the request_queue kobject, when this reaches
+> > + * 0 we'll have blk_release_queue() called. You should avoid calling
+> > + * this function in atomic context but if you really have to ensure you
+> > + * first refcount the block device with bdgrab() / bdput() so that the
+> > + * last decrement happens in blk_cleanup_queue().
+> > + *
+> > + * @q: the request_queue structure to decrement the refcount for
+> > + */
+> >  void blk_put_queue(struct request_queue *q)
+> >  {
+> >  	kobject_put(&q->kobj);
+> > @@ -328,10 +339,16 @@ EXPORT_SYMBOL_GPL(blk_set_queue_dying);
+> >  
+> >  /**
+> >   * blk_cleanup_queue - shutdown a request queue
+> > - * @q: request queue to shutdown
+> >   *
+> >   * Mark @q DYING, drain all pending requests, mark @q DEAD, destroy and
+> >   * put it.  All future requests will be failed immediately with -ENODEV.
+> > + *
+> > + * You should not call this function in atomic context. If you need to
+> > + * refcount a request_queue in atomic context, instead refcount the
+> > + * block device with bdgrab() / bdput().
 > 
-> Quite the contrary, the device doesn't require any particular input
-> clock frequency, so we're removing that from DT :-) Specifying the clock
-> frequency in DT is in my opinion a manual workaround for not computing
-> it at runtime based on the desired link frequency, while the link
-> frequency is a property of the system as it specifies the range of link
-> frequencies that are safe to use from an EMC point of view.
+> I think this needs a WARN_ON thrown in to enforece the calling context.
 
--- 
-Regards,
+I considered adding a might_sleep() but upon review with Bart, he noted
+that this function already has a mutex_lock(), and if you look under the
+hood of mutex_lock(), it has a might_sleep() at the very top. The
+warning then is implicit.
 
-Laurent Pinchart
+> > + *
+> > + * @q: request queue to shutdown
+> 
+> Moving the argument documentation seems against the usual kerneldoc
+> style.
+
+Would you look at that, Documentation/doc-guide/kernel-doc.rst does
+say to keep the argument at the top as it was in place before, OK will
+revert that. Sorry, I used include/net/mac80211.h as my base for style.
+
+> Otherwise this look good, I hope it sticks :)
+
+I hope that the kdocs / might_sleep() sprinkled should make it stick now.
+But hey, this uncovered wonderful obscure bugs, it was fun. I'll add a
+selftest also later to ensure we don't regress on some of this later
+once again.
+
+  Luis
