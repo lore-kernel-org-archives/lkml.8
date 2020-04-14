@@ -2,102 +2,82 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019F7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE03C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34A8206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6488720732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WOKQGFXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404873AbgDNDjX (ORCPT
+        id S2404889AbgDNDk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:39:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404832AbgDNDjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:39:20 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 96C7A3D5AC211402FCB5;
-        Tue, 14 Apr 2020 11:39:15 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Apr 2020 11:39:06 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <akpm@linux-foundation.org>, <sjenning@redhat.com>,
-        <ddstreet@ieee.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] mm: use false for bool variable
-Date:   Tue, 14 Apr 2020 11:45:30 +0800
-Message-ID: <1586835930-47076-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Mon, 13 Apr 2020 23:40:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:19563 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404874AbgDNDk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 23:40:58 -0400
+X-UUID: 130231d2b9d145989eaf1c2be2eb8a40-20200414
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=pXbuHYf29wq9I5dB9+bPlMg2JqoQVfcEPpb8kdg9al4=;
+        b=WOKQGFXHfVI/VIGaXPZyHMPLRnupYoN2y/YqVZyftVjEx5/1eO3QiaNVZ+qhCrR1RzQUfwVGQ1GkE36pkUftFDezbcphpkGR5yCmmSvCUaK4YdK4URSmesoEiFBg6udCBwd3Wo+TXG3cAsRD+/favOs723Knrt/6oO2Oky6Rm5Y=;
+X-UUID: 130231d2b9d145989eaf1c2be2eb8a40-20200414
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <yong.mao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1549726525; Tue, 14 Apr 2020 11:40:55 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Apr 2020 11:40:54 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Apr 2020 11:40:49 +0800
+From:   Yong Mao <yong.mao@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        yong mao <yong.mao@mediatek.com>
+Subject: [PATCH 1/3] mmc: core: need do mmc_power_cycle in mmc_sdio_resend_if_cond
+Date:   Tue, 14 Apr 2020 11:40:09 +0800
+Message-ID: <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com>
+References: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
-
-mm/zbud.c:246:1-20: WARNING: Assignment of 0/1 to bool variable
-mm/mremap.c:777:2-8: WARNING: Assignment of 0/1 to bool variable
-mm/huge_memory.c:525:9-10: WARNING: return of 0/1 in function
-'is_transparent_hugepage' with return type bool
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- mm/huge_memory.c | 2 +-
- mm/mremap.c      | 2 +-
- mm/zbud.c        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 6ecd104..5f42805 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -522,7 +522,7 @@ void prep_transhuge_page(struct page *page)
- bool is_transparent_hugepage(struct page *page)
- {
- 	if (!PageCompound(page))
--		return 0;
-+		return false;
- 
- 	page = compound_head(page);
- 	return is_huge_zero_page(page) ||
-diff --git a/mm/mremap.c b/mm/mremap.c
-index a7e282e..3ac7ced 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -774,7 +774,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- out:
- 	if (offset_in_page(ret)) {
- 		vm_unacct_memory(charged);
--		locked = 0;
-+		locked = false;
- 	}
- 	if (downgraded)
- 		up_read(&current->mm->mmap_sem);
-diff --git a/mm/zbud.c b/mm/zbud.c
-index de5dd4d..bc93aa4 100644
---- a/mm/zbud.c
-+++ b/mm/zbud.c
-@@ -243,7 +243,7 @@ static struct zbud_header *init_zbud_page(struct page *page)
- 	zhdr->last_chunks = 0;
- 	INIT_LIST_HEAD(&zhdr->buddy);
- 	INIT_LIST_HEAD(&zhdr->lru);
--	zhdr->under_reclaim = 0;
-+	zhdr->under_reclaim = false;
- 	return zhdr;
- }
- 
--- 
-2.6.2
+RnJvbTogeW9uZyBtYW8gPHlvbmcubWFvQG1lZGlhdGVrLmNvbT4NCg0KV2hlbiBtbWNfc2Rpb19y
+ZXNuZWRfaWZfY29uZCBpcyBpbnZva2VkLCBpdCBpbmRpY2F0ZXMgdGhlIFNESU8NCmRldmljZSBp
+cyBub3QgaW4gdGhlIHJpZ2h0IHN0YXRlLiBJbiB0aGlzIGNvbmRpdGlvbiwgdGhlIHByZXZpb3Vz
+DQppbXBsZW1lbnRhdGlvbiBvZiBtbWNfc2Rpb19yZXNlbmRfaWZfY29uZCBjYW4ndCBtYWtlIHN1
+cmUgU0RJTw0KZGV2aWNlIGJlIGJhY2sgdG8gaWRsZSBzdGF0ZS4gbW1jX3Bvd2VyX2N5Y2xlIGNh
+biByZXNldCB0aGUgU0RJTw0KZGV2aWNlIGJ5IEhXIGFuZCBhbHNvIG1ha2Ugc3VyZSBTRElPIGRl
+dmljZSBlbnRlciB0byBpZGxlIHN0YXRlDQpjb3JyZWN0bHkuDQoNClNpZ25lZC1vZmYtYnk6IFlv
+bmcgTWFvIDx5b25nLm1hb0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL21tYy9jb3JlL3Nk
+aW8uYyB8IDEgKw0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9tbWMvY29yZS9zZGlvLmMgYi9kcml2ZXJzL21tYy9jb3JlL3NkaW8uYw0KaW5k
+ZXggZWJiMzg3YS4uYWRhMGE4MCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1jL2NvcmUvc2Rpby5j
+DQorKysgYi9kcml2ZXJzL21tYy9jb3JlL3NkaW8uYw0KQEAgLTU0Niw2ICs1NDYsNyBAQCBzdGF0
+aWMgaW50IG1tY19zZGlvX2luaXRfdWhzX2NhcmQoc3RydWN0IG1tY19jYXJkICpjYXJkKQ0KIHN0
+YXRpYyB2b2lkIG1tY19zZGlvX3Jlc2VuZF9pZl9jb25kKHN0cnVjdCBtbWNfaG9zdCAqaG9zdCwN
+CiAJCQkJICAgIHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkNCiB7DQorCW1tY19wb3dlcl9jeWNsZSho
+b3N0LCBob3N0LT5jYXJkLT5vY3IpOw0KIAlzZGlvX3Jlc2V0KGhvc3QpOw0KIAltbWNfZ29faWRs
+ZShob3N0KTsNCiAJbW1jX3NlbmRfaWZfY29uZChob3N0LCBob3N0LT5vY3JfYXZhaWwpOw0KLS0g
+DQoxLjkuMQ0K
 
