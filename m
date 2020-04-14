@@ -2,140 +2,185 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A55C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23011C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4204E206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBEE206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYW4YTrY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OPAU9TvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405506AbgDNF0k (ORCPT
+        id S2405520AbgDNF2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38910 "EHLO
+        Tue, 14 Apr 2020 01:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405499AbgDNF0f (ORCPT
+        by vger.kernel.org with ESMTP id S1729112AbgDNF2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:26:35 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2E6C0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:26:34 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m12so15338291edl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:26:34 -0700 (PDT)
+        Tue, 14 Apr 2020 01:28:38 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB48C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:28:38 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e16so4514556pjp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uuPdzsYrCELKJnGVxoANM1PIXJOyrUjt5nhJHbZTcKo=;
-        b=IYW4YTrYfy+kuwOU/lYSO3bgdbsS6ahDQGbWQz2pVXyf3gpqKiVGpSqAGXtloLGD2M
-         WA6XxacLcQak2MEzhhTV0X5U/dR3yiLyx5qEePcdC4cRvL0T7jdFdGi3CGg8DESOCPws
-         lsm3aaw0P2r+rWFW6Jf015OyCD5/EKke57c2kACRLYYaHvTXrpOJn8pSD0QXt63mP9H2
-         NunKHb4PkJIIeZPyu3B0BstWYB74PnnGOaUD6TXxgbVwrVMYLY1FJV/Hp2oxnAh234Zl
-         xFnItRaPtPJptW3rvZuQD06WVCaVjjK96ry+TXpdxrM5IgHrbsgb77anjgstT6SY1QLw
-         ZSug==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xgp243WtEP1LNdfVIpvVcbQ0zjOhDHE/KM2PzFcpiyc=;
+        b=OPAU9TvDwl7qJCu6OAs5YyahFBZC3Q6cV59WauujCBixAKS7weSNUnQPm/5+MZSb/I
+         pAetxkVzb/jb4aTsYFlB8rtTnm+8gvja6ZVuG15KzTf+4UPKKa6XaL9WI6lfJDQ3HMM8
+         NvJdkYFKkUZbHwr1bUHSMeEebhcnGFyhWeytsELWUa6+bTHVAGAIB/hH0h706oyWzl22
+         2FM/msTcE6mS5aA5+66sYub34SDWu2Rh3SG/57uMrnHRzMxOhQxokRzdQPuWwCaBfttl
+         900oFYEkMK+3Q+XM1Wna3FlMzkh5ZmWWHfMnD/VUW9gGakFyT2Jg73ABFy6BoH1GaW+9
+         vnCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uuPdzsYrCELKJnGVxoANM1PIXJOyrUjt5nhJHbZTcKo=;
-        b=nzgT4Cf9t8uFtydDqSs9ec8O1yPk7D0jK4G28BPfmf6UIUQa1q/q/K78ZN/ehyjdVO
-         ynTjiCRPTZ5kj4iE/CGHkO5QUJ2obKkFkifeVXbHsz4IRtNebeMBJDxxVxY54EI3QZKc
-         SkkjFuDxXTex8LTX7NHIZUHuwA9lzojz59eOafiKD7w7WNT4HqsoGqd860MU9bsqeGZ5
-         wLIGSCRQNSkEibRL7/VWhkyazWZQduq9HYOPl49PIy1XDcOq62sJ1uCdhBTrCq1KCiKT
-         fSl91sQ04meFGy2l5UGYiJNdV36oB7WAMOxaxh77UBrRek8f6yufMfgNCcHzDm28oFL1
-         5rlg==
-X-Gm-Message-State: AGi0PuYhPVeftPBVp0kLmLoX9TJwKpo7kJwAqSa/+GwleMtS536Erd9c
-        +RC6ujTLl2nZNFpZK7JrN4DPb6E9TC0d6l5T/toLvw==
-X-Google-Smtp-Source: APiQypI+OHSx7I0zAFNl0j3kM4YuBCc2AJy2aRhhIsVV8UZqht0LfkdSl9kXkAtfkBw1fMhlpmo+n7+6X8Ap0UyfKBQ=
-X-Received: by 2002:a50:d71e:: with SMTP id t30mr969087edi.246.1586841992805;
- Mon, 13 Apr 2020 22:26:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xgp243WtEP1LNdfVIpvVcbQ0zjOhDHE/KM2PzFcpiyc=;
+        b=B5KrZQNBBskSYKlwT0x6XFK3lCepiWexz1qIhjfwLHoDCZDE0WeK9md7TXf9oSGJWj
+         X8jBzbN2AJimeMBXPHQRcNoclmlxVButEpvcBpj8E4FHCmPxiLQbsTpXf4sEAYW3/O6W
+         f/3vpaDprqCnwlbEpmUatBI5I2V+ef1w4MynFUDKrr8rnfumZ3QpsLR5lc7dymXiwyUf
+         V9HzOOgMtlObIYafrnOAmisXs4ReJQPpTQYop7/0TqZ9oc/OkBeSZQobkT5g4tsPMx3E
+         Ou0Z/8ooaJcPP0FvqJVXQ/iEobEUPvJFYyQQozH0gqM44ZW+8qCekRyVR7NI2b/gdDny
+         96Ag==
+X-Gm-Message-State: AGi0Pub1WIoLaLipl+twfuz00lbbba/4YV0es9Dr8cHBGQMCTi8GEd6S
+        SlQ1LcnS+jdtzo0fDL5a6Dt73A==
+X-Google-Smtp-Source: APiQypJ2DGxHe+wxDjPG889/Q8OzEdTTI9TJ3wHcYRBPl0exjYxmCYOm6PNGkhxghXFnC3kWQsUmfw==
+X-Received: by 2002:a17:90a:23ad:: with SMTP id g42mr12454638pje.35.1586842117393;
+        Mon, 13 Apr 2020 22:28:37 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h6sm10088233pfq.200.2020.04.13.22.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 22:28:36 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 22:28:51 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>, swboyd@chromium.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] drivers: qcom: rpmh-rsc: Cleanup / add lots of
+ comments
+Message-ID: <20200414052851.GI20625@builder.lan>
+References: <20200413170415.32463-1-dianders@chromium.org>
 MIME-Version: 1.0
-References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-3-git-send-email-rnayak@codeaurora.org> <20200409174511.GS199755@google.com>
- <CABymUCNdX=K1vFuC0Rt-u0h-CRYcKtXogyOkAiGZpDfKSVAYqA@mail.gmail.com> <13907000-e3b0-12d6-0768-fd8a7ab100d9@codeaurora.org>
-In-Reply-To: <13907000-e3b0-12d6-0768-fd8a7ab100d9@codeaurora.org>
-From:   Jun Nie <jun.nie@linaro.org>
-Date:   Tue, 14 Apr 2020 13:26:21 +0800
-Message-ID: <CABymUCM+WjSxKhhvqbBSxub_3wxvnJ8aOVgtWD9JOoxA3MuY2A@mail.gmail.com>
-Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, sboyd@kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413170415.32463-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rajendra Nayak <rnayak@codeaurora.org> =E4=BA=8E2020=E5=B9=B44=E6=9C=8813=
-=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=8810:22=E5=86=99=E9=81=93=EF=BC=
-=9A
->
->
->
-> On 4/10/2020 2:06 PM, Jun Nie wrote:
-> >>> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct u=
-art_port *uport,
-> >>>                goto out_restart_rx;
-> >>>
-> >>>        uport->uartclk =3D clk_rate;
-> >>> -     clk_set_rate(port->se.clk, clk_rate);
-> >>> +     dev_pm_opp_set_rate(uport->dev, clk_rate);
-> >
-> > Hi Rajendra,
->
-> Hi Jun,
->
-> > I see lowest rpmhpd_opp_low_svs opp is for 75MHz. It is a bit higher
-> > for a serial.
-> > I am just curious about this.
->
-> Well these OPP tables are technically what we call as fmax tables, which =
-means
-> you can get the clock to a max of 75MHz at that perf level. You need to g=
-o
-> to the next perf level if you want to go higher.
-> That however does not mean that serial cannot run at clocks lower than 75=
-Mhz.
->
-> > I also want to confirm that the rpmhpd_opp_low_svs voltage restriction
-> > is for serial
-> > controller, not for clock controller? Because I see there is similar
-> > restriction to clock
-> > controller on another platform, the restriction is for branch clock,
-> > not leaf clock that
-> > consumer device will get.
->
-> yes, its a serial controller restriction and not of the clock provider.
-> On your note on the branch clock vs leaf clock I am not sure I understand
-> the point you are making.
+On Mon 13 Apr 10:04 PDT 2020, Douglas Anderson wrote:
 
-For the leaf clock, I mean the clock that consumer get with devm_clk_get().=
- The
-branch clock means it is not for consumer directly, and its child
-clock or grandchild
-clock is for consumer. In that case, the restriction has to be done in
-clock driver,
-not in clock consumer driver. Sorry for confusing you. I just want to
-know more about
-what function this patch set provide. Because I am working on the
-clock controller
-restriction of fmax/voltage. Thanks!
+> In order to review Maulik's latest "rpmh_flush for non OSI targets"
+> patch series I've found myself trying to understand rpmh-rsc better.
+> To make it easier for others to do this in the future, add a whole lot
+> of comments / documentation.
+> 
+> As part of this there are a very small number of functional changes.
+> - We'll get a tiny performance boost by getting rid of the "cmd_cache"
+>   which I believe was unnecessary.
+> - We now assume someone else is in charge of exclusivity for
+>   tcs_invalidate() and have removed a lock in there. As per the
+>   comments in the patch, this isn't expected to cause problems.
+> - tcs_is_free() no longer checks hardware state, but we think it
+>   didn't need to.
+> 
+> These changes touch a lot of code in rpmh-rsc.  Luckily Maulik has
+> reported that he's tested them and they work fine for him.  They
+> should be ready to go.
+> 
+> I've tried to structure the patches so that simpler / less
+> controversial patches are first. Those could certainly land on their
+> own without later patches. Many of the patches could also be dropped
+> and the others would still apply if they are controversial.  If you
+> need help doing this then please yell.
+> 
+> These patches are based on Maulik's v17 series, AKA:
+> https://lore.kernel.org/r/1586703004-13674-1-git-send-email-mkshah@codeaurora.org
+> 
+> There are still more cleanups that we need to do, but to avoid having
+> too many patches flying through the air at once we'll do them after
+> Maulik's v17 and this series lands.
+> 
+> With all that, enjoy.
+> 
 
-Jun
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+Applied the series, with the typos pointed out by Stephen fixed.
+Please follow up on the additional suggestions with incremental patches.
+
+Regards,
+Bjorn
+
+> Changes in v4:
+> - Add "payload" to end of ("Don't double-check rpmh") patch subject
+> - Removed extra "make sure" in commit message.
+> 
+> Changes in v3:
+> - ("...are not for IRQ") is new for v3.
+> - ("Don't double-check rpmh") replaces ("Warning if tcs_write...")
+> - Add "TCS" in title (Maulik).
+> - Adjusted comments for rpmh_rsc_write_ctrl_data().
+> - Comments for new enable_tcs_irq() function.
+> - Comments for new rpmh_rsc_cpu_pm_callback() function.
+> - Extra blank line removed (Maulik).
+> - IRQ registers aren't in TCS0 (Maulik).
+> - Kill find_match moves from patch #9 to patch #5 (Maulik).
+> - Mention in message that I also fixed up kernel-doc stuff.
+> - Moved comments patch after ("Kill cmd_cache and find_match...").
+> - One space after a period now (Maulik).
+> - Plural of TCS fixed to TCSes following Maulik's example.
+> - Re-added comment in tcs_write() about checking for same address.
+> - Rebased atop v16 ('Invoke rpmh_flush...') series.
+> - Replace ("...warn if state mismatch") w/ ("...just check tcs_in_use")
+> - Replaced ("irqsave()...") + ("...never -EBUSY") w/ ("Caller handles...")
+> - Rewrote commit message to adjust for patch order.
+> - __tcs_set_trigger() comments adjusted now that it can set or unset.
+> - get_tcs_for_msg() documents why it's safe to borrow the wake TCS.
+> - get_tcs_for_msg() no longer returns -EAGAIN.
+> 
+> Changes in v2:
+> - Comment tcs_is_free() new for v2; replaces old patch 6.
+> - Document bug of tcs_write() not handling -EAGAIN.
+> - Document get_tcs_for_msg() => -EAGAIN only for ACTIVE_ONLY.
+> - Document locks for updating "tcs_in_use" more.
+> - Document tcs_is_free() without drv->lock OK for tcs_invalidate().
+> - Document that rpmh_rsc_send_data() can be an implicit invalidate.
+> - Document two get_tcs_for_msg() issues if zero-active TCS.
+> - Fixed documentation of "tcs" param in find_slots().
+> - Got rid of useless "if (x) continue" at end of for loop.
+> - More clear that active-only xfers can happen on wake TCS sometimes.
+> - Now prose in comments instead of struct definitions.
+> - Pretty ASCII art from Stephen.
+> - Reword tcs_write() doc a bit.
+> 
+> Douglas Anderson (10):
+>   drivers: qcom: rpmh-rsc: Clean code reading/writing TCS regs/cmds
+>   drivers: qcom: rpmh-rsc: Document the register layout better
+>   drivers: qcom: rpmh-rsc: Fold tcs_ctrl_write() into its single caller
+>   drivers: qcom: rpmh-rsc: Remove get_tcs_of_type() abstraction
+>   drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
+>   drivers: qcom: rpmh-rsc: A lot of comments
+>   drivers: qcom: rpmh-rsc: tcs_is_free() can just check tcs_in_use
+>   drivers: qcom: rpmh-rsc: Don't double-check rpmh payload
+>   drivers: qcom: rpmh-rsc: Caller handles tcs_invalidate() exclusivity
+>   drivers: qcom: rpmh-rsc: read_tcs_reg()/write_tcs_reg() are not for
+>     IRQ
+> 
+>  drivers/soc/qcom/rpmh-internal.h |  66 +++--
+>  drivers/soc/qcom/rpmh-rsc.c      | 465 +++++++++++++++++++++----------
+>  drivers/soc/qcom/rpmh.c          |   5 +-
+>  3 files changed, 363 insertions(+), 173 deletions(-)
+> 
+> -- 
+> 2.26.0.110.g2183baf09c-goog
+> 
