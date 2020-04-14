@@ -2,91 +2,114 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D55C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB9DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5484020768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586865884;
-	bh=dUeyL9occ1LadJp/YkgyEFBnPUbUwozdIxbmk4qkG6I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mpWrjJXGU82aa9wzFyujZdnPGdMfBPc1xYuw1tpVJs8fUX7nQ8mpYLe7EcfhuSCLe
-	 INKSlR4nHhsUh9W4UB+dPyx0WyPZzMUY+X0XdBtidftF8Edyf7wYuI5abcMM1U1AUg
-	 V2yb2V00bC5AtEZdo1QSZh04k9J80w5Evk+AmoAY=
+	by mail.kernel.org (Postfix) with ESMTP id F04032075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N7E03Rra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439844AbgDNMEm (ORCPT
+        id S2439853AbgDNMFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:04:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439808AbgDNMEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:04:14 -0400
-Received: from tleilax.com (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8C712076B;
-        Tue, 14 Apr 2020 12:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586865853;
-        bh=dUeyL9occ1LadJp/YkgyEFBnPUbUwozdIxbmk4qkG6I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D40h5ckhi3GEWYC1jSo/8d5JhiNN18OfiGl6Crk4JTEhlkB4kDpOvEVtd7UPqIKTL
-         EWNjrFziaIWg0wBpq7bKhzQopenc5qtJXzWNCPtQpZHaCe+0j9hLX2vvWurnmf5LF8
-         eiuMaUY8GUbMO4OoGR+YXiF755razhzWl//KyDFk=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        akpm@linux-foundation.org, david@fromorbit.com
-Subject: [PATCH v4 RESEND 2/2] buffer: record blockdev write errors in super_block that it backs
-Date:   Tue, 14 Apr 2020 08:04:09 -0400
-Message-Id: <20200414120409.293749-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200414120409.293749-1-jlayton@kernel.org>
-References: <20200414120409.293749-1-jlayton@kernel.org>
+        Tue, 14 Apr 2020 08:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439808AbgDNMFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:05:35 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED11C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:05:34 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id t3so9008346qkg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ye8Pt9b9xIcYq/Gt9nBPREXSZRlFaEUivxRL23XW6ZI=;
+        b=N7E03RrawPL63NujM/vs57LPY3VlQKpiWGG1zavwqsuqb8LNuPN3T88ns898l6ZijV
+         ZEWoA7htCk64CpOwuJs9jyegCT3l54H4MWw9GTAWZkRqdWq1GRFo+PeD+Z3K08CWaTXA
+         iICk6MVImYfOzrhpXwW9pYoBnuOwFSxVKzPEwypoXsCbZXpgQv1KvFMI1zq9m4lusYG0
+         QyPiNzYpsIgjd3fJuOmjH7dXc6zJXzA4L7rVt16CFjIYnPn3qssahmIomZKo9thw2Kn6
+         2B0lCFlCbIx9nZ/Sb763n9gCGQ83KSXkuGAmMOBcYpKccSjYsk3b0dnoJS1r3HJh7gkP
+         pHqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ye8Pt9b9xIcYq/Gt9nBPREXSZRlFaEUivxRL23XW6ZI=;
+        b=bZ2wfemVtJMjaQC7wy0BmaQoAUh5rs11vkF+LrVvxNqY/fM1hErcsipeesLeaQfRAQ
+         cM7k869+GEYQdgOdfbmA6nHhjVaA3VwbsK5FPwAjpFyKLSPP6NvbS3ibhKx7hY8KRaXs
+         yPEO9EWPdEF60tQIsmWF4yUMklwpmM572GwDyfmjmUmm8jvCI4qeUDfp3ZD7TA6KHA5T
+         EpkSqv0wW0sz3zHVCbEpfhBqyIDu/ZaHznmsX1b9jIQcmnvkwRC8lr77jnwYr+56iKtm
+         OhmOkRxgxwHR6nS3NMkVSoZzECvdWGelOhzFGTGOcT8UXHHEgR7CsZUXVVIbmNm5Mgo5
+         sdKg==
+X-Gm-Message-State: AGi0Pua14Dm/vQFQftuYm3B6dq9ty9QTcZXbqEx5GSy3vcJPs781aavv
+        BLuvFsvhfohlkwCt0k4UHizUvYF5fAoMewq3LS6mng==
+X-Google-Smtp-Source: APiQypLY9oDrsLA1N7wxBV5d9f4kHY3bF533lSU3YgONt9q6VMFdfk/Qaf7YZX0PAASz0V54Qg+I6px7ztXqUkuU2r0=
+X-Received: by 2002:a37:bc47:: with SMTP id m68mr10260254qkf.8.1586865933482;
+ Tue, 14 Apr 2020 05:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACT4Y+ZE1XhYpTsjP1J1PyUsEHYKvchww71aHb7UnSk5=4xUrw@mail.gmail.com>
+ <04E78431-7B62-4FA1-8B1D-51DF7648D9C5@lca.pw>
+In-Reply-To: <04E78431-7B62-4FA1-8B1D-51DF7648D9C5@lca.pw>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 14 Apr 2020 14:05:21 +0200
+Message-ID: <CACT4Y+YE6N8MUL-hVps6+BxVoQ0Xi_4AS26j8e+tv=_L2vKuYA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Dan Rue <dan.rue@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@redhat.com>
+On Tue, Apr 14, 2020 at 1:59 PM Qian Cai <cai@lca.pw> wrote:
+> > On Apr 14, 2020, at 7:13 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > How do these use-after-free's and locking bugs get past the
+> > unit-testing systems (which syzbot is not) and remain unnoticed for so
+> > long?...
+> > syzbot uses the dumbest VMs (GCE), so everything it triggers during
+> > boot should be triggerable pretty much everywhere.
+>
+> There are many reasons that any early testing would not be able to catch =
+ALL the syzbot blockers.
+>
+> The Kconfigs are different. For example, I don=E2=80=99t have openvswitch=
+ enabled, so would miss that ovs rcu-list lockdep warning. Same for that us=
+e-after-free in net/bluetooth and a warning in sound subsystem.
+>
+> But, notifying Linux-next ML is a good start, so at least we could ask Pa=
+ul or Steve to pull out the commit which enabling rcu-list debugging by def=
+ault with PROVE_RCU.
+>
+> I learned through that restricted kconfig to some degree of minimal could=
+ save a lot of troubles late on especially those options that I have no way=
+ to exercise like net/bluetooth and sound currently. It is going to be extr=
+a works though because those default options in Linux-next or even defconfi=
+gs are not always pleasant and would want to enable something I don=E2=80=
+=99t need if not given human intervention.
 
-When syncing out a block device (a'la __sync_blockdev), any error
-encountered will only be recorded in the bd_inode's mapping. When the
-blockdev contains a filesystem however, we'd like to also record the
-error in the super_block that's stored there.
-
-Make mark_buffer_write_io_error also record the error in the
-corresponding super_block when a writeback error occurs and the block
-device contains a mounted superblock.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/buffer.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index f73276d746bb..a9d986d27fa1 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -1160,6 +1160,8 @@ void mark_buffer_write_io_error(struct buffer_head *bh)
- 		mapping_set_error(bh->b_page->mapping, -EIO);
- 	if (bh->b_assoc_map)
- 		mapping_set_error(bh->b_assoc_map, -EIO);
-+	if (bh->b_bdev->bd_super)
-+		errseq_set(&bh->b_bdev->bd_super->s_wb_err, -EIO);
- }
- EXPORT_SYMBOL(mark_buffer_write_io_error);
- 
--- 
-2.25.2
-
+We only try to enable what we can reach. There is significant reach
+for sound and net/bluetooth even without any hardware. So I would
+assume generic testing systems like KernelCI, LKFT, CKI should enable
+these as well. Hopefully we don't have all of the sound and
+net/bluetooth completely untested in linux-next.
