@@ -2,133 +2,108 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448D9C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC9FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAA7206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6E920767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGK2Uw7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405113AbgDNEHf (ORCPT
+        id S2405147AbgDNEQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 00:07:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:40842 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405082AbgDNEHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 00:07:34 -0400
-IronPort-SDR: OpTEa9mE3gUxDvsb+RRrPAIXBsyQyqR8+Shg28zPsprOCdZQTKh1nc2QBIAHsZichd4/0DXrb8
- qN9IJoqmwCrg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 21:07:33 -0700
-IronPort-SDR: 2H2UV6KoSEW+hWxOqHYq8ue1kc/E0rZQvQjwl8HWKchfLetHW6mOwNtowO0uaJ/+dCNzqF6pfz
- jZpot8UeQKZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="253077731"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga003.jf.intel.com with ESMTP; 13 Apr 2020 21:07:33 -0700
-Date:   Mon, 13 Apr 2020 21:07:33 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V7 6/9] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200414040732.GF1649878@iweiny-DESK2.sc.intel.com>
-References: <20200413054046.1560106-1-ira.weiny@intel.com>
- <20200413054046.1560106-7-ira.weiny@intel.com>
- <20200413160138.GV6742@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413160138.GV6742@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Tue, 14 Apr 2020 00:16:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405132AbgDNEQj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 00:16:39 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B67C0A3BDC;
+        Mon, 13 Apr 2020 21:16:39 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so11515154wmk.5;
+        Mon, 13 Apr 2020 21:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hyKFoSOT3+JqQspFpmS0qfxT2Hk1NGaZGJAmafeRRtk=;
+        b=OGK2Uw7P7H8pQ49HPYbtL3YliUCHUWx4NkZDNImgjmfM2asoA9P20xDbNR43tqEwPs
+         8iEqjUan/XnkuRsaI5VZQNG3yX0MrTy7tajEKI1jR3tZaEkXw/phtTfTy6+aaGwJ/Ft+
+         Uq+GmI0TUxN9O3+vexT2qqaDMWLncJoPMYxIMcUIrM3Wlq6frsTkTii7Cbt2tdoL8WQ8
+         jkJsWg+Q4WSI+C1pDUCG1hVnLFWdHDWq3tWet68694RxeIEYHDSoe4cvz4Q+5WBVlmXl
+         2ZYqd40DEjaLk+KpJ4XnGX+S9AMvdHwqcEi3grVOdEyJlpv2o5dYToCyf34ok209dLIo
+         Ke9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hyKFoSOT3+JqQspFpmS0qfxT2Hk1NGaZGJAmafeRRtk=;
+        b=Uwoy1EqOC4LY3ykrJ6rs4QAJm1nvMNcKAg5Tx7e7pLSQWs/dKx+VgDrAVTYl4DwXo6
+         1gZgvll7LbOl03FSYCsar5e8F9S05zr4zxvjROqjTfBZx1Ka/Z+A2EeNH/NXRjB9A8+v
+         3CT/ttaxd7GTpKculR0eFr5N8z7lD+8fzmb5Cfo8JhI+q4GQsaO3opwtclgyXMbk4mnw
+         zKhmy253swwAMjPwQSElSuy5Kj+cAaz3F++jRbAcXroC5pT2yKAsKZJi8jJRFw28Xstc
+         Vh5swSc7gyvahq61LhK/wqVSXj5OKkEMkWq9ZPG2fzOlQTLGqBDxzU4qXEhhA9MpssB3
+         vf3A==
+X-Gm-Message-State: AGi0PubEnIyYBpyBl22+W/QfW281CX0UOLKOj4KRWFLUmQZlNNzx9rzm
+        Dhyoc5QGNMuZ9q6ifNK0n1Ae+u4k
+X-Google-Smtp-Source: APiQypLAagBuih4l8BRE4fBYBjWwpOjC3wpu2kO/zAF5kYtC31E5EXaOZj/HyEGbjGDwgkxtAoWyGg==
+X-Received: by 2002:a1c:6642:: with SMTP id a63mr20267586wmc.47.1586837797834;
+        Mon, 13 Apr 2020 21:16:37 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id n4sm16704471wmi.20.2020.04.13.21.16.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 21:16:36 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        linux-kernel@vger.kernel.org (open list), davem@davemloft.net,
+        kuba@kernel.org
+Subject: [PATCH net 0/4] net: dsa: b53: Various ARL fixes
+Date:   Mon, 13 Apr 2020 21:16:26 -0700
+Message-Id: <20200414041630.5740-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 09:01:38AM -0700, Darrick J. Wong wrote:
-> On Sun, Apr 12, 2020 at 10:40:43PM -0700, ira.weiny@intel.com wrote:
+Hi David, Andrew, Vivien, Jakub,
 
-[snip]
+This patch series fixes a number of short comings in the existing b53
+driver ARL management logic in particular:
 
-> >  
-> > -STATIC void
-> > +void
-> >  xfs_diflags_to_iflags(
-> > -	struct inode		*inode,
-> > -	struct xfs_inode	*ip)
-> > +	struct xfs_inode	*ip,
-> > +	bool init)
-> >  {
-> > -	uint16_t		flags = ip->i_d.di_flags;
-> > -
-> > -	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC |
-> > -			    S_NOATIME | S_DAX);
-> > -
-> > -	if (flags & XFS_DIFLAG_IMMUTABLE)
-> > -		inode->i_flags |= S_IMMUTABLE;
-> > -	if (flags & XFS_DIFLAG_APPEND)
-> > -		inode->i_flags |= S_APPEND;
-> > -	if (flags & XFS_DIFLAG_SYNC)
-> > -		inode->i_flags |= S_SYNC;
-> > -	if (flags & XFS_DIFLAG_NOATIME)
-> > -		inode->i_flags |= S_NOATIME;
-> > -	if (xfs_inode_enable_dax(ip))
-> > -		inode->i_flags |= S_DAX;
-> > +	struct inode            *inode = VFS_I(ip);
-> > +	unsigned int            xflags = xfs_ip2xflags(ip);
-> > +	unsigned int            flags = 0;
-> > +
-> > +	ASSERT(!(IS_DAX(inode) && init));
-> > +
-> > +	if (xflags & FS_XFLAG_IMMUTABLE)
-> > +		flags |= S_IMMUTABLE;
-> > +	if (xflags & FS_XFLAG_APPEND)
-> > +		flags |= S_APPEND;
-> > +	if (xflags & FS_XFLAG_SYNC)
-> > +		flags |= S_SYNC;
-> > +	if (xflags & FS_XFLAG_NOATIME)
-> > +		flags |= S_NOATIME;
-> > +	if (init && xfs_inode_enable_dax(ip))
-> > +		flags |= S_DAX;
-> > +
-> > +	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME);
-> 
-> I noticed that S_DAX drops out of the mask out operation here, which of
-> course resulted in an eyebrow-raise because the other four flags are
-> always set to whatever we just computed. :)
-> 
-> Then I realized that yes, this is intentional since we can't change
-> S_DAX on the fly, and that S_DAX is never set i_flags on an inode that's
-> being initialized so we don't need to mask off S_DAX ever.
-> 
-> Could we add a comment here to remind the reader that S_DAX is a bit
-> special?
-> 
-> /*
->  * S_DAX can only be set during inode initialization and is never set by
->  * the VFS, so we cannot mask off S_DAX in i_flags.
->  */
-> 
-> With that added,
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+- we were not looking up the {MAC,VID} tuples against their VID, despite
+  having VLANs enabled
 
-Added that comment.
+- the MDB entries (multicast) would lose their validity as soon as a
+  single port in the vector would leave the entry
 
-Thanks for the review!
-Ira
+- the ARL was currently under utilized because we would always place new
+  entries in bin index #1, instead of using all possible bins available,
+  thus reducing the ARL effective size by 50% or 75% depending on the
+  switch generation
 
-> 
-> --D
+- it was possible to overwrite the ARL entries because no proper space
+  verification was done
+
+This patch series addresses all of these issues.
+
+Florian Fainelli (4):
+  net: dsa: b53: Lookup VID in ARL searches when VLAN is enabled
+  net: dsa: b53: Fix valid setting for MDB entries
+  net: dsa: b53: Fix ARL register definitions
+  net: dsa: b53: Rework ARL bin logic
+
+ drivers/net/dsa/b53/b53_common.c | 31 ++++++++++++++++++++++++++-----
+ drivers/net/dsa/b53/b53_regs.h   |  4 ++--
+ 2 files changed, 28 insertions(+), 7 deletions(-)
+
+-- 
+2.17.1
+
