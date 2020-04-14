@@ -2,133 +2,316 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AECC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A51C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26142206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="G/l1ZTWH"
+	by mail.kernel.org (Postfix) with ESMTP id 75B74206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406917AbgDNHyz (ORCPT
+        id S2406927AbgDNH4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:54:55 -0400
-Received: from mout.web.de ([212.227.17.12]:45421 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406887AbgDNHyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:54:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586850852;
-        bh=hAQpUX7TTke6jwz7Bl++PDHIsePwoXNRIF38VkwFUaE=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=G/l1ZTWHKwuNuZWZbghnLQ/23KaJGCwclKP+NnkQQjQe5QH/NmXNAwqQ+YZdq3WRN
-         wBELouEXa1jiJ9q4RRClC8rdqjWbXtTTeJnsBV7L9amDZq4iiUGeVKojbcDR5U7cHu
-         TKL9uuvSMvQZ0moa2IYGO5HlAO1qe8VSF/qvpTMM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.66.171]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LtnvF-1jE7Yf1UhB-0117Rc; Tue, 14
- Apr 2020 09:54:12 +0200
-To:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        linux-kselftest@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Xiao Yang <ice_yangxiao@163.com>
-Subject: Re: [PATCH v2] tracing: Fix the race between registering 'snapshot'
- event trigger and triggering 'snapshot' operation
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <f4e4614b-e3df-e255-42d0-1148e39b3f8a@web.de>
-Date:   Tue, 14 Apr 2020 09:54:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lUbQ29bmhZJ0g5G+RZyoh8EgL+tJYj+dZipYNEU8WO1IqOSg0KA
- 7TKwt8wVwfL86u/NH6QEwBz6VQDTOU36sJpMXVujRbEXzD2mXXA50H4KBiVI+rEt0/Ci8Lp
- +C1XEq55EXsNH9XgFXNLmHOzAIkYDGpHwJJYv3I2helrl9Je0Dk9bIeza1GOyCa+CxbtPl9
- rB2B98/+YtF2YP0kcus2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bhlk+O28LIA=:s/gtWVVApxLZpQILrAzXGC
- 2blX8565DznK7m1PCzyLmEii6uegX7NXSIoXUDHESAQmvc6CY67SsWEL3CgIHBW3nq2X5mJyW
- tcoyFfVda0oC6s2QD8A6foYtfANWSUsb5Nzfa9aNWrbtxnjNJ/1hsJOBCTP8z6zSDGYZG/KA7
- A/9oCOJTagciDuLl18ImukSMRjmfRhbHzEa44dRab3ZSsuDDnO0kxBFaaefBMkPwu3jMRWeTv
- W/sSMjiO30uYziaPostJXoCDkrxNE0dUI47hMVsRKRBFKw/ShZNWmYMmuBuLUQNoAUTuy9ffR
- A8Qc4ePTHitaZcXnE8i22b8Uwd7Ru4urlXWBMHMf4J5QAaMp6z+wVrMKmJc0OmR53DOKJocqy
- +kqQGtFWIR+9FS+ffUn78zJG0hNpWyznrUZ/KU+A4SjOwgbcmtjfpqC2g7eusRFNWNkQWZHfq
- YqdZI1KLpi5s7yjYw+VPUC4uAGfw9zpxRZLuRRLkOxXLievx7bvyvsiubjMhkVVXCcUz8ZxAe
- kd6O9wMiF8DuUlekp6IkyqArFOFPuT2Dh9yTY43NtcClswnMsf5cQ7cQu119GPwgGtMU3ohke
- LIF4fXhBvvi+Pv8BcmvA7eDYiJdhuhie0M5+w2ECSygOzv44C5OdlNcvweNZj6DjuuQBbN6E+
- Hu4OUB1HFDUP4Le92v6zzVTbK7g4ffHmcsAxdAROrmPJ0MQ3lMtXLVIeBuTnuTL6WUjvCHYPT
- 7ijcGq4WEcTQzlpqfLgYx61t2Z322ezH605hPe9JoizIrexihjwHPZyqMaaJ88B7AaQTds6GD
- v2IePgm0iheS3ZKeotjh/RF7Penel1+YTLCzt7/7YJw4oRpXePAeb/ltmoXggBbdX9hLSYgRU
- 8HCMLgiVTj1FtimkL4ZRTHivIj23Wb4+ALr+esCXOM5BDc+vq7Gx2anW3T8tj3LAg7i5d5rfG
- ASgd3ls3VUnYs1W1rcTQXTnma9eheX5GXFSnXEpL7GhS2pVIGuhCnxXNre44BrYVLmNdFni5F
- qN/FUUcXuYLxqj527B+DLh/RM3D1BWAclwA1OB+/T4+aVWe9vRjKm0lB3BL1CrUVg/MYluPEV
- Rm1epQmYlLFrqiUylATe5JP9QpykLJgBUNn+EdYOGl0MM1I5tij0hLX+oxIGmBxWdAhBbdg9v
- dWdLCCOWGcMjiLV3MJhdqJk6BOXCNj+vdlL55C/D02pLmc1eMa+sq2pvu6QA9CJY02J3BTj2S
- H6hn6tw5KSDTC+8+q
+        Tue, 14 Apr 2020 03:56:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9990 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406918AbgDNH4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:56:03 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E7X16V061126;
+        Tue, 14 Apr 2020 03:54:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cwm01m5t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 03:54:51 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03E7YAkm064637;
+        Tue, 14 Apr 2020 03:54:51 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cwm01m5a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 03:54:51 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03E7oRYh007103;
+        Tue, 14 Apr 2020 07:54:50 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma03dal.us.ibm.com with ESMTP id 30b5h6mn47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 07:54:50 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03E7sm7K57934190
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 07:54:48 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B30706E04E;
+        Tue, 14 Apr 2020 07:54:48 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE2806E050;
+        Tue, 14 Apr 2020 07:54:47 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 07:54:47 +0000 (GMT)
+Subject: [PATCH v10 14/14] powerpc: Use mm_context vas_windows counter to
+ issue CP_ABORT
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mikey@neuling.org, ajd@linux.ibm.com, frederic.barrat@fr.ibm.com,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
+        oohall@gmail.com, clg@kaod.org, herbert@gondor.apana.org.au,
+        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        srikar@linux.vnet.ibm.com
+In-Reply-To: <1585812024.2275.68.camel@hbabu-laptop>
+References: <1585810846.2275.23.camel@hbabu-laptop>
+         <1585812024.2275.68.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 14 Apr 2020 00:54:26 -0700
+Message-ID: <1586850866.2275.1013.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_02:2020-04-13,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ suspectscore=3 adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigge=
-r()
+(Thanks Michael for your review. Here is the updated patch with your
+comments and from Nick - Moved mm_context_add/remove_coproc() to 
+add/remove_vas_window())
 
-I suggest to improve the change description.
+>From 521f86710f3605dc575f13634fd7520087993ffb Mon Sep 17 00:00:00 2001
+From: Haren Myneni <haren@us.ibm.com>
+Date: Wed, 1 Apr 2020 23:12:12 -0500
+Subject: [PATCH] powerpc: Use mm_context vas_windows counter to issue CP_ABORT
 
-* Adjustment:
-  =E2=80=A6 operation (i. e. =E2=80=A6
+set_thread_uses_vas() sets used_vas flag for a process that opened VAS
+window and issue CP_ABORT during context switch for only that process.
+In multi-thread application, windows can be shared. For example Thread
+A can open a window and Thread B can run COPY/PASTE instructions to
+send NX request which may cause corruption or snooping or a covert
+channel Also once this flag is set, continue to run CP_ABORT even the
+VAS window is closed.
 
-* Will the tag =E2=80=9CFixes=E2=80=9D become relevant?
+So define vas-windows counter in process mm_context, increment this
+counter for each window open and decrement it for window close. If
+vas-windows is set, issue CP_ABORT during context switch. It means
+clear the foreign real address mapping only if the process / thread
+uses COPY/PASTE. Then disable it for that process if windows are not
+open.
 
-Regards,
-Markus
+Moved set_thread_uses_vas() code to vas_tx_win_open() as this
+functionality is needed only for userspace open windows. We are adding
+VAS userspace support along with this fix. So no need to include this
+fix in stable releases.
+
+Fixes: 9d2a4d71332c ("powerpc: Define set_thread_uses_vas()")
+Signed-off-by: Haren Myneni <haren@linux.ibm.com>
+Reported-by: Nicholas Piggin <npiggin@gmail.com>
+Suggested-by: Milton Miller <miltonm@us.ibm.com>
+Suggested-by: Nicholas Piggin <npiggin@gmail.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/powerpc/include/asm/book3s/64/mmu.h    |  3 +++
+ arch/powerpc/include/asm/mmu_context.h      | 30 +++++++++++++++++++++++++++++
+ arch/powerpc/include/asm/processor.h        |  1 -
+ arch/powerpc/include/asm/switch_to.h        |  2 --
+ arch/powerpc/kernel/process.c               | 24 ++---------------------
+ arch/powerpc/platforms/powernv/vas-window.c | 22 ++++++++++++---------
+ 6 files changed, 48 insertions(+), 34 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
+index bb3deb7..f0a9ff6 100644
+--- a/arch/powerpc/include/asm/book3s/64/mmu.h
++++ b/arch/powerpc/include/asm/book3s/64/mmu.h
+@@ -116,6 +116,9 @@ struct patb_entry {
+ 	/* Number of users of the external (Nest) MMU */
+ 	atomic_t copros;
+ 
++	/* Number of user space windows opened in process mm_context */
++	atomic_t vas_windows;
++
+ 	struct hash_mm_context *hash_context;
+ 
+ 	unsigned long vdso_base;
+diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+index 360367c..1a474f6b 100644
+--- a/arch/powerpc/include/asm/mmu_context.h
++++ b/arch/powerpc/include/asm/mmu_context.h
+@@ -185,11 +185,41 @@ static inline void mm_context_remove_copro(struct mm_struct *mm)
+ 			dec_mm_active_cpus(mm);
+ 	}
+ }
++
++/*
++ * vas_windows counter shows number of open windows in the mm
++ * context. During context switch, use this counter to clear the
++ * foreign real address mapping (CP_ABORT) for the thread / process
++ * that intend to use COPY/PASTE. When a process closes all windows,
++ * disable CP_ABORT which is expensive to run.
++ *
++ * For user context, register a copro so that TLBIs are seen by the
++ * nest MMU. mm_context_add/remove_vas_window() are used only for user
++ * space windows.
++ */
++static inline void mm_context_add_vas_window(struct mm_struct *mm)
++{
++	atomic_inc(&mm->context.vas_windows);
++	mm_context_add_copro(mm);
++}
++
++static inline void mm_context_remove_vas_window(struct mm_struct *mm)
++{
++	int v;
++
++	mm_context_remove_copro(mm);
++	v = atomic_dec_if_positive(&mm->context.vas_windows);
++
++	/* Detect imbalance between add and remove */
++	WARN_ON(v < 0);
++}
+ #else
+ static inline void inc_mm_active_cpus(struct mm_struct *mm) { }
+ static inline void dec_mm_active_cpus(struct mm_struct *mm) { }
+ static inline void mm_context_add_copro(struct mm_struct *mm) { }
+ static inline void mm_context_remove_copro(struct mm_struct *mm) { }
++static inline void mm_context_add_vas_windows(struct mm_struct *mm) { }
++static inline void mm_context_remove_vas_windows(struct mm_struct *mm) { }
+ #endif
+ 
+ 
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index eedcbfb..bfa336f 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -272,7 +272,6 @@ struct thread_struct {
+ 	unsigned 	mmcr0;
+ 
+ 	unsigned 	used_ebb;
+-	unsigned int	used_vas;
+ #endif
+ };
+ 
+diff --git a/arch/powerpc/include/asm/switch_to.h b/arch/powerpc/include/asm/switch_to.h
+index 5b03d8a..012db9a 100644
+--- a/arch/powerpc/include/asm/switch_to.h
++++ b/arch/powerpc/include/asm/switch_to.h
+@@ -91,8 +91,6 @@ static inline void clear_task_ebb(struct task_struct *t)
+ #endif
+ }
+ 
+-extern int set_thread_uses_vas(void);
+-
+ extern int set_thread_tidr(struct task_struct *t);
+ 
+ #endif /* _ASM_POWERPC_SWITCH_TO_H */
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index fad50db..ed3f645 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1221,7 +1221,8 @@ struct task_struct *__switch_to(struct task_struct *prev,
+ 		 * mappings, we must issue a cp_abort to clear any state and
+ 		 * prevent snooping, corruption or a covert channel.
+ 		 */
+-		if (current->thread.used_vas)
++		if (current->mm &&
++			atomic_read(&current->mm->context.vas_windows))
+ 			asm volatile(PPC_CP_ABORT);
+ 	}
+ #endif /* CONFIG_PPC_BOOK3S_64 */
+@@ -1460,27 +1461,6 @@ void arch_setup_new_exec(void)
+ }
+ #endif
+ 
+-int set_thread_uses_vas(void)
+-{
+-#ifdef CONFIG_PPC_BOOK3S_64
+-	if (!cpu_has_feature(CPU_FTR_ARCH_300))
+-		return -EINVAL;
+-
+-	current->thread.used_vas = 1;
+-
+-	/*
+-	 * Even a process that has no foreign real address mapping can use
+-	 * an unpaired COPY instruction (to no real effect). Issue CP_ABORT
+-	 * to clear any pending COPY and prevent a covert channel.
+-	 *
+-	 * __switch_to() will issue CP_ABORT on future context switches.
+-	 */
+-	asm volatile(PPC_CP_ABORT);
+-
+-#endif /* CONFIG_PPC_BOOK3S_64 */
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PPC64
+ /**
+  * Assign a TIDR (thread ID) for task @t and set it in the thread
+diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
+index 3ffad5a..4085fd6 100644
+--- a/arch/powerpc/platforms/powernv/vas-window.c
++++ b/arch/powerpc/platforms/powernv/vas-window.c
+@@ -1058,13 +1058,6 @@ struct vas_window *vas_tx_win_open(int vasid, enum vas_cop_type cop,
+ 			rc = -ENODEV;
+ 			goto free_window;
+ 		}
+-		/*
+-		 * A user mapping must ensure that context switch issues
+-		 * CP_ABORT for this thread.
+-		 */
+-		rc = set_thread_uses_vas();
+-		if (rc)
+-			goto free_window;
+ 
+ 		/*
+ 		 * Window opened by a child thread may not be closed when
+@@ -1090,7 +1083,7 @@ struct vas_window *vas_tx_win_open(int vasid, enum vas_cop_type cop,
+ 
+ 		mmgrab(txwin->mm);
+ 		mmput(txwin->mm);
+-		mm_context_add_copro(txwin->mm);
++		mm_context_add_vas_window(txwin->mm);
+ 		/*
+ 		 * Process closes window during exit. In the case of
+ 		 * multithread application, the child thread can open
+@@ -1099,6 +1092,17 @@ struct vas_window *vas_tx_win_open(int vasid, enum vas_cop_type cop,
+ 		 * to take pid reference for parent thread.
+ 		 */
+ 		txwin->tgid = find_get_pid(task_tgid_vnr(current));
++		/*
++		 * Even a process that has no foreign real address mapping can
++		 * use an unpaired COPY instruction (to no real effect). Issue
++		 * CP_ABORT to clear any pending COPY and prevent a covert
++		 * channel.
++		 *
++		 * __switch_to() will issue CP_ABORT on future context switches
++		 * if process / thread has any open VAS window (Use
++		 * current->mm->context.vas_windows).
++		 */
++		asm volatile(PPC_CP_ABORT);
+ 	}
+ 
+ 	set_vinst_win(vinst, txwin);
+@@ -1332,7 +1336,7 @@ int vas_win_close(struct vas_window *window)
+ 			/* Drop references to pid and mm */
+ 			put_pid(window->pid);
+ 			if (window->mm) {
+-				mm_context_remove_copro(window->mm);
++				mm_context_remove_vas_window(window->mm);
+ 				mmdrop(window->mm);
+ 			}
+ 		}
+-- 
+1.8.3.1
+
+
+
