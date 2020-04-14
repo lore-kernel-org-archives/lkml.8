@@ -2,204 +2,162 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2149EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D72BC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E899F20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5201420678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOWLE8Wq"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="KS5KSsAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391837AbgDNQgt (ORCPT
+        id S2391850AbgDNQhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:36:49 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59501 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391809AbgDNQg3 (ORCPT
+        Tue, 14 Apr 2020 12:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391839AbgDNQhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:36:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586882187;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Bma9lzqspxl+HaX8bOFBirR9lSGp5CwUCJdb2i/e18Q=;
-        b=dOWLE8WqA4A5HAxi0P3RPoJcrIXAXMmTkLygoAf3Yr4XpYwq+9GylDMk7kPD2Ehcahs316
-        2O/OmkgH/FDc/Nq6cj9wV9egccg5EToRhqymPv7sU4WiKr5pt+9wt0CoheGtdJO2yjJtHY
-        rOg8yf3kCeB1qnzDlbqbBgTFVISQDSY=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-W7CESxTQOkyu0_laDKU0BQ-1; Tue, 14 Apr 2020 12:36:12 -0400
-X-MC-Unique: W7CESxTQOkyu0_laDKU0BQ-1
-Received: by mail-qv1-f72.google.com with SMTP id v11so330036qvw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:36:12 -0700 (PDT)
+        Tue, 14 Apr 2020 12:37:02 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6653C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:37:01 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id s63so9763303qke.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=DYImV4WFqfjPjnkhvl2nD8nYSEJboQaYtVJWAd3b//Q=;
+        b=KS5KSsAg991FP2nFTxhky8wQhQOu9BwakhqYU+efKhtive2f3PbE42bLxc5ZIjZRzc
+         PNWD/LEGWAtMm5/XDuYn/2V4ghpqNkIk8WmZzEJDhpzW4YQNMk1oJKjjSmLLHWlxNlwS
+         SRUHNobeIH59Sg0OvosYB0vVt4FtWC7jtzla2qHmPJoefzLEY2MgbK5IVRlVcrYE4yjp
+         pbtJ8ktGppKUT+kjFT9pc36mAcNXqgmuiq2LD/VFTMh5hdHNLBGM4atG+Z8QcePqRbK+
+         Va56KXOZ1ODNr3uJ0s9LW7EOHOBYLzqekZ1OIXQgckvam6fjqxNU8ywgqJZiDaF17jON
+         qxUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=Bma9lzqspxl+HaX8bOFBirR9lSGp5CwUCJdb2i/e18Q=;
-        b=kCIElkZ0R7DkNvbt2/zwHqIBEci4cpdNT3OP136QM5euUoTGsjBmPL7q1Y7CUYwp1p
-         X9uajgrTp85lc3Au57MxzeJVgcu6wxWTdk5KdcOKVIB6sSsUHqomG+xUNBvg6elmbN/j
-         tV9bGuckiK2PkecFJ7XglwSMVAgCM6I0wQSp/h0+ckOWFX29TLdyswlcF685zAy1s6O0
-         n+DugQvdEYNXsGX27tYUqFxCoX8VjNgp8K8n7OHZunq5Sh6m+Tc2juiWzVNH07caqxpc
-         xUmBKGc6ZmpYYQAjKtKhFPfLNpDmgHFdH2Di4yRyI6GnQSKQaWoUl6mS4o1FMJNXO/By
-         LN8w==
-X-Gm-Message-State: AGi0PuZmHavBVbV+ooXnXvTlakZ9B/069nZiJxITPyhSrH1h3c9xy83E
-        3zdtRMCfUIDYsM6Ye4Cf66ZJaNUzhnHTPIzJVVItHzINEj/nyoJmxRkHFBhtiMLRn2jCNIDY+9I
-        SvhGnpd+ZUqcHXVw8ujafsD56
-X-Received: by 2002:aed:3968:: with SMTP id l95mr17285865qte.268.1586882172287;
-        Tue, 14 Apr 2020 09:36:12 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJmGmy3GlXUch/z8/x+Ns406G7xQ35JzF4VsBJ4waQC3oBq6dZNWOjBqM2wZ8BVLIAkuD0c8Q==
-X-Received: by 2002:aed:3968:: with SMTP id l95mr17285823qte.268.1586882171965;
-        Tue, 14 Apr 2020 09:36:11 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id u126sm10933237qkh.66.2020.04.14.09.36.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=DYImV4WFqfjPjnkhvl2nD8nYSEJboQaYtVJWAd3b//Q=;
+        b=DzZGE7RAXT+YNlqMK5gr6to0+wlMRKteEeQPCg/QPu8dn6K/suR0feSZLNipWLA4W8
+         wUze3zTn58DJT9OBEyrR2jhs4F77k/ItjZBOPPN414wwdNSUntd8KjHWdZLVluZdTf6Z
+         hOMOQHyM3b+A0gRxia2OwbEZQtlChwZhexi514tGCbxhcbwDmoSHEohcnBFSp9JVqZ8s
+         PEd22XULmoXuwXx8lPq6PAqFtPHH4mhESIIlEudobeizNgditkE0FXR0aIhZpsi3fKr8
+         ZcxSX1nRiWGo7wYr4HmOgj5xUtm2sjNp7o/icFcCpitT1ZIFtzY7SqtYBGpb1UVqt/BK
+         7a4A==
+X-Gm-Message-State: AGi0PubSBZEKVC10DJi+a5tfy2oxSXOczKnc1bvz8d7nYb9l7tebsmrG
+        wQz3KMZnflQC33BAiA6+ldvREw==
+X-Google-Smtp-Source: APiQypJDaEd/nGS9BTaUv72nAKo3JSl8h//gwiZ42bd2PG7DF/jOIddhKGGPuIigNWUmnLczWkFCwg==
+X-Received: by 2002:a37:ac08:: with SMTP id e8mr3627259qkm.439.1586882220593;
+        Tue, 14 Apr 2020 09:37:00 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::e623])
+        by smtp.gmail.com with ESMTPSA id u24sm2884840qkk.84.2020.04.14.09.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:36:11 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:36:06 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com, arnd@arndb.de, ashutosh.dixit@intel.com,
-        bjorn.andersson@linaro.org, elfring@users.sourceforge.net,
-        eli@mellanox.com, eperezma@redhat.com, gustavo@embeddedor.com,
-        hulkci@huawei.com, jasowang@redhat.com, matej.genci@nutanix.com,
-        mst@redhat.com, sfr@canb.auug.org.au, yanaijie@huawei.com,
-        yuehaibing@huawei.com
-Subject: [GIT PULL] vhost: cleanups and fixes
-Message-ID: <20200414123606-mutt-send-email-mst@kernel.org>
+        Tue, 14 Apr 2020 09:36:59 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:36:58 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20200414163658.GB136578@cmpxchg.org>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
+ <20200413180725.GA99267@cmpxchg.org>
+ <42d5c2cb-3019-993f-eba7-33a1d69ef699@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mutt-Fcc: =sent
+In-Reply-To: <42d5c2cb-3019-993f-eba7-33a1d69ef699@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7:
+On Tue, Apr 14, 2020 at 04:19:01PM +0800, Alex Shi wrote:
+> 
+> 
+> 在 2020/4/14 上午2:07, Johannes Weiner 写道:
+> > But isolation actually needs to lock out charging, or it would operate
+> > on the wrong list:
+> > 
+> > isolation:                                     commit_charge:
+> > if (TestClearPageLRU(page))
+> >                                                page->mem_cgroup = new
+> >   // page is still physically on
+> >   // the root_mem_cgroup's LRU. We're
+> >   // updating the wrong list:
+> >   memcg = page->mem_cgroup
+> >   spin_lock(memcg->lru_lock)
+> >   del_page_from_lru_list(page, memcg)
+> >   spin_unlock(memcg->lru_lock)
+> > 
+> > lrucare really is a mess. Even before this patch series, it makes
+> > things tricky and subtle and error prone.
+> > 
+> > The only reason we're doing it is for when there is swapping without
+> > swap tracking, in which case swap reahadead needs to put pages on the
+> > LRU but cannot charge them until we have a faulting vma later.
+> > 
+> > But it's not clear how practical such a configuration is. Both memory
+> > and swap are shared resources, and isolation isn't really effective
+> > when you restrict access to memory but then let workloads swap freely.
+> > 
+> > Plus, the overhead of tracking is tiny - 512k per G of swap (0.04%).
+> > 
+> > Maybe we should just delete MEMCG_SWAP and unconditionally track swap
+> > entry ownership when the memory controller is enabled. I don't see a
+> > good reason not to, and it would simplify the entire swapin path, the
+> > LRU locking, and the page->mem_cgroup stabilization rules.
+> 
+> Hi Johannes,
+> 
+> I think what you mean here is to keep swap_cgroup id even it was swaped,
+> then we read back the page from swap disk, we don't need to charge it.
+> So all other memcg charge are just happens on non lru list, thus we have
+> no isolation required in above awkward scenario.
 
-  virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM" (2020-04-07 05:44:57 -0400)
+We don't need to change how swap recording works, we just need to
+always do it when CONFIG_MEMCG && CONFIG_SWAP.
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-
-for you to fetch changes up to d4a85c2ace895a58dcab687ff49c76719011f58d:
-
-  vdpa: fix comment of vdpa_register_device() (2020-04-13 07:16:41 -0400)
-
-----------------------------------------------------------------
-virtio: fixes, cleanups
-
-Some bug fixes.
-Cleanup a couple of issues that surfaced meanwhile.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-----------------------------------------------------------------
-Eugenio Pérez (4):
-      vhost: Create accessors for virtqueues private_data
-      tools/virtio: Add --batch option
-      tools/virtio: Add --batch=random option
-      tools/virtio: Add --reset=random
-
-Gustavo A. R. Silva (1):
-      vhost: vdpa: remove unnecessary null check
-
-Jason Wang (1):
-      vdpa: fix comment of vdpa_register_device()
-
-Jason Yan (1):
-      vhost: remove set but not used variable 'status'
-
-Markus Elfring (1):
-      virtio-mmio: Delete an error message in vm_find_vqs()
-
-Matej Genci (1):
-      virtio: add VIRTIO_RING_NO_LEGACY
-
-Michael S. Tsirkin (22):
-      vdpa-sim: depend on HAS_DMA
-      virtio/test: fix up after IOTLB changes
-      vhost: drop vring dependency on iotlb
-      tools/virtio: define aligned attribute
-      tools/virtio: make asm/barrier.h self contained
-      tools/virtio: define __KERNEL__
-      virtgpu: pull in uaccess.h
-      virtio-rng: pull in slab.h
-      remoteproc: pull in slab.h
-      virtio_input: pull in slab.h
-      rpmsg: pull in slab.h
-      remoteproc: pull in slab.h
-      virtio: stop using legacy struct vring in kernel
-      vhost: force spec specified alignment on types
-      virtio: add legacy init/size APIs
-      virtio_ring: switch to virtio_legacy_init/size
-      tools/virtio: switch to virtio_legacy_init/size
-      vop: switch to virtio_legacy_init/size
-      remoteproc: switch to virtio_legacy_init/size
-      mellanox: switch to virtio_legacy_init/size
-      vdpa: allow a 32 bit vq alignment
-      vdpa: make vhost, virtio depend on menu
-
-Stephen Rothwell (1):
-      drm/virtio: fix up for include file changes
-
-YueHaibing (2):
-      vdpa: remove unused variables 'ifcvf' and 'ifcvf_lm'
-      vdpasim: Return status in vdpasim_get_status
-
- drivers/block/virtio_blk.c               |   1 +
- drivers/char/hw_random/virtio-rng.c      |   1 +
- drivers/gpu/drm/virtio/virtgpu_ioctl.c   |   1 +
- drivers/gpu/drm/virtio/virtgpu_kms.c     |   1 +
- drivers/misc/mic/vop/vop_main.c          |   5 +-
- drivers/misc/mic/vop/vop_vringh.c        |   8 ++-
- drivers/platform/mellanox/mlxbf-tmfifo.c |   6 +-
- drivers/remoteproc/remoteproc_core.c     |   2 +-
- drivers/remoteproc/remoteproc_sysfs.c    |   1 +
- drivers/remoteproc/remoteproc_virtio.c   |   2 +-
- drivers/remoteproc/stm32_rproc.c         |   1 +
- drivers/rpmsg/mtk_rpmsg.c                |   1 +
- drivers/vdpa/Kconfig                     |  19 +++---
- drivers/vdpa/ifcvf/ifcvf_base.c          |   2 -
- drivers/vdpa/ifcvf/ifcvf_main.c          |   4 +-
- drivers/vdpa/vdpa.c                      |   2 +-
- drivers/vdpa/vdpa_sim/vdpa_sim.c         |   4 +-
- drivers/vhost/Kconfig                    |   5 +-
- drivers/vhost/net.c                      |  28 +++++----
- drivers/vhost/scsi.c                     |  14 ++---
- drivers/vhost/test.c                     |  71 +++++++++++++++++++---
- drivers/vhost/test.h                     |   1 +
- drivers/vhost/vdpa.c                     |   5 --
- drivers/vhost/vhost.h                    |  33 +++++++++-
- drivers/vhost/vringh.c                   |   5 ++
- drivers/vhost/vsock.c                    |  14 ++---
- drivers/virtio/Kconfig                   |   2 +-
- drivers/virtio/virtio_input.c            |   1 +
- drivers/virtio/virtio_mmio.c             |   4 +-
- drivers/virtio/virtio_pci_modern.c       |   1 +
- drivers/virtio/virtio_ring.c             |  15 +++--
- include/linux/vdpa.h                     |   2 +-
- include/linux/virtio.h                   |   1 -
- include/linux/virtio_ring.h              |  46 ++++++++++++++
- include/linux/vringh.h                   |   7 +++
- include/uapi/linux/virtio_ring.h         |  30 ++++++---
- tools/virtio/Makefile                    |   5 +-
- tools/virtio/asm/barrier.h               |   1 +
- tools/virtio/generated/autoconf.h        |   0
- tools/virtio/linux/compiler.h            |   1 +
- tools/virtio/ringtest/virtio_ring_0_9.c  |   6 +-
- tools/virtio/virtio_test.c               | 101 ++++++++++++++++++++++++++-----
- tools/virtio/vringh_test.c               |  18 +++---
- 43 files changed, 354 insertions(+), 124 deletions(-)
- create mode 100644 tools/virtio/generated/autoconf.h
-
+We can uncharge the page once it's swapped out. The only difference is
+that with a swap record, we know who owned the page and can charge
+readahead pages right awya, before setting PageLRU; whereas without a
+record, we read pages onto the LRU, and then wait until we hit a page
+fault with an mm to charge. That's why we have this lrucare mess.
