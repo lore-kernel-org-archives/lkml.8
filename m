@@ -2,114 +2,71 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51E3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92956C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04E62075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586879931;
-	bh=l9chY58r4Tu+9R4PzxN5YUOPlEav1oY44s9ex1BCTiU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jztYdMGdKSRi50WrFFgD5E7csEnNV2SPtD7h/+ETgMDfEQmBuEOQYyCms/7Nkl/rX
-	 O8wNrFRIi5nRidXABzmqf/83UHAnKcSKsyhw8rlHTC+3QBCH/XGshDqUI5CqIpM6Z+
-	 ZzVhUlSuqNffrMNjOvR8kwUu8/9d+e5TyEw64KjE=
+	by mail.kernel.org (Postfix) with ESMTP id 7C6C82075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391147AbgDNP5y (ORCPT
+        id S2391141AbgDNP71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:57:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56716 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 11:59:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:58974 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390836AbgDNP5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:57:44 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C43206D5;
-        Tue, 14 Apr 2020 15:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586879864;
-        bh=l9chY58r4Tu+9R4PzxN5YUOPlEav1oY44s9ex1BCTiU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RmfeK+QXiZNsEB5mIch9WsDk4/qNwCzlX5P4rjmP4AY5P3vOOlJghPsTIBHs0eBIR
-         Me0t9pQsM0nYSapcMNqDL9gLd4x85XbI5Y1kIuy/urlAu08nfY+Oer1UtKqSHDDiKO
-         yctIxm0KdJPeKAZcHtq3MsIiyUKWSGWtJaEjdkfk=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Borislav Petkov <bp@suse.de>, Ion Badulescu <ionut@badula.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, netdev@vger.kernel.org,
-        oss-drivers@netronome.com, Pensando Drivers <drivers@pensando.io>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shannon Nelson <snelson@pensando.io>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>
-Subject: [PATCH net-next 0/4] Remove vermagic header from global include folder
-Date:   Tue, 14 Apr 2020 18:57:28 +0300
-Message-Id: <20200414155732.1236944-1-leon@kernel.org>
-X-Mailer: git-send-email 2.25.2
+        id S1732397AbgDNP7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:59:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6163F31B;
+        Tue, 14 Apr 2020 08:59:18 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFD073F6C4;
+        Tue, 14 Apr 2020 08:59:17 -0700 (PDT)
+Subject: Re: stop messing with set_fs in arm_sdei
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200414142302.448447-1-hch@lst.de>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <cc0b5d01-bd19-3437-a76e-2d1daa86f9a4@arm.com>
+Date:   Tue, 14 Apr 2020 16:59:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414142302.448447-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+Hi Christoph,
 
-Hi,
+On 14/04/2020 15:23, Christoph Hellwig wrote:
+> can you take a look at this series?  I've been trying to figure out
+> what the set_fs in arm_sdei is good for, and could not find any
+> good reason.  But I don't have any hardware implementing this interface,
+> so the changes are entirely untested.
 
-This is followup to the failure reported by Borislav [1] and suggested
-fix later on [2].
+Its a firmware thing, think of it as a firmware assisted software NMI.
 
-The series removes all includes of linux/vermagic.h, updates hns and
-nfp to use same kernel versioning scheme (exactly like we did for
-other drivers in previous cycle) and removes vermagic.h from global
-include folder.
+The arch code save/restores set_fs() because the entry code does that when taking an
+exception from EL1. SDEI does the same because it doesn't come via the same entry code. It
+does it in C because that C is always run before the handler, something that isn't true
+for the regular assembly version.
 
-[1] https://lore.kernel.org/lkml/20200411155623.GA22175@zn.tnic
-[2] https://lore.kernel.org/lkml/20200413080452.GA3772@zn.tnic
+The regular entry code does this because any exception may have interrupted code that had
+addr_limit set to something else:
+https://bugs.chromium.org/p/project-zero/issues/detail?id=822
 
-------------------------------------------------------------
-1. Honestly, I have no idea if it can go to net-rc, clearly not all my
-patches are fixes, so I'm sending them to the net-next.
-2. Still didn't get response from kbuild, but it passed my own
-compilation tests.
+and the patch that fixed it: commit e19a6ee2460b "arm64: kernel: Save and restore UAO and
+addr_limit on exception entry"
 
-Thanks
 
-Leon Romanovsky (4):
-  drivers: Remove inclusion of vermagic header
-  net/hns: Remove custom driver version in favour of global one
-  net/nfp: Update driver to use global kernel version
-  kernel/module: Hide vermagic header file from general use
+Thanks,
 
- drivers/net/bonding/bonding_priv.h                   | 2 +-
- drivers/net/ethernet/3com/3c509.c                    | 1 -
- drivers/net/ethernet/3com/3c515.c                    | 1 -
- drivers/net/ethernet/adaptec/starfire.c              | 1 -
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c      | 3 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h      | 4 ----
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 4 ----
- drivers/net/ethernet/netronome/nfp/nfp_main.c        | 3 ---
- drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 2 --
- drivers/net/ethernet/pensando/ionic/ionic_main.c     | 2 +-
- drivers/power/supply/test_power.c                    | 2 +-
- kernel/module.c                                      | 2 +-
- {include/linux => kernel}/vermagic.h                 | 0
- net/ethtool/ioctl.c                                  | 3 +--
- 14 files changed, 5 insertions(+), 25 deletions(-)
- rename {include/linux => kernel}/vermagic.h (100%)
-
---
-2.25.2
-
+James
