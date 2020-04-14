@@ -2,169 +2,508 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626ECC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B5C3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5E4206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:21:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e6D9UKxR"
+	by mail.kernel.org (Postfix) with ESMTP id 276A62074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586899338;
+	bh=8TnD/lVByEQ5HlDhqbjdyO9yLl2CLefeoybPe5cEI4A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gAig8b/pMs2zCvOzc4Z+z7k9Jk4zobNlWg8UdFjkpzEbWVslyly0YMS3rDf7CSBKT
+	 /+oVWvkH/KIZzoazwG9pJdttTyJeUkAsp6cvoDCK5FYGHLiW0U2EQ+NebQRjnaLP3F
+	 nv1HX4Cv4Boebx5tB27cRGV2H0e6jKweB1Vyx8H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633787AbgDNVVb (ORCPT
+        id S2633798AbgDNVWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48708 "EHLO
+        Tue, 14 Apr 2020 17:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633777AbgDNVVU (ORCPT
+        by vger.kernel.org with ESMTP id S2633777AbgDNVWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:21:20 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BDDC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:21:20 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so525140pfc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:21:20 -0700 (PDT)
+        Tue, 14 Apr 2020 17:22:12 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B46CC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:22:12 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id n10so14849905iom.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=qYUxUinpAV+jTdIPlQ2ftanC+VH4TYtMDBpvx6CaE/M=;
-        b=e6D9UKxRfuRB6Vg27Qve4+YFdRAD4xfEU/6fiSyFULykIaaqQmkoKD2e9ao9hIBax8
-         BIg3X9WuPUCvye8P3WyERQJJmZ4no8QQNxBFjt8wy/gPFWEL+qcpQOi0WWSA3MVnH1gN
-         nxjTcN0XIJfb9nPMSkfPXl4vSaCFCt8Z1f8so=
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilwZvdttSDEf//UskpYPZ2Zul+38PvYFS4ITo0BhVJA=;
+        b=iWtWvCpFojn+zp72PxXsySj8a1IOuguJWRadY2He89g2jKfIrkDIDsZxFKL266KGki
+         VYt1qRq7ugoU9K4KY7Px5/NNCBfQ1fIiDGwwyuvslEupGI/fPEvW040+9Xk50MTZ7qCg
+         SVeBk8S2orjp+O9htqCVs4kx+7F5x4QyWIjH4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=qYUxUinpAV+jTdIPlQ2ftanC+VH4TYtMDBpvx6CaE/M=;
-        b=hIx9iDnP7JQREASSblvDsE0jLNzm144NAfX38tGHUzt9O5BxZ39zxq3CHYweJoQQrq
-         QLuxQRyoNjh/vEbXol4e2KGtxUGkyEf3bBtq9b9sGgcK4+aVE2dJzOJehv7XZGmnR+2n
-         fUDlBn33FXxrpCGeGTt5Bl6A0Y28wSlz/6zuXPuDVhnol0bWedy5l0F9zDPywm4OjegT
-         kaV7s/Da0x5DdHPoAECmq9qqbQwcynNTz6ZJSHfpDWfeovAWPQT3vKXWPnIuTmU0KfJ0
-         bLP4EIjtEQQJP23pRrRgY5o3aeL6pfKMHNE3q3asByMA9dqz5xAaB9G2UHQr0R6OP7j1
-         vTTg==
-X-Gm-Message-State: AGi0PuY1AWIJGRaK/AphjmCRaodELUiBYe0N3gby1W04GoWivjbfr5CB
-        /QLvM5Ywa1ZOgBWdjya/s0NXRA==
-X-Google-Smtp-Source: APiQypJvfbBsusLiO4aMQUZyDZaiL2beLstkyOYsDAsnSSXRrCDtVIAiTW4XcNJVdxbo/iotiywFWQ==
-X-Received: by 2002:a63:c101:: with SMTP id w1mr10203522pgf.126.1586899279542;
-        Tue, 14 Apr 2020 14:21:19 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i13sm11701085pfa.113.2020.04.14.14.21.18
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilwZvdttSDEf//UskpYPZ2Zul+38PvYFS4ITo0BhVJA=;
+        b=XpqlrJc9rt/T4H+c2/T6CjKu9tOziVky23DsHUICXRQc/ExjUAA2hOKc7YO9oozS/v
+         K4iuqu0KRPHt0H0Xr4ajVsK6rYsgTUsFPetduboPn2wxBQq01NCvCGnv9dXg8Y6HuC7s
+         npxUYLB4LbylkzBtH4/GgW5y/MP8FYcN8krpJuQlRd9oU7NxRIo6Qu3tAVy4bIlcXfkk
+         4GmIhWLD0qzWvm85H+nTnHR4GTvGIcmG6UuJ0pl4WgqbFfZs1MZOdqnEov1Wto/VPFqD
+         NVSwqJQilERvKTH+V0cI1yfFoejysjsMyQ0y02AXPgbyfXXeqW0IYctop1s8Dapt3cm4
+         3sFQ==
+X-Gm-Message-State: AGi0PuZuSrrtwMRLgU60bVjWSURmhEKemVB67L5YPGRGBo1+7+I1CZHE
+        0YVWfYxzTxwDZRkjJdjLw072uA==
+X-Google-Smtp-Source: APiQypL/Ae/ff0zNVb9OVOr0KWtWAAM2/DX8BUZnYx+4o1BcRxeK60TWgr07hBr4eYrJYptq/2yxcA==
+X-Received: by 2002:a05:6602:1da:: with SMTP id w26mr23430071iot.191.1586899331545;
+        Tue, 14 Apr 2020 14:22:11 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id q29sm5217326ill.65.2020.04.14.14.22.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:21:18 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Apr 2020 14:22:10 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, bamv2005@gmail.com, skhan@linuxfoundation.org,
+        khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests: add build/cross-build dependency check script
+Date:   Tue, 14 Apr 2020 15:22:08 -0600
+Message-Id: <20200414212208.21667-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
-References: <1585809534-11244-1-git-send-email-sanm@codeaurora.org> <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>, robdclark@gmail.com,
-        abhinavk@codeaurora.org, nganji@codeaurora.org,
-        jsanka@codeaurora.org, aravindh@codeaurora.org,
-        hoegsberg@google.com, dri-devel@lists.freedesktop.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Tue, 14 Apr 2020 14:21:17 -0700
-Message-ID: <158689927748.105027.5367465616284167712@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-04-01 23:38:52)
-> Convert QMP PHY bindings to DT schema format using json-schema.
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 332 +++++++++++++++=
-++++++
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 242 ---------------
->  2 files changed, 332 insertions(+), 242 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.ya=
-ml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Do=
-cumentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> new file mode 100644
-> index 0000000..18a8985
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> @@ -0,0 +1,332 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm QMP PHY controller
-> +
-> +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
-> +
-> +description:
-> +  QMP phy controller supports physical layer functionality for a number =
-of
-> +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,ipq8074-qmp-pcie-phy
-> +      - qcom,msm8996-qmp-pcie-phy
-> +      - qcom,msm8996-qmp-ufs-phy
-> +      - qcom,msm8996-qmp-usb3-phy
-> +      - qcom,msm8998-qmp-pcie-phy
-> +      - qcom,msm8998-qmp-ufs-phy
-> +      - qcom,msm8998-qmp-usb3-phy
-> +      - qcom,sdm845-qhp-pcie-phy
-> +      - qcom,sdm845-qmp-pcie-phy
-> +      - qcom,sdm845-qmp-ufs-phy
-> +      - qcom,sdm845-qmp-usb3-phy
-> +      - qcom,sdm845-qmp-usb3-uni-phy
-> +      - qcom,sm8150-qmp-ufs-phy
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: Address and length of PHY's common serdes block.
-> +      - description: Address and length of the DP_COM control block.
+Add build/cross-build dependency check script kselftest_deps.sh
+This script does the following:
 
-This DP_COM block is only for one compatible. Is it possible to split
-that compatible out of this binding so we can enforce the reg property
-being either one or two items?
+Usage: ./kselftest_deps.sh -[p] <compiler> [test_name]
 
-In addition, I don't quite understand how this binding is supposed to
-work with the DP phy that sits inside qcom,sdm845-qmp-usb3-phy and then
-gets muxed out on the USB pins on sdm845 and sc7180 SoCs. Can you fill
-me in on how we plan to share the pins between the two phys so that all
-the combinations of DP and USB over the type-c pins will work here? My
-understanding is that the pins that are controlled by this hardware
-block are basically a full USB type-c connector pinout[1] (except that
-D+/D- isn't there and the VBUS and CC lines go to the PMIC). Either way,
-we get the TX1/2 and RX1/2 pins to use, so we can do 4x lanes of DP or
-2x lanes DP and 2x lanes of USB. There's also a type-c orientation
-flipper bit that can flip the DP and USB phy lanes to the correct TX/RX
-pins on the SoC. And then the DP phy has a lane remapper to change the
-logical DP lane to the physical DP lane. It's a complex piece of
-hardware that isn't fully represented by this binding.
+	kselftest_deps.sh [-p] gcc
+	kselftest_deps.sh [-p] gcc vm
+	kselftest_deps.sh [-p] aarch64-linux-gnu-gcc
+	kselftest_deps.sh [-p] aarch64-linux-gnu-gcc vm
 
-[1] https://en.wikipedia.org/wiki/USB-C#/media/File:USB_Type-C_Receptacle_P=
-inout.svg
+- Should be run in selftests directory in the kernel repo.
+- Checks if Kselftests can be built/cross-built on a system.
+- Parses all test/sub-test Makefile to find library dependencies.
+- Runs compile test on a trivial C file with LDLIBS specified
+  in the test Makefiles to identify missing library dependencies.
+- Prints suggested target list for a system filtering out tests
+  failed the build dependency check from the TARGETS in Selftests
+  the main Makefile when optional -p is specified.
+- Prints pass/fail dependency check for each tests/sub-test.
+- Prints pass/fail targets and libraries.
+- Default: runs dependency checks on all tests.
+- Optional test name can be specified to check dependencies for it.
+
+To make LDLIBS parsing easier
+- change gpio and memfd Makefiles to use the same temporary variable used
+  to find and add libraries to LDLIBS.
+- simlify LDLIBS append logic in intel_pstate/Makefile.
+
+Results from run on x86_64 system (trimmed detailed pass/fail list):
+========================================================
+Kselftest Dependency Check for [./kselftest_deps.sh gcc ] results...
+========================================================
+Checked tests defining LDLIBS dependencies
+--------------------------------------------------------
+Total tests with Dependencies:
+55 Pass: 53 Fail: 2
+--------------------------------------------------------
+Targets passed build dependency check on system:
+bpf capabilities filesystems futex gpio intel_pstate membarrier memfd
+mqueue net powerpc ptp rseq rtc safesetid timens timers vDSO vm
+--------------------------------------------------------
+FAIL: netfilter/Makefile dependency check: -lmnl
+FAIL: gpio/Makefile dependency check: -lmount
+--------------------------------------------------------
+Targets failed build dependency check on system:
+gpio netfilter
+--------------------------------------------------------
+Missing libraries system
+-lmnl -lmount
+--------------------------------------------------------
+========================================================
+
+Results from run on x86_64 system with aarch64-linux-gnu-gcc:
+(trimmed detailed pass/fail list):
+========================================================
+Kselftest Dependency Check for [./kselftest_deps.sh aarch64-linux-gnu-gcc ]
+results...
+========================================================
+Checked tests defining LDLIBS dependencies
+--------------------------------------------------------
+Total tests with Dependencies:
+55 Pass: 41 Fail: 14
+--------------------------------------------------------
+Targets failed build dependency check on system:
+bpf capabilities filesystems futex gpio intel_pstate membarrier memfd
+mqueue net powerpc ptp rseq rtc timens timers vDSO vm
+--------------------------------------------------------
+--------------------------------------------------------
+Targets failed build dependency check on system:
+bpf capabilities gpio memfd mqueue net netfilter safesetid vm
+--------------------------------------------------------
+Missing libraries system
+-lcap -lcap-ng -lelf -lfuse -lmnl -lmount -lnuma -lpopt -lz
+--------------------------------------------------------
+========================================================
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ tools/testing/selftests/gpio/Makefile         |  12 +-
+ tools/testing/selftests/intel_pstate/Makefile |   2 +-
+ tools/testing/selftests/kselftest_deps.sh     | 272 ++++++++++++++++++
+ tools/testing/selftests/memfd/Makefile        |  14 +-
+ 4 files changed, 291 insertions(+), 9 deletions(-)
+ create mode 100755 tools/testing/selftests/kselftest_deps.sh
+
+diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
+index 0bb80619db58..32bdc978a711 100644
+--- a/tools/testing/selftests/gpio/Makefile
++++ b/tools/testing/selftests/gpio/Makefile
+@@ -1,13 +1,13 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-MOUNT_CFLAGS := $(shell pkg-config --cflags mount 2>/dev/null)
+-MOUNT_LDLIBS := $(shell pkg-config --libs mount 2>/dev/null)
+-ifeq ($(MOUNT_LDLIBS),)
+-MOUNT_LDLIBS := -lmount -I/usr/include/libmount
++VAR_CFLAGS := $(shell pkg-config --cflags mount 2>/dev/null)
++VAR_LDLIBS := $(shell pkg-config --libs mount 2>/dev/null)
++ifeq ($(VAR_LDLIBS),)
++VAR_LDLIBS := -lmount -I/usr/include/libmount
+ endif
+ 
+-CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(MOUNT_CFLAGS)
+-LDLIBS += $(MOUNT_LDLIBS)
++CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(VAR_CFLAGS)
++LDLIBS += $(VAR_LDLIBS)
+ 
+ TEST_PROGS := gpio-mockup.sh
+ TEST_FILES := gpio-mockup-sysfs.sh
+diff --git a/tools/testing/selftests/intel_pstate/Makefile b/tools/testing/selftests/intel_pstate/Makefile
+index 7340fd6a9a9f..39f0fa2a8fd6 100644
+--- a/tools/testing/selftests/intel_pstate/Makefile
++++ b/tools/testing/selftests/intel_pstate/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS := $(CFLAGS) -Wall -D_GNU_SOURCE
+-LDLIBS := $(LDLIBS) -lm
++LDLIBS += -lm
+ 
+ uname_M := $(shell uname -m 2>/dev/null || echo not)
+ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
+diff --git a/tools/testing/selftests/kselftest_deps.sh b/tools/testing/selftests/kselftest_deps.sh
+new file mode 100755
+index 000000000000..bb9c22e7af0e
+--- /dev/null
++++ b/tools/testing/selftests/kselftest_deps.sh
+@@ -0,0 +1,272 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# kselftest_deps.sh
++#
++# Checks for kselftest build dependencies on the build system.
++# Copyright (c) 2020 Shuah Khan <skhan@linuxfoundation.org>
++#
++#
++
++usage()
++{
++
++echo -e "Usage: $0 -[p] <compiler> [test_name]\n"
++echo -e "\tkselftest_deps.sh [-p] gcc"
++echo -e "\tkselftest_deps.sh [-p] gcc vm"
++echo -e "\tkselftest_deps.sh [-p] aarch64-linux-gnu-gcc"
++echo -e "\tkselftest_deps.sh [-p] aarch64-linux-gnu-gcc vm\n"
++echo "- Should be run in selftests directory in the kernel repo."
++echo "- Checks if Kselftests can be built/cross-built on a system."
++echo "- Parses all test/sub-test Makefile to find library dependencies."
++echo "- Runs compile test on a trivial C file with LDLIBS specified"
++echo "  in the test Makefiles to identify missing library dependencies."
++echo "- Prints suggested target list for a system filtering out tests"
++echo "  failed the build dependency check from the TARGETS in Selftests"
++echo "  main Makefile when optional -p is specified."
++echo "- Prints pass/fail dependency check for each tests/sub-test."
++echo "- Prints pass/fail targets and libraries."
++echo "- Default: runs dependency checks on all tests."
++echo "- Optional test name can be specified to check dependencies for it."
++exit 1
++
++}
++
++# Start main()
++main()
++{
++
++base_dir=`pwd`
++# Make sure we're in the selftests top-level directory.
++if [ $(basename "$base_dir") !=  "selftests" ]; then
++	echo -e "\tPlease run $0 in"
++	echo -e "\ttools/testing/selftests directory ..."
++	exit 1
++fi
++
++print_targets=0
++
++while getopts "p" arg; do
++    case $arg in
++        p)
++		print_targets=1
++	shift;;
++    esac
++done
++
++if [ $# -eq 0 ]
++then
++	usage
++fi
++
++# Compiler
++CC=$1
++
++tmp_file=$(mktemp).c
++trap "rm -f $tmp_file.o $tmp_file $tmp_file.bin" EXIT
++#echo $tmp_file
++
++pass=$(mktemp).out
++trap "rm -f $pass" EXIT
++#echo $pass
++
++fail=$(mktemp).out
++trap "rm -f $fail" EXIT
++#echo $fail
++
++# Generate tmp source fire for compile test
++cat << "EOF" > $tmp_file
++int main()
++{
++}
++EOF
++
++# Save results
++total_cnt=0
++fail_trgts=()
++fail_libs=()
++fail_cnt=0
++pass_trgts=()
++pass_libs=()
++pass_cnt=0
++
++# Get all TARGETS from selftests Makefile
++targets=$(egrep "^TARGETS +|^TARGETS =" Makefile | cut -d "=" -f2)
++
++# Single test case
++if [ $# -eq 2 ]
++then
++	test=$2/Makefile
++
++	l1_test $test
++	l2_test $test
++	l3_test $test
++
++	print_results $1 $2
++	exit $?
++fi
++
++# Level 1: LDLIBS set static.
++#
++# Find all LDLIBS set statically for all executables built by a Makefile
++# and filter out VAR_LDLIBS to discard the following:
++# 	gpio/Makefile:LDLIBS += $(VAR_LDLIBS)
++# Append space at the end of the list to append more tests.
++
++l1_tests=$(grep -r --include=Makefile "^LDLIBS" | \
++		grep -v "VAR_LDLIBS" | awk -F: '{print $1}')
++
++# Level 2: LDLIBS set dynamically.
++#
++# Level 2
++# Some tests have multiple valid LDLIBS lines for individual sub-tests
++# that need dependency checks. Find them and append them to the tests
++# e.g: vm/Makefile:$(OUTPUT)/userfaultfd: LDLIBS += -lpthread
++# Filter out VAR_LDLIBS to discard the following:
++# 	memfd/Makefile:$(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
++# Append space at the end of the list to append more tests.
++
++l2_tests=$(grep -r --include=Makefile ": LDLIBS" | \
++		grep -v "VAR_LDLIBS" | awk -F: '{print $1}')
++
++# Level 3
++# gpio,  memfd and others use pkg-config to find mount and fuse libs
++# respectively and save it in VAR_LDLIBS. If pkg-config doesn't find
++# any, VAR_LDLIBS set to default.
++# Use the default value and filter out pkg-config for dependency check.
++# e.g:
++# gpio/Makefile
++#	VAR_LDLIBS := $(shell pkg-config --libs mount) 2>/dev/null)
++# memfd/Makefile
++#	VAR_LDLIBS := $(shell pkg-config fuse --libs 2>/dev/null)
++
++l3_tests=$(grep -r --include=Makefile "^VAR_LDLIBS" | \
++       		grep -v "pkg-config" | awk -F: '{print $1}')
++
++#echo $l1_tests
++#echo $l2_1_tests
++#echo $l3_tests
++
++all_tests
++print_results $1 $2
++
++exit $?
++}
++# end main()
++
++all_tests()
++{
++	for test in $l1_tests; do
++		l1_test $test
++	done
++
++	for test in $l2_tests; do
++		l2_test $test
++	done
++
++	for test in $l3_tests; do
++		l3_test $test
++	done
++}
++
++# Use same parsing used for l1_tests and pick libraries this time.
++l1_test()
++{
++	test_libs=$(grep --include=Makefile "^LDLIBS" $test | \
++			grep -v "VAR_LDLIBS" | \
++			sed -e 's/\:/ /' | \
++	       		sed -e 's/+/ /' | cut -d "=" -f 2)
++
++	check_libs $test $test_libs
++}
++
++# Use same parsing used for l2__tests and pick libraries this time.
++l2_test()
++{
++	test_libs=$(grep --include=Makefile ": LDLIBS" $test | \
++			grep -v "VAR_LDLIBS" | \
++			sed -e 's/\:/ /' | sed -e 's/+/ /' | \
++			cut -d "=" -f 2)
++
++	check_libs $test $test_libs
++}
++
++l3_test()
++{
++	test_libs=$(grep --include=Makefile "^VAR_LDLIBS" $test | \
++			grep -v "pkg-config" | sed -e 's/\:/ /' |
++			sed -e 's/+/ /' | cut -d "=" -f 2)
++
++	check_libs $test $test_libs
++}
++
++check_libs()
++{
++
++if [[ ! -z "${test_libs// }" ]]
++then
++
++	#echo $test_libs
++
++	for lib in $test_libs; do
++
++	let total_cnt+=1
++	$CC -o $tmp_file.bin $lib $tmp_file > /dev/null 2>&1
++	if [ $? -ne 0 ]; then
++		echo "FAIL: $test dependency check: $lib" >> $fail
++		let fail_cnt+=1
++		fail_libs+="$lib "
++		fail_target=$(echo "$test" | cut -d "/" -f1)
++		fail_trgts+="$fail_target "
++		targets=$(echo "$targets" | grep -v "$fail_target")
++	else
++		echo "PASS: $test dependency check passed $lib" >> $pass
++		let pass_cnt+=1
++		pass_libs+="$lib "
++		pass_trgts+="$(echo "$test" | cut -d "/" -f1) "
++	fi
++
++	done
++fi
++}
++
++print_results()
++{
++	echo -e "========================================================";
++	echo -e "Kselftest Dependency Check for [$0 $1 $2] results..."
++
++	if [ $print_targets -ne 0 ]
++	then
++	echo -e "Suggested Selftest Targets for your configuration:"
++	echo -e "$targets";
++	fi
++
++	echo -e "========================================================";
++	echo -e "Checked tests defining LDLIBS dependencies"
++	echo -e "--------------------------------------------------------";
++	echo -e "Total tests with Dependencies:"
++	echo -e "$total_cnt Pass: $pass_cnt Fail: $fail_cnt";
++
++	if [ $pass_cnt -ne 0 ]; then
++	echo -e "--------------------------------------------------------";
++	cat $pass
++	echo -e "--------------------------------------------------------";
++	echo -e "Targets passed build dependency check on system:"
++	echo -e "$(echo "$pass_trgts" | xargs -n1 | sort -u | xargs)"
++	fi
++
++	if [ $fail_cnt -ne 0 ]; then
++	echo -e "--------------------------------------------------------";
++	cat $fail
++	echo -e "--------------------------------------------------------";
++	echo -e "Targets failed build dependency check on system:"
++	echo -e "$(echo "$fail_trgts" | xargs -n1 | sort -u | xargs)"
++	echo -e "--------------------------------------------------------";
++	echo -e "Missing libraries system"
++	echo -e "$(echo "$fail_libs" | xargs -n1 | sort -u | xargs)"
++	fi
++
++	echo -e "--------------------------------------------------------";
++	echo -e "========================================================";
++}
++
++main "$@"
+diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
+index 187b14cad00c..4da8b565fa32 100644
+--- a/tools/testing/selftests/memfd/Makefile
++++ b/tools/testing/selftests/memfd/Makefile
+@@ -8,11 +8,21 @@ TEST_GEN_PROGS := memfd_test
+ TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh
+ TEST_GEN_FILES := fuse_test fuse_mnt
+ 
+-fuse_mnt.o: CFLAGS += $(shell pkg-config fuse --cflags)
++VAR_CFLAGS := $(shell pkg-config fuse --cflags 2>/dev/null)
++ifeq ($(VAR_CFLAGS),)
++VAR_CFLAGS := -D_FILE_OFFSET_BITS=64 -I/usr/include/fuse
++endif
++
++VAR_LDLIBS := $(shell pkg-config fuse --libs 2>/dev/null)
++ifeq ($(VAR_LDLIBS),)
++VAR_LDLIBS := -lfuse -pthread
++endif
++
++fuse_mnt.o: CFLAGS += $(VAR_CFLAGS)
+ 
+ include ../lib.mk
+ 
+-$(OUTPUT)/fuse_mnt: LDLIBS += $(shell pkg-config fuse --libs)
++$(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
+ 
+ $(OUTPUT)/memfd_test: memfd_test.c common.c
+ $(OUTPUT)/fuse_test: fuse_test.c common.c
+-- 
+2.20.1
+
