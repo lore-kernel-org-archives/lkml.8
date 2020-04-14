@@ -2,120 +2,121 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05109C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E2BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB6A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2ECA2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:41:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocqZqq6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439452AbgDNLkp (ORCPT
+        id S2439473AbgDNLll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:40:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:53594 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729851AbgDNLkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:40:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9D7E1FB;
-        Tue, 14 Apr 2020 04:40:36 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD4743F6C4;
-        Tue, 14 Apr 2020 04:40:34 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:40:32 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        luca abeni <luca.abeni@santannapisa.it>,
+        Tue, 14 Apr 2020 07:41:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439459AbgDNLlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:41:36 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06D3C061A0C;
+        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t4so4540275plq.12;
+        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=8Esq4uJjc7hCqZPSyfuH3UXfV8N/MZeW3NHhinZ8EQA=;
+        b=ocqZqq6sP10NyE5Oqrsyu24BO4bUv9d+CybYLvjUEA0qRTbQq8IAo2pJTWQfIqu4RO
+         sPTYsA+WN55nEjfpiAKwJ3efgvE0y02zIRGr4QJLeGvUEOTkWEwmF8lPwgWo+rxrPEs5
+         VDTf42M1YbD+ARAsRZhdeD47bvnZpwfdPk63IxzHlEP4FOS+xZOTFLokGOmvq6qCsYSC
+         9tfWtMbUwXgESksl6KkJnUtYDYhwxUwpcnrbpFt8xAH3B/hJvFo4WpPegEXCjs4dhUzZ
+         W26SU5gqovyT9qgqJ6qWu6cT8BV0oBUpmf+pSVOyif6EAbW821Qd95yr49cfUdak8sxQ
+         mhEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=8Esq4uJjc7hCqZPSyfuH3UXfV8N/MZeW3NHhinZ8EQA=;
+        b=WGFvk2eopzzhnzAKMqczAIyD6wLlBVfs7PY3INiZdxfU4MPoGd4n3TTWjqarVcnweU
+         C5Yt9OmQcvvdATPOIYsmM1eOXWh0r4RUve1Me1zIlD6+oqn2mXTKOVexUMrQ1Ov+/o0X
+         ynOXyCsBNxbUJlVv0/wwC/ZkXbv4XCxbcLcSRlPLyTi6IEgqAjHU7pp70Qm47VbQa8ws
+         Jf3MRlCZfJv0WkX8lIv3Wu3p5whHDO113j81OCw19rXVwykUvjsP5Uc/P1H7L3FI/5BQ
+         MUYifou97+SfNF2BarIGH0Re0WqMR+xW+pdPB0CanvoGes7kyAcQxhxrkQnC/O1YhLYa
+         EaMw==
+X-Gm-Message-State: AGi0PuYM1E+KZqhuTkSMqNpb470s3CdfuWvXcLewXGUJuc9u8cjggT1f
+        v1t7DbgwdN962Kd9Oo4Vx+k=
+X-Google-Smtp-Source: APiQypLIBjtk6RQd/AotCq9xnqN6ML09PMuOg/nS9Dm4xLrHmr38av9P0xvvmudk1+K5veWBSwJi4w==
+X-Received: by 2002:a17:90a:2281:: with SMTP id s1mr27766299pjc.68.1586864495571;
+        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
+Received: from localhost ([203.18.28.220])
+        by smtp.gmail.com with ESMTPSA id 132sm11155833pfc.183.2020.04.14.04.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 04:41:35 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 21:39:53 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
         Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] sched/deadline: Improve admission control for
- asymmetric CPU capacities
-Message-ID: <20200414114032.wigdlnegism6qqns@e107158-lin.cambridge.arm.com>
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-3-dietmar.eggemann@arm.com>
- <jhjeesyw96u.mognet@arm.com>
- <20200408153032.447e098d@nowhere>
- <jhjblo2vx60.mognet@arm.com>
- <31620965-e1e7-6854-ad46-8192ee4b41af@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org
+References: <20200413125303.423864-1-npiggin@gmail.com>
+        <20200413125303.423864-5-npiggin@gmail.com>
+        <20200413134106.GN21484@bombadil.infradead.org>
+In-Reply-To: <20200413134106.GN21484@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <31620965-e1e7-6854-ad46-8192ee4b41af@arm.com>
-User-Agent: NeoMutt/20171215
+Message-Id: <1586863931.xb4yeowkao.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/20 19:29, Dietmar Eggemann wrote:
+Excerpts from Matthew Wilcox's message of April 13, 2020 11:41 pm:
+> On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
+>> +static int vmap_pages_range_noflush(unsigned long start, unsigned long =
+end,
+>> +				    pgprot_t prot, struct page **pages,
+>> +				    unsigned int page_shift)
+>> +{
+>> +	if (page_shift =3D=3D PAGE_SIZE) {
+>=20
+> ... I think you meant 'page_shift =3D=3D PAGE_SHIFT'
 
-[...]
+Thanks, good catch. I obviously didn't test the fallback path (the
+other path works for small pages, it just goes one at a time).
 
-> Maybe we can do a hybrid. We have rd->span and rd->sum_cpu_capacity and
-> with the help of an extra per-cpu cpumask we could just
-> 
-> DEFINE_PER_CPU(cpumask_var_t, dl_bw_mask);
-> 
-> dl_bw_cpus(int i) {
-> 
->     struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
->     ...
->     cpumask_and(cpus, rd->span, cpu_active_mask);
-> 
->     return cpumask_weight(cpus);
-> }
-> 
-> and
-> 
-> dl_bw_capacity(int i) {
-> 
->     struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
->     ...
->     cpumask_and(cpus, rd->span, cpu_active_mask);
->     if (cpumask_equal(cpus, rd->span))
->         return rd->sum_cpu_capacity;
-> 
->     for_each_cpu(i, cpus)
->         cap += capacity_orig_of(i);
-> 
->     return cap;
-> }
-> 
-> So only in cases in which rd->span and cpu_active_mask differ we would
-> have to sum up again.
+> Overall I like this series, although it's a bit biased towards CPUs
+> which have page sizes which match PMD/PUD sizes.  It doesn't offer the
+> possibility of using 64kB page sizes on ARM, for example.
 
-I haven't followed this discussion closely, so I could be missing something
-here.
+No, it's just an incremental step on existing huge vmap stuff in
+tree, so such a thing would be out of scope.
 
-In sched_cpu_dying() we call set_rq_offline() which clears the cpu in
-rq->rd->online.
+> But it's a
+> step in the right direction.
+>=20
 
-So the way I read the code
+I don't know about moving kernel maps away from a generic Linux page
+table format. I quite like moving to it and making it as generic as
+possible.
 
-	rd->online = cpumask_and(rd->span, cpu_active_mask)
+On the other hand, I also would like to make some arch-specific
+allowances for certain special cases that may not fit within the
+standard page table format, but it might be a much more specific and
+limited interface than the general vmalloc stuff.
 
-But I could have easily missed some detail.
-
-Regardless, it seems to me that DL is working around something not right in the
-definition of rd->span or using the wrong variable.
-
-My 2p :-). I have to go back and read the discussion in more detail.
-
-Thanks
-
---
-Qais Yousef
+Thanks,
+Nick
