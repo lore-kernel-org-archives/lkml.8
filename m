@@ -6,132 +6,103 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61DDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA1C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F96206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B742075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883968;
-	bh=Xcd8OczNfFdGZEF3wPW0kOHvO/XmMZqNiHT1ft2gcp4=;
+	s=default; t=1586883989;
+	bh=N+wDVFj4k9qNnM4H4JBhjazm1jiklG8jskgZRqJY8vE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yC71Y4uaMgIk/kQ3ibXIdDT9+L9+IF7rcKSp9trbPmS2qx8CQ/Szz8DhC1epe7LoW
-	 H+Mp/J6CWPhFE0oxeG8bBEj40794FKsJE1wDWY6GdXy8LgDvr+XlCdnuV5Jn61NG43
-	 K6O/ItzfR3oxfLnNMh1DxwlJx2OAq4A4htiM4FGc=
+	b=OkAJEdzXfb4RIz+ffD68t2fclCPVBdbOs/c4hiWVtjWtlCafqbA6JLxQhfv4txQWI
+	 lZNnlfmuuaGLBRXG+4iUi/vgQXjFxeethNdbgqEMV9AizFCcMlyg1Rr9y9vdfEiZL2
+	 0nTfGvCkF7ymdgq3XIy0P+Mcl1BzxLPmC55KVGDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407226AbgDNRGG (ORCPT
+        id S2407510AbgDNRG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 13:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732423AbgDNRGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:06:00 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.36.11])
+        id S1729042AbgDNRGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:06:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3116120678;
-        Tue, 14 Apr 2020 17:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B5D820678;
+        Tue, 14 Apr 2020 17:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586883959;
-        bh=Xcd8OczNfFdGZEF3wPW0kOHvO/XmMZqNiHT1ft2gcp4=;
+        s=default; t=1586883980;
+        bh=N+wDVFj4k9qNnM4H4JBhjazm1jiklG8jskgZRqJY8vE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MAYu5Wo6SyKz8OOXUZxB0yCmcnYI/DANdYKf/LLtqG58SEPGSGt3QieOisCBupp8O
-         vcJ5lrB5Tw3WUxzV7qtaa6JNmagze/ZLZ6yLqOYv5AOTziSR15RGF7sSU+Db+w0MLz
-         zYf4DKe5j9ROPxXB1JQgmDIdC6VJa1d1VMeqFamY=
-Date:   Tue, 14 Apr 2020 22:35:47 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] iio: chemical: Add support for external Reset and
- Wakeup in CCS811
-Message-ID: <20200414170547.GB3334@Mani-XPS-13-9360>
-References: <20200414153415.957-1-mani@kernel.org>
- <20200414153415.957-3-mani@kernel.org>
- <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
+        b=GLTIl/JCaTkOhZA5OQwDfanxfbTEyIdCvGi1wIKXRvXuh3XsA+ROea7ZdVEIEMoUp
+         rkUKYqb5ScEV9JzmaLWwUPEzla8bLzvty9CCTcNG/rMrOF/dgEbtEBXh5A5+9KH9XJ
+         dgb4ux3lsK5o5RvJGS7cBTojbNGLUizRObK2g7/U=
+Date:   Tue, 14 Apr 2020 18:06:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-hwmon@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings on reg and ranges in
+ examples
+Message-ID: <20200414170618.GG5412@sirena.org.uk>
+References: <20200409202458.24509-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200409202458.24509-1-robh@kernel.org>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:42:24PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> >
-> > CCS811 VOC sensor exposes nRESET and nWAKE pins which can be connected
-> > to GPIO pins of the host controller. These pins can be used to externally
-> > release the device from reset and also to wake it up before any I2C
-> > transaction. The initial driver support assumed that the nRESET pin is not
-> > connected and the nWAKE pin is tied to ground.
-> >
-> > This commit improves it by adding support for controlling those two pins
-> > externally using a host controller. For the case of reset, if the hardware
-> > reset is not available, the mechanism to do software reset is also added.
-> >
-> > As a side effect of doing this, the IIO device allocation needs to be
-> > slightly moved to top of probe to make use of priv data early.
-> 
-> Thank you for an update, my comments below.
-> 
-> ...
-> 
-> > +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> > +                                            GPIOD_OUT_LOW);
-> > +       if (IS_ERR(reset_gpio)) {
-> 
-> > +               dev_err(&client->dev, "Failed to acquire reset gpio\n");
-> 
-> If it's a deferred probe, it would spam the log.
-> 
 
-Hmm. But error is an error isn't it? Would you recommend doing a debug print
-or completely removing the logging?
+--kjpMrWxdCilgNbo1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > +               return PTR_ERR(reset_gpio);
-> > +       }
-> 
-> ...
-> 
-> > +               static const u8 reset_seq[] = {
-> > +                       0xFF, 0x11, 0xE5, 0x72, 0x8A,
-> > +               };
-> 
-> I would suggest to comment above from where you got this and the
-> meaning of the numbers.
-> 
+On Thu, Apr 09, 2020 at 02:24:58PM -0600, Rob Herring wrote:
+> A recent update to dtc and changes to the default warnings introduced
+> some new warnings in the DT binding examples:
 
-The datasheet doesn't specify the meaning of these values. But will add a
-comment. Btw, just noticed that 0xFF is not needed and only 4 values are
-sufficient for SW reset.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Thanks,
-Mani
+--kjpMrWxdCilgNbo1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ...
-> 
-> > +       data->wakeup_gpio = devm_gpiod_get_optional(&client->dev, "wakeup",
-> > +                                                   GPIOD_OUT_HIGH);
-> > +       if (IS_ERR(data->wakeup_gpio)) {
-> 
-> > +               dev_err(&client->dev, "Failed to acquire wakeup gpio\n");
-> 
-> Ditto.
-> 
-> > +               return PTR_ERR(data->wakeup_gpio);
-> > +       }
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7YkACgkQJNaLcl1U
+h9C0nggAgbznZBSepYyVohp/1H4rCte0Z/wk6K7EfPvfDL1M/M+F5oW6AU4YZ7Kq
+lnSn9hweJBFpxBwrrAv0lHakge/LpEQZ1Aqig/t9jd9NgwKqJWJ8Y2aKPx+Oli9k
+mdb6G44fbxVgVruXHd1n2XzJwpISNXksvKBTYWY63Gb7DRAfzSqlexWfysRbtI/O
+NgdIihQ9ti6mjE0Nxso/6KeZbooinBxVRntCOiinYSHraOWbfTn24MQXa70JtuVC
+m7cod5i1+C4PiKb+3m5aYIEQxvzN08qRxnnZFrnknqj+N0GcA1N9wVkJ06JhXrzn
+a84u535dpkRwCg+2Nf9leoevVqXUqw==
+=wm8m
+-----END PGP SIGNATURE-----
+
+--kjpMrWxdCilgNbo1--
