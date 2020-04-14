@@ -2,185 +2,135 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F90CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B18BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6846E206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C612072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586865132;
+	bh=Fdj1YVdp//ceZ9oMqGAN8F8tYVPLTWDDFpuFS8d9ZK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=18bGfl20c13iOVGKQa09nQoEOdO8FuesaXSDuoQg+ggWjDanZscI4U2Vyd3h5GWo9
+	 qs2Bmz+obtHgHYqniBM2HvIUsskzAc6Z+Pw4SaRMviL09VUl/8ZEBA2eyg1VZdoHt2
+	 y0rZfldItIeG91rL4VjTipjYXIcESR8fVde/rXGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgDNLuj (ORCPT
+        id S2439640AbgDNLwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:50:39 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:40751 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728476AbgDNLuf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:50:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TvX5XkD_1586865020;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvX5XkD_1586865020)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 Apr 2020 19:50:20 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, zhangliguang@linux.alibaba.com,
-        zhang.jia@linux.alibaba.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tianjia.zhang@linux.alibaba.com
-Subject: [PATCH] ima: optimize ima_pcr_extend function by asynchronous
-Date:   Tue, 14 Apr 2020 19:50:20 +0800
-Message-Id: <20200414115020.99288-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Apr 2020 07:52:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728476AbgDNLwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:52:06 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC477206D5;
+        Tue, 14 Apr 2020 11:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586865126;
+        bh=Fdj1YVdp//ceZ9oMqGAN8F8tYVPLTWDDFpuFS8d9ZK0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xvLl7gxIK83JbrlKz158gl7mOTjXgiogxIFkzAfjjz+oIY5zBWsHqzrNFmgAqOLbA
+         P/zzA3lQB9Qd8GhjnQIg/w6omdvO2ltpJYdcrpsC36+XJuHHDFS9eJQhe7h7x2Ost3
+         nxZiqNMd+376EhOyEglUhGg3Hizw1Q0W+Df/EDvc=
+Date:   Tue, 14 Apr 2020 17:21:53 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
+ sensor
+Message-ID: <20200414115153.GC21559@Mani-XPS-13-9360>
+References: <20200412183658.6755-1-mani@kernel.org>
+ <20200412183658.6755-4-mani@kernel.org>
+ <20200413175054.626283dc@archlinux>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413175054.626283dc@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because ima_pcr_extend() to operate the TPM chip, this process is
-very time-consuming, for IMA, this is a blocking action, especially
-when the TPM is in self test state, this process will block for up
-to ten seconds.
+On Mon, Apr 13, 2020 at 05:50:54PM +0100, Jonathan Cameron wrote:
+> On Mon, 13 Apr 2020 00:06:58 +0530
+> mani@kernel.org wrote:
+> 
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > Add devicetree OF match table support for CCS811 VOC sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> Hi,
+> 
+> A few small things to clean up inline
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  drivers/iio/chemical/ccs811.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
+> > index 6cd92c49c348..313931208f61 100644
+> > --- a/drivers/iio/chemical/ccs811.c
+> > +++ b/drivers/iio/chemical/ccs811.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/iio/triggered_buffer.h>
+> >  #include <linux/iio/trigger_consumer.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of.h>
+> 
+> You are including this just to get things in mod_devicetable.h
+> so include that directly instead.
+> 
 
-Because the return result of ima_pcr_extend() is of no concern to IMA,
-it only affects the audit of IMA, so this patch use async_schedule()
-to asynchronously perform the ima_pcr_extend() operation and do an
-audit operation at the end.
+I added this include for of_match_ptr. Since it is not needed anymore, I'll drop
+this.
 
-In a vtpm scenario, I added the measure policy of BPRM and MMAP to
-compare the efficiency before and after applying the patch. The results
-show that the overall startup efficiency of conventional processes can
-be increased by 5% to 10%. I believe this efficiency increase It will
-be more obvious on real hardware tpm.
+> >  
+> >  #define CCS811_STATUS		0x00
+> >  #define CCS811_MEAS_MODE	0x01
+> > @@ -538,9 +539,16 @@ static const struct i2c_device_id ccs811_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, ccs811_id);
+> >  
+> > +static const struct of_device_id ccs811_dt_ids[] = {
+> > +	{ .compatible = "ams,ccs811" },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+> > +
+> >  static struct i2c_driver ccs811_driver = {
+> >  	.driver = {
+> >  		.name = "ccs811",
+> > +		.of_match_table = of_match_ptr(ccs811_dt_ids),
+> No need for the of_match_ptr macro.  It has several issues.
+> 
+> 1) Blocks PRP001 ACPI magic device types being used to instantiate
+> this using the device tree binding but under ACPI.
+> 2) Will give warnings about ccs811_dt_ids being unused on no
+>    device tree builds.
+> 
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- security/integrity/ima/ima_queue.c | 80 ++++++++++++++++++++++--------
- 1 file changed, 59 insertions(+), 21 deletions(-)
+Okay, will use ccs811_dt_ids directly.
 
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 8753212ddb18..12cbf69c2442 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -17,6 +17,7 @@
- 
- #include <linux/rculist.h>
- #include <linux/slab.h>
-+#include <linux/async.h>
- #include "ima.h"
- 
- #define AUDIT_CAUSE_LEN_MAX 32
-@@ -151,6 +152,42 @@ static int ima_pcr_extend(const u8 *hash, int pcr)
- 	return result;
- }
- 
-+struct ima_pcr_extend_async_ctx {
-+	struct ima_template_entry *entry;
-+	int violation;
-+	const char *op;
-+	struct inode *inode;
-+	const unsigned char *filename;
-+	const char *audit_cause;
-+	int audit_info;
-+	int result;
-+};
-+
-+static void ima_pcr_extend_async(void *data, async_cookie_t cookie)
-+{
-+	struct ima_pcr_extend_async_ctx *ctx = data;
-+	u8 digest[TPM_DIGEST_SIZE];
-+	char tpm_audit_cause[AUDIT_CAUSE_LEN_MAX];
-+	int result;
-+
-+	if (ctx->violation)		/* invalidate pcr */
-+		memset(digest, 0xff, sizeof(digest));
-+	else
-+		memcpy(digest, ctx->entry->digest, sizeof(digest));
-+
-+	result = ima_pcr_extend(digest, ctx->entry->pcr);
-+	if (result != 0) {
-+		snprintf(tpm_audit_cause, AUDIT_CAUSE_LEN_MAX, "TPM_error(%d)",
-+			 result);
-+		ctx->audit_cause = tpm_audit_cause;
-+		ctx->audit_info = 0;
-+	}
-+	integrity_audit_msg(AUDIT_INTEGRITY_PCR, ctx->inode, ctx->filename,
-+				ctx->op, ctx->audit_cause, ctx->result, ctx->audit_info);
-+
-+	kfree(ctx);
-+}
-+
- /*
-  * Add template entry to the measurement list and hash table, and
-  * extend the pcr.
-@@ -163,20 +200,16 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
- 			   const char *op, struct inode *inode,
- 			   const unsigned char *filename)
- {
--	u8 digest[TPM_DIGEST_SIZE];
- 	const char *audit_cause = "hash_added";
--	char tpm_audit_cause[AUDIT_CAUSE_LEN_MAX];
- 	int audit_info = 1;
--	int result = 0, tpmresult = 0;
-+	int result = 0;
-+	struct ima_pcr_extend_async_ctx *ctx;
- 
- 	mutex_lock(&ima_extend_list_mutex);
--	if (!violation) {
--		memcpy(digest, entry->digest, sizeof(digest));
--		if (ima_lookup_digest_entry(digest, entry->pcr)) {
--			audit_cause = "hash_exists";
--			result = -EEXIST;
--			goto out;
--		}
-+	if (!violation && ima_lookup_digest_entry(entry->digest, entry->pcr)) {
-+		audit_cause = "hash_exists";
-+		result = -EEXIST;
-+		goto out;
- 	}
- 
- 	result = ima_add_digest_entry(entry, 1);
-@@ -186,20 +219,25 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
- 		goto out;
- 	}
- 
--	if (violation)		/* invalidate pcr */
--		memset(digest, 0xff, sizeof(digest));
--
--	tpmresult = ima_pcr_extend(digest, entry->pcr);
--	if (tpmresult != 0) {
--		snprintf(tpm_audit_cause, AUDIT_CAUSE_LEN_MAX, "TPM_error(%d)",
--			 tpmresult);
--		audit_cause = tpm_audit_cause;
--		audit_info = 0;
-+	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx) {
-+		audit_cause = "ENOMEM";
-+		result = -ENOMEM;
-+		goto out;
- 	}
-+
-+	ctx->entry = entry;
-+	ctx->violation = violation;
-+	ctx->op = op;
-+	ctx->inode = inode;
-+	ctx->filename = filename;
-+	ctx->audit_cause = audit_cause;
-+	ctx->audit_info = audit_info;
-+	ctx->result = result;
-+	async_schedule(ima_pcr_extend_async, ctx);
-+
- out:
- 	mutex_unlock(&ima_extend_list_mutex);
--	integrity_audit_msg(AUDIT_INTEGRITY_PCR, inode, filename,
--			    op, audit_cause, result, audit_info);
- 	return result;
- }
- 
--- 
-2.17.1
+Thanks,
+Mani
 
+> >  	},
+> >  	.probe = ccs811_probe,
+> >  	.remove = ccs811_remove,
+> 
