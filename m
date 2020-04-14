@@ -2,105 +2,120 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BB7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FFFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1D9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46662072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gDswYByS"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="sx6IKJIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436874AbgDNIb1 (ORCPT
+        id S2436913AbgDNIci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:31:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52078 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436826AbgDNIbS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:31:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E8SY8h030059;
-        Tue, 14 Apr 2020 08:30:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=B4F5aK58uXm+SQw8mnNaOVLDhAMxHIBWcLtQ7vVYAdc=;
- b=gDswYBySZ6leZ9Zb7x9/yQfTmqfKWVKXdGBWundE2UoyBcb011loVccqqP4x7nQ7x1F6
- nGaYbCCme8KPyl3nRLOtgysEKqsHw/sOpPUAU3aEJCtxqOt+oyYRg0ZW2vyACJb3MCgu
- Yvah95aNEJzJPeTQPt3oEw2PmibKw/Db37gzPxqF+umNSOIT2IMWZv4RuAq6wNdL46EJ
- 0duPTGY4SCNSUdSn0xag4qvLxAY+cVsEWoEG0G7u1fVP7zT04qrbWmRyZNv4PisS1coP
- OEDi9VY5INA3/7Ej4tcXZBUBs8g2cKhA/lqymThBnAar6EhuiKGHinsrz/3rXtMI43IU Wg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30b5ar2xd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 08:30:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E8QwSL021727;
-        Tue, 14 Apr 2020 08:30:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30bqm13gtg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 08:30:56 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03E8Ulsa008651;
-        Tue, 14 Apr 2020 08:30:48 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 01:30:47 -0700
-Date:   Tue, 14 Apr 2020 11:30:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: fsl: Fix a wrong judgment in fsl_udc_probe()
-Message-ID: <20200414083036.GC14722@kadam>
-References: <20200410015832.8012-1-tangbin@cmss.chinamobile.com>
- <be8cd229-884a-40e6-3363-7c4680a51b30@web.de>
- <0b718268-d330-dfc1-aca3-3dd3203363d7@cmss.chinamobile.com>
+        Tue, 14 Apr 2020 04:32:38 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:52379 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436826AbgDNIcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:32:11 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 9d220a78;
+        Tue, 14 Apr 2020 08:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=subject:to:cc
+        :references:from:message-id:date:mime-version:in-reply-to
+        :content-type:content-transfer-encoding; s=mail; bh=Bn42dUX94nPZ
+        VI2aresTt2verm4=; b=sx6IKJIxzuEOA3MDWmGK5eH/64R8mpMYlG8WURWdfzRD
+        XFeah0rjLnpfJ/wNxDNPuLqvGkOXg2tTc6/J9yxFJV/B/IyVASTm/xV1AWFh8sOT
+        E+Zkl2VUcl4Y0wf6Mu5iapMmn3g8Ztyi36JLXdlWN66PEuOJynjCGScQFzOu0tep
+        4+h/FZal3et8UceGQF9vqtL2mbwwUOtzAFh6NniwZkygh5iiMorXd4zwhnYD2AoL
+        UBjxDBvR+PqwgLJDDNN43HRxAe1Ka1ICHvrV5FNQIfjCNS9xZTJzxiJXAqnsHyrN
+        w3BT8jw4OmracAotC1L9+6WCZMUQn8YWdWOjpIB/Jw==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e4f42b92 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 14 Apr 2020 08:22:18 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
+To:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+References: <20200413211550.8307-1-longman@redhat.com>
+ <20200413211550.8307-2-longman@redhat.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Message-ID: <4babf834-c531-50ba-53f6-e88410b15ce3@zx2c4.com>
+Date:   Tue, 14 Apr 2020 02:32:03 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0b718268-d330-dfc1-aca3-3dd3203363d7@cmss.chinamobile.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=608
- adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140070
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0
- mlxlogscore=669 suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140070
+In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 04:05:06PM +0800, Tang Bin wrote:
-> > 
-> > 
-> > > Thus it must be fixed.
-> > Wording alternative:
-> >    Thus adjust the error detection and corresponding exception handling.
->
-> Got it.
+On 4/13/20 3:15 PM, Waiman Long wrote:
+> As said by Linus:
+> 
+>    A symmetric naming is only helpful if it implies symmetries in use.
+>    Otherwise it's actively misleading.
+> 
+>    In "kzalloc()", the z is meaningful and an important part of what the
+>    caller wants.
+> 
+>    In "kzfree()", the z is actively detrimental, because maybe in the
+>    future we really _might_ want to use that "memfill(0xdeadbeef)" or
+>    something. The "zero" part of the interface isn't even _relevant_.
+> 
+> The main reason that kzfree() exists is to clear sensitive information
+> that should not be leaked to other future users of the same memory
+> objects.
+> 
+> Rename kzfree() to kfree_sensitive() to follow the example of the
+> recently added kvfree_sensitive() and make the intention of the API
+> more explicit. 
 
-Wow...
+Seems reasonable to me. One bikeshed, that you can safely discard and 
+ignore as a mere bikeshed: kfree_memzero or kfree_scrub or 
+kfree_{someverb} seems like a better function name, as it describes what 
+the function does, rather than "_sensitive" that suggests something 
+about the data maybe but who knows what that entails. If you disagree, 
+not a big deal either way.
 
-No, don't listen to Markus when it comes to writing commit messages.
-You couldn't find worse advice anywhere.  :P
+ > In addition, memzero_explicit() is used to clear the
+ > memory to make sure that it won't get optimized away by the compiler.
 
-regards,
-dan carpenter
-
+This had occurred to me momentarily a number of years ago, but I was 
+under the impression that the kernel presumes extern function calls to 
+always imply a compiler barrier, making it difficult for the compiler to 
+reason about what happens in/after kfree, in order to be able to 
+optimize out the preceding memset. With LTO, that rule obviously 
+changes. I guess new code should be written with cross-object 
+optimizations in mind now a days? [Meanwhile, it would be sort of 
+interesting to teach gcc about kfree to enable additional scary 
+optimizations...]
