@@ -7,88 +7,90 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5FFC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDC6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14872063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6FA2063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586877777;
-	bh=1gcn52hELApJmPD44ceyRyCYVmaTOZCsNPkzoiy1HYc=;
+	s=default; t=1586877823;
+	bh=BnFJXGKBDHe/kVeUvj0oykWm9tIl/LIWOLfDY6tuewU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V36iGE3cpia8YTj3TviPRKSfe1c+hYcRL5Qsv8MCSpApWjVAfFRJRZBq9IcL9rMDI
-	 geEvlKWAQumd53r07r2G06kjcKCHvxmf8RUe6Mo2eUEfTTpEW2EULvrQdK8XYbTaMq
-	 VwW1/4Wmfu4J2yRkN3eGf34gWbXcfgoLxOFGZLHw=
+	b=aaDek8ZwUNQn59N1SVdyY5v48yT/4+VTyqoOJJ9k4wHGKpaORiP62lwPkqctwZ7un
+	 CYbk3d4jaCKIoV0wwpv9bjz+NTcsQpA+K63bxIvetpvXOp7UjB3TozR2nWqOgw2RmL
+	 XnOqPRotJ+uQ2bjaShPUutMtM60BfRbGdDisvlk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439318AbgDNPWr (ORCPT
+        id S2439379AbgDNPXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:22:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37691 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438826AbgDNPWb (ORCPT
+        Tue, 14 Apr 2020 11:23:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44518 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390829AbgDNPXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:22:31 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z17so5616910oto.4;
-        Tue, 14 Apr 2020 08:22:31 -0700 (PDT)
+        Tue, 14 Apr 2020 11:23:13 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o25so10684668oic.11;
+        Tue, 14 Apr 2020 08:23:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AnHn2Q/nKp8vHi8xRLPGA04W9zPV6QThgvNNDvW6Lz4=;
-        b=oYeCqf78I8FW6TzZbU5/EHAung+vdubjK44BPSrBmo2lzpN/8YI7S5ZBygDDDUu0Hi
-         dv8Ji9bMj92KjHFFTuBw5maxg/CXgl/AnbAX97ExjD5RnnjxaU44yyFAED09CRZOgbuq
-         s9tXq80KvOtLX/5NiETKUlEavcRYU8VMOBg/Bh4lPdQJ5FmhHggtwKIJYcWJ6B6wwuMe
-         tszTzmKvR/gP0+gJwOCK8sgdYiSudAAdFPfXWXTsNe49vSyxewdsRi+pooy7ufxPdE0T
-         tpjYxLveLyN2AFhYqKua2z48YnBPAzb0pjam8mnN41fLWe5SgHFJpP1sFdNGKvqkJCyo
-         YF+Q==
-X-Gm-Message-State: AGi0PubWoS37eAqQDbiKgCWvAgA9JslnaiJ2NxiI9XS9aACTwAobFqxp
-        0A7Wv2ImeGYdJTPdvWMHeg==
-X-Google-Smtp-Source: APiQypJR5WeRaPhYCrALFhL48Dtxyk9ODcHd1LOjeRCjBr6tTDoukXibtiqbCGRPmuc2x2B7Gx5QGA==
-X-Received: by 2002:a9d:6354:: with SMTP id y20mr9159168otk.171.1586877750682;
-        Tue, 14 Apr 2020 08:22:30 -0700 (PDT)
+        bh=iP8Yme/yERTcpil3n55AnAW8LqUxlEwBY586w3E95nU=;
+        b=KT9HFxB5XAPJZQub5tcJd1ffCgoZe4Hsu2bB0YtfnDWq2kD75KpsszfuWNTjLzgU3X
+         e/F3hMrd3dg3ncoIMwmvQo8ejnJR1IFwwHcBrGVYMawTbhAk3LZBxbtUdmHEkckxiYp6
+         K7FDWE7Vt+2FAyAcWOViXnJRwqG3BrwcNB0BSZjIfsYZ0LeqDlg5tCkqEpQHreQs8xKC
+         YT8E+Gpoy6UV4otFRwVy3/6CL/XxPlRoYVhvifLKCbysa1UmQtSn2/CC6N1ku/ifr5tx
+         OLsThO6XYfkZtu2/g0tvd9J2FY3VuLsUXUaItuvV+QvoaeZq1IWojug9mBGayLv6Xt1l
+         TV+w==
+X-Gm-Message-State: AGi0PuY5vxM9cfMvQNaWmTRz9FR61YhAexF8Kqa7pa/V2RoWkNvZB660
+        ShQOWhGZRCqHebr+L46ukQ==
+X-Google-Smtp-Source: APiQypLYJkYYKWXvpSOEoNFc0cMsCUBSl8xLkW9q0c1ypTr4XS04mdZTHyq74lAxBh4DcMxaGjA35w==
+X-Received: by 2002:a05:6808:a8e:: with SMTP id q14mr13614601oij.63.1586877791941;
+        Tue, 14 Apr 2020 08:23:11 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q18sm5508097otl.65.2020.04.14.08.22.28
+        by smtp.gmail.com with ESMTPSA id a13sm6106021oog.32.2020.04.14.08.23.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 08:22:29 -0700 (PDT)
-Received: (nullmailer pid 27980 invoked by uid 1000);
-        Tue, 14 Apr 2020 15:22:28 -0000
-Date:   Tue, 14 Apr 2020 10:22:28 -0500
+        Tue, 14 Apr 2020 08:23:10 -0700 (PDT)
+Received: (nullmailer pid 28919 invoked by uid 1000);
+        Tue, 14 Apr 2020 15:23:07 -0000
+Date:   Tue, 14 Apr 2020 10:23:07 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: usb: qcom,dwc3: Introduce
- interconnect properties for Qualcomm DWC3 driver
-Message-ID: <20200414152228.GA27923@bogus>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/7] ASoC: dt-bindings: fsl_asrc: Add new property
+ fsl,asrc-format
+Message-ID: <20200414152307.GA28870@bogus>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+ <47fcf06689d1a086141ce4d80f7ea7af7958dc89.1585726761.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <47fcf06689d1a086141ce4d80f7ea7af7958dc89.1585726761.git.shengjiu.wang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  1 Apr 2020 10:45:42 +0530, Sandeep Maheswaram wrote:
-> Add documentation for the interconnects and interconnect-names
-> properties for USB.
+On Wed,  1 Apr 2020 16:45:35 +0800, Shengjiu Wang wrote:
+> In order to support new EASRC and simplify the code structure,
+> We decide to share the common structure between them. This bring
+> a problem that EASRC accept format directly from devicetree, but
+> ASRC accept width from devicetree.
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> In order to align with new ESARC, we add new property fsl,asrc-format.
+> The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> can accept format from devicetree, don't need to convert it to
+> format through width.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
