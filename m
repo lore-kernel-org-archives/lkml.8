@@ -2,116 +2,70 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96265C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CA6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7131F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:52:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDJLx9zi"
+	by mail.kernel.org (Postfix) with ESMTP id 61D93206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586868809;
+	bh=1Ze3diwrbjA7BtxT3+FyzxurdagX5pNnS3OkXL/9zBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qjFbVhfkICjZEd4yiwnaBY190ewQHzflbRqxWFo7qq1IOmm6hBWoEku0KJAnYHoCS
+	 sMi8rnQ1cz82gqXQM/IxnjYgLcuBQzNQ1zsYKkmvJ+x6JywRyzxnQFVsyBlSVRO8RY
+	 4PftpJaWiR1Sv5J6+Rq6CawDhhIVY+zIug+RywO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502276AbgDNMwO (ORCPT
+        id S2502285AbgDNMx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730138AbgDNMv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:51:58 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E707BC061A0C;
-        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id a25so14205889wrd.0;
-        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
-        b=PDJLx9zi1OI+5VbYzQkd02uKzO1waQSh/zV5F3EvUj4R0lf428LvqkmNSdRd79LqxN
-         yh0X6/0sK/jTdSuQbifotYjj3rhQz2aq1vtnVuNxbaP2fDl+wljpd1k8kfAXvU7ERGJf
-         eMSnKtacrGcdgQJGOgFdKNPHZJlFU2gPZl9tcACIWKiMEhmBR66bSDNNeFXm+22SYGuo
-         lfUmhXZ1J1d9b1G3YyWws1cHO5kNdsjF2swkcOotXYdE4xJtx2vRJxWdnK0yyKplYpSZ
-         rt5eDjHEGFa+OX6BnSQ4Oo6BYIR2W/WrYq8wVh1dPt5OvweJz78ZBjx6r6xAJJKS8pw9
-         +xbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
-        b=JgCIC4SH1yPLo8Kr4d9mA4L8/dYxrRta1YvyAZdqxJ1NHCqZstRYdZrcQ8v5pL1i20
-         Qt/L09bOqfOL7GR1OXB2QIwEVbrVWBbV7b5MxZIMwm+ohCzLFBr1c3RVBle0OVScoIRu
-         2FQOGQG8K2xVaEwnaFo14+g2yXV49AvLj46p/2Dr+qcDOLU9AeRYvlOcy1ZIlITrVOWh
-         zqUmtlgH8c/w3RWP2p5BMyeUZ1NyMmdGZ1bJKzztR11d2Eow3/piMJcUcwJbJ9VZ4/EZ
-         TvlEHirREcEkNvWEXWhVfg3qdmpjcgR8ItQRj6ebNpprm6/9OL4B0yxm4/YOtBFN/Nui
-         XQNw==
-X-Gm-Message-State: AGi0Pubsg6D/2l386UQwilhO6PB4/qdFUezd84tUdKm5ywzvr5NAayje
-        ewJdXIjyZKGhA+BPkgdtsng=
-X-Google-Smtp-Source: APiQypLreekvmOTIyJjoRiEofhwIQiv4aipsIMKjDOyMD8hF5sTi0Hn3DIqB4xhgEstTN6UiwtD3pQ==
-X-Received: by 2002:adf:e90e:: with SMTP id f14mr24068876wrm.106.1586868716187;
-        Tue, 14 Apr 2020 05:51:56 -0700 (PDT)
-Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
-        by smtp.gmail.com with ESMTPSA id p10sm18476895wrm.6.2020.04.14.05.51.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 05:51:55 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Florian Fainelli'" <f.fainelli@gmail.com>,
-        <devicetree@vger.kernel.org>
-Cc:     "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Richard Zhu'" <hongxing.zhu@nxp.com>,
-        "'Fabio Estevam'" <festevam@gmail.com>,
-        "'Sascha Hauer'" <s.hauer@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'NXP Linux Team'" <linux-imx@nxp.com>,
-        "'Pengutronix Kernel Team'" <kernel@pengutronix.de>,
-        <linux-pci@vger.kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Shawn Guo'" <shawnguo@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "'Lucas Stach'" <l.stach@pengutronix.de>
-References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-2-ansuelsmth@gmail.com> <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
-In-Reply-To: <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
-Subject: R: [PATCH 1/4] devicetree: bindings: pci: document tx-deempth tx swing and rx-eq property
-Date:   Tue, 14 Apr 2020 14:51:51 +0200
-Message-ID: <01ea01d6125b$79590790$6c0b16b0$@gmail.com>
+        Tue, 14 Apr 2020 08:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502214AbgDNMxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:53:12 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C57B5206A2;
+        Tue, 14 Apr 2020 12:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586868791;
+        bh=1Ze3diwrbjA7BtxT3+FyzxurdagX5pNnS3OkXL/9zBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ltk6dIVxKSMbIoO/6xziiLfPHOBD06ak/vGRajgw9Fr20DqRWd0bFwPdbcC7aH9uB
+         sc3uwRBMIu6ITAnSc6IxD3dZJRYnViF4Usu/Es3m1eIM+4kxEvwB3R4tj1vXffvn6p
+         OKFv1jDjpsHeGTSiIAIX1jgUjYVgWEIPlGuaxDAQ=
+Date:   Tue, 14 Apr 2020 20:53:04 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, daniel.baluta@nxp.com,
+        leonard.crestez@nxp.com, alifer.wsdm@gmail.com,
+        shengjiu.wang@nxp.com, ping.bai@nxp.com, jun.li@nxp.com,
+        abel.vesa@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: Add secondary cpus supply
+Message-ID: <20200414125302.GA30676@dragon>
+References: <1584006465-28494-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQJxOzeYiZkD8UITQ1/aTwnouqE5vALuml4iApJiW/inFjd00A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584006465-28494-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 4/9/2020 5:47 PM, Ansuel Smith wrote:
-> > Document tx-deempth, tx swing and rx-eq property property used on
-> some
-> > device (qcom ipq806x or imx6q) to tune and fix init error of the pci
-> > bridge.
+On Thu, Mar 12, 2020 at 05:47:44PM +0800, Anson Huang wrote:
+> Each cpu-core is supposed to list its supply separately, add
+> supply for secondary cpus.
 > 
-> Those properties are not specific to the host bridge per-se, but to the
-> PCIe PHY, therefore, one would expect to find those properties within
-> the PCIe PHY node if it exists. Given you want this binding to be
-> generic, this is an important thing to correct here.
-> --
-> Florian
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-So where should I put these? If I understand this properly I should move 
-this to the PHY directory but no PCIe PHY node exist for both imx6q 
-and ipq806x. How I should proceed? 
-It would be better to just drop this and add qcom specific binding to the
-driver? 
-
+Applied, thanks.
