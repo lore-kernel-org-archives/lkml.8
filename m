@@ -2,114 +2,138 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55985C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511FAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A212072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7612072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DT7CG0ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438874AbgDNK7m (ORCPT
+        id S2438886AbgDNLEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:59:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:53102 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438846AbgDNK7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:59:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71FBB1FB;
-        Tue, 14 Apr 2020 03:59:38 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.30.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 413B03F6C4;
-        Tue, 14 Apr 2020 03:59:36 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 11:59:23 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Xie XiuQi <xiexiuqi@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
-        james.morse@arm.com, tanxiaofei@huawei.com,
-        wangxiongfeng2@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: panic on synchronous external abort in kernel
- context
-Message-ID: <20200414105923.GA2486@C02TD0UTHF1T.local>
-References: <20200410015245.23230-1-xiexiuqi@huawei.com>
+        Tue, 14 Apr 2020 07:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438846AbgDNLD6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:03:58 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2252DC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:03:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f13so13781677wrm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kozp6i3Lacgef5+4DSMHoj7MA9dOzLCEz2jUPeMWfbA=;
+        b=DT7CG0ssfUne9lNYdPJ9Ecue56wKlgS2k6+ncHI0dPVClo4XpziRxwmp23K8foCmoW
+         Ies2xoFcXT9MXxE5iA+V6bHWY+JTD6hewBKACAJeqfyZDKIu8GPbEaLyvgNm+U3awvAt
+         mbopGWym3uqalLQSDP58sUntlxfxDSo4HkgjF/Hk+TLm9DQOgxAbf3YLvRuHfd5iQ8LN
+         waM/w2GqFMv0wIzsspgGB4Q9OZRyN7XXo9NgIMwnnkJDf5ZLlvpdoJnatqsbTlL1FUGF
+         sG2ZBK/c90tuKWrzt4k0obq2TMLvpzB1+Ny8vy/agL4I3jM4rhJ8kO4XAHSm675H/RBU
+         4y0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kozp6i3Lacgef5+4DSMHoj7MA9dOzLCEz2jUPeMWfbA=;
+        b=ARTxq9j6PbhumM5c1BlZ1RxEVO/9w9QBt9f/zSJWItuuZBL9T+hn6zUPaaGX/bYzjb
+         2uGBvFdrisFQqSya2fJa/1R+GMxAaey2LmmJ+ht5+xg97j+Nz+Z6NkjqK62JnjsQY0e/
+         rIJJptK1qEr6cPnyq/DpFWvKcNGBBlmn20YFuRDsWUwYuQ31so4cihlnAukl6uZ8TeJX
+         /tst2T/6XsVvEgmNOwrsl1XMhEYoCv5jhREcsCAvY/GYYhqc/WoaMKU2EhIfnw4OPLeq
+         Il0QeKFR44gGIO9Ehi5qedDY5hkAFnpUcoG5qPxUcGWYBm6GBDFVsEDqnySYayxdXf2w
+         ed4A==
+X-Gm-Message-State: AGi0Pua09nBBz9jNIaGe1C130EBPXMEjMnTbUZKlre7wQLklJakdF8FV
+        V4ccX6j0AP3XKpCTuWGophQXbw==
+X-Google-Smtp-Source: APiQypLnFggHzw40uCeOKStfMH7DEa3ix/MQQT+27B0+i0Gpd4CjYgAioKfmQb4l8jR9Raq4nljbAA==
+X-Received: by 2002:a5d:664f:: with SMTP id f15mr22603091wrw.72.1586862235663;
+        Tue, 14 Apr 2020 04:03:55 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id 5sm17989784wmg.34.2020.04.14.04.03.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 04:03:55 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org
+Cc:     vkoul@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH] ASoC: wsa881x: mark read_only_wordlength flag
+Date:   Tue, 14 Apr 2020 12:03:47 +0100
+Message-Id: <20200414110347.23829-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410015245.23230-1-xiexiuqi@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:52:45AM +0800, Xie XiuQi wrote:
-> We should panic even panic_on_oops is not set, when we can't recover
-> from synchronous external abort in kernel context.
-> 
-> Othervise, there are two issues:
-> 1) fallback to do_exit() in exception context, cause this core hung up.
->    do_sea()
->    -> arm64_notify_die
->       -> die
->          -> do_exit
-> 2) errors may propagated.
-> 
-> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-> Cc: Xiaofei Tan <tanxiaofei@huawei.com>
-> ---
->  arch/arm64/include/asm/esr.h | 12 ++++++++++++
->  arch/arm64/kernel/traps.c    |  2 ++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-> index cb29253ae86b..acfc71c6d148 100644
-> --- a/arch/arm64/include/asm/esr.h
-> +++ b/arch/arm64/include/asm/esr.h
-> @@ -326,6 +326,18 @@ static inline bool esr_is_data_abort(u32 esr)
->  	return ec == ESR_ELx_EC_DABT_LOW || ec == ESR_ELx_EC_DABT_CUR;
->  }
->  
-> +static inline bool esr_is_inst_abort(u32 esr)
-> +{
-> +	const u32 ec = ESR_ELx_EC(esr);
-> +
-> +	return ec == ESR_ELx_EC_IABT_LOW || ec == ESR_ELx_EC_IABT_CUR;
-> +}
-> +
-> +static inline bool esr_is_ext_abort(u32 esr)
-> +{
-> +	return esr_is_data_abort(esr) || esr_is_inst_abort(esr);
-> +}
+WSA881x works in PDM mode so the wordlength is fixed, which also makes
+the only field "WordLength" in DPN_BlockCtrl1 register a read-only.
+Writing to this register will throw up errors with Qualcomm Controller.
+So use ro_blockctrl1_reg flag to mark this field as read-only so that
+core will not write to this register.
 
-A data abort or an intstruction abort are not necessarily synchronus
-external aborts, so this isn't right.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+Hi Mark,
 
-What exactly are you trying to catch here? If you are seeing a problem
-in practice, can you please share your log from a crash?
+For some reason this patch was missed during last merge window,
+Other patch in this series is already in mainline.
+Without this patch audio is not functional on DB845c and other SDM845
+based platforms.
+
+Can you please take this for next possible rc.
 
 Thanks,
-Mark.
+srini
 
-> +
->  const char *esr_get_class_string(u32 esr);
->  #endif /* __ASSEMBLY */
->  
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index cf402be5c573..08f7f7688d5b 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -202,6 +202,8 @@ void die(const char *str, struct pt_regs *regs, int err)
->  		panic("Fatal exception in interrupt");
->  	if (panic_on_oops)
->  		panic("Fatal exception");
-> +	if (esr_is_ext_abort(err))
-> +		panic("Synchronous external abort in kernel context");
->  
->  	raw_spin_unlock_irqrestore(&die_lock, flags);
->  
-> -- 
-> 2.20.1
-> 
+ sound/soc/codecs/wsa881x.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
+index f2d6f2f81f14..d39d479e2378 100644
+--- a/sound/soc/codecs/wsa881x.c
++++ b/sound/soc/codecs/wsa881x.c
+@@ -394,6 +394,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+ 		.min_ch = 1,
+ 		.max_ch = 1,
+ 		.simple_ch_prep_sm = true,
++		.read_only_wordlength = true,
+ 	}, {
+ 		/* COMP */
+ 		.num = 2,
+@@ -401,6 +402,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+ 		.min_ch = 1,
+ 		.max_ch = 1,
+ 		.simple_ch_prep_sm = true,
++		.read_only_wordlength = true,
+ 	}, {
+ 		/* BOOST */
+ 		.num = 3,
+@@ -408,6 +410,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+ 		.min_ch = 1,
+ 		.max_ch = 1,
+ 		.simple_ch_prep_sm = true,
++		.read_only_wordlength = true,
+ 	}, {
+ 		/* VISENSE */
+ 		.num = 4,
+@@ -415,6 +418,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+ 		.min_ch = 1,
+ 		.max_ch = 1,
+ 		.simple_ch_prep_sm = true,
++		.read_only_wordlength = true,
+ 	}
+ };
+ 
+-- 
+2.21.0
+
