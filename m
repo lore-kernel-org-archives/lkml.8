@@ -2,95 +2,141 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42000C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E2DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C4B2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:06:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V8Ir9IZ4"
+	by mail.kernel.org (Postfix) with ESMTP id F3DEE20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586887605;
+	bh=Q3OyjLxd6V7sXDninaj5vQ+tDQMP5JCucrq9XJnj4jg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sBkg+PzpYAyyiPhfLGc+WdZvG+BIC1Tnajk9fHV2mvRA7J372qJDLQ8XOzgCPnjqo
+	 8argSfF2sL0ueTke2q9I0KBjbGfBR3tWGv9dStGcYqpypEkmEzOc8AX9hpNrhaVmNN
+	 kPuhm4sSbkqCK0ID2QXnBVovk+yenlQ1WsA47Dwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503392AbgDNSGB (ORCPT
+        id S2503404AbgDNSGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503383AbgDNSF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:05:58 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B0DC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KweB4QuPPovogJ/b7HJZC7qbwDcSIuXed6bpI29U9Gg=; b=V8Ir9IZ4xyRcKjAO825c4ArGPl
-        Bkn9m1PaOuwrsYwsQmBviMIK0S/5Y+ByLuBPc0tKPdkmeHOcOaCekZ7z0rGXpv7XiY0r5SLzYJlmT
-        W5fsut/h+/TrkjJqH2UVyRYzrAEymceyj5F3redJFFQ76ZHUbfBO1TvROBndrFgFsf5vvDQkwHYHj
-        zSoxWDd4kpT7jZkDL3JK7ZnD4JF4xR5DI6dg/GYw9H/eJmk4TNFUGs1cNo+gzIGxNTHzEK5KKd1Oe
-        ZK1NlFrlj4lWN19V1DB7yWqdsP199uRjqbszjkdTJ+1+r9rHOTC84vG6xzt0F6NwiMuqxlSbc8bYQ
-        6ipGItIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOPwS-0000CG-Ow; Tue, 14 Apr 2020 18:05:49 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 08C8B981086; Tue, 14 Apr 2020 20:05:46 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 20:05:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "Park, Kyung Min" <kyung.min.park@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>
-Subject: Re: [PATCH v3 3/3] x86/delay: Introduce TPAUSE delay
-Message-ID: <20200414180545.GE2483@worktop.programming.kicks-ass.net>
-References: <1586561395-50914-1-git-send-email-kyung.min.park@intel.com>
- <1586561395-50914-4-git-send-email-kyung.min.park@intel.com>
- <20200414103106.GK20713@hirez.programming.kicks-ass.net>
- <3908561D78D1C84285E8C5FCA982C28F7F5E3E80@ORSMSX115.amr.corp.intel.com>
+        Tue, 14 Apr 2020 14:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503394AbgDNSGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:06:33 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E524420767;
+        Tue, 14 Apr 2020 18:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586887592;
+        bh=Q3OyjLxd6V7sXDninaj5vQ+tDQMP5JCucrq9XJnj4jg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qJfNNloyUkTzPZ08qkeZmoG7gff5nYyrP/RIHx7/sptpDcvD9nTRsZ4oEVeVnu8YB
+         MMNtNNnKdzCIOmnFtia5gA+Qi3QnXnuLPbUYsMvLEqQST6UjoNJSaHD6HxEfPNaebP
+         klNdk8pAn2fzqFWUmYySCKFo7m3qozbVVS6aNjf8=
+Date:   Tue, 14 Apr 2020 19:06:29 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] iio: core: register chardev only if needed
+Message-ID: <20200414190629.2d85759e@archlinux>
+In-Reply-To: <20200414083656.7696-1-alexandru.ardelean@analog.com>
+References: <20200414083656.7696-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F5E3E80@ORSMSX115.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 06:00:21PM +0000, Luck, Tony wrote:
-> >> +static inline void __tpause(u32 ecx, u32 edx, u32 eax)
-> >> +{
-> >> +	/* "tpause %ecx, %edx, %eax;" */
-> >> +	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1\t\n"
-> >> +		     :
-> >> +		     : "c"(ecx), "d"(edx), "a"(eax));
-> >> +}
-> >
-> > Can we please get a comment stating from what binutils version this
-> > opcode has a mnemonic? That way, when we raise the minimum binutils
-> > version we can easily grep and find such things.
-> 
-> Or maybe use arch/x86/Kconfig.assembler to set up a CONFIG_AS_TPAUSE?
-> 
-> Then the code can read something like (syntax may need fixing)
-> 
-> #ifdef CONFIG_AS_TPAUSE
-> 		asm volatile("tpause %ecx\n", : : "c"(ecx), "d"(edx), "a"(eax));
-> #else
-> 		asm volatile(".byte hex gibberish ...
-> #endif
+On Tue, 14 Apr 2020 11:36:56 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Then we still need a comment to know when we can kill that...
+> The final intent is to localize all buffer ops into the
+> industrialio-buffer.c file, to be able to add support for multiple buffers
+> per IIO device.
+> 
+> We only need a chardev if we need to support buffers and/or events.
+> 
+> With this change, a chardev will be created:
+> 1. if there is an IIO buffer attached OR
+> 2. if there is an event_interface configured
+> 
+> Otherwise, no chardev will be created.
+> Quite a lot of IIO devices don't really need a chardev, so this is a minor
+> improvement to the IIO core, as the IIO device will take up fewer
+> resources.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+> 
+> Changelog v1 -> v2:
+> * split away from series 'iio: core,buffer: re-organize chardev creation';
+>   i'm getting the feeling that this has some value on it's own;
+>   no idea if it needs 'Fixes' tag; it is a bit fuzzy to point to a patch
+>   which this would be fixed by this; i'm guessing it would be fine
+>   without one
+
+I'd argue it's an 'optimization' rather than a fix :)
+
+Still looks good to me but I'd like it to sit for a little while to
+see if anyone points out something we are both missing!
+
+Thanks for tidying this up.
+
+Jonathan
+
+> 
+>  drivers/iio/industrialio-core.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index f4daf19f2a3b..32e72d9fd1e9 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -1676,6 +1676,15 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
+>  
+>  static const struct iio_buffer_setup_ops noop_ring_setup_ops;
+>  
+> +static const struct file_operations iio_event_fileops = {
+> +	.release = iio_chrdev_release,
+> +	.open = iio_chrdev_open,
+> +	.owner = THIS_MODULE,
+> +	.llseek = noop_llseek,
+> +	.unlocked_ioctl = iio_ioctl,
+> +	.compat_ioctl = compat_ptr_ioctl,
+> +};
+> +
+>  int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+>  {
+>  	int ret;
+> @@ -1726,7 +1735,10 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+>  		indio_dev->setup_ops == NULL)
+>  		indio_dev->setup_ops = &noop_ring_setup_ops;
+>  
+> -	cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
+> +	if (indio_dev->buffer)
+> +		cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
+> +	else if (indio_dev->event_interface)
+> +		cdev_init(&indio_dev->chrdev, &iio_event_fileops);
+>  
+>  	indio_dev->chrdev.owner = this_mod;
+>  
+> @@ -1754,7 +1766,8 @@ EXPORT_SYMBOL(__iio_device_register);
+>   **/
+>  void iio_device_unregister(struct iio_dev *indio_dev)
+>  {
+> -	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
+> +	if (indio_dev->buffer || indio_dev->event_interface)
+> +		cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
+>  
+>  	mutex_lock(&indio_dev->info_exist_lock);
+>  
+
