@@ -2,79 +2,200 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F93AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37856C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40F3A2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CzGrac61"
+	by mail.kernel.org (Postfix) with ESMTP id 12D632075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586886323;
+	bh=HQZivI+jgvAXZc13IOSnTDiTMKed8JrYsILOdJruhKA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nR9h9r2fqiMDOTt9NT3dkGf/O0/kQAVRhDfFVGmXhOvMz8yPrKlaLAAG85GaCXxHp
+	 zyGe313DBZ7tWlyRog0eXkveJhJ3GOP6judXcgX+qiqa3fIAFyTL2ICyXoTKw0f7pX
+	 T2Zum6dwihQgvJHPq11/V8Hff5enIio/o1vOyxRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502279AbgDNRon (ORCPT
+        id S2502544AbgDNRpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2502163AbgDNRo3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:44:29 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C4CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Af8lJ0Q2s1M3sb97EdyeWvWIG/dElM2CzH7yymWGsh0=; b=CzGrac61uE2SZOlx/djVUAq2cb
-        TelWTgDV4XsyQXfPmf/hj9f+Qf8eaZ3WwCcXJW8aAE+E2bVmHg1rFwUS+OWk5CtlZGn2b04YYgNZI
-        PNUPpqkSQp+d8K3l+R7jrZdsjLIZZ5KDobAVPMJsTy1c0j1lVyYffKsKqRk5Jm3C8pAAuJr0vppY3
-        wZ+Frk1DgBPEGp7LKtBhl75zvay0KKZoT87SwYva3mwgDJk4mS6bIs9havJXN9yBXGI4h8bOhR4Zg
-        2WEO4xgdcAZQk/ciMrSwg3vtOgUY9b5iM0HNw1M17HKtNkLiNhNlIYSDEDV2Z0vTEnX6nkSw79tzN
-        UYL1J2xQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOPbW-0001gA-Mw; Tue, 14 Apr 2020 17:44:10 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D7E59981086; Tue, 14 Apr 2020 19:44:06 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 19:44:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH 1/7] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200414174406.GC2483@worktop.programming.kicks-ass.net>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
+        Tue, 14 Apr 2020 13:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502469AbgDNRpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:45:10 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69EF2074D;
+        Tue, 14 Apr 2020 17:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586886309;
+        bh=HQZivI+jgvAXZc13IOSnTDiTMKed8JrYsILOdJruhKA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VUzuT9SHxvVtrMoQe4Nk0GLtzrLNuuSj8q32jR+DJzJns3eNtCCIZH7LU69ucekxW
+         rS9yz3vRvhSAYOnZ73YTDlWQMy44WZm2zHO+PrARQRatyrzT/bto09rF9aaFpfZ+Cd
+         MECMB3/YtM3ac8bmSzJMC4vAhf8Y7RO9qrlkoNhY=
+Date:   Tue, 14 Apr 2020 18:45:05 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     <Eugen.Hristev@microchip.com>
+Cc:     <alexandru.ardelean@analog.com>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>
+Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Message-ID: <20200414184505.0cd39249@archlinux>
+In-Reply-To: <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
+References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+        <20200413180556.20638f3b@archlinux>
+        <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:28:37AM -0500, Josh Poimboeuf wrote:
-> KLP relocations are livepatch-specific relocations which are applied to
->   1) vmlinux-specific KLP relocation sections
-> 
->      .klp.rela.vmlinux.{sec}
-> 
->      These are relocations (applied to the KLP module) which reference
->      unexported vmlinux symbols.
-> 
->   2) module-specific KLP relocation sections
-> 
->      .klp.rela.{module}.{sec}:
-> 
->      These are relocations (applied to the KLP module) which reference
->      unexported or exported module symbols.
+On Tue, 14 Apr 2020 12:22:45 +0000
+<Eugen.Hristev@microchip.com> wrote:
 
-Is there something that disallows a module from being called 'vmlinux' ?
-If not, we might want to enforce this somewhere.
+> On 13.04.2020 20:05, Jonathan Cameron wrote:
+> > On Wed, 4 Mar 2020 10:42:18 +0200
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >   
+> >> This change moves the logic to check if the current channel is the
+> >> touchscreen channel to a separate helper.
+> >> This reduces some code duplication, but the main intent is to re-use this
+> >> in the next patches.
+> >>
+> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> > Eugen / Ludovic,
+> > 
+> > Have you had a chance to look at this series?  
+> 
+> Hi Jonathan,
+> 
+> Does the patch apply correctly for you ?
+
+I haven't tried yet :)
+
+> I will try to test it , if I manage to apply it.
+> I can only test the ADC though because at this moment I do not have a 
+> touchscreen at disposal.
+> 
+> Meanwhile, the code looks good for me,
+> 
+> Reviewed-by: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> By the way, I do not know if my two pending patches on this driver will 
+> conflict or not.
+
+As this is a long term rework patch at heart, there isn't any particular
+rush as long as we don't loose it forever!
+
+Thanks,
+
+Jonathan
+
+> 
+> Eugen
+> 
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> >> ---
+> >>
+> >> This patchset continues discussion:
+> >>     https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/
+> >> Apologies for the delay.
+> >>
+> >> Changelog v1 -> v2:
+> >> * added patch 'iio: at91-sama5d2_adc: split at91_adc_current_chan_is_touch()
+> >>    helper'
+> >> * renamed at91_adc_buffer_postenable() -> at91_adc_buffer_preenable()
+> >>    - at91_adc_buffer_postenable() - now just calls
+> >>      iio_triggered_buffer_postenable() if the channel isn't the touchscreen
+> >>      channel
+> >> * renamed at91_adc_buffer_predisable() -> at91_adc_buffer_postdisable()
+> >>    - at91_adc_buffer_predisable() - now just calls
+> >>      iio_triggered_buffer_predisable() if the channel isn't the touchscreen
+> >>      channel
+> >>
+> >>   drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++---------------
+> >>   1 file changed, 15 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> >> index a5c7771227d5..f2a74c47c768 100644
+> >> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> >> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> >> @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
+> >>        return 0;
+> >>   }
+> >>
+> >> +static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
+> >> +{
+> >> +     struct at91_adc_state *st = iio_priv(indio_dev);
+> >> +
+> >> +     return !!bitmap_subset(indio_dev->active_scan_mask,
+> >> +                            &st->touch_st.channels_bitmask,
+> >> +                            AT91_SAMA5D2_MAX_CHAN_IDX + 1);
+> >> +}
+> >> +
+> >>   static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
+> >>   {
+> >>        int ret;
+> >>        struct at91_adc_state *st = iio_priv(indio_dev);
+> >>
+> >>        /* check if we are enabling triggered buffer or the touchscreen */
+> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> >> -                       &st->touch_st.channels_bitmask,
+> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> >> -             /* touchscreen enabling */
+> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> >>                return at91_adc_configure_touch(st, true);
+> >> -     }
+> >> +
+> >>        /* if we are not in triggered mode, we cannot enable the buffer. */
+> >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> >>                return -EINVAL;
+> >> @@ -906,12 +912,9 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+> >>        u8 bit;
+> >>
+> >>        /* check if we are disabling triggered buffer or the touchscreen */
+> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> >> -                       &st->touch_st.channels_bitmask,
+> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> >> -             /* touchscreen disable */
+> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> >>                return at91_adc_configure_touch(st, false);
+> >> -     }
+> >> +
+> >>        /* if we are not in triggered mode, nothing to do here */
+> >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> >>                return -EINVAL;
+> >> @@ -1886,14 +1889,10 @@ static __maybe_unused int at91_adc_resume(struct device *dev)
+> >>                return 0;
+> >>
+> >>        /* check if we are enabling triggered buffer or the touchscreen */
+> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> >> -                       &st->touch_st.channels_bitmask,
+> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> >> -             /* touchscreen enabling */
+> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> >>                return at91_adc_configure_touch(st, true);
+> >> -     } else {
+> >> +     else
+> >>                return at91_adc_configure_trigger(st->trig, true);
+> >> -     }
+> >>
+> >>        /* not needed but more explicit */
+> >>        return 0;  
+> >   
+> 
+
