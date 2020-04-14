@@ -2,232 +2,163 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B88C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591D7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B3720678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383D420678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="rGDOlIHN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lv449iGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405660AbgDNFyG (ORCPT
+        id S2405671AbgDNF4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:54:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36697 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgDNFyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:54:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 14 Apr 2020 01:56:16 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32908 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405661AbgDNF4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 01:56:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586843774; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=CqAf2Ohv1uR0GQYvhTerEQ9ipmvFhuy30G923bb4KLk=;
+ b=Lv449iGyQnZCfxTf0p6X/0WbZN8QWkwg9dmzKRfY+rAMxwMNBaXUrCMj2Lh+OBdwOm3RuRd8
+ aEOc3WKVcm8k7NHDcgVfM4prP0ib7e/LYyQBapazmYEBwrg3XuZ0mkhruuufIh8HaxHis3P4
+ mwCHZyhNjcf5Vf5+vERcpSVdVxg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e955075.7f8890cd8260-smtp-out-n01;
+ Tue, 14 Apr 2020 05:56:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AE003C432C2; Tue, 14 Apr 2020 05:56:05 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 491ZRm0Nd7z9sSt;
-        Tue, 14 Apr 2020 15:53:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1586843638;
-        bh=5CTXgwD6QRZ19R0dMPZNZMlbhZJTKR1ERFLzk/tOayw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=rGDOlIHN9VhZPHk0xqQQTGt0JIeqe7ZuCMPimjxIqjtZ0UA6hVuTVpMDgMDbKLF3t
-         Byzd1hqCI0OgLrCMXpU4cdONHOELBWF8A3sEG8Jaj9ggLQvb/trXrJEk3tAcOtLmBV
-         nYbiOhJSSCgm4n6u+mAo7gMrEfF0Cf5y9d3HHUacZZzfn2OuszK9t8QRMpWr7emaXL
-         mTiNgU4ldQAShaI7GU8oArrlpkmY/tjdxRai1o/bHIKYxP/M9N2nZIEzqItnl5wczs
-         XEjj0FSxQ7L+v553P84EnjCs+cIm/VjAbjOlpBmlyvJnzHCM02OjI7D75vStEBNhD5
-         Jk1fzaFhKL7pw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
-        jasowang@redhat.com
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH] vhost: do not enable VHOST_MENU by default
-In-Reply-To: <20200414024438.19103-1-jasowang@redhat.com>
-References: <20200414024438.19103-1-jasowang@redhat.com>
-Date:   Tue, 14 Apr 2020 15:54:05 +1000
-Message-ID: <87h7xmk3ya.fsf@mpe.ellerman.id.au>
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0693FC433CB;
+        Tue, 14 Apr 2020 05:56:04 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Apr 2020 13:56:03 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        'Avri Altman' <avri.altman@wdc.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        'Stanley Chu' <stanley.chu@mediatek.com>,
+        'Bean Huo' <beanhuo@micron.com>,
+        'Bart Van Assche' <bvanassche@acm.org>,
+        'Venkat Gopalakrishnan' <venkatg@codeaurora.org>,
+        'Tomas@codeaurora.org, Winkler' <tomas.winkler@intel.com>,
+        'open list' <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was off
+In-Reply-To: <019601d61204$b303ace0$190b06a0$@samsung.com>
+References: <CGME20200328022740epcas5p1e97777d3e2dacfbee89fed75d6b36e99@epcas5p1.samsung.com>
+ <1585362454-5413-1-git-send-email-cang@codeaurora.org>
+ <019601d61204$b303ace0$190b06a0$@samsung.com>
+Message-ID: <98c11950db39f63fa7f6959b223e7372@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason Wang <jasowang@redhat.com> writes:
-> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> without the caring of CONFIG_VHOST.
->
-> But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> for the ones that doesn't want vhost. So it actually shifts the
-> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
->
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  arch/mips/configs/malta_kvm_defconfig  |  1 +
->  arch/powerpc/configs/powernv_defconfig |  1 +
->  arch/powerpc/configs/ppc64_defconfig   |  1 +
->  arch/powerpc/configs/pseries_defconfig |  1 +
+Hi Alim,
 
-Fine by me.
+On 2020-04-14 10:30, Alim Akhtar wrote:
+> Hi Can,
+> 
+>> -----Original Message-----
+>> From: Can Guo <cang@codeaurora.org>
+>> Sent: 28 March 2020 07:58
+>> To: asutoshd@codeaurora.org; nguyenb@codeaurora.org;
+>> hongwus@codeaurora.org; rnayak@codeaurora.org; linux-
+>> scsi@vger.kernel.org; kernel-team@android.com; saravanak@google.com;
+>> salyzyn@google.com; cang@codeaurora.org
+>> Cc: Alim Akhtar <alim.akhtar@samsung.com>; Avri Altman
+>> <avri.altman@wdc.com>; James E.J. Bottomley <jejb@linux.ibm.com>; 
+>> Martin
+>> K. Petersen <martin.petersen@oracle.com>; Stanley Chu
+>> <stanley.chu@mediatek.com>; Bean Huo <beanhuo@micron.com>; Bart Van
+>> Assche <bvanassche@acm.org>; Venkat Gopalakrishnan
+>> <venkatg@codeaurora.org>; Tomas Winkler <tomas.winkler@intel.com>; 
+>> open
+>> list <linux-kernel@vger.kernel.org>
+>> Subject: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was 
+>> off
+>> 
+>> From: Asutosh Das <asutoshd@codeaurora.org>
+>> 
+>> During suspend, if the link is put to off, it would require a full
+> initialization during
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Good catch.
 
-cheers
+>> resume. This patch resets and restores both the hba and the card 
+>> during
+>> initialization.
+>> 
+> In case you have faced issues by not doing what this patch does, it is 
+> worth
+> mentioning that in the commit mesg.
+> 
 
->  arch/s390/configs/debug_defconfig      |  1 +
->  arch/s390/configs/defconfig            |  1 +
->  drivers/vhost/Kconfig                  | 18 +++++-------------
->  7 files changed, 11 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/mips/configs/malta_kvm_defconfig b/arch/mips/configs/malta_kvm_defconfig
-> index 8ef612552a19..06f0c7a0ca87 100644
-> --- a/arch/mips/configs/malta_kvm_defconfig
-> +++ b/arch/mips/configs/malta_kvm_defconfig
-> @@ -18,6 +18,7 @@ CONFIG_PCI=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM=m
->  CONFIG_KVM_MIPS_DEBUG_COP0_COUNTERS=y
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
-> index 71749377d164..404245b4594d 100644
-> --- a/arch/powerpc/configs/powernv_defconfig
-> +++ b/arch/powerpc/configs/powernv_defconfig
-> @@ -346,5 +346,6 @@ CONFIG_CRYPTO_DEV_VMX=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_PRINTK_TIME=y
-> diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
-> index 7e68cb222c7b..4599fc7be285 100644
-> --- a/arch/powerpc/configs/ppc64_defconfig
-> +++ b/arch/powerpc/configs/ppc64_defconfig
-> @@ -61,6 +61,7 @@ CONFIG_ELECTRA_CF=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_OPROFILE=m
->  CONFIG_KPROBES=y
-> diff --git a/arch/powerpc/configs/pseries_defconfig b/arch/powerpc/configs/pseries_defconfig
-> index 6b68109e248f..4cad3901b5de 100644
-> --- a/arch/powerpc/configs/pseries_defconfig
-> +++ b/arch/powerpc/configs/pseries_defconfig
-> @@ -321,5 +321,6 @@ CONFIG_CRYPTO_DEV_VMX=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_PRINTK_TIME=y
-> diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-> index 0c86ba19fa2b..6ec6e69630d1 100644
-> --- a/arch/s390/configs/debug_defconfig
-> +++ b/arch/s390/configs/debug_defconfig
-> @@ -57,6 +57,7 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=y
->  CONFIG_CMM=m
->  CONFIG_APPLDATA_BASE=y
->  CONFIG_KVM=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_VHOST_VSOCK=m
->  CONFIG_OPROFILE=m
-> diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-> index 6b27d861a9a3..d1b3bf83d687 100644
-> --- a/arch/s390/configs/defconfig
-> +++ b/arch/s390/configs/defconfig
-> @@ -57,6 +57,7 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=y
->  CONFIG_CMM=m
->  CONFIG_APPLDATA_BASE=y
->  CONFIG_KVM=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_VHOST_VSOCK=m
->  CONFIG_OPROFILE=m
-> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> index e79cbbdfea45..14d296dc18cd 100644
-> --- a/drivers/vhost/Kconfig
-> +++ b/drivers/vhost/Kconfig
-> @@ -12,23 +12,18 @@ config VHOST_RING
->  	  This option is selected by any driver which needs to access
->  	  the host side of a virtio ring.
->  
-> -config VHOST
-> -	tristate
-> +menuconfig VHOST
-> +	tristate "Vhost Devices"
->  	select VHOST_IOTLB
->  	help
-> -	  This option is selected by any driver which needs to access
-> -	  the core of vhost.
-> -
-> -menuconfig VHOST_MENU
-> -	bool "VHOST drivers"
-> -	default y
-> +	  Enable option to support host kernel or hardware accelerator
-> +	  for virtio device.
->  
-> -if VHOST_MENU
-> +if VHOST
->  
->  config VHOST_NET
->  	tristate "Host kernel accelerator for virtio net"
->  	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
-> -	select VHOST
->  	---help---
->  	  This kernel module can be loaded in host kernel to accelerate
->  	  guest networking with virtio_net. Not to be confused with virtio_net
-> @@ -40,7 +35,6 @@ config VHOST_NET
->  config VHOST_SCSI
->  	tristate "VHOST_SCSI TCM fabric driver"
->  	depends on TARGET_CORE && EVENTFD
-> -	select VHOST
->  	default n
->  	---help---
->  	Say M here to enable the vhost_scsi TCM fabric module
-> @@ -49,7 +43,6 @@ config VHOST_SCSI
->  config VHOST_VSOCK
->  	tristate "vhost virtio-vsock driver"
->  	depends on VSOCKETS && EVENTFD
-> -	select VHOST
->  	select VIRTIO_VSOCKETS_COMMON
->  	default n
->  	---help---
-> @@ -63,7 +56,6 @@ config VHOST_VSOCK
->  config VHOST_VDPA
->  	tristate "Vhost driver for vDPA-based backend"
->  	depends on EVENTFD
-> -	select VHOST
->  	depends on VDPA
->  	help
->  	  This kernel module can be loaded in host kernel to accelerate
-> -- 
-> 2.20.1
+OK.
+
+>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+> I don't have a way to test this path as of now, changes looks ok 
+> though.
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> 
+>>  drivers/scsi/ufs/ufshcd.c | 8 ++++++--
+>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c 
+>> index
+>> f19a11e..21e41e5 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -8007,9 +8007,13 @@ static int ufshcd_resume(struct ufs_hba *hba, 
+>> enum
+>> ufs_pm_op pm_op)
+>>  		else
+>>  			goto vendor_suspend;
+>>  	} else if (ufshcd_is_link_off(hba)) {
+>> -		ret = ufshcd_host_reset_and_restore(hba);
+>>  		/*
+>> -		 * ufshcd_host_reset_and_restore() should have already
+>> +		 * A full initialization of the host and the device is
+> required
+
+Shall fix.
+
+>> +		 * since the link was put to off during suspend.
+>> +		 */
+>> +		ret = ufshcd_reset_and_restore(hba);
+>> +		/*
+>> +		 * ufshcd_reset_and_restore() should have already
+>>  		 * set the link state as active
+>>  		 */
+>>  		if (ret || !ufshcd_is_link_active(hba))
+>> --
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+>> Linux
+>> Foundation Collaborative Project.
+
+Thanks.
+Can Guo.
