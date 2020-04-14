@@ -4,55 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F8DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2426BC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98E720767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043C12076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586884336;
-	bh=iLPDmCamHeBUANt3XfQx2QQ0FRA3glnRqO+sB/D26/4=;
+	s=default; t=1586884371;
+	bh=+qcyIZF6Y3PyicvWS4ejyY0zwsK0szUsXLI7l22j8W0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NP+gBShPP2CxheXF9ngkMh2mcxySD75vaazmthnsqv5pyKjf8ICim6A1/AnidxZBW
-	 SRbJ3JxUJJ0ChExBjuR3mSR/QDviCyLViA4ZbeKW141FhNPs5Kp7BVxz6DDZsD4rXY
-	 deBTG8EPQ3v1iGY+IcaCO75IMRR2EOhFWTWRVSOQ=
+	b=wlzP9EAPvsQSXzOluC+tPjovCJje8f19zsWU+GaR+6axaHGPvUP5aEWrAy04pXxPd
+	 uZK7ED3ALjM1gzKSHSXrjej0GKIZ5bv8FMrOqIL4ye5cHqUiTTBMDIGVMI9+moFXhf
+	 ulLl44DQBswqZp4EypwK45f6L45bwkJ0J9MlKjkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407575AbgDNRMP (ORCPT
+        id S2407587AbgDNRMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 13:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407517AbgDNRMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:12:12 -0400
+        id S2407517AbgDNRMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:12:46 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EF6B20767;
-        Tue, 14 Apr 2020 17:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6937C20767;
+        Tue, 14 Apr 2020 17:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586884331;
-        bh=iLPDmCamHeBUANt3XfQx2QQ0FRA3glnRqO+sB/D26/4=;
+        s=default; t=1586884366;
+        bh=+qcyIZF6Y3PyicvWS4ejyY0zwsK0szUsXLI7l22j8W0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OUr2iIHB+9sCs9gZlvoyHl49521GFxDIz6kiPIx6s5Cbd/OkUkkX0gd/OGdYlZSVd
-         Yh4JoKVMYh9r8MzXW5llULxI+iR+ZbfW3kXhS5V6NSSn/umlmZajRMTqqEIWl+hRVm
-         wEEMXNyfSLJLxIjPkonDW63VHkqj3fMnttJV/M0s=
-Date:   Tue, 14 Apr 2020 18:12:09 +0100
+        b=PbluDEd8klbe4xkNX9xFsE670ESHTTOhjhaQFVoprnCTaU4ZEjH5UTUWLd+mTSI+6
+         DSQqhWkIQPD3yBIeAJU1asNH6AEgt5USvO7Kqa+X6ECZCi+OKRLsnOvTCTR+BmFAPw
+         EQDmo85zc+VWDvUZDPnadGVNgStkGN6AM/MaH5iQ=
+Date:   Tue, 14 Apr 2020 18:12:43 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     lee.jones@linaro.org, arnd@arndb.de, orsonzhai@gmail.com,
-        zhang.lyra@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/3] regmap: Add bus reg_update_bits() support
-Message-ID: <20200414171209.GH5412@sirena.org.uk>
-References: <cover.1586757922.git.baolin.wang7@gmail.com>
- <df32fd0529957d1e7e26ba1465723f16cfbe92c8.1586757922.git.baolin.wang7@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 04/16] regmap-irq: make it possible to add irq_chip do
+ a specific device node
+Message-ID: <20200414171243.GI5412@sirena.org.uk>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-5-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GBDnBH7+ZvLx8QD4"
+        protocol="application/pgp-signature"; boundary="Q59ABw34pTSIagmi"
 Content-Disposition: inline
-In-Reply-To: <df32fd0529957d1e7e26ba1465723f16cfbe92c8.1586757922.git.baolin.wang7@gmail.com>
+In-Reply-To: <20200402203656.27047-5-michael@walle.cc>
 X-Cookie: I've only got 12 cards.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,13 +79,14 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---GBDnBH7+ZvLx8QD4
+--Q59ABw34pTSIagmi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Apr 13, 2020 at 02:13:20PM +0800, Baolin Wang wrote:
-> Add reg_update_bits() support in case some platforms use a special method
-> to update bits of registers.
+On Thu, Apr 02, 2020 at 10:36:44PM +0200, Michael Walle wrote:
+> Add a new function regmap_add_irq_chip_np() with its corresponding
+> devm_regmap_add_irq_chip_np() variant. Sometimes one want to register
+> the IRQ domain on a different device node that the one of the regmap
 
 The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
@@ -75,38 +94,36 @@ The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-add-bus-update-bits
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-irq-np
 
-for you to fetch changes up to 80215f133d59310fdfce5ee4398aeb7076c2e99f:
+for you to fetch changes up to 12479382877dcf6623af4676caa8d3c647469a1b:
 
-  regmap: Add bus reg_update_bits() support (2020-04-14 16:05:35 +0100)
-
-----------------------------------------------------------------
-regmap: Allow bus update_bits() operation
-
-Allow buses that provide custom operations to provide a custom
-update_bits() operation.
+  regmap-irq: make it possible to add irq_chip do a specific device node (2020-04-14 16:21:37 +0100)
 
 ----------------------------------------------------------------
-Baolin Wang (1):
-      regmap: Add bus reg_update_bits() support
+regmap: Allow an irqchip to be created for a specific DT node
 
- drivers/base/regmap/regmap.c | 1 +
- 1 file changed, 1 insertion(+)
+----------------------------------------------------------------
+Michael Walle (1):
+      regmap-irq: make it possible to add irq_chip do a specific device node
 
---GBDnBH7+ZvLx8QD4
+ drivers/base/regmap/regmap-irq.c | 84 ++++++++++++++++++++++++++++++++--------
+ include/linux/regmap.h           | 10 +++++
+ 2 files changed, 78 insertions(+), 16 deletions(-)
+
+--Q59ABw34pTSIagmi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7ugACgkQJNaLcl1U
-h9Bj6Qf9GRDxeJWPL23ha9p1MgJ+9PmbWDNdIkPokFlHgqssZGj36IiVdeRJJ+xX
-8g9JkkCTJ78I9RQzzYUwa7ap1Uj369VpzlTi79BP40MLYScigyPV4y98sFANdbos
-xX+cBkko1uCk1EMtNfIomfFm0Q5UI58M4s80ULDJPfsP0zV6brO8Y4O4fXU6cWwe
-lLcRhggZdNHX24cFY9Et/7PLw0tIqgVl9c3O1eFQNdME14GSyCZiun4mvQEM8r/O
-h4byq1Cniw1zsJLN3YKyGA33gBvNh7TadmuBmZ39hqbguD00GX5zw1wCxOoZt+qk
-8uH96PJLk9Wz0cEuPj5GZgHQ6kHZsg==
-=HjPp
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7woACgkQJNaLcl1U
+h9BuQQf/an0mQWAm5vrM5ORmT03qy9aVeFZm3VBOD6lyBwl1SqzPsYPgdbPBk75U
+DQv+FyWG5Qq1BmPfR4oE8pimSb+pt0UE1LO6zLTHt8WvYmRh+xj6UwLfO0WVEJ06
++xdRzkrGLVScCsrlYGfx1RtjmpgvwRCKZVw39nPYTr57mRndNqlTCAtVtYoL8bX0
+I1ryrYEBvOcjJKTpWRKkm5LzVB67bpyYHEdmA5X6Xn1EwxcNrsfbJ5Eou9rlYmPI
+c1ehw1CrspXGb28+phVkDRaTYRzv4QhOZ/m7Rj1nTMemSL5++ew7GBtMQYqyh+T4
+x9u6Aa5UCcrOyLUoWRLaA3drz6EgbA==
+=lV/N
 -----END PGP SIGNATURE-----
 
---GBDnBH7+ZvLx8QD4--
+--Q59ABw34pTSIagmi--
