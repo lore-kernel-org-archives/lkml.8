@@ -2,76 +2,215 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23767C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781FCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DFD206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hzraabfb"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5BF20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586878916;
+	bh=YRkBGt/t8S4yK07N3TSLppsH8hd4kN+lD63XKVx6wHU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=w73uRML8nqNyQ0NzxebQOMh3f0cSSO+9nHGBZyHwsNG3fYZmPYjXJi3407rJR22oM
+	 gRo+D6ye9zsKa61CMZsA0Xx1yRdHnTEm4l+5czaqcVhFPvXewHVeRc3oRpAm75WmvU
+	 JWCepOxv3ISIITpGZ86l4t0lkIxstIwQX7bTt1+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440764AbgDNPli (ORCPT
+        id S2440780AbgDNPlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:41:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730181AbgDNPk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:40:59 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D884C061A0C;
-        Tue, 14 Apr 2020 08:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uWqF91n+VhADIdhuzisMtYavXGhMw/jiYsc8UWNs3HE=; b=HzraabfbjAbD5+L7alBwAuxQg4
-        rZ9TPhmym2Y8LbdBNXVWQtDEQyqbmeqD25/XbZE3tUhzhH/JcUGRIhNkCbpWtxjVXIz/rlIO6KHuX
-        aZYI6KMDyzAHtTU8UC2ruyG2iigFrhPaPbyHnOP8pUCpiDIOELu57X5myWxab1z9jknAG44shMPQW
-        7is7vPB71BKCuvvh5xQkSMafc65QzJnst7pERFZ/HSXWvbWmkAGDwhYTbQoFW/UzVHYsb5TXAGm9g
-        ewvBfmh/GN5FW+TwYsmj2pj1t2jE0yuap2tRGO56LY1erH+/++9Q9aZoERVLOVs/ssgCjrbF5QeVW
-        FZIPSzdw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jONg4-00008t-OZ; Tue, 14 Apr 2020 15:40:44 +0000
-Date:   Tue, 14 Apr 2020 08:40:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Message-ID: <20200414154044.GB25765@infradead.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
+        Tue, 14 Apr 2020 11:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439910AbgDNPfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:35:10 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7A4920678;
+        Tue, 14 Apr 2020 15:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586878509;
+        bh=YRkBGt/t8S4yK07N3TSLppsH8hd4kN+lD63XKVx6wHU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KFHJ2r2nepdYtO2DmnwctrU8zCZIwYxMysSA61wrKFckVM0hbk0Ch9hyC6nvi9+NV
+         vmNYQOF8lKi7qW50B5gjWKTJgxWw1UNteSCih+OEllQibrID7VjGhz22npI9OZkHew
+         yILktqHAWgwIfmNO5lqCs49BvjpTip4SO0rJAsik=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v4 00/14] mm: remove __ARCH_HAS_5LEVEL_HACK 
+Date:   Tue, 14 Apr 2020 18:34:41 +0300
+Message-Id: <20200414153455.21744-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414041902.16769-4-mcgrof@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:19:00AM +0000, Luis Chamberlain wrote:
-> Ensure that the request_queue is refcounted during its full
-> ioctl cycle. This avoids possible races against removal, given
-> blk_get_queue() also checks to ensure the queue is not dying.
-> 
-> This small race is possible if you defer removal of the request_queue
-> and userspace fires off an ioctl for the device in the meantime.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Hmm, where exactly does the race come in so that it can only happen
-after where you take the reference, but not before it?  I'm probably
-missing something, but that just means it needs to be explained a little
-better :)
+Hi,
+
+These patches convert several architectures to use page table folding and
+remove __ARCH_HAS_5LEVEL_HACK along with include/asm-generic/5level-fixup.h
+and include/asm-generic/pgtable-nop4d-hack.h. With that we'll have a single
+and consistent way of dealing with page table folding instead of a mix of
+three existing options.
+
+The changes are mostly about mechanical replacement of pgd accessors with
+p4d ones and the addition of higher levels to page table traversals.
+
+v4 is about rebasing on top of v5.7-rc1 
+* split arm and arm64 changes as there is no KVM host on arm anymore
+* update powerpc patches to reflect its recent changes in page table handling
+
+v3:
+* add Christophe's patch that removes ppc32 get_pteptr()
+* reduce amount of upper layer walks in powerpc
+
+v2:
+* collect per-arch patches into a single set
+* include Geert's update of 'sh' printing messages
+* rebase on v5.6-rc1+
+
+Geert Uytterhoeven (1):
+  sh: fault: Modernize printing of kernel messages
+
+Mike Rapoport (13):
+  h8300: remove usage of __ARCH_USE_5LEVEL_HACK
+  arm: add support for folded p4d page tables
+  arm64: add support for folded p4d page tables
+  hexagon: remove __ARCH_USE_5LEVEL_HACK
+  ia64: add support for folded p4d page tables
+  nios2: add support for folded p4d page tables
+  openrisc: add support for folded p4d page tables
+  powerpc: add support for folded p4d page tables
+  sh: drop __pXd_offset() macros that duplicate pXd_index() ones
+  sh: add support for folded p4d page tables
+  unicore32: remove __ARCH_USE_5LEVEL_HACK
+  asm-generic: remove pgtable-nop4d-hack.h
+  mm: remove __ARCH_HAS_5LEVEL_HACK and include/asm-generic/5level-fixup.h
+
+ arch/arm/include/asm/pgtable.h                |   1 -
+ arch/arm/lib/uaccess_with_memcpy.c            |   7 +-
+ arch/arm/mach-sa1100/assabet.c                |   2 +-
+ arch/arm/mm/dump.c                            |  29 ++-
+ arch/arm/mm/fault-armv.c                      |   7 +-
+ arch/arm/mm/fault.c                           |  22 +-
+ arch/arm/mm/idmap.c                           |   3 +-
+ arch/arm/mm/init.c                            |   2 +-
+ arch/arm/mm/ioremap.c                         |  12 +-
+ arch/arm/mm/mm.h                              |   2 +-
+ arch/arm/mm/mmu.c                             |  35 ++-
+ arch/arm/mm/pgd.c                             |  40 +++-
+ arch/arm64/include/asm/kvm_mmu.h              |  10 +-
+ arch/arm64/include/asm/pgalloc.h              |  10 +-
+ arch/arm64/include/asm/pgtable-types.h        |   5 +-
+ arch/arm64/include/asm/pgtable.h              |  37 ++--
+ arch/arm64/include/asm/stage2_pgtable.h       |  48 +++-
+ arch/arm64/kernel/hibernate.c                 |  44 +++-
+ arch/arm64/mm/fault.c                         |   9 +-
+ arch/arm64/mm/hugetlbpage.c                   |  15 +-
+ arch/arm64/mm/kasan_init.c                    |  26 ++-
+ arch/arm64/mm/mmu.c                           |  52 +++--
+ arch/arm64/mm/pageattr.c                      |   7 +-
+ arch/h8300/include/asm/pgtable.h              |   1 -
+ arch/hexagon/include/asm/fixmap.h             |   4 +-
+ arch/hexagon/include/asm/pgtable.h            |   1 -
+ arch/ia64/include/asm/pgalloc.h               |   4 +-
+ arch/ia64/include/asm/pgtable.h               |  17 +-
+ arch/ia64/mm/fault.c                          |   7 +-
+ arch/ia64/mm/hugetlbpage.c                    |  18 +-
+ arch/ia64/mm/init.c                           |  28 ++-
+ arch/nios2/include/asm/pgtable.h              |   3 +-
+ arch/nios2/mm/fault.c                         |   9 +-
+ arch/nios2/mm/ioremap.c                       |   6 +-
+ arch/openrisc/include/asm/pgtable.h           |   1 -
+ arch/openrisc/mm/fault.c                      |  10 +-
+ arch/openrisc/mm/init.c                       |   4 +-
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |   1 -
+ arch/powerpc/include/asm/book3s/64/hash.h     |   4 +-
+ arch/powerpc/include/asm/book3s/64/pgalloc.h  |   4 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  60 ++---
+ arch/powerpc/include/asm/book3s/64/radix.h    |   6 +-
+ arch/powerpc/include/asm/nohash/32/pgtable.h  |   1 -
+ arch/powerpc/include/asm/nohash/64/pgalloc.h  |   2 +-
+ .../include/asm/nohash/64/pgtable-4k.h        |  32 +--
+ arch/powerpc/include/asm/nohash/64/pgtable.h  |   6 +-
+ arch/powerpc/include/asm/pgtable.h            |  10 +-
+ arch/powerpc/kvm/book3s_64_mmu_radix.c        |  32 +--
+ arch/powerpc/lib/code-patching.c              |   7 +-
+ arch/powerpc/mm/book3s64/hash_pgtable.c       |   4 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  26 ++-
+ arch/powerpc/mm/book3s64/subpage_prot.c       |   6 +-
+ arch/powerpc/mm/hugetlbpage.c                 |  28 ++-
+ arch/powerpc/mm/nohash/book3e_pgtable.c       |  15 +-
+ arch/powerpc/mm/pgtable.c                     |  30 ++-
+ arch/powerpc/mm/pgtable_64.c                  |  10 +-
+ arch/powerpc/mm/ptdump/hashpagetable.c        |  20 +-
+ arch/powerpc/mm/ptdump/ptdump.c               |  14 +-
+ arch/powerpc/xmon/xmon.c                      |  18 +-
+ arch/sh/include/asm/pgtable-2level.h          |   1 -
+ arch/sh/include/asm/pgtable-3level.h          |   1 -
+ arch/sh/include/asm/pgtable_32.h              |   5 +-
+ arch/sh/include/asm/pgtable_64.h              |   5 +-
+ arch/sh/kernel/io_trapped.c                   |   7 +-
+ arch/sh/mm/cache-sh4.c                        |   4 +-
+ arch/sh/mm/cache-sh5.c                        |   7 +-
+ arch/sh/mm/fault.c                            |  65 ++++--
+ arch/sh/mm/hugetlbpage.c                      |  28 ++-
+ arch/sh/mm/init.c                             |  15 +-
+ arch/sh/mm/kmap.c                             |   2 +-
+ arch/sh/mm/tlbex_32.c                         |   6 +-
+ arch/sh/mm/tlbex_64.c                         |   7 +-
+ arch/unicore32/include/asm/pgtable.h          |   1 -
+ arch/unicore32/kernel/hibernate.c             |   4 +-
+ include/asm-generic/5level-fixup.h            |  58 -----
+ include/asm-generic/pgtable-nop4d-hack.h      |  64 ------
+ include/asm-generic/pgtable-nopud.h           |   4 -
+ include/linux/mm.h                            |   6 -
+ mm/kasan/init.c                               |  11 -
+ mm/memory.c                                   |   8 -
+ virt/kvm/arm/mmu.c                            | 209 +++++++++++++++---
+ 81 files changed, 872 insertions(+), 520 deletions(-)
+ delete mode 100644 include/asm-generic/5level-fixup.h
+ delete mode 100644 include/asm-generic/pgtable-nop4d-hack.h
+
+-- 
+2.25.1
+
