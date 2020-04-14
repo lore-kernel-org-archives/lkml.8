@@ -2,97 +2,81 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257CAC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650DAC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0832075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3901C2063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586871516;
+	bh=hwrKfBxeK+4AD1ibFnoch7kah+4fJkFJk3wYroT7S0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dXE1M0ALVfHMbRadeVj3VJSa1so+pae0rjeQD/rj365af+1aBORYyEuavQlYXjlAK
+	 LqiwYbHnGR9Ahf/utL1WOv+Dn6zS9UkxVlCy1YA7F1M4ySSSVEe6LzEoaA5VzPaalw
+	 Xpqkb8rALAjOWk1RSLT5XNK4g/FS0fH/6LX9jPso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387630AbgDNNiP (ORCPT
+        id S2387670AbgDNNid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:38:15 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:59075 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502806AbgDNNPa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:15:30 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MxmJs-1j3uc50aLu-00zIi1; Tue, 14 Apr 2020 15:15:27 +0200
-Received: by mail-qk1-f179.google.com with SMTP id w70so8841819qkb.7;
-        Tue, 14 Apr 2020 06:15:26 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaZ5opB60kucpaK2dxIo1LPh1vIWAMOIHqNxBnuUvLBiuht7WaX
-        l68Q8QjBWHmvRfWsPKpNrMC7cLC7CqoXhfmHQ/Q=
-X-Google-Smtp-Source: APiQypKOQ+PuEkXGp7Hz6/dS0o0rdKdh/QEInnUOkTVAVIiLqxS184q6+DgOArKrPli8Cwrbt3SJu+aKb3Opir5v4iw=
-X-Received: by 2002:a37:9d08:: with SMTP id g8mr13992637qke.138.1586870125394;
- Tue, 14 Apr 2020 06:15:25 -0700 (PDT)
+        Tue, 14 Apr 2020 09:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732466AbgDNNgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:36:48 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F63F2063A;
+        Tue, 14 Apr 2020 13:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586871408;
+        bh=hwrKfBxeK+4AD1ibFnoch7kah+4fJkFJk3wYroT7S0E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=skTTgN+rq63uKIs1RVHnvAHkfXTHlRb4q/HJUL3prWhQpva1ix5Y8wQQxe5imin/P
+         /Up9D9UF5vipk/nT7gY9M9Oo9qYOo3G03z1zesgxe2LKbGyHtkqUwKRtlhpqAHodM2
+         8gOmu4jHZrYIdc8F40rej6Hw+QPT3+tdg7I3bNRw=
+Date:   Tue, 14 Apr 2020 21:36:40 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     sboyd@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, aisheng.dong@nxp.com,
+        abel.vesa@nxp.com, Anson.Huang@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] clk: imx7ulp: make it easy to change ARM core clk
+Message-ID: <20200414133639.GC30676@dragon>
+References: <1584347553-2654-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-5-hch@lst.de>
-In-Reply-To: <20200414070142.288696-5-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Apr 2020 15:15:09 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3HvbPKTkwfWr6PbZ96koO_NrJP1qgk8H1mgk=qUScGkQ@mail.gmail.com>
-Message-ID: <CAK8P3a3HvbPKTkwfWr6PbZ96koO_NrJP1qgk8H1mgk=qUScGkQ@mail.gmail.com>
-Subject: Re: [PATCH 4/8] binfmt_elf: open code copy_siginfo_to_user to
- kernelspace buffer
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:niGzd+JIMAutrTQXi6aKMm7ZjyhZV08h5hlKZzx03Gb3lOmqT6z
- 7i9vKEXvzYnwIGk8z3AGZjTgK2evm1jqoj8C/KsTN2Ng17n0WzNRUfAttBxm+cyLxzHRCbd
- ZgmOELgyTQmtDGKM9c0uepxXWGPrNEb5DvfV8rBFyumfuu2aoBGFr67kqa4kjgCo6DImAZb
- fC212L394gbLr8KoeHrRg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:In4NPF/T4tQ=:D5Hh2GBE1UE4cO2sq1wZiv
- RC3T/YjsyxZv/Ps3c4TABpyGM0qA6CTNR2x4Rks4MoHbc7ZaTIf5R4s61VqPYspc/1nq1v5ul
- e6iKT3tPdL8wn3bTuJp5SqO6ncMhuC2n8ukLKcCkkKdIvd/XjcKdcMr0bmfw3xX17IlLVxwqD
- PcsmOzadW/bIy5VFJFWI8NDupqMlKM8Cxmp+XdqwPmlBSEqTwtUBDT6rl7EEIi6E9Y+IE8iG8
- a8vQNskKzM+Vo1MqAfhXJyxMu1CkvY7xoikclgJ0BAnNSaAAwpgnAcFTj9YAxkcd424JMuTVk
- +bmNAyEQshYaZ4wQBK1cs+mypFEa1q38cWAgCOLcGJqVSLFse6iWTQklWw/3Db2EFxAT8d+f+
- BxcRj4dBk9Cahs+kIctVw9mz7mdBKOZtI5sDIxKv96lWFo16sL5o7jJJBBXTTphXqb6m0ICrV
- frTKlzZnN4qNCGvTrUGSgkxekj/y0XhlnG9vGDX3fsCxw9H7Semf4n8JhdijAWCbEm3auYWMO
- JgY7Gu64sj1PqqvdO52ZIbz0CGPP391WCRIRQkdhvXvqgD6SS9pdncyT4tjohGVM0jQCDnb1w
- DCoK9zdPjPGAahfo3JRZjNtebuHMhMDbI1LN1zci9H8uNZBRvqt6alrXlj6Z9ZJw8BkIaoR+n
- tpOj6W213m7vpp5e5NxGkQB9wdpCUrWQFcS6tvZJqUiy4GXXXvHIUtkJOGjo/qNZWHJH4Oo/N
- 7WyaUiDFlGuBzv+rPC9/aKBgh1ndpMJvQW5Yqoby+LyBpS83Yj70Y0QtBjD45AThagnWckzBU
- db9XVwsjcezC3Zga9uFW8Spn9Jk6s+D3epsJDdiSY3kyhSi/7M=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584347553-2654-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:02 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Instead of messing with the address limit just open code the trivial
-> memcpy + memset logic for the native version, and a call to
-> to_compat_siginfo for the compat version.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Mon, Mar 16, 2020 at 04:32:33PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> ARM clk could only source from divcore or hsrun_divcore.
+> 
+> Follow what we already used on i.MX7D and i.MX8M SoCs, use
+> imx_clk_hw_cpu API. When ARM core is running normaly,
+> whether divcore or hwrun_divcore will finally source
+> from SPLL_PFD0. However SPLL_PFD0 is marked with CLK_SET_GATE,
+> so we need to disable SPLL_PFD0, when configure the rate.
+> So add CORE and HSRUN_CORE virtual clk to make it easy to
+> configure the clk using imx_clk_hw_cpu API.
+> 
+> Since CORE and HSRUN_CORE already marked with CLK_IS_CRITICAL, no
+> need to set ARM as CLK_IS_CRITICAL. And when set the rate of ARM clk,
+> prograting it the parent with CLK_SET_RATE_PARENT will finally set
+> the SPLL_PFD0 clk.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Nice!
-
->   */
->  #define user_long_t            compat_long_t
->  #define user_siginfo_t         compat_siginfo_t
-> -#define copy_siginfo_to_user   copy_siginfo_to_user32
-> +#define fill_siginfo_note(note, csigdata, siginfo)             \
-> +do {                                                                   \
-> +       to_compat_siginfo(csigdata, siginfo, compat_siginfo_flags());   \
-> +       fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata); \
-> +} while (0)
-
-I don't think you are changing the behavior here, but I still wonder if it
-is in fact correct for x32: is in_x32_syscall() true here when dumping an
-x32 compat elf process, or should this rather be set according to which
-binfmt_elf copy is being used?
-
-     Arnd
+Applied, thanks.
