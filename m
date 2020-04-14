@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231DBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6893EC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5AC220678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4050D206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883064;
-	bh=e8sa2L9jrsFs8MZxmSzZtk35TsqpIfaY4VUQqf3DBa8=;
+	s=default; t=1586883086;
+	bh=/mHARHeWczRi1L5tDKAwMG7VRaHqjAqAAZDBdAFAoJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jbMq0gwcxXRWQb9KhDq8MV8eSZYQW07h104+XyKp7Chz6pt8ppibVWwyW034gORp4
-	 /Gs/iLAJ/Wn/K761tXpTHEAJic6WSblHDQmyQMH2oh2vju15gUOMIIdnAcC/XJftV9
-	 j7rII7WXpuK1Y0QDY71AnBx6oLLzkJMpD953Wiz4=
+	b=lJap5O7K5m2JkcBIub/3XGIESJZlzcgtu+39pSYXGd0OZtgRFq3p3sdQarPb5azFu
+	 vw+eEsA4cWaWSaJWuLOhJGBo5mxm90zmZBsf1ZQNQQJlaszOZjebMuXm7xN4YgVkOQ
+	 zRwkWDdcQK8VbsvlUCICihB4miQSeRUp2isSZUgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440615AbgDNQvC (ORCPT
+        id S2440411AbgDNQvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:51:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440428AbgDNQt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:49:26 -0400
+        id S2440406AbgDNQtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:21 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77F43208FE;
-        Tue, 14 Apr 2020 16:49:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC8420656;
+        Tue, 14 Apr 2020 16:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882966;
-        bh=e8sa2L9jrsFs8MZxmSzZtk35TsqpIfaY4VUQqf3DBa8=;
+        s=default; t=1586882956;
+        bh=/mHARHeWczRi1L5tDKAwMG7VRaHqjAqAAZDBdAFAoJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W5n+Ul2F1XVNQ1AQAU6F1NPlDnGVsDUbcb1/j+DXUSV9YceAsnW+CCddjBCLLv89i
-         1UJSuvzjDufw+nhr94MMOtMFIJXGAyNw7hTR98uNmjss1PqCcjLE5vnumkGR75j+bq
-         eTIndeL3qtd/C9LsTxs/gCwLcuqGfBnMplg+OieU=
+        b=0hDy+lq50lzxBnb1keJMR5ZhFNyRO3L5S+NZ2mJbZ9CvgWUzIy8B54nSUvEB+alk0
+         Re541EWfc0j6Tb16rBoCNcTAebnm8RfcqirAPj0KXXFfTjMp18BAokdGxigUE8Fe0P
+         laYaWpwb1nCHHo8BEQoRQoRLm76mv1dm0gLvdB8k=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,11 +47,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Tiwei Bie <tiwei.bie@intel.com>
-Subject: [PATCH 08/15] tools include UAPI: Sync linux/vhost.h with the kernel sources
-Date:   Tue, 14 Apr 2020 13:48:47 -0300
-Message-Id: <20200414164854.26026-9-acme@kernel.org>
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 05/15] tools headers UAPI: Sync sched.h with the kernel
+Date:   Tue, 14 Apr 2020 13:48:44 -0300
+Message-Id: <20200414164854.26026-6-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -66,85 +66,73 @@ From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To get the changes in:
 
-  4c8cf31885f6 ("vhost: introduce vDPA-based backend")
+  ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
 
-Silencing this perf build warning:
+Add that to 'perf trace's clone 'flags' decoder.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/vhost.h' differs from latest version at 'include/uapi/linux/vhost.h'
-  diff -u tools/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
+This silences this perf build warning:
 
-This automatically picks these new ioctls, making tools such as 'perf
-trace' aware of them and possibly allowing to use the strings in
-filters, etc:
-
-  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > before
-  $ cp include/uapi/linux/vhost.h tools/include/uapi/linux/vhost.h
-  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > after
-  $ diff -u before after
-  --- before	2020-04-14 09:12:28.559748968 -0300
-  +++ after	2020-04-14 09:12:38.781696242 -0300
-  @@ -24,9 +24,16 @@
-   	[0x44] = "SCSI_GET_EVENTS_MISSED",
-   	[0x60] = "VSOCK_SET_GUEST_CID",
-   	[0x61] = "VSOCK_SET_RUNNING",
-  +	[0x72] = "VDPA_SET_STATUS",
-  +	[0x74] = "VDPA_SET_CONFIG",
-  +	[0x75] = "VDPA_SET_VRING_ENABLE",
-   };
-   static const char *vhost_virtio_ioctl_read_cmds[] = {
-   	[0x00] = "GET_FEATURES",
-   	[0x12] = "GET_VRING_BASE",
-   	[0x26] = "GET_BACKEND_FEATURES",
-  +	[0x70] = "VDPA_GET_DEVICE_ID",
-  +	[0x71] = "VDPA_GET_STATUS",
-  +	[0x73] = "VDPA_GET_CONFIG",
-  +	[0x76] = "VDPA_GET_VRING_NUM",
-   };
-  $
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Michael S. Tsirkin <mst@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tiwei Bie <tiwei.bie@intel.com>
+Cc: Tejun Heo <tj@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/vhost.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ tools/include/uapi/linux/sched.h | 5 +++++
+ tools/perf/trace/beauty/clone.c  | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/tools/include/uapi/linux/vhost.h b/tools/include/uapi/linux/vhost.h
-index 40d028eed645..9fe72e4b1373 100644
---- a/tools/include/uapi/linux/vhost.h
-+++ b/tools/include/uapi/linux/vhost.h
-@@ -116,4 +116,28 @@
- #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
- #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index 2e3bc22c6f20..3bac0a8ceab2 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -35,6 +35,7 @@
  
-+/* VHOST_VDPA specific defines */
-+
-+/* Get the device id. The device ids follow the same definition of
-+ * the device id defined in virtio-spec.
-+ */
-+#define VHOST_VDPA_GET_DEVICE_ID	_IOR(VHOST_VIRTIO, 0x70, __u32)
-+/* Get and set the status. The status bits follow the same definition
-+ * of the device status defined in virtio-spec.
-+ */
-+#define VHOST_VDPA_GET_STATUS		_IOR(VHOST_VIRTIO, 0x71, __u8)
-+#define VHOST_VDPA_SET_STATUS		_IOW(VHOST_VIRTIO, 0x72, __u8)
-+/* Get and set the device config. The device config follows the same
-+ * definition of the device config defined in virtio-spec.
-+ */
-+#define VHOST_VDPA_GET_CONFIG		_IOR(VHOST_VIRTIO, 0x73, \
-+					     struct vhost_vdpa_config)
-+#define VHOST_VDPA_SET_CONFIG		_IOW(VHOST_VIRTIO, 0x74, \
-+					     struct vhost_vdpa_config)
-+/* Enable/disable the ring. */
-+#define VHOST_VDPA_SET_VRING_ENABLE	_IOW(VHOST_VIRTIO, 0x75, \
-+					     struct vhost_vring_state)
-+/* Get the max ring size. */
-+#define VHOST_VDPA_GET_VRING_NUM	_IOR(VHOST_VIRTIO, 0x76, __u16)
-+
+ /* Flags for the clone3() syscall. */
+ #define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
++#define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup given the right permissions. */
+ 
+ /*
+  * cloning flags intersect with CSIGNAL so can be used with unshare and clone3
+@@ -81,6 +82,8 @@
+  * @set_tid_size: This defines the size of the array referenced
+  *                in @set_tid. This cannot be larger than the
+  *                kernel's limit of nested PID namespaces.
++ * @cgroup:       If CLONE_INTO_CGROUP is specified set this to
++ *                a file descriptor for the cgroup.
+  *
+  * The structure is versioned by size and thus extensible.
+  * New struct members must go at the end of the struct and
+@@ -97,11 +100,13 @@ struct clone_args {
+ 	__aligned_u64 tls;
+ 	__aligned_u64 set_tid;
+ 	__aligned_u64 set_tid_size;
++	__aligned_u64 cgroup;
+ };
  #endif
+ 
+ #define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
+ #define CLONE_ARGS_SIZE_VER1 80 /* sizeof second published struct */
++#define CLONE_ARGS_SIZE_VER2 88 /* sizeof third published struct */
+ 
+ /*
+  * Scheduling policies
+diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
+index 062ca849c8fd..f4db894e0af6 100644
+--- a/tools/perf/trace/beauty/clone.c
++++ b/tools/perf/trace/beauty/clone.c
+@@ -46,6 +46,7 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size,
+ 	P_FLAG(NEWNET);
+ 	P_FLAG(IO);
+ 	P_FLAG(CLEAR_SIGHAND);
++	P_FLAG(INTO_CGROUP);
+ #undef P_FLAG
+ 
+ 	if (flags)
 -- 
 2.21.1
 
