@@ -2,115 +2,109 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960E2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E687C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A74920578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD942074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436764AbgDNIZn (ORCPT
+        id S2436791AbgDNI0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:25:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:50906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436753AbgDNIZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:25:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E131FB;
-        Tue, 14 Apr 2020 01:25:32 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 855603F73D;
-        Tue, 14 Apr 2020 01:25:23 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 09:25:20 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, dietmar.eggemann@arm.com,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Peter Xu <peterx@redhat.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 03/11] arch_topology: Make it avilable for MIPS
-Message-ID: <20200414082520.GB6459@bogus>
-References: <20200412032123.3896114-1-jiaxun.yang@flygoat.com>
- <20200412032123.3896114-4-jiaxun.yang@flygoat.com>
+        Tue, 14 Apr 2020 04:26:54 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39633 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436780AbgDNI0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:26:39 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOGtw-0007Pr-8X; Tue, 14 Apr 2020 10:26:36 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOGtv-0000m7-JI; Tue, 14 Apr 2020 10:26:35 +0200
+Date:   Tue, 14 Apr 2020 10:26:35 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
+        jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
+        leonard.crestez@nxp.com, aisheng.dong@nxp.com, Anson.Huang@nxp.com,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] mailbox: imx-mailbox: fix scu msg header size check
+Message-ID: <20200414082635.jo5yljonh5xgnujd@pengutronix.de>
+References: <1586851826-16596-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200412032123.3896114-4-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1586851826-16596-1-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 11:20:33AM +0800, Jiaxun Yang wrote:
-> Simply drop unnecessary archtecture limitions and add dummy
-> function for platforms without OF support.
-> As some of the functions are conflicting with Arm's platform
-> implementations, we mark them as weak.
+On Tue, Apr 14, 2020 at 04:10:26PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> --
-> v2: Use weak instead of ifdef to exclude functions for Arm.
+> The i.MX8 SCU message header size is the number of "u32" elements,
+> not "u8", so fix the check.
+> 
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1461658 ("Memory - corruptions")
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/base/arch_topology.c | 116 ++++++++++++++++++-----------------
->  1 file changed, 60 insertions(+), 56 deletions(-)
 > 
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 4d0a0038b476..13dc4fbf043f 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -143,57 +143,6 @@ void topology_normalize_cpu_scale(void)
->  	}
->  }
+> V2:
+>  I not include the fixes tag, since this patch still in next tree.
+> 
+>  drivers/mailbox/imx-mailbox.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> index 7906624a731c..c2398cb63ea0 100644
+> --- a/drivers/mailbox/imx-mailbox.c
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -154,12 +154,12 @@ static int imx_mu_scu_tx(struct imx_mu_priv *priv,
 >  
-> -bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+>  	switch (cp->type) {
+>  	case IMX_MU_TYPE_TX:
+> -		if (msg->hdr.size > sizeof(*msg)) {
+> +		if (msg->hdr.size > (sizeof(*msg) / 4)) {
 
-This function is not under any #ifdefery and you are adding it but the
-commit message indicates opposite. Please state the reason why this needs
-to be moved under #ifdef
+No need for the parenthesis. Maybe a comment would be helpful here,
+something like:
+
+	/*
+	 * msg->hdr.size specifies the number of u32 words while sizeof
+	 * yields bytes.
+	 */
+
+>  			/*
+>  			 * The real message size can be different to
+>  			 * struct imx_sc_rpc_msg_max size
+>  			 */
+> -			dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i\n", sizeof(*msg), msg->hdr.size);
+> +			dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i\n", sizeof(*msg) / 4, msg->hdr.size);
+
+The unit here is also "number of u32 words", maybe bytes is more
+natural? And I suggesting specifying the unit in the error message.
+
+Best regards
+Uwe
 
 -- 
-Regards,
-Sudeep
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
