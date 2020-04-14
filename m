@@ -2,120 +2,116 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9479C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F91CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5FB8206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C59620656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439665AbgDNP0O (ORCPT
+        id S2439728AbgDNP0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:26:14 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:49335 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729755AbgDNP0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:26:01 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MlfCm-1iyQMg4B2Q-00ihuc; Tue, 14 Apr 2020 17:25:57 +0200
-Received: by mail-qt1-f177.google.com with SMTP id w24so10404110qts.11;
-        Tue, 14 Apr 2020 08:25:56 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYEawHzwf0tXCXIhqzyveDf/fKgTJRq7lmc/+qMlr9Ipu+OaO8G
-        0dGxzi9Jeq3U1wcV3mVJHRnr9OgzCouXCMt4z3U=
-X-Google-Smtp-Source: APiQypL2bnXf86E03hawsz8pxDqc8oMdZRSmBA+dTNzneuRbxAzCaV1aI5lbgXSqxBtoHIjMy0g/toQKbqbs9h0eD6I=
-X-Received: by 2002:aed:20e3:: with SMTP id 90mr16307053qtb.142.1586877955579;
- Tue, 14 Apr 2020 08:25:55 -0700 (PDT)
+        Tue, 14 Apr 2020 11:26:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52362 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729755AbgDNP0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:26:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 61AF7AB8F;
+        Tue, 14 Apr 2020 15:26:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2631D1E125F; Tue, 14 Apr 2020 17:26:30 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 17:26:30 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V7 7/9] fs: Define I_DONTCACNE in VFS layer
+Message-ID: <20200414152630.GE28226@quack2.suse.cz>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
+ <20200413054046.1560106-8-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
- <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
- <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
- <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
- <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
- <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
- <20200414152312.GF5100@ziepe.ca>
-In-Reply-To: <20200414152312.GF5100@ziepe.ca>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Apr 2020 17:25:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
-Message-ID: <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RfyQ2xDdl1ZlEgiL+Y7PvwDBC33min6ODLsofcFtD6lUaRExO0j
- r8qU4Oxw/EwZ0jcE7ean97MitHxLRZ048iY3UOXaVjNOSKnU0Y7o523T7uNpODg4HluSYzY
- 6Q71sv+dp75ckYuN1gISTUMofFGxPDFRqfpBSObbWeOxdeouDF9GnPoZuP9pCavduX6KCfd
- a2goUqaqWN+WvjFVFe0IQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H4VJsjCrV9Y=:1ww5YkAP8BYP33jjCBtzZe
- gAO+1ID6L/XYyf25eZrQfum6CG9xfTfdFeSUlx1AGSvB4KRT9QBiyMUC0eMaA8HPHGmLn4BHX
- 0JYaYQii3d7kq01oXl+YG5NnH5GQ3seNgthXW7lEo6eNP5s6DTWZ1VpYcN0mJCwu9axrNz1bE
- DuZRztf4DXqT5G5cafsLPex64cjAg7FQIY8C+d2mfrqDcy5s5/cRqIYK77fINjGGP/MNvEZWN
- veDFHLYczUC4KgniBlp/EmkfiWkaADKUlj/8gLr4vqjyUMYwNSj/eSEyYtlCjI29ZV3NQJFbk
- tyPFgS3MZARIorz4Qpc7UYtL4MU6UG1QXVsd1jYci9KBR4Kq0AaLFDLQXBUtR2x8OO8k5V9PH
- 6qnQJZZFtfHbP7wObk9LM+CvBpI7XqIlc/n/sTawfpMVPgYNxFnYtmPCbE5UV7UBloLW0YE5c
- /SMOKjNLjRSTsmePktSG4S87NiGZxocpW3wE369nqChe01muVtomXN49usjPyhBdKdz1/B9kT
- VRqIdr4uL8mH0dTF/Ol3WiyHoMClteYldixTsV5nCu+EASX9wduTld5BJNlgT/juwXS1AjceG
- WDIVO/74jqtUbyupvdXS28wWsA4fRaHju9l7oanMXY4SP3h+qoC5baYYdoP6dXOWjl4UWfYKn
- lSEoaKVUaLdHqwHdl1BWYq0xm34uPzZrf6eBiHBkJki6KZjLz+7M2+QjRL6+9JoVWm+9BUJsd
- OEY227ILu/yh2AM0ARpOcVUYyDfSITw00i2yYqNkIAZ5fVlg85b7AfIz7QnwUX9bvO4TMyFFH
- rDilYgJhpmyVd2yS3WJb5TVhbuQyM0NdtEn6Aj9rSTtQH47ahA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413054046.1560106-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 5:23 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Tue, Apr 14, 2020 at 04:27:41PM +0200, Arnd Bergmann wrote:
-> > On Tue, Apr 14, 2020 at 3:29 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > On Fri, Apr 10, 2020 at 07:04:27PM +0000, Saeed Mahameed wrote:
-> > which in turn leads to mlx5_core.ko *not* containing mlx5_vxlan.o,
-> > and in turn causing that link error against
-> > mlx5_vxlan_create/mlx5_vxlan_destroy, unless the IS_ENABLED()
-> > is changed to IS_REACHABLE().
->
-> What about the reverse if mlx5_core is 'm' and VLXAN is 'y'?
->
->  mlx5_core-m := mlx5_core.o
->  mlx5_core-y += mlx5_vxlan.o
->
-> Magically works out?
+On Sun 12-04-20 22:40:44, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DAX effective mode changes (setting of S_DAX) require inode eviction.
+> 
+> Define a flag which can be set to inform the VFS layer that inodes
+> should not be cached.  This will expedite the eviction of those nodes
+> requiring reload.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Yes, Kbuild takes care of that case.
+This inode flag will have a limited impact because usually dentry will
+still hold inode reference. So until dentry is evicted, inode stays as
+well. So I think we'd need something like DCACHE_DONTCACHE flag as well to
+discard a dentry whenever dentry usecount hits zero (which will be
+generally on last file close). What do you think?
 
-> > > IIRC that isn't what the expression does, if vxlan is 'n' then
-> > >   n || !n == true
-> >
-> > It forces MLX5_CORE to 'm' or 'n' but not 'y' if VXLAN=m,
-> > but allows any option if VXLAN=y
->
-> And any option if VXLAN=n ?
+And I'd note that checking for I_DONTCACHE flag in dput() isn't
+straightforward because of locking so that's why I suggest separate dentry
+flag.
 
-Correct.
+								Honza
 
-      Arnd
+> ---
+>  include/linux/fs.h | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index a818ced22961..e2db71d150c3 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2151,6 +2151,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>   *
+>   * I_CREATING		New object's inode in the middle of setting up.
+>   *
+> + * I_DONTCACHE		Do not cache the inode
+> + *
+>   * Q: What is the difference between I_WILL_FREE and I_FREEING?
+>   */
+>  #define I_DIRTY_SYNC		(1 << 0)
+> @@ -2173,6 +2175,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>  #define I_WB_SWITCH		(1 << 13)
+>  #define I_OVL_INUSE		(1 << 14)
+>  #define I_CREATING		(1 << 15)
+> +#define I_DONTCACHE		(1 << 16)
+>  
+>  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+>  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
+> @@ -3042,7 +3045,8 @@ extern int inode_needs_sync(struct inode *inode);
+>  extern int generic_delete_inode(struct inode *inode);
+>  static inline int generic_drop_inode(struct inode *inode)
+>  {
+> -	return !inode->i_nlink || inode_unhashed(inode);
+> +	return !inode->i_nlink || inode_unhashed(inode) ||
+> +		(inode->i_state & I_DONTCACHE);
+>  }
+>  
+>  extern struct inode *ilookup5_nowait(struct super_block *sb,
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
