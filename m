@@ -2,124 +2,191 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8086C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60014C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C096F206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369EF2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y8MoA+jt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Dxy2k4OH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502020AbgDNMeM (ORCPT
+        id S2502047AbgDNMf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:34:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2501995AbgDNMeJ (ORCPT
+        Tue, 14 Apr 2020 08:35:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60226 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502029AbgDNMfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:34:09 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB9EC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:34:08 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id d17so7203970wrg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/0jr+GG3LyvDkB/zvwi8pImlCt3g6GJqvkh08zDnpzk=;
-        b=Y8MoA+jt5jFWw7uXusRhRJQ8ORQ00uQOwPjwmK0LCFbnGb/MKF4Hzd/Qj/EYMROORR
-         uqJopqMXSv/roMf7C+iiqZZvRfqv48qxA07Kg/3ftbyBgJNlGOf6ctCXoiquytT6liQ+
-         2DyBWTGgZbV4qBp0S4Yn60sxJYWX7VgFqK/Jc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=/0jr+GG3LyvDkB/zvwi8pImlCt3g6GJqvkh08zDnpzk=;
-        b=LCSCir7QcGpA5H7itWk7P45EQYOKLx35Q8RXBUKA8sE4/e78yzgu0BGfQVXCS9gtA2
-         u6JhyxBzfF/LmfAd+z8tpvf6eBK4uDCGjWpIKCO+gphWabC4uW2wZiomjgtB9U/KlCNz
-         JaQQVn9WXS2/zQTngmKIljO4Ath4F1zc9uGt6xTZFIrtS+l0bHnqt5ImLeP+QltvWCZL
-         uvo7BZyKXq0SvcL7U20PrQjLa/OI7ifAW15Xod+kch6MKqy0K7/GXoe7k2XHjL0wpJK9
-         4Hri1fgZ1QRaaJR604CSlWGcigOD9HA4uymaM/+meX2oOASS4CO2crhWjGOABE7Kziqs
-         /7sw==
-X-Gm-Message-State: AGi0PuaxAKlZPDjznxUf3PaAAobRj3jpJz/UJ/bDg7HzRpkCR4hZoNGu
-        S3JmBsLJ7xmpgg2JE29zC/tp+j7MkfM=
-X-Google-Smtp-Source: APiQypLhB5mouYy4rFQGtlVpSX6rVjC9jg0eJ/6UH9dcaDMtkDp3vzfrksr11KLN6Er/jKfsmK4Y0A==
-X-Received: by 2002:a5d:42cf:: with SMTP id t15mr10089331wrr.354.1586867647689;
-        Tue, 14 Apr 2020 05:34:07 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id q17sm10461927wmj.45.2020.04.14.05.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 05:34:06 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 14:34:04 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Simon Ser <contact@emersion.fr>, Yussuf Khalil <dev@pp3345.net>,
-        David Airlie <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 5/5] drm/i915: Replace "Broadcast RGB" with "RGB
- quantization range" property
-Message-ID: <20200414123404.GT3456981@phenom.ffwll.local>
-Mail-Followup-To: Jani Nikula <jani.nikula@linux.intel.com>,
-        Simon Ser <contact@emersion.fr>, Yussuf Khalil <dev@pp3345.net>,
-        David Airlie <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-References: <20200413214024.46500-1-dev@pp3345.net>
- <20200413214024.46500-6-dev@pp3345.net>
- <daCvJk4O6rHOwEometGSPENJupb6adPr583_dLEetvftUQPbK4198VDijHGzM9uTm9bP3TEyGCZvxKe5PSvqWBg5xhXkL_7EiAQlmEPKWQI=@emersion.fr>
- <87ftd6mi3e.fsf@intel.com>
- <87d08amhy5.fsf@intel.com>
+        Tue, 14 Apr 2020 08:35:47 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03ECI54q101846;
+        Tue, 14 Apr 2020 12:35:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=y60fSCG2nXRrowJmU8VdzYgVbRBn5fWc0JMdkv+EuI8=;
+ b=Dxy2k4OH6mHEFSQyrfvHAoREOtd2VgID+YF/O9/WcuKsGrDCDD+OyMHviTlzFbdZSWyL
+ +eC5JXZL+R2akjNx7bJ73f4wWH3vqUueLewZdsf6DKh2ZRmi/5ki45AjvYVnPPdcfH4K
+ 45aJcolFwvCupJX/QPnYtf8fiyr5J/QCg+tfy/8kCGCSzlLbskY4eFK6pqng4y2J3Vj0
+ ECfFgNN87QUlB6Cvq+RHMJO8eJqC6jJO44piUF8ibLNlF1tc2J6cCOCZ8w2Go7on7YJv
+ /wdKmbY2lVSJ1q1FOkXtBfZP1KkHw36DB97+EumOCMI7iDeunTdaSKFoIeVlSjPr0oqB kA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30b5um4ars-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 12:35:38 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03ECHj6A180506;
+        Tue, 14 Apr 2020 12:33:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 30bqchhs56-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 12:33:37 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03ECXZUY019294;
+        Tue, 14 Apr 2020 12:33:35 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 05:33:34 -0700
+Date:   Tue, 14 Apr 2020 15:33:26 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
+Cc:     gregkh@linuxfoundation.org, navid.emamdoost@gmail.com,
+        sylphrenadin@gmail.com, nishkadg.linux@gmail.com,
+        stephen@brennan.io, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH 1/2] staging: rtl8192u: Refactoring setKey function
+Message-ID: <20200414123326.GG1163@kadam>
+References: <20200413030129.861-1-c.cantanheide@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d08amhy5.fsf@intel.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200413030129.861-1-c.cantanheide@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140103
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 02:21:06PM +0300, Jani Nikula wrote:
-> On Tue, 14 Apr 2020, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > On Mon, 13 Apr 2020, Simon Ser <contact@emersion.fr> wrote:
-> >> On Monday, April 13, 2020 11:40 PM, Yussuf Khalil <dev@pp3345.net> wrote:
-> >>
-> >>> DRM now has a globally available "RGB quantization range" connector
-> >>> property. i915's "Broadcast RGB" that fulfils the same purpose is now
-> >>> considered deprecated, so drop it in favor of the DRM property.
-> >>
-> >> For a UAPI point-of-view, I'm not sure this is fine. Some user-space
-> >> might depend on this property, dropping it would break such user-space.
-> >
-> > Agreed.
-> >
-> >> Can we make this property deprecated but still keep it for backwards
-> >> compatibility?
-> >
-> > Would be nice to make the i915 specific property an "alias" for the new
-> > property, however I'm not sure how you'd make that happen. Otherwise
-> > juggling between the two properties is going to be a nightmare.
+On Mon, Apr 13, 2020 at 03:01:28AM +0000, Camylla Goncalves Cantanheide wrote:
+> Changes of the local variable value and
+> modification in the seletive repetition structure.
 > 
-> Ah, the obvious easy choice is to use the property and enum names
-> already being used by i915 and gma500, and you have no problem. Perhaps
-> they're not the names you'd like, but then looking at the total lack of
-> consistency across property naming makes them fit right in. ;)
 
-Yeah if we don't have contradictory usage across drivers when modernizing
-these properties, then let's just stick with the names already there. It's
-not pretty, but works better since more userspace/internet howtos know how
-to use this stuff.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+This changelog isn't totally clear why you're doing this.  Just say:
+"I am refactorying setKey() to make it more clear.  I have unrolled the
+first two iterations through the loop.  This patch will not change
+runtime."
+
+So long as it's clear what you're trying to do and why, that's the
+important thing with a commit message.
+
+> Signed-off-by: Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
+> ---
+>  drivers/staging/rtl8192u/r8192U_core.c | 52 ++++++++++++--------------
+>  1 file changed, 24 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+> index 9b8d85a4855d..87c02aee3854 100644
+> --- a/drivers/staging/rtl8192u/r8192U_core.c
+> +++ b/drivers/staging/rtl8192u/r8192U_core.c
+> @@ -4880,7 +4880,7 @@ void EnableHWSecurityConfig8192(struct net_device *dev)
+>  void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
+>  	    u8 *macaddr, u8 defaultkey, u32 *keycontent)
+>  {
+> -	u32 target_command = 0;
+> +	u32 target_command = CAM_CONTENT_COUNT * entryno |  BIT(31) | BIT(16);
+>  	u32 target_content = 0;
+>  	u16 us_config = 0;
+>  	u8 i;
+> @@ -4890,39 +4890,35 @@ void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
+>  
+>  	RT_TRACE(COMP_SEC,
+>  		 "====>to %s, dev:%p, EntryNo:%d, KeyIndex:%d, KeyType:%d, MacAddr%pM\n",
+> -        	 __func__, dev, entryno, keyindex, keytype, macaddr);
+> +		 __func__, dev, entryno, keyindex, keytype, macaddr);
+
+Do this white space change in a separate patch.
+
+>  
+>  	if (defaultkey)
+>  		us_config |= BIT(15) | (keytype << 2);
+>  	else
+>  		us_config |= BIT(15) | (keytype << 2) | keyindex;
+>  
+> -	for (i = 0; i < CAM_CONTENT_COUNT; i++) {
+> -		target_command  = i + CAM_CONTENT_COUNT * entryno;
+> -		target_command |= BIT(31) | BIT(16);
+> -
+> -		if (i == 0) { /* MAC|Config */
+> -			target_content = (u32)(*(macaddr + 0)) << 16 |
+> -					(u32)(*(macaddr + 1)) << 24 |
+> -					(u32)us_config;
+> -
+> -			write_nic_dword(dev, WCAMI, target_content);
+> -			write_nic_dword(dev, RWCAM, target_command);
+> -		} else if (i == 1) { /* MAC */
+> -			target_content = (u32)(*(macaddr + 2))	 |
+> -					(u32)(*(macaddr + 3)) <<  8 |
+> -					(u32)(*(macaddr + 4)) << 16 |
+> -					(u32)(*(macaddr + 5)) << 24;
+> -			write_nic_dword(dev, WCAMI, target_content);
+> -			write_nic_dword(dev, RWCAM, target_command);
+> -		} else {
+> -			/* Key Material */
+> -			if (keycontent) {
+> -				write_nic_dword(dev, WCAMI,
+> -						*(keycontent + i - 2));
+> -				write_nic_dword(dev, RWCAM, target_command);
+> -                	}
+> -		}
+> +	target_content = macaddr[0] << 16 |
+> +			 macaddr[0] << 24 |
+> +			(u32)us_config;
+> +
+> +	write_nic_dword(dev, WCAMI, target_content);
+> +	write_nic_dword(dev, RWCAM, target_command++);
+> +
+> +	/* MAC */
+> +	target_content = macaddr[2]	  |
+> +			 macaddr[3] <<  8 |
+> +			 macaddr[4] << 16 |
+> +			 macaddr[5] << 24;
+> +	write_nic_dword(dev, WCAMI, target_content);
+> +	write_nic_dword(dev, RWCAM, target_command++);
+> +
+> +	/* Key Material */
+> +	if (!keycontent)
+> +		return;
+> +
+> +	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
+> +		write_nic_dword(dev, WCAMI, *keycontent++);
+
+This code was wrong in the original as well, but now that I see the bug
+let's fix it.  CAM_CONTENT_COUNT is 8.  8 - 2 = 6.  We are writing 6
+u32 variables to write_nic_dword().  But the *keycontent buffer only has
+4 u32 variables so it is a buffer overflow.
+
+> +		write_nic_dword(dev, RWCAM, target_command++);
+>  	}
+>  }
+
+regards,
+dan carpenter
+
+
