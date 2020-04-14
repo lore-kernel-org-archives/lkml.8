@@ -2,161 +2,147 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07B6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2B20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5614F2076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AcIhfvsr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e9gZ1tOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437563AbgDNPNO (ORCPT
+        id S2437657AbgDNPN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:13:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46195 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2436728AbgDNPHl (ORCPT
+        Tue, 14 Apr 2020 11:13:59 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28065 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437531AbgDNPM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:07:41 -0400
+        Tue, 14 Apr 2020 11:12:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876860;
+        s=mimecast20190719; t=1586877177;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=AGZKlh4Y3iYusjFkAozB1BrSL7TWS1xxMSS4nCN5u3I=;
-        b=AcIhfvsrtA2xt3C3e//wxYOP9e31+S3A3RRcR7uNMzNDMSEDhiTZnG8nbYOpFkRekRkGzl
-        DiC3hwj/7ZGxXcbmQHY8ukcU9oTW3Wtp/QIC4JQ44ZLI1c9csjCsrE+lb0tbVGDwxSK6AV
-        rzmwNH85uiG3aR6wf77zg3/kI7VW6Ws=
+        bh=hWdxsxQ1IMDhmXo5WAMFE5k2BVlneem3CQpGkc+AuvY=;
+        b=e9gZ1tOgRcN8dlqXtCfqShtwpKxYMsetLehLda7a/WijSKrwDW8yyinYnuWuY7izkjUeqH
+        Y1BGVDA23Kv8UShrnZna0py4l4giGH0oDktWkJrFSWLctZ3mHqkynMjR+N3EjGGfcsDzWO
+        7Vumdy9ppPK3Axc539uVPCcsjaW7NpI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-oN7FE4DZPF2iCVNJOZ74QA-1; Tue, 14 Apr 2020 11:07:32 -0400
-X-MC-Unique: oN7FE4DZPF2iCVNJOZ74QA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-76-3BpvUORRMJS8qDbO7QY6GQ-1; Tue, 14 Apr 2020 11:12:53 -0400
+X-MC-Unique: 3BpvUORRMJS8qDbO7QY6GQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E2D38017F5;
-        Tue, 14 Apr 2020 15:07:29 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1840F271A3;
-        Tue, 14 Apr 2020 15:07:24 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, will@kernel.org,
-        joro@8bytes.org, maz@kernel.org, robin.murphy@arm.com
-Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
-        shameerali.kolothum.thodi@huawei.com, alex.williamson@redhat.com,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
-        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
-        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
-Subject: [PATCH v11 07/13] iommu/smmuv3: Allow stage 1 invalidation with unmanaged ASIDs
-Date:   Tue, 14 Apr 2020 17:06:01 +0200
-Message-Id: <20200414150607.28488-8-eric.auger@redhat.com>
-In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
-References: <20200414150607.28488-1-eric.auger@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D58D41137840;
+        Tue, 14 Apr 2020 15:12:51 +0000 (UTC)
+Received: from krava (unknown [10.40.195.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE27C5C1BE;
+        Tue, 14 Apr 2020 15:12:49 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 17:12:47 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf stat: force error in fallback on :k events
+Message-ID: <20200414151247.GB208694@krava>
+References: <20200413235515.221467-1-irogers@google.com>
+ <20200414130209.GD117177@krava>
+ <CAP-5=fVM6gg3Bo5jHwYG=vhLZ-HQaQfwZFg_=DwRJOmHqRRDMA@mail.gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVM6gg3Bo5jHwYG=vhLZ-HQaQfwZFg_=DwRJOmHqRRDMA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With nested stage support, soon we will need to invalidate
-S1 contexts and ranges tagged with an unmanaged asid, this
-latter being managed by the guest. So let's introduce 2 helpers
-that allow to invalidate with externally managed ASIDs
+On Tue, Apr 14, 2020 at 07:38:17AM -0700, Ian Rogers wrote:
+> On Tue, Apr 14, 2020 at 6:02 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Mon, Apr 13, 2020 at 04:55:15PM -0700, Ian Rogers wrote:
+> > > From: Stephane Eranian <eranian@google.com>
+> > >
+> > > When it is not possible for a non-privilege perf command
+> > > to monitor at the kernel level (:k), the fallback code forces
+> > > a :u. That works if the event was previously monitoring both levels.
+> > > But if the event was already constrained to kernel only, then it does
+> > > not make sense to restrict it to user only.
+> > > Given the code works by exclusion, a kernel only event would have:
+> > > attr->exclude_user = 1
+> > > The fallback code would add:
+> > > attr->exclude_kernel = 1;
+> > >
+> > > In the end the end would not monitor in either the user level or kernel
+> > > level. In other words, it would count nothing.
+> > >
+> > > An event programmed to monitor kernel only cannot be switched to user only
+> > > without seriously warning the user.
+> > >
+> > > This patch forces an error in this case to make it clear the request
+> > > cannot really be satisfied.
+> > >
+> > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/evsel.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >
+> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > > index d23db6755f51..d1e8862b86ce 100644
+> > > --- a/tools/perf/util/evsel.c
+> > > +++ b/tools/perf/util/evsel.c
+> > > @@ -2446,6 +2446,13 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
+> > >               char *new_name;
+> > >               const char *sep = ":";
+> > >
+> > > +             if (evsel->core.attr.exclude_user) {
+> > > +                     scnprintf(msg, msgsize,
+> > > +"kernel.perf_event_paranoid=%d, event set to exclude user, so cannot also exclude kernel",
+> > > +                             paranoid);
+> > > +                     return false;
+> >
+> > I'm not able to get this error printed, it seems to be
+> > overwritten by perf_evsel__open_strerror call
+> >
+> > please include perf example with the new output
+> 
+> Agreed, it is possible the change builtin-top/sched/record so that on
+> error the msg is checked and dumped in verbose mode. I think it is
+> also fine to just remove the scnprintf. Do you have a preference?
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
----
- drivers/iommu/arm-smmu-v3.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+not sure ;-) but let's make sure we don't remove some expected output
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 21bcf2536320..4ec2106be301 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2307,13 +2307,18 @@ static int arm_smmu_atc_inv_domain(struct arm_smm=
-u_domain *smmu_domain,
- }
-=20
- /* IO_PGTABLE API */
--static void arm_smmu_tlb_inv_context(void *cookie)
-+
-+static void __arm_smmu_tlb_inv_context(struct arm_smmu_domain *smmu_doma=
-in,
-+				       int ext_asid)
- {
--	struct arm_smmu_domain *smmu_domain =3D cookie;
- 	struct arm_smmu_device *smmu =3D smmu_domain->smmu;
- 	struct arm_smmu_cmdq_ent cmd;
-=20
--	if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_S1) {
-+	if (ext_asid >=3D 0) { /* guest stage 1 invalidation */
-+		cmd.opcode	=3D CMDQ_OP_TLBI_NH_ASID;
-+		cmd.tlbi.asid	=3D ext_asid;
-+		cmd.tlbi.vmid	=3D smmu_domain->s2_cfg->vmid;
-+	} else if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_S1) {
- 		cmd.opcode	=3D CMDQ_OP_TLBI_NH_ASID;
- 		cmd.tlbi.asid	=3D smmu_domain->s1_cfg->cd.asid;
- 		cmd.tlbi.vmid	=3D 0;
-@@ -2334,9 +2339,17 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	arm_smmu_atc_inv_domain(smmu_domain, 0, 0, 0);
- }
-=20
--static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
-+static void arm_smmu_tlb_inv_context(void *cookie)
-+{
-+	struct arm_smmu_domain *smmu_domain =3D cookie;
-+
-+	__arm_smmu_tlb_inv_context(smmu_domain, -1);
-+}
-+
-+static void __arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
- 				   size_t granule, bool leaf,
--				   struct arm_smmu_domain *smmu_domain)
-+				   struct arm_smmu_domain *smmu_domain,
-+				   int ext_asid)
- {
- 	struct arm_smmu_device *smmu =3D smmu_domain->smmu;
- 	unsigned long start =3D iova, end =3D iova + size, num_pages =3D 0, tg =
-=3D 0;
-@@ -2351,7 +2364,11 @@ static void arm_smmu_tlb_inv_range(unsigned long i=
-ova, size_t size,
- 	if (!size)
- 		return;
-=20
--	if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_S1) {
-+	if (ext_asid >=3D 0) {  /* guest stage 1 invalidation */
-+		cmd.opcode	=3D CMDQ_OP_TLBI_NH_VA;
-+		cmd.tlbi.asid	=3D ext_asid;
-+		cmd.tlbi.vmid	=3D smmu_domain->s2_cfg->vmid;
-+	} else if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_S1) {
- 		cmd.opcode	=3D CMDQ_OP_TLBI_NH_VA;
- 		cmd.tlbi.asid	=3D smmu_domain->s1_cfg->cd.asid;
- 	} else {
-@@ -2411,6 +2428,13 @@ static void arm_smmu_tlb_inv_range(unsigned long i=
-ova, size_t size,
- 	arm_smmu_atc_inv_domain(smmu_domain, 0, start, size);
- }
-=20
-+static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
-+				   size_t granule, bool leaf,
-+				   struct arm_smmu_domain *smmu_domain)
-+{
-+	__arm_smmu_tlb_inv_range(iova, size, granule, leaf, smmu_domain, -1);
-+}
-+
- static void arm_smmu_tlb_inv_page_nosync(struct iommu_iotlb_gather *gath=
-er,
- 					 unsigned long iova, size_t granule,
- 					 void *cookie)
---=20
-2.20.1
+jirka
+
+> 
+> Thanks,
+> Ian
+> 
+> > thanks,
+> > jirka
+> >
+> > > +             }
+> > > +
+> > >               /* Is there already the separator in the name. */
+> > >               if (strchr(name, '/') ||
+> > >                   strchr(name, ':'))
+> > > --
+> > > 2.26.0.110.g2183baf09c-goog
+> > >
+> >
+> 
 
