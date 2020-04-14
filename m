@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC78BC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78EA02063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8B420732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503045AbgDNNSZ (ORCPT
+        id S2503061AbgDNNSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:18:25 -0400
-Received: from 8bytes.org ([81.169.241.247]:35508 "EHLO theia.8bytes.org"
+        Tue, 14 Apr 2020 09:18:41 -0400
+Received: from 8bytes.org ([81.169.241.247]:35234 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502907AbgDNNQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:16:09 -0400
+        id S2502917AbgDNNQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:16:10 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 12DC670B; Tue, 14 Apr 2020 15:15:55 +0200 (CEST)
+        id E6E79984; Tue, 14 Apr 2020 15:15:57 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -46,9 +46,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 24/33] iommu/qcom: Convert to probe/release_device() call-backs
-Date:   Tue, 14 Apr 2020 15:15:33 +0200
-Message-Id: <20200414131542.25608-25-joro@8bytes.org>
+Subject: [PATCH v2 33/33] iommu: Unexport iommu_group_get_for_dev()
+Date:   Tue, 14 Apr 2020 15:15:42 +0200
+Message-Id: <20200414131542.25608-34-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 References: <20200414131542.25608-1-joro@8bytes.org>
@@ -59,79 +59,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the QCOM IOMMU driver to use the probe_device() and
-release_device() call-backs of iommu_ops, so that the iommu core code
-does the group and sysfs setup.
+The function is now only used in IOMMU core code and shouldn't be used
+outside of it anyway, so remove the export for it.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/qcom_iommu.c | 24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+ drivers/iommu/iommu.c | 4 ++--
+ include/linux/iommu.h | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 0e2a96467767..054e476ebd49 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -524,14 +524,13 @@ static bool qcom_iommu_capable(enum iommu_cap cap)
- 	}
- }
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 9a7120746b8e..e9413732c61e 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -91,6 +91,7 @@ static void __iommu_detach_group(struct iommu_domain *domain,
+ 				 struct iommu_group *group);
+ static int iommu_create_device_direct_mappings(struct iommu_group *group,
+ 					       struct device *dev);
++static struct iommu_group *iommu_group_get_for_dev(struct device *dev);
  
--static int qcom_iommu_add_device(struct device *dev)
-+static struct iommu_device *qcom_iommu_probe_device(struct device *dev)
+ #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
+ struct iommu_group_attribute iommu_group_attr_##_name =		\
+@@ -1483,7 +1484,7 @@ static int iommu_alloc_default_domain(struct device *dev)
+  * to the returned IOMMU group, which will already include the provided
+  * device.  The reference should be released with iommu_group_put().
+  */
+-struct iommu_group *iommu_group_get_for_dev(struct device *dev)
++static struct iommu_group *iommu_group_get_for_dev(struct device *dev)
  {
- 	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
--	struct iommu_group *group;
- 	struct device_link *link;
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+ 	struct iommu_group *group;
+@@ -1514,7 +1515,6 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
  
- 	if (!qcom_iommu)
--		return -ENODEV;
-+		return ERR_PTR(-ENODEV);
- 
- 	/*
- 	 * Establish the link between iommu and master, so that the
-@@ -542,28 +541,19 @@ static int qcom_iommu_add_device(struct device *dev)
- 	if (!link) {
- 		dev_err(qcom_iommu->dev, "Unable to create device link between %s and %s\n",
- 			dev_name(qcom_iommu->dev), dev_name(dev));
--		return -ENODEV;
-+		return ERR_PTR(-ENODEV);
- 	}
- 
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
--
--	iommu_group_put(group);
--	iommu_device_link(&qcom_iommu->iommu, dev);
--
--	return 0;
-+	return &qcom_iommu->iommu;
+ 	return ERR_PTR(ret);
  }
+-EXPORT_SYMBOL(iommu_group_get_for_dev);
  
--static void qcom_iommu_remove_device(struct device *dev)
-+static void qcom_iommu_release_device(struct device *dev)
+ struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
  {
- 	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index dd076366383f..7cfd2dddb49d 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -527,7 +527,6 @@ extern int iommu_page_response(struct device *dev,
+ 			       struct iommu_page_response *msg);
  
- 	if (!qcom_iommu)
- 		return;
+ extern int iommu_group_id(struct iommu_group *group);
+-extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
+ extern struct iommu_domain *iommu_group_default_domain(struct iommu_group *);
  
--	iommu_device_unlink(&qcom_iommu->iommu, dev);
--	iommu_group_remove_device(dev);
- 	iommu_fwspec_free(dev);
- }
- 
-@@ -619,8 +609,8 @@ static const struct iommu_ops qcom_iommu_ops = {
- 	.flush_iotlb_all = qcom_iommu_flush_iotlb_all,
- 	.iotlb_sync	= qcom_iommu_iotlb_sync,
- 	.iova_to_phys	= qcom_iommu_iova_to_phys,
--	.add_device	= qcom_iommu_add_device,
--	.remove_device	= qcom_iommu_remove_device,
-+	.probe_device	= qcom_iommu_probe_device,
-+	.release_device	= qcom_iommu_release_device,
- 	.device_group	= generic_device_group,
- 	.of_xlate	= qcom_iommu_of_xlate,
- 	.pgsize_bitmap	= SZ_4K | SZ_64K | SZ_1M | SZ_16M,
+ extern int iommu_domain_get_attr(struct iommu_domain *domain, enum iommu_attr,
 -- 
 2.17.1
 
