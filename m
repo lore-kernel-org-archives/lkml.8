@@ -2,170 +2,158 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D67C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB048C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0852F20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84AE20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SGDVO9Rh"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="YQcJeuR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbgDNNaG (ORCPT
+        id S2387459AbgDNNaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:30:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
+        Tue, 14 Apr 2020 09:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732114AbgDNN3D (ORCPT
+        with ESMTP id S1732162AbgDNN3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:29:03 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB98C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:29:02 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id m67so13069386qke.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:29:02 -0700 (PDT)
+        Tue, 14 Apr 2020 09:29:36 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32721C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:29:36 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id e16so4972528pjp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=35JPFQoqu2n9cN3F6+ZUlaG1xiUip5sDdcTtmfYSpe8=;
-        b=SGDVO9RhBeIKEvWxZM+JWkgmaml/HD1RGTWogUTjrp7mfpYcvQzhzvnQvuqqNth22N
-         Rruj/VI4H3I+sFH0OMY7v28QPW7MuXUg2mASS1xE6j7UY02Vsml5mZ/Qw3RjVn6hM5sL
-         91+i14Bcrzqhm6veEVFJKC4kDq6XPaCQMogswLGFbM3gHKAmva9nPlymq+fzZNGMon0d
-         x8zpf/ituX5C+wfeuP6qyk4GEct1eoKycovq5kubVEQ6lMA/5i8wWni2DZtPa6Up9Ooi
-         kYXcRlzmeiczsaiU0z/VZCQS1033PVmAEKoP0aAKyt6Q1y5kmS85rGIwGACP5nqbuo27
-         H/ug==
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FPVFqHKLtFgv5CMDL9p1wHCJmrO0wMhC7dlAthlEzks=;
+        b=YQcJeuR9b0mmqqvGS3J84hQBGzwnkE6mNVTL5CJRx5P9JEnezpHzzKWafMRucP7EFL
+         tyQJECQZCTHtDHWnAcjB0aDg2I6ifcWyknJTCiKSp7x+aa/77hGKFntzu/GYvhr4TazO
+         iKc7hPMwd6ouVTcn9LpWbAPJxLLvenuOF538EFovumf+1UY0dldXcQry2jVMg59TgTIp
+         YRR8Wv9G7ixQpNmCQXGFIuVJ3xS6pDv9qrwfFZ92EEWUT+7ndZJsrW8MrK/0nPppBy8Z
+         yMPkhySeeTdSCPrUJQ03AaqmvOYok1ON4UCLrbDhZsbBDXKByk6coGgJmLqIYjBUfrqg
+         /XOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=35JPFQoqu2n9cN3F6+ZUlaG1xiUip5sDdcTtmfYSpe8=;
-        b=qqUIXAmYIBrK9I0N6eayAsVqcN9HD5E13kwtJfAWtbVR0fgCVz5v+PUJ9h9NajV2Ww
-         6IGXkEPQh/dx2rtAjkAzvZOF7d1kuxPIIzINTTlJio61IqEsOwhb0F3fAIavu6cE+kdD
-         uvDvHAx2gnAUsfx84HL0p/CIrCHsEex2yip7Gs2bGvsQ3nbG/hCtgQuZF6r8wKV113Og
-         YVpVCKQtX3LtkL92syCahAvpXFHVijNH0Ksc+APaZz9Loq9lTJIUW6DsbzGmaPbhKHcr
-         6yI/6ULRjIw3dTaCzEjLnbCiMOUE1edp3k6IAwSVGjalyoEo0BM70uxohwgLAGlBUyvI
-         TMbw==
-X-Gm-Message-State: AGi0PubxEZoeLcJ4ytRXqAZAG9vYrNPv+IhuVfzXkd4Te0LktRSdWPqI
-        jQigFEn4vrHf3zMAXDO3MC8Y+w==
-X-Google-Smtp-Source: APiQypIkNBlhG/qtn+tMNh1eYCoqf1FbWKttUwwrXZkT7Pr6J06H5IKbF/sYAPrVFKbZXZI1qCFvng==
-X-Received: by 2002:a37:cc7:: with SMTP id 190mr6464058qkm.44.1586870941325;
-        Tue, 14 Apr 2020 06:29:01 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id f1sm9986663qkl.91.2020.04.14.06.29.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 06:29:00 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jOLca-000515-3n; Tue, 14 Apr 2020 10:29:00 -0300
-Date:   Tue, 14 Apr 2020 10:29:00 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-Message-ID: <20200414132900.GD5100@ziepe.ca>
-References: <20200408202711.1198966-1-arnd@arndb.de>
- <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
- <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
- <20200408224224.GD11886@ziepe.ca>
- <87k12pgifv.fsf@intel.com>
- <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
- <20200410171320.GN11886@ziepe.ca>
- <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FPVFqHKLtFgv5CMDL9p1wHCJmrO0wMhC7dlAthlEzks=;
+        b=UNZ9/Er7Y95jg+M6cPDTPZVJviys9nm3WoeJtOIweNI6rbM8hPAuoe2L7Dqm89d9wd
+         P+Icm3UbAbfsYpxO3WTmAjPDadqW0eu5xYZmtVY0A0C/r1l/lXdDdenejA9gPxiTtKxH
+         MS2skd8tSyQm+AtZPiIS0BWmKxQkN86qMuHer5fslFN/SUTkGs2gt/1Uh+8QT2lSbymi
+         d1OHLsnYitmlBFVbijqePbyLFWYqKMsPtVecxKZzC/bCdR5bGrPYSFStkzzSofjdMprN
+         OQ08nqagio7L4g7++BCKW1Md3OMfvad9kPae4C86T2HLTCmzc/BZGLMfWrgUX+ckpxmm
+         GuyA==
+X-Gm-Message-State: AGi0PubF2csxD6SGxgkiNFC8HSEWVU0yIzSEMu9tf4+kMEfMmyDUBQTk
+        znv+kW1U7TFEcZk3vYVj+NX6Xg==
+X-Google-Smtp-Source: APiQypLdtA6iI77i9jhWLS28aw9H7bsNa3cQKswLMtEjLDRChHLwWTX38LrcG/4G6CxqzGUWCAdqRg==
+X-Received: by 2002:a17:90a:ac18:: with SMTP id o24mr140716pjq.62.1586870975059;
+        Tue, 14 Apr 2020 06:29:35 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.220.69])
+        by smtp.gmail.com with ESMTPSA id b4sm996361pff.6.2020.04.14.06.29.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Apr 2020 06:29:34 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     akpm@linux-foundation.org, Markus.Elfring@web.de, david@redhat.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>,
+        Xiongchun Duan <duanxiongchun@bytedance.com>
+Subject: [PATCH v3] mm/ksm: Fix NULL pointer dereference when KSM zero page is enabled
+Date:   Tue, 14 Apr 2020 21:29:05 +0800
+Message-Id: <20200414132905.83819-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 07:04:27PM +0000, Saeed Mahameed wrote:
-> On Fri, 2020-04-10 at 14:13 -0300, Jason Gunthorpe wrote:
-> > On Fri, Apr 10, 2020 at 02:40:42AM +0000, Saeed Mahameed wrote:
-> > 
-> > > This assumes that the module using FOO has its own flag
-> > > representing
-> > > FOO which is not always the case.
-> > > 
-> > > for example in mlx5 we use VXLAN config flag directly to compile
-> > > VXLAN
-> > > related files:
-> > > 
-> > > mlx5/core/Makefile:
-> > > 
-> > > obj-$(CONFIG_MLX5_CORE) += mlx5_core.o
-> > > 
-> > > mlx5_core-y := mlx5_core.o
-> > > mlx5_core-$(VXLAN) += mlx5_vxlan.o
-> > > 
-> > > and in mlx5_main.o we do:
-> > 
-> > Does this work if VXLAN = m ?
-> 
-> Yes, if VXLAN IS_REACHABLE to MLX5, mlx5_vxlan.o will be
-> compiled/linked.
+The find_mergeable_vma can return NULL. In this case, it leads
+to crash when we access vma->vm_mm(its offset is 0x40) later in
+write_protect_page. And this case did happen on our server. The
+following calltrace is captured in kernel 4.19 with the following
+patch applied and KSM zero page enabled on our server.
 
-So mlx5_core-m does the right thing somehow?
+  commit e86c59b1b12d ("mm/ksm: improve deduplication of zero pages with colouring")
 
-> > 
-> > > if (IS_ENABLED(VXLAN))
-> > >        mlx5_vxlan_init()
-> > > 
-> > > after the change in imply semantics:
-> > > our options are:
-> > > 
-> > > 1) use IS_REACHABLE(VXLAN) instead of IS_ENABLED(VXLAN)
-> > > 
-> > > 2) have MLX5_VXLAN in mlx5 Kconfig and use IS_ENABLED(MLX5_VXLAN) 
-> > > config MLX5_VXLAN
-> > > 	depends on VXLAN || !VXLAN
-> > > 	bool
-> > 
-> > Does this trick work when vxlan is a bool not a tristate?
-> > 
-> > Why not just put the VXLAN || !VXLAN directly on MLX5_CORE?
-> > 
-> 
-> so force MLX5_CORE to n if vxlan is not reachable ? 
+So add a vma check to fix it.
 
-IIRC that isn't what the expression does, if vxlan is 'n' then 
-  n || !n == true
+--------------------------------------------------------------------------
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000040
+  Oops: 0000 [#1] SMP NOPTI
+  CPU: 9 PID: 510 Comm: ksmd Kdump: loaded Tainted: G OE 4.19.36.bsk.9-amd64 #4.19.36.bsk.9
+  Hardware name: FOXCONN R-5111/GROOT, BIOS IC1B111F 08/17/2019
+  RIP: 0010:try_to_merge_one_page+0xc7/0x760
+  Code: 24 58 65 48 33 34 25 28 00 00 00 89 e8 0f 85 a3 06 00 00 48 83 c4
+        60 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 8b 46 08 a8 01 75 b8 <49>
+        8b 44 24 40 4c 8d 7c 24 20 b9 07 00 00 00 4c 89 e6 4c 89 ff 48
+  RSP: 0018:ffffadbdd9fffdb0 EFLAGS: 00010246
+  RAX: ffffda83ffd4be08 RBX: ffffda83ffd4be40 RCX: 0000002c6e800000
+  RDX: 0000000000000000 RSI: ffffda83ffd4be40 RDI: 0000000000000000
+  RBP: ffffa11939f02ec0 R08: 0000000094e1a447 R09: 00000000abe76577
+  R10: 0000000000000962 R11: 0000000000004e6a R12: 0000000000000000
+  R13: ffffda83b1e06380 R14: ffffa18f31f072c0 R15: ffffda83ffd4be40
+  FS: 0000000000000000(0000) GS:ffffa0da43b80000(0000) knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000040 CR3: 0000002c77c0a003 CR4: 00000000007626e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+    ? follow_page_pte+0x36d/0x5e0
+    ksm_scan_thread+0x115e/0x1960
+    ? remove_wait_queue+0x60/0x60
+    kthread+0xf5/0x130
+    ? try_to_merge_with_ksm_page+0x90/0x90
+    ? kthread_create_worker_on_cpu+0x70/0x70
+    ret_from_fork+0x1f/0x30
+--------------------------------------------------------------------------
 
-The other version of this is (m || VXLAN != m)
+Fixes: e86c59b1b12d ("mm/ksm: improve deduplication of zero pages with colouring")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Co-developed-by: Xiongchun Duan <duanxiongchun@bytedance.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+---
 
-Basically all it does is prevent MLX5_CORE=y && VXLAN=m
+Change in v3:
+    1. Update "Signed-off-by" to "Co-developed-by"
+    2. Update commit message
 
-> and how do we compile mlx5_vxlan.o wihout a single flag 
-> can i do in Makefile :
-> mlx5_core-$(VXLAN || !VXLAN) += mlx5_vxlan.o ?? 
+Change in v2:
+    1. Update commit message.
+    2. Update patch subject from:
+         "mm/ksm: Fix kernel NULL pointer dereference at 0000000000000040"
+       to:
+         "mm/ksm: Fix NULL pointer dereference when KSM zero page is enabled"
 
-No, you just use VXLAN directly, it will be m, n or y, but it won't be
-m if mlx5_core is y
+ mm/ksm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Jason
+diff --git a/mm/ksm.c b/mm/ksm.c
+index a558da9e71770..69b2f85e22d5b 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2112,8 +2112,11 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
+ 
+ 		down_read(&mm->mmap_sem);
+ 		vma = find_mergeable_vma(mm, rmap_item->address);
+-		err = try_to_merge_one_page(vma, page,
+-					    ZERO_PAGE(rmap_item->address));
++		if (vma)
++			err = try_to_merge_one_page(vma, page,
++					ZERO_PAGE(rmap_item->address));
++		else
++			err = -EFAULT;
+ 		up_read(&mm->mmap_sem);
+ 		/*
+ 		 * In case of failure, the page was not really empty, so we
+-- 
+2.11.0
+
