@@ -2,154 +2,131 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3F8C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECC8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58B852063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586870633;
-	bh=HMSaWPgtthGNfMq4GdX1I/uFf99+Zb7uYqm/NOggiYs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=m5WcGEWQNw7sgzRUB95T/l+IN+2Q4mhZmD2mjEl5gk9baZHolmCNc4uXz5bZ/Kyav
-	 C35c/hxVd8a1FroF789nK1f1EMCjpKiTXQOGzUMj6VTuq7X2gmCV+gokGZ0k7rsB4Y
-	 30b4snrQpIg9u1i+gxbODiFH/WMM8DjeproHSV2g=
+	by mail.kernel.org (Postfix) with ESMTP id 026462063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440166AbgDNNXv (ORCPT
+        id S1731367AbgDNNX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730762AbgDNNWI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:22:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A69AC061A0C;
-        Tue, 14 Apr 2020 06:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=/xO2y+KNj9hON1JQS+bVaVwriQ+uSAmHmyINi2Kj5o0=; b=N02kaKONjn1f6k0idk0j63Nywn
-        SASFBsupwu7J40Pphkl+3WdP4ZHkPO1FsGZRs5i98yHpfhsIKSN3+1c38KshDZDiKcaILE4i0fCnT
-        Mc3eAn3IO+FRmJgVq3mztFMaOQUgm97lfqI2EoMStKuX1etLkYPFj/b2cHBrqfrSafT/pPeRrYcD0
-        DvwoMhFUIsmug067CtFasKN5zcznA7LzQ440N/sFWAXDNp97AWNkDgAU1Ndhq6kp/0Zktb18dv84b
-        7LxC3NffP3fuNduC9OTiwBaCCCB+bCkGQlOPol/9R9McKFSMoHTAYqPA67suimwS40Xs18IBePvsN
-        mI5JfHFA==;
-Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOLVh-00028b-06; Tue, 14 Apr 2020 13:21:53 +0000
-Date:   Tue, 14 Apr 2020 15:21:47 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH] media: Kconfig: Don't expose API options
-Message-ID: <20200414152147.053b4b29@coco.lan>
-In-Reply-To: <20200414130210.18970-1-ezequiel@collabora.com>
-References: <20200414130210.18970-1-ezequiel@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 14 Apr 2020 09:23:58 -0400
+Received: from 8bytes.org ([81.169.241.247]:35332 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502897AbgDNNQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:16:06 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 1211B68C; Tue, 14 Apr 2020 15:15:54 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v2 19/33] iommu/s390: Convert to probe/release_device() call-backs
+Date:   Tue, 14 Apr 2020 15:15:28 +0200
+Message-Id: <20200414131542.25608-20-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
+References: <20200414131542.25608-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 14 Apr 2020 10:02:10 -0300
-Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+From: Joerg Roedel <jroedel@suse.de>
 
-> There is no need to expose API options; instead,
-> drivers that support a given API are expected to just select it.
-> 
-> Happily, this is currently the case, so simply stop
-> exposing the options.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/media/Kconfig           | 2 +-
->  drivers/media/mc/Kconfig        | 3 +--
->  drivers/media/v4l2-core/Kconfig | 2 +-
->  3 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-> index a8def1591352..eef4c6761ffb 100644
-> --- a/drivers/media/Kconfig
-> +++ b/drivers/media/Kconfig
-> @@ -173,7 +173,7 @@ config VIDEO_DEV
->  	  radio devices and by some input devices.
->  
->  config MEDIA_CONTROLLER
-> -	bool "Media Controller API"
-> +	bool
+Convert the S390 IOMMU driver to use the probe_device() and
+release_device() call-backs of iommu_ops, so that the iommu core code
+does the group and sysfs setup.
 
-This is not true here... non-embedded drivers like DVB and UVC can work
-with or without the media controller. For them, the API is experimental.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/s390-iommu.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
->  	default MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_DIGITAL_TV_SUPPORT || MEDIA_PLATFORM_SUPPORT
->  	help
->  	  Enable the media controller API used to query media devices internal
-> diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
-> index 002a918c4c75..0cdf885ce24d 100644
-> --- a/drivers/media/mc/Kconfig
-> +++ b/drivers/media/mc/Kconfig
-> @@ -2,7 +2,6 @@
->  
->  #
->  # Media controller
-> -#	Selectable only for webcam/grabbers, as other drivers don't use it
->  #
->  
->  config MEDIA_CONTROLLER_DVB
-> @@ -14,7 +13,7 @@ config MEDIA_CONTROLLER_DVB
->  	  This is currently experimental.
->  
->  config MEDIA_CONTROLLER_REQUEST_API
-> -	bool "Enable Media controller Request API (EXPERIMENTAL)"
-> +	bool
+diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
+index 1137f3ddcb85..610f0828f22d 100644
+--- a/drivers/iommu/s390-iommu.c
++++ b/drivers/iommu/s390-iommu.c
+@@ -166,21 +166,14 @@ static void s390_iommu_detach_device(struct iommu_domain *domain,
+ 	}
+ }
+ 
+-static int s390_iommu_add_device(struct device *dev)
++static struct iommu_device *s390_iommu_probe_device(struct device *dev)
+ {
+-	struct iommu_group *group = iommu_group_get_for_dev(dev);
+ 	struct zpci_dev *zdev = to_pci_dev(dev)->sysdata;
+ 
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
+-
+-	iommu_group_put(group);
+-	iommu_device_link(&zdev->iommu_dev, dev);
+-
+-	return 0;
++	return &zdev->iommu_dev;
+ }
+ 
+-static void s390_iommu_remove_device(struct device *dev)
++static void s390_iommu_release_device(struct device *dev)
+ {
+ 	struct zpci_dev *zdev = to_pci_dev(dev)->sysdata;
+ 	struct iommu_domain *domain;
+@@ -191,7 +184,7 @@ static void s390_iommu_remove_device(struct device *dev)
+ 	 * to vfio-pci and completing the VFIO_SET_IOMMU ioctl (which triggers
+ 	 * the attach_dev), removing the device via
+ 	 * "echo 1 > /sys/bus/pci/devices/.../remove" won't trigger detach_dev,
+-	 * only remove_device will be called via the BUS_NOTIFY_REMOVED_DEVICE
++	 * only release_device will be called via the BUS_NOTIFY_REMOVED_DEVICE
+ 	 * notifier.
+ 	 *
+ 	 * So let's call detach_dev from here if it hasn't been called before.
+@@ -201,9 +194,6 @@ static void s390_iommu_remove_device(struct device *dev)
+ 		if (domain)
+ 			s390_iommu_detach_device(domain, dev);
+ 	}
+-
+-	iommu_device_unlink(&zdev->iommu_dev, dev);
+-	iommu_group_remove_device(dev);
+ }
+ 
+ static int s390_iommu_update_trans(struct s390_domain *s390_domain,
+@@ -373,8 +363,8 @@ static const struct iommu_ops s390_iommu_ops = {
+ 	.map = s390_iommu_map,
+ 	.unmap = s390_iommu_unmap,
+ 	.iova_to_phys = s390_iommu_iova_to_phys,
+-	.add_device = s390_iommu_add_device,
+-	.remove_device = s390_iommu_remove_device,
++	.probe_device = s390_iommu_probe_device,
++	.release_device = s390_iommu_release_device,
+ 	.device_group = generic_device_group,
+ 	.pgsize_bitmap = S390_IOMMU_PGSIZES,
+ };
+-- 
+2.17.1
 
-This sounds OK.
-
-The only reason why I didn't make this change is because of the 
-"EXPERIMENTAL" warning. 
-
-At least while this API is considered experimental, it sounds
-wise to have a warning.
-
-Perhaps we could apply this hunk, and add something like 
-this to media/Kconfig:
-
-comment "Please notice that the enabled Media controller Request API is EXPERIMENTAL"
-	depends on MEDIA_CONTROLLER_REQUEST_API
-
-Regards,
-Mauro
-
->  	depends on MEDIA_CONTROLLER && STAGING_MEDIA
->  	help
->  	  DO NOT ENABLE THIS OPTION UNLESS YOU KNOW WHAT YOU'RE DOING.
-> diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
-> index 3fa75352d04c..d034185856bb 100644
-> --- a/drivers/media/v4l2-core/Kconfig
-> +++ b/drivers/media/v4l2-core/Kconfig
-> @@ -17,7 +17,7 @@ config VIDEO_V4L2_I2C
->  	default y
->  
->  config VIDEO_V4L2_SUBDEV_API
-> -	bool "V4L2 sub-device userspace API"
-> +	bool
->  	depends on VIDEO_DEV && MEDIA_CONTROLLER
->  	help
->  	  Enables the V4L2 sub-device pad-level userspace API used to configure
-
-
-
-Thanks,
-Mauro
