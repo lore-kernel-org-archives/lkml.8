@@ -2,101 +2,108 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288C3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE424C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDEAD2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8rBoWwi"
+	by mail.kernel.org (Postfix) with ESMTP id B10A820732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501953AbgDNM1z (ORCPT
+        id S2501960AbgDNM2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2501933AbgDNM1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:27:39 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC53C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:27:38 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i19so12937331ioh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xn8/ZRFExSMKU2UJG3B6HUEv5uOUwoceNajhHRuX6V0=;
-        b=L8rBoWwiY/GOC81qGixrT5zatrTvrh+T0u2I/lyH02NoT6c5clc8grzAYBiIUZ1Toc
-         HUZ2sL7IK7OFmqIPG2nCDan618rLX1ERrpB0179fm/1uoX+XpZm5VdPnkJenUo9YubHm
-         hogsN7DydnqEAXT9SAEmHVJ+jNfuQUPbn5Y5VutJVmd4RgY+iwt6QZJYRA6t0yt7ZhQj
-         EYkn+r/q1J3RWoTJ37KdklxA2G2dWYGZnY3G7wWjdaLzw/M5/9OQO6Zwr/sMuhPPHRLB
-         neanrnVNGNoEIG34PFeVmiq0s9SxP0hBDXVo2eUvvGOzRnL/C3ttJggh4psN7YIHNQDO
-         LVlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xn8/ZRFExSMKU2UJG3B6HUEv5uOUwoceNajhHRuX6V0=;
-        b=GBWZAMSmup/3ld8FsaoxiB0eU7iL/HhyaTdXjAUwHuTTP8WuiB5Oe3I+btpkNGMLpO
-         gqITA8PihoxNxDRV6s20MJwfwIbeiWCjkBFOHSFNDh326SWheYqHolamniDSQx2RT6K3
-         L6CGaBkPzoj1bF4Tytw5pdVw1SC4Ndqjts9+p+zzV/2HDTnUXTIoVzvompPoXU/j5yAb
-         6zwZ2yox7IiRrqDyhgiqm/Png9yj2pE5ymTsuemDV//mii3345bELSZkwjJvQEqJD2v7
-         LY5JkHRC85Ya7gJgGUsdJYaHHu51aj7x+3ovIj/ZgKarb1PqzaLzOHZTxCSltTlEYS/M
-         CexQ==
-X-Gm-Message-State: AGi0PuYDA4HQxLo+dB5Qyi6VQEA16uUigr3V0etVx0K+WqgrSUZ2chGb
-        nx2SdwPLtY/B44Utkr8nqmy75g==
-X-Google-Smtp-Source: APiQypJPkNYzInmS2MYdSfh5zb7ZMT1+nhzriatmUZIlwuRMjkmgVtkGbSJHY7hD/WGF+tS+04xaYA==
-X-Received: by 2002:a6b:fc0d:: with SMTP id r13mr20547117ioh.89.1586867257797;
-        Tue, 14 Apr 2020 05:27:37 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id r10sm4346744iom.42.2020.04.14.05.27.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 05:27:37 -0700 (PDT)
-Subject: Re: [PATCH 4/4] remoteproc: Get rid of tedious error path
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-remoteproc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>
-References: <e5e03d6b-46bd-5ece-a7f6-3cb557c3b0b0@web.de>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <3c2ea363-e60f-b3ef-e66f-df8d558972bf@linaro.org>
-Date:   Tue, 14 Apr 2020 07:27:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 14 Apr 2020 08:28:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:54386 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2501933AbgDNM2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:28:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11BD91FB;
+        Tue, 14 Apr 2020 05:28:10 -0700 (PDT)
+Received: from [10.57.33.145] (unknown [10.57.33.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA6673F6C4;
+        Tue, 14 Apr 2020 05:28:07 -0700 (PDT)
+Subject: Re: [BUG] PCI: rockchip: rk3399: pcie switch support
+To:     Soeren Moch <smoch@web.de>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <4d03dd8c-14f9-d1ef-6fd2-095423be3dd3@web.de>
+ <3e9d2c53-4f0d-0c97-fbfa-6d799e223747@arm.com>
+ <b088ad0e-bab1-0cff-dc43-eb5709555902@web.de>
+ <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <d02e0b72-5fb3-dd47-468c-08b86db07a9a@arm.com>
+Date:   Tue, 14 Apr 2020 13:28:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <e5e03d6b-46bd-5ece-a7f6-3cb557c3b0b0@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 3:53 AM, Markus Elfring wrote:
-> …
->> +++ b/drivers/remoteproc/remoteproc_core.c
-> …
->> @@ -2105,11 +2104,8 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
-> …
->> +out:
->> +	put_device(&rproc->dev);
+On 2020-04-14 12:35 pm, Soeren Moch wrote:
+> On 06.04.20 19:12, Soeren Moch wrote:
+>> On 06.04.20 14:52, Robin Murphy wrote:
+>>> On 2020-04-04 7:41 pm, Soeren Moch wrote:
+>>>> I want to use a PCIe switch on a RK3399 based RockPro64 V2.1 board.
+>>>> "Normal" PCIe cards work (mostly) just fine on this board. The PCIe
+>>>> switches (I tried Pericom and ASMedia based switches) also work fine on
+>>>> other boards. The RK3399 PCIe controller with pcie_rockchip_host driver
+>>>> also recognises the switch, but fails to initialize the buses behind the
+>>>> bridge properly, see syslog from linux-5.6.0.
+>>>>
+>>>> Any ideas what I do wrong, or any suggestions what I can test here?
+>>> See the thread here:
+>>>
+>>> https://lore.kernel.org/linux-pci/CAMdYzYoTwjKz4EN8PtD5pZfu3+SX+68JL+dfvmCrSnLL=K6Few@mail.gmail.com/
+>>>
+>> Thanks Robin!
+>>
+>> I also found out in the meantime that device enumeration fails in this
+>> fatal way when probing non-existent devices. So if I hack my complete
+>> bus topology into rockchip_pcie_valid_device, then all existing devices
+>> come up properly. Of course this is not how PCIe should work.
+>>> The conclusion there seems to be that the RK3399 root complex just
+>>> doesn't handle certain types of response in a sensible manner, and
+>>> there's not much that can reasonably be done to change that.
+>> Hm, at least there is the promising suggestion to take over the SError
+>> handler, maybe in ATF, as workaround.
+> Unfortunately it seems to be not that easy. Only when PCIe device
+> probing runs on one of the Cortex-A72 cores of rk3399 we see the SError.
+> When probing runs on one of the A53 cores, we get a synchronous external
+> abort instead.
 > 
-> How do you think about to use the label “put_device”?
+> Is this expected to see different error types on big.LITTLE systems? Or
+> is this another special property of the rk3399 pcie controller?
 
-+1
+As far as I'm aware, the CPU microarchitecture is indeed one of the 
+factors in whether it takes a given external abort synchronously or 
+asynchronously, so yes, I'd say that probably is expected. I wouldn't 
+necessarily even rely on a single microarchitecture only behaving one 
+way, since in principle it's possible that surrounding instructions 
+might affect whether the core still has enough context left to take the 
+exception synchronously or not at the point the abort does come back.
 
-> 
-> Regards,
-> Markus
-> 
+In general external aborts are a "should never happen" kind of thing, so 
+they're not necessarily expected to be recoverable (I think the RAS 
+extensions might add a more robustness in terms of reporting, but aren't 
+relevant here either way).
 
+At this point I'm starting to wonder whether it might be possible to do 
+something similar to the Arm N1SDP workaround using the Cortex-M0, 
+albeit with the complication that probing would realistically have to be 
+explicitly invoked from the Linux driver due to clocks and external 
+regulators... :/
+
+Robin.
