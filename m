@@ -2,140 +2,207 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38D1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD46C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7680C20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B874320768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rUyVQqrg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iR+CobgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438022AbgDNPQa (ORCPT
+        id S2438032AbgDNPQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:16:30 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:20387 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407252AbgDNPF4 (ORCPT
+        Tue, 14 Apr 2020 11:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405634AbgDNPCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:05:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586876755; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=2sHXwJ8AdtS+pVXjlc3JcGuGpLLjSecwst28kNFXaDE=; b=rUyVQqrgk8Ms5DInHRGa59N4XnzEwiTKkrsU+zwJN6aRTddQWF71Ndfh3gLXB5oFMv7dH6X7
- FgK78pwxODIrEo7cDHCzvhGpihUrjOWKRdJwlKA3fbebnfYDxLmGB44YRVrPVrrNh0Yg/6tx
- zKWHwTP5WHwGkuqzNP14NuXGP3Q=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e95d13b.7fadc8ad0810-smtp-out-n05;
- Tue, 14 Apr 2020 15:05:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6422BC44788; Tue, 14 Apr 2020 15:05:31 +0000 (UTC)
-Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC3EAC494AA;
-        Tue, 14 Apr 2020 15:05:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC3EAC494AA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC] opp: Fixup release of clock when using set/put clkname
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1586848508-1320-1-git-send-email-rnayak@codeaurora.org>
- <20200414071823.jdhkprtkizyeua23@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <83c523d0-e18e-0401-5456-2dbba524ee98@codeaurora.org>
-Date:   Tue, 14 Apr 2020 20:35:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 11:02:45 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0E5C03C1AB;
+        Tue, 14 Apr 2020 08:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=ZGpBhfHigVcgOfk1c7Q+Xdyiwq9eQj/GlJHwhBPXodQ=; b=iR+CobgKquFIO8DquoWJkbXqP0
+        srAnDkDiDMphePxANu3js5tGwBJPc9kEV+DY9/7/MTffoUjflZZZY2NMAJNNs36hARCgl7W8+6k0f
+        RV9P3keREFmvNfIaWkLZQ3irLOA/wwRVXYLu3nxnqQRQZbeZaaaRyN3r5sNyVLzUyGc2kd18fd+yW
+        dZQVwKt4cLe8ra5m+PhWYWE0eyh5xOAcxLKpRLQnbySBKUQErvPQEQ9YCEWfzCtBTo0Otx++8Ea3i
+        lgO/tmXlJ/R9lbLDAYyQjA02QbUeOqtKW5IkuPWCgXK9T40EwLSABsRzYAt0tHFvHLjvYKzwlF+1h
+        ZTvhu+5Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jON5A-0006Og-2q; Tue, 14 Apr 2020 15:02:36 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: [PATCH v11 11/25] mm: Add readahead address space operation
+Date:   Tue, 14 Apr 2020 08:02:19 -0700
+Message-Id: <20200414150233.24495-12-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200414150233.24495-1-willy@infradead.org>
+References: <20200414150233.24495-1-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200414071823.jdhkprtkizyeua23@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-On 4/14/2020 12:48 PM, Viresh Kumar wrote:
-> On 14-04-20, 12:45, Rajendra Nayak wrote:
->> Fixup dev_pm_opp_put_clkname() to check for a valid clock pointer
->> before it does a clk_put, since its likely that
->> _opp_table_kref_release() has already done a clk_put. Also fixup
-> 
-> kref release is the last thing that happens on the table, it can't get
-> called after dev_pm_opp_put_clkname().
+This replaces ->readpages with a saner interface:
+ - Return void instead of an ignored error code.
+ - Page cache is already populated with locked pages when ->readahead
+   is called.
+ - New arguments can be passed to the implementation without changing
+   all the filesystems that use a common helper function like
+   mpage_readahead().
 
-so in cases where I do have an OPP table for a device in DT and I do
-dev_pm_opp_set_clkname()
-dev_pm_opp_of_add_table()
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+---
+ Documentation/filesystems/locking.rst |  6 +++++-
+ Documentation/filesystems/vfs.rst     | 15 +++++++++++++++
+ include/linux/fs.h                    |  2 ++
+ mm/readahead.c                        | 12 ++++++++++--
+ 4 files changed, 32 insertions(+), 3 deletions(-)
 
-and clean it up with a
-dev_pm_opp_of_remove_table()
-dev_pm_opp_put_clkname()
-
-things seem to work fine as expected.
-
-However, given I call these unconditionally in common drivers and on
-some (old) platforms we really don't have an OPP table (only scale clocks)
-things get a little tricky. So looks like the ref counting in such cases
-gets messed up, and we end up with dev_pm_opp_of_remove_table() calling
-_opp_table_kref_release() and releasing the clock, and then the subsequent
-call to dev_pm_opp_put_clkname() crashes.
-
->> _opp_table_kref_release() to set the clock pointer to ERR_PTR(-EINVAL)
->> after its done doing a clk_put so dev_pm_opp_put_clkname() can then
->> catch it.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   drivers/opp/core.c | 10 +++++++---
->>   1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->> index e4f01e7..6d064a8 100644
->> --- a/drivers/opp/core.c
->> +++ b/drivers/opp/core.c
->> @@ -1061,8 +1061,10 @@ static void _opp_table_kref_release(struct kref *kref)
->>   	_of_clear_opp_table(opp_table);
->>   
->>   	/* Release clk */
->> -	if (!IS_ERR(opp_table->clk))
->> +	if (!IS_ERR(opp_table->clk)) {
->>   		clk_put(opp_table->clk);
->> +		opp_table->clk = ERR_PTR(-EINVAL);
->> +	}
->>   
->>   	WARN_ON(!list_empty(&opp_table->opp_list));
->>   
->> @@ -1744,8 +1746,10 @@ void dev_pm_opp_put_clkname(struct opp_table *opp_table)
->>   	/* Make sure there are no concurrent readers while updating opp_table */
->>   	WARN_ON(!list_empty(&opp_table->opp_list));
->>   
->> -	clk_put(opp_table->clk);
->> -	opp_table->clk = ERR_PTR(-EINVAL);
->> +	if (!IS_ERR(opp_table->clk)) {
->> +		clk_put(opp_table->clk);
->> +		opp_table->clk = ERR_PTR(-EINVAL);
->> +	}
->>   
->>   	dev_pm_opp_put_opp_table(opp_table);
->>   }
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
-> 
-
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index 5057e4d9dcd1..0af2e0e11461 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -239,6 +239,7 @@ prototypes::
+ 	int (*readpage)(struct file *, struct page *);
+ 	int (*writepages)(struct address_space *, struct writeback_control *);
+ 	int (*set_page_dirty)(struct page *page);
++	void (*readahead)(struct readahead_control *);
+ 	int (*readpages)(struct file *filp, struct address_space *mapping,
+ 			struct list_head *pages, unsigned nr_pages);
+ 	int (*write_begin)(struct file *, struct address_space *mapping,
+@@ -271,7 +272,8 @@ writepage:		yes, unlocks (see below)
+ readpage:		yes, unlocks
+ writepages:
+ set_page_dirty		no
+-readpages:
++readahead:		yes, unlocks
++readpages:		no
+ write_begin:		locks the page		 exclusive
+ write_end:		yes, unlocks		 exclusive
+ bmap:
+@@ -295,6 +297,8 @@ the request handler (/dev/loop).
+ ->readpage() unlocks the page, either synchronously or via I/O
+ completion.
+ 
++->readahead() unlocks the pages that I/O is attempted on like ->readpage().
++
+ ->readpages() populates the pagecache with the passed pages and starts
+ I/O against them.  They come unlocked upon I/O completion.
+ 
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index 7d4d09dd5e6d..ed17771c212b 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -706,6 +706,7 @@ cache in your filesystem.  The following members are defined:
+ 		int (*readpage)(struct file *, struct page *);
+ 		int (*writepages)(struct address_space *, struct writeback_control *);
+ 		int (*set_page_dirty)(struct page *page);
++		void (*readahead)(struct readahead_control *);
+ 		int (*readpages)(struct file *filp, struct address_space *mapping,
+ 				 struct list_head *pages, unsigned nr_pages);
+ 		int (*write_begin)(struct file *, struct address_space *mapping,
+@@ -781,12 +782,26 @@ cache in your filesystem.  The following members are defined:
+ 	If defined, it should set the PageDirty flag, and the
+ 	PAGECACHE_TAG_DIRTY tag in the radix tree.
+ 
++``readahead``
++	Called by the VM to read pages associated with the address_space
++	object.  The pages are consecutive in the page cache and are
++	locked.  The implementation should decrement the page refcount
++	after starting I/O on each page.  Usually the page will be
++	unlocked by the I/O completion handler.  If the filesystem decides
++	to stop attempting I/O before reaching the end of the readahead
++	window, it can simply return.  The caller will decrement the page
++	refcount and unlock the remaining pages for you.  Set PageUptodate
++	if the I/O completes successfully.  Setting PageError on any page
++	will be ignored; simply unlock the page if an I/O error occurs.
++
+ ``readpages``
+ 	called by the VM to read pages associated with the address_space
+ 	object.  This is essentially just a vector version of readpage.
+ 	Instead of just one page, several pages are requested.
+ 	readpages is only used for read-ahead, so read errors are
+ 	ignored.  If anything goes wrong, feel free to give up.
++	This interface is deprecated and will be removed by the end of
++	2020; implement readahead instead.
+ 
+ ``write_begin``
+ 	Called by the generic buffered write code to ask the filesystem
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 4f6f59b4f22a..55c743925c40 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -292,6 +292,7 @@ enum positive_aop_returns {
+ struct page;
+ struct address_space;
+ struct writeback_control;
++struct readahead_control;
+ 
+ /*
+  * Write life time hint values.
+@@ -375,6 +376,7 @@ struct address_space_operations {
+ 	 */
+ 	int (*readpages)(struct file *filp, struct address_space *mapping,
+ 			struct list_head *pages, unsigned nr_pages);
++	void (*readahead)(struct readahead_control *);
+ 
+ 	int (*write_begin)(struct file *, struct address_space *mapping,
+ 				loff_t pos, unsigned len, unsigned flags,
+diff --git a/mm/readahead.c b/mm/readahead.c
+index e52b3a7b9da5..d01531ef9f3c 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -125,7 +125,14 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+ 
+ 	blk_start_plug(&plug);
+ 
+-	if (aops->readpages) {
++	if (aops->readahead) {
++		aops->readahead(rac);
++		/* Clean up the remaining pages */
++		while ((page = readahead_page(rac))) {
++			unlock_page(page);
++			put_page(page);
++		}
++	} else if (aops->readpages) {
+ 		aops->readpages(rac->file, rac->mapping, pages,
+ 				readahead_count(rac));
+ 		/* Clean up the remaining pages */
+@@ -233,7 +240,8 @@ void force_page_cache_readahead(struct address_space *mapping,
+ 	struct file_ra_state *ra = &filp->f_ra;
+ 	unsigned long max_pages;
+ 
+-	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages))
++	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages &&
++			!mapping->a_ops->readahead))
+ 		return;
+ 
+ 	/*
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
