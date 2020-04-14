@@ -2,118 +2,117 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2CBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8CC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4B320768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E583F2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586877280;
+	bh=Q8QQg7yBPa9tNsP5I7eOgx8S0usoTULULNj+cyOrLXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qh5yjXuD6Nm7sz8BdTh8uZRRER8lkW2qhwExqvu7zT9IwrV1H4WmPt7adSI6ABRtS
+	 U8fdJnG9ky5co2qJ+uZbsnoJT2Lks3e5mU2NB2c+xdXFy2CGahqUhTF80nN9gHWN6q
+	 7JnopEMQvtTpyU3GdTBGRGfXqPSRDSyFC/h2sXYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437417AbgDNPOP (ORCPT
+        id S2437695AbgDNPOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:14:15 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:44506 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437530AbgDNPNP (ORCPT
+        Tue, 14 Apr 2020 11:14:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54473 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437681AbgDNPNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:13:15 -0400
-Received: by mail-io1-f70.google.com with SMTP id o20so15072231ioa.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:13:14 -0700 (PDT)
+        Tue, 14 Apr 2020 11:13:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so13341992wmb.4;
+        Tue, 14 Apr 2020 08:13:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=4bd4gGbYFPD8Vgj5mhiYerb95l8W8erwkDbv2sntZe4=;
-        b=TVjiFs4Ir4ne2B0dlEqw72nnL5hwBSe7iV72TaYq/ZBo1/qNNllsi6E3+La9nSYZ35
-         OhQlvOWX0haX9eZfEo6/fgDRLvHKMFfNNyCDJ7hMFioow0QaQBrbvhsqmKf1neVOFSec
-         ScN0+/tQBdqK3ZMSapKLf1xiSbTh42bOBdWAVv/REjPgLIawh0fqNt/ZuMNgAbp3oyp1
-         ncBoi43sBO2B9KgZA5C6JuHV83NHDGTqhxGNB9gRkBgZbyyc++KUkBK3hsHlyug++n9v
-         6Qj71NEh6Job6PxQD/Kln1SwGyMmXAVuntrlq8pca7CJ86CNd62vg1IXSjB2bRpUI53m
-         MVCw==
-X-Gm-Message-State: AGi0PuarB/09Z9fvccv8pd7ED8QwI25r0wp6QV+Hqb5Y6MljhxnCg7rm
-        94jUOsjwtshg4oE7i/jsnXt2VCf6HXacFt0992wmn6coyer/
-X-Google-Smtp-Source: APiQypLIzsH7qfTHqPmsTuLm4Q0+Sm9UqavdIUvKbyeJX958xaaFJ/mQ5uH3tn0w9O/2o5J3WnZ39jpgRGPQHF3fODfgTs3DKlmG
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HmBLSR0xc1v+9c640X8yq/gCGBtmZiJRhg2yrai8Uso=;
+        b=D14QHr9SaRvNqJrN7V4ylJqJZJppU9twbzkK/fNI+KX4UE4L+iib2DfQxpN0Kyf9k0
+         0jWxU8/32Xv3x3XlfJ86tDihFLVOxvOlzEi+ZMdwJLITS8dFK0BX1BnSFMbIukqCz67j
+         Ry1D6UKhhWu8p54BC/8irvBUyM3rgmP6+q/b2UJkE1sNp9+K1kUVaK3Hqvzd2UaPuxIZ
+         anSMQsSW2BVe26VRK/LLL2FrqobB6z1ttZtlJECb+JJs28wjdhWhRht82hzPbhtmGZQY
+         R0TVcuvCAw7BpJsD+qr74o0Ega4Th5Rzz6uz0/Q9BGJM7Sc2yzOzFgFMlpPGsGilpct1
+         7zIg==
+X-Gm-Message-State: AGi0PuZzw+k35gwrD6pHLwZlJLjT1GDlWp2uALnwrcBTshm1PN1umiRv
+        3/JHGYY/h+9WzdYhOwjiHQA=
+X-Google-Smtp-Source: APiQypKJS2zs752mK3EmkKLPxDY+LMikzE4AHuLMlZzMU6rlOFHrjCq5D1gZZCfYEUzJLxq6M+CEVA==
+X-Received: by 2002:a7b:c190:: with SMTP id y16mr393464wmi.50.1586877227391;
+        Tue, 14 Apr 2020 08:13:47 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id t67sm20386094wmg.40.2020.04.14.08.13.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 08:13:46 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 16:13:44 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH 21/29] mm: remove the pgprot argument to __vmalloc
+Message-ID: <20200414151344.zgt2pnq7cjq2bgv6@debian>
+References: <20200414131348.444715-1-hch@lst.de>
+ <20200414131348.444715-22-hch@lst.de>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4c:: with SMTP id i12mr656378ilr.185.1586877194034;
- Tue, 14 Apr 2020 08:13:14 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 08:13:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000073e9c305a341a39a@google.com>
-Subject: WARNING in cpu_latency_qos_remove_request
-From:   syzbot <syzbot+6e2d4fbfbf03293bb776@syzkaller.appspotmail.com>
-To:     len.brown@intel.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, pavel@ucw.cz, rjw@rjwysocki.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414131348.444715-22-hch@lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Apr 14, 2020 at 03:13:40PM +0200, Christoph Hellwig wrote:
+> The pgprot argument to __vmalloc is always PROT_KERNEL now, so remove
+> it.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com> [hyperv]
+> Acked-by: Gao Xiang <xiang@kernel.org> [erofs]
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/hyperv/hv_init.c              |  3 +--
+[...]
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 5a4b363ba67b..a3d689dfc745 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -95,8 +95,7 @@ static int hv_cpu_init(unsigned int cpu)
+>  	 * not be stopped in the case of CPU offlining and the VM will hang.
+>  	 */
+>  	if (!*hvp) {
+> -		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
+> -				 PAGE_KERNEL);
+> +		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
+>  	}
 
-syzbot found the following crash on:
-
-HEAD commit:    c0cc2711 Merge tag 'modules-for-v5.7' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10834007e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23c5a352e32a1944
-dashboard link: https://syzkaller.appspot.com/bug?extid=6e2d4fbfbf03293bb776
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fbbffbe00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6e2d4fbfbf03293bb776@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-cpu_latency_qos_remove_request called for unknown object
-WARNING: CPU: 1 PID: 9086 at kernel/power/qos.c:322 cpu_latency_qos_remove_request+0x59/0x380 kernel/power/qos.c:322
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9086 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:cpu_latency_qos_remove_request+0x59/0x380 kernel/power/qos.c:322
-Code: 02 00 0f 85 f4 02 00 00 48 81 7d 28 80 97 9a 89 74 25 e8 3a 85 18 00 48 c7 c6 20 fc 2b 88 48 c7 c7 20 f8 2b 88 e8 4f b9 e9 ff <0f> 0b 5b 5d 41 5c 41 5d e9 1a 85 18 00 e8 15 85 18 00 0f 1f 44 00
-RSP: 0018:ffffc90002717bb0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815cd551 RDI: fffff520004e2f68
-RBP: ffff8880a3644840 R08: ffff8880a2b04300 R09: ffffed1015ce66a9
-R10: ffff8880ae733547 R11: ffffed1015ce66a8 R12: ffff8880a3644800
-R13: ffff8880a36449e4 R14: 1ffff920004e2f85 R15: 0000000000000000
- snd_pcm_hw_free sound/core/pcm_native.c:827 [inline]
- snd_pcm_common_ioctl+0xb32/0x2260 sound/core/pcm_native.c:3192
- snd_pcm_ioctl_compat+0x70b/0x10d0 sound/core/pcm_compat.c:532
- __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
- __se_compat_sys_ioctl fs/ioctl.c:808 [inline]
- __ia32_compat_sys_ioctl+0x23d/0x2b0 fs/ioctl.c:808
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Acked-by: Wei Liu <wei.liu@kernel.org>
