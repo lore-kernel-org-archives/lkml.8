@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7677CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B1EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E162074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE86206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883110;
-	bh=vTilJT7sSfr6FjNGlvX9bZpL9rzwrQ7T9O6h9ya2LFY=;
+	s=default; t=1586883114;
+	bh=oDW7UtguMEDm6JDyp+2IcYm+CR8RJnA70uLdL5FN+z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XTktcWeK2o9Gn4kH7fU+wQ+Vr28GtPmMRCKHUjIQUZ81VqI8nz5afQVM8jkjM/vCl
-	 6t60p6Ku2Y8yfeRxwdHEe4326/7XV4Mqfsnjv51XmZaJnIttMzaC25qgK1iQIheVDy
-	 CzjHkDtcc1U9Jkc+4IQ2VZXvq9V2ZZH6mix2QZWA=
+	b=j9ZSZhtUce3pz81Ork/uVjfaw+InBXaxg1wLikm/QgZZuM/kXezL79gtcKjSLtySt
+	 F51kiE/lXTQnrSCzX6pSGqUGiJPMmpYagqLDs2EjpyKX4IBHVyrzJpmzOt/qNvWcUO
+	 xvvdat0okl2OA+HQ4T4g5zzBUvAakNQ58GIxYmUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502270AbgDNQvr (ORCPT
+        id S2439315AbgDNQvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440401AbgDNQtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:49:20 -0400
+        id S2440407AbgDNQtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCFC32074D;
-        Tue, 14 Apr 2020 16:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CAF20774;
+        Tue, 14 Apr 2020 16:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882953;
-        bh=vTilJT7sSfr6FjNGlvX9bZpL9rzwrQ7T9O6h9ya2LFY=;
+        s=default; t=1586882963;
+        bh=oDW7UtguMEDm6JDyp+2IcYm+CR8RJnA70uLdL5FN+z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QOB4089nemdYQa+eI5eY+Gj9BAbGvG+2oRZ1BiaXCTV35XyLpONezX9iHMA/hlIel
-         j/ycYpyWhz5kP3nOgCcFNJjA/OIQpmfByu7RkUk+iccPN+z270B7rGrxbmllre/O6g
-         AEKVtdEesEujEAGzR++sGymBhBvBPZ8tnaQcWjJQ=
+        b=SwzT+qMdJPCN2fxj6p+tinUTL2fmA21DsaAzuUESzETsMv+H16UUa1IyBq8EBrEas
+         yuwoBtVJ3c3IqbQHCfhs6ZslEglcMJ5fyPZVHBDqqFvKKBCU8jyhAdEf3wN895qnyB
+         EHddyQ2dD3At6aPQrC3P3pzxTUav1IuLYdCnH2wk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,10 +47,13 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: [PATCH 04/15] tools headers: Update linux/vdso.h and grab a copy of vdso/const.h
-Date:   Tue, 14 Apr 2020 13:48:43 -0300
-Message-Id: <20200414164854.26026-5-acme@kernel.org>
+        Borislav Petkov <bp@suse.de>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wei Huang <wei.huang2@amd.com>
+Subject: [PATCH 07/15] tools arch x86: Sync asm/cpufeatures.h with the kernel sources
+Date:   Tue, 14 Apr 2020 13:48:46 -0300
+Message-Id: <20200414164854.26026-8-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -63,71 +66,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get in line with:
+To pick up the changes from:
 
-  8165b57bca21 ("linux/const.h: Extract common header for vDSO")
+  077168e241ec ("x86/mce/amd: Add PPIN support for AMD MCE")
+  753039ef8b2f ("x86/cpu/amd: Call init_amd_zn() om Family 19h processors too")
+  6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
 
-And silence this tools/perf/ build warning:
+These don't cause any changes in tooling, just silences this perf build
+warning:
 
-  Warning: Kernel ABI header at 'tools/include/linux/const.h' differs from latest version at 'include/linux/const.h'
-  diff -u tools/include/linux/const.h include/linux/const.h
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Kim Phillips <kim.phillips@amd.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/const.h |  5 +----
- tools/include/vdso/const.h  | 10 ++++++++++
- tools/perf/check-headers.sh |  1 +
- 3 files changed, 12 insertions(+), 4 deletions(-)
- create mode 100644 tools/include/vdso/const.h
+ tools/arch/x86/include/asm/cpufeatures.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/linux/const.h b/tools/include/linux/const.h
-index 7b55a55f5911..81b8aae5a855 100644
---- a/tools/include/linux/const.h
-+++ b/tools/include/linux/const.h
-@@ -1,9 +1,6 @@
- #ifndef _LINUX_CONST_H
- #define _LINUX_CONST_H
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index f3327cb56edf..db189945e9b0 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -217,7 +217,7 @@
+ #define X86_FEATURE_IBRS		( 7*32+25) /* Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_IBPB		( 7*32+26) /* Indirect Branch Prediction Barrier */
+ #define X86_FEATURE_STIBP		( 7*32+27) /* Single Thread Indirect Branch Predictors */
+-#define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
++#define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 or above (Zen) */
+ #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
+ #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
+ #define X86_FEATURE_MSR_IA32_FEAT_CTL	( 7*32+31) /* "" MSR IA32_FEAT_CTL configured */
+@@ -285,6 +285,7 @@
+ #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
+ #define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
+ #define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
++#define X86_FEATURE_SPLIT_LOCK_DETECT	(11*32+ 6) /* #AC for split lock */
  
--#include <uapi/linux/const.h>
--
--#define UL(x)		(_UL(x))
--#define ULL(x)		(_ULL(x))
-+#include <vdso/const.h>
+ /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
+ #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
+@@ -299,6 +300,7 @@
+ #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* "" Single Thread Indirect Branch Predictors always-on preferred */
++#define X86_FEATURE_AMD_PPIN		(13*32+23) /* Protected Processor Inventory Number */
+ #define X86_FEATURE_AMD_SSBD		(13*32+24) /* "" Speculative Store Bypass Disable */
+ #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
+ #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
+@@ -367,6 +369,7 @@
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+ #define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
++#define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
+ #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
  
- #endif /* _LINUX_CONST_H */
-diff --git a/tools/include/vdso/const.h b/tools/include/vdso/const.h
-new file mode 100644
-index 000000000000..94b385ad438d
---- /dev/null
-+++ b/tools/include/vdso/const.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __VDSO_CONST_H
-+#define __VDSO_CONST_H
-+
-+#include <uapi/linux/const.h>
-+
-+#define UL(x)		(_UL(x))
-+#define ULL(x)		(_ULL(x))
-+
-+#endif /* __VDSO_CONST_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index bfb21d049e6c..c905c683606a 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -23,6 +23,7 @@ include/uapi/linux/vhost.h
- include/uapi/sound/asound.h
- include/linux/bits.h
- include/linux/const.h
-+include/vdso/const.h
- include/linux/hash.h
- include/uapi/linux/hw_breakpoint.h
- arch/x86/include/asm/disabled-features.h
+ /*
 -- 
 2.21.1
 
