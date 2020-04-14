@@ -2,124 +2,77 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348FBC2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF07DC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143122072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:52:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="viGb6zZa"
+	by mail.kernel.org (Postfix) with ESMTP id B909B2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438010AbgDNJv6 (ORCPT
+        id S2438018AbgDNJwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437964AbgDNJvV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:51:21 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095D2C072EDA;
-        Tue, 14 Apr 2020 02:51:21 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id i7so16272422edq.3;
-        Tue, 14 Apr 2020 02:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=rqmlYsX6Ig4L8f/9zje28ecRn6nWF5ISzXFA0f6dr0c=;
-        b=viGb6zZafzgvsPdJTt7sP+eFNtVC8uu2+ZAIqSTgeeAvLzmPWA4CODCd0ljvR5Mkyj
-         0/DrJxUV+SG8Mssk8pLboXdVGKZuPVBoDFNOuM6LlPNcngb0k7P1C+W/OAA4qC1aiXjT
-         W2iAGZGg9n06w5NyzaG3bAcQ6/9SwU1Npv91z70nN7ERPJC6eHX6QdBxqtZwXY54b289
-         QXJHAu9vZDTJ+2OuozqeK3srjPu4TNxPC68Ztmz4yQ+A8g+XitMb+MDfSF0GozO7ogeX
-         SxRZYIIAQg77rcd3OLEM2jPtO0PwI62BqlpB/ktRuEMufdDDVie1GBJ+62ahrbGK84hR
-         R8fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=rqmlYsX6Ig4L8f/9zje28ecRn6nWF5ISzXFA0f6dr0c=;
-        b=tgUZwmAbrZjCF+6mqJCXlNmfrb6PNDsDSfHVaHv9RkQU/2kbrNNShfBsMfiFEGbuNF
-         ekv1AAKPrJ19BO1D0PsncyvuYZyajcV6booW1qlH9UxfeVrhAnOg/0Ad8M+45nUrpnny
-         RYAPVtX5jy9i2TlyvRYlk1ZAib5dGE/H39PoZXvFeaVSRmWTFmp2ic0ZEODhBI9zZAUF
-         LVSVveNLh1ZUqOa2UNWvkoqv0ZCmP2zCtqobgAxOUTt07jJyj/dG+Mr+Z/g2si9Td6YV
-         nhUvXGlwkp5OzF54MK2vQkPNd5gswu/txJeuHKzvdBjTigLHgS9N3s1RWPRWAH8fF8by
-         Kxtw==
-X-Gm-Message-State: AGi0PubFsUtjNuEcjG3BcLsNfyCPHQ6Ooty7bp7+YsQ/049jXxL0sS7v
-        gax6Ya4deHfXicmPp0Y3EOUFH0jtiBa4zXRFnCc=
-X-Google-Smtp-Source: APiQypKp8eHSjjE16jhChIfVgTCOhYk4SKLhW5qt7sQqopmQ2+MHareRjtFeA98UxsEX++pwQZfXhSUDGga/1kTQGPE=
-X-Received: by 2002:a17:906:add7:: with SMTP id lb23mr11378783ejb.6.1586857879752;
- Tue, 14 Apr 2020 02:51:19 -0700 (PDT)
+        Tue, 14 Apr 2020 05:52:03 -0400
+Received: from mga07.intel.com ([134.134.136.100]:41781 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437981AbgDNJvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:51:37 -0400
+IronPort-SDR: PHVtJUS8L+I3joD8ticl7n3GjYCUcKS9MpHyUtNxeZ6w6s9aIJkt4LZ5tQSPG6zssLRtWzCo0m
+ u0la3fAzWi6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 02:51:36 -0700
+IronPort-SDR: AglxUp8RCWKBm6bm1/qX1Owm6f1GQSAX+ZIuKxOJWSYJXk5uAA0o/gDDTUld+4xo8gYBhyReJ+
+ kfPio+Vh0RRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="288167616"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Apr 2020 02:51:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DDF6CE1; Tue, 14 Apr 2020 12:51:34 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: intel-lpss: Update LPSS UART #2 PCI ID for Jasper Lake
+Date:   Tue, 14 Apr 2020 12:51:34 +0300
+Message-Id: <20200414095134.80135-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <96bedbaf-49ea-f24b-b7b1-fb9a57fb6c7d@gmail.com>
- <20200411154031.642557-1-avagin@gmail.com> <CAKgNAki6uBHVTBdJvj7hzbho9Z94MWRV7ab8npduogQohRndBQ@mail.gmail.com>
- <20200413154746.39275d0981f69e57a7ecab3e@linux-foundation.org>
-In-Reply-To: <20200413154746.39275d0981f69e57a7ecab3e@linux-foundation.org>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Tue, 14 Apr 2020 11:51:08 +0200
-Message-ID: <CAKgNAkha+=3Lxq+AVsRqPNb9FxVEG4rx1wr=HfoV3RfosKi=Tw@mail.gmail.com>
-Subject: Re: [PATCH v2] timens: show clock symbolic names in /proc/pid/timens_offsets
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrei Vagin <avagin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 at 00:47, Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Sun, 12 Apr 2020 07:51:47 +0200 "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> wrote:
->
-> > Hi Andrei,
-> >
-> > On Sat, 11 Apr 2020 at 17:40, Andrei Vagin <avagin@gmail.com> wrote:
-> > >
-> > > Michael Kerrisk suggested to replace numeric clock IDs on symbolic
-> > > names.
-> > >
-> > > Now the content of these files looks like this:
-> > > $ cat /proc/774/timens_offsets
-> > > monotonic      864000         0
-> > > boottime      1728000         0
-> >
-> > Thanks.
-> >
-> > Assuming no-one has objections to the patch, please do mark for stable@.
-> >
->
-> `grep -r timens_offsets Documentation' comes up blank.  Is
-> /proc/pid/timens_offsets documented anywhere?  If not, it should be!
-> And this patch should update that documentation.
->
-> I assume the time namespace feature itself is documented under clone(2)?
+It appears that preliminary documentation has a typo in the ID list,
+i.e. LPSS UART #2 had been advertised wrongly.
 
-We're good, so far. There's time_namespaces(7) [1] and documentation
-of CLONE_NEWTIME in unshare(2) [2].
+Fix the driver according to the EDS v0.9.
 
-CLONE_NEWTIME support for clone3() is still a work in progress [3].
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/intel-lpss-pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 7fc0c5d4edff..046222684b8b 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -250,9 +250,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x4da9), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4daa), (kernel_ulong_t)&spt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4dab), (kernel_ulong_t)&spt_info },
+-	{ PCI_VDEVICE(INTEL, 0x4daf), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4dc5), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4dc6), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4dc7), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4de8), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4de9), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4dea), (kernel_ulong_t)&bxt_i2c_info },
+-- 
+2.25.1
 
-Michael
-
-[1] http://man7.org/linux/man-pages/man7/time_namespaces.7.html
-[2] http://man7.org/linux/man-pages/man2/unshare.2.html
-[3] https://lore.kernel.org/lkml/20200317083043.226593-1-areber@redhat.com/
-
-
---
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
