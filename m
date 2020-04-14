@@ -2,210 +2,109 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5ADC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1293FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3451320732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBUMFK3f"
+	by mail.kernel.org (Postfix) with ESMTP id E7D8620732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404564AbgDNDSe (ORCPT
+        id S2404570AbgDNDSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404542AbgDNDST (ORCPT
+        Mon, 13 Apr 2020 23:18:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404527AbgDNDSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:18:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9769FC0A3BDC;
-        Mon, 13 Apr 2020 20:18:19 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id u13so12118814wrp.3;
-        Mon, 13 Apr 2020 20:18:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=giWSpSfOhp4srs/f1cIhyKITUR4isg3xeqTrICKONHY=;
-        b=nBUMFK3fkZdy9DM1eKQcciB//NLauuaDyrFsHqf48+lN0sDj0eUPj89yOCX5iBSA9X
-         mGOWGgGpgQraxPcw/xk/+Kwe7fLrBY31RI2zRDPGKp0zU22qbwSRpW6NpGX64C/Ja4yD
-         USwz4F71Wfti6WjtpRt/ibRXx28nL7iFHprKDH2LeUmPnMdIZVr8CWflWrDol3dELEHL
-         Mu+1L59w3YcSy1788twvWjjyQ4Nny8KwTupUrwDmkW6qf1QWo4J/0/0T8lTl7UCJ5BwD
-         Ba6jSjgW+g7t5B9hg5HeuGONWpHLrCR203SxC9YyPyWyWsHr3Z872HULVu/iZyOZqEjS
-         2IZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=giWSpSfOhp4srs/f1cIhyKITUR4isg3xeqTrICKONHY=;
-        b=QxiSyjqSsprqxqF1WbMuU3zu+f+8JH1berN+/slb3TuoUvYsc48BNqe35OJFmxjnNq
-         WchutkyU6F9Clb/otKQsjLeaRQTHEyWavw+xVaGvOXTo2hf8KlzfDiqhynL2h6XAPnVh
-         l80uS1YAdLkvn9gpjg/MQtSPmzoiqYLLOVA3VnScjzNciy1qTEbAmSU9c8/vDh2atGlE
-         iT0XukWoUW8sCC+13vNhw/hTMso/3H9NPIbAKvxFgsrgK+XIbd9fClXMoat80EILIcrO
-         oN1JaTdTTeQ+6I8wZHcsuidN1Dad7awqfKvLQQ9x6P4D3cxepvXREnTcgi14SWWc6CD/
-         TMrA==
-X-Gm-Message-State: AGi0Pub4qM7C+5bPfyis7TKHM0/VkwgH5HuRGaaxmAr3v5wOUs98TqkR
-        I9m0wY4jw1nU7a74UOscs7xwaqyNf66/Xt3JsXI=
-X-Google-Smtp-Source: APiQypKMMDhD7xwuCEgfGLdUIfq0mNFjTiqY3bXUa+ho6L8vYto4kPMfkQjPu4KKTYj1zIIxbyg7zpZFZeAyD1/vGzA=
-X-Received: by 2002:a5d:48cc:: with SMTP id p12mr22788314wrs.170.1586834298330;
- Mon, 13 Apr 2020 20:18:18 -0700 (PDT)
+        Mon, 13 Apr 2020 23:18:16 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E34HQK052445
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:18:15 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30b9huxcnb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:18:15 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 14 Apr 2020 04:17:55 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 04:17:51 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03E3I6QC37880098
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 03:18:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C21585204F;
+        Tue, 14 Apr 2020 03:18:06 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.60.157])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3FE655204E;
+        Tue, 14 Apr 2020 03:17:48 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
+        fweisbec@gmail.com, mingo@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com
+Subject: [PATCH v3 02/16] powerpc/watchpoint: Add SPRN macros for second DAWR
+Date:   Tue, 14 Apr 2020 08:46:45 +0530
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190906023601.4378-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190906023601.4378-1-andrew.smirnov@gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 13 Apr 2020 20:18:07 -0700
-Message-ID: <CAHQ1cqEqM5=Gm1jxEX=h02KW_-OLUn0W3R7T6o5bFW9+6ZPiOQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] Bluetooth: Retry configure request if result is L2CAP_CONF_UNKNOWN
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org
-Cc:     "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Florian Dollinger <dollinger.florian@gmx.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041403-0012-0000-0000-000003A410B6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041403-0013-0000-0000-000021E14589
+Message-Id: <20200414031659.58875-3-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-13_11:2020-04-13,2020-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ mlxlogscore=759 lowpriorityscore=0 clxscore=1015 phishscore=0 spamscore=0
+ adultscore=0 impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 7:36 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Due to:
->
->  * Current implementation of l2cap_config_rsp() dropping BT
->    connection if sender of configuration response replied with unknown
->    option failure (Result=0x0003/L2CAP_CONF_UNKNOWN)
->
->  * Current implementation of l2cap_build_conf_req() adding
->    L2CAP_CONF_RFC(0x04) option to initial configure request sent by
->    the Linux host.
->
-> devices that do no recongninze L2CAP_CONF_RFC, such as Xbox One S
-> controllers, will get stuck in endless connect -> configure ->
-> disconnect loop, never connect and be generaly unusable.
->
-> To avoid this problem add code to do the following:
->
->  1. Parse the body of response L2CAP_CONF_UNKNOWN and, in case of
->     unsupported option being RFC, clear L2CAP_FEAT_ERTM and
->     L2CAP_FEAT_STREAMING from connection's feature mask (in order to
->     prevent RFC option from being added going forward)
->
->  2. Retry configuration step the same way it's done for
->     L2CAP_CONF_UNACCEPT
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> Cc: Florian Dollinger <dollinger.florian@gmx.de>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: linux-bluetooth@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->
-> Changes since [v1]:
->
->    - Patch simplified to simply clear L2CAP_FEAT_ERTM |
->      L2CAP_FEAT_STREAMING from feat_mask when device flags RFC options
->      as unknown
->
-> [v1] lore.kernel.org/r/20190208025828.30901-1-andrew.smirnov@gmail.com
->
+Future Power architecture is introducing second DAWR. Add SPRN_ macros
+for the same.
 
-Marcel, Johan, can either of you please comment on this patch? I've
-sent a number of patches to linux-bluetooth in past 6 month all of
-which were met with radio silence, so I am a bit worried that my
-messages are being filtered out or dropped.
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ arch/powerpc/include/asm/reg.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Andrey Smirnov
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index 156ee89fa9be..062e74cf41fd 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -284,6 +284,7 @@
+ #define   CTRL_TE	0x00c00000	/* thread enable */
+ #define   CTRL_RUNLATCH	0x1
+ #define SPRN_DAWR0	0xB4
++#define SPRN_DAWR1	0xB5
+ #define SPRN_RPR	0xBA	/* Relative Priority Register */
+ #define SPRN_CIABR	0xBB
+ #define   CIABR_PRIV		0x3
+@@ -291,6 +292,7 @@
+ #define   CIABR_PRIV_SUPER	2
+ #define   CIABR_PRIV_HYPER	3
+ #define SPRN_DAWRX0	0xBC
++#define SPRN_DAWRX1	0xBD
+ #define   DAWRX_USER	__MASK(0)
+ #define   DAWRX_KERNEL	__MASK(1)
+ #define   DAWRX_HYP	__MASK(2)
+-- 
+2.21.1
 
-
->  net/bluetooth/l2cap_core.c | 58 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->
-> diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-> index dfc1edb168b7..77b65870b064 100644
-> --- a/net/bluetooth/l2cap_core.c
-> +++ b/net/bluetooth/l2cap_core.c
-> @@ -4216,6 +4216,49 @@ static inline int l2cap_config_req(struct l2cap_conn *conn,
->         return err;
->  }
->
-> +static inline int l2cap_config_rsp_unknown(struct l2cap_conn *conn,
-> +                                          struct l2cap_chan *chan,
-> +                                          const u8 *data,
-> +                                          int len)
-> +{
-> +       char req[64];
-> +
-> +       if (!len || len > sizeof(req) -  sizeof(struct l2cap_conf_req))
-> +               return -ECONNRESET;
-> +
-> +       while (len--) {
-> +               const u8 option_type = *data++;
-> +
-> +               BT_DBG("chan %p, unknown option type: %u", chan,  option_type);
-> +
-> +               /* "...Hints shall not be included in the Response and
-> +                * shall not be the sole cause for rejecting the
-> +                * Request.."
-> +                */
-> +               if (option_type & L2CAP_CONF_HINT)
-> +                       return -ECONNRESET;
-> +
-> +               switch (option_type) {
-> +               case L2CAP_CONF_RFC:
-> +                       /* Clearing the following feature should
-> +                        * prevent RFC option from being added next
-> +                        * connection attempt
-> +                        */
-> +                       conn->feat_mask &= ~(L2CAP_FEAT_ERTM |
-> +                                            L2CAP_FEAT_STREAMING);
-> +                       break;
-> +               default:
-> +                       return -ECONNRESET;
-> +               }
-> +       }
-> +
-> +       len = l2cap_build_conf_req(chan, req, sizeof(req));
-> +       l2cap_send_cmd(conn, l2cap_get_ident(conn), L2CAP_CONF_REQ, len, req);
-> +       chan->num_conf_req++;
-> +
-> +       return 0;
-> +}
-> +
->  static inline int l2cap_config_rsp(struct l2cap_conn *conn,
->                                    struct l2cap_cmd_hdr *cmd, u16 cmd_len,
->                                    u8 *data)
-> @@ -4271,6 +4314,21 @@ static inline int l2cap_config_rsp(struct l2cap_conn *conn,
->                 }
->                 goto done;
->
-> +       case L2CAP_CONF_UNKNOWN:
-> +               if (chan->num_conf_rsp <= L2CAP_CONF_MAX_CONF_RSP) {
-> +                       if (l2cap_config_rsp_unknown(conn, chan, rsp->data,
-> +                                                    len) < 0) {
-> +                               l2cap_send_disconn_req(chan, ECONNRESET);
-> +                               goto done;
-> +                       }
-> +                       break;
-> +               }
-> +               /* Once, chan->num_conf_rsp goes above
-> +                * L2CAP_CONF_MAX_CONF_RSP we want to go down all the
-> +                * way to default label (just like L2CAP_CONF_UNACCEPT
-> +                * below)
-> +                */
-> +               /* fall through */
->         case L2CAP_CONF_UNACCEPT:
->                 if (chan->num_conf_rsp <= L2CAP_CONF_MAX_CONF_RSP) {
->                         char req[64];
-> --
-> 2.21.0
->
