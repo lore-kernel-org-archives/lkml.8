@@ -2,82 +2,94 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91EAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00096C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA480206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6182206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883120;
-	bh=5ItLj3pw8ICgMslGV/jzi2WlPetpysNmexshbAM8+2Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mnJlN/OlnSPIRcYbcBeC79+Koj4/jceOTZ8pKBRFAObJJ5VOxHhdUBuqR4cehYOdh
-	 JGXUZR6XPlCLXLTEMl8KcTgL7g+BoEl1WhzZfAFUBRbrHtrEZ+Afjl2rtNCOEUxrJ2
-	 1OVgKGQSvZpWBi7ZPGm76G0rKcLPYWgMSOnEMoK8=
+	s=default; t=1586883131;
+	bh=XKo43H/WISKC0mbYjvAH0yYREpDezLZK9JxzqEgfMvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z7gvoox7z9lVv/at/5Ml5Cili5P9nmcF6YoD78XfpM3qvtJFZx8WabfxXyLUDhA5J
+	 ZZ6zObw3TXPKMoUiqR1DVFHWh+a/+3qFzxq8X3NnYHSMmNEwdqEQ8R5I03AiJM+AtK
+	 UvqmK1GtH5HfuMIITDnzEaoR+lLNfZP7NObve6cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502342AbgDNQv6 (ORCPT
+        id S2440616AbgDNQwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440548AbgDNQvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:51:09 -0400
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 560FF2078A;
-        Tue, 14 Apr 2020 16:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586883069;
-        bh=5ItLj3pw8ICgMslGV/jzi2WlPetpysNmexshbAM8+2Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fny7C1Jr3lw6DvYP3P4R/o+BB7IEzN+oPJXzrc6U328xcACnDY2lLYiQIQ1D8udlH
-         RsdBhYsL48o0lluaI4x/l7MwmKNVmKRfkBokxULYNsrxOKBzJuJnj6lOyW5qD5A2/K
-         httZqYXw2vxiorpan5JMiddA56UtrnQzai215yAc=
-Received: by mail-lf1-f53.google.com with SMTP id t11so306501lfe.4;
-        Tue, 14 Apr 2020 09:51:09 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY9/+ju+XMBFLeorHKUymefpM0xCQfmOe2oPIuxbpyk+8X6hKVg
-        WYG0YtYaA3papQwoO57o4VZZcnhvj+ivQDB7szQ=
-X-Google-Smtp-Source: APiQypI19J8K19veT4EiqcGOziMyMfMCR+Dx1XPgW3Ct5WFJ5x80TGUvwNRUHbxW2Cp528PxmLqewLF8/DF94ZOVYag=
-X-Received: by 2002:a19:494f:: with SMTP id l15mr434803lfj.33.1586883067437;
- Tue, 14 Apr 2020 09:51:07 -0700 (PDT)
+        Tue, 14 Apr 2020 12:52:07 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33416 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440657AbgDNQv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:51:29 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j26so93979ots.0;
+        Tue, 14 Apr 2020 09:51:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E0UhtU0hOfN1mtluPKd6UxG6VtUuYZXqq6zaVbM+sI0=;
+        b=O8kJaC2uYpCUsb7tA1jLJBmfhVAcro4KT01QHr2VDCVsIj+OXRheog2EKQwxW+llxt
+         fX7l8xEkfhpEKvqJHJ3Q/AKbgzMlLR88KKw0B96nN5Y7DFEMm+iE7IuCBnm9Pp3B3180
+         Jf9ztI/xyBVp5PHQn5CR3SUu5tGpJDYi61KtPitYYqh7T6PzFSDAdb0DpFOVE77er1fo
+         w7tiwVt4A9IzSsi/rFXWXwlBQ9Cx0S6BCE/QoATyQa8d1Rb1Oabv/Brt0mrLQyUgYx5r
+         MrFFdVXpfO8wIDyLro2fvS120+YYFWbEKwY4bWfSV2xXW6E+2Y2H6iGiqrO9znjynSvx
+         5y5w==
+X-Gm-Message-State: AGi0PubS6VP6TvVriGwsGZDfV6LMqop6Y2/MOCSeM4L496Nd0EiQK6gL
+        8FRsEaGAnLm0jBdgFwtpIQ==
+X-Google-Smtp-Source: APiQypIcslAsL6nTfjJohaUj1ZXbBo8tbhnBXcKvkKOBU0ppY4P1+HG4u8r7j/Gyi1aadTNcJDyzCw==
+X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr9696815oot.53.1586883088742;
+        Tue, 14 Apr 2020 09:51:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s13sm6235555oov.28.2020.04.14.09.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 09:51:28 -0700 (PDT)
+Received: (nullmailer pid 22116 invoked by uid 1000);
+        Tue, 14 Apr 2020 16:51:27 -0000
+Date:   Tue, 14 Apr 2020 11:51:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: phy: qcom,qmp: Convert QMP PHY
+ bindings to yaml
+Message-ID: <20200414165127.GA21637@bogus>
+References: <1585809534-11244-1-git-send-email-sanm@codeaurora.org>
+ <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-References: <1586779076-101346-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1586779076-101346-1-git-send-email-zou_wei@huawei.com>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 14 Apr 2020 09:50:56 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7CmnBE4xaS6zUBwXuRN5h-ofwpOBQ9ZU0OFPn0Re-kag@mail.gmail.com>
-Message-ID: <CAPhsuW7CmnBE4xaS6zUBwXuRN5h-ofwpOBQ9ZU0OFPn0Re-kag@mail.gmail.com>
-Subject: Re: [PATCH-next] bpf: Verifier, remove unneeded conversion to bool
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:15 PM Zou Wei <zou_wei@huawei.com> wrote:
->
-> This issue was detected by using the Coccinelle software:
->
-> kernel/bpf/verifier.c:1259:16-21: WARNING: conversion to bool not needed here
->
-> The conversion to bool is unneeded, remove it
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+On Thu,  2 Apr 2020 12:08:52 +0530, Sandeep Maheswaram wrote:
+> Convert QMP PHY bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 332 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 242 ---------------
+>  2 files changed, 332 insertions(+), 242 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> 
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
