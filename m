@@ -2,107 +2,315 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06750C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6838BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D49BE2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD772072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kYEogDVd"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uLyAAYMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438120AbgDNKGW (ORCPT
+        id S2438145AbgDNKHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438097AbgDNKGR (ORCPT
+        Tue, 14 Apr 2020 06:07:38 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:39923 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438129AbgDNKHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:06:17 -0400
-X-Greylist: delayed 2360 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 03:06:16 PDT
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD93AC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zRbIhkRTth0h/We8PXb627DVJp3T2IM7e0L6aaERpUc=; b=kYEogDVdl6bmOzX4nQkttpVVB5
-        84XOkDu3cl4CQ8p4NYCdZbDaglqAbjjU20apeP4fcp+hdRwBUSeQNdbpcm/+QfZSWPUfSKXf2by7W
-        Nmh7kXjLlO/KSMXDgBxn7BrBmVpnaGuPS/1FeJdH4mPtY0XyDsERlSIs0LgNDV5arcAj68DMNTtUV
-        txfyLgHN5YUNMTcOy1YJ1ryh7V+GYNf3pf4yaIJX9WJQ3fC20l+4IxozIQLI8wFoba27sUyUxO6jI
-        6ZUa1Ler7eZ8PCg8glPW1N1iexhkQoAlyAhknzr514hS88GXm+bipOGJom0YWCM3MOklTqWCUxuVV
-        dOaBaGHQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOIS6-0000Cp-RY; Tue, 14 Apr 2020 10:05:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 14 Apr 2020 06:07:22 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CF59E3012D8;
-        Tue, 14 Apr 2020 12:05:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 97BA020B07BF9; Tue, 14 Apr 2020 12:05:55 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 12:05:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Wang Qing <wangqing@vivo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        jinho lim <jordan.lim@samsung.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        opensource.kernel@vivo.com
-Subject: Re: [PATCH 1/2] [V2 1/2]sched:add task_running_oncpu
-Message-ID: <20200414100555.GJ20713@hirez.programming.kicks-ass.net>
-References: <1586779466-4439-1-git-send-email-wangqing@vivo.com>
- <1586779466-4439-2-git-send-email-wangqing@vivo.com>
- <CAKfTPtDSk31p5xF9aHef4T7ixgx8m1H86Py=deu7L6dG4Z1vzw@mail.gmail.com>
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3CF8C22EEB;
+        Tue, 14 Apr 2020 12:07:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1586858831;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=APa0klHYbq0nRnZCFsgw5rX3mQ0o6Wd2E6ZRzR/tOMM=;
+        b=uLyAAYMIctXbXn9cwOwmR55h8ibp43+Djfg86KlNcR7vgHgZZwlDgYiRikLd5qtnEMmsMc
+        PzDJsZxopbkE54MxXLnOoNx1pAf8tR0ohLsnwK7dyAuGExIalFgJsLgv7Fxr4qrCcCMQhy
+        F83tczkLaB8z8xbA7ARkBZ9/CpoYSSU=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDSk31p5xF9aHef4T7ixgx8m1H86Py=deu7L6dG4Z1vzw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 14 Apr 2020 12:07:01 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-11-michael@walle.cc>
+ <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
+ <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
+ <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+Message-ID: <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 3CF8C22EEB
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-1.081];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 09:20:57AM +0200, Vincent Guittot wrote:
-> On Mon, 13 Apr 2020 at 14:04, Wang Qing <wangqing@vivo.com> wrote:
-> >
-> > We have no interface whether the task is running,
-> > so we need to add an interface and distinguish CONFIG_SMP.
-> >
-> > Signed-off-by: Wang Qing <wangqing@vivo.com>
-> > ---
-> >  include/linux/sched.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index 4418f5c..13cc8f5 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -1843,6 +1843,11 @@ static inline unsigned int task_cpu(const struct task_struct *p)
-> >
-> >  extern void set_task_cpu(struct task_struct *p, unsigned int cpu);
-> >
-> > +static inline int task_running_oncpu(const struct task_struct *p)
+Am 2020-04-14 11:50, schrieb Bartosz Golaszewski:
+> pon., 6 kwi 2020 o 12:10 Michael Walle <michael@walle.cc> napisał(a):
+>> 
+>> 
+>> Hi Bartosz, Hi Mark Brown,
+>> 
+>> Am 2020-04-06 09:47, schrieb Bartosz Golaszewski:
+>> > czw., 2 kwi 2020 o 22:37 Michael Walle <michael@walle.cc> napisał(a):
+>> >>
+>> >> There are quite a lot simple GPIO controller which are using regmap to
+>> >> access the hardware. This driver tries to be a base to unify existing
+>> >> code into one place. This won't cover everything but it should be a
+>> >> good
+>> >> starting point.
+>> >>
+>> >> It does not implement its own irq_chip because there is already a
+>> >> generic one for regmap based devices. Instead, the irq_chip will be
+>> >> instanciated in the parent driver and its irq domain will be associate
+>> >> to this driver.
+>> >>
+>> >> For now it consists of the usual registers, like set (and an optional
+>> >> clear) data register, an input register and direction registers.
+>> >> Out-of-the-box, it supports consecutive register mappings and mappings
+>> >> where the registers have gaps between them with a linear mapping
+>> >> between
+>> >> GPIO offset and bit position. For weirder mappings the user can
+>> >> register
+>> >> its own .xlate().
+>> >>
+>> >> Signed-off-by: Michael Walle <michael@walle.cc>
+>> >
+>> > Hi Michael,
+>> >
+>> > Thanks for doing this! When looking at other generic drivers:
+>> > gpio-mmio and gpio-reg I can see there are some corner-cases and more
+>> > specific configuration options we could add
+>> 
+>> I didn't want to copy every bit without being able to test it.
+>> 
 > 
-> This function name is too close from task_running_on_cpu() and can be
-> misleading as the difference is only "_"
-> Also, how task_running_oncpu() is different from task_running() ?
+> Sure, I didn't mean we need to do it now - just set it as the future 
+> goal.
+> 
+>> > but it's not a blocker,
+>> > we'll probably be extending this one as we convert more drivers to
+>> > using it.
+>> 
+>> correct, that was also my plan.
+>> 
+>> > Personally I'd love to see gpio-mmio and gpio-reg removed
+>> > and replaced by a single, generic regmap interface eventually.
+>> 
+>> agreed.
+>> 
+>> 
+> 
+> [snip!]
+> 
+>> >> +
+>> >> +/**
+>> >> + * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
+>> >> + *
+>> >> + * Use a simple linear mapping to translate the offset to the
+>> >> bitmask.
+>> >> + */
+>> >> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int
+>> >> base,
+>> >> +                            unsigned int offset,
+>> >> +                            unsigned int *reg, unsigned int *mask)
+>> >> +{
+>> >> +       unsigned int line = offset % gpio->ngpio_per_reg;
+>> >> +       unsigned int stride = offset / gpio->ngpio_per_reg;
+>> >> +
+>> >> +       *reg = base + stride * gpio->reg_stride;
+>> >> +       *mask = BIT(line);
+>> >> +
+>> >> +       return 0;
+>> >> +}
+>> >> +EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
+>> >
+>> > Why does this need to be exported?
+>> 
+>> Mh, the idea was that a user could also set this xlate() by himself 
+>> (for
+>> whatever reason). But since it is the default, it is not really
+>> necessary.
+>> That being said, I don't care if its only local to this module.
+>> 
+> 
+> Let's only export symbols that have external users then.
+> 
+> [snip!]
+> 
+>> >> +
+>> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+>> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
+>> >> +MODULE_LICENSE("GPL");
+>> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+>> >> new file mode 100644
+>> >> index 000000000000..ad63955e0e43
+>> >> --- /dev/null
+>> >> +++ b/include/linux/gpio-regmap.h
+>> >> @@ -0,0 +1,88 @@
+>> >> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> >> +
+>> >> +#ifndef _LINUX_GPIO_REGMAP_H
+>> >> +#define _LINUX_GPIO_REGMAP_H
+>> >> +
+>> >> +struct gpio_regmap_addr {
+>> >> +       unsigned int addr;
+>> >> +       bool valid;
+>> >> +};
+>> >
+>> > I'm not quite sure what the meaning behind the valid field here is.
+>> > When would we potentially set it to false?
+>> 
+>> Some base addresses are optional, but on the other hand, a base 
+>> address
+>> of 0 could also be valid. So I cannot use 0 as an indicator whether a
+>> base address is set or not. The generic mmio driver has some special
+>> case for the ack base, where there is a use_ack flag which forces to
+>> use the ack register even if its zero. So I've had a look at the 
+>> kernel
+>> if there is a better idiom for that, but I haven't found anything.
+>> 
+>> So the best from a user perspective I've could come up with was:
+>> 
+>>    ->base_reg = GPIO_REGMAP_ADDR(addr);
+>> 
+>> I'm open for suggestions.
+>> 
+> 
+> Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
+> IS_ERR() returning true?
 
-It doesn't have the (arguably superfluous) rq argument. But yes, agreed,
-if anything lift that thing (without the argument).
+Unfortunatly, its not a pointer, but only a regular unsigned int (ie
+the type the regmap API has for its "reg" property). It could be a
+pointer of course but then the user would have to allocate additional
+memory.
+
+-michael
+
+> 
+>> >
+>> >> +#define GPIO_REGMAP_ADDR(_addr) \
+>> >> +       ((struct gpio_regmap_addr) { .addr = _addr, .valid = true })
+>> >> +
+>> >> +/**
+>> >> + * struct gpio_regmap - Description of a generic regmap gpio_chip.
+>> >> + *
+>> >> + * @parent:            The parent device
+>> >> + * @regmap:            The regmap use to access the registers
+>> >
+>> > s/use/used/
+>> >
+>> >> + *                     given, the name of the device is used
+>> >> + * @label:             (Optional) Descriptive name for GPIO
+>> >> controller.
+>> >> + *                     If not given, the name of the device is used.
+>> >> + * @ngpio:             Number of GPIOs
+>> >> + * @reg_dat_base:      (Optional) (in) register base address
+>> >> + * @reg_set_base:      (Optional) set register base address
+>> >> + * @reg_clr_base:      (Optional) clear register base address
+>> >> + * @reg_dir_in_base:   (Optional) out setting register base address
+>> >> + * @reg_dir_out_base:  (Optional) in setting register base address
+>> >> + * @reg_stride:                (Optional) May be set if the registers
+>> >> (of the
+>> >> + *                     same type, dat, set, etc) are not consecutive.
+>> >> + * @ngpio_per_reg:     Number of GPIOs per register
+>> >> + * @irq_domain:                (Optional) IRQ domain if the
+>> >> controller is
+>> >> + *                     interrupt-capable
+>> >> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
+>> >> + *                     offset to a register/bitmask pair. If not
+>> >> + *                     given the default gpio_regmap_simple_xlate()
+>> >> + *                     is used.
+>> >> + * @to_irq:            (Optional) Maps GPIO offset to a irq number.
+>> >> + *                     By default assumes a linear mapping of the
+>> >> + *                     given irq_domain.
+>> >> + * @driver_data:       Pointer to the drivers private data. Not used
+>> >> by
+>> >> + *                     gpio-regmap.
+>> >> + *
+>> >> + * The reg_mask_xlate translates a given base address and GPIO offset
+>> >> to
+>> >> + * register and mask pair. The base address is one of the given
+>> >> reg_*_base.
+>> >> + */
+>> >> +struct gpio_regmap {
+>> >
+>> > I'd prefer to follow a pattern seen in other such APIs of calling this
+>> > structure gpio_regmap_config and creating another private structure
+>> > called gpio_regmap used in callbacks that would only contain necessary
+>> > fields.
+>> 
+>> something like the following?
+>> 
+>> struct gpio_regmap *gpio_regmap_register(struct gpio_regmap_config *)
+>> 
+>> but if that structure is private, how can a callback access individual
+>> elements? Or do you mean private in "local to the gpio drivers"?
+>> 
+> 
+> Either making the structure local to drivers/gpio or making it
+> entirely opaque and providing accessor functions. Depending on how
+> much of the structure one may want to access.
+> 
+>> Also I was unsure about the naming, eg. some use
+>> stuff_register()/stuff_unregister() and some 
+>> stuff_add()/stuff_remove().
+>> 
+> 
+> register/unregister is fine with me.
+> 
+> Bart
