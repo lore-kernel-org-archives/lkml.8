@@ -2,249 +2,93 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3395C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5FFC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E16A2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCff+ycy"
+	by mail.kernel.org (Postfix) with ESMTP id F14872063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586877777;
+	bh=1gcn52hELApJmPD44ceyRyCYVmaTOZCsNPkzoiy1HYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V36iGE3cpia8YTj3TviPRKSfe1c+hYcRL5Qsv8MCSpApWjVAfFRJRZBq9IcL9rMDI
+	 geEvlKWAQumd53r07r2G06kjcKCHvxmf8RUe6Mo2eUEfTTpEW2EULvrQdK8XYbTaMq
+	 VwW1/4Wmfu4J2yRkN3eGf34gWbXcfgoLxOFGZLHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440304AbgDNPVf (ORCPT
+        id S2439318AbgDNPWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:21:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43063 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407370AbgDNPV1 (ORCPT
+        Tue, 14 Apr 2020 11:22:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37691 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438826AbgDNPWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:21:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586877684;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3mUwkORT2ROzic1PwZLpKfaNvlCOUG87+Q2jFK40OgI=;
-        b=NCff+ycyTRCxIINeIoyN1ifBviAe0S6rV7Jyjq214yJBIeffdMZO2Qe6x0SxuaRBp/AcWV
-        +996hhiqzuFheiB+u7L/RhmcmFHyyBsvSttJidHGy9ae37DctH46HiC4b+vjVXH40FlQhV
-        YIzvfQBxTwWSIvnAiYnv/5EOSRkBeRA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-foMw-OOxOz2XtPQuTzeCgA-1; Tue, 14 Apr 2020 11:21:15 -0400
-X-MC-Unique: foMw-OOxOz2XtPQuTzeCgA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C13A107ACCC;
-        Tue, 14 Apr 2020 15:21:11 +0000 (UTC)
-Received: from krava (unknown [10.40.195.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CE9FF9F9A4;
-        Tue, 14 Apr 2020 15:21:04 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 17:21:02 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
+        Tue, 14 Apr 2020 11:22:31 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z17so5616910oto.4;
+        Tue, 14 Apr 2020 08:22:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AnHn2Q/nKp8vHi8xRLPGA04W9zPV6QThgvNNDvW6Lz4=;
+        b=oYeCqf78I8FW6TzZbU5/EHAung+vdubjK44BPSrBmo2lzpN/8YI7S5ZBygDDDUu0Hi
+         dv8Ji9bMj92KjHFFTuBw5maxg/CXgl/AnbAX97ExjD5RnnjxaU44yyFAED09CRZOgbuq
+         s9tXq80KvOtLX/5NiETKUlEavcRYU8VMOBg/Bh4lPdQJ5FmhHggtwKIJYcWJ6B6wwuMe
+         tszTzmKvR/gP0+gJwOCK8sgdYiSudAAdFPfXWXTsNe49vSyxewdsRi+pooy7ufxPdE0T
+         tpjYxLveLyN2AFhYqKua2z48YnBPAzb0pjam8mnN41fLWe5SgHFJpP1sFdNGKvqkJCyo
+         YF+Q==
+X-Gm-Message-State: AGi0PubWoS37eAqQDbiKgCWvAgA9JslnaiJ2NxiI9XS9aACTwAobFqxp
+        0A7Wv2ImeGYdJTPdvWMHeg==
+X-Google-Smtp-Source: APiQypJR5WeRaPhYCrALFhL48Dtxyk9ODcHd1LOjeRCjBr6tTDoukXibtiqbCGRPmuc2x2B7Gx5QGA==
+X-Received: by 2002:a9d:6354:: with SMTP id y20mr9159168otk.171.1586877750682;
+        Tue, 14 Apr 2020 08:22:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q18sm5508097otl.65.2020.04.14.08.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 08:22:29 -0700 (PDT)
+Received: (nullmailer pid 27980 invoked by uid 1000);
+        Tue, 14 Apr 2020 15:22:28 -0000
+Date:   Tue, 14 Apr 2020 10:22:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v8 4/4] perf tools: add support for libpfm4
-Message-ID: <20200414152102.GC208694@krava>
-References: <20200411074631.9486-1-irogers@google.com>
- <20200411074631.9486-5-irogers@google.com>
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v7 1/4] dt-bindings: usb: qcom,dwc3: Introduce
+ interconnect properties for Qualcomm DWC3 driver
+Message-ID: <20200414152228.GA27923@bogus>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200411074631.9486-5-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 12:46:31AM -0700, Ian Rogers wrote:
+On Wed,  1 Apr 2020 10:45:42 +0530, Sandeep Maheswaram wrote:
+> Add documentation for the interconnects and interconnect-names
+> properties for USB.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
-SNIP
-
->  TAG_FOLDERS= . ../lib ../include
->  TAG_FILES= ../../include/uapi/linux/perf_event.h
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index 965ef017496f..7b64cd34266e 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -18,6 +18,10 @@
->  #include <subcmd/parse-options.h>
->  #include <stdio.h>
->  
-> +#ifdef HAVE_LIBPFM
-> +#include "util/pfm.h"
-> +#endif
-
-so we have the HAVE_LIBPFM you could do the:
-
-#ifdef HAVE_LIBPFM
-#else
-#endif
-
-in util/pfm.h and add stubs for libpfm_initialize and others
-in case HAVE_LIBPFM is not defined.. that clear out all the
-#ifdefs in the change
-
-
-SNIP
-
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index b6322eb0f423..8b323151f22c 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -313,6 +313,15 @@ static struct test generic_tests[] = {
->  		.desc = "maps__merge_in",
->  		.func = test__maps__merge_in,
->  	},
-> +	{
-> +		.desc = "Test libpfm4 support",
-> +		.func = test__pfm,
-> +		.subtest = {
-> +			.skip_if_fail	= true,
-> +			.get_nr		= test__pfm_subtest_get_nr,
-> +			.get_desc	= test__pfm_subtest_get_desc,
-> +		}
-
-awesome :)
-
-SNIP
-
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d23db6755f51..83ad76d3d2be 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2447,9 +2447,15 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
->  		const char *sep = ":";
->  
->  		/* Is there already the separator in the name. */
-> +#ifndef HAVE_LIBPFM
->  		if (strchr(name, '/') ||
->  		    strchr(name, ':'))
->  			sep = "";
-> +#else
-> +		if (strchr(name, '/') ||
-> +		    (strchr(name, ':') && !evsel->is_libpfm_event))
-> +			sep = "";
-> +#endif
-
-
-  ^^^^^^^^
-
->  
->  		if (asprintf(&new_name, "%s%su", name, sep) < 0)
->  			return false;
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 53187c501ee8..397d335d5e24 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -76,6 +76,9 @@ struct evsel {
->  	bool			ignore_missing_thread;
->  	bool			forced_leader;
->  	bool			use_uncore_alias;
-> +#ifdef HAVE_LIBPFM
-> +	bool			is_libpfm_event;
-> +#endif
-
-perhaps we could had this one in unconditionaly,
-because I think we have some members like that
-for aux tracing.. and that would remove the #ifdef
-above
-
-
-SNIP
-
->  
-> +#ifdef HAVE_LIBPFM
-> +struct evsel *parse_events__pfm_add_event(int idx, struct perf_event_attr *attr,
-> +					char *name, struct perf_pmu *pmu)
-> +{
-> +	return __add_event(NULL, &idx, attr, false, name, pmu, NULL, false,
-> +			   NULL);
-> +}
-> +#endif
-
-could you instead add parse_events__add_event and call it from pfm code?
-
-SNIP
-
-> +		pmu = perf_pmu__find_by_type((unsigned int)attr.type);
-> +		evsel = parse_events__pfm_add_event(evlist->core.nr_entries,
-> +						&attr, q, pmu);
-> +		if (evsel == NULL)
-> +			goto error;
-> +
-> +		evsel->is_libpfm_event = true;
-> +
-> +		evlist__add(evlist, evsel);
-> +
-> +		if (grp_evt == 0)
-> +			grp_leader = evsel;
-> +
-> +		if (grp_evt > -1) {
-> +			evsel->leader = grp_leader;
-> +			grp_leader->core.nr_members++;
-> +			grp_evt++;
-> +		}
-> +
-> +		if (*sep == '}') {
-> +			if (grp_evt < 0) {
-> +				ui__error("cannot close a non-existing event group\n");
-> +				goto error;
-> +			}
-> +			evlist->nr_groups++;
-> +			grp_leader = NULL;
-> +			grp_evt = -1;
-> +		}
-> +		evsel->is_libpfm_event = true;
-
-seems to be set twice in here
-
-
-> +	}
-> +	return 0;
-> +error:
-> +	free(p_orig);
-> +	return -1;
-> +}
-> +
-> +static const char *srcs[PFM_ATTR_CTRL_MAX] = {
-> +	[PFM_ATTR_CTRL_UNKNOWN] = "???",
-> +	[PFM_ATTR_CTRL_PMU] = "PMU",
-> +	[PFM_ATTR_CTRL_PERF_EVENT] = "perf_event",
-> +};
-
-SNIP
-
-thanks,
-jirka
-
+Reviewed-by: Rob Herring <robh@kernel.org>
