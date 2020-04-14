@@ -2,107 +2,105 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFFDC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2FCC38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8302206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586874408;
-	bh=Lg63bhefJlO92twb2XXVp+1t8BwepRn5XnGnurXtetQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UUIFzEp1cRpbD62k4zLASMi+HHBzxv2hdJmIb3YguEXGepjxUM+CdcnwUaafTTwn3
-	 hm80degAdY8Gq3Nh3mCTfj0/Fw30CQ7UM+5wbjFAqcxVIv8evpWjpmpbQN2ayMfTrI
-	 AQHuiceKKXSDPUEIpCfBCKfE837TavWpPlfFA2bQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8D3BA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:27:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gxpg4uqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390696AbgDNO0p (ORCPT
+        id S2390729AbgDNO1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733197AbgDNO0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:26:41 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDC06206D5;
-        Tue, 14 Apr 2020 14:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586874399;
-        bh=Lg63bhefJlO92twb2XXVp+1t8BwepRn5XnGnurXtetQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uxpH/vrmPABKmIKPEaXtjZRXOWqmXB7aJg1kyMsfQwLf3BH71MoyWyHJ6WWObYhRZ
-         co//xuRia8Oomk9lg9TB2YoqWRLvV8PBGuY6TH6OACuukY5Nj8Z9DpaD/YeRi0iP6y
-         gX+kh1B4WnpB+e8Rb6vhPqgGBfLcRl5kfotrslEA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] iommu: spapr_tce: Disable compile testing to fix build on book3s_32 config
-Date:   Tue, 14 Apr 2020 16:26:30 +0200
-Message-Id: <20200414142630.21153-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Apr 2020 10:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390695AbgDNO1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:27:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163CFC061A0C;
+        Tue, 14 Apr 2020 07:27:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id z9so5268856pjd.2;
+        Tue, 14 Apr 2020 07:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WH0wZE6uzzA+a4e5P2qc0W40GDZZ9BneKHmXZLZLm18=;
+        b=Gxpg4uqB8pTwf64kuCO6WCL4wKc87NfZQkmnBDLVsXjiS4BRKT4lEK63M+qjksSIqS
+         BnowqgotjG2fDVoYtOzVdywfwQJlMhyk0xrPOyWWxGI3VJUwOdR+fCSQabLY4wLKBVXv
+         e0ObYzePX4rF67B5iCdGCRhrjzBrAMVj+bnzHZJVz3MqNMN0W0KCzkDbuVmIGtOfllYF
+         4zuK8LxPTtyME/gehxKOcrpZtP70YI553CWgOZOhd+TG6vqXmJpiXwU0/1Ws0KL9kX1+
+         s7R8xYS2e9bJJd8E3dKUzv8zCHCox3S530GQ7H6GPF4dVR65YQwI/ZridBtFTbKE2H+W
+         0X2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WH0wZE6uzzA+a4e5P2qc0W40GDZZ9BneKHmXZLZLm18=;
+        b=twy0+0QR5Qk29oVwiuSN6kW0OSbZrc42FIBrBe2PvaGJkj7qBdV77G+s1uM1Z9TkzG
+         GoBwk/0lAfUQMYUvzJDMSofbVNA9uYEDsmU35T3LM+ZIK0Q+6uptIQ1ncLiCU/yZyeZ/
+         vHLFteblj0ORHoQ0lxzdMeJ+uCrDZOlbzK8VsvKqBIDnNdQhLcqWFhSr3/Xmm/8ggaMW
+         8tyeagiCeKWqqITQ0JWA9KDh4JvXJO3Xxn8jFbDBX5lCFbb5j1U/Ve1SIoAYBsalOEQ3
+         nyhgFS0a8me97AGz2/JDCvgQ1M5sNcM8yk7UFN9B1CSYJ/9BlwWxWvqMN6f8vDcBfZQp
+         /9Kg==
+X-Gm-Message-State: AGi0PuZCbpnrVZ5oVV2pPytPfTSYLe+fNptmnCQz6PN7SNTWFwd6tEN9
+        Kaazg/fl37RpopW+FzjRhmA=
+X-Google-Smtp-Source: APiQypJP0tHAzlwgJYQawKPZOPISY5KMkVWcTjEk+bBRGr09thwu5jRGbw/ykfTLNLKlfbIzaAyC4Q==
+X-Received: by 2002:a17:90b:3648:: with SMTP id nh8mr357049pjb.153.1586874419453;
+        Tue, 14 Apr 2020 07:26:59 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id d23sm11228901pfq.210.2020.04.14.07.26.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 07:26:59 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     linus.walleij@linaro.org, patrice.chotard@st.com, info@metux.net,
+        allison@lohutok.net, nehal-bakulchandra.shah@amd.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1] i2c: img-scb: remove duplicate dev_err()
+Date:   Tue, 14 Apr 2020 22:26:50 +0800
+Message-Id: <20200414142650.29359-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although SPAPR_TCE_IOMMU itself can be compile tested on certain PowerPC
-configurations, its presence makes arch/powerpc/kvm/Makefile to select
-modules which do not build in such configuration.
+it will print an error message by itself when platform_get_irq()
+goes wrong. so don't need dev_err() in here again.
 
-The arch/powerpc/kvm/ modules use kvm_arch.spapr_tce_tables which exists
-only with CONFIG_PPC_BOOK3S_64.  However these modules are selected when
-COMPILE_TEST and SPAPR_TCE_IOMMU are chosen leading to build failures:
-
-    In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20:0,
-                     from arch/powerpc/kvm/book3s_64_vio_hv.c:22:
-    arch/powerpc/include/asm/book3s/64/pgtable.h:17:0: error: "_PAGE_EXEC" redefined [-Werror]
-     #define _PAGE_EXEC  0x00001 /* execute permission */
-
-    In file included from arch/powerpc/include/asm/book3s/32/pgtable.h:8:0,
-                     from arch/powerpc/include/asm/book3s/pgtable.h:8,
-                     from arch/powerpc/include/asm/pgtable.h:18,
-                     from include/linux/mm.h:95,
-                     from arch/powerpc/include/asm/io.h:29,
-                     from include/linux/io.h:13,
-                     from include/linux/irq.h:20,
-                     from arch/powerpc/include/asm/hardirq.h:6,
-                     from include/linux/hardirq.h:9,
-                     from include/linux/kvm_host.h:7,
-                     from arch/powerpc/kvm/book3s_64_vio_hv.c:12:
-    arch/powerpc/include/asm/book3s/32/hash.h:29:0: note: this is the location of the previous definition
-     #define _PAGE_EXEC 0x200 /* software: exec allowed */
-
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- drivers/iommu/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-img-scb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 58b4a4dbfc78..3532b1ead19d 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -362,7 +362,7 @@ config IPMMU_VMSA
+diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+index 422097a31c95..2f6de763816a 100644
+--- a/drivers/i2c/busses/i2c-img-scb.c
++++ b/drivers/i2c/busses/i2c-img-scb.c
+@@ -1344,10 +1344,8 @@ static int img_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->base);
  
- config SPAPR_TCE_IOMMU
- 	bool "sPAPR TCE IOMMU Support"
--	depends on PPC_POWERNV || PPC_PSERIES || (PPC && COMPILE_TEST)
-+	depends on PPC_POWERNV || PPC_PSERIES
- 	select IOMMU_API
- 	help
- 	  Enables bits of IOMMU API required by VFIO. The iommu_ops
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't get irq number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+ 	if (IS_ERR(i2c->sys_clk)) {
 -- 
-2.17.1
+2.25.0
 
