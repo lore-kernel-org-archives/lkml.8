@@ -2,95 +2,77 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD5AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB82C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B92E32076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:31:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DI0GDNcW"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC752076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633140AbgDNUbB (ORCPT
+        id S2633159AbgDNUbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633128AbgDNUas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:30:48 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19F9C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:30:48 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v23so478290pfm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=fSEFHqlQPWjh+eO1zQvk6FlxgyhPbRWA0nRwzXY+ICo=;
-        b=DI0GDNcWCaSKUzojr44APUQ2g87h7tlXam1IW/LVnZhwiGN7iX2KJtlZI5R+UiNDfu
-         DZF+uvx/5gEssBaQxrGn4yJQ3UomR6yu12eYC9INAa7bhWe6L3xj6e4qV1jmHXr+apyW
-         1Br2PWFOsLPo73h3of8BD4ggO6KRXWFIckqv8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=fSEFHqlQPWjh+eO1zQvk6FlxgyhPbRWA0nRwzXY+ICo=;
-        b=Izlfx9gkcgM218ktzEfStuIhPdjM1TB7CW7hHdTKfVeKmyBbQaQlE1DoS/ihG4sNNR
-         REL05HeGbPvI6IFC5POM1yozQFkPKP6y9OYzLeWWiP5/2EJrKs57DIYyjAVLHyempbnB
-         aB4iEmUHGcOiEYLstXrfdNe8N4Z8e28R6NWuYr08SxnjDBERlvPPMJArR5xYekvXfGOJ
-         H0a3eL3/IA0DBchfJfxCRyWrKonp9vk8uo8bhaOHtV3xWMGn03+zth5Say+Z8GkAlQ0T
-         WSQiLGB0OwEISf2wmBjthBwRG14FnPsL/VQNUjeJoqth0HDnHPdjBaC6Semu4Kyk6J6d
-         gCyw==
-X-Gm-Message-State: AGi0PuaZkuT1297XajsvMLf0ItqOIwKQws78tVTBxJstuxwkvRm33lBf
-        M6TR+/qCW5g73vQ69q/qQ/PrZk/Kaeg=
-X-Google-Smtp-Source: APiQypK7j30AyIlG7FThLusdHeZXiMK6nQsQdNpWtZSQ6V+9S0RcjrpG2nccWcW5xJlP3E2y/EjX+A==
-X-Received: by 2002:a62:27c2:: with SMTP id n185mr24066849pfn.203.1586896248214;
-        Tue, 14 Apr 2020 13:30:48 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m3sm11025978pgt.27.2020.04.14.13.30.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:30:47 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Apr 2020 16:31:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:19887 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633141AbgDNUbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:31:32 -0400
+IronPort-SDR: 0E/i2S/t/SrGBvpo7MlJKg5g/xw43VoYFVcSO8BtoW8VtL8LfocJWjibk/V9KYcxFgxLP4f8In
+ vKixC4Z9XYZA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 13:31:31 -0700
+IronPort-SDR: bOko6i7G2Cvd+l+59nK1HE1zgsFtO5KioBUHSU3TkP8t5A7Djd07uHhW+tdoyByVnO8+C51j8+
+ pkifmWB4u+Fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
+   d="scan'208";a="453669027"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Apr 2020 13:31:30 -0700
+From:   richard.gong@linux.intel.com
+To:     mdf@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, dinguyen@kernel.org,
+        richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
+Subject: [RESEND PATCHv1 0/1] firmware: fpga: replace the error codes with the standard one 
+Date:   Tue, 14 Apr 2020 15:47:53 -0500
+Message-Id: <1586897274-307-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for Qualcomm DWC3 driver
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Tue, 14 Apr 2020 13:30:46 -0700
-Message-ID: <158689624666.105027.3280804524840557421@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-03-31 22:15:42)
-> Add documentation for the interconnects and interconnect-names
-> properties for USB.
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
+From: Richard Gong <richard.gong@intel.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+The Intel service layer driver has defined error codes for the
+specific services, which started from FPGA configuration then RSU
+(Remote Status Update).
+
+Intel service layer driver should define the standard error codes
+rather than keep adding more error codes for the new services.
+
+The standard error codes will be used by all the clients of Intel service
+layer driver.
+
+Replace FPGA and RSU specific error codes with Intel service layer’s
+Common error codes.
+
+Richard Gong (1):
+  firmware: fpga: replace the error codes with the standard ones
+
+ drivers/firmware/stratix10-rsu.c                   | 10 +--
+ drivers/firmware/stratix10-svc.c                   | 62 ++++++-------------
+ drivers/fpga/stratix10-soc.c                       | 25 +++-----
+ include/linux/firmware/intel/stratix10-smc.h       | 49 +++++++--------
+ .../linux/firmware/intel/stratix10-svc-client.h    | 71 +++++++++-------------
+ 5 files changed, 84 insertions(+), 133 deletions(-)
+
+-- 
+2.7.4
+
