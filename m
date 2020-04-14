@@ -2,299 +2,343 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12793C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F2CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7468206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963E5206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405360AbgDNEi1 (ORCPT
+        id S2405382AbgDNExB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 00:38:27 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50461 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728974AbgDNEi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 00:38:26 -0400
-IronPort-SDR: 1GpeoPljzo6mZb0pKO9Y/ES+VOadV90vcpj5gmTXK913Y8WVA74E2Yb7CVIOvCsFMLn0Je7Qrx
- 0HsfXn/XvcoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 21:38:22 -0700
-IronPort-SDR: AFsnbKJXO7Jq6GCMvOoawRvmgN4SSCpQ8n9T2cFhMQZ9nfNGAnGTGIWMWCx0PpGgvF9tIF/aFM
- 6KuB7Qgq09VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="245318141"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Apr 2020 21:38:22 -0700
-Date:   Mon, 13 Apr 2020 21:38:22 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V7 9/9] Documentation/dax: Update Usage section
-Message-ID: <20200414043821.GG1649878@iweiny-DESK2.sc.intel.com>
-References: <20200413054046.1560106-1-ira.weiny@intel.com>
- <20200413054046.1560106-10-ira.weiny@intel.com>
- <20200413161912.GZ6742@magnolia>
+        Tue, 14 Apr 2020 00:53:01 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:33759 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405372AbgDNEw7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 00:52:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TvUnJ20_1586839969;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvUnJ20_1586839969)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 Apr 2020 12:52:50 +0800
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
+ <20200413180725.GA99267@cmpxchg.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
+Date:   Tue, 14 Apr 2020 12:52:30 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413161912.GZ6742@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200413180725.GA99267@cmpxchg.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 09:19:12AM -0700, Darrick J. Wong wrote:
-> On Sun, Apr 12, 2020 at 10:40:46PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Update the Usage section to reflect the new individual dax selection
-> > functionality.
-> 
-> Yum. :)
-> 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > Changes from V6:
-> > 	Update to allow setting FS_XFLAG_DAX any time.
-> > 	Update with list of behaviors from Darrick
-> > 	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
-> > 
-> > Changes from V5:
-> > 	Update to reflect the agreed upon semantics
-> > 	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> > ---
-> >  Documentation/filesystems/dax.txt | 166 +++++++++++++++++++++++++++++-
-> >  1 file changed, 163 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-> > index 679729442fd2..af14c1b330a9 100644
-> > --- a/Documentation/filesystems/dax.txt
-> > +++ b/Documentation/filesystems/dax.txt
-> > @@ -17,11 +17,171 @@ For file mappings, the storage device is mapped directly into userspace.
-> >  Usage
-> >  -----
-> >  
-> > -If you have a block device which supports DAX, you can make a filesystem
-> > +If you have a block device which supports DAX, you can make a file system
-> >  on it as usual.  The DAX code currently only supports files with a block
-> >  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
-> > -size when creating the filesystem.  When mounting it, use the "-o dax"
-> > -option on the command line or add 'dax' to the options in /etc/fstab.
-> > +size when creating the file system.
-> > +
-> > +Currently 2 filesystems support DAX, ext4 and xfs.  Enabling DAX on them is
-> > +different at this time.
-> 
-> I thought ext2 supports DAX?
 
-Not that I know of?  Does it?
 
+ÔÚ 2020/4/14 ÉÏÎç2:07, Johannes Weiner Ð´µÀ:
+> On Mon, Apr 13, 2020 at 06:48:22PM +0800, Alex Shi wrote:
+>>> In a previous review, I pointed out the following race condition
+>>> between page charging and compaction:
+>>>
+>>> compaction:				generic_file_buffered_read:
+>>>
+>>> 					page_cache_alloc()
+>>>
+>>> !PageBuddy()
+>>>
+>>> lock_page_lruvec(page)
+>>>   lruvec = mem_cgroup_page_lruvec()
+>>>   spin_lock(&lruvec->lru_lock)
+>>>   if lruvec != mem_cgroup_page_lruvec()
+>>>     goto again
+>>>
+>>> 					add_to_page_cache_lru()
+>>> 					  mem_cgroup_commit_charge()
+>>> 					    page->mem_cgroup = foo
+>>> 					  lru_cache_add()
+>>> 					    __pagevec_lru_add()
+>>> 					      SetPageLRU()
+>>>
+>>> if PageLRU(page):
+>>>   __isolate_lru_page()
+>>>
+>>> As far as I can see, you have not addressed this. You have added
+>>> lock_page_memcg(), but that prevents charged pages from moving between
+>>> cgroups, it does not prevent newly allocated pages from being charged.
+>>>
+>>> It doesn't matter how many times you check the lruvec before and after
+>>> locking - if you're looking at a free page, it might get allocated,
+>>> charged and put on a new lruvec after you're done checking, and then
+>>> you isolate a page from an unlocked lruvec.
+>>>
+>>> You simply cannot serialize on page->mem_cgroup->lruvec when
+>>> page->mem_cgroup isn't stable. You need to serialize on the page
+>>> itself, one way or another, to make this work.
+>>>
+>>>
+>>> So here is a crazy idea that may be worth exploring:
+>>>
+>>> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+>>> linked list.
+>>>
+>>> Can we make PageLRU atomic and use it to stabilize the lru_lock
+>>> instead, and then use the lru_lock only serialize list operations?
+>>>
+>>> I.e. in compaction, you'd do
+>>>
+>>> 	if (!TestClearPageLRU(page))
+>>> 		goto isolate_fail;
+>>> 	/*
+>>> 	 * We isolated the page's LRU state and thereby locked out all
+>>> 	 * other isolators, including cgroup page moving, page reclaim,
+>>> 	 * page freeing etc. That means page->mem_cgroup is now stable
+>>> 	 * and we can safely look up the correct lruvec and take the
+>>> 	 * page off its physical LRU list.
+>>> 	 */
+>>> 	lruvec = mem_cgroup_page_lruvec(page);
+>>> 	spin_lock_irq(&lruvec->lru_lock);
+>>> 	del_page_from_lru_list(page, lruvec, page_lru(page));
+>>>
+>>> Putback would mostly remain the same (although you could take the
+>>> PageLRU setting out of the list update locked section, as long as it's
+>>> set after the page is physically linked):
+>>>
+>>> 	/* LRU isolation pins page->mem_cgroup */
+>>> 	lruvec = mem_cgroup_page_lruvec(page)
+>>> 	spin_lock_irq(&lruvec->lru_lock);
+>>> 	add_page_to_lru_list(...);
+>>> 	spin_unlock_irq(&lruvec->lru_lock);
+>>>
+>>> 	SetPageLRU(page);
+>>>
+>>> And you'd have to carefully review and rework other sites that rely on
+>>> PageLRU: reclaim, __page_cache_release(), __activate_page() etc.
+>>>
+>>> Especially things like activate_page(), which used to only check
+>>> PageLRU to shuffle the page on the LRU list would now have to briefly
+>>> clear PageLRU and then set it again afterwards.
+>>>
+>>> However, aside from a bit more churn in those cases, and the
+>>> unfortunate additional atomic operations, I currently can't think of a
+>>> fundamental reason why this wouldn't work.
+>>>
+>>> Hugh, what do you think?
+>>>
+>>
+>> Hi Johannes
+>>
+>> As to the idea of TestClearPageLRU, we except the following scenario
+>>     compaction                       commit_charge
+>>                                      if (TestClearPageLRU)
+>>         !TestClearPageLRU                 lock_page_lruvec
+>>             goto isolate_fail;            del_from_lru_list
+>>                                           unlock_page_lruvec
+>>
+>> But there is a difficult situation to handle:
+>>
+>>    compaction                        commit_charge
+>>         TestClearPageLRU
+>>                                     !TestClearPageLRU
+>>
+>>                                     page possible state:
+>>                                     a, reclaiming, b, moving between lru list, c, migrating, like in compaction
+>>                                     d, mlocking,   e, split_huge_page,
+>>
+>> If the page lru bit was cleared in commit_charge with lrucare,
+>> we still have no idea if the page was isolated by the reason from a~e
+>> or the page is never on LRU, to deal with different reasons is high cost.
+>>
+>> So as to the above issue you mentioned, Maybe the better idea is to
+>> set lrucare when do mem_cgroup_commit_charge(), since the charge action
+>> is not often. What's your idea of this solution?
 > 
-> > +Enabling DAX on ext4
-> > +--------------------
-> > +
-> > +When mounting the filesystem, use the "-o dax" option on the command line or
-> > +add 'dax' to the options in /etc/fstab.
-> > +
-> > +
-> > +Enabling DAX on xfs
-> > +-------------------
-> > +
-> > +Summary
-> > +-------
-> > +
-> > + 1. There exists an in-kernel access mode flag S_DAX that is set when
-> > +    file accesses go directly to persistent memory, bypassing the page
-> > +    cache.  Applications must call statx to discover the current S_DAX
-> > +    state (STATX_ATTR_DAX).
-> > +
-> > + 2. There exists an advisory file inode flag FS_XFLAG_DAX that is
-> > +    inherited from the parent directory FS_XFLAG_DAX inode flag at file
-> > +    creation time.  This advisory flag can be set or cleared at any
-> > +    time, but doing so does not immediately affect the S_DAX state.
-> > +
-> > +    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
-> > +    and the fs is on pmem then it will enable S_DAX at inode load time;
-> > +    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> > +
-> > + 3. There exists a dax= mount option.
-> > +
-> > +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> > +
-> > +    "-o dax=always" means "always set S_DAX (at least on pmem),
-> > +                    and ignore FS_XFLAG_DAX."
-> > +
-> > +    "-o dax"        is an alias for "dax=always".
-> > +
-> > +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> > +
-> > + 4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
-> > +    be set or cleared at any time.  The flag state is inherited by any files or
-> > +    subdirectories when they are created within that directory.
-> > +
-> > + 5. Programs that require a specific file access mode (DAX or not DAX)
-> > +    can do one of the following:
-> > +
-> > +    (a) Create files in directories that the FS_XFLAG_DAX flag set as
-> > +        needed; or
-> > +
-> > +    (b) Have the administrator set an override via mount option; or
-> > +
-> > +    (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
-> > +        must then cause the kernel to evict the inode from memory.  This
-> > +        can be done by:
-> > +
-> > +        i>  Closing the file and re-opening the file and using statx to
-> > +            see if the fs has changed the S_DAX flag; and
-> > +
-> > +        ii> If the file still does not have the desired S_DAX access
-> > +            mode, either unmount and remount the filesystem, or close
-> > +            the file and use drop_caches.
-> > +
-> > + 6. It is expected that users who want to squeeze every last bit of performance
-> > +    out of the particular rough and tumble bits of their storage will also be
-> > +    exposed to the difficulties of what happens when the operating system can't
-> > +    totally virtualize those hardware capabilities.  DAX is such a feature.
-> > +    Basically, Formula-1 cars require a bit more care and feeding than your
-> > +    averaged Toyota minivan, as it were.
+> Hm, yes, the lrucare scenario is a real problem. If it can isolate the
+> page, fine, but if not, it changes page->mem_cgroup on a page that
+> somebody else has isolated, having indeed no idea who they are and how
+> they are going to access page->mem_cgroup.
 > 
-> I think we can omit this last sentence for the formal documentation...
+> Right now it's safe because of secondary protection on top of
+> isolation: split_huge_page keeps the lru_lock held throughout;
+> reclaim, cgroup migration, page migration, compaction etc. hold the
+> page lock which locks out swapcache charging.
+> 
+> But it complicates the serialization model immensely and makes it
+> subtle and error prone.
+> 
+> I'm not sure how unconditionally taking the lru_lock when charging
+> would help. Can you lay out what you have in mind in prototype code,
+> like I'm using below, for isolation, putback, charging, compaction?
 
-Done.
+The situation would back to relock scheme, the lru_lock will compete with 
+the some root_memcg->lru_lock in practical. So no needs to distinguish 
+putback, compaction etc. 
 
-> :)
-> 
-> > +
-> > +
-> > +Details
-> > +-------
-> > +
-> > +There are 2 per-file dax flags.  One is a physical inode setting (FS_XFLAG_DAX)
-> > +and the other a currently enabled state (S_DAX).
-> > +
-> > +FS_XFLAG_DAX is maintained, on disk, on individual inodes.  It is preserved
-> > +within the file system.  This 'physical' config setting can be set using an
-> > +ioctl and/or an application such as "xfs_io -c 'chattr [-+]x'".  Files and
-> > +directories automatically inherit FS_XFLAG_DAX from their parent directory
-> > +_when_ _created_.  Therefore, setting FS_XFLAG_DAX at directory creation time
-> > +can be used to set a default behavior for an entire sub-tree.  (Doing so on the
-> > +root directory acts to set a default for the entire file system.)
-> > +
-> > +To clarify inheritance here are 3 examples:
-> > +
-> > +Example A:
-> > +
-> > +mkdir -p a/b/c
-> > +xfs_io 'chattr +x' a
-> > +mkdir a/b/c/d
-> > +mkdir a/e
-> > +
-> > +	dax: a,e
-> > +	no dax: b,c,d
-> > +
-> > +Example B:
-> > +
-> > +mkdir a
-> > +xfs_io 'chattr +x' a
-> > +mkdir -p a/b/c/d
-> > +
-> > +	dax: a,b,c,d
-> > +	no dax:
-> > +
-> > +Example C:
-> > +
-> > +mkdir -p a/b/c
-> > +xfs_io 'chattr +x' c
-> > +mkdir a/b/c/d
-> > +
-> > +	dax: c,d
-> > +	no dax: a,b
-> > +
-> > +
-> > +The current enabled state (S_DAX) is set when a file inode is _loaded_ based on
-> > +the underlying media support, the value of FS_XFLAG_DAX, and the file systems
-> > +dax mount option setting.  See below.
-> > +
-> > +statx can be used to query S_DAX.  NOTE that a directory will never have S_DAX
-> > +set and therefore statx will always return false on directories.
-> 
-> "statx will never indicate that S_DAX is set on directories."
+But I don't know how much impact on this alloc path...
 
-Done.
+compaction:				generic_file_buffered_read:
+ 					page_cache_alloc()
+
+ !PageBuddy()
+
+ lock_page_lruvec(page)
+   lruvec = mem_cgroup_page_lruvec()
+   spin_lock(&lruvec->lru_lock)
+   if lruvec != mem_cgroup_page_lruvec()
+     goto again
+
+ 					add_to_page_cache_lru()
+ 					  mem_cgroup_commit_charge()
+					    spin_lock_irq(page->memcg->lruvec->lru_lock)
+ 					    page->mem_cgroup = foo
+					    spin_unlock_irq(page->memcg->lruvec->lru_lock)
+ 					  lru_cache_add()
+ 					    __pagevec_lru_add()
+ 					      SetPageLRU()
+
+ if PageLRU(page):
+   __isolate_lru_page()
 
 > 
-> > +
-> > +NOTE: Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs
-> > +even if the underlying media does not support dax and/or the file system is
-> > +overridden with a mount option.
-> > +
-> > +
-> > +Overriding FS_XFLAG_DAX (dax= mount option)
-> > +-------------------------------------------
-> > +
-> > +There exists a dax mount option.  Using the mount option does not change the
-> > +physical configured state of individual files but overrides the S_DAX operating
-> > +state when inodes are loaded.
-> > +
-> > +Given underlying media support, the dax mount option is a tri-state option
-> > +(never, always, inode) with the following meanings:
-> > +
-> > +   "-o dax=never" means "never set S_DAX, ignore FS_XFLAG_DAX"
-> > +   "-o dax=always" means "always set S_DAX, ignore FS_XFLAG_DAX"
-> > +        "-o dax" by itself means "dax=always" to remain compatible with older
-> > +	         kernels
-> > +   "-o dax=inode" means "follow FS_XFLAG_DAX"
-> > +
-> > +The default state is 'inode'.  Given underlying media support, the following
-> > +algorithm is used to determine the effective mode of the file S_DAX on a
-> > +capable device.
-> > +
-> > +	S_DAX = FS_XFLAG_DAX;
-> > +
-> > +	if (dax_mount == "always")
-> > +		S_DAX = true;
-> > +	else if (dax_mount == "off"
-> > +		S_DAX = false;
-> > +
-> > +To reiterate: Setting, and inheritance, continues to affect FS_XFLAG_DAX even
-> > +while the file system is mounted with a dax override.  However, file enabled
-> > +state, S_DAX, will continue to be the overridden until the file system is
-> > +remounted with dax=inode.
+> That said, charging actually is a hotpath. I'm reluctant to
+> unconditionally take the LRU lock there. But if you can make things a
+> lot simpler this way, it could be worth exploring.
 > 
-> "However, in-core inode state (S_DAX) will continue to be overridden
-> until the filesystem is remounted with dax=inode and the inode is
-> evicted."
+> In the PageLRU locking scheme, I can see a way to make putback safe
+> wrt lrucare charging, but I'm not sure about isolation:
 > 
-> ...since we don't currently evict inodes just because a remount occurred.
-> :)
+> putback:
+> lruvec = page->mem_cgroup->lruvecs[pgdat]
+> spin_lock(lruvec->lru_lock)
+> if lruvec != page->mem_cgroup->lruvecs[pgdat]:
+>   /*
+>    * commit_charge(lrucare=true) can charge an uncharged swapcache
+>    * page while we had it isolated. This changes page->mem_cgroup,
+>    * but it can only happen once. Look up the new cgroup.
+>    */
+>   spin_unlock(lruvec->lru_lock)
+>   lruvec = page->mem_cgroup->lruvecs[pgdat]
+>   spin_lock(lruvec->lru_lock)
+> add_page_to_lru_list(page, lruvec, ...)
+> SetPageLRU(page);
+> spin_unlock(lruvec->lru_lock)
+> 
+> commit_charge:
+> if (lrucare)
+>   spin_lock(root_memcg->lru_lock)
+>   /*
+>    * If we can isolate the page, we'll move it to the new
+>    * cgroup's LRU list. If somebody else has the page
+>    * isolated, we need their putback to move it to the
+>    * new cgroup. If they see the old cgroup - the root -
+>    * they will spin until we're done and recheck.
+>    */
+>   if ((lru = TestClearPageLRU(page)))
+>     del_page_from_lru_list()
+> page->mem_cgroup = new;
+> if (lrucare)
+>   spin_unlock(root_memcg->lru_lock)
+>   if (lru)
+>     spin_lock(new->lru_lock)
+>     add_page_to_lru_list()
+>     spin_unlock(new->lru_lock);
+>     SetPageLRU(page)
+> 
+> putback would need to 1) recheck once after acquiring the lock and 2)
+> SetPageLRU while holding the lru_lock after all. But it works because
+> we know the old cgroup: if the putback sees the old cgroup, we know
+> it's the root cgroup, and we have that locked until we're done with
+> the update. And if putback manages to lock the old cgroup before us,
+> we will spin until the isolator is done, and then either be able to
+> isolate it ourselves or, if racing with yet another isolator, hold the
+> lock and delay putback until we're done.
+> 
+> But isolation actually needs to lock out charging, or it would operate
+> on the wrong list:
+> 
+> isolation:                                     commit_charge:
+> if (TestClearPageLRU(page))
+>                                                page->mem_cgroup = new
+>   // page is still physically on
+>   // the root_mem_cgroup's LRU. We're
+>   // updating the wrong list:
+>   memcg = page->mem_cgroup
+>   spin_lock(memcg->lru_lock)
+>   del_page_from_lru_list(page, memcg)
+>   spin_unlock(memcg->lru_lock)
+> 
 
-Done
+Yes, this is the problem I encountered now for mem_cgroup_lru_size incorrect.
 
-Thanks again for the review!  :-D
+ 
+> lrucare really is a mess. Even before this patch series, it makes
+> things tricky and subtle and error prone.
+> 
+> The only reason we're doing it is for when there is swapping without
+> swap tracking, in which case swap reahadead needs to put pages on the
+> LRU but cannot charge them until we have a faulting vma later.
+> 
+> But it's not clear how practical such a configuration is. Both memory
+> and swap are shared resources, and isolation isn't really effective
+> when you restrict access to memory but then let workloads swap freely.
 
-Ira
+Yes, we didn't figure a good usage on MEMCG_SWAP too. And if swaping happens
+often, the different memcg's memory were swaped to same disk and mixed together
+which cause readahead useless.
 
 > 
-> --D
+> Plus, the overhead of tracking is tiny - 512k per G of swap (0.04%).
 > 
-> >  
-> >  
-> >  Implementation Tips for Block Driver Writers
-> > -- 
-> > 2.25.1
-> > 
+> Maybe we should just delete MEMCG_SWAP and unconditionally track swap
+> entry ownership when the memory controller is enabled. I don't see a
+> good reason not to, and it would simplify the entire swapin path, the
+> LRU locking, and the page->mem_cgroup stabilization rules.
+> 
+
+Sorry for not follow you up, did you mean just remove the MEMCG_SWAP configuration
+and keep the feature in default memcg? 
+That does can remove lrucare, but PageLRU lock scheme still fails since
+we can not isolate the page during commit_charge, is that right?
+
+Thanks a lot!
+Alex
