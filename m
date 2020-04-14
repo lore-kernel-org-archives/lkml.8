@@ -2,73 +2,124 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C2CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF77C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AA9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLc0RHyT"
+	by mail.kernel.org (Postfix) with ESMTP id A3B90206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440955AbgDNPuF (ORCPT
+        id S2440953AbgDNPuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:50:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41084 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2440940AbgDNPt7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:49:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586879398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=C5AiC1VtAoWJEY/odyXCn7YoS2/DSWi+dbTyYEt2cZQ=;
-        b=VLc0RHyThyvpxgG0kBRn05uMXIqWo6cUMaf4HprIHFA7KOHJJoiSzELT/pXKMhRZb1CfkA
-        JXvKPCRrMS1kPBHKsxWTcLAKj5g279ZjXo0bgax8J5YoY0Np2ptgOiNRVjj0kyKjL+t/id
-        TKBEU/nMEcbSs6IT4J+il5AeKMyDl3c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-nx3W3qOFP32vjbdOe67__g-1; Tue, 14 Apr 2020 11:49:56 -0400
-X-MC-Unique: nx3W3qOFP32vjbdOe67__g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A286D107ACC4;
-        Tue, 14 Apr 2020 15:49:55 +0000 (UTC)
-Received: from localhost (ovpn-114-148.ams2.redhat.com [10.36.114.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C16311D2CF;
-        Tue, 14 Apr 2020 15:49:50 +0000 (UTC)
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     linux-security-module@vger.kernel.org
-Cc:     Serge Hallyn <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [PATCH] capabilities: add description for CAP_SETFCAP
-Date:   Tue, 14 Apr 2020 16:49:45 +0100
-Message-Id: <20200414154945.142372-1-stefanha@redhat.com>
+        Tue, 14 Apr 2020 11:50:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37980 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440940AbgDNPuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:50:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 15767ACBA;
+        Tue, 14 Apr 2020 15:50:14 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 983311E125F; Tue, 14 Apr 2020 17:50:13 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 17:50:13 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     jack@suse.cz, tytso@mit.edu, linux-ext4@vger.kernel.org,
+        adilger@dilger.ca, darrick.wong@oracle.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, willy@infradead.org,
+        linux-unionfs@vger.kernel.org,
+        syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+Subject: Re: [RFC 1/1] ext4: Fix overflow case for map.m_len in
+ ext4_iomap_begin_*
+Message-ID: <20200414155013.GF28226@quack2.suse.cz>
+References: <00000000000048518b05a2fef23a@google.com>
+ <dea98f0b07e16de219d8741c1fefc7cb476cb482.1586681010.git.riteshh@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dea98f0b07e16de219d8741c1fefc7cb476cb482.1586681010.git.riteshh@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIHB1cnBvc2Ugb2YgQ0FQX1NFVEZDQVAuICBGb3Igc29tZSByZWFzb24gdGhp
-cyBjYXBhYmlsaXR5CmhhZCBubyBkZXNjcmlwdGlvbiB3aGlsZSB0aGUgb3RoZXJzIGRpZC4KClNp
-Z25lZC1vZmYtYnk6IFN0ZWZhbiBIYWpub2N6aSA8c3RlZmFuaGFAcmVkaGF0LmNvbT4KLS0tCiBp
-bmNsdWRlL3VhcGkvbGludXgvY2FwYWJpbGl0eS5oIHwgMiArKwogMSBmaWxlIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC9jYXBhYmlsaXR5
-LmggYi9pbmNsdWRlL3VhcGkvbGludXgvY2FwYWJpbGl0eS5oCmluZGV4IDI3MmRjNjlmYTA4MC4u
-NzI4OGYwYWQ0NGFmIDEwMDY0NAotLS0gYS9pbmNsdWRlL3VhcGkvbGludXgvY2FwYWJpbGl0eS5o
-CisrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9jYXBhYmlsaXR5LmgKQEAgLTMzMiw2ICszMzIsOCBA
-QCBzdHJ1Y3QgdmZzX25zX2NhcF9kYXRhIHsKIAogI2RlZmluZSBDQVBfQVVESVRfQ09OVFJPTCAg
-ICAzMAogCisvKiBTZXQgb3IgcmVtb3ZlIGNhcGFiaWxpdGllcyBvbiBmaWxlcyAqLworCiAjZGVm
-aW5lIENBUF9TRVRGQ0FQCSAgICAgMzEKIAogLyogT3ZlcnJpZGUgTUFDIGFjY2Vzcy4KLS0gCjIu
-MjUuMQoK
+On Sun 12-04-20 14:54:35, Ritesh Harjani wrote:
+> EXT4_MAX_LOGICAL_BLOCK - map.m_lblk + 1 in case when
+> map.m_lblk (offset) is 0 could overflow an unsigned int
+> and become 0.
+> 
+> Fix this.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
 
+The patch looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/inode.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index e416096fc081..d630ec7a9c8e 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3424,6 +3424,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>  	int ret;
+>  	struct ext4_map_blocks map;
+>  	u8 blkbits = inode->i_blkbits;
+> +	loff_t len;
+>  
+>  	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
+>  		return -EINVAL;
+> @@ -3435,8 +3436,11 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>  	 * Calculate the first and last logical blocks respectively.
+>  	 */
+>  	map.m_lblk = offset >> blkbits;
+> -	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
+> +	len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>  			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
+> +	if (len > EXT4_MAX_LOGICAL_BLOCK)
+> +		len = EXT4_MAX_LOGICAL_BLOCK;
+> +	map.m_len = len;
+>  
+>  	if (flags & IOMAP_WRITE)
+>  		ret = ext4_iomap_alloc(inode, &map, flags);
+> @@ -3524,6 +3528,7 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
+>  	bool delalloc = false;
+>  	struct ext4_map_blocks map;
+>  	u8 blkbits = inode->i_blkbits;
+> +	loff_t len
+>  
+>  	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
+>  		return -EINVAL;
+> @@ -3541,8 +3546,11 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
+>  	 * Calculate the first and last logical block respectively.
+>  	 */
+>  	map.m_lblk = offset >> blkbits;
+> -	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
+> +	len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>  			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
+> +	if (len > EXT4_MAX_LOGICAL_BLOCK)
+> +		len = EXT4_MAX_LOGICAL_BLOCK;
+> +	map.m_len = len;
+>  
+>  	/*
+>  	 * Fiemap callers may call for offset beyond s_bitmap_maxbytes.
+> -- 
+> 2.21.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
