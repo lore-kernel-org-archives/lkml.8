@@ -2,93 +2,72 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7655C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3CDC38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2EA206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F3D2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439445AbgDNPXt (ORCPT
+        id S2440369AbgDNPYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:23:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49086 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390831AbgDNPXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:23:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4D89AAC26;
-        Tue, 14 Apr 2020 15:23:12 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id A41C0DA823; Tue, 14 Apr 2020 17:22:33 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 17:22:33 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     dsterba@suse.cz, Tang Bin <tangbin@cmss.chinamobile.com>,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] btrfs: Fix backref.c selftest compilation warning
-Message-ID: <20200414152233.GV5920@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Tang Bin <tangbin@cmss.chinamobile.com>,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-References: <20200411154915.9408-1-tangbin@cmss.chinamobile.com>
- <20200414151931.GU5920@twin.jikos.cz>
+        Tue, 14 Apr 2020 11:24:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53836 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439435AbgDNPXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:23:47 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jONPc-0005Mt-9D; Tue, 14 Apr 2020 15:23:44 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drivers: hv: remove redundant assignment to pointer primary_channel
+Date:   Tue, 14 Apr 2020 16:23:43 +0100
+Message-Id: <20200414152343.243166-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414151931.GU5920@twin.jikos.cz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 05:19:31PM +0200, David Sterba wrote:
-> On Sat, Apr 11, 2020 at 11:49:15PM +0800, Tang Bin wrote:
-> > Fix missing braces compilation warning in the ARM
-> > compiler environment:
-> >     fs/btrfs/backref.c: In function ‘is_shared_data_backref’:
-> >     fs/btrfs/backref.c:394:9: warning: missing braces around initializer [-Wmissing-braces]
-> >       struct prelim_ref target = {0};
-> >     fs/btrfs/backref.c:394:9: warning: (near initialization for ‘target.rbnode’) [-Wmissing-braces]
-> > 
-> > Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> > Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-> > ---
-> >  fs/btrfs/backref.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
-> > index 9c380e7..0cc0257 100644
-> > --- a/fs/btrfs/backref.c
-> > +++ b/fs/btrfs/backref.c
-> > @@ -391,7 +391,7 @@ static int is_shared_data_backref(struct preftrees *preftrees, u64 bytenr)
-> >  	struct rb_node **p = &preftrees->direct.root.rb_root.rb_node;
-> >  	struct rb_node *parent = NULL;
-> >  	struct prelim_ref *ref = NULL;
-> > -	struct prelim_ref target = {0};
-> > +	struct prelim_ref target = {};
-> 
-> I wonder why this initialization is a problem while there are about 20
-> other uses of "{0}". The warning is about the embedded rbnode, but why
-> does a more recent compiler not warn about that? Is this a missing fix
-> from the one you use?
-> 
-> I don't mind fixing compiler warnings as long as it bothers enough
-> people, eg. we have fixes reported by gcc 7 but I'm hesitant to fix
-> anything older without a good reason.
+From: Colin Ian King <colin.king@canonical.com>
 
-This seems to be the bug report
+The pointer primary_channel is being assigned with a value that is never,
+The assignment is redundant and can be removed.
 
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119
-"Bug 53119 - -Wmissing-braces wrongly warns about universal zero
-initializer {0} "
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/hv/channel_mgmt.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index ffd7fffa5f83..f7bbb8dc4b0f 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
+ 
+ 	if (channel->primary_channel == NULL) {
+ 		list_del(&channel->listentry);
+-
+-		primary_channel = channel;
+ 	} else {
+ 		primary_channel = channel->primary_channel;
+ 		spin_lock_irqsave(&primary_channel->lock, flags);
+-- 
+2.25.1
+
