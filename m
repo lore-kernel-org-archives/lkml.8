@@ -2,119 +2,208 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0042C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3C6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C428C20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiHAQB5F"
+	by mail.kernel.org (Postfix) with ESMTP id 25A7E20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440017AbgDNMTZ (ORCPT
+        id S2440029AbgDNMUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439999AbgDNMTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:19:02 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C304DC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:19:01 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id k21so12270267ljh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V2uhKGH1niG1NZ7O2reXhRZkgbh6RqYNoAWaTPDRwBc=;
-        b=OiHAQB5F+9MwiQLWbGcwkrQZ+osTSBwOsMy5kcZtWYnR8k4okAp2XelXhano8lZPN8
-         cTgJOzPaPkoedcEvWsPG8cUVy6bI6l+Ko4XsThFW7ZK98rWYn/FklZgdXjhHchDgZt1D
-         XjfdLPT3NpV9MpKflOoTutBnaP0uW9SxRzWNoFjANUJzO1XoKeQa5C4rkZ0kH4MCrbmh
-         VjZKURhgVMqgpALpuf6u+sPip5a62otDAQ00BsuDlPSReYgZPKY9LY2WdgOQ/GxZ+AFn
-         RghZSY82owdeScpFYe++gpFet5hJNmIK/WYU81+cxy0a8PijDYkuButVbIdPSvRI5xql
-         vtFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V2uhKGH1niG1NZ7O2reXhRZkgbh6RqYNoAWaTPDRwBc=;
-        b=r0YuCQ9CntoDp5DKmbBt3Q26Ce/0B0CqXjD0DBh4gg4JlQdM/TlTzN9QEQej4iUkrC
-         ooAOk/fbp32hEt2kxMMnl5gkg4q38B2ok/YhsuuEsXqHmRBg/fDFW/vmT/8Uf5NopSwh
-         cOipmi9aCLJXxGiIqaTBKYYVHKWwAoMi8d8B1GYlkAg6Iha9n51Euw/6K5PbKx1EhS4K
-         yaZC4cY97mW3TSoPUruTlqmplxwi/UFIR+GJSD8PTgL7DgNkuXU/RnowhwqJDVABRdY+
-         2Bw60krACPsTNxxi+jGR+kCh/g2d7OzgkYDJOCWyJPdxJOaSXs9KknlepUkxGV+/cRPP
-         DpEw==
-X-Gm-Message-State: AGi0PubReGGg3Y8lU7SrhF5C2AiolepLlp5HnPf47vjglQ1O5oWvjaiQ
-        ++VwdLLIckvqv28SFGFy5H5rh80A
-X-Google-Smtp-Source: APiQypI3Nkfx8h6Wo157c8g5j+hbkgjomDF7OWCyYPa7rvJI4EQxOHRF0nZqN8Psc+SKKr2KzD+ohA==
-X-Received: by 2002:a2e:8996:: with SMTP id c22mr9952749lji.155.1586866739156;
-        Tue, 14 Apr 2020 05:18:59 -0700 (PDT)
-Received: from [192.168.0.160] (84.188.smarthome.spb.ru. [80.249.188.84])
-        by smtp.gmail.com with ESMTPSA id c22sm8980495ljh.66.2020.04.14.05.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 05:18:58 -0700 (PDT)
-Subject: Re: [PATCH 5/8] staging: rtl8188eu: Remove function rtw_modular64()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190712071746.2474-5-nishkadg.linux@gmail.com>
- <66fb1e37-107e-54f4-4986-ca4e4bb99d2d@yandex.ru>
- <20200414115604.GF1163@kadam>
-From:   Ivan Safonov <insafonov@gmail.com>
-Message-ID: <20becb6f-7bf6-8618-9525-b64c226088c7@gmail.com>
-Date:   Tue, 14 Apr 2020 15:22:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Tue, 14 Apr 2020 08:20:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2371 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2440014AbgDNMT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:19:56 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 593FA43AC802EDBA096C;
+        Tue, 14 Apr 2020 20:19:49 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.49) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Apr 2020
+ 20:19:42 +0800
+Subject: Re: [PATCH] arm64: panic on synchronous external abort in kernel
+ context
+To:     Mark Rutland <mark.rutland@arm.com>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <tglx@linutronix.de>,
+        <james.morse@arm.com>, <tanxiaofei@huawei.com>,
+        <wangxiongfeng2@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200410015245.23230-1-xiexiuqi@huawei.com>
+ <20200414105923.GA2486@C02TD0UTHF1T.local>
+From:   Xie XiuQi <xiexiuqi@huawei.com>
+Message-ID: <9982d344-328e-320d-020f-218ab74ae2b1@huawei.com>
+Date:   Tue, 14 Apr 2020 20:19:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200414115604.GF1163@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200414105923.GA2486@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.49]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 2:56 PM, Dan Carpenter wrote:
-> On Sun, Apr 12, 2020 at 04:34:08PM +0300, Ivan Safonov wrote:
->>> Remove function rtw_modular64 as all it does is call do_div.
+Hi Mark,
+
+On 2020/4/14 18:59, Mark Rutland wrote:
+> On Fri, Apr 10, 2020 at 09:52:45AM +0800, Xie XiuQi wrote:
+>> We should panic even panic_on_oops is not set, when we can't recover
+>> from synchronous external abort in kernel context.
 >>
->> This is wrong. Macro do_div(x, y) change first argument x, but
->> rtw_modular64(x, y) preserve it.
+>> Othervise, there are two issues:
+>> 1) fallback to do_exit() in exception context, cause this core hung up.
+>>    do_sea()
+>>    -> arm64_notify_die
+>>       -> die
+>>          -> do_exit
+>> 2) errors may propagated.
 >>
->>> +			tsf = pmlmeext->TSFValue - do_div(pmlmeext->TSFValue, (pmlmeinfo->bcn_interval*1024)) - 1024; /* us */
+>> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+>> Cc: Xiaofei Tan <tanxiaofei@huawei.com>
+>> ---
+>>  arch/arm64/include/asm/esr.h | 12 ++++++++++++
+>>  arch/arm64/kernel/traps.c    |  2 ++
+>>  2 files changed, 14 insertions(+)
 >>
->> rounddown(pmlmeext->TSFValue, pmlmeinfo->bcn_interval * 1024) - 1024
->> is a better replacement for
+>> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+>> index cb29253ae86b..acfc71c6d148 100644
+>> --- a/arch/arm64/include/asm/esr.h
+>> +++ b/arch/arm64/include/asm/esr.h
+>> @@ -326,6 +326,18 @@ static inline bool esr_is_data_abort(u32 esr)
+>>  	return ec == ESR_ELx_EC_DABT_LOW || ec == ESR_ELx_EC_DABT_CUR;
+>>  }
+>>  
+>> +static inline bool esr_is_inst_abort(u32 esr)
+>> +{
+>> +	const u32 ec = ESR_ELx_EC(esr);
+>> +
+>> +	return ec == ESR_ELx_EC_IABT_LOW || ec == ESR_ELx_EC_IABT_CUR;
+>> +}
+>> +
+>> +static inline bool esr_is_ext_abort(u32 esr)
+>> +{
+>> +	return esr_is_data_abort(esr) || esr_is_inst_abort(esr);
+>> +}
 > 
-> You're absolutely correct that the patch is buggy, but I'm not sure that
-> rounddown() is what we want.
+> A data abort or an intstruction abort are not necessarily synchronus
+> external aborts, so this isn't right.
 > 
-> rtw_modular64() took the MOD of x.  So it should be something like:
+> What exactly are you trying to catch here? If you are seeing a problem
+> in practice, can you please share your log from a crash?
+
+Yes, I meet a problem in practice.
+
+Tan Xiaofei report this issue when doing ras error inject testing:
+1) panic_on_oops is not set;
+2) trigger a sea by inject a ECC error;
+3) a cpu core receive a sea in kernel context:
+   do_mem_abort
+     -> arm64_notify_die
+        -> die                    # kernel context, call die() directly;
+           -> do_exit             # kernel process context, call do_exit(SIGSEGV);
+              -> do_task_dead()   # call do_task_dead(), and hung up this core;
+
+Actually, we should not call do_exit() for kernel task, or before return from
+external abort.
+
+So, I send this patch intend to panic directly when receive a sea in kernel context.
+
+crash log:
+
+NOTICE:  [TotemRasIntCpuNodeEri]:[1879L]
+NOTICE:  [RasEriInterrupt]:[173L]NodeTYP2Status = 0x0
+[  387.740609] {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 9
+[  387.748837] {1}[Hardware Error]: event severity: recoverable
+[  387.754470] {1}[Hardware Error]:  Error 0, type: recoverable
+[  387.760103] {1}[Hardware Error]:   section_type: ARM processor error
+[  387.766425] {1}[Hardware Error]:   MIDR: 0x00000000481fd010
+[  387.771972] {1}[Hardware Error]:   Multiprocessor Affinity Register (MPIDR): 0x0000000081080000
+[  387.780628] {1}[Hardware Error]:   error affinity level: 0
+[  387.786088] {1}[Hardware Error]:   running state: 0x1
+[  387.791115] {1}[Hardware Error]:   Power State Coordination Interface state: 0
+[  387.798301] {1}[Hardware Error]:   Error info structure 0:
+[  387.803761] {1}[Hardware Error]:   num errors: 1
+[  387.808356] {1}[Hardware Error]:    error_type: 0, cache error
+[  387.814160] {1}[Hardware Error]:    error_info: 0x0000000024400017
+[  387.820311] {1}[Hardware Error]:     transaction type: Instruction
+[  387.826461] {1}[Hardware Error]:     operation type: Generic error (type cannot be determined)
+[  387.835031] {1}[Hardware Error]:     cache level: 1
+[  387.839878] {1}[Hardware Error]:     the error has been corrected
+[  387.845942] {1}[Hardware Error]:    physical fault address: 0x00000027caf50770
+[  387.853162] Internal error: synchronous external abort: 96000610 [#1] PREEMPT SMP
+[  387.860611] Modules linked in: l1l2_inject(O) vfio_iommu_type1 vfio_pci vfio_virqfd vfio ib_ipoib ib_umad rpcrdma ib_iser libiscsi scsi_transport_iscsi hns_roce_hw_v2 crct10dif_ce ses hns3 hclge hnae3 hisi_trng_v2 rng_core hisi_zip hisi_sec2 hisi_hpre hisi_qm uacce hisi_sas_v3_hw hisi_sas_main libsas scsi_transport_sas
+[  387.888725] CPU: 0 PID: 940 Comm: kworker/0:3 Kdump: loaded Tainted: G           O      5.5.0-rc4-g5993cbe #1
+[  387.898592] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
+[
+ Message from  387.907429] Workqueue: events error_inject [l1l2_inject]
+[  387.914098] pstate: 80c00009 (Nzcv daif +PAN +UAO)
+ s[yslogd@localho  387.918867] pc : lsu_inj_ue+0x58/0x70 [l1l2_inject]
+[  387.925103] lr : error_inject+0x64/0xb0 [l1l2_inject]
+[  387.930132] sp : ffff800020af3d90
+[  387.933435] x29: ffff800020af3d90 x28: 0000000000000000
+st[ at Mar 30 11:  387.938723] x27: ffff0027dae6e838 x26: ffff80001178bcc8
+[  387.945391] x25: 0000000000000000 x24: ffffa2c77162e090
+[  387.950680] x23: 0000000000000000 x22: ffff2027d7c33d40
+33[:55 ...
+ ker  387.955968] x21: ffff2027d7c37a00 x20: ffff0027d679c000
+[  387.962636] x19: ffffa2c77162e088 x18: 0000000020cbf59a
+ne[l:Internal err  387.967924] x17: 000000000000000e x16: ffffa2c7b812bc98
+[  387.974592] x15: 0000000000000001 x14: 0000000000000000
+[  387.979880] x13: ffff2027cf75a780 x12: ffffa2c7b8299c18
+or[: synchronous   387.985168] x11: 0000000000000000 x10: 00000000000009f0
+[  387.991836] x9 : ffff800020af3d50 x8 : fefefefefefefeff
+ex[ternal abort:   387.997124] x7 : 0000000000000000 x6 : 001d4ed88e000000
+[  388.003792] x5 : 000073746e657665 x4 : 0000080110f81381
+[  388.009080] x3 : 000000000000002f x2 : 807fffffffffffff
+96[000610 [#1] PR  388.014369] x1 : ffffa2c77162c518 x0 : 0000000000000081
+[  388.021037] Call trace:
+EEMPT SMP
+[  388.023475]  lsu_inj_ue+0x58/0x70 [l1l2_inject]
+[  388.029019]  error_inject+0x64/0xb0 [l1l2_inject]
+[  388.033707]  process_one_work+0x158/0x4b8
+[  388.037699]  worker_thread+0x50/0x498
+[  388.041348]  kthread+0xfc/0x128
+[  388.044480]  ret_from_fork+0x10/0x1c
+[  388.048042] Code: b2790000 d519f780 f9800020 d5033f9f (58001001)
+[  388.054109] ---[ end trace 39d51c21b0e42ba6 ]---
+
+core 0 hung up at here.
+
+
 > 
-> 	tsf = pmlmeext->TSFValue - (pmlmeext->TSFValue % (pmlmeinfo->bcn_interval * 1024)) - 1024; /* us */
+> Thanks,
+> Mark.
 > 
-> But what the heck is that even???  If pmlmeinfo->bcn_interval is zero
-> or one then the subtraction ends up giving us a negative.
-> 
-> regards,
-> dan carpenter
+>> +
+>>  const char *esr_get_class_string(u32 esr);
+>>  #endif /* __ASSEMBLY */
+>>  
+>> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+>> index cf402be5c573..08f7f7688d5b 100644
+>> --- a/arch/arm64/kernel/traps.c
+>> +++ b/arch/arm64/kernel/traps.c
+>> @@ -202,6 +202,8 @@ void die(const char *str, struct pt_regs *regs, int err)
+>>  		panic("Fatal exception in interrupt");
+>>  	if (panic_on_oops)
+>>  		panic("Fatal exception");
+>> +	if (esr_is_ext_abort(err))
+>> +		panic("Synchronous external abort in kernel context");
+>>  
+>>  	raw_spin_unlock_irqrestore(&die_lock, flags);
+>>  
+>> -- 
+>> 2.20.1
+>>
+> .
 > 
 
-1. pmlmeext->TSFValue can not be negative, because it is uint64_t;
-2. pmlmeext->TSFValue is cyclic value:
-     https://en.wikipedia.org/wiki/Timing_synchronization_function ;
-3. (rounddown(a, b)) is equal to (a - a % b) by definition.
-
-Ivan Safonov.
