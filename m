@@ -2,108 +2,83 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FCFC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54984C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE20206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229CF2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k+JvPfJh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmSa/4wV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389740AbgDNOU3 (ORCPT
+        id S2389795AbgDNOUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389553AbgDNOUR (ORCPT
+        Tue, 14 Apr 2020 10:20:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53264 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389704AbgDNOUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:20:17 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F77FC061A0C;
-        Tue, 14 Apr 2020 07:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=EYElTyl0BVEuRZ/YZRIannaVxf8JX5ztw8CmNN6o67Y=; b=k+JvPfJhqpx47HmkCwXxr89xM+
-        QyEgEaoxNBUTi8nN9/LWRxUHDwtUVhOo0YNyDJ5W6ei8rlBqmf525cLWD6KlLovGZg2abMLOSLsgC
-        U8wk4m1tAXieGZyNr7Aa3+0vMExYQ7HvVRy/YckMT6FP7pWrU6cfoQLCwlyqQ8uaDQdRqKnYkRF85
-        yQRnqEDKov4IQy+woIW66pkgx5WElp0Iqco0DozCF8IxXsxc8UanwYLiVg5+G2RGgAlOH8X2w+1TF
-        7pxsmEI4fCJ4Q8lBBtsqArFRH/jddmGFkpD7092oVyFzilyURxd1GphdGrt2GGHGW+Ljlk6PVVYT3
-        iSr755EQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOMQA-0000bu-TE; Tue, 14 Apr 2020 14:20:14 +0000
-Date:   Tue, 14 Apr 2020 07:20:14 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-Message-ID: <20200414142014.GO21484@bombadil.infradead.org>
-References: <20200413125303.423864-1-npiggin@gmail.com>
- <20200413125303.423864-5-npiggin@gmail.com>
- <20200413134106.GN21484@bombadil.infradead.org>
- <36616218-1d3a-b18a-8fb8-4fc9eff22780@c-s.fr>
+        Tue, 14 Apr 2020 10:20:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586874019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=NYWOZo6GSM1gl5Dpdc7Qc14rRCkPfmWgzyLfnqiKprc=;
+        b=TmSa/4wVzN3qEkCS/7pRh/gGNP8OH2g3ew4EQ2BdoIazaKfz2mXbP5J/6ADJNVumZ1eQ3S
+        Y8kEe4BgiK5mCPXAAmif8Fhf1jj4TTvVIk4XOZEFeLb4O4ZFkesEEriH85xz2zCjpOB1tc
+        Kda5aoKHVfeFhGM7Y/TKBzNbX5YLD2U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-95ZOvXX8MsyxzBYsrtgbiQ-1; Tue, 14 Apr 2020 10:20:14 -0400
+X-MC-Unique: 95ZOvXX8MsyxzBYsrtgbiQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FA47801A12;
+        Tue, 14 Apr 2020 14:20:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B89C260BE1;
+        Tue, 14 Apr 2020 14:20:11 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org
+cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fweimer@redhat.com
+Subject: What's a good default TTL for DNS keys in the kernel
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <36616218-1d3a-b18a-8fb8-4fc9eff22780@c-s.fr>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3865907.1586874010.1@warthog.procyon.org.uk>
+Date:   Tue, 14 Apr 2020 15:20:10 +0100
+Message-ID: <3865908.1586874010@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 02:28:35PM +0200, Christophe Leroy wrote:
-> Le 13/04/2020 à 15:41, Matthew Wilcox a écrit :
-> > On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
-> > > +static int vmap_pages_range_noflush(unsigned long start, unsigned long end,
-> > > +				    pgprot_t prot, struct page **pages,
-> > > +				    unsigned int page_shift)
-> > > +{
-> > > +	if (page_shift == PAGE_SIZE) {
-> > 
-> > ... I think you meant 'page_shift == PAGE_SHIFT'
-> > 
-> > Overall I like this series, although it's a bit biased towards CPUs
-> > which have page sizes which match PMD/PUD sizes.  It doesn't offer the
-> > possibility of using 64kB page sizes on ARM, for example.  But it's a
-> > step in the right direction.
-> 
-> I was going to ask more or less the same question, I would have liked to use
-> 512kB hugepages on powerpc 8xx.
-> 
-> Even the 8M hugepages (still on the 8xx), can they be used as well, taking
-> into account that two PGD entries have to point to the same 8M page ?
-> 
-> I sent out a series which tends to make the management of 512k and 8M pages
-> closer to what Linux expects, in order to use them inside kernel, for Linear
-> mappings and Kasan mappings for the moment. See
-> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=164620
-> It would be nice if we could amplify it a use it for ioremaps and vmallocs
-> as well.
+Since key.dns_resolver isn't given a TTL for the address information obtained
+for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
+NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
+because that is looked up in the DNS directly, but it doesn't look up A or
+AAAA records, so doesn't get an expiry for the addresses themselves.
 
-I haven't been looking at vmalloc at all; I've been looking at the page
-cache.  See:
-https://lore.kernel.org/linux-mm/20200212041845.25879-1-willy@infradead.org/
+I've previously asked the libc folks if there's a way to get this information
+exposed in struct addrinfo, but I don't think that ended up going anywhere -
+and, in any case, would take a few years to work through the system.
 
-Once we have large pages in the page cache, I want to sort out the API
-for asking the CPU to insert a TLB entry.  Right now, we use set_pte_at(),
-set_pmd_at() and set_pud_at().  I'm thinking something along the lines of:
+For the moment, I think I should put a default on any dns_resolver keys and
+have it applied either by the kernel (configurable with a /proc/sys/ setting)
+or by the key.dnf_resolver program (configurable with an /etc file).
 
-vm_fault_t vmf_set_page_at(struct vm_fault *vmf, struct page *page);
+Any suggestion as to the preferred default TTL?  10 minutes?
 
-and the architecture can insert whatever PTEs and/or TLB entries it
-likes based on compound_order(page) -- if, say, it's a 1MB page, it might
-choose to insert 2 * 512kB entries, or just the upper or lower 512kB entry
-(depending which half of the 1MB page the address sits in).
+David
 
