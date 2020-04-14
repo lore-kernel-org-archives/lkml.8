@@ -2,143 +2,180 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CA7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44568C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02523206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E905C206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kX5gbX5U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5a1zUN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440897AbgDNPrZ (ORCPT
+        id S2440906AbgDNPrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:47:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:54638 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731196AbgDNPrI (ORCPT
+        Tue, 14 Apr 2020 11:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2440880AbgDNPrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:47:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586879228; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Ev+tOWmh/spkiQzapjJsMT+Ybl+F09CQsdIN84fz7wM=;
- b=kX5gbX5UNsRbys+fpSygTF9FVSA6ksch3mx1c7QDCJ2WGLggLDt6kDjrHrHHjU90cuRmk4A4
- o+D1PDTl/ML24FCcd+7SGB8w0cQVh2e3eYzAviy/a1TOT8GnODQI3tCxgY4XKIZHQ1Vhgvbm
- 9bVH93rsRZ62Ajj5UFGldarcc7A=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e95dafb.7f3976ce0618-smtp-out-n01;
- Tue, 14 Apr 2020 15:47:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 960BDC44788; Tue, 14 Apr 2020 15:47:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC16DC433BA;
-        Tue, 14 Apr 2020 15:47:05 +0000 (UTC)
+        Tue, 14 Apr 2020 11:47:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83AF4C061A0E;
+        Tue, 14 Apr 2020 08:47:18 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id l1so79617pff.10;
+        Tue, 14 Apr 2020 08:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VuwkE54PJ7NN3Jw9xCKJ7P83z5BDzrAcrezccybhR5g=;
+        b=E5a1zUN1dRUBmM+iNpkg5KQyeqyygRfDHLwN6FfAFge2b1TDFmB9TbjcT+CZnSYKAC
+         eRJR5d9/3en3h04RL4IqsXXi2mZAaxejtvhuWSyO8iGy/iBIJrNJG/5oCoEW2ZznL7Mr
+         JS+xRURuqgCBjUZgsiPXl2jiRQSYWwwzipuCqxJZoj7FLQPshfjrZA+vI7jVViT2jUzA
+         UvOjWhzVFTzTN1EkYA4/Ue83afM+wmpUdOacgTxBl+D2qsi7LTtAQHgR0Z6D+JwipCeV
+         ISH8eIyiRVZ+49h2XZXPi069/oNWSvmwIEtL7ylEU0OSP/vrKz9h/NwvVR9COsD+qICT
+         yxOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VuwkE54PJ7NN3Jw9xCKJ7P83z5BDzrAcrezccybhR5g=;
+        b=EoBeGdXbzn9vI+t+7n9D0NAqesXKnac4FTwmrE2c7khE4JyuXAanXhfW1eeKrR8nuK
+         s2HuWy0gz7VAF4Og3BmbK0jinEfk4n5DufTJo+3H6zuJe80ltikwgGQkE4qIgVLNKepK
+         r3ez+WYR2Sqmd7P7VW/Tto16h7oAseinj1ZMWpt0yKYEHoptI5+AdC2mZb8CI5Gey72n
+         /XUK5kngl0i0CuwmMTsmk8oocgM9yJZvy3voGxKZc5rltwavh6p4IDmX70Vc+4Tjc2VP
+         Vumpb5+WSmgtCUjqTwVcIe7lKjSwLe/dwUrKYgFv6QZ7GCupKua6g7yhxql9pUBczIsN
+         Q/hA==
+X-Gm-Message-State: AGi0PuZcKlhrt9JuKPjP/MXoENc5TgmGRX/ufBCbsUjw0Uu2E/DTchbK
+        optWQiivhe1YwoGuk0fxkfnaTndC
+X-Google-Smtp-Source: APiQypI6DU0l3q53RZZj/j8XQl2DXK+FpUyd8ioUhlL4c+gjLSBD1rzroe17I8SBFlWVqHdohN+SeA==
+X-Received: by 2002:a63:5fd0:: with SMTP id t199mr22907333pgb.207.1586879237973;
+        Tue, 14 Apr 2020 08:47:17 -0700 (PDT)
+Received: from [10.230.188.26] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y9sm11747206pfo.135.2020.04.14.08.47.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 08:47:17 -0700 (PDT)
+Subject: Re: [PATCH net 0/4] net: dsa: b53: Various ARL fixes
+To:     netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        open list <linux-kernel@vger.kernel.org>, davem@davemloft.net,
+        kuba@kernel.org
+References: <20200414041630.5740-1-f.fainelli@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <2c4e181c-02b9-576c-99c1-18a1fa25c469@gmail.com>
+Date:   Tue, 14 Apr 2020 08:47:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200414041630.5740-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Apr 2020 21:17:05 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>, mike.leach@linaro.org,
-        swboyd@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] coresight: tmc: Read TMC mode only when TMC hw is enabled
-In-Reply-To: <20200413171418.GB28804@xps15>
-References: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
- <9a792e3e-5a17-156d-4b59-4a3ec8f9993e@arm.com>
- <1751aeabd22bee18d2eef0f643883265@codeaurora.org>
- <20200413171418.GB28804@xps15>
-Message-ID: <75ef334a7e2cc6d87deecadd12c74f59@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+David, Jakub,
 
-On 2020-04-13 22:44, Mathieu Poirier wrote:
-> On Mon, Apr 13, 2020 at 01:55:30PM +0530, Sai Prakash Ranjan wrote:
->> Hi Suzuki,
->> 
->> On 2020-04-13 04:47, Suzuki K Poulose wrote:
->> > Hi Sai,
->> >
->> > On 04/09/2020 12:35 PM, Sai Prakash Ranjan wrote:
->> > > Reading TMC mode register in tmc_read_prepare_etb without
->> > > enabling the TMC hardware leads to async exceptions like
->> > > the one in the call trace below. This can happen if the
->> > > user tries to read the TMC etf data via device node without
->> > > setting up source and the sink first which enables the TMC
->> > > hardware in the path. So make sure that the TMC is enabled
->> > > before we try to read TMC data.
->> >
->> > So, one can trigger the same SError by simply :
->> >
->> > $ cat /sys/bus/coresight/device/tmc_etb0/mgmt/mode
->> >
->> 
->> I do not see any SError when I run the above command.
->> 
->> localhost ~ # cat /sys/bus/coresight/devices/tmc_etf0/mgmt/mode
->> 0x0
->> 
->> And this is most likely due to
->> 
->> commit cd9e3474bb793dc ("coresight: add PM runtime calls to
->> coresight_simple_func()")
+On 4/13/2020 9:16 PM, Florian Fainelli wrote:
+> Hi David, Andrew, Vivien, Jakub,
 > 
-> Ok, so this is related to power management (you can ignore my question 
-> in the
-> previous email).
+> This patch series fixes a number of short comings in the existing b53
+> driver ARL management logic in particular:
 > 
-> Regarding function tmc_read_prepare_etb(), the best way to deal with 
-> this is
-> probably make sure drvdata->mode != CS_MODE_DISABLED before reading 
-> TMC_MODE.
-> If there is a buffer to read it will have been copied when the ETB was 
-> disabled
-> and there won't be a need to access the HW.
+> - we were not looking up the {MAC,VID} tuples against their VID, despite
+>   having VLANs enabled
 > 
+> - the MDB entries (multicast) would lose their validity as soon as a
+>   single port in the vector would leave the entry
+> 
+> - the ARL was currently under utilized because we would always place new
+>   entries in bin index #1, instead of using all possible bins available,
+>   thus reducing the ARL effective size by 50% or 75% depending on the
+>   switch generation
 
-This works as well, thanks.
+Please do not apply this just yet, this patch issues a dev_warn() which
+would be seen even when deleting an entry from the ARL while the table
+is full this is undesirable and I also need to update the callers of
+b53_arl_op() to check for -ENOSPC specifically. v2 coming, thanks!
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c 
-b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d0cc3985b72a..7ffe05930984 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -596,6 +596,11 @@ int tmc_read_prepare_etb(struct tmc_drvdata 
-*drvdata)
-                 goto out;
-         }
-
-+       if (drvdata->mode == CS_MODE_DISABLED) {
-+               ret = -EINVAL;
-+               goto out;
-+       }
-+
-         /* There is no point in reading a TMC in HW FIFO mode */
-         mode = readl_relaxed(drvdata->base + TMC_MODE);
-         if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-
-
-Thanks,
-Sai
+> 
+> - it was possible to overwrite the ARL entries because no proper space
+>   verification was done
+> 
+> This patch series addresses all of these issues.
+> 
+> Florian Fainelli (4):
+>   net: dsa: b53: Lookup VID in ARL searches when VLAN is enabled
+>   net: dsa: b53: Fix valid setting for MDB entries
+>   net: dsa: b53: Fix ARL register definitions
+>   net: dsa: b53: Rework ARL bin logic
+> 
+>  drivers/net/dsa/b53/b53_common.c | 31 ++++++++++++++++++++++++++-----
+>  drivers/net/dsa/b53/b53_regs.h   |  4 ++--
+>  2 files changed, 28 insertions(+), 7 deletions(-)
+> 
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Florian
