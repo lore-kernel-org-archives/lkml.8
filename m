@@ -2,441 +2,158 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AC7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B348C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 500032064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4477A2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438339AbgDNKat (ORCPT
+        id S2438353AbgDNKcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:30:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30728 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2438313AbgDNK3h (ORCPT
+        Tue, 14 Apr 2020 06:32:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43691 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729506AbgDNK3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:29:37 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EA3e8H134900;
-        Tue, 14 Apr 2020 06:28:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30cvwve9yj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 06:28:48 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03EAAwtj019988;
-        Tue, 14 Apr 2020 06:28:47 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30cvwve9y6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 06:28:47 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03EAL6k1028880;
-        Tue, 14 Apr 2020 10:28:46 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 30b5h6nqbc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 10:28:46 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EASkPp50528690
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:28:46 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07851B205F;
-        Tue, 14 Apr 2020 10:28:46 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C731B2064;
-        Tue, 14 Apr 2020 10:28:45 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.109.81])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Apr 2020 10:28:45 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 4768A2E327D; Tue, 14 Apr 2020 13:17:02 +0530 (IST)
-Date:   Tue, 14 Apr 2020 13:17:02 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
-        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        pratik.r.sampat@gmail.com
-Subject: Re: [PATCH v6 2/3] powerpc/powernv: Introduce support and parsing
- for self-save API
-Message-ID: <20200414074702.GF24277@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200326071034.12838-1-psampat@linux.ibm.com>
- <20200326071034.12838-3-psampat@linux.ibm.com>
+        Tue, 14 Apr 2020 06:29:41 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h25so11854994lja.10;
+        Tue, 14 Apr 2020 03:29:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mIqPfx4e4L3IGXAgqiGpZ+KDaVK6Sf0ZxBEGjobhNgg=;
+        b=YkJDJtbAgra7v3UYjYVtYPOnf0CNMnHXI8XUkhZ+YIL+AmUhnpN2ikIv8tP1jiSNOB
+         ilryebmTsJ5RBN8H40CZZ9bSFLmznuge0UieQwGllUvPIsZ6Ap9L8mSrEjoxs368v5+N
+         Xv823xwnnQo0/4uQvY4yJFWQ5eVkYK3oD2kO4FN+VHQOeULktKDKA4OWJc/IcpJahcua
+         ZqbINp7WeOuSc5yZya2QyBdAicTgBQBGw8gBE9+vpd9YkCt4WrfVci7TkyKBhIWU3nVI
+         uNe/lkO3/dRTQzCKsOtPrrv/ZZeOXxJys91F65yYc/qnBDa6OxjvungkfQIYtGrKfyPo
+         5vXg==
+X-Gm-Message-State: AGi0PuZybjaADxwiYwnXq+xhDKCCxzPpfpExl8GlA6qD4rnNcGWBLBo3
+        WMXp6dCt9Wp+Bw4baH356tw=
+X-Google-Smtp-Source: APiQypJXm0vqnFUdHEU+gU9EChhbVBRXDN1IQWGmNCNeRRGTnxki0Q4ff7wcuBIxWxY3kTOc2iR98w==
+X-Received: by 2002:a2e:9886:: with SMTP id b6mr13417739ljj.237.1586860143935;
+        Tue, 14 Apr 2020 03:29:03 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-231-41.ip.moscow.rt.ru. [188.32.231.41])
+        by smtp.gmail.com with ESMTPSA id w3sm11127835ljm.0.2020.04.14.03.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 03:29:03 -0700 (PDT)
+To:     Willy Tarreau <w@1wt.eu>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>, Ian Molton <spyro@f2s.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>, x86@kernel.org
+References: <20200331094054.24441-1-w@1wt.eu>
+ <ae23d88d-fc21-6f46-7c27-ea0adf6211e5@kernel.dk>
+ <20200414053119.GB20927@1wt.eu>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: Re: [PATCH 00/23] Floppy driver cleanups
+Message-ID: <da6afb7c-d543-b0a3-c165-89ad0b2a2783@linux.com>
+Date:   Tue, 14 Apr 2020 13:29:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326071034.12838-3-psampat@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_02:2020-04-13,2020-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 malwarescore=0
- adultscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140083
+In-Reply-To: <20200414053119.GB20927@1wt.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:40:33PM +0530, Pratik Rajesh Sampat wrote:
-> This commit introduces and leverages the Self save API. The difference
-> between self-save and self-restore is that the value to be saved for the
-> SPR does not need to be passed to the call.
-> 
-> Add the new Self Save OPAL API call in the list of OPAL calls.
-> Implement the self saving of the SPRs based on the support populated.
-> This commit imposes the self-save over self-restore in case both are
-> supported for a particular SPR.
+Hi,
 
-s/imposes/prefers.
+On 4/14/20 8:31 AM, Willy Tarreau wrote:
+> Hi Jens,
+> 
+> On Mon, Apr 13, 2020 at 04:46:41PM -0600, Jens Axboe wrote:
+>> I'll be happy to queue these up for 5.8 when ready. Would be handy
+>> if you could resend a v2 patchset with the extra patches, makes my
+>> life so much easier...
+> 
+> Sure, will do once Denis confirms he's done with the review and is
+> OK with the series.
+> 
+> Thanks!
+> Willy
+>
+I can see no new issues, respecting that the initial version
+was sent privately and additional [24-27] fixups.
 
-> 
-> Along with support for self-save, kernel supported save restore is also
-> populated in the list. This property is only populated for those SPRs
-> which encapsulate support from the kernel and hav ethe possibility to
-                                                ^^^^^^^^^
-						have the
+[+] eye checked the changes
+[+] compile tested the patches on x86, arm, powerpc, sparc64,
+    m68k (forced ARCH_MAY_HAVE_PC_FDC by removing BROKEN)
+    sparc64 showed a couple of warnings in printks
+I was expecting that some of the arch maintainers will at least
+ack the patches.
+[+] tested on real hardware for x86
+[+] local syzkaller fuzzing reveals no new issues
 
-> garner support from a firmware mode too.
+Willy, could you please resend the patchset with printks fix for sparc64?
+Or if Jens don't mind and you don't want to send 30 patches again you can
+resend only sparc64 patch and I will reapply it and send everything to Jens
+with merge request. I applied your patches a couple of days ago here
+https://github.com/evdenis/linux-floppy/ to cleanups branch.
 
+I also faced minor ubsan warning in setup_rw_floppy that is not related
+to these patches. It's false alarm of cross-boundary access of cmd,
+reply_count, reply in floppy_raw_cmd. This access is intentional.
+I will send a patch on top of your patchset.
 
-What you mean here is that some of the SPRs which are currently being
-saved and restored by the kernel can be leverage the firmware
-self-save support when available.
-
-In particular, this is *required* for PTCR in an Ultravisor mode, as
-the Hypervisor Kernel is not allowed to restore PTCR while running in
-an Ultravisor environment.
-
-
-
-
-> 
-> In addition, the commit also parses the device tree for nodes self-save,
-> self-restore and populate support for the preferred SPRs based on what
-> was advertised by the device tree.
-> 
-> In the case a SPR is supported by the firmware self-save, self-restore
-> and kernel save restore then the preference of execution is also in the
-> same order as above.
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-
-Some more comments below.
-
-> ---
->  .../bindings/powerpc/opal/power-mgt.txt       |  18 +++
->  arch/powerpc/include/asm/opal-api.h           |   3 +-
->  arch/powerpc/include/asm/opal.h               |   1 +
->  arch/powerpc/platforms/powernv/idle.c         | 131 +++++++++++++++++-
->  arch/powerpc/platforms/powernv/opal-call.c    |   1 +
->  5 files changed, 146 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt b/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
-> index 9d619e955576..5fb03c6d7de9 100644
-> --- a/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
-> @@ -116,3 +116,21 @@ otherwise. The length of all the property arrays must be the same.
->  	which of the fields of the PMICR are set in the corresponding
->  	entries in ibm,cpu-idle-state-pmicr. This is an optional
->  	property on POWER8 and is absent on POWER9.
-> +
-> +- self-restore:
-> + Array of unsigned 64-bit values containing a property for sprn-mask
-> + with each bit indicating the index of the supported SPR for the
-> + functionality. This is an optional property for both Power8 and Power9
-> +
-> +- self-save:
-> +  Array of unsigned 64-bit values containing a property for sprn-mask
-> +  with each bit indicating the index of the supported SPR for the
-> +  functionality. This is an optional property for both Power8 and Power9
-> +
-> +Example of arrangement of self-restore and self-save arrays:
-> +For instance if PSSCR is supported, the value is 0x357 = 855.
-> +Since the array is of 64 bit values, the index of the array is determined by
-> +855 / 64 = 13th element. Within that index, the bit number is determined by
-> +855 % 64 = 23rd bit.
-> +This means that if the 23rd bit in array[13] is set, then that SPR is supported
-> +by the corresponding self-save or self-restore API.
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index c1f25a760eb1..1b6e1a68d431 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -214,7 +214,8 @@
->  #define OPAL_SECVAR_GET				176
->  #define OPAL_SECVAR_GET_NEXT			177
->  #define OPAL_SECVAR_ENQUEUE_UPDATE		178
-> -#define OPAL_LAST				178
-> +#define OPAL_SLW_SELF_SAVE_REG			181
-> +#define OPAL_LAST				181
-> 
->  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
->  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 9986ac34b8e2..a370b0e8d899 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -204,6 +204,7 @@ int64_t opal_handle_hmi2(__be64 *out_flags);
->  int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
->  int64_t opal_unregister_dump_region(uint32_t id);
->  int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
-> +int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
->  int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
->  int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
->  int64_t opal_pci_get_pbcq_tunnel_bar(uint64_t phb_id, uint64_t *addr);
-> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-> index 858ceb86394d..e77b31621081 100644
-> --- a/arch/powerpc/platforms/powernv/idle.c
-> +++ b/arch/powerpc/platforms/powernv/idle.c
-> @@ -35,13 +35,20 @@
->  /*
->   * Type of support for each SPR
->   * FIRMWARE_RESTORE: firmware restoration supported: calls self-restore OPAL API
-> + * FIRMWARE_SELF_SAVE: firmware save and restore: calls self-save OPAL API
-> + * KERNEL_SAVE_RESTORE: kernel handles the saving and restoring of SPR
->   */
->  #define UNSUPPORTED           0x0
->  #define FIRMWARE_RESTORE      0x1
-> +#define FIRMWARE_SELF_SAVE    0x2
-> +#define KERNEL_SAVE_RESTORE   0x4
-> 
->  static u32 supported_cpuidle_states;
->  struct pnv_idle_states_t *pnv_idle_states;
->  int nr_pnv_idle_states;
-> +/* Caching the lpcr & ptcr support to use later */
-> +static bool is_lpcr_self_save;
-> +static bool is_ptcr_self_save;
-> 
->  struct preferred_sprs {
->  	u64 spr;
-> @@ -51,6 +58,10 @@ struct preferred_sprs {
->  /*
->   * Supported mode: Default support. Can be overwritten during system
->   *		   initialization
-> + * Note: SPRs with support for KERNEL_SAVE_RESTORE in this list are only those
-> + * which have a possibility of support from another firmware mode (i.e self-save
-> + * or self-restore)
-> + * SPRs with exclusive kernel save support are implicit.
->   */
->  struct preferred_sprs preferred_sprs[] = {
->  	{
-> @@ -61,6 +72,10 @@ struct preferred_sprs preferred_sprs[] = {
->  		.spr = SPRN_LPCR,
->  		.supported_mode = FIRMWARE_RESTORE,
->  	},
-> +	{
-> +		.spr = SPRN_PTCR,
-> +		.supported_mode = KERNEL_SAVE_RESTORE,
-> +	},
->  	{
->  		.spr = SPRN_HMEER,
->  		.supported_mode = FIRMWARE_RESTORE,
-> @@ -219,11 +234,33 @@ static int pnv_self_save_restore_sprs(void)
->  			     curr_spr.spr == SPRN_HID4  ||
->  			     curr_spr.spr == SPRN_HID5))
->  				continue;
-> -			if (curr_spr.supported_mode & FIRMWARE_RESTORE) {
-> +
-> +			if (curr_spr.supported_mode & FIRMWARE_SELF_SAVE) {
-> +				rc = opal_slw_self_save_reg(pir,
-> +							curr_spr.spr);
-> +				if (rc != 0)
-> +					return rc;
-> +				switch (curr_spr.spr) {
-> +				case SPRN_LPCR:
-> +					is_lpcr_self_save = true;
-
-Could you consider converting is_lpcr_self_save and is_ptcr_self_save
-into static_keys ? For reference see commit
-14c73bd344da("powerpc/vcpu: Assume dedicated processors as
-non-preempt")
-
-> +					break;
-> +				case SPRN_PTCR:
-> +					is_ptcr_self_save = true;
-> +					break;
-> +				}
-> +			} else if (curr_spr.supported_mode & FIRMWARE_RESTORE) {
->  				rc = pnv_self_restore_sprs(pir, cpu,
->  							   curr_spr.spr);
->  				if (rc != 0)
->  					return rc;
-> +			} else {
-> +				if (curr_spr.supported_mode & KERNEL_SAVE_RESTORE ||
-> +				    (cpu_has_feature(CPU_FTR_ARCH_300) &&
-> +				     (curr_spr.spr == SPRN_HID1 ||
-> +				      curr_spr.spr == SPRN_HID4 ||
-> +				      curr_spr.spr == SPRN_HID5)))
-> +					continue;
-> +				return OPAL_UNSUPPORTED;
->  			}
->  		}
->  	}
-> @@ -762,7 +799,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  		mmcr0		= mfspr(SPRN_MMCR0);
->  	}
->  	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
-> -		sprs.lpcr	= mfspr(SPRN_LPCR);
-> +		if (!is_lpcr_self_save)
-> +			sprs.lpcr	= mfspr(SPRN_LPCR);
->  		sprs.hfscr	= mfspr(SPRN_HFSCR);
->  		sprs.fscr	= mfspr(SPRN_FSCR);
->  		sprs.pid	= mfspr(SPRN_PID);
-> @@ -776,7 +814,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  		sprs.mmcr1	= mfspr(SPRN_MMCR1);
->  		sprs.mmcr2	= mfspr(SPRN_MMCR2);
-> 
-> -		sprs.ptcr	= mfspr(SPRN_PTCR);
-> +		if (!is_ptcr_self_save)
-> +			sprs.ptcr	= mfspr(SPRN_PTCR);
->  		sprs.rpr	= mfspr(SPRN_RPR);
->  		sprs.tscr	= mfspr(SPRN_TSCR);
->  		if (!firmware_has_feature(FW_FEATURE_ULTRAVISOR))
-> @@ -860,7 +899,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  		goto core_woken;
-> 
->  	/* Per-core SPRs */
-> -	mtspr(SPRN_PTCR,	sprs.ptcr);
-> +	if (!is_ptcr_self_save)
-> +		mtspr(SPRN_PTCR,	sprs.ptcr);
->  	mtspr(SPRN_RPR,		sprs.rpr);
->  	mtspr(SPRN_TSCR,	sprs.tscr);
-> 
-> @@ -881,7 +921,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  	atomic_unlock_and_stop_thread_idle();
-> 
->  	/* Per-thread SPRs */
-> -	mtspr(SPRN_LPCR,	sprs.lpcr);
-> +	if (!is_lpcr_self_save)
-> +		mtspr(SPRN_LPCR,	sprs.lpcr);
->  	mtspr(SPRN_HFSCR,	sprs.hfscr);
->  	mtspr(SPRN_FSCR,	sprs.fscr);
->  	mtspr(SPRN_PID,		sprs.pid);
-> @@ -1060,8 +1101,10 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
->  	 * Program the LPCR via stop-api only if the deepest stop state
->  	 * can lose hypervisor context.
->  	 */
-> -	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT)
-> -		opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-> +	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT) {
-> +		if (!is_lpcr_self_save)
-> +			opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-> +	}
->  }
-> 
->  /*
-> @@ -1316,6 +1359,77 @@ static void __init pnv_probe_idle_states(void)
->  		supported_cpuidle_states |= pnv_idle_states[i].flags;
->  }
-> 
-> +/*
-> + * Extracts and populates the self save or restore capabilities
-> + * passed from the device tree node
-
-Could you please document what @np and @support refer to here ?
-
-> + */
-> +static int extract_save_restore_state_dt(struct device_node *np, u32 support)
-> +{
-> +	int nr_sprns = 0, i, bitmask_index;
-> +	u64 *temp_u64;
-> +	u64 bit_pos;
-> +
-> +	nr_sprns = of_property_count_u64_elems(np, "sprn-bitmask");
-> +	if (nr_sprns <= 0)
-> +		return -EINVAL;
-> +	temp_u64 = kcalloc(nr_sprns, sizeof(u64), GFP_KERNEL);
-> +	if (of_property_read_u64_array(np, "sprn-bitmask",
-> +				       temp_u64, nr_sprns)) {
-> +		pr_warn("cpuidle-powernv: failed to find registers in DT\n");
-> +		kfree(temp_u64);
-> +		return -EINVAL;
-> +	}
-> +	/*
-> +	 * Populate acknowledgment of support for the sprs in the global vector
-> +	 * gotten by the registers supplied by the firmware.
-> +	 * The registers are in a bitmask, bit index within
-> +	 * that specifies the SPR
-> +	 */
-> +	for (i = 0; i < nr_preferred_sprs; i++) {
-> +		bitmask_index = BIT_ULL_WORD(preferred_sprs[i].spr);
-> +		bit_pos = BIT_ULL_MASK(preferred_sprs[i].spr);
-> +		if ((temp_u64[bitmask_index] & bit_pos) == 0) {
-> +			preferred_sprs[i].supported_mode &= ~support;
-> +			continue;
-> +		}
-> +		preferred_sprs[i].supported_mode |= support;
-> +	}
-> +
-> +	kfree(temp_u64);
-> +	return 0;
-> +}
-> +
-> +static int pnv_parse_deepstate_dt(void)
-> +{
-> +	struct device_node *np;
-> +	int rc = 0, i;
-> +
-> +	/*
-> +	 * Self restore register population
-> +	 * In the case the node is not found, the support for self-restore for
-> +	 * already populated SPRs is *not* cut. This is because self-restore
-> +	 * assumes legacy support. In an event, self-restore is actually not
-> +	 * supported then the call to the firmware fails and deep stop states
-> +	 * will be cut.
-> +	 */
-> +	np = of_find_compatible_node(NULL, NULL, "ibm,opal-self-restore");
-> +	if (np) {
-> +		rc = extract_save_restore_state_dt(np, FIRMWARE_RESTORE);
-> +		if (rc != 0)
-> +			return rc;
-> +	}
-> +	/* Self save register population */
-> +	np = of_find_compatible_node(NULL, NULL, "ibm,opal-self-save");
-> +	if (!np) {
-> +		for (i = 0; i < nr_preferred_sprs; i++)
-> +			preferred_sprs[i].supported_mode &= ~FIRMWARE_SELF_SAVE;
-> +	} else {
-> +		rc = extract_save_restore_state_dt(np, FIRMWARE_SELF_SAVE);
-> +	}
-> +	of_node_put(np);
-> +	return rc;
-> +}
-> +
->  /*
->   * This function parses device-tree and populates all the information
->   * into pnv_idle_states structure. It also sets up nr_pnv_idle_states
-> @@ -1464,6 +1578,9 @@ static int __init pnv_init_idle_states(void)
->  		return rc;
->  	pnv_probe_idle_states();
-> 
-> +	rc = pnv_parse_deepstate_dt();
-> +	if (rc)
-> +		return rc;
->  	if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
->  		if (!(supported_cpuidle_states & OPAL_PM_SLEEP_ENABLED_ER1)) {
->  			power7_fastsleep_workaround_entry = false;
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index 5cd0f52d258f..11e0ceb90de0 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
->  OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
->  OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
->  OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
-> +OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
->  OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
->  OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
->  OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
-> -- 
-> 2.17.1
-> 
+Thanks,
+Denis 
