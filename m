@@ -2,129 +2,94 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53961C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912F4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29792206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="GpdV1a2I"
+	by mail.kernel.org (Postfix) with ESMTP id 68E0C206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437028AbgDNImo (ORCPT
+        id S2437044AbgDNIm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:42:44 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17852 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436845AbgDNImi (ORCPT
+        Tue, 14 Apr 2020 04:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437029AbgDNImt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:42:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586853598; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=ZSK1M9iyq2xeDVWV8f1PWAKe/9uCU4E9T6vOsK6u9aSiBWGXfIn0pocsjl4tzWveQh2ZDy2cj1b7bpHgekQf0jbXo9LUSmHOeFntpMA9PPG8b23qxVeQDSY4EsbYXLiuAT1HFLfypwEDqH3WZQeK5l7MGE8gNsnNqPEbAdLbAlU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586853598; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=5yxE8rjIQbfWB2zY24IJme7e+SE38jsS1KkXESLePEI=; 
-        b=MxrSvTiMyZFwn8zPfXMUcshZgT9ZAOJ0+qDa6+Tzu6So7Sme1O/aiY+OqbHehQy4rx3Xw09wK2lY2ViNCEJpA1yP8gFpRCNHDfyGSPKKWhGbLu/guUngLhylu0oHCtT3ggf/NpQGrV50PP2CpYp0098dw1hWvD/QtR4tAy5dycc=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586853598;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=5yxE8rjIQbfWB2zY24IJme7e+SE38jsS1KkXESLePEI=;
-        b=GpdV1a2IgBQOShDin5PNisEXA6+bNxd8Mf4rATLprEMaKlc4jf5QVVU3k27MHqSA
-        UeRk2dKl2ZRMbjt9syeLztoXGin7EcYipNexBIvvaQFIBtsgI+VxL4WIGrfrnDqUgNf
-        gaPqGT9RgEkxsHstO7khtgGjXMV3drq4ap00TVuE=
-Received: from localhost (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
-        with SMTPS id 1586853596243411.62253278794117; Tue, 14 Apr 2020 16:39:56 +0800 (CST)
-Date:   Tue, 14 Apr 2020 16:39:57 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-mips@vger.kernel.org, dietmar.eggemann@arm.com,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
+        Tue, 14 Apr 2020 04:42:49 -0400
+X-Greylist: delayed 3871 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 01:42:49 PDT
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F792C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:42:49 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jOH9R-0006mr-Ch; Tue, 14 Apr 2020 10:42:37 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B570C100D14; Tue, 14 Apr 2020 10:42:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        " =?GB18030?B?1tzn/L3c?= (Zhou Yanjie)" <zhouyanjie@wanyeetech.com>,
-        YunQiang Su <syq@debian.org>, Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 01/11] MIPS: setup: Drop prefill_possible_map
-Message-ID: <20200414163957.00006d65@flygoat.com>
-In-Reply-To: <20200414082123.GA6459@bogus>
-References: <20200412032123.3896114-1-jiaxun.yang@flygoat.com>
-        <20200412032123.3896114-2-jiaxun.yang@flygoat.com>
-        <20200414082123.GA6459@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-w64-mingw32)
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: linux-next: build warning after merge of the tip tree
+In-Reply-To: <20200413100112.2e114e24@canb.auug.org.au>
+References: <20200330134746.627dcd93@canb.auug.org.au> <20200401085753.617c1636@canb.auug.org.au> <877dyzv6y2.fsf@nanos.tec.linutronix.de> <20200402090051.741905cd@canb.auug.org.au> <874ku2q18k.fsf@nanos.tec.linutronix.de> <20200413100112.2e114e24@canb.auug.org.au>
+Date:   Tue, 14 Apr 2020 10:42:36 +0200
+Message-ID: <87sgh6o3ur.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ZohoCNMailClient: External
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 09:21:36 +0100
-Sudeep Holla <sudeep.holla@arm.com> wrote:
+Stephen,
 
-> On Sun, Apr 12, 2020 at 11:20:31AM +0800, Jiaxun Yang wrote:
-> > All the plat_smp_setup are setting up possible cpus in their
-> > platform code. So prefill_possible_map is actually overwriting
-> > platform's setup, which seems unreasonable.
-> >   
-> 
-> Why don't you rearrange the code so that this still remains as is and
-> the platforms can override if they need. If you do so, you don't need
-> the change in 04/11 as I suggested previously.
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> On Thu, 02 Apr 2020 00:39:55 +0200 Thomas Gleixner <tglx@linutronix.de> wrote:
+>> and the below proves it:
+>> 
+>> diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+>> index e133da303a98..a9151884bc85 100644
+>> --- a/arch/arm/include/asm/futex.h
+>> +++ b/arch/arm/include/asm/futex.h
+>> @@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+>>  	preempt_enable();
+>>  #endif
+>>  
+>> -	if (!ret)
+>> -		*oval = oldval;
+>> +	/*
+>> +	 * Store unconditionally. If ret != 0 the extra store is the least
+>> +	 * of the worries but GCC cannot figure out that __futex_atomic_op()
+>> +	 * is either setting ret to -EFAULT or storing the old value in
+>> +	 * oldval which results in a uninitialized warning at the call site.
+>> +	 */
+>> +	*oval = oldval;
+>>  
+>>  	return ret;
+>>  }
+>> 
+>> I think that's the right thing to do anyway. The conditional is pointless.
+>
+> Thanks for the analysis.
+>
+> I am still getting this warning, now from Linus' tree builds.
 
-Actually this code break a case that cpumask is not continuous.
-It do happen on some MIPS platforms.
+Yeah. Just noticed that both of us failed to CC the arm folks. :(
 
-Yes. rearrange this is a option but I think it is making the logic
-unnecessarily complex.
+Let me send out a proper patch.
 
-If you think that's better I'll do so.
+Thanks,
 
-Thanks.
-> 
-
---
-Jiaxun Yang
+        tglx
