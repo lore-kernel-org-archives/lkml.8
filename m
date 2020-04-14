@@ -2,179 +2,86 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D69DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01308C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A93820737
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586837988;
-	bh=WK0Djy2DbNnX7XgN1voKF0kaelb+5aAIBEsPUY369d0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ubbrs8Mavxvjet9LmbQWy2JqjKLiVrBwiuG7RS5cf3juMF8uD2hkrxrBJOBl+J0t5
-	 lSWjPHDs1pvrQ6PADf+X/pXMz2ygIiNO70OIvu3BaFk3WiWGMtqzYL6M3CV4b4c6HJ
-	 ouRkem5hnD7/CIMA8qlZDbx7UH/k2ITj1mkBvimM=
+	by mail.kernel.org (Postfix) with ESMTP id D4CBB20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="fiurNNKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405301AbgDNETq (ORCPT
+        id S2405318AbgDNEVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 00:19:46 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53327 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405226AbgDNETH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 00:19:07 -0400
-Received: by mail-pj1-f67.google.com with SMTP id cl8so3568836pjb.3;
-        Mon, 13 Apr 2020 21:19:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GOqFz/6SfoYIxdIaKsZbQKuFZCTl+d+PmNjeRcAeYWw=;
-        b=FYGcpJmOjbezTz22wbul39ZMILTTgMIifA26EiIiCom8QQ29f9m6alYVnFvqjfJAoY
-         INLniVquV5SH0p1m9/a1AH7UnUPnswOH1KkV8g5je0f0XhWr7hauReCWdqc60hH3LKrO
-         wVk5y7yZR9waZ/WBRI4NvNAjkFF8fvARHx6dBY4wPhgMauTDVohc/HPpqaCrvmpEgu8l
-         LUSC1NgFTytqUPhdKht89a1GH4ZotbalWcI6By/7MoLoCbYKgslQga0S87tLRdWny3bT
-         LmSRN9XOkgNwkuM5zRqPOeJ/gskm4hcIxrTBf35vfPzb7kGouwsfR0t5FlP3IMcZsIXR
-         ZcmA==
-X-Gm-Message-State: AGi0PubkN3PSd8iKUdhJ1v70Y1vj2sTiruOk9ZEXA/5l3Mo/GsjyWF8w
-        DNzPo9d4AdR6zDxBAnnisgk=
-X-Google-Smtp-Source: APiQypIp2fwAykCaBVO3uyfeOBBSTJASxml0yVcrV1SDyvghPVLTQxgkubQP+6PzT2wAG+Ag3J1d9w==
-X-Received: by 2002:a17:902:c814:: with SMTP id u20mr1357265plx.85.1586837946598;
-        Mon, 13 Apr 2020 21:19:06 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x7sm7854126pjg.26.2020.04.13.21.19.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 21:19:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D6D8B40605; Tue, 14 Apr 2020 04:19:03 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: [PATCH 1/5] block: move main block debugfs initialization to its own file
-Date:   Tue, 14 Apr 2020 04:18:58 +0000
-Message-Id: <20200414041902.16769-2-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200414041902.16769-1-mcgrof@kernel.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
+        Tue, 14 Apr 2020 00:21:25 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:38217 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405226AbgDNEVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 00:21:23 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id ccc82e8a;
+        Tue, 14 Apr 2020 04:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=ZHWdBzlGnU+TSQ/OY85/9pN0jDk=; b=fiurNN
+        Kwg16EZkR6R765OwLLIDKvf2oVNVqv2Ovz/LbiC3xx9U4sIgVeDV3ARR1vVLROzh
+        yA+9rqpAtjnNIpkaGDLRmQs2PUy/rfM7AS6uRXQhy8EpS9OMrXwPFP+ve1lbrbnN
+        JE5D8A/P5qCqCcWQ+TUOYt5dR9FRfh4qya1pfoWuNkZsuJRhTnFca34XVFeU1m00
+        IIeh/js5kE23MnFToIUX9YeesGlT5IXVVJTRYGaGx+pi2m5qU5WZsgRbU6GwHNyg
+        MiKwWHkfOsjevH/I4zfc9hqrM+wCrfpRC7Xckxe/LJiBoJunEYuKfzVo+smA9+8a
+        Hitxb1aXk2bMnOmw==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 88974827 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 14 Apr 2020 04:11:33 +0000 (UTC)
+Received: by mail-il1-f174.google.com with SMTP id f82so7335232ilh.8;
+        Mon, 13 Apr 2020 21:21:20 -0700 (PDT)
+X-Gm-Message-State: AGi0Puag5qXIieN6iBh2lkiZGdyr/wx2ibzn7vFs1oKsFfUa9cpr/Xwb
+        S8JG+s8vjbCtFMkt/TTeK9IXTvsDKmR9iRLI+yE=
+X-Google-Smtp-Source: APiQypJ/7RhNGnnGookdRVoanSctjn1Vok787USuwSL3Yuhqk8qU4YRDoByE1P0QjYrfbk+dxd7U09uiMMNqPDB7Oik=
+X-Received: by 2002:a92:d98c:: with SMTP id r12mr2063647iln.224.1586838079492;
+ Mon, 13 Apr 2020 21:21:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200407063345.4484-1-Jason@zx2c4.com> <20200407063345.4484-3-Jason@zx2c4.com>
+ <0e189a4fe1e69b08afc859ce83623a0e5ea0c08b.camel@linux.intel.com>
+In-Reply-To: <0e189a4fe1e69b08afc859ce83623a0e5ea0c08b.camel@linux.intel.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 13 Apr 2020 22:21:08 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pigvAgK3Bje6DkFEcdyWwi7-C7D6QEo4YiH_cbJvxqhQ@mail.gmail.com>
+Message-ID: <CAHmME9pigvAgK3Bje6DkFEcdyWwi7-C7D6QEo4YiH_cbJvxqhQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/mce/therm_throt: allow disabling the thermal
+ vector altogether
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        X86 ML <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        bberg@redhat.com, bp@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-make_request-based drivers and and request-based drivers share some
-some debugfs code. By moving this into its own file it makes it easier
-to expand and audit this shared code.
+On Mon, Apr 13, 2020 at 9:38 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Tue, 2020-04-07 at 00:33 -0600, Jason A. Donenfeld wrote:
+> > The thermal IRQ handler uses 1.21% CPU on my system when it's hot
+> > from
+> > compiling things. Indeed looking at /proc/interrupts reveals quite a
+> > lot
+> I am curious why you are hitting threshold frequently?
+> What is rdmsr 0x1a2
 
-This patch contains no functional changes.
+5640000
 
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/Makefile      |  1 +
- block/blk-core.c    |  9 +--------
- block/blk-debugfs.c | 15 +++++++++++++++
- block/blk.h         |  7 +++++++
- 4 files changed, 24 insertions(+), 8 deletions(-)
- create mode 100644 block/blk-debugfs.c
+> > of events coming in. Beyond logging them, the existing drivers on the
+> > system don't appear to do very much that I'm interested in. So, add a
+> > way to disable this entirely so that I can regain precious CPU
+> > cycles.
+> It is showing amount of time system is running in a constrained
+> environment. Lots of real time and HPC folks really care about this.
 
-diff --git a/block/Makefile b/block/Makefile
-index 206b96e9387f..1d3ab20505d8 100644
---- a/block/Makefile
-+++ b/block/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_BLOCK) := bio.o elevator.o blk-core.o blk-sysfs.o \
- 			blk-mq-sysfs.o blk-mq-cpumap.o blk-mq-sched.o ioctl.o \
- 			genhd.o ioprio.o badblocks.o partitions/ blk-rq-qos.o
- 
-+obj-$(CONFIG_DEBUG_FS)		+= blk-debugfs.o
- obj-$(CONFIG_BOUNCE)		+= bounce.o
- obj-$(CONFIG_BLK_SCSI_REQUEST)	+= scsi_ioctl.o
- obj-$(CONFIG_BLK_DEV_BSG)	+= bsg.o
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 7e4a1da0715e..5aaae7a1b338 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -48,10 +48,6 @@
- #include "blk-pm.h"
- #include "blk-rq-qos.h"
- 
--#ifdef CONFIG_DEBUG_FS
--struct dentry *blk_debugfs_root;
--#endif
--
- EXPORT_TRACEPOINT_SYMBOL_GPL(block_bio_remap);
- EXPORT_TRACEPOINT_SYMBOL_GPL(block_rq_remap);
- EXPORT_TRACEPOINT_SYMBOL_GPL(block_bio_complete);
-@@ -1796,10 +1792,7 @@ int __init blk_dev_init(void)
- 
- 	blk_requestq_cachep = kmem_cache_create("request_queue",
- 			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
--
--#ifdef CONFIG_DEBUG_FS
--	blk_debugfs_root = debugfs_create_dir("block", NULL);
--#endif
-+	blk_debugfs_register();
- 
- 	return 0;
- }
-diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-new file mode 100644
-index 000000000000..19091e1effc0
---- /dev/null
-+++ b/block/blk-debugfs.c
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Shared request-based / make_request-based functionality
-+ */
-+#include <linux/kernel.h>
-+#include <linux/blkdev.h>
-+#include <linux/debugfs.h>
-+
-+struct dentry *blk_debugfs_root;
-+
-+void blk_debugfs_register(void)
-+{
-+	blk_debugfs_root = debugfs_create_dir("block", NULL);
-+}
-diff --git a/block/blk.h b/block/blk.h
-index 0a94ec68af32..86a66b614f08 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -487,5 +487,12 @@ struct request_queue *__blk_alloc_queue(int node_id);
- int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
- 		struct page *page, unsigned int len, unsigned int offset,
- 		bool *same_page);
-+#ifdef CONFIG_DEBUG_FS
-+void blk_debugfs_register(void);
-+#else
-+static inline void blk_debugfs_register(void)
-+{
-+}
-+#endif /* CONFIG_DEBUG_FS */
- 
- #endif /* BLK_INTERNAL_H */
--- 
-2.25.1
-
+Which is why this patch adds an option, not a full removal or
+something. Real time and HPC people can keep their expensive
+interrupt. Other people with different varieties of system can disable
+it.
