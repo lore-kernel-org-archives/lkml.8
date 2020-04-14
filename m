@@ -2,154 +2,296 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B639FC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354C1C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D27B20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="03DbJ5dr"
+	by mail.kernel.org (Postfix) with ESMTP id 1787E2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503555AbgDNSMf (ORCPT
+        id S2503563AbgDNSMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:12:35 -0400
-Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:54626 "EHLO
-        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2503531AbgDNSML (ORCPT
+        Tue, 14 Apr 2020 14:12:46 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:43392 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503483AbgDNSMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:12:11 -0400
-Received: from pps.filterd (m0127837.ppops.net [127.0.0.1])
-        by mx0a-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EI4T5K023495;
-        Tue, 14 Apr 2020 11:09:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint20171006;
- bh=745c7R5noQJZyZzadl+HjR2ni9lSf396P96eRY/ZhmU=;
- b=03DbJ5drl5HQEVbImtwuqZcW0ICY2uANBQqTHd51+nRFb3fQUFysmvRTXyHkiDBT9ODA
- T1W3arQWw+xGTLTCua1N2RIYz8J51dvfjIHraV+5vDerqTqoHiiJsmdJ7jG1mmCdeTZD
- SbtNbfIr7KfqHOJPFDbO53g391V0VVuDQ7gGQ+uXsbrWe1Ci2/+GXUHkW/hCdvnUmQ2h
- drMRIO9xdvxMe1f1w0q7duViKyWFbttaiX10tmbtWGOz0vGLtK9OE9SW43mrfPXexzCE
- Mk2cpsdjNiobU5NArSmr9iYRglG2/WR/T33gn5hT9xrT42cf/9yk1IukwXWXreZXsZkK 1g== 
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2056.outbound.protection.outlook.com [104.47.37.56])
-        by mx0a-002c1b01.pphosted.com with ESMTP id 30b9t97amp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 11:09:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JjCda54OjK+DkgSx+WhIGFMP2hptc9WbjsHJn3sPCxlMl/I5rbNjWpnsfy+KRj/dwle2TW5iznuRx9ruPt5MfDZQxj5qpAJ6dtjX1qEPK8+DmPxMaElgM13aT35pZs+rHvSIHAHYAmuJ59cyaF6Dt8lt5mcnDecgR/Y1RLMCgnEclDe8FHZiyYfPiq6Dpxu3qkoFy9OMAZYyR/2jqQG91zgetPVsCbPOzEn5fSX7j/O88narE7lSsmz9AKsbNn/Tb4qAfHFHjk9CMhKPy4h7+UBDv4csu1wU2b4vUwAc4PQTVZe2ZP5pFaRMwe6CdPx6bFEU/q/q5T0CyDUuoDQEAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=745c7R5noQJZyZzadl+HjR2ni9lSf396P96eRY/ZhmU=;
- b=R2uHSJubfmIx2fhFsgpxBibAeHTw35wKoHiAMm/GfPA+VrNwcuWuBEyO9H8wb8PqvwYSu0GKenfePeZIbeVJ4J9cIKsOs98oCnBRxh5Y4UGcZIPVfmDWEilEfmJLZmQ4sxhvMUz/P00RW8siyl1sTGEtLFKTJ/VAf85MD4Ur7pmBQYvlLgFQy891i+BIrRMfF8rLU2FaDiZ+aeXMKW+1ZPo1IrsGe6Inlp3/q30hiDhdG4FCEaYB6ejvCa4BGaBlTaFBFBuSippu0lMTQugc157NTzCluAItmBxlnYPq3gQsafwuIFk5nP3A25WCnqznX+iGdz/AAoMZNR4+6OwoUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from MN2PR02MB6303.namprd02.prod.outlook.com (2603:10b6:208:1bd::13)
- by MN2PR02MB6989.namprd02.prod.outlook.com (2603:10b6:208:20f::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Tue, 14 Apr
- 2020 16:08:39 +0000
-Received: from MN2PR02MB6303.namprd02.prod.outlook.com
- ([fe80::1dc5:77f3:3eaf:ffc8]) by MN2PR02MB6303.namprd02.prod.outlook.com
- ([fe80::1dc5:77f3:3eaf:ffc8%4]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 16:08:39 +0000
-From:   Ivan Teterevkov <ivan.teterevkov@nutanix.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     "rientjes@google.com" <rientjes@google.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>, "tj@kernel.org" <tj@kernel.org>,
-        "lizefan@huawei.com" <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "guro@fb.com" <guro@fb.com>,
-        "shakeelb@google.com" <shakeelb@google.com>,
-        "chris@chrisdown.name" <chris@chrisdown.name>,
-        "yang.shi@linux.alibaba.com" <yang.shi@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "ying.huang@intel.com" <ying.huang@intel.com>,
-        "ziqian.lzq@antfin.com" <ziqian.lzq@antfin.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Jonathan Davies <jond@nutanix.com>
-Subject: RE: [RFC] memcg: fix default behaviour of non-overridden
- memcg.swappiness
-Thread-Topic: [RFC] memcg: fix default behaviour of non-overridden
- memcg.swappiness
-Thread-Index: AdX+Dc7TuUU65jcsTmmN9pfGvp9AeQAr94MABO48HRA=
-Date:   Tue, 14 Apr 2020 16:08:39 +0000
-Message-ID: <MN2PR02MB63033A5D2EE11A0D7DFEBE95E9DA0@MN2PR02MB6303.namprd02.prod.outlook.com>
-References: <BL0PR02MB560170CD4D4245D4B89BC22EE9F40@BL0PR02MB5601.namprd02.prod.outlook.com>
- <20200320134428.GG24409@dhcp22.suse.cz>
-In-Reply-To: <20200320134428.GG24409@dhcp22.suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [31.125.170.138]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e2c41af-10e4-40dd-05a3-08d7e08e187c
-x-ms-traffictypediagnostic: MN2PR02MB6989:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB6989C6F145A231B70F6BA5F6E9DA0@MN2PR02MB6989.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0373D94D15
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR02MB6303.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(396003)(39830400003)(376002)(346002)(366004)(44832011)(5660300002)(2906002)(8676002)(86362001)(478600001)(71200400001)(4744005)(33656002)(81156014)(8936002)(26005)(107886003)(54906003)(316002)(6916009)(4326008)(186003)(6506007)(66556008)(66476007)(7416002)(76116006)(52536014)(9686003)(66446008)(66946007)(64756008)(7696005)(55016002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: nutanix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 81fjC7P1yUMgY4+NpwMHI7pjn64+1RSsVdFiC63I2EjZYQbX8lBwmNU7DEdyHwfIflKXfLb+a0FrJbPvp7pE60U/FMcVzmqTGAxfpBRBUPbPLYOXKkkVryPhctMY+dTsII+QL66+zXKr0LB3NEdnG88v5xDMx/jEL7pZyaA8R0dElqLncU6RVjGVJ6Kes3ugmg0q/xUR133kE9bf0dEAL2dr1zJOgPWl9nakO/WANWVw7+3POwl+rIkamaAotUH5KDyycsv61hN0EYm14kBNs5kQn+J6KUvPLS0A4bpLrUHRmqT3bZ8xfS6OtYvq2YEsFFsBYJq7E+Lf0Kp77xSjEBCh2hb25SAiIVCTWNt6CyAnrxESnO0igeMiAcC9OrtW074jirVAVZ9vW+XTqipmh/Z+TGDjek6ryaEHOJaGE0c/uoHE5N5IRKkGOHpdRKZc
-x-ms-exchange-antispam-messagedata: PrOqkpWRb9Lmx1mGa2XnylOJJ2/L1K4/mKxs21Cukmg4Wxva66c+exnxyQwDNQXu5lV/zyxZW3rn/9iha0pLf+xw5WL4w9rct+sxamv9I59p/gobmZV7Q/BzEOluJ1ye5fTYPzML0X9HH6AU3wrv1Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 14:12:13 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E06EC80441;
+        Tue, 14 Apr 2020 20:12:01 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 20:11:55 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] DRM: ARC: add HDMI 2.0 TX encoder support
+Message-ID: <20200414181155.GA21071@ravnborg.org>
+References: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
+ <20200414144402.27643-2-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e2c41af-10e4-40dd-05a3-08d7e08e187c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 16:08:39.4265
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aAGl/A2ez2HORvWec3Er0IHF+Gsn+A2FgN90jguyi/fbSkLzjhQa7NfR2/Iudr+hXn9hbm8gWjdp3Eha+S1mEjv+Sx0Mm2PlpY12YIa5E+g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6989
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_09:2020-04-14,2020-04-14 signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414144402.27643-2-Eugeniy.Paltsev@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=jIQo8A4GAAAA:8 a=VwQbUJbxAAAA:8 a=irhMBndJ4tJQUlVCqRwA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=Lf5xNeLK5dgiOs8hzIjU:22
+        a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020, Michal Hocko wrote:
-> On Thu 19-03-20 17:38:30, Ivan Teterevkov wrote:
-> > Also, shall this magic -1 be exposed to the user? I think it's a "no",
-> > but what if the user wants to un-override the memcg.swappiness...
->=20
-> If we are to use such a semantic then it absolutely has to be an opt-in b=
-ehavior
-> and expressed in some way to the user space (e.g. a symbolic name referri=
-ng to
-> the global setting).
+Hi Eugeniy.
 
-A symbolic link would be a good approach but...
+On Tue, Apr 14, 2020 at 05:44:01PM +0300, Eugeniy Paltsev wrote:
+> The Synopsys ARC SoCs (like HSDK4xD) include on-chip DesignWare HDMI
+> encoders. Support them with a platform driver to provide platform glue
+> data to the dw-hdmi driver.
 
-> I am not convinced we need it.
 
-... agree and not going any further with the suggestion.
+Drivers looks lean and clean.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Support of the sysctl parameters in the kernel command line is a
-better solution and would address my initially raised concern to
-tackle the configuration parameters.
+But really take this as I found no whitespace erros or something...
 
-Thanks
-Ivan
+A few drive-by comments below.
+
+	Sam
+
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  MAINTAINERS                       |   6 ++
+>  drivers/gpu/drm/Makefile          |   2 +-
+>  drivers/gpu/drm/arc/Kconfig       |   7 ++
+>  drivers/gpu/drm/arc/Makefile      |   1 +
+>  drivers/gpu/drm/arc/arc-dw-hdmi.c | 126 ++++++++++++++++++++++++++++++
+>  5 files changed, 141 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a6fbdf354d34..2aaed1190370 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1258,6 +1258,12 @@ S:	Supported
+>  F:	drivers/gpu/drm/arc/
+>  F:	Documentation/devicetree/bindings/display/snps,arcpgu.txt
+>  
+> +ARC DW HDMI DRIVER
+> +M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> +S:	Supported
+> +F:	drivers/gpu/drm/arc/arc-dw-hdmi.c
+> +F:	Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+
+I am confused about the filename of the binding.
+Binding files are often named after their compatible.
+But the compatible is: snps,dw-hdmi-hsdk
+
+And the biding file seems to be named after the driver name.
+This seems wrong - and I do nto see it explained.
+
+> +
+>  ARCNET NETWORK LAYER
+>  M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
+>  L:	netdev@vger.kernel.org
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 6493088a0fdd..5b0bcf7f45cd 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -109,7 +109,7 @@ obj-y			+= panel/
+>  obj-y			+= bridge/
+>  obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
+>  obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
+> -obj-$(CONFIG_DRM_ARCPGU)+= arc/
+> +obj-y			+= arc/
+>  obj-y			+= hisilicon/
+>  obj-$(CONFIG_DRM_ZTE)	+= zte/
+>  obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
+> diff --git a/drivers/gpu/drm/arc/Kconfig b/drivers/gpu/drm/arc/Kconfig
+> index e8f3d63e0b91..baec9d2a4fba 100644
+> --- a/drivers/gpu/drm/arc/Kconfig
+> +++ b/drivers/gpu/drm/arc/Kconfig
+> @@ -8,3 +8,10 @@ config DRM_ARCPGU
+>  	  Choose this option if you have an ARC PGU controller.
+>  
+>  	  If M is selected the module will be called arcpgu.
+> +
+> +config DRM_ARC_DW_HDMI
+> +	tristate "ARC DW HDMI"
+> +	depends on DRM && OF
+> +	select DRM_DW_HDMI
+> +	help
+> +	  Synopsys DW HDMI driver for various ARC development boards
+> diff --git a/drivers/gpu/drm/arc/Makefile b/drivers/gpu/drm/arc/Makefile
+> index c7028b7427b3..7a156d8c2c3c 100644
+> --- a/drivers/gpu/drm/arc/Makefile
+> +++ b/drivers/gpu/drm/arc/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  arcpgu-y := arcpgu_crtc.o arcpgu_hdmi.o arcpgu_sim.o arcpgu_drv.o
+>  obj-$(CONFIG_DRM_ARCPGU) += arcpgu.o
+> +obj-$(CONFIG_DRM_ARC_DW_HDMI) += arc-dw-hdmi.o
+> diff --git a/drivers/gpu/drm/arc/arc-dw-hdmi.c b/drivers/gpu/drm/arc/arc-dw-hdmi.c
+> new file mode 100644
+> index 000000000000..4869dd668a51
+> --- /dev/null
+> +++ b/drivers/gpu/drm/arc/arc-dw-hdmi.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// Synopsys DW HDMI driver for various ARC development boards
+> +//
+> +// Copyright (C) 2020 Synopsys
+> +// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> +
+> +#include <linux/component.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <drm/bridge/dw_hdmi.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_edid.h>
+> +#include <drm/drm_encoder_slave.h>
+> +#include <drm/drm_of.h>
+> +
+> +static const struct dw_hdmi_mpll_config snps_hdmi_mpll_cfg[] = {
+> +	{
+> +		27000000, {
+> +			{ 0x00B3, 0x0000 },
+> +			{ 0x00B3, 0x0000 },
+> +			{ 0x00B3, 0x0000 }
+> +		},
+> +	}, {
+> +		74250000, {
+> +			{ 0x0072, 0x0001},
+> +			{ 0x0072, 0x0001},
+> +			{ 0x0072, 0x0001}
+> +		},
+> +	}, {
+> +		148500000, {
+> +			{ 0x0051, 0x0002},
+> +			{ 0x0051, 0x0002},
+> +			{ 0x0051, 0x0002}
+> +		},
+> +	}, {
+> +		~0UL, {
+> +			{ 0x00B3, 0x0000 },
+> +			{ 0x00B3, 0x0000 },
+> +			{ 0x00B3, 0x0000 },
+> +		},
+> +	}
+> +};
+> +
+> +static const struct dw_hdmi_curr_ctrl snps_hdmi_cur_ctr[] = {
+> +	/* pixelclk    bpp8    bpp10   bpp12 */
+This comment is very useful. Could you put one on top of
+snps_hdmi_mpll_cfg too?
+
+> +	{ 27000000,  { 0x0000, 0x0000, 0x0000 }, },
+> +	{ 74250000,  { 0x0008, 0x0008, 0x0008 }, },
+> +	{ 148500000, { 0x001b, 0x001b, 0x001b }, },
+> +	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
+> +};
+> +
+> +
+> +static const struct dw_hdmi_phy_config snps_hdmi_phy_config[] = {
+> +	/* pixelclk   symbol  term    vlev */
+> +	{ 27000000,   0x8009, 0x0004, 0x0232},
+> +	{ 74250000,   0x8009, 0x0004, 0x0232},
+> +	{ 148500000,  0x8009, 0x0004, 0x0232},
+> +	{ ~0UL,       0x8009, 0x0004, 0x0232}
+> +};
+> +
+> +static enum drm_mode_status snps_dw_hdmi_mode_valid(struct drm_connector *con,
+> +						    const struct drm_display_mode *mode)
+> +{
+> +	return MODE_OK;
+> +}
+
+dw_hdmi_bridge_mode_valid() will return MODE_OK if no operation
+is assigned to .mode_valid.
+So I think it is not needed.
+
+Or I have missed something, which is also quite possible.
+
+> +
+> +static struct dw_hdmi_plat_data snps_dw_hdmi_drv_data = {
+> +	.mpll_cfg   = snps_hdmi_mpll_cfg,
+> +	.cur_ctr    = snps_hdmi_cur_ctr,
+> +	.phy_config = snps_hdmi_phy_config,
+> +	.mode_valid = snps_dw_hdmi_mode_valid,
+> +};
+> +
+static const struct of_device_id snps_dw_hdmi_dt_ids[] = {
+	{ .compatible = "snps,dw-hdmi-hsdk", .data = &snps_dw_hdmi_drv_data },
+	{ /* sentinel */ },
+	
+Bracing looked strange. Consider the above format.
+Ignore if line becomes a few char too long (IMO).
+
+	Sam
+
+> +};
+> +MODULE_DEVICE_TABLE(of, snps_dw_hdmi_dt_ids);
+> +
+> +static int snps_dw_hdmi_probe(struct platform_device *pdev)
+> +{
+> +	const struct dw_hdmi_plat_data *plat_data;
+> +	const struct of_device_id *match;
+> +	struct dw_hdmi *hdmi;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	match = of_match_node(snps_dw_hdmi_dt_ids, pdev->dev.of_node);
+> +	plat_data = match->data;
+> +
+> +	hdmi = dw_hdmi_probe(pdev, plat_data);
+> +	if (IS_ERR(hdmi))
+> +		return PTR_ERR(hdmi);
+> +
+> +	platform_set_drvdata(pdev, hdmi);
+> +
+> +	return 0;
+> +}
+> +
+> +static int snps_dw_hdmi_remove(struct platform_device *pdev)
+> +{
+> +	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
+> +
+> +	dw_hdmi_remove(hdmi);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver snps_dw_hdmi_platform_driver = {
+> +	.probe  = snps_dw_hdmi_probe,
+> +	.remove = snps_dw_hdmi_remove,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = snps_dw_hdmi_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(snps_dw_hdmi_platform_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("ARC specific DW-HDMI driver extension");
+> +MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
+> -- 
+> 2.21.1
