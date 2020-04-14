@@ -2,66 +2,130 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756DAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23002C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5757A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F295820775
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391275AbgDNQEx (ORCPT
+        id S2391283AbgDNQE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:04:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44278 "EHLO mx2.suse.de"
+        Tue, 14 Apr 2020 12:04:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30959 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391244AbgDNQDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:03:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3706CAC77;
-        Tue, 14 Apr 2020 16:03:50 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 18:03:50 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 4/4] kernel/module: Hide vermagic header file
- from general use
-Message-ID: <20200414160349.GH31763@zn.tnic>
-References: <20200414155732.1236944-1-leon@kernel.org>
- <20200414155732.1236944-5-leon@kernel.org>
+        id S2391254AbgDNQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:04:10 -0400
+IronPort-SDR: M/xsaHrEmI6bxTLkO+jqUFZgxjpm1iLeVC/gaB9lhrbaHo/R45H44+8xlzanQj8vC0aRAcYlLu
+ 6c1fC0L4rJ4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 09:04:07 -0700
+IronPort-SDR: JPmVlV3ND9Xn87O4ueaT4dwiU5HpXLw64/OwsZMmuFE450xcAlAYC0qYmoATBfWS8hXr1sfFnZ
+ sPAtVpoFWbDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="242035655"
+Received: from shiyaowa-mobl.ger.corp.intel.com (HELO localhost) ([10.249.43.105])
+  by orsmga007.jf.intel.com with ESMTP; 14 Apr 2020 09:04:04 -0700
+Date:   Tue, 14 Apr 2020 19:04:04 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
+Message-ID: <20200414160404.GA32775@linux.intel.com>
+References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
+ <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
+ <20200413180732.GA11147@linux.intel.com>
+ <7df7f8bd-c65e-1435-7e82-b9f4ecd729de@redhat.com>
+ <20200414071349.GA8403@linux.intel.com>
+ <d6684575-ce91-fe72-6035-11834a05cd54@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414155732.1236944-5-leon@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d6684575-ce91-fe72-6035-11834a05cd54@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 06:57:32PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
+On Tue, Apr 14, 2020 at 10:26:32AM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> VERMAGIC* definitions are not supposed to be used by the drivers,
+> On 4/14/20 9:13 AM, Jarkko Sakkinen wrote:
+> > On Mon, Apr 13, 2020 at 08:11:15PM +0200, Hans de Goede wrote:
+> > > Hi,
+> > > 
+> > > On 4/13/20 8:07 PM, Jarkko Sakkinen wrote:
+> > > > On Mon, Apr 13, 2020 at 12:04:25PM +0200, Hans de Goede wrote:
+> > > > > Hi Jarkko,
+> > > > > 
+> > > > > On 4/12/20 7:04 PM, Jarkko Sakkinen wrote:
+> > > > > > Call devm_free_irq() if we have to revert to polling in order not to
+> > > > > > unnecessarily reserve the IRQ for the life-cycle of the driver.
+> > > > > > 
+> > > > > > Cc: stable@vger.kernel.org # 4.5.x
+> > > > > > Reported-by: Hans de Goede <hdegoede@redhat.com>
+> > > > > > Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+> > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > ---
+> > > > > >     drivers/char/tpm/tpm_tis_core.c | 5 ++++-
+> > > > > >     1 file changed, 4 insertions(+), 1 deletion(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> > > > > > index 27c6ca031e23..ae6868e7b696 100644
+> > > > > > --- a/drivers/char/tpm/tpm_tis_core.c
+> > > > > > +++ b/drivers/char/tpm/tpm_tis_core.c
+> > > > > > @@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+> > > > > >     		if (irq) {
+> > > > > >     			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+> > > > > >     						 irq);
+> > > > > > -			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
+> > > > > > +			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+> > > > > >     				dev_err(&chip->dev, FW_BUG
+> > > > > >     					"TPM interrupt not working, polling instead\n");
+> > > > > > +				devm_free_irq(chip->dev.parent, priv->irq,
+> > > > > > +					      chip);
+> > > > > > +			}
+> > > > > 
+> > > > > My initial plan was actually to do something similar, but if the probe code
+> > > > > is actually ever fixed to work as intended again then this will lead to a
+> > > > > double free as then the IRQ-test path of tpm_tis_send() will have called
+> > > > > disable_interrupts() which already calls devm_free_irq().
+> > > > > 
+> > > > > You could check for chip->irq != 0 here to avoid that.
+> 
+> Erm in case you haven't figured it out yet this should be priv->irq != 0, sorry.
 
-Yeah, this was only me conjecturing here. But yes, if people agree, this
-would be one way to do it.
+Yup.
 
-In any case and FWIW, series looks ok to me:
+> > > > > 
+> > > > > But it all is rather messy, which is why I went with the "#if 0" approach
+> > > > > in my patch.
+> > > > 
+> > > > I think it is right way to fix it. It is a bug independent of the issue
+> > > > we are experiencing.
+> > > > 
+> > > > However, what you are suggesting should be done in addition. Do you have
+> > > > a patch in place or do you want me to refine mine?
+> > > 
+> > > I do not have a patch ready for this, if you can refine yours that would
+> > > be great.
+> > 
+> > Thanks! Just wanted to confirm.
+> 
+> And thank you for working on a (temporary?) fix for this.
 
-Acked-by: Borislav Petkov <bp@suse.de>
+As far as I see it, it is orthogonal fix that needs to be backported
+to stable kernels. This bug predates the issue we're seeing now.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+/Jarkko
