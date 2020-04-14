@@ -2,284 +2,130 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB11C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A594EC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B8820787
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586887468;
-	bh=pgCsmzu10cSNWKNLO0MTeQoYGZx2WpejbOfONgJvSGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D4va1xEnDUkq+xSAvwBciMXqSpWOny1Q9l2O3elqsT4qz2sarliYOlEiaR9b6dPxX
-	 hqjFwadBWI4P9iT8yRfHuHIRbIDugEn6C++bZWrY1Go1fSmlFUAIHori97gO8ZkkXp
-	 4iSWwGviUSWuath92MMdSdVeeD0+89XlvHqZYUaQ=
+	by mail.kernel.org (Postfix) with ESMTP id 867A420767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:04:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qotcykh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407779AbgDNSE0 (ORCPT
+        id S2407812AbgDNSEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:04:26 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36372 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503176AbgDNSER (ORCPT
+        Tue, 14 Apr 2020 14:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407786AbgDNSEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:04:17 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s202so8008179oih.3;
-        Tue, 14 Apr 2020 11:04:16 -0700 (PDT)
+        Tue, 14 Apr 2020 14:04:33 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE87EC061BD3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:04:28 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id g11so405519pgd.20
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=BlvWvGdkN2WeiBN4fqdYccjrgT9VbdrAfRUdSyUXBZE=;
+        b=qotcykh6fSG/qm/7oyV0C2RLfqHJRLB9uNOcTZJ+xI0bwdHUs/bval7rxdFichn7Px
+         cds/LILyV/qc33RH3PO7JhsOVWmtrGHKMn0tlao0W+RD4sPbBDPtRyuJVZU3jOKAemyp
+         xHfGM0o/5HGClnix9GABq0SN2wa9BYukgEInsw6x9yC3nqGHbgPv2nLGv8SDphk9fffG
+         OYZvkRedZ3/oU3gQCVmkk5CY9c/P1UAWcN6OZXrkTBpkTbJWXsGFmOot6GCGVaiEZVmg
+         hFnLyW50k+bthEAP/4L+LRjcXMnPr1gtQbGvV19aAIrOBcj6YD5wuY14th6lm8XEQC+y
+         T7WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zQ0PimyRdMABhjhHh/Gv5/rP+w4JWlh3TdDCCaak8Qg=;
-        b=h8gB/AfV1bECQFTSRSe4DA82VFQgAMK7GAVKxdbtSlrOPusEjEAbM7VhU8goP6xA1B
-         V9Um/1q+82gJWZo1DgJ/s2zxCKo9dWYQBysU3q0DSTuDuTT+vHkArQQE3kHIeuMOWItS
-         bWh50w/Ul5h308HMOi8Wi6DI9Yvx3gjJ2TqrZ+HKj3i+6m/o4CqyyPyZOXI9sjXs5Ty1
-         W9dbBwRy9ytIlrWypdA6NVfcW7s8IFfugc/VkacICLRmXjtOJxL2JX+QzhyWAsugET8d
-         68jV89QV/+MR+4/ex1wwg9MIIJnE6P6oH1mpEXk7lrZHYe0/sffXVAWL5bhMuNvlUwWi
-         zieA==
-X-Gm-Message-State: AGi0PuYcwf9GCdTvyVr+zJZ5np11EvbSZ3T4ATEN3aSw+vzMq4XpvCmU
-        hQtNH9B8VmZSNz4ONJXvtA==
-X-Google-Smtp-Source: APiQypKFUIbErgo20KGe3E34B2dSQ+p6+Rq8KlCqQOyTgLPxoH4qjOuY/QFqublHD1xJYLoIqVNeSg==
-X-Received: by 2002:aca:b104:: with SMTP id a4mr14281712oif.103.1586887455780;
-        Tue, 14 Apr 2020 11:04:15 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o204sm5707995oib.12.2020.04.14.11.04.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:04:15 -0700 (PDT)
-Received: (nullmailer pid 18713 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:04:13 -0000
-Date:   Tue, 14 Apr 2020 13:04:13 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Christophe Roullier <christophe.roullier@st.com>
-Cc:     davem@davemloft.net, mark.rutland@arm.com, mripard@kernel.org,
-        martin.blumenstingl@googlemail.com, alexandru.ardelean@analog.com,
-        narmstrong@baylibre.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to
- DT schema
-Message-ID: <20200414180413.GB4816@bogus>
-References: <20200403140415.29641-1-christophe.roullier@st.com>
- <20200403140415.29641-3-christophe.roullier@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403140415.29641-3-christophe.roullier@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=BlvWvGdkN2WeiBN4fqdYccjrgT9VbdrAfRUdSyUXBZE=;
+        b=fglLH12Tli746MyI2HyazQXA1gSDVEPfDBEj86/0oQV7z04hWRXcoi2MqPhGCJYpOn
+         YQHgOSU8fUQLRtRo2Q0+2tWuwN8DGjQledMlomOHA8Tw6pCLIRcDovzm3ena7yVK7SlH
+         2fZPYS6vC6z2shCkupWSobGMK3RQhlkSnPf5DijLUYeLmohLsnQQsF8w1MiJsOAAU8WM
+         2UHmlB3L1IY2g3f8+3DlizZtCRDi5ZlPDiTjyOpM+9+l01R4o1GDR5mK5TtHIvxLrhpU
+         85FuHMtXyyTfoOLSfezBBm5cIQWuZLGVipyDbGMvi1d2b/68of1gW4TdtDnncTeIhkTe
+         l8CA==
+X-Gm-Message-State: AGi0PubNDulbG8MGT8S8n9CdPgYi1MJ9aHnGTlbLkSKukfNe1vs5huMZ
+        lbyUBLwtwXxrAI9oU3nvIBBW/5i/2Vtu
+X-Google-Smtp-Source: APiQypINK1iuhPngXC6+csiMJV8tSnHSd+p8i2SPRyYLIKD/yOPb21DGbW6f+TuBhNHqxPj6rbTeaTpyAK/t
+X-Received: by 2002:a17:90a:2709:: with SMTP id o9mr1509358pje.168.1586887468161;
+ Tue, 14 Apr 2020 11:04:28 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 11:04:16 -0700
+In-Reply-To: <20200414180419.14398-1-irogers@google.com>
+Message-Id: <20200414180419.14398-2-irogers@google.com>
+Mime-Version: 1.0
+References: <20200414180419.14398-1-irogers@google.com>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH v9 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 04:04:15PM +0200, Christophe Roullier wrote:
-> Convert stm32 dwmac to DT schema.
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
->  .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
->  .../devicetree/bindings/net/stm32-dwmac.yaml  | 150 ++++++++++++++++++
->  2 files changed, 150 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> deleted file mode 100644
-> index a90eef11dc46..000000000000
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> +++ /dev/null
-> @@ -1,44 +0,0 @@
-> -STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> -
-> -This file documents platform glue layer for stmmac.
-> -Please see stmmac.txt for the other unchanged properties.
-> -
-> -The device node has following properties.
-> -
-> -Required properties:
-> -- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
-> -	       "snps,dwmac-3.50a" to select IP version.
-> -	       For MPU family should be "st,stm32mp1-dwmac" to select
-> -	       glue, and "snps,dwmac-4.20a" to select IP version.
-> -- clocks: Must contain a phandle for each entry in clock-names.
-> -- clock-names: Should be "stmmaceth" for the host clock.
-> -	       Should be "mac-clk-tx" for the MAC TX clock.
-> -	       Should be "mac-clk-rx" for the MAC RX clock.
-> -	       For MPU family need to add also "ethstp" for power mode clock
-> -- interrupt-names: Should contain a list of interrupt names corresponding to
-> -           the interrupts in the interrupts property, if available.
-> -		   Should be "macirq" for the main MAC IRQ
-> -		   Should be "eth_wake_irq" for the IT which wake up system
-> -- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-> -	       encompases the glue register, and the offset of the control register.
-> -
-> -Optional properties:
-> -- clock-names:     For MPU family "eth-ck" for PHY without quartz
-> -- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> -- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
-> -
-> -Example:
-> -
-> -	ethernet@40028000 {
-> -		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> -		reg = <0x40028000 0x8000>;
-> -		reg-names = "stmmaceth";
-> -		interrupts = <0 61 0>, <0 62 0>;
-> -		interrupt-names = "macirq", "eth_wake_irq";
-> -		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> -		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> -		st,syscon = <&syscfg 0x4>;
-> -		snps,pbl = <8>;
-> -		snps,mixed-burst;
-> -		dma-ranges;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> new file mode 100644
-> index 000000000000..f559293dbab5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/net/stm32-dwmac.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> +
-> +maintainers:
-> +  - Alexandre Torgue <alexandre.torgue@st.com>
-> +  - Christophe Roullier <christophe.roullier@st.com>
-> +
-> +description:
-> +  This file documents platform glue layer for stmmac.
-> +
-> +# We need a select here so we don't match all nodes with 'snps,dwmac'
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - st,stm32-dwmac
-> +          - st,stm32mp1-dwmac
-> +  required:
-> +    - compatible
-> +
-> +allOf:
-> +  - $ref: "snps,dwmac.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - st,stm32mp1-dwmac
-> +          - const: snps,dwmac-4.20a
-> +      - items:
-> +          - enum:
-> +              - st,stm32-dwmac
-> +          - const: snps,dwmac-4.10a
-> +      - items:
-> +          - enum:
-> +              - st,stm32-dwmac
-> +          - const: snps,dwmac-3.50a
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 5
-> +    items:
-> +        - description: GMAC main clock
-> +        - description: MAC TX clock
-> +        - description: MAC RX clock
-> +        - description: For MPU family, used for power mode
-> +        - description: For MPU family, used for PHY without quartz
-> +
-> +  clock-names:
-> +    minItems: 3
-> +    maxItems: 5
-> +    contains:
-> +      enum:
-> +        - stmmaceth
-> +        - mac-clk-tx
-> +        - mac-clk-rx
-> +        - ethstp
-> +        - eth-ck
-> +
-> +  st,syscon:
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      Should be phandle/offset pair. The phandle to the syscon node which
-> +      encompases the glue register, and the offset of the control register
-> +
-> +  st,eth-clk-sel:
-> +    description:
-> +      set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> +    type: boolean
-> +
-> +  st,eth-ref-clk-sel:
-> +    description:
-> +      set this property in RMII mode when you have PHY without crystal 50MHz and want to
-> +      select RCC clock instead of ETH_REF_CLK.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - st,syscon
-> +
-> +examples:
-> + - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    #include <dt-bindings/mfd/stm32h7-rcc.h>
-> +    //Example 1
-> +     ethernet0: ethernet@5800a000 {
-> +           compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
-> +           reg = <0x5800a000 0x2000>;
-> +           reg-names = "stmmaceth";
-> +           interrupts = <&intc GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +           interrupt-names = "macirq";
-> +           clock-names = "stmmaceth",
-> +                     "mac-clk-tx",
-> +                     "mac-clk-rx",
-> +                     "ethstp",
-> +                     "eth-ck";
-> +           clocks = <&rcc ETHMAC>,
-> +                <&rcc ETHTX>,
-> +                <&rcc ETHRX>,
-> +                <&rcc ETHSTP>,
-> +                <&rcc ETHCK_K>;
-> +           st,syscon = <&syscfg 0x4>;
-> +           snps,pbl = <2>;
-> +           snps,axi-config = <&stmmac_axi_config_0>;
-> +           snps,tso;
-> +           phy-mode = "rgmii";
-> +       };
-> +
-> +    //Example 2 (MCU example)
-> +     ethernet1: ethernet@40028000 {
-> +           compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> +           reg = <0x40028000 0x8000>;
-> +           reg-names = "stmmaceth";
-> +           interrupts = <0 61 0>, <0 62 0>;
-> +           interrupt-names = "macirq", "eth_wake_irq";
-> +           clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> +           clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> +           st,syscon = <&syscfg 0x4>;
-> +           snps,pbl = <8>;
-> +           snps,mixed-burst;
-> +           dma-ranges;
+This will allow parent makefiles to pass values to asciidoc.
 
-dma-ranges is not valid here. I will drop on applying, but you should 
-check your dts files.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Rob
+diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+index 31824d5269cc..6e54979c2124 100644
+--- a/tools/perf/Documentation/Makefile
++++ b/tools/perf/Documentation/Makefile
+@@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
+ man7dir=$(mandir)/man7
+ 
+ ASCIIDOC=asciidoc
+-ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
++ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
+ ASCIIDOC_HTML = xhtml11
+ MANPAGE_XSL = manpage-normal.xsl
+ XMLTO_EXTRA =
+@@ -59,7 +59,7 @@ HTML_REF = origin/html
+ 
+ ifdef USE_ASCIIDOCTOR
+ ASCIIDOC = asciidoctor
+-ASCIIDOC_EXTRA = -a compat-mode
++ASCIIDOC_EXTRA += -a compat-mode
+ ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
+ ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
+ ASCIIDOC_HTML = xhtml5
+-- 
+2.26.0.110.g2183baf09c-goog
+
