@@ -2,111 +2,117 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D988C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900E5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0544F206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E692206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586835491;
+	bh=8xQ/g6XkjB21fZ4IAt0tb5TLpkz6WBsvZzuRcALTQso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TqM+hiOfMjz9LT08kj/ABeJ15J4rQcR8LRMnZyh35jy6s1yakXAAVQOEOGThZ59Sk
+	 /MEt7lSaajr9l/pfW2J5JPF/90+8FJBJ5BKyA1TyigS1P6mGyI7soQC/CnJGeJ76X1
+	 eUFPMacY91laiO56tDboNWLEXy35Uhq9cDG9Lyd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404842AbgDNDg2 (ORCPT
+        id S2404854AbgDNDiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:36:28 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41976 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404832AbgDNDgY (ORCPT
+        Mon, 13 Apr 2020 23:38:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35946 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404832AbgDNDiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:36:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvUm.hu_1586835380;
-Received: from 30.27.118.45(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvUm.hu_1586835380)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 Apr 2020 11:36:21 +0800
-Subject: Re: [PATCH 0/2] support to read and tune appraise mode in runtime
-To:     Mimi Zohar <zohar@linux.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, zhangliguang@linux.alibaba.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>
-References: <20200409033907.102833-1-tianjia.zhang@linux.alibaba.com>
- <1586814958.7311.92.camel@linux.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <a767d0e0-6c57-254a-3c95-f78026e80c1d@linux.alibaba.com>
-Date:   Tue, 14 Apr 2020 11:36:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 13 Apr 2020 23:38:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n10so5486382pff.3;
+        Mon, 13 Apr 2020 20:38:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h/r5aOsQUftJul1WcNyBZHlZU1sP9juTahr+5gdxxlg=;
+        b=eY6Po53FMrgn7zyfImIEoNGBsf3Q/L4BK/JpaOTo3GMlGi+AJIYTAXyruGjEeXrYn6
+         koZFvaXlOlw4XTIgYfU3mvCVnmP094gIKjR/aiHyaHmD/8FzxsPJ46eygSbPCiK+hiHb
+         AeT4oRa1XFQ+/Oqew27t5EQvNn5lTLYNtdVfbCqQ0qu7aEI+iZ/RDvf1kBkNb6ZmJHp4
+         1yv2UrXEaH8TzTPHv/a8YqsMp2RiaDogZf6anz8c3bT4U4Su09ZZT1+Wu6YaqYLlpiAZ
+         aZe+1CJijZkYBuyyOdNRj0LzsNQSfw9A+wHOd86ymg+il7R22Q4H2makifKFF5g69b3y
+         XV9A==
+X-Gm-Message-State: AGi0PuZdgrprLIqVk9DF9dsqjtGyeZd2EgTP1V1yrFX062D485cRXuHd
+        MvUeqyw6olu7kjCz0APjrjMo7cmuths=
+X-Google-Smtp-Source: APiQypLbMnY7RmOhI54DEIQDHmqf9p5b+ywolxB5Vv3/JhisfnuzWeRXYY9C/ZyBC+MSinBn4WxhUg==
+X-Received: by 2002:a63:da47:: with SMTP id l7mr21029707pgj.315.1586835487193;
+        Mon, 13 Apr 2020 20:38:07 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x71sm9855165pfd.129.2020.04.13.20.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 20:38:05 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id EF98140277; Tue, 14 Apr 2020 03:38:04 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 03:38:04 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Ming Lei <ming.lei@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, yu kuai <yukuai3@huawei.com>,
+        linux-block@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [RFC v2 5/5] block: revert back to synchronous request_queue
+ removal
+Message-ID: <20200414033804.GO11244@42.do-not-panic.com>
+References: <20200409214530.2413-1-mcgrof@kernel.org>
+ <20200409214530.2413-6-mcgrof@kernel.org>
+ <161e938d-929b-1fdb-ba77-56b839c14b5b@acm.org>
+ <20200410143412.GK11244@42.do-not-panic.com>
+ <CAB=NE6VfQH3duMGneJnzEnXzAJ1TDYn26WhQCy8X1Mb_T6esgQ@mail.gmail.com>
+ <CAB=NE6XfdgB82ncZUkLpdYvDDdyVvVUd8nUmRCb8LbOQ213QoA@mail.gmail.com>
+ <64c9212d-aaa3-d172-0ab9-0fc0e25a019a@acm.org>
 MIME-Version: 1.0
-In-Reply-To: <1586814958.7311.92.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64c9212d-aaa3-d172-0ab9-0fc0e25a019a@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 11, 2020 at 04:21:17PM -0700, Bart Van Assche wrote:
+> On 2020-04-10 14:27, Luis Chamberlain wrote:
+> > On Fri, Apr 10, 2020 at 2:50 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >>
+> >> On Fri, Apr 10, 2020 at 8:34 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >>> On Thu, Apr 09, 2020 at 08:12:21PM -0700, Bart Van Assche wrote:
+> >>>> Please add a might_sleep() call in blk_put_queue() since with this patch
+> >>>> applied it is no longer allowed to call blk_put_queue() from atomic context.
+> >>>
+> >>> Sure thing.
+> >>
+> >> On second though, I don't think blk_put_queue() would be the right
+> >> place for might_sleep(), given we really only care about the *last*
+> >> refcount decrement to 0. So I'll move it to blk_release_queue().
+> >> Granted, at that point we are too late, and we'd get a splat about
+> >> this issue *iff* we really sleep. So yeah, I do suppose that forcing
+> >> this check there still makes sense.
+> > 
+> > I'll add might_sleep() to both blk_release_queue() *and* blk_cleanup_queue().
+> 
+> Since there is already an unconditional mutex_lock() call in
+> blk_cleanup_queue(), do we really need to add a might_sleep() call in
+> blk_cleanup_queue()?
 
+You are right, mutex_lock() already has a might_sleep() sprinkled on it.
 
-On 2020/4/14 5:55, Mimi Zohar wrote:
-> On Thu, 2020-04-09 at 11:39 +0800, Tianjia Zhang wrote:
->> Support the read and write operations of ima_appraise by adding a
->> securifyfs file 'appraise_mode'.
->>
->> In order to tune appraise mode in runtime, writing a PKCS#7 signature
->> corresponding the signed content is required. The content should be off,
->> enforce, log or fix. Given a simple way to archive this:
->>
->> $ echo -n off > mode
->> $ openssl smime -sign -nocerts -noattr -binary \
->>      -in mode -inkey <system_trusted_key> \
->>      -signer <cert> -outform der -out mode.p7s
->> $ sudo cat mode.p7s \
->>      > /sys/kernel/security/ima/appraise_mode
->>
->> Note that the signing key must be a trust key located in
->> system trusted keyring. So even the root privilege cannot
->> simply disable the enforcement.
-> 
-> There are major problems with disabling IMA appraisal.  This patch set
-> proposes disabling IMA appraisal without even providing the motivation
-> for such support.
-> 
-> A lot of effort went into preventing custom IMA policies from
-> disabling appraising the kexec or kernel module signatures.  In
-> addition, the "lockdown" patch set was upstreamed permitting IMA
-> signature verification.  This patch set would break both of these
-> features.
-> 
-> IMA relies on its own keyring for verifying file signatures, not the
-> builtin or secondary trusted kernel keyrings.
-> 
-> Two methods already exist - xattr and appended signatures - for
-> verifying file signatures.  This patch set assumes creating and
-> signing a file, which is then written to a securityfs file.  Like for
-> loading a custom IMA policy, instead of cat'ing the file, write the
-> pathname to the securityfs file.
-> 
-> If you must define a new IMA method for verifying file signatures,
-> then it needs to be generic and added to ima_appraise_measurement().
->   (Refer to the new IMA appended signature support.)
-> 
-> Mimi
-> 
->>
->> Tianjia Zhang (2):
->>    ima: support to read appraise mode
->>    ima: support to tune appraise mode in runtime
->>
->>   security/integrity/ima/ima_fs.c | 134 +++++++++++++++++++++++++++++++-
->>   1 file changed, 133 insertions(+), 1 deletion(-)
->>
-
-Thanks for your suggestion, the way to close the appraise mode here is 
-indeed a bit rude, I will reconsider again according to your suggestions.
-
-In addition, [PATCH 1/2] ima: support to read appraise mode, by the way, 
-see if this patch is acceptable.
-
-Thanks and best,
-Tianjia
+  Luis
