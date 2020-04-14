@@ -2,189 +2,129 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3490C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B853206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8061B2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gY3dzy/W"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="P/2e9Sa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436999AbgDNIkr (ORCPT
+        id S2437007AbgDNIk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:40:47 -0400
-Received: from mail-eopbgr10065.outbound.protection.outlook.com ([40.107.1.65]:10979
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436981AbgDNIkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:40:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GdHOBagvB8lGfg256VZ1rlNJqpjRY5Ycg8k9EfHuY6ZG9DF8W9D133CV1QJ/7Qs2Mt3FnGHAwhjollxO7mitNOUEGHuZTbEU/Ttc/Atu2bi5mzKphBCCTCV2JI/ENx/n4RqLG5KIlhurs/FhM3+lJ4gjQqa2okcLwAxUcNw1fxdKTKZ/wWi3Iv4m0J+qUtZf3LM4nZ2dxC7vm3dz5zEmoIpG8c606ISt22OTAGtm5cGg5bntLHgeelep2bx35Y1Y3H7fpS8OLF/eKL8sNR3uxObHolqQOvmpBpRN+IYHjklD1mZQIGhUEUWS53A4mobQwTc9lzPbTkkBp4cj0gE23Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xc5c9qVSbdIVQvIgLLc3BYBS6U6GkcdHbgGkL6PgOY0=;
- b=HGnYm/TvcV1l48RD3O5msI/P91inBpGRCXTFSMxrKsf5pdWzNkBKHKP7qemfQDpxLRTw0T+LEQkNWgzQAoJkv+92A+T2g20NSia93hXip/V3cYWpRt+jweD8GILdleWpv7ii9hOcA28OnVEtvZjlAvQsdzJJdwEuf+MP8DdeJLNn7xYRj9i+R+wdid9CNG/uhdO5B4G7SvnEKRXgeTmnAbOw1hfhmw2DNAvKZV2Y+ySW9NELBLn7JFa1PuGcyE9P9Va98eOGmtftAnUL4zifwb1DCdO1XMPTvyJG/kQW4tRERfLYZSTd7gHUba255CbwK9QkJ2GnVXi9ANjSr6DK9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xc5c9qVSbdIVQvIgLLc3BYBS6U6GkcdHbgGkL6PgOY0=;
- b=gY3dzy/W6ZQMFfdWxJkIJsvsgGyXqhMP7eYD0lkq55jLGmiN43kGOEDCWsL3kGks7++yfbRAoM6hNteAz2Q9vq1u6lomk2v4G5NdcnbgUhWYDu5ivwK2n++dVByyNyYVIwQSQtVLf3opcEas7summwVWpJOHtNXKGfdmsua279M=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
- by AM0PR04MB5204.eurprd04.prod.outlook.com (2603:10a6:208:bf::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Tue, 14 Apr
- 2020 08:40:20 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 08:40:20 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH] mailbox: imx-mailbox: fix scu msg header size check
-Thread-Topic: [PATCH] mailbox: imx-mailbox: fix scu msg header size check
-Thread-Index: AQHWEjVOJqZ73kq4ZkWCSd6i237Mtah4SGeAgAAB9XA=
-Date:   Tue, 14 Apr 2020 08:40:19 +0000
-Message-ID: <AM0PR04MB4481562AFA8A4B9CDDD3E55F88DA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1586851826-16596-1-git-send-email-peng.fan@nxp.com>
- <20200414082635.jo5yljonh5xgnujd@pengutronix.de>
-In-Reply-To: <20200414082635.jo5yljonh5xgnujd@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 27bc825e-c552-4fde-3821-08d7e04f7710
-x-ms-traffictypediagnostic: AM0PR04MB5204:|AM0PR04MB5204:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5204E38DDC0F6EDEBCE4FEAC88DA0@AM0PR04MB5204.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0373D94D15
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(6506007)(55016002)(45080400002)(7696005)(86362001)(54906003)(8676002)(71200400001)(52536014)(478600001)(83080400001)(316002)(2906002)(44832011)(4326008)(5660300002)(15650500001)(26005)(186003)(9686003)(66476007)(8936002)(66556008)(6916009)(966005)(64756008)(66574012)(66446008)(33656002)(76116006)(81156014)(66946007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UeEkyWS6tiuNQRH0tLo2BsVxdt+TVVXYSMN9R57Ku5MPkdVVsdeJ9xj/o0EZ/ducreXQHA6WlyTRqQcfaBO/cq4/q4zaTAJNuVDeDEwQ1RPOjNWjieQ0jk8qXS7SGXa8GV+H+NDu8RvPmyIT5/rAoQkJ5fag1aD8sevi3xV5222muUW0B/HMWkjyqX4JmTxr//ozkEP0McdoRYq+Ra9gmOLF4uIXD9HBlSnoiyQOzeBL8Ibdi1OgbJ5nLfCyUk1J7jtqqj9vRyvsSuHj6z2Mh45UH+fgzeYOyYW/2zCV6gJXSGKYoW1QYcEktVQpAc/lN0luYyP6bTepBpLLwgbJXmwJO4IH7Bkgmly3BKC3Y/OeapHfVGN5a6ovNM1R9whq1ESzjgqvTFw4UMMxRcas3TW3iz1rcgzEylW6GDi7PL/UJOcyGC4fQAaWcoSzIOczwZDfanrrq04a4DxxOXILOhUFy8GvWZogLkI6wJkYAdsa8q3D2gea1kLgZkn07da1BreH0Q0twZ0z+6Lm32/SLg==
-x-ms-exchange-antispam-messagedata: zwKq6yiyAwqodp1P+N+CfxT0B8ix9Wz3zBAtwVBoOdJvO/Q2495BmEOApG8BLlukeivaHuA5KLEWzDm9R1nTiFQxAbcj/FyWP97Yn15uW8GVILEm3NSzzFuYVmuLj+jc3VUxn/GWGtkWrAV6fLbv1w==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 04:40:58 -0400
+Received: from mout.web.de ([212.227.17.11]:59063 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436988AbgDNIkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:40:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586853617;
+        bh=hEj77XzExxM86gI+aD2VvXjn7SHjDcbARJFDPiuH/R0=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=P/2e9Sa0kM2GoAAYWir5qWkURwxu2KmfpwUB81hJlR4ZNBL/ZgVZ3gaNgUK/tOI73
+         HaWl/cs0phhKfHmIaFRb8agud5QLG3J9hKLF9PULWgGWXpvT/fSfkxtINrPslO35Dn
+         n5m/14UORJhjB/eBmt/hu0xmHMZjLdWVa98nNzfg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.66.171]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M5g0a-1j4XGr0goK-00xann; Tue, 14
+ Apr 2020 10:40:17 +0200
+To:     Zou Wei <zou_wei@huawei.com>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH -next] IMA: Fix a memdup.cocci warning
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <87ca047f-2b4b-313c-c8da-231c16d7277b@web.de>
+Date:   Tue, 14 Apr 2020 10:40:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27bc825e-c552-4fde-3821-08d7e04f7710
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 08:40:19.8695
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Np5pxY//l4ahF22/XylSevcBP+V3YwxyyN5T90Ny2DkYzfiq14sFRu47jVITfALS9jXOEQiQ6k3Oue6RSS2LgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5204
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MRYClenv3hRQ+J2VLmKxK5LNF2eDInoBHxgx5ptYlRpbyzfWZDE
+ makOXI8slNtgjfwAw/IVQ5w3FgVHT9vynUAaoeGop2cY4ZtSLi6wu9aiRGgMb+Hwg8pi8iM
+ 8/3ak5GQPWrZqE54dr1R6j8B1iT4eo4DB3KeK9hjEuIGXFxMS9WNowtvC7TX/rZhMUwkge8
+ VkQ2MiDQ9/7/LGawAj9ZA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I+vvtfQuOOk=:pD72gCA25GzpRjFA0zPTHJ
+ ZvLyhmGPM3g6aeufSnbPRATYYsGEt9jYkiOdYf9GSEQcHe8/oH71Q0L9u7jf5oBtacC4ZyVWs
+ GWNJDbK4NcPadagYUzy0r7wDlRBoaMttxoySCRqCsalnwWLWQfUFsZtxMmkxzMNuODlYKScsV
+ /nu/9ryuH3PRKNGyDNp7n8feQ5QZne7ZrNrz+EhmD1TG7UnDc8/d8nxEjSAavQPmeqb3VCWA5
+ N590gaf+i/uwyAfYTizp5tUUQWv5EVoQyQbOlnSf0azsZEwgE2FZaxc6+CmNznVizfezIAThH
+ M+MEfHMpiXIfwpS5q7TdKKdG3ylW2phnB+byQ18KyXYn+gVCJviG53B1T6madGnD+T2s+XEd4
+ aQSDFBZjf1pBak4NElerpVWK/YMGTraFhKj5q0UdUPlsmQZ7Aqe9cIfhE2agYaLJptU1eUIDM
+ //ZhfT2T4xdmjQinHO1UD/bXRYdzwZenlJdV41PjsVinRUJgSCHn+VGQhh+jpCpfYjjByfWfW
+ o/8z9CbPf8JYB0NxpkJxOF/57BjvfhcMAT1T2uj1Ad85agId/fpQf3b+W2LN0qyVIqXIybbql
+ 2qeSBgsU3WI6SPXqUh0EdfQ1aCeExpZxCiwZLmTi1q0TK//JeycKmtVadxz+LLgMpyH/0oTic
+ XesGMB1qDfszMrSZcmyC2cHtix1bh1JM/M6Oy4nzQ/hsnfSGChzMxPt3BSum2CmMYJUDTjdgc
+ lNFasKw0Dxbor147UjWbmJw/zidRYxpPYbnEGl9IskipD3+V1nCnklbRc60/mqMlh6rz5jK7S
+ QuDmTXbIrQ81NpRsfmblmLJ9V3ugM/vgxlUn0oOZIStjertWxDHduMNSptDux31Q+m9qTUqSS
+ 9tx5k5ZHa3ug/uHX41bWeksuF3/hU1yguYBFbJhaOvzQ+y3+1ur6ZzDEXfgewR+RF/madcO10
+ 0cVpq8SmGtZs1b9PBCgb6KuoHQ+oKL9DKYqRNUQMoCBnsOa3AwFXxvu9U4Vh4CdlOW4TEapo4
+ RbXKDGipO2kJVQc6r8xcvsJYJdCao+CGeBBzwrj0pPPpK5OSmrKb8PTNstW+d/YVEdBGBYkPT
+ GFnROrYwVksUIlOmev114oJ/OEtzfmLq54xURca154CZvvZ5Kv5D4E5KSUHqVJOM/Fu17+oNo
+ JUHnXD6vjq4bkWOzk3LGZno5nprVb3LhKOsso4Ep3EM2ZhAiGMyW+KKd8m7/ZWM57Yo3aYJAd
+ eTsoAky8mveVHEVHy
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH] mailbox: imx-mailbox: fix scu msg header size check
->=20
-> On Tue, Apr 14, 2020 at 04:10:26PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The i.MX8 SCU message header size is the number of "u32" elements, not
-> > "u8", so fix the check.
-> >
-> > Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> > Addresses-Coverity-ID: 1461658 ("Memory - corruptions")
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >
-> > V2:
-> >  I not include the fixes tag, since this patch still in next tree.
-> >
-> >  drivers/mailbox/imx-mailbox.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/mailbox/imx-mailbox.c
-> > b/drivers/mailbox/imx-mailbox.c index 7906624a731c..c2398cb63ea0
-> > 100644
-> > --- a/drivers/mailbox/imx-mailbox.c
-> > +++ b/drivers/mailbox/imx-mailbox.c
-> > @@ -154,12 +154,12 @@ static int imx_mu_scu_tx(struct imx_mu_priv
-> > *priv,
-> >
-> >  	switch (cp->type) {
-> >  	case IMX_MU_TYPE_TX:
-> > -		if (msg->hdr.size > sizeof(*msg)) {
-> > +		if (msg->hdr.size > (sizeof(*msg) / 4)) {
->=20
-> No need for the parenthesis. Maybe a comment would be helpful here,
-> something like:
->=20
-> 	/*
-> 	 * msg->hdr.size specifies the number of u32 words while sizeof
-> 	 * yields bytes.
-> 	 */
+> Use kmemdup rather than duplicating its implementation
 
-V2 will have the update.
+How do you think about to add the tag =E2=80=9CFixes=E2=80=9D to the chang=
+e description?
 
->=20
-> >  			/*
-> >  			 * The real message size can be different to
-> >  			 * struct imx_sc_rpc_msg_max size
-> >  			 */
-> > -			dev_err(priv->dev, "Exceed max msg size (%zu) on TX,
-> got: %i\n", sizeof(*msg), msg->hdr.size);
-> > +			dev_err(priv->dev, "Exceed max msg size (%zu) on TX,
-> got: %i\n",
-> > +sizeof(*msg) / 4, msg->hdr.size);
->=20
-> The unit here is also "number of u32 words", maybe bytes is more natural?
-
-ok. Will change to msg->hdr.size << 2 keeping sizeof(*msg).
-
-> And I suggesting specifying the unit in the error message.
-
-Is this ok to you?
-dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i,=20
-msg->hdr.size: %i\n", sizeof(*msg), msg->hdr.size << 2, msg->hdr.size);
-
-Thanks,
-Peng.
-
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig
-> |
-> Industrial Linux Solutions                 |
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww.
-> pengutronix.de%2F&amp;data=3D02%7C01%7Cpeng.fan%40nxp.com%7Ca6a32
-> 1daf8f84601a28808d7e04d8def%7C686ea1d3bc2b4c6fa92cd99c5c301635%
-> 7C0%7C0%7C637224496010304343&amp;sdata=3DGebTJ82O2xOf52yISwVZTM
-> 6s2q%2Blar533PAGnm%2FAPHI%3D&amp;reserved=3D0 |
+Regards,
+Markus
