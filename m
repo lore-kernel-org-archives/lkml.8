@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7069C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A71C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06BC2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EDD2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404245AbgDNCzd (ORCPT
+        id S2404263AbgDNCzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:55:33 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:51904 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404222AbgDNCza (ORCPT
+        Mon, 13 Apr 2020 22:55:38 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:20359 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728757AbgDNCza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Apr 2020 22:55:30 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 13 Apr 2020 19:55:25 -0700
+  by ironmsg01-sd.qualcomm.com with ESMTP; 13 Apr 2020 19:55:25 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 23252216A4; Tue, 14 Apr 2020 08:25:24 +0530 (IST)
+        id 12C7E210E1; Tue, 14 Apr 2020 08:25:24 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
@@ -33,9 +33,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH V3 2/8] dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
-Date:   Tue, 14 Apr 2020 08:25:16 +0530
-Message-Id: <1586832922-29191-3-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V3 1/8] dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
+Date:   Tue, 14 Apr 2020 08:25:15 +0530
+Message-Id: <1586832922-29191-2-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
 References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
@@ -44,113 +44,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds schema for primary CPU PLL found on few Qualcomm
-platforms.
+Qualcomm APCS global block provides a bunch of generic properties which
+are required in a device tree. Add YAML schema for these properties.
 
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
-[V3]
- * Fixed dt binding error in "$id" field.
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 ----------------------
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 88 ++++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
 
- .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 --------
- .../devicetree/bindings/clock/qcom,a53pll.yaml     | 60 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
 deleted file mode 100644
-index e3fa811..0000000
---- a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+index beec612..0000000
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
 +++ /dev/null
-@@ -1,22 +0,0 @@
--Qualcomm MSM8916 A53 PLL Binding
----------------------------------
--The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
--above 1GHz.
+@@ -1,88 +0,0 @@
+-Binding for the Qualcomm APCS global block
+-==========================================
 -
--Required properties :
--- compatible : Shall contain only one of the following:
+-This binding describes the APCS "global" block found in various Qualcomm
+-platforms.
 -
--		"qcom,msm8916-a53pll"
+-- compatible:
+-	Usage: required
+-	Value type: <string>
+-	Definition: must be one of:
+-		    "qcom,msm8916-apcs-kpss-global",
+-		    "qcom,msm8996-apcs-hmss-global"
+-		    "qcom,msm8998-apcs-hmss-global"
+-		    "qcom,qcs404-apcs-apps-global"
+-		    "qcom,sc7180-apss-shared"
+-		    "qcom,sdm845-apss-shared"
+-		    "qcom,sm8150-apss-shared"
+-		    "qcom,ipq8074-apcs-apps-global"
 -
--- reg : shall contain base register location and length
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: must specify the base address and size of the global block
 -
--- #clock-cells : must be set to <0>
+-- clocks:
+-	Usage: required if #clock-names property is present
+-	Value type: <phandle array>
+-	Definition: phandles to the two parent clocks of the clock driver.
 -
--Example:
+-- #mbox-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: as described in mailbox.txt, must be 1
 -
--	a53pll: clock@b016000 {
--		compatible = "qcom,msm8916-a53pll";
--		reg = <0xb016000 0x40>;
+-- #clock-cells:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: as described in clock.txt, must be 0
+-
+-- clock-names:
+-	Usage: required if the platform data based clock driver needs to
+-	retrieve the parent clock names from device tree.
+-	This will requires two mandatory clocks to be defined.
+-	Value type: <string-array>
+-	Definition: must be "pll" and "aux"
+-
+-= EXAMPLE
+-The following example describes the APCS HMSS found in MSM8996 and part of the
+-GLINK RPM referencing the "rpm_hlos" doorbell therein.
+-
+-	apcs_glb: mailbox@9820000 {
+-		compatible = "qcom,msm8996-apcs-hmss-global";
+-		reg = <0x9820000 0x1000>;
+-
+-		#mbox-cells = <1>;
+-	};
+-
+-	rpm-glink {
+-		compatible = "qcom,glink-rpm";
+-
+-		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+-
+-		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+-
+-		mboxes = <&apcs_glb 0>;
+-		mbox-names = "rpm_hlos";
+-	};
+-
+-Below is another example of the APCS binding on MSM8916 platforms:
+-
+-	apcs: mailbox@b011000 {
+-		compatible = "qcom,msm8916-apcs-kpss-global";
+-		reg = <0xb011000 0x1000>;
+-		#mbox-cells = <1>;
+-		clocks = <&a53pll>;
 -		#clock-cells = <0>;
 -	};
 -
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+-Below is another example of the APCS binding on QCS404 platforms:
+-
+-	apcs_glb: mailbox@b011000 {
+-		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+-		reg = <0x0b011000 0x1000>;
+-		#mbox-cells = <1>;
+-		clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
+-		clock-names = "pll", "aux";
+-		#clock-cells = <0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
 new file mode 100644
-index 0000000..c865293
+index 0000000..b46474b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/qcom,a53pll.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++$id: "http://devicetree.org/schemas/mailbox/qcom,apcs-kpss-global.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Qualcomm A53 PLL Binding
++title: Qualcomm APCS global block bindings
++
++description:
++  This binding describes the APCS "global" block found in various Qualcomm
++  platforms.
 +
 +maintainers:
 +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
 +
-+description:
-+  The A53 PLL on few Qualcomm platforms is the main CPU PLL used used for
-+  frequencies above 1GHz.
-+
 +properties:
 +  compatible:
 +    enum:
-+      - qcom,msm8916-a53pll
-+      - qcom,ipq6018-a53pll
++      - qcom,ipq8074-apcs-apps-global
++      - qcom,msm8916-apcs-kpss-global
++      - qcom,msm8996-apcs-hmss-global
++      - qcom,msm8998-apcs-hmss-global
++      - qcom,qcs404-apcs-apps-global
++      - qcom,sc7180-apss-shared
++      - qcom,sdm845-apss-shared
++      - qcom,sm8150-apss-shared
 +
 +  reg:
++    description: specifies the base address and size of the global block
 +    maxItems: 1
++
++  clocks:
++    description: phandles to the parent clocks of the clock driver
++
++  '#mbox-cells':
++    const: 1
 +
 +  '#clock-cells':
 +    const: 0
 +
-+  clocks:
-+    description: clocks required for this controller.
-+    maxItems: 1
-+
 +  clock-names:
-+    description: clock output names of required clocks.
-+    maxItems: 1
++    description:
++      parent clock names, required if the platform data based clock driver
++      needs to retrieve the parent clock names from device tree.
++    maxItems: 2
++    items:
++      - const: pll
++      - const: aux
 +
 +required:
 +  - compatible
 +  - reg
-+  - '#clock-cells'
++  - '#mbox-cells'
 +
 +additionalProperties: false
 +
 +examples:
-+  #Example 1 - A53 PLL found on MSM8916 devices
++
++  # Example apcs with msm8996
 +  - |
-+    a53pll: clock@b016000 {
-+        compatible = "qcom,msm8916-a53pll";
-+        reg = <0xb016000 0x40>;
-+        #clock-cells = <0>;
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    apcs_glb: mailbox@9820000 {
++        compatible = "qcom,msm8996-apcs-hmss-global";
++        reg = <0x9820000 0x1000>;
++
++        #mbox-cells = <1>;
 +    };
 +
-+  #Example 2 - A53 PLL found on IPQ6018 devices
++    rpm-glink {
++        compatible = "qcom,glink-rpm";
++        interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++        qcom,rpm-msg-ram = <&rpm_msg_ram>;
++        mboxes = <&apcs_glb 0>;
++        mbox-names = "rpm_hlos";
++    };
++
++  # Example apcs with qcs404
 +  - |
-+    a53pll_ipq: clock@b116000 {
-+        compatible = "qcom,ipq6018-a53pll";
-+        reg = <0x0b116000 0x40>;
++    #define GCC_APSS_AHB_CLK_SRC  1
++    #define GCC_GPLL0_AO_OUT_MAIN 123
++    apcs: mailbox@b011000 {
++        compatible = "qcom,qcs404-apcs-apps-global";
++        reg = <0x0b011000 0x1000>;
++        #mbox-cells = <1>;
++        clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
++        clock-names = "pll", "aux";
 +        #clock-cells = <0>;
-+        clocks = <&xo>;
-+        clock-names = "xo";
 +    };
 -- 
 2.7.4
