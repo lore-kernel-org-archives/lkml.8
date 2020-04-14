@@ -2,90 +2,66 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC43C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6422FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F240A2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586895412;
-	bh=4W3gIsYx8mNRm7hQccmDcfI7rVeS0PCbsqaEor2jO1A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=bboeWOtMsj+hqgbH2+RE5v29IfPR2NBVVPsNooNsTlHBFeAdMhiwU4C3DNy0rABDM
-	 j+UQWpZlIn3QRKM/+CSNpaE3JZCOqQ4J+koOkEbv4lF8qaK5VEr6KB8n04yyOJLvWQ
-	 EHf3t6YtTGYh/zHwSpKncz4Ss2jj93BUbNN3eaT8=
+	by mail.kernel.org (Postfix) with ESMTP id 4A2552074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632931AbgDNUQ2 (ORCPT
+        id S2632949AbgDNURP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632793AbgDNUQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:16:10 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CF082074D;
-        Tue, 14 Apr 2020 20:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586895367;
-        bh=4W3gIsYx8mNRm7hQccmDcfI7rVeS0PCbsqaEor2jO1A=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=C4uL/J0pV22/gMFfSQyw7mxFz8RSAoHxrbABKat2YAnbqmLdyT1HH96qxNFf6MwZe
-         lIYaRIqET3RZlaHuohQThMMnmG3sDfVZdwqkNMQvxZC4N7NbE8Z0K7NUQ1pCA/ZW6r
-         0z3amCpYG+5IOToFbZUiDdjckJlO8mLeqbvDwegw=
-Message-ID: <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-From:   Jeff Layton <jlayton@kernel.org>
-To:     David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org
-Cc:     keyrings@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fweimer@redhat.com
-Date:   Tue, 14 Apr 2020 16:16:05 -0400
-In-Reply-To: <3865908.1586874010@warthog.procyon.org.uk>
-References: <3865908.1586874010@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 14 Apr 2020 16:17:15 -0400
+Received: from www62.your-server.de ([213.133.104.62]:54510 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2632798AbgDNUQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:16:20 -0400
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jORVK-0002Ww-MB; Tue, 14 Apr 2020 21:45:54 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jORVK-000AlG-9Q; Tue, 14 Apr 2020 21:45:54 +0200
+Subject: Re: [PATCH-next] bpf: Verifier, remove unneeded conversion to bool
+To:     Zou Wei <zou_wei@huawei.com>, ast@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1586779076-101346-1-git-send-email-zou_wei@huawei.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <ab62b97e-844f-3493-e30d-9e57c625fa35@iogearbox.net>
+Date:   Tue, 14 Apr 2020 21:45:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <1586779076-101346-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25782/Tue Apr 14 13:57:42 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 15:20 +0100, David Howells wrote:
-> Since key.dns_resolver isn't given a TTL for the address information obtained
-> for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
-> NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
-> because that is looked up in the DNS directly, but it doesn't look up A or
-> AAAA records, so doesn't get an expiry for the addresses themselves.
+On 4/13/20 1:57 PM, Zou Wei wrote:
+> This issue was detected by using the Coccinelle software:
 > 
-> I've previously asked the libc folks if there's a way to get this information
-> exposed in struct addrinfo, but I don't think that ended up going anywhere -
-> and, in any case, would take a few years to work through the system.
+> kernel/bpf/verifier.c:1259:16-21: WARNING: conversion to bool not needed here
 > 
-> For the moment, I think I should put a default on any dns_resolver keys and
-> have it applied either by the kernel (configurable with a /proc/sys/ setting)
-> or by the key.dnf_resolver program (configurable with an /etc file).
+> The conversion to bool is unneeded, remove it
 > 
-> Any suggestion as to the preferred default TTL?  10 minutes?
-> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
 
-Typical DNS TTL values are on the order of a day but it can vary widely.
-There's really no correct answer for this, since you have no way to tell
-how long the entry has been sitting in the DNS server's cache before you
-queried for it.
-
-So, you're probably down to just finding some value that doesn't hammer
-the DNS server too much, but that allows you to get new entries in a
-reasonable amount of time.
-
-10 mins sounds like a reasonable default to me.
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Applied, thanks!
