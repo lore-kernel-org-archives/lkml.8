@@ -2,236 +2,154 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C256C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F2AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6385220767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689A62074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="tJCGtH3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502747AbgDNRuA (ORCPT
+        id S2502878AbgDNRuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 Apr 2020 13:50:07 -0400
+Received: from mail-eopbgr130074.outbound.protection.outlook.com ([40.107.13.74]:61156
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2502768AbgDNRuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 13:50:00 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:43355 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2502566AbgDNRrp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:47:45 -0400
-Received: (qmail 24357 invoked by uid 500); 14 Apr 2020 13:47:35 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 14 Apr 2020 13:47:35 -0400
-Date:   Tue, 14 Apr 2020 13:47:35 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-cc:     Qais Yousef <qais.yousef@arm.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-In-Reply-To: <CAJZ5v0jSMC1FGc2N06B=2VmXRF1XJi4gNyKPkjfBPCEtjm50Yw@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2004141150590.12758-100000@netrider.rowland.org>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iyOGX9WxAd+GnyCLUeCYSog1HseE8s6vpjfqj3bdUJzKw4NH20gmeU/Rx75Jj1a0TruwZq75kG20VICDO+tvHKCX/J7cgO42cD1X2N2RhW4EFXewDdzphyJ2Um9Ln8oHG/77InMDZcI67od91tDLnp7ikrZOpm1VbF7p6YT/FveggUhgJBPW+mXmZCvEE1RV9vFbVRIL1sTKfClZbQTnUkItKa5phCS/5x0OGvHJBJW8NgZzLNzEcoDY3LWmk/mx++kUl0JF7Obrc7xumvKh0DZWH49cluXCxh9prSK5RDeWZftgSRWDf6+lSr3iUrOcZDKD3Pjfu2eHXoxv8Lxo5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wpxs3kU8/3fQJR7Txh0E1aVd1Pzhw8m1oYOxfQFrT/Y=;
+ b=Rb0Jf0A8Xt2vn3Rr0mXqMvq3Mm5tZRlOWS0NOqqgHDP2MIIT2CloEvcqsOGLRTLTpG4ppM0imuhudETfEL1bB2vlNlsLFfUX+LZSlPO1exk299YWF6DOWRsky5vmH9DTTZBYm7McrclfxqCHrGFFoqrg2d2pVI0pWHEKtIAmoJ4q44cDH6/UWWW9ekkAQvJh1qno4m6njcQiBYeFCV2+HEOUNYU9Gje5Ev8kW0PdZWW4cgrI9qkZom9+BbvMqIqTMu4au4w1MsiwcWUVrRVLi24Ne6TdpmMeJU6XrpsD/151qd1dVAoIZcWOGNXdgyOZZMqZA2V0JY29nTIYwlOamw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wpxs3kU8/3fQJR7Txh0E1aVd1Pzhw8m1oYOxfQFrT/Y=;
+ b=tJCGtH3faicDp6+ueuJPlsxNwmWG4oF26ioRso1QmvA7Pr7d84FU8pGbiV0M2iND5qWb/dgVKppTfvOBPFN/TIjugbE94NtF7D1WLiIAS4w5Dr4GvmPrsk/KT7Wmz+29oOMjMkxacGJ3zEdHP5ApqTnH8ZFwWG0tyulK+NoZnhM=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB5215.eurprd05.prod.outlook.com (2603:10a6:803:a7::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
+ 2020 17:49:42 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 17:49:42 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
+CC:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Thread-Topic: [RFC 0/6] Regressions for "imply" behavior change
+Thread-Index: AQHWDeQiJzc7TgrcN0yUMWAEU5j98qhvr4mAgAADKgCAAB92AIAAp0gAgAEtnwCAAPPSAIAAHv4AgAXrpwCAABBmgIAAD4MAgAAAr4CAACg8gA==
+Date:   Tue, 14 Apr 2020 17:49:41 +0000
+Message-ID: <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+References: <20200408202711.1198966-1-arnd@arndb.de>
+         <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+         <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+         <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
+         <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+         <20200410171320.GN11886@ziepe.ca>
+         <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+         <20200414132900.GD5100@ziepe.ca>
+         <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+         <20200414152312.GF5100@ziepe.ca>
+         <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+In-Reply-To: <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ac769aa8-eb06-45b6-7ff4-08d7e09c35f3
+x-ms-traffictypediagnostic: VI1PR05MB5215:
+x-microsoft-antispam-prvs: <VI1PR05MB5215F4B00C4CB883593FF645BEDA0@VI1PR05MB5215.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(186003)(71200400001)(110136005)(5660300002)(7416002)(36756003)(8676002)(6506007)(8936002)(4326008)(6486002)(6512007)(81156014)(86362001)(54906003)(316002)(91956017)(66556008)(2616005)(64756008)(478600001)(76116006)(26005)(66446008)(2906002)(66476007)(53546011)(66946007);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rm0zeaUTSgMejJQtSAwBz9bMu/mx2ECZFRTaXwd7jczXadIbDlze6tFI/xdXfrLMGOU+E2OjNRODqv4AE4oLdJPEAzKDSDpVe+pwaj4UzAS/oGlE+YRuTkMczt/RgHqM//KDwmKrfvTENztwxgnB1ogO0DXrRNmIhR8T9G8e108OG9jspYBsmqx26lHMbf162L9iJ57wDKHEM2k+P5kxCjal/FdhVffAHGgx5ZuB871ShY54VoApR7Z863JOp105F8ffkgmEFoaqmux2mlegYjYOnQ6yukU3fgOwpBcgHelfaq25p6xbfZa99wDVAAgvflv+/sRgjL73Gx3evC+yHGtKjiN8FkjtdQB9M+B8McYJvLw+/F430WyF2KEkAQTI78siDZ3aAbwcQZ8V9LgELYBCotB3a1CJOIybpPDq+U9pThnhFH34R/iuiELAkzWU
+x-ms-exchange-antispam-messagedata: 1NkgKHyHsKz1raQ+CJFWat9KZLvaunRuFz0VzeVRjmy9P5lMDvq5bg32Cbuk3ZV3Lg0LQMOJYBzhTwD2Kq3vH0FdeDp506pXFlhpN2ZP8/7mp7Ml0neEOquN3vtuGtQ4aBhztmVYYS8eVBqmpp7htg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <732BDB5CD5614D4C86B0C0233E6BE302@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac769aa8-eb06-45b6-7ff4-08d7e09c35f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 17:49:42.0115
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NkCNURkiqLIWiek5JheVgT9BsK/z5kmnYSQK4VIif/CghHtXxXIkY9lxJgBSB5D3azWVOjo2ZNNscu+eC6maOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020, Rafael J. Wysocki wrote:
-
-> Note to self: avoid replying to technical messages late in the night ...
-> 
-> On Mon, Apr 13, 2020 at 11:32 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > On Saturday, April 11, 2020 4:41:14 AM CEST Alan Stern wrote:
-> > > Okay, this is my attempt to summarize what we have been discussing.
-> > > But first: There is a dev_pm_skip_resume() helper routine which
-> > > subsystems can call to see whether resume-side _early and _noirq driver
-> > > callbacks should be skipped.  But there is no corresponding
-> > > dev_pm_skip_suspend() helper routine.  Let's add one, or rename
-> > > dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
-> >
-> > OK
-> >
-> > > Given that, here's my understanding of what should happen.  (I'm
-> > > assuming the direct_complete mechanism is not being used.)  This tries
-> > > to describe what we _want_ to happen, which is not always the same as
-> > > what the current code actually _does_.
-> >
-> > OK
-> >
-> > >       During the suspend side, for each of the
-> > >       {suspend,freeze,poweroff}_{late,noirq} phases: If
-> > >       dev_pm_skip_suspend() returns true then the subsystem should
-> > >       not invoke the driver's callback, and if there is no subsystem
-> > >       callback then the core will not invoke the driver's callback.
-> > >
-> > >       During the resume side, for each of the
-> > >       {resume,thaw,restore}_{early,noirq} phases: If
-> > >       dev_pm_skip_resume() returns true then the subsystem should
-> > >       not invoke the driver's callback, and if there is no subsystem
-> > >       callback then the core will not invoke the driver's callback.
-> > >
-> > >       dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
-> > >       set and the device's runtime status is "suspended".
-> >
-> > Agreed with the above.
-> >
-> > >       power.must_resume gets set following the suspend-side _noirq
-> > >       phase if power.usage_count > 1 (indicating the device was
-> > >       in active use before the start of the sleep transition) or
-> > >       power.must_resume is set for any of the device's dependents.
-> >
-> > Or MAY_SKIP_RESUME is unset (which means that the driver does not
-> > allow its resume callbacks to be skipped), or power.may_skip_resume
-> > is unset (which means that the subsystem does not allow the
-> > driver callbacks to be skipped).
-
-Are you certain about that?  It contradicts what you said earlier, that
-MAY_SKIP_RESUME doesn't affect THAW transitions.  Also, it would mean 
-that a device whose subsystem doesn't know about power.may_skip_resume 
-would never be allowed to stay in runtime suspend.
-
-> > >       dev_pm_skip_resume() will return "false" if the current
-> > >       transition is RESTORE or power.must_resume is set.  Otherwise:
-> > >       It will return true if the current transition is THAW,
-> > >       SMART_SUSPEND is set, and the device's runtime status is
-> > >       "suspended".
-> >
-> > The other way around.  That is:
-> >
-> > dev_pm_skip_resume() will return "true" if the current transition is
-> > THAW and dev_pm_skip_suspend() returns "true" for that device (so
-> > SMART_SUSPEND is set, and the device's runtime status is "suspended",
-> > as per the definition of that function above).
-> 
-> The above is what I wanted to say ->
-
-So for THAW, dev_pm_skip_resume() can return "true" even if 
-power.must_resume is set?  That doesn't seem right.
-
-> > Otherwise, it will return "true" if the current transition is RESTORE
-> > (which means that all devices are resumed) or power.must_resume is not
-> > set (so this particular device need not be resumed).
-> 
-> -> but this isn't.  In particular, I messed up the RESTORE part, so it
-> should read:
-> 
-> Otherwise, it will return "true" if the current transition is *not*
-> RESTORE (in which case all devices would be resumed) *and*
-> power.must_resume is not set (so this particular device need not be
-> resumed).
-> 
-> Sorry about that.
-
-For the RESTORE and THAW cases that is exactly the same as what I 
-wrote, apart from the THAW issue noted above.
-
-> > >  It will return "true" if the current transition is
-> > >       RESUME, SMART_SUSPEND and MAY_SKIP_RESUME are both set, and
-> > >       the device's runtime status is "suspended".
-> >
-> > Unless MAY_SKIP_RESUME is unset for at least one of its descendants (or
-> > dependent devices).
-> 
-> That should include the power.may_skip_resume flag, so as to read as follows:
-> 
-> Unless MAY_SKIP_RESUME is unset or power.may_skip_resume is unset for
-> at least one of its descendants (or dependent devices).
-
-What about the runtime PM usage counter?
-
-> > >       For a RESUME
-> > >       transition, it will also return "true" if MAY_SKIP_RESUME and
-> > >       power.may_skip_resume are both set, regardless of
-> > >       SMART_SUSPEND or the current runtime status.
-> >
-> > And if the device was not in active use before suspend (as per its usage
-> > counter) or MAY_SKIP_RESUME is unset for at least one of its descendants (or
-> > dependent devices in general).
-> 
-> And analogously here, so what I really should have written is:
-> 
-> And if the device was not in active use before suspend (as per its
-> usage counter) or MAY_SKIP_RESUME or power.may_skip_resume is unset
-> for at least one of its descendants (or dependent devices in general).
-
-In other words, for RESUME transitions you want the MAY_SKIP_RESUME and
-power.may_skip_resume restrictions to propagate up from dependent
-devices.  And of course, the way to do that is by adding them into the
-power.must_resume flag.
-
-How do you want to handle the usage counter restriction.  
-Should that also propagate upward?
-
-And how should the result of dev_pm_skip_resume() be affected by 
-SMART_SUSPEND for RESUME transitions?
-
-Maybe this is getting confusing because of the way I organized it.  
-Let's try like this:
-
-Transition   Conditions for dev_pm_skip_resume() to return "true"
-----------   ----------------------------------------------------
-
-RESTORE      Never
-
-THAW         power.must_resume is clear (which requires
-               MAY_SKIP_RESUME and power.may_skip_resume to be set and 
-               the runtime usage counter to be = 1, and which 
-               propagates up from dependent devices)
-             SMART_SUSPEND is set,
-             runtime status is "suspended"
-
-RESUME       Same as THAW?  Or maybe don't require SMART_SUSPEND?
-               (But if SMART_SUSPEND is clear, how could the runtime 
-               status be "suspended"?)
-
-I can't really tell what you want, because your comments at various 
-times have been inconsistent.
-
-Alan Stern
-
-> > >       At the start of the {resume,thaw,restore}_noirq phase, if
-> > >       dev_pm_skip_resume() returns true then the core will set the
-> > >       runtime status to "suspended".  Otherwise it will set the
-> > >       runtime status to "active".  If this is not what the subsystem
-> > >       or driver wants, it must update the runtime status itself.
-> >
-> > Right.
-> >
-> > > Comments and differences with respect to the code in your pm-sleep-core
-> > > branch:
-> > >
-> > >       I'm not sure whether we should specify other conditions for
-> > >       setting power.must_resume.
-> >
-> > IMO we should.
-> 
-> In fact, this is part of the implementation and it helps to
-> "propagate" the "must resume" condition to the parent and the
-> first-order suppliers of the device (which is sufficient, because
-> their power.must_resume "propagates" in the same way and so on).
-> 
-> IOW, the important piece is what the return value of
-> dev_pm_skip_resume() should be in particular conditions and that
-> return value is computed with the help of power.must_resume (and it
-> might have been computed in a different, possibly less efficient,
-> way).
-> 
-> > Otherwise it is rather hard to catch the case in which one of the
-> > device's descendants has MAY_SKIP_RESUME unset (and so the device
-> > needs to be resumed).
-> >
-> > >       dev_pm_skip_resume() doesn't compute the value described
-> > >       above.  I'm pretty sure the existing code is wrong.
-> >
-> > Well, we don't seem to have reached an agreement on some details
-> > above ...
-> 
-> Sorry for failing to be careful enough ...
-
-
+T24gVHVlLCAyMDIwLTA0LTE0IGF0IDE3OjI1ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
+PiBPbiBUdWUsIEFwciAxNCwgMjAyMCBhdCA1OjIzIFBNIEphc29uIEd1bnRob3JwZSA8amdnQHpp
+ZXBlLmNhPiB3cm90ZToNCj4gPiBPbiBUdWUsIEFwciAxNCwgMjAyMCBhdCAwNDoyNzo0MVBNICsw
+MjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0KPiA+ID4gT24gVHVlLCBBcHIgMTQsIDIwMjAgYXQg
+MzoyOSBQTSBKYXNvbiBHdW50aG9ycGUgPGpnZ0B6aWVwZS5jYT4NCj4gPiA+IHdyb3RlOg0KPiA+
+ID4gPiBPbiBGcmksIEFwciAxMCwgMjAyMCBhdCAwNzowNDoyN1BNICswMDAwLCBTYWVlZCBNYWhh
+bWVlZCB3cm90ZToNCj4gPiA+IHdoaWNoIGluIHR1cm4gbGVhZHMgdG8gbWx4NV9jb3JlLmtvICpu
+b3QqIGNvbnRhaW5pbmcNCj4gPiA+IG1seDVfdnhsYW4ubywNCj4gPiA+IGFuZCBpbiB0dXJuIGNh
+dXNpbmcgdGhhdCBsaW5rIGVycm9yIGFnYWluc3QNCj4gPiA+IG1seDVfdnhsYW5fY3JlYXRlL21s
+eDVfdnhsYW5fZGVzdHJveSwgdW5sZXNzIHRoZSBJU19FTkFCTEVEKCkNCj4gPiA+IGlzIGNoYW5n
+ZWQgdG8gSVNfUkVBQ0hBQkxFKCkuDQo+ID4gDQo+ID4gV2hhdCBhYm91dCB0aGUgcmV2ZXJzZSBp
+ZiBtbHg1X2NvcmUgaXMgJ20nIGFuZCBWTFhBTiBpcyAneSc/DQo+ID4gDQo+ID4gIG1seDVfY29y
+ZS1tIDo9IG1seDVfY29yZS5vDQo+ID4gIG1seDVfY29yZS15ICs9IG1seDVfdnhsYW4ubw0KPiA+
+IA0KPiA+IE1hZ2ljYWxseSB3b3JrcyBvdXQ/DQo+IA0KPiBZZXMsIEtidWlsZCB0YWtlcyBjYXJl
+IG9mIHRoYXQgY2FzZS4NCj4gDQo+ID4gPiA+IElJUkMgdGhhdCBpc24ndCB3aGF0IHRoZSBleHBy
+ZXNzaW9uIGRvZXMsIGlmIHZ4bGFuIGlzICduJyB0aGVuDQo+ID4gPiA+ICAgbiB8fCAhbiA9PSB0
+cnVlDQo+ID4gPiANCj4gPiA+IEl0IGZvcmNlcyBNTFg1X0NPUkUgdG8gJ20nIG9yICduJyBidXQg
+bm90ICd5JyBpZiBWWExBTj1tLA0KPiA+ID4gYnV0IGFsbG93cyBhbnkgb3B0aW9uIGlmIFZYTEFO
+PXkNCj4gPiANCj4gPiBBbmQgYW55IG9wdGlvbiBpZiBWWExBTj1uID8NCj4gDQo+IENvcnJlY3Qu
+DQo+IA0KDQpHcmVhdCAhDQoNClRoZW4gYm90dG9tIGxpbmUgd2Ugd2lsbCBjaGFuZ2UgbWx4NS9L
+Y29uZmlnOiB0bw0KDQpkZXBlbmRzIG9uIFZYTEFOIHx8ICFWWExBTg0KDQpUaGlzIHdpbGwgZm9y
+Y2UgTUxYNV9DT1JFIHRvIG0gd2hlbiBuZWNlc3NhcnkgdG8gbWFrZSB2eGxhbiByZWFjaGFibGUN
+CnRvIG1seDVfY29yZS4gIFNvIG5vIG5lZWQgZm9yIGV4cGxpY2l0IHVzZSBvZiBJU19SRUFDSEFC
+TEUoKS4NCmluIG1seDUgdGhlcmUgYXJlIDQgb2YgdGhlc2U6DQoNCiAgICAgICAgaW1wbHkgUFRQ
+XzE1ODhfQ0xPQ0sNCiAgICAgICAgaW1wbHkgVlhMQU4NCiAgICAgICAgaW1wbHkgTUxYRlcNCiAg
+ICAgICAgaW1wbHkgUENJX0hZUEVSVl9JTlRFUkZBQ0UNCg0KDQpJIHdpbGwgbWFrZSBhIHBhdGNo
+Lg0KDQpUaGFua3MsDQpTYWVlZC4NCg==
