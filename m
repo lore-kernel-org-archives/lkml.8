@@ -2,182 +2,121 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB7AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D743C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5D0E2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3901820775
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XdzuMuJK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsF0ZGyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391294AbgDNQF2 (ORCPT
+        id S2391322AbgDNQFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:05:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22065 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391295AbgDNQFJ (ORCPT
+        Tue, 14 Apr 2020 12:05:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24027 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391240AbgDNQDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:05:09 -0400
+        Tue, 14 Apr 2020 12:03:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586880307;
+        s=mimecast20190719; t=1586880228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=hZ2ZtNnGXnyUgL1WENewzG8fdgRXTiQCFKmqoVMaPAQ=;
-        b=XdzuMuJK1jKJuXP8dg8mvq22iCxURdVHENZzZF7DejPw7TBuj3x3wb64Ov6BoUbFH1svuo
-        bG3WRpKvBcR0gxW4EVFgVR9JeGsLXXqSI2D87BiAy+224csztppScp0L2h6X7I3lGAcf63
-        ZYjBNqDJio5+VE1O++1hTeDAQWfkP0k=
+        bh=azRF+PxhqvsRfgCFrbt5heLat6wkx5149SjRHQdnP7Q=;
+        b=gsF0ZGyRRqoBq/nBnGam0PlOcZVTWB3S4+YibYq3SBZqFnfug3P1ur/PhF5m6cCg90oiDz
+        +7meuxg2XCe4ul2O52kU9EDGwhqYeadUvzTUDx8LeJWcIeBfiugbhg55XqG9VcYaWpMx5R
+        yf+63brbZXO/Cy0OVE4xepP/bkC9Q+c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-ugqth5v9OAOHZ9ntkLmB5Q-1; Tue, 14 Apr 2020 12:05:05 -0400
-X-MC-Unique: ugqth5v9OAOHZ9ntkLmB5Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-467-fN3lL75JOwuE-Yt-p-pVuw-1; Tue, 14 Apr 2020 12:03:44 -0400
+X-MC-Unique: fN3lL75JOwuE-Yt-p-pVuw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25EE18017F6;
-        Tue, 14 Apr 2020 16:05:04 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.194.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F33DC1036D2F;
-        Tue, 14 Apr 2020 16:04:41 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 18:04:39 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Wainer dos Santos Moschetta <wainersm@redhat.com>
-Subject: Re: [PATCH 03/10] KVM: selftests: Add util to delete memory region
-Message-ID: <20200414160439.ca52vt5jgri7jcxw@kamzik.brq.redhat.com>
-References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
- <20200410231707.7128-4-sean.j.christopherson@intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49A97800D53;
+        Tue, 14 Apr 2020 16:03:43 +0000 (UTC)
+Received: from krava (unknown [10.40.195.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4AA1C96B93;
+        Tue, 14 Apr 2020 16:03:41 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 18:03:38 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "bibo,mao" <bibo.mao@intel.com>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>
+Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
+ kprobe_flush_task
+Message-ID: <20200414160338.GE208694@krava>
+References: <20200408164641.3299633-1-jolsa@kernel.org>
+ <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
+ <20200409184451.GG3309111@krava>
+ <20200409201336.GH3309111@krava>
+ <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200410231707.7128-4-sean.j.christopherson@intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 04:17:00PM -0700, Sean Christopherson wrote:
-> Add a utility to delete a memory region, it will be used by x86's
-> set_memory_region_test.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  .../testing/selftests/kvm/include/kvm_util.h  |  1 +
->  tools/testing/selftests/kvm/lib/kvm_util.c    | 56 +++++++++++++------
->  2 files changed, 40 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 2f329e785c58..d4c3e4d9cd92 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -114,6 +114,7 @@ int _vcpu_ioctl(struct kvm_vm *vm, uint32_t vcpuid, unsigned long ioctl,
->  void vm_ioctl(struct kvm_vm *vm, unsigned long ioctl, void *arg);
->  void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
->  void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
-> +void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
->  void vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpuid);
->  vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
->  			  uint32_t data_memslot, uint32_t pgd_memslot);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 105ee9bc09f0..ab5b7ea60f4b 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -433,34 +433,38 @@ void kvm_vm_release(struct kvm_vm *vmp)
->  		"  vmp->kvm_fd: %i rc: %i errno: %i", vmp->kvm_fd, ret, errno);
->  }
->  
-> +static void __vm_mem_region_delete(struct kvm_vm *vm,
-> +				   struct userspace_mem_region *region)
-> +{
-> +	int ret;
-> +
-> +	list_del(&region->list);
-> +
-> +	region->region.memory_size = 0;
-> +	ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION, &region->region);
-> +	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
-> +		    "rc: %i errno: %i", ret, errno);
-> +
-> +	sparsebit_free(&region->unused_phy_pages);
-> +	ret = munmap(region->mmap_start, region->mmap_size);
-> +	TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i", ret, errno);
-> +
-> +	free(region);
-> +}
-> +
->  /*
->   * Destroys and frees the VM pointed to by vmp.
->   */
->  void kvm_vm_free(struct kvm_vm *vmp)
->  {
->  	struct userspace_mem_region *region, *tmp;
-> -	int ret;
->  
->  	if (vmp == NULL)
->  		return;
->  
->  	/* Free userspace_mem_regions. */
-> -	list_for_each_entry_safe(region, tmp, &vmp->userspace_mem_regions, list) {
-> -		list_del(&region->list);
-> -
-> -		region->region.memory_size = 0;
-> -		ret = ioctl(vmp->fd, KVM_SET_USER_MEMORY_REGION,
-> -			&region->region);
-> -		TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
-> -			"rc: %i errno: %i", ret, errno);
-> -
-> -		sparsebit_free(&region->unused_phy_pages);
-> -		ret = munmap(region->mmap_start, region->mmap_size);
-> -		TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i",
-> -			    ret, errno);
-> -
-> -		free(region);
-> -	}
-> +	list_for_each_entry_safe(region, tmp, &vmp->userspace_mem_regions, list)
-> +		__vm_mem_region_delete(vmp, region);
->  
->  	/* Free sparsebit arrays. */
->  	sparsebit_free(&vmp->vpages_valid);
-> @@ -775,6 +779,24 @@ void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa)
->  		    ret, errno, slot, new_gpa);
->  }
->  
-> +/*
-> + * VM Memory Region Delete
-> + *
-> + * Input Args:
-> + *   vm - Virtual Machine
-> + *   slot - Slot of the memory region to delete
-> + *
-> + * Output Args: None
-> + *
-> + * Return: None
-> + *
-> + * Delete a memory region.
-> + */
-> +void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot)
-> +{
-> +	__vm_mem_region_delete(vm, memslot2region(vm, slot));
-> +}
-> +
->  /*
->   * VCPU mmap Size
->   *
-> -- 
-> 2.26.0
->
+On Fri, Apr 10, 2020 at 09:31:59AM +0900, Masami Hiramatsu wrote:
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+SNIP
+
+> > diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> > index 4d7022a740ab..081d0f366c99 100644
+> > --- a/arch/x86/kernel/kprobes/core.c
+> > +++ b/arch/x86/kernel/kprobes/core.c
+> > @@ -757,12 +757,33 @@ static struct kprobe kretprobe_kprobe = {
+> >  	.addr = (void *)kretprobe_trampoline,
+> >  };
+> >  
+> > +void arch_kprobe_reject_section_start(void)
+> > +{
+> > +	struct kprobe_ctlblk *kcb;
+> > +
+> > +	preempt_disable();
+> > +
+> > +	/*
+> > +	 * Set a dummy kprobe for avoiding kretprobe recursion.
+> > +	 * Since kretprobe never run in kprobe handler, kprobe must not
+> > +	 * be running behind this point.
+> > +	 */
+> > +	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+> > +	kcb = get_kprobe_ctlblk();
+> > +	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> > +}
+> 
+> Yeah, the code seems good to me.
+> 
+> BTW, I rather like make it arch independent function so that other
+> arch can use it. In this case, the dummy kprobe's addr should be
+> somewhere obviously blacklisted (but it must be accessible.)
+> I think get_kprobe() will be a candidate.
+
+right.. as Ziqian noted we see this on other ppc as well
+
+> 
+> And (sorry about changing my mind), the naming, I think kprobe_busy_begin()
+> and kprobe_busy_end() will be better because it doesn't reject registering
+> kprobes, instead, just make it busy :)
+
+ok, will change 
+
+thanks,
+jirka
 
