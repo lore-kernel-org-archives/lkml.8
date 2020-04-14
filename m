@@ -2,109 +2,126 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D3DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E189C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE49D20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:13:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mE40WOyH"
+	by mail.kernel.org (Postfix) with ESMTP id 2502B20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389352AbgDNQNc (ORCPT
+        id S2389771AbgDNQOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:13:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388615AbgDNQNZ (ORCPT
+        Tue, 14 Apr 2020 12:14:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3727 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389373AbgDNQNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:13:25 -0400
-Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0038AC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:13:24 -0700 (PDT)
-Received: by mail-wr1-x449.google.com with SMTP id f15so9017656wrj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=32Nk4yPycqu5U0xNKJFgggSPEJ2kI45tjBMiQl+YlNA=;
-        b=mE40WOyH75uFRgF6wVIgUBWep7Ri5Ntb76JlyOq46CyKv4H4x1tSiyQsiDVJYfEH0B
-         PUU2apk7coMOeSEqrsIZICCfJ4J37ROVKUK7U94JmzNd0C7pkreMZTRQIuo6UXtGL/g3
-         YqU2bRic0wZVSeBaY+BJF+1+xwRll9gMxui/OnXIN6/TLAc4dqKPGVNlYouHRIbWY0W+
-         Tz6S6s2icon2Z1V+YB/agukYvetCsmEhhoSHR9GCRN/qZVnzoa+rKJwRQpeKlDH+ZNZV
-         l1ZXyUlo6qifGBodsmsS2ENWoJaSekGQ+CZoQLmhnJ4XxVSxQTXRynejRHqHcQGKLgk6
-         IDZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=32Nk4yPycqu5U0xNKJFgggSPEJ2kI45tjBMiQl+YlNA=;
-        b=KgpTg7zuNV+bC3VWstwKfUg10UvjzW/lsUJ2BLhTCUVbGhckd7AD0UqCi/v7tMk2S6
-         jG4sGcx1VfE9dQLfldILOPOTL8MOJtY5fFxd/O7XEnMt2uMlvQKDyhhC/niDyWXLC94S
-         tyZ9kn2d7HYWPzOdPVSIG2cZymw1Ax+2eMqtbvegJFSvrmoyaTNOiJRQshEC8vQ5XsB6
-         Zrd9baGMITSz0H5sAZHNQn7rHAoumj47yUxnDA/dWGXTGXUtUzGuqJnvaW0WAOG11VRH
-         6iK4rucCeGSVoktC60BEe/gviluyYeUTtbiVrAIxzbQ7XtxDlaN/w0w499Ij4Z0rMhEn
-         5isg==
-X-Gm-Message-State: AGi0PuY0NDDHtXmd/HdTYRYqOGeXoD+8c0LOnNvDHWDiP4LOuWwqyPk1
-        3K7kXXtqdR46vbRxnTwKKmRR50ZNxr4g
-X-Google-Smtp-Source: APiQypKwAfnFzmYYa+L3bVNgwfMAQPIvFvcWx4Ta3qexNvUbtsUABlfhkQUSstih8SCkRqSQdtA7xqceZd13
-X-Received: by 2002:adf:9321:: with SMTP id 30mr23209645wro.330.1586880802935;
- Tue, 14 Apr 2020 09:13:22 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 17:13:20 +0100
-Message-Id: <20200414161320.251897-1-qperret@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH] sched/core: Fix reset-on-fork from RT with uclamp
-From:   Quentin Perret <qperret@google.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, ctheegal@codeaurora.org, dianders@chromium.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        qais.yousef@arm.com, linux-kernel@vger.kernel.org,
-        qperret@google.com, kernel-team@android.com
+        Tue, 14 Apr 2020 12:13:52 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EGCmqm053883
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:13:52 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30bad8wrqk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:13:49 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 14 Apr 2020 17:10:44 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 17:10:40 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EGBEau45023442
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 16:11:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70C7A4C044;
+        Tue, 14 Apr 2020 16:11:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18EF94C040;
+        Tue, 14 Apr 2020 16:11:13 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.236.92])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 16:11:12 +0000 (GMT)
+Subject: Re: [PATCH] ima: optimize ima_pcr_extend function by asynchronous
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        zhangliguang@linux.alibaba.com, zhang.jia@linux.alibaba.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kenneth Goldman <kgoldman@us.ibm.com>,
+        Monty Wiseman <monty.wiseman@ge.com>,
+        David Safford <david.safford@gmail.com>
+Date:   Tue, 14 Apr 2020 12:11:12 -0400
+In-Reply-To: <20200414115020.99288-1-tianjia.zhang@linux.alibaba.com>
+References: <20200414115020.99288-1-tianjia.zhang@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041416-0016-0000-0000-000003047557
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041416-0017-0000-0000-000033686DEB
+Message-Id: <1586880672.7311.212.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 priorityscore=1501 suspectscore=0
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uclamp_fork() resets the uclamp values to their default when the
-reset-on-fork flag is set. It also checks whether the task has a RT
-policy, and sets its uclamp.min to 1024 accordingly. However, during
-reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
-hence leading to an erroneous uclamp.min setting for the new task if it
-was forked from RT.
+[Cc'ing Ken Goldman, Monty Wiseman, and Dave Safford]
 
-Fix this by removing the unnecessary check on rt_policy() in
-uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
-set.
+On Tue, 2020-04-14 at 19:50 +0800, Tianjia Zhang wrote:
+> Because ima_pcr_extend() to operate the TPM chip, this process is
+> very time-consuming, for IMA, this is a blocking action, especially
+> when the TPM is in self test state, this process will block for up
+> to ten seconds.
+> 
+> Because the return result of ima_pcr_extend() is of no concern to IMA,
+> it only affects the audit of IMA, so this patch use async_schedule()
+> to asynchronously perform the ima_pcr_extend() operation and do an
+> audit operation at the end.
+> 
+> In a vtpm scenario, I added the measure policy of BPRM and MMAP to
+> compare the efficiency before and after applying the patch. The results
+> show that the overall startup efficiency of conventional processes can
+> be increased by 5% to 10%. I believe this efficiency increase It will
+> be more obvious on real hardware tpm.
 
-Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
+Yes, we're fully aware that extending the TPM PCR takes a long time.
+ That is the reason for a lot of Nayna Jain's and my work on improving
+the TPM performance.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3a61a3b8eaa9..9ea3e484eea2 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1234,10 +1234,6 @@ static void uclamp_fork(struct task_struct *p)
- 	for_each_clamp_id(clamp_id) {
- 		unsigned int clamp_value = uclamp_none(clamp_id);
- 
--		/* By default, RT tasks always get 100% boost */
--		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			clamp_value = uclamp_none(UCLAMP_MAX);
--
- 		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
- 	}
- }
--- 
-2.26.0.110.g2183baf09c-goog
+At one point, I implemented queueing the measurements without waiting
+for the measurements to extend the TPM.  The performance was
+absolutely amazing, but not waiting for the TPM extend to complete
+violates the trusted boot principle of measuring and extending the TPM
+PCR before use.
+
+Secondly, the IMA measurement list order and the order in which the
+measurements extend the TPM is really important in order to be able to
+validate the IMA measurement list against the TPM PCR quote.
+
+One solution that we've considered is batching the measurements, so
+that the TPM PCR is extended with the hash of the batched
+measurements, instead of each measurement.  The IMA measurement list
+would continue to contain the individual measurements, but would also
+need to indicate start/stop of the batched measurement group.  None of
+this is trivial.
+
+Mimi
 
