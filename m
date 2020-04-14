@@ -2,109 +2,156 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21827C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E535C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02092063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KhiN2gV6"
+	by mail.kernel.org (Postfix) with ESMTP id 1390C20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502982AbgDNNRL (ORCPT
+        id S2502993AbgDNNRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502853AbgDNNPu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:15:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A51C061A0F;
-        Tue, 14 Apr 2020 06:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=xg3LanskcG5YxBBSEuWUOh1CRzHOTC2lvRuHUPOBmeo=; b=KhiN2gV6T32eNzUkhId1mXELeZ
-        5PsdY9DuWijoEqV8hb2sX5GukDJyInt/jxOFGbCajA4t8GitLegtX+eJQjrYYS/EnKK8+i/D4f+Fn
-        tuFY7+F0XaygZYJ5b1gWq/yCLhFuXWmmMjxhVh9UYbhg/6YPWDb54NRr5jsiB9JeTXQUj+Uy4dLSr
-        ofbutqQlzahhykDWFxF/82ir6KFU2OmzWWDcFYlCWo/0EVGvQvt26fFQ+vtZ8pm1pttsS+Y8snal4
-        j3dMZYsLj+N5ZdDPGWwXBRyexm9J5W7B+EYRiLN4iSj9Ock+F721O8Q3VljvKV/BYvUCnE8LmtGd2
-        GtWRMJVg==;
-Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOLPX-0001qd-UV; Tue, 14 Apr 2020 13:15:32 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 29/29] s390: use __vmalloc_node in stack_alloc
-Date:   Tue, 14 Apr 2020 15:13:48 +0200
-Message-Id: <20200414131348.444715-30-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200414131348.444715-1-hch@lst.de>
-References: <20200414131348.444715-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Tue, 14 Apr 2020 09:17:19 -0400
+Received: from 8bytes.org ([81.169.241.247]:34698 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730960AbgDNNP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:15:57 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B35903A2; Tue, 14 Apr 2020 15:15:51 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v2 02/33] iommu: Add def_domain_type() callback in iommu_ops
+Date:   Tue, 14 Apr 2020 15:15:11 +0200
+Message-Id: <20200414131542.25608-3-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
+References: <20200414131542.25608-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stack_alloc can use a slightly higher level vmalloc function.
+From: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Some devices are reqired to use a specific type (identity or dma)
+of default domain when they are used with a vendor iommu. When the
+system level default domain type is different from it, the vendor
+iommu driver has to request a new default domain with
+iommu_request_dma_domain_for_dev() and iommu_request_dm_for_dev()
+in the add_dev() callback. Unfortunately, these two helpers only
+work when the group hasn't been assigned to any other devices,
+hence, some vendor iommu driver has to use a private domain if
+it fails to request a new default one.
+
+This adds def_domain_type() callback in the iommu_ops, so that
+any special requirement of default domain for a device could be
+aware by the iommu generic layer.
+
+Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+[ jroedel@suse.de: Added iommu_get_def_domain_type() function and use
+                   it to allocate the default domain ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/s390/kernel/setup.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/iommu/iommu.c | 20 +++++++++++++++++---
+ include/linux/iommu.h |  6 ++++++
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 36445dd40fdb..0f0b140b5558 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -305,12 +305,9 @@ void *restart_stack __section(.data);
- unsigned long stack_alloc(void)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index bfe011760ed1..5877abd9b693 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1361,21 +1361,35 @@ struct iommu_group *fsl_mc_device_group(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(fsl_mc_device_group);
+ 
++static int iommu_get_def_domain_type(struct device *dev)
++{
++	const struct iommu_ops *ops = dev->bus->iommu_ops;
++	unsigned int type = 0;
++
++	if (ops->def_domain_type)
++		type = ops->def_domain_type(dev);
++
++	return (type == 0) ? iommu_def_domain_type : type;
++}
++
+ static int iommu_alloc_default_domain(struct device *dev,
+ 				      struct iommu_group *group)
  {
- #ifdef CONFIG_VMAP_STACK
--	return (unsigned long)
--		__vmalloc_node_range(THREAD_SIZE, THREAD_SIZE,
--				     VMALLOC_START, VMALLOC_END,
--				     THREADINFO_GFP,
--				     PAGE_KERNEL, 0, NUMA_NO_NODE,
--				     __builtin_return_address(0));
-+	return (unsigned long)__vmalloc_node(THREAD_SIZE, THREAD_SIZE,
-+			THREADINFO_GFP, NUMA_NO_NODE,
-+			__builtin_return_address(0));
- #else
- 	return __get_free_pages(GFP_KERNEL, THREAD_SIZE_ORDER);
- #endif
+ 	struct iommu_domain *dom;
++	unsigned int type;
+ 
+ 	if (group->default_domain)
+ 		return 0;
+ 
+-	dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
+-	if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
++	type = iommu_get_def_domain_type(dev);
++
++	dom = __iommu_domain_alloc(dev->bus, type);
++	if (!dom && type != IOMMU_DOMAIN_DMA) {
+ 		dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
+ 		if (dom) {
+ 			dev_warn(dev,
+ 				 "failed to allocate default IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
+-				 iommu_def_domain_type);
++				 type);
+ 		}
+ 	}
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 7ef8b0bda695..1f027b07e499 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -248,6 +248,10 @@ struct iommu_iotlb_gather {
+  * @cache_invalidate: invalidate translation caches
+  * @sva_bind_gpasid: bind guest pasid and mm
+  * @sva_unbind_gpasid: unbind guest pasid and mm
++ * @def_domain_type: device default domain type, return value:
++ *		- IOMMU_DOMAIN_IDENTITY: must use an identity domain
++ *		- IOMMU_DOMAIN_DMA: must use a dma domain
++ *		- 0: use the default setting
+  * @pgsize_bitmap: bitmap of all possible supported page sizes
+  * @owner: Driver module providing these ops
+  */
+@@ -318,6 +322,8 @@ struct iommu_ops {
+ 
+ 	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
+ 
++	int (*def_domain_type)(struct device *dev);
++
+ 	unsigned long pgsize_bitmap;
+ 	struct module *owner;
+ };
 -- 
-2.25.1
+2.17.1
 
