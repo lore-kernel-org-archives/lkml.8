@@ -7,90 +7,84 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77693C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF7AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4843C2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E512074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586898092;
-	bh=iAaI96UO9jO0nmyHDUvCt1c5ZT2a84A5TIYscM+YLpc=;
+	s=default; t=1586898201;
+	bh=DA1WJO+r6+0Wscx5HhjNM2dYKkw7EdCTk/tCIFAmpuI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oIlGosMgU3a6VqoYFOSqBs4MrU8iv7DZ+n2trvFlvOpxzlk+P07C59DY5HkbzZOR+
-	 LvUSXqVjWKt/cak3tsm1HCIjqC4NJoo37k2IOIYKMLASf2HIkMe0rT4ayBN+/lhTw2
-	 +Wq2tgn1Qk1z+T1qPbBmBaZi4lSysVvjLPJv5v4g=
+	b=LUEieA4C4P/K1h2295fCQrB42iu+BP6HXJgqS4/FqZs0belzIadYrVGfnwkMtkIdh
+	 hVxTquhprcBXYFG+aQr4PHTaddghk4MAVD9lJnP45iS5ccFiihwd7OBZ+WlxbZc7KA
+	 OfxUVeFhxLvANXYkZ4ksK5jbzjlyCbZdRJTygNjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633556AbgDNVBX (ORCPT
+        id S2633612AbgDNVDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:01:23 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43223 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633541AbgDNVBI (ORCPT
+        Tue, 14 Apr 2020 17:03:12 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41714 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633583AbgDNVCe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:01:08 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j16so11700668oih.10;
-        Tue, 14 Apr 2020 14:01:07 -0700 (PDT)
+        Tue, 14 Apr 2020 17:02:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f52so1180801otf.8;
+        Tue, 14 Apr 2020 14:02:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2tnI9OFnswT+j7ufoqi84C+8316n65ZdA2j48i1vU10=;
-        b=uOzhGkswrjuWE4gpstlr+MZoBaKrHDK0U0WXesXuKFu6b3hpWtJi+nIufd7BrKPi7z
-         li/4h0edLbp9DQ2oXRwz03PUTEE1F/dDUZ4aY/sH/ztcz5DKRZKbt8CEUzP8sdp5xIGH
-         awyyMgZxrR2VCTU9vdYcnbWbNsJ4bUhYgbjlBmT/OpQccOdJ67QRq2x9fmYpfX7/WgsH
-         hQZhWsnME4pqerew1tnKCpSI82qjEkhMW3/v+LsfV/w26Qgg86ldr/BFWNT769tvgO7j
-         bp6YCP+YxoZX7MSQ83BiXtXHjRzV6Jmq9OL/L5AOwNdm6GNcgJjkNrQR1kfC66btbP6n
-         Xm/Q==
-X-Gm-Message-State: AGi0PuZRLHdfVWXfv29L25uwF1kf3GIqcKe9SKwPOBry2vx6Qqo7fuUE
-        PdHFxfjRoXaMhS0e9Jk3Bm2du2M=
-X-Google-Smtp-Source: APiQypI88cfV+Vx4EqdyKBvxYVVd0MKPigaGXZDKD8HyL53QwsqxG0yMTlV8exKkTgUJ2NGdCF/Omw==
-X-Received: by 2002:aca:c385:: with SMTP id t127mr16945398oif.49.1586898066938;
-        Tue, 14 Apr 2020 14:01:06 -0700 (PDT)
+        bh=1nuyaAjNqXWnHHUJzL2XAoGa0wH4Zq86LiHy6nqxsJQ=;
+        b=SWVzQGhPDVbIqrNyXwBQOpSSRlU6S7cGLUOwbZtkbBlGCrqFK52hhQIlszeB6p3puT
+         7NNuHO+7ZwoEWZ+XeaMkuebm3Vq+IdlQ/pTrOvNWsCDgzvFdZ8NJUJL9PV90RKNK387V
+         NidhlWg6bonEzkE1pFjvPinfaQjuYY5Tby4uLps1N6i8nGv9AUPYlOfgVYhW0yCQQf2b
+         Rk7vQojgC/UFr8914TjhQRzjMpgOTUCYq6xW/8QOX8elsQE/RnYK570kR9GtsPysfaJ3
+         hT5KLa2MVE+58GRbqF97WqLYn3FhId46x2N9VimdjuwQsoQua76NIStcDkiB3EG3Z2nJ
+         g9Wg==
+X-Gm-Message-State: AGi0PuYc02MC7jq89L9MSL2pmBX2rU1PfKGv9Y8CrtvUvbvowfIQ5ebd
+        hGvmXQHH+t1h5wVLS+oigQ==
+X-Google-Smtp-Source: APiQypKapzYt9/7Q7GX3xQeCXyCjneXL8ofq3ZPCgF3NijaDtaMlETjB5mxGRQw13Z/0NIvx/NAIzg==
+X-Received: by 2002:a05:6830:573:: with SMTP id f19mr11105288otc.195.1586898153253;
+        Tue, 14 Apr 2020 14:02:33 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s10sm332886oig.56.2020.04.14.14.01.05
+        by smtp.gmail.com with ESMTPSA id s73sm1425254oih.14.2020.04.14.14.02.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:01:06 -0700 (PDT)
-Received: (nullmailer pid 2708 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:01:04 -0000
-Date:   Tue, 14 Apr 2020 16:01:04 -0500
+        Tue, 14 Apr 2020 14:02:32 -0700 (PDT)
+Received: (nullmailer pid 5278 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:02:31 -0000
+Date:   Tue, 14 Apr 2020 16:02:31 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yuti Amonkar <yamonkar@cadence.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 08/33] docs: dt: fix broken reference to
- phy-cadence-torrent.yaml
-Message-ID: <20200414210104.GA2508@bogus>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 28/33] docs: dt: rockchip,dwc3.txt: fix a pointer to a
+ renamed file
+Message-ID: <20200414210231.GA5218@bogus>
 References: <cover.1586881715.git.mchehab+huawei@kernel.org>
- <3f1cf6d74e392f3ee9f894d82cb7ee29d04c1b6d.1586881715.git.mchehab+huawei@kernel.org>
+ <287bd271f5c542e9d12a132a6b6a17672c9fd67c.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3f1cf6d74e392f3ee9f894d82cb7ee29d04c1b6d.1586881715.git.mchehab+huawei@kernel.org>
+In-Reply-To: <287bd271f5c542e9d12a132a6b6a17672c9fd67c.1586881715.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:48:34 +0200, Mauro Carvalho Chehab wrote:
-> This file was removed, and another file was added instead of
-> it, on two separate commits.
+On Tue, 14 Apr 2020 18:48:54 +0200, Mauro Carvalho Chehab wrote:
+> phy-rockchip-inno-usb2.txt was converted to yaml.
 > 
-> Splitting a single logical change (doc conversion) on two
-> patches is a bad thing, as it makes harder to discover what
-> crap happened.
+> Fix the corresponding reference.
 > 
-> Anyway, this patch fixes the broken reference, making it
-> pointing to the new location of the file.
-> 
-> Fixes: 922003733d42 ("dt-bindings: phy: Remove Cadence MHDP PHY dt binding")
-> Fixes: c6d8eef38b7f ("dt-bindings: phy: Add Cadence MHDP PHY bindings in YAML format.")
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
+>  Documentation/devicetree/bindings/usb/rockchip,dwc3.txt | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
