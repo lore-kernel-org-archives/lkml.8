@@ -2,111 +2,112 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EE9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316BCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDB1206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154CE206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407614AbgDNRU1 (ORCPT
+        id S2407624AbgDNRVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:20:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:60396 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407594AbgDNRUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:20:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C014430E;
-        Tue, 14 Apr 2020 10:20:23 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.30.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38E863F6C4;
-        Tue, 14 Apr 2020 10:20:22 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 18:20:14 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH v2 3/6] arm64/vdso: Add time napespace page
-Message-ID: <20200414172014.GA6705@C02TD0UTHF1T.local>
-References: <20200225073731.465270-1-avagin@gmail.com>
- <20200225073731.465270-4-avagin@gmail.com>
+        Tue, 14 Apr 2020 13:21:33 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33659 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407594AbgDNRV3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:21:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a25so15353474wrd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:21:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pFmpb+RA+NWz9T4WQIzSSblNv9ya5RwMO1G2Lr5Br/c=;
+        b=E6pl8bRclDUQzmGxEzTlKzs+PpS3PN26S3O2BW8s/c+jjR1SADr/4GISXuCvRQ8sDZ
+         Uq0CvTqg/lDvhhrCnd3GLiMhZB89ZdSg+yAlmsQYeNP8Osf/ryS6rn0QvhdHQf/pF7nr
+         Nq2r0GZ50CdTabInS4ypwtxqZiG5vqP1iWrCq1trpMb2wpPV9AFWLtE8UCPp3OeARDeX
+         snwgmU76EjgYadBuvTiAYcf+8V+ljniluq81u2pAfS7JaWEqr8WnuJCUcpytaewLt9dZ
+         X2KSVDOF1BJ/0Uv9kpgBuimnFLwhsHb5IftPetiXuFXOgNn16kF7+5V79NpYInGWNwNu
+         ZNFA==
+X-Gm-Message-State: AGi0PubeNcqRRfhkUy0X0D+1TvLepZLPL7yWSVyWyS/FeKmxqvhd6RRn
+        gVVozr5BX548ujyLQUzQgBY=
+X-Google-Smtp-Source: APiQypKGLMd4Io+mmJCD/aE71mw75UTb89hD2sdyZ51tFIcs+6M14eUwDvUS4XBySaMGdiIp8wTneg==
+X-Received: by 2002:a5d:6091:: with SMTP id w17mr21891200wrt.382.1586884886048;
+        Tue, 14 Apr 2020 10:21:26 -0700 (PDT)
+Received: from darkstar ([51.154.17.58])
+        by smtp.gmail.com with ESMTPSA id j135sm20463515wmj.46.2020.04.14.10.21.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 10:21:25 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 19:21:20 +0200
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Quentin Perret <qperret@google.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        ctheegal@codeaurora.org, dianders@chromium.org,
+        valentin.schneider@arm.com, qais.yousef@arm.com,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH] sched/core: Fix reset-on-fork from RT with uclamp
+Message-ID: <20200414172120.GA20442@darkstar>
+References: <20200414161320.251897-1-qperret@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225073731.465270-4-avagin@gmail.com>
+In-Reply-To: <20200414161320.251897-1-qperret@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:37:28PM -0800, Andrei Vagin wrote:
-> Allocate the time namespace page among VVAR pages.  Provide
-> __arch_get_timens_vdso_data() helper for VDSO code to get the
-> code-relative position of VVARs on that special page.
+On 14-Apr 17:13, Quentin Perret wrote:
+> uclamp_fork() resets the uclamp values to their default when the
+> reset-on-fork flag is set. It also checks whether the task has a RT
+> policy, and sets its uclamp.min to 1024 accordingly. However, during
+> reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
+> hence leading to an erroneous uclamp.min setting for the new task if it
+> was forked from RT.
+
+Right, good catch. Thanks.
+
+> Fix this by removing the unnecessary check on rt_policy() in
+> uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
+> set.
 > 
-> If a task belongs to a time namespace then the VVAR page which contains
-> the system wide VDSO data is replaced with a namespace specific page
-> which has the same layout as the VVAR page. That page has vdso_data->seq
-> set to 1 to enforce the slow path and vdso_data->clock_mode set to
-> VCLOCK_TIMENS to enforce the time namespace handling path.
-> 
-> The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-> update of the VDSO data is in progress, is not really affecting regular
-> tasks which are not part of a time namespace as the task is spin waiting
-> for the update to finish and vdso_data->seq to become even again.
-> 
-> If a time namespace task hits that code path, it invokes the corresponding
-> time getter function which retrieves the real VVAR page, reads host time
-> and then adds the offset for the requested clock which is stored in the
-> special VVAR page.
-> 
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
+> Signed-off-by: Quentin Perret <qperret@google.com>
+
+Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
+Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
+
 > ---
->  arch/arm64/include/asm/vdso.h                 |  6 ++++++
->  .../include/asm/vdso/compat_gettimeofday.h    | 11 ++++++++++
->  arch/arm64/include/asm/vdso/gettimeofday.h    |  8 ++++++++
->  arch/arm64/kernel/vdso.c                      | 20 ++++++++++++++++---
->  arch/arm64/kernel/vdso/vdso.lds.S             |  5 ++++-
->  arch/arm64/kernel/vdso32/vdso.lds.S           |  5 ++++-
->  include/vdso/datapage.h                       |  1 +
->  7 files changed, 51 insertions(+), 5 deletions(-)
-
-> +#ifdef CONFIG_TIME_NS
-> +static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
-> +{
-> +	const struct vdso_data *ret;
-> +
-> +	asm volatile("mov %0, %1" : "=r"(ret) : "r"(_timens_data));
-> +
-> +	return ret;
-> +}
-> +#endif
-
-What is this inline assembly for? The commit message doesn't mention it,
-there's no explanation here, and the native version doesn't do likewise
-so it seems rather surprising.
-
-Thanks,
-Mark.
-
-> diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-> index 5a534432aa5d..553bdc19a91f 100644
-> --- a/arch/arm64/include/asm/vdso/gettimeofday.h
-> +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-> @@ -97,6 +97,14 @@ const struct vdso_data *__arch_get_vdso_data(void)
->  	return _vdso_data;
->  }
+>  kernel/sched/core.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 3a61a3b8eaa9..9ea3e484eea2 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1234,10 +1234,6 @@ static void uclamp_fork(struct task_struct *p)
+>  	for_each_clamp_id(clamp_id) {
+>  		unsigned int clamp_value = uclamp_none(clamp_id);
 >  
-> +#ifdef CONFIG_TIME_NS
-> +static __always_inline
-> +const struct vdso_data *__arch_get_timens_vdso_data(void)
-> +{
-> +	return _timens_data;
-> +}
-> +#endif
+> -		/* By default, RT tasks always get 100% boost */
+> -		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> -
+>  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+>  	}
+>  }
+> -- 
+> 2.26.0.110.g2183baf09c-goog
+> 
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
