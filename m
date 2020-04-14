@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC315C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E69CC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F99F20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0480C20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KR6ctP5E"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="AXMojgi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440703AbgDNPkz (ORCPT
+        id S2440710AbgDNPlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:40:55 -0400
-Received: from mout.gmx.net ([212.227.15.18]:44211 "EHLO mout.gmx.net"
+        Tue, 14 Apr 2020 11:41:02 -0400
+Received: from mout.gmx.net ([212.227.15.18]:34727 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440639AbgDNPkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:40:00 -0400
+        id S2440647AbgDNPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:40:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586878781;
-        bh=9OBF6gIjnTCjWkLOnZw3x33tS8mKryfNv0za8UnranA=;
+        s=badeba3b8450; t=1586878786;
+        bh=nDJVD3AZSdIriWbccSTLZqEVGQm3QecfPNGiBjWsz6o=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=KR6ctP5E28ExNfQyU4nYL19Thd+6hjEDhiVKcsF77siheMnXF/whNUnEMxzcgYRK3
-         xjlsJ41JvCplpQY/+yzOGwWtMobzasntqtLpcZpwkZAUjIJNVx73dWVxk2akb2anTS
-         IBlNvTSrnvBPXdvIJI4EKTFwpNr42ZRYDawtAFUA=
+        b=AXMojgi8mai/xDVdpSdtmJqNbS/L8S8/dYfL9R2K1CSIvxfWNch3jWyFx5da69mZz
+         RJnloac4OCKwq9asLbDLvneU0bDVR6hJY6zxfH6gwyNbxnwMnDY/o7Xk2JkIxrz2yb
+         yM4BN/W+RRvttKuwqFCyJiilXVnv74qtHckXBEtw=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
  (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MPokD-1jbloF3z63-00MsVj; Tue, 14 Apr 2020 17:39:41 +0200
+ 1M26vL-1jQIPI3EC1-002aT7; Tue, 14 Apr 2020 17:39:45 +0200
 From:   Oscar Carter <oscar.carter@gmx.com>
 To:     Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -44,74 +44,72 @@ Cc:     Oscar Carter <oscar.carter@gmx.com>,
         "John B. Wyatt IV" <jbwyatt4@gmail.com>,
         Colin Ian King <colin.king@canonical.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] staging: vt6656: Use define instead of magic number for tx_rate
-Date:   Tue, 14 Apr 2020 17:38:47 +0200
-Message-Id: <20200414153849.5785-4-oscar.carter@gmx.com>
+Subject: [PATCH 5/5] staging: vt6656: Remove duplicate code for the phy->service assignment
+Date:   Tue, 14 Apr 2020 17:38:49 +0200
+Message-Id: <20200414153849.5785-6-oscar.carter@gmx.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200414153849.5785-1-oscar.carter@gmx.com>
 References: <20200414153849.5785-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lxuWUOiVxukpQ2P1v0kvR0BBk5n4QGoskbxEewLD2Q2qXZ6+QNZ
- JXOXB/XgnuoS/bgvRFm7LhcZX6TxmTt4QEd2e0yT68u3VkwECvKNCVYoxpmxx1p+GFL2GLc
- 1qZUYdaYDdpd4d5mq2tXnitAsQZnNpeK8kXWTTJdY/jw27Czr36oafo4rE043sdCJ1QnE1N
- 1e8fPVj5LQVEGIYr13oWg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:T4fp2YI8ohc=:OHdWikw8B0zzCa595ZMPoV
- j1Ti4zhYfcSJdu03kXfZFaG6Tk5aLGK1YkfWB01k8DXtxNT38UIO7DTxbRLwLQM6H5yjJiQd2
- T2YT34U0fHl/inq1C64CZHzp3OF106H3xWPee/m2RiFjoTW/Mz2IIX01jR56B5/27BrH7EXMJ
- j9+CEqzTs84U+Yq4DFIdYPDVhotKGtuqZjH92mBDYCkPQsx4U5USliuBAXj3N8r/mEygO/665
- 83RPVmIu3KX2sQBBlmpXLukuBERZb0+UGl4c34xU/AcdsjHVXpL9UY+9aGj9fNur6Q0k0Vrdd
- +tDP+niIhJE8AGW/S95CtAGvtp8NRxvFsiZhP7gMG8rN/ztQjQp3U4ODrxqk9dPW8ZxtisU5Y
- Di+edi9gRbWu1TqtMeWtdicySfOijZxho2TBP7Li64X9DMFlUs5/0Uoe9ENzJ+Ue3Y7TgKCT4
- bV14tXOoR7PQZXSerayNO2ly/XZ1qaKJ1FD3OmOVjaWen1NV+O2ypfQhwRrwq7gf1YZAqnd5C
- pBVFezB5ppDWAwyRxzOq0X8663yRqlBgWuU+ThAqn38wwqKc+SFsv2eU0n4MvAl4lP65LUAaI
- v0+0mX3ZIBClnYa+kISKrjKsu/iFCdthSf2HlxchSvUiDzlxzLV5MAWcTe92mx2IZ143lgkF2
- BNCXLWfv4zcAnVmX/XUc7MDtvxLnd0ZtWlwDHb0hoOwOzFom0hixXSAm41qOBt/brb5ytgBzX
- LmjUa+OHTJFZAzrJMnvhwP3Zh48+j6h6TstgCLH+WYVn3GO4AEpcbgcIr0xiMKdLvBEXi2oLF
- P3yZ8SjjVKVrcG4ZwcaUI+3GzTHFIEIgqZNeJKIk/j2UXj17OCMIIegsLVBsAAcFjhcXXyWK/
- myI7uJC7Q++n8VtS+Pd3RJjRPlmjoGRLREHSiStKZ4e4Ou8w+98rY7t4wisuQkGc2khTxcrU9
- ZYsrUilsBs6pZ5+cOIm1gTNzDKI0ZzNZvvqB/3aFHMgITYUBa35BhW53Yp0VUK0eJkBqVqVgM
- wmQpZijVk56AKVLyA/ihiFI0BC5tBGOYg5cbyJc21nYL+q5XfL30D/Hw3cpXqZNpgjYrbCxoD
- 0t3vlp2RgxElGnSfWVgrXzP1WAphK9MmSbZKQGuAeFrlp443I+cphSbr98wuzCXG0d/y6K0Pa
- Myc6/G7uEOCdo4giCascLHWwaCKCItWej0R5B8pLZ2AuR4+PpU3ie56IgRuJt8mP4yDRLtMKV
- wvoTtKDJ6ybZq5gaU
+X-Provags-ID: V03:K1:DqvcGdhV5y8Y8s39nWF+VzmtqcxktmEh47LOIttz1c+qLCQDQg1
+ cfV8jiNw7uEusUe9pgroliSQiI3xubV7UhjX3MTpQbFSgnytyWA5c4kLJgZVY/GLnHcKlnD
+ ZfL4zDNVpqKomHGKssznseGBLiDvg2+iwXUu5BPb5WaBHXYB4wIKZjV3hZPdSdVu9YW0vR7
+ yzQR0vWNSzHpi02IFC5nw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3+DymnGzQ14=:9SoIDgt6GCJphG8jmZ2IuV
+ Lo7xl13oKDZiPO7+dD0zspU6mBrEsODfbvDNRY70d+rAAO8AXDKRIW+Ru/tXrKboBNnKvr9ap
+ fgG5R2CyzvUIWTHB1IPOpHhFl7MJw34RE2yiBNIaMDDL3DLJ2FLT74fOpkt0ubaG4c+4Jdcax
+ wBOsUTZMBELSVdwieFVBVP/wMvPMkYinwU7eBpcMaNRoTSdeIkAqKmQMNUEdnDaM5Dq8ecduW
+ Ax8AS9ZTM4PCdsdPdah/ssgZiKVuoVDTOdzvA2rGCotWDfU3f28n3hNFS5rYhU+0oMzrn6tM/
+ yonV5imk5jEV56QMtsyEMxYUVyieDriK8DJ+qeYeZKX85fHwt5c/ijphBl2Otu7eObysxOkuI
+ Nuatj0KwxxF/4ggsq5Ep1ov2+bJurf9NLNM+dgZze3Og0FGYQ1+O4TYd36SwRr7v8mvxBhvTa
+ vkRAEOgm2sn5e5gcxxQ/PvXeVXcAB/mLRZRnXOP8iNWWwshTFH38AqWznfNktBac7TokW1PKc
+ abP4A2/anBPJphl+qmtL6DZa8C7jGKaN41p+rM9YhrkfP3SV0HNuF5v4VvbmTiQIC02iIiXq3
+ uhA87J72jju9NIh5dyB7zqncgbkKL3tSL8fvCFOiCCfmVmXdjZQVTbwFWMN4DcMzMpdKm7K6W
+ 9yo/9qeELCjVclsLNJwkWPHi/6vgA++l7IAPxf3ITFnRWXApCVfoR4c5//0szF6JfBkeiqOUF
+ tBAlwaJJs6uZzCKVRpRtf/2ke7Sr37aNnZ31JWfxoy4dCx1JZyMeN6uIaBi2MxNA2esK5RP8b
+ Bx3aw+pspX1gTqJRYBgo7UhHhay3U3EE+u5+k/U1DbSwFoWI83LLZmWlu31WJihfiREQfebWi
+ DeF86WW8S4mF5uqtWc9a7qQfW2ldfwbY8UWy87kvrI9HQcJyYSRJjriuNqP5a1euyQkqa63jQ
+ g9wCmIQ+92+ggNA2/3G8kJ4EY6qFUOpwj0oNKdlbBPmIGJ0RrIKp6innp0LHgL+bus3qGiTXx
+ CNUS/EllOKAl2ONZ9TYzTk2BxZA6I2MAsnSlqhUV1cHuSDsBUtc8rUaY6p3eu6gk3hcScOvh9
+ iPrWNB978kLaCl5yljTJoJoTKErjK3PHIF5c8BIASyy671c6ZWfbXU+GJMYHOyeJ1IKj6R0J7
+ i09sq3IrPq+HehLQboWS/WgUsamFUvOF8rcauCM8W0tdhCUzUZCGd0wOj5EVBZaOafeelFvzO
+ TALSnEw8QxN4GXPPF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the define RATE_11M present in the file "device.h" instead of the
-magic number 3. So the code is more clear.
+Take out the "phy->service" assignment from the if-else statement due to
+it's the same for the two branches.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
 =2D--
- drivers/staging/vt6656/baseband.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/vt6656/baseband.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
 seband.c
-index e0352405e4cf..149c9bba7108 100644
+index 3b6f2bcf91a7..13b91d7fc6db 100644
 =2D-- a/drivers/staging/vt6656/baseband.c
 +++ b/drivers/staging/vt6656/baseband.c
-@@ -24,6 +24,7 @@
+@@ -320,14 +320,13 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
+ frame_length,
 
- #include <linux/bits.h>
- #include <linux/kernel.h>
-+#include "device.h"
- #include "mac.h"
- #include "baseband.h"
- #include "rf.h"
-@@ -221,7 +222,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 p=
-kt_type,
+ 	i =3D tx_rate > RATE_54M ? RATE_54M : tx_rate;
+ 	phy->signal =3D vnt_phy_signal[i] | mask;
++	phy->service =3D 0x00;
 
- 	rate =3D (unsigned int)vnt_frame_time[tx_rate];
-
--	if (tx_rate <=3D 3) {
-+	if (tx_rate <=3D RATE_11M) {
- 		if (preamble_type =3D=3D PREAMBLE_SHORT)
- 			preamble =3D 96;
- 		else
+ 	if (pkt_type =3D=3D PK_TYPE_11B) {
+-		phy->service =3D 0x00;
+ 		if (ext_bit)
+ 			phy->service |=3D 0x80;
+ 		phy->len =3D cpu_to_le16((u16)count);
+ 	} else {
+-		phy->service =3D 0x00;
+ 		phy->len =3D cpu_to_le16((u16)frame_length);
+ 	}
+ }
 =2D-
 2.20.1
 
