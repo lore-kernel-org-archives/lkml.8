@@ -2,410 +2,161 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69892C352B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06109C352B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C870206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586850143;
-	bh=6uhrz44i5eT5f7oLOC1OL5FsVtDT/iQzuTX/CEU8+zg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=abZQGIl8gFav1+upsynzLQ9Al8lIOw+m7afpTu+j2CcRr0xTtuVb+u+/EWPXzMmlI
-	 rW8hidG6DFsgDzky9bZq+sAohTEjQll89EJQtSQ89mZxxdEIaUADA+1aSaWOJ3sv/5
-	 gEQR6dhD6cPCo+5tfA5KaqYbiliZQNCVYoiYk/f4=
+	by mail.kernel.org (Postfix) with ESMTP id CFBC2206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nD1jFWNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406797AbgDNHmW (ORCPT
+        id S2406836AbgDNHmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbgDNHmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:42:09 -0400
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6452078A;
-        Tue, 14 Apr 2020 07:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586850128;
-        bh=6uhrz44i5eT5f7oLOC1OL5FsVtDT/iQzuTX/CEU8+zg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kkhRNFE9I2rpe6sQkWBvxuZaLVbg2k7qQG00iGfMn+/lB/f4EpTtiIstquxxZzcHx
-         Boy3N8hW0XUYjpMpVWWDMxuiLsBLOIqw/GFFqVBO2tV9JEdob4OvPkRBe2168zb3DO
-         KJ+dXf05/GRM9IhKGc/hQuPjx581hpLtIlKD/WKM=
-Received: by mail-il1-f175.google.com with SMTP id t8so6385276ilj.3;
-        Tue, 14 Apr 2020 00:42:07 -0700 (PDT)
-X-Gm-Message-State: AGi0Pubfk2YiXe6/uZL+Y1OCSxUhUwjzKkzeKj68YFESJqRCz1yp7FMx
-        EEtL4BHXUtktgvKRjDLyeVHjEFMyEWQOfUP2yYQ=
-X-Google-Smtp-Source: APiQypKnsZnymajbRGIINhll+k8W8ECmHw5zlJZoQtqgJ3tUHBY0WQrKdUP+h27ZLkZch8vBVYS7Xb9sP2akdj5i40E=
-X-Received: by 2002:a92:c788:: with SMTP id c8mr20566174ilk.279.1586850127067;
- Tue, 14 Apr 2020 00:42:07 -0700 (PDT)
+        Tue, 14 Apr 2020 03:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406809AbgDNHmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:42:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BD2C008748;
+        Tue, 14 Apr 2020 00:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=Ual/dMzALNy8sA75wgtQ+6CUGk8C9/Ruhu//u9rXiYs=; b=nD1jFWNXBCPAHbKCVLUh/4zZP6
+        aMmoAa2p2OsI8xgMcnB2Cn2pKZLtc9sWDwBKzIOUkA23FTslj2T/Be9JdJ4HQVKaEyXHHQMuW+sfu
+        jn6zfc5VOaCWrYlqGOs25hrYbadm7LCeLtoppuaGtok7dBPU2ONjPtVyzQQ9wf4TGJHdhA/9vW2UH
+        3mLC9RoxUAmaa7Wl/cGJ3jRcIBTrEgaioW3BYA3yXv+djI+7ET76a/vdqROV+H0pVYi8BtA03QTja
+        t8b2rWol0S9WjASVxYfn4Xp9JPF6Qg6Lmv60JIRaPq3EqVTeORW/hap4olwjWqc3pzDjOmLNF2ghk
+        oy8BDYBA==;
+Received: from [2001:4bb8:180:384b:4c21:af7:dd95:e552] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOGDJ-00078L-FJ; Tue, 14 Apr 2020 07:42:33 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: [PATCH 2/5] block: provide a blk_rq_map_sg variant that returns the last element
+Date:   Tue, 14 Apr 2020 09:42:22 +0200
+Message-Id: <20200414074225.332324-3-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200414074225.332324-1-hch@lst.de>
+References: <20200414074225.332324-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200413212907.29244-1-atish.patra@wdc.com> <20200413212907.29244-6-atish.patra@wdc.com>
-In-Reply-To: <20200413212907.29244-6-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 14 Apr 2020 09:41:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEiQRORXMe4s_-iqmOefv-mbsPCtMT9ivJPvnkja+v0oQ@mail.gmail.com>
-Message-ID: <CAMj1kXEiQRORXMe4s_-iqmOefv-mbsPCtMT9ivJPvnkja+v0oQ@mail.gmail.com>
-Subject: Re: [v2 PATCH 5/5] RISC-V: Add EFI stub support.
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 at 23:29, Atish Patra <atish.patra@wdc.com> wrote:
->
-> Add a RISC-V architecture specific stub code that actually copies the
-> actual kernel image to a valid address and jump to it after boot services
-> are terminated. Enable UEFI related kernel configs as well for RISC-V.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/Kconfig                        |  20 ++++
->  arch/riscv/Makefile                       |   1 +
->  arch/riscv/configs/defconfig              |   1 +
->  arch/riscv/include/asm/efi.h              |  45 ++++++++
->  drivers/firmware/efi/Kconfig              |   2 +-
->  drivers/firmware/efi/libstub/Makefile     |   8 ++
->  drivers/firmware/efi/libstub/riscv-stub.c | 131 ++++++++++++++++++++++
->  7 files changed, 207 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/include/asm/efi.h
->  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index f39e326a7a42..eb4f41c8f3ce 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -379,10 +379,30 @@ config CMDLINE_FORCE
->
->  endchoice
->
-> +config EFI_STUB
-> +       bool
-> +
-> +config EFI
-> +       bool "UEFI runtime support"
-> +       depends on OF
-> +       select LIBFDT
-> +       select UCS2_STRING
-> +       select EFI_PARAMS_FROM_FDT
-> +       select EFI_STUB
-> +       select EFI_GENERIC_STUB
-> +       default y
-> +       help
-> +         This option provides support for runtime services provided
-> +         by UEFI firmware (such as non-volatile variables, realtime
-> +          clock, and platform reset). A UEFI stub is also provided to
-> +         allow the kernel to be booted as an EFI application. This
-> +         is only useful on systems that have UEFI firmware.
-> +
->  endmenu
->
->  menu "Power management options"
->
->  source "kernel/power/Kconfig"
-> +source "drivers/firmware/Kconfig"
->
->  endmenu
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index fb6e37db836d..079435804d6d 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -80,6 +80,7 @@ head-y := arch/riscv/kernel/head.o
->  core-y += arch/riscv/
->
->  libs-y += arch/riscv/lib/
-> +core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
->
->  PHONY += vdso_install
->  vdso_install:
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 4da4886246a4..ae69e12d306a 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -129,3 +129,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
->  # CONFIG_RUNTIME_TESTING_MENU is not set
->  CONFIG_MEMTEST=y
->  # CONFIG_SYSFS_SYSCALL is not set
-> +CONFIG_EFI=y
-> diff --git a/arch/riscv/include/asm/efi.h b/arch/riscv/include/asm/efi.h
-> new file mode 100644
-> index 000000000000..ba0a6d35cc15
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/efi.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + * Based on arch/arm64/include/asm/efi.h
-> + */
-> +#ifndef _ASM_EFI_H
-> +#define _ASM_EFI_H
-> +
-> +#include <asm/io.h>
-> +#include <asm/mmu_context.h>
-> +#include <asm/ptrace.h>
-> +#include <asm/tlbflush.h>
-> +
-> +#define VA_BITS_MIN 39
-> +
-> +/* on RISC-V, the FDT may be located anywhere in system RAM */
-> +static inline unsigned long efi_get_max_fdt_addr(unsigned long dram_base)
-> +{
-> +       return ULONG_MAX;
-> +}
-> +
-> +/* Load initrd at enough distance from DRAM start */
-> +static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
-> +                                                   unsigned long image_addr)
-> +{
-> +       return dram_base + SZ_256M;
-> +}
-> +
-> +#define efi_bs_call(func, ...) efi_system_table()->boottime->func(__VA_ARGS__)
-> +#define efi_rt_call(func, ...) efi_system_table()->runtime->func(__VA_ARGS__)
-> +#define efi_is_native()                (true)
-> +
-> +#define efi_table_attr(inst, attr)     (inst->attr)
-> +
-> +#define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
-> +
-> +#define alloc_screen_info(x...)                (&screen_info)
-> +extern char stext_offset[];
-> +
-> +static inline void free_screen_info(struct screen_info *si)
-> +{
-> +}
-> +#define EFI_ALLOC_ALIGN                SZ_64K
-> +
-> +#endif /* _ASM_EFI_H */
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index 2a2b2b96a1dc..fcdc789d3f87 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -111,7 +111,7 @@ config EFI_GENERIC_STUB
->
->  config EFI_ARMSTUB_DTB_LOADER
->         bool "Enable the DTB loader"
-> -       depends on EFI_GENERIC_STUB
-> +       depends on EFI_GENERIC_STUB && !RISCV
->         default y
->         help
->           Select this config option to add support for the dtb= command
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index d590504541f6..b1db3a793c43 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -22,6 +22,8 @@ cflags-$(CONFIG_ARM64)                := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->                                    -fno-builtin -fpic \
->                                    $(call cc-option,-mno-single-pic-base)
-> +cflags-$(CONFIG_RISCV)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> +                                  -fpic
->
->  cflags-$(CONFIG_EFI_GENERIC_STUB)      += -I$(srctree)/scripts/dtc/libfdt
->
-> @@ -56,6 +58,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)                += efi-stub.o fdt.o string.o \
->  lib-$(CONFIG_ARM)              += arm32-stub.o
->  lib-$(CONFIG_ARM64)            += arm64-stub.o
->  lib-$(CONFIG_X86)              += x86-stub.o
-> +lib-$(CONFIG_RISCV)            += riscv-stub.o
->  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->
-> @@ -80,6 +83,11 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --prefix-alloc-sections=.init \
->                                    --prefix-symbols=__efistub_
->  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
->
-> +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-sections=.init \
-> +                                  --prefix-symbols=__efistub_
-> +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
-> +
-> +
->  $(obj)/%.stub.o: $(obj)/%.o FORCE
->         $(call if_changed,stubcopy)
->
-> diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-> new file mode 100644
-> index 000000000000..acb69eae187a
-> --- /dev/null
-> +++ b/drivers/firmware/efi/libstub/riscv-stub.c
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org>
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + *
-> + * This file implements the EFI boot stub for the RISC-V kernel.
-> + * Adapted from ARM64 version at drivers/firmware/efi/libstub/arm64-stub.c.
-> + */
-> +
-> +#include <linux/efi.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/libfdt_env.h>
-> +#include <asm/efi.h>
-> +#include <asm/sections.h>
-> +
-> +#include "efistub.h"
-> +/*
-> + * RISCV requires the kernel image to placed TEXT_OFFSET bytes beyond a 2 MB
-> + * aligned base for 64 bit and 4MB for 32 bit.
-> + */
-> +#ifdef CONFIG_64BIT
-> +#define MIN_KIMG_ALIGN SZ_2M
-> +#else
-> +#define MIN_KIMG_ALIGN SZ_4M
-> +#endif
-> +/*
-> + * TEXT_OFFSET ensures that we don't overwrite the firmware that probably sits
-> + * at the beginning of the DRAM.
-> + */
-> +#define TEXT_OFFSET MIN_KIMG_ALIGN
-> +
+To be able to move some of the special purpose hacks in blk_rq_map_sg
+into the callers we need a variant that returns the last mapped
+S/G list element to the caller.  Add that variant as __blk_rq_map_sg
+and make blk_rq_map_sg a trivial inline wrapper around it.
 
-Again, this is not the right approach. If there are any allocations in
-memory that EFI cannot touch, you have to mark them as reserved in the
-EFI memory map. Otherwise, anything running in the EFI context (GRUB,
-systemd-boot, shim, etc) could step on it, not just the kernel.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/blk-merge.c      | 25 ++++++++++++-------------
+ include/linux/blkdev.h | 10 +++++++++-
+ 2 files changed, 21 insertions(+), 14 deletions(-)
 
-> +typedef __attribute__((noreturn)) void (*jump_kernel_func)(unsigned int,
-> +                                                          unsigned long);
-> +efi_status_t check_platform_features(void)
-> +{
-> +       return EFI_SUCCESS;
-> +}
-> +
-> +static u32 get_boot_hartid_from_fdt(unsigned long fdt)
-> +{
-> +       int chosen_node, len;
-> +       const fdt32_t *prop;
-> +
-> +       chosen_node = fdt_path_offset((void *)fdt, "/chosen");
-> +       if (chosen_node < 0)
-> +               return U32_MAX;
-> +       prop = fdt_getprop((void *)fdt, chosen_node, "boot-hartid", &len);
-> +       if (!prop || len != sizeof(u32))
-> +               return U32_MAX;
-> +
-> +       return fdt32_to_cpu(*prop);
-> +}
-> +
-> +/*
-> + * Jump to real kernel here with following constraints.
-> + * 1. MMU should be disabled.
-> + * 2. a0 should contain hartid
-> + * 3. a1 should DT address
-> + */
-> +void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt,
-> +                                unsigned long fdt_size)
-> +{
-> +       unsigned long kernel_entry = entrypoint + (unsigned long)stext_offset;
-> +       jump_kernel_func jump_kernel = (void (*)(unsigned int, unsigned long))kernel_entry;
-> +       u32 hartid = get_boot_hartid_from_fdt(fdt);
-> +
-> +       if (hartid == U32_MAX)
-> +               /* We can not use panic or BUG at this point */
-> +               __asm__ __volatile__ ("ebreak");
-> +       /* Disable MMU */
-> +       csr_write(CSR_SATP, 0);
-> +       jump_kernel(hartid, fdt);
-> +}
-> +
-> +efi_status_t handle_kernel_image(unsigned long *image_addr,
-> +                                unsigned long *image_size,
-> +                                unsigned long *reserve_addr,
-> +                                unsigned long *reserve_size,
-> +                                unsigned long dram_base,
-> +                                efi_loaded_image_t *image)
-> +{
-> +       efi_status_t status;
-> +       unsigned long kernel_size, kernel_memsize = 0;
-> +       unsigned long preferred_offset;
-> +
-> +       /*
-> +        * The preferred offset of the kernel Image is TEXT_OFFSET bytes beyond
-> +        * a KIMG_ALIGN aligned base.
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 99c9759f3a8a..ee618cdb141e 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -519,24 +519,23 @@ static int __blk_bios_map_sg(struct request_queue *q, struct bio *bio,
+  * map a request to scatterlist, return number of sg entries setup. Caller
+  * must make sure sg can hold rq->nr_phys_segments entries
+  */
+-int blk_rq_map_sg(struct request_queue *q, struct request *rq,
+-		  struct scatterlist *sglist)
++int __blk_rq_map_sg(struct request_queue *q, struct request *rq,
++		struct scatterlist *sglist, struct scatterlist **last_sg)
+ {
+-	struct scatterlist *sg = NULL;
+ 	int nsegs = 0;
+ 
+ 	if (rq->rq_flags & RQF_SPECIAL_PAYLOAD)
+-		nsegs = __blk_bvec_map_sg(rq->special_vec, sglist, &sg);
++		nsegs = __blk_bvec_map_sg(rq->special_vec, sglist, last_sg);
+ 	else if (rq->bio && bio_op(rq->bio) == REQ_OP_WRITE_SAME)
+-		nsegs = __blk_bvec_map_sg(bio_iovec(rq->bio), sglist, &sg);
++		nsegs = __blk_bvec_map_sg(bio_iovec(rq->bio), sglist, last_sg);
+ 	else if (rq->bio)
+-		nsegs = __blk_bios_map_sg(q, rq->bio, sglist, &sg);
++		nsegs = __blk_bios_map_sg(q, rq->bio, sglist, last_sg);
+ 
+ 	if (blk_rq_bytes(rq) && (blk_rq_bytes(rq) & q->dma_pad_mask)) {
+ 		unsigned int pad_len =
+ 			(q->dma_pad_mask & ~blk_rq_bytes(rq)) + 1;
+ 
+-		sg->length += pad_len;
++		(*last_sg)->length += pad_len;
+ 		rq->extra_len += pad_len;
+ 	}
+ 
+@@ -544,9 +543,9 @@ int blk_rq_map_sg(struct request_queue *q, struct request *rq,
+ 		if (op_is_write(req_op(rq)))
+ 			memset(q->dma_drain_buffer, 0, q->dma_drain_size);
+ 
+-		sg_unmark_end(sg);
+-		sg = sg_next(sg);
+-		sg_set_page(sg, virt_to_page(q->dma_drain_buffer),
++		sg_unmark_end(*last_sg);
++		*last_sg = sg_next(*last_sg);
++		sg_set_page(*last_sg, virt_to_page(q->dma_drain_buffer),
+ 			    q->dma_drain_size,
+ 			    ((unsigned long)q->dma_drain_buffer) &
+ 			    (PAGE_SIZE - 1));
+@@ -554,8 +553,8 @@ int blk_rq_map_sg(struct request_queue *q, struct request *rq,
+ 		rq->extra_len += q->dma_drain_size;
+ 	}
+ 
+-	if (sg)
+-		sg_mark_end(sg);
++	if (*last_sg)
++		sg_mark_end(*last_sg);
+ 
+ 	/*
+ 	 * Something must have been wrong if the figured number of
+@@ -565,7 +564,7 @@ int blk_rq_map_sg(struct request_queue *q, struct request *rq,
+ 
+ 	return nsegs;
+ }
+-EXPORT_SYMBOL(blk_rq_map_sg);
++EXPORT_SYMBOL(__blk_rq_map_sg);
+ 
+ static inline int ll_new_hw_segment(struct request *req, struct bio *bio,
+ 		unsigned int nr_phys_segs)
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 76da162b6ae9..496dc9491026 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1136,7 +1136,15 @@ static inline unsigned short blk_rq_nr_discard_segments(struct request *rq)
+ 	return max_t(unsigned short, rq->nr_phys_segments, 1);
+ }
+ 
+-extern int blk_rq_map_sg(struct request_queue *, struct request *, struct scatterlist *);
++int __blk_rq_map_sg(struct request_queue *q, struct request *rq,
++		struct scatterlist *sglist, struct scatterlist **last_sg);
++static inline int blk_rq_map_sg(struct request_queue *q, struct request *rq,
++		struct scatterlist *sglist)
++{
++	struct scatterlist *last_sg = NULL;
++
++	return __blk_rq_map_sg(q, rq, sglist, &last_sg);
++}
+ extern void blk_dump_rq_flags(struct request *, char *);
+ extern long nr_blockdev_pages(void);
+ 
+-- 
+2.25.1
 
-MIN_KIMG_ALIGN
-
-> +        */
-> +       preferred_offset = round_up(dram_base, MIN_KIMG_ALIGN) + TEXT_OFFSET;
-> +
-> +       kernel_size = _edata - _start;
-> +       kernel_memsize = kernel_size + (_end - _edata);
-> +
-> +       /*
-> +        * Try a straight allocation at the preferred offset. It will also
-> +        * ensure that, on platforms where the [dram_base, dram_base + TEXT_OFFSET)
-> +        * interval is partially occupied by the firmware we can still place
-> +        * the kernel at the address 'dram_base + TEXT_OFFSET'. If the straight
-> +        * allocation fails, efi_low_alloc tries allocate memory from the lowest
-> +        * available LOADER_DATA mapped memory as long as address and size meet
-> +        * the alignment constraints.
-> +        */
-> +       if (*image_addr == preferred_offset)
-> +               return EFI_SUCCESS;
-> +
-> +       *image_addr = *reserve_addr = preferred_offset;
-> +       *reserve_size = round_up(kernel_memsize, EFI_ALLOC_ALIGN);
-> +
-> +       status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
-> +                               EFI_LOADER_DATA,
-> +                               *reserve_size / EFI_PAGE_SIZE,
-> +                               (efi_physical_addr_t *)reserve_addr);
-> +
-> +       if (status != EFI_SUCCESS) {
-> +               pr_efi("straight allocation failed do a low alloc\n");
-> +               *reserve_size = kernel_memsize + TEXT_OFFSET;
-> +               status = efi_low_alloc(*reserve_size, MIN_KIMG_ALIGN,
-> +                                      reserve_addr);
-> +
-
-So, instead of the above, could we simply allocate kernel_memsize
-bytes using efi_allocate_pages(), with the max address set to
-'round_up(dram_base, MIN_KIMG_ALIGN) + kernel_memsize + TEXT_OFFSET -
-1'? This should work in the majority of cases, and not trample on the
-TEXT_OFFSET bytes at the start, regardless of whether they are
-reserved or not.
-
-In the future, I imagine you may want to relax the requirements
-regarding the physical placement of the kernel, in which case you can
-start falling back to a suitably aligned allocation anywhere in
-memory.
-
-
-
-> +               if (status != EFI_SUCCESS) {
-> +                       pr_efi_err("Failed to relocate kernel\n");
-> +                       *reserve_size = 0;
-> +                       return status;
-> +               }
-> +               *image_addr = *reserve_addr + TEXT_OFFSET;
-> +       }
-> +       memcpy((void *)*image_addr, image->image_base, kernel_size);
-> +
-> +       return EFI_SUCCESS;
-> +}
-> --
-> 2.24.0
->
