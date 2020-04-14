@@ -2,81 +2,234 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40147C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1843C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE372074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0252074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503069AbgDNRxq (ORCPT
+        id S2503077AbgDNRyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:53:46 -0400
-Received: from mailoutvs30.siol.net ([185.57.226.221]:56900 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729303AbgDNRxn (ORCPT
+        Tue, 14 Apr 2020 13:54:36 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:56986 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729303AbgDNRy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:53:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 7F40452394D;
-        Tue, 14 Apr 2020 19:53:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zT-bx81lubdB; Tue, 14 Apr 2020 19:53:37 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 304EC52395E;
-        Tue, 14 Apr 2020 19:53:37 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id D84D852394D;
-        Tue, 14 Apr 2020 19:53:34 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Torsten Duwe <duwe@lst.de>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: drm/bridge: anx6345: set correct BPC for display_info of connector
-Date:   Tue, 14 Apr 2020 19:53:34 +0200
-Message-ID: <12495893.uLZWGnKmhe@jernej-laptop>
-In-Reply-To: <20200329222253.2941405-1-anarsoul@gmail.com>
-References: <20200329222253.2941405-1-anarsoul@gmail.com>
+        Tue, 14 Apr 2020 13:54:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 8EDD29E7402;
+        Tue, 14 Apr 2020 18:54:19 +0100 (BST)
+Date:   Tue, 14 Apr 2020 18:54:16 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Jeremy Fertic <jeremyfertic@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexandru.tachici@analog.com
+Subject: Re: [PATCH v3 1/2] iio: adc: ad7192: fix null pointer de-reference
+ crash during probe
+Message-ID: <20200414185416.098062f7@archlinux>
+In-Reply-To: <20200413220631.GA4884@r2700x.localdomain>
+References: <20200413082044.81101-1-alexandru.ardelean@analog.com>
+        <20200413220631.GA4884@r2700x.localdomain>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 30. marec 2020 ob 00:22:53 CEST je Vasily Khoruzhick 
-napisal(a):
-> Some drivers (e.g. sun4i-drm) need this info to decide whether they
-> need to enable dithering. Currently driver reports what panel supports
-> and if panel supports 8 we don't get dithering enabled.
+On Mon, 13 Apr 2020 16:06:31 -0600
+Jeremy Fertic <jeremyfertic@gmail.com> wrote:
+
+> On Mon, Apr 13, 2020 at 11:20:43AM +0300, Alexandru Ardelean wrote:
+> > When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+> > assignment:
+> >    'indio_dev->name = spi_get_device_id(spi)->name;'
+> > 
+> > After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+> > during probe with null de-ref.
+> > 
+> > This change fixes this by introducing an ad7192_chip_info struct, and
+> > defines all part-names [that should be assigned to indio_dev->name] in a
+> > 'ad7192_chip_info_tbl' table.
+> > 
+> > With this change, the old 'st->devid' is also moved to be a
+> > 'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
+> > 'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
+> > values in the new 'ad7192_chip_info_tbl'.
+> > 
+> > This should fix the bug, and maintain the ABI for the 'indio_dev->name'
+> > field.
+> > 
+> > Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> > 
+> > Changelog v2 -> v3:
+> > * reworked patch to introduce a chip_info struct for the part-name
+> > * added 2nd patch to move of-table closer to the end of the file; this
+> >   patch is more cosmetic; has no fixes tag, but is on top of the previous
+> > 
+> > Changelog v1 -> v2:
+> > * fix colon for Fixes tag
+> > * updated commit title a bit; to make it longer
+> > 
+> >  drivers/iio/adc/ad7192.c | 61 ++++++++++++++++++++++++++++++----------
+> >  1 file changed, 46 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+> > index 8ec28aa8fa8a..7e8662c5cb0e 100644
+> > --- a/drivers/iio/adc/ad7192.c
+> > +++ b/drivers/iio/adc/ad7192.c
+> > @@ -125,10 +125,10 @@
+> >  #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
+> >  
+> >  /* ID Register Bit Designations (AD7192_REG_ID) */
+> > -#define ID_AD7190		0x4
+> > -#define ID_AD7192		0x0
+> > -#define ID_AD7193		0x2
+> > -#define ID_AD7195		0x6
+> > +#define CHIPID_AD7190		0x4
+> > +#define CHIPID_AD7192		0x0
+> > +#define CHIPID_AD7193		0x2
+> > +#define CHIPID_AD7195		0x6
+> >  #define AD7192_ID_MASK		0x0F
+> >  
+> >  /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
+> > @@ -161,7 +161,20 @@ enum {
+> >     AD7192_SYSCALIB_FULL_SCALE,
+> >  };
+> >  
+> > +enum {
+> > +	ID_AD7190,
+> > +	ID_AD7192,
+> > +	ID_AD7193,
+> > +	ID_AD7195,
+> > +};
+> > +
+> > +struct ad7192_chip_info {
+> > +	unsigned int			chip_id;
+> > +	const char			*name;
+> > +};
+> > +
+> >  struct ad7192_state {
+> > +	const struct ad7192_chip_info	*chip_info;
+> >  	struct regulator		*avdd;
+> >  	struct regulator		*dvdd;
+> >  	struct clk			*mclk;
+> > @@ -172,7 +185,6 @@ struct ad7192_state {
+> >  	u32				conf;
+> >  	u32				scale_avail[8][2];
+> >  	u8				gpocon;
+> > -	u8				devid;
+> >  	u8				clock_sel;
+> >  	struct mutex			lock;	/* protect sensor state */
+> >  	u8				syscalib_mode[8];
+> > @@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+> >  
+> >  	id &= AD7192_ID_MASK;
+> >  
+> > -	if (id != st->devid)
+> > +	if (id != st->chip_info->chip_id)
+> >  		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
+> >  			 id);
+> >  
+> > @@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+> >  		st->mode |= AD7192_MODE_REJ60;
+> >  
+> >  	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
+> > -	if (refin2_en && st->devid != ID_AD7195)
+> > +	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
+> >  		st->conf |= AD7192_CONF_REFSEL;
+> >  
+> >  	st->conf &= ~AD7192_CONF_CHOP;
+> > @@ -859,11 +871,30 @@ static const struct iio_chan_spec ad7193_channels[] = {
+> >  	IIO_CHAN_SOFT_TIMESTAMP(14),
+> >  };
+> >  
+> > +static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
+> > +	[ID_AD7190] = {
+> > +		.chip_id = CHIPID_AD7190,
+> > +		.name = "ad7190",
+> > +	},
+> > +	[ID_AD7192] = {
+> > +		.chip_id = CHIPID_AD7192,
+> > +		.name = "ad7192",
+> > +	},
+> > +	[ID_AD7193] = {
+> > +		.chip_id = CHIPID_AD7193,
+> > +		.name = "ad7193",
+> > +	},
+> > +	[ID_AD7195] = {
+> > +		.chip_id = CHIPID_AD7195,
+> > +		.name = "ad7195",
+> > +	},
+> > +};
+> > +
+> >  static int ad7192_channels_config(struct iio_dev *indio_dev)
+> >  {
+> >  	struct ad7192_state *st = iio_priv(indio_dev);
+> >  
+> > -	switch (st->devid) {
+> > +	switch (st->chip_info->chip_id) {
+> >  	case ID_AD7193:  
 > 
-> Hardcode BPC to 6 for now since that's the only BPC
-> that driver supports.
+> Would it be better to change this to CHIPID_AD7193? It looks like it works
+> the way you have it, but only by coincidence since it happens to be true
+> that ID_AD7193 == CHIPID_AD7193.
+>
+dropped patch from my fixes branch whilst this is resolved!
+
+Thanks,
+
+Jonathan
+ 
+> Jeremy
 > 
-> Fixes: 6aa192698089 ("drm/bridge: Add Analogix anx6345 support")
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-
-Applied to drm-misc-fixes. Thanks!
-
-Best regards,
-Jernej
-
+> >  		indio_dev->channels = ad7193_channels;
+> >  		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
+> > @@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+> >  }
+> >  
+> >  static const struct of_device_id ad7192_of_match[] = {
+> > -	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
+> > -	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
+> > -	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
+> > -	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
+> > +	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
+> > +	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
+> > +	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
+> > +	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
+> >  	{}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, ad7192_of_match);
+> > @@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
+> >  	}
+> >  
+> >  	spi_set_drvdata(spi, indio_dev);
+> > -	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
+> > +	st->chip_info = of_device_get_match_data(&spi->dev);
+> >  	indio_dev->dev.parent = &spi->dev;
+> > -	indio_dev->name = spi_get_device_id(spi)->name;
+> > +	indio_dev->name = st->chip_info->name;
+> >  	indio_dev->modes = INDIO_DIRECT_MODE;
+> >  
+> >  	ret = ad7192_channels_config(indio_dev);
+> >  	if (ret < 0)
+> >  		goto error_disable_dvdd;
+> >  
+> > -	if (st->devid == ID_AD7195)
+> > +	if (st->chip_info->chip_id == CHIPID_AD7195)
+> >  		indio_dev->info = &ad7195_info;
+> >  	else
+> >  		indio_dev->info = &ad7192_info;
+> > -- 
+> > 2.17.1
+> >   
 
