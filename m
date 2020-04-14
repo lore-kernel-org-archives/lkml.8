@@ -2,114 +2,124 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F1BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4181BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27AF2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qx9SLKZn"
+	by mail.kernel.org (Postfix) with ESMTP id 27A7E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437795AbgDNJs2 (ORCPT
+        id S2437816AbgDNJsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:48:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20320 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2437780AbgDNJsW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:48:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586857701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RCUnMVTMhiXmQTIRtH4ig9vejIyMaafXsJBXVyt/T0o=;
-        b=Qx9SLKZnYhNTbLa8p/DYIAU0u2He3JEZV5OKgGMkD4j2ar8VvcMvI9spYac/1V3on30r2I
-        gbJce48bO5HPmbEmghmwYgdkOH95MFmGVN4ZtiTnORz2dRt/vYrruVIsTRvK9PJofjgjuB
-        2vmruUNOZBfI96c2As4BSe9rWipu3HM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-qE1gTkkzPsijc6xmZp2iOg-1; Tue, 14 Apr 2020 05:48:17 -0400
-X-MC-Unique: qE1gTkkzPsijc6xmZp2iOg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF2DE800D53;
-        Tue, 14 Apr 2020 09:48:13 +0000 (UTC)
-Received: from [10.72.13.119] (ovpn-13-119.pek2.redhat.com [10.72.13.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7602F1001920;
-        Tue, 14 Apr 2020 09:48:05 +0000 (UTC)
-Subject: Re: [PATCH] vhost: do not enable VHOST_MENU by default
-To:     Christian Borntraeger <borntraeger@de.ibm.com>, mst@redhat.com
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20200414024438.19103-1-jasowang@redhat.com>
- <375181ee-08ec-77a6-2dfc-f3c9c26705a1@de.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <802e6da9-4827-a9a4-b409-f08a5de4e750@redhat.com>
-Date:   Tue, 14 Apr 2020 17:48:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <375181ee-08ec-77a6-2dfc-f3c9c26705a1@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 05:48:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:51792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437801AbgDNJsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:48:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0063E31B;
+        Tue, 14 Apr 2020 02:48:51 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5D7103F6C4;
+        Tue, 14 Apr 2020 02:48:48 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 01/16] arm64/cpufeature: Add explicit ftr_id_isar0[] for ID_ISAR0 register
+Date:   Tue, 14 Apr 2020 15:18:15 +0530
+Message-Id: <1586857710-17154-2-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
+References: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ID_ISAR0[31..28] bits are RES0 in ARMv8, Reserved/UNK in ARMv7. Currently
+these bits get exposed through generic_id_ftr32[] which is not desirable.
+Hence define an explicit ftr_id_isar0[] array for ID_ISAR0 register where
+those bits can be hidden.
 
-On 2020/4/14 =E4=B8=8B=E5=8D=883:26, Christian Borntraeger wrote:
-> On 14.04.20 04:44, Jason Wang wrote:
->> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
->> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
->> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
->> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
->> without the caring of CONFIG_VHOST.
->>
->> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfigs and ev=
-en
->> for the ones that doesn't want vhost. So it actually shifts the
->> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
->> not set". So this patch tries to enable CONFIG_VHOST explicitly in
->> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
->>
->> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
->> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
->> Cc: Paul Mackerras<paulus@samba.org>
->> Cc: Michael Ellerman<mpe@ellerman.id.au>
->> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
->> Cc: Vasily Gorbik<gor@linux.ibm.com>
->> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
-> Fine with me.
-> s390 part
->
-> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>
->
->   That was my first approach to get things fixed before I reported
-> this to you.
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ arch/arm64/include/asm/sysreg.h |  8 ++++++++
+ arch/arm64/kernel/cpufeature.c  | 14 ++++++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-Exactly.
-
-Thanks
-
->
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index ebc622432831..f6341065b929 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -750,6 +750,14 @@
+ 
+ #define ID_DFR0_PERFMON_8_1		0x4
+ 
++#define ID_ISAR0_DIVIDE_SHIFT		24
++#define ID_ISAR0_DEBUG_SHIFT		20
++#define ID_ISAR0_COPROC_SHIFT		16
++#define ID_ISAR0_CMPBRANCH_SHIFT	12
++#define ID_ISAR0_BITFIELD_SHIFT		8
++#define ID_ISAR0_BITCOUNT_SHIFT		4
++#define ID_ISAR0_SWAP_SHIFT		0
++
+ #define ID_ISAR5_RDM_SHIFT		24
+ #define ID_ISAR5_CRC32_SHIFT		16
+ #define ID_ISAR5_SHA2_SHIFT		12
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9fac745aa7bb..7b0f8b59bf59 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -316,6 +316,16 @@ static const struct arm64_ftr_bits ftr_dczid[] = {
+ 	ARM64_FTR_END,
+ };
+ 
++static const struct arm64_ftr_bits ftr_id_isar0[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_DIVIDE_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_DEBUG_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_COPROC_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_CMPBRANCH_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_BITFIELD_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_BITCOUNT_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR0_SWAP_SHIFT, 4, 0),
++	ARM64_FTR_END,
++};
+ 
+ static const struct arm64_ftr_bits ftr_id_isar5[] = {
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_RDM_SHIFT, 4, 0),
+@@ -373,7 +383,7 @@ static const struct arm64_ftr_bits ftr_zcr[] = {
+  * Common ftr bits for a 32bit register with all hidden, strict
+  * attributes, with 4bit feature fields and a default safe value of
+  * 0. Covers the following 32bit registers:
+- * id_isar[0-4], id_mmfr[1-3], id_pfr1, mvfr[0-1]
++ * id_isar[1-4], id_mmfr[1-3], id_pfr1, mvfr[0-1]
+  */
+ static const struct arm64_ftr_bits ftr_generic_32bits[] = {
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
+@@ -419,7 +429,7 @@ static const struct __ftr_reg_entry {
+ 	ARM64_FTR_REG(SYS_ID_MMFR3_EL1, ftr_generic_32bits),
+ 
+ 	/* Op1 = 0, CRn = 0, CRm = 2 */
+-	ARM64_FTR_REG(SYS_ID_ISAR0_EL1, ftr_generic_32bits),
++	ARM64_FTR_REG(SYS_ID_ISAR0_EL1, ftr_id_isar0),
+ 	ARM64_FTR_REG(SYS_ID_ISAR1_EL1, ftr_generic_32bits),
+ 	ARM64_FTR_REG(SYS_ID_ISAR2_EL1, ftr_generic_32bits),
+ 	ARM64_FTR_REG(SYS_ID_ISAR3_EL1, ftr_generic_32bits),
+-- 
+2.20.1
 
