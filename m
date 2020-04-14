@@ -2,1279 +2,238 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF9BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B683FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F0B20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lTd1r+B3"
+	by mail.kernel.org (Postfix) with ESMTP id 9887C20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404532AbgDNDR6 (ORCPT
+        id S2404536AbgDNDSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404514AbgDNDRr (ORCPT
+        Mon, 13 Apr 2020 23:18:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404527AbgDNDR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:17:47 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97040C0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:17:47 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id w203so4642330pfc.21
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=jMfPZm0xoHQ7SZAkMd/arltwRSOeHvoFoMY5vmvogrs=;
-        b=lTd1r+B3CVbd/THb/hfXYzXmy+MP9sR+G7jZCHluVH6LPaV7MA/n1DJ3kgdhiqAOQj
-         SCYF9inWXGib4a/hpZkuIgzqmCJHWbuWWOYXQGNbmoOevA0e5Vlj/Qgm0pV2GaNNoBdq
-         b6Ifd8RY8JuRhBMNJCItufTHXvH+RlTv0h7EWZHYv0iqr5q85W+YtDn3UYQQHoGzXWo/
-         fE9YZCpSB+KYJx7OTHoaAwX869g1Olm+pcvOi+bKwkvqyN83MOLUbDGFPTqYv+TzAcX6
-         6V+29o9JPcJC/hCdNpGdfbGVwwGWuI1UQ2erQwmz1jns4XkFnFVdCWmHyV+u/rvK3DjI
-         xeUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=jMfPZm0xoHQ7SZAkMd/arltwRSOeHvoFoMY5vmvogrs=;
-        b=r6TPR3/zJF8riDlR0LBqoUOBoZrUsHV7dGG3HdW4KjRK8hewujM/BYuAexdbOe1E/X
-         WF6L4pVitlLEy0frapMdZ9JOEKqrB/R1DpQAJT8j0wdhCiZ5+51p43e45oqVk9pwD0bR
-         vdrJKDi5b6CXeUu6XB7Xre3uh+kUya4MODs8acxR6j3ris/+kwJ3/zIJKFGHzyyCoTqf
-         6qx5shGNwT2hO6HNdyNYPfc0bsye2QqOtKpNh6wlfvGOdm4SFwc5x6p79N/fpNgS6ay1
-         wvR7Ow15XaiBbpWUdmUJ6uScCsQbXBVQV7Wvv1nP+sM6diMi7wccsNRxbvi+z9kbM+mM
-         VDEQ==
-X-Gm-Message-State: AGi0Pua4fY4x/Qu0Qu4lx5UPVRn9DSy8eM3pTShVw0GLgq9yasmscg0w
-        iAucjASSBaRTvXGE1ikxmO0edsTiEZyzTA==
-X-Google-Smtp-Source: APiQypLaxpN9xDhSnzC8KsvAIjKVshrQ0iPgsjqkPmsgwOptE87ddIOpUiNqZAmvbs2Ly3c5a6Jn+H5hXnF1xQ==
-X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr12803521pjk.142.1586834267098;
- Mon, 13 Apr 2020 20:17:47 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 20:16:47 -0700
-In-Reply-To: <20200414031647.124664-1-davidgow@google.com>
-Message-Id: <20200414031647.124664-4-davidgow@google.com>
-Mime-Version: 1.0
-References: <20200414031647.124664-1-davidgow@google.com>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v5 3/4] KASAN: Port KASAN Tests to KUnit
-From:   David Gow <davidgow@google.com>
-To:     trishalfonso@google.com, brendanhiggins@google.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 Apr 2020 23:17:56 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E33Y2g101634
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:17:54 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30b96thrg4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:17:54 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 14 Apr 2020 04:17:19 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 04:17:15 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03E3Gful43319798
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 03:16:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CDE5752052;
+        Tue, 14 Apr 2020 03:17:46 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.60.157])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6559E5204E;
+        Tue, 14 Apr 2020 03:17:27 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
+        fweisbec@gmail.com, mingo@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com
+Subject: [PATCH v3 01/16] powerpc/watchpoint: Rename current DAWR macros
+Date:   Tue, 14 Apr 2020 08:46:44 +0530
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041403-4275-0000-0000-000003BF6A2B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041403-4276-0000-0000-000038D4DAD7
+Message-Id: <20200414031659.58875-2-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-13_11:2020-04-13,2020-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 mlxlogscore=883
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 impostorscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patricia Alfonso <trishalfonso@google.com>
+Future Power architecture is introducing second DAWR. Use real
+register names from ISA for current macros:
+  s/SPRN_DAWR/SPRN_DAWR0/
+  s/SPRN_DAWRX/SPRN_DAWRX0/
 
-Transfer all previous tests for KASAN to KUnit so they can be run
-more easily. Using kunit_tool, developers can run these tests with their
-other KUnit tests and see "pass" or "fail" with the appropriate KASAN
-report instead of needing to parse each KASAN report to test KASAN
-functionalities. All KASAN reports are still printed to dmesg.
-
-Stack tests do not work properly when KASAN_STACK is enabled so
-those tests use a check for "if IS_ENABLED(CONFIG_KASAN_STACK)" so they
-only run if stack instrumentation is enabled. If KASAN_STACK is not
-enabled, KUnit will print a statement to let the user know this test
-was not run with KASAN_STACK enabled.
-
-copy_user_test cannot be run in KUnit so there is a separate test file
-for those tests, which can be run as before as a module.
-
-Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: David Gow <davidgow@google.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- lib/Kconfig.kasan       |  18 +-
- lib/Makefile            |   3 +-
- lib/test_kasan.c        | 622 ++++++++++++++++------------------------
- lib/test_kasan_module.c |  76 +++++
- 4 files changed, 337 insertions(+), 382 deletions(-)
- create mode 100644 lib/test_kasan_module.c
+ arch/powerpc/include/asm/reg.h          |  4 ++--
+ arch/powerpc/kernel/dawr.c              |  4 ++--
+ arch/powerpc/kvm/book3s_hv.c            | 12 ++++++------
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S | 18 +++++++++---------
+ arch/powerpc/xmon/xmon.c                |  2 +-
+ 5 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 81f5464ea9e1..53063dee3f81 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -158,10 +158,18 @@ config KASAN_VMALLOC
- 	  for KASAN to detect more sorts of errors (and to support vmapped
- 	  stacks), but at the cost of higher memory usage.
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index da5cab038e25..156ee89fa9be 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -283,14 +283,14 @@
+ #define   CTRL_CT1	0x40000000	/* thread 1 */
+ #define   CTRL_TE	0x00c00000	/* thread enable */
+ #define   CTRL_RUNLATCH	0x1
+-#define SPRN_DAWR	0xB4
++#define SPRN_DAWR0	0xB4
+ #define SPRN_RPR	0xBA	/* Relative Priority Register */
+ #define SPRN_CIABR	0xBB
+ #define   CIABR_PRIV		0x3
+ #define   CIABR_PRIV_USER	1
+ #define   CIABR_PRIV_SUPER	2
+ #define   CIABR_PRIV_HYPER	3
+-#define SPRN_DAWRX	0xBC
++#define SPRN_DAWRX0	0xBC
+ #define   DAWRX_USER	__MASK(0)
+ #define   DAWRX_KERNEL	__MASK(1)
+ #define   DAWRX_HYP	__MASK(2)
+diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
+index cc14aa6c4a1b..e91b613bf137 100644
+--- a/arch/powerpc/kernel/dawr.c
++++ b/arch/powerpc/kernel/dawr.c
+@@ -39,8 +39,8 @@ int set_dawr(struct arch_hw_breakpoint *brk)
+ 	if (ppc_md.set_dawr)
+ 		return ppc_md.set_dawr(dawr, dawrx);
  
--config TEST_KASAN
--	tristate "Module for testing KASAN for bug detection"
--	depends on m && KASAN
-+config TEST_KASAN_KUNIT
-+	tristate "KUnit-compatible tests of KASAN bug detection capabilities"
-+	depends on KASAN && KUNIT
- 	help
--	  This is a test module doing various nasty things like
--	  out of bounds accesses, use after free. It is useful for testing
-+	  This is a KUnit test suite doing various nasty things like
-+	  out of bounds and use after free accesses. It is useful for testing
- 	  kernel debugging features like KASAN.
-+
-+config TEST_KASAN_MODULE
-+	tristate "KUnit-incompatible tests of KASAN bug detection capabilities"
-+	depends on m && KASAN
-+	help
-+	  This is a part of the KASAN test suite that is incompatible with
-+	  KUnit. Currently includes tests that do bad copy_from/to_user
-+	  accesses.
-diff --git a/lib/Makefile b/lib/Makefile
-index 611872c06926..60e125555271 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -59,9 +59,10 @@ obj-$(CONFIG_TEST_FIRMWARE) += test_firmware.o
- obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
- obj-$(CONFIG_TEST_HASH) += test_hash.o test_siphash.o
- obj-$(CONFIG_TEST_IDA) += test_ida.o
--obj-$(CONFIG_TEST_KASAN) += test_kasan.o
-+obj-$(CONFIG_TEST_KASAN_KUNIT) += test_kasan.o
- CFLAGS_test_kasan.o += -fno-builtin
- CFLAGS_test_kasan.o += $(call cc-disable-warning, vla)
-+obj-$(CONFIG_TEST_KASAN_MODULE) += test_kasan_module.o
- obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
- CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
- UBSAN_SANITIZE_test_ubsan.o := y
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index 7b4cb107b387..801ef7573da2 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -5,8 +5,6 @@
-  * Author: Andrey Ryabinin <a.ryabinin@samsung.com>
-  */
+-	mtspr(SPRN_DAWR, dawr);
+-	mtspr(SPRN_DAWRX, dawrx);
++	mtspr(SPRN_DAWR0, dawr);
++	mtspr(SPRN_DAWRX0, dawrx);
  
--#define pr_fmt(fmt) "kasan test: %s " fmt, __func__
--
- #include <linux/bitops.h>
- #include <linux/delay.h>
- #include <linux/kasan.h>
-@@ -65,380 +63,311 @@ static void kasan_test_exit(struct kunit *test)
- 			fail_data.report_found); \
- } while (0)
- 
-+static void kmalloc_oob_right(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 123;
- 
--	pr_info("out-of-bounds to right\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	ptr[size] = 'x';
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 'x');
- 	kfree(ptr);
+ 	return 0;
  }
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 33be4d93248a..498c57e1f5c9 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -3383,8 +3383,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	int trap;
+ 	unsigned long host_hfscr = mfspr(SPRN_HFSCR);
+ 	unsigned long host_ciabr = mfspr(SPRN_CIABR);
+-	unsigned long host_dawr = mfspr(SPRN_DAWR);
+-	unsigned long host_dawrx = mfspr(SPRN_DAWRX);
++	unsigned long host_dawr = mfspr(SPRN_DAWR0);
++	unsigned long host_dawrx = mfspr(SPRN_DAWRX0);
+ 	unsigned long host_psscr = mfspr(SPRN_PSSCR);
+ 	unsigned long host_pidr = mfspr(SPRN_PID);
  
--static noinline void __init kmalloc_oob_left(void)
-+static void kmalloc_oob_left(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 15;
+@@ -3413,8 +3413,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	mtspr(SPRN_SPURR, vcpu->arch.spurr);
  
--	pr_info("out-of-bounds to left\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	*ptr = *(ptr - 1);
-+	KUNIT_EXPECT_KASAN_FAIL(test, *ptr = *(ptr - 1));
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_node_oob_right(void)
-+static void kmalloc_node_oob_right(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 4096;
- 
--	pr_info("kmalloc_node(): out-of-bounds to right\n");
- 	ptr = kmalloc_node(size, GFP_KERNEL, 0);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	ptr[size] = 0;
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
- 	kfree(ptr);
- }
- 
--#ifdef CONFIG_SLUB
--static noinline void __init kmalloc_pagealloc_oob_right(void)
-+static void kmalloc_pagealloc_oob_right(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = KMALLOC_MAX_CACHE_SIZE + 10;
- 
-+	if (!IS_ENABLED(CONFIG_SLUB)) {
-+		kunit_info(test, "CONFIG_SLUB is not enabled.");
-+		return;
-+	}
-+
- 	/* Allocate a chunk that does not fit into a SLUB cache to trigger
- 	 * the page allocator fallback.
- 	 */
--	pr_info("kmalloc pagealloc allocation: out-of-bounds to right\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	ptr[size] = 0;
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_pagealloc_uaf(void)
-+static void kmalloc_pagealloc_uaf(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = KMALLOC_MAX_CACHE_SIZE + 10;
- 
--	pr_info("kmalloc pagealloc allocation: use-after-free\n");
--	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
-+	if (!IS_ENABLED(CONFIG_SLUB)) {
-+		kunit_info(test, "CONFIG_SLUB is not enabled.");
- 		return;
+ 	if (dawr_enabled()) {
+-		mtspr(SPRN_DAWR, vcpu->arch.dawr);
+-		mtspr(SPRN_DAWRX, vcpu->arch.dawrx);
++		mtspr(SPRN_DAWR0, vcpu->arch.dawr);
++		mtspr(SPRN_DAWRX0, vcpu->arch.dawrx);
  	}
- 
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-+
- 	kfree(ptr);
--	ptr[0] = 0;
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr[0] = 0);
- }
- 
--static noinline void __init kmalloc_pagealloc_invalid_free(void)
-+static void kmalloc_pagealloc_invalid_free(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = KMALLOC_MAX_CACHE_SIZE + 10;
- 
--	pr_info("kmalloc pagealloc allocation: invalid-free\n");
--	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
-+	if (!IS_ENABLED(CONFIG_SLUB)) {
-+		kunit_info(test, "CONFIG_SLUB is not enabled.");
- 		return;
- 	}
- 
--	kfree(ptr + 1);
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, kfree(ptr + 1));
- }
--#endif
- 
--static noinline void __init kmalloc_large_oob_right(void)
-+static void kmalloc_large_oob_right(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = KMALLOC_MAX_CACHE_SIZE - 256;
- 	/* Allocate a chunk that is large enough, but still fits into a slab
- 	 * and does not trigger the page allocator fallback in SLUB.
- 	 */
--	pr_info("kmalloc large allocation: out-of-bounds to right\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	ptr[size] = 0;
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_oob_krealloc_more(void)
-+static void kmalloc_oob_krealloc_more(struct kunit *test)
- {
- 	char *ptr1, *ptr2;
- 	size_t size1 = 17;
- 	size_t size2 = 19;
- 
--	pr_info("out-of-bounds after krealloc more\n");
- 	ptr1 = kmalloc(size1, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr1);
-+
- 	ptr2 = krealloc(ptr1, size2, GFP_KERNEL);
--	if (!ptr1 || !ptr2) {
--		pr_err("Allocation failed\n");
--		kfree(ptr1);
--		kfree(ptr2);
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
- 
--	ptr2[size2] = 'x';
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr2[size2] = 'x');
- 	kfree(ptr2);
- }
- 
--static noinline void __init kmalloc_oob_krealloc_less(void)
-+static void kmalloc_oob_krealloc_less(struct kunit *test)
- {
- 	char *ptr1, *ptr2;
- 	size_t size1 = 17;
- 	size_t size2 = 15;
- 
--	pr_info("out-of-bounds after krealloc less\n");
- 	ptr1 = kmalloc(size1, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr1);
-+
- 	ptr2 = krealloc(ptr1, size2, GFP_KERNEL);
--	if (!ptr1 || !ptr2) {
--		pr_err("Allocation failed\n");
--		kfree(ptr1);
--		return;
--	}
--	ptr2[size2] = 'x';
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr2[size2] = 'x');
- 	kfree(ptr2);
- }
- 
--static noinline void __init kmalloc_oob_16(void)
-+static void kmalloc_oob_16(struct kunit *test)
- {
- 	struct {
- 		u64 words[2];
- 	} *ptr1, *ptr2;
- 
--	pr_info("kmalloc out-of-bounds for 16-bytes access\n");
- 	ptr1 = kmalloc(sizeof(*ptr1) - 3, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr1);
-+
- 	ptr2 = kmalloc(sizeof(*ptr2), GFP_KERNEL);
--	if (!ptr1 || !ptr2) {
--		pr_err("Allocation failed\n");
--		kfree(ptr1);
--		kfree(ptr2);
--		return;
--	}
--	*ptr1 = *ptr2;
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, *ptr1 = *ptr2);
- 	kfree(ptr1);
- 	kfree(ptr2);
- }
- 
--static noinline void __init kmalloc_oob_memset_2(void)
-+static void kmalloc_oob_memset_2(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 8;
- 
--	pr_info("out-of-bounds in memset2\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	memset(ptr+7, 0, 2);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memset(ptr+7, 0, 2));
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_oob_memset_4(void)
-+static void kmalloc_oob_memset_4(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 8;
- 
--	pr_info("out-of-bounds in memset4\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	memset(ptr+5, 0, 4);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memset(ptr+5, 0, 4));
- 	kfree(ptr);
- }
- 
- 
--static noinline void __init kmalloc_oob_memset_8(void)
-+static void kmalloc_oob_memset_8(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 8;
- 
--	pr_info("out-of-bounds in memset8\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	memset(ptr+1, 0, 8);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memset(ptr+1, 0, 8));
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_oob_memset_16(void)
-+static void kmalloc_oob_memset_16(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 16;
- 
--	pr_info("out-of-bounds in memset16\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	memset(ptr+1, 0, 16);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memset(ptr+1, 0, 16));
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_oob_in_memset(void)
-+static void kmalloc_oob_in_memset(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 666;
- 
--	pr_info("out-of-bounds in memset\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
--	memset(ptr, 0, size+5);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memset(ptr, 0, size+5));
- 	kfree(ptr);
- }
- 
--static noinline void __init kmalloc_uaf(void)
-+static void kmalloc_uaf(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 10;
- 
--	pr_info("use-after-free\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	kfree(ptr);
--	*(ptr + 8) = 'x';
-+	KUNIT_EXPECT_KASAN_FAIL(test, *(ptr + 8) = 'x');
- }
- 
--static noinline void __init kmalloc_uaf_memset(void)
-+static void kmalloc_uaf_memset(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 33;
- 
--	pr_info("use-after-free in memset\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	kfree(ptr);
--	memset(ptr, 0, size);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memset(ptr, 0, size));
- }
- 
--static noinline void __init kmalloc_uaf2(void)
-+static void kmalloc_uaf2(struct kunit *test)
- {
- 	char *ptr1, *ptr2;
- 	size_t size = 43;
- 
--	pr_info("use-after-free after another kmalloc\n");
- 	ptr1 = kmalloc(size, GFP_KERNEL);
--	if (!ptr1) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr1);
- 
- 	kfree(ptr1);
-+
- 	ptr2 = kmalloc(size, GFP_KERNEL);
--	if (!ptr2) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr1[40] = 'x');
-+	KUNIT_EXPECT_PTR_NE(test, ptr1, ptr2);
- 
--	ptr1[40] = 'x';
--	if (ptr1 == ptr2)
--		pr_err("Could not detect use-after-free: ptr1 == ptr2\n");
- 	kfree(ptr2);
- }
- 
--static noinline void __init kfree_via_page(void)
-+static void kfree_via_page(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 8;
- 	struct page *page;
- 	unsigned long offset;
- 
--	pr_info("invalid-free false positive (via page)\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	page = virt_to_page(ptr);
- 	offset = offset_in_page(ptr);
- 	kfree(page_address(page) + offset);
- }
- 
--static noinline void __init kfree_via_phys(void)
-+static void kfree_via_phys(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 8;
- 	phys_addr_t phys;
- 
--	pr_info("invalid-free false positive (via phys)\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	phys = virt_to_phys(ptr);
- 	kfree(phys_to_virt(phys));
- }
- 
--static noinline void __init kmem_cache_oob(void)
-+static void kmem_cache_oob(struct kunit *test)
- {
- 	char *p;
- 	size_t size = 200;
- 	struct kmem_cache *cache = kmem_cache_create("test_cache",
- 						size, 0,
- 						0, NULL);
--	if (!cache) {
--		pr_err("Cache allocation failed\n");
--		return;
--	}
--	pr_info("out-of-bounds in kmem_cache_alloc\n");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, cache);
- 	p = kmem_cache_alloc(cache, GFP_KERNEL);
- 	if (!p) {
--		pr_err("Allocation failed\n");
-+		kunit_err(test, "Allocation failed: %s\n", __func__);
- 		kmem_cache_destroy(cache);
- 		return;
- 	}
- 
--	*p = p[size];
-+	KUNIT_EXPECT_KASAN_FAIL(test, *p = p[size]);
- 	kmem_cache_free(cache, p);
- 	kmem_cache_destroy(cache);
- }
- 
--static noinline void __init memcg_accounted_kmem_cache(void)
-+static void memcg_accounted_kmem_cache(struct kunit *test)
- {
- 	int i;
- 	char *p;
-@@ -446,12 +375,8 @@ static noinline void __init memcg_accounted_kmem_cache(void)
- 	struct kmem_cache *cache;
- 
- 	cache = kmem_cache_create("test_cache", size, 0, SLAB_ACCOUNT, NULL);
--	if (!cache) {
--		pr_err("Cache allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, cache);
- 
--	pr_info("allocate memcg accounted object\n");
- 	/*
- 	 * Several allocations with a delay to allow for lazy per memcg kmem
- 	 * cache creation.
-@@ -471,134 +396,93 @@ static noinline void __init memcg_accounted_kmem_cache(void)
- 
- static char global_array[10];
- 
--static noinline void __init kasan_global_oob(void)
-+static void kasan_global_oob(struct kunit *test)
- {
- 	volatile int i = 3;
- 	char *p = &global_array[ARRAY_SIZE(global_array) + i];
- 
--	pr_info("out-of-bounds global variable\n");
--	*(volatile char *)p;
-+	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
- }
- 
--static noinline void __init kasan_stack_oob(void)
--{
--	char stack_array[10];
--	volatile int i = 0;
--	char *p = &stack_array[ARRAY_SIZE(stack_array) + i];
--
--	pr_info("out-of-bounds on stack\n");
--	*(volatile char *)p;
--}
--
--static noinline void __init ksize_unpoisons_memory(void)
-+static void ksize_unpoisons_memory(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 123, real_size;
- 
--	pr_info("ksize() unpoisons the whole allocated chunk\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 	real_size = ksize(ptr);
- 	/* This access doesn't trigger an error. */
- 	ptr[size] = 'x';
- 	/* This one does. */
--	ptr[real_size] = 'y';
-+	KUNIT_EXPECT_KASAN_FAIL(test, ptr[real_size] = 'y');
- 	kfree(ptr);
- }
- 
--static noinline void __init copy_user_test(void)
-+static void kasan_stack_oob(struct kunit *test)
- {
--	char *kmem;
--	char __user *usermem;
--	size_t size = 10;
--	int unused;
--
--	kmem = kmalloc(size, GFP_KERNEL);
--	if (!kmem)
--		return;
-+	char stack_array[10];
-+	volatile int i = 0;
-+	char *p = &stack_array[ARRAY_SIZE(stack_array) + i];
- 
--	usermem = (char __user *)vm_mmap(NULL, 0, PAGE_SIZE,
--			    PROT_READ | PROT_WRITE | PROT_EXEC,
--			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
--	if (IS_ERR(usermem)) {
--		pr_err("Failed to allocate user memory\n");
--		kfree(kmem);
-+	if (!IS_ENABLED(CONFIG_KASAN_STACK)) {
-+		kunit_info(test, "CONFIG_KASAN_STACK is not enabled");
- 		return;
- 	}
- 
--	pr_info("out-of-bounds in copy_from_user()\n");
--	unused = copy_from_user(kmem, usermem, size + 1);
--
--	pr_info("out-of-bounds in copy_to_user()\n");
--	unused = copy_to_user(usermem, kmem, size + 1);
--
--	pr_info("out-of-bounds in __copy_from_user()\n");
--	unused = __copy_from_user(kmem, usermem, size + 1);
--
--	pr_info("out-of-bounds in __copy_to_user()\n");
--	unused = __copy_to_user(usermem, kmem, size + 1);
--
--	pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
--	unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
--
--	pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
--	unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
--
--	pr_info("out-of-bounds in strncpy_from_user()\n");
--	unused = strncpy_from_user(kmem, usermem, size + 1);
--
--	vm_munmap((unsigned long)usermem, PAGE_SIZE);
--	kfree(kmem);
-+	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
- }
- 
--static noinline void __init kasan_alloca_oob_left(void)
-+static void kasan_alloca_oob_left(struct kunit *test)
- {
- 	volatile int i = 10;
- 	char alloca_array[i];
- 	char *p = alloca_array - 1;
- 
--	pr_info("out-of-bounds to left on alloca\n");
--	*(volatile char *)p;
-+	if (!IS_ENABLED(CONFIG_KASAN_STACK)) {
-+		kunit_info(test, "CONFIG_KASAN_STACK is not enabled");
-+		return;
-+	}
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
- }
- 
--static noinline void __init kasan_alloca_oob_right(void)
-+static void kasan_alloca_oob_right(struct kunit *test)
- {
- 	volatile int i = 10;
- 	char alloca_array[i];
- 	char *p = alloca_array + i;
- 
--	pr_info("out-of-bounds to right on alloca\n");
--	*(volatile char *)p;
-+	if (!IS_ENABLED(CONFIG_KASAN_STACK)) {
-+		kunit_info(test, "CONFIG_KASAN_STACK is not enabled");
-+		return;
-+	}
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
- }
- 
--static noinline void __init kmem_cache_double_free(void)
-+static void kmem_cache_double_free(struct kunit *test)
- {
- 	char *p;
- 	size_t size = 200;
- 	struct kmem_cache *cache;
- 
- 	cache = kmem_cache_create("test_cache", size, 0, 0, NULL);
--	if (!cache) {
--		pr_err("Cache allocation failed\n");
--		return;
--	}
--	pr_info("double-free on heap object\n");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, cache);
-+
- 	p = kmem_cache_alloc(cache, GFP_KERNEL);
- 	if (!p) {
--		pr_err("Allocation failed\n");
-+		kunit_err(test, "Allocation failed: %s\n", __func__);
- 		kmem_cache_destroy(cache);
- 		return;
- 	}
- 
- 	kmem_cache_free(cache, p);
--	kmem_cache_free(cache, p);
-+	KUNIT_EXPECT_KASAN_FAIL(test, kmem_cache_free(cache, p));
- 	kmem_cache_destroy(cache);
- }
- 
--static noinline void __init kmem_cache_invalid_free(void)
-+static void kmem_cache_invalid_free(struct kunit *test)
- {
- 	char *p;
- 	size_t size = 200;
-@@ -606,20 +490,17 @@ static noinline void __init kmem_cache_invalid_free(void)
- 
- 	cache = kmem_cache_create("test_cache", size, 0, SLAB_TYPESAFE_BY_RCU,
- 				  NULL);
--	if (!cache) {
--		pr_err("Cache allocation failed\n");
--		return;
--	}
--	pr_info("invalid-free of heap object\n");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, cache);
-+
- 	p = kmem_cache_alloc(cache, GFP_KERNEL);
- 	if (!p) {
--		pr_err("Allocation failed\n");
-+		kunit_err(test, "Allocation failed: %s\n", __func__);
- 		kmem_cache_destroy(cache);
- 		return;
- 	}
- 
- 	/* Trigger invalid free, the object doesn't get freed */
--	kmem_cache_free(cache, p + 1);
-+	KUNIT_EXPECT_KASAN_FAIL(test, kmem_cache_free(cache, p + 1));
+ 	mtspr(SPRN_CIABR, vcpu->arch.ciabr);
+ 	mtspr(SPRN_IC, vcpu->arch.ic);
+@@ -3466,8 +3466,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	      (local_paca->kvm_hstate.fake_suspend << PSSCR_FAKE_SUSPEND_LG));
+ 	mtspr(SPRN_HFSCR, host_hfscr);
+ 	mtspr(SPRN_CIABR, host_ciabr);
+-	mtspr(SPRN_DAWR, host_dawr);
+-	mtspr(SPRN_DAWRX, host_dawrx);
++	mtspr(SPRN_DAWR0, host_dawr);
++	mtspr(SPRN_DAWRX0, host_dawrx);
+ 	mtspr(SPRN_PID, host_pidr);
  
  	/*
- 	 * Properly free the object to prevent the "Objects remaining in
-@@ -630,45 +511,60 @@ static noinline void __init kmem_cache_invalid_free(void)
- 	kmem_cache_destroy(cache);
- }
+diff --git a/arch/powerpc/kvm/book3s_hv_rmhandlers.S b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+index 780a499c7114..70de3325d0e9 100644
+--- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
++++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+@@ -707,8 +707,8 @@ BEGIN_FTR_SECTION
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
+ BEGIN_FTR_SECTION
+ 	mfspr	r5, SPRN_CIABR
+-	mfspr	r6, SPRN_DAWR
+-	mfspr	r7, SPRN_DAWRX
++	mfspr	r6, SPRN_DAWR0
++	mfspr	r7, SPRN_DAWRX0
+ 	mfspr	r8, SPRN_IAMR
+ 	std	r5, STACK_SLOT_CIABR(r1)
+ 	std	r6, STACK_SLOT_DAWR(r1)
+@@ -803,8 +803,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
+ 	beq	1f
+ 	ld	r5, VCPU_DAWR(r4)
+ 	ld	r6, VCPU_DAWRX(r4)
+-	mtspr	SPRN_DAWR, r5
+-	mtspr	SPRN_DAWRX, r6
++	mtspr	SPRN_DAWR0, r5
++	mtspr	SPRN_DAWRX0, r6
+ 1:
+ 	ld	r7, VCPU_CIABR(r4)
+ 	ld	r8, VCPU_TAR(r4)
+@@ -1766,8 +1766,8 @@ BEGIN_FTR_SECTION
+ 	 * If the DAWR doesn't work, it's ok to write these here as
+ 	 * this value should always be zero
+ 	*/
+-	mtspr	SPRN_DAWR, r6
+-	mtspr	SPRN_DAWRX, r7
++	mtspr	SPRN_DAWR0, r6
++	mtspr	SPRN_DAWRX0, r7
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
+ BEGIN_FTR_SECTION
+ 	ld	r5, STACK_SLOT_TID(r1)
+@@ -2577,8 +2577,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
+ 	mfmsr	r6
+ 	andi.	r6, r6, MSR_DR		/* in real mode? */
+ 	bne	4f
+-	mtspr	SPRN_DAWR, r4
+-	mtspr	SPRN_DAWRX, r5
++	mtspr	SPRN_DAWR0, r4
++	mtspr	SPRN_DAWRX0, r5
+ 4:	li	r3, 0
+ 	blr
  
--static noinline void __init kasan_memchr(void)
-+static void kasan_memchr(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 24;
+@@ -3329,7 +3329,7 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
+ 	mtspr	SPRN_AMR, r0
+ 	mtspr	SPRN_IAMR, r0
+ 	mtspr	SPRN_CIABR, r0
+-	mtspr	SPRN_DAWRX, r0
++	mtspr	SPRN_DAWRX0, r0
  
--	pr_info("out-of-bounds in memchr\n");
--	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
--	if (!ptr)
-+	// See https://bugzilla.kernel.org/show_bug.cgi?id=206337
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
-+		kunit_info(test,
-+			"str* functions are not instrumented with CONFIG_AMD_MEM_ENCRYPT");
- 		return;
-+	}
- 
--	memchr(ptr, '1', size + 1);
-+	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-+
-+	KUNIT_EXPECT_KASAN_FAIL(test, memchr(ptr, '1', size + 1));
- 	kfree(ptr);
- }
- 
--static noinline void __init kasan_memcmp(void)
-+static void kasan_memcmp(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 24;
- 	int arr[9];
- 
--	pr_info("out-of-bounds in memcmp\n");
--	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
--	if (!ptr)
-+	// See https://bugzilla.kernel.org/show_bug.cgi?id=206337
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
-+		kunit_info(test,
-+			"str* functions are not instrumented with CONFIG_AMD_MEM_ENCRYPT");
- 		return;
-+	}
-+
-+	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	memset(arr, 0, sizeof(arr));
--	memcmp(ptr, arr, size+1);
-+	KUNIT_EXPECT_KASAN_FAIL(test, memcmp(ptr, arr, size+1));
- 	kfree(ptr);
- }
- 
--static noinline void __init kasan_strings(void)
-+static void kasan_strings(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 24;
- 
--	pr_info("use-after-free in strchr\n");
--	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
--	if (!ptr)
-+	// See https://bugzilla.kernel.org/show_bug.cgi?id=206337
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
-+		kunit_info(test,
-+			"str* functions are not instrumented with CONFIG_AMD_MEM_ENCRYPT");
- 		return;
-+	}
-+
-+	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	kfree(ptr);
- 
-@@ -679,188 +575,162 @@ static noinline void __init kasan_strings(void)
- 	 * will likely point to zeroed byte.
- 	 */
- 	ptr += 16;
--	strchr(ptr, '1');
-+	KUNIT_EXPECT_KASAN_FAIL(test, strchr(ptr, '1'));
- 
--	pr_info("use-after-free in strrchr\n");
--	strrchr(ptr, '1');
-+	KUNIT_EXPECT_KASAN_FAIL(test, strrchr(ptr, '1'));
- 
--	pr_info("use-after-free in strcmp\n");
--	strcmp(ptr, "2");
-+	KUNIT_EXPECT_KASAN_FAIL(test, strcmp(ptr, "2"));
- 
--	pr_info("use-after-free in strncmp\n");
--	strncmp(ptr, "2", 1);
-+	KUNIT_EXPECT_KASAN_FAIL(test, strncmp(ptr, "2", 1));
- 
--	pr_info("use-after-free in strlen\n");
--	strlen(ptr);
-+	KUNIT_EXPECT_KASAN_FAIL(test, strlen(ptr));
- 
--	pr_info("use-after-free in strnlen\n");
--	strnlen(ptr, 1);
-+	KUNIT_EXPECT_KASAN_FAIL(test, strnlen(ptr, 1));
- }
- 
--static noinline void __init kasan_bitops(void)
-+static void kasan_bitops(struct kunit *test)
- {
- 	/*
- 	 * Allocate 1 more byte, which causes kzalloc to round up to 16-bytes;
- 	 * this way we do not actually corrupt other memory.
- 	 */
- 	long *bits = kzalloc(sizeof(*bits) + 1, GFP_KERNEL);
--	if (!bits)
--		return;
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, bits);
- 
- 	/*
- 	 * Below calls try to access bit within allocated memory; however, the
- 	 * below accesses are still out-of-bounds, since bitops are defined to
- 	 * operate on the whole long the bit is in.
- 	 */
--	pr_info("out-of-bounds in set_bit\n");
--	set_bit(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, set_bit(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in __set_bit\n");
--	__set_bit(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, __set_bit(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in clear_bit\n");
--	clear_bit(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, clear_bit(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in __clear_bit\n");
--	__clear_bit(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, __clear_bit(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in clear_bit_unlock\n");
--	clear_bit_unlock(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, clear_bit_unlock(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in __clear_bit_unlock\n");
--	__clear_bit_unlock(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, __clear_bit_unlock(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in change_bit\n");
--	change_bit(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, change_bit(BITS_PER_LONG, bits));
- 
--	pr_info("out-of-bounds in __change_bit\n");
--	__change_bit(BITS_PER_LONG, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test, __change_bit(BITS_PER_LONG, bits));
- 
- 	/*
- 	 * Below calls try to access bit beyond allocated memory.
- 	 */
--	pr_info("out-of-bounds in test_and_set_bit\n");
--	test_and_set_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		test_and_set_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in __test_and_set_bit\n");
--	__test_and_set_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		__test_and_set_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in test_and_set_bit_lock\n");
--	test_and_set_bit_lock(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		test_and_set_bit_lock(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in test_and_clear_bit\n");
--	test_and_clear_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		test_and_clear_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in __test_and_clear_bit\n");
--	__test_and_clear_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		__test_and_clear_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in test_and_change_bit\n");
--	test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in __test_and_change_bit\n");
--	__test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		__test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
--	pr_info("out-of-bounds in test_bit\n");
--	(void)test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		(void)test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits));
- 
- #if defined(clear_bit_unlock_is_negative_byte)
--	pr_info("out-of-bounds in clear_bit_unlock_is_negative_byte\n");
--	clear_bit_unlock_is_negative_byte(BITS_PER_LONG + BITS_PER_BYTE, bits);
-+	KUNIT_EXPECT_KASAN_FAIL(test,
-+		clear_bit_unlock_is_negative_byte(BITS_PER_LONG + BITS_PER_BYTE,
-+						bits));
+ BEGIN_MMU_FTR_SECTION
+ 	b	4f
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index 7af840c0fc93..d4dba8ea8995 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -1939,7 +1939,7 @@ static void dump_207_sprs(void)
+ 	printf("hfscr  = %.16lx  dhdes = %.16lx rpr    = %.16lx\n",
+ 		mfspr(SPRN_HFSCR), mfspr(SPRN_DHDES), mfspr(SPRN_RPR));
+ 	printf("dawr   = %.16lx  dawrx = %.16lx ciabr  = %.16lx\n",
+-		mfspr(SPRN_DAWR), mfspr(SPRN_DAWRX), mfspr(SPRN_CIABR));
++		mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0), mfspr(SPRN_CIABR));
  #endif
- 	kfree(bits);
  }
  
--static noinline void __init kmalloc_double_kzfree(void)
-+static void kmalloc_double_kzfree(struct kunit *test)
- {
- 	char *ptr;
- 	size_t size = 16;
- 
--	pr_info("double-free (kzfree)\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
--	if (!ptr) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
- 	kzfree(ptr);
--	kzfree(ptr);
-+	KUNIT_EXPECT_KASAN_FAIL(test, kzfree(ptr));
- }
- 
--#ifdef CONFIG_KASAN_VMALLOC
--static noinline void __init vmalloc_oob(void)
-+static void vmalloc_oob(struct kunit *test)
- {
- 	void *area;
- 
--	pr_info("vmalloc out-of-bounds\n");
-+	if (!IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
-+		kunit_info(test, "CONFIG_KASAN_VMALLOC is not enabled.");
-+		return;
-+	}
- 
- 	/*
- 	 * We have to be careful not to hit the guard page.
- 	 * The MMU will catch that and crash us.
- 	 */
- 	area = vmalloc(3000);
--	if (!area) {
--		pr_err("Allocation failed\n");
--		return;
--	}
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, area);
- 
--	((volatile char *)area)[3100];
-+	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)area)[3100]);
- 	vfree(area);
- }
--#else
--static void __init vmalloc_oob(void) {}
--#endif
- 
--static int __init kmalloc_tests_init(void)
--{
--	/*
--	 * Temporarily enable multi-shot mode. Otherwise, we'd only get a
--	 * report for the first case.
--	 */
--	bool multishot = kasan_save_enable_multi_shot();
--
--	kmalloc_oob_right();
--	kmalloc_oob_left();
--	kmalloc_node_oob_right();
--#ifdef CONFIG_SLUB
--	kmalloc_pagealloc_oob_right();
--	kmalloc_pagealloc_uaf();
--	kmalloc_pagealloc_invalid_free();
--#endif
--	kmalloc_large_oob_right();
--	kmalloc_oob_krealloc_more();
--	kmalloc_oob_krealloc_less();
--	kmalloc_oob_16();
--	kmalloc_oob_in_memset();
--	kmalloc_oob_memset_2();
--	kmalloc_oob_memset_4();
--	kmalloc_oob_memset_8();
--	kmalloc_oob_memset_16();
--	kmalloc_uaf();
--	kmalloc_uaf_memset();
--	kmalloc_uaf2();
--	kfree_via_page();
--	kfree_via_phys();
--	kmem_cache_oob();
--	memcg_accounted_kmem_cache();
--	kasan_stack_oob();
--	kasan_global_oob();
--	kasan_alloca_oob_left();
--	kasan_alloca_oob_right();
--	ksize_unpoisons_memory();
--	copy_user_test();
--	kmem_cache_double_free();
--	kmem_cache_invalid_free();
--	kasan_memchr();
--	kasan_memcmp();
--	kasan_strings();
--	kasan_bitops();
--	kmalloc_double_kzfree();
--	vmalloc_oob();
--
--	kasan_restore_multi_shot(multishot);
--
--	return -EAGAIN;
--}
-+static struct kunit_case kasan_kunit_test_cases[] = {
-+	KUNIT_CASE(kmalloc_oob_right),
-+	KUNIT_CASE(kmalloc_oob_left),
-+	KUNIT_CASE(kmalloc_node_oob_right),
-+	KUNIT_CASE(kmalloc_pagealloc_oob_right),
-+	KUNIT_CASE(kmalloc_pagealloc_uaf),
-+	KUNIT_CASE(kmalloc_pagealloc_invalid_free),
-+	KUNIT_CASE(kmalloc_large_oob_right),
-+	KUNIT_CASE(kmalloc_oob_krealloc_more),
-+	KUNIT_CASE(kmalloc_oob_krealloc_less),
-+	KUNIT_CASE(kmalloc_oob_16),
-+	KUNIT_CASE(kmalloc_oob_in_memset),
-+	KUNIT_CASE(kmalloc_oob_memset_2),
-+	KUNIT_CASE(kmalloc_oob_memset_4),
-+	KUNIT_CASE(kmalloc_oob_memset_8),
-+	KUNIT_CASE(kmalloc_oob_memset_16),
-+	KUNIT_CASE(kmalloc_uaf),
-+	KUNIT_CASE(kmalloc_uaf_memset),
-+	KUNIT_CASE(kmalloc_uaf2),
-+	KUNIT_CASE(kfree_via_page),
-+	KUNIT_CASE(kfree_via_phys),
-+	KUNIT_CASE(kmem_cache_oob),
-+	KUNIT_CASE(memcg_accounted_kmem_cache),
-+	KUNIT_CASE(kasan_global_oob),
-+	KUNIT_CASE(kasan_stack_oob),
-+	KUNIT_CASE(kasan_alloca_oob_left),
-+	KUNIT_CASE(kasan_alloca_oob_right),
-+	KUNIT_CASE(ksize_unpoisons_memory),
-+	KUNIT_CASE(kmem_cache_double_free),
-+	KUNIT_CASE(kmem_cache_invalid_free),
-+	KUNIT_CASE(kasan_memchr),
-+	KUNIT_CASE(kasan_memcmp),
-+	KUNIT_CASE(kasan_strings),
-+	KUNIT_CASE(kasan_bitops),
-+	KUNIT_CASE(kmalloc_double_kzfree),
-+	KUNIT_CASE(vmalloc_oob),
-+	{}
-+};
-+
-+static struct kunit_suite kasan_kunit_test_suite = {
-+	.name = "kasan_kunit_test",
-+	.init = kasan_test_init,
-+	.test_cases = kasan_kunit_test_cases,
-+	.exit = kasan_test_exit,
-+};
-+
-+kunit_test_suite(kasan_kunit_test_suite);
- 
--module_init(kmalloc_tests_init);
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_kasan_module.c b/lib/test_kasan_module.c
-new file mode 100644
-index 000000000000..87d7e4d8fc31
---- /dev/null
-+++ b/lib/test_kasan_module.c
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *
-+ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-+ * Author: Andrey Ryabinin <a.ryabinin@samsung.com>
-+ */
-+
-+#define pr_fmt(fmt) "kasan test: %s " fmt, __func__
-+
-+#include <linux/mman.h>
-+#include <linux/module.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+
-+static noinline void __init copy_user_test(void)
-+{
-+	char *kmem;
-+	char __user *usermem;
-+	size_t size = 10;
-+	int unused;
-+
-+	kmem = kmalloc(size, GFP_KERNEL);
-+	if (!kmem)
-+		return;
-+
-+	usermem = (char __user *)vm_mmap(NULL, 0, PAGE_SIZE,
-+			    PROT_READ | PROT_WRITE | PROT_EXEC,
-+			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
-+	if (IS_ERR(usermem)) {
-+		pr_err("Failed to allocate user memory\n");
-+		kfree(kmem);
-+		return;
-+	}
-+
-+	pr_info("out-of-bounds in copy_from_user()\n");
-+	unused = copy_from_user(kmem, usermem, size + 1);
-+
-+	pr_info("out-of-bounds in copy_to_user()\n");
-+	unused = copy_to_user(usermem, kmem, size + 1);
-+
-+	pr_info("out-of-bounds in __copy_from_user()\n");
-+	unused = __copy_from_user(kmem, usermem, size + 1);
-+
-+	pr_info("out-of-bounds in __copy_to_user()\n");
-+	unused = __copy_to_user(usermem, kmem, size + 1);
-+
-+	pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
-+	unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
-+
-+	pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
-+	unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-+
-+	pr_info("out-of-bounds in strncpy_from_user()\n");
-+	unused = strncpy_from_user(kmem, usermem, size + 1);
-+
-+	vm_munmap((unsigned long)usermem, PAGE_SIZE);
-+	kfree(kmem);
-+}
-+
-+static int __init test_kasan_module_init(void)
-+{
-+	/*
-+	 * Temporarily enable multi-shot mode. Otherwise, we'd only get a
-+	 * report for the first case.
-+	 */
-+	bool multishot = kasan_save_enable_multi_shot();
-+
-+	copy_user_test();
-+
-+	kasan_restore_multi_shot(multishot);
-+	return -EAGAIN;
-+}
-+
-+module_init(test_kasan_module_init);
-+MODULE_LICENSE("GPL");
 -- 
-2.26.0.110.g2183baf09c-goog
+2.21.1
 
