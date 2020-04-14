@@ -2,115 +2,207 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF81C38A29
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F6EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59CE420644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E4320644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586871808;
+	bh=qqW5/rj/ym4JObD+j1XKqjcdZOSGKbOSEq4bicdKYyI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SkmjgTCTEqeADSBYdlGOn1xfGl0WoiVD84PGap/TW3Y+qoFdUdq3yJmK3qu56auqi
+	 iYJtsIc4IMxA7YDBDzF6l4Oi8GxCfVD3Z77lq5b8GEReddqkBWZXs9Q2gbHFCkIZER
+	 crmaGnxUlEoe/ZYk2sH+7bgwaCNsonAxp4DpxSi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732724AbgDNNmG (ORCPT
+        id S2387940AbgDNNnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:42:06 -0400
-Received: from mail.v3.sk ([167.172.186.51]:54832 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728028AbgDNNmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:42:02 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 27FADE03A9;
-        Tue, 14 Apr 2020 13:42:25 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Kf1VxHPKjDDi; Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C5C6BE043F;
-        Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nLR6T56V68z8; Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
-Received: from localhost (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 54494E03A9;
-        Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 15:41:55 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     kvalo@codeaurora.org, davem@davemloft.net,
-        colin.king@canonical.com, dan.carpenter@oracle.com,
-        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] libertas: make lbs_init_mesh() void
-Message-ID: <20200414134155.GA166011@furthur.local>
-References: <20200410090942.27239-1-yanaijie@huawei.com>
+        Tue, 14 Apr 2020 09:43:24 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38104 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbgDNNnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:43:14 -0400
+Received: by mail-oi1-f193.google.com with SMTP id x21so4199764oic.5;
+        Tue, 14 Apr 2020 06:43:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R8OJr7MdmFUiaJqkSUSMNUd1rbCvGu/Jw8zTWMZO2co=;
+        b=f9cvEB7q5OX0kjTwNhvMRT8hk6AK6v/Qak4TP4v4iTAkoKPEeu6ULWuwd+lqZLk2xx
+         LxhxBA2Iy3L+CgNC3FU03Nw0cqeKhImDkVeK8RBp8ApIL+ASw30AYOZuyNym+BA2G0DD
+         KYCqUD4+7HmsUE2Du6zKDlkvP85tFmsMXAri5ZTBrnq8oV3A5+kemmDS56dqINs8iAnz
+         HE64FgOtYAahLZx/XW/SzQkPcMRyEWjW+M4wgcrGoKzeDmi0segBj2hZPhS80Bp5s9xs
+         QgQxFC4RTEa26whHcD2nHUpbW8XWowybfB1tZum9brcyJljC4wJMZaZD4USgVob0M/XV
+         3eMw==
+X-Gm-Message-State: AGi0PuZipJHaUSzSJxrrfvj8OC7s/57h3ZV7/kKtQCLI9Wxr7WjS/zaI
+        PKmjnt8CZ+7ih7skDCTBV3eWaiqOsBZrbgD1fiE=
+X-Google-Smtp-Source: APiQypJt/47quOZ6p2heqG3XjpDgc/jI3rGel706Hqe2lcfGhDVJx//FIXc88SmEIJ2HOzueXC/KMVkE23w7KDup9ls=
+X-Received: by 2002:aca:2209:: with SMTP id b9mr15986264oic.103.1586871792611;
+ Tue, 14 Apr 2020 06:43:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410090942.27239-1-yanaijie@huawei.com>
+References: <Pine.LNX.4.44L0.2004102231270.30859-100000@netrider.rowland.org> <6362254.rXp5uA8eak@kreacher>
+In-Reply-To: <6362254.rXp5uA8eak@kreacher>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 14 Apr 2020 15:43:01 +0200
+Message-ID: <CAJZ5v0jSMC1FGc2N06B=2VmXRF1XJi4gNyKPkjfBPCEtjm50Yw@mail.gmail.com>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 05:09:42PM +0800, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> drivers/net/wireless/marvell/libertas/mesh.c:833:5-8: Unneeded variable:
-> "ret". Return "0" on line 874
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Note to self: avoid replying to technical messages late in the night ...
 
-Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+On Mon, Apr 13, 2020 at 11:32 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Saturday, April 11, 2020 4:41:14 AM CEST Alan Stern wrote:
+> > Okay, this is my attempt to summarize what we have been discussing.
+> > But first: There is a dev_pm_skip_resume() helper routine which
+> > subsystems can call to see whether resume-side _early and _noirq driver
+> > callbacks should be skipped.  But there is no corresponding
+> > dev_pm_skip_suspend() helper routine.  Let's add one, or rename
+> > dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
+>
+> OK
+>
+> > Given that, here's my understanding of what should happen.  (I'm
+> > assuming the direct_complete mechanism is not being used.)  This tries
+> > to describe what we _want_ to happen, which is not always the same as
+> > what the current code actually _does_.
+>
+> OK
+>
+> >       During the suspend side, for each of the
+> >       {suspend,freeze,poweroff}_{late,noirq} phases: If
+> >       dev_pm_skip_suspend() returns true then the subsystem should
+> >       not invoke the driver's callback, and if there is no subsystem
+> >       callback then the core will not invoke the driver's callback.
+> >
+> >       During the resume side, for each of the
+> >       {resume,thaw,restore}_{early,noirq} phases: If
+> >       dev_pm_skip_resume() returns true then the subsystem should
+> >       not invoke the driver's callback, and if there is no subsystem
+> >       callback then the core will not invoke the driver's callback.
+> >
+> >       dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+> >       set and the device's runtime status is "suspended".
+>
+> Agreed with the above.
+>
+> >       power.must_resume gets set following the suspend-side _noirq
+> >       phase if power.usage_count > 1 (indicating the device was
+> >       in active use before the start of the sleep transition) or
+> >       power.must_resume is set for any of the device's dependents.
+>
+> Or MAY_SKIP_RESUME is unset (which means that the driver does not
+> allow its resume callbacks to be skipped), or power.may_skip_resume
+> is unset (which means that the subsystem does not allow the
+> driver callbacks to be skipped).
+>
+> >       dev_pm_skip_resume() will return "false" if the current
+> >       transition is RESTORE or power.must_resume is set.  Otherwise:
+> >       It will return true if the current transition is THAW,
+> >       SMART_SUSPEND is set, and the device's runtime status is
+> >       "suspended".
+>
+> The other way around.  That is:
+>
+> dev_pm_skip_resume() will return "true" if the current transition is
+> THAW and dev_pm_skip_suspend() returns "true" for that device (so
+> SMART_SUSPEND is set, and the device's runtime status is "suspended",
+> as per the definition of that function above).
 
-Thank you
-Lubo
+The above is what I wanted to say ->
 
-> ---
->  drivers/net/wireless/marvell/libertas/mesh.c | 6 +-----
->  drivers/net/wireless/marvell/libertas/mesh.h | 2 +-
->  2 files changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/libertas/mesh.c b/drivers/net/wireless/marvell/libertas/mesh.c
-> index 44c8a550da4c..f5b78257d551 100644
-> --- a/drivers/net/wireless/marvell/libertas/mesh.c
-> +++ b/drivers/net/wireless/marvell/libertas/mesh.c
-> @@ -828,10 +828,8 @@ static void lbs_persist_config_remove(struct net_device *dev)
->   * Check mesh FW version and appropriately send the mesh start
->   * command
->   */
-> -int lbs_init_mesh(struct lbs_private *priv)
-> +void lbs_init_mesh(struct lbs_private *priv)
->  {
-> -	int ret = 0;
-> -
->  	/* Determine mesh_fw_ver from fwrelease and fwcapinfo */
->  	/* 5.0.16p0 9.0.0.p0 is known to NOT support any mesh */
->  	/* 5.110.22 have mesh command with 0xa3 command id */
-> @@ -870,8 +868,6 @@ int lbs_init_mesh(struct lbs_private *priv)
->  
->  	/* Stop meshing until interface is brought up */
->  	lbs_mesh_config(priv, CMD_ACT_MESH_CONFIG_STOP, 1);
-> -
-> -	return ret;
->  }
->  
->  void lbs_start_mesh(struct lbs_private *priv)
-> diff --git a/drivers/net/wireless/marvell/libertas/mesh.h b/drivers/net/wireless/marvell/libertas/mesh.h
-> index 1561018f226f..d49717b20c09 100644
-> --- a/drivers/net/wireless/marvell/libertas/mesh.h
-> +++ b/drivers/net/wireless/marvell/libertas/mesh.h
-> @@ -16,7 +16,7 @@
->  
->  struct net_device;
->  
-> -int lbs_init_mesh(struct lbs_private *priv);
-> +void lbs_init_mesh(struct lbs_private *priv);
->  void lbs_start_mesh(struct lbs_private *priv);
->  int lbs_deinit_mesh(struct lbs_private *priv);
->  
-> -- 
-> 2.17.2
-> 
+> Otherwise, it will return "true" if the current transition is RESTORE
+> (which means that all devices are resumed) or power.must_resume is not
+> set (so this particular device need not be resumed).
+
+-> but this isn't.  In particular, I messed up the RESTORE part, so it
+should read:
+
+Otherwise, it will return "true" if the current transition is *not*
+RESTORE (in which case all devices would be resumed) *and*
+power.must_resume is not set (so this particular device need not be
+resumed).
+
+Sorry about that.
+
+> >  It will return "true" if the current transition is
+> >       RESUME, SMART_SUSPEND and MAY_SKIP_RESUME are both set, and
+> >       the device's runtime status is "suspended".
+>
+> Unless MAY_SKIP_RESUME is unset for at least one of its descendants (or
+> dependent devices).
+
+That should include the power.may_skip_resume flag, so as to read as follows:
+
+Unless MAY_SKIP_RESUME is unset or power.may_skip_resume is unset for
+at least one of its descendants (or dependent devices).
+
+> >       For a RESUME
+> >       transition, it will also return "true" if MAY_SKIP_RESUME and
+> >       power.may_skip_resume are both set, regardless of
+> >       SMART_SUSPEND or the current runtime status.
+>
+> And if the device was not in active use before suspend (as per its usage
+> counter) or MAY_SKIP_RESUME is unset for at least one of its descendants (or
+> dependent devices in general).
+
+And analogously here, so what I really should have written is:
+
+And if the device was not in active use before suspend (as per its
+usage counter) or MAY_SKIP_RESUME or power.may_skip_resume is unset
+for at least one of its descendants (or dependent devices in general).
+
+> >       At the start of the {resume,thaw,restore}_noirq phase, if
+> >       dev_pm_skip_resume() returns true then the core will set the
+> >       runtime status to "suspended".  Otherwise it will set the
+> >       runtime status to "active".  If this is not what the subsystem
+> >       or driver wants, it must update the runtime status itself.
+>
+> Right.
+>
+> > Comments and differences with respect to the code in your pm-sleep-core
+> > branch:
+> >
+> >       I'm not sure whether we should specify other conditions for
+> >       setting power.must_resume.
+>
+> IMO we should.
+
+In fact, this is part of the implementation and it helps to
+"propagate" the "must resume" condition to the parent and the
+first-order suppliers of the device (which is sufficient, because
+their power.must_resume "propagates" in the same way and so on).
+
+IOW, the important piece is what the return value of
+dev_pm_skip_resume() should be in particular conditions and that
+return value is computed with the help of power.must_resume (and it
+might have been computed in a different, possibly less efficient,
+way).
+
+> Otherwise it is rather hard to catch the case in which one of the
+> device's descendants has MAY_SKIP_RESUME unset (and so the device
+> needs to be resumed).
+>
+> >       dev_pm_skip_resume() doesn't compute the value described
+> >       above.  I'm pretty sure the existing code is wrong.
+>
+> Well, we don't seem to have reached an agreement on some details
+> above ...
+
+Sorry for failing to be careful enough ...
