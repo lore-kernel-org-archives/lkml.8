@@ -2,296 +2,114 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B6DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F17FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261CF206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:21:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="laUVcAhw"
+	by mail.kernel.org (Postfix) with ESMTP id 7639F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405479AbgDNFVq (ORCPT
+        id S2405490AbgDNFYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405466AbgDNFVj (ORCPT
+        Tue, 14 Apr 2020 01:24:40 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:27979 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgDNFYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:21:39 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E78C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:21:38 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id ca21so13007445edb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 22:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZY8Vs/SgwJl+VB027jYPMKdeld89d9fqn3BGrnSEshA=;
-        b=laUVcAhwpnvPYmoi3Vs4k6JlLKU7l/6lGpqIm4rNDHe75tVMkLYBulH3dC0lvmguj2
-         7gmPjORXoeijp6jw6Wp9xBSd2GWJl1vucqlB7xwqDdjVkfTQ/qRIMcOP2EnAnnbWaZEw
-         taELjK/cbkyaYl5jD8vGkc1bV25tVRzzZtme8siByLNib6t4mxjRJ/hDeQ/eYStGST0T
-         WDULZxhGjbK2MBRUZycQuwZhjwiGShoayN9LoR+hK+HzCvMQYVHaplpCApFB5g72V05w
-         /IZVipN/VlAwVu5R0s9VnLTvGAt1ZbwckMQQAhAs6ozRgqVdOdw+3/QF3FKT+z3YqedQ
-         ywhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZY8Vs/SgwJl+VB027jYPMKdeld89d9fqn3BGrnSEshA=;
-        b=eWBWGF51LJVL9OJiXCaVwbgq/OCbFm80qot6SFpHFRy3rszEObT3A51MhIzi0a2+PG
-         aUN36iB8TuzwgqQHlnCjzT797TQPQ8LYXtO7vt4d01yfVBgyNXxOgScXqJqOdxce/jeQ
-         xGXcFuOBhFqQ66cOSKyK609Iz2M0B9lYsE80HvioQdPsOTM7HjJuBx4XE9t2IWoBR3AM
-         CBiT7JCpJTo9x3f8sbW6zpkWHTXx1SGfdzS0iuPE0RddG37Mh9rS+WDt27y/H1LWm0dq
-         wMuao+UjoFFtFqHI11VpJxySS3k55Uati9dmyrW+qWhNkZQFqNfvEWshwf2yrFBcN6Qq
-         HaFQ==
-X-Gm-Message-State: AGi0PuYVdM1i0Hnesdm5MRPjm7xjAFNEH3PGoYwyemi8sjmMYTIasqTT
-        AVp3chGXfRv6avW4961ng/yN7kDL+50CKVYympkh6A==
-X-Google-Smtp-Source: APiQypIqcFELxzeJQBnDG8J7SDZ/6/w8DMevIneRKEWQzaP8G0zmTkaBzVyHxQ0NkMxEQlNY/w0eiznf5LBjuNDT/Rg=
-X-Received: by 2002:a17:906:1e42:: with SMTP id i2mr18247668ejj.317.1586841696955;
- Mon, 13 Apr 2020 22:21:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200413054046.1560106-1-ira.weiny@intel.com> <20200413054046.1560106-10-ira.weiny@intel.com>
-In-Reply-To: <20200413054046.1560106-10-ira.weiny@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 13 Apr 2020 22:21:26 -0700
-Message-ID: <CAPcyv4g1gGWUuzVyOgOtkRTxzoSKOjVpAOmW-UDtmud9a3CUUA@mail.gmail.com>
-Subject: Re: [PATCH V7 9/9] Documentation/dax: Update Usage section
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Apr 2020 01:24:38 -0400
+IronPort-SDR: cwVzQoT1a708KngoN6/rGhZ6Goc8X6sBW3XGm5tzr0FZOeyHoFcHrELRpDi4BOEi1N0idHz+Vt
+ gBtYgQDR26w/pzWrL2X0D7kBSUOAsBxZw5iSk+s5I9918FJ8YXBJgcOqypDacKYT1twNQPd86L
+ aC2H8hZa5B2/CyxzxGgIFJKIu//jbdb1zFHQw05Rl+0lRwBVUEaLXV8iR5dtkdRxDkBCTOurTq
+ ywwuYWCejNDmweW0QR//0xeGP84mQrcNlxJHX0U8kz7aaaH2yiBM/nhKBXMyEkeOGlCrkb7P37
+ Gvo=
+X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
+   d="scan'208";a="46834635"
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by labrats.qualcomm.com with ESMTP; 13 Apr 2020 22:24:37 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 13 Apr 2020 22:24:36 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id 000D03B21; Mon, 13 Apr 2020 22:24:36 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/1] scsi: pm: Balance pm_only counter of request queue during system resume
+Date:   Mon, 13 Apr 2020 22:24:34 -0700
+Message-Id: <1586841875-15667-1-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 10:41 PM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> Update the Usage section to reflect the new individual dax selection
-> functionality.
->
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->
-> ---
-> Changes from V6:
->         Update to allow setting FS_XFLAG_DAX any time.
->         Update with list of behaviors from Darrick
->         https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
->
-> Changes from V5:
->         Update to reflect the agreed upon semantics
->         https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> ---
->  Documentation/filesystems/dax.txt | 166 +++++++++++++++++++++++++++++-
->  1 file changed, 163 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-> index 679729442fd2..af14c1b330a9 100644
-> --- a/Documentation/filesystems/dax.txt
-> +++ b/Documentation/filesystems/dax.txt
-> @@ -17,11 +17,171 @@ For file mappings, the storage device is mapped directly into userspace.
->  Usage
->  -----
->
-> -If you have a block device which supports DAX, you can make a filesystem
-> +If you have a block device which supports DAX, you can make a file system
->  on it as usual.  The DAX code currently only supports files with a block
->  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
-> -size when creating the filesystem.  When mounting it, use the "-o dax"
-> -option on the command line or add 'dax' to the options in /etc/fstab.
-> +size when creating the file system.
-> +
-> +Currently 2 filesystems support DAX, ext4 and xfs.  Enabling DAX on them is
-> +different at this time.
-> +
-> +Enabling DAX on ext4
-> +--------------------
-> +
-> +When mounting the filesystem, use the "-o dax" option on the command line or
-> +add 'dax' to the options in /etc/fstab.
-> +
-> +
-> +Enabling DAX on xfs
-> +-------------------
-> +
-> +Summary
-> +-------
-> +
-> + 1. There exists an in-kernel access mode flag S_DAX that is set when
-> +    file accesses go directly to persistent memory, bypassing the page
-> +    cache.
+During system resume, scsi_resume_device() decreases a request queue's
+pm_only counter if the scsi device was quiesced before. But after that,
+if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
+still held (non-zero). Current scsi resume hook only sets the RPM status
+of the scsi device and its request queue to RPM_ACTIVE, but leaves the
+pm_only counter unchanged. This may make the request queue's pm_only
+counter remain non-zero after resume hook returns, hence those who are
+waiting on the mq_freeze_wq would never be woken up. Fix this by calling
+blk_post_runtime_resume() if pm_only is non-zero to balance the pm_only
+counter which is held by the scsi device's RPM ops.
 
-I had reserved some quibbling with this wording, but now that this is
-being proposed as documentation I'll let my quibbling fly. "dax" may
-imply, but does not require persistent memory nor does it necessarily
-"bypass page cache". For example on configurations that support dax,
-but turn off MAP_SYNC (like virtio-pmem), a software flush is
-required. Instead, if we're going to define "dax" here I'd prefer it
-be a #include of the man page definition that is careful (IIRC) to
-only talk about semantics and not backend implementation details. In
-other words, dax is to page-cache as direct-io is to page cache,
-effectively not there, but dig a bit deeper and you may find it.
+(struct request_queue)0xFFFFFF815B69E938
+	pm_only = (counter = 2),
+	rpm_status = 0,
+	dev = 0xFFFFFF815B0511A0,
 
-> Applications must call statx to discover the current S_DAX
-> +    state (STATX_ATTR_DAX).
-> +
-> + 2. There exists an advisory file inode flag FS_XFLAG_DAX that is
-> +    inherited from the parent directory FS_XFLAG_DAX inode flag at file
-> +    creation time.  This advisory flag can be set or cleared at any
-> +    time, but doing so does not immediately affect the S_DAX state.
-> +
-> +    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
-> +    and the fs is on pmem then it will enable S_DAX at inode load time;
-> +    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> +
-> + 3. There exists a dax= mount option.
-> +
-> +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> +
-> +    "-o dax=always" means "always set S_DAX (at least on pmem),
-> +                    and ignore FS_XFLAG_DAX."
-> +
-> +    "-o dax"        is an alias for "dax=always".
-> +
-> +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> +
-> + 4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
-> +    be set or cleared at any time.  The flag state is inherited by any files or
-> +    subdirectories when they are created within that directory.
-> +
-> + 5. Programs that require a specific file access mode (DAX or not DAX)
-> +    can do one of the following:
-> +
-> +    (a) Create files in directories that the FS_XFLAG_DAX flag set as
-> +        needed; or
-> +
-> +    (b) Have the administrator set an override via mount option; or
-> +
-> +    (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
-> +        must then cause the kernel to evict the inode from memory.  This
-> +        can be done by:
-> +
-> +        i>  Closing the file and re-opening the file and using statx to
-> +            see if the fs has changed the S_DAX flag; and
-> +
-> +        ii> If the file still does not have the desired S_DAX access
-> +            mode, either unmount and remount the filesystem, or close
-> +            the file and use drop_caches.
-> +
-> + 6. It is expected that users who want to squeeze every last bit of performance
-> +    out of the particular rough and tumble bits of their storage will also be
-> +    exposed to the difficulties of what happens when the operating system can't
-> +    totally virtualize those hardware capabilities.  DAX is such a feature.
-> +    Basically, Formula-1 cars require a bit more care and feeding than your
-> +    averaged Toyota minivan, as it were.
-> +
-> +
-> +Details
-> +-------
-> +
-> +There are 2 per-file dax flags.  One is a physical inode setting (FS_XFLAG_DAX)
-> +and the other a currently enabled state (S_DAX).
-> +
-> +FS_XFLAG_DAX is maintained, on disk, on individual inodes.  It is preserved
-> +within the file system.  This 'physical' config setting can be set using an
-> +ioctl and/or an application such as "xfs_io -c 'chattr [-+]x'".  Files and
-> +directories automatically inherit FS_XFLAG_DAX from their parent directory
-> +_when_ _created_.  Therefore, setting FS_XFLAG_DAX at directory creation time
-> +can be used to set a default behavior for an entire sub-tree.  (Doing so on the
-> +root directory acts to set a default for the entire file system.)
-> +
-> +To clarify inheritance here are 3 examples:
-> +
-> +Example A:
-> +
-> +mkdir -p a/b/c
-> +xfs_io 'chattr +x' a
-> +mkdir a/b/c/d
-> +mkdir a/e
-> +
-> +       dax: a,e
-> +       no dax: b,c,d
-> +
-> +Example B:
-> +
-> +mkdir a
-> +xfs_io 'chattr +x' a
-> +mkdir -p a/b/c/d
-> +
-> +       dax: a,b,c,d
-> +       no dax:
-> +
-> +Example C:
-> +
-> +mkdir -p a/b/c
-> +xfs_io 'chattr +x' c
-> +mkdir a/b/c/d
-> +
-> +       dax: c,d
-> +       no dax: a,b
-> +
-> +
-> +The current enabled state (S_DAX) is set when a file inode is _loaded_ based on
-> +the underlying media support, the value of FS_XFLAG_DAX, and the file systems
-> +dax mount option setting.  See below.
-> +
-> +statx can be used to query S_DAX.  NOTE that a directory will never have S_DAX
-> +set and therefore statx will always return false on directories.
-> +
-> +NOTE: Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs
-> +even if the underlying media does not support dax and/or the file system is
-> +overridden with a mount option.
-> +
-> +
-> +Overriding FS_XFLAG_DAX (dax= mount option)
-> +-------------------------------------------
-> +
-> +There exists a dax mount option.  Using the mount option does not change the
-> +physical configured state of individual files but overrides the S_DAX operating
-> +state when inodes are loaded.
-> +
-> +Given underlying media support, the dax mount option is a tri-state option
-> +(never, always, inode) with the following meanings:
-> +
-> +   "-o dax=never" means "never set S_DAX, ignore FS_XFLAG_DAX"
-> +   "-o dax=always" means "always set S_DAX, ignore FS_XFLAG_DAX"
-> +        "-o dax" by itself means "dax=always" to remain compatible with older
-> +                kernels
-> +   "-o dax=inode" means "follow FS_XFLAG_DAX"
-> +
-> +The default state is 'inode'.  Given underlying media support, the following
-> +algorithm is used to determine the effective mode of the file S_DAX on a
-> +capable device.
-> +
-> +       S_DAX = FS_XFLAG_DAX;
-> +
-> +       if (dax_mount == "always")
-> +               S_DAX = true;
-> +       else if (dax_mount == "off"
-> +               S_DAX = false;
-> +
-> +To reiterate: Setting, and inheritance, continues to affect FS_XFLAG_DAX even
-> +while the file system is mounted with a dax override.  However, file enabled
-> +state, S_DAX, will continue to be the overridden until the file system is
-> +remounted with dax=inode.
->
->
->  Implementation Tips for Block Driver Writers
-> --
-> 2.25.1
->
+((struct device)0xFFFFFF815B0511A0)).power
+	is_suspended = FALSE,
+	runtime_status = RPM_ACTIVE,
+
+(struct scsi_device)0xffffff815b051000
+	request_queue = 0xFFFFFF815B69E938,
+	sdev_state = SDEV_RUNNING,
+	quiesced_by = 0x0,
+
+B::v.f_/task_0xFFFFFF810C246940
+-000|__switch_to(prev = 0xFFFFFF810C246940, next = 0xFFFFFF80A49357C0)
+-001|context_switch(inline)
+-001|__schedule(?)
+-002|schedule()
+-003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
+-004|generic_make_request(?)
+-005|submit_bio(bio = 0xFFFFFF80A8195B80)
+
+Signed-off-by: Can Guo <cang@codeaurora.org>
+
+Change since v1:
+- Added more debugging context info
+
+---
+ drivers/scsi/scsi_pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
+index 3717eea..4804029 100644
+--- a/drivers/scsi/scsi_pm.c
++++ b/drivers/scsi/scsi_pm.c
+@@ -93,8 +93,10 @@ static int scsi_dev_type_resume(struct device *dev,
+ 		 */
+ 		if (!err && scsi_is_sdev_device(dev)) {
+ 			struct scsi_device *sdev = to_scsi_device(dev);
+-
+-			blk_set_runtime_active(sdev->request_queue);
++			if (blk_queue_pm_only(sdev->request_queue))
++				blk_post_runtime_resume(sdev->request_queue, 0);
++			else
++				blk_set_runtime_active(sdev->request_queue);
+ 		}
+ 	}
+ 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
