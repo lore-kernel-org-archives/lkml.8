@@ -4,111 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D11C38A29
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219D2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF4020644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C5620578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732358AbgDNNtK (ORCPT
+        id S1728647AbgDNNtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:49:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388027AbgDNNsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:48:42 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EDYdWZ100004
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:48:41 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30cvqfd99j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:48:41 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 14 Apr 2020 14:48:00 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 Apr 2020 14:47:55 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EDmY7P37028098
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 13:48:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A1BCAE051;
-        Tue, 14 Apr 2020 13:48:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67B60AE04D;
-        Tue, 14 Apr 2020 13:48:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.236.92])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Apr 2020 13:48:33 +0000 (GMT)
-Subject: Re: [PATCH] evm: Fix possible memory leak in evm_calc_hmac_or_hash()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Tue, 14 Apr 2020 09:48:32 -0400
-In-Reply-To: <20200414080131.29411-1-roberto.sassu@huawei.com>
-References: <20200414080131.29411-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041413-0020-0000-0000-000003C7B0C1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041413-0021-0000-0000-000022208C90
-Message-Id: <1586872112.7311.194.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_05:2020-04-14,2020-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140108
+        Tue, 14 Apr 2020 09:49:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30458 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388105AbgDNNss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:48:48 -0400
+IronPort-SDR: Wnz1yPzBLW0c1HLt3uEdhL1QT150Y4SrgB5i9x6/WMFQFu1lh/8Xl1QvR+J3PUk5x4V5KC1T3p
+ z6Uvo+D2ukFg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 06:48:47 -0700
+IronPort-SDR: Ny/ZagQyHiMzUsJbw7iCuEBiMwf3T11gCmuZPUzB0PbQQ1XB5A6ROCjYYxclPkrI+XrQKUqnLl
+ x90OkNyxbUtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="243817401"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Apr 2020 06:48:45 -0700
+Subject: Re: [PATCH v5 2/3] mmc: host: sdhci: Implement the request_atomic()
+ API
+To:     Baolin Wang <baolin.wang7@gmail.com>, ulf.hansson@linaro.org
+Cc:     arnd@arndb.de, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1586744073.git.baolin.wang7@gmail.com>
+ <9ed34afa9fb42e0c234065cac5401d7826942b55.1586744073.git.baolin.wang7@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <9d118792-8551-7988-464e-162550bc6614@intel.com>
+Date:   Tue, 14 Apr 2020 16:47:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <9ed34afa9fb42e0c234065cac5401d7826942b55.1586744073.git.baolin.wang7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, Roberto.
-
-Sorry for the delays in reviewing the miscellaneous set of IMA patches
-you previously posted.  They're next on my "todo" list.
-
-Mimi
-
-On Tue, 2020-04-14 at 10:01 +0200, Roberto Sassu wrote:
-> Don't immediately return if the signature is portable and security.ima is
-> not present. Just set error so that memory allocated is freed before
-> returning from evm_calc_hmac_or_hash().
+On 13/04/20 5:46 am, Baolin Wang wrote:
+> Implement the request_atomic() ops for the sdhci driver to process
+> one request in the atomic context if the card is nonremovable.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 50b977481fce9 ("EVM: Add support for portable signature format")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Moreover, we should return BUSY flag if controller has not released
+> the inhibit bits to allow HSQ trying to send request again in non-atomic
+> context.
+> 
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->  security/integrity/evm/evm_crypto.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/mmc/host/sdhci.c | 34 ++++++++++++++++++++++++++++++++++
+>  drivers/mmc/host/sdhci.h |  1 +
+>  2 files changed, 35 insertions(+)
 > 
-> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-> index 35682852ddea..499ea01b2edc 100644
-> --- a/security/integrity/evm/evm_crypto.c
-> +++ b/security/integrity/evm/evm_crypto.c
-> @@ -241,7 +241,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 10b9570f48aa..0baef595de26 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2144,6 +2144,40 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_request);
 >  
->  	/* Portable EVM signatures must include an IMA hash */
->  	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
-> -		return -EPERM;
-> +		error = -EPERM;
->  out:
->  	kfree(xattr_value);
->  	kfree(desc);
+> +int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	struct mmc_command *cmd;
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	spin_lock_irqsave(&host->lock, flags);
+> +
+> +	if (sdhci_present_error(host, mrq->cmd, true)) {
+> +		sdhci_finish_mrq(host, mrq);
+> +		goto out_finish;
+> +	}
+> +
+> +	cmd = sdhci_manual_cmd23(host, mrq) ? mrq->sbc : mrq->cmd;
+> +
+> +	/*
+> +	 * The HSQ may send a command in interrupt context without polling
+> +	 * the busy signaling, which means we should return BUSY if controller
+> +	 * has not released inhibit bits to allow HSQ trying to send request
+> +	 * again in non-atomic context. So we should not finish this request
+> +	 * here.
+> +	 */
+> +	if (!sdhci_send_command(host, cmd))
+> +		ret = -EBUSY;
+> +	else
+> +		sdhci_led_activate(host);
+> +
+> +out_finish:
+> +	spin_unlock_irqrestore(&host->lock, flags);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(sdhci_request_atomic);
+> +
+>  void sdhci_set_bus_width(struct sdhci_host *host, int width)
+>  {
+>  	u8 ctrl;
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index a7e469c00617..4bd70da7aa00 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -776,6 +776,7 @@ void sdhci_set_power_and_bus_voltage(struct sdhci_host *host,
+>  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+>  			   unsigned short vdd);
+>  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
+> +int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
+>  void sdhci_set_bus_width(struct sdhci_host *host, int width);
+>  void sdhci_reset(struct sdhci_host *host, u8 mask);
+>  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
+> 
 
