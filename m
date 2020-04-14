@@ -2,97 +2,138 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C81DC38A29
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B91C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 097392076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586901076;
-	bh=7tksp8DJqvv4aFKzOAsBYA42hPh+JG5SvGguvYOTEh4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1GOW+od14zFskZL0ojEL6Ad2HPNmWdemZI8Ik3VgUxZiJkFzB/5dsn7mX4wz7hr33
-	 gppZeIoOer+bnaVQ6Aakgl18hQdsM+icpfzIMASoPNX31yDXYQzbTFmhviOon+QK38
-	 V5NlwQ6yzy4B7oAzcZNrK2Fjq3t5PO+y/iK3qWoM=
+	by mail.kernel.org (Postfix) with ESMTP id 57C0F20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440949AbgDNVvM (ORCPT
+        id S2440979AbgDNVvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:51:12 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37595 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440819AbgDNVuT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:50:19 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z17so1346921oto.4;
-        Tue, 14 Apr 2020 14:50:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=r6xzZ1b4JHWGtxEECvqX1ZeFiRv8Q65WRsOrzmnGvfQ=;
-        b=pbJpBVaGtsjyamyR7k92/WWs2lcU0j2mDUF6sDJo12fDCEpi267bV4fX/0qnokVSiB
-         EBLlEfm/DdYmMA2U2FgRDulbZWS4ITC0CbqL0hOGE1xPpGJJkOiFjUijqpxWKBa0NyC7
-         i/Jo9yq+rVSEifohUO1Njb5/RJLFD22WuJpvvQs1jFZ/bjWOZxCM2+mVTzPYmmxTNluV
-         6Z2iHFhPgWGoXqR3P4pTPG/y/UuqQGjyfvolooQZkWtLm2lkDgaz0cRqZd+PRERc2azR
-         +B8+KeUB+UxQMiDaW0SvJ9+whzWn64DADT0Fg4OegnCd43u1247T9P6Ios+Gq2kYCkNr
-         Fx2A==
-X-Gm-Message-State: AGi0PuZRFxoc0gFxuUUZDjpxzhITaHSzAzQFUhDFZ4xLrwK1oupYrg0w
-        erj9dyQSGWycQyS/N47QUQ==
-X-Google-Smtp-Source: APiQypI4T5IhspzuZMGUVQLSFU+HW4jJmxEf4RMXRC/Ht0Wg9mRzSEMEd8lT6Oa91uUR9Pib4mx+KA==
-X-Received: by 2002:a05:6830:1b64:: with SMTP id d4mr19628904ote.368.1586901018496;
-        Tue, 14 Apr 2020 14:50:18 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm2576523ott.51.2020.04.14.14.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:50:17 -0700 (PDT)
-Received: (nullmailer pid 22631 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:50:16 -0000
-Date:   Tue, 14 Apr 2020 16:50:16 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: iio: light: vcnl4000: Add
- proximity-near-level
-Message-ID: <20200414215016.GA22563@bogus>
-References: <cover.1586094535.git.agx@sigxcpu.org>
- <9bbbc30e5e8e67e50ddacb4cadc180fa5c7f7bd0.1586094535.git.agx@sigxcpu.org>
+        Tue, 14 Apr 2020 17:51:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57796 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440819AbgDNVv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 17:51:26 -0400
+IronPort-SDR: vZU0oqJXCsEvUa/EtJCIfj1Vo16Ek2XpihzCVrTLA5s+3D5jzjjEnwZEWC0X1sxp8F9MnKNLzI
+ hFXw4GXDwwjQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 14:51:24 -0700
+IronPort-SDR: ij8iqHgZZGRON/acdZ34Z8oe1de2h0YuaZUoV5nkBqf5XAAASINM7Rc6Fba1Xl8axQDbfmFBtB
+ EdajjSl5EfwQ==
+X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
+   d="scan'208";a="271529999"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.134.69.31])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 14:51:23 -0700
+Message-ID: <b64aa350ba40c53e799690141006e0f1885d28a2.camel@linux.intel.com>
+Subject: Re: [PATCH 3/3] x86/mce/therm_throt: allow disabling the thermal
+ vector altogether
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Borislav Petkov <bp@suse.de>, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org, X86 ML <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, bberg@redhat.com,
+        Tony Luck <tony.luck@intel.com>
+Date:   Tue, 14 Apr 2020 14:51:22 -0700
+In-Reply-To: <CAHmME9rx6w=p6+AFP=0Y5tPEq1CxUTGe4h8SXz-qRNuCvU0hyw@mail.gmail.com>
+References: <20200407063345.4484-1-Jason@zx2c4.com>
+         <20200407063345.4484-3-Jason@zx2c4.com>
+         <0e189a4fe1e69b08afc859ce83623a0e5ea0c08b.camel@linux.intel.com>
+         <CAHmME9pigvAgK3Bje6DkFEcdyWwi7-C7D6QEo4YiH_cbJvxqhQ@mail.gmail.com>
+         <4b75ec34ccff5abdc0b1c04a5ac39455ddd4f49b.camel@linux.intel.com>
+         <CAHmME9rfXXPepanaxR6EBimSNkJp6KTuNLkYcSceGwZXp_j-Kw@mail.gmail.com>
+         <20200414202328.GK31763@zn.tnic>
+         <81359df9983fb70bd40ddb3be9090e5521294529.camel@linux.intel.com>
+         <CAHmME9rx6w=p6+AFP=0Y5tPEq1CxUTGe4h8SXz-qRNuCvU0hyw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bbbc30e5e8e67e50ddacb4cadc180fa5c7f7bd0.1586094535.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Apr 2020 15:50:30 +0200, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> This value indicates when userspace should consider an object
-> near to the sensor/device.
+On Tue, 2020-04-14 at 15:07 -0600, Jason A. Donenfeld wrote:
+> On Tue, Apr 14, 2020 at 2:49 PM Srinivas Pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> > On Tue, 2020-04-14 at 22:23 +0200, Borislav Petkov wrote:
+> > > + Tony.
+> > > 
+> > > On Tue, Apr 14, 2020 at 01:41:08PM -0600, Jason A. Donenfeld
+> > > wrote:
+> > > > Generally it is desirable, and extremely common too. This
+> > > > thermal
+> > > > code
+> > > > -- which mostly functions to print some messages into kmsg --
+> > > > is
+> > > > very
+> > > > verbose. This is not something I want to compile into smaller
+> > > > systems.
+> > > > This is the reason why kconfig has options in the first place.
+> > > > I'm
+> > > > not
+> > > > sure yet-another boottime flag makes sense for this.
+> > > 
+> > > I don't mind making the already existing option selectable and
+> > > leaving
+> > > it default y, i.e., keeping the current situation by default. And
+> > > people
+> > > who want to disable it, can then do so.
+> > > 
+> > > I do mind to having yet another config option though. No thanks -
+> > > they're already too many.
+> > > 
+> > > So it should be an all or nothing thing.
+> > > 
+> > > Poking quickly at that and
+> > > drivers/thermal/intel/x86_pkg_temp_thermal.c,
+> > > all those things do is report trip points. therm_throt reports
+> > > how
+> > > long
+> > > the hw throttled due to hitting a trip point, etc.
+> > > 
+> > > IINM, of course so please correct me if I'm missing anything.
+> > > 
+> > > But if not and this all is only for reporting and doesn't have
+> > > any
+> > > detrimental effects on the hardware when missing from the system,
+> > > then I
+> > > guess we could make CONFIG_X86_THERMAL_VECTOR user-selectable.
+> > 
+> > We can make user selectable
+> > 
+> > These drivers are used for reporting only.
+> > User space can select a trip temperature via x86_pkg_temp and get
+> > notification via uevent to start additional cooling system
+> > (additional
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml     | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
+> I didn't see any uevent stuff. Is this part of out-of-tree modules or
+> proprietary code that's hooking into those EXPORT_SYMBOL (non-GPL)
+> exports?
+This is not out of tree. This is x86_pkg_temp driver as part of thermal
+subsystem, and thermal_zone_device_update()  user space governor issues uevent. But those are different modifiable thresholds not the high/low temperature thresholds.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+> > fans, liquid coooling etc), so that processor don't have to go self
+> > throttling mode. Self throttling depending on processor series and
+> > firmware can be very aggressive.
+> > In client systems thermald will set a temperature and starts power
+> > control once it reaches passive temperature limit. But it can
+> > function
+> > without x86_pkg_temp also, so even if user disables thermal
+> > reporting
+> > it can still function.
+> 
+> The 2/3 patch may be interesting as well to you. This removes the
+> expensive work queue management stuff if the option is deselected,
+> since all those workqueues do is print messages to kmsg, while
+> retaining the rest of the infra.
+
