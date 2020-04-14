@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2E9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB148C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C518206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53982075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883041;
-	bh=IyXCB/Gshsv4ZXplxm2A4QdYz94WdQJKVQgSgbKpCKM=;
+	s=default; t=1586883046;
+	bh=Cm3N7O2MN4MEZNeRuTifdeRPG8I+2G5uqGf6sx1QAY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ciE4q+/Wrud6fALq7whQTeBppmqqoCAyTuJOsq/3dC4lGIv4/DJIcFX8DrtILyaqJ
-	 m24H/yO/VxzisC10ch7/CcGytWC/37eTPdwrj5xyn++RPY3IfScvxs/V8cyGLAyosx
-	 +C0Zhiijihuh6uInrDv7ZNJYhGSXPmet/ScHnPGE=
+	b=tf45xNG6nPQ/seRIFC8Tp/k/zu1SPTqwK2CO/eYo9HXhby68UyongpNRYooXC5pv9
+	 CSse+AYluuz1b2ddOki6rniZqLV+qJtHn1D+6RI45gW47ydlxDjk6g5/do8cyMxZJC
+	 IhlK/Z2mhi5aCDl35Q0FOL86THLQOVjqh63K9niA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502071AbgDNQuj (ORCPT
+        id S2440606AbgDNQun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:50:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440461AbgDNQtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:49:36 -0400
+        id S2440450AbgDNQtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:33 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4430721734;
-        Tue, 14 Apr 2020 16:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8171621569;
+        Tue, 14 Apr 2020 16:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882975;
-        bh=IyXCB/Gshsv4ZXplxm2A4QdYz94WdQJKVQgSgbKpCKM=;
+        s=default; t=1586882972;
+        bh=Cm3N7O2MN4MEZNeRuTifdeRPG8I+2G5uqGf6sx1QAY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3ygblLYHiQj0KT4ClT3lOIBQHUjnegalr3hSYM7yhnaTDT4EE9DN9LgmHZO/cozL
-         k+07MGyGtLqs2b6vmjWaYdWrj3lTeaAylhT/QkROuQ1siRhjfJ4v1o+SE2Mq2I27DL
-         UDxk3Xmkxd+dqrAgrll8iZOhHfZPnkPsHPKAeMT8=
+        b=C9dx3Ho63fqNvGy2eq52ejcMT6LA0YLyK+KZKkTNSW2ts2yLGJK5wBnQClKzWkDGd
+         FXSAIvXf98ROxh8Ng2Q0q42ysiS/8Z/yD38eJlz05C+fI5gvtyVM0h4dQAjyCqF5uw
+         CBq755xIePOGMKGDagibMHtdCwA0e+7P2rOjjiyw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,11 +47,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Daniel Stone <daniels@collabora.com>,
-        Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 11/15] tools headers UAPI: Update tools's copy of drm.h headers
-Date:   Tue, 14 Apr 2020 13:48:50 -0300
-Message-Id: <20200414164854.26026-12-acme@kernel.org>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 10/15] tools headers kvm: Sync linux/kvm.h with the kernel sources
+Date:   Tue, 14 Apr 2020 13:48:49 -0300
+Message-Id: <20200414164854.26026-11-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -64,58 +67,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Picking the changes from:
+To pick up the changes from:
 
-  455e00f1412f ("drm: Add getfb2 ioctl")
+  9a5788c615f5 ("KVM: PPC: Book3S HV: Add a capability for enabling secure guests")
+  3c9bd4006bfc ("KVM: x86: enable dirty log gradually in small chunks")
+  13da9ae1cdbf ("KVM: s390: protvirt: introduce and enable KVM_CAP_S390_PROTECTED")
+  e0d2773d487c ("KVM: s390: protvirt: UV calls in support of diag308 0, 1")
+  19e122776886 ("KVM: S390: protvirt: Introduce instruction data area bounce buffer")
+  29b40f105ec8 ("KVM: s390: protvirt: Add initial vm and cpu lifecycle handling")
 
-Silencing these perf build warnings:
+So far we're ignoring those arch specific ioctls, we need to revisit
+this at some time to have arch specific tables, etc:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/drm/drm.h' differs from latest version at 'include/uapi/drm/drm.h'
-  diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
-
-Now 'perf trace' and other code that might use the
-tools/perf/trace/beauty autogenerated tables will be able to translate
-this new ioctl code into a string:
-
-  $ tools/perf/trace/beauty/drm_ioctl.sh > before
-  $ cp include/uapi/drm/drm.h tools/include/uapi/drm/drm.h
-  $ tools/perf/trace/beauty/drm_ioctl.sh > after
-  $ diff -u before after
-  --- before	2020-04-14 09:28:45.461821077 -0300
-  +++ after	2020-04-14 09:28:53.594782685 -0300
-  @@ -107,6 +107,7 @@
-   	[0xCB] = "SYNCOBJ_QUERY",
-   	[0xCC] = "SYNCOBJ_TRANSFER",
-   	[0xCD] = "SYNCOBJ_TIMELINE_SIGNAL",
-  +	[0xCE] = "MODE_GETFB2",
-   	[DRM_COMMAND_BASE + 0x00] = "I915_INIT",
-   	[DRM_COMMAND_BASE + 0x01] = "I915_FLUSH",
-   	[DRM_COMMAND_BASE + 0x02] = "I915_FLIP",
+  $ grep S390 tools/perf/trace/beauty/kvm_ioctl.sh
+      egrep -v " ((ARM|PPC|S390)_|[GS]ET_(DEBUGREGS|PIT2|XSAVE|TSC_KHZ)|CREATE_SPAPR_TCE_64)" | \
   $
 
+This addresses these tools/perf build warnings:
+
+  Warning: Kernel ABI header at 'tools/arch/arm/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm/include/uapi/asm/kvm.h'
+  diff -u tools/arch/arm/include/uapi/asm/kvm.h arch/arm/include/uapi/asm/kvm.h
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Daniel Stone <daniels@collabora.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Jay Zhou <jianjay.zhou@huawei.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/drm/drm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/include/uapi/linux/kvm.h | 47 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 45 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
-index 868bf7996c0f..808b48a93330 100644
---- a/tools/include/uapi/drm/drm.h
-+++ b/tools/include/uapi/drm/drm.h
-@@ -948,6 +948,8 @@ extern "C" {
- #define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
- #define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 4b95f9a31a2f..428c7dde6b4b 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -474,12 +474,17 @@ struct kvm_s390_mem_op {
+ 	__u32 size;		/* amount of bytes */
+ 	__u32 op;		/* type of operation */
+ 	__u64 buf;		/* buffer in userspace */
+-	__u8 ar;		/* the access register number */
+-	__u8 reserved[31];	/* should be set to 0 */
++	union {
++		__u8 ar;	/* the access register number */
++		__u32 sida_offset; /* offset into the sida */
++		__u8 reserved[32]; /* should be set to 0 */
++	};
+ };
+ /* types for kvm_s390_mem_op->op */
+ #define KVM_S390_MEMOP_LOGICAL_READ	0
+ #define KVM_S390_MEMOP_LOGICAL_WRITE	1
++#define KVM_S390_MEMOP_SIDA_READ	2
++#define KVM_S390_MEMOP_SIDA_WRITE	3
+ /* flags for kvm_s390_mem_op->flags */
+ #define KVM_S390_MEMOP_F_CHECK_ONLY		(1ULL << 0)
+ #define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
+@@ -1010,6 +1015,8 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_ARM_NISV_TO_USER 177
+ #define KVM_CAP_ARM_INJECT_EXT_DABT 178
+ #define KVM_CAP_S390_VCPU_RESETS 179
++#define KVM_CAP_S390_PROTECTED 180
++#define KVM_CAP_PPC_SECURE_GUEST 181
  
-+#define DRM_IOCTL_MODE_GETFB2		DRM_IOWR(0xCE, struct drm_mode_fb_cmd2)
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+@@ -1478,6 +1485,39 @@ struct kvm_enc_region {
+ #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
+ #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
+ 
++struct kvm_s390_pv_sec_parm {
++	__u64 origin;
++	__u64 length;
++};
 +
- /**
-  * Device specific ioctls should only be in their respective headers
-  * The device specific ioctl range is from 0x40 to 0x9f.
++struct kvm_s390_pv_unp {
++	__u64 addr;
++	__u64 size;
++	__u64 tweak;
++};
++
++enum pv_cmd_id {
++	KVM_PV_ENABLE,
++	KVM_PV_DISABLE,
++	KVM_PV_SET_SEC_PARMS,
++	KVM_PV_UNPACK,
++	KVM_PV_VERIFY,
++	KVM_PV_PREP_RESET,
++	KVM_PV_UNSHARE_ALL,
++};
++
++struct kvm_pv_cmd {
++	__u32 cmd;	/* Command to be executed */
++	__u16 rc;	/* Ultravisor return code */
++	__u16 rrc;	/* Ultravisor return reason code */
++	__u64 data;	/* Data or address */
++	__u32 flags;    /* flags for future extensions. Must be 0 for now */
++	__u32 reserved[3];
++};
++
++/* Available with KVM_CAP_S390_PROTECTED */
++#define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
++
+ /* Secure Encrypted Virtualization command */
+ enum sev_cmd_id {
+ 	/* Guest initialization commands */
+@@ -1628,4 +1668,7 @@ struct kvm_hyperv_eventfd {
+ #define KVM_HYPERV_CONN_ID_MASK		0x00ffffff
+ #define KVM_HYPERV_EVENTFD_DEASSIGN	(1 << 0)
+ 
++#define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE    (1 << 0)
++#define KVM_DIRTY_LOG_INITIALLY_SET            (1 << 1)
++
+ #endif /* __LINUX_KVM_H */
 -- 
 2.21.1
 
