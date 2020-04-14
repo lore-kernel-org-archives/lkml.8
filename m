@@ -2,141 +2,124 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01BCC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2D3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85AF5206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D910F20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gp1QYLF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436665AbgDNIYA (ORCPT
+        id S2436674AbgDNIYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407133AbgDNIU4 (ORCPT
+        Tue, 14 Apr 2020 04:24:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60225 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436523AbgDNIVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:20:56 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F57C00860E;
-        Tue, 14 Apr 2020 01:20:56 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOGoO-0006Ik-6C; Tue, 14 Apr 2020 10:20:52 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BF2E91C0450;
-        Tue, 14 Apr 2020 10:20:51 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 08:20:51 -0000
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/x86: Move efi stub globals from .bss to .data
-Cc:     Sergey Shatunov <me@prok.pw>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200406180614.429454-1-nivedita@alum.mit.edu>
-References: <20200406180614.429454-1-nivedita@alum.mit.edu>
+        Tue, 14 Apr 2020 04:21:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586852461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TtBLM3c8JTLmBP2uDmSrWuT9/+Pwll6JJwpjBt6QX00=;
+        b=Gp1QYLF1PrEgX3vAu+dXARdbbNzC1ycYKeG+e0+OpE4vNR7LX6VMIJvieYXs4I87X9JUX/
+        gzuj5HEc/iaB6nLYR4Z289isVPNRjpA/FaBzKZI6u0tRNFN9Hc5SnZ4PMicCjfqTZnyeXs
+        lgf+SPEheVAIOy5fbj3vM1Ma0KNTWZQ=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-495-J1iW7KjONDavI80bIPdQkA-1; Tue, 14 Apr 2020 04:19:02 -0400
+X-MC-Unique: J1iW7KjONDavI80bIPdQkA-1
+Received: by mail-wm1-f71.google.com with SMTP id h184so300020wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:19:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TtBLM3c8JTLmBP2uDmSrWuT9/+Pwll6JJwpjBt6QX00=;
+        b=Cgr8HCbif3MIqeAvrbaP65wJqr84FJUqsxgXLu8MBWiCQ2vuevr+gQV1oi5aks2jlU
+         KqkAeDePvcGp0XO6mbrBrOMO4a7lal2QVJud/M+eSPonzeCBZKmGetB+s4BsT3FsHLQO
+         /B496O27X7AtR6hHGrAQu7CmyswBlYsIgyn8DC10pfnL7mazCIO2cri35jsu16NmhIni
+         /gubrk2xYnqPKTsR4jK1oEHWNQehJD3iQsr0Q8NTavcsl6MK0vC36iLDoPQFyDHGnrUs
+         9vI+zhwH8XoQzuI5nDOqfM6Ttvu/E+mrr/F0TvRo/NtylIvwIc6/UuPNWMHmwXqiyIVk
+         eQmw==
+X-Gm-Message-State: AGi0Pua5o8/XF2SH8cxwjfgzerASJX726memW3T52H+E0FeFi4+P6enJ
+        FwnMwJk+BnUGKhoWIj1vXPUqO7a2a0PuTqHKc079HiICaixpg+4f0ewBwHd5m7zWe9UvoqXPXcw
+        8hR/l7gWYOnBdVWzowiM2Q/+9
+X-Received: by 2002:a05:6000:8b:: with SMTP id m11mr8390693wrx.168.1586852341223;
+        Tue, 14 Apr 2020 01:19:01 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKNVMzJLyv+Go05DzXWcde1VJnPobjfS5TpC3OSGCsAYJkHQBkL4kr8iyDzRWBXP64iQWFZGA==
+X-Received: by 2002:a05:6000:8b:: with SMTP id m11mr8390681wrx.168.1586852340970;
+        Tue, 14 Apr 2020 01:19:00 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e159:eda1:c472:fcfa? ([2001:b07:6468:f312:e159:eda1:c472:fcfa])
+        by smtp.gmail.com with ESMTPSA id o28sm3426907wra.84.2020.04.14.01.18.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 01:19:00 -0700 (PDT)
+Subject: Re: [PATCH] kvm_host: unify VM_STAT and VCPU_STAT definitions in a
+ single place
+To:     =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        kvm@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+References: <20200413140332.22896-1-eesposit@redhat.com>
+ <03a481a8-bcf2-8755-d113-71ef393508bf@amsat.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bf870876-9f9a-7ba8-d941-a3883e519eed@redhat.com>
+Date:   Tue, 14 Apr 2020 10:18:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Message-ID: <158685245141.28353.8610622208195845083.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <03a481a8-bcf2-8755-d113-71ef393508bf@amsat.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+On 13/04/20 23:34, Philippe Mathieu-Daudé wrote:
+>> +#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
+>> +#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
+> I find this macro expanding into multiple fields odd... Maybe a matter
+> of taste. Sugggestion, have the macro define the full structure, as in
+> the arm64 arch:
+> 
+> #define VM_STAT(n, x, ...) { n, offsetof(struct kvm, stat.x),
+> KVM_STAT_VM, ## __VA_ARGS__ }
+> 
+> Ditto for VCPU_STAT().
+> 
 
-Commit-ID:     105cb9544b161819b7be23a8a8419353a3218807
-Gitweb:        https://git.kernel.org/tip/105cb9544b161819b7be23a8a8419353a3218807
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Thu, 09 Apr 2020 15:04:28 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 14 Apr 2020 08:32:13 +02:00
+Yes, that's a good idea.  Emanuele, can you switch it to this format?
 
-efi/x86: Move efi stub globals from .bss to .data
+Thanks,
 
-Commit
+Paolo
 
-  3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
-
-removed the .bss section from the bzImage.
-
-However, while a PE loader is required to zero-initialize the .bss
-section before calling the PE entry point, the EFI handover protocol
-does not currently document any requirement that .bss be initialized by
-the bootloader prior to calling the handover entry.
-
-When systemd-boot is used to boot a unified kernel image [1], the image
-is constructed by embedding the bzImage as a .linux section in a PE
-executable that contains a small stub loader from systemd together with
-additional sections and potentially an initrd. As the .bss section
-within the bzImage is no longer explicitly present as part of the file,
-it is not initialized before calling the EFI handover entry.
-Furthermore, as the size of the embedded .linux section is only the size
-of the bzImage file itself, the .bss section's memory may not even have
-been allocated.
-
-In particular, this can result in efi_disable_pci_dma being true even
-when it was not specified via the command line or configuration option,
-which in turn causes crashes while booting on some systems.
-
-To avoid issues, place all EFI stub global variables into the .data
-section instead of .bss. As of this writing, only boolean flags for a
-few command line arguments and the sys_table pointer were in .bss and
-will now move into the .data section.
-
-[1] https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
-
-Fixes: 3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
-Reported-by: Sergey Shatunov <me@prok.pw>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200406180614.429454-1-nivedita@alum.mit.edu
-Link: https://lore.kernel.org/r/20200409130434.6736-4-ardb@kernel.org
----
- drivers/firmware/efi/libstub/efistub.h  | 2 +-
- drivers/firmware/efi/libstub/x86-stub.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index cc90a74..67d2694 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -25,7 +25,7 @@
- #define EFI_ALLOC_ALIGN		EFI_PAGE_SIZE
- #endif
- 
--#ifdef CONFIG_ARM
-+#if defined(CONFIG_ARM) || defined(CONFIG_X86)
- #define __efistub_global	__section(.data)
- #else
- #define __efistub_global
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index e02ea51..867a57e 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -20,7 +20,7 @@
- /* Maximum physical address for 64-bit kernel with 4-level paging */
- #define MAXMEM_X86_64_4LEVEL (1ull << 46)
- 
--static efi_system_table_t *sys_table;
-+static efi_system_table_t *sys_table __efistub_global;
- extern const bool efi_is64;
- extern u32 image_offset;
- 
