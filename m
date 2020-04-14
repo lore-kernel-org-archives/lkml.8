@@ -2,127 +2,155 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32177C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5E2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 189CF2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3842087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="doeIn3Si"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502578AbgDNNGg (ORCPT
+        id S2502586AbgDNNII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:06:36 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:55642 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502564AbgDNNGQ (ORCPT
+        Tue, 14 Apr 2020 09:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730314AbgDNNIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:06:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id h10so14720448ilq.22
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:06:15 -0700 (PDT)
+        Tue, 14 Apr 2020 09:08:02 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E57C061A0C;
+        Tue, 14 Apr 2020 06:08:01 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h2so12882097wmb.4;
+        Tue, 14 Apr 2020 06:08:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NTg88EBEg4qOXVBL74JDWDn01n0VKUHWmo8g8ottwjk=;
+        b=doeIn3Si97S/MngUsuOx9N4xLfiWQ81AHOxJsgpJhSAaWdJ2Vx25UzrTmv1oMFjUT5
+         2QrtYy8fiNH4Kn3zuur6CtddJ+sA9PjIDuvapuo+7hezmgeX1gCLq8q/cvM0dqtWRJ+s
+         RRbl7AO5mYAqbZIYfFOfsLhszvuoM1XdzCh6gHiYb2MIgUpFnlvCr3wmp+TG3kxnoWi2
+         KTfOQAqt+s4VSLVL7pdljX4nIVsSCXJW1iUCV2XueyHuhYle+s3TZXZVNctwVQ/UWr18
+         WrkPmWYC/UlioNHys+m0chulDlp4tIJTjsliPfReuZdcpT6juGkIrPquN6zRthwd3wzu
+         0ZSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=WGQ3SBJwnf5YlDpIwsgsa30mhVfEOL2HbfrgyzxLGnc=;
-        b=KcfRnsOg0fWL37ZUgYk2jijedTOrrm5v8KvwuN+jPSG1K/YvKDd/Iz3eve5MJRcQ5N
-         33UOff88vNJwPM6Il3ap4bcVZGET+OKBc+6LECcIvzLZkQ9qDcOsVnIk5Xmig7cNsncH
-         t+RqbvfHkwnL47lpoDS7jOqctXEjBCLZottMyBfL2dvbGzX8dPQR594vSdakwFdMwNYa
-         er/O7prxpVoKXsfWgoAsRXyCySxI3QsbMShOJ1MFBYzeQrrgD29cIK5QJfyMq2w93juU
-         QGBBfQ5qI1+KBCcMYaIOkCxgM3AgdjKhk1F99OmECoobn7ARgNW0KnX4/dSJcsFj6t2i
-         ownQ==
-X-Gm-Message-State: AGi0PuYmDPbywe1FEjwlhTEP1R3krrSvJZWKi15yzlOdXVhL7usRhDkJ
-        jBQFbbEzF5STRi46nBPVpk0qTGuAdJTcRGlJF81j36QdkT0h
-X-Google-Smtp-Source: APiQypJhM6Ooj+LDG0cOS+J2eVV/xc3nBrVxB8AaWinUc083RZNukheeDbjpO8n8EebTcWpWn6KhKsXwn1rfWItyQs/rkAkmoVwg
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NTg88EBEg4qOXVBL74JDWDn01n0VKUHWmo8g8ottwjk=;
+        b=kfmPpT/MOie0nZYLux8VUwp+gTfDh681xjPGEzrFoKV9KZOCzHAEmEpLaQXTa2NP50
+         /gkQnzkL2QSH33IP6DUpt5Th8tiLlsBX2oVlzOhd6Jr9DZwfMgY5ZS1ypMxOhmPyEjjG
+         qy7S8X638prKM3gg+8Q5ilm+DCn3X0KQ85DXR7FOyd8KKSaQ3br8MFUBZVkIzRNJ4Zh3
+         wFaLnqKZQvE+2g3jxlGI9gElg9G90Bbt5SAA/5Ri7qlgjMM3zakwI+9pIdb6Gn3JcDNw
+         /sYLAXVWPBhM+NKcSG7OEhdiHn2KMuhn/G5fECeOhKY2sCFaIedWOfmoaLHqtvX/0pFg
+         aupA==
+X-Gm-Message-State: AGi0Pub/NVKjxacGwySPhgQsoKhj0S8OXxnu/Yd4Wb2hpUUuC+xJ5o7W
+        o/720RD1VLGPLbL3SgZnau6Sc92Y1yFlhKudm3I=
+X-Google-Smtp-Source: APiQypLRdOptdfBucYqQMnGBtfQiQYTTSA5SWpTYFLPJ+tWQQHwbFT4r0uERcCDlgiqUc8evR7fd9G2UXxUjtwOwvAI=
+X-Received: by 2002:a7b:cc8e:: with SMTP id p14mr23079662wma.70.1586869680226;
+ Tue, 14 Apr 2020 06:08:00 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2a56:: with SMTP id k22mr530410iov.22.1586869575527;
- Tue, 14 Apr 2020 06:06:15 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 06:06:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005ab2f105a33fdd82@google.com>
-Subject: WARNING in plist_check_prev_next
-From:   syzbot <syzbot+9c64e877cca5f208807f@syzkaller.appspotmail.com>
-To:     len.brown@intel.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, pavel@ucw.cz, rjw@rjwysocki.net,
-        syzkaller-bugs@googlegroups.com
+References: <f4eaf0ca-6cd6-c224-9205-bf64ca533ff5@molgen.mpg.de>
+ <dcc4851e-0ab5-683a-2cf2-687d64a3c9da@molgen.mpg.de> <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
+ <20200414082150.GD4149624@kroah.com>
+In-Reply-To: <20200414082150.GD4149624@kroah.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 14 Apr 2020 09:07:49 -0400
+Message-ID: <CADnq5_NCnHFO9kZY-8L34B3uVX5aghXO8+gXNC_cPMOnP7UGAg@mail.gmail.com>
+Subject: Re: [regression 5.7-rc1] System does not power off, just halts
+To:     Greg KH <greg@kroah.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Prike Liang <Prike.Liang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        regressions@leemhuis.info, David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "for 3.8" <stable@vger.kernel.org>, Huang Rui <ray.huang@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mengbing Wang <Mengbing.Wang@amd.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Apr 14, 2020 at 4:21 AM Greg KH <greg@kroah.com> wrote:
+>
+> On Mon, Apr 13, 2020 at 01:48:58PM -0400, Alex Deucher wrote:
+> > On Mon, Apr 13, 2020 at 1:47 PM Paul Menzel <pmenzel@molgen.mpg.de> wro=
+te:
+> > >
+> > > Dear Prike, dear Alex, dear Linux folks,
+> > >
+> > >
+> > > Am 13.04.20 um 10:44 schrieb Paul Menzel:
+> > >
+> > > > A regression between causes a system with the AMD board MSI B350M M=
+ORTAR
+> > > > (MS-7A37) with an AMD Ryzen 3 2200G not to power off any more but j=
+ust
+> > > > to halt.
+> > > >
+> > > > The regression is introduced in 9ebe5422ad6c..b032227c6293. I am in=
+ the
+> > > > process to bisect this, but maybe somebody already has an idea.
+> > >
+> > > I found the Easter egg:
+> > >
+> > > > commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58
+> > > > Author: Prike Liang <Prike.Liang@amd.com>
+> > > > Date:   Tue Apr 7 20:21:26 2020 +0800
+> > > >
+> > > >     drm/amdgpu: fix gfx hang during suspend with video playback (v2=
+)
+> > > >
+> > > >     The system will be hang up during S3 suspend because of SMU is =
+pending
+> > > >     for GC not respose the register CP_HQD_ACTIVE access request.Th=
+is issue
+> > > >     root cause of accessing the GC register under enter GFX CGGPG a=
+nd can
+> > > >     be fixed by disable GFX CGPG before perform suspend.
+> > > >
+> > > >     v2: Use disable the GFX CGPG instead of RLC safe mode guard.
+> > > >
+> > > >     Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+> > > >     Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
+> > > >     Reviewed-by: Huang Rui <ray.huang@amd.com>
+> > > >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> > > >     Cc: stable@vger.kernel.org
+> > >
+> > > It reverts cleanly on top of 5.7-rc1, and this fixes the issue.
+> > >
+> > > Greg, please do not apply this to the stable series. The commit messa=
+ge
+> > > doesn=E2=80=99t even reference a issue/bug report, and doesn=E2=80=99=
+t give a detailed
+> > > problem description. What system is it?
+> > >
+> > > Dave, Alex, how to proceed? Revert? I created issue 1094 [1].
+> >
+> > Already fixed:
+> > https://patchwork.freedesktop.org/patch/361195/
+>
+> Any reason that doesn't have a cc: stable tag on it?
+>
+> And is it committed to any tree at the moment?
 
-syzbot found the following crash on:
+It's going out in my -fixes pull this week with a stable tag.
 
-HEAD commit:    c0cc2711 Merge tag 'modules-for-v5.7' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1600bdb3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23c5a352e32a1944
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c64e877cca5f208807f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
+Alex
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9c64e877cca5f208807f@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-top: 00000000dcea6c9a, n: 0000000093c70fdb, p: 0000000013dbca61
-prev: 00000000dcea6c9a, n: 0000000093c70fdb, p: 0000000013dbca61
-next: 0000000093c70fdb, n: 0000000093c70fdb, p: 0000000093c70fdb
-WARNING: CPU: 1 PID: 30481 at lib/plist.c:35 plist_check_prev_next+0x108/0x1a0 lib/plist.c:35
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 30481 Comm: syz-executor.3 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:plist_check_prev_next+0x108/0x1a0 lib/plist.c:35
-Code: df 48 c1 ee 03 80 3c 16 00 75 6c 49 8b 14 24 41 55 4d 89 f1 49 89 d8 50 4c 89 e6 48 c7 c7 80 20 fc 88 55 41 57 e8 60 52 7b f9 <0f> 0b 48 83 c4 20 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 1f
-RSP: 0018:ffffc90007d9f8d0 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: ffffffff899a9780 RCX: 0000000000000000
-RDX: 0000000000020c0b RSI: ffffffff815cd551 RDI: fffff52000fb3f0c
-RBP: ffff8880a8479858 R08: ffff8880673a60c0 R09: ffffed1015ce45f1
-R10: ffff8880ae722f83 R11: ffffed1015ce45f0 R12: ffffffff899a9780
-R13: ffff8880a8479858 R14: ffff8880a8479858 R15: ffffffff8bbc3ed8
- plist_check_list+0x41/0xa0 lib/plist.c:48
- plist_add+0x2f/0x4e0 lib/plist.c:78
- pm_qos_update_target+0x4ac/0x5d0 kernel/power/qos.c:125
- cpu_latency_qos_apply+0x40/0x70 kernel/power/qos.c:247
- cpu_latency_qos_add_request+0xf1/0x3c0 kernel/power/qos.c:277
- snd_pcm_hw_params+0x173c/0x1da0 sound/core/pcm_native.c:757
- snd_pcm_kernel_ioctl+0xd1/0x240 sound/core/pcm_native.c:3305
- snd_pcm_oss_change_params_locked+0x1328/0x34b0 sound/core/oss/pcm_oss.c:941
- snd_pcm_oss_make_ready_locked+0xb3/0x130 sound/core/oss/pcm_oss.c:1166
- snd_pcm_oss_write1 sound/core/oss/pcm_oss.c:1384 [inline]
- snd_pcm_oss_write+0x43b/0x8c0 sound/core/oss/pcm_oss.c:2765
- __vfs_write+0x76/0x100 fs/read_write.c:495
- vfs_write+0x268/0x5d0 fs/read_write.c:559
- ksys_write+0x12d/0x250 fs/read_write.c:612
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> thanks,
+>
+> greg k-h
