@@ -2,109 +2,115 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5043EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF81C38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2788320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gkxa9gqq"
+	by mail.kernel.org (Postfix) with ESMTP id 59CE420644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732687AbgDNNlv (ORCPT
+        id S1732724AbgDNNmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502667AbgDNNOY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:14:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886CBC061A0F;
-        Tue, 14 Apr 2020 06:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=P0QGXI8WIAUkLA5oaVQBkKr+RjNjEiTElf25rk2wDtU=; b=gkxa9gqqASDphVAfv8wQt845n9
-        jxkDvAqxlxq3J6swikqKkHBol2ekFVYuRiMkqfgxWqwJXtVowUJA7JjIek0DLR0hHrHAizB5G7Wsc
-        oot4UnFb6Xragn/foDCyGfKAjsCHRfqvVZRmIgXoRm+tCfezVrCYGWXgNNVttfszg/ayjEN/RMQ7R
-        59IfeDRqEnNQLXqu1aFCyGpz2UAFfQmjKnYeQBjdx4DL6OZQoyk854r/C68f7mqnWD6X4Jwo3J6Mf
-        YdAyGkJTZ7GF84coUyuViF3tLk9sw6TRCoiRgWSxRil+PRCoYHLztBa/Op3s/jlDqMmwGscHlTz8c
-        rmXaTzog==;
-Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOLO6-0006Jn-Io; Tue, 14 Apr 2020 13:14:03 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 03/29] staging: android: ion: use vmap instead of vm_map_ram
-Date:   Tue, 14 Apr 2020 15:13:22 +0200
-Message-Id: <20200414131348.444715-4-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200414131348.444715-1-hch@lst.de>
-References: <20200414131348.444715-1-hch@lst.de>
+        Tue, 14 Apr 2020 09:42:06 -0400
+Received: from mail.v3.sk ([167.172.186.51]:54832 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728028AbgDNNmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:42:02 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 27FADE03A9;
+        Tue, 14 Apr 2020 13:42:25 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Kf1VxHPKjDDi; Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id C5C6BE043F;
+        Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id nLR6T56V68z8; Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 54494E03A9;
+        Tue, 14 Apr 2020 13:42:23 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 15:41:55 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        colin.king@canonical.com, dan.carpenter@oracle.com,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libertas: make lbs_init_mesh() void
+Message-ID: <20200414134155.GA166011@furthur.local>
+References: <20200410090942.27239-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410090942.27239-1-yanaijie@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
-with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
+On Fri, Apr 10, 2020 at 05:09:42PM +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> drivers/net/wireless/marvell/libertas/mesh.c:833:5-8: Unneeded variable:
+> "ret". Return "0" on line 874
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- drivers/staging/android/ion/ion_heap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
 
-diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
-index 473b465724f1..0755b11348ed 100644
---- a/drivers/staging/android/ion/ion_heap.c
-+++ b/drivers/staging/android/ion/ion_heap.c
-@@ -99,12 +99,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
- 
- static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
- {
--	void *addr = vm_map_ram(pages, num, -1, pgprot);
-+	void *addr = vmap(pages, num, VM_MAP, pgprot);
- 
- 	if (!addr)
- 		return -ENOMEM;
- 	memset(addr, 0, PAGE_SIZE * num);
--	vm_unmap_ram(addr, num);
-+	vunmap(addr);
- 
- 	return 0;
- }
--- 
-2.25.1
+Thank you
+Lubo
 
+> ---
+>  drivers/net/wireless/marvell/libertas/mesh.c | 6 +-----
+>  drivers/net/wireless/marvell/libertas/mesh.h | 2 +-
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/libertas/mesh.c b/drivers/net/wireless/marvell/libertas/mesh.c
+> index 44c8a550da4c..f5b78257d551 100644
+> --- a/drivers/net/wireless/marvell/libertas/mesh.c
+> +++ b/drivers/net/wireless/marvell/libertas/mesh.c
+> @@ -828,10 +828,8 @@ static void lbs_persist_config_remove(struct net_device *dev)
+>   * Check mesh FW version and appropriately send the mesh start
+>   * command
+>   */
+> -int lbs_init_mesh(struct lbs_private *priv)
+> +void lbs_init_mesh(struct lbs_private *priv)
+>  {
+> -	int ret = 0;
+> -
+>  	/* Determine mesh_fw_ver from fwrelease and fwcapinfo */
+>  	/* 5.0.16p0 9.0.0.p0 is known to NOT support any mesh */
+>  	/* 5.110.22 have mesh command with 0xa3 command id */
+> @@ -870,8 +868,6 @@ int lbs_init_mesh(struct lbs_private *priv)
+>  
+>  	/* Stop meshing until interface is brought up */
+>  	lbs_mesh_config(priv, CMD_ACT_MESH_CONFIG_STOP, 1);
+> -
+> -	return ret;
+>  }
+>  
+>  void lbs_start_mesh(struct lbs_private *priv)
+> diff --git a/drivers/net/wireless/marvell/libertas/mesh.h b/drivers/net/wireless/marvell/libertas/mesh.h
+> index 1561018f226f..d49717b20c09 100644
+> --- a/drivers/net/wireless/marvell/libertas/mesh.h
+> +++ b/drivers/net/wireless/marvell/libertas/mesh.h
+> @@ -16,7 +16,7 @@
+>  
+>  struct net_device;
+>  
+> -int lbs_init_mesh(struct lbs_private *priv);
+> +void lbs_init_mesh(struct lbs_private *priv);
+>  void lbs_start_mesh(struct lbs_private *priv);
+>  int lbs_deinit_mesh(struct lbs_private *priv);
+>  
+> -- 
+> 2.17.2
+> 
