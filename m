@@ -2,134 +2,148 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618BAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70095C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427F02084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D632075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:59:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TAcHGeo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502448AbgDNM4t (ORCPT
+        id S2502466AbgDNM7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:56:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30327 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502379AbgDNM4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:56:37 -0400
-IronPort-SDR: RALUCLWzA513w5YLsdb+DuMoI3qmO9SBvtQ+wz21FWHI0TEjmB5d1hhQBzoGGJD30K1kL3tsX6
- Zeu0OusZ0E9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 05:56:35 -0700
-IronPort-SDR: 0t2LpaZzXlrLiysgg+XThqX3bjmDETP/jkxtCWox8fvVjUjySzFjzb/fbcs52LNgL3lyv+Fwjo
- Ppo2e/h182MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
-   d="scan'208";a="277244660"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Apr 2020 05:56:34 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 3/3][RFC v2] tools/power turbostat: Enable accumulate RAPL display
-Date:   Tue, 14 Apr 2020 20:57:07 +0800
-Message-Id: <81e85cd2b8e2d386bac71731307c0dcd4ad2871f.1586782089.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1586782089.git.yu.c.chen@intel.com>
-References: <cover.1586782089.git.yu.c.chen@intel.com>
+        Tue, 14 Apr 2020 08:59:11 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47400 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2502439AbgDNM7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:59:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586869143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0fdJexKCJPjvfrLIsyDcvHn2Ex4ChlT7CSP78FqF/p0=;
+        b=TAcHGeo3pH6LG7J5uqb/L9VLaGGoBZO9RlfkS3mUMT6i4cGpeFtxL1p7z75UebLO00wb5f
+        dj0FNwN3DLiEcDOj0HOdwJ8QExUP2VmkQJ+sDMvPM1xKTywCk5AUGhHiR9g60IAxlA2dOD
+        1PtDQ9IXZxSOVnimoCi/84+Wfl5+Pl8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-vOXVWCNXO6iub9T6nt5_og-1; Tue, 14 Apr 2020 08:59:02 -0400
+X-MC-Unique: vOXVWCNXO6iub9T6nt5_og-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FD1E13F8;
+        Tue, 14 Apr 2020 12:59:00 +0000 (UTC)
+Received: from gondolin (ovpn-113-32.ams2.redhat.com [10.36.113.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DD8425C1B2;
+        Tue, 14 Apr 2020 12:58:54 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 14:58:51 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20200414145851.562867ae.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-4-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-4-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the accumulated RAPL display by default.
+On Tue,  7 Apr 2020 15:20:03 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- tools/power/x86/turbostat/turbostat.c | 34 +++++++++++----------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. The intent of
+> this callback is to provide a driver with the means to prevent a root user
+> from inadvertently taking a queue away from a guest and giving it to the
+> host while the guest is still using it. The callback will
+> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+> attributes would result in one or more AP queues being removed from its
+> driver. If the callback responds in the affirmative for any driver
+> queried, the change to the apmask or aqmask will be rejected with a device
+> in use error.
+> 
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver manages AP queues passed through to one or more
+> guests and we don't want to unexpectedly take AP resources away from
+> guests which are most likely independently administered.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
+>  drivers/s390/crypto/ap_bus.h |   4 +
+>  2 files changed, 142 insertions(+), 6 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index ef380db38cba..29fc4069f467 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -1169,14 +1169,7 @@ int format_counters(struct thread_data *t, struct core_data *c,
- 		}
- 	}
- 
--	/*
--	 * If measurement interval exceeds minimum RAPL Joule Counter range,
--	 * indicate that results are suspect by printing "**" in fraction place.
--	 */
--	if (interval_float < rapl_joule_counter_range)
--		fmt8 = "%s%.2f";
--	else
--		fmt8 = "%6.0f**";
-+	fmt8 = "%s%.2f";
- 
- 	if (DO_BIC(BIC_CorWatt) && (do_rapl & RAPL_PER_CORE_ENERGY))
- 		outp += sprintf(outp, fmt8, (printed++ ? delim : ""), c->core_energy * rapl_energy_units / interval_float);
-@@ -2069,34 +2062,34 @@ int get_counters(struct thread_data *t, struct core_data *c, struct pkg_data *p)
- 		p->sys_lpi = cpuidle_cur_sys_lpi_us;
- 
- 	if (do_rapl & RAPL_PKG) {
--		if (get_msr(cpu, MSR_PKG_ENERGY_STATUS, &msr))
-+		if (get_msr_sum(cpu, MSR_PKG_ENERGY_STATUS, &msr))
- 			return -13;
--		p->energy_pkg = msr & 0xFFFFFFFF;
-+		p->energy_pkg = msr;
- 	}
- 	if (do_rapl & RAPL_CORES_ENERGY_STATUS) {
--		if (get_msr(cpu, MSR_PP0_ENERGY_STATUS, &msr))
-+		if (get_msr_sum(cpu, MSR_PP0_ENERGY_STATUS, &msr))
- 			return -14;
--		p->energy_cores = msr & 0xFFFFFFFF;
-+		p->energy_cores = msr;
- 	}
- 	if (do_rapl & RAPL_DRAM) {
--		if (get_msr(cpu, MSR_DRAM_ENERGY_STATUS, &msr))
-+		if (get_msr_sum(cpu, MSR_DRAM_ENERGY_STATUS, &msr))
- 			return -15;
--		p->energy_dram = msr & 0xFFFFFFFF;
-+		p->energy_dram = msr;
- 	}
- 	if (do_rapl & RAPL_GFX) {
--		if (get_msr(cpu, MSR_PP1_ENERGY_STATUS, &msr))
-+		if (get_msr_sum(cpu, MSR_PP1_ENERGY_STATUS, &msr))
- 			return -16;
--		p->energy_gfx = msr & 0xFFFFFFFF;
-+		p->energy_gfx = msr;
- 	}
- 	if (do_rapl & RAPL_PKG_PERF_STATUS) {
--		if (get_msr(cpu, MSR_PKG_PERF_STATUS, &msr))
-+		if (get_msr_sum(cpu, MSR_PKG_PERF_STATUS, &msr))
- 			return -16;
--		p->rapl_pkg_perf_status = msr & 0xFFFFFFFF;
-+		p->rapl_pkg_perf_status = msr;
- 	}
- 	if (do_rapl & RAPL_DRAM_PERF_STATUS) {
--		if (get_msr(cpu, MSR_DRAM_PERF_STATUS, &msr))
-+		if (get_msr_sum(cpu, MSR_DRAM_PERF_STATUS, &msr))
- 			return -16;
--		p->rapl_dram_perf_status = msr & 0xFFFFFFFF;
-+		p->rapl_dram_perf_status = msr;
- 	}
- 	if (do_rapl & RAPL_AMD_F17H) {
- 		if (get_msr(cpu, MSR_PKG_ENERGY_STAT, &msr))
-@@ -6073,6 +6066,7 @@ int main(int argc, char **argv)
- 		return 0;
- 	}
- 
-+	msr_sum_record();
- 	/*
- 	 * if any params left, it must be a command to fork
- 	 */
--- 
-2.20.1
+(...)
+
+> @@ -1196,12 +1202,75 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>  	return rc;
+>  }
+>  
+> +int __verify_card_reservations(struct device_driver *drv, void *data)
+> +{
+> +	int rc = 0;
+> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+> +	unsigned long *newapm = (unsigned long *)data;
+> +
+> +	/*
+> +	 * If the reserved bits do not identify cards reserved for use by the
+> +	 * non-default driver, there is no need to verify the driver is using
+> +	 * the queues.
+
+I had to read that one several times... what about
+
+"No need to verify whether the driver is using the queues if it is the
+default driver."
+
+?
+
+> +	 */
+> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+> +		return 0;
+> +
+> +	/* The non-default driver's module must be loaded */
+> +	if (!try_module_get(drv->owner))
+> +		return 0;
+
+Is that really needed? I would have thought that the driver core's
+klist usage would make sure that the callback would not be invoked for
+drivers that are not registered anymore. Or am I missing a window?
+
+> +
+> +	if (ap_drv->in_use)
+> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+
+Can we log the offending apm somewhere, preferably with additional info
+that allows the admin to figure out why an error was returned?
+
+> +			rc = -EADDRINUSE;
+> +
+> +	module_put(drv->owner);
+> +
+> +	return rc;
+> +}
+
+(Same comments for the other changes further along in this patch.)
 
