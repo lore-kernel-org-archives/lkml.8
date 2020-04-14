@@ -2,213 +2,141 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D453C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8A7C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00759206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293BB206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:21:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="jlXnhyu7"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="wW8qZX3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405892AbgDNGVg (ORCPT
+        id S2405901AbgDNGVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 02:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47380 "EHLO
+        Tue, 14 Apr 2020 02:21:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729231AbgDNGVf (ORCPT
+        with ESMTP id S1729270AbgDNGVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 02:21:35 -0400
+        Tue, 14 Apr 2020 02:21:53 -0400
 Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A08C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:21:34 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id r14so5607652pfl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:21:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE89C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:21:53 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id r20so3956336pfh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:21:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T2V6RFxG+St6MIwHonDlDqJYtf1QoZ6rfA/nQPhlGxM=;
-        b=jlXnhyu78Pr3Mf9T3zCyZ59xDjsHm3mWl3rYbZSrzdBF1tTa1afLDAfFkEOx40odgC
-         UOJ2mgADsZhbLZC/mbBFYPobHXNEwLUlvqLwFNNZkbic1x8aOSRRE+nXAXAhGqFbkKiE
-         DX6GdjyxxLEAEOu0fQ/Zv/7nYNhsDQqyH53V7fWCQEL6BQSD6uScccI+8yiNWhYIAIk+
-         lT92xWmziQdvsYLgjUxqFcpcDak5rZHQ9lRwe9MHp/VzXC/Bv7buD/ZWELIV90ZXX6lZ
-         lgQs5ntF0YygigTCZb/4nvzcQYOtHFq1imyoiCZMp5OiLSMQoTc8HWjbi5EWeSQN3fWL
-         n71Q==
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AhGsCcJsWxwEFFxEZHrkOLjEp/9h1BEi4GUJh65PtH4=;
+        b=wW8qZX3Uelwn7XTniuKRvm+BQQg7fayx1Qw8h2CxqacAQ1p1I90+7Lp17FAjvDv9z1
+         qC341SseVZacRkPlv/Da5KdalPz3wP0Zj5KbZIKWCKJXiRrHHFEdh1VdGUssJ8iiI33g
+         G/Dhf5Di1CQLga6HRgfBIEhO4SeGEMr1Yti8Gkm2auK+lMmEd3Wrg+tjq29Nslt4lZ9b
+         jtzo9RF9qOOItIeoP1R0ook+cd29AqjnQur7QVVVTij5N8HqWAsNSiwyZYCg9At9tuHM
+         A4PsPLgYBbiOoA+QEq0gt2VvRRQ2l0DR9PJPDejd2nf95pA2ULMHCHwTHcyx36MsONSU
+         NjAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=T2V6RFxG+St6MIwHonDlDqJYtf1QoZ6rfA/nQPhlGxM=;
-        b=GXAhsOwLooegFQqy7KqK6hP7kvtRIOpcUqElvXC5UfAicWnRCRDOQrZuUFwm30o7z7
-         xHOpgjjS55yNsTH1pGb2XudkZ/nBCKGvF5aSfkm/veRX8ZQf79P2NgAMTIEf06MENwLd
-         rFCyBpC6h8jJrnY/N+VWrJXGDRyghssG1DQD0/jB+rrjYWIaXF5V926SKnjYBan7wNTy
-         OBNauqKv5K2I34Antx4B246j/yOngmIKa0MltwwVKzmzSX5U/pvOmB3GenmPqrQgTINT
-         e/RS9Oi1l6XPyKfkw0SUJzB7yb2zjfCC2vn/FcaQ+Hqh+39qggomBhemIH3GJq9oNz2n
-         mnkQ==
-X-Gm-Message-State: AGi0PubOz8pSJYSsKRi+K+N0w8BT+st25SEGrhhlBhv5k7cSfydwB3D1
-        ycZWChXyFjwy1Dj5sWAJrMiXxg==
-X-Google-Smtp-Source: APiQypL83TT0KlsOsKIJ3fvR06bQJNuFT6Oa4gTm65rKyfX1kCum+En95qF9urIy+WRzq1bLEYqidA==
-X-Received: by 2002:a63:7d5d:: with SMTP id m29mr15941343pgn.65.1586845294300;
-        Mon, 13 Apr 2020 23:21:34 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-87-207.dyn.iinet.net.au. [124.171.87.207])
-        by smtp.gmail.com with ESMTPSA id u44sm9699150pgn.81.2020.04.13.23.21.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 23:21:33 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
- device
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-References: <87sghz2ibh.fsf@linux.ibm.com> <20200323172256.GB31269@lst.de>
- <ffce1af6-a215-dee8-7b5c-2111f43accfd@ozlabs.ru>
- <20200324075402.GJ23447@lst.de>
- <41975da3-3a4a-fc3c-2b90-8d607cf220e6@ozlabs.ru>
- <20200325083740.GC21605@lst.de>
- <a705afc5-779d-baf4-e5d2-e2da04c82743@ozlabs.ru>
- <213b0c7d-f908-b4f4-466d-6240c3622cd6@ozlabs.ru>
- <20200406115016.GA10941@lst.de>
- <348046e7-7a38-62d6-4df0-e4a537b98926@ozlabs.ru>
- <20200406171706.GA3231@lst.de>
- <95395244-bdec-84d2-b81b-3040c076fe4d@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <44ad32a4-7ce5-4f4d-8237-53356f76f53a@ozlabs.ru>
-Date:   Tue, 14 Apr 2020 16:21:27 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AhGsCcJsWxwEFFxEZHrkOLjEp/9h1BEi4GUJh65PtH4=;
+        b=gej8jqYTb4RO5Prl0PdPx4gxz5uWtbdgI+a4Gt5n3RJEXczOkjls6gysA7hDa/RbOk
+         EsgiMTTXbFe71VH+U1bhEaXVBs8pKGcK2BMg+M6x5Xz1niBsiI6rJ1ZgAdG+ptIJ4h9V
+         T98ZByT55m5wnqPhkpOVCRgLpTUOc90rW45Q5Hrm4Mr5E4IGFZSREr72n5ZQK3ytbYdL
+         qQFvyjiXn/Uk6FOusQha7BZFDH0TdoHTvOhfrMj5NQPlmFciG5Cv0gZkhdpJmt0wzNuU
+         XUPi7pc+NpOBkjMFkDcuxWy1u7+7yu3tEpQtA4et2CbiXYBwWtQQZ19n57VPGaY2Z2Ph
+         GHQQ==
+X-Gm-Message-State: AGi0PuZvrJtjkD35B7zowOGYIfM1iCUESFccJ2A4UnlOkWnfYZ0wyxyd
+        1fqvq3ig10BUG8ZOzCuq0zgurg==
+X-Google-Smtp-Source: APiQypJ63b72LYvQX0syssjhVvQdWz8tO1l5fSoJ4sTfv7EI8r/gFKegCWq+/El+20plx32p4Nrzlg==
+X-Received: by 2002:a62:e803:: with SMTP id c3mr5962493pfi.228.1586845313150;
+        Mon, 13 Apr 2020 23:21:53 -0700 (PDT)
+Received: from Smcdef-MBP.local.net ([103.136.220.69])
+        by smtp.gmail.com with ESMTPSA id w12sm3211103pfq.133.2020.04.13.23.21.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Apr 2020 23:21:52 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>,
+        Xiongchun duan <duanxiongchun@bytedance.com>
+Subject: [PATCH] mm/ksm: Fix kernel NULL pointer dereference at 0000000000000040
+Date:   Tue, 14 Apr 2020 14:20:50 +0800
+Message-Id: <20200414062050.66644-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-In-Reply-To: <95395244-bdec-84d2-b81b-3040c076fe4d@ozlabs.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The find_mergeable_vma can return NULL. In this case, it leads
+to crash when we access vma->vm_mm(which's offset is 0x40) in
+write_protect_page. And this case did happen on our server. The
+following calltrace is captured in kernel 4.19 with ksm enabled.
+So add a vma check to fix it.
 
+--------------------------------------------------------------------------
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000040
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP NOPTI
+  CPU: 9 PID: 510 Comm: ksmd Kdump: loaded Tainted: G OE 4.19.36.bsk.9-amd64 #4.19.36.bsk.9
+  Hardware name: FOXCONN R-5111/GROOT, BIOS IC1B111F 08/17/2019
+  RIP: 0010:try_to_merge_one_page+0xc7/0x760
+  Code: 24 58 65 48 33 34 25 28 00 00 00 89 e8 0f 85 a3 06 00 00 48 83 c4
+        60 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 8b 46 08 a8 01 75 b8 <49>
+        8b 44 24 40 4c 8d 7c 24 20 b9 07 00 00 00 4c 89 e6 4c 89 ff 48
+  RSP: 0018:ffffadbdd9fffdb0 EFLAGS: 00010246
+  RAX: ffffda83ffd4be08 RBX: ffffda83ffd4be40 RCX: 0000002c6e800000
+  RDX: 0000000000000000 RSI: ffffda83ffd4be40 RDI: 0000000000000000
+  RBP: ffffa11939f02ec0 R08: 0000000094e1a447 R09: 00000000abe76577
+  R10: 0000000000000962 R11: 0000000000004e6a R12: 0000000000000000
+  R13: ffffda83b1e06380 R14: ffffa18f31f072c0 R15: ffffda83ffd4be40
+  FS: 0000000000000000(0000) GS:ffffa0da43b80000(0000) knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000040 CR3: 0000002c77c0a003 CR4: 00000000007626e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+    ? follow_page_pte+0x36d/0x5e0
+    ksm_scan_thread+0x115e/0x1960
+    ? remove_wait_queue+0x60/0x60
+    kthread+0xf5/0x130
+    ? try_to_merge_with_ksm_page+0x90/0x90
+    ? kthread_create_worker_on_cpu+0x70/0x70
+    ret_from_fork+0x1f/0x30
+--------------------------------------------------------------------------
 
-On 07/04/2020 20:12, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 07/04/2020 03:17, Christoph Hellwig wrote:
->> On Mon, Apr 06, 2020 at 11:25:09PM +1000, Alexey Kardashevskiy wrote:
->>>>> Do you see any serious problem with this approach? Thanks!
->>>>
->>>> Do you have a link to the whole branch?  The github UI is unfortunately
->>>> unusable for that (or I'm missing something).
->>>
->>> The UI shows the branch but since I rebased and forcepushed it, it does
->>> not. Here is the current one with:
->>>
->>> https://github.com/aik/linux/commits/dma-bypass.3
->>
->> Ok, so we use the core bypass without persistent memory, and then
->> have another bypass mode on top.  Not great, but I can't think
->> of anything better.  Note that your checks for the map_sg case
->> aren't very efficient - for one it would make sense to calculate
->> the limit only once, 
-> 
-> Good points, I'll post revised version when you post your v3 of this.
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Xiongchun duan <duanxiongchun@bytedance.com>
+---
+ mm/ksm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-
-
-Any plans on posting v3 of this? Thanks,
-
-
-> 
->> but also it would make sense to reuse the
->> calculted diecect mapping addresses instead of doing another pass
->> later on in the dma-direct code.
-> 
-> Probably but I wonder what kind of hardware we need to see the
-> difference. I might try, just need to ride to the office to plug the
-> cable in my 100GBit eth machines :) Thanks,
-> 
-> 
-
+diff --git a/mm/ksm.c b/mm/ksm.c
+index a558da9e71770..69b2f85e22d5b 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2112,8 +2112,11 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
+ 
+ 		down_read(&mm->mmap_sem);
+ 		vma = find_mergeable_vma(mm, rmap_item->address);
+-		err = try_to_merge_one_page(vma, page,
+-					    ZERO_PAGE(rmap_item->address));
++		if (vma)
++			err = try_to_merge_one_page(vma, page,
++					ZERO_PAGE(rmap_item->address));
++		else
++			err = -EFAULT;
+ 		up_read(&mm->mmap_sem);
+ 		/*
+ 		 * In case of failure, the page was not really empty, so we
 -- 
-Alexey
+2.11.0
+
