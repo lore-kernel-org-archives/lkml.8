@@ -2,256 +2,112 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DD1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463DAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDFD02064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF8F2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GOgLo8PU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438538AbgDNKnd (ORCPT
+        id S2438574AbgDNKoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:43:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48660 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438448AbgDNKfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:35:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 873BAABB2;
-        Tue, 14 Apr 2020 10:35:33 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 20:35:24 +1000
-From:   Aleksa Sarai <asarai@suse.de>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
- syscall
-Message-ID: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
-References: <20200202151907.23587-1-cyphar@cyphar.com>
- <20200202151907.23587-3-cyphar@cyphar.com>
- <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com>
- <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
- <cd3a6aad-b906-ee57-1b5b-5939b9602ad0@gmail.com>
- <20200412164943.imwpdj5qgtyfn5de@yavin.dot.cyphar.com>
- <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com>
+        Tue, 14 Apr 2020 06:44:30 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17364 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438550AbgDNKn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:43:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9591d40000>; Tue, 14 Apr 2020 03:35:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Apr 2020 03:35:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Apr 2020 03:35:58 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 10:35:57 +0000
+Received: from [10.26.73.15] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 10:35:54 +0000
+Subject: Re: [PATCH 4.4 00/29] 4.4.219-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200411115407.651296755@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <63b31c56-b5c9-2ced-ee00-772fa9a1dcaf@nvidia.com>
+Date:   Tue, 14 Apr 2020 11:35:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="imnm2xqfgm757zs2"
-Content-Disposition: inline
-In-Reply-To: <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com>
+In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586860500; bh=wc5RrsSn49RxdciYOKQhAVVgiFmPrVsNjOlrDRUtw+4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GOgLo8PUxB7kyLRS26OzHHazN5wgHn/I6uvs5RED9i5PQIj+c4aviQxwu57vqw4V6
+         9uF2aBpz/iP4Ttko7L9FUVZcMLT35ZIJnzUqRRIfe/PdKBDj2VzjSO1cegZPw0hdPM
+         q/7YHGFP7afn3im8kt5PoQoZvrlcvsmJzm1hW8SXyEIHridXAGMnwvK9a+qYJauGG1
+         wGPSNtVeF3Uw8iO5NQb0eb+mCaMMvxUdKWLvIfuby3UGrUBYzwMdmW+/XtShtLpGgk
+         Dnm3O3kB3Cje4HErp5+gJ93W+oTvnLUlOAfKsAlzcsfeAjBuBx2t5qeLqb8qG+KYij
+         OPqhIfFB1mIdQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---imnm2xqfgm757zs2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/04/2020 13:08, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.219 release.
+> There are 29 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.219-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-On 2020-04-13, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> >>>> .\" FIXME I find the "previously-functional systems" in the previous
-> >>>> .\" sentence a little odd (since openat2() ia new sysycall), so I wo=
-uld
-> >>>> .\" like to clarify a little...
-> >>>> .\" Are you referring to the scenario where someone might take an
-> >>>> .\" existing application that uses openat() and replaces the uses
-> >>>> .\" of openat() with openat2()? In which case, is it correct to
-> >>>> .\" understand that you mean that one should not just indiscriminate=
-ly
-> >>>> .\" add the RESOLVE_NO_XDEV flag to all of the openat2() calls?
-> >>>> .\" If I'm not on the right track, could you point me in the right
-> >>>> .\" direction please.
-> >>>
-> >>> This is mostly meant as a warning to hopefully avoid applications
-> >>> because the developer didn't realise that system paths may contain
-> >>> symlinks or bind-mounts. For an application which has switched to
-> >>> openat2() and then uses RESOLVE_NO_SYMLINKS for a non-security reason,
-> >>> it's possible that on some distributions (or future versions of a
-> >>> distribution) that their application will stop working because a syst=
-em
-> >>> path suddenly contains a symlink or is a bind-mount.
-> >>>
-> >>> This was a concern which was brought up on LWN some time ago. If you =
-can
-> >>> think of a phrasing that makes this more clear, I'd appreciate it.
-> >>
-> >> Thanks. I've made the text:
-> >>
-> >>                      Applications  that  employ  the RESOLVE_NO_XDEV f=
-lag
-> >>                      are encouraged to make its use configurable  (unl=
-ess
-> >>                      it is used for a specific security purpose), as b=
-ind
-> >>                      mounts are widely used by end-users.   Setting  t=
-his
-> >>                      flag indiscriminately=E2=80=94i.e., for purposes =
-not specif=E2=80=90
-> >>                      ically related to security=E2=80=94for all uses o=
-f openat2()
-> >>                      may  result  in  spurious errors on previously-fu=
-nc=E2=80=90
-> >>                      tional systems.  This may occur if, for  example,=
-  a
-> >>                      system  pathname  that  is used by an application=
- is
-> >>                      modified (e.g., in a new  distribution  release) =
- so
-> >>                      that  a  pathname  component  (now)  contains a b=
-ind
-> >>                      mount.
-> >>
-> >> Okay?
-> >=20
-> > Yup,
->=20
-> Thanks.
->=20
-> > and the same text should be used for the same warning I gave for
-> > RESOLVE_NO_SYMLINKS (for the same reason, because system paths may
-> > switch to symlinks -- the prime example being what Arch Linux did
-> > several years ago).
->=20
-> Okay -- I added similar text to RESOLVE_NO_SYMLINKS.
 
-Much appreciated.
+Sorry this is late, but all tests are passing for Tegra ...
 
-> >>>> .\" FIXME: what specific details in symlink(7) are being referred
-> >>>> .\" by the following sentence? It's not clear.
-> >>>
-> >>> The section on magic-links, but you're right that the sentence orderi=
-ng
-> >>> is a bit odd. It should probably go after the first sentence.
-> >>
-> >> I must admit that I'm still confused. There's only the briefest of=20
-> >> mentions of magic links in symlink(7). Perhaps that needs to be fixed?
-> >=20
-> > It wouldn't hurt to add a longer description of magic-links in
-> > symlink(7). I'll send you a small patch to beef up the description (I
-> > had planned to include a longer rewrite with the O_EMPTYPATH patches but
-> > those require quite a bit more work to land).
->=20
-> That would be great. Thank you!
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
 
-I'll cook something up later this week.
+Linux version:	4.4.219-rc1-g8cd74c57ff4a
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
 
-> >> And, while I think of it, the text just preceding that FIXME says:
-> >>
-> >>     Due to the potential danger of unknowingly opening=20
-> >>     these magic links, it may be preferable for users to=20
-> >>     disable their resolution entirely.
-> >>
-> >> This sentence reads a little strangely. Could you please give me some
-> >> concrete examples, and I will try rewording that sentence a bit.
-> >=20
-> > The primary example is that certain files (such as tty devices) are
-> > best not opened by an unsuspecting program (if you do not have a
-> > controlling TTY, and you open such a file that console becomes your
-> > controlling TTY unless you use O_NOCTTY).
-> >=20
-> > But more generally, magic-links allow programs to be "beamed" all over
-> > the system (bypassing ordinary mount namespace restrictions). Since they
-> > are fairly rarely used intentionally by most programs, this is more of a
-> > tip to programmers that maybe they should play it safe and disallow
-> > magic-links unless they are expecting to have to use them.
->=20
->=20
-> I've reworked the text on RESOLVE_NO_MAGICLINKS substantially:
->=20
->        RESOLVE_NO_MAGICLINKS
->               Disallow all magic-link resolution during path reso=E2=80=90
->               lution.
->=20
->               Magic links are symbolic link-like objects that  are
->               most  notably  found  in  proc(5);  examples include
->               /proc/[pid]/exe  and  /proc/[pid]/fd/*.   (See  sym=E2=80=90
->               link(7) for more details.)
->=20
->               Unknowingly  opening  magic  links  can be risky for
->               some applications.  Examples of such  risks  include
->               the following:
->=20
->               =C2=B7 If the process opening a pathname is a controlling
->                 process that currently has no controlling terminal
->                 (see  credentials(7)),  then  opening a magic link
->                 inside /proc/[pid]/fd that happens to refer  to  a
->                 terminal would cause the process to acquire a con=E2=80=90
->                 trolling terminal.
->=20
->               =C2=B7 In  a  containerized  environment,  a  magic  link
->                 inside  /proc  may  refer to an object outside the
->                 container, and thus may provide a means to  escape
->                 from the container.
->=20
-> [The above example derives from https://lwn.net/Articles/796868/]
->=20
->               Because  of such risks, an application may prefer to
->               disable   magic   link    resolution    using    the
->               RESOLVE_NO_MAGICLINKS flag.
->=20
->               If  the trailing component (i.e., basename) of path=E2=80=90
->               name is a magic link, and  how.flags  contains  both
->               O_PATH  and O_NOFOLLOW, then an O_PATH file descrip=E2=80=90
->               tor referencing the magic link will be returned.
->=20
-> How does the above look?
+Cheers
+Jon
 
-The changes look correct, though you could end up going through procfs
-even if you weren't resolving a path inside proc directly (since you can
-bind-mount symlinks or have a symlink to procfs). But I'm not sure if
-it's necessary to outline all the ways a program could be tricked into
-doing something unintended.
-
-> Also, regarding the last paragraph, I  have a question.  The
-> text doesn't seem quite to relate to the rest of the discussion.
-> Should it be saying something like:
->=20
-> If the trailing component (i.e., basename) of pathname is a magic link,
-> **how.resolve contains RESOLVE_NO_MAGICLINKS,**
-> and how.flags contains both O_PATH and O_NOFOLLOW, then an O_PATH
-> file descriptor referencing the magic link will be returned.
->=20
-> ?
-
-Yes, that is what I meant to write -- and I believe that the
-RESOLVE_NO_SYMLINKS section is missing similar text in the second
-paragraph (except it should refer to RESOLVE_NO_SYMLINKS, obviously).
-
-Thanks!
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---imnm2xqfgm757zs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl6VkekACgkQnhiqJn3b
-jbRFCBAAySOXNoi4rBtphTOrPpV04SkFI3zJXufokazx9NSB/q0Wn399VAyuwORF
-R8Zlq+6SvA/jDR/oOBduXIWOWs1wcnI3a+fBF5lhm63Gidvf1NroIAYnHS+kJ91Z
-gnZlleHHx9QOwYp3Ds6CTphKBJ5kYIArTIMaPyrEyd7gmDyT+oEJ25s+WidiYDUe
-I0IVdjLJNc9U7QG2va02xhv91QSkZYDvsZH+mjcZs1fZAksccEIB8oovUUz7sI8t
-mLlpHdcx9X+75QJozHyzoBB4Zh0fyndkzVpgKyvZgS2ZKWzra94Lln0ZBv/jP+kl
-4Lk0a1L0YIrr2EYXVgcjQM+G8HOozVYQfoaabtdxLB5qKTv3Xlfb/imeOAG0d86K
-9pUANSuDg0JQwFcxnIcEDoNtmiRdmovF67wdBM73z001TScYuBchwQALkBAwbpXF
-OAi0wrOv6oZ7xpoCHEY5jrV472fGA/3fnBR+eV/9X2jEjmsLTFZSaINxvRTNZT1H
-ClxmIEJE0pkS1FsuBCxYyihpTWNZ2nDlSmSZAxNrz9/s7zyAvOUEr1zY3yACsjLJ
-Xx0A/TiTdvm4d8/Zw6cteImWKVXxj6Wko1pLvXTbOEgv3xQV1WAe4hbvraqUnoB0
-PBSuKd7vQtGxlg9cHOEPGablYwu4SXnIgQPBszoGOBT6vRNf5Jo=
-=vLXb
------END PGP SIGNATURE-----
-
---imnm2xqfgm757zs2--
+-- 
+nvpublic
