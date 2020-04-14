@@ -2,111 +2,112 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB07C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781A1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B45C220732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455B92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cMRgeWs/"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IFOXCWbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439733AbgDNL4k (ORCPT
+        id S2439743AbgDNL70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:56:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46136 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439721AbgDNL4X (ORCPT
+        Tue, 14 Apr 2020 07:59:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729583AbgDNL7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:56:23 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EBmdm8015076;
-        Tue, 14 Apr 2020 11:56:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=FHLWQFpis8qC0ost0GJpkrUK3UmvMx3TtVVZsTxGv0U=;
- b=cMRgeWs/2IvX4EUo3a/Lvzs1QAww3YiHVsDUnb7nUtGaieQCbJ+cDRNcPdqqreGvcvNY
- iy6hcoXcGVx0N7b8HdF6eaywud0fc1sPgEx66gnVpMlwy0qj74K2MEdbBiSm8szKsdBC
- tOUMKetRp4kjYsB0NoHy+Djxsj/nzGPQHSIn3NmAnkVuGeDYGaD/ORbZtyA1lFkn/I3u
- mcb4s7GhnSXvYe0U0qfdcYeY1jUuj/nzAo5rlQAotADyVg6Jv3nlumq7F/l1/cs6AEBh
- 0M6blAkcalb8/xm1hs9JdKz7n7lJe4VxRQURar1Uh/ufc+JfMmpfXGVWrjbUgZLrlLH3 2A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30b5ar42t8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 11:56:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EBliJY083552;
-        Tue, 14 Apr 2020 11:56:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30bqchf63b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 11:56:15 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EBuCNt014251;
-        Tue, 14 Apr 2020 11:56:14 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 04:56:12 -0700
-Date:   Tue, 14 Apr 2020 14:56:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ivan Safonov <isaf21@yandex.ru>
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/8] staging: rtl8188eu: Remove function rtw_modular64()
-Message-ID: <20200414115604.GF1163@kadam>
-References: <20190712071746.2474-5-nishkadg.linux@gmail.com>
- <66fb1e37-107e-54f4-4986-ca4e4bb99d2d@yandex.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66fb1e37-107e-54f4-4986-ca4e4bb99d2d@yandex.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 mlxlogscore=822
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140099
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0
- mlxlogscore=890 suspectscore=18 adultscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140099
+        Tue, 14 Apr 2020 07:59:19 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40462C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:59:19 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id di6so313135qvb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=7+NC2RpkOf2SbI98FY1bSeaxQhjq9j8fWNpYmPilqT8=;
+        b=IFOXCWbMzuDssZf6ycLUgkISxSiuf2CsSXEDQa2VAVyFmZsNGExERsa00yDBMwSY1u
+         AMmX6M9VsTB3/0M3DwP5yHf0eyMfoJ4WF0qfdGvlttTqQ40phwndif0orRYexZKyDvU4
+         /7SO8EaeSuU7esDAGWAL053wWZIQE6yJuoxt8mRJL1q6YqRpDsUBcezr5WOKqNmbvPJw
+         q4wGqo2q8tGjDrY1OlrkUQZ/7yIdjXpXlqjX5r2e4QPt4deHgTb14RIQ+NCcqQvqYS2C
+         9cOMkruOoLt36q/jfbJdbbVHSICik7pnsHoHhbyE+6wJBT2F2SIWfFFFKH182uzdhRlw
+         FbLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=7+NC2RpkOf2SbI98FY1bSeaxQhjq9j8fWNpYmPilqT8=;
+        b=AKkV0kw+KtXcNtpYvyz957slLfwfoprDuRhLA1HVvlcUj8gCkcO0oK9azITAnlvzjH
+         9f+f7htAp6GtCFFnGpCnN8Zev9duIMJlhF3KkufqNSY+jpotHm6OhidQMY26TqJE7DCO
+         8sixH69MKhd5JBm5LCZpxtpeZ6WepuZ8uMY/Ib5LL2luinT8DUMhbINMEoMn21NofV4M
+         +yxohm3kPqJDXIRGw4i6rZbyyaMVTszKzYbrc9DM8Th62AniwfwhQ/usooZmL/KuI4Ys
+         80o1iXH6jJa+DNoN+AlvGR3x/L9KmygrC4ex+Dk4ows+DHmEpEEI4fTV3BjK8p0WwW27
+         8hpw==
+X-Gm-Message-State: AGi0Pubu3G/bVSIHPNxMWjx7HUiLiNBab5bzvp3eKY9M/BzHJZcIj77p
+        WRkujDyTLZBZTtiW7TasRCYL2A==
+X-Google-Smtp-Source: APiQypIGjOUH2uNHcQKWvPdZOxNKnIpWBKuay8+N4jyECDb2JDTqdXtv2gfs5yNy3EBgAH4Dam+RHA==
+X-Received: by 2002:ad4:548b:: with SMTP id q11mr7157656qvy.129.1586865558333;
+        Tue, 14 Apr 2020 04:59:18 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w27sm10924164qtc.18.2020.04.14.04.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 04:59:17 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Date:   Tue, 14 Apr 2020 07:59:16 -0400
+Message-Id: <04E78431-7B62-4FA1-8B1D-51DF7648D9C5@lca.pw>
+References: <CACT4Y+ZE1XhYpTsjP1J1PyUsEHYKvchww71aHb7UnSk5=4xUrw@mail.gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Dan Rue <dan.rue@linaro.org>
+In-Reply-To: <CACT4Y+ZE1XhYpTsjP1J1PyUsEHYKvchww71aHb7UnSk5=4xUrw@mail.gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 04:34:08PM +0300, Ivan Safonov wrote:
-> > Remove function rtw_modular64 as all it does is call do_div.
-> 
-> This is wrong. Macro do_div(x, y) change first argument x, but
-> rtw_modular64(x, y) preserve it.
-> 
-> > +			tsf = pmlmeext->TSFValue - do_div(pmlmeext->TSFValue, (pmlmeinfo->bcn_interval*1024)) - 1024; /* us */
-> 
-> rounddown(pmlmeext->TSFValue, pmlmeinfo->bcn_interval * 1024) - 1024
-> is a better replacement for
 
-You're absolutely correct that the patch is buggy, but I'm not sure that
-rounddown() is what we want.
 
-rtw_modular64() took the MOD of x.  So it should be something like:
+> On Apr 14, 2020, at 7:13 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
+>=20
+> How do these use-after-free's and locking bugs get past the
+> unit-testing systems (which syzbot is not) and remain unnoticed for so
+> long?...
+> syzbot uses the dumbest VMs (GCE), so everything it triggers during
+> boot should be triggerable pretty much everywhere.
 
-	tsf = pmlmeext->TSFValue - (pmlmeext->TSFValue % (pmlmeinfo->bcn_interval * 1024)) - 1024; /* us */
+There are many reasons that any early testing would not be able to catch ALL=
+ the syzbot blockers.
 
-But what the heck is that even???  If pmlmeinfo->bcn_interval is zero
-or one then the subtraction ends up giving us a negative.
+The Kconfigs are different. For example, I don=E2=80=99t have openvswitch en=
+abled, so would miss that ovs rcu-list lockdep warning. Same for that use-af=
+ter-free in net/bluetooth and a warning in sound subsystem.
 
-regards,
-dan carpenter
+But, notifying Linux-next ML is a good start, so at least we could ask Paul o=
+r Steve to pull out the commit which enabling rcu-list debugging by default w=
+ith PROVE_RCU.
 
+I learned through that restricted kconfig to some degree of minimal could sa=
+ve a lot of troubles late on especially those options that I have no way to e=
+xercise like net/bluetooth and sound currently. It is going to be extra work=
+s though because those default options in Linux-next or even defconfigs are n=
+ot always pleasant and would want to enable something I don=E2=80=99t need i=
+f not given human intervention.=
