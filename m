@@ -2,178 +2,156 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FF5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7F1C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1FC020644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:14:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=easyb-ch.20150623.gappssmtp.com header.i=@easyb-ch.20150623.gappssmtp.com header.b="oZuCdEKr"
+	by mail.kernel.org (Postfix) with ESMTP id 7024420644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390846AbgDNLO0 (ORCPT
+        id S2390863AbgDNLQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728734AbgDNLOP (ORCPT
+        Tue, 14 Apr 2020 07:16:11 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:58671 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390852AbgDNLQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:14:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8A84C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:14:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id h2so12519611wmb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 04:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=easyb-ch.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2hf2r+2wVOWBvmSoLn7/fDnDty1h5K4Nf4IQt6b/VXs=;
-        b=oZuCdEKrLiXXACXu02t5Ord1KePOALbWLPWSCdt0MaGN6o60hFWt7+Anj+VqW6mz3c
-         5RAqS9SQUBW6sd+kaDpyTWwJkBHxsG2+xT2IOhXMKe28847HtBZYcdqvyGaCTbJssfia
-         vl9WPxEtjLO7iuAJ3CvgFOwOY/661H8LqVY4pgw3rQDLwmR2yHKihrr8fl6BuTYtQhx/
-         3lMKPdBP98AIeeHTF7XhtKIk0WEjSC9yoShfOsW8mexfyOPRwusOTu1CC0nj1IXQgc3G
-         lFG2LH7CVDCULB7DhsrZhrx6r92JcqEhS7dVGtcABZOwRHYuSsnngd0/PVs51NrmMJMI
-         xipQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2hf2r+2wVOWBvmSoLn7/fDnDty1h5K4Nf4IQt6b/VXs=;
-        b=Nj8QdYn5/pFTIrkmq8vWmUrW/K/i37nX9gm5Yt+Qvohv9kamJV5DH43xNmruzc4TG7
-         LRTB3+w/dK73dZ853zMSbjIqdunbZgnQYV2xBv/h1V+y7qltUcLxMVdGOgoV6SVBI3gX
-         viSIQ2gXJLuxnBYkoGgFDttAwl5aGngk2vli3uJRbvy3jeqkhRsxO5K11rn/nn0xG1yQ
-         omzw+RExM0FTymzvZAKy9Kt9BRljuXtLPEjCo75IezjUSTxsuZlY8N+iCcMg8BSwB6sB
-         Uoa10R01+uPUfOdveMWX91yrKTWAjHL8Gwl9en1D9f+Wpk87DaH96OaBKmiI+J/oeqv9
-         aqxA==
-X-Gm-Message-State: AGi0PubelERuAzzld5vmR7eGUvVXi/ZsOosKpOxu+Pj9/ESCfii/k+D3
-        3S5E55Eu+IXwzESf43UmCor8oQ==
-X-Google-Smtp-Source: APiQypINQ5Int4XZmMvn1pNdc97YjR9Zh6ogA4Ast3SBJ5dyvLsyW2d/9AW+u29N+In+zEZDIKOntA==
-X-Received: by 2002:a1c:1b88:: with SMTP id b130mr22771164wmb.75.1586862853356;
-        Tue, 14 Apr 2020 04:14:13 -0700 (PDT)
-Received: from [10.0.0.131] (adsl-84-227-160-19.adslplus.ch. [84.227.160.19])
-        by smtp.gmail.com with ESMTPSA id p10sm18165006wrm.6.2020.04.14.04.14.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 04:14:12 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
-Subject: Re: [PATCH] selftests/tpm2: Change exception handling to be Python 3
- compatible
-From:   Ezra Buehler <ezra@easyb.ch>
-In-Reply-To: <20200414073806.GE8403@linux.intel.com>
-Date:   Tue, 14 Apr 2020 13:14:11 +0200
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3DDD1D36-9FCC-480A-978F-3BD08283DA03@easyb.ch>
-References: <20200412143656.72955-1-jarkko.sakkinen@linux.intel.com>
- <1FE03B4F-C42C-4B5F-A4B5-8169705911FA@easyb.ch>
- <20200412170719.GA324408@linux.intel.com>
- <531D50E8-E8FC-402E-9226-6000E8B6E960@easyb.ch>
- <20200413180440.GA10917@linux.intel.com>
- <D670A3F7-6FE2-4A07-8251-680C2ED27764@easyb.ch>
- <20200414073806.GE8403@linux.intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.9.5)
+        Tue, 14 Apr 2020 07:16:07 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E9207240008;
+        Tue, 14 Apr 2020 11:16:00 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 13:16:00 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
+Message-ID: <20200414111600.GE34509@piout.net>
+References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+ <20200410222658.GB3628@piout.net>
+ <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
+ <20200413104652.GE3628@piout.net>
+ <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14 Apr 2020, at 09:38, Jarkko Sakkinen =
-<jarkko.sakkinen@linux.intel.com> wrote:
-> OK, I'm aware about the dynamic nature but in this case it is somewhat
-> counter intuitive since it is part of the exception clause. You'd =
-except
-> the Python interpreter to complain.
+On 14/04/2020 08:42:08+0000, Claudiu.Beznea@microchip.com wrote:
+> > Why would one use the RTT while the RTC is far superior?
+> 
+> I didn't enabled this for a particular use case, but: couldn't this be used
+> by some user that wants to generate multiple alarms? from multiple RTCs?
+> 
 
-I agree.
+I very much doubt that as Linux is able to properly multiplex alarms and
+basically, the only one we are interested in is actually wakeup.
 
-> So, is Flake8 like the standard to be used?
+> Moreover, this IP's counter has the possibility of being clocked at 1Hz.
+> Couldn't this minimize the power consumption while being in a power saving
+> mode?
+> 
 
-Pretty much, yes. There is also Pylint though. Among other things, they
-both check for PEP 8 (official) coding style compliance.
+And that 1Hz clock is coming from the RTC so using the RTC is
+definitively consuming less power.
 
-Cheers,
-Ezra.
+> > 
+> >>>
+> >>> In any case, this diff should be merge with the other at91-sam9x60ek.dts
+> >>> change instead of being with the dtsi change.
+> >>
+> >> The changes in this patch are related to enabling the RTT. The other dts
+> >> change is related to enabling gpbr. The RTT uses that enabled gpbr -> one
+> >> change per patch.
+> >>
+> >> If you still want to merge then, I'll do it, but then it becomes mixed.
+> >>
+> > 
+> > This patch is already mixing add the gpbr in sam9x60ek and add the node
+> > in sam9x60.dtsi which is worse.
+> 
+> This patch is like this:
+> 
+> diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts
+> b/arch/arm/boot/dts/at91-sam9x60ek.dts
+> index ab3d2d9a420a..4020e79a958e 100644
+> --- a/arch/arm/boot/dts/at91-sam9x60ek.dts
+> +++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
+> @@ -617,6 +617,11 @@
+>  	};
+>  };
+> 
+> +&rtt {
+> +	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
+> +	status = "okay";
+> +};
+> +
+>  &shutdown_controller {
+>  	atmel,shdwc-debouncer = <976>;
+>  	status = "okay";
+> diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
+> index 326b39328b58..e1d8e3a4cb0b 100644
+> --- a/arch/arm/boot/dts/sam9x60.dtsi
+> +++ b/arch/arm/boot/dts/sam9x60.dtsi
+> @@ -661,6 +661,13 @@
+>  				status = "disabled";
+>  			};
+> 
+> +			rtt: rtt@fffffe20 {
+> +				compatible = "microchip,sam9x60-rtt";
+> +				reg = <0xfffffe20 0x20>;
+> +				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+> +				clocks = <&clk32k 0>;
+> +			};
+> +
+> 
+> It doesn't adds the GPBR in sam9x60ek, it adds rtt in sam9x60ek which uses
+> GPBR.
+> 
+> > 
+> > Just have one patch adding the rtt node to the sam9x60.dtsi and then a
+> > patch adding the RTT to sam9x60ek.
+> 
+> Ok, I understand this.
+> 
+> > Because the RTT uses the gpbr, it is
+> > a good time to add enable the gpbr, this is a single functionnal change.
+> > 
+> > Let's say that for some reason, the RTT patch on sam9x60ek has to be
+> > reverted, then the RTT node is still defined which is good for all the
+> > other eventual users.
+> 
+> RTT node would still be defined but GPBR node will not be enabled.
+> 
+> If RTT patch contains this change that I understand you want me to merge here:
+> 
+> +&gpbr {
+> +	status = "okay";
+> +};
+> +
+> 
+> then, theoretically, some other IPs using the GPBR (RTC have the
+> possibility of doing this), may be broken by reverting the RTT patch that
+> includes the GPBR enabling patch.
+> 
 
-> On 14 Apr 2020, at 09:38, Jarkko Sakkinen =
-<jarkko.sakkinen@linux.intel.com> wrote:
->=20
-> On Tue, Apr 14, 2020 at 07:45:33AM +0200, Ezra Buehler wrote:
->> Hi Jarkko,
->>=20
->> On 13 Apr 2020, at 20:04, Jarkko Sakkinen =
-<jarkko.sakkinen@linux.intel.com> wrote:
->>>=20
->>> On Mon, Apr 13, 2020 at 07:02:20AM +0200, Ezra Buehler wrote:
->>>> Hi Jarkko,
->>>>=20
->>>> On 12 Apr 2020, at 19:07, Jarkko Sakkinen =
-<jarkko.sakkinen@linux.intel.com> wrote:
->>>>>=20
->>>>> On Sun, Apr 12, 2020 at 05:02:27PM +0200, Ezra Buehler wrote:
->>>>>> Hi Jarkkon,
->>>>>>=20
->>>>>>> On 12 Apr 2020, at 16:36, Jarkko Sakkinen =
-<jarkko.sakkinen@linux.intel.com> wrote:
->>>>>>> +        except ProtocolError(e):
->>>>>>=20
->>>>>> Should this not be
->>>>>>=20
->>>>>>      except ProtocolError as e:
->>>>>=20
->>>>> Unless there is a functional difference, does it matter?
->>>>>=20
->>>>> /Jarkko
->>>>=20
->>>> Well, your patch confuses me a lot. It looks to me like you are =
-passing
->>>> the undefined `e` variable to the constructor.
->>>>=20
->>>> When I run flake8 on it I get following error (among others):
->>>>=20
->>>>   F821 undefined name 'e'
->>>=20
->>> I don't know what flake8 is.
->>=20
->> https://flake8.pycqa.org/en/latest/
->>=20
->>>> What I suggested is the standard syntax:
->>>> https://docs.python.org/3/tutorial/errors.html
->>>=20
->>> It passed the Python 3 interpreter.
->>=20
->> That is because it is technically valid syntax.
->>=20
->>>> Did you test this? You should get an error as soon as an exception
->>>> occurs.
->>>=20
->>> Yes. Interpreter did not complain. I did not know that the language
->>> is broken that way that you have to exercise the code path to get
->>> a syntax error.
->>=20
->> That is due to the dynamic nature of Python. You won=E2=80=99t get a =
-syntax
->> error. You will get an exception:
->>=20
->>    NameError: name 'e' is not defined
->>=20
->> Python has to assume that `e` might be defined at runtime. However,
->> style checkers will complain.
->=20
-> OK, I'm aware about the dynamic nature but in this case it is somewhat
-> counter intuitive since it is part of the exception clause. You'd =
-except
-> the Python interpreter to complain.
->=20
-> So, is Flake8 like the standard to be used?
->=20
-> /Jarkko
+But this is very unlikely to happen because this would be limited to a
+single board device tree instead of impact every sam9x60 based boards.
 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
