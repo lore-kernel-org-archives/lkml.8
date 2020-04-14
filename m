@@ -2,120 +2,88 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71950C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BA9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48C472076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA1220768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="utxnrz3v"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rONCojIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407315AbgDNPRK (ORCPT
+        id S2407328AbgDNPRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405617AbgDNPCp (ORCPT
+        Tue, 14 Apr 2020 11:17:35 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53402 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405617AbgDNPRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:02:45 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500D0C03C1AC;
-        Tue, 14 Apr 2020 08:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=WfxVIQbzH9o8gavebp1mRU1CPxrl55pCfYyCVUPCjeY=; b=utxnrz3vTeaE2MmO4KHCnLGYE3
-        MY8TBtA84T93LzmFRoxfwGLXp+AnifxNBEOyHkVUt++LE3uFa0N3wrQ+nK5RSU43Ia4XRn+/1K2k+
-        r4j4MH4CtMN/haSqJ64Dvs3gdCAtZpnYlZYMnazXiRjrJJurwomFH1sNMn8MsFrvJA/qDB6icJxIw
-        BXPKVOVd6QrksY7rKyX5iofBaSwRFzD7mr7XhT1dnLg+jqSAoOE8pjI587n6VfT7jYx9/5U/5ihzv
-        c9cG1tYHLDvaqE/AyWcOznXdGGOxCLuTfgf/sOG1tBw0ZXe53z26EPaTvad2escHU84R8pJx/h0+2
-        udGUVreA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jON5A-0006Ol-4U; Tue, 14 Apr 2020 15:02:36 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCH v11 12/25] mm: Move end_index check out of readahead loop
-Date:   Tue, 14 Apr 2020 08:02:20 -0700
-Message-Id: <20200414150233.24495-13-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200414150233.24495-1-willy@infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
+        Tue, 14 Apr 2020 11:17:16 -0400
+Received: from [192.168.0.109] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 350C720B4737;
+        Tue, 14 Apr 2020 08:17:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 350C720B4737
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1586877435;
+        bh=4Tq3FB+xGJtxT6ZUJb0cf3A21zkjTaUDbsRjLeb16W4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rONCojIm0QhclazO1zFbIqpb0Fg7wgDbsdQRc+yc8GRjqaScZWdOx870Nq7D+agOO
+         rsG2DlIToXNm6Yvf6yRt46/RvdMZKpDB29hFSxGQiL2i9OJAADLibOXrKhXrehXpkM
+         iG1yYDoJpXtG22gfeY00WDEciLw4dvRHjFdQQEu4=
+Subject: Re: [PATCH 1/2] ima: simplify function ima_store_template
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, zhangliguang@linux.alibaba.com,
+        zhang.jia@linux.alibaba.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200414114850.98622-1-tianjia.zhang@linux.alibaba.com>
+ <20200414114850.98622-2-tianjia.zhang@linux.alibaba.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <36c7b81e-ac42-b34a-808b-92107ff85805@linux.microsoft.com>
+Date:   Tue, 14 Apr 2020 08:17:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414114850.98622-2-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On 4/14/20 4:48 AM, Tianjia Zhang wrote:
 
-By reducing nr_to_read, we can eliminate this check from inside the loop.
+> The 'result' here is not necessary, remove redundant code,
+> the code is more concise.
+> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>   security/integrity/ima/ima_api.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index f6bc00914aa5..9121257c9dc6 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -118,8 +118,7 @@ int ima_store_template(struct ima_template_entry *entry,
+>   		memcpy(entry->digest, hash.hdr.digest, hash.hdr.length);
+>   	}
+>   	entry->pcr = pcr;
+> -	result = ima_add_template_entry(entry, violation, op, inode, filename);
+> -	return result;
+> +	return ima_add_template_entry(entry, violation, op, inode, filename);
+>   }
+>   
+>   /*
+> 
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
----
- mm/readahead.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index d01531ef9f3c..998fdd23c0b1 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -167,8 +167,6 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 		unsigned long lookahead_size)
- {
- 	struct inode *inode = mapping->host;
--	struct page *page;
--	unsigned long end_index;	/* The last page we want to read */
- 	LIST_HEAD(page_pool);
- 	loff_t isize = i_size_read(inode);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-@@ -178,22 +176,26 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 		._index = index,
- 	};
- 	unsigned long i;
-+	pgoff_t end_index;	/* The last page we want to read */
- 
- 	if (isize == 0)
- 		return;
- 
--	end_index = ((isize - 1) >> PAGE_SHIFT);
-+	end_index = (isize - 1) >> PAGE_SHIFT;
-+	if (index > end_index)
-+		return;
-+	/* Don't read past the page containing the last byte of the file */
-+	if (nr_to_read > end_index - index)
-+		nr_to_read = end_index - index + 1;
- 
- 	/*
- 	 * Preallocate as many pages as we will need.
- 	 */
- 	for (i = 0; i < nr_to_read; i++) {
--		if (index + i > end_index)
--			break;
-+		struct page *page = xa_load(&mapping->i_pages, index + i);
- 
- 		BUG_ON(index + i != rac._index + rac._nr_pages);
- 
--		page = xa_load(&mapping->i_pages, index + i);
- 		if (page && !xa_is_value(page)) {
- 			/*
- 			 * Page already present?  Kick off the current batch of
--- 
-2.25.1
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
