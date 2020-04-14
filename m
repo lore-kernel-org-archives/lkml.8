@@ -2,43 +2,42 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6F3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34833C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32BBA20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CA420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tlPfosRr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k4J2N/j3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406277AbgDNHDV (ORCPT
+        id S2406286AbgDNHD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
+        Tue, 14 Apr 2020 03:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406225AbgDNHCN (ORCPT
+        with ESMTP id S2406216AbgDNHCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:02:13 -0400
+        Tue, 14 Apr 2020 03:02:07 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6966AC00860A
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 00:02:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6417DC0A3BE2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 00:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=KHVzeUUAH3X0C6cb/ymYAEgh7N1ttmSFET3iRg2WhBE=; b=tlPfosRrj3qkmtLbo7WAC3GLFM
-        pZUo0pIHOMgV2ItCPG5KBLuBF6ptIBBgLnIC4mv3ugIcbqiTPrTD4kSThZ+6eM6vxBWR4ykY/hSre
-        I/9rty73cmTUeDn2B4K0O6O+ExQVh32xgF8rLfpUGLVt9krhTDBPxGUS7USXvuyPnhE+wb18GjNU0
-        b1FOJMBrXQzxMuFzEuT1P21UflcExmhYZ4jpJVV+ivuOOnVsEZ7GNoV8qESgFv5BYbiAQ600qhB4D
-        Y34UOIvdtYsCXzVV2UPoVPFATeJIAyLH3KxISCe5cU2rsB4RGAmi0qfFYW+Ip70BFDF2yTOywgZCu
-        7Md5KSYw==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=77D1XXRWkuxqD9EgsqFvBl2GVjPwcFnlwZ4H5QeKf8g=; b=k4J2N/j3r3k8rtX6J9OJVuyI/B
+        Y/lP14ZAwAwAT+sXF6iSJZ7ASkdNoGavrhLf4SxqyRpa2OOaUsmOzNdSgpuMsZdrrc4HvhlAEFo6b
+        CCobuvFapWEVgmmPConT4NvC8iJNZsDtt7TmeAFbHEiIFxc4pOViS5uJuA9eKcZ1YLFo8rU1xATNc
+        7jiVWmya/Lqbc2aONf6lZe3mQgKP2ol+a2aOWYinwhbJfGu2Bup5vo1BCn4zkThGhmyTPMs2dpbgm
+        OUtUWfHYOwAT2kAEC0lHtnGO8aIpQsX1LeXu1KBN5ExPzd35dPommBeIn41XPgbKi10y5lDc0DARp
+        aeCnc9Hw==;
 Received: from [2001:4bb8:180:384b:4c21:af7:dd95:e552] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOFa8-0005Zi-VO; Tue, 14 Apr 2020 07:02:05 +0000
+        id 1jOFZo-0005Xi-T4; Tue, 14 Apr 2020 07:01:45 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>
@@ -46,12 +45,10 @@ Cc:     Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/8] exec: simplify the copy_strings_kernel calling convention
-Date:   Tue, 14 Apr 2020 09:01:41 +0200
-Message-Id: <20200414070142.288696-8-hch@lst.de>
+Subject: remove set_fs calls from the exec and coredump code v2
+Date:   Tue, 14 Apr 2020 09:01:34 +0200
+Message-Id: <20200414070142.288696-1-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200414070142.288696-1-hch@lst.de>
-References: <20200414070142.288696-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -60,143 +57,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-copy_strings_kernel is always used with a single argument,
-adjust the calling convention to that.
+Hi all,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/binfmt_em86.c        |  6 +++---
- fs/binfmt_misc.c        |  4 ++--
- fs/binfmt_script.c      |  6 +++---
- fs/exec.c               | 13 ++++++-------
- include/linux/binfmts.h |  3 +--
- 5 files changed, 15 insertions(+), 17 deletions(-)
+this series gets rid of playing with the address limit in the exec and
+coredump code.  Most of this was fairly trivial, the biggest changes are
+those to the spufs coredump code.
 
-diff --git a/fs/binfmt_em86.c b/fs/binfmt_em86.c
-index 466497860c62..f33fa668c91f 100644
---- a/fs/binfmt_em86.c
-+++ b/fs/binfmt_em86.c
-@@ -68,15 +68,15 @@ static int load_em86(struct linux_binprm *bprm)
- 	 * user environment and arguments are stored.
- 	 */
- 	remove_arg_zero(bprm);
--	retval = copy_strings_kernel(1, &bprm->filename, bprm);
-+	retval = copy_string_kernel(bprm->filename, bprm);
- 	if (retval < 0) return retval; 
- 	bprm->argc++;
- 	if (i_arg) {
--		retval = copy_strings_kernel(1, &i_arg, bprm);
-+		retval = copy_string_kernel(i_arg, bprm);
- 		if (retval < 0) return retval; 
- 		bprm->argc++;
- 	}
--	retval = copy_strings_kernel(1, &i_name, bprm);
-+	retval = copy_string_kernel(i_name, bprm);
- 	if (retval < 0)	return retval;
- 	bprm->argc++;
- 
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index cdb45829354d..b15257d8ff5e 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -190,13 +190,13 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 		bprm->file = NULL;
- 	}
- 	/* make argv[1] be the path to the binary */
--	retval = copy_strings_kernel(1, &bprm->interp, bprm);
-+	retval = copy_string_kernel(bprm->interp, bprm);
- 	if (retval < 0)
- 		goto error;
- 	bprm->argc++;
- 
- 	/* add the interp as argv[0] */
--	retval = copy_strings_kernel(1, &fmt->interpreter, bprm);
-+	retval = copy_string_kernel(fmt->interpreter, bprm);
- 	if (retval < 0)
- 		goto error;
- 	bprm->argc++;
-diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
-index e9e6a6f4a35f..c4fb7f52a46e 100644
---- a/fs/binfmt_script.c
-+++ b/fs/binfmt_script.c
-@@ -117,17 +117,17 @@ static int load_script(struct linux_binprm *bprm)
- 	retval = remove_arg_zero(bprm);
- 	if (retval)
- 		return retval;
--	retval = copy_strings_kernel(1, &bprm->interp, bprm);
-+	retval = copy_string_kernel(bprm->interp, bprm);
- 	if (retval < 0)
- 		return retval;
- 	bprm->argc++;
- 	if (i_arg) {
--		retval = copy_strings_kernel(1, &i_arg, bprm);
-+		retval = copy_string_kernel(i_arg, bprm);
- 		if (retval < 0)
- 			return retval;
- 		bprm->argc++;
- 	}
--	retval = copy_strings_kernel(1, &i_name, bprm);
-+	retval = copy_string_kernel(i_name, bprm);
- 	if (retval)
- 		return retval;
- 	bprm->argc++;
-diff --git a/fs/exec.c b/fs/exec.c
-index 06b4c550af5d..b2a77d5acede 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -588,24 +588,23 @@ static int copy_strings(int argc, struct user_arg_ptr argv,
- }
- 
- /*
-- * Like copy_strings, but get argv and its values from kernel memory.
-+ * Copy and argument/environment string from the kernel to the processes stack.
-  */
--int copy_strings_kernel(int argc, const char *const *__argv,
--			struct linux_binprm *bprm)
-+int copy_string_kernel(const char *arg, struct linux_binprm *bprm)
- {
- 	int r;
- 	mm_segment_t oldfs = get_fs();
- 	struct user_arg_ptr argv = {
--		.ptr.native = (const char __user *const  __user *)__argv,
-+		.ptr.native = (const char __user *const  __user *)&arg,
- 	};
- 
- 	set_fs(KERNEL_DS);
--	r = copy_strings(argc, argv, bprm);
-+	r = copy_strings(1, argv, bprm);
- 	set_fs(oldfs);
- 
- 	return r;
- }
--EXPORT_SYMBOL(copy_strings_kernel);
-+EXPORT_SYMBOL(copy_string_kernel);
- 
- #ifdef CONFIG_MMU
- 
-@@ -1863,7 +1862,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	if (retval < 0)
- 		goto out;
- 
--	retval = copy_strings_kernel(1, &bprm->filename, bprm);
-+	retval = copy_string_kernel(bprm->filename, bprm);
- 	if (retval < 0)
- 		goto out;
- 
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index a345d9fed3d8..3d3afe094c97 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -144,8 +144,7 @@ extern int setup_arg_pages(struct linux_binprm * bprm,
- extern int transfer_args_to_stack(struct linux_binprm *bprm,
- 				  unsigned long *sp_location);
- extern int bprm_change_interp(const char *interp, struct linux_binprm *bprm);
--extern int copy_strings_kernel(int argc, const char *const *argv,
--			       struct linux_binprm *bprm);
-+int copy_string_kernel(const char *arg, struct linux_binprm *bprm);
- extern void install_exec_creds(struct linux_binprm *bprm);
- extern void set_binfmt(struct linux_binfmt *new);
- extern ssize_t read_code(struct file *, unsigned long, loff_t, size_t);
--- 
-2.25.1
-
+Changes since v1:
+ - properly spell NUL
+ - properly handle the compat siginfo case in ELF coredumps
