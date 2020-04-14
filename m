@@ -2,57 +2,70 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4167C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642FEC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD3820768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586900541;
-	bh=mxRggllLpcQk0zHINUzA5Doa1ZiVifhmNU6OaQZDwTU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JvWap/ZGLi/0z5di6sBeIU1iFnwa/7OUh3/upYUeqgNO+4MJIrY0UcekQJiOipdem
-	 7bWGRdK8Lo/DNwOdw/+CaJ7uY6crzviFt7ZXXWG6LayuyztZEo+yU141Rd/HE4YGWg
-	 +uwoSq3wW8/0G/mCT9TUIjftM12oo8DDjTO6q5es=
+	by mail.kernel.org (Postfix) with ESMTP id 362AF20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE8twXYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634010AbgDNVlk (ORCPT
+        id S2634033AbgDNVmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732377AbgDNVk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:40:27 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3356220767;
-        Tue, 14 Apr 2020 21:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586900426;
-        bh=mxRggllLpcQk0zHINUzA5Doa1ZiVifhmNU6OaQZDwTU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pOPeRt+nk/80OVCj/AqAhRtKVPlOIjakq/evxhT+vGv76ccozA4Nb3mgt06YoLQws
-         5eZZdeUCY9AkOnV8w+SHxdEpaqEehbKy5XXXXwB41k4Ge5VrjVKe6ejgLWzCEC+muq
-         6lFcQxj5mls3Ah23znRFcUwYU9oy4GElJGYhlc80=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        sparclinux@vger.kernel.org, kernel-team@android.com
-Subject: [RESEND PATCH 3/4] sparc32: mm: Change pgtable_t type to pte_t * instead of struct page *
-Date:   Tue, 14 Apr 2020 22:40:10 +0100
-Message-Id: <20200414214011.2699-4-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200414214011.2699-1-will@kernel.org>
-References: <20200414214011.2699-1-will@kernel.org>
+        Tue, 14 Apr 2020 17:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2633991AbgDNVk7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 17:40:59 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF94C061A0C;
+        Tue, 14 Apr 2020 14:40:59 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o81so9230362wmo.2;
+        Tue, 14 Apr 2020 14:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u64x/Qw3ftLTMz2uZfg2N+jGFHmpawLcn/9u79QLico=;
+        b=bE8twXYunjrtJQmL+t5DyOaZIkShuig3BIpEVeynGY4ZcXGZ8bj4dEYMXxBO4+/ZeR
+         8tfZJpa3mi9MJwI0OIrpyem7urDSDcPhDgqAQA2YzvbuSNZ1Lj/+ipi4nPcwYyIKRooH
+         lpphEmFP5mVR8dYx+1nqPJq4CKLCQD9v8N2tLlqNV/NDQu0hq0p+MY7qo9+XrpaJvz8O
+         YRi0/sQktYEjcRv8LRon/8E3YIEjrxdOflVszye2NzTSTrZWsihkjQY5yMBEtW6paMFA
+         oOTM34oR1r/45ExyaxkxGxBiC3XiA2bRIU9WBUJW4cDn6+l9OFjvymE/hjm0owCF2vj1
+         KvwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u64x/Qw3ftLTMz2uZfg2N+jGFHmpawLcn/9u79QLico=;
+        b=t9EXFj9NrbhpQBjlm0qc4wjxejI6Aee0iiUoP5gIhVgLao+B4d0RO672YyYihFktH3
+         yhCykLd2DNGa/97oOReTUr6WIInm2XCzVML3pvC4ueeOPFI9Ps8lQ9fnJqFjNAaeOcvv
+         ky+FAQhreJKysmVRF7qe6D2tvSfwgNrTCF73ZhuyPZedy9YSpSz8in/M2Pstp7xnP29b
+         Ny1lxzYgyTxON3pr6dfm69pCZvcp5ervulweziV99wfpxgWvr7gfP3tbP5rsCGod5cFb
+         /ePxiAnEtxqNUTqpugO5zHvZRA6DMgpICvGb1Km65HMEBUvozAunqG9/FnrKLKIv6WCG
+         3pfQ==
+X-Gm-Message-State: AGi0PuYIzSyLIaxH1HZexVsOXTN7vL88NB1AKPobNG4NZ3e7SMSZrgRA
+        mgZlViZyOohKGSoeOSkMqBL5GEXo
+X-Google-Smtp-Source: APiQypKfNQkrPJKalZdKjQBcnBHLkY4WLfnxCnjuz3msS6nHF5+Ewr5gtZN8j7t/Q2UbPbFvZkY/TA==
+X-Received: by 2002:a1c:9a96:: with SMTP id c144mr1848585wme.84.1586900457942;
+        Tue, 14 Apr 2020 14:40:57 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id l185sm20320540wml.44.2020.04.14.14.40.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 14:40:57 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] timeout and sequence fixes
+Date:   Wed, 15 Apr 2020 00:39:47 +0300
+Message-Id: <cover.1586899625.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,133 +73,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the 'pgtable_t' type for sparc32 so that it represents the uncached
-virtual address of the PTE table, rather than the underlying 'struct page'.
+[4/4] is dirty, but fixes the issue. And there is still "SQ vs CQ"
+problem, solving which can effectively revert it, so I suggest to
+postpone the last patch for a while. I'll rebase if it'd be necessary.
 
-This allows us to free page table allocations smaller than a page.
+Pavel Begunkov (4):
+  io_uring: fix cached_sq_head in io_timeout()
+  io_uring: kill already cached timeout.seq_offset
+  io_uring: don't count rqs failed after current one
+  io_uring: fix timeout's seq catching old requests
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- arch/sparc/include/asm/page_32.h    |  2 +-
- arch/sparc/include/asm/pgalloc_32.h |  6 +++---
- arch/sparc/include/asm/pgtable_32.h | 11 +++++++++++
- arch/sparc/mm/srmmu.c               | 29 +++++++++--------------------
- 4 files changed, 24 insertions(+), 24 deletions(-)
+ fs/io_uring.c | 43 ++++++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 19 deletions(-)
 
-diff --git a/arch/sparc/include/asm/page_32.h b/arch/sparc/include/asm/page_32.h
-index da01c8c45412..fff8861df107 100644
---- a/arch/sparc/include/asm/page_32.h
-+++ b/arch/sparc/include/asm/page_32.h
-@@ -106,7 +106,7 @@ typedef unsigned long iopgprot_t;
- 
- #endif
- 
--typedef struct page *pgtable_t;
-+typedef pte_t *pgtable_t;
- 
- #define TASK_UNMAPPED_BASE	0x50000000
- 
-diff --git a/arch/sparc/include/asm/pgalloc_32.h b/arch/sparc/include/asm/pgalloc_32.h
-index 99c032424946..b772384871e9 100644
---- a/arch/sparc/include/asm/pgalloc_32.h
-+++ b/arch/sparc/include/asm/pgalloc_32.h
-@@ -50,11 +50,11 @@ static inline void free_pmd_fast(pmd_t * pmd)
- #define pmd_free(mm, pmd)		free_pmd_fast(pmd)
- #define __pmd_free_tlb(tlb, pmd, addr)	pmd_free((tlb)->mm, pmd)
- 
--void pmd_populate(struct mm_struct *mm, pmd_t *pmdp, struct page *ptep);
--#define pmd_pgtable(pmd) pmd_page(pmd)
-+#define pmd_populate(mm, pmd, pte)	pmd_set(pmd, pte)
-+#define pmd_pgtable(pmd)		(pgtable_t)__pmd_page(pmd)
- 
- void pmd_set(pmd_t *pmdp, pte_t *ptep);
--#define pmd_populate_kernel(MM, PMD, PTE) pmd_set(PMD, PTE)
-+#define pmd_populate_kernel		pmd_populate
- 
- pgtable_t pte_alloc_one(struct mm_struct *mm);
- 
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
-index 3367e2ba89e0..c5625b2aa331 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -135,6 +135,17 @@ static inline struct page *pmd_page(pmd_t pmd)
- 	return pfn_to_page((pmd_val(pmd) & SRMMU_PTD_PMASK) >> (PAGE_SHIFT-4));
- }
- 
-+static inline unsigned long __pmd_page(pmd_t pmd)
-+{
-+	unsigned long v;
-+
-+	if (srmmu_device_memory(pmd_val(pmd)))
-+		BUG();
-+
-+	v = pmd_val(pmd) & SRMMU_PTD_PMASK;
-+	return (unsigned long)__nocache_va(v << 4);
-+}
-+
- static inline unsigned long pud_page_vaddr(pud_t pud)
- {
- 	if (srmmu_device_memory(pud_val(pud))) {
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 50da4bcdd6fa..c861c0f0df73 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -140,12 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
- 	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
- }
- 
--void pmd_populate(struct mm_struct *mm, pmd_t *pmdp, struct page *ptep)
--{
--	unsigned long ptp = page_to_pfn(ptep) << (PAGE_SHIFT-4); /* watch for overflow */
--	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
--}
--
- /* Find an entry in the third-level page table.. */
- pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
- {
-@@ -364,31 +358,26 @@ pgd_t *get_pgd_fast(void)
-  */
- pgtable_t pte_alloc_one(struct mm_struct *mm)
- {
--	unsigned long pte;
-+	pte_t *ptep;
- 	struct page *page;
- 
--	if ((pte = (unsigned long)pte_alloc_one_kernel(mm)) == 0)
-+	if ((ptep = pte_alloc_one_kernel(mm)) == 0)
- 		return NULL;
--	page = pfn_to_page(__nocache_pa(pte) >> PAGE_SHIFT);
-+	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
- 	if (!pgtable_pte_page_ctor(page)) {
- 		__free_page(page);
- 		return NULL;
- 	}
--	return page;
-+	return ptep;
- }
- 
--void pte_free(struct mm_struct *mm, pgtable_t pte)
-+void pte_free(struct mm_struct *mm, pgtable_t ptep)
- {
--	unsigned long p;
--
--	pgtable_pte_page_dtor(pte);
--	p = (unsigned long)page_address(pte);	/* Cached address (for test) */
--	if (p == 0)
--		BUG();
--	p = page_to_pfn(pte) << PAGE_SHIFT;	/* Physical address */
-+	struct page *page;
- 
--	/* free non cached virtual address*/
--	srmmu_free_nocache(__nocache_va(p), SRMMU_PTE_TABLE_SIZE);
-+	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
-+	pgtable_pte_page_dtor(page);
-+	srmmu_free_nocache(ptep, SRMMU_PTE_TABLE_SIZE);
- }
- 
- /* context handling - a dynamically sized pool is used */
 -- 
-2.26.0.110.g2183baf09c-goog
+2.24.0
 
