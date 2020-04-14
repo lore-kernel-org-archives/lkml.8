@@ -2,121 +2,183 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E9FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58169C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF2F20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3692220656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:43:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jC6MN7SM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PIrTpU7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505110AbgDNTmB (ORCPT
+        id S2505124AbgDNTnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504949AbgDNTl5 (ORCPT
+        Tue, 14 Apr 2020 15:43:09 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1180 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504949AbgDNTnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:41:57 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580C9C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:41:57 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id z17so947359oto.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v7lYaeOwaRqbFs5URm39Evj8odcvFYk7byk2mljb3n8=;
-        b=jC6MN7SM0gbB8C6igXZxmy6YlyG0XZnCiDkfi2LGCG7dBKUpE5RuDtCbIWQmNZRi7t
-         TB24fwPuLxY/DRx/QGbKHTkZKH3g2OS9XV076Aw8qWQiZu6BSf0Ol/8gFV0nGye9aHln
-         D4MhJtbEHC5nMdc4+qqeqrrq91fiUoNet6Ugih5692RKERrseObjhfHKpxuKQUQMNY27
-         nkbfybKw5cY7bxGM6EZ68pPy/LfKhp3nCZU3CsqVQPrTlD8NnLuoot6qnP5U5Rg/8Rip
-         YkS6VjG0cTZ/dASX8VHRmrkvH/HQZgPh3PsFaaT4gaGTpiQAPuuBwDw5WuL5875+Jmo4
-         XB0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=v7lYaeOwaRqbFs5URm39Evj8odcvFYk7byk2mljb3n8=;
-        b=VKGxCxrkyBkYrVAXffnRhJgXXQhb8RwklAfRgWpWgsy/3tNS2NZPKWYXDdTfzMYcqk
-         rojHindHZ/3dymlf5aIIOBDBstKkC6abdZgXzylGLQ9ZJ4nRkbDWBRdXlUram8DDVFYU
-         8Yr7glFx8CRBnJnDxgd+mUvBx825IWTRMY/p4acb4ulbVh+f1cbW3kx+lSrGV7BeaXiV
-         N+43Aa+8crUYW+ht1KHHcscEStjZcEQsE9UGVXrbOmv9jTQp488NQ0K65S+3JT4yKIN1
-         +9CAzr9RY5y41pOI7dULA3lZSACuSlDuL/ux076jcYP2yHbyn5A67nuwqzADLBjC6CXe
-         8IRQ==
-X-Gm-Message-State: AGi0PuYTgiEkvLPw4ZzmT/+DmaB7u6V7023UprWjDauPabz073biw2GL
-        6eGqcvlEsagrGGcza5TPyjHl+Pw+5w==
-X-Google-Smtp-Source: APiQypIbgA6RA1suVxKHDWo9E+TrEXDK/YUzdLWPyxfpHgwm7FSg23LhKy6aqdEMgLFevEM+n2kq2A==
-X-Received: by 2002:a9d:470b:: with SMTP id a11mr9680927otf.44.1586893316477;
-        Tue, 14 Apr 2020 12:41:56 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id z11sm5701093oto.23.2020.04.14.12.41.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:41:55 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id 8C6A8181888;
-        Tue, 14 Apr 2020 19:41:54 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 14:41:53 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] ipmi:bt-bmc: Fix some format issue of the code
-Message-ID: <20200414194153.GG3587@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200414141814.19048-1-tangbin@cmss.chinamobile.com>
+        Tue, 14 Apr 2020 15:43:05 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e96120e0001>; Tue, 14 Apr 2020 12:42:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Apr 2020 12:43:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Apr 2020 12:43:04 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 19:43:04 +0000
+Received: from [10.26.73.15] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 19:43:01 +0000
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     Rob Herring <robh@kernel.org>, Karol Herbst <karolherbst@gmail.com>
+CC:     <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Segher Boessenkool" <segher@kernel.crashing.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191211232345.24810-1-robh@kernel.org>
+ <5386e959-f9c4-2748-ed08-34ab361aee2c@nvidia.com>
+ <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com>
+ <93314ff5-aa89-cd99-393c-f75f31d9d6e5@nvidia.com>
+ <CAL_JsqL84LvUrNy095E_sC2UJnB3SFBgsw6wjOKmFM249BHMOA@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <97c0d1f4-f73e-98bd-380b-d1b8658b965a@nvidia.com>
+Date:   Tue, 14 Apr 2020 20:43:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414141814.19048-1-tangbin@cmss.chinamobile.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL_JsqL84LvUrNy095E_sC2UJnB3SFBgsw6wjOKmFM249BHMOA@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586893326; bh=5SeSWnlnNXu3ix6j1SQBL1b0Wj2Lu1/GlzCZkTlRGbk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PIrTpU7mjRDGrDY2LHI80qDLR80IqS9UwjwB7/Mx/Nyz4Z0eS028r3+i078Vbz/gY
+         y/iSQGye3+oAJjdeHO0nuxzCeotZHg9iy0DNYjdFvxGnAc66VqMQFu9QE74mg5ocMu
+         Mt6TNg7rdTpiUG8ghbG4/cCSgRSiF5cnTYBMu0GTIPBzolQZD3u2ixvaBkHJU/S2iJ
+         rNDlFHEK2iLFNx+ZVxn00cE+wGlIAFl96BIKhYf9tfzfPcupAFUtqcGCM113Khuk7b
+         dbxELKjTprzhvrIjFTN86kU3ymrbvEQxMQzak4rbmsX8fBxaMXEhlLGwwgKgZLwYIX
+         BE4n4sjftafAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 10:18:14PM +0800, Tang Bin wrote:
-> Fix some format issue of the code in bt-bmc.c
+On 14/04/2020 16:00, Rob Herring wrote:
+> +Karol
+> 
+> On Mon, Jan 13, 2020 at 5:12 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>>
+>> On 10/01/2020 23:50, Rob Herring wrote:
+>>> On Tue, Jan 7, 2020 at 4:22 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> On 11/12/2019 23:23, Rob Herring wrote:
+>>>>> The phandle cache was added to speed up of_find_node_by_phandle() by
+>>>>> avoiding walking the whole DT to find a matching phandle. The
+>>>>> implementation has several shortcomings:
+>>>>>
+>>>>>   - The cache is designed to work on a linear set of phandle values.
+>>>>>     This is true for dtc generated DTs, but not for other cases such as
+>>>>>     Power.
+>>>>>   - The cache isn't enabled until of_core_init() and a typical system
+>>>>>     may see hundreds of calls to of_find_node_by_phandle() before that
+>>>>>     point.
+>>>>>   - The cache is freed and re-allocated when the number of phandles
+>>>>>     changes.
+>>>>>   - It takes a raw spinlock around a memory allocation which breaks on
+>>>>>     RT.
+>>>>>
+>>>>> Change the implementation to a fixed size and use hash_32() as the
+>>>>> cache index. This greatly simplifies the implementation. It avoids
+>>>>> the need for any re-alloc of the cache and taking a reference on nodes
+>>>>> in the cache. We only have a single source of removing cache entries
+>>>>> which is of_detach_node().
+>>>>>
+>>>>> Using hash_32() removes any assumption on phandle values improving
+>>>>> the hit rate for non-linear phandle values. The effect on linear values
+>>>>> using hash_32() is about a 10% collision. The chances of thrashing on
+>>>>> colliding values seems to be low.
+>>>>>
+>>>>> To compare performance, I used a RK3399 board which is a pretty typical
+>>>>> system. I found that just measuring boot time as done previously is
+>>>>> noisy and may be impacted by other things. Also bringing up secondary
+>>>>> cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+>>>>> With no caching, calls to of_find_node_by_phandle() take about 20124 us
+>>>>> for 1248 calls. There's an additional 288 calls before time keeping is
+>>>>> up. Using the average time per hit/miss with the cache, we can calculate
+>>>>> these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+>>>>> and 13319 us with no cache or an uninitialized cache.
+>>>>>
+>>>>> Comparing the 3 implementations the time spent in
+>>>>> of_find_node_by_phandle() is:
+>>>>>
+>>>>> no cache:        20124 us (+ 13319 us)
+>>>>> 128 entry cache:  5134 us (+ 690 us)
+>>>>> current cache:     819 us (+ 13319 us)
+>>>>>
+>>>>> We could move the allocation of the cache earlier to improve the
+>>>>> current cache, but that just further complicates the situation as it
+>>>>> needs to be after slab is up, so we can't do it when unflattening (which
+>>>>> uses memblock).
+>>>>>
+>>>>> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>>>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>>>> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+>>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>>>
+>>>> With next-20200106 I have noticed a regression on Tegra210 where it
+>>>> appears that only one of the eMMC devices is being registered. Bisect is
+>>>> pointing to this patch and reverting on top of next fixes the problem.
+>>>> That is as far as I have got so far, so if you have any ideas, please
+>>>> let me know. Unfortunately, there do not appear to be any obvious errors
+>>>> from the bootlog.
+>>>
+>>> I guess that's tegra210-p2371-2180.dts because none of the others have
+>>> 2 SD hosts enabled. I don't see anything obvious though. Are you doing
+>>> any runtime mods to the DT?
+>>
+>> I have noticed that the bootloader is doing some runtime mods and so
+>> checking if this is the cause. I will let you know, but most likely,
+>> seeing as I cannot find anything wrong with this change itself.
+> 
+> Did you figure out the problem here? Karol sees a similar problem on
+> Tegra210 with the gpu node regulator.
+> 
+> It looks like /external-memory-controller@7001b000 has a duplicate
+> phandle. Comparing the dtb in the filesystem with what the kernel
+> gets, that node is added by the bootloader. So the bootloader is
+> definitely creating a broken dtb.
 
-Applied, thanks.
+Yes it was caused by the bootloader, u-boot, incorrectly copying some
+nodes. After preventing u-boot from doing that, it was fine. There are
+some u-boot environment variables [0] that you can try clearing to
+prevent this. Alternatively, if you use a upstream u-boot that should
+also work.
 
--corey
+Cheers
+Jon
 
-> 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-> ---
->  drivers/char/ipmi/bt-bmc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
-> index 890ad55aa..cd0349bff 100644
-> --- a/drivers/char/ipmi/bt-bmc.c
-> +++ b/drivers/char/ipmi/bt-bmc.c
-> @@ -463,9 +463,9 @@ static int bt_bmc_probe(struct platform_device *pdev)
->  	init_waitqueue_head(&bt_bmc->queue);
->  
->  	bt_bmc->miscdev.minor	= MISC_DYNAMIC_MINOR,
-> -		bt_bmc->miscdev.name	= DEVICE_NAME,
-> -		bt_bmc->miscdev.fops	= &bt_bmc_fops,
-> -		bt_bmc->miscdev.parent = dev;
-> +	bt_bmc->miscdev.name	= DEVICE_NAME,
-> +	bt_bmc->miscdev.fops	= &bt_bmc_fops,
-> +	bt_bmc->miscdev.parent = dev;
->  	rc = misc_register(&bt_bmc->miscdev);
->  	if (rc) {
->  		dev_err(dev, "Unable to register misc device\n");
-> -- 
-> 2.20.1.windows.1
-> 
-> 
-> 
+[0] https://elinux.org/Jetson/TX1_Upstream_Kernel#Upstream_Linux_kernel
+
+-- 
+nvpublic
