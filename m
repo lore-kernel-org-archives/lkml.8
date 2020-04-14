@@ -2,126 +2,206 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94FDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416E8C38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C61252076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200402076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DhsWQxH8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xSuS5cYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440919AbgDNVut (ORCPT
+        id S2440935AbgDNVvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440753AbgDNVtr (ORCPT
+        Tue, 14 Apr 2020 17:51:01 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:53309 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2440837AbgDNVul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:49:47 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DA1C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:49:46 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z6so16210844wml.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lLu0lDjOuieHB5rYFFB3f7WiEo1gndmAxrF4xwTxJdI=;
-        b=DhsWQxH8nmCAK1PslhefQsGiSmVRGPV2C48zxDbAw+oQWBdo9hCDs8vO1ONpqDN/ZZ
-         0bz/HssycdFvoO7X3Iesav1WJkrV/TzZ8z1A2cYIFwxDLpmiHDaHFAWeW1CL6SPLhYmU
-         lZHTH7t8+H+50T6hyqE/VczVZrP0k7Yam75JGCk4tqKGgVg/hd8f5PzicIVTsN8l8wf9
-         0d7w2hKZQlina8KT9FJPENgYhD12ZaSSfJ9EFc5c82a/zaqtSwByCfK5H7WE/lt/S0RJ
-         ZqXOLu6xUN/HVpfbnQ/0i/WvJqbIY+SX3vK/d/QuS5EuF4moAadgaBELrhQpbFEgXMGh
-         noPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lLu0lDjOuieHB5rYFFB3f7WiEo1gndmAxrF4xwTxJdI=;
-        b=LWpOhJTp5pEiBNffJc/T+Bw17IWI6s3ptfAEAgaQ3+wBNLYwdVkssUttkyrFYMRqUu
-         8aJJGdZ85wbzwOuuT86aUYKIJ/OrPeCHEkoHELMJRsKihSEwGyx6915NQwMojgRlqjR3
-         dhRaLCFTJkAlT8Z/xXVilDHSJULiaFZPh5LLoKrEFiI1NDaco/+eWjIbzM3XRJu7pcBh
-         m19y1eWkTbH2a5BhnjHinBMGrKtfspA6G7nHJ4nAa98nckXSwbV5LGXciX5YEODIHISV
-         qDCfqc/gj+ZVEQH9pugRh9YKII104Dva3v+7d4zLQ0Lj71dTWVS6WC6bQl93J8VdjxTX
-         8nHQ==
-X-Gm-Message-State: AGi0PuaBpSVToAvLTFhOWpgHlU1rT4Eui80gV9trRsBJ3wQ8GUcdNR6V
-        cy31TjSWrC+KV3nhb3uAmhlxFqkB5ng=
-X-Google-Smtp-Source: APiQypL0+9U7VuiJ8stS+8CjpDdryFrogKFubugLUq0tYDBk79fADkOCK7EquRDegrfCnG/uugEJyQ==
-X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr1784657wmd.19.1586900985207;
-        Tue, 14 Apr 2020 14:49:45 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.googlemail.com with ESMTPSA id b4sm15868876wrv.42.2020.04.14.14.49.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 14:49:44 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] dt-bindings: thermal: Add the idle cooling device
-To:     Rob Herring <robh@kernel.org>
-Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200414162634.1867-1-daniel.lezcano@linaro.org>
- <20200414162634.1867-2-daniel.lezcano@linaro.org>
- <20200414214509.GA10673@bogus>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <882e9605-a2e6-1af8-26e3-b03f2a7bcb5e@linaro.org>
-Date:   Tue, 14 Apr 2020 23:49:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 14 Apr 2020 17:50:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586901032; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=8Gyw9naBcMzogGhcRdaELY49d7UUtPgb3sIbiANgrzk=; b=xSuS5cYketjenQEd4JP8WCEFdz9qcSc6/NvUC3KVrVRUIBD3kPu9QubzlNm/KsFI/S01N+Wk
+ 5CLuM4J8RTjiIAGGOEH1JK+MSsCcpLBsl61FQh9hqba3Yl0taRifVwaGUVrD/2HOjpRBI9kr
+ wjkcmwbU50/2Du8q72QStdNMFNk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e963019.7f4c0a749f10-smtp-out-n04;
+ Tue, 14 Apr 2020 21:50:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4E152C432C2; Tue, 14 Apr 2020 21:50:17 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F5AEC433CB;
+        Tue, 14 Apr 2020 21:50:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F5AEC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 14 Apr 2020 15:50:15 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH] soc: qcom: cmd-db: Add debugfs dumping file
+Message-ID: <20200414215015.GA3820@codeaurora.org>
+References: <20200309185704.2491-1-swboyd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200414214509.GA10673@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200309185704.2491-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/04/2020 23:45, Rob Herring wrote:
-> On Tue, 14 Apr 2020 18:26:27 +0200, Daniel Lezcano wrote:
-
-[ ... ]
-
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/thermal/thermal-idle.yaml:  while scanning a block scalar
->   in "<unicode string>", line 39, column 20
-> found a tab character where an indentation space is expected
->   in "<unicode string>", line 44, column 1
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/thermal/thermal-idle.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/thermal/thermal-idle.example.dts] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> warning: no schema found in file: Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-idle.yaml: ignoring, error parsing file
-> Makefile:1264: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> See https://patchwork.ozlabs.org/patch/1270492
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-
-Sorry for that, I forgot to re-run the binding check and my editor is
-automatically replacing spaces with tabs.
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+On Mon, Mar 09 2020 at 12:57 -0600, Stephen Boyd wrote:
+>It's useful for kernel devs to understand what resources and data is
+>stored inside command db. Add a file in debugufs called 'cmd-db' to dump
+>the memory contents and strings for resources along with their
+>addresses. E.g.
+>
+> Command DB DUMP
+> Slave ARC (v16.0)
+> -------------------------
+> 0x00030000: cx.lvl [00 00 10 00 40 00 80 00 c0 00 00 01 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+> 0x00030004: cx.tmr
+> 0x00030010: mx.lvl [00 00 10 00 00 01 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+> 0x00030014: mx.tmr
+>
+>Cc: Lina Iyer <ilina@codeaurora.org>
+>Cc: Maulik Shah <mkshah@codeaurora.org>
+>Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>---
+> drivers/soc/qcom/cmd-db.c | 79 ++++++++++++++++++++++++++++++++++++++-
+> 1 file changed, 77 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
+>index f6c3d17b05c7..6c308f92a13c 100644
+>--- a/drivers/soc/qcom/cmd-db.c
+>+++ b/drivers/soc/qcom/cmd-db.c
+>@@ -1,12 +1,13 @@
+> /* SPDX-License-Identifier: GPL-2.0 */
+> /* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved. */
+>
+>+#include <linux/debugfs.h>
+> #include <linux/kernel.h>
+> #include <linux/of.h>
+> #include <linux/of_address.h>
+>-#include <linux/of_platform.h>
+> #include <linux/of_reserved_mem.h>
+> #include <linux/platform_device.h>
+>+#include <linux/seq_file.h>
+> #include <linux/types.h>
+>
+> #include <soc/qcom/cmd-db.h>
+>@@ -236,6 +237,78 @@ enum cmd_db_hw_type cmd_db_read_slave_id(const char *id)
+> }
+> EXPORT_SYMBOL(cmd_db_read_slave_id);
+>
+>+#ifdef CONFIG_DEBUG_FS
+>+static int cmd_db_debugfs_dump(struct seq_file *seq, void *p)
+>+{
+>+	int i, j;
+>+	const struct rsc_hdr *rsc;
+>+	const struct entry_header *ent;
+>+	const char *name;
+>+	u16 len, version;
+>+	u8 major, minor;
+>+
+>+	seq_puts(seq, "Command DB DUMP\n");
+>+
+>+	for (i = 0; i < MAX_SLV_ID; i++) {
+>+
+>+		rsc = &cmd_db_header->header[i];
+>+		if (!rsc->slv_id)
+>+			break;
+>+
+>+		switch (rsc->slv_id) {
+>+		case CMD_DB_HW_ARC:
+>+			name = "ARC";
+>+			break;
+>+		case CMD_DB_HW_VRM:
+>+			name = "VRM";
+>+			break;
+>+		case CMD_DB_HW_BCM:
+>+			name = "BCM";
+>+			break;
+>+		default:
+>+			name = "Unknown";
+>+			break;
+>+		}
+>+
+>+		version = le16_to_cpu(rsc->version);
+>+		major = version >> 8;
+>+		minor = version;
+>+
+>+		seq_printf(seq, "Slave %s (v%u.%u)\n", name, major, minor);
+>+		seq_puts(seq, "-------------------------\n");
+>+
+>+		ent = rsc_to_entry_header(rsc);
+>+		for (j = 0; j < le16_to_cpu(rsc->cnt); j++, ent++) {
+>+			seq_printf(seq, "0x%08x: %*pEp", le32_to_cpu(ent->addr),
+0x%05x is what we would have for a resource address.
+>+				   sizeof(ent->id), ent->id);
+>+
+>+			len = le16_to_cpu(ent->len);
+>+			if (len) {
+>+				seq_printf(seq, " [%*ph]",
+>+					   len, rsc_offset(rsc, ent));
+>+			}
+>+			seq_putc(seq, '\n');
+>+		}
+>+	}
+>+
+>+	return 0;
+>+}
+>+
+>+static int open_cmd_db_debugfs(struct inode *inode, struct file *file)
+>+{
+>+	return single_open(file, cmd_db_debugfs_dump, inode->i_private);
+>+}
+>+#endif
+>+
+>+static const struct file_operations cmd_db_debugfs_ops = {
+>+#ifdef CONFIG_DEBUG_FS
+>+	.open = open_cmd_db_debugfs,
+>+#endif
+>+	.read = seq_read,
+>+	.llseek = seq_lseek,
+>+	.release = single_release,
+>+};
+>+
+> static int cmd_db_dev_probe(struct platform_device *pdev)
+> {
+> 	struct reserved_mem *rmem;
+>@@ -259,12 +332,14 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
+> 		return -EINVAL;
+> 	}
+>
+>+	debugfs_create_file("cmd-db", 0400, NULL, NULL, &cmd_db_debugfs_ops);
+>+
+> 	return 0;
+> }
+>
+> static const struct of_device_id cmd_db_match_table[] = {
+> 	{ .compatible = "qcom,cmd-db" },
+>-	{ },
+>+	{ }
+> };
+>
+> static struct platform_driver cmd_db_dev_driver = {
+>
+>base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
+>--
+>Sent by a computer, using git, on the internet
+>
