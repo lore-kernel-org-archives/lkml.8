@@ -2,162 +2,269 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26813C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C99C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03050206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6822F206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="op0QuF5o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iLnREQsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503622AbgDNSOL (ORCPT
+        id S2503652AbgDNSOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
+        Tue, 14 Apr 2020 14:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503621AbgDNSOH (ORCPT
+        by vger.kernel.org with ESMTP id S2503629AbgDNSOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:14:07 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B14CC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:14:07 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id d77so14120174wmd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:14:07 -0700 (PDT)
+        Tue, 14 Apr 2020 14:14:15 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B55C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:14:14 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id f13so5977173ybk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:14:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
-        b=op0QuF5o7KM2geCjMTJ9l2SXLIdI+tfmh0VqUaUn5gu7/Q979iv5Gr25yZJThV3/Wg
-         2gj58yuEuT3HLa93eYIlFphRqiTpteGIWOR+/KM5tX2Rlbcw6FWK27kC7ounWe1M1CRH
-         pwjBVYq3PnNKqCkrk9qwlrw1UlL1oQEaC8JyGAYKBtI2y7PBwHznOjVqrsoMKmskRNp8
-         tJvirX/mDEevHIZwgzl+nio4PtPsdPJwjcYv2zNIRd/dyw8K3tvJjy5TP25soZ6snY7S
-         dPrO44rNstJ2DzTVhertdW15zkWX2Sdw/ICjkadkTtCEsFtTEdD4GEC2sskh1JHCV4qp
-         KqNw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ANLrY4ni7/9H944gaMoVhVUXyiL5aEmRMiwWCB+UJKE=;
+        b=iLnREQsqffwaJy3FePccTuETnEVFwlaFpld2yrIrRXQ7A36BwmrE1GlAwupPa5L47g
+         VmnZWDR9jqg/phbSSPtf8QcENJgUg7GH8O5O2/NbFIEYHag5LVgk3Wge6H63DxzZd6P9
+         MItSwoJezoC7yFPTOHK2U0vX9qFBErGLI9hJ7kPLq6rhbzCAAfwuhsB0p3yilxsr9mpX
+         Qai3Q3wqsMvrXZ3kklG5YlM5Um7gWA8NXiJEy3fSFEHoewS5hPrA3R4nORvxYnHvJC+q
+         yxcAMO8IPG3pGrXtWLD+zjvnoXEXvf2AALtjJ1UdXw9Dj757IeTV9LfNWmidYc8N+1Yz
+         P6pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
-        b=jB98tXPX62iZIjRzcz2uBXd4iPWvPYBiDZQYutThL04MFaD0LRFYksdgtsy5anqrbm
-         vcftrMz2TT5VWcRKdAAqvz1O5YoR1jEDykJIboHFvKaQHseQGD9G17+vvqnK9aGjcjqX
-         mcNKnuOB74R9Jspi/vczRR1i2/aeCG9izBxHxQvzPuc234VAGqTEEdz2ndNe5jiH9aEC
-         O4NXID1aJVdhm05DXp3goQKjr7Sn+xBxtC1RwoxFqxGtqDJ/Mn7/PnOeEbiZxWpglcjv
-         CqokBJ9Ql0BrdaRFZYDtg2kVcipoQhboedQ6tZHWQntuNZG0Hv0Phy9w08YYz7nwx9og
-         ASaA==
-X-Gm-Message-State: AGi0PuanQmPjhQqzpfRHIABVw51zgJ5oYVoo/nkpNCDYapQLKT966fRy
-        fueBfp47DYssoOPF3wCslkdSTw==
-X-Google-Smtp-Source: APiQypKSOh+5deo6wcOrMT7bpCM+o1kPTCXNMnVPx6TFrYyM03oN+vSVOxcaV5uRzDdsNRb4azMBMg==
-X-Received: by 2002:a7b:c250:: with SMTP id b16mr1143293wmj.100.1586888045816;
-        Tue, 14 Apr 2020 11:14:05 -0700 (PDT)
-Received: from localhost.localdomain (dh207-97-22.xnet.hr. [88.207.97.22])
-        by smtp.googlemail.com with ESMTPSA id w12sm5387763wrk.56.2020.04.14.11.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:14:05 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH v2 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-Date:   Tue, 14 Apr 2020 20:10:13 +0200
-Message-Id: <20200414181012.114905-2-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200414181012.114905-1-robert.marko@sartura.hr>
-References: <20200414181012.114905-1-robert.marko@sartura.hr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ANLrY4ni7/9H944gaMoVhVUXyiL5aEmRMiwWCB+UJKE=;
+        b=OHILTKaLan5q5TqA/Eo7SF+YYZPd2od2EbUZ4yIWIVDZ6TjmQVYk3kniOauxQcPPTX
+         JIKot3xpLdRYXUdfJojwKU6svguL+Cwmvda1DVlcKmpgsUdoY9WkYbhfAILyBJgShopx
+         P2dFOS6Nmtz4gyTasSCTH4D0Tny9UaiqhswPoy8pnEO9zYxzjLRRcWwN7X96NNNo8RGT
+         vJW/Dl5TPwNck/e2YQTe9/LATw90yYF/SejUuwmZNPLi1y/6K+tEiikypxr/qDidr0as
+         8BSDU6jVfC2R9uGrEpnfCnwgWPehgHBfmp1Q/hxDhKvw7V6ybS/xn6EK2s4ifh9hZai4
+         TThA==
+X-Gm-Message-State: AGi0PuY0ElF2qhSrhKvolyVKN7Mq6GQMuiOQNG6g59yYRc9t+gS62pfv
+        4mJTmukMFU7t9BNPHIS0dJtCs7eSoPxj8AQZVoeYVQ==
+X-Google-Smtp-Source: APiQypJykLo1er/rJmbEdiyFYjwm7+CD4HzCNR2GAZsEgaOKmBtuRhgU0Ng44D7rAjxhNkfFtPyHmipGv/BFzHbg8Nw=
+X-Received: by 2002:a25:aaa4:: with SMTP id t33mr2030364ybi.324.1586888053511;
+ Tue, 14 Apr 2020 11:14:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200411074631.9486-1-irogers@google.com> <20200411074631.9486-5-irogers@google.com>
+ <20200414152102.GC208694@krava>
+In-Reply-To: <20200414152102.GC208694@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 14 Apr 2020 11:14:01 -0700
+Message-ID: <CAP-5=fW6LgbEodo0StNXBm+hjEEhrQ8JFBU8tYEfeoCURmakaQ@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] perf tools: add support for libpfm4
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the binding document for the IPQ40xx MDIO driver.
+On Tue, Apr 14, 2020 at 8:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Sat, Apr 11, 2020 at 12:46:31AM -0700, Ian Rogers wrote:
+>
+> SNIP
+>
+> >  TAG_FOLDERS= . ../lib ../include
+> >  TAG_FILES= ../../include/uapi/linux/perf_event.h
+> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> > index 965ef017496f..7b64cd34266e 100644
+> > --- a/tools/perf/builtin-list.c
+> > +++ b/tools/perf/builtin-list.c
+> > @@ -18,6 +18,10 @@
+> >  #include <subcmd/parse-options.h>
+> >  #include <stdio.h>
+> >
+> > +#ifdef HAVE_LIBPFM
+> > +#include "util/pfm.h"
+> > +#endif
+>
+> so we have the HAVE_LIBPFM you could do the:
+>
+> #ifdef HAVE_LIBPFM
+> #else
+> #endif
+>
+> in util/pfm.h and add stubs for libpfm_initialize and others
+> in case HAVE_LIBPFM is not defined.. that clear out all the
+> #ifdefs in the change
+>
+>
+> SNIP
+>
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > index b6322eb0f423..8b323151f22c 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -313,6 +313,15 @@ static struct test generic_tests[] = {
+> >               .desc = "maps__merge_in",
+> >               .func = test__maps__merge_in,
+> >       },
+> > +     {
+> > +             .desc = "Test libpfm4 support",
+> > +             .func = test__pfm,
+> > +             .subtest = {
+> > +                     .skip_if_fail   = true,
+> > +                     .get_nr         = test__pfm_subtest_get_nr,
+> > +                     .get_desc       = test__pfm_subtest_get_desc,
+> > +             }
+>
+> awesome :)
+>
+> SNIP
+>
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index d23db6755f51..83ad76d3d2be 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -2447,9 +2447,15 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
+> >               const char *sep = ":";
+> >
+> >               /* Is there already the separator in the name. */
+> > +#ifndef HAVE_LIBPFM
+> >               if (strchr(name, '/') ||
+> >                   strchr(name, ':'))
+> >                       sep = "";
+> > +#else
+> > +             if (strchr(name, '/') ||
+> > +                 (strchr(name, ':') && !evsel->is_libpfm_event))
+> > +                     sep = "";
+> > +#endif
+>
+>
+>   ^^^^^^^^
+>
+> >
+> >               if (asprintf(&new_name, "%s%su", name, sep) < 0)
+> >                       return false;
+> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> > index 53187c501ee8..397d335d5e24 100644
+> > --- a/tools/perf/util/evsel.h
+> > +++ b/tools/perf/util/evsel.h
+> > @@ -76,6 +76,9 @@ struct evsel {
+> >       bool                    ignore_missing_thread;
+> >       bool                    forced_leader;
+> >       bool                    use_uncore_alias;
+> > +#ifdef HAVE_LIBPFM
+> > +     bool                    is_libpfm_event;
+> > +#endif
+>
+> perhaps we could had this one in unconditionaly,
+> because I think we have some members like that
+> for aux tracing.. and that would remove the #ifdef
+> above
+>
+>
+> SNIP
+>
+> >
+> > +#ifdef HAVE_LIBPFM
+> > +struct evsel *parse_events__pfm_add_event(int idx, struct perf_event_attr *attr,
+> > +                                     char *name, struct perf_pmu *pmu)
+> > +{
+> > +     return __add_event(NULL, &idx, attr, false, name, pmu, NULL, false,
+> > +                        NULL);
+> > +}
+> > +#endif
+>
+> could you instead add parse_events__add_event and call it from pfm code?
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
- .../bindings/net/qcom,ipq40xx-mdio.yaml       | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+I wasn't clear whether this was just a name change given the different
+arguments on existing functions. Hopefully everything is addressed in
+the v9 set:
+https://lore.kernel.org/lkml/20200414181054.22435-2-irogers@google.com/T/#m32fc3e3605e49b01e12418f59ef3977cab0561ed
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-new file mode 100644
-index 000000000000..3e2ccf417fb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
-+
-+maintainers:
-+  - Robert Marko <robert.marko@sartura.hr>
-+
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq40xx-mdio
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    mdio@90000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      compatible = "qcom,ipq40xx-mdio";
-+      reg = <0x90000 0x64>;
-+      status = "disabled";
-+
-+      ethphy0: ethernet-phy@0 {
-+        reg = <0>;
-+      };
-+
-+      ethphy1: ethernet-phy@1 {
-+        reg = <1>;
-+      };
-+
-+      ethphy2: ethernet-phy@2 {
-+        reg = <2>;
-+      };
-+
-+      ethphy3: ethernet-phy@3 {
-+        reg = <3>;
-+      };
-+
-+      ethphy4: ethernet-phy@4 {
-+        reg = <4>;
-+      };
-+    };
--- 
-2.26.0
+Thanks,
+Ian
 
+> SNIP
+>
+> > +             pmu = perf_pmu__find_by_type((unsigned int)attr.type);
+> > +             evsel = parse_events__pfm_add_event(evlist->core.nr_entries,
+> > +                                             &attr, q, pmu);
+> > +             if (evsel == NULL)
+> > +                     goto error;
+> > +
+> > +             evsel->is_libpfm_event = true;
+> > +
+> > +             evlist__add(evlist, evsel);
+> > +
+> > +             if (grp_evt == 0)
+> > +                     grp_leader = evsel;
+> > +
+> > +             if (grp_evt > -1) {
+> > +                     evsel->leader = grp_leader;
+> > +                     grp_leader->core.nr_members++;
+> > +                     grp_evt++;
+> > +             }
+> > +
+> > +             if (*sep == '}') {
+> > +                     if (grp_evt < 0) {
+> > +                             ui__error("cannot close a non-existing event group\n");
+> > +                             goto error;
+> > +                     }
+> > +                     evlist->nr_groups++;
+> > +                     grp_leader = NULL;
+> > +                     grp_evt = -1;
+> > +             }
+> > +             evsel->is_libpfm_event = true;
+>
+> seems to be set twice in here
+>
+>
+> > +     }
+> > +     return 0;
+> > +error:
+> > +     free(p_orig);
+> > +     return -1;
+> > +}
+> > +
+> > +static const char *srcs[PFM_ATTR_CTRL_MAX] = {
+> > +     [PFM_ATTR_CTRL_UNKNOWN] = "???",
+> > +     [PFM_ATTR_CTRL_PMU] = "PMU",
+> > +     [PFM_ATTR_CTRL_PERF_EVENT] = "perf_event",
+> > +};
+>
+> SNIP
+>
+> thanks,
+> jirka
+>
