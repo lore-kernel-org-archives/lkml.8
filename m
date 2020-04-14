@@ -2,89 +2,88 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21361C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5ABF20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E4E20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r9ac1r/E"
+	dkim=pass (1024-bit key) header.d=engebretsen.ch header.i=@engebretsen.ch header.b="K4g0aUjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504236AbgDNSnC (ORCPT
+        id S1730997AbgDNSnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49966 "EHLO
+        Tue, 14 Apr 2020 14:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504208AbgDNSmm (ORCPT
+        by vger.kernel.org with ESMTP id S2504206AbgDNSmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 14:42:42 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409C4C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rIV7Tc0uXVh+eJ6y+fStjQcH1El3n85jcYIkYBCjgyc=; b=r9ac1r/EsQKIdOrBiHWUM6Ofs1
-        E0sTjiwSIndZtvieDBNXVhBUNPyXhoA7bpdX5Tiodw5H7sC5FmgA8mdH+oL7WHx5nDjhzvQFJdsvp
-        pb8ROtCIMUHenzJ4/BAbetUwdOx3HbKFxkXK4QZYhDe02H17+rLCdtHeq1uWgaxAC+7avqml3l85V
-        6dYA49N3e/44fD1i4w7bqPQmNDu6UlWNmZK6Z8ZIH1oPAcg0hyodyZBo0fPm4w+E8k7rjtpF15yAo
-        N8INC4MNcgR3beeMfpV00FLQ+0ZTMZQ4GzwNZzO00n/YIkXZD0Dy7mUtPPARKMgTJU5ZoyDwHjfTP
-        45pp9cPg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOQW3-00081G-Hn; Tue, 14 Apr 2020 18:42:35 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8A627981086; Tue, 14 Apr 2020 20:42:33 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 20:42:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH V3 5/9] objtool: Add return address unwind hints
-Message-ID: <20200414184233.GG2483@worktop.programming.kicks-ass.net>
-References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
- <20200414103618.12657-6-alexandre.chartre@oracle.com>
- <20200414161636.GP20713@hirez.programming.kicks-ass.net>
- <546b2d81-39ca-00e1-4df2-d4eaa18496a4@oracle.com>
- <20200414175604.GD2483@worktop.programming.kicks-ass.net>
- <e9e1c4cd-193f-fd5e-65c4-cc9fb159d861@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9e1c4cd-193f-fd5e-65c4-cc9fb159d861@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53665C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:42:41 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a25so15740040wrd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:42:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=engebretsen.ch; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=T5w85/Anw13tnbFJIsbgQbaUb8qEVJINnyZH/cS+SFA=;
+        b=K4g0aUjWSXaR1qjQRM7vF6ngIM040z0byOMBmmaLbxuCHsx1eU2XHQgcC+h3zB6roD
+         9OwOfH43+UCVaiqpxekqVF0+cfehe7BOCOASrrs+6egXc6i78Z+zOWxOxiDTm0H4JsP8
+         oaxQ0yxuRhsYLXnA9yJjXox6PzDb/yrtuzM5k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T5w85/Anw13tnbFJIsbgQbaUb8qEVJINnyZH/cS+SFA=;
+        b=JQsNh/kYKjLoJZkIOyqEWvncOSR/+N1cNnM27MEJQC+Pl41MThlKzm1HVmPd4ULaQU
+         LbSgFpJFU1tl+sj9FxR1EiHa/AUU0GVf7AxGHl2FGh4VcBTYttcp9ElF3ejMav2Zxn8p
+         LLPxicOLyQ8hjoVe6J3tZj0fUcQ1/crgrfGqBxXNXqCMPvZJyetgSr0Xprrg4+V+l9e8
+         N3zr8Ics6FzcoQYtNWHmePISW+oYeAsTWW6l2ztqXf22Uk4bmUyeuf9lRm2ZcWVdz4Uv
+         ZR/nSqgTzCiVldd2YUIQJX1cRJTqUzphSdPVt2zGOAysGhmG5gDkfxWSBvEbXH35ZnXB
+         3lMg==
+X-Gm-Message-State: AGi0PuZXId8icqWvO3ANt9ujgKlY21zcvjMSydlVZxnQLt9FEskshvIm
+        rgYl20sIlh5qfc1g01ryVejIXg==
+X-Google-Smtp-Source: APiQypJ4CWXJdjqsZgKMnosMbBk5AQ2uEX3vx58eKWZLcZIzyhZZOngMXbsuFGiiiFpHI3sSB0oUZA==
+X-Received: by 2002:a05:6000:108b:: with SMTP id y11mr23266082wrw.380.1586889759990;
+        Tue, 14 Apr 2020 11:42:39 -0700 (PDT)
+Received: from server.home ([2a02:120b:2c74:f040:98c9:7cd5:92ab:c7f4])
+        by smtp.gmail.com with ESMTPSA id a7sm3439211wrs.61.2020.04.14.11.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 11:42:39 -0700 (PDT)
+From:   Lars Engebretsen <lars@engebretsen.ch>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org, Lars Engebretsen <lars@engebretsen.ch>
+Subject: [PATCH] iio: core: remove extra semi-colon from devm_iio_device_register() macro
+Date:   Tue, 14 Apr 2020 20:42:37 +0200
+Message-Id: <20200414184237.23018-1-lars@engebretsen.ch>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:31:23PM +0200, Alexandre Chartre wrote:
-> On 4/14/20 7:56 PM, Peter Zijlstra wrote:
+Signed-off-by: Lars Engebretsen <lars@engebretsen.ch>
+---
+ include/linux/iio/iio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > So what actual problem is it solving?
-> > 
-> 
-> The return stack stuff is here to correctly handle intra-function call so that
-> we can figure out where the ret of an intra-function call should return. We
-> don't have this challenge with regular functions because we know that a ret
-> inside such function just indicates the end of the function.
-> 
-> But when there's an intra-function call, a ret instruction can either:
->   - continue after the intra-function call (if the stack was unchanged)
->   - jump somewhere else (if the return address was changed) and eventually
->     return to the next return address
->   - indicate the end of the function (if the return address was removed).
-> 
-> So, all this is needed to correctly follow the flow of the code and properly
-> record stack changes.
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index d63884a54939..76ba7c9fd3e0 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -597,7 +597,7 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+  * 0 on success, negative error number on failure.
+  */
+ #define devm_iio_device_register(dev, indio_dev) \
+-	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE);
++	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE)
+ int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
+ 			       struct module *this_mod);
+ int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);
+-- 
+2.17.1
 
-But which intra-function calls are you worried about here? The RSB
-stuffing ones we have to explicitly forget and the retpoline ones we
-can't follow because they're indirect calls.
-
-So again, who cares about that stack?
