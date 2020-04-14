@@ -2,89 +2,141 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A62AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA665C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D141820575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889169;
-	bh=aMgICZ0DbRdXvD3uWrORNNguBQeKs4PhM0IInqphAhQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nP1qh8fY0dv72jgJTh6rRHvel96PDwHd60Vv4Y2CEA9cc3v4pKih2QjkPQTmUmAiE
-	 OO8K+jaWo/bqvtSWA8KmtuO1PEC5JJExBOgbbcDsgyA8eU6fEYP7QGFrGhOJ62Ex4v
-	 UQmBRNwjHPj5YwgTykwuXQYW38i8x/Uoym5rhKMY=
+	by mail.kernel.org (Postfix) with ESMTP id 8534920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:34:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Qal0UHDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504043AbgDNScs (ORCPT
+        id S2504053AbgDNSes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:32:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504019AbgDNSco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:32:44 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 040DD2074D;
-        Tue, 14 Apr 2020 18:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586889164;
-        bh=aMgICZ0DbRdXvD3uWrORNNguBQeKs4PhM0IInqphAhQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XfIhvFsgxducy/79xPb6PuW6aGDpJNTv8SgSfkKE5j8IOkLygZtW12kHVhyyfdo+I
-         PK7OLQyfIkruNmP7rsqIhJ85FSuV148czdCpC2qQRitLDO1MefAABnaRbTqULLz7KA
-         UFlEKdLVcW1cpZ96WHu9sVApx7wt4ztMN55pzeVI=
-Received: by mail-io1-f49.google.com with SMTP id s18so10966641ioe.10;
-        Tue, 14 Apr 2020 11:32:43 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaDfxWVsEhz/p0TGTB8sUkvxCYFTbj7eD2/nQ0uKHnjyC1kj+AB
-        yLmBmge861Hcq0zF1Gzf0U8qqe958d8gz05yUyA=
-X-Google-Smtp-Source: APiQypKav3WF7b4959gYRb4rMnNBPvkKR4rIb6+qdaWp1uLO7cvZSPLe+Li9/xtzPrkG38ZrAXVf5g0i0NS110Xnpzg=
-X-Received: by 2002:a6b:ef03:: with SMTP id k3mr11387607ioh.203.1586889163435;
- Tue, 14 Apr 2020 11:32:43 -0700 (PDT)
+        Tue, 14 Apr 2020 14:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2503532AbgDNSeo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:34:44 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC22C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:34:43 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w70so10216885qkb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UckdiV4g5smZ/YcYI1aDJQcvx18cWKoMgwV0GVKDwJ0=;
+        b=Qal0UHDj/Eh4X2gPNfet+Ka0Gd7Qxqv6WpAnof0EP/tM7en7YjAoUu3rwectliHx7Y
+         r/11+bJ0rk7/AA1OcEDXD0YMNQT+id7VTgB/BnjObZPMdLPfh4SqFd14nx6Ngqon4GJl
+         N1uiOu7wVABx2p4DOPdrqi0i1GwK4np0KxVY7jJOV+80BPCzYqXPRoE+YkXM6cOT22X7
+         suqYhKQbOmCb8IPB+SA6OC1Rv4kfGqukqe03wLBKfPm1FczWzmZc4h7MVrHJnzCzzMqP
+         LeC8pauqSDJJ7L8P0aVYRe+qybQjGc4hrCDzc7wRoOozJrVPBZS3LgeicsSvK3GxD6en
+         DfHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UckdiV4g5smZ/YcYI1aDJQcvx18cWKoMgwV0GVKDwJ0=;
+        b=GwGSwLb/omKbqnAiee08nK7TRfzDwevu5pEyjXSVwYVu9xHbJkmhV+Z9O2elIx7GAd
+         HfAHA/jA6HuymaaaQveZvTddosnT0eL9HpEUo4NauAT8XRkO1QnVT16VVmaobaLUyrRo
+         8/SQnw1hABHSYdN8gCXP6dMN++lDtCNuNzx5iNK3aJknQZt4/homQk+s0jHqKlHtlaNT
+         e6zPPq/yiVxEzOBnXdZ2owUQtzl8xbXoCayVlrtAF10Kcpk4E18sJwY2eZQp+3ewwPd9
+         fbF8sWPHdRHg0Q83377qH57R5bLeV/sF3xYZXfbFlSnk4qeBT3S23jMO+7VxZBzuww0A
+         337g==
+X-Gm-Message-State: AGi0PubInaLj0EPfhMYSjxW4HL9vjNJO8it++/aVPrClibwzBNCqGvVN
+        t/RlWthaHs5sHrKyRCpn+SxBDQ==
+X-Google-Smtp-Source: APiQypLAHvd4BQDsWDVAsKlHDEm2qIIWVfGyjyhDo2xP6GrGkkqj/rTWWaUyHuGIzua7pF+OJeIiSQ==
+X-Received: by 2002:a37:6754:: with SMTP id b81mr2072274qkc.129.1586889282884;
+        Tue, 14 Apr 2020 11:34:42 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o6sm10819346qkd.113.2020.04.14.11.34.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 11:34:42 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jOQOP-0007ea-Qq; Tue, 14 Apr 2020 15:34:41 -0300
+Date:   Tue, 14 Apr 2020 15:34:41 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
+        roland@purestorage.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
+Message-ID: <20200414183441.GA28870@ziepe.ca>
+References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
- <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com> <CAHk-=wi-s0mmLAVg-aSmNU55=cE8ES7mC=Mc3Wn62P8W9VjY-A@mail.gmail.com>
-In-Reply-To: <CAHk-=wi-s0mmLAVg-aSmNU55=cE8ES7mC=Mc3Wn62P8W9VjY-A@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 14 Apr 2020 20:32:32 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE9046X9EDd636Bw1A9npv0QKAuLcTAzMXAn=JVZeCN0Q@mail.gmail.com>
-Message-ID: <CAMj1kXE9046X9EDd636Bw1A9npv0QKAuLcTAzMXAn=JVZeCN0Q@mail.gmail.com>
-Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 at 20:27, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Apr 14, 2020 at 3:50 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > [*] GRUB on x86 turns out not to zero initialize BSS when it invokes
-> > the EFI stub as a PE/COFF executable
->
-> The fix seems to be to put all globals in the .data section, even if
-> they don't have initializers.
->
-> That seems very fragile. Very easy to forget to not declare some
-> static variable with __efistub_global.
->
-> Could we not make the EFI stub code zero out the BSS itself? Perhaps
-> setting a warning flag (for a later printout) if it wasn't already
-> zero, so that people could point fingers are buggy loaders..
->
+On Sat, Mar 28, 2020 at 08:30:40AM +0100, Christophe JAILLET wrote:
+> There is an off-by-one issue when checking if there is enough space in the
+> output buffer, because we must keep some place for a final '\0'.
+> 
+> While at it:
+>    - Use 'scnprintf' instead of 'snprintf' in order to avoid a superfluous
+>     'strlen'
+>    - avoid some useless initializations
+>    - avoida hard coded buffer size that can be computed at built time.
+> 
+> Fixes: a51f06e1679e ("RDMA/ocrdma: Query controller information")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> The '\0' comes from memset(..., 0, ...) in all callers.
+> This could be also avoided if needed.
+> ---
+>  drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+> index 5f831e3bdbad..614a449e6b87 100644
+> --- a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+> +++ b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+> @@ -49,13 +49,12 @@ static struct dentry *ocrdma_dbgfs_dir;
+>  static int ocrdma_add_stat(char *start, char *pcur,
+>  				char *name, u64 count)
+>  {
+> -	char buff[128] = {0};
+> -	int cpy_len = 0;
+> +	char buff[128];
+> +	int cpy_len;
+>  
+> -	snprintf(buff, 128, "%s: %llu\n", name, count);
+> -	cpy_len = strlen(buff);
+> +	cpy_len = scnprintf(buff, sizeof(buff), "%s: %llu\n", name, count);
+>  
+> -	if (pcur + cpy_len > start + OCRDMA_MAX_DBGFS_MEM) {
+> +	if (pcur + cpy_len >= start + OCRDMA_MAX_DBGFS_MEM) {
+>  		pr_err("%s: No space in stats buff\n", __func__);
+>  		return 0;
+>  	}
 
-That is the quick fix, but Arvind is working on getting rid of
-__efistub_global entirely, and use the right linker foo to put .bss in
-.data. This gives a tiny bit of bloat, but we are talking about a
-handful of bools here.
+The memcpy is still kind of silly right? What about this:
+
+static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
+{
+	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
+	int cpy_len;
+
+	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
+	if (cpy_len >= len || cpy_len < 0) {
+		pr_err("%s: No space in stats buff\n", __func__);
+		return 0;
+	}
+	return cpy_len;
+}
+
+Jason
