@@ -2,138 +2,74 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7080DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC966C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4697F20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3ptBY/e"
+	by mail.kernel.org (Postfix) with ESMTP id B953420578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586872790;
+	bh=fFINDROxgiHKxx92P2pZaMJQJWiL2z3aI5A+SKWsmmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OO7ObjydbxHMSiBdh1pV8GwMrzFBT6X8X/j1UCoejMPPvg8qVN5DwaZMFfiBVlA2E
+	 J/Z+OtEGfN693zGZbCIb8DOLnVdU8JSvxAcLKJY0lY7CnueD5Ew8WdmIgaoFx5w7dV
+	 tvCN5N7Uv30YqtaZFQmHrw3oYcRmbkt+nkDMgTqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388555AbgDNN6m (ORCPT
+        id S2388609AbgDNN7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388513AbgDNN6b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:58:31 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24FAC061A0C;
-        Tue, 14 Apr 2020 06:58:30 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so14095107wmh.0;
-        Tue, 14 Apr 2020 06:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=shNjxK2XZi1SBgNMZlObJi0kerdnPGniLRexipno8Aw=;
-        b=i3ptBY/ez3Oo/1/XjdW66FOjERVUY+KxiP/0oUYA3/TRzcFzt6p+vzYFmA3kr0stYu
-         2HtKP6BexVXp6h6iZagIVX4IfEtcWFyjNYdOtfSgJy4M6Y/KtK0s2ppV+WVgeuTUY+6I
-         cbOmZv+cQGy775YaEyYWVr51UJc9PHzuMDRGEygWNzPZkZNHIoJ+I/8w0/Af8g2Dow+7
-         QSHVIYRdcw7ydzYMZPSb8Qc10WZB+8u63b0LjufKNjzWLWP/hQQtfDJgJzYHlKvcf54m
-         hzxQ2WD9uOGJmzDxc7aIWc8rAb3JZjpP7rPpkJbqwt9FhrnWZQ0nTFS59+pD6MJp5kR5
-         PiyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=shNjxK2XZi1SBgNMZlObJi0kerdnPGniLRexipno8Aw=;
-        b=ZpwHYUgv3R0K/bx7E6kOy8Ob8RnWTimBL+NyL8eXSm5fx/nazQTxlJNGH2ONfNAdli
-         D8pCJMXah7zapkBOMzjD889AeAcAH+BlAo5428Fr6aFfZP00qe6sm7zaNqW9vJX55eeL
-         AOTRkPJskuJRO1kakY7WdWgnoEW2uVixO4nJUNycDTHJWmGRrLpz5+CfqzCOmt/gyMhR
-         GPdyIxtFY4O9ms6HLnd+RUHqR+bnChJT7tCwEU/o/jKUlC2qbbLpfXwWTE85Xr8zTIzt
-         jBdV2YyywvaTkDegO1RaX77YcGrAzSIhSiGqxta9/4Yu7QwfxlgAlUVcfYSYoN3b9xpu
-         GF4A==
-X-Gm-Message-State: AGi0PubkXuuEVdEIQISZEsp072AspBSKltEiMeZ902taeTYY8Hs6Y8nx
-        J1Pge6g1Hl+TqO9QXzHLmj0=
-X-Google-Smtp-Source: APiQypJnpCKxrTz2rJ7RiPyVd3Z7CdK6nXF5XVpomjZm7GVdu8lqiAw3ETD0/uxvcPenl+bWtJRhbw==
-X-Received: by 2002:a1c:4b0a:: with SMTP id y10mr45278wma.24.1586872709606;
-        Tue, 14 Apr 2020 06:58:29 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id q18sm12282012wmj.11.2020.04.14.06.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 06:58:28 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 15:58:27 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
-Message-ID: <20200414135827.GB3593749@ulmo>
-References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
+        Tue, 14 Apr 2020 09:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388513AbgDNN7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:59:43 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DCB620578;
+        Tue, 14 Apr 2020 13:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586872783;
+        bh=fFINDROxgiHKxx92P2pZaMJQJWiL2z3aI5A+SKWsmmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lVieuKoaxhrtyXLu+CFu07YGsuDgJSbocZ8LVuRDeZsyhKDzofZcLudfh8BlRBrk1
+         tMXl1JiHjg8RGQ44D7ey/DdOqIXuJVH+5HrVAVhcocCw/0m8cXk0gDq20mlO5ZUjM2
+         +FNLJvktRPOuXVH4GEQ/1KZuL8VZYV+K6W8gHEKE=
+Date:   Tue, 14 Apr 2020 21:59:37 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet
+ connection
+Message-ID: <20200414135936.GH30676@dragon>
+References: <1584434788-11945-1-git-send-email-michal.vokac@ysoft.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1584434788-11945-1-git-send-email-michal.vokac@ysoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 09:46:28AM +0100, Michal Vokáč wrote:
+> The Y Soft yapp4 platform supports up to two Ethernet ports.
+> The Ursa board though has only one Ethernet port populated and that is
+> the port@2. Since the introduction of this platform into mainline a wrong
+> port was deleted and the Ethernet could never work. Fix this by deleting
+> the correct port node.
+> 
+> Fixes: 87489ec3a77f ("ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa boards")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 
---/WwmFnJnmDyWGHa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Apr 11, 2020 at 05:35:28PM +0200, Christophe JAILLET wrote:
-> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
->=20
-> Fixes: 3ad1f3a33286 ("pwm: Implement some checks for lowlevel drivers")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/pwm/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 9973c442b455..bca04965bfe6 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -537,7 +537,7 @@ static void pwm_apply_state_debug(struct pwm_device *=
-pwm,
-> =20
->  	if (!state->enabled && s2.enabled && s2.duty_cycle > 0)
->  		dev_warn(chip->dev,
-> -			 "requested disabled, but yielded enabled with duty > 0");
-> +			 "requested disabled, but yielded enabled with duty > 0\n");
-> =20
->  	/* reapply the state that the driver reported being configured. */
->  	err =3D chip->ops->apply(chip, pwm, &s1);
-
-I don't think this is strictly necessary any longer since the logging
-functions are supposed to add these themselves nowadays. But I like the
-consistency of this, so I'll apply this anyway.
-
-Thanks,
-Thierry
-
---/WwmFnJnmDyWGHa4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6VwYMACgkQ3SOs138+
-s6Fzlg//b9ON8vAP4sRTnLHsUC0mCmY2XcrY0P5eCKvrjAivAAswf7qGNpzKcBN1
-FUzY74P+qLClXRXFcciVxdGCaPzb+dynFkizSZC5wqBathkkFK3WMAjfFkjH2fe5
-2pLX7gpMvlrlneBVM52ZrR2KK4fAonlQe7Xq07vKQ6K8stWmQblhGZNKXlCaK4fi
-gkzWQKzHvWML6Bzu5Zrk21Z/BxPeT4gHl0jxo3ZnsHhv1ZveNkDHDLB1ybDjTaEj
-p+faT8bCf4bSPp8OlpnJpP6d0yzAxcDO6gDRCEH/jaBUaZDkHEgjsSDxkL5H+lkp
-s8N/kJ9q+0qSivxQyFLPTGyUoUm5C/xkT81UrwWEQMbouN7FVBelXVs9SLKfUSbA
-noAYtOMxz8V4AxtUNniYyzo1ir8gqB4kZTUmr+cn0mP68WJHvmTHe/ElmC/bn8uK
-N92cuJnV0s4A+5SrPi4mDpLA4FP8m2MBAsEDKd5j1tPfBY7HrHgdgZkNxSIiehNQ
-+5rzl2LyBfx8rnz/Ljw02TpgJX/pNELNrM/Oa4jy3QoDiIlaUpoL5/d9QrIbt71d
-UlGep4cyvSvRlsY0CZDJhABtsjb6zLix/Rc6x0jCL45rwGVLilLbKgoHedCEllvu
-ueo5JO9bxbeHxPi+II1uGQ07LNd3TJyRZMVjSggpscDcfmfJCTc=
-=cwju
------END PGP SIGNATURE-----
-
---/WwmFnJnmDyWGHa4--
+Applied, thanks.
