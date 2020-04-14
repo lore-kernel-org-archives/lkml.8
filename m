@@ -2,31 +2,30 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ACFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB4FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEAC20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E5120644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404327AbgDNC5M (ORCPT
+        id S2404335AbgDNC5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:57:12 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:51914 "EHLO
+        Mon, 13 Apr 2020 22:57:19 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:51904 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404250AbgDNCze (ORCPT
+        by vger.kernel.org with ESMTP id S2404224AbgDNCzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 22:55:34 -0400
+        Mon, 13 Apr 2020 22:55:31 -0400
 Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Apr 2020 19:55:33 -0700
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 13 Apr 2020 19:55:25 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 698B5216B5; Tue, 14 Apr 2020 08:25:24 +0530 (IST)
+        id 0145421634; Tue, 14 Apr 2020 08:25:23 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
@@ -34,175 +33,61 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH V3 5/8] clk: qcom: Add ipq apss clock controller
-Date:   Tue, 14 Apr 2020 08:25:19 +0530
-Message-Id: <1586832922-29191-6-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V3 0/8] Add APSS clock controller support for IPQ6018
+Date:   Tue, 14 Apr 2020 08:25:14 +0530
+Message-Id: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
-References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPU on Qualcomm's IPQ platform devices are clocked primarily by a
-PLL and xo which are connected to a mux and enable block, This patch adds
-support for the mux and the enable.
+The CPU on Qualcomm's IPQ6018 devices are primarily fed by A53 PLL and XO,
+these are connected to a clock mux and enable block.
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- drivers/clk/qcom/Kconfig    |  10 +++++
- drivers/clk/qcom/Makefile   |   1 +
- drivers/clk/qcom/apss-ipq.c | 107 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 118 insertions(+)
+This patch series adds support for these clocks and inturn enables clocks
+required for CPU freq.
+
+[V3]
+ * Fixed dt binding check error in patch2
+   dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
+[V2]
+ * Restructred the patch series as there are two different HW blocks,
+   the mux and enable belongs to the apcs block and PLL has a separate HW
+   block.
+ * Converted qcom mailbox and qcom a53 pll documentation to yaml.
+ * Addressed review comments from Stephen, Rob and Sibi where it is applicable.
+ * Changed this cover letter to state the purpose of this patch series
+
+Sivaprakash Murugesan (8):
+  dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
+  dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
+  clk: qcom: Add A53 PLL support for ipq6018 devices
+  clk: qcom: Add DT bindings for ipq6018 apss clock controller
+  clk: qcom: Add ipq apss clock controller
+  dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
+  mailbox: qcom: Add ipq6018 apcs compatible
+  arm64: dts: ipq6018: Add a53 pll and apcs clock
+
+ .../devicetree/bindings/clock/qcom,a53pll.txt      |  22 ----
+ .../devicetree/bindings/clock/qcom,a53pll.yaml     |  60 +++++++++
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |  88 -------------
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 101 +++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  16 ++-
+ drivers/clk/qcom/Kconfig                           |  10 ++
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/a53-pll.c                         | 136 +++++++++++++++++----
+ drivers/clk/qcom/apss-ipq.c                        | 107 ++++++++++++++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  22 ++--
+ include/dt-bindings/clock/qcom,apss-ipq.h          |  12 ++
+ 11 files changed, 430 insertions(+), 145 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
  create mode 100644 drivers/clk/qcom/apss-ipq.c
+ create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 15cdcdc..8573f2e 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -89,6 +89,16 @@ config APQ_MMCC_8084
- 	  Say Y if you want to support multimedia devices such as display,
- 	  graphics, video encode/decode, camera, etc.
- 
-+config IPQ_APSS
-+	tristate "IPQ APSS Clock Controller"
-+	default N
-+	help
-+	  Support for APSS clock controller on ipq platform devices. The
-+	  APSS clock controller manages the Mux and enable block that feeds the
-+	  CPUs.
-+	  Say Y if you want to support CPU frequency scaling on
-+	  ipq based devices.
-+
- config IPQ_GCC_4019
- 	tristate "IPQ4019 Global Clock Controller"
- 	help
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 656a87e..1e4b296 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -19,6 +19,7 @@ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
- # Keep alphabetically sorted by config
- obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
- obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
-+obj-$(CONFIG_IPQ_APSS) += apss-ipq.o
- obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
- obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
- obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
-diff --git a/drivers/clk/qcom/apss-ipq.c b/drivers/clk/qcom/apss-ipq.c
-new file mode 100644
-index 0000000..a37cd98
---- /dev/null
-+++ b/drivers/clk/qcom/apss-ipq.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk-provider.h>
-+#include <linux/regmap.h>
-+#include <linux/module.h>
-+
-+#include <dt-bindings/clock/qcom,apss-ipq.h>
-+
-+#include "common.h"
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "clk-alpha-pll.h"
-+#include "clk-regmap-mux.h"
-+
-+enum {
-+	P_XO,
-+	P_APSS_PLL_EARLY,
-+};
-+
-+static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
-+	{ .fw_name = "xo" },
-+	{ .fw_name = "pll" },
-+};
-+
-+static const struct parent_map parents_apcs_alias0_clk_src_map[] = {
-+	{ P_XO, 0 },
-+	{ P_APSS_PLL_EARLY, 5 },
-+};
-+
-+static struct clk_regmap_mux apcs_alias0_clk_src = {
-+	.reg = 0x0050,
-+	.width = 3,
-+	.shift = 7,
-+	.parent_map = parents_apcs_alias0_clk_src_map,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "apcs_alias0_clk_src",
-+		.parent_data = parents_apcs_alias0_clk_src,
-+		.num_parents = 2,
-+		.ops = &clk_regmap_mux_closest_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+/*required for cpufreq*/
-+static struct clk_branch apcs_alias0_core_clk = {
-+	.halt_reg = 0x0058,
-+	.clkr = {
-+		.enable_reg = 0x0058,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "apcs_alias0_core_clk",
-+			.parent_hws = (const struct clk_hw *[]){
-+				&apcs_alias0_clk_src.clkr.hw },
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static const struct regmap_config apss_ipq_regmap_config = {
-+	.reg_bits       = 32,
-+	.reg_stride     = 4,
-+	.val_bits       = 32,
-+	.max_register   = 0x1000,
-+	.fast_io        = true,
-+};
-+
-+static struct clk_regmap *apss_ipq_clks[] = {
-+	[APCS_ALIAS0_CLK_SRC] = &apcs_alias0_clk_src.clkr,
-+	[APCS_ALIAS0_CORE_CLK] = &apcs_alias0_core_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc apss_ipq_desc = {
-+	.config = &apss_ipq_regmap_config,
-+	.clks = apss_ipq_clks,
-+	.num_clks = ARRAY_SIZE(apss_ipq_clks),
-+};
-+
-+static int apss_ipq_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return qcom_cc_really_probe(pdev, &apss_ipq_desc, regmap);
-+}
-+
-+static struct platform_driver apss_ipq_driver = {
-+	.probe = apss_ipq_probe,
-+	.driver = {
-+		.name   = "qcom,apss-ipq-clk",
-+	},
-+};
-+
-+module_platform_driver(apss_ipq_driver);
-+
-+MODULE_DESCRIPTION("QCOM APSS IPQ CLK Driver");
-+MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
