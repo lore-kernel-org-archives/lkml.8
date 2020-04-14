@@ -2,120 +2,136 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59282C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16D1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301902076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4E52076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c6qp5YUt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UW03JANv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633291AbgDNUjv (ORCPT
+        id S2633300AbgDNUl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42198 "EHLO
+        Tue, 14 Apr 2020 16:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730053AbgDNUj3 (ORCPT
+        by vger.kernel.org with ESMTP id S1729251AbgDNUly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:39:29 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037B6C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:39:28 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id n128so351143vke.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:39:28 -0700 (PDT)
+        Tue, 14 Apr 2020 16:41:54 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B086C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:41:54 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z6so15964207wml.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hxK3Sqhwvh9HQz8vI3EGqehbyyDGiizGlJruFTBZOiI=;
-        b=c6qp5YUtAXQcWJjTWNsBFpOyyFWdmGQpkw4prkbONKTeTw/XOR/xcawcwrXd2fbgSU
-         JOMhYTnvdPurqp721fz0QiydwLxg1DaBoGODQdVn4Zndww6QKB/wzjVlvaHdBD0bRZCX
-         5UuKM+vtKTnZEJuss5/lGBpw/28PwI2XHAB3Y=
+        bh=kRD6ER0kESZyvLzhCicmTVhbpnrsXVXBsNz/nRRqon0=;
+        b=UW03JANvjlup8MIxgaN12OcWZzq7aMnlQ1ahjWwW0fKJ3LVfWDPay6E/5n+/DshVIF
+         vsqX/H0BWReIctV3h6m0IbsfCf3/op3n9k9KqN/7abhhc6P7mSI12NkG8sfsIy9RRPvz
+         OZ+JuhkoD38d75gQcIBDzbOwuCyJd5kABsk3la8pblyaMB+WmO56/XDeZHtO1dBSBWOp
+         iDerYsJ+kySrEkSFs1CLjZY2Dh3PHscv752KQmzHpUOHnzZdNVPt7ya0qgqz4F2PXaSg
+         yZCIOtDwCiMjVL7PwmSCpPEONHpMVxYK0//DDBb7tK5GrXc8KD5tIMFvCFHVJEJfB44T
+         JEGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hxK3Sqhwvh9HQz8vI3EGqehbyyDGiizGlJruFTBZOiI=;
-        b=o4yDW5Cd3yG+Ji97w1CA9X6Jm1j85O5W+e4h1R2fPWDhb2pS+xtsv5ZTwxLGt41Em+
-         DWbdQfYYvtvp4k2q4rHqv5vo019ekfLjT/QRZr3SCugK73EsbEB94s+BUz/EwxwX7EjW
-         u7BWYawyXW8YUiPswB5GokAryEqTXrtkseFTi/KVeIRvM8A8Nh8v0SC2cVclYrIDElnt
-         6t3yGtaeVXn9Gi5ln7PXFvkr7YZkAG+urQzuOTPwLr+SIgCFRKHq/Hd34r3hZuZbbsPJ
-         txTE7r/mo3CMystUMMzmyULuDt7ymlT9Die1V8fk1QOPQ4c/MDkryFes8/ri8Pw4WFKk
-         4BBA==
-X-Gm-Message-State: AGi0Pua7oxaZJxc32EE/WGlsyQL9Hw586p+7iD0xzAVN80W7Cz7LtHTv
-        6Hi2HwYrg6T4gIMfOv87EBcNCvGGVpQ=
-X-Google-Smtp-Source: APiQypJFBbCwIcB5dqlitII3g8/AjLwY0lmQSVZrforCemC80VDTluzApC9mDoA+RPk/SPAqQWTT7w==
-X-Received: by 2002:ac5:c9aa:: with SMTP id f10mr11290711vkm.100.1586896767738;
-        Tue, 14 Apr 2020 13:39:27 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id r205sm2398969vkr.11.2020.04.14.13.39.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 13:39:27 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id g24so862076vsp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:39:27 -0700 (PDT)
-X-Received: by 2002:a67:2b07:: with SMTP id r7mr1932123vsr.169.1586896766379;
- Tue, 14 Apr 2020 13:39:26 -0700 (PDT)
+        bh=kRD6ER0kESZyvLzhCicmTVhbpnrsXVXBsNz/nRRqon0=;
+        b=lSH6a4c0WnFEWKJQIzWkpC7Z0tTwVWspfiaIfEyzenwu98TsVBAZCt6okrst0mJHeN
+         CiTAcWOZkbrKiczx4x9mRs3FmBjOCHVZHEFy5eeazGPpIR3ZcB9e9h/CH731gcsYMVds
+         HlMtw6rBBeKy+cxa5XlaHSa9fbTfYdqUMORPXMNLMp67IzsShnx+sTbWVJhrNFr5+FLO
+         3yOjVST0J9Od2Jp7S8W8ioOJeuGnm6TlQuFN3CY4d3j9QSgzDp3QfIqvFW0HYKW34zQX
+         jtxcHw3bKojIecQkU6z3REXxfFXjRt2z7M7LvIoW2GLORDYlfSw/vXfclkCjpcddwOuG
+         ahGw==
+X-Gm-Message-State: AGi0PuYvYRQj47PVKZ5Kumk6of503jUag0X9/M5NpzpFUQOpevPorFNr
+        SnAFe9y9I55g+/gHf6F7Y7dpv227IUBGf67+jONRlw==
+X-Google-Smtp-Source: APiQypJfqEPibYcj2k65XEXixEnNsItmQI+g5MjRJaCCFk2dep2r9dX3R/rTcIvaSElU3BOpks6akiiqS+ParjXVlXs=
+X-Received: by 2002:a1c:5ac4:: with SMTP id o187mr1719537wmb.79.1586896912367;
+ Tue, 14 Apr 2020 13:41:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200414131010.v2.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
- <20200414131010.v2.2.I8550512081c89ec7a545018a7d2d9418a27c1a7a@changeid> <158689621032.105027.15399009553185990099@swboyd.mtv.corp.google.com>
-In-Reply-To: <158689621032.105027.15399009553185990099@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 14 Apr 2020 13:39:15 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W9swvzfCX5H=qhqdsnCAFTCWwzibcu72JJ9VKi9cR+1Q@mail.gmail.com>
-Message-ID: <CAD=FV=W9swvzfCX5H=qhqdsnCAFTCWwzibcu72JJ9VKi9cR+1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] soc: qcom: rpmh-rsc: Timeout after 1 second in write_tcs_reg_sync()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Joe Perches <joe@perches.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200408175058.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
+ <CAHp75VcuPoVK_+KV+88Di1dUFZ9S8-1nNqo2s8a_n3vgSMoecg@mail.gmail.com>
+ <CAHcu+VZMiFVt9L9kNCTtsmxUP-7tO+pBpCOtMHQPotuye_2w1A@mail.gmail.com> <CAHp75VemvD0mvDHWorSFhqOKaQ1Y_vLYVAQmnb8iz30AH431+Q@mail.gmail.com>
+In-Reply-To: <CAHp75VemvD0mvDHWorSFhqOKaQ1Y_vLYVAQmnb8iz30AH431+Q@mail.gmail.com>
+From:   Daniel Campello <campello@google.com>
+Date:   Tue, 14 Apr 2020 14:41:16 -0600
+Message-ID: <CAHcu+VbZjqnxmfw-fN9H=qwWAdR9Y8JuQC2e39xe7UtFfCXf8A@mail.gmail.com>
+Subject: Re: [PATCH 2/2 v8] iio: Add SEMTECH SX9310/9311 sensor driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Apr 14, 2020 at 1:30 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Tue, Apr 14, 2020 at 3:11 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Quoting Douglas Anderson (2020-04-14 13:10:16)
-> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> > index f988e9cc2c30..02fc114ffb4f 100644
-> > --- a/drivers/soc/qcom/rpmh-rsc.c
-> > +++ b/drivers/soc/qcom/rpmh-rsc.c
-> > @@ -174,12 +175,13 @@ static void write_tcs_reg(const struct rsc_drv *drv, int reg, int tcs_id,
-> >  static void write_tcs_reg_sync(const struct rsc_drv *drv, int reg, int tcs_id,
-> >                                u32 data)
-> >  {
-> > +       u32 new_data;
-> > +
-> >         writel(data, tcs_reg_addr(drv, reg, tcs_id));
-> > -       for (;;) {
-> > -               if (data == readl(tcs_reg_addr(drv, reg, tcs_id)))
-> > -                       break;
-> > -               udelay(1);
-> > -       }
-> > +       if (readl_poll_timeout_atomic(tcs_reg_addr(drv, reg, tcs_id), new_data,
-> > +                                     new_data == data, 1, USEC_PER_SEC))
-> > +               pr_err("%s: error writing %#x to %d:%d\n", drv->name,
+> On Tue, Apr 14, 2020 at 1:56 AM Daniel Campello <campello@google.com> wrote:
+> > On Fri, Apr 10, 2020 at 4:52 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Thu, Apr 9, 2020 at 2:54 AM Daniel Campello <campello@chromium.org> wrote:
 >
-> Shouldn't the register be hex? That seems to be how the registers are
-> represented. But I guess tcs_id is decimal and can't be translated to be
-> meaningful enough to indicate which TCS it is like the sleep or wake
-> one.
+> As far I understand you agreed on the rest.
+> Correct?
+>
+Yes, sorry for not be explicit before.
+> ...
+>
+> > > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > Signed-off-by: Enrico Granata <egranata@chromium.org>
+> > >
+> > > This is not understandable. Are they who helped you develop the code
+> > > (we have a special tag, i.e. Co-developed-by in addition to SoB), or
+> > > just people in the middle? Then the question is, how come author is
+> > > you and not Gwendal?
+> > >
+> > This patch was initially developed by Gwendal and Enrico (here:
+> > crrev.com/c/1089826).
+>
+> So, tags should include
+>  SoB: Gwendal ...
+>  Co-developed-by: Enrico ...
+>  SoB: Enrico ...
+>  Co-developed-by: yours (if you developed it)
+>  SoB: yours
+>
+> and on top git commit --amend --author="Gwendal  ..."
 
-Good point.  Should I quickly spin a v3 just so this is all ready to
-go, or wait to see if there is any additional feedback?
+I sent v10 with this metadata changed. Thanks!
+>
+> ...
+>
+> > > > +#define SX9310_REG_IRQ_MSK                             0x03
+> > >
+> > > Is MSK abbreviation in datasheet? Please spell it how it's in datasheet.
+> > Yes, they indead use MSK.
+>
+> Okay!
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
--Doug
+Regards,
+Daniel
