@@ -2,137 +2,159 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A253C352B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D68C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC98E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44980206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wIX4lrZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437237AbgDNIzA (ORCPT
+        id S2437260AbgDNI7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:55:00 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36880 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437215AbgDNIy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:54:57 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D21420038D;
-        Tue, 14 Apr 2020 10:54:55 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 300F5200358;
-        Tue, 14 Apr 2020 10:54:55 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1982B204D3;
-        Tue, 14 Apr 2020 10:54:55 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 11:54:54 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     peng.fan@nxp.com
-Cc:     shawnguo@kernel.org, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        aisheng.dong@nxp.com, Anson.Huang@nxp.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] clk: imx7ulp: make it easy to change ARM core clk
-Message-ID: <20200414085454.emvw6nlknniaeaug@fsr-ub1664-175>
-References: <1584347553-2654-1-git-send-email-peng.fan@nxp.com>
+        Tue, 14 Apr 2020 04:59:14 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:42007 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437118AbgDNI7M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:59:12 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id OHPKjOrxh7xncOHPNj15dZ; Tue, 14 Apr 2020 10:59:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1586854749; bh=rzPTxABO+GO1ugN9j20FMyIDQtHP+K58senQ24jTmeU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=wIX4lrZYhA1ZNxZ1zu0YHpjfb3/YpkUl4SIXy9p8vUwDC3l9MksiY5zCtsdXZPIcx
+         DrchSwyRHNztaKYhUj8S+mm3TVrFDxSBCXcWLYHMC3xSHSm8Y057DYv31ikZ/Jiznx
+         v8ACZ0ANVNLOAFAze84oTQSZ2PVIeGOX6HDlcSyCsedLpUD1NX6WcOHTyaHs8sVhuY
+         DBMJlesQODpFgurBw82if94aOYyqrTNJ6Q7uif3GwH+3ykGNQya2P/85q+6HTNnqXS
+         4KvioAGuaXLZ8/q5HT64wWCzTJOihjiVI7/MHYyybf+V+KxuQLvKwl1CePTulPhnLj
+         7yk2eS8bDPt7w==
+Subject: Re: gspca webcam: need to plug it 5 times before it works
+To:     Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, samr7@cs.washington.edu,
+        gerard@gkall.hobby.nl
+Cc:     linux@rainbow-software.org, kilgota@auburn.edu, moinejf@free.fr
+References: <20200404184732.GA17534@duo.ucw.cz>
+ <20200404191530.GA19753@duo.ucw.cz> <20200404191846.GA20044@duo.ucw.cz>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <ae4ed621-8f91-2c6a-bd11-2f4709a056dc@xs4all.nl>
+Date:   Tue, 14 Apr 2020 10:59:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584347553-2654-1-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200404191846.GA20044@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAOpjT6gnyQpA6kxmqjfE+s0kn+FWY8uOLPLQ8MXzuHjYKzU6z2HfKptcPI+tvk97Uq6fVHNbRPhp5/2mPUBRJYvcFWzGuv/v26d7OPnwgpWM9k6uybj
+ 97cHUFYJ4lZP/6xsc4SJAG6t4T3+ISq5xRdr/N4zh2yHz4siBgbFiTT/rIi6EhOcOahX+sYtuvya5Bj3O020xIsq4JPIamZeFKDMjtRAMy5nxcbJSCnm7z9P
+ 80pOCqQB2v6KqCFZN4gzHOpcJwrYNlAzZVNRvIZlITM0aOGwCxJnz+W3S33heSO+YDz7VZSpYZNr06Q1iq0a/p4zyDyVQr/ytJdKmmd0OpDkVJtGbRzaSzEK
+ 9jR9nB4/ynspMFYsh2qcnGfAZ+9xQ1oIhddNsbj3j4H9iyp/WlU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-16 16:32:33, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> ARM clk could only source from divcore or hsrun_divcore.
-> 
-> Follow what we already used on i.MX7D and i.MX8M SoCs, use
-> imx_clk_hw_cpu API. When ARM core is running normaly,
-> whether divcore or hwrun_divcore will finally source
-> from SPLL_PFD0. However SPLL_PFD0 is marked with CLK_SET_GATE,
-> so we need to disable SPLL_PFD0, when configure the rate.
-> So add CORE and HSRUN_CORE virtual clk to make it easy to
-> configure the clk using imx_clk_hw_cpu API.
-> 
-> Since CORE and HSRUN_CORE already marked with CLK_IS_CRITICAL, no
-> need to set ARM as CLK_IS_CRITICAL. And when set the rate of ARM clk,
-> prograting it the parent with CLK_SET_RATE_PARENT will finally set
-> the SPLL_PFD0 clk.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Hi Pavel,
 
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+On 04/04/2020 21:18, Pavel Machek wrote:
+> Hi!
+> 
+>>> ..but if I'm patient enough, it eventually starts working... somehow.
+>>>
+>>> Incoming data seems to go in reliably. Outgoing commands (such as
+>>> change gain) don't seem to be unreliable.
+>>>
+>>> Any idea how to debug / what could be wrong?
+>>
+>> And I can force it to probe like this: which... makes it work, but
+>> does not fix the outgoing commands.
+>>
+>> Any ideas?
 
-> ---
+You're on your own, I'm afraid.
+
+I think I have one or two of these webcams, but they are in the Netherlands
+while I am in Norway, and I have no idea when I will be back.
+
+Frankly, I would recommend buying a uvc webcam rather than spending any time on
+these old crappy webcams.
+
+Regards,
+
+	Hans
+
 > 
-> V3:
->  Update commit log. Make this a standalone patch from V2 
-> V2:
->  https://patchwork.kernel.org/patch/11390595/
->  No change
+> (Adding people from module_authors to the list.)
 > 
->  drivers/clk/imx/clk-imx7ulp.c             | 6 ++++--
->  include/dt-bindings/clock/imx7ulp-clock.h | 5 ++++-
->  2 files changed, 8 insertions(+), 3 deletions(-)
+>  								Pavel
+>  
+>> diff --git a/drivers/media/usb/gspca/sq930x.c b/drivers/media/usb/gspca/sq930x.c
+>> index c3610247a90e..c9756c0a78df 100644
+>> --- a/drivers/media/usb/gspca/sq930x.c
+>> +++ b/drivers/media/usb/gspca/sq930x.c
+>> @@ -7,6 +7,7 @@
+>>   * Copyright (C) 2007 Sam Revitch <samr7@cs.washington.edu>
+>>   */
+>>  
+>> +#define DEBUG
+>>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>  
+>>  #define MODULE_NAME "sq930x"
+>> @@ -446,7 +447,7 @@ static void reg_w(struct gspca_dev *gspca_dev, u16 value, u16 index)
+>>  			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+>>  			value, index, NULL, 0,
+>>  			500);
+>> -	msleep(30);
+>> +	msleep(90);
+>>  	if (ret < 0) {
+>>  		pr_err("reg_w %04x %04x failed %d\n", value, index, ret);
+>>  		gspca_dev->usb_err = ret;
+>> @@ -635,19 +636,25 @@ static void cmos_probe(struct gspca_dev *gspca_dev)
+>>  		SENSOR_MT9V111,
+>>  	};
+>>  
+>> +	printk("CMOS Probing...\n");
+>>  	for (i = 0; i < ARRAY_SIZE(probe_order); i++) {
+>> +	  printk("Probing type %d...\n", i);
+>> +	  
+>>  		sensor = &sensor_tb[probe_order[i]];
+>>  		ucbus_write(&sd->gspca_dev, sensor->cmd, sensor->cmd_len, 8);
+>>  		gpio_init(sd, sensor->gpio);
+>> -		msleep(100);
+>> +		msleep(200);
+>>  		reg_r(gspca_dev, (sensor->i2c_addr << 8) | 0x001c, 1);
+>> -		msleep(100);
+>> -		if (gspca_dev->usb_buf[0] != 0)
+>> +		msleep(200);
+>> +		if (gspca_dev->usb_buf[0] != 0) {
+>> +		  printk("#### LUCKY! Have type %d\n", i);
+>>  			break;
+>> +		}
+>>  	}
+>>  	if (i >= ARRAY_SIZE(probe_order)) {
+>> -		pr_err("Unknown sensor\n");
+>> -		gspca_dev->usb_err = -EINVAL;
+>> +		printk("Unknown sensor ... hmm?\n");
+>> +		sd->sensor = probe_order[i-1];
+>> +		//gspca_dev->usb_err = -EINVAL;
+>>  		return;
+>>  	}
+>>  	sd->sensor = probe_order[i];
+>>
+>>
+>> -- 
+>> (english) http://www.livejournal.com/~pavelmachek
+>> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 > 
-> diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
-> index 3710aa0dee9b..634c0b6636b0 100644
-> --- a/drivers/clk/imx/clk-imx7ulp.c
-> +++ b/drivers/clk/imx/clk-imx7ulp.c
-> @@ -29,7 +29,7 @@ static const char * const ddr_sels[]		= { "apll_pfd_sel", "dummy", "dummy", "dum
->  static const char * const nic_sels[]		= { "firc", "ddr_clk", };
->  static const char * const periph_plat_sels[]	= { "dummy", "nic1_bus_clk", "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
->  static const char * const periph_bus_sels[]	= { "dummy", "sosc_bus_clk", "dummy", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk", };
-> -static const char * const arm_sels[]		= { "divcore", "dummy", "dummy", "hsrun_divcore", };
-> +static const char * const arm_sels[]		= { "core", "dummy", "dummy", "hsrun_core", };
->  
->  /* used by sosc/sirc/firc/ddr/spll/apll dividers */
->  static const struct clk_div_table ulp_div_table[] = {
-> @@ -121,7 +121,9 @@ static void __init imx7ulp_clk_scg1_init(struct device_node *np)
->  	hws[IMX7ULP_CLK_DDR_SEL]	= imx_clk_hw_mux_flags("ddr_sel", base + 0x30, 24, 2, ddr_sels, ARRAY_SIZE(ddr_sels), CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
->  
->  	hws[IMX7ULP_CLK_CORE_DIV]	= imx_clk_hw_divider_flags("divcore",	"scs_sel",  base + 0x14, 16, 4, CLK_SET_RATE_PARENT);
-> +	hws[IMX7ULP_CLK_CORE]		= imx_clk_hw_cpu("core", "divcore", hws[IMX7ULP_CLK_CORE_DIV]->clk, hws[IMX7ULP_CLK_SYS_SEL]->clk, hws[IMX7ULP_CLK_SPLL_SEL]->clk, hws[IMX7ULP_CLK_FIRC]->clk);
->  	hws[IMX7ULP_CLK_HSRUN_CORE_DIV] = imx_clk_hw_divider_flags("hsrun_divcore", "hsrun_scs_sel", base + 0x1c, 16, 4, CLK_SET_RATE_PARENT);
-> +	hws[IMX7ULP_CLK_HSRUN_CORE] = imx_clk_hw_cpu("hsrun_core", "hsrun_divcore", hws[IMX7ULP_CLK_HSRUN_CORE_DIV]->clk, hws[IMX7ULP_CLK_HSRUN_SYS_SEL]->clk, hws[IMX7ULP_CLK_SPLL_SEL]->clk, hws[IMX7ULP_CLK_FIRC]->clk);
->  
->  	hws[IMX7ULP_CLK_DDR_DIV]	= imx_clk_hw_divider_gate("ddr_clk", "ddr_sel", CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, base + 0x30, 0, 3,
->  							       0, ulp_div_table, &imx_ccm_lock);
-> @@ -270,7 +272,7 @@ static void __init imx7ulp_clk_smc1_init(struct device_node *np)
->  	base = of_iomap(np, 0);
->  	WARN_ON(!base);
->  
-> -	hws[IMX7ULP_CLK_ARM] = imx_clk_hw_mux_flags("arm", base + 0x10, 8, 2, arm_sels, ARRAY_SIZE(arm_sels), CLK_IS_CRITICAL);
-> +	hws[IMX7ULP_CLK_ARM] = imx_clk_hw_mux_flags("arm", base + 0x10, 8, 2, arm_sels, ARRAY_SIZE(arm_sels), CLK_SET_RATE_PARENT);
->  
->  	imx_check_clk_hws(hws, clk_data->num);
->  
-> diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-bindings/clock/imx7ulp-clock.h
-> index 38145bdcd975..b58370d146e2 100644
-> --- a/include/dt-bindings/clock/imx7ulp-clock.h
-> +++ b/include/dt-bindings/clock/imx7ulp-clock.h
-> @@ -58,7 +58,10 @@
->  #define IMX7ULP_CLK_HSRUN_SYS_SEL	44
->  #define IMX7ULP_CLK_HSRUN_CORE_DIV	45
->  
-> -#define IMX7ULP_CLK_SCG1_END		46
-> +#define IMX7ULP_CLK_CORE		46
-> +#define IMX7ULP_CLK_HSRUN_CORE		47
-> +
-> +#define IMX7ULP_CLK_SCG1_END		48
->  
->  /* PCC2 */
->  #define IMX7ULP_CLK_DMA1		0
-> -- 
-> 2.16.4
 > 
+> 
+
