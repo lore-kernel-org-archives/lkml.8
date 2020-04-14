@@ -2,94 +2,128 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505AFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08937C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DEF20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:59:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qypbwXhy"
+	by mail.kernel.org (Postfix) with ESMTP id E015520732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403912AbgDNB7e (ORCPT
+        id S2403923AbgDNCAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 21:59:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38144 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgDNB7b (ORCPT
+        Mon, 13 Apr 2020 22:00:00 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:22422 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727867AbgDNB75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 21:59:31 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E1wWIQ128662;
-        Tue, 14 Apr 2020 01:59:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=Pss09eBJvBQFMkNBerzkwr8grKGZSCPuJdKRQI0iY6I=;
- b=qypbwXhyoF8mF6bYdiGH8RRqpTWteyQuD7lBD8vZAAo22kvgrfv7itVr3il+4kWa8T4F
- EpZcJxT00ZWVeJYS4daY1f34mCijuzcnvc+tmJDS3IDtbEJyscb+pcqjF/6vdBvB7vE/
- a9T12H29lFnElAL8qH8+fv35VrINVn5cKoz/nFiahHL9p2t4FbhorlGTrFV9GUFnHoJZ
- pPSndRos+SqqlqJ3CiCaLHcwPzYbRPOmWOpd6bh/YGsHkafFOskjwjZHXQjMdJdbdeUS
- bJ054h7FrUN2XrzFrMCu/aIW077b4VdHVioVqIQxZbK0wPk89kIGMrv0NwZzsOQLyYDL jg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30b5ar1pya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 01:59:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E1vgrQ090924;
-        Tue, 14 Apr 2020 01:59:20 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 30bqcfyvg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 01:59:19 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03E1xHAk026817;
-        Tue, 14 Apr 2020 01:59:17 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Apr 2020 18:59:17 -0700
-To:     Li Bin <huawei.libin@huawei.com>
-Cc:     <dgilbert@interlog.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xiexiuqi@huawei.com>
-Subject: Re: [PATCH] scsi: sg: add sg_remove_request in sg_common_write
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1586777361-17339-1-git-send-email-huawei.libin@huawei.com>
-Date:   Mon, 13 Apr 2020 21:59:14 -0400
-In-Reply-To: <1586777361-17339-1-git-send-email-huawei.libin@huawei.com> (Li
-        Bin's message of "Mon, 13 Apr 2020 19:29:21 +0800")
-Message-ID: <yq1a73eu8st.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 13 Apr 2020 21:59:57 -0400
+X-IronPort-AV: E=Sophos;i="5.72,381,1580745600"; 
+   d="scan'208";a="88984692"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 14 Apr 2020 09:59:53 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 4E67649DF135;
+        Tue, 14 Apr 2020 09:49:22 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 14 Apr 2020 09:59:50 +0800
+Message-ID: <5E951914.70104@cn.fujitsu.com>
+Date:   Tue, 14 Apr 2020 09:59:48 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=923
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140014
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>,
+        <linux-trace-devel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: Fix the race between registering 'snapshot'
+ event trigger and triggering 'snapshot' operation
+References: <20200413071252.13720-1-yangx.jy@cn.fujitsu.com> <20200413110207.01a48591@gandalf.local.home>
+In-Reply-To: <20200413110207.01a48591@gandalf.local.home>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 4E67649DF135.AAE37
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/4/13 23:02, Steven Rostedt wrote:
+> On Mon, 13 Apr 2020 15:12:52 +0800
+> Xiao Yang<yangx.jy@cn.fujitsu.com>  wrote:
+>
+>> Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
+>> or snapshot_count_trigger()) when register_snapshot_trigger() has completed
+>> registration but doesn't allocate spare buffer for 'snapshot' event trigger.
+>> 'snapshot' operation always detects the lack of allocated buffer in the rare
+>> case so make register_snapshot_trigger() allocate spare buffer first.
+>>
+>> trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
+>> -----------------------------------------------------------
+>> cat trace
+>> ...
+>> ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
+>>       <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
+>>       <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
+>> -----------------------------------------------------------
+>>
+>> Signed-off-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
+>> ---
+>>   kernel/trace/trace_events_trigger.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+>> index dd34a1b46a86..00e54cdcef3e 100644
+>> --- a/kernel/trace/trace_events_trigger.c
+>> +++ b/kernel/trace/trace_events_trigger.c
+>> @@ -1088,9 +1088,13 @@ register_snapshot_trigger(char *glob, struct event_trigger_ops *ops,
+>>   			  struct event_trigger_data *data,
+>>   			  struct trace_event_file *file)
+>>   {
+>> -	int ret = register_trigger(glob, ops, data, file);
+>> +	int alloc_ret, ret;
+>>
+>> -	if (ret>  0&&  tracing_alloc_snapshot_instance(file->tr) != 0) {
+>> +	alloc_ret = tracing_alloc_snapshot_instance(file->tr);
+>> +
+>> +	ret = register_trigger(glob, ops, data, file);
+>> +
+>> +	if (ret>  0&&  alloc_ret != 0) {
+>>   		unregister_trigger(glob, ops, data, file);
+>>   		ret = 0;
+>>   	}
+>
+>
+> Why register if the allocation failed? Just switch the logic:
+>
+> 	int ret = tracing_alloc_snapshot_instance(file->tr);
+>
+> 	if (ret != 0)
+> 		return 0;
+>
+> 	return register_trigger(glob, ops, data, file);
+Hi Steve,
 
-Li,
+It looks simpler and better.
+I think we can drop the unnecessary ret variable as well.
 
-> If the dxfer_len is greater than 256M that the request is invalid,
-> it should call sg_remove_request in sg_common_write.
+Thanks,
+Xiao Yang
+>
+>
+> -- Steve
+>
+>
+> .
+>
 
-Applied to 5.7/scsi-fixes with a tweak to the commit description. Thanks!
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+
