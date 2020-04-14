@@ -2,137 +2,76 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69491C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F362FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E8B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ESkBcoVs"
+	by mail.kernel.org (Postfix) with ESMTP id D1AE220575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504751AbgDNT2v (ORCPT
+        id S2504768AbgDNT3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504730AbgDNT2o (ORCPT
+        Tue, 14 Apr 2020 15:29:04 -0400
+Received: from smtprelay0211.hostedemail.com ([216.40.44.211]:41858 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504730AbgDNT25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:28:44 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57030C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:28:43 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id t3so10821470qkg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IORMumCebuze4EyI4LOyKESUzl1Jcbf1Jp+K7sS8I70=;
-        b=ESkBcoVswaFsly4kmPHKJVb+78TgajiEpVqF1tU8LgTu2iXzxsXcGjF6O4bKbweLq1
-         yAQyXkmWSkH2sJteZkfThdHQuCVtX1fQnjNJNaUhMmNW8h3CJ71kdPd2cvsWt6Fb0CVO
-         GSik1aq66pL6+LZtJGgw9+TAdLXakjfM3U6maibzKy4wrcqSd3Y2xxIvL+CgzJDFI3Xp
-         iMAHRD64SR81483P2dlIEAK1g+52a29rb9wNCuZY4ejZVt5VR3Fn8kBmkuCSrv0CJ2q9
-         PQ3p0/IQVHwYXwHjfJkdI8dsgbY5bPk90FFDhPPafBqy9qH5KsM2868wUhY67qDcrOSK
-         yXlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IORMumCebuze4EyI4LOyKESUzl1Jcbf1Jp+K7sS8I70=;
-        b=eyPITpFah5eZKa5MX/MMYmekoq/wXAFt8Ags/rLGpV+T8i2UYNhYU6zkGqx/YBFCPY
-         v25as7MB3H+lW8VC+Dm7Aj8j5F17KHmFi7A88AiH06hEj/6vI5hW/tOzzksXnhhf8a9z
-         mZoxULQRuo7x7dzPC3s3NS6fxLk3AK0xEed1EQUrj09S7KzRe7iyJnXUnkUlxaYuUfOT
-         /txlmj4cfx5yXFZiiG0hMFJktp9KOQ900ZWXrJ94lOar4ehRPo/YgBLQdMoscJsNKORK
-         EtT9dXEaJ4Zn7MrWcb1YYiAEggBp5lw734//VC/Pd5yP6HPgPBwPqGAiLef6Pv6WwpOR
-         Jw+g==
-X-Gm-Message-State: AGi0PuaKSvlo4eUcE+QAV84+Z2b3j0VoqchtTqmWOsxP6Cv1KYS/bfR7
-        AjczAwYGlY9wwHhxX+dQCWaQYg==
-X-Google-Smtp-Source: APiQypI3u+h9kUnqMBm13TwpxGsENaSz5GhDxDugW473o9Jks3w0wtIYTRQcpCEOvn4Q7jD3a2excQ==
-X-Received: by 2002:ae9:e214:: with SMTP id c20mr11087674qkc.107.1586892522518;
-        Tue, 14 Apr 2020 12:28:42 -0700 (PDT)
-Received: from localhost ([2601:441:27f:8f73:faf4:f79d:8a53:5ca2])
-        by smtp.gmail.com with ESMTPSA id m1sm11944411qtm.22.2020.04.14.12.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:28:41 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 14:28:40 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Qian Cai <cai@lca.pw>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-Message-ID: <20200414192840.4yp3zqbe2tgtesve@xps.therub.org>
-References: <20200408014010.80428-1-peterx@redhat.com>
- <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
- <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
- <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
- <20200410092951.6db32bfe@canb.auug.org.au>
- <7325374A-6072-44E4-85EE-F97FC7E8565F@lca.pw>
- <CACT4Y+ZE1XhYpTsjP1J1PyUsEHYKvchww71aHb7UnSk5=4xUrw@mail.gmail.com>
+        Tue, 14 Apr 2020 15:28:57 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id 2B1CF18064C30;
+        Tue, 14 Apr 2020 19:12:00 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 032BF100E7B45;
+        Tue, 14 Apr 2020 19:12:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rain29_4b79cd438ab50
+X-Filterd-Recvd-Size: 1707
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 14 Apr 2020 19:11:58 +0000 (UTC)
+Message-ID: <19df87f5d093a6c2721316811aca1c90d287bf1d.camel@perches.com>
+Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
+From:   Joe Perches <joe@perches.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, paul@crapouillou.net,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Tue, 14 Apr 2020 12:09:49 -0700
+In-Reply-To: <20200414184925.GA12862@kadam>
+References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
+         <20200414135827.GB3593749@ulmo>
+         <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
+         <20200414184925.GA12862@kadam>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZE1XhYpTsjP1J1PyUsEHYKvchww71aHb7UnSk5=4xUrw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 01:12:50PM +0200, Dmitry Vyukov wrote:
-> On Tue, Apr 14, 2020 at 12:06 AM Qian Cai <cai@lca.pw> wrote:
-> > Well, there are other CI's beyond syzbot.
-> > On the other hand, this makes me worry who is testing on linux-next every day.
+On Tue, 2020-04-14 at 21:49 +0300, Dan Carpenter wrote:
+> Huh...
 > 
-> How do these use-after-free's and locking bugs get past the
-> unit-testing systems (which syzbot is not) and remain unnoticed for so
-> long?...
-> syzbot uses the dumbest VMs (GCE), so everything it triggers during
-> boot should be triggerable pretty much everywhere.
-> It seems to be an action point for the testing systems. "Boot to ssh"
-> is not the best criteria. Again if there is a LOCKDEP error, we are
-> not catching any more LOCKDEP errors during subsequent testing. If
-> there is a use-after-free, that's a serious error on its own and KASAN
-> produces only 1 error by default as well. And as far as I understand,
-> lots of kernel testing systems don't even enable KASAN, which is very
-> wrong.
-> I've talked to +Dan Rue re this few days ago. Hopefully LKFT will
-> start catching these as part of unit testing. Which should help with
-> syzbot testing as well.
+> If you look at dev_vprintk_emit().  It looks like if
+> create_syslog_header() returns a string then vprintk_store() will add
+> a newline.
+> 
+> I guess that means that dev_printk() can't be used to pr_cont().  And
+> probably that's deliberate because using pr_cont() after boot is racy
+> anyway.
 
-LKFT has recently added testing with KASAN enabled and improved the
-kernel log parsing to catch more of this class of errors while
-performing our regular functional testing.
+Perhaps that's true, it didn't used to be.
 
-Incidentally, -next was also broken for us from March 25 through April 5
-due to a perf build failure[0], which eventually made itself all the way
-down into v5.6 release and I believe the first two 5.6.x stable
-releases.
+There are couple dozen or so KERN_CONT uses after a dev_<level>
+without a newline, so those _might_ be broken, but I don't thinks so.
 
-For -next, LKFT's gap is primarily reporting. We do build and run over
-30k tests on every -next daily release, but we send out issues manually
-when we see them because triaging is still a manual effort. We're
-working to build better automated reporting. If anyone is interested in
-watching LKFT's -next results more closely (warning, it's a bit noisy),
-please let me know. Watching the results at https://lkft.linaro.org
-provides some overall health indications, but again, it gets pretty
-difficult to figure out signal from noise once you start drilling down
-without sufficient context of the system.
+$ git grep -P -A10 '\bdev_\w+\s*\(' | \
+  grep -P -B10 "KERN_CONT|pr_cont"
 
-Dan
-
-[0] https://lore.kernel.org/stable/CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com/
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
