@@ -2,88 +2,95 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21361C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7BCC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1E4E20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=engebretsen.ch header.i=@engebretsen.ch header.b="K4g0aUjW"
+	by mail.kernel.org (Postfix) with ESMTP id 3C1212074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586889794;
+	bh=92ouK1EZtTn+HmugH5BHACzd3FyOicJdIGabmG3nexM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FXbyY0mSFWqKGUE4R1fIuYJMkfYsJSiVhK7KOE22AWZgiw1cc4BwXnbM3OI9j6Z9F
+	 oAU8gikE8it9BdXk67nwRwo4Rxcwdn8UqT3mpiGk2zwe5VNaLsBTthSCYI6EEQfSo1
+	 UssOAVVZePW2fYZ8QgzY1sVuqh1qqImyAmaKR7Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbgDNSnJ (ORCPT
+        id S2504226AbgDNSm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504206AbgDNSmm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:42:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53665C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:42:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a25so15740040wrd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:42:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=engebretsen.ch; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=T5w85/Anw13tnbFJIsbgQbaUb8qEVJINnyZH/cS+SFA=;
-        b=K4g0aUjWSXaR1qjQRM7vF6ngIM040z0byOMBmmaLbxuCHsx1eU2XHQgcC+h3zB6roD
-         9OwOfH43+UCVaiqpxekqVF0+cfehe7BOCOASrrs+6egXc6i78Z+zOWxOxiDTm0H4JsP8
-         oaxQ0yxuRhsYLXnA9yJjXox6PzDb/yrtuzM5k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=T5w85/Anw13tnbFJIsbgQbaUb8qEVJINnyZH/cS+SFA=;
-        b=JQsNh/kYKjLoJZkIOyqEWvncOSR/+N1cNnM27MEJQC+Pl41MThlKzm1HVmPd4ULaQU
-         LbSgFpJFU1tl+sj9FxR1EiHa/AUU0GVf7AxGHl2FGh4VcBTYttcp9ElF3ejMav2Zxn8p
-         LLPxicOLyQ8hjoVe6J3tZj0fUcQ1/crgrfGqBxXNXqCMPvZJyetgSr0Xprrg4+V+l9e8
-         N3zr8Ics6FzcoQYtNWHmePISW+oYeAsTWW6l2ztqXf22Uk4bmUyeuf9lRm2ZcWVdz4Uv
-         ZR/nSqgTzCiVldd2YUIQJX1cRJTqUzphSdPVt2zGOAysGhmG5gDkfxWSBvEbXH35ZnXB
-         3lMg==
-X-Gm-Message-State: AGi0PuZXId8icqWvO3ANt9ujgKlY21zcvjMSydlVZxnQLt9FEskshvIm
-        rgYl20sIlh5qfc1g01ryVejIXg==
-X-Google-Smtp-Source: APiQypJ4CWXJdjqsZgKMnosMbBk5AQ2uEX3vx58eKWZLcZIzyhZZOngMXbsuFGiiiFpHI3sSB0oUZA==
-X-Received: by 2002:a05:6000:108b:: with SMTP id y11mr23266082wrw.380.1586889759990;
-        Tue, 14 Apr 2020 11:42:39 -0700 (PDT)
-Received: from server.home ([2a02:120b:2c74:f040:98c9:7cd5:92ab:c7f4])
-        by smtp.gmail.com with ESMTPSA id a7sm3439211wrs.61.2020.04.14.11.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:42:39 -0700 (PDT)
-From:   Lars Engebretsen <lars@engebretsen.ch>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org, Lars Engebretsen <lars@engebretsen.ch>
-Subject: [PATCH] iio: core: remove extra semi-colon from devm_iio_device_register() macro
-Date:   Tue, 14 Apr 2020 20:42:37 +0200
-Message-Id: <20200414184237.23018-1-lars@engebretsen.ch>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Apr 2020 14:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504162AbgDNSmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:42:01 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208EF2082E;
+        Tue, 14 Apr 2020 18:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586889720;
+        bh=92ouK1EZtTn+HmugH5BHACzd3FyOicJdIGabmG3nexM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X/xW7zelTwm+eLJXOa5oraSC7xyJEyB8ZvW05z0FCYozMYFK2a4FqfiL8E+EJkMkB
+         tzcNKGEEUSG1tLaWK/VzGQ5Y/HiIgdk5/KCQRXyrNMe5mGfMX3siaXj3EZx3IpvQG7
+         qsUSEbcxeZQZQWaxbwHU10WBAXPtIii+L+vJqouE=
+Date:   Tue, 14 Apr 2020 21:41:55 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 4/4] kernel/module: Hide vermagic header file
+ from general use
+Message-ID: <20200414184155.GB1239315@unreal>
+References: <20200414155732.1236944-1-leon@kernel.org>
+ <20200414155732.1236944-5-leon@kernel.org>
+ <20200414160349.GH31763@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414160349.GH31763@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Lars Engebretsen <lars@engebretsen.ch>
----
- include/linux/iio/iio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Apr 14, 2020 at 06:03:50PM +0200, Borislav Petkov wrote:
+> On Tue, Apr 14, 2020 at 06:57:32PM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@mellanox.com>
+> >
+> > VERMAGIC* definitions are not supposed to be used by the drivers,
+>
+> Yeah, this was only me conjecturing here. But yes, if people agree, this
+> would be one way to do it.
+>
+> In any case and FWIW, series looks ok to me:
+>
+> Acked-by: Borislav Petkov <bp@suse.de>
 
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index d63884a54939..76ba7c9fd3e0 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -597,7 +597,7 @@ void iio_device_unregister(struct iio_dev *indio_dev);
-  * 0 on success, negative error number on failure.
-  */
- #define devm_iio_device_register(dev, indio_dev) \
--	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE);
-+	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE)
- int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
- 			       struct module *this_mod);
- int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);
--- 
-2.17.1
+Thanks, finally kbuild slap me to the face.
+There is a need to change scripts/mod/modpost.c too and find the reason
+why I didn't get any compilation errors.
 
+<...>
+>> drivers/gpio/gpio-aspeed.mod.c:3:10: fatal error: linux/vermagic.h: No such file or directory
+       3 | #include <linux/vermagic.h>
+         |          ^~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+<...>
+
+
+>
+> Thx.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
