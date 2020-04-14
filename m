@@ -2,227 +2,116 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F2DC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D99342072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:28:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MaRtlpQJ"
+	by mail.kernel.org (Postfix) with ESMTP id E9C9B20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586835171;
+	bh=zhwSF3NZS9bLrQun2YibJSAsZeZNELHfYull4/GBo6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nrkC6d9/+U8q/DO3g0qpqnp2EruonKsQ1pw2IT9mj1Q9b05Edce4dTcpgYF/8mK6d
+	 gmvMrHZHh9wk6oCGTr0fUS01rs1SSDvA1+Jd/ZPjWSaxk2vZ8My7Pzt9Yzk6KYN98a
+	 QAn2W2Ue4suP3TaNIwAFt7VTZNKBQ1hlRcrqUkdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404741AbgDND24 (ORCPT
+        id S2404755AbgDNDct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:28:56 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51891 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404733AbgDND2q (ORCPT
+        Mon, 13 Apr 2020 23:32:49 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55263 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbgDNDcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586834924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C9mqH+aSg2B9etP5nDjtE7RFbZ6ObRo29eOLCwS0Ci4=;
-        b=MaRtlpQJrtzQMWMqHPjpF1H7g5FfMJmIUR2VhqhwFnJKoKcB+QTSLjUFTJkamEmaIoiSf+
-        77dgRjanpBPaSit43Q5vLPXVLoT2dkoR0+sQDv6ox49i6Lihj4GOMIrUhG8NeJkpcUz9hq
-        wRiIkx8kQo6a7i/YL7Srp9BN082fU7U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-cf1mVbgROBq6eE-reOx51g-1; Mon, 13 Apr 2020 23:28:40 -0400
-X-MC-Unique: cf1mVbgROBq6eE-reOx51g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6C88800D53;
-        Tue, 14 Apr 2020 03:28:38 +0000 (UTC)
-Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F34C6092D;
-        Tue, 14 Apr 2020 03:28:37 +0000 (UTC)
-Date:   Mon, 13 Apr 2020 21:28:36 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Message-ID: <20200413212836.117b4c86@x1.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D81D376@SHSMSX104.ccr.corp.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-        <20200402165954.48d941ee@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
-        <20200403112545.6c115ba3@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
-        <20200407095801.648b1371@w520.home>
-        <20200408040021.GS67127@otc-nc-03>
-        <20200408101940.3459943d@w520.home>
-        <20200413031043.GA18183@araj-mobl1.jf.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
-        <20200413132122.46825849@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81D376@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        Mon, 13 Apr 2020 23:32:48 -0400
+Received: by mail-pj1-f68.google.com with SMTP id np9so4718811pjb.4;
+        Mon, 13 Apr 2020 20:32:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ArgnOF6jLXpb/Aiqzc0Aon2OsGQE4oCrOJZfbEaRH+I=;
+        b=bn5RUFOoLjNufGkZiwp+HvhbtDf+SXl58erARtI9EBH9cETeOXao+x/CLmeULiCjnp
+         lNgEHUz2GMvRrSOWEXaxOrkah+FqA0mCsLFLjkOsywlgHp0xiVhCPQPoUiJm5t7/jEH0
+         0UEyorNelLbBB8qXPceyL2lPJPLbxNRtF5tYBRbBihNqKXGX4umJSe+t9HcyB2MBc5tW
+         Cu8bcnXj2VQ9af9u4lMAc5qsDWcgBaYSTWLXfy3zro8bv1KONjTne/ys5TZQfKZPz+ZW
+         x6uTUmwfmgZC/y9wXIMtDDsiWLyquSvIryanXSoNx9G+W+S9ziZa6ak60Z0mKWy+u1tq
+         KF1g==
+X-Gm-Message-State: AGi0PuYduIQC+z6m77/RE8Lp4Bpp2bqrNclkpYzjYoW6gagfOtrWy+xc
+        2RetwDv+3mMaAtzx/dxVV3U=
+X-Google-Smtp-Source: APiQypID3YxvbyG2BHdjJhI/9Ccmf+GO9Qf3+pzzIuUIxcf0WguocjZaoZm68OvUVdP61Q4w8oVZnQ==
+X-Received: by 2002:a17:902:bc48:: with SMTP id t8mr2486948plz.311.1586835167370;
+        Mon, 13 Apr 2020 20:32:47 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id u8sm2686875pjy.16.2020.04.13.20.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 20:32:46 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 757DF40277; Tue, 14 Apr 2020 03:32:44 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 03:32:44 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [RFC v2 2/5] blktrace: fix debugfs use after free
+Message-ID: <20200414033244.GN11244@42.do-not-panic.com>
+References: <20200409214530.2413-1-mcgrof@kernel.org>
+ <20200409214530.2413-3-mcgrof@kernel.org>
+ <88f94070-cd34-7435-9175-e0518a7d7db8@acm.org>
+ <20200410195805.GM11244@42.do-not-panic.com>
+ <0837b27e-e07b-b61c-5842-00cdf78873ca@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0837b27e-e07b-b61c-5842-00cdf78873ca@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 02:40:58 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Tuesday, April 14, 2020 3:21 AM
+On Sat, Apr 11, 2020 at 04:09:13PM -0700, Bart Van Assche wrote:
+> On 2020-04-10 12:58, Luis Chamberlain wrote:
+> > On Thu, Apr 09, 2020 at 07:52:59PM -0700, Bart Van Assche wrote:
+> >> On 2020-04-09 14:45, Luis Chamberlain wrote:
+> >>> +void blk_q_debugfs_register(struct request_queue *q)
+> >>> +{
+> >>> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> >>> +					    blk_debugfs_root);
+> >>> +}
+> >>> +
+> >>> +void blk_q_debugfs_unregister(struct request_queue *q)
+> >>> +{
+> >>> +	debugfs_remove_recursive(q->debugfs_dir);
+> >>> +	q->debugfs_dir = NULL;
+> >>> +}
+> >>
+> >> There are no other functions in the block layer that start with the
+> >> prefix blk_q_. How about changing that prefix into blk_?
 > > 
-> > On Mon, 13 Apr 2020 08:05:33 +0000
-> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> >   
-> > > > From: Tian, Kevin
-> > > > Sent: Monday, April 13, 2020 3:55 PM
-> > > >  
-> > > > > From: Raj, Ashok <ashok.raj@linux.intel.com>
-> > > > > Sent: Monday, April 13, 2020 11:11 AM
-> > > > >
-> > > > > On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:  
-> > > > > > On Tue, 7 Apr 2020 21:00:21 -0700
-> > > > > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
-> > > > > >  
-> > > > > > > Hi Alex
-> > > > > > >
-> > > > > > > + Bjorn  
-> > > > > >
-> > > > > >  + Don
-> > > > > >  
-> > > > > > > FWIW I can't understand why PCI SIG went different ways with ATS,
-> > > > > > > where its enumerated on PF and VF. But for PASID and PRI its only
-> > > > > > > in PF.
-> > > > > > >
-> > > > > > > I'm checking with our internal SIG reps to followup on that.
-> > > > > > >
-> > > > > > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:  
-> > > > > > > > > Is there vendor guarantee that hidden registers will locate at the
-> > > > > > > > > same offset between PF and VF config space?  
-> > > > > > > >
-> > > > > > > > I'm not sure if the spec really precludes hidden registers, but the
-> > > > > > > > fact that these registers are explicitly outside of the capability
-> > > > > > > > chain implies they're only intended for device specific use, so I'd  
-> > say  
-> > > > > > > > there are no guarantees about anything related to these registers.  
-> > > > > > >
-> > > > > > > As you had suggested in the other thread, we could consider
-> > > > > > > using the same offset as in PF, but even that's a better guess
-> > > > > > > still not reliable.
-> > > > > > >
-> > > > > > > The other option is to maybe extend driver ops in the PF to expose
-> > > > > > > where the offsets should be. Sort of adding the quirk in the
-> > > > > > > implementation.
-> > > > > > >
-> > > > > > > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is  
-> > > > > resisting  
-> > > > > > > making VF's first class citizen, we might ask them to add some  
-> > verbiage  
-> > > > > > > to suggest leave the same offsets as PF open to help emulation  
-> > software.  
-> > > > > >
-> > > > > > Even if we know where to expose these capabilities on the VF, it's not
-> > > > > > clear to me how we can actually virtualize the capability itself.  If
-> > > > > > the spec defines, for example, an enable bit as r/w then software that
-> > > > > > interacts with that register expects the bit is settable.  There's no
-> > > > > > protocol for "try to set the bit and re-read it to see if the hardware
-> > > > > > accepted it".  Therefore a capability with a fixed enable bit
-> > > > > > representing the state of the PF, not settable by the VF, is
-> > > > > > disingenuous to the spec.  
-> > > > >
-> > > > > I think we are all in violent agreement. A lot of times the pci spec gets
-> > > > > defined several years ahead of real products and no one remembers
-> > > > > the justification on why they restricted things the way they did.
-> > > > >
-> > > > > Maybe someone early product wasn't quite exposing these features to  
-> > the  
-> > > > > VF
-> > > > > and hence the spec is bug compatible :-)
-> > > > >  
-> > > > > >
-> > > > > > If what we're trying to do is expose that PASID and PRI are enabled on
-> > > > > > the PF to a VF driver, maybe duplicating the PF capabilities on the VF
-> > > > > > without the ability to control it is not the right approach.  Maybe we  
-> > > > >
-> > > > > As long as the capability enable is only provided when the PF has  
-> > enabled  
-> > > > > the feature. Then it seems the hardware seems to do the right thing.
-> > > > >
-> > > > > Assume we expose PASID/PRI only when PF has enabled it. It will be the
-> > > > > case since the PF driver needs to exist, and IOMMU would have set the
-> > > > > PASID/PRI/ATS on PF.
-> > > > >
-> > > > > If the emulation is purely spoofing the capability. Once vIOMMU driver
-> > > > > enables PASID, the context entries for the VF are completely  
-> > independent  
-> > > > > from the PF context entries.
-> > > > >
-> > > > > vIOMMU would enable PASID, and we just spoof the PASID capability.
-> > > > >
-> > > > > If vIOMMU or guest for some reason does disable_pasid(), then the
-> > > > > vIOMMU driver can disaable PASID on the VF context entries. So the VF
-> > > > > although the capability is blanket enabled on PF, IOMMU gaurantees  
-> > the  
-> > > > > transactions are blocked.
-> > > > >
-> > > > >
-> > > > > In the interim, it seems like the intent of the virtual capability
-> > > > > can be honored via help from the IOMMU for the controlling aspect..
-> > > > >
-> > > > > Did i miss anything?  
-> > > >
-> > > > Above works for emulating the enable bit (under the assumption that
-> > > > PF driver won't disable pasid when vf is assigned). However, there are
-> > > > also "Execute permission enable" and "Privileged mode enable" bits in
-> > > > PASID control registers. I don't know how those bits could be cleanly
-> > > > emulated when the guest writes a value different from PF's...  
-> > >
-> > > sent too quick. the IOMMU also includes control bits for allowing/
-> > > blocking execute requests and supervisor requests. We can rely on
-> > > IOMMU to block those requests to emulate the disabled cases of
-> > > all three control bits in the pasid cap.  
+> > I the first patch already introduced blk_debugfs_register(), so I have
+> > now changed the above to:
 > > 
+> > blk_debugfs_common_register()
+> > blk_debugfs_common_unregister()
 > > 
-> > So if the emulation of the PASID capability takes into account the
-> > IOMMU configuration to back that emulation, shouldn't we do that
-> > emulation in the hypervisor, ie. QEMU, rather than the kernel vfio
-> > layer?  Thanks,
-> > 
-> > Alex  
+> > Let me know if something else is preferred.
 > 
-> We need enforce it in physical IOMMU, to ensure that even the
-> VF may send requests which violate the guest expectation those
-> requests are always blocked by IOMMU. Kernel vfio identifies
-> such need when emulating the pasid cap and then forward the 
-> request to host iommu driver.
+> I just realized that the "q" in "blk_q_" probably refers to the word
+> "queue"? How about renaming these funtions into
+> blk_queue_debugfs_register/unregister()?
 
-Implementing this in the kernel would be necessary if we needed to
-protect from the guest device doing something bad to the host or
-other devices.  Making sure the physical IOMMU is configured to meet
-guest expectations doesn't sound like it necessarily falls into that
-category.  We do that on a regular basis to program the DMA mappings.
-Tell me more about why the hypervisor can't handle this piece of
-guest/host synchronization on top of all the other things it
-synchronizes to make a VM.  Thanks,
+Sure.
 
-Alex
-
+  Luis
