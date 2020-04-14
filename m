@@ -2,351 +2,228 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C7C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC172C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16E4E2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC152072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439156AbgDNLaF (ORCPT
+        id S2439166AbgDNLa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:30:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18080 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439121AbgDNL27 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:28:59 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EB4jui015701;
-        Tue, 14 Apr 2020 07:28:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30bad8m8g3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 07:28:46 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03EB54Xc017625;
-        Tue, 14 Apr 2020 07:28:45 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30bad8m8fn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 07:28:45 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03EBMULn030882;
-        Tue, 14 Apr 2020 11:28:44 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04wdc.us.ibm.com with ESMTP id 30b5h6g5ra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Apr 2020 11:28:44 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EBShNI55116192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 11:28:43 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA42B78064;
-        Tue, 14 Apr 2020 11:28:43 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2E797805E;
-        Tue, 14 Apr 2020 11:28:42 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.109.81])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Apr 2020 11:28:42 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 72BE52E3019; Tue, 14 Apr 2020 12:38:20 +0530 (IST)
-Date:   Tue, 14 Apr 2020 12:38:20 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     skiboot@lists.ozlabs.org, oohall@gmail.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        pratik.r.sampat@gmail.com
-Subject: Re: [PATCH v6 4/4] Advertise the self-save and self-restore
- attributes in the device tree
-Message-ID: <20200414070820.GC24277@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200326070917.12744-1-psampat@linux.ibm.com>
- <20200326070917.12744-5-psampat@linux.ibm.com>
+        Tue, 14 Apr 2020 07:30:26 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2317 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729505AbgDNL3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:29:19 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 544039E08F019AD4617D;
+        Tue, 14 Apr 2020 19:28:57 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 14 Apr 2020 19:28:48 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <will@kernel.org>, <catalin.marinas@arm.com>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [RFC PATCH v3 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+Date:   Tue, 14 Apr 2020 19:28:35 +0800
+Message-ID: <20200414112835.1121-3-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200414112835.1121-1-yezhenyu2@huawei.com>
+References: <20200414112835.1121-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326070917.12744-5-psampat@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_02:2020-04-14,2020-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 priorityscore=1501 suspectscore=2
- impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140092
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pratik,
+Add __TLBI_VADDR_RANGE macro and __flush_tlb_range_directly()
+interface.
 
-On Thu, Mar 26, 2020 at 12:39:17PM +0530, Pratik Rajesh Sampat wrote:
-> Support for self save and self restore interface is advertised in the
-> device tree, along with the list of SPRs it supports for each.
-> 
-> The Special Purpose Register identification is encoded in a 2048 bitmask
-> structure, where each bit signifies the identification key of that SPR
-> which is consistent with that of the POWER architecture set for that
-> register.
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-> ---
->  .../ibm,opal/power-mgt/self-restore.rst       |  27 ++++
->  .../ibm,opal/power-mgt/self-save.rst          |  27 ++++
->  hw/slw.c                                      | 116 ++++++++++++++++++
->  include/skiboot.h                             |   1 +
->  4 files changed, 171 insertions(+)
->  create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-restore.rst
->  create mode 100644 doc/device-tree/ibm,opal/power-mgt/self-save.rst
-> 
-> diff --git a/doc/device-tree/ibm,opal/power-mgt/self-restore.rst b/doc/device-tree/ibm,opal/power-mgt/self-restore.rst
-> new file mode 100644
-> index 00000000..2a2269f7
-> --- /dev/null
-> +++ b/doc/device-tree/ibm,opal/power-mgt/self-restore.rst
-> @@ -0,0 +1,27 @@
-> +ibm,opal/power-mgt/self-restore device tree entries
-> +===================================================
-> +
-> +This node exports the bitmask representing the special purpose registers that
-> +the self-restore API currently supports.
-> +
-> +Example:
-> +
-> +.. code-block:: dts
-> +
-> +  self-restore {
-> +        sprn-bitmask = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x42010000 0x0 0x0
-> +                        0x20000 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x0 0x100000 0x900000 0x0 0x0 0x530000 0x0 0x0 0x0
-> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x10000>;
-> +        phandle = <0x1c7>;
-> +  };
-> +
-> +sprn-bitmask
-> +------------
-> +
-> +This property is a bitmask of of all the existing SPRs and if the SPR is
-> +supported, the corresponding bit of the SPR number is set to 1.
-> +The representation of the bits are left-right, i.e the MSB of the first
-> +doubleword represants the 0th bit.
-> diff --git a/doc/device-tree/ibm,opal/power-mgt/self-save.rst b/doc/device-tree/ibm,opal/power-mgt/self-save.rst
-> new file mode 100644
-> index 00000000..c367720e
-> --- /dev/null
-> +++ b/doc/device-tree/ibm,opal/power-mgt/self-save.rst
-> @@ -0,0 +1,27 @@
-> +ibm,opal/power-mgt/self-save device tree entries
-> +===================================================
-> +
-> +This node exports the bitmask representing the special purpose registers that
-> +the self-save API currently supports.
-> +
-> +Example:
-> +
-> +.. code-block:: dts
-> +
-> +  self-save {
-> +        sprn-bitmask = <0x0 0x0 0x0 0x0 0x100000 0x0 0x0 0x0 0x42010000 0x0 0x0
-> +                        0x20000 0x0 0x0 0x0 0x10000 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x0 0x0 0x100000 0x840000 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0
-> +                        0x0 0x10000>;
-> +        phandle = <0x1c8>;
-> +  };
-> +
-> +sprn-bitmask
-> +------------
-> +
-> +This property is a bitmask of of all the existing SPRs and if the SPR is
-> +supported, the corresponding bit of the SPR number is set to 1.
-> +The representation of the bits are left-right, i.e the MSB of the first
-> +doubleword represants the 0th bit.
-> diff --git a/hw/slw.c b/hw/slw.c
-> index 6a09cc2c..9d1fe2c5 100644
-> --- a/hw/slw.c
-> +++ b/hw/slw.c
-> @@ -29,6 +29,7 @@
->  #include <sbe_xip_image.h>
-> 
->  static uint32_t slw_saved_reset[0x100];
-> +#define SPR_BITMAP_LENGTH	2048
-> 
->  static bool slw_current_le = false;
-> 
-> @@ -750,6 +751,119 @@ static void slw_late_init_p9(struct proc_chip *chip)
->  	}
->  }
-> 
-> +/* Add device tree properties to determine self-save | restore */
-> +void add_cpu_self_save_restore_properties(void)
-> +{
-> +	struct dt_node *self_restore, *self_save, *power_mgt;
-> +	uint64_t *self_save_mask, *self_restore_mask;
-> +	bool self_save_supported = true;
-> +	uint64_t compVector = -1;
-> +	struct proc_chip *chip;
-> +	int i, rc;
-> +
-> +	const uint64_t self_restore_regs[] = {
-> +		P8_SPR_HRMOR,
-> +		P8_SPR_HMEER,
-> +		P8_SPR_PMICR,
-> +		P8_SPR_PMCR,
-> +		P8_SPR_HID0,
-> +		P8_SPR_HID1,
-> +		P8_SPR_HID4,
-> +		P8_SPR_HID5,
-> +		P8_SPR_HSPRG0,
-> +		P8_SPR_LPCR,
-> +		P8_MSR_MSR
-> +	};
-> +
-> +	const uint64_t self_save_regs[] = {
-> +		P9_STOP_SPR_DAWR,
-> +		P9_STOP_SPR_HSPRG0,
-> +		P9_STOP_SPR_LDBAR,
-> +		P9_STOP_SPR_LPCR,
-> +		P9_STOP_SPR_PSSCR,
-> +		P9_STOP_SPR_MSR,
-> +		P9_STOP_SPR_HRMOR,
-> +		P9_STOP_SPR_HMEER,
-> +		P9_STOP_SPR_PMCR,
-> +		P9_STOP_SPR_PTCR
-> +	};
-> +
-> +	chip = next_chip(NULL);
-> +	assert(chip);
-> +	rc = proc_stop_api_discover_capability((void *) chip->homer_base,
-> +					       &compVector);
-> +	if (rc == STOP_SAVE_ARG_INVALID_IMG) {
-> +		prlog(PR_DEBUG, "HOMER BASE INVALID\n");
-> +		return;
-> +	} else if (rc == STOP_SAVE_API_IMG_INCOMPATIBLE) {
-> +		prlog(PR_DEBUG, "STOP API running incompatible versions\n");
-> +		if ((compVector & SELF_RESTORE_VER_MISMATCH) == 0) {
-> +			prlog(PR_DEBUG, "Self-save API unsupported\n");
-> +			self_save_supported = false;
-> +		}
-> +	}
-> +
-> +	power_mgt = dt_find_by_path(dt_root, "/ibm,opal/power-mgt");
-> +	if (!power_mgt) {
-> +		prerror("OCC: dt node /ibm,opal/power-mgt not found\n");
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+---
+ arch/arm64/include/asm/tlb.h      |   7 +-
+ arch/arm64/include/asm/tlbflush.h | 114 +++++++++++++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 2 deletions(-)
 
-The prerror/warning in this function should be prefixed with "SLW"
-instead of "OCC" here. This function has nothing to do with OCC.
-
-
-> +		return;
-> +	}
-> +
-> +	self_restore = dt_new(power_mgt, "self-restore");
-> +	if (!self_restore) {
-> +		prerror("OCC: Failed to create self restore node");
-
-Ditto.
-
-> +		return;
-> +	}
-> +
-> +	self_restore_mask = zalloc(SPR_BITMAP_LENGTH / 8);
-> +	if (!self_restore_mask)
-> +		return;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(self_restore_regs); i++) {
-> +		int bitmask_idx = self_restore_regs[i] / 64;
-> +		uint64_t bitmask_pos = self_restore_regs[i] % 64;
-> +		self_restore_mask[bitmask_idx] |= 1ul << bitmask_pos;
-> +	}
-> +
-> +	for (i = 0; i < (SPR_BITMAP_LENGTH / 64); i++) {
-> +		self_restore_mask[i] = cpu_to_be64(self_restore_mask[i]);
-> +	}
-> +
-> +	dt_add_property(self_restore, "sprn-bitmask", self_restore_mask,
-> +			SPR_BITMAP_LENGTH / 8);
-> +	dt_add_property_string(self_restore, "compatible",
-> +			       "ibm,opal-self-restore");
-> +	free(self_restore_mask);
-> +
-> +	if (proc_gen != proc_gen_p9 || !self_save_supported)
-
-We need a 
-prlog(PR_INFO, "SLW: self-save not supported on this platform");
-
-?
-
-> +		return;
+diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+index b76df828e6b7..3a1816770bd1 100644
+--- a/arch/arm64/include/asm/tlb.h
++++ b/arch/arm64/include/asm/tlb.h
+@@ -38,7 +38,12 @@ static inline void tlb_flush(struct mmu_gather *tlb)
+ 		return;
+ 	}
+ 
+-	__flush_tlb_range(&vma, tlb->start, tlb->end, stride, last_level);
++	if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE))
++		__flush_tlb_range_directly(&vma, tlb->start, tlb->end,
++					   stride, last_level);
++	else
++		__flush_tlb_range(&vma, tlb->start, tlb->end,
++				  stride, last_level);
+ }
+ 
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index bc3949064725..a482188ea563 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -59,6 +59,44 @@
+ 		__ta;						\
+ 	})
+ 
++/*
++ * This macro creates a properly formatted VA operand for the TLBI RANGE.
++ * The value bit assignments are:
++ *
++ * +----------+------+-------+-------+-------+----------------------+
++ * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
++ * +-----------------+-------+-------+-------+----------------------+
++ * |63      48|47  46|45   44|43   39|38   37|36                   0|
++ *
++ * The address range is determined by below formula:
++ * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
++ *
++ */
++#define __TLBI_VADDR_RANGE(addr, asid, tg, scale, num, ttl)	\
++	({							\
++		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
++		__ta &= GENMASK_ULL(36, 0);			\
++		__ta |= (unsigned long)(ttl) << 37;		\
++		__ta |= (unsigned long)(num) << 39;		\
++		__ta |= (unsigned long)(scale) << 44;		\
++		__ta |= (unsigned long)(tg) << 46;		\
++		__ta |= (unsigned long)(asid) << 48;		\
++		__ta;						\
++	})
++
++#define TLB_RANGE_MASK_SHIFT 5
++#define TLB_RANGE_MASK GENMASK_ULL(TLB_RANGE_MASK_SHIFT - 1, 0)
++
++/*
++ * __TG defines translation granule of the system, which is defined by
++ * PAGE_SHIFT.  Used by TTL.
++ *  - 4KB	: 1
++ *  - 16KB	: 2
++ *  - 64KB	: 3
++ */
++#define __TG	((PAGE_SHIFT - 12) / 2 + 1)
++
++
+ /*
+  *	TLB Invalidation
+  *	================
+@@ -171,12 +209,83 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+ 	dsb(ish);
+ }
+ 
++/* The maximum range size of one TLBI-RANGE instruction */
++#define MAX_TLBI_RANGE_SIZE	(1UL << 21)
++
++/*
++ * This interface uses the *rvale1is* instruction to flush TLBs
++ * in [start, end) directly.
++ * This instruction is supported from ARM v8.4.
++ */
++static inline void __flush_tlb_range_directly(struct vm_area_struct *vma,
++				unsigned long start, unsigned long end,
++				unsigned long stride, bool last_level)
++{
++	int num = 0;
++	int scale = 0;
++	unsigned long asid = ASID(vma->vm_mm);
++	unsigned long addr = 0;
++	unsigned long range_size;
++
++	start = round_down(start, stride);
++	end = round_up(end, stride);
++	range_size = (end - start) >> PAGE_SHIFT;
++
++	if (range_size > MAX_TLBI_RANGE_SIZE) {
++		flush_tlb_mm(vma->vm_mm);
++		return;
++	}
++
++	dsb(ishst);
++
++	/*
++	 * The minimum size of TLB RANGE is 2 PAGE;
++	 * Use normal TLB instruction to handle odd PAGEs
++	 */
++	if (range_size % 2 == 1) {
++		addr = __TLBI_VADDR(start, asid);
++		if (last_level) {
++			__tlbi(vale1is, addr);
++			__tlbi_user(vale1is, addr);
++		} else {
++			__tlbi(vae1is, addr);
++			__tlbi_user(vae1is, addr);
++		}
++		start += 1 << PAGE_SHIFT;
++		range_size -= 1;
++	}
++
++	range_size >>= 1;
++	while (range_size > 0) {
++		num = (range_size & TLB_RANGE_MASK) - 1;
++		if (num >= 0) {
++			addr = __TLBI_VADDR_RANGE(start, asid, __TG,
++						  scale, num, 0);
++			if (last_level) {
++				__tlbi(rvale1is, addr);
++				__tlbi_user(rvale1is, addr);
++			} else {
++				__tlbi(rvae1is, addr);
++				__tlbi_user(rvae1is, addr);
++			}
++			start += (num + 1) << (5 * scale + 1) << PAGE_SHIFT;
++		}
++		scale++;
++		range_size >>= TLB_RANGE_MASK_SHIFT;
++	}
++	dsb(ish);
++}
++
+ /*
+  * This is meant to avoid soft lock-ups on large TLB flushing ranges and not
+  * necessarily a performance improvement.
+  */
+ #define MAX_TLBI_OPS	PTRS_PER_PTE
+ 
++/*
++ * This interface uses the *vae1is* instruction to flush TLBs
++ * in [start, end) one by one.
++ */
+ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 				     unsigned long start, unsigned long end,
+ 				     unsigned long stride, bool last_level)
+@@ -218,7 +327,10 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
+ 	 * We cannot use leaf-only invalidation here, since we may be invalidating
+ 	 * table entries as part of collapsing hugepages or moving page tables.
+ 	 */
+-	__flush_tlb_range(vma, start, end, PAGE_SIZE, false);
++	if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE))
++		__flush_tlb_range_directly(vma, start, end, PAGE_SIZE, false);
++	else
++		__flush_tlb_range(vma, start, end, PAGE_SIZE, false);
+ }
+ 
+ static inline void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+-- 
+2.19.1
 
 
-> +
-> +	self_save = dt_new(power_mgt, "self-save");
-> +	if (!self_save) {
-> +		prerror("OCC: Failed to create self save node");
-> +		return;
-> +	}
-> +
-> +	self_save_mask = zalloc(SPR_BITMAP_LENGTH / 8);
-> +	if (!self_save_mask)
-> +		return;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(self_save_regs); i++) {
-> +		int bitmask_idx = self_save_regs[i] / 64;
-> +		uint64_t bitmask_pos = self_save_regs[i] % 64;
-> +		self_save_mask[bitmask_idx] |= 1ul << bitmask_pos;
-> +	}
-> +
-> +	for (i = 0; i < (SPR_BITMAP_LENGTH / 64); i++) {
-> +		self_save_mask[i] = cpu_to_be64(self_save_mask[i]);
-> +	}
-> +
-> +	dt_add_property(self_save, "sprn-bitmask", self_save_mask,
-> +			SPR_BITMAP_LENGTH / 8);
-> +	dt_add_property_string(self_save, "compatible", "ibm,opal-self-save");
-> +	free(self_save_mask);
-> +}
-> +
->  /* Add device tree properties to describe idle states */
->  void add_cpu_idle_state_properties(void)
->  {
-> @@ -1563,4 +1677,6 @@ void slw_init(void)
->  		}
->  	}
->  	add_cpu_idle_state_properties();
-> +	if (has_deep_states)
-> +		add_cpu_self_save_restore_properties();
->  }
-> diff --git a/include/skiboot.h b/include/skiboot.h
-> index 9ced240e..d3631dea 100644
-> --- a/include/skiboot.h
-> +++ b/include/skiboot.h
-> @@ -209,6 +209,7 @@ extern void early_uart_init(void);
->  extern void homer_init(void);
->  extern void slw_init(void);
->  extern void add_cpu_idle_state_properties(void);
-> +extern void add_cpu_self_save_restore_properties(void);
->  extern void lpc_rtc_init(void);
-
-Apart from these minor quibbles,
-
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
-> 
->  /* flash support */
-> -- 
-> 2.24.1
-> 
