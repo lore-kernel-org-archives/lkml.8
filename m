@@ -2,133 +2,166 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95340C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FE3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB84206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F632054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586885860;
-	bh=LpwviLsVNM9P2b0C2NQOinyd32vuFV2xrpFIULefpQQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=HjO05WITcUtLVSsaxwor6iFzpwEFf8VdDnxElFKfuF60w9v1HwrkMZe9ZbllC9FAZ
-	 t14CKJx82mmc+WXsf4xj0MHu9juM3GjINUD2wuvA49kJnVpdazYriC7DGQIVbbO2sd
-	 Lq0vfXb0YcaCkH7jxsZvlqEyunOOZM5rvBhsv7YE=
+	s=default; t=1586885928;
+	bh=BlRdEu7bWkoJW8GKNHvreZ6ibTBfjVJvw4Fqm/MWRIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1SvT3hlxLctKfM/DL0f/2p7T/vjtLvdyt+zk1Kdk790HERGc3o/rNXSZ1jS5jzIeY
+	 X8jVNpPOYzpTG51Rc09J5qTjBegpLXWz88bzXbfj+N8UEhjY9atqbDqT30X/wuTpDt
+	 mr2n5+78SH20kQllzdHO8dUFfngB15xf4rj6docI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440491AbgDNRhd (ORCPT
+        id S2440468AbgDNRiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440297AbgDNRhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:37:11 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330592054F;
-        Tue, 14 Apr 2020 17:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586885830;
-        bh=LpwviLsVNM9P2b0C2NQOinyd32vuFV2xrpFIULefpQQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IYI6FBrfzydQucos+PkX8TQl/lmtqZfZNerWvB2UXCzjDNUtZEsPYqbvTWKlmdRBX
-         XpQXmRf5gqsfhiseZSTzjHYny6zbPI/IT1n54atQQUt8ioZp78QYfcbto5MXgQNFC4
-         YzfAoYXSe2pGWoFvmu6KnhAtxLPn9J9CHCTyxlwA=
-Date:   Tue, 14 Apr 2020 18:37:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Applied "spi: spidev_test: Remove hidden temporary file when make clean" to the spi tree
-In-Reply-To:  <1586230512-5507-1-git-send-email-yangtiezhu@loongson.cn>
-Message-Id:  <applied-1586230512-5507-1-git-send-email-yangtiezhu@loongson.cn>
-X-Patchwork-Hint: ignore
+        Tue, 14 Apr 2020 13:38:46 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43058 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730099AbgDNRil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:38:41 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g14so451589otg.10;
+        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8Nz3sKqk6tf6wfMqMfDxAKL6dU6xyEXZ2XEc3RZw1kA=;
+        b=HAea2NfyN4EFRHBhVGk45x5b1ywH72yfmLIX+OIf4N7IU41ZZgJQlIsdkf9JzvKfWd
+         aDGUkIWXXNgf6OruWAIYGOXvogoqXyXN5Pqx7BSf0nOa+fPplI7anS1zgRRs1Tvat5U7
+         ksCGk9BG9xvyZh8qd3c3UFRCQlGYgcYgFq35smDJcIUQIbGasG9NbttBq6eUTYjUTqc5
+         e/KEkTZ6je/8bY0GnCNzVU3mYAuHk9LCsKmo7UqFzV75fHgO7aS8WKLIPPG2zNf4GOhQ
+         B/Bw9LiGsKzUSSMBxPGhQSQr/oqgjypOpK294XQ/a7sCMIVaJl3KpQH+bwIjlMziPHD+
+         rySA==
+X-Gm-Message-State: AGi0PuamumCRgqT3zCvTLvm2P0jC+yyFY0t0A5n8DwUsWmeYuw5XsrXa
+        cQMLy6QPcUPg8Fv19mnMWQ==
+X-Google-Smtp-Source: APiQypLLc0miyc2capf1MVVpp0fAaq2ltXN508BsmSUu5FT95kopV2NU4H4Jg7eQPEjl2rrJC7bPYg==
+X-Received: by 2002:a9d:2c1:: with SMTP id 59mr699714otl.321.1586885920167;
+        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d61sm5640680otb.53.2020.04.14.10.38.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 10:38:39 -0700 (PDT)
+Received: (nullmailer pid 2638 invoked by uid 1000);
+        Tue, 14 Apr 2020 17:38:38 -0000
+Date:   Tue, 14 Apr 2020 12:38:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
+Message-ID: <20200414173838.GA29176@bogus>
+References: <20200403002608.946-1-ansuelsmth@gmail.com>
+ <20200403002608.946-2-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403002608.946-2-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65 +++++++++++++++++++
+>  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65 +++++++++++++++++++
+>  2 files changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> new file mode 100644
+> index 000000000000..0bb59e3c2ab8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm DWC3 HS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers. Each DWC3 PHY controller should have its own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,dwc3-hs-usb-phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  regmap:
+> +    maxItems: 1
+> +    description: phandle to usb3 dts definition
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      - "ref" Is required
+> +      - "xo"	Optional external reference clock
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - regmap
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    hs_phy_0: hs_phy_0 {
+> +      compatible = "qcom,dwc3-hs-usb-phy";
+> +      regmap = <&usb3_0>;
 
-   spi: spidev_test: Remove hidden temporary file when make clean
+If the registers for the phy are part of 'qcom,dwc3' then make this node 
+a child of it.
 
-has been applied to the spi tree at
+> +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> +
+> +    usb3_0: usb3@110f8800 {
+> +      compatible = "qcom,dwc3", "syscon";
+> +      reg = <0x110f8800 0x8000>;
+> +
+> +      /* ... */
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Incomplete examples should or will fail validation.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 0b93dd98d6d5ba93f834113994dbc8f291447dae Mon Sep 17 00:00:00 2001
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Tue, 7 Apr 2020 11:35:12 +0800
-Subject: [PATCH] spi: spidev_test: Remove hidden temporary file when make
- clean
-
-In the current code, it only removes *.o and .*.o.d file when make clean,
-there still exists useless .*.o.cmd file, just remove it.
-
-Without this patch:
-
-[yangtiezhu@linux spi]$ make
-[yangtiezhu@linux spi]$ make clean
-[yangtiezhu@linux spi]$ ls -1 .*.o.cmd
-.spidev_fdx-in.o.cmd
-.spidev_fdx.o.cmd
-.spidev_test-in.o.cmd
-.spidev_test.o.cmd
-
-With this patch:
-
-[yangtiezhu@linux spi]$ make
-[yangtiezhu@linux spi]$ make clean
-[yangtiezhu@linux spi]$ ls -1 .*.o.cmd
-ls: cannot access .*.o.cmd: No such file or directory
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Link: https://lore.kernel.org/r/1586230512-5507-1-git-send-email-yangtiezhu@loongson.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/spi/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/spi/Makefile b/tools/spi/Makefile
-index 2249a1546cc1..ada881afb489 100644
---- a/tools/spi/Makefile
-+++ b/tools/spi/Makefile
-@@ -52,7 +52,9 @@ $(OUTPUT)spidev_fdx: $(SPIDEV_FDX_IN)
- clean:
- 	rm -f $(ALL_PROGRAMS)
- 	rm -rf $(OUTPUT)include/
--	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
-+	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete
-+	find $(if $(OUTPUT),$(OUTPUT),.) -name '\.*.o.d' -delete
-+	find $(if $(OUTPUT),$(OUTPUT),.) -name '\.*.o.cmd' -delete
- 
- install: $(ALL_PROGRAMS)
- 	install -d -m 755 $(DESTDIR)$(bindir);		\
--- 
-2.20.1
-
+> +    };
