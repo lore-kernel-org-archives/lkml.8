@@ -4,46 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6A3C352B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67FEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5B66206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5E0206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436593AbgDNIWw (ORCPT
+        id S2436607AbgDNIXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
+        Tue, 14 Apr 2020 04:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407129AbgDNIUy (ORCPT
+        by vger.kernel.org with ESMTP id S2407128AbgDNIUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:20:54 -0400
+        Tue, 14 Apr 2020 04:20:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F85C00860B;
-        Tue, 14 Apr 2020 01:20:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C07EC00860A;
+        Tue, 14 Apr 2020 01:20:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOGoL-0006Gl-1u; Tue, 14 Apr 2020 10:20:49 +0200
+        id 1jOGoN-0006I5-8z; Tue, 14 Apr 2020 10:20:51 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9EFD61C0086;
-        Tue, 14 Apr 2020 10:20:48 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 08:20:48 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DD84C1C0450;
+        Tue, 14 Apr 2020 10:20:50 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 08:20:50 -0000
 From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/x86: Revert struct layout change to fix kexec
- boot regression
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, Dave Young <dyoung@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
+Subject: [tip: efi/urgent] efi/arm: Deal with ADR going out of range in
+ efi_enter_kernel()
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200409130434.6736-6-ardb@kernel.org>
+References: <20200409130434.6736-6-ardb@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158685244823.28353.9175276609347162511.tip-bot2@tip-bot2>
+Message-ID: <158685245053.28353.8781169269960396594.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,54 +60,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the efi/urgent branch of tip:
 
-Commit-ID:     a088b858f16af85e3db359b6c6aaa92dd3bc0921
-Gitweb:        https://git.kernel.org/tip/a088b858f16af85e3db359b6c6aaa92dd3bc0921
+Commit-ID:     a94691680bace7e1404e4f235badb74e30467e86
+Gitweb:        https://git.kernel.org/tip/a94691680bace7e1404e4f235badb74e30467e86
 Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Fri, 10 Apr 2020 09:43:20 +02:00
+AuthorDate:    Thu, 09 Apr 2020 15:04:30 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 14 Apr 2020 08:32:17 +02:00
+CommitterDate: Tue, 14 Apr 2020 08:32:14 +02:00
 
-efi/x86: Revert struct layout change to fix kexec boot regression
+efi/arm: Deal with ADR going out of range in efi_enter_kernel()
 
 Commit
 
-  0a67361dcdaa29 ("efi/x86: Remove runtime table address from kexec EFI setup data")
+  0698fac4ac2a ("efi/arm: Clean EFI stub exit code from cache instead of avoiding it")
 
-removed the code that retrieves the non-remapped UEFI runtime services
-pointer from the data structure provided by kexec, as it was never really
-needed on the kexec boot path: mapping the runtime services table at its
-non-remapped address is only needed when calling SetVirtualAddressMap(),
-which never happens during a kexec boot in the first place.
+introduced a PC-relative reference to 'call_cache_fn' into
+efi_enter_kernel(), which lives way at the end of head.S. In some cases,
+the ARM version of the ADR instruction does not have sufficient range,
+resulting in a build error:
 
-However, dropping the 'runtime' member from struct efi_setup_data was a
-mistake. That struct is shared ABI between the kernel and the kexec tooling
-for x86, and so we cannot simply change its layout. So let's put back the
-removed field, but call it 'unused' to reflect the fact that we never look
-at its contents. While at it, add a comment to remind our future selves
-that the layout is external ABI.
+  arch/arm/boot/compressed/head.S:1453: Error: invalid constant (fffffffffffffbe4) after fixup
 
-Fixes: 0a67361dcdaa29 ("efi/x86: Remove runtime table address from kexec EFI setup data")
-Reported-by: Theodore Ts'o <tytso@mit.edu>
-Tested-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Dave Young <dyoung@redhat.com>
+ARM defines an alternative with a wider range, called ADRL, but this does
+not exist for Thumb-2. At the same time, the ADR instruction in Thumb-2
+has a wider range, and so it does not suffer from the same issue.
+
+So let's switch to ADRL for ARM builds, and keep the ADR for Thumb-2 builds.
+
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200409130434.6736-6-ardb@kernel.org
 ---
- arch/x86/include/asm/efi.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/compressed/head.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index cdcf48d..8391c11 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -178,8 +178,10 @@ extern void efi_free_boot_services(void);
- extern pgd_t * __init efi_uv1_memmap_phys_prolog(void);
- extern void __init efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
- 
-+/* kexec external ABI */
- struct efi_setup_data {
- 	u64 fw_vendor;
-+	u64 __unused;
- 	u64 tables;
- 	u64 smbios;
- 	u64 reserved[8];
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index cabdd8f..e8e1c86 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -1450,7 +1450,8 @@ ENTRY(efi_enter_kernel)
+ 		@ running beyond the PoU, and so calling cache_off below from
+ 		@ inside the PE/COFF loader allocated region is unsafe unless
+ 		@ we explicitly clean it to the PoC.
+-		adr	r0, call_cache_fn		@ region of code we will
++ ARM(		adrl	r0, call_cache_fn	)
++ THUMB(		adr	r0, call_cache_fn	)	@ region of code we will
+ 		adr	r1, 0f				@ run with MMU off
+ 		bl	cache_clean_flush
+ 		bl	cache_off
