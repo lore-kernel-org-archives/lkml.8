@@ -2,164 +2,94 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4F6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2CDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE5A12076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9875B2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpdUzP76"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="S4W+3eig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634286AbgDNWM1 (ORCPT
+        id S1732548AbgDNWMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634196AbgDNWKD (ORCPT
+        Tue, 14 Apr 2020 18:12:53 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50997 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634196AbgDNWMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:10:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3206C061A0E;
-        Tue, 14 Apr 2020 15:10:01 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q22so1571203ljg.0;
-        Tue, 14 Apr 2020 15:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F0XPwxdFCjJHTuSbnS2w6zqorjjc9RWVXqyjiI/jIis=;
-        b=dpdUzP76QV7sTI3nok9EmoFs3mfQ1Co9VYbw/a3nyURD6+kqJhVSzly9jO3vV4wqvy
-         ssBZrTUThPra2QqU4vWEX67XOAk7/GhHDG2oUY8PaRBNjJ1FDyz69atAKd99SIPhUIvE
-         jilM5R8pCrvuWEWk/1Hg9X+udDVYk8BW6CdgJJyG6eap2Fjiq1bUBx76cixcTh9jImJ3
-         21sBnI4clZ+HyT0uvnzIBdUaVRw3LkVYDxCJiETJo5Y5Bg8tCxLlbn2MUHLc4fddlFdu
-         pfS273xaNWyZxrvOdQCJb5gFWZverpcLzKWs3k6RItrNeIK6dDInuhSsGAjLjMZ3oXQB
-         Whjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F0XPwxdFCjJHTuSbnS2w6zqorjjc9RWVXqyjiI/jIis=;
-        b=IUwSpA/U7+JxXewBv5v34UzVR/rMLxQeCUcAe9M7Yv3+ARu+oe2fImehZwUpueotZG
-         b55JxK8WfWeISt5DISHTzj/PLjAMbuimrpSyIAS951BsScMUlF83LKWYhaGuYKfpJYjc
-         2YkrD2UH/2sR7eWVlBDLSPAK98wNP+K9tqnQv+RM1ImWMCbJRH42EJW5zvHKbQwDcBBV
-         5erMZzHoUeF8iQE1mOc1s6KsCVRa1ejf9pNQKpFJtdpWJ+VXFtL2OrHeypyNNyzDBeCA
-         B8gZXqyyQJujKiq/zY8GJgncvQTi4cbqJF/dsyYQFvM8UPZXwbHSx80HVhqf/3cYQSX9
-         xDGQ==
-X-Gm-Message-State: AGi0PuZ6vfW8CFsmJONQoib2T0oC+gxd1i8P7tVk9bpSnctwgXWLTyEp
-        qzD8Q0eB3zpnk98or+NbYqc=
-X-Google-Smtp-Source: APiQypLlrZjm0kkuuIk+cj7F9b+2hImgbX9ulv04uvR3P0Uia+i65n+ywVvG9BUpZuc5iL5d6G3zJA==
-X-Received: by 2002:a2e:8e68:: with SMTP id t8mr1407493ljk.20.1586902200388;
-        Tue, 14 Apr 2020 15:10:00 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id w27sm13663044lfn.45.2020.04.14.15.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 15:09:58 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7 devices
-Date:   Wed, 15 Apr 2020 01:07:53 +0300
-Message-Id: <20200414220759.29146-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Tue, 14 Apr 2020 18:12:35 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CD6FB80237;
+        Wed, 15 Apr 2020 10:12:27 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1586902347;
+        bh=+6kc3E2+ilGoFnJMFyMnA2X2aiLhEyeMzGGPuTXvRew=;
+        h=From:To:Cc:Subject:Date;
+        b=S4W+3eigkdzrdebmXDJLW5kH0mWWG7KovQ+ODdUsueM28gRqND6Sr71eeL/JdSXUC
+         TEdTIkaUD6LfiH5fH3/gwZFWwu69f398p0pd2fv6BqHwY5Qv/wCIMFwHfxbox1biPr
+         KhAh1hFuU+XCFnZxDsZJA2rH2MqQXvqbYzxN25YlLYmRvccjJOowJd5heSgXknudFu
+         rWbySK8aZ7WprwU2dZgSXO8xqZcKzccLlFQU5FE4+21PBrFTK3YgHLvNO73tqGrkIs
+         UHrSr3fZqeW+5u9qBj/qpm580w2PAJW/CzgpAqH+kHYX6zkX4iZT1cFzhx92CG/z+5
+         LWYQb14RMS9EQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e96354b0000>; Wed, 15 Apr 2020 10:12:27 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 0991113EF08;
+        Wed, 15 Apr 2020 10:12:27 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 8938C28006C; Wed, 15 Apr 2020 10:12:27 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     corbet@lwn.net, tglx@linutronix.de, Jason@zx2c4.com, arnd@arndb.de
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] docs: timekeeping: Use correct prototype for deprecated functions
+Date:   Wed, 15 Apr 2020 10:12:22 +1200
+Message-Id: <20200414221222.23996-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Use the correct prototypes for do_gettimeofday(), getnstimeofday() and
+getnstimeofday64(). All of these returned void and passed the return
+value by reference. This should make the documentation of their
+deprecation and replacements easier to search for.
 
-This series introduces upstream kernel support for Acer Iconia Tab A500
-and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
-in advance.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ Documentation/core-api/timekeeping.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Changelog:
-
-v4: - Corrected CPU's thermal zone on both A500 and Nexus 7, which
-      should use the remote thermal sensor (Tegra chip) instead of the
-      local ("skin" temperature).
-
-    - Added default PMIC pinmux state on Nexus 7, for completeness.
-
-    - Added PMIC cpu_pwr_req GPIO hog on Nexus 7, for completeness.
-
-    - Renamed thermal sensor node label to NCT72 on Nexus 7 to match the
-      actual hardware (NCT72 is compatible with NCT1008). For completeness.
-
-    - Added always-on USB AVDD regulator on Nexus 7, which is controlled by
-      the PMIC GPIO. For completeness.
-
-    - Added PMIC GPIO enable-control to the 3v3_sys regulator on Nexus 7,
-      for completeness.
-
-    - Added CONFIG_NAMESPACES, CONFIG_USER_NS, CONFIG_SECCOMP and
-      CONFIG_PINCTRL_MAX77620 to the tegra_defconfig. The first three
-      options are must-have for the modern userspace, the last is somewhat
-      actual now since the default PMIC pinmux state is added to the N7 DT.
-
-v3: - Improved device-tree node-names in accordance to review comments that
-      were made by Thierry Reding to v2.
-
-    - Corrected LVDS encoder powerdown-GPIO polarity on both A500 and Nexus 7
-      because I implemented the DRM bridges support in the Tegra DRM driver
-      and found that there was a mistake in the device-trees. The updated
-      polarity also matches the boards schematics. Now DRM bridges support
-      becomes mandatory since LVDS is getting disabled during of the encoder
-      driver probing. I'll send the DRM patch separately from this series.
-
-    - Replaced recently deprecated CONFIG_DRM_LVDS_ENCODER with the new
-      CONFIG_DRM_LVDS_CODEC in tegra_defconfig.
-
-    - Added more config options to tegra_defconfig, like pstore and thermal.
-
-    - Added atmel,cfg_name to the A500 DT, which is a new upcoming property
-      in 5.8+ that allows to specify the per-board hardware config file name.
-
-v2: - Corrected "volume down" key-label in the grouper's device-tree and
-      improved some other names in device-trees.
-
-    - Added optional (upcoming in 5.8+) VDD/AVDD regulators to the touchscreen
-      node in A500 device-tree.
-
-Dmitry Osipenko (6):
-  ARM: tegra: Add device-tree for Acer Iconia Tab A500
-  ARM: tegra: Add device-tree for ASUS Google Nexus 7
-  dt-bindings: Add vendor prefix for Acer Inc.
-  dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
-  dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
-  ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
-
- .../devicetree/bindings/arm/tegra.yaml        |   10 +
- .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
- arch/arm/boot/dts/Makefile                    |    3 +
- .../boot/dts/tegra20-acer-a500-picasso.dts    | 1458 +++++++++
- .../tegra30-asus-nexus7-grouper-common.dtsi   | 2680 +++++++++++++++++
- .../boot/dts/tegra30-asus-nexus7-grouper.dts  |  463 +++
- .../boot/dts/tegra30-asus-nexus7-tilapia.dts  |  549 ++++
- arch/arm/configs/tegra_defconfig              |   42 +
- 8 files changed, 5207 insertions(+)
- create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
- create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
- create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dts
- create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dts
-
--- 
-2.26.0
+diff --git a/Documentation/core-api/timekeeping.rst b/Documentation/core-=
+api/timekeeping.rst
+index c0ffa30c7c37..729e24864fe7 100644
+--- a/Documentation/core-api/timekeeping.rst
++++ b/Documentation/core-api/timekeeping.rst
+@@ -154,9 +154,9 @@ architectures. These are the recommended replacements=
+:
+=20
+ 	Use ktime_get() or ktime_get_ts64() instead.
+=20
+-.. c:function:: struct timeval do_gettimeofday( void )
+-		struct timespec getnstimeofday( void )
+-		struct timespec64 getnstimeofday64( void )
++.. c:function:: void do_gettimeofday( struct timeval * )
++		void getnstimeofday( struct timespec * )
++		void getnstimeofday64( struct timespec64 * )
+ 		void ktime_get_real_ts( struct timespec * )
+=20
+ 	ktime_get_real_ts64() is a direct replacement, but consider using
+--=20
+2.25.1
 
