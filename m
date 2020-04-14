@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25D7C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBC2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A801920578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B5020787
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586875557;
-	bh=BKt0ly0X0uSnzjL/jCTuX7kQW79brFOyTVWQb3pvaVg=;
+	s=default; t=1586875588;
+	bh=550yDRRNFH/KAKBnw/zzOaMx4yYeCB4m9knrvjHhjMk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jkNndXPfA6zDdQXHxhQ9OEKr6rzlVwWN6B1kxHKl4qYU5MSgUvl3Ks0UFx81e+BtH
-	 RyweD8SOx46pfPL35dt2BwhUdeL6JJhtSb5PV1lh+7vqwXkR+CHOxJb3ITPsO49wQ8
-	 VXSyBgFCPtZbUNbN/v6KygXeAibHIJswYO3UA3OY=
+	b=UDLRjAhk9ECfwzf725ZRnqT9xy9LfoKugs4JMfixZadXrwwGidc1Xq1C/TBzAnlAr
+	 R6BapNuQSZQyZjTb9m3BtpKgFUn1nD4683Ab9aPEagt2iHrRxs8We1CbTxHwULMkBL
+	 OPlZEDRdDgAv1xfxmZjudR2vuAKQPNA/xhbzKxyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404749AbgDNOp4 (ORCPT
+        id S2404783AbgDNOqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 10:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404554AbgDNOpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:45:53 -0400
+        id S2404554AbgDNOqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:46:10 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EA4320578;
-        Tue, 14 Apr 2020 14:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7C512076D;
+        Tue, 14 Apr 2020 14:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586875553;
-        bh=BKt0ly0X0uSnzjL/jCTuX7kQW79brFOyTVWQb3pvaVg=;
+        s=default; t=1586875569;
+        bh=550yDRRNFH/KAKBnw/zzOaMx4yYeCB4m9knrvjHhjMk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Xj0eRvpcd0zAHHGgS+wlkuC4N5yFk7/Jl/HNtK96l4XQMHdwnPoEAvivqpMhgIeM0
-         vPngoZWMyKMqw4h4vqjDFcvzCxx/XMchC3Fwy/4lD2/mzfQ7AASvzYHB+w1bkMcJI+
-         NNDw8/wBVhwYCKjYJlDHd/tPPcA8jAUWZt/e+Xmw=
-Date:   Tue, 14 Apr 2020 15:45:50 +0100
+        b=tQXk7Bs2mmJoHSR0U1aT1XOibvgfQAeB0u3K7jGl7yto1Qe3iqVCOLvuygK6ZCPej
+         d2jkNnJYllIIcikjYkc/wjVnjEPcfMc9DeYGghPL9VsHXcqxTji2fujd7y4bdjxMF6
+         DqmIziBSu59Kj5cQwWn5h70iRpTu8E1Zdzef+B0Q=
+Date:   Tue, 14 Apr 2020 15:46:06 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, heiko@sntech.de, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org
-Subject: Applied "ASoC: rockchip-i2s: add power-domains property" to the asoc tree
-In-Reply-To:  <20200324094149.6904-3-jbx6244@gmail.com>
-Message-Id:  <applied-20200324094149.6904-3-jbx6244@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alsa-devel@alsa-project.org,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        srinivas.kandagatla@linaro.org, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: qcom: common: Silence duplicate parse error messages" to the asoc tree
+In-Reply-To:  <20200406003229.2354631-1-bjorn.andersson@linaro.org>
+Message-Id:  <applied-20200406003229.2354631-1-bjorn.andersson@linaro.org>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip-i2s: add power-domains property
+   ASoC: qcom: common: Silence duplicate parse error messages
 
 has been applied to the asoc tree at
 
@@ -83,38 +85,55 @@ to this mail.
 Thanks,
 Mark
 
-From 2a79c31a498e002eeb7c7d759241c3cca95b28d9 Mon Sep 17 00:00:00 2001
-From: Johan Jonker <jbx6244@gmail.com>
-Date: Tue, 24 Mar 2020 10:41:49 +0100
-Subject: [PATCH] ASoC: rockchip-i2s: add power-domains property
+From d0c56b307f37fd21e2424d3c210e5d85831dd132 Mon Sep 17 00:00:00 2001
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Sun, 5 Apr 2020 17:32:29 -0700
+Subject: [PATCH] ASoC: qcom: common: Silence duplicate parse error messages
 
-In the old txt situation we add/describe only properties that are used
-by the driver/hardware itself. With yaml it also filters things in a
-node that are used by other drivers like 'power-domains' for rk3399,
-so add it to 'rockchip-i2s.yaml'.
+All error paths in qcom_snd_parse_of() prints more specific error
+messages, so silence the one in apq8096_platform_probe() and
+sdm845_snd_platform_probe() to avoid spamming the kernel log.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200324094149.6904-3-jbx6244@gmail.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200406003229.2354631-1-bjorn.andersson@linaro.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/rockchip-i2s.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/qcom/apq8096.c | 4 +---
+ sound/soc/qcom/sdm845.c  | 4 +---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-index 7cd0e278ed85..a3ba2186d6a1 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-@@ -56,6 +56,9 @@ properties:
-       - const: tx
-       - const: rx
+diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
+index d55e3ad96716..287ad2aa27f3 100644
+--- a/sound/soc/qcom/apq8096.c
++++ b/sound/soc/qcom/apq8096.c
+@@ -116,10 +116,8 @@ static int apq8096_platform_probe(struct platform_device *pdev)
+ 	card->dev = dev;
+ 	dev_set_drvdata(dev, card);
+ 	ret = qcom_snd_parse_of(card);
+-	if (ret) {
+-		dev_err(dev, "Error parsing OF data\n");
++	if (ret)
+ 		goto err;
+-	}
  
-+  power-domains:
-+    maxItems: 1
-+
-   rockchip,capture-channels:
-     allOf:
-       - $ref: /schemas/types.yaml#/definitions/uint32
+ 	apq8096_add_be_ops(card);
+ 	ret = snd_soc_register_card(card);
+diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
+index b2de65c7f95c..68e9388ff46f 100644
+--- a/sound/soc/qcom/sdm845.c
++++ b/sound/soc/qcom/sdm845.c
+@@ -559,10 +559,8 @@ static int sdm845_snd_platform_probe(struct platform_device *pdev)
+ 	card->dev = dev;
+ 	dev_set_drvdata(dev, card);
+ 	ret = qcom_snd_parse_of(card);
+-	if (ret) {
+-		dev_err(dev, "Error parsing OF data\n");
++	if (ret)
+ 		goto parse_dt_fail;
+-	}
+ 
+ 	data->card = card;
+ 	snd_soc_card_set_drvdata(card, data);
 -- 
 2.20.1
 
