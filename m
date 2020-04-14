@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76F3C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7677CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B395C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E162074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883102;
-	bh=kjNU8gkJH0MuwVzru11aJkVZj5ZBZx/fNWrBzMDaFgI=;
+	s=default; t=1586883110;
+	bh=vTilJT7sSfr6FjNGlvX9bZpL9rzwrQ7T9O6h9ya2LFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pjg8yesmXSPfamcm+AF+L+jPzO/Eiq/E15lNLTa8bypwAXZcSvLoOJJ1RvjEvDmLJ
-	 IE9tVeevj/g/CQDadEISCeggjAWietC7SdOa3w3x+axcuE4RSCdPbruECIfMesaGox
-	 V2ld7hHTJjCEm3CpquQ0JV9krWqPrkioAqzsHJvE=
+	b=XTktcWeK2o9Gn4kH7fU+wQ+Vr28GtPmMRCKHUjIQUZ81VqI8nz5afQVM8jkjM/vCl
+	 6t60p6Ku2Y8yfeRxwdHEe4326/7XV4Mqfsnjv51XmZaJnIttMzaC25qgK1iQIheVDy
+	 CzjHkDtcc1U9Jkc+4IQ2VZXvq9V2ZZH6mix2QZWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441024AbgDNQvj (ORCPT
+        id S2502270AbgDNQvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440391AbgDNQtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2440401AbgDNQtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 12:49:20 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 567D22076C;
-        Tue, 14 Apr 2020 16:49:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCFC32074D;
+        Tue, 14 Apr 2020 16:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882950;
-        bh=kjNU8gkJH0MuwVzru11aJkVZj5ZBZx/fNWrBzMDaFgI=;
+        s=default; t=1586882953;
+        bh=vTilJT7sSfr6FjNGlvX9bZpL9rzwrQ7T9O6h9ya2LFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OrlZkcWaTwuSoDJ5Sr0lNxMuyaLW87+joKMjI4013YrfOPVX66DkOznAp6eI+dCFo
-         P+vL/+GkMkVw2BUyYT/CITXiZtvsSU42KATNahDIbqh+qj6XiL3p62m5IiEeIAfSEb
-         AyTDMFhz45k/YelbeCOLntOoZhoCIfm8fU4xfAWA=
+        b=QOB4089nemdYQa+eI5eY+Gj9BAbGvG+2oRZ1BiaXCTV35XyLpONezX9iHMA/hlIel
+         j/ycYpyWhz5kP3nOgCcFNJjA/OIQpmfByu7RkUk+iccPN+z270B7rGrxbmllre/O6g
+         AEKVtdEesEujEAGzR++sGymBhBvBPZ8tnaQcWjJQ=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/15] perf stat: Fix no metric header if --per-socket and --metric-only set
-Date:   Tue, 14 Apr 2020 13:48:42 -0300
-Message-Id: <20200414164854.26026-4-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: [PATCH 04/15] tools headers: Update linux/vdso.h and grab a copy of vdso/const.h
+Date:   Tue, 14 Apr 2020 13:48:43 -0300
+Message-Id: <20200414164854.26026-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -64,81 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We received a report that was no metric header displayed if --per-socket
-and --metric-only were both set.
+To get in line with:
 
-It's hard for script to parse the perf-stat output. This patch fixes this
-issue.
+  8165b57bca21 ("linux/const.h: Extract common header for vDSO")
 
-Before:
+And silence this tools/perf/ build warning:
 
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
-  ^C
-   Performance counter stats for 'system wide':
+  Warning: Kernel ABI header at 'tools/include/linux/const.h' differs from latest version at 'include/linux/const.h'
+  diff -u tools/include/linux/const.h include/linux/const.h
 
-  S0        8                  2.6
-
-         2.215270071 seconds time elapsed
-
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
-  #           time socket cpus
-       1.000411692 S0        8                  2.2
-       2.001547952 S0        8                  3.4
-       3.002446511 S0        8                  3.4
-       4.003346157 S0        8                  4.0
-       5.004245736 S0        8                  0.3
-
-After:
-
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
-  ^C
-   Performance counter stats for 'system wide':
-
-                               CPI
-  S0        8                  2.1
-
-         1.813579830 seconds time elapsed
-
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
-  #           time socket cpus                  CPI
-       1.000415122 S0        8                  3.2
-       2.001630051 S0        8                  2.9
-       3.002612278 S0        8                  4.3
-       4.003523594 S0        8                  3.0
-       5.004504256 S0        8                  3.7
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200331180226.25915-1-yao.jin@linux.intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/include/linux/const.h |  5 +----
+ tools/include/vdso/const.h  | 10 ++++++++++
+ tools/perf/check-headers.sh |  1 +
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+ create mode 100644 tools/include/vdso/const.h
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 0fd713d3674f..03ecb8cd0eec 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -803,8 +803,11 @@ static void generic_metric(struct perf_stat_config *config,
- 				     out->force_header ?
- 				     (metric_name ? metric_name : name) : "", 0);
- 		}
--	} else
--		print_metric(config, ctxp, NULL, NULL, "", 0);
-+	} else {
-+		print_metric(config, ctxp, NULL, NULL,
-+			     out->force_header ?
-+			     (metric_name ? metric_name : name) : "", 0);
-+	}
+diff --git a/tools/include/linux/const.h b/tools/include/linux/const.h
+index 7b55a55f5911..81b8aae5a855 100644
+--- a/tools/include/linux/const.h
++++ b/tools/include/linux/const.h
+@@ -1,9 +1,6 @@
+ #ifndef _LINUX_CONST_H
+ #define _LINUX_CONST_H
  
- 	for (i = 1; i < pctx.num_ids; i++)
- 		zfree(&pctx.ids[i].name);
+-#include <uapi/linux/const.h>
+-
+-#define UL(x)		(_UL(x))
+-#define ULL(x)		(_ULL(x))
++#include <vdso/const.h>
+ 
+ #endif /* _LINUX_CONST_H */
+diff --git a/tools/include/vdso/const.h b/tools/include/vdso/const.h
+new file mode 100644
+index 000000000000..94b385ad438d
+--- /dev/null
++++ b/tools/include/vdso/const.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_CONST_H
++#define __VDSO_CONST_H
++
++#include <uapi/linux/const.h>
++
++#define UL(x)		(_UL(x))
++#define ULL(x)		(_ULL(x))
++
++#endif /* __VDSO_CONST_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index bfb21d049e6c..c905c683606a 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -23,6 +23,7 @@ include/uapi/linux/vhost.h
+ include/uapi/sound/asound.h
+ include/linux/bits.h
+ include/linux/const.h
++include/vdso/const.h
+ include/linux/hash.h
+ include/uapi/linux/hw_breakpoint.h
+ arch/x86/include/asm/disabled-features.h
 -- 
 2.21.1
 
