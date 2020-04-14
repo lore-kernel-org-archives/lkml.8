@@ -2,128 +2,99 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0203C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AFFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD1AE206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hYCUF+Lr"
+	by mail.kernel.org (Postfix) with ESMTP id CF39C206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586870937;
+	bh=9W/HyBUTNA9xJihOP6WNQHBn9qXODr85F+yJ6JRchDc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qaN07wczoQ3hlNp71x0uAoAbjq8IwP+HV6sDS7RcMqrhzTzszDAH+YL+i08Dr+euD
+	 U3eEdIaMu57AAUy5Hfi7dYt5t5tj1N9RJHdrVKscEQ977toeRDU5VT+tOrKxGXNH4D
+	 QHfTxJlc4Of3VwWzXmBMknMO+rlarFutDs2CgmVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbgDNN2s (ORCPT
+        id S1732093AbgDNN2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:28:48 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58044 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731898AbgDNN0H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:26:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EDO5UW043642;
-        Tue, 14 Apr 2020 13:26:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=gatGl3cXyXLavzUnNcCzXYbQt7xdiunM/YVOCfb2tV0=;
- b=hYCUF+LrRDOfYKEY32wyv0mlGa/Jg4YKSL4HygoQ2650pcI7mMZ2UAKoZcbyU7zi4ltC
- 1nFIdXP7YNr+RcQ+cOPtdsOnpzBQKQjcmWe8Svvz1aNpe15Po3rhSc2WLnQGx/eUk+bJ
- k62dcz8aKQ7TDKz4g+QsGHswgU06ZFQSlVMotzspusEyly1IHKkqeY52pTZ69VbFs+kU
- z/TetCRr6C0M6qWwfZzuinuo1mpOk195dGqkTivLEqt1KdvyJKAXEfpePrrVH+/m2m7x
- ULp9pGwqBEkPrynPFIJWfCbg3gLBPKh/flQ8OwFh+/rHMyMVOBTyT8koVioRA5g1rLB7 8Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30b5um4n05-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 13:26:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EDLlFB177137;
-        Tue, 14 Apr 2020 13:26:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30bqchndks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 13:26:00 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EDPwi6019231;
-        Tue, 14 Apr 2020 13:25:58 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 06:25:58 -0700
-Date:   Tue, 14 Apr 2020 16:25:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ivan Safonov <insafonov@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH 5/8] staging: rtl8188eu: Remove function rtw_modular64()
-Message-ID: <20200414132551.GJ1163@kadam>
-References: <20190712071746.2474-5-nishkadg.linux@gmail.com>
- <66fb1e37-107e-54f4-4986-ca4e4bb99d2d@yandex.ru>
- <20200414115604.GF1163@kadam>
- <20becb6f-7bf6-8618-9525-b64c226088c7@gmail.com>
+        Tue, 14 Apr 2020 09:28:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731811AbgDNN0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:26:38 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF632064A;
+        Tue, 14 Apr 2020 13:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586870795;
+        bh=9W/HyBUTNA9xJihOP6WNQHBn9qXODr85F+yJ6JRchDc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R/Cm15qvptpJz5+ZTlJbK0Q3ZZpttQRtj06aQlvTOKJInt0FBc4ZAsxoWB+V91W6K
+         44ROAr80b/6pq8c2vkNzGO8Naut9E/Jtup6jPQNgIwin1QL0S6nK1kpQc1o4+XNFQ8
+         8GXElpEYPEdZzwQgk18C33jKVcGSZbndo+atYD4E=
+Date:   Tue, 14 Apr 2020 15:26:31 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>
+Subject: Re: [PATCH] media: Kconfig: Don't expose API options
+Message-ID: <20200414152631.7d1f1925@coco.lan>
+In-Reply-To: <20200414152147.053b4b29@coco.lan>
+References: <20200414130210.18970-1-ezequiel@collabora.com>
+        <20200414152147.053b4b29@coco.lan>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20becb6f-7bf6-8618-9525-b64c226088c7@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=1 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140110
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 03:22:59PM +0300, Ivan Safonov wrote:
-> On 4/14/20 2:56 PM, Dan Carpenter wrote:
-> > On Sun, Apr 12, 2020 at 04:34:08PM +0300, Ivan Safonov wrote:
-> > > > Remove function rtw_modular64 as all it does is call do_div.
-> > > 
-> > > This is wrong. Macro do_div(x, y) change first argument x, but
-> > > rtw_modular64(x, y) preserve it.
-> > > 
-> > > > +			tsf = pmlmeext->TSFValue - do_div(pmlmeext->TSFValue, (pmlmeinfo->bcn_interval*1024)) - 1024; /* us */
-> > > 
-> > > rounddown(pmlmeext->TSFValue, pmlmeinfo->bcn_interval * 1024) - 1024
-> > > is a better replacement for
-> > 
-> > You're absolutely correct that the patch is buggy, but I'm not sure that
-> > rounddown() is what we want.
-> > 
-> > rtw_modular64() took the MOD of x.  So it should be something like:
-> > 
-> > 	tsf = pmlmeext->TSFValue - (pmlmeext->TSFValue % (pmlmeinfo->bcn_interval * 1024)) - 1024; /* us */
-> > 
-> > But what the heck is that even???  If pmlmeinfo->bcn_interval is zero
-> > or one then the subtraction ends up giving us a negative.
-> > 
-> > regards,
-> > dan carpenter
-> > 
+Em Tue, 14 Apr 2020 15:21:47 +0200
+Mauro Carvalho Chehab <mchehab@kernel.org> escreveu:
+
+> Em Tue, 14 Apr 2020 10:02:10 -0300
+> Ezequiel Garcia <ezequiel@collabora.com> escreveu:
 > 
-> 1. pmlmeext->TSFValue can not be negative, because it is uint64_t;
-> 2. pmlmeext->TSFValue is cyclic value:
->     https://en.wikipedia.org/wiki/Timing_synchronization_function ;
-> 3. (rounddown(a, b)) is equal to (a - a % b) by definition.
+> > There is no need to expose API options; instead,
+> > drivers that support a given API are expected to just select it.
+> > 
+> > Happily, this is currently the case, so simply stop
+> > exposing the options.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/media/Kconfig           | 2 +-
+> >  drivers/media/mc/Kconfig        | 3 +--
+> >  drivers/media/v4l2-core/Kconfig | 2 +-
+> >  3 files changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+> > index a8def1591352..eef4c6761ffb 100644
+> > --- a/drivers/media/Kconfig
+> > +++ b/drivers/media/Kconfig
+> > @@ -173,7 +173,7 @@ config VIDEO_DEV
+> >  	  radio devices and by some input devices.
+> >  
+> >  config MEDIA_CONTROLLER
+> > -	bool "Media Controller API"
+> > +	bool  
+> 
+> This is not true here... non-embedded drivers like DVB and UVC can work
+> with or without the media controller. For them, the API is experimental.
 
-Yeah.  You're right.  I got mixed up and I misread what you were
-suggesting.
+Heh.... I meant to say:
 
-	tsf = rounddown(pmlmeext->TSFValue, pmlmeinfo->bcn_interval * 1024) - 1024;
+	For them, the API is ***optional***.
 
-regards,
-dan carpenter
-
+Thanks,
+Mauro
