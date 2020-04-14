@@ -2,91 +2,122 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA35C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ECBC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99EEE20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFABB20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2JB8l3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436775AbgDNQnK (ORCPT
+        id S2437152AbgDNQnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:43:10 -0400
-Received: from sauhun.de ([88.99.104.3]:38692 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404908AbgDNQnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:43:02 -0400
-Received: from localhost (p54B3339A.dip0.t-ipconnect.de [84.179.51.154])
-        by pokefinder.org (Postfix) with ESMTPSA id 93EC22C1F85;
-        Tue, 14 Apr 2020 18:42:59 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 18:42:59 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>, linus.walleij@linaro.org,
-        patrice.chotard@st.com, info@metux.net, allison@lohutok.net,
-        nehal-bakulchandra.shah@amd.com, tglx@linutronix.de,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: img-scb: remove duplicate dev_err()
-Message-ID: <20200414164259.GA3708@kunai>
-References: <20200414142650.29359-1-zhengdejin5@gmail.com>
- <20200414143837.GV34613@smile.fi.intel.com>
- <20200414155047.GA10848@nuc8i5>
- <20200414162002.GX34613@smile.fi.intel.com>
+        Tue, 14 Apr 2020 12:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436882AbgDNQnT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:43:19 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C84C061A0C;
+        Tue, 14 Apr 2020 09:43:19 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cl8so4338039pjb.3;
+        Tue, 14 Apr 2020 09:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hOohlzAiNKfUzsvao/Q2tVKLwGqeqHoBfplEnNk+A1M=;
+        b=T2JB8l3JocTfBjxOI7PpooozKdlQ9JBHlQdMCz07hJdJXwuxWFwJP9SXp0WJH5bwq1
+         eR5zFUYchzZW5JnxZtk7n7E/D2+8ni3blABsh3w3D9PefNTRy2L/kt19fMcLqFrLuL3M
+         sgtmiDab+t0nhmCWySwYjbOksI4jhBG9n9dI7d43xmkSdtiFwiUtuONVDh1JvatXD76T
+         l2BRljIIM+942pwrl/FhSrbDsNesSxZKXz+shgMQg6RLTwxHDbjuSeLojyUK3SbPWMJt
+         HxjyBdEjUT+4fQl0T/6jLXeuvgYLxXeindxgYCXAtTZLOD4vDUqd74Ekhz86ub92WWsd
+         fz8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hOohlzAiNKfUzsvao/Q2tVKLwGqeqHoBfplEnNk+A1M=;
+        b=sR53mPJDJKAybvsko4JxZK6c2tSnN+ybcp+IuJYXpdUgOEtuhxTEkHYmdTSXUwB9jm
+         0iFdzcjX28p9vYhuqOiy0BHYqlQrpMMEG4RV6nN//MWqS6Q9vow/dSaE9CkigLr2q35F
+         J69AFKpREluFcE8AAkVGCP1FRJCurxso66NImTL+w36iVCx4Tbv0ogGBnn6VEce9Ughx
+         sn0JMvvCtwvo8DfomlyKdQJHiFC5YLKT84eZd/b7dyABzf5STyz8RiUAVeMc+gyUhW50
+         UOmhr+tj0MedLd3VOAbJ4lxQGpzy/di8CbisOHEO+ygx02sU2ySJGJIryDVG8hrr3WV6
+         ecdg==
+X-Gm-Message-State: AGi0PuYKngSuB+OSp9CoKylyY6q6PEHiiPJBgO2vzxQ6ScBsUtjD/iDL
+        UFp2jTBBPx8suAV04d7yqR7E6y6cT6XDjQeGgjQ=
+X-Google-Smtp-Source: APiQypIu1D5dL806JQXfQ/JKdGfF4gC8kgyPW+X8fK/e0eKjkozYSPlnET4zbmu/GSn3HKuAEC6w358C5Ks5h180L9c=
+X-Received: by 2002:a17:90a:224b:: with SMTP id c69mr1181020pje.8.1586882598601;
+ Tue, 14 Apr 2020 09:43:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Content-Disposition: inline
-In-Reply-To: <20200414162002.GX34613@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414153415.957-1-mani@kernel.org> <20200414153415.957-4-mani@kernel.org>
+In-Reply-To: <20200414153415.957-4-mani@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 14 Apr 2020 19:43:11 +0300
+Message-ID: <CAHp75VdBvJRVxSTcWkPyW=ePhr2oPmKpEar=XsXF+KV+w1306w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] iio: chemical: Add OF match table for CCS811 VOC sensor
+To:     mani@kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <mani@kernel.org>
+>
+> Add devicetree OF match table support for CCS811 VOC sensor.
+>
 
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This looks good to me. FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  drivers/iio/chemical/ccs811.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
+> index 951358710f64..310e9dedc9ba 100644
+> --- a/drivers/iio/chemical/ccs811.c
+> +++ b/drivers/iio/chemical/ccs811.c
+> @@ -538,9 +538,16 @@ static const struct i2c_device_id ccs811_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ccs811_id);
+>
+> +static const struct of_device_id ccs811_dt_ids[] = {
+> +       { .compatible = "ams,ccs811" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+> +
+>  static struct i2c_driver ccs811_driver = {
+>         .driver = {
+>                 .name = "ccs811",
+> +               .of_match_table = ccs811_dt_ids,
+>         },
+>         .probe = ccs811_probe,
+>         .remove = ccs811_remove,
+> --
+> 2.17.1
+>
 
 
-> > scripts/get_maintainer.pl --git --git-min-percent=3D67 v1-0001-i2c-img-=
-scb-remove-duplicate-dev_err.patch
-> > linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS)
-> > linux-kernel@vger.kernel.org (open list)
->=20
-> Nice, you found a bug in MAINTAINERS database.
-
-No, all fine. We don't have a maintainer for that driver.
-
-> I recommend to resend a new version with those mailings lists followed by
-> Wolfram included in the Cc list. Don't forget to add my tag in the commit
-> message and bump the version.
-
-The patch is already in patchwork, so no need to resend from my side.
-
-
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6V6A4ACgkQFA3kzBSg
-KbZcVA//ecH3hRW4Ka5Lxz6+xz4JrhX+/5Q0Rjgoweu4RsAm6026QmHBuJCQtD1e
-3NfZC9uGQVtM0/33LAhXFcYdluOcMMfgs6KFzyKwFAOvLCne1nRyyJ5po5q9rhWz
-rlTI10G2aWoyr7itAcyOy+JkR/efmqSCHlSsTq/xtejPxD5Ys53dZ3rz4PJP1IC3
-XDa0csByBjXN7CQjIi4mhcJlLwiHEMQ3jc5d9UxZ4ORioP6uZdgtb+t40u2Btt2l
-OkjPtdQIYrLLmqq+LnpGqaMJwUYJvYuBr9I+GeFUtEstfxA7dfjIrMVQKPEoWXP9
-4dvS4vw6SzBkM7gD0R/y5XXSMoA01Vy7MPYALBOpQU8xrxr0wfozXAcbPXEKxVHO
-cZXK9sFdNkBI4NuoHHipNi4xJTjILSHjk4cUH7rFE4+XmdnlBldlvLLiYjCSgzNr
-2crrIVbduKrHkmgEvMicfaorZR8zzKuYO34yaWXNTU67DxVqNxxe3Qj6o/iSuCln
-cWOqCxxJ+nxtTOHYiJahLh5zu3Y/5cjLatJwHLx3ZT1WSEL86Ep3rgMn6C4s6Vj7
-KDEyzWlKJtyLpR0PUucX2dSFbr6q9lUNTt+J5GoQcZoYgDfaAxlAtP4MtkUjh3U6
-XaQE3CoT38dV0QHtzoUsIBtpDQzqPjw2J7XojJgrtCwhHU9zwww=
-=Mqwf
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+-- 
+With Best Regards,
+Andy Shevchenko
