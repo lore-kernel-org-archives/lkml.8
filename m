@@ -2,134 +2,347 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845B5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C50C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8F1206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995FF2063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gwOWdDcr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQXesxwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391766AbgDNQdR (ORCPT
+        id S2391787AbgDNQep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391745AbgDNQdJ (ORCPT
+        Tue, 14 Apr 2020 12:34:45 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36771 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391775AbgDNQej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:33:09 -0400
-Received: from mail-vs1-xe4a.google.com (mail-vs1-xe4a.google.com [IPv6:2607:f8b0:4864:20::e4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CC1C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:33:09 -0700 (PDT)
-Received: by mail-vs1-xe4a.google.com with SMTP id x14so172770vsn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=C/WMPxWmNKBqJ/Zz9SNZ/9dLp/Pjl7eWvbmkGXyv5l8=;
-        b=gwOWdDcr8K2xj9bCTj7H5OL85GAIl6qKwa9aYWhyWu1Rn5CPfXHvSHlcLupYSb+aNy
-         Hhvbi7HVhzDRTVj1FQJhmoVvVW0EJ45dX1P6BDPkSE/+XklQDRWskVCf0zeCRRdQvXog
-         iBOjzhbsYUBtOdcFJnwtrxajIPEzSc58MWMoqofCIGjCmQuLE4DKZhCRSNAydisOSAhj
-         ILLq36JK5Ke6AD0l/kg/Z6WzFiIqOig6iBOEeLGDDrBw762y0GBLAH+Bb0+ynatGlrkS
-         C+e9T2LfS+F5yZTVUFEwAnkfN0fe5gOmUNc7Bcu1aYgve/Lj9EmOsoX83Q5BObCWGYjs
-         0M2g==
+        Tue, 14 Apr 2020 12:34:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586882076;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mxMk4OjYqz6WaLMP6SDDXA6S1CwQy1WHx7MZAFhC3P4=;
+        b=UQXesxwNuQ0wFGXxSVDQHwtjUjmgD9dSkh1rbYgo1NvcJg6Pn5z732ZSaZpPLabxC1O6U6
+        u3w12TrY+nnVVs45cxSEmd7vPQZXX5a2oqKTxmiF0uYi/dgSakPyaT0NFrBQrRBhFUjj1G
+        Gc67/B2jW2wKo1Up3yczfiE7ei8/xLQ=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-317-b6JCtEiwMDK0iGMcZQOR9A-1; Tue, 14 Apr 2020 12:34:34 -0400
+X-MC-Unique: b6JCtEiwMDK0iGMcZQOR9A-1
+Received: by mail-qv1-f72.google.com with SMTP id x9so313021qvj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:34:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=C/WMPxWmNKBqJ/Zz9SNZ/9dLp/Pjl7eWvbmkGXyv5l8=;
-        b=BFjyM1ZzKOEEsC5PetRhaHNFyjlfGzNMNC2BXd0r9iIuJnW/IV9szMzwcq8HMFNOo+
-         UTtfnZEFi3Q7dCgvqn+CbGdzlMRk93txQjIm/mI+luWeZC7sZJe1cEl+RkkfDGcUE4Hu
-         8CuqkVX4qg4DzE/pqE6w5s6ovvp56nc3mICxPj1/mt71WAJfez73eJOrqqwBTZs9e30y
-         gCdzJIapg6cfCygolZl7UMQqEFICARgpHYaAQONjvInz3zPqJ1TqoNXSREJZ0dNYgIgv
-         7sxaAp55GY/InGTwgZpibWjwfd/kWvU6VHquWrVi9BUu66Sa5GI3Y7fm3UAE2H+pfU/W
-         V65A==
-X-Gm-Message-State: AGi0PuZq1btV7YxA8uExi5Gsi8Urlz8w7USd4cIRush9FgyWYMOA6zNQ
-        0SOVSKI5GjddnDMBn1mr3teHo0cTunl1
-X-Google-Smtp-Source: APiQypL2292vcdQOPgM/pbOZPk9A8GWPQ48YdWAzRpisGiQjViIba//xyUIANE+PSCLKQ5rg8OUQVFnSzjm+
-X-Received: by 2002:a67:2284:: with SMTP id i126mr890118vsi.223.1586881988191;
- Tue, 14 Apr 2020 09:33:08 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 09:32:55 -0700
-Message-Id: <20200414163255.66437-1-maskray@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v2] arm64: Delete the space separator in __emit_inst
-From:   Fangrui Song <maskray@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Jian Cai <jiancai@google.com>,
-        Fangrui Song <maskray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mxMk4OjYqz6WaLMP6SDDXA6S1CwQy1WHx7MZAFhC3P4=;
+        b=R+YgxVCcjk/X68UZ4vrQBysJ/j2TV5kntw6nPQNjVCyh612coGDr+Lwt67s50w7HgZ
+         SfbWmvphqXVOc/DUJJPpPdgjSL7P91q8+DXF8vQyzK4l+XbugZn6Y7GrU1E22RHwpu+q
+         1rRj1IFuESt9GRooL6zy0/8YuXP77pmHd33xoSag2ZVXCmDvf2Bgi/9Hp/OCrI8bwMwK
+         wY9Pbo99PEARtFjOu/4ktcU3c8An4oW6MTgRQourcmTyEf+2wAoN4PUqmxunm6vKVqnZ
+         T45RF3BVXGqaF2AZuiCgqHg/Is+I2Xs6drdPu2+BjAF31to/ydQHnrn/f4kQEqzkRvmm
+         lC7w==
+X-Gm-Message-State: AGi0PuZGSMnZeVIVfdFdfHDhU9DNVgs/+ctL3MF5DzlQ3LVKF81e/KGQ
+        I+fTct8mCCEWC5Hx7bq/dsxqQ+Gr2jg+wBXy9LhywQL9+YB4T+xXq7jMq/aBVxswb3n3cSCHyaa
+        MDXhJVW79T7r6oScTx8m06PeY
+X-Received: by 2002:a37:4852:: with SMTP id v79mr21337204qka.459.1586882074312;
+        Tue, 14 Apr 2020 09:34:34 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIxDlWSPYHz24Em/CyqTvLeDJZn3kuTqc3zQvK9MuWirtAiyJlkACPViYqM2NQN7iOQBdFYOg==
+X-Received: by 2002:a37:4852:: with SMTP id v79mr21337161qka.459.1586882073931;
+        Tue, 14 Apr 2020 09:34:33 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
+        by smtp.gmail.com with ESMTPSA id y9sm10550413qkb.41.2020.04.14.09.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 09:34:32 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:34:26 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Qian Cai <cai@lca.pw>, Pingfan Liu <kernelfans@gmail.com>
+Subject: Re: [PATCH v2 05/10] mm: Allow to offline unmovable PageOffline()
+ pages via MEM_GOING_OFFLINE
+Message-ID: <20200414123334-mutt-send-email-mst@kernel.org>
+References: <20200311171422.10484-1-david@redhat.com>
+ <20200311171422.10484-6-david@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311171422.10484-6-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In assembly, many instances of __emit_inst(x) expand to a directive. In
-a few places __emit_inst(x) is used as an assembler macro argument. For
-example, in arch/arm64/kvm/hyp/entry.S
+On Wed, Mar 11, 2020 at 06:14:17PM +0100, David Hildenbrand wrote:
+> virtio-mem wants to allow to offline memory blocks of which some parts
+> were unplugged (allocated via alloc_contig_range()), especially, to later
+> offline and remove completely unplugged memory blocks. The important part
+> is that PageOffline() has to remain set until the section is offline, so
+> these pages will never get accessed (e.g., when dumping). The pages should
+> not be handed back to the buddy (which would require clearing PageOffline()
+> and result in issues if offlining fails and the pages are suddenly in the
+> buddy).
+> 
+> Let's allow to do that by allowing to isolate any PageOffline() page
+> when offlining. This way, we can reach the memory hotplug notifier
+> MEM_GOING_OFFLINE, where the driver can signal that he is fine with
+> offlining this page by dropping its reference count. PageOffline() pages
+> with a reference count of 0 can then be skipped when offlining the
+> pages (like if they were free, however they are not in the buddy).
+> 
+> Anybody who uses PageOffline() pages and does not agree to offline them
+> (e.g., Hyper-V balloon, XEN balloon, VMWare balloon for 2MB pages) will not
+> decrement the reference count and make offlining fail when trying to
+> migrate such an unmovable page. So there should be no observable change.
+> Same applies to balloon compaction users (movable PageOffline() pages), the
+> pages will simply be migrated.
+> 
+> Note 1: If offlining fails, a driver has to increment the reference
+> 	count again in MEM_CANCEL_OFFLINE.
+> 
+> Note 2: A driver that makes use of this has to be aware that re-onlining
+> 	the memory block has to be handled by hooking into onlining code
+> 	(online_page_callback_t), resetting the page PageOffline() and
+> 	not giving them to the buddy.
+> 
+> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Pingfan Liu <kernelfans@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+Andrew, could you please ack merging this through the vhost tree
+together with the rest of the patches?
 
-expands to the following by the C preprocessor:
 
-  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
 
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so the clang
-integrated assembler splits the arguments to:
-
-   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
-(along with many other non-x86 backends) sees:
-
-  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # .inst(...) is parsed as one argument
-
-while its x86 backend sees:
-
-  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
-
-The non-x86 backend's behavior is considered unintentional
-(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
-So drop the space separator inside `.inst (...)` to make the clang
-integrated assembler work.
-
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/939
----
- arch/arm64/include/asm/sysreg.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index ebc622432831..c4ac0ac25a00 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -49,7 +49,9 @@
- #ifndef CONFIG_BROKEN_GAS_INST
- 
- #ifdef __ASSEMBLY__
--#define __emit_inst(x)			.inst (x)
-+// The space separator is omitted so that __emit_inst(x) can be parsed as
-+// either an assembler directive or an assembler macro argument.
-+#define __emit_inst(x)			.inst(x)
- #else
- #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
- #endif
--- 
-2.26.0.110.g2183baf09c-goog
+> ---
+>  include/linux/page-flags.h | 10 +++++++++
+>  mm/memory_hotplug.c        | 44 +++++++++++++++++++++++++++++---------
+>  mm/page_alloc.c            | 24 +++++++++++++++++++++
+>  mm/page_isolation.c        |  9 ++++++++
+>  4 files changed, 77 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 49c2697046b9..fd6d4670ccc3 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -772,6 +772,16 @@ PAGE_TYPE_OPS(Buddy, buddy)
+>   * not onlined when onlining the section).
+>   * The content of these pages is effectively stale. Such pages should not
+>   * be touched (read/write/dump/save) except by their owner.
+> + *
+> + * If a driver wants to allow to offline unmovable PageOffline() pages without
+> + * putting them back to the buddy, it can do so via the memory notifier by
+> + * decrementing the reference count in MEM_GOING_OFFLINE and incrementing the
+> + * reference count in MEM_CANCEL_OFFLINE. When offlining, the PageOffline()
+> + * pages (now with a reference count of zero) are treated like free pages,
+> + * allowing the containing memory block to get offlined. A driver that
+> + * relies on this feature is aware that re-onlining the memory block will
+> + * require to re-set the pages PageOffline() and not giving them to the
+> + * buddy via online_page_callback_t.
+>   */
+>  PAGE_TYPE_OPS(Offline, offline)
+>  
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 1a00b5a37ef6..ab1c31e67fd1 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1221,11 +1221,17 @@ struct zone *test_pages_in_a_zone(unsigned long start_pfn,
+>  
+>  /*
+>   * Scan pfn range [start,end) to find movable/migratable pages (LRU pages,
+> - * non-lru movable pages and hugepages). We scan pfn because it's much
+> - * easier than scanning over linked list. This function returns the pfn
+> - * of the first found movable page if it's found, otherwise 0.
+> + * non-lru movable pages and hugepages). Will skip over most unmovable
+> + * pages (esp., pages that can be skipped when offlining), but bail out on
+> + * definitely unmovable pages.
+> + *
+> + * Returns:
+> + *	0 in case a movable page is found and movable_pfn was updated.
+> + *	-ENOENT in case no movable page was found.
+> + *	-EBUSY in case a definitely unmovable page was found.
+>   */
+> -static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
+> +static int scan_movable_pages(unsigned long start, unsigned long end,
+> +			      unsigned long *movable_pfn)
+>  {
+>  	unsigned long pfn;
+>  
+> @@ -1237,18 +1243,30 @@ static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
+>  			continue;
+>  		page = pfn_to_page(pfn);
+>  		if (PageLRU(page))
+> -			return pfn;
+> +			goto found;
+>  		if (__PageMovable(page))
+> -			return pfn;
+> +			goto found;
+> +
+> +		/*
+> +		 * PageOffline() pages that are not marked __PageMovable() and
+> +		 * have a reference count > 0 (after MEM_GOING_OFFLINE) are
+> +		 * definitely unmovable. If their reference count would be 0,
+> +		 * they could at least be skipped when offlining memory.
+> +		 */
+> +		if (PageOffline(page) && page_count(page))
+> +			return -EBUSY;
+>  
+>  		if (!PageHuge(page))
+>  			continue;
+>  		head = compound_head(page);
+>  		if (page_huge_active(head))
+> -			return pfn;
+> +			goto found;
+>  		skip = compound_nr(head) - (page - head);
+>  		pfn += skip - 1;
+>  	}
+> +	return -ENOENT;
+> +found:
+> +	*movable_pfn = pfn;
+>  	return 0;
+>  }
+>  
+> @@ -1515,7 +1533,8 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  	}
+>  
+>  	do {
+> -		for (pfn = start_pfn; pfn;) {
+> +		pfn = start_pfn;
+> +		do {
+>  			if (signal_pending(current)) {
+>  				ret = -EINTR;
+>  				reason = "signal backoff";
+> @@ -1525,14 +1544,19 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  			cond_resched();
+>  			lru_add_drain_all();
+>  
+> -			pfn = scan_movable_pages(pfn, end_pfn);
+> -			if (pfn) {
+> +			ret = scan_movable_pages(pfn, end_pfn, &pfn);
+> +			if (!ret) {
+>  				/*
+>  				 * TODO: fatal migration failures should bail
+>  				 * out
+>  				 */
+>  				do_migrate_range(pfn, end_pfn);
+>  			}
+> +		} while (!ret);
+> +
+> +		if (ret != -ENOENT) {
+> +			reason = "unmovable page";
+> +			goto failed_removal_isolated;
+>  		}
+>  
+>  		/*
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 8d7be3f33e26..baa60222215f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8366,6 +8366,19 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>  		if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
+>  			continue;
+>  
+> +		/*
+> +		 * We treat all PageOffline() pages as movable when offlining
+> +		 * to give drivers a chance to decrement their reference count
+> +		 * in MEM_GOING_OFFLINE in order to indicate that these pages
+> +		 * can be offlined as there are no direct references anymore.
+> +		 * For actually unmovable PageOffline() where the driver does
+> +		 * not support this, we will fail later when trying to actually
+> +		 * move these pages that still have a reference count > 0.
+> +		 * (false negatives in this function only)
+> +		 */
+> +		if ((flags & MEMORY_OFFLINE) && PageOffline(page))
+> +			continue;
+> +
+>  		if (__PageMovable(page) || PageLRU(page))
+>  			continue;
+>  
+> @@ -8786,6 +8799,17 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+>  			offlined_pages++;
+>  			continue;
+>  		}
+> +		/*
+> +		 * At this point all remaining PageOffline() pages have a
+> +		 * reference count of 0 and can simply be skipped.
+> +		 */
+> +		if (PageOffline(page)) {
+> +			BUG_ON(page_count(page));
+> +			BUG_ON(PageBuddy(page));
+> +			pfn++;
+> +			offlined_pages++;
+> +			continue;
+> +		}
+>  
+>  		BUG_ON(page_count(page));
+>  		BUG_ON(!PageBuddy(page));
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 2c11a38d6e87..f6d07c5f0d34 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -151,6 +151,7 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+>   *			a bit mask)
+>   *			MEMORY_OFFLINE - isolate to offline (!allocate) memory
+>   *					 e.g., skip over PageHWPoison() pages
+> + *					 and PageOffline() pages.
+>   *			REPORT_FAILURE - report details about the failure to
+>   *			isolate the range
+>   *
+> @@ -259,6 +260,14 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
+>  		else if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
+>  			/* A HWPoisoned page cannot be also PageBuddy */
+>  			pfn++;
+> +		else if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
+> +			 !page_count(page))
+> +			/*
+> +			 * The responsible driver agreed to skip PageOffline()
+> +			 * pages when offlining memory by dropping its
+> +			 * reference in MEM_GOING_OFFLINE.
+> +			 */
+> +			pfn++;
+>  		else
+>  			break;
+>  	}
+> -- 
+> 2.24.1
 
