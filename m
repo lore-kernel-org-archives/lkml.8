@@ -2,284 +2,87 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5991DC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D67C38A2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6D92078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227B22078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="La5G2Clc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kRM9L2re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440230AbgDNPIA (ORCPT
+        id S2440238AbgDNPIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:08:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22856 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2436701AbgDNPHZ (ORCPT
+        Tue, 14 Apr 2020 11:08:05 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25205 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2440202AbgDNPHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:07:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XLfUEvncMSN2IdVwHVtfvHoOX5DPXg9vZNdRCxVTUD8=;
-        b=La5G2Clc62eksH8A8qGxm8T7qGFXtkJw8k9Niwwg19yDB7kXrG729UU4IiQbSXrWwkRgTq
-        iWiYEQoK+eH0W5SuC5oKW9WWTo0w7szcAMJrwlKUQJsOxfDiIJKytayumzkjlwthxHFSBR
-        IPG2kHbPYHLOC1LIKU/kbNoCnAegRkQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-Ug0CyV-oOdGES9Et9LHdew-1; Tue, 14 Apr 2020 11:07:22 -0400
-X-MC-Unique: Ug0CyV-oOdGES9Et9LHdew-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Apr 2020 11:07:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586876852; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=pzkx7xJD1kBHfGD+u6PRwl7F+O1g7GJzrEjUCdwfk/E=;
+ b=kRM9L2re+bU432M7oNCQ2HSWbX0m5nOVxEe1/8upFff6aM09o0Jl9yHE5IjQ7XftFPCwEg4+
+ boPd1Gc8yMcLwXp2om88OgrLh/7lkZ6ADlsaiam5AwbQk6DwvfltGmB8ufs38lm84bgX2ahl
+ p1kpa0ToNcrgpr67tV58RfNlvfI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e95d1b0.7f7bb752a650-smtp-out-n01;
+ Tue, 14 Apr 2020 15:07:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D6DA0C4478C; Tue, 14 Apr 2020 15:07:28 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C65881005510;
-        Tue, 14 Apr 2020 15:07:19 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C26A27098;
-        Tue, 14 Apr 2020 15:07:03 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, will@kernel.org,
-        joro@8bytes.org, maz@kernel.org, robin.murphy@arm.com
-Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
-        shameerali.kolothum.thodi@huawei.com, alex.williamson@redhat.com,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
-        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
-        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
-Subject: [PATCH v11 05/13] iommu/smmuv3: Get prepared for nested stage support
-Date:   Tue, 14 Apr 2020 17:05:59 +0200
-Message-Id: <20200414150607.28488-6-eric.auger@redhat.com>
-In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
-References: <20200414150607.28488-1-eric.auger@redhat.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6BEFC433CB;
+        Tue, 14 Apr 2020 15:07:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6BEFC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rtw88: Add delay on polling h2c command status bit
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200407073331.397-1-kai.heng.feng@canonical.com>
+References: <20200407073331.397-1-kai.heng.feng@canonical.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     yhchuang@realtek.com, Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
+        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200414150728.D6DA0C4478C@smtp.codeaurora.org>
+Date:   Tue, 14 Apr 2020 15:07:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When nested stage translation is setup, both s1_cfg and
-s2_cfg are allocated.
+Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-We introduce a new smmu domain abort field that will be set
-upon guest stage1 configuration passing.
+> On some systems we can constanly see rtw88 complains:
+> [39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
+> 
+> Increase interval of each check to wait the status bit really changed.
+> 
+> Use read_poll_timeout() macro which fits anything we need here.
+> 
+> Suggested-by: Kalle Valo <kvalo@codeaurora.org>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-arm_smmu_write_strtab_ent() is modified to write both stage
-fields in the STE and deal with the abort field.
+Patch applied to wireless-drivers-next.git, thanks.
 
-In nested mode, only stage 2 is "finalized" as the host does
-not own/configure the stage 1 context descriptor; guest does.
+6343a6d4b213 rtw88: Add delay on polling h2c command status bit
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+-- 
+https://patchwork.kernel.org/patch/11477667/
 
----
-v10 -> v11:
-- Fix an issue reported by Shameer when switching from with vSMMU
-  to without vSMMU. Despite the spec does not seem to mention it
-  seems to be needed to reset the 2 high 64b when switching from
-  S1+S2 cfg to S1 only. Especially dst[3] needs to be reset (S2TTB).
-  On some implementations, if the S2TTB is not reset, this causes
-  a C_BAD_STE error
-
-v7 -> v8:
-- rebase on 8be39a1a04c1 iommu/arm-smmu-v3: Add a master->domain
-  pointer
-- restore live checks for not nested cases and add s1_live and
-  s2_live to be more previse. Remove bypass local variable.
-  In STE live case, move the ste to abort state and send a
-  CFGI_STE before updating the rest of the fields.
-- check s2ttb in case of live s2
-
-v4 -> v5:
-- reset ste.abort on detach
-
-v3 -> v4:
-- s1_cfg.nested_abort and nested_bypass removed.
-- s/ste.nested/ste.abort
-- arm_smmu_write_strtab_ent modifications with introduction
-  of local abort, bypass and translate local variables
-- comment updated
----
- drivers/iommu/arm-smmu-v3.c | 68 +++++++++++++++++++++++++++++++------
- 1 file changed, 58 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index da3739bb7323..dd3c12034e84 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -223,6 +223,7 @@
- #define STRTAB_STE_0_CFG_BYPASS		4
- #define STRTAB_STE_0_CFG_S1_TRANS	5
- #define STRTAB_STE_0_CFG_S2_TRANS	6
-+#define STRTAB_STE_0_CFG_NESTED		7
-=20
- #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
- #define STRTAB_STE_0_S1FMT_LINEAR	0
-@@ -721,6 +722,7 @@ struct arm_smmu_domain {
- 	enum arm_smmu_domain_stage	stage;
- 	struct arm_smmu_s1_cfg		*s1_cfg;
- 	struct arm_smmu_s2_cfg		*s2_cfg;
-+	bool				abort;
-=20
- 	struct iommu_domain		domain;
-=20
-@@ -1807,8 +1809,10 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
-mmu_master *master, u32 sid,
- 	 * three cases at the moment:
- 	 *
- 	 * 1. Invalid (all zero) -> bypass/fault (init)
--	 * 2. Bypass/fault -> translation/bypass (attach)
--	 * 3. Translation/bypass -> bypass/fault (detach)
-+	 * 2. Bypass/fault -> single stage translation/bypass (attach)
-+	 * 3. Single or nested stage Translation/bypass -> bypass/fault (detach=
-)
-+	 * 4. S2 -> S1 + S2 (attach_pasid_table)
-+	 * 5. S1 + S2 -> S2 (detach_pasid_table)
- 	 *
- 	 * Given that we can't update the STE atomically and the SMMU
- 	 * doesn't read the thing in a defined order, that leaves us
-@@ -1819,7 +1823,8 @@ static void arm_smmu_write_strtab_ent(struct arm_sm=
-mu_master *master, u32 sid,
- 	 * 3. Update Config, sync
- 	 */
- 	u64 val =3D le64_to_cpu(dst[0]);
--	bool ste_live =3D false;
-+	bool abort, translate, s1_live =3D false, s2_live =3D false, ste_live;
-+	bool nested =3D false;
- 	struct arm_smmu_device *smmu =3D NULL;
- 	struct arm_smmu_s1_cfg *s1_cfg =3D NULL;
- 	struct arm_smmu_s2_cfg *s2_cfg =3D NULL;
-@@ -1839,6 +1844,7 @@ static void arm_smmu_write_strtab_ent(struct arm_sm=
-mu_master *master, u32 sid,
- 	if (smmu_domain) {
- 		s1_cfg =3D smmu_domain->s1_cfg;
- 		s2_cfg =3D smmu_domain->s2_cfg;
-+		nested =3D (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_NESTED);
- 	}
-=20
- 	if (val & STRTAB_STE_0_V) {
-@@ -1846,23 +1852,37 @@ static void arm_smmu_write_strtab_ent(struct arm_=
-smmu_master *master, u32 sid,
- 		case STRTAB_STE_0_CFG_BYPASS:
- 			break;
- 		case STRTAB_STE_0_CFG_S1_TRANS:
-+			s1_live =3D true;
-+			break;
- 		case STRTAB_STE_0_CFG_S2_TRANS:
--			ste_live =3D true;
-+			s2_live =3D true;
-+			break;
-+		case STRTAB_STE_0_CFG_NESTED:
-+			s1_live =3D true;
-+			s2_live =3D true;
- 			break;
- 		case STRTAB_STE_0_CFG_ABORT:
--			BUG_ON(!disable_bypass);
- 			break;
- 		default:
- 			BUG(); /* STE corruption */
- 		}
- 	}
-=20
-+	ste_live =3D s1_live || s2_live;
-+
- 	/* Nuke the existing STE_0 value, as we're going to rewrite it */
- 	val =3D STRTAB_STE_0_V;
-=20
- 	/* Bypass/fault */
--	if (!smmu_domain || !(s1_cfg || s2_cfg)) {
--		if (!smmu_domain && disable_bypass)
-+
-+	if (!smmu_domain)
-+		abort =3D disable_bypass;
-+	else
-+		abort =3D smmu_domain->abort;
-+	translate =3D s1_cfg || s2_cfg;
-+
-+	if (abort || !translate) {
-+		if (abort)
- 			val |=3D FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_ABORT);
- 		else
- 			val |=3D FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_BYPASS);
-@@ -1880,8 +1900,18 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
-mmu_master *master, u32 sid,
- 		return;
- 	}
-=20
-+	/* S1 or S2 translation */
-+
-+	BUG_ON(ste_live && !nested);
-+
-+	if (ste_live) {
-+		/* First invalidate the live STE */
-+		dst[0] =3D cpu_to_le64(STRTAB_STE_0_CFG_ABORT);
-+		arm_smmu_sync_ste_for_sid(smmu, sid);
-+	}
-+
- 	if (s1_cfg) {
--		BUG_ON(ste_live);
-+		BUG_ON(s1_live);
- 		dst[1] =3D cpu_to_le64(
- 			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
-@@ -1900,7 +1930,14 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
-mmu_master *master, u32 sid,
- 	}
-=20
- 	if (s2_cfg) {
--		BUG_ON(ste_live);
-+		u64 vttbr =3D s2_cfg->vttbr & STRTAB_STE_3_S2TTB_MASK;
-+
-+		if (s2_live) {
-+			u64 s2ttb =3D le64_to_cpu(dst[3] & STRTAB_STE_3_S2TTB_MASK);
-+
-+			BUG_ON(s2ttb !=3D vttbr);
-+		}
-+
- 		dst[2] =3D cpu_to_le64(
- 			 FIELD_PREP(STRTAB_STE_2_S2VMID, s2_cfg->vmid) |
- 			 FIELD_PREP(STRTAB_STE_2_VTCR, s2_cfg->vtcr) |
-@@ -1910,9 +1947,12 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
-mmu_master *master, u32 sid,
- 			 STRTAB_STE_2_S2PTW | STRTAB_STE_2_S2AA64 |
- 			 STRTAB_STE_2_S2R);
-=20
--		dst[3] =3D cpu_to_le64(s2_cfg->vttbr & STRTAB_STE_3_S2TTB_MASK);
-+		dst[3] =3D cpu_to_le64(vttbr);
-=20
- 		val |=3D FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S2_TRANS);
-+	} else {
-+		dst[2] =3D 0;
-+		dst[3] =3D 0;
- 	}
-=20
- 	if (master->ats_enabled)
-@@ -2602,6 +2642,14 @@ static int arm_smmu_domain_finalise(struct iommu_d=
-omain *domain,
- 		return 0;
- 	}
-=20
-+	if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_NESTED &&
-+	    (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1) ||
-+	     !(smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
-+		dev_info(smmu_domain->smmu->dev,
-+			 "does not implement two stages\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Restrict the stage to what we can actually support */
- 	if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1))
- 		smmu_domain->stage =3D ARM_SMMU_DOMAIN_S2;
---=20
-2.20.1
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
