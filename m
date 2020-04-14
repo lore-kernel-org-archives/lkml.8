@@ -2,118 +2,142 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368FAC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A869DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2C220575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882E920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evzNfjaB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Sc/miCdL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503975AbgDNS1r (ORCPT
+        id S2503987AbgDNS3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:27:47 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32054 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503914AbgDNS1G (ORCPT
+        Tue, 14 Apr 2020 14:29:13 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58838 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729648AbgDNS3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:27:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586888825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TLv7+DlAPTIRbMlPGq/MKTxn9g95YUGNwTJol6ZbUDE=;
-        b=evzNfjaBoC6wCoS1V+bzcOYtHbD9SzXUS83ZXqorselZop7fMYVcJA2XhtVcujpFYBL4ZR
-        tfmaAyfvPWvASv2oK5uwpQSjcj3C1oCqIsgQPNL61hTJ/MHoA/ncXstn457cJWAIA7hwex
-        B+PnsH/bRW41yP4beWIBSvT1KRsWynM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-449-lrwga1poPzOYOa4E2pXY4A-1; Tue, 14 Apr 2020 14:27:01 -0400
-X-MC-Unique: lrwga1poPzOYOa4E2pXY4A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E975D13FA;
-        Tue, 14 Apr 2020 18:26:55 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-173.rdu2.redhat.com [10.10.118.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 936D410013A1;
-        Tue, 14 Apr 2020 18:26:48 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-To:     dsterba@suse.cz, Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-2-longman@redhat.com>
- <20200414124854.GQ5920@twin.jikos.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <3d8c80cb-68e5-9211-9eda-bc343ed7d894@redhat.com>
-Date:   Tue, 14 Apr 2020 14:26:48 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 14 Apr 2020 14:29:08 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIAB7L076596;
+        Tue, 14 Apr 2020 18:28:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=cimUPVtfjS/Wbbbse4n50p0R0R56tjhdBkxdd46cVqM=;
+ b=Sc/miCdLt8x6mNA4jz4sZWit/VDyixzBlI6uaAhsuguWUD7Fy498rQ14g1zoPrzXIx3r
+ bCgA6A9uj91TYQwU5RWZsX3Lc3R2l2DoysZ0WMNF9mXoVikSO8+ggv/ph4OH31w6zSfo
+ 9VIhbkNidopHpnJ5KoOfmJ4ZWqBOkI4rGf3Y7P3cT1CN1HiXsgBPHVJwn2AFyzR3n1sO
+ f+Dxrd/EfAqyu/r6iNqdKFS0TuTlKcz2Zz7jPJLAvw+s+fCFukqARmR/wkW3UKVtS6qY
+ Je5KdnB23CfEudqUKxRGumDiUpuYSi/9cQafyoLtsyk4ZLibYcBfE1V80Eg+GBww2C19 gQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30b5um6kp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 18:28:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EI7DvV129643;
+        Tue, 14 Apr 2020 18:26:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30ctaav76x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 18:26:51 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03EIQnTT010384;
+        Tue, 14 Apr 2020 18:26:49 GMT
+Received: from linux-1.home (/10.175.33.16)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 11:26:49 -0700
+Subject: Re: [PATCH V3 5/9] objtool: Add return address unwind hints
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
+ <20200414103618.12657-6-alexandre.chartre@oracle.com>
+ <20200414161636.GP20713@hirez.programming.kicks-ass.net>
+ <546b2d81-39ca-00e1-4df2-d4eaa18496a4@oracle.com>
+ <20200414175604.GD2483@worktop.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <e9e1c4cd-193f-fd5e-65c4-cc9fb159d861@oracle.com>
+Date:   Tue, 14 Apr 2020 20:31:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200414124854.GQ5920@twin.jikos.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200414175604.GD2483@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 8:48 AM, David Sterba wrote:
-> On Mon, Apr 13, 2020 at 05:15:49PM -0400, Waiman Long wrote:
->>  fs/btrfs/ioctl.c                              |  2 +-
->
->> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
->> index 40b729dce91c..eab3f8510426 100644
->> --- a/fs/btrfs/ioctl.c
->> +++ b/fs/btrfs/ioctl.c
->> @@ -2691,7 +2691,7 @@ static int btrfs_ioctl_get_subvol_info(struct file *file, void __user *argp)
->>  	btrfs_put_root(root);
->>  out_free:
->>  	btrfs_free_path(path);
->> -	kzfree(subvol_info);
->> +	kfree_sensitive(subvol_info);
-> This is not in a sensitive context so please switch it to plain kfree.
-> With that you have my acked-by. Thanks.
->
-Thanks for letting me know about. I think I will send it out as a
-separate patch.
 
-Cheers,
-Longman
+
+On 4/14/20 7:56 PM, Peter Zijlstra wrote:
+> On Tue, Apr 14, 2020 at 06:40:12PM +0200, Alexandre Chartre wrote:
+>>
+>> On 4/14/20 6:16 PM, Peter Zijlstra wrote:
+>>> On Tue, Apr 14, 2020 at 12:36:14PM +0200, Alexandre Chartre wrote:
+>>>> Add the UNWIND_HINT_RADDR_DELETE and UNWIND_HINT_RADDR_ALTER unwind
+>>>> hint macros to flag instructions which remove or modify return
+>>>> addresses.
+>>>
+>>> I'm confused by this thing; why? AFAICT the rest of the patches are
+>>> actually simpler without this one.
+>>>
+>>
+>> This is required to indicate to objtool that assembly instructions are
+>> changing return addresses. For example, in patch 8:
+>>
+>> For retpoline:
+>>
+>> @@ -88,6 +96,7 @@
+>>   	lfence
+>>   	jmp	.Lspec_trap_\@
+>>   .Ldo_rop_\@:
+>> +	UNWIND_HINT_RADDR_ALTER
+>>   	mov	\reg, (%_ASM_SP)
+>>   	ret
+>>   .endm
+>>
+>> The unwind hint indicates that the return address has been altered, so the
+>> code won't return to the return address which was on the stack.
+> 
+> But if you hadn't added that return stack stuff in the first place,
+> you'd not have needed that HINT.
+> 
+> So what actual problem is it solving?
+> 
+
+The return stack stuff is here to correctly handle intra-function call so that
+we can figure out where the ret of an intra-function call should return. We
+don't have this challenge with regular functions because we know that a ret
+inside such function just indicates the end of the function.
+
+But when there's an intra-function call, a ret instruction can either:
+   - continue after the intra-function call (if the stack was unchanged)
+   - jump somewhere else (if the return address was changed) and eventually
+     return to the next return address
+   - indicate the end of the function (if the return address was removed).
+
+So, all this is needed to correctly follow the flow of the code and properly
+record stack changes.
+
+alex.
 
