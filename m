@@ -2,145 +2,92 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C209C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD2CC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5383F2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5269A2076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgbD7ia5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437011AbgDNPJf (ORCPT
+        id S2437085AbgDNPJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:09:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11530 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2440280AbgDNPIe (ORCPT
+        Tue, 14 Apr 2020 11:09:44 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24078 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436870AbgDNPIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:08:34 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EF49XE052373
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:08:33 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30b6sg8av6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:08:32 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <agordeev@linux.ibm.com>;
-        Tue, 14 Apr 2020 16:07:55 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 Apr 2020 16:07:54 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EF8RnQ54132906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 15:08:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BADC4C040;
-        Tue, 14 Apr 2020 15:08:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 149244C046;
-        Tue, 14 Apr 2020 15:08:27 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.30.155])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Apr 2020 15:08:26 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>, linux-mm@kvack.org
-Subject: [PATCH RESEND 2/2] mm/mmap.c: deny fixed mappings outside of allowed limits
-Date:   Tue, 14 Apr 2020 17:08:23 +0200
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1586876678.git.agordeev@linux.ibm.com>
-References: <cover.1586876678.git.agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20041415-0016-0000-0000-0000030470C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041415-0017-0000-0000-0000336868F9
-Message-Id: <b00a3b7d5f4761b8ac789393164f25e1abc48d8d.1586876678.git.agordeev@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- phishscore=0 adultscore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=550 suspectscore=1 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004140123
+        Tue, 14 Apr 2020 11:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586876916;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=KqvdvPMVZP9GhLam1e8X/uCXyRLGbaBc4BNhj+P59mw=;
+        b=ZgbD7ia5HG8w59z+nULOTPd3Ahtvkd5tp/bQ1dcCXP0U6IFeopFgLrNvIwG5dQVRMW0Yxn
+        Ou2fCeFLerM8VINSnYrn0yB7xZ0No84prUK2B5vHXYwHjBxdJJRO3pOiyl1qSXHuHASDRa
+        VNmSsNnSvGrALfrzBDphi8/46+I1TmY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-XZ3qLv-yOUejSdncIk2Eiw-1; Tue, 14 Apr 2020 11:08:34 -0400
+X-MC-Unique: XZ3qLv-yOUejSdncIk2Eiw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8EA1810CE780;
+        Tue, 14 Apr 2020 15:08:32 +0000 (UTC)
+Received: from localhost (ovpn-116-111.rdu2.redhat.com [10.10.116.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07F9627098;
+        Tue, 14 Apr 2020 15:08:31 +0000 (UTC)
+From:   Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.9.219-rt142
+Date:   Tue, 14 Apr 2020 15:06:33 -0000
+Message-ID: <158687679390.397792.8613444289630927615@tagon>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to request a fixed mapping address below
-mmap_min_addr and succeed. This update adds early checks
-of mmap_min_addr and mmap_end boundaries and fixes the
-above issue.
+Hello RT-list!
 
-CC: linux-mm@kvack.org
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- mm/mmap.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+I'm pleased to announce the 4.9.219-rt142 stable release.
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 5b22d47..9a16e25 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -62,6 +62,14 @@
- #define arch_mmap_check(addr, len, flags)	(0)
- #endif
- 
-+#ifndef arch_get_mmap_end
-+#define arch_get_mmap_end(addr)	(TASK_SIZE)
-+#endif
-+
-+#ifndef arch_get_mmap_base
-+#define arch_get_mmap_base(addr, base) (base)
-+#endif
-+
- #ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
- const int mmap_rnd_bits_min = CONFIG_ARCH_MMAP_RND_BITS_MIN;
- const int mmap_rnd_bits_max = CONFIG_ARCH_MMAP_RND_BITS_MAX;
-@@ -1369,6 +1377,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 			unsigned long pgoff, unsigned long *populate,
- 			struct list_head *uf)
- {
-+	const unsigned long mmap_end = arch_get_mmap_end(addr);
- 	struct mm_struct *mm = current->mm;
- 	int pkey = 0;
- 
-@@ -1391,8 +1400,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 	if (flags & MAP_FIXED_NOREPLACE)
- 		flags |= MAP_FIXED;
- 
--	if (!(flags & MAP_FIXED))
-+	if (flags & MAP_FIXED) {
-+		if ((addr < mmap_min_addr) || (addr > mmap_end))
-+			return -ENOMEM;
-+	} else {
- 		addr = round_hint_to_min(addr);
-+	}
- 
- 	/* Careful about overflows.. */
- 	len = PAGE_ALIGN(len);
-@@ -2089,14 +2102,6 @@ unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info)
- 	return addr;
- }
- 
--#ifndef arch_get_mmap_end
--#define arch_get_mmap_end(addr)	(TASK_SIZE)
--#endif
--
--#ifndef arch_get_mmap_base
--#define arch_get_mmap_base(addr, base) (base)
--#endif
--
- /* Get an address range which is currently unmapped.
-  * For shmat() with addr=0.
-  *
--- 
-1.8.3.1
+Note that 4.9-rt is in maintenance mode, so this is merely a merge of the
+upstream stable updates, with no changes to the PREEMPT_RT patches.
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v4.9-rt
+  Head SHA1: a3ddf39c50c383f479faafde2e4e2167568724cb
+
+Or to build 4.9.219-rt142 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.9.219.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/patch-4.9.219-rt142.patch.xz
+
+
+You can also build from 4.9.218-rt141 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/incr/patch-4.9.218-rt141-rt142.patch.xz
+
+Enjoy!
+Clark
 
