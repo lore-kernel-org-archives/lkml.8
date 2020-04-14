@@ -2,72 +2,164 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3CDC38A29
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB4CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F3D2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED872063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SS4y0Whv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440369AbgDNPYA (ORCPT
+        id S2440384AbgDNPYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:24:00 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53836 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439435AbgDNPXr (ORCPT
+        Tue, 14 Apr 2020 11:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390836AbgDNPXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:23:47 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jONPc-0005Mt-9D; Tue, 14 Apr 2020 15:23:44 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drivers: hv: remove redundant assignment to pointer primary_channel
-Date:   Tue, 14 Apr 2020 16:23:43 +0100
-Message-Id: <20200414152343.243166-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 14 Apr 2020 11:23:15 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C336BC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:23:14 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id ef12so6356695qvb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mFojnywoPNyFdhtgvXnmkYzEiNUOhwI6TxTxAvK3xdg=;
+        b=SS4y0WhvQF1bhRQ3pn3wLMCiWkfm25jaLNJNqFQ3AGdG5Ie+8aNc3U9tGocHDfSWTi
+         nP+oDC2NmQXii1RTPcUNQIL8gVaiNDH9qzhRCfQwRsuSwl/EmmYHOIZ9KjxJur5xTeSL
+         7Vjbus/zWtsfWnZ8bBIMSrZuDZ0y/TqLZ0QIUfvodRUt9yC0QUXhZMc9fdqbHI2yoa6K
+         w1ySea+kHv4r8Ugu79ALt3mtAd1B/Ihd2AamFw/3d/AtK6QauU6u7ZaiyS4j+fQmNDwy
+         EDJOBUhMExnxLYWwN9HQ1rqa8gZ/OgdahR8fmY45lXLkUx5Vq8b+XdpMp0OL1rfhdNWu
+         ti+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mFojnywoPNyFdhtgvXnmkYzEiNUOhwI6TxTxAvK3xdg=;
+        b=tQbJKXOb0Y7CSnlkx26GeS3KSgTRX3HEL0nhViKK2UYs0IZ6izkiagRjdwvAqi4Eb6
+         bmsLBGUYoSS3tuMGH5MOn3MgiKd4UPcQfb4+HSb5bUQYq6kkWveW3PM2cCBN/fsjSCMs
+         hfKk3/5L4hv8igA13jdPXF7jTZh0unpsgV387agpXidFRp83LrzDNMXjwrnSxF8VbjYj
+         4e2V0SkZ6xaxXT5S1omPosdjyGeLlpKluxM/5eJC/6b6nGg+IcOv5EVsbi9u955fpDkB
+         JbsMlNPHXsDK/o37ZTzQglJ2C23TFK589leOcXTNurZDD6suTYPTyRcistf3qo7ST0C2
+         7vrg==
+X-Gm-Message-State: AGi0PuaX8rVIIgD6T62GrI4mXESZ+dusFej3tUDMHbYkCjPLWb4MjbSf
+        nt7UlTuTNb5TTHb65O83k23S2A==
+X-Google-Smtp-Source: APiQypKtItLidlBv85QFnpoyu7Va9Voe4R7MeN23XgRqelBoPM+HtCP/PCBCt2N7ezfG4+eyRUxTjA==
+X-Received: by 2002:a0c:ac48:: with SMTP id m8mr509910qvb.13.1586877793898;
+        Tue, 14 Apr 2020 08:23:13 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id m11sm10391993qkg.130.2020.04.14.08.23.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 08:23:13 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jONP6-0005EN-Cy; Tue, 14 Apr 2020 12:23:12 -0300
+Date:   Tue, 14 Apr 2020 12:23:12 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Message-ID: <20200414152312.GF5100@ziepe.ca>
+References: <20200408202711.1198966-1-arnd@arndb.de>
+ <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+ <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+ <20200408224224.GD11886@ziepe.ca>
+ <87k12pgifv.fsf@intel.com>
+ <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+ <20200410171320.GN11886@ziepe.ca>
+ <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+ <20200414132900.GD5100@ziepe.ca>
+ <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Apr 14, 2020 at 04:27:41PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 14, 2020 at 3:29 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > On Fri, Apr 10, 2020 at 07:04:27PM +0000, Saeed Mahameed wrote:
+> > > On Fri, 2020-04-10 at 14:13 -0300, Jason Gunthorpe wrote:
+> > > > On Fri, Apr 10, 2020 at 02:40:42AM +0000, Saeed Mahameed wrote:
+> > > >
+> > > > > This assumes that the module using FOO has its own flag
+> > > > > representing
+> > > > > FOO which is not always the case.
+> > > > >
+> > > > > for example in mlx5 we use VXLAN config flag directly to compile
+> > > > > VXLAN related files:
+> > > > >
+> > > > > mlx5/core/Makefile:
+> > > > >
+> > > > > obj-$(CONFIG_MLX5_CORE) += mlx5_core.o
+> > > > >
+> > > > > mlx5_core-y := mlx5_core.o
+> > > > > mlx5_core-$(VXLAN) += mlx5_vxlan.o
+> > > > >
+> > > > > and in mlx5_main.o we do:
+> > > >
+> > > > Does this work if VXLAN = m ?
+> > >
+> > > Yes, if VXLAN IS_REACHABLE to MLX5, mlx5_vxlan.o will be
+> > > compiled/linked.
+> >
+> > So mlx5_core-m does the right thing somehow?
+> 
+> What happens with CONFIG_VXLAN=m is that the above turns into
+> 
+> mlx5_core-y := mlx5_core.o
+> mlx5_core-m += mlx5_vxlan.o
+> 
+> which in turn leads to mlx5_core.ko *not* containing mlx5_vxlan.o,
+> and in turn causing that link error against
+> mlx5_vxlan_create/mlx5_vxlan_destroy, unless the IS_ENABLED()
+> is changed to IS_REACHABLE().
 
-The pointer primary_channel is being assigned with a value that is never,
-The assignment is redundant and can be removed.
+What about the reverse if mlx5_core is 'm' and VLXAN is 'y'?
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/hv/channel_mgmt.c | 2 --
- 1 file changed, 2 deletions(-)
+ mlx5_core-m := mlx5_core.o
+ mlx5_core-y += mlx5_vxlan.o
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index ffd7fffa5f83..f7bbb8dc4b0f 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
- 
- 	if (channel->primary_channel == NULL) {
- 		list_del(&channel->listentry);
--
--		primary_channel = channel;
- 	} else {
- 		primary_channel = channel->primary_channel;
- 		spin_lock_irqsave(&primary_channel->lock, flags);
--- 
-2.25.1
+Magically works out?
 
+> > IIRC that isn't what the expression does, if vxlan is 'n' then
+> >   n || !n == true
+> 
+> It forces MLX5_CORE to 'm' or 'n' but not 'y' if VXLAN=m,
+> but allows any option if VXLAN=y
+
+And any option if VXLAN=n ?
+
+Jason
