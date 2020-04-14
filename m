@@ -2,137 +2,76 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BCDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E10C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECDE52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9552072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403811AbgDNBiw (ORCPT
+        id S2403822AbgDNBjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 21:38:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32757 "EHLO mga02.intel.com"
+        Mon, 13 Apr 2020 21:39:22 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:42691 "EHLO smtp.infotech.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbgDNBiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 21:38:52 -0400
-IronPort-SDR: X49EmwBSXnrBq/Tpoh3DNYwG399q7ZQT4c2sW5W81s/PhkYFhnl+28LpmmqDcKr3293DkRSCa9
- uoGw5cuQKw5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 18:38:51 -0700
-IronPort-SDR: RtgrjbRtraNTJIo+okYLapG087iI+EHbT5aFYMZcT1o/QxOywQgceQmYAxkoGIQoXXaIlp7wEd
- wxJUCwPmR2Kw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="256351353"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.105])
-  by orsmga006.jf.intel.com with ESMTP; 13 Apr 2020 18:38:49 -0700
-Date:   Tue, 14 Apr 2020 09:38:49 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-Subject: Re: [LKP] [f2fs] fe1897eaa6: aim7.jobs-per-min -60.9% regression
-Message-ID: <20200414013849.GB49945@shbuild999.sh.intel.com>
-References: <20191208154145.GM32275@shao2-debian>
- <20200413105124.GA49945@shbuild999.sh.intel.com>
- <1c5007a1-26fe-650b-0a34-5b12f749b384@huawei.com>
+        id S1728252AbgDNBjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 21:39:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 7A8D220425A;
+        Tue, 14 Apr 2020 03:39:16 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2ZpwWByjkMTG; Tue, 14 Apr 2020 03:39:15 +0200 (CEST)
+Received: from [192.168.48.23] (host-23-251-188-50.dyn.295.ca [23.251.188.50])
+        by smtp.infotech.no (Postfix) with ESMTPA id F28A120414B;
+        Tue, 14 Apr 2020 03:39:13 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH] scsi: sg: fix memory leak in sg_build_indirect
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Li Bin <huawei.libin@huawei.com>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Xie XiuQi <xiexiuqi@huawei.com>
+References: <8b5551e6-46e2-9def-8ab6-ec5ba252c5ea@web.de>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <0162f996-eb48-fda5-8355-1c9bc1162177@interlog.com>
+Date:   Mon, 13 Apr 2020 21:39:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c5007a1-26fe-650b-0a34-5b12f749b384@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <8b5551e6-46e2-9def-8ab6-ec5ba252c5ea@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 07:03:57PM +0800, Chao Yu wrote:
-> On 2020/4/13 18:51, Feng Tang wrote:
-> > On Sun, Dec 08, 2019 at 11:41:46PM +0800, kernel test robot wrote:
-> >> Greeting,
-> >>
-> >> FYI, we noticed a -60.9% regression of aim7.jobs-per-min due to commit:
-> >>
-> >>
-> >> commit: fe1897eaa6646f5a64a4cee0e6473ed9887d324b ("f2fs: fix to update time in lazytime mode")
-> >> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> >>
-> >> in testcase: aim7
-> >> on test machine: 48 threads Intel(R) Xeon(R) CPU E5-2697 v2 @ 2.70GHz with 64G memory
-> >> with following parameters:
-> >>
-> >> 	disk: 4BRD_12G
-> >> 	md: RAID1
-> >> 	fs: f2fs
-> >> 	test: sync_disk_rw
-> >> 	load: 200
-> >> 	cpufreq_governor: performance
-> >> 	ucode: 0x42e
-> >>
-> >> test-description: AIM7 is a traditional UNIX system level benchmark suite which is used to test and measure the performance of multiuser system.
-> >> test-url: https://sourceforge.net/projects/aimbench/files/aim-suite7/
-> >>
-> >>
-> >>
-> >> If you fix the issue, kindly add following tag
-> >> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> >>
-> >>
-> >> Details are as below:
-> >> -------------------------------------------------------------------------------------------------->
-> >>
-> >>
-> >> To reproduce:
-> >>
-> >>         git clone https://github.com/intel/lkp-tests.git
-> >>         cd lkp-tests
-> >>         bin/lkp install job.yaml  # job file is attached in this email
-> >>         bin/lkp run     job.yaml
-> >>
-> >> =========================================================================================
-> >> compiler/cpufreq_governor/disk/fs/kconfig/load/md/rootfs/tbox_group/test/testcase/ucode:
-> >>   gcc-7/performance/4BRD_12G/f2fs/x86_64-rhel-7.6/200/RAID1/debian-x86_64-2019-11-14.cgz/lkp-ivb-2ep1/sync_disk_rw/aim7/0x42e
-> >>
-> >> commit: 
-> >>   b145b0eb20 (" ARM and x86 bugfixes of all kinds.  The most visible one is that migrating")
-> >>   fe1897eaa6 ("f2fs: fix to update time in lazytime mode")
-> >>
-> >> b145b0eb2031a620 fe1897eaa6646f5a64a4cee0e64 
-> >> ---------------- --------------------------- 
-> >>        fail:runs  %reproduction    fail:runs
-> >>            |             |             |    
-> >>           1:4          -25%            :4     dmesg.WARNING:at#for_ip_interrupt_entry/0x
-> >>          %stddev     %change         %stddev
-> >>              \          |                \  
-> >>       1208           -60.9%     473.12        aim7.jobs-per-min
-> > 
-> > Hi Chao Yu,
-> > 
-> > Any thoughts on this? 
-> > 
-> > IIUC, this commit is a fix, and if you think it is necessary, we will
-> > stop tracking this regresion.
+On 2020-04-13 3:35 p.m., Markus Elfring wrote:
+>> Fix a memory leak when there have failed, that we should free the pages
+>> under the condition rem_sz > 0.
 > 
-> Hi Feng Tang,
+> I suggest to improve the change description.
 > 
-> Sorry, I missed to reply this thread.
-> 
-> Anyway, we need this fix patch to avoid losing atime issue in some cases,
-> let's stop tracking this regression please.
- 
-Got it, thanks for confirming!
+> * Please use an imperative wording.
 
-- Feng
+nominative, vocative, accusative, genitive ...
 
-> Thanks for noticing/reporting this regression. :)
-> 
-> Thanks,
+I have made some comment suggestions in response to the original posts
+from the author.
+
+> * Will the tag “Fixes” become relevant?
+
+Yes, both patches from the author are fixes. These leaks would typically
+appear on a system under resource pressure (specifically low memory) and
+would tend to make the situation worse.
+
+Doug Gilbert
+
+
