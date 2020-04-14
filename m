@@ -2,406 +2,138 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B393C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2830FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251E72072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE292072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439512AbgDNLot (ORCPT
+        id S2439529AbgDNLpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:44:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2320 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439489AbgDNLop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:44:45 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B47DF5584F2A41682894;
-        Tue, 14 Apr 2020 19:44:42 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 14 Apr
- 2020 19:44:38 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint is
- in progress
-To:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sahitya Tummala <stummala@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
- <20200331035419.GB79749@google.com> <20200331090608.GZ20234@codeaurora.org>
- <20200331184307.GA198665@google.com> <20200401050801.GA20234@codeaurora.org>
- <20200403171727.GB68460@google.com> <20200403172750.GD68460@google.com>
- <20200413174237.GC39092@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <34baaa43-fdc7-68e8-0a72-724e3bf5a717@huawei.com>
-Date:   Tue, 14 Apr 2020 19:44:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200413174237.GC39092@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Tue, 14 Apr 2020 07:45:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:53666 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439489AbgDNLoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:44:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF0571FB;
+        Tue, 14 Apr 2020 04:44:52 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0B493F6C4;
+        Tue, 14 Apr 2020 04:44:42 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] mm/hugetlb: Add some new arch enabling macros
+Date:   Tue, 14 Apr 2020 17:14:27 +0530
+Message-Id: <1586864670-21799-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/14 1:42, Jaegeuk Kim wrote:
-> On 04/03, Jaegeuk Kim wrote:
->> On 04/03, Jaegeuk Kim wrote:
->>> On 04/01, Sahitya Tummala wrote:
->>>> Hi Jaegeuk,
->>>>
->>>> Got it.
->>>> The diff below looks good to me.
->>>> Would you like me to test it and put a patch for this?
->>>
->>> Sahitya, Chao,
->>>
->>> Could you please take a look at this patch and test intensively?
->>>
->>> Thanks,
-> v3:
->  - fix gc_lock
-> 
->>From d10c09dfedc7a10cef7dd34493ddbd7c27889033 Mon Sep 17 00:00:00 2001
-> From: Jaegeuk Kim <jaegeuk@kernel.org>
-> Date: Tue, 31 Mar 2020 11:43:07 -0700
-> Subject: [PATCH] f2fs: refactor resize_fs to avoid meta updates in progress
-> 
-> Sahitya raised an issue:
-> - prevent meta updates while checkpoint is in progress
-> 
-> allocate_segment_for_resize() can cause metapage updates if
-> it requires to change the current node/data segments for resizing.
-> Stop these meta updates when there is a checkpoint already
-> in progress to prevent inconsistent CP data.
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c        |   6 ++-
->  fs/f2fs/f2fs.h              |   2 +-
->  fs/f2fs/file.c              |   5 +-
->  fs/f2fs/gc.c                | 105 ++++++++++++++++++++----------------
->  fs/f2fs/super.c             |   1 -
->  include/trace/events/f2fs.h |   4 +-
->  6 files changed, 67 insertions(+), 56 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 6be357c8e0020..dcb3a15574c99 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1554,7 +1554,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  			return 0;
->  		f2fs_warn(sbi, "Start checkpoint disabled!");
->  	}
-> -	mutex_lock(&sbi->cp_mutex);
-> +	if (cpc->reason != CP_RESIZE)
-> +		mutex_lock(&sbi->cp_mutex);
->  
->  	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
->  		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
-> @@ -1623,7 +1624,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	f2fs_update_time(sbi, CP_TIME);
->  	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
->  out:
-> -	mutex_unlock(&sbi->cp_mutex);
-> +	if (cpc->reason != CP_RESIZE)
-> +		mutex_unlock(&sbi->cp_mutex);
->  	return err;
->  }
->  
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 1241a397bf53c..e8e26ab723eba 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -194,6 +194,7 @@ enum {
->  #define	CP_DISCARD	0x00000010
->  #define CP_TRIMMED	0x00000020
->  #define CP_PAUSE	0x00000040
-> +#define CP_RESIZE 	0x00000080
->  
->  #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
->  #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
-> @@ -1422,7 +1423,6 @@ struct f2fs_sb_info {
->  	unsigned int segs_per_sec;		/* segments per section */
->  	unsigned int secs_per_zone;		/* sections per zone */
->  	unsigned int total_sections;		/* total section count */
-> -	struct mutex resize_mutex;		/* for resize exclusion */
->  	unsigned int total_node_count;		/* total node block count */
->  	unsigned int total_valid_node_count;	/* valid node block count */
->  	loff_t max_file_blocks;			/* max block index of file */
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index f06b029c00d8d..0514fab8d2eb8 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3313,7 +3313,6 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
->  {
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
->  	__u64 block_count;
-> -	int ret;
->  
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
-> @@ -3325,9 +3324,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
->  			   sizeof(block_count)))
->  		return -EFAULT;
->  
-> -	ret = f2fs_resize_fs(sbi, block_count);
-> -
-> -	return ret;
-> +	return f2fs_resize_fs(sbi, block_count);
->  }
->  
->  static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index 26248c8936db0..3d003397252b8 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -1399,12 +1399,29 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
->  				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
->  }
->  
-> -static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
-> -							unsigned int end)
-> +static int free_segment_range(struct f2fs_sb_info *sbi,
-> +				unsigned int secs, bool gc_only)
->  {
-> -	int type;
-> -	unsigned int segno, next_inuse;
-> +	unsigned int segno, next_inuse, start, end;
-> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
-> +	int gc_mode, gc_type;
->  	int err = 0;
-> +	int type;
-> +
-> +	/* Force block allocation for GC */
-> +	MAIN_SECS(sbi) -= secs;
-> +	start = MAIN_SECS(sbi) * sbi->segs_per_sec;
-> +	end = MAIN_SEGS(sbi) - 1;
-> +
-> +	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
-> +	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
-> +		if (SIT_I(sbi)->last_victim[gc_mode] >= start)
-> +			SIT_I(sbi)->last_victim[gc_mode] = 0;
-> +
-> +	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
-> +		if (sbi->next_victim_seg[gc_type] >= start)
-> +			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
-> +	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
->  
->  	/* Move out cursegs from the target range */
->  	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
-> @@ -1422,13 +1439,17 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
->  		up_write(&sbi->gc_lock);
->  		put_gc_inode(&gc_list);
->  
-> -		if (get_valid_blocks(sbi, segno, true))
-> -			return -EAGAIN;
-> +		if (!gc_only && get_valid_blocks(sbi, segno, true)) {
-> +			err = -EAGAIN;
-> +			goto out;
-> +		}
->  	}
-> +	if (gc_only)
-> +		goto out;
->  
-> -	err = f2fs_sync_fs(sbi->sb, 1);
-> +	err = f2fs_write_checkpoint(sbi, &cpc);
->  	if (err)
-> -		return err;
-> +		goto out;
->  
->  	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
->  	if (next_inuse <= end) {
-> @@ -1436,6 +1457,8 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
->  			 next_inuse);
->  		f2fs_bug_on(sbi, 1);
->  	}
-> +out:
-> +	MAIN_SECS(sbi) -= secs;
->  	return err;
->  }
->  
-> @@ -1481,6 +1504,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
->  
->  	SM_I(sbi)->segment_count = (int)SM_I(sbi)->segment_count + segs;
->  	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
-> +	MAIN_SECS(sbi) += secs;
->  	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
->  	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
->  	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
-> @@ -1502,8 +1526,8 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
->  int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  {
->  	__u64 old_block_count, shrunk_blocks;
-> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
->  	unsigned int secs;
-> -	int gc_mode, gc_type;
->  	int err = 0;
->  	__u32 rem;
->  
-> @@ -1538,10 +1562,22 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  		return -EINVAL;
->  	}
->  
-> -	freeze_bdev(sbi->sb->s_bdev);
-> -
->  	shrunk_blocks = old_block_count - block_count;
->  	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
-> +
-> +	/* protect MAIN_SEC in free_segment_range */
-> +	f2fs_lock_op(sbi);
-> +	err = free_segment_range(sbi, secs, true);
-> +	f2fs_unlock_op(sbi);
+This series adds two macros which platforms can enable to override generic
+fallback definitions. Before that it drops __HAVE_ARCH_HUGE_PTEP_GET from
+arm64 platform.
 
-There will be ABBA deadlock:
+1. HAVE_ARCH_IS_HUGEPAGE_ONLY_RANGE - is_hugepage_only_range()
+2. HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS   - arch_clear_hugepage_flags()
 
-- lock_op()
- - free_segment_range()
-					- f2fs_sync_fs()
-					 - down_write(gc_lock)
-  - down_write(gc_lock)
-   - do_garbage_collect()
-					  - f2fs_write_checkpoint()
-					   - block_operations()
-					    - f2fs_lock_all()
+This has been boot tested on arm64 and x86 platforms but built tested on
+some more platforms including the changed ones here. This series applies
+on v5.7-rc1. After this arm (32 bit) remains the sole platform defining
+it's own huge_ptep_get() via __HAVE_ARCH_HUGE_PTEP_GET.
 
-Thanks,
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: x86@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-> +	if (err)
-> +		return err;
-> +
-> +	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
-> +
-> +	freeze_super(sbi->sb);
-> +	down_write(&sbi->gc_lock);
-> +	mutex_lock(&sbi->cp_mutex);
-> +
->  	spin_lock(&sbi->stat_lock);
->  	if (shrunk_blocks + valid_user_blocks(sbi) +
->  		sbi->current_reserved_blocks + sbi->unusable_block_count +
-> @@ -1550,69 +1586,44 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  	else
->  		sbi->user_block_count -= shrunk_blocks;
->  	spin_unlock(&sbi->stat_lock);
-> -	if (err) {
-> -		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
-> -		return err;
-> -	}
-> -
-> -	mutex_lock(&sbi->resize_mutex);
-> -	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
-> -
-> -	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
-> -
-> -	MAIN_SECS(sbi) -= secs;
-> -
-> -	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
-> -		if (SIT_I(sbi)->last_victim[gc_mode] >=
-> -					MAIN_SECS(sbi) * sbi->segs_per_sec)
-> -			SIT_I(sbi)->last_victim[gc_mode] = 0;
-> -
-> -	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
-> -		if (sbi->next_victim_seg[gc_type] >=
-> -					MAIN_SECS(sbi) * sbi->segs_per_sec)
-> -			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
-> -
-> -	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
-> +	if (err)
-> +		goto out_err;
->  
-> -	err = free_segment_range(sbi, MAIN_SECS(sbi) * sbi->segs_per_sec,
-> -			MAIN_SEGS(sbi) - 1);
-> +	err = free_segment_range(sbi, secs, false);
->  	if (err)
-> -		goto out;
-> +		goto recover_out;
->  
->  	update_sb_metadata(sbi, -secs);
->  
->  	err = f2fs_commit_super(sbi, false);
->  	if (err) {
->  		update_sb_metadata(sbi, secs);
-> -		goto out;
-> +		goto recover_out;
->  	}
->  
-> -	mutex_lock(&sbi->cp_mutex);
->  	update_fs_metadata(sbi, -secs);
->  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
->  	set_sbi_flag(sbi, SBI_IS_DIRTY);
-> -	mutex_unlock(&sbi->cp_mutex);
->  
-> -	err = f2fs_sync_fs(sbi->sb, 1);
-> +	err = f2fs_write_checkpoint(sbi, &cpc);
->  	if (err) {
-> -		mutex_lock(&sbi->cp_mutex);
->  		update_fs_metadata(sbi, secs);
-> -		mutex_unlock(&sbi->cp_mutex);
->  		update_sb_metadata(sbi, secs);
->  		f2fs_commit_super(sbi, false);
->  	}
-> -out:
-> +recover_out:
->  	if (err) {
->  		set_sbi_flag(sbi, SBI_NEED_FSCK);
->  		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
->  
-> -		MAIN_SECS(sbi) += secs;
->  		spin_lock(&sbi->stat_lock);
->  		sbi->user_block_count += shrunk_blocks;
->  		spin_unlock(&sbi->stat_lock);
->  	}
-> +out_err:
-> +	mutex_unlock(&sbi->cp_mutex);
-> +	up_write(&sbi->gc_lock);
-> +	thaw_super(sbi->sb);
->  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
-> -	mutex_unlock(&sbi->resize_mutex);
-> -	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
->  	return err;
->  }
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index f2dfc21c6abb0..18b4a43a13438 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -3413,7 +3413,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->  	init_rwsem(&sbi->gc_lock);
->  	mutex_init(&sbi->writepages);
->  	mutex_init(&sbi->cp_mutex);
-> -	mutex_init(&sbi->resize_mutex);
->  	init_rwsem(&sbi->node_write);
->  	init_rwsem(&sbi->node_change);
->  
-> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-> index e78c8696e2adc..e1ad392aae05a 100644
-> --- a/include/trace/events/f2fs.h
-> +++ b/include/trace/events/f2fs.h
-> @@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
->  TRACE_DEFINE_ENUM(CP_DISCARD);
->  TRACE_DEFINE_ENUM(CP_TRIMMED);
->  TRACE_DEFINE_ENUM(CP_PAUSE);
-> +TRACE_DEFINE_ENUM(CP_RESIZE);
->  
->  #define show_block_type(type)						\
->  	__print_symbolic(type,						\
-> @@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
->  		{ CP_RECOVERY,	"Recovery" },				\
->  		{ CP_DISCARD,	"Discard" },				\
->  		{ CP_PAUSE,	"Pause" },				\
-> -		{ CP_TRIMMED,	"Trimmed" })
-> +		{ CP_TRIMMED,	"Trimmed" },				\
-> +		{ CP_RESIZE,	"Resize" })
->  
->  #define show_fsync_cpreason(type)					\
->  	__print_symbolic(type,						\
-> 
+Anshuman Khandual (3):
+  arm64/mm: Drop __HAVE_ARCH_HUGE_PTEP_GET
+  mm/hugetlb: Introduce HAVE_ARCH_IS_HUGEPAGE_ONLY_RANGE
+  mm/hugetlb: Introduce HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
+
+ arch/arm/include/asm/hugetlb.h     |  7 +------
+ arch/arm64/include/asm/hugetlb.h   | 13 +------------
+ arch/ia64/include/asm/hugetlb.h    |  5 +----
+ arch/mips/include/asm/hugetlb.h    | 11 -----------
+ arch/parisc/include/asm/hugetlb.h  | 10 ----------
+ arch/powerpc/include/asm/hugetlb.h |  5 +----
+ arch/riscv/include/asm/hugetlb.h   | 10 ----------
+ arch/s390/include/asm/hugetlb.h    |  8 +-------
+ arch/sh/include/asm/hugetlb.h      |  7 +------
+ arch/sparc/include/asm/hugetlb.h   | 10 ----------
+ arch/x86/include/asm/hugetlb.h     | 10 ----------
+ include/linux/hugetlb.h            | 12 ++++++++++++
+ 12 files changed, 18 insertions(+), 90 deletions(-)
+
+-- 
+2.20.1
+
