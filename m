@@ -2,155 +2,113 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9BCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A52DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 704D8206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259AC206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IER5c0nM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438648AbgDNKuE (ORCPT
+        id S2438656AbgDNKuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438635AbgDNKta (ORCPT
+        Tue, 14 Apr 2020 06:50:32 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7297 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438461AbgDNKls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:49:30 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275E4C061A0C;
-        Tue, 14 Apr 2020 03:49:30 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B221B2A186D
-Received: by earth.universe (Postfix, from userid 1000)
-        id AD1183C08C7; Tue, 14 Apr 2020 12:49:26 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 12:49:26 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     saravanan sekar <sravanhome@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v8 4/6] power: supply: Add support for mps mp2629 battery
- charger
-Message-ID: <20200414104926.2yxpxclsqdp2gz3f@earth.universe>
-References: <20200413173656.28522-1-sravanhome@gmail.com>
- <20200413173656.28522-5-sravanhome@gmail.com>
- <CAHp75VeYFY1CW4AH+D4HAgzppMZ5J8dL8kKPYmcwsXNVGNSYjQ@mail.gmail.com>
- <6cfab0a6-c3eb-bd9b-6572-b49e3205524f@gmail.com>
- <20200413204847.ni7dsrn5tslrorqn@earth.universe>
- <CAHp75VdRXWVtveRnvR-k8wqH5R_P7owfQvFf7YT3qM_oVEY3vg@mail.gmail.com>
+        Tue, 14 Apr 2020 06:41:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9591cf0000>; Tue, 14 Apr 2020 03:34:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Apr 2020 03:36:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Apr 2020 03:36:43 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 10:36:43 +0000
+Received: from [10.26.73.15] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 10:36:40 +0000
+Subject: Re: [PATCH 5.5 00/44] 5.5.17-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200411115456.934174282@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4743e8c2-8f05-99c2-ea88-4b5b211b102c@nvidia.com>
+Date:   Tue, 14 Apr 2020 11:36:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rlcmmezjuw4wenk5"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdRXWVtveRnvR-k8wqH5R_P7owfQvFf7YT3qM_oVEY3vg@mail.gmail.com>
+In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586860495; bh=59mxtrltq2UKYTwsK9Cv9A2i+6Mceqs/TnwHnwPHerc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IER5c0nMieqzNMe6visPxK54ALxaYcfLkM8XPyF1dneM+Lt1Snen6xax57SUhI/v9
+         1ZYpMOF6Cp7AsO1OeZN4Bkd5tydPJYwBYLhiO+ggL/yAXpFcCkxQ25MXVvkZqs241l
+         4Cy9A0BavXJVsbiWR47t9UKIHUH0cXSDNUcUMo2xSLgz+n0FIOvG/aCSS2MVlm1ZXM
+         K4moLgTjRpPHOpPfFYK4gFA+ElTYqHDTT/CrcttgvQoeQK3aCSZsJEPEU/61PfG86/
+         htDecIsboWypZ/1F2DfQVjsxtfHYM3934ZLBayvBG0gqW3aUB9M3SslqYma2F40tuI
+         6dVRHK0mOcrMw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---rlcmmezjuw4wenk5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/04/2020 13:09, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.17 release.
+> There are 44 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.17-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Hi,
+All tests are passing for Tegra ...
 
-On Tue, Apr 14, 2020 at 12:05:15PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 13, 2020 at 11:48 PM Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
-> > On Mon, Apr 13, 2020 at 10:28:19PM +0200, saravanan sekar wrote:
-> > > On 13/04/20 10:10 pm, Andy Shevchenko wrote:
-> > > > On Mon, Apr 13, 2020 at 8:37 PM Saravanan Sekar <sravanhome@gmail.c=
-om> wrote:
->=20
-> ...
->=20
-> > > > > +       irq =3D platform_get_irq(to_platform_device(pdev->dev.par=
-ent), 0);
-> > > > Why not to use temporary variable dev?
-> > > >
-> > > > This should be platform_get_irq_optional().
-> > >
-> > > Platform_get_irq in turn calls platform_get_irq_optional. It was sugg=
-ested
-> > > by Lee and is it mandatory to change it?
-> >
-> > platform_get_irq is fine.
->=20
-> I don't think so. It will spill an error in case there is no IRQ or
-> error happened.
+Test results for stable-v5.5:
+    13 builds:	13 pass, 0 fail
+    24 boots:	24 pass, 0 fail
+    40 tests:	40 pass, 0 fail
 
-I suppose even for an optional IRQ we want an error message when an
-error happens (i.e. IRQ is specified, but not used because $reason).
+Linux version:	5.5.17-rc1-g95e8add082c3
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-> So, either is should be _optional, or below conditional simply wrong, sho=
-uld be
->   if (irq < 0)
->     return irq;
+Cheers
+Jon
 
-In other words: Making the irq mandatory. Sounds reasonable to me
-considering the driver code. Without IRQ userspace needs to poll to
-know about error states like thermal shutdown.
-
--- Sebastian
->=20
-> > > > > +       if (irq) {
-> >
-> > But this must be
-> >
-> > if (irq > 0)
-> >
-> > or you will also try to continue with error codes.
-> >
-> > > > > +               ret =3D devm_request_irq(dev, irq, mp2629_irq_han=
-dler,
-> > > > > +                                IRQF_TRIGGER_RISING, "mp2629-cha=
-rger",
-> > > > > +                                charger);
-> > > > > +               if (ret) {
-> > > > > +                       dev_err(dev, "failed to request gpio IRQ\=
-n");
-> > > > > +                       goto iio_fail;
-> > > > > +               }
-> > > > > +       }
-> > > > > +}
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
-
---rlcmmezjuw4wenk5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6VlTYACgkQ2O7X88g7
-+pp4Pw/7Bn+7UvIz8i2/PkRw+aYkOp53iodrsxMP38OY6owBwJ2WtgN0Bk43IrzB
-h2v4VXpaI/CtXmb8P4/wtr9eNDuZ3jWksI3zMh6QPtBt+8z3kwzesMFXDIl6pDtC
-AD358+a89lKanBayAXNC28JQuOjP3r5LXbnfusUK2zo21A6ZAj8nu/WcmZ+tzxnI
-5wJpjyuLnwOIgyzKlYeL7KFZghfSK4uCaoMDS4FQ7t1mWgslqiUcH5M8CyVXURNh
-BM1ljZkq4APaBcVmG0Lgj8WPxn+b++8dazKPpV83uUz4X71/Tt5iGetUQjsQwDK8
-yHUa24/qwfTi1hD6LjUqxKtngbfksddIf3GeTqPfxARotCtMEUMSQ1eIcaQ71f43
-DLEfb4CHOO7Y3SK9u984AbFiD6Br34Wuk22qasl4g2sNKLRLOJPictqfjRNyTzH9
-KYHXVpzZLH1D1gEOtca5xupI1W2G2PSQ5pHuY18o/1EhwZuL6yPBekywczjNmjSp
-xVHVusojDvBZCnbZdCR18QsCcTzEcwcxUS5jk8CPcV3sQh0/5JSysC2rw34p9buB
-upfx8jwp9dWhs2HxMOUCFaDMyCMLg9m14cl/mGM/f09gE1+HPBYTvK3aRoQqNCHc
-gxmLpwvBDuC4mlKU2/o8GIv/NwDPmrgpNScaTxnx8gTX9Dh2+W0=
-=Qvky
------END PGP SIGNATURE-----
-
---rlcmmezjuw4wenk5--
+-- 
+nvpublic
