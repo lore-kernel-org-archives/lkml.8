@@ -2,131 +2,90 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B993AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70913C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB2A2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4521C206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="CPsOHPWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439210AbgDNLbQ (ORCPT
+        id S2439206AbgDNLb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:31:16 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2316 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439123AbgDNL3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:29:03 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4C70C735B70B8CB2A2C5;
-        Tue, 14 Apr 2020 19:28:57 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Apr 2020 19:28:47 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <will@kernel.org>, <catalin.marinas@arm.com>,
-        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
-        <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-Subject: [RFC PATCH v3 1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
-Date:   Tue, 14 Apr 2020 19:28:34 +0800
-Message-ID: <20200414112835.1121-2-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200414112835.1121-1-yezhenyu2@huawei.com>
-References: <20200414112835.1121-1-yezhenyu2@huawei.com>
+        Tue, 14 Apr 2020 07:31:29 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:21527 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439200AbgDNLbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:31:12 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 491jwp4f2HzZ5;
+        Tue, 14 Apr 2020 13:31:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1586863867; bh=XMK7e0Dm8F9YE8gKtQY1u7hsmjy1KuLoqRJsGZsIDcE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CPsOHPWcNDRbKJmA8ReFm7MwVhynuUCOFOdWX6Kj3c3xx9s4hmVn0j6s2Z4nzzt1c
+         Z/XzQ1W/X1ISsCV0CfSuVFBiTlLHb0I0iejhgKeM6WJs/JfZ35kq3KjyN5LuJEjEV5
+         WcWH0WoFwMfJ7qyqXaw3zhARV8ktvem1kFKh/y/aA4APigaAxCXAABAbL0rEQk6rt2
+         n54j71vXR4APXPcqYXC2+hZ0OTlr1LYcy/2dFdqBj8KFoAi158AeS2Ug+8TmLbxJ4G
+         +zsecp8nh0QLpwSIilYPdOCCvD0MbqBUeiP3kFlQ0AdNu22tN631+88QZjSRB3X0La
+         AR5yu3RKD69EQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Tue, 14 Apr 2020 13:31:04 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Pali =?iso-8859-2?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix reporting GPIO error value
+Message-ID: <20200414113104.GA27984@qmqm.qmqm.pl>
+References: <20200414102512.27506-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414102512.27506-1-pali@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
-range of input addresses. This patch detect this feature.
+On Tue, Apr 14, 2020 at 12:25:12PM +0200, Pali Rohár wrote:
+> Error code is stored in rp->reset_gpio and not in err variable.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 0e03cef72840..378d5a8773c7 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2314,8 +2314,8 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>  			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
+>  				rp->reset_gpio = NULL;
+>  			} else {
+> -				dev_err(dev, "failed to get reset GPIO: %d\n",
+> -					err);
+> +				dev_err(dev, "failed to get reset GPIO: %ld\n",
+> +					PTR_ERR(rp->reset_gpio));
+>  				return PTR_ERR(rp->reset_gpio);
+>  			}
+>  		}
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- arch/arm64/include/asm/cpucaps.h |  3 ++-
- arch/arm64/include/asm/sysreg.h  |  4 ++++
- arch/arm64/kernel/cpufeature.c   | 11 +++++++++++
- 3 files changed, 17 insertions(+), 1 deletion(-)
+You can use %pe directly on the pointer for added benefit of translation
+of the error to a name.
 
-diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-index 8eb5a088ae65..950095a72617 100644
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -61,7 +61,8 @@
- #define ARM64_HAS_AMU_EXTN			51
- #define ARM64_HAS_ADDRESS_AUTH			52
- #define ARM64_HAS_GENERIC_AUTH			53
-+#define ARM64_HAS_TLBI_RANGE			54
- 
--#define ARM64_NCAPS				54
-+#define ARM64_NCAPS				55
- 
- #endif /* __ASM_CPUCAPS_H */
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index ebc622432831..ac1b98650234 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -592,6 +592,7 @@
- 
- /* id_aa64isar0 */
- #define ID_AA64ISAR0_RNDR_SHIFT		60
-+#define ID_AA64ISAR0_TLBI_RANGE_SHIFT	56
- #define ID_AA64ISAR0_TS_SHIFT		52
- #define ID_AA64ISAR0_FHM_SHIFT		48
- #define ID_AA64ISAR0_DP_SHIFT		44
-@@ -605,6 +606,9 @@
- #define ID_AA64ISAR0_SHA1_SHIFT		8
- #define ID_AA64ISAR0_AES_SHIFT		4
- 
-+#define ID_AA64ISAR0_TLBI_RANGE_NI	0x0
-+#define ID_AA64ISAR0_TLBI_RANGE		0x2
-+
- /* id_aa64isar1 */
- #define ID_AA64ISAR1_I8MM_SHIFT		52
- #define ID_AA64ISAR1_DGH_SHIFT		48
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9fac745aa7bb..31bcfd0722b5 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -124,6 +124,7 @@ static bool __system_matches_cap(unsigned int n);
-  */
- static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_RNDR_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TLBI_RANGE_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_FHM_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_DP_SHIFT, 4, 0),
-@@ -1779,6 +1780,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.min_field_value = 1,
- 	},
- #endif
-+	{
-+		.desc = "TLB range maintenance instruction",
-+		.capability = ARM64_HAS_TLBI_RANGE,
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.matches = has_cpuid_feature,
-+		.sys_reg = SYS_ID_AA64ISAR0_EL1,
-+		.field_pos = ID_AA64ISAR0_TLBI_RANGE_SHIFT,
-+		.sign = FTR_UNSIGNED,
-+		.min_field_value = ID_AA64ISAR0_TLBI_RANGE,
-+	},
- 	{},
- };
- 
--- 
-2.19.1
-
-
+Best Regards,
+Micha³ Miros³aw
