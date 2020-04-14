@@ -2,237 +2,56 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54576C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC431C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A1920678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586882360;
-	bh=fh0CwTg9fVCUTMCmRwDo30VJ7gsfT2UR0AmvRtpphIQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=AvuEjnnRWz+PABSTlLd8LMAgMMFX04w2FWxqGqS5aBhiW9ruzYWxkAopGpG4AkSNO
-	 yvKjb316DZC9AtPBzL8UY+PdkOV6xhDfG1AenyuiiibyMm/PFNem4Vlf02oVCI5wJz
-	 CoT+c2iqZljTGv72bK5ARg3YytVJmibp2zT5bU1c=
+	by mail.kernel.org (Postfix) with ESMTP id B2FFE20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404429AbgDNQjQ (ORCPT
+        id S2404762AbgDNQkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:40:09 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:47480 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391830AbgDNQi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:38:58 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C23D20678;
-        Tue, 14 Apr 2020 16:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882337;
-        bh=fh0CwTg9fVCUTMCmRwDo30VJ7gsfT2UR0AmvRtpphIQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eeFdZnCdLKvn1k846cWdOhUR8u4BkQgLABxQymSIwfnjsTJahYe3UzAO6QMUQ/OEf
-         DXiVWQriEBloZXhonjlKOLh/+e2VMDpmwzTRWchYvhcuLPYQqBTKvC6eGHgBNvSyOh
-         ya7cvVU35j0clIOn1S4K4ZmSrFBdISAQwpOZiDUY=
-Subject: Re: [PATCH] selftest: add a script to perform selftest compile tests
-To:     "Bird, Tim" <Tim.Bird@sony.com>, Tim Bird <tim@bird.org>
-Cc:     "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tbird20d@gmail.com" <tbird20d@gmail.com>, shuah <shuah@kernel.org>
-References: <86508e9d-4aff-d9a0-3783-971a4686ccd1@bird.org>
- <9c2a8679-eb90-8dd1-43f6-40ce0a842c87@kernel.org>
- <CY4PR13MB1527E216D153ADDFE747F485FDDA0@CY4PR13MB1527.namprd13.prod.outlook.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <56a085c6-96fa-d5ad-086f-359dd3008fed@kernel.org>
-Date:   Tue, 14 Apr 2020 10:38:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S2404433AbgDNQkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:40:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 6926A3742B3D;
+        Tue, 14 Apr 2020 18:40:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LtX2ZRwLkphG; Tue, 14 Apr 2020 18:40:00 +0200 (CEST)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH 0/2] Fix some GPIO setup on Pinebook Pro
+Date:   Tue, 14 Apr 2020 18:39:50 +0200
+Message-Id: <20200414163952.1093784-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CY4PR13MB1527E216D153ADDFE747F485FDDA0@CY4PR13MB1527.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 10:06 AM, Bird, Tim wrote:
->> -----Original Message-----
->> From: shuah <shuah@kernel.org>
->>
->> On 4/13/20 4:15 PM, Tim Bird wrote:
->>> From: Tim Bird <tim.bird@sony.com>
->>>
->>> Add ksft-compile-test.sh.  This is a program used to test
->>> cross-compilation and installation of selftest tests.
->>>
->>> See the test usage for help
->>>
->>> This program currently tests 3 scenarios out of a larger matrix
->>> of possibly interesting scenarios.  For each scenario, it conducts
->>> multiple tests for correctness.  This version tests:
->>>    1) does the test compile
->>
->> Is it necessary to write this long a script? Could we just parse
->> the "kselftest
-> ???
-> 
+This patchset contains two small fixes for the dts of the Pinebook Pro.
+The first fixes inverted logic on the headphone detect GPIO.
+The second patch fixes unreliable DC charger detection.
 
-Sorry for the dangling sentence. :) Can we parse the make kselftest-all
-output instead?
+Tobias Schramm (2):
+  arm64: dts: rockchip: fix inverted headphone detection
+  arm64: dts: rockchip: enable DC charger detection pullup
 
->>>    2) is the kernel source directory clean after the compile
->>
->> Can you use make mrproper and see if anything needs cleaning?
-> I'll check into this.  Does 'make mrproper' return an error code if
-> it found something that needed cleaning?  Or do I have to parse
-> stuff.  The actual code to check if the directory is clean is pretty
-> short.
-> 
->>
->>>    3) does the test install operation succeed
->>>    4) does the test run script reference the test
->>>
->>
->> I like the idea of being able to test, however I am not convinced
->> you would need a whole new script for it.
-> 
-> The current build system is broken in a few different ways.
-> I have only enabled a few test cases out of the test matrix, to
-> be able to isolate some of the obvious problems from individual
-> target areas.  One of the reasons I wrote a full script was to more easily
-> enable additional tests, once functionality in the current build
-> system was fixed, to notify us of regressions going forward.
-> 
->>
+ arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I still want to see a way to use output from build and install
-steps and parse it, instead of a whole new script.
-
->>
->>> Signed-off-by: Tim Bird <tim.bird@sony.com>
->>> ---
->>>    MAINTAINERS                                  |   6 +
->>>    tools/testing/selftests/ksft-compile-test.sh | 567 +++++++++++++++++++++++++++
->>>    2 files changed, 573 insertions(+)
->>>    create mode 100755 tools/testing/selftests/ksft-compile-test.sh
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index cc1d18c..a6289c7 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -9127,6 +9127,12 @@ S:	Maintained
->>>    F:	tools/testing/selftests/
->>>    F:	Documentation/dev-tools/kselftest*
->>>
->>> +KERNEL SELFTEST SELFTEST
->>> +M:	Tim Bird <tim.bird@sony.com>
->>> +L:	linux-kselftest@vger.kernel.org
->>> +S:	Maintained
->>> +F:	tools/testing/selftests/ksft-compile-test.sh
->>> +
->>
->> Please don't add another entry to the MAINTAINERS file just
->> for a shell script under tools/testing/selftests
->>
->> This doesn't make sense.
-> OK. I only added this to eliminate a checkpatch.pl warning.
-> It seems like overkill to me also, but I was trying to obey the tools.
-> :-)
-> 
-> Maybe that warning from checkpatch is too aggressive?
-> 
-
-Yeah. checkpatch warn in this case is reminder in case a new entry
-is needed. A new entry isn't necessary in most cases.
-
->>
->>>    KERNEL UNIT TESTING FRAMEWORK (KUnit)
->>>    M:	Brendan Higgins <brendanhiggins@google.com>
->>>    L:	linux-kselftest@vger.kernel.org
->>> diff --git a/tools/testing/selftests/ksft-compile-test.sh b/tools/testing/selftests/ksft-compile-test.sh
->>> new file mode 100755
->>> index 0000000..e36e858
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/ksft-compile-test.sh
->>> @@ -0,0 +1,567 @@
->>> +#!/bin/bash
->>> +# SPDX-License-Identifier: GPL-2.0-only OR MIT
->>> +#
->>> +# ksft-compile-test.sh - test compiling Linux kernel selftests under lots of
->>> +#   different configurations.  This is used to check that cross-compilation
->>> +#   and install works properly for a newly submitted test target, and
->>> +#   also that changes to existing test Makefiles don't regress with regard to
->>> +#   this functionality.
->>> +#
->>> +# Copyright 2020 Sony Corporation
->>> +#
->>> +# Here are the things that Shuah Kahn asked for on 3/6/2020
->>> +# 1. Cross-compilation & relocatable build support
->>> +# 2. Generates objects in objdir/kselftest without cluttering main objdir
->>> +# 3. Leave source directory clean
->>> +# 4. Installs correctly in objdir/kselftest/kselftest_install and adds
->>> +#        itself to run_kselftest.sh script generated during install.
->>> +#
->>
->> I was asking for fixes to individual tests.
-> Well, I used this to find some things to fix.  I have some patches queued,
-> but I thought the tool might be useful for others.  I'll send the patches
-> instead of posting the tool.
-> 
->>
->>> +# Would be nice to make sure other features also work:
->>> +# 5. can use absolute, relative, or current directory for output directory
->>> +# 6. can use ~ in output directory path
->>> +#
->>
->> I do think this can be achieved with a simpler script wrapper around
->> existing commands and kselftest_install.sh instead of writing a whole
->> new shell script.
-> 
-> Well, my pain point is the build system itself, not kselftest_install.sh.
-> There are still some bugs in the build system, and it appears that people
-> still sometimes submit new tests with subtle problems compiling under
-> different build configurations.
-> 
-
-Agreed. I think it is still a better idea to parse to find error and
-display them.
-
-> My goal was to be able to test a whole matrix of build configurations,
-> to detect these problems.  But making a generic system to test a matrix
-> of configurations requires more than just putting together a few wrapper
-> scripts.  However, I'm not as familiar with the existing commands as you
-> are, so maybe I missed some functionality I could reuse.
-> 
-
-Right. Hence the reason why I am asking if you explored using exiting
-parsing build and install output. Approaching this as a parsing also
-reduces maintenance overhead for this script. I am not questioning the
-value of the script, I am asking about the approach.
-
-> One of the significant problems here, IMO, is that since most kernel developers
-> don't cross-compile, it introduces a whole range of potential
-> errors in the build system that they can't really test for.
->
-
-We have efforts such as lkft and soon kernelci do cross-compiles.
-powerpc tests have good coverage and so do arm. The problem is tests
-that can run on multiple architectures at times come in without good
-support.
-
->I'm happy to leave this outside the kernel tree, and provide 'testing as a service'
->  >by Fuego!) to find bugs in the kselftest build system.  In that case, 
-I'll just report
->bugs that this finds (along with fixes where possible).
-Testing as service by Fuego and fixes to problems you find is great.
-
-thanks,
--- Shuah
+-- 
+2.26.0
 
