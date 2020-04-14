@@ -2,105 +2,115 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1AFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19655C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BEF2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA30206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438053AbgDNJ6S (ORCPT
+        id S2438063AbgDNJ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:58:18 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:3089 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438040AbgDNJ6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:58:14 -0400
-Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id ED667262F71;
-        Tue, 14 Apr 2020 17:47:25 +0800 (CST)
-From:   Wang Qing <wangqing@vivo.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com
-Subject: Re: [PATCH 1/2] [V2 1/2]sched:add task_running_oncpu
-Date:   Tue, 14 Apr 2020 17:47:12 +0800
-Message-Id: <1586857633-2747-1-git-send-email-wangqing@vivo.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586779466-4439-2-git-send-email-wangqing@vivo.com>
-References: <1586779466-4439-2-git-send-email-wangqing@vivo.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSlVDS01LS0tKSkhPQ0xJT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mz46SCo4ITgwAgoVDzgaAjc2
-        HEsKCgxVSlVKTkNNQ05MTU9NSkxNVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
-        VUtVSEpVSklJWVdZCAFZQUhLSUk3Bg++
-X-HM-Tid: 0a71781618279375kuwsed667262f71
+        Tue, 14 Apr 2020 05:59:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:52210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438040AbgDNJ7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:59:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 605841FB;
+        Tue, 14 Apr 2020 02:59:08 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EB863F6C4;
+        Tue, 14 Apr 2020 02:59:07 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 10:59:04 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Fangrui Song <maskray@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] arm64: Delete the space separator in __emit_inst
+Message-ID: <20200414095904.GB1278@C02TD0UTHF1T.local>
+References: <20200413033811.75074-1-maskray@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413033811.75074-1-maskray@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->On Mon, 13 Apr 2020 at 14:04, Wang Qing <wangqing@vivo.com> wrote:
->>
->> We have no interface whether the task is running,
->> so we need to add an interface and distinguish CONFIG_SMP.
->>
->> Signed-off-by: Wang Qing <wangqing@vivo.com>
->> ---
->>  include/linux/sched.h | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index 4418f5c..13cc8f5 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -1843,6 +1843,11 @@ static inline unsigned int task_cpu(const struct task_struct *p)
->>
->>  extern void set_task_cpu(struct task_struct *p, unsigned int cpu);
->>
->> +static inline int task_running_oncpu(const struct task_struct *p)
->
->This function name is too close from task_running_on_cpu() and can be
->misleading as the difference is only "_"
->Also, how task_running_oncpu() is different from task_running() ?
+Hi Fangrui,
 
-I think task_running() should be renamed to task_running_on_rq(), this is what
-it originally mean. And the task_running_oncpu I added should be called 
-task_running(). This solves the confusing naming problem that already exists.
+On Sun, Apr 12, 2020 at 08:38:11PM -0700, Fangrui Song wrote:
+> Many instances of __emit_inst(x) expand to a directive. In a few places
+> it is used as a macro argument, e.g.
+> 
+>   arch/arm64/include/asm/sysreg.h
+>   #define __emit_inst(x)                       .inst (x)
+> 
+>   arch/arm64/include/asm/sysreg.h
+>   #define SET_PSTATE_PAN(x)            __emit_inst(0xd500401f | PSTATE_PAN | ((!!x) << PSTATE_Imm_shift))
+> 
+>   arch/arm64/kvm/hyp/entry.S
+>   ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+> 
+> Clang integrated assembler parses `.inst (x)` as two arguments passing
+> to a macro. We delete the space separator so that `.inst(x)` will be
+> parsed as one argument.
+
+I'm a little confused by the above; sorry if the below sounds stupid or
+pedantic, but I just want to make sure I've understood the problem
+correctly.
+
+For the above, ALTERNATIVE() and SET_PSTATE_PAN() are both preprocessor
+macros, so I would expect those to be expanded before either the
+integrated assembler or an external assembler consumes any of the
+assembly (and both would see the same expanded text). Given that, I'm a
+bit confused as to why the integrated assembly would have an impact on
+preprocessing.
+
+Does compiling the pre-processed source using the integrated assembler
+result in the same behaviour? Can we see the expanded text to make that
+clear?
+
+... at what stage exactly does this go wrong?
 
 Thanks,
-Wang Qing.
+Mark.
 
->
->> +{
->> +       return p->on_cpu;
->> +}
->> +
->>  #else
->>
->>  static inline unsigned int task_cpu(const struct task_struct *p)
->> @@ -1854,6 +1859,11 @@ static inline void set_task_cpu(struct task_struct *p, unsigned int cpu)
->>  {
->>  }
->>
->> +static inline int task_running_oncpu(const struct task_struct *p)
->> +{
->> +       return p == current;
->> +}
->> +
->>  #endif /* CONFIG_SMP */
->>
->>  /*
->> --
->> 2.7.4
->>
+> 
+> Note, GNU as parsing `.inst (x)` as one argument is unintentional (for
+> example the x86 backend will parse the construct as two arguments).
+> See https://sourceware.org/bugzilla/show_bug.cgi?id=25750#c10
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/939
+> Cc: clang-built-linux@googlegroups.com
+> Signed-off-by: Fangrui Song <maskray@google.com>
+> ---
+>  arch/arm64/include/asm/sysreg.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index ebc622432831..af21e2ec5e3e 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -49,7 +49,9 @@
+>  #ifndef CONFIG_BROKEN_GAS_INST
+>  
+>  #ifdef __ASSEMBLY__
+> -#define __emit_inst(x)			.inst (x)
+> +// The space separator is omitted so that __emit_inst(x) can be parsed as
+> +// either a directive or a macro argument.
+> +#define __emit_inst(x)			.inst(x)
+>  #else
+>  #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+>  #endif
+> -- 
+> 2.26.0.110.g2183baf09c-goog
+> 
