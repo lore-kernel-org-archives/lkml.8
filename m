@@ -2,69 +2,75 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7B2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913A6C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEC420732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7444B206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgDNPzE (ORCPT
+        id S1732234AbgDNPzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732077AbgDNPzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:55:01 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB8B206D5;
-        Tue, 14 Apr 2020 15:55:00 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 11:54:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [RFC][PATCH 00/36] objtool: Make recordmcount a subcommand
-Message-ID: <20200414115458.093e221b@gandalf.local.home>
-In-Reply-To: <064f41bd-0dfe-e875-df7c-214184c29fa7@redhat.com>
-References: <cover.1586468801.git.mhelsley@vmware.com>
-        <3a3f70df-07b0-91d9-33e1-e997e72b0c5c@redhat.com>
-        <20200414093506.7b91bbbb@gandalf.local.home>
-        <064f41bd-0dfe-e875-df7c-214184c29fa7@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 Apr 2020 11:55:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45252 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbgDNPzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:55:39 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id CF1822A04F7
+Subject: Re: [PATCH 0/4] Add support for constant power-supply property tables
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20200413183853.1088823-1-sebastian.reichel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <11e73f71-56f7-328a-ed4d-a4e393ba7265@collabora.com>
+Date:   Tue, 14 Apr 2020 17:55:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200413183853.1088823-1-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 15:17:39 +0100
-Julien Thierry <jthierry@redhat.com> wrote:
+Hi Sebastian,
 
-> > I was hoping to have objtool handle all the operations needed that required
-> > reading elf headers.
-> >   
+I went through all the patches and Anyway I also tested with cros-usbpd-driver
+and they look good to me. I am wondering if you shouldn't constify the users in
+this series too, looks pretty trivial?
+
+Cheers,
+ Enric
+
+On 13/4/20 20:38, Sebastian Reichel wrote:
+> Hi,
 > 
-> That makes sense, however, having each operation as an objtool 
-> subcommand doesn't solve that issue, right? Each invocation of objtool 
-> will re-read the elf object.
+> This marks the properties and usb_types entries in
+> struct power_supply_desc as const, so that drivers
+> can constify those tables.
 > 
-> I guess having all the relevant code in objtool as subcommand would be a 
-> first step towards that goal.
-
-Exactly. I believe the goal (it's been a while since we discussed this),
-was that we could "batch" the sub commands into a single command. That way,
-the executable will be executed once per object file, load all the elf
-headers, than iterate over all the sub commands that we set on the command
-line.
-
--- Steve
+> -- Sebastian
+> 
+> Sebastian Reichel (4):
+>   power: supply: core: Constify usb_types
+>   power: supply: charger-manager: Prepare for const properties
+>   power: supply: generic-adc-battery: Prepare for const properties
+>   power: supply: core: Constify properties
+> 
+>  drivers/power/supply/charger-manager.c     | 40 ++++++++++++----------
+>  drivers/power/supply/generic-adc-battery.c | 22 ++++++------
+>  drivers/power/supply/power_supply_sysfs.c  |  2 +-
+>  include/linux/power_supply.h               |  4 +--
+>  4 files changed, 36 insertions(+), 32 deletions(-)
+> 
