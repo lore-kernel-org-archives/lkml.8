@@ -2,94 +2,128 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7350DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C81AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466512076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045CF2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QiJ9ArI4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H7fyljQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633194AbgDNUc0 (ORCPT
+        id S2633211AbgDNUdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633183AbgDNUcJ (ORCPT
+        Tue, 14 Apr 2020 16:33:37 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56480 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2633198AbgDNUd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:32:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB2CC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:32:08 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k18so375725pll.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=RoKpcxr6K9VGzAmsqGBuph/1FoGQ9qjjJ0YxDqJJHHg=;
-        b=QiJ9ArI4RGUZhtyAjahBG207F3DQ0dZvDNZYdWFyHhMRRRSlzyFzC4sGGOg/4ROOBT
-         Xy2fb6wp6NXZaEWLhn5Se6/JkcAwSQHiPsbE2laZg4hG5k9JNR5qDpZhNpdGdanByfFJ
-         77diWG+Xdzc7JkfsQfJq2MY9esr8dS5CXo9Ak=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=RoKpcxr6K9VGzAmsqGBuph/1FoGQ9qjjJ0YxDqJJHHg=;
-        b=bA5AQJq6o508nCcFTPCOYElqa197Bvzo0qL9KZlnH2K8Abkc1CdZJKawRMqUhDUkbE
-         8Z6gXQ14HLrwuRRMra+KLJfrI+h2PJ79gC22s/jPMbkUT/n4/saaW+M26abMP1E/k2BW
-         BQ3OomT2CIOEKvpABaDugLP5ipnQwc0Lq1LDttNFIaMO50emtpaV7fGnsQjCvbe+SvBb
-         hbpox7yAavB6JPrL32lt5mnTAwB/PlBhOwtKEbLW/paozdKcHIGaXg/wNKEVwWXCrjPp
-         BybRcHuhOrYdycd0VD+GIQHTBiVLsT/Bx3q/t9qDoFLW6o/k+WkLtfPuUsfGHkeiiQjz
-         W3ag==
-X-Gm-Message-State: AGi0PubSltWnyiujOfBFidblScVCs5xGx6KT9B6SY4B0WygwMSqRKbJg
-        H7sUmQJrKTVKvCKpG7LXHhgj7A==
-X-Google-Smtp-Source: APiQypJmomzVcaErIMWufXBh4DLq/VWKaXXky2Q+jgmXEF61n7QDVFPgCA0LLJzRIGPeVmppodfzCA==
-X-Received: by 2002:a17:902:8305:: with SMTP id bd5mr1602962plb.114.1586896327676;
-        Tue, 14 Apr 2020 13:32:07 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i124sm11791303pfg.14.2020.04.14.13.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:32:07 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Apr 2020 16:33:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586896406;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KwTOC5onNXJuxN2tXzBuJ3tclXWEJTwV06ZLB9D3qTQ=;
+        b=H7fyljQ1FCRTuqAMAiQNPpJOq2tLRqyR4Si/k7ie7IwAqpUWS5OervaSVnlajV6qXJ2D/G
+        QNuEwUSwQfTZUoJfOk4QR726zbKh6WsEXjDsNQjmpZ+Mgvejw18laMmyvpG3U0rm+3dMgz
+        QTw2Xf2Ds3afTdMHJXliT0ycd4jee0U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-PUQ0StVLN8yTR-bYNrMKXQ-1; Tue, 14 Apr 2020 16:33:20 -0400
+X-MC-Unique: PUQ0StVLN8yTR-bYNrMKXQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0E25149C0;
+        Tue, 14 Apr 2020 20:33:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BA60126510;
+        Tue, 14 Apr 2020 20:33:17 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] keys: Fix proc_keys_next to increase position index
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 14 Apr 2020 21:33:16 +0100
+Message-ID: <158689639664.3925765.4549426529245164675.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585718145-29537-5-git-send-email-sanm@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-5-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v7 4/4] arm64: dts: qcom: sc7180: Add interconnect properties for USB
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Tue, 14 Apr 2020 13:32:06 -0700
-Message-ID: <158689632638.105027.4250669142733413538@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-03-31 22:15:45)
-> Populate USB DT nodes with interconnect properties.
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
+From: Vasily Averin <vvs@virtuozzo.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+If seq_file .next function does not change position index,
+read after some lseek can generate unexpected output:
+
+$ dd if=/proc/keys bs=1  # full usual output
+0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
+1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
+27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
+2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
+33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
+3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
+3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+521+0 records in
+521+0 records out
+521 bytes copied, 0,00123769 s, 421 kB/s
+
+$ dd if=/proc/keys bs=500 skip=1  # read after lseek in middle of last line
+dd: /proc/keys: cannot skip to specified offset
+g   _uid_ses.1000: 1        <<<< end of last line
+3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+   <<<< and whole last line again
+0+1 records in
+0+1 records out
+97 bytes copied, 0,000135035 s, 718 kB/s
+
+$ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
+dd: /proc/keys: cannot skip to specified offset
+3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+   <<<< generates last line
+0+1 records in
+0+1 records out
+76 bytes copied, 0,000119981 s, 633 kB/s
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=206283
+
+Cc: stable@vger.kernel.org
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ security/keys/proc.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/security/keys/proc.c b/security/keys/proc.c
+index 415f3f1c2da0..d0cde6685627 100644
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -139,6 +139,8 @@ static void *proc_keys_next(struct seq_file *p, void *v, loff_t *_pos)
+ 	n = key_serial_next(p, v);
+ 	if (n)
+ 		*_pos = key_node_serial(n);
++	else
++		(*_pos)++;
+ 	return n;
+ }
+ 
+
+
