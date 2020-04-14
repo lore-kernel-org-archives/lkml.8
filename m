@@ -2,114 +2,137 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12656C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4339FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F33206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1729E20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="V8/TjoNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406461AbgDNHOH (ORCPT
+        id S2406479AbgDNHOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:14:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15417 "EHLO mga14.intel.com"
+        Tue, 14 Apr 2020 03:14:35 -0400
+Received: from mout.web.de ([217.72.192.78]:45047 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728832AbgDNHOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:14:04 -0400
-IronPort-SDR: x+GymWW4BvhmswprN44dAE603qBZeSJ9AoAEd7XftgtZUDY/RUiHlnulUBU9PwZEE/vn8kD2RN
- Oz4EQ3zugJtA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 00:14:01 -0700
-IronPort-SDR: QOV5zgQ1egzihWv+H7DsjawipRguSz0Uey+cL3InHyRrluoUgmrK9ZXPKAIPUeF5fvnUcr7+Ix
- 89mCJfnjXw9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="288134130"
-Received: from elenamax-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.42.208])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Apr 2020 00:13:56 -0700
-Date:   Tue, 14 Apr 2020 10:13:49 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
-Message-ID: <20200414071349.GA8403@linux.intel.com>
-References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
- <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
- <20200413180732.GA11147@linux.intel.com>
- <7df7f8bd-c65e-1435-7e82-b9f4ecd729de@redhat.com>
+        id S1728832AbgDNHOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:14:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586848465;
+        bh=PVmBDL5kcUuX+6XrhUBKRuAWQjEhX1m5FbnPAl74/Lc=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=V8/TjoNbkWnJYiaAh3tyrtU19+jeGKGh9m+FZD+ndfmIQUCyJhbLg5WBGgeDqoeyN
+         RLW5qbxdrtGVf0lliJQ3uBvG97MslahNWpJQmuWWE8+gPBAv/BjPbrET2JWPAyf6ak
+         0lZQN7DCL0Hg+louTxQfruBDzFjkznZ6BSQiCJbs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.66.171]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MKrU4-1jOFm51qwi-0007Oa; Tue, 14
+ Apr 2020 09:14:25 +0200
+To:     Muchun Song <songmuchun@bytedance.com>,
+        Xiongchun duan <duanxiongchun@bytedance.com>,
+        linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm/ksm: Fix a null pointer dereference
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <740ca6b2-d3c9-02a2-9d81-c212bf9772e2@web.de>
+Date:   Tue, 14 Apr 2020 09:14:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7df7f8bd-c65e-1435-7e82-b9f4ecd729de@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CtLWSo0wH6cUZE0FLVUUBSrkRYpuXgYuVUhKJOJpPiA2Jv3zKIv
+ l98kSryOZIuutLQiU5zjscyzalrOpzREzbsONfzksRA5wl2mNb4EKHBacZ17+MCcmb3Rflz
+ BpcfQBatiZTqdkrwyK2ajlxDYfKoBRhJQ6gbkDDd2PLEKPeC1I5JPLAMJRDwNMMqhEnLetb
+ 6/IC7yUNtD4G0Enz5cETQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Iw23QiE6u9o=:Xa6hEsYa6mhftHkWY414iF
+ W6rn/EoIwnsrbT+CzMBsx6zx/VdUK7/5x5LwFbHV28h43EfNhi47DnbItNd15J2HsfSKE63Wr
+ bxJCEbxk4gfp2a98dHov5weooHQ535Mru6d/lRKVZNsoIPqCyRSGDm+hvBdtT3cgkb+opa9hE
+ LYA5BlXhHIgP3mGaKpLCQfwVjoDDpQyqD+t1dd/UqCHAyqbn9R8jkdUKhbmdre/Px/fNbpbJ6
+ +gedZ0y5MO5WD1pltq6Y3dUSNmjjYGlm1z/UObo2u3xV/rHXnxsQKSp3zzosFQgHja2OUPrq3
+ ZVmvwsvc13b883OCnUBq+QJANFaJU/Fsh2kbTiRRw6kYvOH8v1STeATqFyDhHQlPog6l8nOGx
+ S2I2AKHAcXTUEc1t1NLz3+YRU5eJtWWuOEzONs1+PNfuUZx7J/HnFxjZLSLkPA6tvn+/BLpJd
+ uOHwl6f+1SOUEvFi0ge9027/laSi+9+ROd8Bzbw+V5JgpabVTrbsmi8DL3dq0BqInO6ZjHNn3
+ JlFt3c085fWffXZ6mlCRQvBXNYkbg+CKM+xr3VHsRYAjjUeEf/rf/Av3XPu9J2h9WIkc0Msig
+ 2wXXIsVyKzt40I7zaPI+MVIL+fBbI/yoZCbpIi0uVLA9s+lC1AfINaYXE642Q4G4U3FHEhE4G
+ GxnxAmuprWnTKyh7+9OJ5DnFqjiTxIZb3gI+TsP47iFzUgih37heX3RioA4qFZtLehOSyVtT9
+ cdqLc7XPcYO/Kvy3idOkF7kq06eNBVHJX9lBhZyQq51iZU8ljskCotqlZPcJCk8gnkQn9hC7D
+ I008V0RoB3PWokJuzPfpsKJ93jRF57moq09pQaqdvNxLikqy59u2chdyFhT4uFYye8WAhYrc3
+ LfJ879wzy13hOJvYskLZpPiAMqg2f6WAU7T3Hn4g5grtOHE2PJWw5RJ9he6pzKKVrfk1UuXT0
+ BhaeyfoPIcVxoopsUrAWgkUBZAdvKr+D1Eus34ZV6qh/vugHRt8qcafWzsAPJbFG+c+L7piKF
+ Ie0ZD92x8JYJza1oklt+KB452QMF6SFasnC99n0Ai8rhf8i14U1qZ4WlERUKBCWozbbUiZbn+
+ qdiTwdRtnErdNSr8IzY/tn5vuCmBwLCIsuoiHKjb6GvUFjhPYqrk7fSkQWIF9O24zzBmD8iaB
+ 5RuS1Du7PKHVEnrxpZm52fN6VMoXF7oaQGj8fzdqrgh0TSpYnxaNsLGi3EtYpvB33aMif49T9
+ +NDIPUIh9EV1iRaD9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 08:11:15PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 4/13/20 8:07 PM, Jarkko Sakkinen wrote:
-> > On Mon, Apr 13, 2020 at 12:04:25PM +0200, Hans de Goede wrote:
-> > > Hi Jarkko,
-> > > 
-> > > On 4/12/20 7:04 PM, Jarkko Sakkinen wrote:
-> > > > Call devm_free_irq() if we have to revert to polling in order not to
-> > > > unnecessarily reserve the IRQ for the life-cycle of the driver.
-> > > > 
-> > > > Cc: stable@vger.kernel.org # 4.5.x
-> > > > Reported-by: Hans de Goede <hdegoede@redhat.com>
-> > > > Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
-> > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > ---
-> > > >    drivers/char/tpm/tpm_tis_core.c | 5 ++++-
-> > > >    1 file changed, 4 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> > > > index 27c6ca031e23..ae6868e7b696 100644
-> > > > --- a/drivers/char/tpm/tpm_tis_core.c
-> > > > +++ b/drivers/char/tpm/tpm_tis_core.c
-> > > > @@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
-> > > >    		if (irq) {
-> > > >    			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
-> > > >    						 irq);
-> > > > -			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
-> > > > +			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
-> > > >    				dev_err(&chip->dev, FW_BUG
-> > > >    					"TPM interrupt not working, polling instead\n");
-> > > > +				devm_free_irq(chip->dev.parent, priv->irq,
-> > > > +					      chip);
-> > > > +			}
-> > > 
-> > > My initial plan was actually to do something similar, but if the probe code
-> > > is actually ever fixed to work as intended again then this will lead to a
-> > > double free as then the IRQ-test path of tpm_tis_send() will have called
-> > > disable_interrupts() which already calls devm_free_irq().
-> > > 
-> > > You could check for chip->irq != 0 here to avoid that.
-> > > 
-> > > But it all is rather messy, which is why I went with the "#if 0" approach
-> > > in my patch.
-> > 
-> > I think it is right way to fix it. It is a bug independent of the issue
-> > we are experiencing.
-> > 
-> > However, what you are suggesting should be done in addition. Do you have
-> > a patch in place or do you want me to refine mine?
-> 
-> I do not have a patch ready for this, if you can refine yours that would
-> be great.
+> The find_mergeable_vma can return NULL. In this case, it leads
+> to crash when we access vma->vm_mm(which's offset is 0x40) in
 
-Thanks! Just wanted to confirm.
+I suggest to improve the commit message.
 
-/Jarkko
+* Wording alternative:
+  to a crash when we access vma->vm_mm (its offset is 0x40) in
+
+* Can a function name be nicer than the information =E2=80=9Cat 0000000000=
+000040=E2=80=9D
+  in the patch subject?
+
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change desc=
+ription?
+
+Regards,
+Markus
