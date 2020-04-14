@@ -2,61 +2,63 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC9FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDACC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6E920767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587F82072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGK2Uw7P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNkCAZdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405147AbgDNEQl (ORCPT
+        id S2405183AbgDNEQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 00:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
+        Tue, 14 Apr 2020 00:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405132AbgDNEQj (ORCPT
+        by vger.kernel.org with ESMTP id S2405148AbgDNEQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 00:16:39 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B67C0A3BDC;
-        Mon, 13 Apr 2020 21:16:39 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so11515154wmk.5;
-        Mon, 13 Apr 2020 21:16:39 -0700 (PDT)
+        Tue, 14 Apr 2020 00:16:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AC7C0A3BE2;
+        Mon, 13 Apr 2020 21:16:43 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id u13so12222424wrp.3;
+        Mon, 13 Apr 2020 21:16:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hyKFoSOT3+JqQspFpmS0qfxT2Hk1NGaZGJAmafeRRtk=;
-        b=OGK2Uw7P7H8pQ49HPYbtL3YliUCHUWx4NkZDNImgjmfM2asoA9P20xDbNR43tqEwPs
-         8iEqjUan/XnkuRsaI5VZQNG3yX0MrTy7tajEKI1jR3tZaEkXw/phtTfTy6+aaGwJ/Ft+
-         Uq+GmI0TUxN9O3+vexT2qqaDMWLncJoPMYxIMcUIrM3Wlq6frsTkTii7Cbt2tdoL8WQ8
-         jkJsWg+Q4WSI+C1pDUCG1hVnLFWdHDWq3tWet68694RxeIEYHDSoe4cvz4Q+5WBVlmXl
-         2ZYqd40DEjaLk+KpJ4XnGX+S9AMvdHwqcEi3grVOdEyJlpv2o5dYToCyf34ok209dLIo
-         Ke9w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=SXFXDht7/3iXzvI5k60WQfsBzoAI9Y3+puLs1Yp6VtY=;
+        b=YNkCAZdknXK8VmHZ0F4x4nF47T2prrmOKC/yEOWk3nGbcOx8VquapD9JJceuakhCY6
+         6kvUNrn+E+xETPUkALedeJFBA8i17rBIHTn4wOxYobMpZFQtaw4q1iS6z+eZnpmHwbBd
+         OgCDKSTrSYtCDJfnHBFrV+EHwnwMA+knrJ51Q6QWBbCZJgN4xOQ3C9/0UCxSoChpEZc1
+         MNGnapOeY6n55g7Rw6MjLSM/4l79U0/V72Wf3cCL+7MQY7vB5il8XFwWHTphIvX/d30e
+         u2RrjeICrrmZFtsLBZTBzqnzR8N8KJPp/V9Wemr/AoCAWO0NcjCCvFMTgVdw+YyOrPcT
+         NFGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hyKFoSOT3+JqQspFpmS0qfxT2Hk1NGaZGJAmafeRRtk=;
-        b=Uwoy1EqOC4LY3ykrJ6rs4QAJm1nvMNcKAg5Tx7e7pLSQWs/dKx+VgDrAVTYl4DwXo6
-         1gZgvll7LbOl03FSYCsar5e8F9S05zr4zxvjROqjTfBZx1Ka/Z+A2EeNH/NXRjB9A8+v
-         3CT/ttaxd7GTpKculR0eFr5N8z7lD+8fzmb5Cfo8JhI+q4GQsaO3opwtclgyXMbk4mnw
-         zKhmy253swwAMjPwQSElSuy5Kj+cAaz3F++jRbAcXroC5pT2yKAsKZJi8jJRFw28Xstc
-         Vh5swSc7gyvahq61LhK/wqVSXj5OKkEMkWq9ZPG2fzOlQTLGqBDxzU4qXEhhA9MpssB3
-         vf3A==
-X-Gm-Message-State: AGi0PubEnIyYBpyBl22+W/QfW281CX0UOLKOj4KRWFLUmQZlNNzx9rzm
-        Dhyoc5QGNMuZ9q6ifNK0n1Ae+u4k
-X-Google-Smtp-Source: APiQypLAagBuih4l8BRE4fBYBjWwpOjC3wpu2kO/zAF5kYtC31E5EXaOZj/HyEGbjGDwgkxtAoWyGg==
-X-Received: by 2002:a1c:6642:: with SMTP id a63mr20267586wmc.47.1586837797834;
-        Mon, 13 Apr 2020 21:16:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=SXFXDht7/3iXzvI5k60WQfsBzoAI9Y3+puLs1Yp6VtY=;
+        b=RcTEaiKRaaXY7o+085T0E9psq+deifwxAvD4N1Ih5kv/Ooci1SvbvXOHdD6ocYiRtd
+         itGhplo20hua+z8fsPWran60E7Bh1mxwDHe9OB4dw4CPrzYf31M2tiLqwOMk01hng06w
+         Zuq6USDbiTRxyell5f3uyO43m22Mvns+O/FUmZ1OvirfyvF4TOb2LuQgY0xP13+wDd9M
+         X60SGtbCuw1iiqYD95rXzCvgRTvSAOpdO+i+ed3my/MFaLB4lROQBCAJJ6TVkXEw0oHt
+         wDs+TWAMv1ZO/DAhCz7ludui8Et/ke+TJuleWk5l4Yfy/xZ2q+xC8X6EVGtqcCWJb7gD
+         0KuQ==
+X-Gm-Message-State: AGi0PuYRanXgQU11/naH8NgZp4iACDlqVBjoO2aR/03KxTorqbUVgT9H
+        psGKrhZbg0d0COviGpDfVjk9E3C3
+X-Google-Smtp-Source: APiQypIcZDxxr2Eu1lQZSjSFJyoLmGE3ZTB8XGWig3h8cGrZ3uZ0abVEthSGjKHd95e3BVxrCkgQjg==
+X-Received: by 2002:a5d:410a:: with SMTP id l10mr21315456wrp.355.1586837802152;
+        Mon, 13 Apr 2020 21:16:42 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n4sm16704471wmi.20.2020.04.13.21.16.35
+        by smtp.gmail.com with ESMTPSA id n4sm16704471wmi.20.2020.04.13.21.16.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 21:16:36 -0700 (PDT)
+        Mon, 13 Apr 2020 21:16:41 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -64,46 +66,42 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
         linux-kernel@vger.kernel.org (open list), davem@davemloft.net,
         kuba@kernel.org
-Subject: [PATCH net 0/4] net: dsa: b53: Various ARL fixes
-Date:   Mon, 13 Apr 2020 21:16:26 -0700
-Message-Id: <20200414041630.5740-1-f.fainelli@gmail.com>
+Subject: [PATCH net 2/4] net: dsa: b53: Fix valid setting for MDB entries
+Date:   Mon, 13 Apr 2020 21:16:28 -0700
+Message-Id: <20200414041630.5740-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200414041630.5740-1-f.fainelli@gmail.com>
+References: <20200414041630.5740-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, Andrew, Vivien, Jakub,
+When support for the MDB entries was added, the valid bit was correctly
+changed to be assigned depending on the remaining port bitmask, that is,
+if there were no more ports added to the entry's port bitmask, the entry
+now becomes invalid. There was another assignment a few lines below that
+would override this which would invalidate entries even when there were
+still multiple ports left in the MDB entry.
 
-This patch series fixes a number of short comings in the existing b53
-driver ARL management logic in particular:
+Fixes: 5d65b64a3d97 ("net: dsa: b53: Add support for MDB")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/dsa/b53/b53_common.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-- we were not looking up the {MAC,VID} tuples against their VID, despite
-  having VLANs enabled
-
-- the MDB entries (multicast) would lose their validity as soon as a
-  single port in the vector would leave the entry
-
-- the ARL was currently under utilized because we would always place new
-  entries in bin index #1, instead of using all possible bins available,
-  thus reducing the ARL effective size by 50% or 75% depending on the
-  switch generation
-
-- it was possible to overwrite the ARL entries because no proper space
-  verification was done
-
-This patch series addresses all of these issues.
-
-Florian Fainelli (4):
-  net: dsa: b53: Lookup VID in ARL searches when VLAN is enabled
-  net: dsa: b53: Fix valid setting for MDB entries
-  net: dsa: b53: Fix ARL register definitions
-  net: dsa: b53: Rework ARL bin logic
-
- drivers/net/dsa/b53/b53_common.c | 31 ++++++++++++++++++++++++++-----
- drivers/net/dsa/b53/b53_regs.h   |  4 ++--
- 2 files changed, 28 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index fa9b9aca7b56..e937bf365490 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1561,7 +1561,6 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+ 		ent.is_valid = !!(ent.port);
+ 	}
+ 
+-	ent.is_valid = is_valid;
+ 	ent.vid = vid;
+ 	ent.is_static = true;
+ 	ent.is_age = false;
 -- 
 2.17.1
 
