@@ -2,135 +2,84 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B18BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001EDC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11C612072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586865132;
-	bh=Fdj1YVdp//ceZ9oMqGAN8F8tYVPLTWDDFpuFS8d9ZK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=18bGfl20c13iOVGKQa09nQoEOdO8FuesaXSDuoQg+ggWjDanZscI4U2Vyd3h5GWo9
-	 qs2Bmz+obtHgHYqniBM2HvIUsskzAc6Z+Pw4SaRMviL09VUl/8ZEBA2eyg1VZdoHt2
-	 y0rZfldItIeG91rL4VjTipjYXIcESR8fVde/rXGk=
+	by mail.kernel.org (Postfix) with ESMTP id CC18A206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439640AbgDNLwK (ORCPT
+        id S2439660AbgDNLw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60064 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 07:52:58 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38462 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728476AbgDNLwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:52:06 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC477206D5;
-        Tue, 14 Apr 2020 11:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586865126;
-        bh=Fdj1YVdp//ceZ9oMqGAN8F8tYVPLTWDDFpuFS8d9ZK0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xvLl7gxIK83JbrlKz158gl7mOTjXgiogxIFkzAfjjz+oIY5zBWsHqzrNFmgAqOLbA
-         P/zzA3lQB9Qd8GhjnQIg/w6omdvO2ltpJYdcrpsC36+XJuHHDFS9eJQhe7h7x2Ost3
-         nxZiqNMd+376EhOyEglUhGg3Hizw1Q0W+Df/EDvc=
-Date:   Tue, 14 Apr 2020 17:21:53 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
- sensor
-Message-ID: <20200414115153.GC21559@Mani-XPS-13-9360>
-References: <20200412183658.6755-1-mani@kernel.org>
- <20200412183658.6755-4-mani@kernel.org>
- <20200413175054.626283dc@archlinux>
+        id S1728476AbgDNLwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:52:55 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jOK7V-0002BV-00; Tue, 14 Apr 2020 13:52:49 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 68F61C0108; Tue, 14 Apr 2020 13:52:35 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 13:52:35 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        geert@linux-m68k.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH] vhost: do not enable VHOST_MENU by default
+Message-ID: <20200414115235.GA13675@alpha.franken.de>
+References: <20200414024438.19103-1-jasowang@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413175054.626283dc@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200414024438.19103-1-jasowang@redhat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:50:54PM +0100, Jonathan Cameron wrote:
-> On Mon, 13 Apr 2020 00:06:58 +0530
-> mani@kernel.org wrote:
+On Tue, Apr 14, 2020 at 10:44:38AM +0800, Jason Wang wrote:
+> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
+> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
+> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+> without the caring of CONFIG_VHOST.
 > 
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> > 
-> > Add devicetree OF match table support for CCS811 VOC sensor.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
+> for the ones that doesn't want vhost. So it actually shifts the
+> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
+> not set". So this patch tries to enable CONFIG_VHOST explicitly in
+> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
 > 
-> Hi,
-> 
-> A few small things to clean up inline
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/iio/chemical/ccs811.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
-> > index 6cd92c49c348..313931208f61 100644
-> > --- a/drivers/iio/chemical/ccs811.c
-> > +++ b/drivers/iio/chemical/ccs811.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/iio/triggered_buffer.h>
-> >  #include <linux/iio/trigger_consumer.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of.h>
-> 
-> You are including this just to get things in mod_devicetable.h
-> so include that directly instead.
-> 
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  arch/mips/configs/malta_kvm_defconfig  |  1 +
 
-I added this include for of_match_ptr. Since it is not needed anymore, I'll drop
-this.
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-> >  
-> >  #define CCS811_STATUS		0x00
-> >  #define CCS811_MEAS_MODE	0x01
-> > @@ -538,9 +539,16 @@ static const struct i2c_device_id ccs811_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, ccs811_id);
-> >  
-> > +static const struct of_device_id ccs811_dt_ids[] = {
-> > +	{ .compatible = "ams,ccs811" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
-> > +
-> >  static struct i2c_driver ccs811_driver = {
-> >  	.driver = {
-> >  		.name = "ccs811",
-> > +		.of_match_table = of_match_ptr(ccs811_dt_ids),
-> No need for the of_match_ptr macro.  It has several issues.
-> 
-> 1) Blocks PRP001 ACPI magic device types being used to instantiate
-> this using the device tree binding but under ACPI.
-> 2) Will give warnings about ccs811_dt_ids being unused on no
->    device tree builds.
-> 
+Thomas.
 
-Okay, will use ccs811_dt_ids directly.
-
-Thanks,
-Mani
-
-> >  	},
-> >  	.probe = ccs811_probe,
-> >  	.remove = ccs811_remove,
-> 
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
