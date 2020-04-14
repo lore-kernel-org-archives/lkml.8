@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592E1C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7B8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3159E2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA77A20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LSXUefaf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n2G/G4Bd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404439AbgDNDI1 (ORCPT
+        id S2404451AbgDNDIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
+        Mon, 13 Apr 2020 23:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404429AbgDNDIY (ORCPT
+        by vger.kernel.org with ESMTP id S2404437AbgDNDI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:08:24 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1004C0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:08:22 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id k15so5453447pfh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:08:22 -0700 (PDT)
+        Mon, 13 Apr 2020 23:08:27 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2EEDC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:08:26 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g32so5391733pgb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sK5J9WWtksNX77+NYMwDl6iDZ21wbSLhPOx9BD2BM8M=;
-        b=LSXUefafyRPCK1BKfVXiyl8L6XfmghKkzW97uJsOEM4gDKMgCfDopHvzMyxX9Myj88
-         Gl5rTEhzpS1OYgiBDgymvERjRoXimxL5xwpDoZPX/ySaHiEso7gshkntX1zU3eV/rMje
-         P7odV0SrY0XzqZfAZFoea4TeBlA+Wp45m+108=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5zRLvY/lFyVA8CmcHxoztfhLeB6Hcp8Rb9myeLFGE2Y=;
+        b=n2G/G4BdsXylPAXJFcQRTVHOuqsJKdpWbXtgpE0vRfTZ6zqn5UOIvHQK/E6B09RbBb
+         LDa0XYcYzYD5v7gjcGLOmaVvkxWAgoIi8UKyC9Xpli+XMHphDtBdltPVBndKpUx5BNVR
+         iPSvizo2wr2JHDiXX3MwqKvyQJlQ25Ua8hL7Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sK5J9WWtksNX77+NYMwDl6iDZ21wbSLhPOx9BD2BM8M=;
-        b=U32s088L1AGX75BVNINzmb502jHfbpWUfEXWZ2vL8tyzYLCq3kFyHsYgPfMWBeDPW2
-         PiY0Zs3KMsoRvI3hS3zAbZDhZ0779UaQnPKoEz9ADh0OV8ASCVfkfV0T4lXFFLGat54C
-         goqJwHJP2U6XBS9BaCCv9T3xtJE0wn/Q5118WZpM7lzahMgrYA8NtCcYPjwCOqpTzXUj
-         SHOoGr75UviLovt4NiG/SP0xyc68nT3PduUmFNIZxSWzaqbOmrWfDuSw75lqmiuJ7o8C
-         6ppN5I3fMJN3H115Thss23chM4RnDZVghFrySwqYVjPbG7r0iutYMVVu6boObRDv3yfX
-         4CLQ==
-X-Gm-Message-State: AGi0Puam2b13ItCtx9yumPftmVHNXAAxNwXByq7tDrS863WsjiK06da3
-        RBe9nCP21me8iitDsqCPlFC9oA==
-X-Google-Smtp-Source: APiQypJQpaS0PH8YnPtS/hZHhI9tNItaYB2TAmhKVyqtt1h2PIezqUr6JFZ0U4VOiU7IsrqBf+3Iqg==
-X-Received: by 2002:a63:6287:: with SMTP id w129mr10337254pgb.410.1586833702123;
-        Mon, 13 Apr 2020 20:08:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5zRLvY/lFyVA8CmcHxoztfhLeB6Hcp8Rb9myeLFGE2Y=;
+        b=Gv5DanaiCozg8FDYSABZPe1zSb6Ye2r5lKC0wvEeKn7Jcu9ykm0w2tr1C62IYCxVfp
+         G/eUHsjiXleAlNvCu9V7clVR9AxJfGMNcFQqY6DjPP7WYPBO7FYKcR/hieUc8v1QWCJ7
+         VApey1u302OEtLlgpbhT0qRcHvXQrY8mev1+M9fXuJ1GWjBuR7T5Z2wrpYMu3OAl4AGn
+         U4bdOw2yl2FlASY2TtjwemMbwwgcemcFTpTAN9cCy9cUrPENUAcqXjlR+rbaXRNnMSPn
+         8qVbFCKG1nvFm38yD/y/VM1NXLxGtm2A9UURySrqiJCV+ldaWJeBu4wSA5y0kvNM/Qmi
+         Pa6A==
+X-Gm-Message-State: AGi0PuYsKCd1UIfF/nT6gm/5SU9iY5YeoQkla0Rbz0gH+Ej8ms2DvuuM
+        UNY+pM5ZAiT2iVtpU3nR/U4f9Q==
+X-Google-Smtp-Source: APiQypLDqSi+uJwrfXUjYacymxQYaq/+/Ey0TiNm/1+jCiQfoIEMLFJm77pkr/oXOdsSGluRuYv5UA==
+X-Received: by 2002:a62:1a4e:: with SMTP id a75mr8921678pfa.235.1586833706151;
+        Mon, 13 Apr 2020 20:08:26 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id z23sm3610897pfr.136.2020.04.13.20.08.19
+        by smtp.gmail.com with ESMTPSA id z23sm3610897pfr.136.2020.04.13.20.08.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 20:08:21 -0700 (PDT)
+        Mon, 13 Apr 2020 20:08:25 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
@@ -66,10 +66,12 @@ Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 1/2] arm64: dts: mt8173: fix mdp aliases property name
-Date:   Tue, 14 Apr 2020 11:08:14 +0800
-Message-Id: <20200414030815.192104-1-hsinyi@chromium.org>
+Subject: [PATCH 2/2] media: mtk-mdp: Use correct aliases name
+Date:   Tue, 14 Apr 2020 11:08:15 +0800
+Message-Id: <20200414030815.192104-2-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+In-Reply-To: <20200414030815.192104-1-hsinyi@chromium.org>
+References: <20200414030815.192104-1-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,41 +79,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warning:
-Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+aliases property name must include only lowercase and '-'. Fix in dts
+and driver.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index a212bf124e81..d1e9c41004b4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -42,14 +42,14 @@ aliases {
- 		dpi0 = &dpi0;
- 		dsi0 = &dsi0;
- 		dsi1 = &dsi1;
--		mdp_rdma0 = &mdp_rdma0;
--		mdp_rdma1 = &mdp_rdma1;
--		mdp_rsz0 = &mdp_rsz0;
--		mdp_rsz1 = &mdp_rsz1;
--		mdp_rsz2 = &mdp_rsz2;
--		mdp_wdma0 = &mdp_wdma0;
--		mdp_wrot0 = &mdp_wrot0;
--		mdp_wrot1 = &mdp_wrot1;
-+		mdp-rdma0 = &mdp_rdma0;
-+		mdp-rdma1 = &mdp_rdma1;
-+		mdp-rsz0 = &mdp_rsz0;
-+		mdp-rsz1 = &mdp_rsz1;
-+		mdp-rsz2 = &mdp_rsz2;
-+		mdp-wdma0 = &mdp_wdma0;
-+		mdp-wrot0 = &mdp_wrot0;
-+		mdp-wrot1 = &mdp_wrot1;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+index 14991685adb7..58abfbdfb82d 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+@@ -15,10 +15,10 @@
+ 
+ 
+ static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] = {
+-	"mdp_rdma",
+-	"mdp_rsz",
+-	"mdp_wdma",
+-	"mdp_wrot",
++	"mdp-rdma",
++	"mdp-rsz",
++	"mdp-wdma",
++	"mdp-wrot",
+ };
+ 
+ struct mtk_mdp_comp_match {
 -- 
 2.26.0.110.g2183baf09c-goog
 
