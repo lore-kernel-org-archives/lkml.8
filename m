@@ -2,172 +2,252 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02A0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF205C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3FD2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:41:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SAi6aRue"
+	by mail.kernel.org (Postfix) with ESMTP id D01192075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440149AbgDNMlo (ORCPT
+        id S2502161AbgDNMlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49772 "EHLO
+        Tue, 14 Apr 2020 08:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730818AbgDNMlh (ORCPT
+        by vger.kernel.org with ESMTP id S1730819AbgDNMlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 08:41:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C34C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:41:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id u13so13661463wrp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:41:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EOTA3Bl8xK7jbI/7Nx56mhbuxCAqHFdnbLl81CCUHsQ=;
-        b=SAi6aRueQ5Zyf7tLT2VCOAgQfNIxII4FkFQe+ghkqK3mPNmGOXJYz88+RE3XsXdRi6
-         pI0oSaGVyF7xDMAM9kwkKlt7DjRomsEap9SMshCDqJXjPRJo2hwkBrrB0P9+mCDiBJ3x
-         kRKLEK5KpPf4yrnR71LhJXZxP/UV/q63+DjlY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=EOTA3Bl8xK7jbI/7Nx56mhbuxCAqHFdnbLl81CCUHsQ=;
-        b=iQhN46iAk1jlQ50ZUsGKWIKxmNjEIe7o8/ppYAC42c9y0KAFpVAhR66fqqkhOOGzyS
-         CFm9whs0kGv1JSdqEO/0cyK0sZXmopJ7R3/H+JN89Rg51xNcRNCb+IPz1lX5Kq7fl2/K
-         ol0srAxrIASlT7aT4EyrMGTzyYm7rbox6EzMMKaocdiS10swnyKio60yVOjPlu9gbbY2
-         dBwUHpzECkmnnqJUCb9N30ITGeAqH2wgPP1qZprzYZIBwOYz9cxcy1xUCp+OiU0q+eWN
-         gJ7VX5/6D9s+CcV4tmxrtxPTnY9+AqLsymPnts7GNVow0eVnddOX0FH2/X/K+YL00Y6c
-         szpA==
-X-Gm-Message-State: AGi0PubaPtbEyNq8wVOI2xJWoKUKzzn5MfYPJxmojiXF5zSY2j4pbpR4
-        fM607R7YCFLX1TW4LmFVj6GNiA==
-X-Google-Smtp-Source: APiQypLKGFmCSvctczx8VqjOVo8EhZPFdvd9ehQw9JMKKTphUeYZwccZm2MYcJ+RgiNCMDJUQcRwEQ==
-X-Received: by 2002:adf:cc8c:: with SMTP id p12mr23416418wrj.165.1586868095238;
-        Tue, 14 Apr 2020 05:41:35 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id v21sm18064169wmj.8.2020.04.14.05.41.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 05:41:34 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 14:41:32 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Yussuf Khalil <dev@pp3345.net>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] drm/modes: Indicate CEA-861 CE modes to user-space
-Message-ID: <20200414124132.GV3456981@phenom.ffwll.local>
-Mail-Followup-To: Yussuf Khalil <dev@pp3345.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20200413214024.46500-1-dev@pp3345.net>
- <20200413214024.46500-2-dev@pp3345.net>
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D998C061A0F;
+        Tue, 14 Apr 2020 05:41:36 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jOKse-0002do-Li; Tue, 14 Apr 2020 14:41:32 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F5F21C0086;
+        Tue, 14 Apr 2020 14:41:32 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 12:41:31 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/32: Remove CONFIG_DOUBLEFAULT
+Cc:     Borislav Petkov <bp@suse.de>, Andy Lutomirski <luto@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200404083646.8897-1-bp@alien8.de>
+References: <20200404083646.8897-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413214024.46500-2-dev@pp3345.net>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+Message-ID: <158686809173.28353.11453848908665322063.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 11:40:22PM +0200, Yussuf Khalil wrote:
-> Add a new flag to mark modes that are considered a CE mode according to the
-> CEA-861 specification. Modes without this flag are implicitly considered to
-> be IT modes.
-> 
-> User-space applications may use this flag to determine possible
-> implications of using a CE mode (e.g., limited RGB range).
-> 
-> There is no use for this flag inside the kernel, so we set it only when
-> communicating a mode to user-space.
-> 
-> Signed-off-by: Yussuf Khalil <dev@pp3345.net>
+The following commit has been merged into the x86/asm branch of tip:
 
-Do we have userspace for this?
+Commit-ID:     593309423cbad0fab659a685834416cf12d8f581
+Gitweb:        https://git.kernel.org/tip/593309423cbad0fab659a685834416cf12d8f581
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Sat, 04 Apr 2020 01:33:05 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 14 Apr 2020 14:24:05 +02:00
 
-If we go with the existing quant range property you don't need new
-userspace for the property itself. But this flag here is new uapi, so
-needs userspace per
+x86/32: Remove CONFIG_DOUBLEFAULT
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
+Make the doublefault exception handler unconditional on 32-bit. Yes,
+it is important to be able to catch #DF exceptions instead of silent
+reboots. Yes, the code size increase is worth every byte. And one less
+CONFIG symbol is just the cherry on top.
 
-Also since this standardizes kms uapi, we need testcases per
+No functional changes.
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#testing-requirements-for-userspace-api
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200404083646.8897-1-bp@alien8.de
+---
+ arch/x86/Kconfig.debug                              |  9 ---------
+ arch/x86/entry/entry_32.S                           |  2 --
+ arch/x86/include/asm/doublefault.h                  |  2 +-
+ arch/x86/include/asm/traps.h                        |  2 --
+ arch/x86/kernel/Makefile                            |  4 +---
+ arch/x86/kernel/dumpstack_32.c                      |  4 ----
+ arch/x86/kernel/traps.c                             |  2 --
+ arch/x86/mm/cpu_entry_area.c                        |  4 +---
+ tools/testing/selftests/wireguard/qemu/debug.config |  1 -
+ 9 files changed, 3 insertions(+), 27 deletions(-)
 
-Cheers, Daniel
-
-> ---
->  drivers/gpu/drm/drm_modes.c | 14 ++++++++++++++
->  include/uapi/drm/drm_mode.h |  2 ++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-> index d4d64518e11b..0d8a032f437d 100644
-> --- a/drivers/gpu/drm/drm_modes.c
-> +++ b/drivers/gpu/drm/drm_modes.c
-> @@ -1973,6 +1973,14 @@ void drm_mode_convert_to_umode(struct drm_mode_modeinfo *out,
->  		break;
->  	}
->  
-> +	if (drm_match_cea_mode(in) > 1) {
-> +		/*
-> +		 * All modes in CTA-861-G Table 1 are CE modes, except 640x480p
-> +		 * (VIC 1).
-> +		 */
-> +		out->flags |= DRM_MODE_FLAG_CEA_861_CE_MODE;
-> +	}
-> +
->  	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
->  	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
->  }
-> @@ -2045,6 +2053,12 @@ int drm_mode_convert_umode(struct drm_device *dev,
->  		return -EINVAL;
->  	}
->  
-> +	/*
-> +	 * The CEA-861 CE mode flag is purely informational and intended for
-> +	 * userspace only.
-> +	 */
-> +	out->flags &= ~DRM_MODE_FLAG_CEA_861_CE_MODE;
-> +
->  	out->status = drm_mode_validate_driver(dev, out);
->  	if (out->status != MODE_OK)
->  		return -EINVAL;
-> diff --git a/include/uapi/drm/drm_mode.h b/include/uapi/drm/drm_mode.h
-> index 735c8cfdaaa1..5e78b350b2e2 100644
-> --- a/include/uapi/drm/drm_mode.h
-> +++ b/include/uapi/drm/drm_mode.h
-> @@ -124,6 +124,8 @@ extern "C" {
->  #define  DRM_MODE_FLAG_PIC_AR_256_135 \
->  			(DRM_MODE_PICTURE_ASPECT_256_135<<19)
->  
-> +#define DRM_MODE_FLAG_CEA_861_CE_MODE (1<<23)
-> +
->  #define  DRM_MODE_FLAG_ALL	(DRM_MODE_FLAG_PHSYNC |		\
->  				 DRM_MODE_FLAG_NHSYNC |		\
->  				 DRM_MODE_FLAG_PVSYNC |		\
-> -- 
-> 2.26.0
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index 2e74690..f909d3c 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -99,15 +99,6 @@ config DEBUG_WX
+ 
+ 	  If in doubt, say "Y".
+ 
+-config DOUBLEFAULT
+-	default y
+-	bool "Enable doublefault exception handler" if EXPERT && X86_32
+-	---help---
+-	  This option allows trapping of rare doublefault exceptions that
+-	  would otherwise cause a system to silently reboot. Disabling this
+-	  option saves about 4k and might cause you much additional grey
+-	  hair.
+-
+ config DEBUG_TLBFLUSH
+ 	bool "Set upper limit of TLB entries to flush one-by-one"
+ 	depends on DEBUG_KERNEL
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index b67bae7..5c9c7ee 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1536,7 +1536,6 @@ SYM_CODE_START(debug)
+ 	jmp	common_exception
+ SYM_CODE_END(debug)
+ 
+-#ifdef CONFIG_DOUBLEFAULT
+ SYM_CODE_START(double_fault)
+ 1:
+ 	/*
+@@ -1576,7 +1575,6 @@ SYM_CODE_START(double_fault)
+ 	hlt
+ 	jmp 1b
+ SYM_CODE_END(double_fault)
+-#endif
+ 
+ /*
+  * NMI is doubly nasty.  It can happen on the first instruction of
+diff --git a/arch/x86/include/asm/doublefault.h b/arch/x86/include/asm/doublefault.h
+index af9a14a..54a6e4a 100644
+--- a/arch/x86/include/asm/doublefault.h
++++ b/arch/x86/include/asm/doublefault.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_X86_DOUBLEFAULT_H
+ #define _ASM_X86_DOUBLEFAULT_H
+ 
+-#if defined(CONFIG_X86_32) && defined(CONFIG_DOUBLEFAULT)
++#ifdef CONFIG_X86_32
+ extern void doublefault_init_cpu_tss(void);
+ #else
+ static inline void doublefault_init_cpu_tss(void)
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index c26a7e1..70bd0f3 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -69,9 +69,7 @@ dotraplinkage void do_overflow(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_invalid_op(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_device_not_available(struct pt_regs *regs, long error_code);
+-#if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
+ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
+-#endif
+ dotraplinkage void do_coprocessor_segment_overrun(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_invalid_TSS(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_segment_not_present(struct pt_regs *regs, long error_code);
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index ba89cab..2a7c3af 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -102,9 +102,7 @@ obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
+ obj-y				+= kprobes/
+ obj-$(CONFIG_MODULES)		+= module.o
+-ifeq ($(CONFIG_X86_32),y)
+-obj-$(CONFIG_DOUBLEFAULT)	+= doublefault_32.o
+-endif
++obj-$(CONFIG_X86_32)		+= doublefault_32.o
+ obj-$(CONFIG_KGDB)		+= kgdb.o
+ obj-$(CONFIG_VM86)		+= vm86_32.o
+ obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
+diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
+index 8e3a8fe..722fd71 100644
+--- a/arch/x86/kernel/dumpstack_32.c
++++ b/arch/x86/kernel/dumpstack_32.c
+@@ -87,7 +87,6 @@ static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
+ 
+ static bool in_doublefault_stack(unsigned long *stack, struct stack_info *info)
+ {
+-#ifdef CONFIG_DOUBLEFAULT
+ 	struct cpu_entry_area *cea = get_cpu_entry_area(raw_smp_processor_id());
+ 	struct doublefault_stack *ss = &cea->doublefault_stack;
+ 
+@@ -103,9 +102,6 @@ static bool in_doublefault_stack(unsigned long *stack, struct stack_info *info)
+ 	info->next_sp	= (unsigned long *)this_cpu_read(cpu_tss_rw.x86_tss.sp);
+ 
+ 	return true;
+-#else
+-	return false;
+-#endif
+ }
+ 
+ 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index d54cffd..e85561f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -326,7 +326,6 @@ __visible void __noreturn handle_stack_overflow(const char *message,
+ }
+ #endif
+ 
+-#if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
+ /*
+  * Runs on an IST stack for x86_64 and on a special task stack for x86_32.
+  *
+@@ -450,7 +449,6 @@ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsign
+ 	die("double fault", regs, error_code);
+ 	panic("Machine halted.");
+ }
+-#endif
+ 
+ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+ {
+diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
+index 56f9189..5199d8a 100644
+--- a/arch/x86/mm/cpu_entry_area.c
++++ b/arch/x86/mm/cpu_entry_area.c
+@@ -17,7 +17,7 @@ static DEFINE_PER_CPU_PAGE_ALIGNED(struct exception_stacks, exception_stacks);
+ DEFINE_PER_CPU(struct cea_exception_stacks*, cea_exception_stacks);
+ #endif
+ 
+-#if defined(CONFIG_X86_32) && defined(CONFIG_DOUBLEFAULT)
++#ifdef CONFIG_X86_32
+ DECLARE_PER_CPU_PAGE_ALIGNED(struct doublefault_stack, doublefault_stack);
+ #endif
+ 
+@@ -114,12 +114,10 @@ static void __init percpu_setup_exception_stacks(unsigned int cpu)
+ #else
+ static inline void percpu_setup_exception_stacks(unsigned int cpu)
+ {
+-#ifdef CONFIG_DOUBLEFAULT
+ 	struct cpu_entry_area *cea = get_cpu_entry_area(cpu);
+ 
+ 	cea_map_percpu_pages(&cea->doublefault_stack,
+ 			     &per_cpu(doublefault_stack, cpu), 1, PAGE_KERNEL);
+-#endif
+ }
+ #endif
+ 
+diff --git a/tools/testing/selftests/wireguard/qemu/debug.config b/tools/testing/selftests/wireguard/qemu/debug.config
+index 5909e7e..807fa7d 100644
+--- a/tools/testing/selftests/wireguard/qemu/debug.config
++++ b/tools/testing/selftests/wireguard/qemu/debug.config
+@@ -58,7 +58,6 @@ CONFIG_RCU_EQS_DEBUG=y
+ CONFIG_USER_STACKTRACE_SUPPORT=y
+ CONFIG_DEBUG_SG=y
+ CONFIG_DEBUG_NOTIFIERS=y
+-CONFIG_DOUBLEFAULT=y
+ CONFIG_X86_DEBUG_FPU=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_DEBUG_PAGEALLOC=y
