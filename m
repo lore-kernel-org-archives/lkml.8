@@ -2,110 +2,117 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5EBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56025C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C122076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586902733;
-	bh=JTEHaA8L3ttVTL7silMjzu76CqWt/4Z5j2JWJn0TfT4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yeqJljHIZKuEOV1gibgGlY6vo6RMTSV+ZqcmXyLxPrChB5I5ecOM0vR+tbyqbHP0D
-	 IIxsaNrknvAheWMe9dr/4bQ2a5p2L4m0qphB83nwvZt4lyGoLWeTpv86HKz21X1g7G
-	 NWhXNf/BmNxgeeBd2u0bVXz0RxlTCvm7NdJIkcPk=
+	by mail.kernel.org (Postfix) with ESMTP id 2824D20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:19:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIO5vamY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387582AbgDNWSv (ORCPT
+        id S2387608AbgDNWTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728100AbgDNWSu (ORCPT
+        Tue, 14 Apr 2020 18:19:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40298 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728100AbgDNWTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:18:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72129C061A0C;
-        Tue, 14 Apr 2020 15:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=B58qBEM0F93IEa1FE/sOHbOVrJ5N3H5UuNHGMFnTNEY=; b=PnOMmQBCVUeuZe49ng9V1LX6qZ
-        5scCVyueSv4y8TcEtozZM9VIlWkaLMG8qjVLreBCKpdKcHomGML01QCfKv57R5D9Mb9ikzKNJ2qMm
-        f4kPPYN4r8UflRTwTrMd2qOj0hUQyLsJGiKRsN0zS1AUycYIhvWL6LNSiHLzZfqdevSajCgWWgJWv
-        IFjKBLWMDdiMqkoRPK/oCLT91XYSBOSZnLyOfLdBlvp6d63XFTS5xshgKEjYAsKgQUOJ5GzufangJ
-        IqE6fgDT6I2fNSb3HJVgptaWu+f1xRZ4HWM+Ym9jVLxFZilCDrNkvEZB30m8Ixlvgg22GwUcjyx0i
-        hcF5otLg==;
-Received: from [95.90.212.216] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOTtH-0000Ml-VG; Tue, 14 Apr 2020 22:18:48 +0000
-Date:   Wed, 15 Apr 2020 00:18:42 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH] media: Kconfig: Don't expose the Request API option
-Message-ID: <20200415001842.7773610b@coco.lan>
-In-Reply-To: <20200414220624.5396-1-ezequiel@collabora.com>
-References: <20200414130210.18970-1-ezequiel@collabora.com>
-        <20200414220624.5396-1-ezequiel@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 14 Apr 2020 18:19:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586902762;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yL6cjrdLQOUSqErBo6QoCuDORXmlrgCzzoA47tfOvfU=;
+        b=FIO5vamYSj1cLgaGv1rAx89r5GlbvetVCjCNGZZsD0alzcO6hrHbgZ+v0L2rS9WTLzizsy
+        i+5r1yZbBfT6V/tw0xHy4L0/vFWKrKUEko6hnuqNfSKJ82vKTucG5VR6PTl06ktTJ1cQpy
+        7dvy4ZnfrSvy3oeS0sSy5GrUywaQrHA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-405-j6syM9dhMDOsGPla-pJb0g-1; Tue, 14 Apr 2020 18:19:20 -0400
+X-MC-Unique: j6syM9dhMDOsGPla-pJb0g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03F5519067E3;
+        Tue, 14 Apr 2020 22:19:19 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 928009F9B0;
+        Tue, 14 Apr 2020 22:19:17 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 17:19:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Apr 14 (objtool crazy)
+Message-ID: <20200414221914.hbvp4dvh47at4nlg@treble>
+References: <20200414123900.4f97a83f@canb.auug.org.au>
+ <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 14 Apr 2020 19:06:24 -0300
-Ezequiel Garcia <ezequiel@collabora.com> escreveu:
-
-> The Request API isn't meant to be chosen by users,
-> but instead should be selected by drivers that want
-> to support it.
+On Tue, Apr 14, 2020 at 06:50:15AM -0700, Randy Dunlap wrote:
+> On 4/13/20 7:39 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200413:
+> > 
 > 
-> Hantro and Cedrus are already selecting the right options,
-> so only the test drivers need to be fixed.
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/media/mc/Kconfig                   | 6 ++++--
->  drivers/media/test_drivers/Kconfig         | 2 ++
->  drivers/media/test_drivers/vicodec/Kconfig | 2 ++
->  drivers/media/test_drivers/vivid/Kconfig   | 2 ++
->  4 files changed, 10 insertions(+), 2 deletions(-)
+> I killed objtool after 49 minutes of CPU time:
 > 
-> diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
-> index 002a918c4c75..7c9628f37196 100644
-> --- a/drivers/media/mc/Kconfig
-> +++ b/drivers/media/mc/Kconfig
-> @@ -2,7 +2,6 @@
->  
->  #
->  # Media controller
-> -#	Selectable only for webcam/grabbers, as other drivers don't use it
->  #
->  
->  config MEDIA_CONTROLLER_DVB
-> @@ -14,7 +13,7 @@ config MEDIA_CONTROLLER_DVB
->  	  This is currently experimental.
->  
->  config MEDIA_CONTROLLER_REQUEST_API
-> -	bool "Enable Media controller Request API (EXPERIMENTAL)"
-> +	bool
->  	depends on MEDIA_CONTROLLER && STAGING_MEDIA
->  	help
->  	  DO NOT ENABLE THIS OPTION UNLESS YOU KNOW WHAT YOU'RE DOING.
+>   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND    
+>  6159 rdunlap   30  10   42756   8028      0 R 100.0 0.099  49:19.02 objtool 
+> 
+> 
+> /bin/sh: line 1:  6159 Terminated              ./tools/objtool/objtool orc generate --no-fp --no-unreachable --uaccess drivers/i2c/busses/i2c-parport.o
 
-Hmm... I guess you can also remove the help here, as it won't be
-shown anymore with make menuconfig.
+I took an initial look at this one.  I can dig more tomorrow unless
+Peter beats me to it.
 
-Thanks,
-Mauro
+(gdb) bt
+#0  0x000000000040df55 in sec_offset_hash (sec=0xc30930, offset=4334561216) at elf.h:104
+#1  0x000000000040e907 in find_rela_by_dest_range (elf=0x7ffff64a4010, sec=0xc30930, offset=18446744073709551608, len=1) at elf.c:227
+#2  0x000000000040ea67 in find_rela_by_dest (elf=0x7ffff64a4010, sec=0xc30710, offset=18446744073709551608) at elf.c:246
+#3  0x0000000000408038 in find_jump_table (file=0x427620 <file>, func=0xc32bf0, insn=0xc4f840) at check.c:1118
+#4  0x0000000000408242 in mark_func_jump_tables (file=0x427620 <file>, func=0xc32bf0) at check.c:1170
+#5  0x00000000004083b6 in add_jump_table_alts (file=0x427620 <file>) at check.c:1215
+#6  0x0000000000408b95 in decode_sections (file=0x427620 <file>) at check.c:1413
+#7  0x000000000040bf44 in check (_objname=0x7fffffffceff "drivers/i2c/busses/i2c-parport.o", orc=true) at check.c:2508
+#8  0x0000000000405580 in cmd_orc (argc=1, argv=0x7fffffffc9d8) at builtin-orc.c:41
+#9  0x0000000000411297 in handle_internal_command (argc=6, argv=0x7fffffffc9d0) at objtool.c:96
+#10 0x0000000000411349 in main (argc=6, argv=0x7fffffffc9d0) at objtool.c:119
+
+It's an infinite loop in find_rela_by_dest_range() because offset is -8.
+That comes from find_jump_table():
+
+  table_offset = text_rela->addend;
+  table_sec = text_rela->sym->sec;
+  ...
+  table_rela = find_rela_by_dest(file->elf, table_sec, table_offset);
+
+which comes from this gem:
+
+00000000000001fd <line_set>:
+ 1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
+ 204:	00 00 00 
+			1ff: R_X86_64_64	.rodata-0x8
+
+So objtool is getting confused by that -0x8 rela addend.
+
+-- 
+Josh
+
