@@ -2,65 +2,120 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F61AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DA3C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3890C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D817206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:15:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUXhWcLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632816AbgDNUOz (ORCPT
+        id S2632842AbgDNUO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:14:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47824 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632776AbgDNUNW (ORCPT
+        Tue, 14 Apr 2020 16:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2632825AbgDNUOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:13:22 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id B4F342A1B70
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org
-Subject: [PATCH] platform/chrome: cros_ec_i2c: Appease the kernel-doc deity
-Date:   Tue, 14 Apr 2020 22:13:13 +0200
-Message-Id: <20200414201313.1507146-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 14 Apr 2020 16:14:46 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DA1C061BD3;
+        Tue, 14 Apr 2020 12:58:45 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id e17so7893681ybq.0;
+        Tue, 14 Apr 2020 12:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GNxgPPM4n2ujMawZGS0HyHorgM1gpVp/anc4VzVl3U8=;
+        b=mUXhWcLskvqOcwmIDaztUH/RxMxbg4sS/9GYSD08uGIEVyl0iz5WH10Ounm4jH3bP6
+         Bc+znuOupuZWbV2UIvNrxIE69HdFLORK6/IbFspNMefhoC2TrA/gpeaAkIVydH+WCACW
+         oAjJLeKQqhAxADjapWPVoHTp6dmMIZpYPHA4C012WPe/YHLabmYx9OHJHydOfJmoF1BG
+         RUglQAsacRDOUfVOmrH11aj/m0+0ozDIsEqa2ZK8l5T3Tdi34fw9mAS6JZ8RkB/i8cV0
+         uCmcemCp8Ri92TqFucj4fEHTZAAd3abOlg53bHe8Ge8qhRNjdwRMR6FK/GvwsnXbh8bd
+         nDTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GNxgPPM4n2ujMawZGS0HyHorgM1gpVp/anc4VzVl3U8=;
+        b=e2Ry80shEjg9wmZvIV/hv8WlmwOyzprO/x88pBHQs1dR96oIJMFJdFA3WGNcRmFNe5
+         fvQ3+89jFEKZZpAVfAvJX3qIayhc74WzjBRTPmM5ZeIwLJldZ2GL4bEI7YBwb+AIntEe
+         Hr6JEL+1huX1WS/YRGb+MXabWpuCGwKErKNr6EZdvCsj6XF+iMZI8Wqjw2x4jlDB+Co3
+         WqeVy9QEiyRW/PLtB4NtQ8TZkCbrYTKGCr+XkRnjpQe4/tL3nJeBSJlloQH/6XzPTCvm
+         HGrqE2PxMN6VhKB1zAXgfkvDlfrxkcIde4PjUAZR4TkzfxGd71yCW5YQFRDSF8Ij12kq
+         K4nA==
+X-Gm-Message-State: AGi0PuYUKBTMYrr61TupUWxYqzdmeieGYFlGOWuWJ/TeK5M2Og+AdyB5
+        E5gmggNFQgYf9+YgZDGo3NAl6wM59Jh0TVX4BuQ=
+X-Google-Smtp-Source: APiQypJN5cWKfU4KSqHxDKZJHAGcb3fPrJTJAFfYVdg0wvrOrwPXCVsAsVoQ1s1vQir2tqnSureNzNJq3rjM6EsKb4Q=
+X-Received: by 2002:a25:b78b:: with SMTP id n11mr3040477ybh.376.1586894324869;
+ Tue, 14 Apr 2020 12:58:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAEUGjKiLPQP9wp0AgLUvHgKBOe9We2a-RQaZ7cd7CvhnarwWiw@mail.gmail.com>
+ <CAKywueT0Q9WkANNsg8cEDwGZSMaaE5c4LHuEeMhVDzJAzycroQ@mail.gmail.com> <CAEUGjKhSBNQboKOMFMgos9OQfxcLQZsXp8aBrUSFcaSe1saH2Q@mail.gmail.com>
+In-Reply-To: <CAEUGjKhSBNQboKOMFMgos9OQfxcLQZsXp8aBrUSFcaSe1saH2Q@mail.gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 14 Apr 2020 14:58:33 -0500
+Message-ID: <CAH2r5mt1k5t8rSH1KizeSrcLaN1Fn3GWeMvDPwT2Kfq43UAWaQ@mail.gmail.com>
+Subject: Re: [PATCH] cifs: improve read performance for page size 64KB &
+ cache=strict & vers=2.1+
+To:     Jones Syue <jonessyue@qnap.com>
+Cc:     Pavel Shilovsky <piastryyy@gmail.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        Samba Technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace a comment starting with /** by simply /* to avoid having
-it interpreted as a kernel-doc comment.
+Did you also test (at least briefly) with vers=3D1.0 since some of your
+code affects that code path too?
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+And if anyone figures out how to configure an x86_64 Linux to use
+PAGE_SIZE of 64K or larger let me know...
 
- drivers/platform/chrome/cros_ec_i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Apr 12, 2020 at 9:24 PM Jones Syue via samba-technical
+<samba-technical@lists.samba.org> wrote:
+>
+> Hello Pavel
+>
+> Thanks for kindly reviewing!
+> Please find the attached v2.patch.
+>
+> --
+> Regards,
+> Jones Syue | =E8=96=9B=E6=87=B7=E5=AE=97
+> QNAP Systems, Inc.
+>
+>
+> On Sat, Apr 11, 2020 at 2:25 AM Pavel Shilovsky <piastryyy@gmail.com> wro=
+te:
+> >
+> > Hi Jones,
+> >
+> > Thanks for the patch!
+> >
+> > It will work although it is probably a little bit cleaner to
+> > initialize server->max_read to server->maxBuf for SMB1 and use the
+> > server->max_read in the readpages condition check instead.
+> >
+> > @Others, thoughts?
+> >
+> > --
+> > Best regards,
+> > Pavel Shilovsky
 
-diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chrome/cros_ec_i2c.c
-index 6119eccd8a18..30c8938c27d5 100644
---- a/drivers/platform/chrome/cros_ec_i2c.c
-+++ b/drivers/platform/chrome/cros_ec_i2c.c
-@@ -16,7 +16,7 @@
- 
- #include "cros_ec.h"
- 
--/**
-+/*
-  * Request format for protocol v3
-  * byte 0	0xda (EC_COMMAND_PROTOCOL_3)
-  * byte 1-8	struct ec_host_request
--- 
-2.25.1
 
+
+--=20
+Thanks,
+
+Steve
