@@ -2,118 +2,209 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F38EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D18C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD2E2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586859946;
-	bh=3R4LkW9m++BkyWApJ1YSbZWdvAzxY45mlsMH09crBBM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0iC2Kma1NOp2OckHdMK212euAW9KyvoCySCyEjDB7ErOFgNPs645Kv3RvN25VikDY
-	 dnOSPcERdwD5afWiwrBFN3nampRam0sS25m5bZ3+5mQf25Pirbbfoc1VWPeiW1MOTc
-	 EyBE1mi6svLO4I713a74fubddICJ7i7Anv7DWX2o=
+	by mail.kernel.org (Postfix) with ESMTP id 382502076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438289AbgDNKZT (ORCPT
+        id S2438322AbgDNK0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:25:19 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45635 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438287AbgDNKVV (ORCPT
+        Tue, 14 Apr 2020 06:26:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60126 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2438286AbgDNKVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 06:21:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t14so435278wrw.12;
-        Tue, 14 Apr 2020 03:21:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=EYaPeiECDQ5ZXShj8p9XCOhGGkLuneAOUv8e9e/QTQQ=;
-        b=BXtTxS6Nh9AGjbv+xl5m6pltKvjPF5MhpJyV1UeseGEI/3AHg1SbjFEAJPQkYpH/e+
-         BpVlbG7cEeX/35AMpXYA0cXNHEcpp31zKtJJOrlFVhYYNB3gJoknc2whOpbMj1MYkboM
-         46nFM2olpVR8VbTH8/LfUQDxDhSW7/p8DIYkO191Jhvbjx/jGxD8E3ADjVWsLN3VbB0L
-         +e1VU9+4OU+CFpfgN35AWFitjrjgEIPP6ShTFolWQQtNbqXAr+J+3F27WOWnP6KLaWBq
-         SZ41OVXt2S/3+rrmSfKR2Azdxh2Ao5UsQZ2ZlCZ4x5iShADVesNsmVmM2XxgfQmn8ZSH
-         FWXA==
-X-Gm-Message-State: AGi0PuYqkrFEOMhwiA4h3McYK0tM57tlSLOH0syLHo/SZ/Qscq3ntRhy
-        OW1f/n/0Z/F9anFIMi4xVfg=
-X-Google-Smtp-Source: APiQypJfL641U3oiX9dTXxf/ghp8OKYDWYbORn6FwzR3xNZYsyAebrfet+aQW3p3qkLc/MCFbrsuHA==
-X-Received: by 2002:a5d:6584:: with SMTP id q4mr11223043wru.403.1586859664926;
-        Tue, 14 Apr 2020 03:21:04 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id t16sm17621540wmi.27.2020.04.14.03.21.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 03:21:04 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 11:21:02 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        haiyangz@microsoft.com
-Subject: [GIT PULL] Hyper-V fixes for 5.7-rc1
-Message-ID: <20200414102102.7jci4pzsp5tdoifr@debian>
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EA35YJ060749;
+        Tue, 14 Apr 2020 06:20:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cwm05pdd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 06:20:22 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03EA3etk063999;
+        Tue, 14 Apr 2020 06:20:21 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cwm05pcw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 06:20:21 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03EAFWfA003461;
+        Tue, 14 Apr 2020 10:20:20 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02wdc.us.ibm.com with ESMTP id 30b5h67qs2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 10:20:20 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EAKJ8n52101384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 10:20:19 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AFAAC6059;
+        Tue, 14 Apr 2020 10:20:19 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0C80C6055;
+        Tue, 14 Apr 2020 10:20:18 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.109.81])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 10:20:18 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id F27BF2E301A; Tue, 14 Apr 2020 12:41:49 +0530 (IST)
+Date:   Tue, 14 Apr 2020 12:41:49 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
+        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: Re: [PATCH v6 0/3] powerpc/powernv: Introduce interface for
+ self-restore support
+Message-ID: <20200414071149.GD24277@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200326071034.12838-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200326071034.12838-1-psampat@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_02:2020-04-13,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello Pratik,
 
-Please pull from the tag hyperv-fixes-signed for the first batch of
-Hyper-V fixes for 5.7-rc.
+On Thu, Mar 26, 2020 at 12:40:31PM +0530, Pratik Rajesh Sampat wrote:
+> v5: https://lkml.org/lkml/2020/3/17/944
+> Changelog
+> v5-->v6
+> 1. Updated background, motivation and illuminated potential design
+> choices
+> 2. Re-organization of patch-set
+>   a. Split introducing preference for optimization from 1/1 to patch 3/3
+>   b. Merge introducing self-save API and parsing the device-tree
+>   c. Introduce a supported mode called KERNEL_SAVE_RESTORE which
+>      outlines and makes kernel supported SPRs for save-restore more
+>      explicit
+> 
+[..snip..]
 
-The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
+> Presenting the design choices in front of us:
+> 
+> Design-Choice 1:
+> ----------------
+> A simple implementation is to just replace self-restore calls with
+> self-save as it is direct super-set.
+> 
+> Pros:
+> A simple design, quick to implement
+> 
+> 
+> Cons:
+> * Breaks backward compatibility. Self-restore has historically been
+>   supported in the firmware and an old firmware running on an new
+>   kernel will be incompatible and deep stop states will be cut.
+> * Furthermore, critical SPRs which need to be restored
+>   before 0x100 vector like HID0 are not supported by self-save.
+> 
+> Design-Choice 2:
+> ----------------
+> Advertise both self-restore and self-save from OPAL including the set
+> of registers that each support. The kernel can then choose which API
+> to go with.
+> For the sake of simplicity, in case both modes are supported for an
+> SPR by default self-save would be called for it.
+> 
+> Pros:
+> * Backwards compatible
+> 
+> Cons:
+> Overhead in parsing device tree with the SPR list
+> 
+> Possible optimization with Approach2:
+> -------------------------------------
+> There are SPRs whose values don't tend to change over time and invoking
+> self-save on them, where the values are gotten each time may turn out to
+> be inefficient. In that case calling a self-restore where passing the
+> value makes more sense as, if the value is same, the memory location
+> is not updated.
+> SPRs that dont change are as follows:
+> SPRN_HSPRG0,
+> SPRN_LPCR,
+> SPRN_PTCR,
+> SPRN_HMEER,
+> SPRN_HID0,
 
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+We can just pick self-save wherever available and fallback to
+self-restore when self-save support is not avaiable for any SPR.
+The optimization that you mention here can be revisited if the
+additional latency due to self-save becomes observable (Note that both
+stop4 and stop5 have wakeup latency between 200-500us).
 
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
-
-for you to fetch changes up to f3a99e761efa616028b255b4de58e9b5b87c5545:
-
-  x86/Hyper-V: Report crash data in die() when panic_on_oops is set (2020-04-11 17:19:07 +0100)
-
-----------------------------------------------------------------
-hyperv-fixes for 5.7-rc1
-
-  - Patch series from Tianyu Lan to fix crash reporting on Hyper-V
-  - Three miscellaneous cleanup patches
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      hv: hyperv_vmbus.h: Replace zero-length array with flexible-array member
-
-Olaf Hering (1):
-      x86: hyperv: report value of misc_features
-
-Tianyu Lan (6):
-      x86/Hyper-V: Unload vmbus channel in hv panic callback
-      x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-      x86/Hyper-V: Trigger crash enlightenment only once during system crash.
-      x86/Hyper-V: Report crash register data or kmsg before running crash kernel
-      x86/Hyper-V: Report crash register data when sysctl_record_panic_msg is not set
-      x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-
-YueHaibing (1):
-      hv_debugfs: Make hv_debug_root static
-
- arch/x86/hyperv/hv_init.c      |  6 +++-
- arch/x86/kernel/cpu/mshyperv.c | 14 ++++++++--
- drivers/hv/channel_mgmt.c      |  3 ++
- drivers/hv/hv_debugfs.c        |  2 +-
- drivers/hv/hyperv_vmbus.h      |  2 +-
- drivers/hv/vmbus_drv.c         | 62 ++++++++++++++++++++++++++++++------------
- include/asm-generic/mshyperv.h |  2 +-
- 7 files changed, 67 insertions(+), 24 deletions(-)
+> 
+> The values of PSSCR and MSR change at runtime and hence, the kernel
+> cannot determine during boot time what their values will be before
+> entering a particular deep-stop state.
+> 
+> Therefore, a preference based interface is introduced for choosing
+> between self-save or self-restore between for each SPR.
+> The per-SPR preference is only a refinement of
+> approach 2 purely for performance reasons. It can be dropped if the
+> complexity is not deemed worth the returns.
+> 
+> Patches Organization
+> ====================
+> Design Choice 2 has been chosen as an implementation to demonstrate in
+> the patch series.
+> 
+> Patch1:
+> Devises an interface which lists all the interested SPRs, along with
+> highlighting the support of mode.
+> It is an isomorphic patch to replicate the functionality of the older
+> self-restore firmware for the new interface
+> 
+> Patch2:
+> Introduces the self-save API and leverages upon the struct interface to
+> add another supported mode in the mix of saving and restoring. It also
+> enforces that in case both modes are supported self-save is chosen over
+> self-restore
+> 
+> The commit also parses the device-tree and populate support for
+> self-save and self-restore in the supported mask
+> 
+> Patch3:
+> Introduce an optimization to allow preference to choose between one more
+> over the one when both both modes are supported. This optimization can
+> allow for better performance for the SPRs that don't change in value and
+> hence self-restore is a better alternative, and in cases when it is
+> known for values to change self-save is more convenient.
+> 
+> Pratik Rajesh Sampat (3):
+>   powerpc/powernv: Introduce interface for self-restore support
+>   powerpc/powernv: Introduce support and parsing for self-save API
+>   powerpc/powernv: Preference optimization for SPRs with constant values
+> 
+>  .../bindings/powerpc/opal/power-mgt.txt       |  18 +
+>  arch/powerpc/include/asm/opal-api.h           |   3 +-
+>  arch/powerpc/include/asm/opal.h               |   1 +
+>  arch/powerpc/platforms/powernv/idle.c         | 385 +++++++++++++++---
+>  arch/powerpc/platforms/powernv/opal-call.c    |   1 +
+>  5 files changed, 351 insertions(+), 57 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
