@@ -2,147 +2,118 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5614F2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e9gZ1tOg"
+	by mail.kernel.org (Postfix) with ESMTP id 2F4B320768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437657AbgDNPN7 (ORCPT
+        id S2437417AbgDNPOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:13:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28065 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2437531AbgDNPM7 (ORCPT
+        Tue, 14 Apr 2020 11:14:15 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:44506 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437530AbgDNPNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:12:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586877177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hWdxsxQ1IMDhmXo5WAMFE5k2BVlneem3CQpGkc+AuvY=;
-        b=e9gZ1tOgRcN8dlqXtCfqShtwpKxYMsetLehLda7a/WijSKrwDW8yyinYnuWuY7izkjUeqH
-        Y1BGVDA23Kv8UShrnZna0py4l4giGH0oDktWkJrFSWLctZ3mHqkynMjR+N3EjGGfcsDzWO
-        7Vumdy9ppPK3Axc539uVPCcsjaW7NpI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-76-3BpvUORRMJS8qDbO7QY6GQ-1; Tue, 14 Apr 2020 11:12:53 -0400
-X-MC-Unique: 3BpvUORRMJS8qDbO7QY6GQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D58D41137840;
-        Tue, 14 Apr 2020 15:12:51 +0000 (UTC)
-Received: from krava (unknown [10.40.195.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE27C5C1BE;
-        Tue, 14 Apr 2020 15:12:49 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 17:12:47 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf stat: force error in fallback on :k events
-Message-ID: <20200414151247.GB208694@krava>
-References: <20200413235515.221467-1-irogers@google.com>
- <20200414130209.GD117177@krava>
- <CAP-5=fVM6gg3Bo5jHwYG=vhLZ-HQaQfwZFg_=DwRJOmHqRRDMA@mail.gmail.com>
+        Tue, 14 Apr 2020 11:13:15 -0400
+Received: by mail-io1-f70.google.com with SMTP id o20so15072231ioa.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:13:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4bd4gGbYFPD8Vgj5mhiYerb95l8W8erwkDbv2sntZe4=;
+        b=TVjiFs4Ir4ne2B0dlEqw72nnL5hwBSe7iV72TaYq/ZBo1/qNNllsi6E3+La9nSYZ35
+         OhQlvOWX0haX9eZfEo6/fgDRLvHKMFfNNyCDJ7hMFioow0QaQBrbvhsqmKf1neVOFSec
+         ScN0+/tQBdqK3ZMSapKLf1xiSbTh42bOBdWAVv/REjPgLIawh0fqNt/ZuMNgAbp3oyp1
+         ncBoi43sBO2B9KgZA5C6JuHV83NHDGTqhxGNB9gRkBgZbyyc++KUkBK3hsHlyug++n9v
+         6Qj71NEh6Job6PxQD/Kln1SwGyMmXAVuntrlq8pca7CJ86CNd62vg1IXSjB2bRpUI53m
+         MVCw==
+X-Gm-Message-State: AGi0PuarB/09Z9fvccv8pd7ED8QwI25r0wp6QV+Hqb5Y6MljhxnCg7rm
+        94jUOsjwtshg4oE7i/jsnXt2VCf6HXacFt0992wmn6coyer/
+X-Google-Smtp-Source: APiQypLIzsH7qfTHqPmsTuLm4Q0+Sm9UqavdIUvKbyeJX958xaaFJ/mQ5uH3tn0w9O/2o5J3WnZ39jpgRGPQHF3fODfgTs3DKlmG
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVM6gg3Bo5jHwYG=vhLZ-HQaQfwZFg_=DwRJOmHqRRDMA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Received: by 2002:a05:6e02:4c:: with SMTP id i12mr656378ilr.185.1586877194034;
+ Tue, 14 Apr 2020 08:13:14 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 08:13:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000073e9c305a341a39a@google.com>
+Subject: WARNING in cpu_latency_qos_remove_request
+From:   syzbot <syzbot+6e2d4fbfbf03293bb776@syzkaller.appspotmail.com>
+To:     len.brown@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, pavel@ucw.cz, rjw@rjwysocki.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:38:17AM -0700, Ian Rogers wrote:
-> On Tue, Apr 14, 2020 at 6:02 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Mon, Apr 13, 2020 at 04:55:15PM -0700, Ian Rogers wrote:
-> > > From: Stephane Eranian <eranian@google.com>
-> > >
-> > > When it is not possible for a non-privilege perf command
-> > > to monitor at the kernel level (:k), the fallback code forces
-> > > a :u. That works if the event was previously monitoring both levels.
-> > > But if the event was already constrained to kernel only, then it does
-> > > not make sense to restrict it to user only.
-> > > Given the code works by exclusion, a kernel only event would have:
-> > > attr->exclude_user = 1
-> > > The fallback code would add:
-> > > attr->exclude_kernel = 1;
-> > >
-> > > In the end the end would not monitor in either the user level or kernel
-> > > level. In other words, it would count nothing.
-> > >
-> > > An event programmed to monitor kernel only cannot be switched to user only
-> > > without seriously warning the user.
-> > >
-> > > This patch forces an error in this case to make it clear the request
-> > > cannot really be satisfied.
-> > >
-> > > Signed-off-by: Stephane Eranian <eranian@google.com>
-> > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/evsel.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index d23db6755f51..d1e8862b86ce 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -2446,6 +2446,13 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
-> > >               char *new_name;
-> > >               const char *sep = ":";
-> > >
-> > > +             if (evsel->core.attr.exclude_user) {
-> > > +                     scnprintf(msg, msgsize,
-> > > +"kernel.perf_event_paranoid=%d, event set to exclude user, so cannot also exclude kernel",
-> > > +                             paranoid);
-> > > +                     return false;
-> >
-> > I'm not able to get this error printed, it seems to be
-> > overwritten by perf_evsel__open_strerror call
-> >
-> > please include perf example with the new output
-> 
-> Agreed, it is possible the change builtin-top/sched/record so that on
-> error the msg is checked and dumped in verbose mode. I think it is
-> also fine to just remove the scnprintf. Do you have a preference?
+Hello,
 
-not sure ;-) but let's make sure we don't remove some expected output
+syzbot found the following crash on:
 
-jirka
+HEAD commit:    c0cc2711 Merge tag 'modules-for-v5.7' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10834007e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23c5a352e32a1944
+dashboard link: https://syzkaller.appspot.com/bug?extid=6e2d4fbfbf03293bb776
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fbbffbe00000
 
-> 
-> Thanks,
-> Ian
-> 
-> > thanks,
-> > jirka
-> >
-> > > +             }
-> > > +
-> > >               /* Is there already the separator in the name. */
-> > >               if (strchr(name, '/') ||
-> > >                   strchr(name, ':'))
-> > > --
-> > > 2.26.0.110.g2183baf09c-goog
-> > >
-> >
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6e2d4fbfbf03293bb776@syzkaller.appspotmail.com
 
+------------[ cut here ]------------
+cpu_latency_qos_remove_request called for unknown object
+WARNING: CPU: 1 PID: 9086 at kernel/power/qos.c:322 cpu_latency_qos_remove_request+0x59/0x380 kernel/power/qos.c:322
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9086 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:cpu_latency_qos_remove_request+0x59/0x380 kernel/power/qos.c:322
+Code: 02 00 0f 85 f4 02 00 00 48 81 7d 28 80 97 9a 89 74 25 e8 3a 85 18 00 48 c7 c6 20 fc 2b 88 48 c7 c7 20 f8 2b 88 e8 4f b9 e9 ff <0f> 0b 5b 5d 41 5c 41 5d e9 1a 85 18 00 e8 15 85 18 00 0f 1f 44 00
+RSP: 0018:ffffc90002717bb0 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815cd551 RDI: fffff520004e2f68
+RBP: ffff8880a3644840 R08: ffff8880a2b04300 R09: ffffed1015ce66a9
+R10: ffff8880ae733547 R11: ffffed1015ce66a8 R12: ffff8880a3644800
+R13: ffff8880a36449e4 R14: 1ffff920004e2f85 R15: 0000000000000000
+ snd_pcm_hw_free sound/core/pcm_native.c:827 [inline]
+ snd_pcm_common_ioctl+0xb32/0x2260 sound/core/pcm_native.c:3192
+ snd_pcm_ioctl_compat+0x70b/0x10d0 sound/core/pcm_compat.c:532
+ __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
+ __se_compat_sys_ioctl fs/ioctl.c:808 [inline]
+ __ia32_compat_sys_ioctl+0x23d/0x2b0 fs/ioctl.c:808
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
