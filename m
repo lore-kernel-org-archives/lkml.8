@@ -2,154 +2,218 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F2AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 689A62074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6E12074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="tJCGtH3f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UAMvKl7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502878AbgDNRuH (ORCPT
+        id S2502892AbgDNRuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:50:07 -0400
-Received: from mail-eopbgr130074.outbound.protection.outlook.com ([40.107.13.74]:61156
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502768AbgDNRuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:50:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iyOGX9WxAd+GnyCLUeCYSog1HseE8s6vpjfqj3bdUJzKw4NH20gmeU/Rx75Jj1a0TruwZq75kG20VICDO+tvHKCX/J7cgO42cD1X2N2RhW4EFXewDdzphyJ2Um9Ln8oHG/77InMDZcI67od91tDLnp7ikrZOpm1VbF7p6YT/FveggUhgJBPW+mXmZCvEE1RV9vFbVRIL1sTKfClZbQTnUkItKa5phCS/5x0OGvHJBJW8NgZzLNzEcoDY3LWmk/mx++kUl0JF7Obrc7xumvKh0DZWH49cluXCxh9prSK5RDeWZftgSRWDf6+lSr3iUrOcZDKD3Pjfu2eHXoxv8Lxo5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wpxs3kU8/3fQJR7Txh0E1aVd1Pzhw8m1oYOxfQFrT/Y=;
- b=Rb0Jf0A8Xt2vn3Rr0mXqMvq3Mm5tZRlOWS0NOqqgHDP2MIIT2CloEvcqsOGLRTLTpG4ppM0imuhudETfEL1bB2vlNlsLFfUX+LZSlPO1exk299YWF6DOWRsky5vmH9DTTZBYm7McrclfxqCHrGFFoqrg2d2pVI0pWHEKtIAmoJ4q44cDH6/UWWW9ekkAQvJh1qno4m6njcQiBYeFCV2+HEOUNYU9Gje5Ev8kW0PdZWW4cgrI9qkZom9+BbvMqIqTMu4au4w1MsiwcWUVrRVLi24Ne6TdpmMeJU6XrpsD/151qd1dVAoIZcWOGNXdgyOZZMqZA2V0JY29nTIYwlOamw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wpxs3kU8/3fQJR7Txh0E1aVd1Pzhw8m1oYOxfQFrT/Y=;
- b=tJCGtH3faicDp6+ueuJPlsxNwmWG4oF26ioRso1QmvA7Pr7d84FU8pGbiV0M2iND5qWb/dgVKppTfvOBPFN/TIjugbE94NtF7D1WLiIAS4w5Dr4GvmPrsk/KT7Wmz+29oOMjMkxacGJ3zEdHP5ApqTnH8ZFwWG0tyulK+NoZnhM=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB5215.eurprd05.prod.outlook.com (2603:10a6:803:a7::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
- 2020 17:49:42 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 17:49:42 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
-CC:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-Thread-Topic: [RFC 0/6] Regressions for "imply" behavior change
-Thread-Index: AQHWDeQiJzc7TgrcN0yUMWAEU5j98qhvr4mAgAADKgCAAB92AIAAp0gAgAEtnwCAAPPSAIAAHv4AgAXrpwCAABBmgIAAD4MAgAAAr4CAACg8gA==
-Date:   Tue, 14 Apr 2020 17:49:41 +0000
-Message-ID: <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
-References: <20200408202711.1198966-1-arnd@arndb.de>
-         <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
-         <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
-         <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
-         <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
-         <20200410171320.GN11886@ziepe.ca>
-         <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
-         <20200414132900.GD5100@ziepe.ca>
-         <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
-         <20200414152312.GF5100@ziepe.ca>
-         <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
-In-Reply-To: <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ac769aa8-eb06-45b6-7ff4-08d7e09c35f3
-x-ms-traffictypediagnostic: VI1PR05MB5215:
-x-microsoft-antispam-prvs: <VI1PR05MB5215F4B00C4CB883593FF645BEDA0@VI1PR05MB5215.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0373D94D15
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(186003)(71200400001)(110136005)(5660300002)(7416002)(36756003)(8676002)(6506007)(8936002)(4326008)(6486002)(6512007)(81156014)(86362001)(54906003)(316002)(91956017)(66556008)(2616005)(64756008)(478600001)(76116006)(26005)(66446008)(2906002)(66476007)(53546011)(66946007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rm0zeaUTSgMejJQtSAwBz9bMu/mx2ECZFRTaXwd7jczXadIbDlze6tFI/xdXfrLMGOU+E2OjNRODqv4AE4oLdJPEAzKDSDpVe+pwaj4UzAS/oGlE+YRuTkMczt/RgHqM//KDwmKrfvTENztwxgnB1ogO0DXrRNmIhR8T9G8e108OG9jspYBsmqx26lHMbf162L9iJ57wDKHEM2k+P5kxCjal/FdhVffAHGgx5ZuB871ShY54VoApR7Z863JOp105F8ffkgmEFoaqmux2mlegYjYOnQ6yukU3fgOwpBcgHelfaq25p6xbfZa99wDVAAgvflv+/sRgjL73Gx3evC+yHGtKjiN8FkjtdQB9M+B8McYJvLw+/F430WyF2KEkAQTI78siDZ3aAbwcQZ8V9LgELYBCotB3a1CJOIybpPDq+U9pThnhFH34R/iuiELAkzWU
-x-ms-exchange-antispam-messagedata: 1NkgKHyHsKz1raQ+CJFWat9KZLvaunRuFz0VzeVRjmy9P5lMDvq5bg32Cbuk3ZV3Lg0LQMOJYBzhTwD2Kq3vH0FdeDp506pXFlhpN2ZP8/7mp7Ml0neEOquN3vtuGtQ4aBhztmVYYS8eVBqmpp7htg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <732BDB5CD5614D4C86B0C0233E6BE302@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 Apr 2020 13:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2502882AbgDNRuK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:50:10 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B3DC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:50:10 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id o25so11144668oic.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TEcf9WnegdoS4TK74rJ3jgH/4y0s3Rie/mbgUIU1/FE=;
+        b=UAMvKl7xtSUqKv4GH9GoENT8bjniUZLfgA1J6ygO0hUfMB3Cq7HU3VRLr7MF3tNSBc
+         6acm2t0Th/b86RF+1RJx/BWkJWMT19MCvJUjMPxA6WoQDJ4po8xwBBNiKXkq5oAT6yE7
+         RW500W0rIeHDSvvoMWQxe/VoG1JMqhBEZ/hfisGAcN8iIRwXRvbUeC8pbC6sXSnC6eWl
+         F7DwK+3hUK3Ea3Z9HSZw8mzXP81JyPKqkZueHq7U94LiXRGo9H3tfwgZV4P6918kZEHR
+         o3p4ueeWK0Y9jozDlZEN/+/mux5LBnZqKHPo3C74Kxa/VN5G2idQ3qy6k2zJ2+SIEP6v
+         oTKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TEcf9WnegdoS4TK74rJ3jgH/4y0s3Rie/mbgUIU1/FE=;
+        b=KuWlkaTaUXLs0cTwwr0W9vsaHW8ZkMypWAfy7x57Q7otYV3khtvMlrjNd53eqgVl6Q
+         paHCKEwmRQb8usuaH+dtByv2U8enEf+iRbbJizPKTI04AGzgaauox2MY1XW9sZfpO4NZ
+         hEDvBDfFeGirxh5QK9V6sIItM6FEGLp2v9jWkJII/VPwFzE/e3CDdVL70okqikppVR2f
+         Ko25U+7PBQRvvCTgbLrRWHps2anxpUBYNrL9b8kJ9LjEBqarUpoBK/CR67jK8dA/umfq
+         EHMUaKV4A5WMK1/LX6ntJgV/vKuYr9cD3xwpTFoS94EFTPRnxl3WTBh+NegP8Q6OKgwZ
+         2nAA==
+X-Gm-Message-State: AGi0PuajCczKxQR1nWiEJBTRQ9TJP68al1cpBVBQ3aT6TY72C6t9VDYZ
+        6GbLZLToDOf9O7VhW4hAPpP/i7SEaN6by+flkkr1MA==
+X-Google-Smtp-Source: APiQypJgJrLtDCVotmqMnrcmnAO6pwj12kHLl2IpqN8C6Me+Cr3pykgTBi5j4IbIKhMt9UQxCJz8SLQoM48DAyNfkU8=
+X-Received: by 2002:a54:481a:: with SMTP id j26mr16403284oij.172.1586886608876;
+ Tue, 14 Apr 2020 10:50:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac769aa8-eb06-45b6-7ff4-08d7e09c35f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 17:49:42.0115
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NkCNURkiqLIWiek5JheVgT9BsK/z5kmnYSQK4VIif/CghHtXxXIkY9lxJgBSB5D3azWVOjo2ZNNscu+eC6maOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5215
+References: <0000000000009d5cef05a22baa95@google.com> <20200331202706.GA127606@gmail.com>
+ <CACT4Y+ZSTjPmPmiL_1JEdroNZXYgaKewDBEH6RugnhsDVd+bUQ@mail.gmail.com>
+ <CANpmjNPkzTSwtJhRXWE0DYi8mToDufuOztjE4h9KopZ11T+q+w@mail.gmail.com> <20200401162028.GA201933@gmail.com>
+In-Reply-To: <20200401162028.GA201933@gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 14 Apr 2020 19:49:57 +0200
+Message-ID: <CANpmjNOJ-LZXv29heKZ5LazF5e99BC7-fXi7G0EsSNQd_yiyPQ@mail.gmail.com>
+Subject: Re: KCSAN: data-race in glue_cbc_decrypt_req_128bit / glue_cbc_decrypt_req_128bit
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTE0IGF0IDE3OjI1ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
-PiBPbiBUdWUsIEFwciAxNCwgMjAyMCBhdCA1OjIzIFBNIEphc29uIEd1bnRob3JwZSA8amdnQHpp
-ZXBlLmNhPiB3cm90ZToNCj4gPiBPbiBUdWUsIEFwciAxNCwgMjAyMCBhdCAwNDoyNzo0MVBNICsw
-MjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0KPiA+ID4gT24gVHVlLCBBcHIgMTQsIDIwMjAgYXQg
-MzoyOSBQTSBKYXNvbiBHdW50aG9ycGUgPGpnZ0B6aWVwZS5jYT4NCj4gPiA+IHdyb3RlOg0KPiA+
-ID4gPiBPbiBGcmksIEFwciAxMCwgMjAyMCBhdCAwNzowNDoyN1BNICswMDAwLCBTYWVlZCBNYWhh
-bWVlZCB3cm90ZToNCj4gPiA+IHdoaWNoIGluIHR1cm4gbGVhZHMgdG8gbWx4NV9jb3JlLmtvICpu
-b3QqIGNvbnRhaW5pbmcNCj4gPiA+IG1seDVfdnhsYW4ubywNCj4gPiA+IGFuZCBpbiB0dXJuIGNh
-dXNpbmcgdGhhdCBsaW5rIGVycm9yIGFnYWluc3QNCj4gPiA+IG1seDVfdnhsYW5fY3JlYXRlL21s
-eDVfdnhsYW5fZGVzdHJveSwgdW5sZXNzIHRoZSBJU19FTkFCTEVEKCkNCj4gPiA+IGlzIGNoYW5n
-ZWQgdG8gSVNfUkVBQ0hBQkxFKCkuDQo+ID4gDQo+ID4gV2hhdCBhYm91dCB0aGUgcmV2ZXJzZSBp
-ZiBtbHg1X2NvcmUgaXMgJ20nIGFuZCBWTFhBTiBpcyAneSc/DQo+ID4gDQo+ID4gIG1seDVfY29y
-ZS1tIDo9IG1seDVfY29yZS5vDQo+ID4gIG1seDVfY29yZS15ICs9IG1seDVfdnhsYW4ubw0KPiA+
-IA0KPiA+IE1hZ2ljYWxseSB3b3JrcyBvdXQ/DQo+IA0KPiBZZXMsIEtidWlsZCB0YWtlcyBjYXJl
-IG9mIHRoYXQgY2FzZS4NCj4gDQo+ID4gPiA+IElJUkMgdGhhdCBpc24ndCB3aGF0IHRoZSBleHBy
-ZXNzaW9uIGRvZXMsIGlmIHZ4bGFuIGlzICduJyB0aGVuDQo+ID4gPiA+ICAgbiB8fCAhbiA9PSB0
-cnVlDQo+ID4gPiANCj4gPiA+IEl0IGZvcmNlcyBNTFg1X0NPUkUgdG8gJ20nIG9yICduJyBidXQg
-bm90ICd5JyBpZiBWWExBTj1tLA0KPiA+ID4gYnV0IGFsbG93cyBhbnkgb3B0aW9uIGlmIFZYTEFO
-PXkNCj4gPiANCj4gPiBBbmQgYW55IG9wdGlvbiBpZiBWWExBTj1uID8NCj4gDQo+IENvcnJlY3Qu
-DQo+IA0KDQpHcmVhdCAhDQoNClRoZW4gYm90dG9tIGxpbmUgd2Ugd2lsbCBjaGFuZ2UgbWx4NS9L
-Y29uZmlnOiB0bw0KDQpkZXBlbmRzIG9uIFZYTEFOIHx8ICFWWExBTg0KDQpUaGlzIHdpbGwgZm9y
-Y2UgTUxYNV9DT1JFIHRvIG0gd2hlbiBuZWNlc3NhcnkgdG8gbWFrZSB2eGxhbiByZWFjaGFibGUN
-CnRvIG1seDVfY29yZS4gIFNvIG5vIG5lZWQgZm9yIGV4cGxpY2l0IHVzZSBvZiBJU19SRUFDSEFC
-TEUoKS4NCmluIG1seDUgdGhlcmUgYXJlIDQgb2YgdGhlc2U6DQoNCiAgICAgICAgaW1wbHkgUFRQ
-XzE1ODhfQ0xPQ0sNCiAgICAgICAgaW1wbHkgVlhMQU4NCiAgICAgICAgaW1wbHkgTUxYRlcNCiAg
-ICAgICAgaW1wbHkgUENJX0hZUEVSVl9JTlRFUkZBQ0UNCg0KDQpJIHdpbGwgbWFrZSBhIHBhdGNo
-Lg0KDQpUaGFua3MsDQpTYWVlZC4NCg==
+On Wed, 1 Apr 2020 at 18:20, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Wed, Apr 01, 2020 at 12:24:01PM +0200, Marco Elver wrote:
+> > On Wed, 1 Apr 2020 at 09:04, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Tue, Mar 31, 2020 at 10:27 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > >
+> > > > On Tue, Mar 31, 2020 at 12:35:13PM -0700, syzbot wrote:
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following crash on:
+> > > > >
+> > > > > HEAD commit:    b12d66a6 mm, kcsan: Instrument SLAB free with ASSERT_EXCLU..
+> > > > > git tree:       https://github.com/google/ktsan.git kcsan
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=111f0865e00000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=10bc0131c4924ba9
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=6a6bca8169ffda8ce77b
+> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > >
+> > > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > > >
+> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com
+> > > > >
+> > > > > ==================================================================
+> > > > > BUG: KCSAN: data-race in glue_cbc_decrypt_req_128bit / glue_cbc_decrypt_req_128bit
+> > > > >
+> > > > > write to 0xffff88809966e128 of 8 bytes by task 24119 on cpu 0:
+> > > > >  u128_xor include/crypto/b128ops.h:67 [inline]
+> > > > >  glue_cbc_decrypt_req_128bit+0x396/0x460 arch/x86/crypto/glue_helper.c:144
+> > > > >  cbc_decrypt+0x26/0x40 arch/x86/crypto/serpent_avx2_glue.c:152
+> > > > >  crypto_skcipher_decrypt+0x65/0x90 crypto/skcipher.c:652
+> > > > >  _skcipher_recvmsg crypto/algif_skcipher.c:142 [inline]
+> > > > >  skcipher_recvmsg+0x7fa/0x8c0 crypto/algif_skcipher.c:161
+> > > > >  skcipher_recvmsg_nokey+0x5e/0x80 crypto/algif_skcipher.c:279
+> > > > >  sock_recvmsg_nosec net/socket.c:886 [inline]
+> > > > >  sock_recvmsg net/socket.c:904 [inline]
+> > > > >  sock_recvmsg+0x92/0xb0 net/socket.c:900
+> > > > >  ____sys_recvmsg+0x167/0x3a0 net/socket.c:2566
+> > > > >  ___sys_recvmsg+0xb2/0x100 net/socket.c:2608
+> > > > >  __sys_recvmsg+0x9d/0x160 net/socket.c:2642
+> > > > >  __do_sys_recvmsg net/socket.c:2652 [inline]
+> > > > >  __se_sys_recvmsg net/socket.c:2649 [inline]
+> > > > >  __x64_sys_recvmsg+0x51/0x70 net/socket.c:2649
+> > > > >  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+> > > > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > > >
+> > > > > read to 0xffff88809966e128 of 8 bytes by task 24118 on cpu 1:
+> > > > >  u128_xor include/crypto/b128ops.h:67 [inline]
+> > > > >  glue_cbc_decrypt_req_128bit+0x37c/0x460 arch/x86/crypto/glue_helper.c:144
+> > > > >  cbc_decrypt+0x26/0x40 arch/x86/crypto/serpent_avx2_glue.c:152
+> > > > >  crypto_skcipher_decrypt+0x65/0x90 crypto/skcipher.c:652
+> > > > >  _skcipher_recvmsg crypto/algif_skcipher.c:142 [inline]
+> > > > >  skcipher_recvmsg+0x7fa/0x8c0 crypto/algif_skcipher.c:161
+> > > > >  skcipher_recvmsg_nokey+0x5e/0x80 crypto/algif_skcipher.c:279
+> > > > >  sock_recvmsg_nosec net/socket.c:886 [inline]
+> > > > >  sock_recvmsg net/socket.c:904 [inline]
+> > > > >  sock_recvmsg+0x92/0xb0 net/socket.c:900
+> > > > >  ____sys_recvmsg+0x167/0x3a0 net/socket.c:2566
+> > > > >  ___sys_recvmsg+0xb2/0x100 net/socket.c:2608
+> > > > >  __sys_recvmsg+0x9d/0x160 net/socket.c:2642
+> > > > >  __do_sys_recvmsg net/socket.c:2652 [inline]
+> > > > >  __se_sys_recvmsg net/socket.c:2649 [inline]
+> > > > >  __x64_sys_recvmsg+0x51/0x70 net/socket.c:2649
+> > > > >  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+> > > > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > > >
+> > > > > Reported by Kernel Concurrency Sanitizer on:
+> > > > > CPU: 1 PID: 24118 Comm: syz-executor.1 Not tainted 5.6.0-rc1-syzkaller #0
+> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > > > ==================================================================
+> > > > >
+> > > >
+> > > > I think this is a problem for almost all the crypto code.  Due to AF_ALG, both
+> > > > the source and destination buffers can be userspace pages that were gotten with
+> > > > get_user_pages().  Such pages can be concurrently modified, not just by the
+> > > > kernel but also by userspace.
+> > > >
+> > > > I'm not sure what can be done about this.
+> > >
+> > > Oh, I thought it's something more serious like a shared crypto object.
+> > > Thanks for debugging.
+[...]
+> > >
+> > > Marco, I think we need to ignore all memory that comes from
+> > > get_user_pages() somehow. Either not set watchpoints at all, or
+> > > perhaps filter them out later if the check is not totally free.
+> >
+> > Makes sense. We already have similar checks, and they're in the
+> > slow-path, so it shouldn't be a problem. Let me investigate.
+>
+> I'm wondering whether you really should move so soon to ignoring these races?
+> They are still races; the crypto code is doing standard unannotated reads/writes
+> of memory that can be concurrently modified.
+>
+[...]
+
+Wanted to follow up on this, just to clarify: The issue here
+essentially boils down to a user-space race involving an API that
+isn't designed to be thread-safe with the provided arguments (pointer
+to same user-space memory). The data race here merely manifests in
+kernel code, but otherwise the kernel is unaffected (if it were
+affected, a real fix would be needed). I.e. if we observe this data
+race, KCSAN is helpfully pointing out that user space has a bug.
+
+There are some options to deal with cases like this:
+
+1. Do nothing, and just let KCSAN report the data race.
+
+2. Somehow make KCSAN distinguish in-kernel data races that are due to
+user space misusing the API. KCSAN can still show the race, but
+clearly denote the nature of it by e.g. saying "KCSAN: user data-race
+in ..." (instead of "KCSAN: data-race in ..."). This will require one
+of 2 things:
+
+    a. Distinguish the access by memory range. This doesn't seem
+great, because I don't know if we can apply a general rule like "all
+races involving this memory are user-space's fault". What if we have
+data races in the memory range that aren't user-space's fault?
+
+    b. Mark the accesses somehow, either by providing a region in
+which all races are deemed user-space's fault. This is likely more
+problematic than (a), because saying something like "all races in this
+section of code are user-space's fault" may also hide real issues.
+
+Because none of (2.a) or (2.b) seem great, at present I would opt for (1).
+
+Anything better we can do here?
+
+Thanks,
+-- Marco
