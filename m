@@ -4,62 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F324BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF96B20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C834A20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586892300;
-	bh=Mi6b47e7sZxf4lucQ8ES01EeyQZOSRxAHXiLRU0VwDg=;
+	s=default; t=1586892335;
+	bh=HMUCX6aWm71uge2BoPhYzk7fH+SUIkv3Ru9XRaQuLNU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ijH3cGkoVdXJGiE5Yj7yF31FDH/AVdouPMqz6kh1cbzFn8/u2T6Rkx9ykHWY/p/th
-	 7J4S8EEvLLnZgNMEoP2/TbxHJedXGamlvFIEtgpuzbwkbco95GxPJbVkfz5q7rmshC
-	 T9nTKR4tR9Wdml6lHENEwMJgONkB+1SYyWs4LnsY=
+	b=VBG5fURj5tJE3oCZxit9Tf+hxtdJX33TzOUXlcTQZ/MAyJzt+5N921C/9dpMuI1gL
+	 rBtVCgqGlLrAFUUIS7zGTa48JaCqFKgCNWRRf95kBts7H0v0JvONo8EGsZOwcvLk/A
+	 L11C0MXYp/+PrUjxu5NCO0ITRLUh/fvJxVmmu8Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgDNTYo (ORCPT
+        id S2504657AbgDNTZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33970 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 15:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504638AbgDNTYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2504621AbgDNTYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 15:24:20 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.7-rc2
+Subject: Re: [GIT PULL] Hyper-V fixes for 5.7-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586891123;
-        bh=Mi6b47e7sZxf4lucQ8ES01EeyQZOSRxAHXiLRU0VwDg=;
+        s=default; t=1586891122;
+        bh=HMUCX6aWm71uge2BoPhYzk7fH+SUIkv3Ru9XRaQuLNU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=IN4H6DoD4MgQSG7CApDYBhwspxleLmWgsm6N3H3bGJEZX5lr+v9/ifDqmDzxlwy5y
-         lUbFRG0wmIQwQjjwXeDUW8qdTB5nsFzqfMpL5u9NE48gWNgLZ1LOiMckYudtLLvVqu
-         hmOoJeVbqtnqx2BiYEfA2gefveLIfd1m2TyoV840=
+        b=z2Am7yZ9Y6qIZ+x31ILB+uyNWwcbIcSyLo9IF0AyGIWnM7Dh28PMl4sErQo+wDe95
+         0zWy1rp1oOAyF2hpudVmADjltiEqcmThWlQVOfvS66ktyD3pbV+3nXdTAnMdu3l2wp
+         1qQ8Ntaf6PiCB/Tu5J+iiBBgFWTiwGout1cny5xc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1586868872.git.dsterba@suse.com>
-References: <cover.1586868872.git.dsterba@suse.com>
+In-Reply-To: <20200414102102.7jci4pzsp5tdoifr@debian>
+References: <20200414102102.7jci4pzsp5tdoifr@debian>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1586868872.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc1-tag
-X-PR-Tracked-Commit-Id: 34c51814b2b87cb2e5a98c92fe957db2ee8e27f4
+X-PR-Tracked-Message-Id: <20200414102102.7jci4pzsp5tdoifr@debian>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+ tags/hyperv-fixes-signed
+X-PR-Tracked-Commit-Id: f3a99e761efa616028b255b4de58e9b5b87c5545
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6cc9306b8fc03019e81e4f10c93ff0528cba5217
-Message-Id: <158689112373.29674.16323985983606188540.pr-tracker-bot@kernel.org>
-Date:   Tue, 14 Apr 2020 19:05:23 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 8632e9b5645bbc2331d21d892b0d6961c1a08429
+Message-Id: <158689112259.29674.18320264839412857827.pr-tracker-bot@kernel.org>
+Date:   Tue, 14 Apr 2020 19:05:22 +0000
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        haiyangz@microsoft.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 14 Apr 2020 15:59:45 +0200:
+The pull request you sent on Tue, 14 Apr 2020 11:21:02 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc1-tag
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6cc9306b8fc03019e81e4f10c93ff0528cba5217
+https://git.kernel.org/torvalds/c/8632e9b5645bbc2331d21d892b0d6961c1a08429
 
 Thank you!
 
