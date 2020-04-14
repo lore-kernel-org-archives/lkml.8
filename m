@@ -2,152 +2,88 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FCCC2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72D5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70AE32063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:22:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbdltNJ8"
+	by mail.kernel.org (Postfix) with ESMTP id 9E50F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbgDNNWw (ORCPT
+        id S1731519AbgDNNXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:22:52 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40230 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731108AbgDNNUE (ORCPT
+        Tue, 14 Apr 2020 09:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731120AbgDNNUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:20:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586870403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=3HuLilv69rC7THF45aYrV+6luk1YKd/SKbIHAdtaS/I=;
-        b=TbdltNJ8jZQXuJwsQZdr6sZi8I/S+6zwcgoPxr6JDDhUIb2uNfSjSVzudXMbYwWmv9/7tB
-        iKol0fvSq0C6MYSILN7S/LY5sJMw06DmtRpoAUVLXCt4oN4UY1tgErNKfhce9sPD1aDlJQ
-        SNZzhEgdUhaMXaG8nhmYuIxwjmDM7/g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-179-s7QuTE3nMBK2FMGTYY2epg-1; Tue, 14 Apr 2020 09:19:58 -0400
-X-MC-Unique: s7QuTE3nMBK2FMGTYY2epg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E38B51B2C98A;
-        Tue, 14 Apr 2020 13:19:56 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-114-21.ams2.redhat.com [10.36.114.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DA489F9A4;
-        Tue, 14 Apr 2020 13:19:55 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        "5 . 3+" <stable@vger.kernel.org>
-Subject: [PATCH v2] platform/x86: intel_int0002_vgpio: Only bind to the INT0002 dev when using s2idle
-Date:   Tue, 14 Apr 2020 15:19:53 +0200
-Message-Id: <20200414131953.131533-1-hdegoede@redhat.com>
+        Tue, 14 Apr 2020 09:20:33 -0400
+X-Greylist: delayed 277 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 06:20:32 PDT
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED76DC061A0C;
+        Tue, 14 Apr 2020 06:20:32 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 340BE45B; Tue, 14 Apr 2020 15:20:31 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 15:20:29 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH] iommu/exynos: Get rid of 'struct exynos_iommu_owner'
+ exynos_iommu_owner
+Message-ID: <20200414132029.GB14731@8bytes.org>
+References: <20200407183742.4344-1-joro@8bytes.org>
+ <CGME20200407184501eucas1p25407bc96e4345df406cf6ba061ae6a82@eucas1p2.samsung.com>
+ <20200407183742.4344-32-joro@8bytes.org>
+ <449e7f16-e719-9617-ec92-63b82c0bc33f@samsung.com>
+ <f59b0bb3-8c08-9cc9-bb1a-e69b7b226f60@samsung.com>
+ <20200409114620.GA16298@8bytes.org>
+ <40af831b-d00c-0cf9-0a06-e60c048a9ab8@samsung.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40af831b-d00c-0cf9-0a06-e60c048a9ab8@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
-irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
-the parents IRQ because this was breaking suspend (causing immediate
-wakeups) on an Asus E202SA.
+On Thu, Apr 09, 2020 at 03:58:00PM +0200, Marek Szyprowski wrote:
+> I've checked and it works fine on top of 
+> ff68eb23308e6538ec7864c83d39540f423bbe90. However I'm not a fan of 
+> removing this 'owner' structure. It gave a nice abstraction for the all 
+> SYSMMU controllers for the given device (although most devices in the 
+> system have only one SYSMMU). Why this structure is a problem for your 
+> rework?
 
-This workaround for this issue is mostly fine, on most Cherry Trail
-devices where we need the INT0002 device for wakeups by e.g. USB kbds,
-the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
-anyways.
+Okay, the structure itself is not a problem, I just thought it is not
+really necessary. But to keep things simple I've taken another approach
+for v2 of this series: Just use the first SYSMMU of the controllers list
+to link the device and the IOMMU. When the owner structure exists there
+is always one entry in this list, so that should work fine.
 
-But not on all devices, specifically on a Medion Akoya E1239T there is
-no SCI at all, and because the irq_set_wake request is not passed on to
-the parent IRQ, wake up by the builtin USB kbd does not work here.
+Regards,
 
-So the workaround for the Asus E202SA immediate wake problem is causing
-problems elsewhere; and in hindsight it is not the correct fix,
-the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
-Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
-actually is a Braswell device.
-
-Most (all?) Braswell devices use classic S3 mode suspend rather then
-s2idle suspend and in this case directly dealing with PME events as
-the INT0002 driver does likely is not the best idea, so that this is
-causing issues is not surprising.
-
-Replace the workaround of not passing irq_set_wake requests on to the
-parents IRQ, by not binding to the INT0002 device when s2idle is not used=
-.
-This fixes USB kbd wakeups not working on some Cherry Trail devices,
-while still avoiding mucking with the wakeup flags on the Asus E202SA
-(and other Brasswell devices).
-
-Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement i=
-rq_set_wake on Bay Trail")
-Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Rebase on top of 5.7-rc1
----
- drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platfor=
-m/x86/intel_int0002_vgpio.c
-index 289c6655d425..30806046b664 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip =3D {
- 	.irq_set_wake		=3D int0002_irq_set_wake,
- };
-=20
--static struct irq_chip int0002_cht_irqchip =3D {
--	.name			=3D DRV_NAME,
--	.irq_ack		=3D int0002_irq_ack,
--	.irq_mask		=3D int0002_irq_mask,
--	.irq_unmask		=3D int0002_irq_unmask,
--	/*
--	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
--	 * and we don't want to mess with the ACPI SCI irq settings.
--	 */
--	.flags			=3D IRQCHIP_SKIP_SET_WAKE,
--};
--
- static const struct x86_cpu_id int0002_cpu_ids[] =3D {
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&int0002_byt_irqchip),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_cht_irqchip),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_byt_irqchip),
- 	{}
- };
-=20
-@@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pde=
-v)
- 	if (!cpu_id)
- 		return -ENODEV;
-=20
-+	/* We only need to directly deal with PMEs when using s2idle */
-+	if (!pm_suspend_default_s2idle())
-+		return -ENODEV;
-+
- 	irq =3D platform_get_irq(pdev, 0);
- 	if (irq < 0)
- 		return irq;
---=20
-2.26.0
+	Joerg
 
