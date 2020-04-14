@@ -4,94 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92CAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED5CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1A920767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D468520767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586887751;
-	bh=VJQrPKIgL+tVPD56smBveevLeXsut5vUEmDteXcsIck=;
+	s=default; t=1586887827;
+	bh=EbmMqfwZdQ48vvGP4gUEgE4gk1uvCdbJHR7To1L+RzQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UbvqmTPnSgyu4VF1Dc6hxOKgr4mNogNszz3zsNPPMdE0vYY3v8SEk7JpJZ0UiKhjc
-	 SmPaYox0Z3oQZ1aLHcyZh7sBu9snxDB/W2lZ54JQ6QgBYF/OQwUHJx06akwhk+/zlD
-	 KsS06+lZfu4+BICA6nMEZM0ck+f8n4NSObwflP5E=
+	b=zxVTkWkaEc5WO+1rR1YkwEwxc1kh2rZSsKBBjXM2Q3Ms7vlbvpbC8CJ+whnMHwRBs
+	 mExg9LqaEIq78pBvkNG9sYV6MeOqwKU49nFrLlhXJu52aS+xknzLiiblzy1EX8tJfl
+	 vAVB07/R5wsfWwhAyIuA8p0GrbYEHFLBMLkoSxBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503439AbgDNSJJ (ORCPT
+        id S2503443AbgDNSKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:09:09 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39858 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731265AbgDNSJB (ORCPT
+        Tue, 14 Apr 2020 14:10:24 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36266 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503440AbgDNSKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:09:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x11so598470otp.6;
-        Tue, 14 Apr 2020 11:09:00 -0700 (PDT)
+        Tue, 14 Apr 2020 14:10:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s202so8027437oih.3;
+        Tue, 14 Apr 2020 11:10:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=prDWIrMyWVL9le+9ZcGHN+BwfXt6qR13g2kfPV4NuLU=;
-        b=sD52D5uY35Jxg9+tPH/hSaC4e0TKFlj9S0kHxtEr51tPa5mTishDdwXqaQDMJaw5qJ
-         t1xJJ88H6N3Cmz1NX1wmHoduwnafE6VbyL21LSKre3EiTOzG6UJU8pXiva7yDnkNgA8u
-         Rpiw74hJMblFIUkJhqHTcCtEqi3yzilU8L4zVZR0HNmSL1ncCwb3OimGorXbD5+2uYXT
-         2H78Q2KriDl+ECgdEUKD65AobLms68uMPPVre+uZes3ZrdrVjqePsub6spJNpvMA1hqF
-         TTzecpnDuCyQr9ihqjx/clh++epjJQpu5mVp1MgJ66xtxil05sBlnZErGU8zx5jjMHLs
-         nrSQ==
-X-Gm-Message-State: AGi0PuaQM+YXSM/IVdvPWTh8+D1NfWuGjwxUVBTyYiKgrrGNeoXpYUvj
-        cKTMpS6agQb7iOcJXRcGBA==
-X-Google-Smtp-Source: APiQypIh/leoxjlevMbuXjSNGpeuUA+hc90vGxRi1bhdKnjP1LzJUetWbjZ5GD/fYFx5Zd1kLiU9jw==
-X-Received: by 2002:a9d:5b4:: with SMTP id 49mr18758120otd.210.1586887739227;
-        Tue, 14 Apr 2020 11:08:59 -0700 (PDT)
+        bh=Gk9v81jHbK3iR48L6X7HK2W2hW2idFCYLNnsfsLJ5DI=;
+        b=RhIBHdLmpH5b82iqnJh1wB1tjsulhqO2PWtMksh7mLPeS1gZY0+VPtnGAsywDxa39a
+         SFBmk6t5wejd2uRwzx7HHxrs3/sdcCbE/3h8jf5G+UiAjNRx/lsegHtifoXEoUysKnfU
+         I9TtiUGHhkUwrijNgQW+rALnItJ38XZy9NwWQOrCSchvUvN4Q1gWJoE83d8XNulnnI3E
+         GVpIbuVOUfRolu2MpfKCqRIgRuMJkrap0VsG4gj95kfQ5J7KDDRKGe0a3wsfJQnKf7ZF
+         +Kx6Mjos42lv1t90unKHkPH4A3ZdUR0e50BWIpbaKKBktiYMyRBmcnFD89kJpgzIDcQb
+         9lDg==
+X-Gm-Message-State: AGi0PubA6Bft/6+0S82ARV2fUtN1tc4QkwcU2O4GpCgAiIgeH1fgsYcH
+        OotH/3f9V2OC/rUxPH+Rxg==
+X-Google-Smtp-Source: APiQypJDRGMEJXG8wmRe/NiPBnSGRAZWCVmHL7lGBysJHnkMXrQCbeU+veI2YWGa/oKKLMFumNHrzA==
+X-Received: by 2002:a54:4e0e:: with SMTP id a14mr16768498oiy.88.1586887804608;
+        Tue, 14 Apr 2020 11:10:04 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g12sm1060392otk.71.2020.04.14.11.08.57
+        by smtp.gmail.com with ESMTPSA id f45sm5697664otf.30.2020.04.14.11.10.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:08:58 -0700 (PDT)
-Received: (nullmailer pid 829 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:08:57 -0000
-Date:   Tue, 14 Apr 2020 13:08:57 -0500
+        Tue, 14 Apr 2020 11:10:04 -0700 (PDT)
+Received: (nullmailer pid 4320 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:10:03 -0000
+Date:   Tue, 14 Apr 2020 13:10:03 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, robh+dt@kernel.org, heiko@sntech.de,
-        hverkuil-cisco@xs4all.nl, kernel@collabora.com,
-        dafna.hirschfeld@collabora.com, ezequiel@collabora.com,
-        mark.rutland@arm.com, karthik.poduval@gmail.com, jbx6244@gmail.com,
-        kishon@ti.com
-Subject: Re: [PATCH v2 6/9] dt-bindings: media: rkisp1: move rockchip-isp1
- bindings out of staging
-Message-ID: <20200414180857.GA742@bogus>
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
- <20200403161538.1375908-7-helen.koike@collabora.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     devicetree@vger.kernel.org, Jason Kridner <jkridner@gmail.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
+        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
+Subject: Re: [PATCH v4] dt-bindings: Add vendor prefix for BeagleBoard.org
+Message-ID: <20200414181003.GA4231@bogus>
+References: <20200403191931.GA31296@x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403161538.1375908-7-helen.koike@collabora.com>
+In-Reply-To: <20200403191931.GA31296@x1>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Apr 2020 13:15:35 -0300, Helen Koike wrote:
-> Move rkisp1 bindings to Documentation/devicetree/bindings/media
+On Fri, 3 Apr 2020 21:19:31 +0200, Drew Fustini wrote:
+> Add vendor prefix for BeagleBoard.org Foundation
 > 
-> Verified with:
-> make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 > ---
+> Changes in v4:
+>   - rebase on robh/for-next branch
 > 
-> V2:
-> - no changes
+> Changes in v3:
+>   - add SoB from drew@beagleboard.org
+>   - email patch from drew@beagleboard.org
 > 
->  .../devicetree/bindings/media/rockchip-isp1.yaml                  | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
+> Changes in v2:
+>   - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
+>     needing to quote within a yaml regular expression.
+>   - Assign 'from' to author e-mail address.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
