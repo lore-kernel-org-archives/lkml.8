@@ -2,102 +2,75 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD3DC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13AFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF28A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586888851;
-	bh=Y5f94rGXyvxM7q1IoU22He/0fWYgi6eYHPW6GepYqCY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q4XCtz4eOehgxG64glHCZmpkzScM9bpdYJx+IKdVCtOtKhuoa/4Bnb+RGFN1lmXJV
-	 E+j08WRDhpjJE2swsqaojOnCbi74gMWunudjWKy9oB346FoqwYxfygqxSSM68CieIT
-	 8VacQGaUNQn47sQyVgdIM0AO2Gjp3Saz2njnenA8=
+	by mail.kernel.org (Postfix) with ESMTP id CAA3020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tD3LQn4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503940AbgDNS1a (ORCPT
+        id S2503960AbgDNS1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
+        Tue, 14 Apr 2020 14:27:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503938AbgDNS1Z (ORCPT
+        by vger.kernel.org with ESMTP id S2503947AbgDNS13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:27:25 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2507BC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:27:24 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id l11so566418lfc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=39725/N1RjmePGAGcC5L2gkhHxlD8TbK9gL3md/ZFx8=;
-        b=CklwolPhhQ8hL0pe0esgaXAWhzOphc+1ipdU/gtsCdbnIN8BptD7ncJ7Ip2B+9ZNIz
-         vFn/n2SF727a3t5AeH8HNVUtkc4iDjzx7d4aFtPu1v6a4Pj2VtCbnLyg/RmKavbz+gss
-         DDIxPHkXG5BPEFZw9Xl5Mv4iABaWzzjBotJ0Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=39725/N1RjmePGAGcC5L2gkhHxlD8TbK9gL3md/ZFx8=;
-        b=Iz4yGtZFIRbIXaiQdsG1VLXO6thJPtAE6oJBJZrK2+VkWJ+6N+OyzSY9InFsddeW3b
-         W+OPMxf8fLaaH3K8Bjs/NbLmOY8+KKjy5Izu9Viu0UyOL4JV7ZDcAefidt+O0EUH48T7
-         gU4XdSxE529ynXKvw/+OdPU00KQllwxYOFEwtzzYsRInkuH6qFxxs73tH+jW1XCak8ya
-         YXtmXvTRPKYaHvHhQjfCG3kjzOgXyHG+TI/iXDM2Z+5IaOIlIo/vIDERHTKmASB6bGTB
-         BMXIzPkANdaP5f/OB3eJHQ8ZE/E2FtcBH0ib9YkDVi2HESBvKFoVsJWApcTkn+RMzwuu
-         DVZw==
-X-Gm-Message-State: AGi0PuYAW/pFgFnp5GKUMGr4PwbGkswEIMJ0lWbna9L6CC5Yuvk5xiTY
-        QezZjkLGB04p7R84qHm1go05hQNPcrU=
-X-Google-Smtp-Source: APiQypLKjicnaMFs+ZXRHRlZSvO83xliuqdehKb2Bfxxx0/wgrUyjJm6WDhEeW0XEZiTrMePyDxIJQ==
-X-Received: by 2002:a19:e049:: with SMTP id g9mr681608lfj.198.1586888841755;
-        Tue, 14 Apr 2020 11:27:21 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id s7sm10741834lfb.40.2020.04.14.11.27.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 11:27:20 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id q19so859745ljp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:27:20 -0700 (PDT)
-X-Received: by 2002:a2e:a58e:: with SMTP id m14mr859604ljp.204.1586888840289;
- Tue, 14 Apr 2020 11:27:20 -0700 (PDT)
+        Tue, 14 Apr 2020 14:27:29 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBD2C061A0C;
+        Tue, 14 Apr 2020 11:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=w2oScmLWvNS0pE9g0BNFVGRJ1Z3X4h/XpiGkuoMfTl8=; b=tD3LQn4fu/VaX7Xe/1Od68HJYr
+        pQsue+85LW0nQVRKGurdh9H89+cq+T7kyJK81NIT/34ojHpMLUsNro0ArivA2S8eX5d2kbOcq7q3n
+        C16cG89tI/IOhvjg0reh1ApEsmxAL/UIaMByTx2VoL/EsNoCBaK97mxF1/ypRYj9w7Y1PyQ6wVU37
+        VpOuv24MwH0C0JrSMk8gEFV8glwMK9kySl3I53rr1anvD37m99Shsy0d5k6S2isvE97N62nmkoGi6
+        MVUvxqCHAbJFNiaOPw/Rn/nu6wCcOxItpQyELcpbZ0diuG7IhS2qYfX9RpmUfucBzt0OEkpTcZZoT
+        JG4Ccq9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOQHR-0005cu-1P; Tue, 14 Apr 2020 18:27:29 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 118D1981086; Tue, 14 Apr 2020 20:27:27 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 20:27:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+Message-ID: <20200414182726.GF2483@worktop.programming.kicks-ass.net>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
- <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 14 Apr 2020 11:27:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi-s0mmLAVg-aSmNU55=cE8ES7mC=Mc3Wn62P8W9VjY-A@mail.gmail.com>
-Message-ID: <CAHk-=wi-s0mmLAVg-aSmNU55=cE8ES7mC=Mc3Wn62P8W9VjY-A@mail.gmail.com>
-Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1586881704.git.jpoimboe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 3:50 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> [*] GRUB on x86 turns out not to zero initialize BSS when it invokes
-> the EFI stub as a PE/COFF executable
+On Tue, Apr 14, 2020 at 11:28:36AM -0500, Josh Poimboeuf wrote:
+> Better late than never, these patches add simplifications and
+> improvements for some issues Peter found six months ago, as part of his
+> non-writable text code (W^X) cleanups.
 
-The fix seems to be to put all globals in the .data section, even if
-they don't have initializers.
+Excellent stuff, thanks!!
 
-That seems very fragile. Very easy to forget to not declare some
-static variable with __efistub_global.
+I'll go brush up these two patches then:
 
-Could we not make the EFI stub code zero out the BSS itself? Perhaps
-setting a warning flag (for a later printout) if it wasn't already
-zero, so that people could point fingers are buggy loaders..
+  https://lkml.kernel.org/r/20191018074634.801435443@infradead.org
+  https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
 
-             Linus
+and write a patch that makes the x86 code throw a wobbly on W+X.
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
