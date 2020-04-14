@@ -2,170 +2,120 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF4EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD962054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05882054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qkQKYtZS"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="d/XycrnO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634350AbgDNXEt (ORCPT
+        id S2441005AbgDNXKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:04:49 -0400
-Received: from mail-eopbgr20065.outbound.protection.outlook.com ([40.107.2.65]:62670
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731157AbgDNXEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 19:04:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PeHux+xRrktFx3EmRm/IHrrE4m5fUCHWgFnarV3JyleAgXOEcgTPi+XnLEnC9Axuox2VOo2IKfhYdQLs6FmQIPk+3jTkf7Xq02NCoheuTIKdQUsruBLtxLu2DH2PSbplAfc0Sxut5RzHEv9J+mCCf/lbPQdYEqD7vMQ4/2XOSHgN01FN1Fknx1K2fz6iKc9LZWcLTeTWNbdV5T10lNsVxXSFFGxHiBGcCpjwOBOCEonOPVl8USSUx4HtzYC3v9SHQy4VCgW+s7rKe3x46BXOUTULnB82LFWBYxrlfQf6SjRDye85yLArQDr5HsjphyraYFgAg8t/Ct57imJIuZlbSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xk3eyvmEu0cGdo9crw47iVwBRhWCgTqTQ57qHpPk2Ho=;
- b=URF2RfftT8aX1X0T7nI9rRdgJzI5OhjXigmHOsufGLVuQaaHJ6s3o4aE38HV8HJUjy/jY10ck5XGm5QGFV2g+UwvnUao4vZ9PnaMUXDG7F033vJe0xNyjqcS82HdseJHc6OERPux2GF7l4olodOQe6yfuL5F0u+ngBEkGwQXX+5NXO9ptB1ZjTmMtFRYo4e4g3KUHsAzle3yt7276dfjiwzhQwI9qLVX253SiF8Ke/vWeqHVKJSsr5xLbnypmON5HcDf63IeEBz7Ud/OKHwPQQtKOQFIf1uZiMeTuvmpqpoc2DdsF6Ni4ewERmgoBJM7trZyBqnzNqDTkZEyb8GJQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xk3eyvmEu0cGdo9crw47iVwBRhWCgTqTQ57qHpPk2Ho=;
- b=qkQKYtZSSpljO7VVk1AzheuyTuTLtSZdgEgADGD2J+FqKgYWbx2+jhvqOKTavLZ3BqIBw3BzRCUl9bp2Tz8aER2uibuhGgo0w8w63/e0/rxB4PzbnaO/SZIHSNm/2AJECaENP9sjR0edd4cvCMN4yqrxxMKafKWMvmIzIrJgG5k=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2920.eurprd04.prod.outlook.com (2603:10a6:4:9d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
- 2020 23:04:42 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 23:04:41 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: RE: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
-Thread-Topic: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
-Thread-Index: AQHWEWDF3qNLhxLm4UOCh+3sub5JH6h4otcAgACcRgA=
-Date:   Tue, 14 Apr 2020 23:04:41 +0000
-Message-ID: <DB6PR0402MB2760232F4EDEB9D9BE42F71988DA0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1586760548-23046-1-git-send-email-peng.fan@nxp.com>
- <20200414134419.GE30676@dragon>
-In-Reply-To: <20200414134419.GE30676@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b40e0e1d-2a15-441e-b8e9-08d7e0c83729
-x-ms-traffictypediagnostic: DB6PR0402MB2920:|DB6PR0402MB2920:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB292037454EEC66F6F387388A88DA0@DB6PR0402MB2920.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0373D94D15
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(396003)(39860400002)(136003)(346002)(83080400001)(52536014)(66946007)(33656002)(55016002)(76116006)(9686003)(2906002)(54906003)(966005)(7696005)(6506007)(64756008)(66476007)(316002)(66556008)(45080400002)(26005)(66446008)(186003)(44832011)(478600001)(5660300002)(8936002)(86362001)(71200400001)(81156014)(6916009)(4326008)(8676002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tiZqzEPKuU1A8JPLsRtL3bhNeZtw+Pz/YDGXcJFj2cYHMaYGWybMtcwDY9Q3ovZuZq3jMVdW1N7dh5SFfm2E5VoMzbrH1SitlG6IKBrqK8pxxRlhJ75T+YkTluXlxqcQEnF2gcUFnYLaU27rWIk1X2Z5tcaWSPKoYSDbAN/2wy0kia3ZURadXilSMXj5vKtFW7v9Wrz5QZ21RohuitSBlBXBSzuEXqgl8cFyWtdaXS6a30mWbDSrbDzwRhdLa8Lbus3a96OMbmFDbBBBOgU2G9n0ZrHfLYT8xuUUjFRE/fIBV+FUPTX8/EwMUYhNRCJ55yvSuoQqgSJ500psTeju2KzA7AezyRTlqX/qA03w9k/ljSRKX1WSknlDvLzU166Y6pPkmSm8eqmkYddHzS0UHz7upvRF5A8uR3lYW6vTIpVOUThkCatJRuFy9rfaiTFhSBPdY2WcSxRW41goEshtDaLD7rGh0odICLfNJ5H68i4HXoXyRb8GsQAXbt0UKBow
-x-ms-exchange-antispam-messagedata: 2t2oMZsLzcqr2vAj4WOo65XKb91AQ4T9cxu95LT+HBAplE8HGKM6bZN987SdtEmnQSVCzTiyoe0wXCckhq0OzG8DWGyYkBYMQ9r1YvwvZ8R8edyTkH0xeoe0DlbFPQoai5c876z0S6plnwQ/HqLvog==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 19:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731377AbgDNXJ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 19:09:57 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EC1C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 16:09:55 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l60so3380511qtd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 16:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8GmpDGYHNWO1HVRGOCC1HUE41KMOfYWwP4MYA86x9Hs=;
+        b=d/XycrnOIE9zVNs85mQ8kiqfaX2FAKRGtTainrFJ0IzS2KMbTBKck6+HKcl12KMfi/
+         mLyCl0M1OBOJwXwZ3mkeZWf734twgkheW3CbMFKK9vgo54UnwfYGSfuqlmm2nneOODqY
+         lFI2ztDOic5VkmRttn366D+g3jqOHNKyx6SEMuHpgfwN4dMbeYlKBWMp7+Sx0VtOHgkw
+         QAB6RJyglN5wdqlfuhGUcdCQiEH3Z01NDBhyXZH9qCDuhlHStFTK31cHPnoZ3HSzOw1n
+         zELCk4JBQJoOxdIR6Znl2rOgnjsEmPOnLC0nGGBLDO2jdXjzhoB0uXDpMRgRXyQfNDmR
+         X8Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8GmpDGYHNWO1HVRGOCC1HUE41KMOfYWwP4MYA86x9Hs=;
+        b=kg7RH0ghHiv3Hzz7glkSlEK4rlNx7Nypou/52egDdqVwP0L+c01hAEfsxqrCtFc/Yt
+         XK1o/Ym3LL/yql9byzLv0DKjff8wVMFBgbbkBM0D4qbLfgp5soT+aGjZL/8OEAgitBk/
+         kSOdD6/G2FrDou7LtiyiZVI60F64YwcQ83OenOG5VuxZDGsn3dhrw8sOHxnJGfcn0zef
+         itMm4VCDOjSRBLJoQiOzMcAbNnPet7bgwK470/kpjOFXI0f+d3/rG7UvAxCMYMFAi7f4
+         eKvR8xgiYpTzN322kuCcbPhCbMXE9l25F2fWDQtC0sZIY9ngYDEM6F+I3ZnzlEhzJQhl
+         r9kA==
+X-Gm-Message-State: AGi0Pua5WQzjkRxXDypIhFcfBWAPIF2Kq1xBUZMAuSPFVUxIOTZ2yePN
+        KHRtP4o035M2aRVY+imdr1qvlQ==
+X-Google-Smtp-Source: APiQypIq7HA/Rl7AQcDjE3FdKvf8IBKg1xI6rru45NLF9fLflB46Gk0TTOpZ6L0hLOq23HmizGMYBQ==
+X-Received: by 2002:ac8:16e4:: with SMTP id y33mr19301422qtk.4.1586905795146;
+        Tue, 14 Apr 2020 16:09:55 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id f1sm11455084qkl.72.2020.04.14.16.09.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 16:09:54 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [RESEND] kunit: use --build_dir=.kunit as default
+Date:   Tue, 14 Apr 2020 20:09:50 -0300
+Message-Id: <20200414230950.83665-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b40e0e1d-2a15-441e-b8e9-08d7e0c83729
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 23:04:41.8977
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wOQvS1JgNaJ0jyQX4ebDOgltPYk26EUvkkPKwyyzBWGoc9Pm7+ksRDtGR5Gz6i99cUepH+SkTlRp87lAqf7LoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2920
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
->=20
-> On Mon, Apr 13, 2020 at 02:49:04PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > V2:
-> >  Fix dt_bindings check
->=20
-> Confusing.  The series posted on Mar. 16 was already numbered v3.  Now,
-> it goes back to v2.  You should at least have a note to explain how they =
-are
-> related.
+To make KUnit easier to use, and to avoid overwriting object and
+.config files, the default KUnit build directory is set to .kunit
 
-Sorry, this should be v4. I format patch with wrong subject prefix.
-Will post this patchset again with v4.
+ * Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205221
 
-Thanks,
-Peng.
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+ tools/testing/kunit/kunit.py | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
->=20
-> Shawn
->=20
-> >
-> > This is a splited part from V2:
-> > ARM: imx7ulp: add cpufreq using cpufreq-dt
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
-c
-> >
-> hwork.kernel.org%2Fcover%2F11390589%2F&amp;data=3D02%7C01%7Cpeng.f
-> an%40n
-> >
-> xp.com%7C5d5665f577bc4175d56108d7e079f573%7C686ea1d3bc2b4c6fa92
-> cd99c5c
-> >
-> 301635%7C0%7C1%7C637224686727427611&amp;sdata=3DLP0xeyGrCzZcR7U
-> ruDnPqAFT
-> > qzFgdj68hs41%2F5eiWrc%3D&amp;reserved=3D0
-> > Nothing changed
-> >
-> >
-> > The original V2 patchset is to support i.MX7ULP cpufreq, still waiting
-> > the virtual clk being accepted. so to decouple, this patchset only
-> > takes the run mode part.
-> >
-> > Peng Fan (4):
-> >   dt-bindings: fsl: add i.MX7ULP PMC binding doc
-> >   ARM: dts: imx7ulp: add pmc node
-> >   ARM: imx: imx7ulp: support HSRUN mode
-> >   ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
-> >
-> >  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32
-> ++++++++++++++++++++++
-> >  arch/arm/boot/dts/imx7ulp.dtsi                     | 10 +++++++
-> >  arch/arm/mach-imx/common.h                         |  1 +
-> >  arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14
-> ++++++++--
-> >  arch/arm/mach-imx/pm-imx7ulp.c                     | 25
-> +++++++++++++++++
-> >  5 files changed, 79 insertions(+), 3 deletions(-)  create mode 100644
-> > Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-> >
-> > --
-> > 2.16.4
-> >
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index 7dca74774dd2..5da190c79481 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -116,7 +116,7 @@ def main(argv, linux=None):
+ 	run_parser.add_argument('--build_dir',
+ 				help='As in the make command, it specifies the build '
+ 				'directory.',
+-				type=str, default='', metavar='build_dir')
++				type=str, default='.kunit', metavar='build_dir')
+ 
+ 	run_parser.add_argument('--defconfig',
+ 				help='Uses a default .kunitconfig.',
+@@ -136,12 +136,11 @@ def main(argv, linux=None):
+ 		if get_kernel_root_path():
+ 			os.chdir(get_kernel_root_path())
+ 
+-		if cli_args.build_dir:
+-			if not os.path.exists(cli_args.build_dir):
+-				os.mkdir(cli_args.build_dir)
+-			kunit_kernel.kunitconfig_path = os.path.join(
+-				cli_args.build_dir,
+-				kunit_kernel.kunitconfig_path)
++		if not os.path.exists(cli_args.build_dir):
++			os.mkdir(cli_args.build_dir)
++		kunit_kernel.kunitconfig_path = os.path.join(
++			cli_args.build_dir,
++			kunit_kernel.kunitconfig_path)
+ 
+ 		if cli_args.defconfig:
+ 			create_default_kunitconfig()
+-- 
+2.25.1
+
