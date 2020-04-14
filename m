@@ -2,137 +2,83 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2778CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EA5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F322C20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40AD2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="UCGbIx6B"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="a4bjsZvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504069AbgDNSgd (ORCPT
+        id S2504087AbgDNShE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730984AbgDNSg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:36:26 -0400
-X-Greylist: delayed 30551 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 11:36:25 PDT
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1035C061A0C;
-        Tue, 14 Apr 2020 11:36:25 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 53BD023EC2;
-        Tue, 14 Apr 2020 20:36:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1586889384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ETg9DQrxdDCpr8jJWz38aDIweCD3QxDPHNHvzP2jUaI=;
-        b=UCGbIx6BP4Q+IaZfvVxIu9QIHpybrXsMYlGwiW2F5q48TGdHlwBz9HWEvKi0jPP6M5pjd9
-        Uw30KSd6GweHb9rvhRNdwXbJKNLmCajHFJWJw47XKaaa1+xYZhHnR2oC1BTv5WnO4w6CIb
-        AVzpz/8vTxtmpQrjUjxSLzL8hoFsy5E=
+        Tue, 14 Apr 2020 14:37:04 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37346 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730984AbgDNShB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:37:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ViDMoOKYM5eKMxDsxHH7qVo/oFOUllzmSiKC3yZPO6c=; b=a4bjsZvzVTQKEboODtQWY+VzaR
+        Uka9txjlohDs9CE42qN9gGt3beuSmKNSmtSo7sK+GvEmNmBdul/j9c1ITfwevq3/jPyfVKOK/ju0h
+        cXqUEA7fx3zAhjjBHSzaQmtEoOu3GpTuVsEJOgDDdlfssYACYEu7t10Syh0LjvN7FKLA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jOQQW-002hvo-0W; Tue, 14 Apr 2020 20:36:52 +0200
+Date:   Tue, 14 Apr 2020 20:36:52 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Message-ID: <20200414183652.GB637127@lunn.ch>
+References: <20200413170107.246509-1-robert.marko@sartura.hr>
+ <20200413184219.GH557892@lunn.ch>
+ <CA+HBbNE_-Pjr6dZ3qjgk1MiaT3PL9eUgs=XfK-ohkWDCR9yfZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Apr 2020 20:36:23 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <20200414172129.GJ5412@sirena.org.uk>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
- <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
- <20200414172129.GJ5412@sirena.org.uk>
-Message-ID: <fa605af3aee48f0bc62133f398ed7c5d@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 53BD023EC2
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-1.083];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+HBbNE_-Pjr6dZ3qjgk1MiaT3PL9eUgs=XfK-ohkWDCR9yfZA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-14 19:21, schrieb Mark Brown:
-> On Tue, Apr 14, 2020 at 12:07:01PM +0200, Michael Walle wrote:
->> Am 2020-04-14 11:50, schrieb Bartosz Golaszewski:
-> 
->> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
->> > IS_ERR() returning true?
-> 
->> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
->> the type the regmap API has for its "reg" property). It could be a
->> pointer of course but then the user would have to allocate additional
->> memory.
-> 
-> You could define REGMAP_INVALID_ADDR to be (unsigned int)(-1) or some
-> other suitably implausible address and use that as a value.  It's
-> possible that there might be a collision with a real address on some
-> device but it should be sufficiently unlikely to be useful, especially
-> if it's not something regmap in general goes and evaluates.  For extra
-> safety we could have an API for allowing users to query the register
-> validity information regmap has (or can be given) and gpiolib could 
-> then
-> use that to figure out if the value was actually a dummy value but
-> that's probably overdoing it.
+> Unfortunately, I don't have access to documentation and this is all based on
+> GPL code from Qualcomm's SDK.
+> So I don't really know whats their purpose.
 
-If possible, I'd like to have the opposite logic. That is, if it is not
-set it should be invalid. If we have a magic macro like
-REGMAP_INVALID_ADDR, we must assign it to all the unused addresses. Thus
-every driver would have to assign all addresses and if in the future
-there will be some added, we'd have to touch all the drivers which use
-gpio_regmap.
+Then please try to reverse engineer it. Just looking at the code, it
+seems like one register is read, and the other is write. So use that
+in the name.
 
--michael
+> No, this is also an old relic from the SDK driver.
+> It works without this perfectly fine, so I will drop it from v2.
+
+Part of cleaning up 'Vendor Crap' is throwing out all the stuff like
+this. What you end up with should be something you would of been happy
+to write yourself.
+
+> > Why the name am? Generally priv is used. I could also understand bus,
+> > or even data, but am?
+> Like most stuff in this driver, its a leftover from the SDK driver.
+
+I guessed as much. But this is the sort of thing you need to fix when
+cleaning up 'vendor crap'.
+
+	 Andrew
