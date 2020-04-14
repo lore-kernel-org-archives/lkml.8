@@ -2,117 +2,175 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56025C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99883C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2824D20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7251920767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIO5vamY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ztxpc9P/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387608AbgDNWTm (ORCPT
+        id S2387729AbgDNWV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:19:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40298 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728100AbgDNWTX (ORCPT
+        Tue, 14 Apr 2020 18:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387609AbgDNWVn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:19:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586902762;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yL6cjrdLQOUSqErBo6QoCuDORXmlrgCzzoA47tfOvfU=;
-        b=FIO5vamYSj1cLgaGv1rAx89r5GlbvetVCjCNGZZsD0alzcO6hrHbgZ+v0L2rS9WTLzizsy
-        i+5r1yZbBfT6V/tw0xHy4L0/vFWKrKUEko6hnuqNfSKJ82vKTucG5VR6PTl06ktTJ1cQpy
-        7dvy4ZnfrSvy3oeS0sSy5GrUywaQrHA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-j6syM9dhMDOsGPla-pJb0g-1; Tue, 14 Apr 2020 18:19:20 -0400
-X-MC-Unique: j6syM9dhMDOsGPla-pJb0g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03F5519067E3;
-        Tue, 14 Apr 2020 22:19:19 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 928009F9B0;
-        Tue, 14 Apr 2020 22:19:17 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 17:19:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Apr 14 (objtool crazy)
-Message-ID: <20200414221914.hbvp4dvh47at4nlg@treble>
-References: <20200414123900.4f97a83f@canb.auug.org.au>
- <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
+        Tue, 14 Apr 2020 18:21:43 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F0BC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:21:43 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id h69so569662pgc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZwCrJaGxUOzJeHGKvHVPJYFgPdIhYcpo9yljCYyVINA=;
+        b=ztxpc9P/5puzYuVP0ylIYDNls2wP+oCoQ5LomytlmZgClZ8aqrPg2fpqTfLkJP0M5d
+         M5oSppS5NwlpOa/pz5s2uovRhN+jYnYinexRX3NPf63kKPMvZ7zhLwaTtbi9D9jCqpER
+         mhqeL3QaxlvVdHn++gqu5g9eBYEnmz1e7jyFNlaAkPNUGcq7wbWL/gXE8mi0BxjCDtQ6
+         Lt/2iTHeZcRji2SzUGOiKfZiqGfELyN/ghfduK24lqDlUfw4TaMWSfFUPmHqzq6HC9QR
+         PcAbJkyq3KZ5gFA6edT3pBTPuojwr1xEiYfG21HRCwtcecUblGhE1kS0PHNwBzQFC76t
+         0oVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZwCrJaGxUOzJeHGKvHVPJYFgPdIhYcpo9yljCYyVINA=;
+        b=dyOZ2LEajqlU0pOjd22iw7ooHHQFZ8Dc+cUPYIZjn1j/d8pCbX4i1wRs48qt7Ytqvx
+         dMmSXEFVB1Bx0RCuruzv6aZ1G0cYpFr6SBQxp3p35Jrx/vXIaP6/mzwikTp/HR3OnGJw
+         4LsrXWGyGjxanEnx7IzIVlWmFjnLE3I9PCbffDYb23gQtzpkcrsqvc3H0KkU9gODwx71
+         9JSTDNoT7iNDs3+1AxDRLSlaSHiJNDQNvXgldnf6rwNfT+vo3b6QXuUdRRse+XlWC+qi
+         SuXmsi6VIgSIUm1cKBq6lSMnDpnEGCCJjro8+pVJUqvfUpRrD6p/ISEEc6WoqboanU26
+         lNOg==
+X-Gm-Message-State: AGi0PuZGcfSGjZbJDaUjfWEGHjEcsH/5O78eASEevz4qDfM53mC8kgxu
+        sXOyLDOXw717RNUzJfH8zHvJjmShsUw=
+X-Google-Smtp-Source: APiQypJK7Z+ffXbRR1wnDe41MyryqC1NgQllHHYkqbCtNvpgKWSRtwZTf1HG5yhq46Qb6hqUYGuF7w==
+X-Received: by 2002:a62:5c1:: with SMTP id 184mr13429191pff.68.1586902903205;
+        Tue, 14 Apr 2020 15:21:43 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g9sm11056999pgc.46.2020.04.14.15.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 15:21:42 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 15:21:58 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] soc: qcom: rpmpd: Allow RPMPD driver to be loaded
+ as a module
+Message-ID: <20200414222158.GL576963@builder.lan>
+References: <20200326224459.105170-1-john.stultz@linaro.org>
+ <20200326224459.105170-2-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200326224459.105170-2-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 06:50:15AM -0700, Randy Dunlap wrote:
-> On 4/13/20 7:39 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200413:
-> > 
+On Thu 26 Mar 15:44 PDT 2020, John Stultz wrote:
+
+> This patch allow the rpmpd driver to be loaded as a permenent
+> module. Meaning it can be loaded from a module, but then cannot
+> be unloaded.
 > 
+> Ideally, it would include a remove hook and related logic, but
+> apparently the genpd code isn't able to track usage and cleaning
+> things up? (See: https://lkml.org/lkml/2019/1/24/38)
 > 
-> I killed objtool after 49 minutes of CPU time:
+> So making it a permenent module at least improves things slightly
+> over requiring it to be a built in driver.
 > 
->   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND    
->  6159 rdunlap   30  10   42756   8028      0 R 100.0 0.099  49:19.02 objtool 
+> Feedback would be appreciated!
 > 
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Acked-by: Saravana Kannan <saravanak@google.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2:
+> * Fix MODULE_LICENSE to be GPL v2 as suggested by Bjorn
+> * Leave initcall as core_initcall, since that switches to module_initcall
+>   only when built as a module, also suggested by Bjorn
+> * Add module tags taken from Rajendra's earlier patch
+> ---
+>  drivers/soc/qcom/Kconfig | 4 ++--
+>  drivers/soc/qcom/rpmpd.c | 6 ++++++
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> /bin/sh: line 1:  6159 Terminated              ./tools/objtool/objtool orc generate --no-fp --no-unreachable --uaccess drivers/i2c/busses/i2c-parport.o
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index d0a73e76d563..af774555b9d2 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -123,8 +123,8 @@ config QCOM_RPMHPD
+>  	  for the voltage rail.
+>  
+>  config QCOM_RPMPD
+> -	bool "Qualcomm RPM Power domain driver"
+> -	depends on QCOM_SMD_RPM=y
+> +	tristate "Qualcomm RPM Power domain driver"
+> +	depends on QCOM_SMD_RPM
+>  	help
+>  	  QCOM RPM Power domain driver to support power-domains with
+>  	  performance states. The driver communicates a performance state
+> diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+> index 2b1834c5609a..22fe94c03e79 100644
+> --- a/drivers/soc/qcom/rpmpd.c
+> +++ b/drivers/soc/qcom/rpmpd.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mutex.h>
+> +#include <linux/module.h>
 
-I took an initial look at this one.  I can dig more tomorrow unless
-Peter beats me to it.
+module comes before mutex in the alphabet.
 
-(gdb) bt
-#0  0x000000000040df55 in sec_offset_hash (sec=0xc30930, offset=4334561216) at elf.h:104
-#1  0x000000000040e907 in find_rela_by_dest_range (elf=0x7ffff64a4010, sec=0xc30930, offset=18446744073709551608, len=1) at elf.c:227
-#2  0x000000000040ea67 in find_rela_by_dest (elf=0x7ffff64a4010, sec=0xc30710, offset=18446744073709551608) at elf.c:246
-#3  0x0000000000408038 in find_jump_table (file=0x427620 <file>, func=0xc32bf0, insn=0xc4f840) at check.c:1118
-#4  0x0000000000408242 in mark_func_jump_tables (file=0x427620 <file>, func=0xc32bf0) at check.c:1170
-#5  0x00000000004083b6 in add_jump_table_alts (file=0x427620 <file>) at check.c:1215
-#6  0x0000000000408b95 in decode_sections (file=0x427620 <file>) at check.c:1413
-#7  0x000000000040bf44 in check (_objname=0x7fffffffceff "drivers/i2c/busses/i2c-parport.o", orc=true) at check.c:2508
-#8  0x0000000000405580 in cmd_orc (argc=1, argv=0x7fffffffc9d8) at builtin-orc.c:41
-#9  0x0000000000411297 in handle_internal_command (argc=6, argv=0x7fffffffc9d0) at objtool.c:96
-#10 0x0000000000411349 in main (argc=6, argv=0x7fffffffc9d0) at objtool.c:119
+>  #include <linux/pm_domain.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> @@ -226,6 +227,7 @@ static const struct of_device_id rpmpd_match_table[] = {
+>  	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
+>  	{ }
+>  };
+> +MODULE_DEVICE_TABLE(of, rpmpd_match_table);
+>  
+>  static int rpmpd_send_enable(struct rpmpd *pd, bool enable)
+>  {
+> @@ -422,3 +424,7 @@ static int __init rpmpd_init(void)
+>  	return platform_driver_register(&rpmpd_driver);
+>  }
+>  core_initcall(rpmpd_init);
+> +
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPM Power Domain Driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:qcom-rpmpd");
 
-It's an infinite loop in find_rela_by_dest_range() because offset is -8.
-That comes from find_jump_table():
+Is there any reason for this alias?
 
-  table_offset = text_rela->addend;
-  table_sec = text_rela->sym->sec;
-  ...
-  table_rela = find_rela_by_dest(file->elf, table_sec, table_offset);
+The module will be automatically loaded based on compatible and the
+MODULE_DEVICE_TABLE() information above, and for ACPI would need a
+similar acpi_device_id table.
 
-which comes from this gem:
+Regards,
+Bjorn
 
-00000000000001fd <line_set>:
- 1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
- 204:	00 00 00 
-			1ff: R_X86_64_64	.rodata-0x8
-
-So objtool is getting confused by that -0x8 rela addend.
-
--- 
-Josh
-
+> -- 
+> 2.17.1
+> 
