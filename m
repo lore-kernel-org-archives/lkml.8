@@ -2,202 +2,138 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF5EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EF0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6F5206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="A1/V73Z0"
+	by mail.kernel.org (Postfix) with ESMTP id 5FBC9206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437583AbgDNJU1 (ORCPT
+        id S2437589AbgDNJVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:20:27 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60119 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437568AbgDNJUT (ORCPT
+        Tue, 14 Apr 2020 05:21:11 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37628 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437568AbgDNJVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:20:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586856018; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=+XRnNV94uKt5nAFMee794EpLZKQMMlWET+oJDf9hq18=; b=A1/V73Z0//cvlP4im2fM+r8o+gCpxswZPaK+rbtupDoi9v+3wFCFoBtpSFmUOyRLqnOLy4ML
- NwJI5G0AzlLjauOoSS2dW8HvCWeMQa6/kFS9mIVdLH5pmTtyYy/TbFdZgbTDIbhd+wSjMaQv
- xxqJMZ1dzmvrKuth3U0EiaNfSWg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e958045.7fd359261b58-smtp-out-n02;
- Tue, 14 Apr 2020 09:20:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BC71C432C2; Tue, 14 Apr 2020 09:20:05 +0000 (UTC)
-Received: from [192.168.43.129] (unknown [106.222.14.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02DDCC433CB;
-        Tue, 14 Apr 2020 09:19:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02DDCC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v17 0/6] Invoke rpmh_flush for non OSI targets
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1586703004-13674-1-git-send-email-mkshah@codeaurora.org>
- <20200414053412.GJ20625@builder.lan>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <b4d25241-00e2-d730-31f1-3a32418a017e@codeaurora.org>
-Date:   Tue, 14 Apr 2020 14:49:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 05:21:03 -0400
+Received: by mail-lf1-f68.google.com with SMTP id t11so8802962lfe.4;
+        Tue, 14 Apr 2020 02:21:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=LywWFJk14UpQ6bDY3nfxNnszaV03Hsnpt1J5lFZIdc4=;
+        b=CHc2dSSsspRqkTPrdH1LqDfBZ0eFSFjv0cl4l58VoBC+33oSpbOkhlSSMjVppjLBr+
+         1ylMpoltQSxsc23OUIZ0zuoawgwRv67Pq28L0BnSudmaCigJE2hhIlcqmSAATqT4/4vB
+         ejqBowiuTUm0MYxxN5/ckx41w4rCVm01iCnS7j0b2LXupPXU2jI517UnCSKFhN2xqwEk
+         Ci+sj6eZ1lNIGZcEiqPfVFC81ekvGdIuST+rFRhO7HznlXMJQTbVcXfhzAaiTMHw8Plv
+         jeLy+/pK5RY0GR3ujIE/QxAo+XeMgW/aRHlfinTWA2WWlzxyH0yo4DWOJ2VEl+a+HYyb
+         T1zQ==
+X-Gm-Message-State: AGi0PuZ3vn3tWZ5lt4VU+ubelaJw/GSPWvJ1sQ82u5eW3Nz4R6pDSxdg
+        m1KzVd8iMbOW3rwwG4xcK5uDJO4jHz0=
+X-Google-Smtp-Source: APiQypI5GgR4aLihNN/8n444oF17+wSmXZMTHVQCCUThjYgd10aTZwcq9crkU2ou4vSCpeFGP7xSow==
+X-Received: by 2002:a05:6512:54e:: with SMTP id h14mr13068942lfl.56.1586856059445;
+        Tue, 14 Apr 2020 02:20:59 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-231-41.ip.moscow.rt.ru. [188.32.231.41])
+        by smtp.gmail.com with ESMTPSA id a10sm4088622ljp.16.2020.04.14.02.20.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 02:20:58 -0700 (PDT)
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200331094054.24441-1-w@1wt.eu>
+ <20200331094054.24441-8-w@1wt.eu>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: Re: [PATCH 07/23] floppy: use symbolic register names in the sparc64
+ port
+Message-ID: <bcaddeb1-7017-9ac7-fd76-ebd1146b4293@linux.com>
+Date:   Tue, 14 Apr 2020 12:20:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200414053412.GJ20625@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+In-Reply-To: <20200331094054.24441-8-w@1wt.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Bjorn.
+Hi,
 
-Thanks,
-Maulik
+On 3/31/20 12:40 PM, Willy Tarreau wrote:
+-		printk("floppy: Asked to read unknown port %lx\n", port);
+> +		printk("floppy: Asked to read unknown port %lx\n", reg);
 
-On 4/14/2020 11:04 AM, Bjorn Andersson wrote:
-> On Sun 12 Apr 07:49 PDT 2020, Maulik Shah wrote:
->
-> I sorted them includes and applied the series.
->
-> Thanks,
-> Bjorn
->
->> Changes in v17:
->> - Address Stephen's comments on change 3 and change 4.
->> - Add Stephen's Reviewed-by on change 5.
->>
->> Changes in v16:
->> - Use base address in probe only, drop change to save it in drv->base
->> - Address Doug's comments on change 5,6 and 7.
->> - Add Doug's Reviewed-by.
->>
->> Changes in v15:
->> - Address Doug's comments on change 3 of v14 and add Reviewed-by
->> - Split change 4 of v14 to save drv->base in a new change
->> - Address Doug's comments on change 4, 5, 6 of v14
->> - Add missing NOTIFY_OK for rpmh_flush() success case
->> - First 5 changes in this series can be merged without change 6 and 7
->>
->> Changes in v14:
->> - Address Doug's comments on change 3 from v13
->> - Drop new APIs for start and end transaction from change 4 in v13
->> - Update change 4 to use cpu pm notifications instead
->> - Add [5] as change 5 to enable use of WAKE TCS when ACTIVE TCS count is 0
->> - Add change 6 to Allow multiple WAKE TCS to be used as ACTIVE TCSes
->> - First 4 changes can be merged even without change 5 and 6.
->>
->> Changes in v13:
->> - Address Stephen's comment to maintain COMPILE_TEST
->> - Address Doug's comments and add new APIs for start and end transaction
->>
->> Changes in v12:
->> - Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
->>
->> Changes in v11:
->> - Address Doug's comments on change 2 and 3
->> - Include change to invalidate TCSes before flush from [4]
->>
->> Changes in v10:
->> - Address Evan's comments to update commit message on change 2
->> - Add Evan's Reviewed by on change 2
->> - Remove comment from rpmh_flush() related to last CPU invoking it
->> - Rebase all changes on top of next-20200302
->>
->> Changes in v9:
->> - Keep rpmh_flush() to invoke from within cache_lock
->> - Remove comments related to only last cpu invoking rpmh_flush()
->>
->> Changes in v8:
->> - Address Stephen's comments on changes 2 and 3
->> - Add Reviewed by from Stephen on change 1
->>
->> Changes in v7:
->> - Address Srinivas's comments to update commit text
->> - Add Reviewed by from Srinivas
->>
->> Changes in v6:
->> - Drop 1 & 2 changes from v5 as they already landed in maintainer tree
->> - Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
->> - Rename subject to appropriate since power domain changes are dropped
->> - Rebase other changes on top of next-20200221
->>
->> Changes in v5:
->> - Add Rob's Acked by on dt-bindings change
->> - Drop firmware psci change
->> - Update cpuidle stats in dtsi to follow PC mode
->> - Include change to update dirty flag when data is updated from [4]
->> - Add change to invoke rpmh_flush when caches are dirty
->>
->> Changes in v4:
->> - Add change to allow hierarchical topology in PC mode
->> - Drop hierarchical domain idle states converter from v3
->> - Address Merge sc7180 dtsi change to add low power modes
->>
->> Changes in v3:
->> - Address Rob's comment on dt property value
->> - Address Stephen's comments on rpmh-rsc driver change
->> - Include sc7180 cpuidle low power mode changes from [1]
->> - Include hierarchical domain idle states converter change from [2]
->>
->> Changes in v2:
->> - Add Stephen's Reviewed-By to the first three patches
->> - Addressed Stephen's comments on fourth patch
->> - Include changes to connect rpmh domain to cpuidle and genpds
->>
->> Resource State Coordinator (RSC) is responsible for powering off/lowering
->> the requirements from CPU subsystem for the associated hardware like buses,
->> clocks, and regulators when all CPUs and cluster is powered down.
->>
->> RSC power domain uses last-man activities provided by genpd framework based
->> on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
->> idle states. As a part of domain poweroff, RSC can lower resource state
->> requirements by flushing the cached sleep and wake state votes for various
->> resources.
->>
->> [1] https://patchwork.kernel.org/patch/11218965
->> [2] https://patchwork.kernel.org/patch/10941671
->> [3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
->> [4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
->> [5] https://patchwork.kernel.org/patch/10818129
->>
->> Maulik Shah (5):
->>    arm64: dts: qcom: sc7180: Add cpuidle low power states
->>    soc: qcom: rpmh: Update dirty flag only when data changes
->>    soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new
->>      data
->>    soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
->>    soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
->>
->> Raju P.L.S.S.S.N (1):
->>    soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
->>
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi |  78 +++++++++++++
->>   drivers/soc/qcom/rpmh-internal.h     |  25 ++--
->>   drivers/soc/qcom/rpmh-rsc.c          | 220 +++++++++++++++++++++++++++--------
->>   drivers/soc/qcom/rpmh.c              |  79 ++++++-------
->>   4 files changed, 305 insertions(+), 97 deletions(-)
->>
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
+> -		printk("floppy: Asked to write to unknown port %lx\n", port);
+> +		printk("floppy: Asked to write to unknown port %lx\n", reg);
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+sparc64 showed a couple of warnings in printks (I will send fixes)
+./arch/sparc/include/asm/floppy_64.h: In function ‘sun_82077_fd_inb’:
+./arch/sparc/include/asm/floppy_64.h:106:48: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’ [-Wformat=]
+  106 |   printk("floppy: Asked to read unknown port %lx\n", reg);
+      |                                              ~~^     ~~~
+      |                                                |     |
+      |                                                |     unsigned int
+      |                                                long unsigned int
+      |                                              %x
+./arch/sparc/include/asm/floppy_64.h: In function ‘sun_82077_fd_outb’:
+./arch/sparc/include/asm/floppy_64.h:125:52: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’ [-Wformat=]
+  125 |   printk("floppy: Asked to write to unknown port %lx\n", reg);
+      |                                                  ~~^     ~~~
+      |                                                    |     |
+      |                                                    |     unsigned int
+      |                                                    long unsigned int
+      |                                                  %x
+
+A couple of new warnings.
