@@ -2,153 +2,211 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB4CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE5CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A8020678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6958120678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:19:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EBVOg6X/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VKfOwVkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391030AbgDNQSo (ORCPT
+        id S2391348AbgDNQTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:18:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14120 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390722AbgDNQSk (ORCPT
+        Tue, 14 Apr 2020 12:19:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42067 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390953AbgDNQT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:18:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586881119; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=pjzwfTcChHnISigCJHUetoRvOtw8Q36XYbff0pt71XY=;
- b=EBVOg6X/p8Plyh7uVYSdxlpC70ArYFEMk51fgEK/B/bp2K3IC3orEv8eF9AUu4Su42r8ezrX
- K1qYYCFrTbBc9M/3Zqh/IMWsCue72TzGg9VhmaiDSgEktaKEupqbWlzfvEoULpBcPWQj0zwA
- ypoXb7FqSNiEGrGW/FfJyVMDAuU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e95e25e.7f4c0c536228-smtp-out-n04;
- Tue, 14 Apr 2020 16:18:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 06F62C4478F; Tue, 14 Apr 2020 16:18:37 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 14 Apr 2020 12:19:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586881162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6nA9JsP6NHFHE81BI0WbmxyRDhA75yxUAmygws1QELI=;
+        b=VKfOwVkYXLHly6VI3XBHCeaPoOU6TUpIck/5hW12xMPMo5gT9r3l9ejuuvzWR4GpeVyFta
+        ylyk2OV1QjCIwt5LbunuOo3Us1MX0FiM5IDwxgfBzL4P4DpFBJGvGOXWWvj18fUDLPRSkM
+        z9PRmI61A08xdVgFA5c/Kp1NJpg5rS8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-1YqG7yzvPxOwln_cdmgkuA-1; Tue, 14 Apr 2020 12:19:16 -0400
+X-MC-Unique: 1YqG7yzvPxOwln_cdmgkuA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28FA7C433F2;
-        Tue, 14 Apr 2020 16:18:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFBE2107B28C;
+        Tue, 14 Apr 2020 16:19:14 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.194.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CE7D160BE0;
+        Tue, 14 Apr 2020 16:19:03 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 18:19:00 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Wainer dos Santos Moschetta <wainersm@redhat.com>
+Subject: Re: [PATCH 06/10] KVM: selftests: Add "delete" testcase to
+ set_memory_region_test
+Message-ID: <20200414161900.ovqpaz4q36hdro4n@kamzik.brq.redhat.com>
+References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
+ <20200410231707.7128-7-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Apr 2020 21:48:37 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH 2/2] iommu/arm-smmu: Allow client devices to select direct
- mapping
-In-Reply-To: <CAE=gft7HFBc7XtgiV1hkG-m3ONMUiE2vu8Vg_7Mu1dfe2BjYpA@mail.gmail.com>
-References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <813cc5b2da10c27db982254b274bf26008a9e6da.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <CAE=gft7HFBc7XtgiV1hkG-m3ONMUiE2vu8Vg_7Mu1dfe2BjYpA@mail.gmail.com>
-Message-ID: <eb30fcf85127676e401ca5d83f9a6ad7@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410231707.7128-7-sean.j.christopherson@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Evan,
-
-On 2020-04-14 04:42, Evan Green wrote:
-> On Wed, Jan 22, 2020 at 3:48 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> From: Jordan Crouse <jcrouse@codeaurora.org>
->> 
->> Some client devices want to directly map the IOMMU themselves instead
->> of using the DMA domain. Allow those devices to opt in to direct
->> mapping by way of a list of compatible strings.
->> 
->> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
->> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  drivers/iommu/arm-smmu-qcom.c | 39 
->> +++++++++++++++++++++++++++++++++++
->>  drivers/iommu/arm-smmu.c      |  3 +++
->>  drivers/iommu/arm-smmu.h      |  5 +++++
->>  3 files changed, 47 insertions(+)
->> 
->> diff --git a/drivers/iommu/arm-smmu-qcom.c 
->> b/drivers/iommu/arm-smmu-qcom.c
->> index 64a4ab270ab7..ff746acd1c81 100644
->> --- a/drivers/iommu/arm-smmu-qcom.c
->> +++ b/drivers/iommu/arm-smmu-qcom.c
->> @@ -3,6 +3,7 @@
->>   * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->>   */
->> 
->> +#include <linux/of_device.h>
->>  #include <linux/qcom_scm.h>
->> 
->>  #include "arm-smmu.h"
->> @@ -11,6 +12,43 @@ struct qcom_smmu {
->>         struct arm_smmu_device smmu;
->>  };
->> 
->> +static const struct arm_smmu_client_match_data qcom_adreno = {
->> +       .direct_mapping = true,
->> +};
->> +
->> +static const struct arm_smmu_client_match_data qcom_mdss = {
->> +       .direct_mapping = true,
+On Fri, Apr 10, 2020 at 04:17:03PM -0700, Sean Christopherson wrote:
+> Add a testcase for deleting memslots while the guest is running.
+> Like the "move" testcase, this is x86_64-only as it relies on MMIO
+> happening when a non-existent memslot is encountered.
 > 
-> I don't actually see direct_mapping being used. Shouldn't this member
-> be checked somewhere?
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  .../kvm/x86_64/set_memory_region_test.c       | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c b/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+> index 629dd8579b73..b556024af683 100644
+> --- a/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+> @@ -29,6 +29,9 @@
+>  
+>  static const uint64_t MMIO_VAL = 0xbeefull;
+>  
+> +extern const uint64_t final_rip_start;
+> +extern const uint64_t final_rip_end;
+> +
+>  static sem_t vcpu_ready;
+>  
+>  static inline uint64_t guest_spin_on_val(uint64_t spin_val)
+
+We don't have guest_spin_on_val(), so it looks like this patch applies
+on the older version of this series? But I don't know where
+wait_for_vcpu() called below comes from.
+
+Thanks,
+drew
+
+
+> @@ -203,6 +206,89 @@ static void test_move_memory_region(void)
+>  	kvm_vm_free(vm);
+>  }
+>  
+> +static void guest_code_delete_memory_region(void)
+> +{
+> +	uint64_t val;
+> +
+> +	GUEST_SYNC(0);
+> +
+> +	/* Spin until the memory region is deleted. */
+> +	val = guest_spin_on_val(0);
+> +	GUEST_ASSERT_1(val == MMIO_VAL, val);
+> +
+> +	/* Spin until the memory region is recreated. */
+> +	val = guest_spin_on_val(MMIO_VAL);
+> +	GUEST_ASSERT_1(val == 0, val);
+> +
+> +	/* Spin until the memory region is deleted. */
+> +	val = guest_spin_on_val(0);
+> +	GUEST_ASSERT_1(val == MMIO_VAL, val);
+> +
+> +	asm("1:\n\t"
+> +	    ".pushsection .rodata\n\t"
+> +	    ".global final_rip_start\n\t"
+> +	    "final_rip_start: .quad 1b\n\t"
+> +	    ".popsection");
+> +
+> +	/* Spin indefinitely (until the code memslot is deleted). */
+> +	guest_spin_on_val(MMIO_VAL);
+> +
+> +	asm("1:\n\t"
+> +	    ".pushsection .rodata\n\t"
+> +	    ".global final_rip_end\n\t"
+> +	    "final_rip_end: .quad 1b\n\t"
+> +	    ".popsection");
+> +
+> +	GUEST_ASSERT_1(0, 0);
+> +}
+> +
+> +static void test_delete_memory_region(void)
+> +{
+> +	pthread_t vcpu_thread;
+> +	struct kvm_regs regs;
+> +	struct kvm_run *run;
+> +	struct kvm_vm *vm;
+> +
+> +	vm = spawn_vm(&vcpu_thread, guest_code_delete_memory_region);
+> +
+> +	/* Delete the memory region, the guest should not die. */
+> +	vm_mem_region_delete(vm, MEM_REGION_SLOT);
+> +	wait_for_vcpu();
+> +
+> +	/* Recreate the memory region.  The guest should see "0". */
+> +	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS_THP,
+> +				    MEM_REGION_GPA, MEM_REGION_SLOT,
+> +				    MEM_REGION_SIZE / getpagesize(), 0);
+> +	wait_for_vcpu();
+> +
+> +	/* Delete the region again so that there's only one memslot left. */
+> +	vm_mem_region_delete(vm, MEM_REGION_SLOT);
+> +	wait_for_vcpu();
+> +
+> +	/*
+> +	 * Delete the primary memslot.  This should cause an emulation error or
+> +	 * shutdown due to the page tables getting nuked.
+> +	 */
+> +	vm_mem_region_delete(vm, 0);
+> +
+> +	pthread_join(vcpu_thread, NULL);
+> +
+> +	run = vcpu_state(vm, VCPU_ID);
+> +
+> +	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN ||
+> +		    run->exit_reason == KVM_EXIT_INTERNAL_ERROR,
+> +		    "Unexpected exit reason = %d", run->exit_reason);
+> +
+> +	vcpu_regs_get(vm, VCPU_ID, &regs);
+> +
+> +	TEST_ASSERT(regs.rip >= final_rip_start &&
+> +		    regs.rip < final_rip_end,
+> +		    "Bad rip, expected 0x%lx - 0x%lx, got 0x%llx\n",
+> +		    final_rip_start, final_rip_end, regs.rip);
+> +
+> +	kvm_vm_free(vm);
+> +}
+> +
+>  int main(int argc, char *argv[])
+>  {
+>  	int i, loops;
+> @@ -215,8 +301,13 @@ int main(int argc, char *argv[])
+>  	else
+>  		loops = 10;
+>  
+> +	pr_info("Testing MOVE of in-use region, %d loops\n", loops);
+>  	for (i = 0; i < loops; i++)
+>  		test_move_memory_region();
+>  
+> +	pr_info("Testing DELETE of in-use region, %d loops\n", loops);
+> +	for (i = 0; i < loops; i++)
+> +		test_delete_memory_region();
+> +
+>  	return 0;
+>  }
+> -- 
+> 2.26.0
 > 
 
-Thanks for spotting this, my bad. It should be checked in 
-qcom_smmu_request_domain().
-
-diff --git a/drivers/iommu/arm-smmu-qcom.c 
-b/drivers/iommu/arm-smmu-qcom.c
-index ff746acd1c81..3ff62ca13ad5 100644
---- a/drivers/iommu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -43,7 +43,7 @@ static int qcom_smmu_request_domain(struct device 
-*dev)
-         const struct arm_smmu_client_match_data *client;
-
-         client = qcom_smmu_client_data(dev);
--       if (client)
-+       if (client && client->direct_mapping)
-                 iommu_request_dm_for_dev(dev);
-
-         return 0;
-
--Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
