@@ -2,123 +2,155 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71D2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5DCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32572064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1988F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BwmNsRYe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="REJMFVTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632744AbgDNULT (ORCPT
+        id S2632753AbgDNULq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730893AbgDNUKt (ORCPT
+        Tue, 14 Apr 2020 16:11:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40784 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2632745AbgDNULU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:10:49 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB6BC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:10:48 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so442400pfn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ppH/+YgCTeOL3Dr2C7WADabmRRYp+dAF5+qWcrgchF0=;
-        b=BwmNsRYexbR7lKrCQrRx5vsflrNkwJmuQvHInrHOfAT5Dk3KjbgEjVMmw76lAtjYT1
-         NMhgs04kdmPjqzqupZHaAZB8KgSRn/q/t6O2dWDYs7nPuwzziHX3Qc6PFNZ5kankIYN3
-         ynMKtW6TWXTgjetozVX2nrvQnHjWoNtgmnvT0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ppH/+YgCTeOL3Dr2C7WADabmRRYp+dAF5+qWcrgchF0=;
-        b=QZ0ZDZXGKp3gOKuTq/9gnxZy0/fVHcNq2kLTJbMC0xd/b0uPxSD+fofgGQriKQeSPx
-         yR0kgAJOi2AnpaDFaQyMHDqZ2asr2E0WT/uMyOiqHzA7AQCQVwTdG5nWMQXFp6GvCANM
-         lXe3Xzf1hn4eE/7D+TScs7tpJxuY1oJ0n8rUEWCnn6ru3f/ZmR2ToNCIbh+glB4H3ShG
-         g25XJpfbwokM3Xvvw/kT6mtYzaX2ZMKXGteqECwVWRqgvUSWmOyIuNUuOctLFnccnGTi
-         ezIlhC9rzA85mZy3JpaKoGgfwLxf5n2ZcDPqd77FSPZjjz2c1lUbG7uZGKi76BTTgPlc
-         b0hQ==
-X-Gm-Message-State: AGi0PuaTjKrEJh5UR7L7vGZgXGmFWM0lyigHd6fCzyoy5Uwm4vAj3cu/
-        nKLWlPPGoCTcEebNXe+sizL5WQ==
-X-Google-Smtp-Source: APiQypJPg1zVr0kK4Hik17t3Nla01ANehPz3YuKx5NpHqPaF9GKVC9k17lYP+tIq+gKMj4lum9Z3kA==
-X-Received: by 2002:a62:4e0c:: with SMTP id c12mr23544904pfb.87.1586895047930;
-        Tue, 14 Apr 2020 13:10:47 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 135sm12189805pfu.207.2020.04.14.13.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:10:47 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mkshah@codeaurora.org, joe@perches.com, swboyd@chromium.org,
-        mka@chromium.org, evgreen@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] soc: qcom: rpmh-rsc: Timeout after 1 second in write_tcs_reg_sync()
-Date:   Tue, 14 Apr 2020 13:10:16 -0700
-Message-Id: <20200414131010.v2.2.I8550512081c89ec7a545018a7d2d9418a27c1a7a@changeid>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-In-Reply-To: <20200414131010.v2.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
-References: <20200414131010.v2.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
+        Tue, 14 Apr 2020 16:11:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586895079;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t7aLyIzVIv8UgnZXzETONCOSTJxW/XfBuHyqu3EQW8M=;
+        b=REJMFVTRzqqgH2MPSVwB6xIsV1MvOURq56YVLpo51esxAVP4YUDnYZ54JL1eTJHfSBmZ86
+        9lZR/sQa8gWoxKHg4lUFxvLjV9GZrDoxZXH0PipoL6E+m5+C6qjoMvOc2SeVheyFMtNswu
+        4rbE0zDCjikzGg7E1iBdKDHMGvdCJuM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-303-T-VB9X6nO8ODzdUku_1Fng-1; Tue, 14 Apr 2020 16:11:13 -0400
+X-MC-Unique: T-VB9X6nO8ODzdUku_1Fng-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E5221088398;
+        Tue, 14 Apr 2020 20:11:12 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-113-69.rdu2.redhat.com [10.10.113.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 883765DA66;
+        Tue, 14 Apr 2020 20:11:11 +0000 (UTC)
+From:   Cathy Avery <cavery@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com
+Cc:     vkuznets@redhat.com, wei.huang2@amd.com
+Subject: [PATCH 1/2] KVM: SVM: Implement check_nested_events for NMI
+Date:   Tue, 14 Apr 2020 16:11:06 -0400
+Message-Id: <20200414201107.22952-2-cavery@redhat.com>
+In-Reply-To: <20200414201107.22952-1-cavery@redhat.com>
+References: <20200414201107.22952-1-cavery@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If our data still isn't there after 1 second, shout and give up.
+Migrate nested guest NMI intercept processing
+to new check_nested_events.
 
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Cathy Avery <cavery@redhat.com>
 ---
+ arch/x86/kvm/svm/nested.c | 21 +++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c    |  2 +-
+ arch/x86/kvm/svm/svm.h    | 15 ---------------
+ 3 files changed, 22 insertions(+), 16 deletions(-)
 
-Changes in v2:
-- Patch ("Timeout after 1 second") new for v2.
-
- drivers/soc/qcom/rpmh-rsc.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index f988e9cc2c30..02fc114ffb4f 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -10,6 +10,7 @@
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/of.h>
-@@ -174,12 +175,13 @@ static void write_tcs_reg(const struct rsc_drv *drv, int reg, int tcs_id,
- static void write_tcs_reg_sync(const struct rsc_drv *drv, int reg, int tcs_id,
- 			       u32 data)
- {
-+	u32 new_data;
-+
- 	writel(data, tcs_reg_addr(drv, reg, tcs_id));
--	for (;;) {
--		if (data == readl(tcs_reg_addr(drv, reg, tcs_id)))
--			break;
--		udelay(1);
--	}
-+	if (readl_poll_timeout_atomic(tcs_reg_addr(drv, reg, tcs_id), new_data,
-+				      new_data == data, 1, USEC_PER_SEC))
-+		pr_err("%s: error writing %#x to %d:%d\n", drv->name,
-+		       data, tcs_id, reg);
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 90a1ca939627..1ba8ef46b0b5 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -764,6 +764,20 @@ int nested_svm_check_exception(struct vcpu_svm *svm,=
+ unsigned nr,
+ 	return vmexit;
  }
- 
- /**
--- 
-2.26.0.110.g2183baf09c-goog
+=20
++static bool nested_exit_on_nmi(struct vcpu_svm *svm)
++{
++	return (svm->nested.intercept & (1ULL << INTERCEPT_NMI));
++}
++
++static void nested_svm_nmi(struct vcpu_svm *svm)
++{
++	svm->vmcb->control.exit_code =3D SVM_EXIT_NMI;
++	svm->vmcb->control.exit_info_1 =3D 0;
++	svm->vmcb->control.exit_info_2 =3D 0;
++
++	svm->nested.exit_required =3D true;
++}
++
+ static void nested_svm_intr(struct vcpu_svm *svm)
+ {
+ 	svm->vmcb->control.exit_code   =3D SVM_EXIT_INTR;
+@@ -793,6 +807,13 @@ int svm_check_nested_events(struct kvm_vcpu *vcpu)
+ 		return 0;
+ 	}
+=20
++	if (vcpu->arch.nmi_pending && nested_exit_on_nmi(svm)) {
++		if (block_nested_events)
++			return -EBUSY;
++		nested_svm_nmi(svm);
++		return 0;
++	}
++
+ 	return 0;
+ }
+=20
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 2be5bbae3a40..84c338c55348 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3053,7 +3053,7 @@ static int svm_nmi_allowed(struct kvm_vcpu *vcpu)
+ 	int ret;
+ 	ret =3D !(vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK) &&
+ 	      !(svm->vcpu.arch.hflags & HF_NMI_MASK);
+-	ret =3D ret && gif_set(svm) && nested_svm_nmi(svm);
++	ret =3D ret && gif_set(svm);
+=20
+ 	return ret;
+ }
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index df3474f4fb02..9be2b890ff3c 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -369,21 +369,6 @@ void disable_nmi_singlestep(struct vcpu_svm *svm);
+ #define NESTED_EXIT_DONE	1	/* Exit caused nested vmexit  */
+ #define NESTED_EXIT_CONTINUE	2	/* Further checks needed      */
+=20
+-/* This function returns true if it is save to enable the nmi window */
+-static inline bool nested_svm_nmi(struct vcpu_svm *svm)
+-{
+-	if (!is_guest_mode(&svm->vcpu))
+-		return true;
+-
+-	if (!(svm->nested.intercept & (1ULL << INTERCEPT_NMI)))
+-		return true;
+-
+-	svm->vmcb->control.exit_code =3D SVM_EXIT_NMI;
+-	svm->nested.exit_required =3D true;
+-
+-	return false;
+-}
+-
+ static inline bool svm_nested_virtualize_tpr(struct kvm_vcpu *vcpu)
+ {
+ 	return is_guest_mode(vcpu) && (vcpu->arch.hflags & HF_VINTR_MASK);
+--=20
+2.20.1
 
