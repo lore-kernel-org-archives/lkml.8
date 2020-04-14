@@ -2,108 +2,138 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60071C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489CDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB2C20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tniFeoki"
+	by mail.kernel.org (Postfix) with ESMTP id 2EFDF20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404499AbgDNDRh (ORCPT
+        id S2404509AbgDNDRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404486AbgDNDRe (ORCPT
+        Mon, 13 Apr 2020 23:17:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404489AbgDNDRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:17:34 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB92C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:17:34 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id p13so10336402pgk.18
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 20:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=qmS4Dws1dS9Cf9mpNh1dkBLiz6hqHz5k1HrVTs3BHIU=;
-        b=tniFeokiM0fcdzRPHG1ZbY9ozBysDVZ/aYvbq902VEONvODDGN/4/AT7Q/QD43RaKG
-         A1SPyDQUACNvXr8ytYrkcN7tkAvv28uU02BFBJryzTx876TVzWaft4V6l9RXExPBRjIm
-         aSi9pMgHwnv6rIPIdSj1ZKpYdqljYl1+o2o2GWV/+Wr2bkpxuDI4hGJQbXdq6od6c8Om
-         9xdLlOxCICXwcuG6aB1tSJdAKkOcXcZgJrfOajKOOf5mGJp+d5gjj/XiZCWCQ5l8fKJ6
-         ydKrqljfMn/rMylk4TKt+nHAEX9YlDL8ye+X4LaBoYCZO3cJMz1/NuKNlMGbuGnPAoO9
-         RyZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=qmS4Dws1dS9Cf9mpNh1dkBLiz6hqHz5k1HrVTs3BHIU=;
-        b=m61db3kofiHvt7KoP/ljGmOmxzQT92al/fyxIdj+rz2Ws8WeNXuy04tW2EICMzleJI
-         zMvVubk4xaBdFW0vV0PqKugZfqmVSf51AfTqatj7TeQKjlaObGCazFbXZyvNk72OMgAt
-         ZuL9xmg8AalgwP1Hl06GsqNDL8d20ne/rzkUbZFR8Pw+xP+Y4I9FMAduOmZrLiySkMr6
-         T9APL+XYncV4xlMPckzbIdhl3PthkahbquwuppMvvcO6f1Rwx8heQujejZuC2cpOTU2z
-         uFqIS34mM9EcCNaL6r3vEMXOKH7F3fKctWb76xR9J6PTayRR0oczIrjXdrI2+9xU1/AO
-         c7fw==
-X-Gm-Message-State: AGi0PuaZvd7hKolEmxmLOSZVAgFQcL6BA3wnOg3T6G2FcwavXxeB9nvn
-        0XJkJA5K0fAhe4FGUE1Fw7yfILOyWJPa3Q==
-X-Google-Smtp-Source: APiQypKW5TDCpyIvzemzn/s78Ld1CH+htFCh8fWOvNw2ECN6IMlElhfG7YP8qxjm0N6Glpf+/LH8+Hhn27QBOQ==
-X-Received: by 2002:a17:90a:ea05:: with SMTP id w5mr5197470pjy.143.1586834254059;
- Mon, 13 Apr 2020 20:17:34 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 20:16:45 -0700
-In-Reply-To: <20200414031647.124664-1-davidgow@google.com>
-Message-Id: <20200414031647.124664-2-davidgow@google.com>
-Mime-Version: 1.0
-References: <20200414031647.124664-1-davidgow@google.com>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v5 1/4] Add KUnit Struct to Current Task
-From:   David Gow <davidgow@google.com>
-To:     trishalfonso@google.com, brendanhiggins@google.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 Apr 2020 23:17:35 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E34GRO069644
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:17:34 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30b7gw3uws-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:17:34 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 14 Apr 2020 04:17:15 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 04:17:10 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03E3HQIH60096710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 03:17:26 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7033D52054;
+        Tue, 14 Apr 2020 03:17:26 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.60.157])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DE98652067;
+        Tue, 14 Apr 2020 03:17:11 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
+        fweisbec@gmail.com, mingo@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com
+Subject: [PATCH v3 00/16] powerpc/watchpoint: Preparation for more than one watchpoint
+Date:   Tue, 14 Apr 2020 08:46:43 +0530
+X-Mailer: git-send-email 2.25.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041403-0012-0000-0000-000003A410A8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041403-0013-0000-0000-000021E1457A
+Message-Id: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-13_11:2020-04-13,2020-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=643 clxscore=1015 malwarescore=0 mlxscore=0 impostorscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patricia Alfonso <trishalfonso@google.com>
+So far, powerpc Book3S code has been written with an assumption of only
+one watchpoint. But future power architecture is introducing second
+watchpoint register (DAWR). Even though this patchset does not enable
+2nd DAWR, it make the infrastructure ready so that enabling 2nd DAWR
+should just be a matter of changing count.
 
-In order to integrate debugging tools like KASAN into the KUnit
-framework, add KUnit struct to the current task to keep track of the
-current KUnit test.
+Existing functionality works fine with the patchset. I've tested it with
+perf, ptrace(gdb), xmon. All hw-breakpoint selftests are passing as well.
+And I've build tested for 8xx and 'AMCC 44x, 46x or 47x'.
 
-Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: David Gow <davidgow@google.com>
----
- include/linux/sched.h | 4 ++++
- 1 file changed, 4 insertions(+)
+Note: kvm or PowerVM guest is not enabled yet.
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 04278493bf15..7ca3e5068316 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1180,6 +1180,10 @@ struct task_struct {
- 	unsigned int			kasan_depth;
- #endif
- 
-+#if IS_ENABLED(CONFIG_KUNIT)
-+	struct kunit			*kunit_test;
-+#endif
-+
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	/* Index of current stored address in ret_stack: */
- 	int				curr_ret_stack;
+v2:
+  https://lore.kernel.org/linuxppc-dev/20200401061309.92442-1-ravi.bangoria@linux.ibm.com
+
+v2->v3:
+ - Few minor improvements as suggested by Christophe
+ - Rebased to powerpc/next
+
+Ravi Bangoria (16):
+  powerpc/watchpoint: Rename current DAWR macros
+  powerpc/watchpoint: Add SPRN macros for second DAWR
+  powerpc/watchpoint: Introduce function to get nr watchpoints
+    dynamically
+  powerpc/watchpoint/ptrace: Return actual num of available watchpoints
+  powerpc/watchpoint: Provide DAWR number to set_dawr
+  powerpc/watchpoint: Provide DAWR number to __set_breakpoint
+  powerpc/watchpoint: Get watchpoint count dynamically while disabling
+    them
+  powerpc/watchpoint: Disable all available watchpoints when
+    !dawr_force_enable
+  powerpc/watchpoint: Convert thread_struct->hw_brk to an array
+  powerpc/watchpoint: Use loop for thread_struct->ptrace_bps
+  powerpc/watchpoint: Introduce is_ptrace_bp() function
+  powerpc/watchpoint: Use builtin ALIGN*() macros
+  powerpc/watchpoint: Prepare handler to handle more than one
+    watcnhpoint
+  powerpc/watchpoint: Don't allow concurrent perf and ptrace events
+  powerpc/watchpoint/xmon: Don't allow breakpoint overwriting
+  powerpc/watchpoint/xmon: Support 2nd dawr
+
+ arch/powerpc/include/asm/cputable.h       |   6 +-
+ arch/powerpc/include/asm/debug.h          |   2 +-
+ arch/powerpc/include/asm/hw_breakpoint.h  |  32 +-
+ arch/powerpc/include/asm/processor.h      |   6 +-
+ arch/powerpc/include/asm/reg.h            |   6 +-
+ arch/powerpc/include/asm/sstep.h          |   2 +
+ arch/powerpc/kernel/dawr.c                |  23 +-
+ arch/powerpc/kernel/hw_breakpoint.c       | 646 ++++++++++++++++++----
+ arch/powerpc/kernel/process.c             |  85 +--
+ arch/powerpc/kernel/ptrace/ptrace-noadv.c |  72 ++-
+ arch/powerpc/kernel/ptrace/ptrace32.c     |   4 +-
+ arch/powerpc/kernel/signal.c              |  12 +-
+ arch/powerpc/kvm/book3s_hv.c              |  12 +-
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S   |  18 +-
+ arch/powerpc/xmon/xmon.c                  |  99 +++-
+ kernel/events/hw_breakpoint.c             |  16 +
+ 16 files changed, 814 insertions(+), 227 deletions(-)
+
 -- 
-2.26.0.110.g2183baf09c-goog
+2.21.1
 
