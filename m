@@ -2,116 +2,136 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFBDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61DDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDEA720678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F96206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883835;
-	bh=hwHnQDgIoW19lCoLAnrpKBo69x4YnM2jX32aKx4IPd0=;
+	s=default; t=1586883968;
+	bh=Xcd8OczNfFdGZEF3wPW0kOHvO/XmMZqNiHT1ft2gcp4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gD/cpubf+Qt2mfpVrbLrYj6hkFvlGkEHe+EEoUYWwmQUCesPXhegJRN6jQGSPy6X9
-	 lsIbn/n4sUDYkvd0aMNK/dCzRfKw1OwJ07AyDCcVUgOwc7T9I50nFLmdQi2d+JTl7g
-	 Nb7e4sU+IQ1lqowkBmn5lFblulJKU50vNUMzY9us=
+	b=yC71Y4uaMgIk/kQ3ibXIdDT9+L9+IF7rcKSp9trbPmS2qx8CQ/Szz8DhC1epe7LoW
+	 H+Mp/J6CWPhFE0oxeG8bBEj40794FKsJE1wDWY6GdXy8LgDvr+XlCdnuV5Jn61NG43
+	 K6O/ItzfR3oxfLnNMh1DxwlJx2OAq4A4htiM4FGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390907AbgDNRDx (ORCPT
+        id S2407226AbgDNRGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:03:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46593 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbgDNRDk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:03:40 -0400
-Received: by mail-ot1-f65.google.com with SMTP id w12so292990otm.13;
-        Tue, 14 Apr 2020 10:03:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jaXxYQ2FYpSVQsJaEvJ0tlJfoyPl68Crc2WxdCdXIYU=;
-        b=T51wxXppjDfrn19kOTet2iKoIIax3Lvy7J2tfyYErQUs+ptzGw3teNlRyst2v6pCu2
-         xRsEtgeLzSLWq7us729b+lMu7DKfqneVydKzZNJ96VRTlMnhyadM5opWIQZCRYXYJAb/
-         ygMx6Su0biE/1qYB5sheh1yz9lENdKolmyKaMFiBfr31lMJfePOg6byZAEX0YYJJKPtH
-         rqNtfnbNAk25sIZwus5XlJSNVT4XFNKVXPafMZagkDn//7iupBy/EvtitKKvVOMjSSqc
-         OLk/xEep9pooENBWno03epvwwZBBYsPYddYQHQ6jmfgnMMfcLfl79ilTAJrLaYrLV2vD
-         Wy9A==
-X-Gm-Message-State: AGi0PuZftsD04c7TZ7DC4MxXzSw0cGntOhq/wfnBY7NFigEeR3zJAjVM
-        vww4MBKrHneK/FREPZJC3g==
-X-Google-Smtp-Source: APiQypJLVVe9ZYo0KcdXWrYnv+be8t6aET3lPXMMKhLrbG6rm1kd16c0H9/OvnOO9p4vB30IOLnDaw==
-X-Received: by 2002:a4a:c408:: with SMTP id y8mr19491246oop.42.1586883819021;
-        Tue, 14 Apr 2020 10:03:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s73sm1275570oih.14.2020.04.14.10.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:03:37 -0700 (PDT)
-Received: (nullmailer pid 6695 invoked by uid 1000);
-        Tue, 14 Apr 2020 17:03:36 -0000
-Date:   Tue, 14 Apr 2020 12:03:36 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] dt-bindings: soc: document LiteX SoC Controller
-  bindings
-Message-ID: <20200414170336.GA6657@bogus>
-References: <20200402084513.4173306-0-mholenko@antmicro.com>
- <20200402084513.4173306-2-mholenko@antmicro.com>
+        Tue, 14 Apr 2020 13:06:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732423AbgDNRGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:06:00 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.50.36.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3116120678;
+        Tue, 14 Apr 2020 17:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586883959;
+        bh=Xcd8OczNfFdGZEF3wPW0kOHvO/XmMZqNiHT1ft2gcp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MAYu5Wo6SyKz8OOXUZxB0yCmcnYI/DANdYKf/LLtqG58SEPGSGt3QieOisCBupp8O
+         vcJ5lrB5Tw3WUxzV7qtaa6JNmagze/ZLZ6yLqOYv5AOTziSR15RGF7sSU+Db+w0MLz
+         zYf4DKe5j9ROPxXB1JQgmDIdC6VJa1d1VMeqFamY=
+Date:   Tue, 14 Apr 2020 22:35:47 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] iio: chemical: Add support for external Reset and
+ Wakeup in CCS811
+Message-ID: <20200414170547.GB3334@Mani-XPS-13-9360>
+References: <20200414153415.957-1-mani@kernel.org>
+ <20200414153415.957-3-mani@kernel.org>
+ <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402084513.4173306-2-mholenko@antmicro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 08:45:54 +0200, Mateusz Holenko wrote:
-> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+On Tue, Apr 14, 2020 at 07:42:24PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:
+> >
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> >
+> > CCS811 VOC sensor exposes nRESET and nWAKE pins which can be connected
+> > to GPIO pins of the host controller. These pins can be used to externally
+> > release the device from reset and also to wake it up before any I2C
+> > transaction. The initial driver support assumed that the nRESET pin is not
+> > connected and the nWAKE pin is tied to ground.
+> >
+> > This commit improves it by adding support for controlling those two pins
+> > externally using a host controller. For the case of reset, if the hardware
+> > reset is not available, the mechanism to do software reset is also added.
+> >
+> > As a side effect of doing this, the IIO device allocation needs to be
+> > slightly moved to top of probe to make use of priv data early.
 > 
-> Add documentation for LiteX SoC Controller bindings.
+> Thank you for an update, my comments below.
 > 
-> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> ---
+> ...
 > 
-> Notes:
->     Changes in v4:
->     - changes compatible to "litex,soc-controller"
->     - fixed yaml's header
->     - removed unnecessary sections from yaml
->     - fixed indentation in yaml
+> > +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> > +                                            GPIOD_OUT_LOW);
+> > +       if (IS_ERR(reset_gpio)) {
 > 
->     This commit has been introduced in v3 of the patchset.
+> > +               dev_err(&client->dev, "Failed to acquire reset gpio\n");
 > 
->  .../soc/litex/litex,soc-controller.yaml       | 39 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+> If it's a deferred probe, it would spam the log.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hmm. But error is an error isn't it? Would you recommend doing a debug print
+or completely removing the logging?
+
+> > +               return PTR_ERR(reset_gpio);
+> > +       }
+> 
+> ...
+> 
+> > +               static const u8 reset_seq[] = {
+> > +                       0xFF, 0x11, 0xE5, 0x72, 0x8A,
+> > +               };
+> 
+> I would suggest to comment above from where you got this and the
+> meaning of the numbers.
+> 
+
+The datasheet doesn't specify the meaning of these values. But will add a
+comment. Btw, just noticed that 0xFF is not needed and only 4 values are
+sufficient for SW reset.
+
+Thanks,
+Mani
+
+> ...
+> 
+> > +       data->wakeup_gpio = devm_gpiod_get_optional(&client->dev, "wakeup",
+> > +                                                   GPIOD_OUT_HIGH);
+> > +       if (IS_ERR(data->wakeup_gpio)) {
+> 
+> > +               dev_err(&client->dev, "Failed to acquire wakeup gpio\n");
+> 
+> Ditto.
+> 
+> > +               return PTR_ERR(data->wakeup_gpio);
+> > +       }
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
