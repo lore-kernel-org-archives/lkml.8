@@ -2,64 +2,82 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6FBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ECFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33ECF206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77903206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406426AbgDNHGc (ORCPT
+        id S2406437AbgDNHJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:06:32 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2382 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729537AbgDNHG2 (ORCPT
+        Tue, 14 Apr 2020 03:09:48 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42988 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728832AbgDNHJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:06:28 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9560e5542-4b799; Tue, 14 Apr 2020 15:06:13 +0800 (CST)
-X-RM-TRANSID: 2eea5e9560e5542-4b799
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.21.224] (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e9560e4e57-5ddbd;
-        Tue, 14 Apr 2020 15:06:13 +0800 (CST)
-X-RM-TRANSID: 2ee65e9560e4e57-5ddbd
-Subject: Re: [PATCH] [PATCH v2] power:supply:88pm860x_battery:removeredundant
- dev_err message
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200406050757.13796-1-tangbin@cmss.chinamobile.com>
- <20200413230428.33zvqkw22sq25yk3@earth.universe>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <d9e8fdaa-dcfc-3680-9cc2-f5c90873cb09@cmss.chinamobile.com>
-Date:   Tue, 14 Apr 2020 15:08:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 03:09:47 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d7so4558424oif.9;
+        Tue, 14 Apr 2020 00:09:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Z5zt2CUahX5IsPzgShiRFj23zj/g56lthuN3s9ga2E=;
+        b=fsFjPs6Y14mHhPJvwHG2nVoLYDeiYpwPqBi643pwYF8SsT936r5ZjyTw0+nzLN8NBZ
+         bswe+kkXZn0SDEeHK/9XVIKGOBfwSLqfmYS1dj8PRhVEHMIwg/zKaAfuLZiFpW+5ZK/O
+         KN/7iWu3GIKwYlMTlkPKL/E+/90in7Sd3M89Vk80M3lzlHeNoq8n2ehSg321k79a2ryB
+         uv/88vIUAGMGWxkRZTWcbtZI0GEvxTlxAbnH5vvR9DkzUWxI5kPU3NEkmEB9b7B/Jnw4
+         ZqBZ3BWnlrJP5JK1U+4Dnmo9G1RyWDi6UXnZ41hPQu7CidyZPpU8ntDcuW1il1Es9QUp
+         zXLA==
+X-Gm-Message-State: AGi0PubIsK/GfVSGqwICoMA8o+/vfisRtQV4MnHM4RjGUpf/GrnRQUuX
+        HffUSV6qfJErxPRTp4ybrRnILZdG98eMRPf6EFA=
+X-Google-Smtp-Source: APiQypJPAEdSB0/mCpnigVvRvJ7XIRVHn8kPh4UNvKk3GhriQALdtPNdVHc6H4U6yfJQ1kTqUN+mE1pGe6RO8Ue6wUc=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr257295oih.148.1586848186462;
+ Tue, 14 Apr 2020 00:09:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200413230428.33zvqkw22sq25yk3@earth.universe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200413041709.3630-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200413041709.3630-1-christophe.jaillet@wanadoo.fr>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 Apr 2020 09:09:35 +0200
+Message-ID: <CAMuHMdXoVGkRh63=H6P29JSS6yNCyKZdsAX1_qUNC_mH=aymyw@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: r9a06g032: Fix some typo in comments
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian:
-
-On 2020/4/14 7:04, Sebastian Reichel wrote:
-> Thanks, queued.
-
-Thanks!
-
-Tang Bin
-
+On Mon, Apr 13, 2020 at 5:12 PM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+> This file seems to be for R9A06G032 only. So replace reference to
+> R9A09G032 by R9A06G032 to avoid confusion.
 >
+> AFAIK, R9A09G032 does'nt exist.
 >
->
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v5.8.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
