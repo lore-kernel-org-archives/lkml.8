@@ -2,76 +2,104 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE11C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A95C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1F120768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rXukUfJu"
+	by mail.kernel.org (Postfix) with ESMTP id 4999120768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437757AbgDNPPX (ORCPT
+        id S2437165AbgDNPPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:15:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36710 "EHLO vps0.lunn.ch"
+        Tue, 14 Apr 2020 11:15:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:57714 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437266AbgDNPPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:15:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Wb8f39hCjGcYV8+AHNSAescCyaLfOVyVKTEaqlWfHFA=; b=rXukUfJulQmi7iSIMYWiAq9QR6
-        JXRXBujHbPtK1TQRqgGBlXbmwkIa5/8xprYf1whWGTnGar8OAbVX+Qel6l8H0iYPf4kpQGsFnCxYo
-        F0NYB3fyVHQtiPMsP1pPBLoC+PP88zvzGx82OwcsQEXCaZWQT+LEw/Tpz5fT9Fv2a7ho=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jONH8-002fp9-VA; Tue, 14 Apr 2020 17:14:58 +0200
-Date:   Tue, 14 Apr 2020 17:14:58 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Christophe ROULLIER <christophe.roullier@st.com>
-Cc:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "joabreu@synopsys.com" <joabreu@synopsys.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Peppe CAVALLARO <peppe.cavallaro@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCHv2 1/1] net: ethernet: stmmac: simplify phy modes
- management for stm32
-Message-ID: <20200414151458.GA637127@lunn.ch>
-References: <20200316090907.18488-1-christophe.roullier@st.com>
- <cb0a5dd3-02da-7d60-7069-a8ee080ad239@st.com>
- <ecbfd26c-8dcb-3763-c1aa-ccc4c110aefa@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ecbfd26c-8dcb-3763-c1aa-ccc4c110aefa@st.com>
+        id S2406985AbgDNPGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:06:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88D53113E;
+        Tue, 14 Apr 2020 08:06:52 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73C593F73D;
+        Tue, 14 Apr 2020 08:06:50 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Paul Turner <pjt@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Josh Don <joshdon@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] sched/rt: Better distribute tasks that wakeup simultaneously
+Date:   Tue, 14 Apr 2020 16:05:56 +0100
+Message-Id: <20200414150556.10920-5-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200414150556.10920-1-qais.yousef@arm.com>
+References: <20200414150556.10920-1-qais.yousef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 03:10:26PM +0000, Christophe ROULLIER wrote:
-> Hi,
-> 
-> Gentle reminder
+If multiple RT tasks of the same priority wakeup simultaneously,
+select_task_rt_rt() will always return the same CPU for all tasks
+because find_lowest_rq() always returns the first cpu in the
+lowest_mask.
 
-Hi Christophe
+Use cpumask_any_and() to randomize the selection, hence better
+distribute the tasks.
 
-You are more likely to have success if you repost.
+This helps alleviate the thundering herd issue described here when
+multiple tasks of the same priority wake up simultaneously:
 
-    Andrew
+	https://lore.kernel.org/lkml/20200219140243.wfljmupcrwm2jelo@e107158-lin/
+
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Juri Lelli <juri.lelli@redhat.com>
+CC: Vincent Guittot <vincent.guittot@linaro.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Segall <bsegall@google.com>
+CC: Mel Gorman <mgorman@suse.de>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Yury Norov <yury.norov@gmail.com>
+CC: Paul Turner <pjt@google.com>
+CC: Alexey Dobriyan <adobriyan@gmail.com>
+CC: Josh Don <joshdon@google.com>
+CC: Pavan Kondeti <pkondeti@codeaurora.org>
+CC: linux-kernel@vger.kernel.org
+---
+ kernel/sched/rt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index df11d88c9895..16c7eede370a 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1750,8 +1750,8 @@ static int find_lowest_rq(struct task_struct *task)
+ 				return this_cpu;
+ 			}
+ 
+-			best_cpu = cpumask_first_and(lowest_mask,
+-						     sched_domain_span(sd));
++			best_cpu = cpumask_any_and(lowest_mask,
++						   sched_domain_span(sd));
+ 			if (best_cpu < nr_cpu_ids) {
+ 				rcu_read_unlock();
+ 				return best_cpu;
+-- 
+2.17.1
+
