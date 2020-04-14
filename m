@@ -2,155 +2,412 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58072C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BFBC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 348FB20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y+Ch9R+m"
+	by mail.kernel.org (Postfix) with ESMTP id C6DED20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403982AbgDNCKM (ORCPT
+        id S2403992AbgDNCNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403967AbgDNCKF (ORCPT
+        Mon, 13 Apr 2020 22:13:21 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:54407 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403967AbgDNCNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 22:10:05 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31DAC0A3BE2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 19:10:04 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id q43so9593386qtj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 19:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=UePEpdaC2ycyMQqKY3VvUVHzAITFO1WaLxj8IrY6qu8=;
-        b=Y+Ch9R+mOG0WOz7fZC803YgQZdgH1am2v/9Ef141meGmpPoUbpreVAJyRcI+oV0cD9
-         TaNv6Iyv8eMgXCqU0AopIUqaw2MfJ+Wru08nUN7ralt2JbP4Oz3f1JrsiNfg7xr1Enmz
-         9mhYae6iwZsb2iGqDs8x9q/TckA9htOYT6zTGZS6YTzBRaGL9Dyen4eBhaJOfY9se8jy
-         GKeqotAahau8bBySfs/8GeWVQOoIS3GUiKThD6S7NZQC/6q4ChRSGIkxIyif8eHtgOqE
-         nqK00YyvOX6cvLtWTk5LlkFoF2zB2MtQjUMz7IZzCUKVXZXBDSkT1J0ygTqtr1lx0ca3
-         rj7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=UePEpdaC2ycyMQqKY3VvUVHzAITFO1WaLxj8IrY6qu8=;
-        b=OHilXbsX3fu8doRCsBOoKKhs7h2oUhoR6MqLh1tj2bR26UKzeGU//ydF3a9eH9Jylx
-         qRxP5pqljgbV0OQ/S7kQGESOJ06lrRj7y/gpCVJvPNGtpW9z7zeigUIFLzd4PKCjagGy
-         z8uW1pB/vr9xXFC08O1ykRJZHTrjjb5vMo3/svB8yDmIXNtxpDM8LdepauhE0LbGNbZE
-         VAtTL4KHKQ8UmbRjineris+BzjfSilyGuxKHzPYjC1BjzlO3Wr/gdsfHYpQu730yVpH4
-         k9+BDEQZh1O00bhCXF7CCXfYQ6MWTauk+j7/343aTLKcThe6PAMf3sC3S1yCWAH+Q6Zg
-         8rAA==
-X-Gm-Message-State: AGi0PuYHe7bIkZCCciGTAbOo8KaDEF4SQQNbA13mR9QZzppcquq9Jo7W
-        0uO5b7J2Hsvw4DwcvmpetsM6K+ksiEYQhpmgyHte/PBeMokeOCGUbZQD7LR/UY3eDmfEc2vt8ay
-        UqK+30lQ1MPvgl4tWYAXbC7NufRc9sIxw4T3G7fL37trkIPemGJMM2vBEWRXfBksbmWLpRydCSu
-        Jl+DsxOItFLW8XtYQ=
-X-Google-Smtp-Source: APiQypIrcUF9MRaDBPvC8wMspH6egQhEXdv3UeW3HCocsYf3qGlfvURiiWOX63Mr0bOz4rfHeUbXGxtMjVCJ8/kI8altEg==
-X-Received: by 2002:a0c:e848:: with SMTP id l8mr20182788qvo.82.1586830204047;
- Mon, 13 Apr 2020 19:10:04 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 19:09:53 -0700
-In-Reply-To: <20200414020953.255364-1-matthewgarrett@google.com>
-Message-Id: <20200414020953.255364-3-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20200414020953.255364-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH V2 3/3] thermal/int340x_thermal: Don't require IDSP to exist
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-pm@vger.kernel.org, rui.zhang@intel.com,
-        nisha.aram@intel.com, Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 Apr 2020 22:13:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.521171-0.000241871-0.478587;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.HGDYbyx_1586830392;
+Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.HGDYbyx_1586830392)
+          by smtp.aliyun-inc.com(10.147.42.241);
+          Tue, 14 Apr 2020 10:13:13 +0800
+Subject: Re: [PATCH v3 05/11] pstore/blk: blkoops: support console recorder
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1585126506-18635-6-git-send-email-liaoweixiong@allwinnertech.com>
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Message-ID: <31dd38ea-6331-2dee-34cd-7e88ee1c9036@allwinnertech.com>
+Date:   Tue, 14 Apr 2020 10:13:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1585126506-18635-6-git-send-email-liaoweixiong@allwinnertech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <mjg59@google.com>
+Hi Kees Cook,
 
-The IDSP method doesn't appear to exist on the most recent Intel platforms:
-instead, the IDSP data is included in the GDDV blob. Since we probably don't
-want to decompress and parse that in-kernel, just allow any UUID to be
-written if IDSP is missing.
+A bad subject on patch 5 and patch 6 that "blkoops" should be "pstore/zone".
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
----
- .../intel/int340x_thermal/int3400_thermal.c   | 30 ++++++++++++++-----
- 1 file changed, 22 insertions(+), 8 deletions(-)
+I will fix it in the next version.
 
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 3919098a73b47..19936709c2ad0 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -96,6 +96,9 @@ static ssize_t available_uuids_show(struct device *dev,
- 	int i;
- 	int length = 0;
- 
-+	if (!priv->uuid_bitmap)
-+		return sprintf(buf, "UNKNOWN\n");
-+
- 	for (i = 0; i < INT3400_THERMAL_MAXIMUM_UUID; i++) {
- 		if (priv->uuid_bitmap & (1 << i))
- 			if (PAGE_SIZE - length > 0)
-@@ -113,11 +116,11 @@ static ssize_t current_uuid_show(struct device *dev,
- {
- 	struct int3400_thermal_priv *priv = dev_get_drvdata(dev);
- 
--	if (priv->uuid_bitmap & (1 << priv->current_uuid_index))
--		return sprintf(buf, "%s\n",
--			       int3400_thermal_uuids[priv->current_uuid_index]);
--	else
-+	if (priv->current_uuid_index == -1)
- 		return sprintf(buf, "INVALID\n");
-+
-+	return sprintf(buf, "%s\n",
-+		       int3400_thermal_uuids[priv->current_uuid_index]);
- }
- 
- static ssize_t current_uuid_store(struct device *dev,
-@@ -128,9 +131,16 @@ static ssize_t current_uuid_store(struct device *dev,
- 	int i;
- 
- 	for (i = 0; i < INT3400_THERMAL_MAXIMUM_UUID; ++i) {
--		if ((priv->uuid_bitmap & (1 << i)) &&
--		    !(strncmp(buf, int3400_thermal_uuids[i],
--			      sizeof(int3400_thermal_uuids[i]) - 1))) {
-+		if (!strncmp(buf, int3400_thermal_uuids[i],
-+			     sizeof(int3400_thermal_uuids[i]) - 1)) {
-+			/*
-+			 * If we have a list of supported UUIDs, make sure
-+			 * this one is supported.
-+			 */
-+			if (priv->uuid_bitmap &&
-+			    !(priv->uuid_bitmap & (1 << i)))
-+				return -EINVAL;
-+
- 			priv->current_uuid_index = i;
- 			return count;
- 		}
-@@ -462,9 +472,13 @@ static int int3400_thermal_probe(struct platform_device *pdev)
- 	priv->adev = adev;
- 
- 	result = int3400_thermal_get_uuids(priv);
--	if (result)
-+
-+	/* Missing IDSP isn't fatal */
-+	if (result && result != -ENODEV)
- 		goto free_priv;
- 
-+	priv->current_uuid_index = -1;
-+
- 	result = acpi_parse_art(priv->adev->handle, &priv->art_count,
- 				&priv->arts, true);
- 	if (result)
+On 2020/3/25 PM 4:55, WeiXiong Liao wrote:
+> Support recorder for console. To enable console recorder, just make
+> console_size be greater than 0 and a multiple of 4096.
+> 
+> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+> ---
+>  fs/pstore/Kconfig           | 12 ++++++++
+>  fs/pstore/pstore_blk.c      | 12 +++++++-
+>  fs/pstore/pstore_zone.c     | 70 +++++++++++++++++++++++++++++++++++++++++----
+>  include/linux/pstore_zone.h |  4 ++-
+>  4 files changed, 91 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+> index 8cead860dcfc..bf90de48ad3c 100644
+> --- a/fs/pstore/Kconfig
+> +++ b/fs/pstore/Kconfig
+> @@ -225,6 +225,18 @@ config PSTORE_BLK_PMSG_SIZE
+>  	  NOTE that, both Kconfig and module parameters can configure
+>  	  pstore/blk, but module parameters have priority over Kconfig.
+>  
+> +config PSTORE_BLK_CONSOLE_SIZE
+> +	int "Size in Kbytes of console to store"
+> +	depends on PSTORE_BLK
+> +	depends on PSTORE_CONSOLE
+> +	default 64
+> +	help
+> +	  This just sets size of console (console_size) for pstore/blk. The
+> +	  size is in KB and must be a multiple of 4.
+> +
+> +	  NOTE that, both Kconfig and module parameters can configure
+> +	  pstore/blk, but module parameters have priority over Kconfig.
+> +
+>  config PSTORE_BLK_DUMP_OOPS
+>  	bool "dump oops"
+>  	depends on PSTORE_BLK
+> diff --git a/fs/pstore/pstore_blk.c b/fs/pstore/pstore_blk.c
+> index 85cd9f2335be..2b513acaa18f 100644
+> --- a/fs/pstore/pstore_blk.c
+> +++ b/fs/pstore/pstore_blk.c
+> @@ -26,6 +26,14 @@
+>  module_param(pmsg_size, long, 0400);
+>  MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
+>  
+> +#if IS_ENABLED(CONFIG_PSTORE_CONSOLE)
+> +static long console_size = CONFIG_PSTORE_BLK_CONSOLE_SIZE;
+> +#else
+> +static long console_size = -1;
+> +#endif
+> +module_param(console_size, long, 0400);
+> +MODULE_PARM_DESC(console_size, "console size in kbytes");
+> +
+>  static int dump_oops = CONFIG_PSTORE_BLK_DUMP_OOPS;
+>  module_param(dump_oops, int, 0400);
+>  MODULE_PARM_DESC(total_size, "whether dump oops");
+> @@ -81,7 +89,8 @@
+>   *		whole disk).
+>   *		On success, the number of bytes should be returned, others
+>   *		means error.
+> - * @write:	The same as @read.
+> + * @write:	The same as @read, but the following error number:
+> + *		-EBUSY means try to write again later.
+>   * @panic_write:The write operation only used for panic case. It's optional
+>   *		if you do not care panic log. The parameters and return value
+>   *		are the same as @read.
+> @@ -131,6 +140,7 @@ static int psblk_register_do(struct psblk_device *dev)
+>  
+>  	verify_size(oops_size, 4096, dev->flags & PSTORE_FLAGS_DMESG);
+>  	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
+> +	verify_size(console_size, 4096, dev->flags & PSTORE_FLAGS_CONSOLE);
+>  #undef verify_size
+>  	dump_oops = dump_oops <= 0 ? 0 : 1;
+>  
+> diff --git a/fs/pstore/pstore_zone.c b/fs/pstore/pstore_zone.c
+> index 444bce7f9ac3..e1e84505b046 100644
+> --- a/fs/pstore/pstore_zone.c
+> +++ b/fs/pstore/pstore_zone.c
+> @@ -87,10 +87,12 @@ struct psz_zone {
+>   *
+>   * @opszs: oops/panic storage zones
+>   * @ppsz: pmsg storage zone
+> + * @cpsz: console storage zone
+>   * @oops_max_cnt: max count of @opszs
+>   * @oops_read_cnt: counter to read oops zone
+>   * @oops_write_cnt: counter to write
+>   * @pmsg_read_cnt: counter to read pmsg zone
+> + * @console_read_cnt: counter to read console zone
+>   * @oops_counter: counter to oops
+>   * @panic_counter: counter to panic
+>   * @recovered: whether finish recovering data from storage
+> @@ -102,10 +104,12 @@ struct psz_zone {
+>  struct psz_context {
+>  	struct psz_zone **opszs;
+>  	struct psz_zone *ppsz;
+> +	struct psz_zone *cpsz;
+>  	unsigned int oops_max_cnt;
+>  	unsigned int oops_read_cnt;
+>  	unsigned int oops_write_cnt;
+>  	unsigned int pmsg_read_cnt;
+> +	unsigned int console_read_cnt;
+>  	/*
+>  	 * the counter should be recovered when recover.
+>  	 * It records the oops/panic times after burning rather than booting.
+> @@ -125,6 +129,9 @@ struct psz_context {
+>  };
+>  static struct psz_context psz_cxt;
+>  
+> +static void psz_flush_all_dirty_zones(struct work_struct *> +static DECLARE_WORK(psz_cleaner, psz_flush_all_dirty_zones);
+
+I think it's better to use delayed work.
+
+	static DECLARE_DELAYED_WORK(psz_cleaner, psz_flush_all_dirty_zones);
+
+> +
+>  /**
+>   * enum psz_flush_mode - flush mode for psz_zone_write()
+>   *
+> @@ -235,6 +242,9 @@ static int psz_zone_write(struct psz_zone *zone,
+>  	return 0;
+>  dirty:
+>  	atomic_set(&zone->dirty, true);
+> +	/* flush dirty zones nicely */
+> +	if (wcnt == -EBUSY && !is_on_panic())
+> +		schedule_work(&psz_cleaner);
+
+Change to:
+	
+	schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(500));
+
+delay for 500ms to merge more log of console and reduce calling times.
+
+>  	return -EBUSY;
+>  }
+>  
+> @@ -291,6 +301,15 @@ static int psz_move_zone(struct psz_zone *old, struct psz_zone *new)
+>  	return 0;
+>  }
+>  
+> +static void psz_flush_all_dirty_zones(struct work_struct *work)
+> +{
+> +	struct psz_context *cxt = &psz_cxt;
+> +
+> +	psz_flush_dirty_zone(cxt->ppsz);
+> +	psz_flush_dirty_zone(cxt->cpsz);
+> +	psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
+> +}
+
+If flush dirty failed, I think it should try again later.
+
+	int ret = 0;
+	
+	ret |= psz_flush_dirty_zone(cxt->ppsz);
+	ret |= psz_flush_dirty_zone(cxt->cpsz);
+	ret |= psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
+	if (ret)
+		schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(1000));
+
+I will fix it in the next version.
+
+> +
+>  static int psz_recover_oops_data(struct psz_context *cxt)
+>  {
+>  	struct psz_info *info = cxt->psz_info;
+> @@ -546,6 +565,10 @@ static inline int psz_recovery(struct psz_context *cxt)
+>  	if (ret)
+>  		goto recover_fail;
+>  
+> +	ret = psz_recover_zone(cxt, cxt->cpsz);
+> +	if (ret)
+> +		goto recover_fail;
+> +
+>  	pr_debug("recover end!\n");
+>  	atomic_set(&cxt->recovered, 1);
+>  	return 0;
+> @@ -561,6 +584,7 @@ static int psz_pstore_open(struct pstore_info *psi)
+>  
+>  	cxt->oops_read_cnt = 0;
+>  	cxt->pmsg_read_cnt = 0;
+> +	cxt->console_read_cnt = 0;
+>  	return 0;
+>  }
+>  
+> @@ -625,8 +649,9 @@ static int psz_pstore_erase(struct pstore_record *record)
+>  		return psz_oops_erase(cxt, cxt->opszs[record->id], record);
+>  	case PSTORE_TYPE_PMSG:
+>  		return psz_record_erase(cxt, cxt->ppsz);
+> -	default:
+> -		return -EINVAL;
+> +	case PSTORE_TYPE_CONSOLE:
+> +		return psz_record_erase(cxt, cxt->cpsz);
+> +	default: return -EINVAL;
+>  	}
+>  }
+>  
+> @@ -767,9 +792,18 @@ static int notrace psz_pstore_write(struct pstore_record *record)
+>  			record->reason == KMSG_DUMP_PANIC)
+>  		atomic_set(&cxt->on_panic, 1);
+>  
+> +	/*
+> +	 * if on panic, do not write except panic records
+> +	 * Fix case that panic_write prints log which wakes up console recorder.
+> +	 */
+> +	if (is_on_panic() && record->type != PSTORE_TYPE_DMESG)
+> +		return -EBUSY;
+> +
+>  	switch (record->type) {
+>  	case PSTORE_TYPE_DMESG:
+>  		return psz_oops_write(cxt, record);
+> +	case PSTORE_TYPE_CONSOLE:
+> +		return psz_record_write(cxt->cpsz, record);
+>  	case PSTORE_TYPE_PMSG:
+>  		return psz_record_write(cxt->ppsz, record);
+>  	default:
+> @@ -794,6 +828,13 @@ static struct psz_zone *psz_read_next_zone(struct psz_context *cxt)
+>  			return zone;
+>  	}
+>  
+> +	if (cxt->console_read_cnt == 0) {
+> +		cxt->console_read_cnt++;
+> +		zone = cxt->cpsz;
+> +		if (psz_old_ok(zone))
+> +			return zone;
+> +	}
+> +
+>  	return NULL;
+>  }
+>  
+> @@ -903,6 +944,8 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
+>  		readop = psz_oops_read;
+>  		record->id = cxt->oops_read_cnt - 1;
+>  		break;
+> +	case PSTORE_TYPE_CONSOLE:
+> +		fallthrough;
+>  	case PSTORE_TYPE_PMSG:
+>  		readop = psz_record_read;
+>  		break;
+> @@ -1050,6 +1093,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
+>  		psz_free_zones(&cxt->opszs, &cxt->oops_max_cnt);
+>  	if (cxt->ppsz)
+>  		psz_free_zone(&cxt->ppsz);
+> +	if (cxt->cpsz)
+> +		psz_free_zone(&cxt->cpsz);
+>  }
+>  
+>  static int psz_alloc_zones(struct psz_context *cxt)
+> @@ -1066,6 +1111,14 @@ static int psz_alloc_zones(struct psz_context *cxt)
+>  		goto free_out;
+>  	}
+>  
+> +	off_size += info->console_size;
+> +	cxt->cpsz = psz_init_zone(PSTORE_TYPE_CONSOLE, &off,
+> +			info->console_size);
+> +	if (IS_ERR(cxt->cpsz)) {
+> +		err = PTR_ERR(cxt->cpsz);
+> +		goto free_out;
+> +	}
+> +
+>  	cxt->opszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
+>  			info->total_size - off_size,
+>  			info->oops_size, &cxt->oops_max_cnt);
+> @@ -1100,7 +1153,7 @@ int psz_register(struct psz_info *info)
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (!info->oops_size && !info->pmsg_size) {
+> +	if (!info->oops_size && !info->pmsg_size && !info->console_size) {
+>  		pr_warn("at least one of the records be non-zero\n");
+>  		return -EINVAL;
+>  	}
+> @@ -1128,6 +1181,7 @@ int psz_register(struct psz_info *info)
+>  	check_size(total_size, 4096);
+>  	check_size(oops_size, SECTOR_SIZE);
+>  	check_size(pmsg_size, SECTOR_SIZE);
+> +	check_size(console_size, SECTOR_SIZE);
+>  
+>  #undef check_size
+>  
+> @@ -1160,6 +1214,7 @@ int psz_register(struct psz_info *info)
+>  	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
+>  	pr_debug("\toops size : %ld Bytes\n", info->oops_size);
+>  	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
+> +	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
+>  
+>  	err = psz_alloc_zones(cxt);
+>  	if (err) {
+> @@ -1181,11 +1236,14 @@ int psz_register(struct psz_info *info)
+>  		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
+>  	if (info->pmsg_size)
+>  		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
+> +	if (info->console_size)
+> +		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+>  
+> -	pr_info("Registered %s as pszone backend for%s%s%s\n", info->name,
+> +	pr_info("Registered %s as pszone backend for%s%s%s%s\n", info->name,
+>  			cxt->opszs && cxt->psz_info->dump_oops ? " Oops" : "",
+>  			cxt->opszs && cxt->psz_info->panic_write ? " Panic" : "",
+> -			cxt->ppsz ? " Pmsg" : "");
+> +			cxt->ppsz ? " Pmsg" : "",
+> +			cxt->cpsz ? " Console" : "");
+>  
+>  	err = pstore_register(&cxt->pstore);
+>  	if (err) {
+> @@ -1219,6 +1277,8 @@ void psz_unregister(struct psz_info *info)
+>  {
+>  	struct psz_context *cxt = &psz_cxt;
+>  
+> +	flush_work(&psz_cleaner);
+
+I think it should try to flush dirty zones before unregister.
+
+	psz_flush_all_dirty_zones(NULL);
+	flush_delayed_work(&psz_cleaner);
+
+> +
+>  	pstore_unregister(&cxt->pstore);
+>  	kfree(cxt->pstore.buf);
+>  	cxt->pstore.bufsize = 0;
+> diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
+> index 85e159d8f935..8a1838633010 100644
+> --- a/include/linux/pstore_zone.h
+> +++ b/include/linux/pstore_zone.h
+> @@ -17,12 +17,13 @@
+>   * @oops_size:	The size of oops/panic zone. Zero means disabled, otherwise,
+>   *		it must be multiple of SECTOR_SIZE(512 Bytes).
+>   * @pmsg_size:	The size of pmsg zone which is the same as @oops_size.
+> + * @console_size:The size of console zone which is the same as @oops_size.
+>   * @dump_oops:	Whether to dump oops log.
+>   * @read:	The general read operation. Both of the function parameters
+>   *		@size and @offset are relative value to storage.
+>   *		On success, the number of bytes should be returned, others
+>   *		means error.
+> - * @write:	The same as @read.
+> + * @write:	The same as @read, but -EBUSY means try to write again later.
+>   * @panic_write:The write operation only used for panic case. It's optional
+>   *		if you do not care panic log. The parameters and return value
+>   *		are the same as @read.
+> @@ -34,6 +35,7 @@ struct psz_info {
+>  	unsigned long total_size;
+>  	unsigned long oops_size;
+>  	unsigned long pmsg_size;
+> +	unsigned long console_size;
+>  	int dump_oops;
+>  	psz_read_op read;
+>  	psz_write_op write;
+> 
+
 -- 
-2.26.0.110.g2183baf09c-goog
-
+WeiXiong Liao
