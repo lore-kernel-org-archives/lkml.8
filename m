@@ -4,54 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBC2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179CAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B5020787
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E534F2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586875588;
-	bh=550yDRRNFH/KAKBnw/zzOaMx4yYeCB4m9knrvjHhjMk=;
+	s=default; t=1586875596;
+	bh=NF+ReJtRcTYkXwWbn0gQZMoewENSGMQLJ68bqwW6Mmo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=UDLRjAhk9ECfwzf725ZRnqT9xy9LfoKugs4JMfixZadXrwwGidc1Xq1C/TBzAnlAr
-	 R6BapNuQSZQyZjTb9m3BtpKgFUn1nD4683Ab9aPEagt2iHrRxs8We1CbTxHwULMkBL
-	 OPlZEDRdDgAv1xfxmZjudR2vuAKQPNA/xhbzKxyU=
+	b=AVsAz2bp36Ssx6ZgcMvENwoy8yDZTog6y4ax7tIjolXkl9n2soQKf1mqakc0tTYTP
+	 74OX/kUur6WJUg2t/M9wM59+p8e/ih+OAVMkUlWAFknGBCR7VqMlvaYpQNor8Z9+Ph
+	 xyeiofW78PSrTUpxeUnPmaaGhGuydZdWlQJNetZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404783AbgDNOqZ (ORCPT
+        id S2404803AbgDNOqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43864 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 10:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404554AbgDNOqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:46:10 -0400
+        id S2404752AbgDNOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:46:15 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7C512076D;
-        Tue, 14 Apr 2020 14:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E397120787;
+        Tue, 14 Apr 2020 14:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586875569;
-        bh=550yDRRNFH/KAKBnw/zzOaMx4yYeCB4m9knrvjHhjMk=;
+        s=default; t=1586875574;
+        bh=NF+ReJtRcTYkXwWbn0gQZMoewENSGMQLJ68bqwW6Mmo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tQXk7Bs2mmJoHSR0U1aT1XOibvgfQAeB0u3K7jGl7yto1Qe3iqVCOLvuygK6ZCPej
-         d2jkNnJYllIIcikjYkc/wjVnjEPcfMc9DeYGghPL9VsHXcqxTji2fujd7y4bdjxMF6
-         DqmIziBSu59Kj5cQwWn5h70iRpTu8E1Zdzef+B0Q=
-Date:   Tue, 14 Apr 2020 15:46:06 +0100
+        b=C/BTHfQDUOzrAqshiXGCZxUd05u6HaBj3kdNTyGK93zm96V/C6YRj9GuyfLwpYHcv
+         dDP9o79bwt+lLfi4bXk2Efv0bJ/OFYlMVVYA2XN5bZhQt7C0DK+iNSpnUcBnfCIxAT
+         OuSaau+3AnAquDPsh12gpkVSza7hSxUQm9smVQ3Q=
+Date:   Tue, 14 Apr 2020 15:46:11 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alsa-devel@alsa-project.org,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
+To:     Sebastian Fricke <sebastian.fricke.linux@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        alsa-devel@alsa-project.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        kernel-janitors@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        srinivas.kandagatla@linaro.org, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: qcom: common: Silence duplicate parse error messages" to the asoc tree
-In-Reply-To:  <20200406003229.2354631-1-bjorn.andersson@linaro.org>
-Message-Id:  <applied-20200406003229.2354631-1-bjorn.andersson@linaro.org>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        olivier.moysan@st.com, sebastian.fricke.linux@gmail.com,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "soc/stm/stm32_sub_sai: Add missing '\n' in log messages" to the asoc tree
+In-Reply-To:  <20200413042952.7675-1-sebastian.fricke.linux@gmail.com>
+Message-Id:  <applied-20200413042952.7675-1-sebastian.fricke.linux@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: qcom: common: Silence duplicate parse error messages
+   soc/stm/stm32_sub_sai: Add missing '\n' in log messages
 
 has been applied to the asoc tree at
 
@@ -85,55 +89,35 @@ to this mail.
 Thanks,
 Mark
 
-From d0c56b307f37fd21e2424d3c210e5d85831dd132 Mon Sep 17 00:00:00 2001
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Date: Sun, 5 Apr 2020 17:32:29 -0700
-Subject: [PATCH] ASoC: qcom: common: Silence duplicate parse error messages
+From 9de300abb71f24b190362ff53907ab90505517bc Mon Sep 17 00:00:00 2001
+From: Sebastian Fricke <sebastian.fricke.linux@gmail.com>
+Date: Mon, 13 Apr 2020 06:29:52 +0200
+Subject: [PATCH] soc/stm/stm32_sub_sai: Add missing '\n' in log messages
 
-All error paths in qcom_snd_parse_of() prints more specific error
-messages, so silence the one in apq8096_platform_probe() and
-sdm845_snd_platform_probe() to avoid spamming the kernel log.
+Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200406003229.2354631-1-bjorn.andersson@linaro.org
+Fixes: 3e086ed("ASoC: stm32: add SAI drivers")
+
+Signed-off-by: Sebastian Fricke <sebastian.fricke.linux@gmail.com>
+Link: https://lore.kernel.org/r/20200413042952.7675-1-sebastian.fricke.linux@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/qcom/apq8096.c | 4 +---
- sound/soc/qcom/sdm845.c  | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ sound/soc/stm/stm32_sai_sub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
-index d55e3ad96716..287ad2aa27f3 100644
---- a/sound/soc/qcom/apq8096.c
-+++ b/sound/soc/qcom/apq8096.c
-@@ -116,10 +116,8 @@ static int apq8096_platform_probe(struct platform_device *pdev)
- 	card->dev = dev;
- 	dev_set_drvdata(dev, card);
- 	ret = qcom_snd_parse_of(card);
--	if (ret) {
--		dev_err(dev, "Error parsing OF data\n");
-+	if (ret)
- 		goto err;
--	}
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 0d0c9afd8791..34a7c3d6fb91 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -837,7 +837,7 @@ static int stm32_sai_set_config(struct snd_soc_dai *cpu_dai,
+ 		cr1 = SAI_XCR1_DS_SET(SAI_DATASIZE_32);
+ 		break;
+ 	default:
+-		dev_err(cpu_dai->dev, "Data format not supported");
++		dev_err(cpu_dai->dev, "Data format not supported\n");
+ 		return -EINVAL;
+ 	}
  
- 	apq8096_add_be_ops(card);
- 	ret = snd_soc_register_card(card);
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index b2de65c7f95c..68e9388ff46f 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -559,10 +559,8 @@ static int sdm845_snd_platform_probe(struct platform_device *pdev)
- 	card->dev = dev;
- 	dev_set_drvdata(dev, card);
- 	ret = qcom_snd_parse_of(card);
--	if (ret) {
--		dev_err(dev, "Error parsing OF data\n");
-+	if (ret)
- 		goto parse_dt_fail;
--	}
- 
- 	data->card = card;
- 	snd_soc_card_set_drvdata(card, data);
 -- 
 2.20.1
 
