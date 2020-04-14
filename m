@@ -2,135 +2,124 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A14C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFA3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE99206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789672074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TKSsICsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504557AbgDNS7Z (ORCPT
+        id S2504566AbgDNS7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:59:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:33388 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504532AbgDNS7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:59:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62C6A1FB;
-        Tue, 14 Apr 2020 11:58:57 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AF3D3F68F;
-        Tue, 14 Apr 2020 11:58:55 -0700 (PDT)
-References: <20200414150556.10920-1-qais.yousef@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        Paul Turner <pjt@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Josh Don <joshdon@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] sched/rt: Distribute tasks in find_lowest_rq()
-In-reply-to: <20200414150556.10920-1-qais.yousef@arm.com>
-Date:   Tue, 14 Apr 2020 19:58:49 +0100
-Message-ID: <jhjh7xlvqqe.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 14 Apr 2020 14:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504540AbgDNS7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:59:05 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9605C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:59:05 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id w3so727464plz.15
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=vIh5eTB8uOZv+p6Eoz7dTqGKo5Rnh4f9sFKMcqBFlS8=;
+        b=TKSsICsFBab9k1r/Gi5jGrU9d5rCvU8AKwKC4tWt+X4MHt8DCtd7JylXyPtfDr97It
+         cWvrhcw8k895UD38eusJiJiXLt8LJcVf5Z0GTMQSaGZKkNGuX6QUnhfCUraiApk4aPVC
+         zUkxuEaZUfBnb4dgp4Wh8RldstNeGPXqBLEoFg8r+Q29SKYCDPNTewavGBOmD/z5ndit
+         sA0PM1rjsRpW6QeqWDeMcUTlWpnOqsT5kP59nabvANNNLjPhqSj+/KRdaXN56Hkl3e7x
+         CBNpY6OGBXo+MK5RU/QXKqUxCMUGcDACNLYg8lKP/HdrZAgGjKO8EUe2ZDtvBqYc5LoE
+         rfTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=vIh5eTB8uOZv+p6Eoz7dTqGKo5Rnh4f9sFKMcqBFlS8=;
+        b=eP3p8lIell1qz7skrMBPWZ8kl16Z0kDLlO43AM+KsQKO1hgkP6En3oyaLUaV/QGied
+         4ffQxOSw2EPN3oT51PcJqe6m3PFtro8fSvRsDefBQyXO6EBP7hUI2rCun44YftObIeWw
+         6ll1UbGM/GaZLZuIh6KnUlphB7t6+d2bMUC5fjN0tMOH/yu69oBF4Qxpmis7sDxRMDpZ
+         ZPL3nJm2gpCIftRfoDBNhWn0A4zSz9crDn+IUdbW3I1ONFwLnfjOlrEA00GoQLAEz0kg
+         LCFOYQPAFEySrYukeS40QUIIekOOJPxRvrtLb7iIfOzwxj5K0iQhcfNRJiPbIyc9Z38S
+         4E9w==
+X-Gm-Message-State: AGi0PuYrPhWQTq6e59SANm+kw1VMPw/9fRbvm+E77+J7uoDd9Ioy7Tr6
+        EbbIJzCp+k1iWkZyYID+dub/NEUEjnCcpQ==
+X-Google-Smtp-Source: APiQypLCRwItYE4hAhA2TRPzwwyxc65C2HZuJqXdiigQnh9OCq/AJAhmepoJkaAhS7Huv9Y2QbNqd8iIqzVihw==
+X-Received: by 2002:a17:90a:e02:: with SMTP id v2mr1764972pje.131.1586890745234;
+ Tue, 14 Apr 2020 11:59:05 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 11:58:21 -0700
+Message-Id: <20200414115512.1.I9dd050ead919f2cc3ef83d4e866de537c7799cf3@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH] Bluetooth: Terminate the link if pairing is cancelled
+From:   Manish Mandlik <mmandlik@google.com>
+To:     marcel@holtmann.org, luiz.dentz@gmail.com
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Alain Michaud <alainm@chromium.org>,
+        Manish Mandlik <mmandlik@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If user decides to cancel ongoing pairing process (e.g. by clicking
+the cancel button on the pairing/passkey window), abort any ongoing
+pairing and then terminate the link.
 
-On 14/04/20 16:05, Qais Yousef wrote:
-> Now that we have a proper function that returns a 'random' CPU in a mask [1]
-> utilize that in find_lowest_rq() to solve the thundering herd issue described
-> in this thread
->
->       https://lore.kernel.org/lkml/20200219140243.wfljmupcrwm2jelo@e107158-lin/
->
-> But as a pre-amble, I noticed that the new cpumask_any_and_distribute() is
-> actually an alias for cpumask_any_and() which is documented as returning
-> a 'random' cpu but actually just does cpumask_first_and().
->
-> The first 3 patches cleanup the API so that the whole family of
-> cpumask_any*() take advantage of the new 'random' behavior
+Signed-off-by: Manish Mandlik <mmandlik@google.com>
+---
+Hello Linux-Bluetooth,
 
-I'm a bit wary about such blanket changes. I feel like most places impacted
-by this change don't gain anything by using the random thing. In sched land
-that would be:
+  This patch aborts any ongoing pairing and then terminates the link
+  by calling hci_abort_conn() in cancel_pair_device() function.
 
-- The single cpumask_any() in core.c::select_task_rq()
-- Pretty much any function that wants a CPU id to dereference a
-  root_domain; there's some of them in deadline.c, topology.c
+  However, I'm not very sure if hci_abort_conn() should be called here
+  in cancel_pair_device() or in smp for example to terminate the link
+  after it had sent the pairing failed PDU.
 
-Looking some more into it, there's shadier things:
+  Please share your thoughts on this.
 
-- cpufreq_offline() uses cpumask_any() to figure out the new policy
-  leader... That one should be cpumask_first()
-- gic_set_affinity() uses cpumask_any_and() (in the common case). If this
-  starts using randomness, you will stop affining e.g. all SPIs to CPU0
-  by default (!!!)
-- ... and there might be more
+Thanks and regards,
+Manish.
 
-I think people went with cpumask_any_* mostly because there is just
-cpumask_first() while there are more cpumask_any_* variants, and since
-those have been returning the first set CPU for over a decade people just
-went with it.
+ net/bluetooth/mgmt.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-To move this forward, I would suggest renaming the current cpumask_any_*()
-into cpumask_first_*(), and THEN introduce the new pseudo-random
-ones. People are then free to hand-fix specific locations if it makes sense
-there, like you're doing for RT.
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 6552003a170eb..1aaa44282af4f 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -3030,6 +3030,18 @@ static int cancel_pair_device(struct sock *sk, struct hci_dev *hdev, void *data,
+ 
+ 	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_CANCEL_PAIR_DEVICE, 0,
+ 				addr, sizeof(*addr));
++
++	/* Since user doesn't want to proceed with the connection,
++	 * abort any ongoing pairing and then terminate the link.
++	 */
++	if (addr->type == BDADDR_BREDR)
++		hci_remove_link_key(hdev, &addr->bdaddr);
++	else
++		smp_cancel_and_remove_pairing(hdev, &addr->bdaddr,
++					      le_addr_type(addr->type));
++
++	hci_abort_conn(conn, HCI_ERROR_REMOTE_USER_TERM);
++
+ unlock:
+ 	hci_dev_unlock(hdev);
+ 	return err;
+-- 
+2.26.0.110.g2183baf09c-goog
 
-I think it's safe to say the vast majority of the current callers do not
-require randomness - the exceptions should mainly be scheduler / workqueues
-and the like.
-
-> and in patch
-> 4 I convert the cpumask_first_and() --> cpumask_any_and() in find_lowest_rq()
-> to allow to better distribute the RT tasks that wake up simultaneously.
->
-> [1] https://lore.kernel.org/lkml/20200311010113.136465-1-joshdon@google.com/
->
-> CC: Juri Lelli <juri.lelli@redhat.com>
-> CC: Vincent Guittot <vincent.guittot@linaro.org>
-> CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> CC: Steven Rostedt <rostedt@goodmis.org>
-> CC: Ben Segall <bsegall@google.com>
-> CC: Mel Gorman <mgorman@suse.de>
-> CC: Andrew Morton <akpm@linux-foundation.org>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Yury Norov <yury.norov@gmail.com>
-> CC: Paul Turner <pjt@google.com>
-> CC: Alexey Dobriyan <adobriyan@gmail.com>
-> CC: Josh Don <joshdon@google.com>
-> CC: Pavan Kondeti <pkondeti@codeaurora.org>
-> CC: linux-kernel@vger.kernel.org
->
-> Qais Yousef (4):
->   cpumask: Rename cpumask_any_and_distribute
->   cpumask: Make cpumask_any() truly random
->   cpumask: Convert cpumask_any_but() to the new random function
->   sched/rt: Better distribute tasks that wakeup simultaneously
->
->  include/linux/cpumask.h | 33 ++++++-----------
->  kernel/sched/core.c     |  2 +-
->  kernel/sched/rt.c       |  4 +-
->  lib/cpumask.c           | 82 +++++++++++++++++++++++++++--------------
->  4 files changed, 68 insertions(+), 53 deletions(-)
