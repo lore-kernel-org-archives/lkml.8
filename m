@@ -2,289 +2,185 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE62FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421B7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F67F20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="N7hHaZrd";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="N7hHaZrd"
+	by mail.kernel.org (Postfix) with ESMTP id 1B8A620578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586872074;
+	bh=zPGc63UmWLc/+H/vjVjMmsftRUnohKoZ25/OzLAX5q0=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=RLzi5oDAIe7IUi4572prYPErtLUW6VlCuCmQgTRqWwzUK8OZrhLt7r1DjxyGmQnAv
+	 w1MUw2gmqoi7xqz9HOTgT65RhglIunWX9y5KaDgDPMtZJIOsrFu5pgp9RCyHIhMrMK
+	 k1MZ2Tjasnj3kuRBPRqKqyEhZ8Wi1Idv1il4WeSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbgDNNrm (ORCPT
+        id S1732838AbgDNNrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 Apr 2020 09:47:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732790AbgDNNrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 09:47:42 -0400
-Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:38565
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbgDNNrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:47:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bC7j1Zj4y5mIGXCP+MT8yqQBhySeisf48q0gLE5hvKQ=;
- b=N7hHaZrdBjcM4hhZlLDf4iVXCHOTAegsG+g4BYAydne1mpThFAp4/p1kSsjgojQ1wi2DvGbqEpaVuZb7KeTCdwSK+fMcUl6ZgPMB98r7xLGFcEAhUcFsevoqNciSLc5wrcMyQLC/VLVed4agbb1T/RZOnf7fljGFZSqfYVuXSYI=
-Received: from AM7PR02CA0013.eurprd02.prod.outlook.com (2603:10a6:20b:100::23)
- by AM0PR08MB5106.eurprd08.prod.outlook.com (2603:10a6:208:160::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Tue, 14 Apr
- 2020 13:47:31 +0000
-Received: from VE1EUR03FT055.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:100:cafe::1d) by AM7PR02CA0013.outlook.office365.com
- (2603:10a6:20b:100::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17 via Frontend
- Transport; Tue, 14 Apr 2020 13:47:31 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT055.mail.protection.outlook.com (10.152.19.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.18 via Frontend Transport; Tue, 14 Apr 2020 13:47:30 +0000
-Received: ("Tessian outbound eadf07c3b4bb:v50"); Tue, 14 Apr 2020 13:47:29 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 62c0907afbdc7e40
-X-CR-MTA-TID: 64aa7808
-Received: from 9a99640b1180.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id DAD7CB87-2015-4625-B0C4-7DA69BA9DCEE.1;
-        Tue, 14 Apr 2020 13:47:23 +0000
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9a99640b1180.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 14 Apr 2020 13:47:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lczVclKocjtdvFm8J+qBgxH3CNbT0DO26U/Fi5x48uhaq8eobHryIFqdbVGJvztLHwb6zFiVcnD4XxV6/fcOBzYuQ/xFX5jk2IPohBGwDNAJw8b6cfRSqNpCNS/TjVZdoVwmCdTa3m7ncdrJiPHrHjeOiel+NN0kF2xaQ9EhvLjfJvhs0f+ar72gX2jo9glA9qo75JY1ZDSZVe/9MOCytb4dplgi7YVVP7JUoIr5d56hTExERIfSHSz728a6Lv6hX07yKh4khZO8ldNqqjhUyDgsohVcf7wWQq9deWJzP6wUbmkohHoa6N62gmEABct/R+sy9bi9A0ictLjCF6B7hQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bC7j1Zj4y5mIGXCP+MT8yqQBhySeisf48q0gLE5hvKQ=;
- b=N6RpR+Gx0WjMIYgNLT15y5AqPaMagr5CUaM5FwG/3IF5EbGpGP52jLdU2tUlRxgv4aNegt5FFxE9O0u43XWZBPRCbHgcj1LYPhO/cru/fhlDBB8vy95n8aRsl3R1C1vb1aReREuN+B1dvHbVGQcaCUivlIsJ6O5t8ok1+btDc+4u1VJd6WvYRJpxzEYc5Uh8p/65WWGNNn5bReQu/2XV1z9FI39RIpkZij1BmAgz4iL9gkp/NsT0naIPuJkNsmKx8bXJ/TVKp1UAsyX4knmZy7Nn1/YMdGpVgWiuFubzT99/4pCzfvkg7PVnJj6JJKmLVoHKZQaHRXBwLS9avgQ/0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 40.67.248.234) smtp.rcpttodomain=linaro.org smtp.mailfrom=arm.com;
- dmarc=bestguesspass action=none header.from=arm.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bC7j1Zj4y5mIGXCP+MT8yqQBhySeisf48q0gLE5hvKQ=;
- b=N7hHaZrdBjcM4hhZlLDf4iVXCHOTAegsG+g4BYAydne1mpThFAp4/p1kSsjgojQ1wi2DvGbqEpaVuZb7KeTCdwSK+fMcUl6ZgPMB98r7xLGFcEAhUcFsevoqNciSLc5wrcMyQLC/VLVed4agbb1T/RZOnf7fljGFZSqfYVuXSYI=
-Received: from AM6PR0502CA0064.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::41) by DB7PR08MB3465.eurprd08.prod.outlook.com
- (2603:10a6:10:50::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.20; Tue, 14 Apr
- 2020 13:47:20 +0000
-Received: from VE1EUR03FT041.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:56:cafe::a5) by AM6PR0502CA0064.outlook.office365.com
- (2603:10a6:20b:56::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend
- Transport; Tue, 14 Apr 2020 13:47:20 +0000
-Authentication-Results-Original: spf=pass (sender IP is 40.67.248.234)
- smtp.mailfrom=arm.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 40.67.248.234 as permitted sender) receiver=protection.outlook.com;
- client-ip=40.67.248.234; helo=nebula.arm.com;
-Received: from nebula.arm.com (40.67.248.234) by
- VE1EUR03FT041.mail.protection.outlook.com (10.152.19.163) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.2900.18 via Frontend Transport; Tue, 14 Apr 2020 13:47:19 +0000
-Received: from AZ-NEU-EX03.Arm.com (10.251.24.31) by AZ-NEU-EX03.Arm.com
- (10.251.24.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1415.2; Tue, 14 Apr
- 2020 13:47:05 +0000
-Received: from e123356-lin.trondheim.arm.com (10.40.16.105) by mail.arm.com
- (10.251.24.31) with Microsoft SMTP Server id 15.1.1415.2 via Frontend
- Transport; Tue, 14 Apr 2020 13:47:04 +0000
-From:   =?UTF-8?q?=C3=98rjan=20Eide?= <orjan.eide@arm.com>
-CC:     <orjan.eide@arm.com>, <anders.pedersen@arm.com>,
-        <john.stultz@linaro.org>, Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "Daniel Vetter" <daniel.vetter@ffwll.ch>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        "Arnd Bergmann" <arnd@arndb.de>, <devel@driverdev.osuosl.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>
-Subject: [PATCH] staging: android: ion: Skip sync if not mapped
-Date:   Tue, 14 Apr 2020 15:46:27 +0200
-Message-ID: <20200414134629.54567-1-orjan.eide@arm.com>
-X-Mailer: git-send-email 2.17.1
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 553C72078B
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586872061;
+        bh=zPGc63UmWLc/+H/vjVjMmsftRUnohKoZ25/OzLAX5q0=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=HRMb8JjdVUWax/yRhGpGbsXJtWA0MwsXbW5hdYtmysQU0jyHCuyXJUqnSyIuwOjhh
+         saVHqWredVkvYW0WSYQHrXBHg+oS/u8bANzIjtXP42QCBKNS7BMMYtH2MnBm9y+iFX
+         Dr9wWT0Ih9G62vdBgNLHljzN1U4Cil7VH86QZa/I=
+Received: by mail-lf1-f52.google.com with SMTP id l11so9423854lfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:47:41 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYlgS+G3o9T1PfeJff+l6IFMnf4YBYapyTmxwxPyjx77WcJZ3ij
+        bxUoarGF6Fu7TtZwf2PgH3O7gdsRnxFOPGRZ11U=
+X-Google-Smtp-Source: APiQypJxCiAhNBPjhKsW1uO1167hs2/TAd8oRp4Z+eS/oD8l54yts/N11sRuWc97KVigMWLNcyMCQcj61mfyJqS+FqM=
+X-Received: by 2002:ac2:551e:: with SMTP id j30mr14307830lfk.179.1586872059357;
+ Tue, 14 Apr 2020 06:47:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200401100240.445447-1-ribalda@kernel.org> <20200402065953.9974-1-ribalda@kernel.org>
+In-Reply-To: <20200402065953.9974-1-ribalda@kernel.org>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Tue, 14 Apr 2020 15:47:23 +0200
+X-Gmail-Original-Message-ID: <CAPybu_34nSmbu4JMK-uA3SWrj_eMUftZ8S6zf1Vpg3Etkz3SPw@mail.gmail.com>
+Message-ID: <CAPybu_34nSmbu4JMK-uA3SWrj_eMUftZ8S6zf1Vpg3Etkz3SPw@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: Fix mtd not the same name not registered if nvmem
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-EOPAttributedMessage: 1
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report-Untrusted: CIP:40.67.248.234;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:nebula.arm.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(39860400002)(46966005)(26005)(109986005)(426003)(47076004)(86362001)(36756003)(336012)(7416002)(1076003)(81156014)(6666004)(2616005)(70586007)(7696005)(8676002)(54906003)(70206006)(186003)(2906002)(82740400003)(316002)(356005)(478600001)(8936002)(4326008)(81166007)(5660300002)(266003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bff94702-d3af-4052-e4f1-08d7e07a60d5
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3465:|AM0PR08MB5106:
-X-Microsoft-Antispam-PRVS: <AM0PR08MB5106FE6A1753EE6A4084F45690DA0@AM0PR08MB5106.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;OLM:10000;
-X-Forefront-PRVS: 0373D94D15
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: OGuNZ9Sp55GW2uy07GFxMH/CEdnN8U6hHYJ+sLt2NUjAjZN2HCtqsI7/S3Vhl5dsxZdE9FXbQEOgLYb/C4XXB0dqEdKHCxh2O9zs+FmkbOx3QW9JNiuPWXw6S7aDBr8Rq4MnYfRGt+rW8zMoHZLSNmPjHtoDnf6wOtPmw5i9q99WSIsmO/xqi/jnIX/qMqBmpeLV7iLJ34r1g0JqyzsH0paK0Q/dPXXJo3IpzjJU3iQCETclb/5J65Ik53iHcMzcusdAjYNQ3jX272YxlquGpMXXC8ewtGcQ77jnmDwLhLcC/KWgkWJuGXIn2NarFqs+fckVG2F9z+KYfxc5dCEwTP+8zY/Xxg5FuLAHNS5CsGcKo4hXxyNikQbBBsf4rqM/XMO4YW/mtFSTfr4RGdMXc7RbBS+jsmgJ5TDk30t7mTjqoqFzo8eoJKjy4YhOaZu43gS5qOjR7pAjmfh10p5zYg8I1n0/gjFRHjVs+1GoIMCAIRvUFwXSarGR4D9U4Rdu2JHsm5CKqkGTWbz3/cDTP5bfBC4+4Ue7u8n5iFNMFOo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3465
-Original-Authentication-Results: spf=pass (sender IP is 40.67.248.234)
- smtp.mailfrom=arm.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=arm.com;
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT055.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(396003)(346002)(46966005)(426003)(86362001)(82740400003)(26005)(478600001)(186003)(2906002)(26826003)(2616005)(109986005)(81166007)(81156014)(8936002)(70586007)(4326008)(6666004)(7696005)(450100002)(54906003)(8676002)(336012)(36906005)(316002)(70206006)(47076004)(1076003)(5660300002)(36756003)(266003);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 5c68708c-7b33-4645-c6e1-08d7e07a5a24
-X-Forefront-PRVS: 0373D94D15
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dQisQtbDqB8Fez7+TQy4LSDRmJxm7DD51aPRw307V6c3nIj46iCsdIXltkHsqvyRYcTCmOPuioGgRy5ei5GpqP6G4LpDCNczJ/UzoAxurlgy5+FuvZhHwHU3Q3T5X2nep+9rsz+sNmXsdmp8YwLXRvrnoSoV1Rq09vII2Hy487EjL4HTWaRrO/c+hihKRdxlL3QwYP3maHWvGKsBy96XBSmLimcdKk3dJgJ0YYbbtRXf7hloLPcoAoXAujycdkJcN2PHXIPPeESJOOdL9xfzK3yU8hFRrYieaWV5phJ90akffPwpWgkOBu/FSvGsiMGbzEn2mmd7oXgvB3sPRi/q3mbhOyPQwLGvTF2kkuHHchv52luWoc3O/pFZ8dr1qWe9LNYz5U5XyBQR1VNORGH4+faOXaJvm9s8x2oVRuizVzT4AdP4m1V+mM3uqN8su6O/tAXbA6cym0NA+o7aJNUlw8sAjGEKYryQ1gt/e+vfuL/JpIi2i5ZhXiM1t+lPfw2Fh/jc4leZAocjxbYlocno0c+2GCBdF4291aqTg1G3Z9o=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 13:47:30.9995
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bff94702-d3af-4052-e4f1-08d7e07a60d5
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5106
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only sync the sg-list of an Ion dma-buf attachment when the attachment
-is actually mapped on the device.
+Ping?
 
-dma-bufs may be synced at any time. It can be reached from user space
-via DMA_BUF_IOCTL_SYNC, so there are no guarantees from callers on when
-syncs may be attempted, and dma_buf_end_cpu_access() and
-dma_buf_begin_cpu_access() may not be paired.
-
-Since the sg_list's dma_address isn't set up until the buffer is used
-on the device, and dma_map_sg() is called on it, the dma_address will be
-NULL if sync is attempted on the dma-buf before it's mapped on a device.
-
-Before v5.0 (commit 55897af63091 ("dma-direct: merge swiotlb_dma_ops
-into the dma_direct code")) this was a problem as the dma-api (at least
-the swiotlb_dma_ops on arm64) would use the potentially invalid
-dma_address. How that failed depended on how the device handled physical
-address 0. If 0 was a valid address to physical ram, that page would get
-flushed a lot, while the actual pages in the buffer would not get synced
-correctly. While if 0 is an invalid physical address it may cause a
-fault and trigger a crash.
-
-In v5.0 this was incidentally fixed by commit 55897af63091 ("dma-direct:
-merge swiotlb_dma_ops into the dma_direct code"), as this moved the
-dma-api to use the page pointer in the sg_list, and (for Ion buffers at
-least) this will always be valid if the sg_list exists at all.
-
-But, this issue is re-introduced in v5.3 with
-commit 449fa54d6815 ("dma-direct: correct the physical addr in
-dma_direct_sync_sg_for_cpu/device") moves the dma-api back to the old
-behaviour and picks the dma_address that may be invalid.
-
-dma-buf core doesn't ensure that the buffer is mapped on the device, and
-thus have a valid sg_list, before calling the exporter's
-begin_cpu_access.
-
-Signed-off-by: =C3=98rjan Eide <orjan.eide@arm.com>
----
- drivers/staging/android/ion/ion.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-This seems to be part of a bigger issue where dma-buf exporters assume
-that their dma-buf begin_cpu_access and end_cpu_access callbacks have a
-certain guaranteed behavior, which isn't ensured by dma-buf core.
-
-This patch fixes this in ion only, but it also needs to be fixed for
-other exporters, either handled like this in each exporter, or in
-dma-buf core before calling into the exporters.
-
-diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/io=
-n/ion.c
-index 38b51eace4f9..7b752ba0cb6d 100644
---- a/drivers/staging/android/ion/ion.c
-+++ b/drivers/staging/android/ion/ion.c
-@@ -173,6 +173,7 @@ struct ion_dma_buf_attachment {
-        struct device *dev;
-        struct sg_table *table;
-        struct list_head list;
-+       bool mapped:1;
- };
-
- static int ion_dma_buf_attach(struct dma_buf *dmabuf,
-@@ -195,6 +196,7 @@ static int ion_dma_buf_attach(struct dma_buf *dmabuf,
-        a->table =3D table;
-        a->dev =3D attachment->dev;
-        INIT_LIST_HEAD(&a->list);
-+       a->mapped =3D false;
-
-        attachment->priv =3D a;
-
-@@ -231,6 +233,8 @@ static struct sg_table *ion_map_dma_buf(struct dma_buf_=
-attachment *attachment,
-                        direction))
-                return ERR_PTR(-ENOMEM);
-
-+       a->mapped =3D true;
-+
-        return table;
- }
-
-@@ -238,6 +242,10 @@ static void ion_unmap_dma_buf(struct dma_buf_attachmen=
-t *attachment,
-                              struct sg_table *table,
-                              enum dma_data_direction direction)
- {
-+       struct ion_dma_buf_attachment *a =3D attachment->priv;
-+
-+       a->mapped =3D false;
-+
-        dma_unmap_sg(attachment->dev, table->sgl, table->nents, direction);
- }
-
-@@ -297,6 +305,8 @@ static int ion_dma_buf_begin_cpu_access(struct dma_buf =
-*dmabuf,
-
-        mutex_lock(&buffer->lock);
-        list_for_each_entry(a, &buffer->attachments, list) {
-+               if (!a->mapped)
-+                       continue;
-                dma_sync_sg_for_cpu(a->dev, a->table->sgl, a->table->nents,
-                                    direction);
-        }
-@@ -320,6 +330,8 @@ static int ion_dma_buf_end_cpu_access(struct dma_buf *d=
-mabuf,
-
-        mutex_lock(&buffer->lock);
-        list_for_each_entry(a, &buffer->attachments, list) {
-+               if (!a->mapped)
-+                       continue;
-                dma_sync_sg_for_device(a->dev, a->table->sgl, a->table->nen=
-ts,
-                                       direction);
-        }
---
-2.17.1
-
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+On Thu, Apr 2, 2020 at 8:59 AM Ricardo Ribalda Delgado
+<ribalda@kernel.org> wrote:
+>
+> When the nvmem framework is enabled, a nvmem device is created per mtd
+> device/partition.
+>
+> It is not uncommon that a device can have multiple mtd devices with
+> partitions that have the same name. Eg, when there DT overlay is allowed
+> and the same device with mtd is attached twice.
+>
+> Under that circumstances, the mtd fails to register due to a name
+> duplication on the nvmem framework.
+>
+> With this patch we add a _1, _2, _X to the subsequent names if there is
+> a collition, and throw a warning, instead of not starting the mtd
+> device.
+>
+> [    8.948991] sysfs: cannot create duplicate filename '/bus/nvmem/devices/Production Data'
+> [    8.948992] CPU: 7 PID: 246 Comm: systemd-udevd Not tainted 5.5.0-qtec-standard #13
+> [    8.948993] Hardware name: AMD Dibbler/Dibbler, BIOS 05.22.04.0019 10/26/2019
+> [    8.948994] Call Trace:
+> [    8.948996]  dump_stack+0x50/0x70
+> [    8.948998]  sysfs_warn_dup.cold+0x17/0x2d
+> [    8.949000]  sysfs_do_create_link_sd.isra.0+0xc2/0xd0
+> [    8.949002]  bus_add_device+0x74/0x140
+> [    8.949004]  device_add+0x34b/0x850
+> [    8.949006]  nvmem_register.part.0+0x1bf/0x640
+> ...
+> [    8.948926] mtd mtd8: Failed to register NVMEM device
+>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+> v2: I left behind on my patch a
+>
+> mtd->nvmem = NULL;
+>
+> from my tests. Sorry.
+>
+>  drivers/mtd/mtdcore.c | 35 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 5fac4355b9c2..7a4b520ef3b0 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/leds.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/nvmem-provider.h>
+> +#include <linux/nvmem-consumer.h>
+>
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/partitions.h>
+> @@ -545,13 +546,34 @@ static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
+>         return retlen == bytes ? 0 : -EIO;
+>  }
+>
+> +static int nvmem_next_name(const char *init_name, char *name, size_t len)
+> +{
+> +       unsigned int i = 0;
+> +       int ret = 0;
+> +       struct nvmem_device *dev = NULL;
+> +
+> +       strlcpy(name, init_name, len);
+> +
+> +       while ((ret < len) &&
+> +              !IS_ERR(dev = nvmem_device_find(name, device_match_name))) {
+> +               nvmem_device_put(dev);
+> +               ret = snprintf(name, len, "%s_%u", init_name, ++i);
+> +       }
+> +
+> +       if (ret >= len)
+> +               return -ENOMEM;
+> +
+> +       return i;
+> +}
+> +
+>  static int mtd_nvmem_add(struct mtd_info *mtd)
+>  {
+>         struct nvmem_config config = {};
+> +       char name[128];
+> +       int ret = 0;
+>
+>         config.id = -1;
+>         config.dev = &mtd->dev;
+> -       config.name = mtd->name;
+>         config.owner = THIS_MODULE;
+>         config.reg_read = mtd_nvmem_reg_read;
+>         config.size = mtd->size;
+> @@ -562,6 +584,13 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
+>         config.no_of_node = true;
+>         config.priv = mtd;
+>
+> +       if (mtd->name) {
+> +               ret = nvmem_next_name(mtd->name, name, sizeof(name));
+> +               if (ret < 0)
+> +                       return ret;
+> +               config.name = name;
+> +       }
+> +
+>         mtd->nvmem = nvmem_register(&config);
+>         if (IS_ERR(mtd->nvmem)) {
+>                 /* Just ignore if there is no NVMEM support in the kernel */
+> @@ -573,6 +602,10 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
+>                 }
+>         }
+>
+> +       if (ret)
+> +               dev_warn(&mtd->dev, "mtdev %s renamed to %s due to name collision",
+> +                               mtd->name, nvmem_dev_name(mtd->nvmem));
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.25.1
+>
