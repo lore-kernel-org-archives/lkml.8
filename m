@@ -2,270 +2,131 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B6FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D0BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD9F2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1462074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GcmdrTId"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="irwPblHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504830AbgDNTbo (ORCPT
+        id S2504841AbgDNTcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:31:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47737 "EHLO
+        Tue, 14 Apr 2020 15:32:13 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52717 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504817AbgDNTbO (ORCPT
+        by vger.kernel.org with ESMTP id S2504817AbgDNTb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:31:14 -0400
+        Tue, 14 Apr 2020 15:31:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586892662;
+        s=mimecast20190719; t=1586892716;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tX2A1lYpIi69ByBKUOVihFZNecxN5C8mk7sqpyU0EA8=;
-        b=GcmdrTIdLWzF4UIk5LW3aXRZW+73zs/qSG+NzbQBC2OKPWBHFN5ZB9HNF58JgJOGs5CPwA
-        P70RDEs/Tha+grRglIhNovwrgKPQOBiFlQJMjprf0NQ+WBJACBe7+QS23xQDFsU9jwu5rv
-        byCn/hTHJ89p4OAdEycxGiBB5jCEMNU=
+        bh=+Ahnft7vUrxEzTLFARwrc8iGTJuhUk/MsvvVIUVUZdA=;
+        b=irwPblHDA/mj3vvMgCcsNFAoBxFse+/oK+dWQbKMWkFN0HeEQ+IB2Pc3AJB+dS0nh96wcM
+        cFHuSOp0CN+Ak7C4zdkQQ7MAE5Ufj9N+cyMxHlXXcqEjPv1pnMK67cxHmTNpdglSqm/zXc
+        MpZgNn0JM/jU+w4cKSAEwE6rVxztRnI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-TsVI3A-1M06YvsRJbwepyw-1; Tue, 14 Apr 2020 15:30:58 -0400
-X-MC-Unique: TsVI3A-1M06YvsRJbwepyw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-405-APxugEDrOxmPbni84qHg7w-1; Tue, 14 Apr 2020 15:31:55 -0400
+X-MC-Unique: APxugEDrOxmPbni84qHg7w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB25D8017F3;
-        Tue, 14 Apr 2020 19:30:56 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-133.rdu2.redhat.com [10.10.115.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EDF2116D8B;
-        Tue, 14 Apr 2020 19:30:46 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id E0C1C220935; Tue, 14 Apr 2020 15:30:45 -0400 (EDT)
-Date:   Tue, 14 Apr 2020 15:30:45 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Liu Bo <bo.liu@linux.alibaba.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
-Message-ID: <20200414193045.GB210453@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-21-vgoyal@redhat.com>
- <20200326000904.GA34937@rsjd01523.et2sqa>
- <20200327140114.GB32717@redhat.com>
- <20200327220606.GA119028@rsjd01523.et2sqa>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D27311034AE1;
+        Tue, 14 Apr 2020 19:31:53 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D40F95D9CD;
+        Tue, 14 Apr 2020 19:31:52 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 14:31:50 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 1/7] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200414193150.iqw224itgpedpltm@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
+ <20200414174406.GC2483@worktop.programming.kicks-ass.net>
+ <20200414180109.da4v2b4ifpixuzn3@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200327220606.GA119028@rsjd01523.et2sqa>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200414180109.da4v2b4ifpixuzn3@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 06:06:06AM +0800, Liu Bo wrote:
-> On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
-> > On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
-> > 
-> > [..]
-> > > > +/*
-> > > > + * Find first mapping in the tree and free it and return it. Do not add
-> > > > + * it back to free pool. If fault == true, this function should be called
-> > > > + * with fi->i_mmap_sem held.
-> > > > + */
-> > > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
-> > > > +							 struct inode *inode,
-> > > > +							 bool fault)
-> > > > +{
-> > > > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> > > > +	struct fuse_dax_mapping *dmap;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!fault)
-> > > > +		down_write(&fi->i_mmap_sem);
-> > > > +
-> > > > +	/*
-> > > > +	 * Make sure there are no references to inode pages using
-> > > > +	 * get_user_pages()
-> > > > +	 */
-> > > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
+On Tue, Apr 14, 2020 at 01:01:09PM -0500, Josh Poimboeuf wrote:
+> On Tue, Apr 14, 2020 at 07:44:06PM +0200, Peter Zijlstra wrote:
+> > On Tue, Apr 14, 2020 at 11:28:37AM -0500, Josh Poimboeuf wrote:
+> > > KLP relocations are livepatch-specific relocations which are applied to
+> > >   1) vmlinux-specific KLP relocation sections
 > > > 
-> > > Hi Vivek,
+> > >      .klp.rela.vmlinux.{sec}
 > > > 
-> > > This patch is enabling inline reclaim for fault path, but fault path
-> > > has already holds a locked exceptional entry which I believe the above
-> > > fuse_break_dax_layouts() needs to wait for, can you please elaborate
-> > > on how this can be avoided?
+> > >      These are relocations (applied to the KLP module) which reference
+> > >      unexported vmlinux symbols.
 > > > 
+> > >   2) module-specific KLP relocation sections
+> > > 
+> > >      .klp.rela.{module}.{sec}:
+> > > 
+> > >      These are relocations (applied to the KLP module) which reference
+> > >      unexported or exported module symbols.
 > > 
-> > Hi Liubo,
-> > 
-> > Can you please point to the exact lock you are referring to. I will
-> > check it out. Once we got rid of needing to take inode lock in
-> > reclaim path, that opended the door to do inline reclaim in fault
-> > path as well. But I was not aware of this exceptional entry lock.
+> > Is there something that disallows a module from being called 'vmlinux' ?
+> > If not, we might want to enforce this somewhere.
 > 
-> Hi Vivek,
+> I'm pretty sure we don't have a check for that anywhere, though the KLP
+> module would almost certainly fail during the module load when it
+> couldn't find the vmlinux.ko symbols it needed.
 > 
-> dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
-> locked entry, when this fault gets into inline reclaim, would
-> fuse_break_dax_layouts wait for the locked exceptional entry which is
-> locked in dax_iomap_{pte,pmd}_fault?
+> It wouldn't hurt to add a check somewhere though.  Maybe in
+> klp_module_coming() since the restriction only applies to
+> CONFIG_LIVEPATCH...
 
-Hi Liu Bo,
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] livepatch: Disallow vmlinux.ko
 
-This is a good point. Indeed it can deadlock the way code is written
-currently.
+This is purely a theoretical issue, but if there were a module named
+vmlinux.ko, the livepatch relocation code wouldn't be able to
+distinguish between vmlinux-specific and vmlinux.o-specific KLP
+relocations.
 
-Currently we are calling fuse_break_dax_layouts() on the whole file
-in memory inline reclaim path. I am thinking of changing that. Instead,
-find a mapped memory range and file offset and call
-fuse_break_dax_layouts() only on that range (2MB). This should ensure
-that we don't try to break dax layout in the range where we are holding
-exceptional entry lock and avoid deadlock possibility.
+If CONFIG_LIVEPATCH is enabled, don't allow a module named vmlinux.ko.
 
-This also has added benefit that we don't have to unmap the whole
-file in an attempt to reclaim one memory range. We will unmap only
-a portion of file and that should be good from performance point of
-view.
-
-Here is proof of concept patch which applies on top of my internal 
-tree.
-
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- fs/fuse/file.c |   72 +++++++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 50 insertions(+), 22 deletions(-)
+ kernel/livepatch/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Index: redhat-linux/fs/fuse/file.c
-===================================================================
---- redhat-linux.orig/fs/fuse/file.c	2020-04-14 13:47:19.493780528 -0400
-+++ redhat-linux/fs/fuse/file.c	2020-04-14 14:58:26.814079643 -0400
-@@ -4297,13 +4297,13 @@ static int fuse_break_dax_layouts(struct
-         return ret;
- }
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 3a88639b3326..3ff886b911ae 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -1169,6 +1169,11 @@ int klp_module_coming(struct module *mod)
+ 	if (WARN_ON(mod->state != MODULE_STATE_COMING))
+ 		return -EINVAL;
  
--/* Find first mapping in the tree and free it. */
--static struct fuse_dax_mapping *
--inode_reclaim_one_dmap_locked(struct fuse_conn *fc, struct inode *inode)
-+/* Find first mapped dmap for an inode and return file offset. Caller needs
-+ * to hold inode->i_dmap_sem lock either shared or exclusive. */
-+static struct fuse_dax_mapping *inode_lookup_first_dmap(struct fuse_conn *fc,
-+							struct inode *inode)
- {
- 	struct fuse_inode *fi = get_fuse_inode(inode);
- 	struct fuse_dax_mapping *dmap;
--	int ret;
- 
- 	for (dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, 0, -1);
- 	     dmap;
-@@ -4312,18 +4312,6 @@ inode_reclaim_one_dmap_locked(struct fus
- 		if (refcount_read(&dmap->refcnt) > 1)
- 			continue;
- 
--		ret = reclaim_one_dmap_locked(fc, inode, dmap);
--		if (ret < 0)
--			return ERR_PTR(ret);
--
--		/* Clean up dmap. Do not add back to free list */
--		dmap_remove_busy_list(fc, dmap);
--		dmap->inode = NULL;
--		dmap->start = dmap->end = 0;
--
--		pr_debug("fuse: %s: reclaimed memory range. inode=%px,"
--			 " window_offset=0x%llx, length=0x%llx\n", __func__,
--			 inode, dmap->window_offset, dmap->length);
- 		return dmap;
- 	}
- 
-@@ -4335,30 +4323,70 @@ inode_reclaim_one_dmap_locked(struct fus
-  * it back to free pool. If fault == true, this function should be called
-  * with fi->i_mmap_sem held.
-  */
--static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
--							 struct inode *inode,
--							 bool fault)
-+static struct fuse_dax_mapping *
-+inode_inline_reclaim_one_dmap(struct fuse_conn *fc, struct inode *inode,
-+			      bool fault)
- {
- 	struct fuse_inode *fi = get_fuse_inode(inode);
- 	struct fuse_dax_mapping *dmap;
-+	u64 dmap_start, dmap_end;
- 	int ret;
- 
- 	if (!fault)
- 		down_write(&fi->i_mmap_sem);
- 
-+	/* Lookup a dmap and corresponding file offset to reclaim. */
-+	down_read(&fi->i_dmap_sem);
-+	dmap = inode_lookup_first_dmap(fc, inode);
-+	if (dmap) {
-+		dmap_start = dmap->start;
-+		dmap_end = dmap->end;
++	if (!strcmp(mod->name, "vmlinux")) {
++		pr_err("vmlinux.ko: invalid module name");
++		return -EINVAL;
 +	}
-+	up_read(&fi->i_dmap_sem);
 +
-+	if (!dmap)
-+		goto out_mmap_sem;
+ 	mutex_lock(&klp_mutex);
  	/*
- 	 * Make sure there are no references to inode pages using
- 	 * get_user_pages()
- 	 */
--	ret = fuse_break_dax_layouts(inode, 0, 0);
-+	ret = fuse_break_dax_layouts(inode, dmap_start, dmap_end);
- 	if (ret) {
- 		printk("virtio_fs: fuse_break_dax_layouts() failed. err=%d\n",
- 		       ret);
- 		dmap = ERR_PTR(ret);
- 		goto out_mmap_sem;
- 	}
-+
- 	down_write(&fi->i_dmap_sem);
--	dmap = inode_reclaim_one_dmap_locked(fc, inode);
-+	dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, dmap_start,
-+						 dmap_start);
-+	/* Range already got reclaimed by somebody else */
-+	if (!dmap)
-+		goto out_write_dmap_sem;
-+
-+	/* still in use. */
-+	if (refcount_read(&dmap->refcnt) > 1) {
-+		dmap = NULL;
-+		goto out_write_dmap_sem;
-+	}
-+
-+	ret = reclaim_one_dmap_locked(fc, inode, dmap);
-+	if (ret < 0) {
-+		dmap = NULL;
-+		goto out_write_dmap_sem;
-+	}
-+
-+	/* Clean up dmap. Do not add back to free list */
-+	dmap_remove_busy_list(fc, dmap);
-+	dmap->inode = NULL;
-+	dmap->start = dmap->end = 0;
-+
-+	pr_debug("fuse: %s: inline reclaimed memory range. inode=%px,"
-+		 " window_offset=0x%llx, length=0x%llx\n", __func__,
-+		 inode, dmap->window_offset, dmap->length);
-+
-+out_write_dmap_sem:
- 	up_write(&fi->i_dmap_sem);
- out_mmap_sem:
- 	if (!fault)
-@@ -4379,7 +4407,7 @@ static struct fuse_dax_mapping *alloc_da
- 			return dmap;
- 
- 		if (fi->nr_dmaps) {
--			dmap = inode_reclaim_one_dmap(fc, inode, fault);
-+			dmap = inode_inline_reclaim_one_dmap(fc, inode, fault);
- 			if (dmap)
- 				return dmap;
- 			/* If we could not reclaim a mapping because it
-
+ 	 * Each module has to know that klp_module_coming()
+-- 
+2.21.1
 
