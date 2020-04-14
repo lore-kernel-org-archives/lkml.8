@@ -2,105 +2,101 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A8DC352B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45765C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233EE21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F792084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNzKcqtQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rg2UNX+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502665AbgDNNON (ORCPT
+        id S2502688AbgDNNOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54790 "EHLO
+        Tue, 14 Apr 2020 09:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502653AbgDNNOG (ORCPT
+        with ESMTP id S2502664AbgDNNON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:14:06 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F844C061A0C;
-        Tue, 14 Apr 2020 06:14:06 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u10so8180074lfo.8;
-        Tue, 14 Apr 2020 06:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TwanPYDMNjwsdCZf99BwEwFxyfAbUGx0ihTeXWNRhe8=;
-        b=lNzKcqtQbCw7svBeyfiCxylKZs/JH3ObkWG10wkqPNqlJxNoGQwHf7fcXBO0snOALd
-         X77ccfHRCEiHrXncn/sIsPliBESv8IFf2V0++EFPVLEK2JOqnNyRcGDtRqKzMjSf8y4w
-         3vMjsaryxNLGzs7zskjkiKetPDJ4tT4Fh5rPfF7eoZvgIPy/2LJrbY3kVlZz2/vLtPPD
-         zPMl5jM14tvVfN9GDu0IPy2QKfrUmH6diCa99yIhTTFTCh1xyTjurfXB8kgesJJgauoM
-         D4i6LwFVvpnyGzSZQ2NNUCMdi4YRhHhnNw/pCnEoUHUO5e2Z5dENIZtXPbct0O+FjJmm
-         yjGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TwanPYDMNjwsdCZf99BwEwFxyfAbUGx0ihTeXWNRhe8=;
-        b=sL1qKFrfhvsqlXdWBxPwAduCcjU5kkqz9ANdS0GKgo9ofCHvJa4EDdOSH0pO6VTgeE
-         6sykLxP46brIO6NIEaXXrKoJHRYTKPv/NcY/RlJQsoZfRZrXK0WZyWflOX7C9c+i4+k9
-         3estFRTsng2qvBdjuq61SFh2x78srdgdxhz0pTTP1LYI6yZXajMy9HPsiif+Eoo/cYl3
-         HcrNwTDY8U9gnoT+0pAXqhkbgKc1qgJ4OFRcKy8Trc7mTw4y9ZXU5CgjQrcQ3n0T1MJ5
-         Y1LtCBA2fgvgqGq8PUG+8BnE9Q6Txrk/3NHz8tHYwRiuk1C413Nwc0PRzTT7ffnKXjoK
-         LIEQ==
-X-Gm-Message-State: AGi0PuZS+LfQ4CC92ljfqTFtXfnoXG107sCwNWtNyat81BpkOmyvnxva
-        vY71IdgKZQv25+DXVCqMneQ=
-X-Google-Smtp-Source: APiQypLa/KxVEJAuwOK/hWdTm1YU8JrHLqXCaAxUYLJM1nn3mtGtpnTVOFU77TpHqHnoVQGPtH1qFA==
-X-Received: by 2002:ac2:4853:: with SMTP id 19mr13296940lfy.171.1586870044950;
-        Tue, 14 Apr 2020 06:14:04 -0700 (PDT)
-Received: from [192.168.86.24] ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id h14sm10658884lfm.60.2020.04.14.06.14.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 06:14:03 -0700 (PDT)
-Subject: Re: [PATCH 0/3] regulator: max77826: Add MAX77826 support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
- <20200414105725.GB5412@sirena.org.uk>
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-Message-ID: <f167d50f-c0d7-f359-a167-2782040ae7c3@gmail.com>
-Date:   Tue, 14 Apr 2020 16:14:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 09:14:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F5BC061A0C;
+        Tue, 14 Apr 2020 06:14:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=s9wO1kktwKhWfxkNKBlR4BadnfNxuXVCWsOuMusKhWU=; b=rg2UNX+oDOoOmlIrOoATZfvHJo
+        yXYLxsNWr2T1nJZrGxGk5Lv5RIM+MPtFqTLpUBL+OtQmXF3dvx+r/E34dM9LM/msmhlhCadHxgEIS
+        pWLlsjvDOXkWGefwhB3ab1TbSjUnXSZ4O+DhmchdWfxHMd4ltbCqfxvArHED4bAzh+LrU5N0g8RQ/
+        sMGiG1d5h+8y+YZLDA1ZDHHjyY6lnNQFIUnXfoqPK7R0pAFuXPpCBcPa9tHT3OZrp88howxBXTV4j
+        g8suig+TIKVixAxTM0KrW7filVEfIW9iQoItZ9Ea9AdgUOMqiNFBCHWAFRBbLBwX140HeueDrEM53
+        qriivVXQ==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOLNu-0006Fe-Le; Tue, 14 Apr 2020 13:13:54 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: decruft the vmalloc API v2
+Date:   Tue, 14 Apr 2020 15:13:19 +0200
+Message-Id: <20200414131348.444715-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200414105725.GB5412@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
-On 4/14/20 1:57 PM, Mark Brown wrote:
-> On Mon, Apr 13, 2020 at 07:44:37PM +0300, Iskren Chernev wrote:
->> The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly other
->> devices. It is produced by Maxim Integrated and contains 15 LDOs a buck and
->> a buck boost regulator.
->>
->> Iskren Chernev (3):
->>   regulator: max77826: Add max77826 regulator driver
->>   dt-bindings: regulator: Add document bindings for max77826
->
-> Aside from the compatible string and the subject prefix on the DT
-> binding patch this looks good to me.
+Peter noticed that with some dumb luck you can toast the kernel address
+space with exported vmalloc symbols.
 
-About the subject -- I guess you mean the suffix is wrong, it should be:
+I used this as an opportunity to decruft the vmalloc.c API and make it
+much more systematic.  This also removes any chance to create vmalloc
+mappings outside the designated areas or using executable permissions
+from modules.  Besides that it removes more than 300 lines of code.
 
-  dt-bindings: regulator: Document bindings for max77826
+A git tree is also available here:
 
-I'll also change the compatible string.
+    git://git.infradead.org/users/hch/misc.git sanitize-vmalloc-api.2
 
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sanitize-vmalloc-api.2
+
+Changes since v1:
+ - implement pgprot_nx for arm64 (Mark Rutland)
+ - fix a patch description
+ - properly pass pgprot to vmap in ion
+ - add a new patch to fix vmap() API misuse
+ - fix a vmap argument in x86
+ - two more vmalloc cleanups
+ - cleanup use of the unmap_kernel_range API
+ - rename ioremap_pbh to ioremap_phb
