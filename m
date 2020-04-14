@@ -2,97 +2,181 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E79C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE738C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27FDB2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586898260;
-	bh=IEPA8EAo6GEHtO3JgqEzYGhe3BBUs+SZRAd1fHALJxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CWIA2faBAm/YP6vEPJduLOe9af6N94XtnrC5b8G37t48tCg8GeyteZkXUynSOw4sH
-	 UhXJtgcCg+aCLe0hHadZII0gdQYKG5LTqcYTSV+GihXkIAmymF0bH9nW2OAXtUNnc3
-	 G7Bg0kpkjP4v1eA4NxtCCQ2iVIy9IUXskzk+iM0Y=
+	by mail.kernel.org (Postfix) with ESMTP id C8BF72074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mb2PRhSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbgDNVEK (ORCPT
+        id S2633656AbgDNVFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:04:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43257 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633589AbgDNVCV (ORCPT
+        Tue, 14 Apr 2020 17:05:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2633573AbgDNVB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:02:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g14so1170735otg.10;
-        Tue, 14 Apr 2020 14:02:21 -0700 (PDT)
+        Tue, 14 Apr 2020 17:01:57 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E9AC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:01:56 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id c13so954889plq.22
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ZT9uearJKSnBiqdjC5QhzgxpTglsuQMI/wN8PXUX9eU=;
+        b=mb2PRhSeg1kyS8eXbE+AHB8pbDmwauqFv3Af67l0qf34soIrNE2+PWJOVmY4xCLD1M
+         ZLtTcCqfWh9mRht24aCgrcUfedC5EV2jeNL7+jyl1j9v5wwt+P3S7ANJ6cxqO/VziGgC
+         zmj8gSM9CvaA2/VZSRFSRY09dktytU1aPnSIOnTPGtEYBla4CzZzLH1W4OgRFnvfc8Nr
+         TlSjYxMZV3HjTQXRQ5zc6IeWqJkwLzQBS5eEZaxWrQXwNflqtNJZ0xc1uOy/gSb9eBrq
+         MMh8L8QmGi3ECF5n2tOY2luFyZxoi8q5E1h19B0c5gaI4ahhu6iWY5Lak7lX+7Jh9/zl
+         kysA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9MY/dlKLTuZil2riiVa0/9Eb/2zBtz5HqkHealjLMWs=;
-        b=T51FbA6ftj/Hfoje5hSGAL015T1DIIeHfM6T3BPYazymT6bem55aEHxQzAkbBIkQ9s
-         iCrwXkJZg2joMX3Ftrdks02rVdhg0m6afZ6tzyxYxGU5nI649SgZuO/6Xic1gUS5W94O
-         HVtvb0HP0KArgdEh4p1DMTopXQFr5Yx0ZeDZHJWKmwEBlSP7EqHuybewUp/Q0XtxNNbB
-         /y4qrT/9yrWK2bPxRyKFonNuZmMLDMBhLCYMatd3R+1TQbL8ygzCCYU41dBx3YoiJqRV
-         rWYNTtFpNVKnop1PINVweFWqwMIFRW4e2IjOA4c3bzUF7jC5PXIvnvCVobYGOSzofUjU
-         MPTQ==
-X-Gm-Message-State: AGi0PuY4NfYAlxzUX269ruac54WoqL3zi5HN8c3QuSAUiKDujFoXvfgE
-        9bFJYSNcEUYYGgOllY9Log==
-X-Google-Smtp-Source: APiQypLZU+zH1H3PmR7mpM0KydZcPZZRdURdwW0Z0j09EtkFyflB/iPfFy/cR2DtAw2h0lMojnFh7Q==
-X-Received: by 2002:a05:6830:1305:: with SMTP id p5mr18706002otq.345.1586898140783;
-        Tue, 14 Apr 2020 14:02:20 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a3sm5793648oti.27.2020.04.14.14.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:02:19 -0700 (PDT)
-Received: (nullmailer pid 4807 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:02:18 -0000
-Date:   Tue, 14 Apr 2020 16:02:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matthias Brugger <mbrugger@suse.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 24/33] docs: dt: fix a broken reference for a file
- converted to json
-Message-ID: <20200414210218.GA4755@bogus>
-References: <cover.1586881715.git.mchehab+huawei@kernel.org>
- <9b1603e254d39c9607bfedefeedaafd2c44aeb19.1586881715.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b1603e254d39c9607bfedefeedaafd2c44aeb19.1586881715.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ZT9uearJKSnBiqdjC5QhzgxpTglsuQMI/wN8PXUX9eU=;
+        b=myK3cFGz6g0jfLhypqgQmUIijD/YOSzI4y/wHdpUM6zXnTVNsKFhjUP4MhwBFiDmja
+         E52hDBQleZ2yJ3enf95Ej1ACXYsIRUwBIx5SLmyQdpXoXRzPJzqSdyVLucec3wwmLqvm
+         eUunKiyMcOn0ivUdbvlAtFN24nsEUc0uRnRflyk53tsE4cQ6kDRXPeaa48RTCBn4zf0N
+         Aaior1vszZj/5lgljiEqnoE2+6bsLKuzoXF5fv1EGd2pPJOE6oxx0AOAt4Cs+fSYPuVA
+         vz/zvih/WJVsyuYPAwI3bw2cgVuK2sMnVdxNlpZ/Xc3vs7Q29QddgrHNj0x+vj7Un+Jh
+         gGRw==
+X-Gm-Message-State: AGi0PuYM+/tVOmjKSkDX+3/pCG/lwBm+mRfFbTtc557UNUYAp0ORLHLk
+        R+aLfJfuU4+no49TgK4GiFTz1csXm2w/FJUgh8B9Sw==
+X-Google-Smtp-Source: APiQypJk6hNUQUA3Bisgo76EBfo2lDVWAGKtRAaH5IY81miVwxuR5o6DC3Snabvte1Vdaw+giAxDZtEfV7zCyd0/4I1tmg==
+X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr2318668pjk.142.1586898116262;
+ Tue, 14 Apr 2020 14:01:56 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 14:01:42 -0700
+Message-Id: <20200414210142.191327-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [RFC v1] software: node: test: add test to exercise parent child add/remove
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:48:50 +0200, Mauro Carvalho Chehab wrote:
-> Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-> moved a binding to json and updated the links.
-> 
-> Yet, one link was not changed, due to a merge conflict.
-> 
-> Update this one too.
-> 
-> Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Add test which adds a tree of software_nodes, checks that the nodes
+exist, and then removes the tree. This exercises a bug reported by
+Naresh Kamboju <naresh.kamboju@linaro.org>, and pretty much just takes a
+test case from the test_printf Kselftest module and refocusses it on
+adding and then removing a tree of software_nodes.
 
-Applied, thanks.
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
 
-Rob
+I am not sure if this should be rolled into the property entry test, or
+should be moved somewhere else; nevertheless, testing the software node
+API seems like a good idea and this seems like a good place to start.
+
+---
+ drivers/base/test/Kconfig              | 14 ++++++++
+ drivers/base/test/Makefile             |  2 ++
+ drivers/base/test/software-node-test.c | 46 ++++++++++++++++++++++++++
+ 3 files changed, 62 insertions(+)
+ create mode 100644 drivers/base/test/software-node-test.c
+
+diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
+index 305c7751184a..b42f385fe233 100644
+--- a/drivers/base/test/Kconfig
++++ b/drivers/base/test/Kconfig
+@@ -11,3 +11,17 @@ config TEST_ASYNC_DRIVER_PROBE
+ config KUNIT_DRIVER_PE_TEST
+ 	bool "KUnit Tests for property entry API"
+ 	depends on KUNIT=y
++config KUNIT_DRIVER_SOFTWARE_NODE_TEST
++	bool "KUnit Tests for software node API"
++	depends on KUNIT=y
++	help
++	  This builds the software node API tests.
++
++	  KUnit tests run during boot and output the results to the debug log
++	  in TAP format (http://testanything.org/). Only useful for kernel devs
++	  and are not for inclusion into a production build.
++
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
+diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+index 3ca56367c84b..63325e8a5288 100644
+--- a/drivers/base/test/Makefile
++++ b/drivers/base/test/Makefile
+@@ -2,3 +2,5 @@
+ obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
+ 
+ obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
++
++obj-$(CONFIG_KUNIT_DRIVER_SOFTWARE_NODE_TEST) += software-node-test.o
+diff --git a/drivers/base/test/software-node-test.c b/drivers/base/test/software-node-test.c
+new file mode 100644
+index 000000000000..0609cbd9aa0a
+--- /dev/null
++++ b/drivers/base/test/software-node-test.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0
++// Unit tests for software node API
++//
++// Copyright 2020 Google LLC.
++
++#include <kunit/test.h>
++#include <linux/property.h>
++#include <linux/types.h>
++
++static void software_node_test_register_nodes(struct kunit *test)
++{
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{}
++	};
++	const char * const full_name = "first/second/third";
++	char *buf;
++
++	buf = kunit_kzalloc(test, strlen(full_name), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
++
++	KUNIT_ASSERT_EQ(test, software_node_register_nodes(softnodes), 0);
++
++	/* Check that all the nodes exist. */
++	KUNIT_ASSERT_EQ(test,
++			(size_t)sprintf(buf, "%pfw",
++					software_node_fwnode(&softnodes[2])),
++			strlen(full_name));
++	KUNIT_EXPECT_STREQ(test, buf, full_name);
++
++	software_node_unregister_nodes(softnodes);
++}
++
++static struct kunit_case software_node_test_cases[] = {
++	KUNIT_CASE(software_node_test_register_nodes),
++	{}
++};
++
++static struct kunit_suite software_node_test_suite = {
++	.name = "software-node",
++	.test_cases = software_node_test_cases,
++};
++
++kunit_test_suite(software_node_test_suite);
+
+base-commit: 8632e9b5645bbc2331d21d892b0d6961c1a08429
+-- 
+2.26.0.110.g2183baf09c-goog
+
