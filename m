@@ -2,142 +2,100 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D5EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55233208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZPcMzQj"
+	by mail.kernel.org (Postfix) with ESMTP id 8201D208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502588AbgDNNIm (ORCPT
+        id S2502621AbgDNNJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:08:42 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38612 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730314AbgDNNId (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:08:33 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAY6PH104127;
-        Tue, 14 Apr 2020 10:36:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=7IB4h4vyHZWuhixM+o7hLit581/PbOa3rBB6fd0VUW8=;
- b=MZPcMzQjDfxCxXNIYeqRN9HocfuwqrmnTenxdO2rqeN2uXqKXipO3qic8tbl3CbmAfkd
- V280YB2ZkN7oIwRxDneQg4GZHn/+aZQlq3o49sFIt/5eETL8v9nhgAR4iD/5wj+NZ4L8
- Lb1xHUE04kmF1i8pZ6kAEs2pLU9Zmdm77AL7UW28fPvPIX2ZGMWMGK2UVnHEkfcW15IQ
- aMRX44wom+dKiU2FK8yH3jZM5U1S0UKGq5TuA+JNfVqVwYsOhFjGxZW1xDVhMlByNZSa
- qF8z8HPudP2SzAQ0vTewEvJF5ABa8OARycNnB/DPBuC0KvNeohXeH7GlnlyIBMjzogwz Eg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30b5um3pc6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:36:41 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAW0pY123322;
-        Tue, 14 Apr 2020 10:36:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30bqpfy3g0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:36:41 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EAabmn015613;
-        Tue, 14 Apr 2020 10:36:37 GMT
-Received: from mihai.localdomain (/10.153.73.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 03:36:36 -0700
-From:   Mihai Carabas <mihai.carabas@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86: microcode: fix return value for microcode late loading
-Date:   Tue, 14 Apr 2020 12:55:35 +0300
-Message-Id: <1586858135-29337-1-git-send-email-mihai.carabas@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 bulkscore=0 spamscore=0 suspectscore=1 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140087
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=1 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140087
+        Tue, 14 Apr 2020 09:09:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:55112 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502606AbgDNNJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:09:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30E0130E;
+        Tue, 14 Apr 2020 06:09:07 -0700 (PDT)
+Received: from [10.57.33.145] (unknown [10.57.33.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B89573F73D;
+        Tue, 14 Apr 2020 06:09:05 -0700 (PDT)
+Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Steven Price <steven.price@arm.com>
+Cc:     Nishanth Menon <nm@ti.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+References: <20200411200632.4045-1-peron.clem@gmail.com>
+ <20200411200632.4045-2-peron.clem@gmail.com>
+ <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com>
+ <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <729d73c5-2d2d-a2b6-7715-7293744f8f95@arm.com>
+Date:   Tue, 14 Apr 2020 14:09:02 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value from stop_machine might not be consistent.
+On 2020-04-13 3:18 pm, Clément Péron wrote:
+> Hi Steven,
+> 
+> On Mon, 13 Apr 2020 at 15:18, Steven Price <steven.price@arm.com> wrote:
+>>
+>> On 11/04/2020 21:06, Clément Péron wrote:
+>>> OPP table can defined both frequency and voltage.
+>>>
+>>> Register the mali regulator if it exist.
+>>>
+>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+>>> ---
+>>>    drivers/gpu/drm/panfrost/panfrost_devfreq.c | 34 ++++++++++++++++++---
+>>>    drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
+>>>    2 files changed, 31 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+>>> index 62541f4edd81..2dc8e2355358 100644
+>>> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+>>> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+>>> @@ -78,12 +78,26 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+>>>        struct device *dev = &pfdev->pdev->dev;
+>>>        struct devfreq *devfreq;
+>>>        struct thermal_cooling_device *cooling;
+>>> +     const char *mali = "mali";
+>>> +     struct opp_table *opp_table = NULL;
+>>> +
+>>> +     /* Regulator is optional */
+>>> +     opp_table = dev_pm_opp_set_regulators(dev, &mali, 1);
+>>
+>> This looks like it applies before 3e1399bccf51 ("drm/panfrost: Add
+>> support for multiple regulators") which is currently in drm-misc-next
+>> (and linux-next). You want something more like:
+> 
+> Thanks for you review, indeed I didn't see that multiple regulators
+> support has been added.
+> Will update in v2.
 
-stop_machine_cpuslocked returns:
-- zero if all functions have returned 0
-- a non-zero value if at least one of the functions returned
-a non-zero value
+Although note that we probably also want a version that can be 
+backported to stable without that dependency, since this behaviour is 
+arguably a regression since 221bc77914cb ("drm/panfrost: Use generic 
+code for devfreq"), and does appear to have been causing subtle problems 
+for users.
 
-There is no way to know if it is negative or positive. So make
-__reload_late return 0 on success, or negative otherwise.
-
-Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
----
- arch/x86/kernel/cpu/microcode/core.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index 7019d4b..336003e 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -545,8 +545,7 @@ static int __wait_for_cpus(atomic_t *t, long long timeout)
- /*
-  * Returns:
-  * < 0 - on error
-- *   0 - no update done
-- *   1 - microcode was updated
-+ *   0 - success (no update done or microcode was updated)
-  */
- static int __reload_late(void *info)
- {
-@@ -573,11 +572,9 @@ static int __reload_late(void *info)
- 	else
- 		goto wait_for_siblings;
- 
--	if (err > UCODE_NFOUND) {
-+	if (err >= UCODE_NFOUND) {
- 		pr_warn("Error reloading microcode on CPU %d\n", cpu);
- 		ret = -1;
--	} else if (err == UCODE_UPDATED || err == UCODE_OK) {
--		ret = 1;
- 	}
- 
- wait_for_siblings:
-@@ -608,7 +605,7 @@ static int microcode_reload_late(void)
- 	atomic_set(&late_cpus_out, 0);
- 
- 	ret = stop_machine_cpuslocked(__reload_late, NULL, cpu_online_mask);
--	if (ret > 0)
-+	if (ret == 0)
- 		microcode_check();
- 
- 	pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
-@@ -649,7 +646,7 @@ static ssize_t reload_store(struct device *dev,
- put:
- 	put_online_cpus();
- 
--	if (ret >= 0)
-+	if (ret == 0)
- 		ret = size;
- 
- 	return ret;
--- 
-1.8.3.1
-
+Robin.
