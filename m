@@ -2,107 +2,134 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86730C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C9AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2E620787
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005662072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 01:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586829005;
+	bh=vXA9q8sEY9SbPvIcQ96LL9SjViMTa5ew+yrz24pkr/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m7NCbAPcBJhD3l5IBpLRFI5D0yKrUMj9Ggl9davMBCKWwkJuYlrEsGJDvOa1yzAu+
+	 sL+gqawkmovTIM13HkWOr1MrHAoZ3U1N1I+NPIWTa39em7VDV75kNlCZZva+9isexE
+	 NTPeFnoJ9oZ2xpxBpijAzAHGuNAtSD6/sdosjzSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403846AbgDNBpo (ORCPT
+        id S2403861AbgDNBuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 21:45:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1314 "EHLO mga05.intel.com"
+        Mon, 13 Apr 2020 21:50:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbgDNBpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 21:45:43 -0400
-IronPort-SDR: peIj0ED6tBRRwL2Hkjr8iGVJTt0N4TVvH1cazX0JiPGsYnRxnTDxz3wbiTiBNezpq1zC+OiKmP
- +NqSHqs2iTng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 18:45:42 -0700
-IronPort-SDR: UexRrFsjgpHMwK9A/oshz470Jyjmt45pDLe5ZgnWgwlNmXbLHxziiQ0KeEPirtr6TXqNxuNBWf
- KflPfxfdcp7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="256353181"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga006.jf.intel.com with ESMTP; 13 Apr 2020 18:45:40 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Anchal Agarwal <anchalag@amazon.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm: swap: use fixed-size readahead during swapoff
-References: <20200413111810.GA801367@xps-13>
-        <875ze37cle.fsf@yhuang-dev.intel.com> <20200413132658.GB801367@xps-13>
-Date:   Tue, 14 Apr 2020 09:45:39 +0800
-In-Reply-To: <20200413132658.GB801367@xps-13> (Andrea Righi's message of "Mon,
-        13 Apr 2020 15:26:58 +0200")
-Message-ID: <87sgh66drw.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1728247AbgDNBuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 21:50:01 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E558920768;
+        Tue, 14 Apr 2020 01:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586829000;
+        bh=vXA9q8sEY9SbPvIcQ96LL9SjViMTa5ew+yrz24pkr/E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SWiKFLseJ5Tu4B0xlU02YhwRey+bsGWzKJguSE4tU9XTEruOGJHAbkczwSJp3x2eG
+         fcsnfYjUqA2JDV3AV6xOFamC0oO4C6C8PSbaNSWceO/Iy2ctVm0sbpx5HKYBBQg4co
+         DwCKGXkZFTN6F0blO0+SVDcVvG0Eq/nGgrdLn1cM=
+Received: by mail-wm1-f53.google.com with SMTP id y24so12183425wma.4;
+        Mon, 13 Apr 2020 18:49:59 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYfUuBBeZ+8eWOaWJrAjQShCZYidKrNocvZ6OQrW3Empva6hX/G
+        6OpS62gu4cn+J7QBn7Elux+iAFBSliqqWXCm4VM=
+X-Google-Smtp-Source: APiQypKOxEpt6GAvO4Ooxq2Lkas6ZiYokwDtKPN9Jt46BH0K2njaNHzVcpNOU5zijVjK3H9M6q25t+rlrEOqhpvTon0=
+X-Received: by 2002:a05:600c:295a:: with SMTP id n26mr23009054wmd.16.1586828998334;
+ Mon, 13 Apr 2020 18:49:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20200412034931.9558-1-f.fainelli@gmail.com> <20200412112756.687ff227@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <ae06b4c6-6818-c053-6f33-55c96f88a4ae@gmail.com> <BN8PR12MB3266A47DE93CEAEBDB4F288AD3DD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <CAGb2v65wjtphcN4DEM4mfv+=U5KUmsTujVoPb9L0idwy=ysDZw@mail.gmail.com> <BN8PR12MB32667D9FEB2FBC9657C16183D3DD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+In-Reply-To: <BN8PR12MB32667D9FEB2FBC9657C16183D3DD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Tue, 14 Apr 2020 09:49:57 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64XcLHYFVwy8mnKnUR2qEcJOYLHJF1uDAcqmy484CUoFQ@mail.gmail.com>
+Message-ID: <CAGb2v64XcLHYFVwy8mnKnUR2qEcJOYLHJF1uDAcqmy484CUoFQ@mail.gmail.com>
+Subject: Re: [PATCH net] net: stmmac: Guard against txfifosz=0
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrea Righi <andrea.righi@canonical.com> writes:
-
-> On Mon, Apr 13, 2020 at 09:13:33PM +0800, Huang, Ying wrote:
->> Andrea Righi <andrea.righi@canonical.com> writes:
->> 
->> > The global swap-in readahead policy takes in account the previous access
->> > patterns, using a scaling heuristic to determine the optimal readahead
->> > chunk dynamically.
->> >
->> > This works pretty well in most cases, but like any heuristic there are
->> > specific cases when this approach is not ideal, for example the swapoff
->> > scenario.
->> >
->> > During swapoff we just want to load back into memory all the swapped-out
->> > pages and for this specific use case a fixed-size readahead is more
->> > efficient.
->> >
->> > The specific use case this patch is addressing is to improve swapoff
->> > performance when a VM has been hibernated, resumed and all memory needs
->> > to be forced back to RAM by disabling swap (see the test case below).
->> 
->> Why do you need to swapoff after resuming?  The swap device isn't used
->> except hibernation?  I guess the process is,
->> 
->> 1) add swap device to VM
->> 2) hibernate
->> 3) resume
->> 4) swapoff
+On Mon, Apr 13, 2020 at 2:59 PM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
 >
-> Correct, the swap device is used only for hibernation, when the system
-> is resumed the swap is disabled (swapoff).
+> From: Chen-Yu Tsai <wens@kernel.org>
+> Date: Apr/13/2020, 07:50:47 (UTC+00:00)
 >
->> 
->> Some pages are swapped out in step 2?  If os, can we just set
->> /proc/sys/vm/swappiness to 0 to avoid swapping in step 2?
+> > On Mon, Apr 13, 2020 at 2:42 PM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+> > >
+> > > From: Florian Fainelli <f.fainelli@gmail.com>
+> > > Date: Apr/12/2020, 19:31:55 (UTC+00:00)
+> > >
+> > > >
+> > > >
+> > > > On 4/12/2020 11:27 AM, Jakub Kicinski wrote:
+> > > > > On Sat, 11 Apr 2020 20:49:31 -0700 Florian Fainelli wrote:
+> > > > >> After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
+> > > > >> configure the MTU for switch ports") my Lamobo R1 platform which uses
+> > > > >> an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
+> > > > >> by rejecting a MTU of 1536. The reason for that is that the DMA
+> > > > >> capabilities are not readable on this version of the IP, and there is
+> > > > >> also no 'tx-fifo-depth' property being provided in Device Tree. The
+> > > > >> property is documented as optional, and is not provided.
+> > > > >>
+> > > > >> The minimum MTU that the network device accepts is ETH_ZLEN - ETH_HLEN,
+> > > > >> so rejecting the new MTU based on the txfifosz value unchecked seems a
+> > > > >> bit too heavy handed here.
+> > > > >
+> > > > > OTOH is it safe to assume MTUs up to 16k are valid if device tree lacks
+> > > > > the optional property? Is this change purely to preserve backward
+> > > > > (bug-ward?) compatibility, even if it's not entirely correct to allow
+> > > > > high MTU values? (I think that'd be worth stating in the commit message
+> > > > > more explicitly.) Is there no "reasonable default" we could select for
+> > > > > txfifosz if property is missing?
+> > > >
+> > > > Those are good questions, and I do not know how to answer them as I am
+> > > > not familiar with the stmmac HW design, but I am hoping Jose can respond
+> > > > on this patch. It does sound like providing a default TX FIFO size would
+> > > > solve that MTU problem, too, but without a 'tx-fifo-depth' property
+> > > > specified in Device Tree, and with the "dma_cap" being empty for this
+> > > > chip, I have no idea what to set it to.
+> > >
+> > > Unfortunately, allwinner uses GMAC which does not have any mean to detect
+> > > TX FIFO Size. Default value in HW is 2k but this can not be the case in
+> > > these platforms if HW team decided to change it.
+> >
+> > I looked at all the publicly available datasheets and Allwinner uses
+> > 4K TX FIFO and 16K RX FIFO in all SoCs. Not sure if this would help.
 >
-> Sorry, can you elaborate more on this? All anonymous pages are swapped
-> out during step 2, it doesn't matter if we set swappiness to 0, they are
-> swapped out anyway, because we need save them somewhere in order to
-> hibernate, shutting down the system.
+> Yes, thanks for finding this!
+>
+> So, I think correct fix is then to hard-code these values in dwmac-sunxi.c
+> probe function using the already available platform data structure.
 
-All pages will be written to the swap device in step 2.  But the normal
-swapout path isn't used.  So these pages will be restored in step 3
-instead of step 4.  But at the beginning of step 2, system may try to
-reclaim some pages, the reclaimed anonymous pages will be restored in
-step 4.  This may be avoided via setting /proc/sys/vm/swappiness to 0
-before step 2.
+I guess we should also set this in the device trees, so that all DT users
+can benefit.
 
-Best Regards,
-Huang, Ying
-
-> Thanks,
-> -Andrea
+ChenYu
