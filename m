@@ -2,88 +2,162 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4220C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C958DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 978C3206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586888106;
-	bh=LdcvGKafiPDkGR8AY64ypjNR2PvxDKazM33lIohCF9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eTV5gvjPEWb71iesO/TcIotx+fvn+mxa87+lsCx5XQP1rbIchk56Zjv+LiJD/uJfw
-	 GQVKDlOM5tBtVacOGSEPjPL4isPnce5vvdkhz/hzxffqMGbzcDeDMzEJO+WOu4CZi7
-	 rCboBtq+0XDl6sLTSU9B0srzGbdVClsL7d6RK9Qg=
+	by mail.kernel.org (Postfix) with ESMTP id A86D320767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:15:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsNiBJat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503698AbgDNSPF (ORCPT
+        id S2503708AbgDNSPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:15:05 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42335 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503671AbgDNSPB (ORCPT
+        Tue, 14 Apr 2020 14:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2503671AbgDNSPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:15:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id d7so6208789oif.9;
-        Tue, 14 Apr 2020 11:15:00 -0700 (PDT)
+        Tue, 14 Apr 2020 14:15:16 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0862EC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:15:16 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so14141519wmk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VclBjPf0G+5Fbq0gaSlTkJ1trKfc494vLUCcFmtZb4c=;
+        b=PsNiBJat77NUlKls3n38NeJLDYLaxdO6QQ6kNr7NquUmAWTr4Xr/gyZ+hbFWU/eXM7
+         2RULAsbItfI/aUioDQWzlNzU9OwRPaWk6JkOzaTreyYLviOdSSY453B7dw+PDBDHSt5F
+         x+ojvn8taK7Eh5VzTxRhgWytqULvg+MjLbTb5qPvwe3GT/SM9ICpx465II+ZHxlvDEu6
+         EdZu5PKeyOnl92lAJp0VvmNLIhz/DfFnnJXqACQ6ap+4a4nM1nzV/2vePaF6OLLpoPp6
+         VhB8C6nOdPPLhz3JyOYIeW/DRBlSu3OAR06M2NqGsi/j9hp5y8zxBDFL/blKkRX+TQ3S
+         +mhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=65DkFlztgppXvsQRy19eL08nR3Skwie1axX0JEZh0zY=;
-        b=XzsdHTAejPSOccwdYKT/xRkFiybbt65C4M0dVQthIjsa9Gfz1W/RYrYB2+/FY8jlnw
-         XvUbaG+/xpHQH+riMfSDQ6Wiqz/W5iXWtnmYjhT1t2BVgEG85wHgGnHX+YD3Eueidnat
-         VbNRnp1lZbuUX2/uJ1bnfepSXBg+M2gw9nxs//MWP3Nq8Y1bMvRoarsFk5HM1xVlWbII
-         8MWo+mMr94p574S+oLyBGP96xGG56L6kjNnZjWVf0J9kU6UrCK77kq595iz/FrEoULgT
-         ZH77DwpqZEljo9d8XlRUYXkOwPFiXO+wpIZ/STHR3T/8xOx4MzKT/9MAHtLez5gLcEry
-         2uww==
-X-Gm-Message-State: AGi0PuYOhTtPV+D2294deU9wtvduf2Th/ohfocRjEf08uQWOJZzUx4hi
-        LMtXjU2k1EhYBPFcUxNSVA==
-X-Google-Smtp-Source: APiQypI6GHk8xdPK5wkkeoLMN/Gum7n0XE1rJqDu/xuakTvwO6qkRDc9XPA/bZoazZ2j983VfpVHkw==
-X-Received: by 2002:aca:4243:: with SMTP id p64mr16670247oia.21.1586888100393;
-        Tue, 14 Apr 2020 11:15:00 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i17sm5660774otc.16.2020.04.14.11.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:14:59 -0700 (PDT)
-Received: (nullmailer pid 18162 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:14:58 -0000
-Date:   Tue, 14 Apr 2020 13:14:58 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     skomatineni@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, helen.koike@collabora.com, digetx@gmail.com,
-        sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v6 8/9] dt-bindings: reset: Add ID for Tegra210 VI
- reset
-Message-ID: <20200414181458.GA18112@bogus>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-9-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VclBjPf0G+5Fbq0gaSlTkJ1trKfc494vLUCcFmtZb4c=;
+        b=Nc6mw3v1GmuQppj7NwgEnkkajyIeNLB0redkdQBB9MtIEwBNuIKpKMMupI6gfjj9sO
+         qE8nyU9ro4KulLkInGyHq/xUctljn0DTUJlo8+APDCToxzNFpXxy8ag6gUPb9RIjNZVx
+         qOV2/iCG/I19bZsHt29GgSHk/oSZFR/f4zc9dSoY5+uM5Z4hk0l6BKGU6lo1HVZJhUfP
+         i2OR6850oDC26VuxhLPS3mtfpd/73FAFZvv5fAKOMw8Nv3wf3LForLhLXyBZLRQ/PpwD
+         EZRp/CzZ/1aTN7mTqosliGjNd3PnRy7w7BZMXWrbwl4OBNvj9+KpETa5j829rwJ5rnCO
+         j4GA==
+X-Gm-Message-State: AGi0PuZbd1TSsDJNRKMobl5WcmoSoBsY/hm1QbcjYvs5n9aBYqQpPA3f
+        joAdccvWP+9GSiPAL5I9CQh/V9I25rynBLdj9DI=
+X-Google-Smtp-Source: APiQypLEf8jmLLVAWrEjgPnl0rCghmXeebEJ0OPl3F3M89wXZj0sFLn3oBx6ZCBDgzxk4rui1NHBjDA+ZFAHFVN+3TA=
+X-Received: by 2002:a1c:6344:: with SMTP id x65mr1101168wmb.56.1586888114753;
+ Tue, 14 Apr 2020 11:15:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585963507-12610-9-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1586864113-30682-1-git-send-email-bernard@vivo.com>
+In-Reply-To: <1586864113-30682-1-git-send-email-bernard@vivo.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 14 Apr 2020 14:15:03 -0400
+Message-ID: <CADnq5_Phca3L-HGOQz0DPBoARHgwcJRK_a7-WmeFMPkrPWeOeg@mail.gmail.com>
+Subject: Re: [PATCH] Optimized division operation to shift operation
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Oak Zeng <Oak.Zeng@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Alex Sierra <alex.sierra@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Kent Russell <kent.russell@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@vivo.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 18:25:06 -0700, Sowjanya Komatineni wrote:
-> This patch adds ID for Tegra210 VI controller reset to use with
-> device tree.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  include/dt-bindings/reset/tegra210-car.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Tue, Apr 14, 2020 at 9:05 AM Bernard Zhao <bernard@vivo.com> wrote:
+>
+> On some processors, the / operate will call the compiler`s div lib,
+> which is low efficient, We can replace the / operation with shift,
+> so that we can replace the call of the division library with one
+> shift assembly instruction.
+>
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied.  thanks.
+
+Alex
+
+> ---
+>  drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 4 ++--
+>  drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 4 ++--
+>  drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c | 4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+> index b205039..66cd078 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+> @@ -175,10 +175,10 @@ static int gmc_v6_0_mc_load_microcode(struct amdgpu_device *adev)
+>         amdgpu_ucode_print_mc_hdr(&hdr->header);
+>
+>         adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
+> -       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
+> +       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
+>         new_io_mc_regs = (const __le32 *)
+>                 (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
+> -       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
+> +       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
+>         new_fw_data = (const __le32 *)
+>                 (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+> index 9da9596..ca26d63 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+> @@ -193,10 +193,10 @@ static int gmc_v7_0_mc_load_microcode(struct amdgpu_device *adev)
+>         amdgpu_ucode_print_mc_hdr(&hdr->header);
+>
+>         adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
+> -       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
+> +       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
+>         io_mc_regs = (const __le32 *)
+>                 (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
+> -       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
+> +       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
+>         fw_data = (const __le32 *)
+>                 (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+> index 27d83204..295039c 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+> @@ -318,10 +318,10 @@ static int gmc_v8_0_tonga_mc_load_microcode(struct amdgpu_device *adev)
+>         amdgpu_ucode_print_mc_hdr(&hdr->header);
+>
+>         adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
+> -       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
+> +       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
+>         io_mc_regs = (const __le32 *)
+>                 (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
+> -       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
+> +       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
+>         fw_data = (const __le32 *)
+>                 (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
+>
+> --
+> 2.7.4
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
