@@ -2,84 +2,109 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001EDC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8C3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC18A206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47942072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586865204;
+	bh=D43Bu/ZLpshHkAJBUbBrh5xBrdOB1DSsVsdvcQSwfNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y9HVOxRuMoNhzKHse7NfxH1ZVTYx0l+3ZigCbm5TLu26ZWEYnrOAmJaZMiME5VwNR
+	 iQcqsXEuNjqLdyqiOqAqI12fupqqfH+ZAL/2U5skrWaVv9QJygSTnUrZM7in7/e4kO
+	 x/xpggoq2YOB9oWuIpABaKkpa83q1nvWj0XYSOpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439660AbgDNLw6 (ORCPT
+        id S2439673AbgDNLxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:52:58 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38462 "EHLO elvis.franken.de"
+        Tue, 14 Apr 2020 07:53:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728476AbgDNLwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:52:55 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jOK7V-0002BV-00; Tue, 14 Apr 2020 13:52:49 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 68F61C0108; Tue, 14 Apr 2020 13:52:35 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 13:52:35 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        geert@linux-m68k.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH] vhost: do not enable VHOST_MENU by default
-Message-ID: <20200414115235.GA13675@alpha.franken.de>
-References: <20200414024438.19103-1-jasowang@redhat.com>
+        id S2439662AbgDNLxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:53:16 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59A81206D5;
+        Tue, 14 Apr 2020 11:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586865196;
+        bh=D43Bu/ZLpshHkAJBUbBrh5xBrdOB1DSsVsdvcQSwfNo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Clj8lQN7P3dEhHGhulq35t2RhO+AitzH5UFcJfbxLwpvj5tOrA7liaLMG5iPlzNOo
+         w1KOI6Z7f9B0dKQoiXz+FUYHBBE2CCLrhsqn+0YQDaR72qpxhr3QoTU269zf1iz6RJ
+         zlSfCPGL/h7PtgJ08tEvoNSYoYk9pg+sRLjFV6QQ=
+Date:   Tue, 14 Apr 2020 17:23:06 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
+ sensor
+Message-ID: <20200414115306.GA28064@Mani-XPS-13-9360>
+References: <20200412183658.6755-1-mani@kernel.org>
+ <20200412183658.6755-4-mani@kernel.org>
+ <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414024438.19103-1-jasowang@redhat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 10:44:38AM +0800, Jason Wang wrote:
-> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> without the caring of CONFIG_VHOST.
+On Mon, Apr 13, 2020 at 11:23:03PM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 13, 2020 at 10:23 AM <mani@kernel.org> wrote:
+> >
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> >
+> > Add devicetree OF match table support for CCS811 VOC sensor.
 > 
-> But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> for the ones that doesn't want vhost. So it actually shifts the
-> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+> ...
 > 
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  arch/mips/configs/malta_kvm_defconfig  |  1 +
+> > +#include <linux/of.h>
+> 
+> Why?
+> 
 
-Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+As replied to Jonathan, will drop this and of_match_ptr.
 
-Thomas.
+Thanks,
+Mani
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> ...
+> 
+> > +static const struct of_device_id ccs811_dt_ids[] = {
+> > +       { .compatible = "ams,ccs811" },
+> > +       { }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+> 
+> Since it has no ugly ifdeffery...
+> 
+> >  static struct i2c_driver ccs811_driver = {
+> >         .driver = {
+> >                 .name = "ccs811",
+> > +               .of_match_table = of_match_ptr(ccs811_dt_ids),
+> 
+> ...use of of_match_ptr() brings a compiler warning.
+> 
+> Drop of_match_ptr() for good. And thus drop redundant of.h.
+> 
+> >         },
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
