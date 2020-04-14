@@ -2,200 +2,347 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37856C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34008C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D632075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049672074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586886323;
-	bh=HQZivI+jgvAXZc13IOSnTDiTMKed8JrYsILOdJruhKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nR9h9r2fqiMDOTt9NT3dkGf/O0/kQAVRhDfFVGmXhOvMz8yPrKlaLAAG85GaCXxHp
-	 zyGe313DBZ7tWlyRog0eXkveJhJ3GOP6judXcgX+qiqa3fIAFyTL2ICyXoTKw0f7pX
-	 T2Zum6dwihQgvJHPq11/V8Hff5enIio/o1vOyxRo=
+	s=default; t=1586886379;
+	bh=qYSI8frT4eWihABoeqWhVlHDSowvM6DDYFpgUiw/9sE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VeCy0ZDl4uhzJeshcqRKeYIN4SvJCocmATLPX0CTyJmxXB56BjNUa0jWyW2H7VeLQ
+	 NoV/uGz7u6YR9zp6/5sqjhsp9JyQvcw5EYSo6961+n5oTMFYs7gcejAUH2d4U9M/H3
+	 VFIrUJMJPP/LFWsSaa0zqqVAmjcJP+k3nje5cHgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502544AbgDNRpV (ORCPT
+        id S2502594AbgDNRqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54806 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 13:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502469AbgDNRpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:45:10 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S2502565AbgDNRqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:46:00 -0400
+Received: from localhost (unknown [104.132.1.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B69EF2074D;
-        Tue, 14 Apr 2020 17:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D462074D;
+        Tue, 14 Apr 2020 17:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586886309;
-        bh=HQZivI+jgvAXZc13IOSnTDiTMKed8JrYsILOdJruhKA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VUzuT9SHxvVtrMoQe4Nk0GLtzrLNuuSj8q32jR+DJzJns3eNtCCIZH7LU69ucekxW
-         rS9yz3vRvhSAYOnZ73YTDlWQMy44WZm2zHO+PrARQRatyrzT/bto09rF9aaFpfZ+Cd
-         MECMB3/YtM3ac8bmSzJMC4vAhf8Y7RO9qrlkoNhY=
-Date:   Tue, 14 Apr 2020 18:45:05 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <Eugen.Hristev@microchip.com>
-Cc:     <alexandru.ardelean@analog.com>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
- at91_adc_current_chan_is_touch() helper
-Message-ID: <20200414184505.0cd39249@archlinux>
-In-Reply-To: <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
-References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
-        <20200413180556.20638f3b@archlinux>
-        <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1586886359;
+        bh=qYSI8frT4eWihABoeqWhVlHDSowvM6DDYFpgUiw/9sE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BLMFmr4aFEeJfc86aSsImNuVCWPMPxZSiH+hFZZDf/ol9SbmHGr2RDtK5HO0jzkLs
+         CIHv8LfZoM3oDqSX0HjcrOt8e/RcsYNZJnfqJ3rW3jT5BokSD3mtGXYAlLb6rrBe9p
+         HiakH9ViIiqAf9BDB68x6DN8QWlXe7JUYURaoTUA=
+Date:   Tue, 14 Apr 2020 10:45:58 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Sahitya Tummala <stummala@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: fix long latency due to discard
+ during umount
+Message-ID: <20200414174558.GA115366@google.com>
+References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
+ <20200331184655.GB198665@google.com>
+ <20200401092201.GB20234@codeaurora.org>
+ <20200403171943.GC68460@google.com>
+ <20200408090024.GC20234@codeaurora.org>
+ <20200409022928.GD110440@google.com>
+ <20200409114756.GD20234@codeaurora.org>
+ <20200413165229.GA39092@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413165229.GA39092@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 12:22:45 +0000
-<Eugen.Hristev@microchip.com> wrote:
+Hi Sahitya,
 
-> On 13.04.2020 20:05, Jonathan Cameron wrote:
-> > On Wed, 4 Mar 2020 10:42:18 +0200
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >   
-> >> This change moves the logic to check if the current channel is the
-> >> touchscreen channel to a separate helper.
-> >> This reduces some code duplication, but the main intent is to re-use this
-> >> in the next patches.
-> >>
-> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
-> > Eugen / Ludovic,
-> > 
-> > Have you had a chance to look at this series?  
-> 
-> Hi Jonathan,
-> 
-> Does the patch apply correctly for you ?
-
-I haven't tried yet :)
-
-> I will try to test it , if I manage to apply it.
-> I can only test the ADC though because at this moment I do not have a 
-> touchscreen at disposal.
-> 
-> Meanwhile, the code looks good for me,
-> 
-> Reviewed-by: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> By the way, I do not know if my two pending patches on this driver will 
-> conflict or not.
-
-As this is a long term rework patch at heart, there isn't any particular
-rush as long as we don't loose it forever!
+Could you please post the revised patch?
 
 Thanks,
 
-Jonathan
-
+On 04/13, Jaegeuk Kim wrote:
+> On 04/09, Sahitya Tummala wrote:
+> > On Wed, Apr 08, 2020 at 07:29:28PM -0700, Jaegeuk Kim wrote:
+> > > On 04/08, Sahitya Tummala wrote:
+> > > > Hi Jaegeuk,
+> > > > 
+> > > > On Fri, Apr 03, 2020 at 10:19:43AM -0700, Jaegeuk Kim wrote:
+> > > > > On 04/01, Sahitya Tummala wrote:
+> > > > > > Hi Jaegeuk,
+> > > > > > 
+> > > > > > On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
+> > > > > > > On 03/30, Sahitya Tummala wrote:
+> > > > > > > > F2FS already has a default timeout of 5 secs for discards that
+> > > > > > > > can be issued during umount, but it can take more than the 5 sec
+> > > > > > > > timeout if the underlying UFS device queue is already full and there
+> > > > > > > > are no more available free tags to be used. In that case, submit_bio()
+> > > > > > > > will wait for the already queued discard requests to complete to get
+> > > > > > > > a free tag, which can potentially take way more than 5 sec.
+> > > > > > > > 
+> > > > > > > > Fix this by submitting the discard requests with REQ_NOWAIT
+> > > > > > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
+> > > > > > > > scenario without waiting in the context of submit_bio(). The FS can
+> > > > > > > > then handle these requests by retrying again within the stipulated
+> > > > > > > > discard timeout period to avoid long latencies.
+> > > > > > > 
+> > > > > > > Sorry, Sahitya, but, do we really need to do like this? How about just
+> > > > > > > controlling # of outstanding discarding bios in __issue_discard_cmd()?
+> > > > > > 
+> > > > > > Do you mean something like this?
+> > > > > > 
+> > > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > > > > index 1a62b27..860dd43 100644
+> > > > > > --- a/fs/f2fs/segment.c
+> > > > > > +++ b/fs/f2fs/segment.c
+> > > > > > @@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+> > > > > >         } else if (discard_type == DPOLICY_FSTRIM) {
+> > > > > >                 dpolicy->io_aware = false;
+> > > > > >         } else if (discard_type == DPOLICY_UMOUNT) {
+> > > > > > -               dpolicy->max_requests = UINT_MAX;
+> > > > > > +               dpolicy->max_requests = 30;
+> > > > > 
+> > > > > Can we use max queue depth of the block device?
+> > > > 
+> > > > I think it should be limited to 8 or 16 as Chao suggested, so that we can have
+> > > > better control on the given timeout value? Thoughts?
+> > > 
+> > > Where is 8 or 16 coming from? What about SSD? Sorry, it's unclear to me.
+> > 
+> > With this patch we now wait for a batch of discard requests in __issue_discard_cmd()
+> > with a upper timeout of 5 sec. So, I thought that having a smaller batch of
+> > discard requests would help us to avoid queuing more requests and end up waiting
+> > for more time in __wait_all_discard_cmd(). Today we have DEF_MAX_DISCARD_REQUEST
+> > as 8 for default max discard requests. If it too less, may be for umount
+> > we can use 16 instead. But the idea is to avoid more wait time.
 > 
-> Eugen
+> Ok, then, it seems we can just remove this line to use dpolicy->max_requests,
+> and retry issuing all the discard commands like below. Later, I thnk it'd be
+> fine to tune the max_requests based on bd_queue->queue_depth.
 > 
+> > 
+> > If you would like to propose to use max queue depth, we can get it from bdev as 
+> > sbi->sb->s_bdev->bd_queue->queue_depth. Is it okay to use it in our FS? or you
+> > think it should be hardcoded to 32 (as most UFS/eMMC devices will have this as
+> > its queue depth)? Please let me know.
 > > 
 > > Thanks,
 > > 
-> > Jonathan
-> >   
-> >> ---
-> >>
-> >> This patchset continues discussion:
-> >>     https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/
-> >> Apologies for the delay.
-> >>
-> >> Changelog v1 -> v2:
-> >> * added patch 'iio: at91-sama5d2_adc: split at91_adc_current_chan_is_touch()
-> >>    helper'
-> >> * renamed at91_adc_buffer_postenable() -> at91_adc_buffer_preenable()
-> >>    - at91_adc_buffer_postenable() - now just calls
-> >>      iio_triggered_buffer_postenable() if the channel isn't the touchscreen
-> >>      channel
-> >> * renamed at91_adc_buffer_predisable() -> at91_adc_buffer_postdisable()
-> >>    - at91_adc_buffer_predisable() - now just calls
-> >>      iio_triggered_buffer_predisable() if the channel isn't the touchscreen
-> >>      channel
-> >>
-> >>   drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++---------------
-> >>   1 file changed, 15 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> >> index a5c7771227d5..f2a74c47c768 100644
-> >> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> >> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> >> @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
-> >>        return 0;
-> >>   }
-> >>
-> >> +static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
-> >> +{
-> >> +     struct at91_adc_state *st = iio_priv(indio_dev);
-> >> +
-> >> +     return !!bitmap_subset(indio_dev->active_scan_mask,
-> >> +                            &st->touch_st.channels_bitmask,
-> >> +                            AT91_SAMA5D2_MAX_CHAN_IDX + 1);
-> >> +}
-> >> +
-> >>   static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-> >>   {
-> >>        int ret;
-> >>        struct at91_adc_state *st = iio_priv(indio_dev);
-> >>
-> >>        /* check if we are enabling triggered buffer or the touchscreen */
-> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
-> >> -                       &st->touch_st.channels_bitmask,
-> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
-> >> -             /* touchscreen enabling */
-> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
-> >>                return at91_adc_configure_touch(st, true);
-> >> -     }
-> >> +
-> >>        /* if we are not in triggered mode, we cannot enable the buffer. */
-> >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
-> >>                return -EINVAL;
-> >> @@ -906,12 +912,9 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-> >>        u8 bit;
-> >>
-> >>        /* check if we are disabling triggered buffer or the touchscreen */
-> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
-> >> -                       &st->touch_st.channels_bitmask,
-> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
-> >> -             /* touchscreen disable */
-> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
-> >>                return at91_adc_configure_touch(st, false);
-> >> -     }
-> >> +
-> >>        /* if we are not in triggered mode, nothing to do here */
-> >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
-> >>                return -EINVAL;
-> >> @@ -1886,14 +1889,10 @@ static __maybe_unused int at91_adc_resume(struct device *dev)
-> >>                return 0;
-> >>
-> >>        /* check if we are enabling triggered buffer or the touchscreen */
-> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
-> >> -                       &st->touch_st.channels_bitmask,
-> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
-> >> -             /* touchscreen enabling */
-> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
-> >>                return at91_adc_configure_touch(st, true);
-> >> -     } else {
-> >> +     else
-> >>                return at91_adc_configure_trigger(st->trig, true);
-> >> -     }
-> >>
-> >>        /* not needed but more explicit */
-> >>        return 0;  
-> >   
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > 
+> > > > > 
+> > > > > >                 dpolicy->io_aware = false;
+> > > > > >                 /* we need to issue all to keep CP_TRIMMED_FLAG */
+> > > > > >                 dpolicy->granularity = 1;
+> > > > > > @@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > >         struct list_head *pend_list;
+> > > > > >         struct discard_cmd *dc, *tmp;
+> > > > > >         struct blk_plug plug;
+> > > > > > -       int i, issued = 0;
+> > > > > > +       int i, issued;
+> > > > > >         bool io_interrupted = false;
+> > > > > > 
+> > > > > >         if (dpolicy->timeout != 0)
+> > > > > >                 f2fs_update_time(sbi, dpolicy->timeout);
+> > > > > > 
+> > > > > > +retry:
+> > > > > > +       issued = 0;
+> > > > > >         for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+> > > > > >                 if (dpolicy->timeout != 0 &&
+> > > > > >                                 f2fs_time_over(sbi, dpolicy->timeout))
+> > > > > > @@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > >                         break;
+> > > > > >         }
+> > > > > > 
+> > > > > > +       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
+> > > > > > +               __wait_all_discard_cmd(sbi, dpolicy);
+> > > > > > +               goto retry;
+> > > > > > +       }
+> > > > > > +
+> > > > > >         if (!issued && io_interrupted)
+> > > > > >                 issued = -1;
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > 
+> > > > > > > 
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > > > > > > > ---
+> > > > > > > > v3:
+> > > > > > > > -Handle the regression reported by Chao with v2.
+> > > > > > > > -simplify the logic to split the dc with multiple bios incase any bio returns
+> > > > > > > >  EAGAIN and retry those new dc within 5 sec timeout.
+> > > > > > > > 
+> > > > > > > >  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
+> > > > > > > >  1 file changed, 51 insertions(+), 14 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > > > > > > index fb3e531..55d18c7 100644
+> > > > > > > > --- a/fs/f2fs/segment.c
+> > > > > > > > +++ b/fs/f2fs/segment.c
+> > > > > > > > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+> > > > > > > >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+> > > > > > > >  	unsigned long flags;
+> > > > > > > >  
+> > > > > > > > -	dc->error = blk_status_to_errno(bio->bi_status);
+> > > > > > > > -
+> > > > > > > >  	spin_lock_irqsave(&dc->lock, flags);
+> > > > > > > > +	if (!dc->error)
+> > > > > > > > +		dc->error = blk_status_to_errno(bio->bi_status);
+> > > > > > > > +
+> > > > > > > >  	dc->bio_ref--;
+> > > > > > > > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+> > > > > > > > -		dc->state = D_DONE;
+> > > > > > > > -		complete_all(&dc->wait);
+> > > > > > > > +	if (!dc->bio_ref) {
+> > > > > > > > +		if (dc->error || dc->state == D_SUBMIT) {
+> > > > > > > > +			dc->state = D_DONE;
+> > > > > > > > +			complete_all(&dc->wait);
+> > > > > > > > +		}
+> > > > > > > >  	}
+> > > > > > > >  	spin_unlock_irqrestore(&dc->lock, flags);
+> > > > > > > >  	bio_put(bio);
+> > > > > > > > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> > > > > > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+> > > > > > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
+> > > > > > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > > > > > > +	int flag;
+> > > > > > > >  	block_t lstart, start, len, total_len;
+> > > > > > > >  	int err = 0;
+> > > > > > > >  
+> > > > > > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > > > > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> > > > > > > > +
+> > > > > > > >  	if (dc->state != D_PREP)
+> > > > > > > >  		return 0;
+> > > > > > > >  
+> > > > > > > > @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  		dc->bio_ref++;
+> > > > > > > >  		spin_unlock_irqrestore(&dc->lock, flags);
+> > > > > > > >  
+> > > > > > > > -		atomic_inc(&dcc->queued_discard);
+> > > > > > > > -		dc->queued++;
+> > > > > > > > -		list_move_tail(&dc->list, wait_list);
+> > > > > > > > -
+> > > > > > > >  		/* sanity check on discard range */
+> > > > > > > >  		__check_sit_bitmap(sbi, lstart, lstart + len);
+> > > > > > > >  
+> > > > > > > > @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
+> > > > > > > >  		bio->bi_opf |= flag;
+> > > > > > > >  		submit_bio(bio);
+> > > > > > > > +		if (flag & REQ_NOWAIT) {
+> > > > > > > > +			if (dc->error == -EAGAIN) {
+> > > > > > > > +				spin_lock_irqsave(&dc->lock, flags);
+> > > > > > > > +				dc->len -= len;
+> > > > > > > > +				if (!dc->len) {
+> > > > > > > > +					dc->len = total_len;
+> > > > > > > > +					dc->state = D_PREP;
+> > > > > > > > +					reinit_completion(&dc->wait);
+> > > > > > > > +				} else {
+> > > > > > > > +					dcc->undiscard_blks -= total_len;
+> > > > > > > > +					if (dc->state == D_PARTIAL)
+> > > > > > > > +						dc->state = D_SUBMIT;
+> > > > > > > > +				}
+> > > > > > > > +				err = dc->error;
+> > > > > > > > +				dc->error = 0;
+> > > > > > > > +				spin_unlock_irqrestore(&dc->lock, flags);
+> > > > > > > > +				break;
+> > > > > > > > +			}
+> > > > > > > > +		}
+> > > > > > > > +
+> > > > > > > > +		atomic_inc(&dcc->queued_discard);
+> > > > > > > > +		dc->queued++;
+> > > > > > > > +		list_move_tail(&dc->list, wait_list);
+> > > > > > > >  
+> > > > > > > >  		atomic_inc(&dcc->issued_discard);
+> > > > > > > >  
+> > > > > > > > @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  		len = total_len;
+> > > > > > > >  	}
+> > > > > > > >  
+> > > > > > > > -	if (!err && len)
+> > > > > > > > -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
+> > > > > > > > +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
+> > > > > > > > +		__update_discard_tree_range(sbi, bdev, lstart, start,
+> > > > > > > > +					total_len);
+> > > > > > > >  	return err;
+> > > > > > > >  }
+> > > > > > > >  
+> > > > > > > > @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  	struct list_head *pend_list;
+> > > > > > > >  	struct discard_cmd *dc, *tmp;
+> > > > > > > >  	struct blk_plug plug;
+> > > > > > > > -	int i, issued = 0;
+> > > > > > > > +	int i, err, issued = 0;
+> > > > > > > >  	bool io_interrupted = false;
+> > > > > > > > +	bool retry;
+> > > > > > > >  
+> > > > > > > >  	if (dpolicy->timeout != 0)
+> > > > > > > >  		f2fs_update_time(sbi, dpolicy->timeout);
+> > > > > > > >  
+> > > > > > > > +retry:
+> > > > > > > > +	retry = false;
+> > > > > > > >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+> > > > > > > >  		if (dpolicy->timeout != 0 &&
+> > > > > > > >  				f2fs_time_over(sbi, dpolicy->timeout))
+> > > > > > > > @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  				break;
+> > > > > > > >  			}
+> > > > > > > >  
+> > > > > > > > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > > > > > > > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > > > > > > > +			if (err == -EAGAIN) {
+> > > > > > > > +				congestion_wait(BLK_RW_ASYNC,
+> > > > > > > > +						DEFAULT_IO_TIMEOUT);
+> > > > > > > > +				retry = true;
+> > > > > > > > +			}
+> > > > > > > >  
+> > > > > > > >  			if (issued >= dpolicy->max_requests)
+> > > > > > > >  				break;
+> > > > > > > > @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > > > > >  			break;
+> > > > > > > >  	}
+> > > > > > > >  
+> > > > > > > > +	if (retry)
+> > > > > > > > +		goto retry;
+> > > > > > > > +
+> > > > > > > >  	if (!issued && io_interrupted)
+> > > > > > > >  		issued = -1;
+> > > > > > > >  
+> > > > > > > > -- 
+> > > > > > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> > > > > > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > > > > > 
+> > > > > > -- 
+> > > > > > --
+> > > > > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> > > > > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> > > > 
+> > > > -- 
+> > > > --
+> > > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> > > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> > 
+> > -- 
+> > --
+> > Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
 > 
-
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
