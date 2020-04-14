@@ -2,147 +2,201 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79162C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790BBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552C820678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB7B20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="KqIgm1YW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSbO2uBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391703AbgDNQbn (ORCPT
+        id S2391712AbgDNQcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:31:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391697AbgDNQb0 (ORCPT
+        Tue, 14 Apr 2020 12:32:02 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55121 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391615AbgDNQ3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:31:26 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F65C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:31:18 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id j4so13859344qkc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=VLlqU4q1Tg1FlNFBFuJbOrDiNdW49LDEweZ01PUJ+98=;
-        b=KqIgm1YWeupPQ5AKLZtSk0DWobRLAyx4G0DicpwgPEuui+DlaMsDiKTWKhHut76tPe
-         cYkvg60mA+l32MQOTN2Yo9cr2x9SfF7mZFyW2bPkKGoWpB9W4i9Fg/XLdxsyHIRG6xIv
-         Vdu9Te/V8atdgTrrO4LzPtLZ5EpU2OptdF7l28ADsB3fiAaEBk922FWRSmKrVCt6HG0T
-         xX+N2nBIgTpHnzmZk3oEfPv09qpNqpyFn1/hmFKdTUV/HIjx0pv9hZkhSNQb2tcIGmmd
-         fw0D7qs3MC9hPJXIiHPKn2r0dwccVBsgYR0SfZ5+96775nW8w/RprUF1bKur1zG/sKiy
-         6YYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=VLlqU4q1Tg1FlNFBFuJbOrDiNdW49LDEweZ01PUJ+98=;
-        b=kgU/Kd38GKa87JAhIfkBqJtw/t2bTJO0V4aeqUjmky83QQ+9p7HYX4HenKRpPxA0RL
-         J9Zp/+GJafIZwtDgl6A6hUglFS3N8SyZj0KR8p+b9ehZBU71DVi9uXhJ2ELNm4YMiplX
-         pNZoUIz7en6gqdFRFZQ8i+C8hVcT+NWeAAxB6z45c2UyCz2r1mg3GIoAQfFvBErkM/eP
-         RMSC8YBBFK4FEJhZNYYcnjev9er+tIyxe5xczXZlsLUTWMTNNcXVIri9y0LNPflGEqqY
-         WDgVEecrxXXeo9Bto0c3h8Objv2Sj1h9ZbaO7vJyKmnmdVza6HrVvb/Bb7V8bfvlm0hR
-         KYuA==
-X-Gm-Message-State: AGi0PuaBVEWAV6gVip0bPClaMLWkQrN/Tl3zlhrAiWLbrus3wHTOXUGA
-        048ULx2unOi/fjqOVD54KYXf8w==
-X-Google-Smtp-Source: APiQypJC4xDXZh2RTbpe7APa2bCoLe+wBervVwS7oEjfiQ4YylFde7I8dO9567LUfW0QyczZeiX5wQ==
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr22454961qka.152.1586881876177;
-        Tue, 14 Apr 2020 09:31:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e623])
-        by smtp.gmail.com with ESMTPSA id s14sm8027858qts.70.2020.04.14.09.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:31:15 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:31:14 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20200414163114.GA136578@cmpxchg.org>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
- <20200413180725.GA99267@cmpxchg.org>
- <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
+        Tue, 14 Apr 2020 12:29:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586881747;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SDOntVpJ2wIX8xc8jWrCMYRJV9gG7vNugW7XYn0v5+k=;
+        b=BSbO2uBpU6JWS89wXHHrwCQLQstCPhUay2zv5MuvL5Bq3UDcN+tXEhieqC6WDeHaFR/8l/
+        UKwnArIFp7I83bSPYWArJl3kAYD+UgkVw6NWWfKP2OYeOxmnSVQz28GrzMR66C26aVxJvi
+        p7I2QgT3Y3oOyODgStIFc95r1HC1Eao=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-FtjNr5VWMxa35jaLXC5NoQ-1; Tue, 14 Apr 2020 12:29:02 -0400
+X-MC-Unique: FtjNr5VWMxa35jaLXC5NoQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 797A8107ACC7;
+        Tue, 14 Apr 2020 16:29:01 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A37885DA66;
+        Tue, 14 Apr 2020 16:29:00 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org
+Subject: [PATCH 5/7] x86/module: Use text_poke() for relocations
+Date:   Tue, 14 Apr 2020 11:28:41 -0500
+Message-Id: <bd80e3695203179a7ad12fa2b9ff7d5f1b38f024.1586881704.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1586881704.git.jpoimboe@redhat.com>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:52:30PM +0800, Alex Shi wrote:
-> 在 2020/4/14 上午2:07, Johannes Weiner 写道:
-> > Plus, the overhead of tracking is tiny - 512k per G of swap (0.04%).
-> > 
-> > Maybe we should just delete MEMCG_SWAP and unconditionally track swap
-> > entry ownership when the memory controller is enabled. I don't see a
-> > good reason not to, and it would simplify the entire swapin path, the
-> > LRU locking, and the page->mem_cgroup stabilization rules.
-> > 
-> 
-> Sorry for not follow you up, did you mean just remove the MEMCG_SWAP configuration
-> and keep the feature in default memcg? 
+From: Peter Zijlstra <peterz@infradead.org>
 
-Yes.
+Instead of playing games with module_{dis,en}able_ro(), use existing
+text poking mechanisms to apply relocations after module loading.
 
-> That does can remove lrucare, but PageLRU lock scheme still fails since
-> we can not isolate the page during commit_charge, is that right?
+So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
+two also have STRICT_MODULE_RWX.
 
-No, without lrucare the scheme works. Charges usually do:
+This will allow removal of the last module_disable_ro() usage in
+livepatch.  The ultimate goal is to completely disallow making
+executable mappings writable.
 
-page->mem_cgroup = new;
-SetPageLRU(page);
+[ jpoimboe: Split up patches.  Use mod state to determine whether
+	    memcpy() can be used.  Implement text_poke() for UML. ]
 
-And so if you can TestClearPageLRU(), page->mem_cgroup is stable.
+Cc: x86@kernel.org
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/um/kernel/um_arch.c | 16 ++++++++++++++++
+ arch/x86/kernel/module.c | 34 +++++++++++++++++++++++++++-------
+ 2 files changed, 43 insertions(+), 7 deletions(-)
 
-lrucare charging is the exception: it changes page->mem_cgroup AFTER
-PageLRU has already been set, and even when it CANNOT acquire the
-PageLRU lock itself. It violates the rules.
+diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
+index 0f40eccbd759..375ab720e4aa 100644
+--- a/arch/um/kernel/um_arch.c
++++ b/arch/um/kernel/um_arch.c
+@@ -362,3 +362,19 @@ void __init check_bugs(void)
+ void apply_alternatives(struct alt_instr *start, struct alt_instr *end)
+ {
+ }
++
++void *text_poke(void *addr, const void *opcode, size_t len)
++{
++	/*
++	 * In UML, the only reference to this function is in
++	 * apply_relocate_add(), which shouldn't ever actually call this
++	 * because UML doesn't have live patching.
++	 */
++	WARN_ON(1);
++
++	return memcpy(addr, opcode, len);
++}
++
++void text_poke_sync(void)
++{
++}
+diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+index d5c72cb877b3..b67ec70cf35b 100644
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -126,11 +126,12 @@ int apply_relocate(Elf32_Shdr *sechdrs,
+ 	return 0;
+ }
+ #else /*X86_64*/
+-int apply_relocate_add(Elf64_Shdr *sechdrs,
++static int __apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		   const char *strtab,
+ 		   unsigned int symindex,
+ 		   unsigned int relsec,
+-		   struct module *me)
++		   struct module *me,
++		   void *(*write)(void *dest, const void *src, size_t len))
+ {
+ 	unsigned int i;
+ 	Elf64_Rela *rel =3D (void *)sechdrs[relsec].sh_addr;
+@@ -162,19 +163,19 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		case R_X86_64_64:
+ 			if (*(u64 *)loc !=3D 0)
+ 				goto invalid_relocation;
+-			*(u64 *)loc =3D val;
++			write(loc, &val, 8);
+ 			break;
+ 		case R_X86_64_32:
+ 			if (*(u32 *)loc !=3D 0)
+ 				goto invalid_relocation;
+-			*(u32 *)loc =3D val;
++			write(loc, &val, 4);
+ 			if (val !=3D *(u32 *)loc)
+ 				goto overflow;
+ 			break;
+ 		case R_X86_64_32S:
+ 			if (*(s32 *)loc !=3D 0)
+ 				goto invalid_relocation;
+-			*(s32 *)loc =3D val;
++			write(loc, &val, 4);
+ 			if ((s64)val !=3D *(s32 *)loc)
+ 				goto overflow;
+ 			break;
+@@ -183,7 +184,7 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 			if (*(u32 *)loc !=3D 0)
+ 				goto invalid_relocation;
+ 			val -=3D (u64)loc;
+-			*(u32 *)loc =3D val;
++			write(loc, &val, 4);
+ #if 0
+ 			if ((s64)val !=3D *(s32 *)loc)
+ 				goto overflow;
+@@ -193,7 +194,7 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 			if (*(u64 *)loc !=3D 0)
+ 				goto invalid_relocation;
+ 			val -=3D (u64)loc;
+-			*(u64 *)loc =3D val;
++			write(loc, &val, 8);
+ 			break;
+ 		default:
+ 			pr_err("%s: Unknown rela relocation: %llu\n",
+@@ -215,6 +216,25 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 	       me->name);
+ 	return -ENOEXEC;
+ }
++
++int apply_relocate_add(Elf64_Shdr *sechdrs,
++		   const char *strtab,
++		   unsigned int symindex,
++		   unsigned int relsec,
++		   struct module *me)
++{
++	int ret;
++	bool early =3D me->state =3D=3D MODULE_STATE_UNFORMED;
++
++	ret =3D __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
++				   early ? memcpy : text_poke);
++
++	if (!ret && !early)
++		text_poke_sync();
++
++	return ret;
++}
++
+ #endif
+=20
+ int module_finalize(const Elf_Ehdr *hdr,
+--=20
+2.21.1
 
-If we make MEMCG_SWAP mandatory, we always have cgroup records for
-swapped out pages. That means we can charge all swapin pages
-(incl. readahead pages) directly in __read_swap_cache_async(), before
-setting PageLRU on the new pages.
-
-Then we can delete lrucare.
-
-And then TestClearPageLRU() guarantees page->mem_cgroup is stable.
