@@ -2,116 +2,254 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DCDC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4E2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301A520656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376EF20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qtec.com header.i=@qtec.com header.b="A5fmNoTb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drZVtAqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505469AbgDNUDM (ORCPT
+        id S2505480AbgDNUDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505426AbgDNUCT (ORCPT
+        Tue, 14 Apr 2020 16:03:21 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55765 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2505445AbgDNUCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:02:19 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E8BC03C1A8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:02:19 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 131so748213lfh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qtec.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MRB0ksvQ4dG29cTOUC/flJPc0kMN71llsVsfBnEBR7I=;
-        b=A5fmNoTbHCX/JTsNQXS4inav3bJdDNDFSfh/2RdqtNlPCsrUh2mQPKLn8XxYoMgikf
-         9IUzWVOry7lbRk9V4qAVh4wnBFwJGs+26zMD2FigmBGS/+u6Phrfn5w2+T5AgStl0PJx
-         qYHFaPInYa3JEF16Nnehtm5qWCOKjO9BCNTJU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MRB0ksvQ4dG29cTOUC/flJPc0kMN71llsVsfBnEBR7I=;
-        b=uV22eAix72epJrGMA7CHHhUJb9U0m1H/AudFnerMPqM7RUT83+4OkMO2yVXOscmcin
-         E/2TqdAdrTDKefA7DHRgcCnc7b9zPepJ45ttJiMvKn82DabBxomoTNi63bHNF6QkJ0NO
-         R/aZ2LrLddggkLmvcjjxWgIwojY1aoXzZL3uZHGlRZGewUkjuZbu5OTktTqbT8AXxqPb
-         4qgsd2JC5wplhxX1Cui2NEoh6SwZdGVo4D94+VYP1cWR+tj3aCyzPfsq5fPOhHW2hFpd
-         Th8BwnS/E8cj8OSHnU1rQD0dBQC1028oyEr0Fa7b+vETr0W1+Hus9dKEO9u54BiQPutO
-         nEjA==
-X-Gm-Message-State: AGi0PubqjQR1SSrD+jG6CvhTos1G06jere/V8Ci3luYCurX9pXrIF52P
-        fTbx8xmdVzS6jd4ZBHmydneb0g==
-X-Google-Smtp-Source: APiQypJuHbpOy7oy8YGes+7tejCweE9iUD5goZkzU5ynPG1AQcmzXM2sskWakxg+yfgM6m3/9tvpmg==
-X-Received: by 2002:a19:c14e:: with SMTP id r75mr878761lff.62.1586894537392;
-        Tue, 14 Apr 2020 13:02:17 -0700 (PDT)
-Received: from localhost.localdomain (62-243-86-95-cable.dk.customer.tdc.net. [62.243.86.95])
-        by smtp.gmail.com with ESMTPSA id v4sm3525254ljj.104.2020.04.14.13.02.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:02:16 -0700 (PDT)
-From:   Daniel Gomez <daniel@qtec.com>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Daniel Gomez <daniel@qtec.com>
-Subject: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
-Date:   Tue, 14 Apr 2020 22:01:49 +0200
-Message-Id: <20200414200151.80089-2-daniel@qtec.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200414200151.80089-1-daniel@qtec.com>
-References: <20200414200151.80089-1-daniel@qtec.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Apr 2020 16:02:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586894569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=55O3NEeOmFMu2pI5z7Txh645s57BVO3ScH0+97Mu2jE=;
+        b=drZVtAqGtA22psCAfcnEKXj5DW5QIypeQMu8yXsScRxOBHBY4ezEs+IZMjt50Pv3sJcIAM
+        uGuBpDT+7aSGCGlZDs4RRx1gU9qoFvQN8vw/KlBlWncJ8Lh/eoHv3BxugS/ba/SNnunnSk
+        yNB/uNo2Nby0A+ntCiafyy7svaSr1sA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-9yYcqMz-OTCLtF2LTf-VbA-1; Tue, 14 Apr 2020 16:02:45 -0400
+X-MC-Unique: 9yYcqMz-OTCLtF2LTf-VbA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D33A1005509;
+        Tue, 14 Apr 2020 20:02:42 +0000 (UTC)
+Received: from llong.com (ovpn-118-173.rdu2.redhat.com [10.10.118.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 89A065C1A2;
+        Tue, 14 Apr 2020 20:02:35 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, Waiman Long <longman@redhat.com>
+Subject: [PATCH v3 2/3] crypto: Remove unnecessary memzero_explicit()
+Date:   Tue, 14 Apr 2020 16:02:14 -0400
+Message-Id: <20200414200214.1873-1-longman@redhat.com>
+In-Reply-To: <20200413211550.8307-1-longman@redhat.com>
+References: <20200413211550.8307-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add min and max structures to the v4l2-subdev callback in order to allow
-the subdev to return a range of valid frame intervals.
+Since kfree_sensitive() will do an implicit memzero_explicit(),
+there is no need to call memzero_explicit() before it. Eliminate those
+memzero_explicit() and simplify the call sites. For better correctness,
+keylen is cleared if key memory allocation fails.
 
-This would operate similar to the struct v4l2_subdev_frame_size_enum and
-its max and min values for the width and the height. In this case, the
-possibility to return a frame interval range is added to the v4l2-subdev level
-whenever the v4l2 device operates in step-wise or continuous mode.
-
-Signed-off-by: Daniel Gomez <daniel@qtec.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- include/uapi/linux/v4l2-subdev.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 23 +++++++-----------
+ .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 24 +++++++------------
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c   | 14 ++++-------
+ drivers/crypto/inside-secure/safexcel_hash.c  |  3 +--
+ 4 files changed, 24 insertions(+), 40 deletions(-)
 
-diff --git a/include/uapi/linux/v4l2-subdev.h b/include/uapi/linux/v4l2-subdev.h
-index 03970ce30741..ee15393c58cd 100644
---- a/include/uapi/linux/v4l2-subdev.h
-+++ b/include/uapi/linux/v4l2-subdev.h
-@@ -117,6 +117,8 @@ struct v4l2_subdev_frame_interval {
-  * @code: format code (MEDIA_BUS_FMT_ definitions)
-  * @width: frame width in pixels
-  * @height: frame height in pixels
-+ * @min_interval: min frame interval in seconds
-+ * @max_interval: max frame interval in seconds
-  * @interval: frame interval in seconds
-  * @which: format type (from enum v4l2_subdev_format_whence)
-  */
-@@ -126,9 +128,11 @@ struct v4l2_subdev_frame_interval_enum {
- 	__u32 code;
- 	__u32 width;
- 	__u32 height;
-+	struct v4l2_fract min_interval;
-+	struct v4l2_fract max_interval;
- 	struct v4l2_fract interval;
- 	__u32 which;
--	__u32 reserved[8];
-+	__u32 reserved[4];
- };
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index aa4e8fdc2b32..a2bac10d2876 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
+ {
+ 	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
  
- /**
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	crypto_free_sync_skcipher(op->fallback_tfm);
+ 	pm_runtime_put_sync_suspend(op->ce->dev);
+ }
+@@ -391,14 +388,13 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		dev_dbg(ce->dev, "ERROR: Invalid keylen %u\n", keylen);
+ 		return -EINVAL;
+ 	}
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	op->keylen = keylen;
+ 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+-	if (!op->key)
++	if (unlikely(!op->key)) {
++		op->keylen = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+@@ -416,14 +412,13 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 	if (err)
+ 		return err;
+ 
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	op->keylen = keylen;
+ 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+-	if (!op->key)
++	if (unlikely(!op->key)) {
++		op->keylen = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+index 5246ef4f5430..a24d567a6c36 100644
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+@@ -249,7 +249,6 @@ static int sun8i_ss_cipher(struct skcipher_request *areq)
+ 			offset = areq->cryptlen - ivsize;
+ 			if (rctx->op_dir & SS_DECRYPTION) {
+ 				memcpy(areq->iv, backup_iv, ivsize);
+-				memzero_explicit(backup_iv, ivsize);
+ 				kfree_sensitive(backup_iv);
+ 			} else {
+ 				scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
+@@ -367,10 +366,7 @@ void sun8i_ss_cipher_exit(struct crypto_tfm *tfm)
+ {
+ 	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
+ 
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	crypto_free_sync_skcipher(op->fallback_tfm);
+ 	pm_runtime_put_sync(op->ss->dev);
+ }
+@@ -392,14 +388,13 @@ int sun8i_ss_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		dev_dbg(ss->dev, "ERROR: Invalid keylen %u\n", keylen);
+ 		return -EINVAL;
+ 	}
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	op->keylen = keylen;
+ 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+-	if (!op->key)
++	if (unlikely(!op->key))
++		op->keylen = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+@@ -418,14 +413,13 @@ int sun8i_ss_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	op->keylen = keylen;
+ 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+-	if (!op->key)
++	if (unlikely(!op->key))
++		op->keylen = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+index fd1269900d67..5312bad7534e 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+@@ -341,10 +341,7 @@ void meson_cipher_exit(struct crypto_tfm *tfm)
+ {
+ 	struct meson_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
+ 
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	crypto_free_sync_skcipher(op->fallback_tfm);
+ }
+ 
+@@ -368,14 +365,13 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		dev_dbg(mc->dev, "ERROR: Invalid keylen %u\n", keylen);
+ 		return -EINVAL;
+ 	}
+-	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
+-	}
++	kfree_sensitive(op->key);
+ 	op->keylen = keylen;
+ 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+-	if (!op->key)
++	if (unlikely(!op->key))
++		op->keylen = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	return crypto_sync_skcipher_setkey(op->fallback_tfm, key, keylen);
+ }
+diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
+index 43962bc709c6..4a2d162914de 100644
+--- a/drivers/crypto/inside-secure/safexcel_hash.c
++++ b/drivers/crypto/inside-secure/safexcel_hash.c
+@@ -1081,8 +1081,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
+ 		}
+ 
+ 		/* Avoid leaking */
+-		memzero_explicit(keydup, keylen);
+-		kfree(keydup);
++		kfree_sensitive(keydup);
+ 
+ 		if (ret)
+ 			return ret;
 -- 
-2.25.1
+2.18.1
 
