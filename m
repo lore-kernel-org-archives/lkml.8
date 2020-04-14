@@ -2,104 +2,112 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EEAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B580EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D862074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Fi9Gct8y"
+	by mail.kernel.org (Postfix) with ESMTP id 9786B2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504476AbgDNSvn (ORCPT
+        id S2504490AbgDNSyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504464AbgDNSve (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:51:34 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9B0C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:51:34 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id l60so2714969qtd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+pj2d/UhEffZ+BGtjmYawglygVQvC6XutQRC9yavuQ8=;
-        b=Fi9Gct8ywSHuMzlhqXmHeEouwgNdM/N6XscrCf6dfjOWwL3xnqOO7wmCo9DI1kK9+M
-         PvFGEOIM5KxqND8BqDNIyDixTdJHNANHf9DxV4JSJXTyCQ5KOO3ajb6ButNl55OVqrSt
-         DpF6PtOmcDiaDXJuy+cCA6Qg6VEAAzDXxPA35roai1S6TnDTNUReZ1hdVUq0sPLN7fCZ
-         LPLRr3ZrknbT2Sx1hOPUyA6DuO+C1FS4vz07+CHmu23jNZARj9FbiH+JFyqKWlcKDTIu
-         +gTrVk2EhuBmFG0PTWpkpP89xMzrzkyAPRKFL0LdAuUWyI0m/BT+lxZYa/MKuf2/n3jk
-         EzDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+pj2d/UhEffZ+BGtjmYawglygVQvC6XutQRC9yavuQ8=;
-        b=FefVilPC+K/bya09tSfbIP23bqlFpY+E15+ClLFuR1LBoDd2+qy3meBN7mrcmy6C+z
-         9XikX4cE4X99RDT/m2y5u9SPb6l+qJJ5EDhhPWnxciTglSuQnC+jIq9qRx1Nb5ZrJxOF
-         FGhSPIr6DN2sDwUISrMHJFln8lM2gShImPjngsfYMjD+1V0DlvxmBnP3OFo99pRvj+tv
-         TBDMTHZfpJiyHmQZAjxQayrwmWwFlmyF4QWU6y94+1ndAW/z1yQ4MK1C0BYF12V3NAUP
-         3R4y1EURqXTaX0k8CkyrV2Ui4PWoGPBArUIU5D9AU7mzhAoYg38RFFBTqgWzP4xliav0
-         fdeA==
-X-Gm-Message-State: AGi0PuZqkCOtn26P+Rz4XQK4iJJZMjt0TU4K7cutU8kmhKkFIasDB3di
-        BCDKj0FqgrFJqtR5tMIl3GLNsA==
-X-Google-Smtp-Source: APiQypJPbl2HYS41QgZwy6Kbla3bs4hTTS8H3zzlkOxdjWX2b0lK6R609TRSaWWLbYrQN5WnpagJpg==
-X-Received: by 2002:ac8:3874:: with SMTP id r49mr17790847qtb.66.1586890293466;
-        Tue, 14 Apr 2020 11:51:33 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id t35sm1715044qte.92.2020.04.14.11.51.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 11:51:32 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jOQei-0001C3-DP; Tue, 14 Apr 2020 15:51:32 -0300
-Date:   Tue, 14 Apr 2020 15:51:32 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>, sindhu.devale@intel.com,
-        linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] i40iw: fix null pointer dereference on a null wqe
- pointer
-Message-ID: <20200414185132.GA4556@ziepe.ca>
-References: <20200401224921.405279-1-colin.king@canonical.com>
+        Tue, 14 Apr 2020 14:54:06 -0400
+Received: from mga09.intel.com ([134.134.136.24]:25328 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504434AbgDNSyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:54:04 -0400
+IronPort-SDR: cLw27pjfhl03m3Z5KJ4KurPrcVHYPtVLSC9oxY5/UzjqD23GnSjHZ/Zs3wh3A8E1HE86sGxZxc
+ xDERD+K7QDWg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 11:54:03 -0700
+IronPort-SDR: hoN/JjJah2VUqWKnTwlrf7C3VPLIlSMNSn/PJq4GuJetvLLjSlJI+Hy1urbgwRtKxsxZSt2RKB
+ y0j8foxGrwzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="253280689"
+Received: from svarahab-mobl.amr.corp.intel.com (HELO [10.212.190.40]) ([10.212.190.40])
+  by orsmga003.jf.intel.com with ESMTP; 14 Apr 2020 11:54:00 -0700
+Subject: Re: [PATCH v2] ASoC: bdw-rt5650: remove 3-channel capture support
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Mark Brown <broonie@kernel.org>
+References: <1586766533-18557-1-git-send-email-brent.lu@intel.com>
+ <9a484795-ea4a-e559-4ea9-3de24417ec9b@linux.intel.com>
+ <BN6PR1101MB21320F655CFC1C271CCA9CE097DD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <4b9455cb-d0d2-f5d8-f04c-df6e5abb4441@linux.intel.com>
+Date:   Tue, 14 Apr 2020 13:53:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401224921.405279-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <BN6PR1101MB21320F655CFC1C271CCA9CE097DD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 11:49:21PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the null check for wqe is incorrect and lets a null wqe
-> be passed to set_64bit_val and this indexes into the null pointer
-> causing a null pointer dereference.  Fix this by fixing the null
-> pointer check to return an error if wqe is null.
-> 
-> Addresses-Coverity: ("dereference after a null check")
-> Fixes: 4b34e23f4eaa ("i40iw: Report correct firmware version")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
-> ---
->  drivers/infiniband/hw/i40iw/i40iw_ctrl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to for-rc, thanks
 
-Jason
+On 4/13/20 9:29 AM, Lu, Brent wrote:
+>>
+>> That looks like an error caught by the ALSA conformance tool?
+>>
+>> What are the odds that we have a similar issue with the other broadwell
+>> drivers which don't have a constraint on the number of channels either on
+>> their 'System PCM' dailink?
+>>
+>> Thanks
+>> -Pierre
+>>
+> 
+> Yes. That's why I am sending patch for this old BDW platform...
+> 
+> So far as I know only 'buddy' supports 2/4-channel recording while other BDW
+> Chrome products should support stereo recording only. Therefore, this defect
+> should only be triggered by the ALSA conformance tool.
+> 
+> I am think about implementing the constraint in FE DAI's startup() callback
+> instead of DAI Link's callback. Since the channels_max is 4 for the capture
+> stream, ALSA conformance tool will always test 3-channel recording on any
+> platforms using this driver. Does it make sense to you?
+
+Looking back at previous threads, you indicated that the number of 
+channels supported in propagated from BE to FE, so a similar patch to 
+add 2ch constraints for bwd-rt5677 was dropped  ("ASoC: bdw-rt5677: 
+channel constraint support")
+
+Actually I am not sure it was dropped since later you submitted another 
+patch ("ASoC: bdw-rt5677: enable runtime channel merge"), and my 
+feedback was that it seemed simpler to add constraints on all machine 
+drivers.
+
+And now this patch only addresses bdw-rt5650.c but with the initial 
+solution suggested for bdw-rt5677.c
+
+It seems like a generic problem on all Broadwell devices so let's solve 
+with one a single patchset.
+
+Shouldn't we just add the 2ch constraints for broadwell.c and 
+bdw-rt5677.c, and the 2 or 4ch constraint for bdw-rt5650.c? Would this 
+work for you?
+
+Thanks
+-Pierre
+
