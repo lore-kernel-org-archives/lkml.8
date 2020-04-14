@@ -2,110 +2,666 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C3AC2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96E2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8F020732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5A92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTY8X432"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LrmRmdyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440075AbgDNMYz (ORCPT
+        id S2440091AbgDNMZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
+        Tue, 14 Apr 2020 08:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440027AbgDNMYx (ORCPT
+        by vger.kernel.org with ESMTP id S2440027AbgDNMZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:24:53 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2A1C061A0C;
-        Tue, 14 Apr 2020 05:24:53 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n16so283088pgb.7;
-        Tue, 14 Apr 2020 05:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=Rb/je2Xt8A81/xIFagwzCqIYQq2/FJP34odIX+hqS1U=;
-        b=UTY8X432PCL3xnyTGZfBuHl+0Bru8fmRiTRB3WNI37NEJ7KTMzoFLX2u03Uns6v3uq
-         F/zxrSmFmkbGZUSIlNotinDSbHpNioo3BPibPY7Hq3u6abi0GiJHTsb44JDJWQtNBlCL
-         vWKBwbGGopau7TdSdq4RHW5AYBcXX3ugO1gg/D9VurF5nr9DU9//Hc3tebF+AEXw7p23
-         IjjZGeRtC+Y+5OKiYdSGb61HJWL626shxWK/InsgIDK/s0OVVuqFs8+Mx/Y7v6OWCPfA
-         Y3tBiSH2mMbAHzyhVjdorRuJ5pwhgLWdYVX8ynemqDENLjjuLIWBi7zBSb9Y2MMRVhXc
-         niCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=Rb/je2Xt8A81/xIFagwzCqIYQq2/FJP34odIX+hqS1U=;
-        b=dPUGhstpUOZVJxukD/4L8BjrZIOhm91rFQJWbTEkLwBd3aDug+BBijIQbJAueOfpE+
-         y4B73cr4guPWa6JqPP4DzKo0htrHKv6H7IeOj/diHLr7W4H8WBbAGv1tDdg8qvwW0+lB
-         YBiaLcHOH1hXCzvX8d2/mLl9UQjBUQUsXGotoV7wNwy/0CUyeu1tiUovNBgDcxcGQWCd
-         hXHob9A/dP2MmsPF1DY1EWv1+TTMnQLaKNqCuDosjImOARM0PtL50XN5N7ne2H03p76p
-         D4MAfWB07odS8aoTeBGTQJAIMBTUV7G4qkUviBTmokWAqmzlk4ylJ7mjukVWQfmUt48P
-         rACw==
-X-Gm-Message-State: AGi0PuZWZL8uTymah2emiEgQUmM1hstb/bhoawHgtlR63cfzwmwTJ8CD
-        qJafZTFNXl0nR8ewBoYi42Y=
-X-Google-Smtp-Source: APiQypKChJa2JAz01cF35C6aERv1vm8eZC5rnffnL1LIrhvrzG/AI0EVc0p0VH0u8Wat3QrbLfmOYQ==
-X-Received: by 2002:a62:5e86:: with SMTP id s128mr23700777pfb.157.1586867092854;
-        Tue, 14 Apr 2020 05:24:52 -0700 (PDT)
-Received: from localhost ([203.18.28.220])
-        by smtp.gmail.com with ESMTPSA id p19sm1389150pfn.19.2020.04.14.05.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 05:24:52 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 22:23:11 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 0/4] huge vmalloc mappings
-To:     David Rientjes <rientjes@google.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
-        <alpine.DEB.2.21.2004131727150.260270@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.21.2004131727150.260270@chino.kir.corp.google.com>
+        Tue, 14 Apr 2020 08:25:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9F6C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=UXE4ZvfpHvFCQtXgmZx5sPrQdZniGS5Gq+YeZThj91M=; b=LrmRmdyLMoPXNoS0vgOAFKTl1i
+        pcrAMPT0EMtmcmLMM5IJE8LtIJoSyXEfuzxyhA5vtvW5O0Ynk2q+g+VNyHsp2fGRDveabXdoEK+Li
+        lFRRTG6rKoiqDn9vgr3LBf9DFP7Jk60GxyPCwy8xJVs7VyhsHV2V2PxXPj+IFqxOQRGOh4daZBGs1
+        P5kyDX0o5aNIlUkc/La7pFv/p8K4SxYeFKTc2XaTNMohfEueZF8LHhMq7+aEwkY3cpeabkNbbRJyA
+        CoqwP0LrKfYPwUopVNIcrgAs3A6A9p2KAYbiSrrzYTdOlMa/xMR2PAYkK8siFdO3xCWb+tUIINAjg
+        dNzBvVIw==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOKcr-0004Qr-PN; Tue, 14 Apr 2020 12:25:14 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] dma-mapping: move the remaining DMA API calls out of line
+Date:   Tue, 14 Apr 2020 14:25:03 +0200
+Message-Id: <20200414122506.438134-2-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200414122506.438134-1-hch@lst.de>
+References: <20200414122506.438134-1-hch@lst.de>
 MIME-Version: 1.0
-Message-Id: <1586866432.g0r7udmtjr.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from David Rientjes's message of April 14, 2020 10:27 am:
-> On Mon, 13 Apr 2020, Nicholas Piggin wrote:
->=20
->> We can get a significant win with larger mappings for some of the big
->> global hashes.
->>=20
->> Since RFC, relevant architectures have added p?d_leaf accessors so no
->> real arch changes required, and I changed it not to allocate huge
->> mappings for modules and a bunch of other fixes.
->>=20
->=20
-> Hi Nicholas,
->=20
-> Any performance numbers to share besides the git diff in the last patch i=
-n=20
-> the series?  I'm wondering if anything from mmtests or lkp-tests makes=20
-> sense to try?
+For a long time the DMA API has been implemented inline in dma-mapping.h,
+but the function bodies can be quite large.  Move them all out of line.
 
-Hey, no I don't have any other tests I've run. Some of the networking
-hashes do make use of it as well though, and might see a few % in
-the right kind of workload. There's probably a bunch of other stuff
-where it could help a little bit, looking through the tree, I just don't
-have anything specific.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/dma-direct.h  |  58 +++++++++
+ include/linux/dma-mapping.h | 247 ++++--------------------------------
+ kernel/dma/direct.c         |   9 --
+ kernel/dma/mapping.c        | 164 ++++++++++++++++++++++++
+ 4 files changed, 244 insertions(+), 234 deletions(-)
 
-Thanks,
-Nick
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index 24b8684aa21d..da689ad5fffd 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -85,4 +85,62 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+ 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+ 		unsigned long attrs);
+ int dma_direct_supported(struct device *dev, u64 mask);
++dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
++		unsigned long offset, size_t size, enum dma_data_direction dir,
++		unsigned long attrs);
++int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
++		enum dma_data_direction dir, unsigned long attrs);
++dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs);
++
++#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
++    defined(CONFIG_SWIOTLB)
++void dma_direct_sync_single_for_device(struct device *dev,
++		dma_addr_t addr, size_t size, enum dma_data_direction dir);
++void dma_direct_sync_sg_for_device(struct device *dev,
++		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
++#else
++static inline void dma_direct_sync_single_for_device(struct device *dev,
++		dma_addr_t addr, size_t size, enum dma_data_direction dir)
++{
++}
++static inline void dma_direct_sync_sg_for_device(struct device *dev,
++		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
++{
++}
++#endif
++
++#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
++    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) || \
++    defined(CONFIG_SWIOTLB)
++void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs);
++void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
++		int nents, enum dma_data_direction dir, unsigned long attrs);
++void dma_direct_sync_single_for_cpu(struct device *dev,
++		dma_addr_t addr, size_t size, enum dma_data_direction dir);
++void dma_direct_sync_sg_for_cpu(struct device *dev,
++		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
++#else
++static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
++{
++}
++static inline void dma_direct_unmap_sg(struct device *dev,
++		struct scatterlist *sgl, int nents, enum dma_data_direction dir,
++		unsigned long attrs)
++{
++}
++static inline void dma_direct_sync_single_for_cpu(struct device *dev,
++		dma_addr_t addr, size_t size, enum dma_data_direction dir)
++{
++}
++static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
++		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
++{
++}
++#endif
++
++size_t dma_direct_max_mapping_size(struct device *dev);
++
+ #endif /* _LINUX_DMA_DIRECT_H */
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 330ad58fbf4d..793ad775cd54 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -188,73 +188,6 @@ static inline int dma_mmap_from_global_coherent(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_DMA_DECLARE_COHERENT */
+ 
+-static inline bool dma_is_direct(const struct dma_map_ops *ops)
+-{
+-	return likely(!ops);
+-}
+-
+-/*
+- * All the dma_direct_* declarations are here just for the indirect call bypass,
+- * and must not be used directly drivers!
+- */
+-dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
+-		unsigned long offset, size_t size, enum dma_data_direction dir,
+-		unsigned long attrs);
+-int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+-		enum dma_data_direction dir, unsigned long attrs);
+-dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+-		size_t size, enum dma_data_direction dir, unsigned long attrs);
+-
+-#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+-    defined(CONFIG_SWIOTLB)
+-void dma_direct_sync_single_for_device(struct device *dev,
+-		dma_addr_t addr, size_t size, enum dma_data_direction dir);
+-void dma_direct_sync_sg_for_device(struct device *dev,
+-		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
+-#else
+-static inline void dma_direct_sync_single_for_device(struct device *dev,
+-		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+-{
+-}
+-static inline void dma_direct_sync_sg_for_device(struct device *dev,
+-		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+-{
+-}
+-#endif
+-
+-#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+-    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) || \
+-    defined(CONFIG_SWIOTLB)
+-void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+-		size_t size, enum dma_data_direction dir, unsigned long attrs);
+-void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+-		int nents, enum dma_data_direction dir, unsigned long attrs);
+-void dma_direct_sync_single_for_cpu(struct device *dev,
+-		dma_addr_t addr, size_t size, enum dma_data_direction dir);
+-void dma_direct_sync_sg_for_cpu(struct device *dev,
+-		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
+-#else
+-static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+-		size_t size, enum dma_data_direction dir, unsigned long attrs)
+-{
+-}
+-static inline void dma_direct_unmap_sg(struct device *dev,
+-		struct scatterlist *sgl, int nents, enum dma_data_direction dir,
+-		unsigned long attrs)
+-{
+-}
+-static inline void dma_direct_sync_single_for_cpu(struct device *dev,
+-		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+-{
+-}
+-static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
+-		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+-{
+-}
+-#endif
+-
+-size_t dma_direct_max_mapping_size(struct device *dev);
+-
+ #ifdef CONFIG_HAS_DMA
+ #include <asm/dma-mapping.h>
+ 
+@@ -271,164 +204,6 @@ static inline void set_dma_ops(struct device *dev,
+ 	dev->dma_ops = dma_ops;
+ }
+ 
+-static inline dma_addr_t dma_map_page_attrs(struct device *dev,
+-		struct page *page, size_t offset, size_t size,
+-		enum dma_data_direction dir, unsigned long attrs)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-	dma_addr_t addr;
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		addr = dma_direct_map_page(dev, page, offset, size, dir, attrs);
+-	else
+-		addr = ops->map_page(dev, page, offset, size, dir, attrs);
+-	debug_dma_map_page(dev, page, offset, size, dir, addr);
+-
+-	return addr;
+-}
+-
+-static inline void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr,
+-		size_t size, enum dma_data_direction dir, unsigned long attrs)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		dma_direct_unmap_page(dev, addr, size, dir, attrs);
+-	else if (ops->unmap_page)
+-		ops->unmap_page(dev, addr, size, dir, attrs);
+-	debug_dma_unmap_page(dev, addr, size, dir);
+-}
+-
+-/*
+- * dma_maps_sg_attrs returns 0 on error and > 0 on success.
+- * It should never return a value < 0.
+- */
+-static inline int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+-				   int nents, enum dma_data_direction dir,
+-				   unsigned long attrs)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-	int ents;
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
+-	else
+-		ents = ops->map_sg(dev, sg, nents, dir, attrs);
+-	BUG_ON(ents < 0);
+-	debug_dma_map_sg(dev, sg, nents, ents, dir);
+-
+-	return ents;
+-}
+-
+-static inline void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+-				      int nents, enum dma_data_direction dir,
+-				      unsigned long attrs)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	debug_dma_unmap_sg(dev, sg, nents, dir);
+-	if (dma_is_direct(ops))
+-		dma_direct_unmap_sg(dev, sg, nents, dir, attrs);
+-	else if (ops->unmap_sg)
+-		ops->unmap_sg(dev, sg, nents, dir, attrs);
+-}
+-
+-static inline dma_addr_t dma_map_resource(struct device *dev,
+-					  phys_addr_t phys_addr,
+-					  size_t size,
+-					  enum dma_data_direction dir,
+-					  unsigned long attrs)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-	dma_addr_t addr = DMA_MAPPING_ERROR;
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-
+-	/* Don't allow RAM to be mapped */
+-	if (WARN_ON_ONCE(pfn_valid(PHYS_PFN(phys_addr))))
+-		return DMA_MAPPING_ERROR;
+-
+-	if (dma_is_direct(ops))
+-		addr = dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
+-	else if (ops->map_resource)
+-		addr = ops->map_resource(dev, phys_addr, size, dir, attrs);
+-
+-	debug_dma_map_resource(dev, phys_addr, size, dir, addr);
+-	return addr;
+-}
+-
+-static inline void dma_unmap_resource(struct device *dev, dma_addr_t addr,
+-				      size_t size, enum dma_data_direction dir,
+-				      unsigned long attrs)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (!dma_is_direct(ops) && ops->unmap_resource)
+-		ops->unmap_resource(dev, addr, size, dir, attrs);
+-	debug_dma_unmap_resource(dev, addr, size, dir);
+-}
+-
+-static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
+-					   size_t size,
+-					   enum dma_data_direction dir)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
+-	else if (ops->sync_single_for_cpu)
+-		ops->sync_single_for_cpu(dev, addr, size, dir);
+-	debug_dma_sync_single_for_cpu(dev, addr, size, dir);
+-}
+-
+-static inline void dma_sync_single_for_device(struct device *dev,
+-					      dma_addr_t addr, size_t size,
+-					      enum dma_data_direction dir)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		dma_direct_sync_single_for_device(dev, addr, size, dir);
+-	else if (ops->sync_single_for_device)
+-		ops->sync_single_for_device(dev, addr, size, dir);
+-	debug_dma_sync_single_for_device(dev, addr, size, dir);
+-}
+-
+-static inline void
+-dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
+-		    int nelems, enum dma_data_direction dir)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		dma_direct_sync_sg_for_cpu(dev, sg, nelems, dir);
+-	else if (ops->sync_sg_for_cpu)
+-		ops->sync_sg_for_cpu(dev, sg, nelems, dir);
+-	debug_dma_sync_sg_for_cpu(dev, sg, nelems, dir);
+-}
+-
+-static inline void
+-dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+-		       int nelems, enum dma_data_direction dir)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
+-		dma_direct_sync_sg_for_device(dev, sg, nelems, dir);
+-	else if (ops->sync_sg_for_device)
+-		ops->sync_sg_for_device(dev, sg, nelems, dir);
+-	debug_dma_sync_sg_for_device(dev, sg, nelems, dir);
+-
+-}
+ 
+ static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
+ {
+@@ -439,6 +214,28 @@ static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
+ 	return 0;
+ }
+ 
++dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
++		size_t offset, size_t size, enum dma_data_direction dir,
++		unsigned long attrs);
++void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir, unsigned long attrs);
++int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
++		enum dma_data_direction dir, unsigned long attrs);
++void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
++				      int nents, enum dma_data_direction dir,
++				      unsigned long attrs);
++dma_addr_t dma_map_resource(struct device *dev, phys_addr_t phys_addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs);
++void dma_unmap_resource(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir, unsigned long attrs);
++void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir);
++void dma_sync_single_for_device(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir);
++void dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
++		    int nelems, enum dma_data_direction dir);
++void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
++		       int nelems, enum dma_data_direction dir);
+ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+ 		gfp_t flag, unsigned long attrs);
+ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 8f4bbdaf965e..f1a9099a4b5b 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -260,7 +260,6 @@ void dma_direct_sync_single_for_device(struct device *dev,
+ 	if (!dev_is_dma_coherent(dev))
+ 		arch_sync_dma_for_device(paddr, size, dir);
+ }
+-EXPORT_SYMBOL(dma_direct_sync_single_for_device);
+ 
+ void dma_direct_sync_sg_for_device(struct device *dev,
+ 		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+@@ -280,7 +279,6 @@ void dma_direct_sync_sg_for_device(struct device *dev,
+ 					dir);
+ 	}
+ }
+-EXPORT_SYMBOL(dma_direct_sync_sg_for_device);
+ #endif
+ 
+ #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+@@ -299,7 +297,6 @@ void dma_direct_sync_single_for_cpu(struct device *dev,
+ 	if (unlikely(is_swiotlb_buffer(paddr)))
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
+ }
+-EXPORT_SYMBOL(dma_direct_sync_single_for_cpu);
+ 
+ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+@@ -321,7 +318,6 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 	if (!dev_is_dma_coherent(dev))
+ 		arch_sync_dma_for_cpu_all();
+ }
+-EXPORT_SYMBOL(dma_direct_sync_sg_for_cpu);
+ 
+ void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+@@ -334,7 +330,6 @@ void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+ 	if (unlikely(is_swiotlb_buffer(phys)))
+ 		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
+ }
+-EXPORT_SYMBOL(dma_direct_unmap_page);
+ 
+ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+ 		int nents, enum dma_data_direction dir, unsigned long attrs)
+@@ -346,7 +341,6 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+ 		dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
+ 			     attrs);
+ }
+-EXPORT_SYMBOL(dma_direct_unmap_sg);
+ #endif
+ 
+ dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
+@@ -373,7 +367,6 @@ dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
+ 		arch_sync_dma_for_device(phys, size, dir);
+ 	return dma_addr;
+ }
+-EXPORT_SYMBOL(dma_direct_map_page);
+ 
+ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 		enum dma_data_direction dir, unsigned long attrs)
+@@ -395,7 +388,6 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 	dma_direct_unmap_sg(dev, sgl, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
+ 	return 0;
+ }
+-EXPORT_SYMBOL(dma_direct_map_sg);
+ 
+ dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+@@ -412,7 +404,6 @@ dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+ 
+ 	return dma_addr;
+ }
+-EXPORT_SYMBOL(dma_direct_map_resource);
+ 
+ int dma_direct_get_sgtable(struct device *dev, struct sg_table *sgt,
+ 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 98e3d873792e..8e4155f9ee69 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -105,6 +105,170 @@ void *dmam_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+ }
+ EXPORT_SYMBOL(dmam_alloc_attrs);
+ 
++static inline bool dma_is_direct(const struct dma_map_ops *ops)
++{
++	return likely(!ops);
++}
++
++dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
++		size_t offset, size_t size, enum dma_data_direction dir,
++		unsigned long attrs)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++	dma_addr_t addr;
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		addr = dma_direct_map_page(dev, page, offset, size, dir, attrs);
++	else
++		addr = ops->map_page(dev, page, offset, size, dir, attrs);
++	debug_dma_map_page(dev, page, offset, size, dir, addr);
++
++	return addr;
++}
++EXPORT_SYMBOL(dma_map_page_attrs);
++
++void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		dma_direct_unmap_page(dev, addr, size, dir, attrs);
++	else if (ops->unmap_page)
++		ops->unmap_page(dev, addr, size, dir, attrs);
++	debug_dma_unmap_page(dev, addr, size, dir);
++}
++EXPORT_SYMBOL(dma_unmap_page_attrs);
++
++/*
++ * dma_maps_sg_attrs returns 0 on error and > 0 on success.
++ * It should never return a value < 0.
++ */
++int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++	int ents;
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
++	else
++		ents = ops->map_sg(dev, sg, nents, dir, attrs);
++	BUG_ON(ents < 0);
++	debug_dma_map_sg(dev, sg, nents, ents, dir);
++
++	return ents;
++}
++EXPORT_SYMBOL(dma_map_sg_attrs);
++
++void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
++				      int nents, enum dma_data_direction dir,
++				      unsigned long attrs)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	debug_dma_unmap_sg(dev, sg, nents, dir);
++	if (dma_is_direct(ops))
++		dma_direct_unmap_sg(dev, sg, nents, dir, attrs);
++	else if (ops->unmap_sg)
++		ops->unmap_sg(dev, sg, nents, dir, attrs);
++}
++EXPORT_SYMBOL(dma_unmap_sg_attrs);
++
++dma_addr_t dma_map_resource(struct device *dev, phys_addr_t phys_addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++	dma_addr_t addr = DMA_MAPPING_ERROR;
++
++	BUG_ON(!valid_dma_direction(dir));
++
++	/* Don't allow RAM to be mapped */
++	if (WARN_ON_ONCE(pfn_valid(PHYS_PFN(phys_addr))))
++		return DMA_MAPPING_ERROR;
++
++	if (dma_is_direct(ops))
++		addr = dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
++	else if (ops->map_resource)
++		addr = ops->map_resource(dev, phys_addr, size, dir, attrs);
++
++	debug_dma_map_resource(dev, phys_addr, size, dir, addr);
++	return addr;
++}
++EXPORT_SYMBOL(dma_map_resource);
++
++void dma_unmap_resource(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (!dma_is_direct(ops) && ops->unmap_resource)
++		ops->unmap_resource(dev, addr, size, dir, attrs);
++	debug_dma_unmap_resource(dev, addr, size, dir);
++}
++EXPORT_SYMBOL(dma_unmap_resource);
++
++void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
++	else if (ops->sync_single_for_cpu)
++		ops->sync_single_for_cpu(dev, addr, size, dir);
++	debug_dma_sync_single_for_cpu(dev, addr, size, dir);
++}
++EXPORT_SYMBOL(dma_sync_single_for_cpu);
++
++void dma_sync_single_for_device(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		dma_direct_sync_single_for_device(dev, addr, size, dir);
++	else if (ops->sync_single_for_device)
++		ops->sync_single_for_device(dev, addr, size, dir);
++	debug_dma_sync_single_for_device(dev, addr, size, dir);
++}
++EXPORT_SYMBOL(dma_sync_single_for_device);
++
++void dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
++		    int nelems, enum dma_data_direction dir)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		dma_direct_sync_sg_for_cpu(dev, sg, nelems, dir);
++	else if (ops->sync_sg_for_cpu)
++		ops->sync_sg_for_cpu(dev, sg, nelems, dir);
++	debug_dma_sync_sg_for_cpu(dev, sg, nelems, dir);
++}
++EXPORT_SYMBOL(dma_sync_sg_for_cpu);
++
++void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
++		       int nelems, enum dma_data_direction dir)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	BUG_ON(!valid_dma_direction(dir));
++	if (dma_is_direct(ops))
++		dma_direct_sync_sg_for_device(dev, sg, nelems, dir);
++	else if (ops->sync_sg_for_device)
++		ops->sync_sg_for_device(dev, sg, nelems, dir);
++	debug_dma_sync_sg_for_device(dev, sg, nelems, dir);
++}
++EXPORT_SYMBOL(dma_sync_sg_for_device);
++
+ /*
+  * Create scatter-list for the already allocated DMA buffer.
+  */
+-- 
+2.25.1
+
