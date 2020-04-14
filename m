@@ -2,216 +2,271 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA293C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3876C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8BB206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF9120732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7vtx7Ln"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LoFK+I6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440984AbgDNPvs (ORCPT
+        id S2440997AbgDNPwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
+        Tue, 14 Apr 2020 11:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440940AbgDNPvL (ORCPT
+        by vger.kernel.org with ESMTP id S2440987AbgDNPwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:51:11 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB20CC061A0C;
-        Tue, 14 Apr 2020 08:51:11 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id s18so10368527ioe.10;
-        Tue, 14 Apr 2020 08:51:11 -0700 (PDT)
+        Tue, 14 Apr 2020 11:52:30 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C224AC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:52:28 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x18so10635792wrq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:52:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4cAyVbZ5COn1OcRqgq9nR7fLvg4V1HkON81sQ7ObhuU=;
-        b=M7vtx7Ln812XR9re0r9ZDNtO/hiwSJp5CEqqgv2pc8Y2OjQKDtWwOS3CYL6rt3RPz0
-         mwVy9PVKaq3SVzxkCdlXwrGLaQ4OW5MsZlpDwnppdoF9apHhqRAq5783Y9AR483tzs1b
-         +ocnJs1zoH4T3kX7jQqTzqqplSGGNkb8clc/YVpD+rUn3mXw31rpdty2n4+BW5yKRmqE
-         UhnSG3Dd74p2lBT38ag5yxw8vmMiU5sQeHQO/keZ3bJGzEu3cSW2pm6dSyvcMass/CS3
-         G3VrDl4HVxx/tP3PODLlbqJ2qwCIHB0gVtlEsBBRtPo1gVoPwf33Gz0lvwgBK1mteIR7
-         qqUA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=uN0TIUWhXWSobokMdn3Cae3WuG2MAfFXZCbP4BbRQYI=;
+        b=LoFK+I6tpK526IXb/HJ63KdTycL+qUFmUZnxNw8NLro/U5V6BX/SlkDOLyAHVMnLyf
+         MQYdOgBvWW1X/L60TkRCc9MqA++270r6iAJ3ZRwlPKb1/NPM6Nk2MqPxCkRV8WjFlNN6
+         ZmRklPNnVF95N1yZaY2U9UjqlzubGJnw5Jt+14k6JqanWr1bFHv/r0ULo10OafDMXHkX
+         SrTjzKM4L3IwKydPOEyvOOf2opVI6J5Tcf7pES5Rk7x84jK1sssdWh6SsSSs9ArEwZGc
+         Hqej7gJERbL+fmTeMb5jyNoQPzFB1ZaF6WXrzEjkYZTX5y6yd8dZtcwIFWIVXqu9aSKd
+         RnGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4cAyVbZ5COn1OcRqgq9nR7fLvg4V1HkON81sQ7ObhuU=;
-        b=acxsXWuMKdXt7099V8cgBE2wyvd9MHWMNBdbTlfazfmU6ENYqWQqAC7eA1PFOxFaEx
-         /oX70M9Cm3kACA+nDFyAyvg31olYaqxuksdG2cmfrhWdDcnIUH1gtDJ9uekdlerD5qBp
-         1LLILRsEPuHDVxubrNzummZB/fhpYjHoNHIKpfJkhs+xePNtL+uqs6FFjkfqZsKwDiW3
-         gHXbWU8cBLgKGwqlqXXMbh33KWyeWHqMJkBCulgUZZxRXbzo+QqRLfWsV766MeiLUVuS
-         LMVPHrsV/l0iFCCTjBeqxlS5if7+e4bOVcFC/my4RHBtdwKSoYNdU08azwMpelznQ4zZ
-         PWcw==
-X-Gm-Message-State: AGi0PubDNPdGY46F7B829VQNIY7lw/higDLY4lXNKRgYp6j312fI1qZp
-        erDqnYFFwuAkfg4sBIUArL7G6OR8Go06k+x1Z5c=
-X-Google-Smtp-Source: APiQypJom1qT9CGtZyGfBzB/8Nk8sayobqgdaf2m8OHsxrE9Xnj1ZapGSrh/Sv6+0IV8YLP5LUEe+G0Es8jRtvWynWY=
-X-Received: by 2002:a02:9642:: with SMTP id c60mr21342669jai.87.1586879470745;
- Tue, 14 Apr 2020 08:51:10 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=uN0TIUWhXWSobokMdn3Cae3WuG2MAfFXZCbP4BbRQYI=;
+        b=HXxfjZwDyqJ1hzit3Uo/U0XCiFeOC3cg2LIVFXIhMVHX+1n9m6gfw7hKmF53y9DKRm
+         XJfC9N71oUwLeDE410yNyQTu/YJ79G0XgmvZCIW6q+qgxARZdIPEvwNrmNkBbGpfmTF8
+         Q8GK8obU9sOTgYM7ImkHnS13+BIb7ExoT3xD2bkQD4s4vo3CQJ7plRXgWwgTa6w7yhpR
+         3LcJAOVzpTtVZogBpwVu1HkWt6ElfI3lTJO36jXswfANnhe4S5VbUX1AMYjdAWW8ibvz
+         /SLtRcZdsSfnUnTF/RW/i6bT3AXFlvlVmjJj6EX7lHss+W9RjqGs/BOSA1rknuRwLZxQ
+         wvtA==
+X-Gm-Message-State: AGi0PubpAeP36Q69z5CTeClMVllIxCmdPFNHnt5Gg4Oa+qrD8cPhHkyR
+        mM/iAr/pVAhkddGkj+pwK3Dr7w==
+X-Google-Smtp-Source: APiQypJtqRV/cPyJgxPWg14A9VkXjv2ap4pSZVR4LkFlYNdUgsM2F2H1r9AIWBy+S8TWH93JMDygBQ==
+X-Received: by 2002:adf:fd0a:: with SMTP id e10mr10074700wrr.160.1586879547477;
+        Tue, 14 Apr 2020 08:52:27 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id n124sm19673794wma.11.2020.04.14.08.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 08:52:26 -0700 (PDT)
+References: <20200407144658.829246-1-maz@kernel.org> <20200414142018.6e7e5ec3@why>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] irqchip/meson-gpio: Fix HARDIRQ-safe -> HARDIRQ-unsafe lock order
+In-reply-to: <20200414142018.6e7e5ec3@why>
+Date:   Tue, 14 Apr 2020 17:52:25 +0200
+Message-ID: <1jeesqt686.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20200412191824.GA109724@laptop> <CAKgT0Udn3sE4iZci2dRNun6i3DMoG==kuksX_gLXWQORXA1kWA@mail.gmail.com>
- <20200413215508.GA122208@laptop>
-In-Reply-To: <20200413215508.GA122208@laptop>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 14 Apr 2020 08:50:59 -0700
-Message-ID: <CAKgT0UeThCT2FrccmP1TdNuWD9S2cgXOhu2423MQteOKw5Xpvw@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] BUG: e1000: infinitely loop at e1000_set_link_ksettings
-To:     Maxim Zhukov <mussitantesmortem@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 2:55 PM Maxim Zhukov
-<mussitantesmortem@gmail.com> wrote:
->
-> On Mon, Apr 13, 2020 at 11:47:21AM -0700, Alexander Duyck wrote:
-> > On Sun, Apr 12, 2020 at 4:12 PM Maxim Zhukov
-> > <mussitantesmortem@gmail.com> wrote:
-> > >
-> > > On Qemu X86 (kernel 5.4.31):
-> > What version of QEMU are you running? That would tell us more about
-> > how the device is being emulated.
-> $ qemu-system-i386 --version
-> QEMU emulator version 4.2.0
-> Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers
-> >
-> > > The system-maintenance daemon hangout on D-state at startup on
-> > > ioctl(ETHTOOL_SSET) for setup advertising, duplex, etc...
-> > >
-> > > kgdb stacktrace:
-> > >
-> > > ----
-> > >
-> >
-> > I am dropping the first backtrace since it is a symptom of the trace
-> > below. Essentially the issue is all calls to e1000_reinit_locked get
-> > stuck because the __E1000_RESETTING bit is stuck set because this
-> > first thread is stuck waiting on napi_disable to succeed.
-> >
-> > > Also stalled workers backtrace:
-> > >
-> > > #3  0xc19e0870 in schedule () at kernel/sched/core.c:4150
-> > > #4  0xc19e2f3e in schedule_timeout (timeout=<optimized out>) at kernel/time/timer.c:1895
-> > > #5  0xc19e3041 in schedule_timeout_uninterruptible (timeout=<optimized out>) at kernel/time/timer.c:1929
-> > > #6  0xc10b3dd1 in msleep (msecs=<optimized out>) at kernel/time/timer.c:2048
-> > > #7  0xc1771fb4 in napi_disable (n=0xdec0b7d8) at net/core/dev.c:6240
-> > > #8  0xc15f0e87 in e1000_down (adapter=0xdec0b540) at drivers/net/ethernet/intel/e1000/e1000_main.c:522
-> > > #9  0xc15f0f35 in e1000_reinit_locked (adapter=0xdec0b540) at drivers/net/ethernet/intel/e1000/e1000_main.c:545
-> > > #10 0xc15f6ecd in e1000_reset_task (work=0xdec0bca0) at drivers/net/ethernet/intel/e1000/e1000_main.c:3506
-> > > #11 0xc106c882 in process_one_work (worker=0xdef4d840, work=0xdec0bca0) at kernel/workqueue.c:2272
-> > > #12 0xc106ccc6 in worker_thread (__worker=0xdef4d840) at kernel/workqueue.c:2418
-> > > #13 0xc1070657 in kthread (_create=0xdf508800) at kernel/kthread.c:255
-> > > #14 0xc19e4078 in ret_from_fork () at arch/x86/entry/entry_32.S:813
-> >
-> > So the question I would have is what is causing napi_disable to stall
-> > out? I have looked over the latest QEMU code and the driver code and
-> > both the Tx and Rx paths should have been shut down at the point where
-> > napi_disable is called. I'm assuming there is little to no traffic
-> > present so the NAPI thread shouldn't be stuck in the polling state for
-> > that reason. The only other thing I can think of is that somehow this
-> > is getting scheduled after the interface was already brought down
-> > causing napi_disable to be called a second time for the same NAPI
-> > instance.
-> In the log below udhcpc sends discover packets in the raw mode (https://git.busybox.net/busybox/tree/networking/udhcp/dhcpc.c#n738), maybe it's triggered stall?
->
-> >
-> > A dmesg log for the system at the time of the hang might be useful as
-> > it could include some information on what other configuration options
-> > might have been changed that led to us blocking on the napi_disable
-> > call.
->
-> running command:
-> qemu-system-i386 \
->         -kernel bzImage \
->         -drive file=rootfs.ext2,index=0,media=disk,format=raw \
->         -drive file=storage.ext2,index=1,media=disk,format=raw \
->         -smp 2 \
->         -m 2047M \
->         -enable-kvm \
->         -append "console=ttyS0 root=/dev/sda rw storage=/dev/sdb rw virtfs_tag=host0" \
->         -netdev tap,id=mynet1,ifname=tap0,script=no,downscript=no -device e1000,netdev=mynet1,mac=02:88:b1:e7:d1:f7 \
->         -netdev tap,id=mynet2,ifname=tap1,script=no,downscript=no -device e1000,netdev=mynet2,mac=02:70:67:e7:d1:f7 \
->         -virtfs local,path=./share/,mount_tag=host0,security_model=mapped-file,id=host0 \
->         -nographic
->
->
-> dmesg:
->
-> ---------
-> [    2.113622] Run /sbin/init as init process
-> [    2.145965] random: init: uninitialized urandom read (4 bytes read)
-> [    3.175813] random: modprobe: uninitialized urandom read (4 bytes read)
-> [    3.182942] modprobe (1267) used greatest stack depth: 5904 bytes left
-> [    3.193894] EXT4-fs (sdb): mounting ext2 file system using the ext4 subsystem
-> [    3.196343] EXT4-fs (sdb): warning: mounting unchecked fs, running e2fsck is recommended
-> [    3.406740] EXT4-fs (sdb): mounted filesystem without journal. Opts: (null)
-> [    3.408419] ext2 filesystem being mounted at /boot supports timestamps until 2038 (0x7fffffff)
-> [    3.412388] random: sh: uninitialized urandom read (4 bytes read)
-> [    3.415512] random: startup.sh: uninitialized urandom read (4 bytes read)
-> [    3.907569] 8021q: adding VLAN 0 to HW filter on device eth0
-> [    3.909715] e1000: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
-> [    3.912057] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
-> [    3.922927] 8021q: adding VLAN 0 to HW filter on device x86eth100
-> [    3.934933] 8021q: adding VLAN 0 to HW filter on device eth1
-> [    3.936800] e1000: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
-> [    3.939092] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
-> [    3.948995] 8021q: adding VLAN 0 to HW filter on device x86eth200
-> [    4.178555] e1000 0000:00:04.0 eth1: Reset adapter
-> [    4.219492] dmsd[wrkr] (1350) used greatest stack depth: 5536 bytes left
-> [    4.368172] random: crng init done
-> [    4.369034] random: 6 urandom warning(s) missed due to ratelimiting
-> [    4.502536] 8021q: adding VLAN 0 to HW filter on device x86eth100
-> [    4.520655] 8021q: adding VLAN 0 to HW filter on device x86eth200
-> [    4.558841] br1: port 1(x86eth100) entered blocking state
-> [    4.560342] br1: port 1(x86eth100) entered disabled state
-> [    4.561649] device x86eth100 entered promiscuous mode
-> [    4.562823] device eth0 entered promiscuous mode
-> [    9.705295] 8021q: adding VLAN 0 to HW filter on device eth0
-> [   11.731948] e1000: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
-> ----
->
-> syslog:
->
-> ----
-> Apr 14 00:31:23 [ALRT] default_port_status_set[1716]: ioctl(eth0, ETHTOOL_SSET)
-> Apr 14 00:31:23 [ALRT] default_port_status_set[1716]: ifup eth0
-> Apr 14 00:31:23 [INFO] kernel: [    9.705295] 8021q: adding VLAN 0 to HW filter on device eth0
-> Apr 14 00:31:23 [ALRT] default_port_status_set[1717]: ioctl(eth1, ETHTOOL_SSET)                                   <<<<<<<<<<< last ioctl
-> Apr 14 00:31:24 [INFO] udhcpc[1545]: sending discover
-> Apr 14 00:31:25 [INFO] kernel: [   11.731948] e1000: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
-> ----
->
->
-> >
-> > Other than that, how easy is it to trigger this hang. Is this
-> > happening every time you start the guest, or does this just happen
-> > periodically?
-> It's happening periodically, sometimes the chance is very low.
->
-> I did't find the way for reproduce this hang (I tried to call ioctl + ifups in several configurations)
->
-> Thanks for your attention!
 
-Thanks for the logs. I'll have to look it over and see if I can figure
-out what is going on. It looks like something is triggering a reset
-for eth1 almost immediately after the link is up. I'm suspecting some
-sort of race during initialization time resulting in us coming up and
-triggering the reset while the interface is actually down and causing
-the hang.
+On Tue 14 Apr 2020 at 15:20, Marc Zyngier <maz@kernel.org> wrote:
 
-One other question. Are you always seeing this on eth1 or is it
-cycling between eth1 and eth0 when it occurs?
+> On Tue,  7 Apr 2020 15:46:58 +0100
+> Marc Zyngier <maz@kernel.org> wrote:
+>
+> +Jerome, Martin,
+>
+>> Running a lockedp-enabled kernel on a vim3l board (Amlogic SM1)
+>> leads to the following splat:
+>> 
+>> [   13.557138] WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+>> [   13.587485] ip/456 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+>> [   13.625922] ffff000059908cf0 (&irq_desc_lock_class){-.-.}-{2:2}, at: __setup_irq+0xf8/0x8d8
+>> [   13.632273] which would create a new lock dependency:
+>> [   13.637272]  (&irq_desc_lock_class){-.-.}-{2:2} -> (&ctl->lock){+.+.}-{2:2}
+>> [   13.644209]
+>> [   13.644209] but this new dependency connects a HARDIRQ-irq-safe lock:
+>> [   13.654122]  (&irq_desc_lock_class){-.-.}-{2:2}
+>> [   13.654125]
+>> [   13.654125] ... which became HARDIRQ-irq-safe at:
+>> [   13.664759]   lock_acquire+0xec/0x368
+>> [   13.666926]   _raw_spin_lock+0x60/0x88
+>> [   13.669979]   handle_fasteoi_irq+0x30/0x178
+>> [   13.674082]   generic_handle_irq+0x38/0x50
+>> [   13.678098]   __handle_domain_irq+0x6c/0xc8
+>> [   13.682209]   gic_handle_irq+0x5c/0xb0
+>> [   13.685872]   el1_irq+0xd0/0x180
+>> [   13.689010]   arch_cpu_idle+0x40/0x220
+>> [   13.692732]   default_idle_call+0x54/0x60
+>> [   13.696677]   do_idle+0x23c/0x2e8
+>> [   13.699903]   cpu_startup_entry+0x30/0x50
+>> [   13.703852]   rest_init+0x1e0/0x2b4
+>> [   13.707301]   arch_call_rest_init+0x18/0x24
+>> [   13.711449]   start_kernel+0x4ec/0x51c
+>> [   13.715167]
+>> [   13.715167] to a HARDIRQ-irq-unsafe lock:
+>> [   13.722426]  (&ctl->lock){+.+.}-{2:2}
+>> [   13.722430]
+>> [   13.722430] ... which became HARDIRQ-irq-unsafe at:
+>> [   13.732319] ...
+>> [   13.732324]   lock_acquire+0xec/0x368
+>> [   13.735985]   _raw_spin_lock+0x60/0x88
+>> [   13.739452]   meson_gpio_irq_domain_alloc+0xcc/0x290
+>> [   13.744392]   irq_domain_alloc_irqs_hierarchy+0x24/0x60
+>> [   13.749586]   __irq_domain_alloc_irqs+0x160/0x2f0
+>> [   13.754254]   irq_create_fwspec_mapping+0x118/0x320
+>> [   13.759073]   irq_create_of_mapping+0x78/0xa0
+>> [   13.763360]   of_irq_get+0x6c/0x80
+>> [   13.766701]   of_mdiobus_register_phy+0x10c/0x238 [of_mdio]
+>> [   13.772227]   of_mdiobus_register+0x158/0x380 [of_mdio]
+>> [   13.777388]   mdio_mux_init+0x180/0x2e8 [mdio_mux]
+>> [   13.782128]   g12a_mdio_mux_probe+0x290/0x398 [mdio_mux_meson_g12a]
+>> [   13.788349]   platform_drv_probe+0x5c/0xb0
+>> [   13.792379]   really_probe+0xe4/0x448
+>> [   13.795979]   driver_probe_device+0xe8/0x140
+>> [   13.800189]   __device_attach_driver+0x94/0x120
+>> [   13.804639]   bus_for_each_drv+0x84/0xd8
+>> [   13.808474]   __device_attach+0xe4/0x168
+>> [   13.812361]   device_initial_probe+0x1c/0x28
+>> [   13.816592]   bus_probe_device+0xa4/0xb0
+>> [   13.820430]   deferred_probe_work_func+0xa8/0x100
+>> [   13.825064]   process_one_work+0x264/0x688
+>> [   13.829088]   worker_thread+0x4c/0x458
+>> [   13.832768]   kthread+0x154/0x158
+>> [   13.836018]   ret_from_fork+0x10/0x18
+>> [   13.839612]
+>> [   13.839612] other info that might help us debug this:
+>> [   13.839612]
+>> [   13.850354]  Possible interrupt unsafe locking scenario:
+>> [   13.850354]
+>> [   13.855720]        CPU0                    CPU1
+>> [   13.858774]        ----                    ----
+>> [   13.863242]   lock(&ctl->lock);
+>> [   13.866330]                                local_irq_disable();
+>> [   13.872233]                                lock(&irq_desc_lock_class);
+>> [   13.878705]                                lock(&ctl->lock);
+>> [   13.884297]   <Interrupt>
+>> [   13.886857]     lock(&irq_desc_lock_class);
+>> [   13.891014]
+>> [   13.891014]  *** DEADLOCK ***
+>> 
+>> The issue can occur when CPU1 is doing something like irq_set_type()
+>> and CPU0 performing an interrupt allocation, for example. Taking
+>> an interrupt (like the one being reconfigured) would lead to a
+>> deadlock.
+
+Just to make sure I understand
+* the 1st trace is a CPU getting interrupted while setting the irq type
+* the 2nd trace is another CPU trying to allocate an irq for network PHY.
+
+>> 
+>> A solution to this is:
+>> 
+>> - Reorder the locking so that meson_gpio_irq_update_bits takes the lock
+>>   itself at all times, instead of relying on the caller to lock or not,
+>>   hence making the RMW sequence atomic,
+>> 
+>> - Rework the critical section in meson_gpio_irq_request_channel to only
+>>   cover the allocation itself, and let the gpio_irq_sel_pin callback
+>>   deal with its own locking if required,
+>> 
+>> - Take the private spin-lock with interrupts disabled at all times
+
+Looks like the only safe path if I understand correctly.
+The patch below looks good to me.
+
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+Thanks for the fix Marc.
+
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+
+>> ---
+>>  drivers/irqchip/irq-meson-gpio.c | 18 ++++++++++--------
+>>  1 file changed, 10 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+>> index ccc7f823911b..bc7aebcc96e9 100644
+>> --- a/drivers/irqchip/irq-meson-gpio.c
+>> +++ b/drivers/irqchip/irq-meson-gpio.c
+>> @@ -144,12 +144,17 @@ struct meson_gpio_irq_controller {
+>>  static void meson_gpio_irq_update_bits(struct meson_gpio_irq_controller *ctl,
+>>  				       unsigned int reg, u32 mask, u32 val)
+>>  {
+>> +	unsigned long flags;
+>>  	u32 tmp;
+>>  
+>> +	spin_lock_irqsave(&ctl->lock, flags);
+>> +
+>>  	tmp = readl_relaxed(ctl->base + reg);
+>>  	tmp &= ~mask;
+>>  	tmp |= val;
+>>  	writel_relaxed(tmp, ctl->base + reg);
+>> +
+>> +	spin_unlock_irqrestore(&ctl->lock, flags);
+>>  }
+>>  
+>>  static void meson_gpio_irq_init_dummy(struct meson_gpio_irq_controller *ctl)
+>> @@ -196,14 +201,15 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+>>  			       unsigned long  hwirq,
+>>  			       u32 **channel_hwirq)
+>>  {
+>> +	unsigned long flags;
+>>  	unsigned int idx;
+>>  
+>> -	spin_lock(&ctl->lock);
+>> +	spin_lock_irqsave(&ctl->lock, flags);
+>>  
+>>  	/* Find a free channel */
+>>  	idx = find_first_zero_bit(ctl->channel_map, NUM_CHANNEL);
+>>  	if (idx >= NUM_CHANNEL) {
+>> -		spin_unlock(&ctl->lock);
+>> +		spin_unlock_irqrestore(&ctl->lock, flags);
+>>  		pr_err("No channel available\n");
+>>  		return -ENOSPC;
+>>  	}
+>> @@ -211,6 +217,8 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+>>  	/* Mark the channel as used */
+>>  	set_bit(idx, ctl->channel_map);
+>>  
+>> +	spin_unlock_irqrestore(&ctl->lock, flags);
+>> +
+>>  	/*
+>>  	 * Setup the mux of the channel to route the signal of the pad
+>>  	 * to the appropriate input of the GIC
+>> @@ -225,8 +233,6 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+>>  	 */
+>>  	*channel_hwirq = &(ctl->channel_irqs[idx]);
+>>  
+>> -	spin_unlock(&ctl->lock);
+>> -
+>>  	pr_debug("hwirq %lu assigned to channel %d - irq %u\n",
+>>  		 hwirq, idx, **channel_hwirq);
+>>  
+>> @@ -287,13 +293,9 @@ static int meson_gpio_irq_type_setup(struct meson_gpio_irq_controller *ctl,
+>>  			val |= REG_EDGE_POL_LOW(params, idx);
+>>  	}
+>>  
+>> -	spin_lock(&ctl->lock);
+>> -
+>>  	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
+>>  				   REG_EDGE_POL_MASK(params, idx), val);
+>>  
+>> -	spin_unlock(&ctl->lock);
+>> -
+>>  	return 0;
+>>  }
+>>  
+
