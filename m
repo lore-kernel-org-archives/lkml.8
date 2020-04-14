@@ -2,130 +2,195 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2135BC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6D0C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35112082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889568;
-	bh=P4rgnvp+ubvr6gQQwx96f5n8r83/w0mRlcAt7NxMf1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iuW4D6RIISSDWyVpBwf1ojPgY1uhPuSpaYf5IwhjOE4eLpVj/oPnqyDsstEk4zz9F
-	 YmOhMHtwDh1Pmj4pdocF+M14Y4G9Se/I5WRh+EER4KprRXcqCVNODK2hK5L91TNbf1
-	 h7jDBy7rH7ciiM/WD6O148F4T5EADo1SWwk43uE0=
+	by mail.kernel.org (Postfix) with ESMTP id CBD4320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aWUmc0y/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504129AbgDNSj1 (ORCPT
+        id S2504141AbgDNSkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504116AbgDNSjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:39:24 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 14 Apr 2020 14:40:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30003 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504116AbgDNSj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:39:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586889594;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=+Cj0ZgPzOaN4hCJWMzFwXfxpwQsNMlaKJGQT+M6uQCY=;
+        b=aWUmc0y/+tzZdtBThgU4BKwwXiaitzfegcaZ2lCY7WVDFIYPzNvzbXEMP5Kfpl44W69bxd
+        ZHyIj5KrqVS9fcEAHUus6C0biuY63bd8j7YYnI2sXpN52/ETJzcFLKK5p1axcZVnAx3x0/
+        FydoSuABKkkim2G2d9dtDILnwkdHrG8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-81-RceiZkfbMOKyDjsd_U1aAg-1; Tue, 14 Apr 2020 14:39:50 -0400
+X-MC-Unique: RceiZkfbMOKyDjsd_U1aAg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030CD2076C;
-        Tue, 14 Apr 2020 18:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586889563;
-        bh=P4rgnvp+ubvr6gQQwx96f5n8r83/w0mRlcAt7NxMf1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ww0nYJB4QPCYiyCRxxrz3MhjaV8MiazOYKP+JMlOoHG2mbl+ChLoBBcrOipv2bynr
-         B20L1Mj7Hi2EyxZG0mfBSrEA+lwtlYNctnTC7UWNAjwpWou1DgNqwMLKtwb2+q7N60
-         usjUjbY8yBBBG0upAxAMQXtDr65r+D74Qk8q/NYI=
-Date:   Tue, 14 Apr 2020 19:39:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-Message-ID: <20200414183921.GN5412@sirena.org.uk>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
- <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
- <20200414172129.GJ5412@sirena.org.uk>
- <fa605af3aee48f0bc62133f398ed7c5d@walle.cc>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15AC21005509;
+        Tue, 14 Apr 2020 18:39:46 +0000 (UTC)
+Received: from [10.36.113.201] (ovpn-113-201.ams2.redhat.com [10.36.113.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D1C09F9AC;
+        Tue, 14 Apr 2020 18:39:26 +0000 (UTC)
+Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        teawater <teawaterz@linux.alibaba.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20200311171422.10484-1-david@redhat.com>
+ <20200329084128-mutt-send-email-mst@kernel.org>
+ <b9984195-bb48-e2a6-887d-0905692a7524@redhat.com>
+ <20200414122716-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <758aa88e-7bd1-ea77-6ee3-9a015a0f8b0e@redhat.com>
+Date:   Tue, 14 Apr 2020 20:39:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uWbmMdDzzl2TXAgx"
-Content-Disposition: inline
-In-Reply-To: <fa605af3aee48f0bc62133f398ed7c5d@walle.cc>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414122716-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14.04.20 18:28, Michael S. Tsirkin wrote:
+> On Tue, Apr 14, 2020 at 11:15:18AM +0200, David Hildenbrand wrote:
+>> On 29.03.20 14:42, Michael S. Tsirkin wrote:
+>>> On Wed, Mar 11, 2020 at 06:14:12PM +0100, David Hildenbrand wrote:
+>>>> This series is based on latest linux-next. The patches are located at:
+>>>>     https://github.com/davidhildenbrand/linux.git virtio-mem-v2
+>>>>
+>>>> I now have acks for all !virtio-mem changes. I'll be happy to get review
+>>>> feedback, testing reports, etc. for the virtio-mem changes. If there are
+>>>> no further comments, I guess this is good to go as a v1 soon.
+>>>
+>>> I'd like to queue it for merge after the release. If you feel it's ready
+>>> please ping me after the release to help make sure it didn't get
+>>> dropped.  I see there were some reports about people having trouble
+>>> using this, pls keep working on this meanwhile.
+>>
+>> Hi Michael,
+>>
+>> I think this is ready to go as a first version. There are a couple of
+>> future work items related to kexec/kdump:
+>> - Teach kexec-tools/kexec_file_load() to not place the kexec
+>>   kernel/initrd onto virtio-mem added memory.
+>> - Teach kexec-tools/kdump to consider a bigger number of memory
+>>   resources for dumping.
+>>
+>> In general, as virtio-mem adds a lot of memory resources, we might want
+>> to tweak performance in that area as well. Future stuff.
+>>
+>> So I suggest queuing this. If you need a resend, please let me know.
+>>
+>> Cheers!
+> 
+> Thanks!
+> I'll queue it for merge after the release. If possible please ping me
+> after the release to help make sure it didn't get dropped.
 
---uWbmMdDzzl2TXAgx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If we could get this into 5.8, that would be great (IOW, have it in
+-next for a while before the 5.8 merge window opens).
 
-On Tue, Apr 14, 2020 at 08:36:23PM +0200, Michael Walle wrote:
-> Am 2020-04-14 19:21, schrieb Mark Brown:
+Thanks!
 
-> > You could define REGMAP_INVALID_ADDR to be (unsigned int)(-1) or some
-> > other suitably implausible address and use that as a value.  It's
-> > possible that there might be a collision with a real address on some
-> > device but it should be sufficiently unlikely to be useful, especially
-> > if it's not something regmap in general goes and evaluates.  For extra
-> > safety we could have an API for allowing users to query the register
-> > validity information regmap has (or can be given) and gpiolib could then
-> > use that to figure out if the value was actually a dummy value but
-> > that's probably overdoing it.
+-- 
+Thanks,
 
-> If possible, I'd like to have the opposite logic. That is, if it is not
-> set it should be invalid. If we have a magic macro like
-> REGMAP_INVALID_ADDR, we must assign it to all the unused addresses. Thus
-> every driver would have to assign all addresses and if in the future
-> there will be some added, we'd have to touch all the drivers which use
-> gpio_regmap.
+David / dhildenb
 
-Sure, for that you'd need a separate flag since zero is such a commonly
-valid address.
-
---uWbmMdDzzl2TXAgx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6WA1gACgkQJNaLcl1U
-h9BAjwf/bIsieXPSNQdoyPsGYQ4OjkmRX200mVnxW9V8WW1aT87hmD5XwdcUz27T
-0oXCpdsy7VDE5l4T7iDCXzXW1++aQW/mOE7MW7fgfDLWe212XUBcKluVTQ77+1wo
-z8FEPPjTRReUzy4LyvEtOuPv8S/wEeHOaPxuyOhhNacw5Sa/Wrmoj3UJRsUzB/MG
-Cm0W3nRmAIw1VeyMwP89BNeTXYdbqUojlBRj5DZRhXziF7L6YyLe8nMH3ZN+JOq7
-Od3cD4VROPQ3xfDaeCEG8QsoHSwZXYG+2kF7DjgWvC7zliuISkElPje0uK2KEHHJ
-aaGR4e5qeBL5Nha6oy2QwhRMN1Fezw==
-=I4w+
------END PGP SIGNATURE-----
-
---uWbmMdDzzl2TXAgx--
