@@ -2,186 +2,338 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54635C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94A7C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3167A20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBDD20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WJ1VSHG+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vU9z5nd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407597AbgDNRPW (ORCPT
+        id S2407605AbgDNRUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:15:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50613 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2407566AbgDNRPR (ORCPT
+        Tue, 14 Apr 2020 13:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407532AbgDNRUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:15:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586884515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QHwWbb/0Om5PBT0L8gP9PPmqVVSNwuqyRY8+lxTkQz4=;
-        b=WJ1VSHG+GeFcrhROLEEIH4cTLfXUyXFsuMe+s1bJmAYY/hWRUoKijH3IWwxxpRTLunHGHn
-        dAeTRZjOQJm0bw2K20DYcg+7d9zfHNgVmaFa7nKwxFyw4DSnxQ3aM7s6A2PumZcE03juvu
-        ar90PMgDKCmKl+re/Cl7NsQGaECJnTg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-wbu3JzAdMomDRBfIBFC79Q-1; Tue, 14 Apr 2020 13:15:12 -0400
-X-MC-Unique: wbu3JzAdMomDRBfIBFC79Q-1
-Received: by mail-wm1-f72.google.com with SMTP id l21so2738111wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:15:12 -0700 (PDT)
+        Tue, 14 Apr 2020 13:20:08 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B5A3C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:20:08 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id np9so5580221pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 10:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nYOdjx3SpF9DkUS8byznV4S2MTaAE+QPJcIvAavqU9w=;
+        b=vU9z5nd4yquIaqbQ1kKrijql3CdqH/vUzjQxEYdp7Ld378Iah8QBqN0n5HZWOjhj88
+         Ya9kPC8lGxVHd/ig51gCCgTEkGIYfntAFWS1+ReMGiRZGuA4/hoUrk4RVpaZm8UooYCb
+         79nJW9TJdniD4kLM9nqpLWjRlOG52HbMsBH3Sd8TpJSvNEW6SXJQkFr/XJav44xgPVc6
+         ko2830DQlLvQaUXLGIK9KVq+VYtkY5YhKFEuvlyILXUJquBnTrqkew3g2ZlTuDJklXEP
+         Tl7PWyPp+L7eWHxh6UKxVU0YDWUupsw/FldAsdG9qXGfXkugd+kY94tgTkY6FIMZyCWY
+         tXsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QHwWbb/0Om5PBT0L8gP9PPmqVVSNwuqyRY8+lxTkQz4=;
-        b=QEsnvZdTa9qhMoh5VYddmJU7Qjg7qTTABqkZWC9jsL8rgUh9Q6NtXq0BIqv+Bo6QKa
-         AcWciwT7D7AoeZJdOTFGqGTbU968G6VGb3loJUO/VtJmGIS7cplCZpnk6guZlWaC6D0f
-         uaX84enFuWLF4vsWHjAUUIovsT7mF0pBF1/fzDwQdvUm1F5UxbhWwM+SC1IlVZmLrPQG
-         PuhbO5/nAC69bb+w718XY5HxOmTAlHTyjnk+cxGYsfYDy3XQ4S6HnbPM2Ef1qyP1Yvrj
-         0ZL0P/9vEdMuXowCBHSawohp0R0pfIH+csYDSFZu1b0EGsKzWWPO1Vb0ThauzfSzi3UC
-         g17A==
-X-Gm-Message-State: AGi0PuYj36Sl6trB7lr5OJcHZiNL97D/CLz0rhs+g7aF4Fvu51rJCFmt
-        Xaq4tO5taMNCmugadph4XTCKTy2zmurxf0NZTxkcOOzBVrSXjXzhyWKF03g9mxw4s7DrPMOf+UN
-        2a/wnyzBPKJBpYDGuObXvZTJC
-X-Received: by 2002:a1c:3884:: with SMTP id f126mr872617wma.91.1586884510941;
-        Tue, 14 Apr 2020 10:15:10 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLZ5tlO8vUZ2+Gf9BUVJ2f3UtHoKBSt3gtDjrnyTHdxARpdiMBvdHLGMesO68HbfP9mIsMQ6Q==
-X-Received: by 2002:a1c:3884:: with SMTP id f126mr872591wma.91.1586884510742;
-        Tue, 14 Apr 2020 10:15:10 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id s18sm10732847wrv.2.2020.04.14.10.15.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 10:15:09 -0700 (PDT)
-Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
- <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
- <20200413180732.GA11147@linux.intel.com>
- <7df7f8bd-c65e-1435-7e82-b9f4ecd729de@redhat.com>
- <20200414071349.GA8403@linux.intel.com>
- <d6684575-ce91-fe72-6035-11834a05cd54@redhat.com>
- <20200414160404.GA32775@linux.intel.com>
- <20200414164542.GC32775@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <df580835-f887-1918-c933-6509e5a1ad47@redhat.com>
-Date:   Tue, 14 Apr 2020 19:15:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nYOdjx3SpF9DkUS8byznV4S2MTaAE+QPJcIvAavqU9w=;
+        b=PNt5BwoBTDrLZp+FpJqQ+D5GRxBhm+AClsKBkTFP8Mkdv6zVgHQ6aEUMIW1OM5MSdS
+         8UzAbq/x45r1Ca9c0EFSQjn2BNmF1PYAkPnQyHNwWJ45vzaHmNIublUqI0G/4xGU8RLL
+         +kAKtzi1bGMT3JfYaKIBYZEII3umEUCrhosSuwXBj7/riCbVIziS0d1dzbhOLZMxecS5
+         pw/MPjifskM3p1JdlIiLYtsgwrGRdxdBnhEWsmBUkNY+qhxveqw5xrqLNHHGVU0ddFya
+         CCGnDowa+N0uJAkPlsy+9RTZxruRZTxIbCLUukpTTa70ZqkueJYcMGatq/JifmgN1Yen
+         pHsg==
+X-Gm-Message-State: AGi0PuaeUR4korN+i+vXAB3kti3Q0K4vlx0vtXMPb265+W8juDqdqKGv
+        MULEoWIPMJLQJyeMUwFswuJMqA==
+X-Google-Smtp-Source: APiQypLFa9Zwdjn4tdg2Thq8figw9/2KqysFQllBw2vu3dYOR6i9Wi65V7imT93s00HkpgLRMaPogA==
+X-Received: by 2002:a17:90a:71c5:: with SMTP id m5mr1275159pjs.193.1586884807655;
+        Tue, 14 Apr 2020 10:20:07 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id l9sm11402386pff.16.2020.04.14.10.20.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 10:20:07 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 11:20:05 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     nikita.shubin@maquefel.me
+Cc:     Nikita Shubin <NShubin@topcon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] remoteproc: imx_rproc: mailbox support
+Message-ID: <20200414172004.GB24061@xps15>
+References: <20200304142628.8471-1-NShubin@topcon.com>
+ <20200406113310.3041-1-nikita.shubin@maquefel.me>
+ <20200406113310.3041-3-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
-In-Reply-To: <20200414164542.GC32775@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406113310.3041-3-nikita.shubin@maquefel.me>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 4/14/20 6:45 PM, Jarkko Sakkinen wrote:
-> On Tue, Apr 14, 2020 at 07:04:07PM +0300, Jarkko Sakkinen wrote:
->> On Tue, Apr 14, 2020 at 10:26:32AM +0200, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 4/14/20 9:13 AM, Jarkko Sakkinen wrote:
->>>> On Mon, Apr 13, 2020 at 08:11:15PM +0200, Hans de Goede wrote:
->>>>> Hi,
->>>>>
->>>>> On 4/13/20 8:07 PM, Jarkko Sakkinen wrote:
->>>>>> On Mon, Apr 13, 2020 at 12:04:25PM +0200, Hans de Goede wrote:
->>>>>>> Hi Jarkko,
->>>>>>>
->>>>>>> On 4/12/20 7:04 PM, Jarkko Sakkinen wrote:
->>>>>>>> Call devm_free_irq() if we have to revert to polling in order not to
->>>>>>>> unnecessarily reserve the IRQ for the life-cycle of the driver.
->>>>>>>>
->>>>>>>> Cc: stable@vger.kernel.org # 4.5.x
->>>>>>>> Reported-by: Hans de Goede <hdegoede@redhat.com>
->>>>>>>> Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
->>>>>>>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>>>>>> ---
->>>>>>>>      drivers/char/tpm/tpm_tis_core.c | 5 ++++-
->>>>>>>>      1 file changed, 4 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
->>>>>>>> index 27c6ca031e23..ae6868e7b696 100644
->>>>>>>> --- a/drivers/char/tpm/tpm_tis_core.c
->>>>>>>> +++ b/drivers/char/tpm/tpm_tis_core.c
->>>>>>>> @@ -1062,9 +1062,12 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->>>>>>>>      		if (irq) {
->>>>>>>>      			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
->>>>>>>>      						 irq);
->>>>>>>> -			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
->>>>>>>> +			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
->>>>>>>>      				dev_err(&chip->dev, FW_BUG
->>>>>>>>      					"TPM interrupt not working, polling instead\n");
->>>>>>>> +				devm_free_irq(chip->dev.parent, priv->irq,
->>>>>>>> +					      chip);
->>>>>>>> +			}
->>>>>>>
->>>>>>> My initial plan was actually to do something similar, but if the probe code
->>>>>>> is actually ever fixed to work as intended again then this will lead to a
->>>>>>> double free as then the IRQ-test path of tpm_tis_send() will have called
->>>>>>> disable_interrupts() which already calls devm_free_irq().
->>>>>>>
->>>>>>> You could check for chip->irq != 0 here to avoid that.
->>>
->>> Erm in case you haven't figured it out yet this should be priv->irq != 0, sorry.
->>
->> Yup.
->>
->>>>>>>
->>>>>>> But it all is rather messy, which is why I went with the "#if 0" approach
->>>>>>> in my patch.
->>>>>>
->>>>>> I think it is right way to fix it. It is a bug independent of the issue
->>>>>> we are experiencing.
->>>>>>
->>>>>> However, what you are suggesting should be done in addition. Do you have
->>>>>> a patch in place or do you want me to refine mine?
->>>>>
->>>>> I do not have a patch ready for this, if you can refine yours that would
->>>>> be great.
->>>>
->>>> Thanks! Just wanted to confirm.
->>>
->>> And thank you for working on a (temporary?) fix for this.
->>
->> As far as I see it, it is orthogonal fix that needs to be backported
->> to stable kernels. This bug predates the issue we're seeing now.
+On Mon, Apr 06, 2020 at 02:33:09PM +0300, nikita.shubin@maquefel.me wrote:
+> Add support for mailboxes to imx_rproc
 > 
-> Hey, I came to other thoughts on "how". Would probably make sense
-> to always call disable_interrupts() aka no sense to add two separate
-> code paths. What do you think?
+> Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+> ---
+>  drivers/remoteproc/Kconfig     |   2 +
+>  drivers/remoteproc/imx_rproc.c | 142 ++++++++++++++++++++++++++++++++-
+>  2 files changed, 143 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 94afdde4bc9f..02d23a54c9cf 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -17,6 +17,8 @@ if REMOTEPROC
+>  config IMX_REMOTEPROC
+>  	tristate "IMX6/7 remoteproc support"
+>  	depends on ARCH_MXC
+> +	select MAILBOX
+> +	select IMX_MBOX
+>  	help
+>  	  Say y here to support iMX's remote processors (Cortex M4
+>  	  on iMX7D) via the remote processor framework.
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index bebc58d0f711..d2bede4ccb70 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -14,6 +14,9 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/remoteproc.h>
+> +#include <linux/mailbox_client.h>
+> +
+> +#include "remoteproc_internal.h"
+>  
+>  #define IMX7D_SRC_SCR			0x0C
+>  #define IMX7D_ENABLE_M4			BIT(3)
+> @@ -47,6 +50,12 @@
+>  
+>  #define IMX_BOOT_PC			0x4
+>  
+> +#define IMX_MBOX_NB_VQ			2
+> +#define IMX_MBOX_NB_MBX		2
 
-Sounds good, I guess it would be best to combine that with a:
+Please align this.
 
-	if (priv->irq == 0)
-		return;
+> +
+> +#define IMX_MBX_VQ0		"vq0"
+> +#define IMX_MBX_VQ1		"vq1"
+> +
+>  /**
+>   * struct imx_rproc_mem - slim internal memory structure
+>   * @cpu_addr: MPU virtual address of the memory region
+> @@ -80,6 +89,14 @@ struct imx_rproc_dcfg {
+>  	size_t				att_size;
+>  };
+>  
+> +struct imx_mbox {
+> +	const unsigned char name[10];
+> +	struct mbox_chan *chan;
+> +	struct mbox_client client;
+> +	struct work_struct vq_work;
+> +	int vq_id;
+> +};
+> +
+>  struct imx_rproc {
+>  	struct device			*dev;
+>  	struct regmap			*regmap;
+> @@ -88,6 +105,8 @@ struct imx_rproc {
+>  	struct imx_rproc_mem		mem[IMX7D_RPROC_MEM_MAX];
+>  	struct clk			*clk;
+>  	void __iomem			*bootreg;
+> +	struct imx_mbox mb[IMX_MBOX_NB_MBX];
+> +	struct workqueue_struct *workqueue;
+>  };
+>  
+>  static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
+> @@ -251,10 +270,118 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>  	return va;
+>  }
+>  
+> +static void imx_rproc_mb_vq_work(struct work_struct *work)
+> +{
+> +	struct imx_mbox *mb = container_of(work, struct imx_mbox, vq_work);
+> +	struct rproc *rproc = dev_get_drvdata(mb->client.dev);
+> +
+> +	if (rproc_vq_interrupt(rproc, mb->vq_id) == IRQ_NONE)
+> +		dev_dbg(&rproc->dev, "no message found in vq%d\n", mb->vq_id);
+> +}
+> +
+> +static void imx_rproc_mb_callback(struct mbox_client *cl, void *data)
+> +{
+> +	struct rproc *rproc = dev_get_drvdata(cl->dev);
+> +	struct imx_mbox *mb = container_of(cl, struct imx_mbox, client);
+> +	struct imx_rproc *ddata = rproc->priv;
+> +
+> +	queue_work(ddata->workqueue, &mb->vq_work);
+> +}
+> +
+> +static const struct imx_mbox imx_rproc_mbox[IMX_MBOX_NB_MBX] = {
+> +	{
+> +		.name = IMX_MBX_VQ0,
+> +		.vq_id = 0,
+> +		.client = {
+> +			.rx_callback = imx_rproc_mb_callback,
+> +			.tx_block = false,
+> +		},
+> +	},
+> +	{
+> +		.name = IMX_MBX_VQ1,
+> +		.vq_id = 1,
+> +		.client = {
+> +			.rx_callback = imx_rproc_mb_callback,
+> +			.tx_block = false,
+> +		},
+> +	},
+> +};
+> +
+> +static void imx_rproc_request_mbox(struct rproc *rproc)
+> +{
+> +	struct imx_rproc *ddata = rproc->priv;
+> +	struct device *dev = &rproc->dev;
+> +	unsigned int i;
+> +	const unsigned char *name;
+> +	struct mbox_client *cl;
+> +
+> +	/* Initialise mailbox structure table */
+> +	memcpy(ddata->mb, imx_rproc_mbox, sizeof(imx_rproc_mbox));
+> +
+> +	for (i = 0; i < IMX_MBOX_NB_MBX; i++) {
+> +		name = ddata->mb[i].name;
+> +
+> +		cl = &ddata->mb[i].client;
+> +		cl->dev = dev->parent;
+> +
+> +		ddata->mb[i].chan = mbox_request_channel_byname(cl, name);
+> +
+> +		dev_dbg(dev, "%s: name=%s, idx=%u\n",
+> +			__func__, name, ddata->mb[i].vq_id);
+> +
+> +		if (IS_ERR(ddata->mb[i].chan)) {
+> +			dev_warn(dev, "cannot get %s mbox\n", name);
+> +			ddata->mb[i].chan = NULL;
 
-At the top of disable_interrupts() and then unconditionally
-call disable_interrupts() where your v1 of this patch
-calls devm_free_irq(). That would be a reasonable clean
-solution I think.
+If the mailbox isn't ready this driver will fail without a chance of recovery.
+Since most of the code in this patch is a carbon copy of the implementation
+found in stm32_proc.c, I suggest you do the same as they did in
+stm32_rproc_request_mbox() and privision for cases where requesting a channel
+returns -EPROBE_DEFER.
 
-Regards,
+> +		}
+> +
+> +		if (ddata->mb[i].vq_id >= 0)
+> +			INIT_WORK(&ddata->mb[i].vq_work, imx_rproc_mb_vq_work);
+> +	}
+> +}
+> +
+> +static void imx_rproc_free_mbox(struct rproc *rproc)
+> +{
+> +	struct imx_rproc *ddata = rproc->priv;
+> +	unsigned int i;
+> +
+> +	dev_dbg(&rproc->dev, "%s: %d boxes\n",
+> +		__func__, ARRAY_SIZE(ddata->mb));
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ddata->mb); i++) {
+> +		if (ddata->mb[i].chan)
+> +			mbox_free_channel(ddata->mb[i].chan);
+> +		ddata->mb[i].chan = NULL;
+> +	}
+> +}
+> +
+> +static void imx_rproc_kick(struct rproc *rproc, int vqid)
+> +{
+> +	struct imx_rproc *ddata = rproc->priv;
+> +	unsigned int i;
+> +	int err;
+> +
+> +	if (WARN_ON(vqid >= IMX_MBOX_NB_VQ))
+> +		return;
+> +
+> +	for (i = 0; i < IMX_MBOX_NB_MBX; i++) {
+> +		if (vqid != ddata->mb[i].vq_id)
+> +			continue;
+> +		if (!ddata->mb[i].chan)
+> +			return;
+> +		dev_dbg(&rproc->dev, "sending message : vqid = %d\n", vqid);
+> +		err = mbox_send_message(ddata->mb[i].chan, &vqid);
+> +		if (err < 0)
+> +			dev_err(&rproc->dev, "%s: failed (%s, err:%d)\n",
+> +					__func__, ddata->mb[i].name, err);
+> +			return;
+> +	}
+> +}
+> +
+>  static const struct rproc_ops imx_rproc_ops = {
+>  	.start		= imx_rproc_start,
+>  	.stop		= imx_rproc_stop,
+>  	.da_to_va	= imx_rproc_da_to_va,
+> +	.kick		= imx_rproc_kick,
+>  	.get_boot_addr	= rproc_elf_get_boot_addr,
+>  };
+>  
+> @@ -384,14 +511,26 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  		goto err_put_rproc;
+>  	}
+>  
+> +	priv->workqueue = create_workqueue(dev_name(dev));
+> +	if (!priv->workqueue) {
+> +		dev_err(dev, "cannot create workqueue\n");
+> +		ret = -ENOMEM;
+> +		goto err_put_clk;
+> +	}
+> +
+> +	imx_rproc_request_mbox(rproc);
+> +
+>  	ret = rproc_add(rproc);
+>  	if (ret) {
+>  		dev_err(dev, "rproc_add failed\n");
+> -		goto err_put_clk;
+> +		goto err_free_mb;
+>  	}
+>  
+>  	return 0;
+>  
+> +err_free_mb:
+> +	imx_rproc_free_mbox(rproc);
+> +	destroy_workqueue(priv->workqueue);
+>  err_put_clk:
+>  	clk_disable_unprepare(priv->clk);
+>  err_put_rproc:
+> @@ -407,6 +546,7 @@ static int imx_rproc_remove(struct platform_device *pdev)
+>  
+>  	clk_disable_unprepare(priv->clk);
+>  	rproc_del(rproc);
+> +	imx_rproc_free_mbox(rproc);
 
-Hans
+I have no issues with people reusing code already found in the kernel - in fact
+I encourage it because it makes reviewing patches much easier.  On the flip side
+you have to give credit where it is due.  Here adding a line in the changelog
+that mentions where you took your inspiration from will be much appreciated.
 
+Thanks,
+Mathieu
+
+>  	rproc_free(rproc);
+>  
+>  	return 0;
+> -- 
+> 2.25.1
+> 
