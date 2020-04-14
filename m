@@ -2,141 +2,153 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24810C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B3E2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F325220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:56:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wlltAl4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633442AbgDNUys (ORCPT
+        id S2633458AbgDNU4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:54:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:32810 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730661AbgDNUyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:54:46 -0400
-IronPort-SDR: J0S1V3hJcgIJ1pWqKTnjwYCrZAVd56mNz4t0oJSxvYK9tIqfpTfUNNsi76Ulqf/htW40jAHbaV
- 769S3qJgU7dA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 13:54:44 -0700
-IronPort-SDR: BZChCMYVjYFNgj/WPAnrIXxxL30sSdjjJOLvtEa8gqzFAPoAV1bL8QYBJ4AhNfUMFrGcQwknUh
- TlfbYx01RNGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
-   d="scan'208";a="253308266"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga003.jf.intel.com with ESMTP; 14 Apr 2020 13:54:44 -0700
-Date:   Tue, 14 Apr 2020 13:54:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V7 9/9] Documentation/dax: Update Usage section
-Message-ID: <20200414205443.GC1982089@iweiny-DESK2.sc.intel.com>
-References: <20200413054046.1560106-1-ira.weiny@intel.com>
- <20200413054046.1560106-10-ira.weiny@intel.com>
- <CAPcyv4g1gGWUuzVyOgOtkRTxzoSKOjVpAOmW-UDtmud9a3CUUA@mail.gmail.com>
- <20200414161509.GF6742@magnolia>
- <CAPcyv4hr+NKbpAU4UhKcmHfvDq1+GTM+y+K28XGbkDYBP=Kaag@mail.gmail.com>
- <20200414195754.GH6742@magnolia>
- <20200414200015.GF1853609@iweiny-DESK2.sc.intel.com>
- <20200414201808.GI6742@magnolia>
+        Tue, 14 Apr 2020 16:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729251AbgDNU4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:56:06 -0400
+X-Greylist: delayed 829 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 13:56:06 PDT
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BF0C061A0C;
+        Tue, 14 Apr 2020 13:56:06 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92C34521;
+        Tue, 14 Apr 2020 22:56:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586897764;
+        bh=9MCdqBysYUB1/Yp+/aFnc/DzMGk2zM7gWb4HYthYFuA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wlltAl4d7yJ3Ttu5SYoIhj+TK1xMzDFzXGKXxIJi1KWk4ymBxQ//ax6cUr+er8YA0
+         o6OThwNGl4FX2g1oOnqzHFceM9lcrMFuX0zPhjsWOz67Pzl1yPKSCJdCjZm9cBm8rb
+         ZhPzOrQPT3rho7m5xZFfbE+WTFwYem9kTlj0OzBo=
+Date:   Tue, 14 Apr 2020 23:55:52 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200414205552.GN19819@pendragon.ideasonboard.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
+ <20200407122106.GD4751@pendragon.ideasonboard.com>
+ <20200407151401.GA5206@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200414201808.GI6742@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200407151401.GA5206@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 01:18:08PM -0700, Darrick J. Wong wrote:
-> On Tue, Apr 14, 2020 at 01:00:15PM -0700, Ira Weiny wrote:
-> > On Tue, Apr 14, 2020 at 12:57:54PM -0700, Darrick J. Wong wrote:
-> > > On Tue, Apr 14, 2020 at 12:04:57PM -0700, Dan Williams wrote:
-> > > > On Tue, Apr 14, 2020 at 9:15 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+Hi Sakari,
+
+On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
+> On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
+> > On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> >> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> >>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> >>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> >>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> >>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> >>>>> 24MHz. So instead making clock-frequency as dt-property just let the
+> >>>>> driver enforce the required clock frequency.
+> >>>> 
+> >>>> Even if some current systems where the driver is used are using 24 MHz
+> >>>> clock, that doesn't mean there wouldn't be systems using another frequency
+> >>>> that the driver does not support right now.
+> >>>> 
+> >>>> The driver really should not set the frequency unless it gets it from DT,
+> >>>> but I think the preferred means is to use assigned-clock-rates instead, and
+> >>>> not to involve the driver with setting the frequency.
+> >>>> 
+> >>>> Otherwise we'll make it impossible to support other frequencies, at least
+> >>>> without more or less random defaults.
+> >>> 
+> >>> We're running in circles here.
+> >>> 
+> >>> As the driver only supports 24MHz at the moment, the frequency should be
+> >>> set by the driver, as it's a driver limitation. We can then work on
+> >>> supporting additional frequencies, which will require DT to provide a
+> >>> list of supported frequencies for the system, but that can be done on
+> >>> top.
+> >> 
+> >> I guess it would be possible to use different external clock frequencies on
+> >> a sensor in a given system but that seems to be a bit far fetched, to the
+> >> extent I've never seen anyone doing that in practice.
+> >> 
+> >> Originally, the driver set the frequency based on the clock-frequency
+> >> property. If we're removing that but use a fixed frequency instead, then
+> >> how is that going to work going forward when someone adds support for other
+> >> frequencies in the driver and has a system requiring that, while there are
+> >> some other platforms relying on the driver setting a particular frequency?
 > > 
-> > [snip]
-> > 
-> > > > > > > +
-> > > > > > > +Enabling DAX on xfs
-> > > > > > > +-------------------
-> > > > > > > +
-> > > > > > > +Summary
-> > > > > > > +-------
-> > > > > > > +
-> > > > > > > + 1. There exists an in-kernel access mode flag S_DAX that is set when
-> > > > > > > +    file accesses go directly to persistent memory, bypassing the page
-> > > > > > > +    cache.
-> > > > > >
-> > > > > > I had reserved some quibbling with this wording, but now that this is
-> > > > > > being proposed as documentation I'll let my quibbling fly. "dax" may
-> > > > > > imply, but does not require persistent memory nor does it necessarily
-> > > > > > "bypass page cache". For example on configurations that support dax,
-> > > > > > but turn off MAP_SYNC (like virtio-pmem), a software flush is
-> > > > > > required. Instead, if we're going to define "dax" here I'd prefer it
-> > > > > > be a #include of the man page definition that is careful (IIRC) to
-> > > > > > only talk about semantics and not backend implementation details. In
-> > > > > > other words, dax is to page-cache as direct-io is to page cache,
-> > > > > > effectively not there, but dig a bit deeper and you may find it.
-> > > > >
-> > > > > Uh, which manpage?  Are you talking about the MAP_SYNC documentation?
-> > > > 
-> > > > No, I was referring to the proposed wording for STATX_ATTR_DAX.
-> > > > There's no reason for this description to say anything divergent from
-> > > > that description.
-> > > 
-> > > Ahh, ok.  Something like this, then:
-> > > 
-> > >  1. There exists an in-kernel access mode flag S_DAX.  When set, the
-> > >     file is in the DAX (cpu direct access) state.  DAX state attempts to
-> > >     minimize software cache effects for both I/O and memory mappings of
-> > >     this file.  The S_DAX state is exposed to userspace via the
-> > >     STATX_ATTR_DAX statx flag.
-> > > 
-> > >     See the STATX_ATTR_DAX in the statx(2) manpage for more information.
-> > 
-> > We crossed in the ether!!!  I propose even less details here...  Leave all the
-> > details to the man page.
-> > 
-> > <quote>
-> > 1. There exists an in-kernel access mode flag S_DAX that is set when file
-> >     accesses is enabled for 'DAX'.  Applications must call statx to discover
-> >     the current S_DAX state (STATX_ATTR_DAX).  See the man page for statx for
-> >     more details.
-> > </quote>
+> > The standard property for this is link-frequencies, not clock-frequency.
+> > Deprecating clock-frequency now paves the way to use the standard
+> > property later when/if someone implements support for additional
+> > frequencies.
 > 
-> Why stop cutting there? :)
+> The external clock frequency and link frequency are different indeed, but
+> they are related. The link frequency has been selected in a way that it is
+> possible to generate that exact frequency using the chosen external clock
+> frequency. If you change the external clock frequency, chances are good
+> there is no PLL configuration to generate that link frequency.
+
+But aren't we supposed to pick the clock frequency based on the link
+frequency specified in DT ?
+
+In any case, this policy needs to be carefully documented.
+
+> >> Although, if you're saying that this driver only needs to work with DT that
+> >> comes with the kernel and you don't care about DT binary compatibility,
+> >> this would be fine.
+> > 
+> > I believe this series to not break backward compatibility, as the driver
+> > only works with a 24MHz clock, so I expect all DTs to specify that.
 > 
->  1. There exists an in-kernel file access mode flag S_DAX that
->     corresponds to the statx flag STATX_ATTR_DIRECT_LOAD_STORE.  See the
->     manpage for statx(2) for details about this access mode.
+> What you're still doing here is defining the DT bindings based on the
+> current driver implementation, not the device properties.
 
-Sure!  But I'm holding to STATX_ATTR_DAX...  I don't like introducing another
-alias for this stuff.  Why have '-o dax=x' and then have some other term here?
+Quite the contrary, the device doesn't require any particular input
+clock frequency, so we're removing that from DT :-) Specifying the clock
+frequency in DT is in my opinion a manual workaround for not computing
+it at runtime based on the desired link frequency, while the link
+frequency is a property of the system as it specifies the range of link
+frequencies that are safe to use from an EMC point of view.
 
-Keep the name the same for consistency.
+-- 
+Regards,
 
-Searching for 'DAX Linux'[*] results in 'About 877,000 results' on Google.
-
-While "'direct load store' Linux" results in 'About 2,630 results'.
-
-I'll update the rest of the text though!  :-D
-
-Ira
-
-[*] Because 'DAX' is some company index and or a rapper...  <sigh>
+Laurent Pinchart
