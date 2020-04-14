@@ -2,96 +2,139 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E18C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972A3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F082064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:52:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586897542;
-	bh=UNAynrifsyrl63+WA+Z6q40CoIdb4PxkQRzhNgu9FRk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=v8NvUyOuI+y27e2ovdgxA3U6vs+C3HGHPzUuIHa+cBcYCU51ZC9g1NLGjhqqInSeq
-	 CUt2xTHZPrw4PjrSG6FU7KcQa1Wqi1qzHh3E0h28Sse+U1q5X7SLVlcU23uz+bHuMF
-	 mC6UPv+I2pTUyK9dDR1c/Rn3KsaqiFj3CTpFcYFY=
+	by mail.kernel.org (Postfix) with ESMTP id 724052064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:52:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eX7dtv0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633413AbgDNUwT (ORCPT
+        id S2633419AbgDNUw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:52:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633395AbgDNUwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:52:29 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34170 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729251AbgDNUwN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 16:52:13 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBAC52074D;
-        Tue, 14 Apr 2020 20:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586897533;
-        bh=UNAynrifsyrl63+WA+Z6q40CoIdb4PxkQRzhNgu9FRk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dm5y+ThhW+vRmynXiHvgCKGwq2G2cQ1F8s1xmhdUMO+psCFELoh54cRe4ZgdeZXBF
-         yR0JVYeIEDk5FZOQaN0kEmypiQH9DOkDH21WLrUw53Qzdc4Tw8Ya31r4SIKFlhC88M
-         BpFCZPAyaC07c2kpRZEM4NfjOGF3SAD3n/UF4JdE=
-Subject: Re: [PATCH] Revert "Kernel selftests: tpm2: check for tpm support"
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <20200412142309.71807-1-jarkko.sakkinen@linux.intel.com>
- <3921a93f-120c-0201-4af5-591bf4e6a0b0@kernel.org>
- <20200414193722.GD13000@linux.intel.com>
- <20200414193800.GE13000@linux.intel.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ac896427-581d-6fd0-e088-3bc519b6ed66@kernel.org>
-Date:   Tue, 14 Apr 2020 14:52:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 64594521;
+        Tue, 14 Apr 2020 22:52:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586897530;
+        bh=yu8wglok8OGTOl53X/EXGSF59yx8BKjlyryBpwdu+g0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eX7dtv0TNakDsdzDQ3BH/Un2lTDwlo7BU+ATugilaXE2BvVbaPEOuDTYiH1LzmDIm
+         zrk2T1Qy/+CGgzRhsuhVjKF08IvLfYSkNdohXM/gitM7lOB1zw2S3nfDH7IHxsEmek
+         VZYsFivVYMWhwIzYLp8N1QYZhkjRQi5t7LPo1xVk=
+Date:   Tue, 14 Apr 2020 23:51:58 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
+Message-ID: <20200414205158.GM19819@pendragon.ideasonboard.com>
+References: <20200408202711.1198966-1-arnd@arndb.de>
+ <20200408202711.1198966-6-arnd@arndb.de>
+ <20200414201739.GJ19819@pendragon.ideasonboard.com>
+ <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200414193800.GE13000@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 1:38 PM, Jarkko Sakkinen wrote:
-> On Tue, Apr 14, 2020 at 10:37:25PM +0300, Jarkko Sakkinen wrote:
->> On Tue, Apr 14, 2020 at 09:12:05AM -0600, shuah wrote:
->>> On 4/12/20 8:23 AM, Jarkko Sakkinen wrote:
->>>> This reverts commit b32694cd0724d4ceca2c62cc7c3d3a8d1ffa11fc.
->>>>
->>>> The original comment
->>>
->>> commit I assume.
->>>
->>>   was neither reviewed nor tested. Thus, this the
->>>> *only* possible action to take.
->>>>
->>>
->>> Bummer. I will apply this right away.
->>
->> No worries, and fine with the change as long as I'm able to
->> review and try it out :-) Sorry for the dull tone!
+Hi Arnd,
+
+On Tue, Apr 14, 2020 at 10:38:27PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 14, 2020 at 10:17 PM Laurent Pinchart wrote:
+> > On Wed, Apr 08, 2020 at 10:27:10PM +0200, Arnd Bergmann wrote:
+> > > The 'imply' statement does not seem to have an effect, as it's
+> > > still possible to turn the CMM code into a loadable module
+> > > in a randconfig build, leading to a link error:
+> > >
+> > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_crtc.o: in function `rcar_du_crtc_atomic_enable':
+> > > rcar_du_crtc.c:(.text+0xad4): undefined reference to `rcar_lvds_clk_enable'
+> > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_crtc.o: in function `rcar_du_crtc_atomic_disable':
+> > > rcar_du_crtc.c:(.text+0xd7c): undefined reference to `rcar_lvds_clk_disable'
+> > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_drv.o: in function `rcar_du_init':
+> > > rcar_du_drv.c:(.init.text+0x4): undefined reference to `rcar_du_of_init'
+> > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_encoder.o: in function `rcar_du_encoder_init':
+> > >
+> > > Remove the 'imply', and instead use a silent symbol that defaults
+> > > to the correct setting.
+> >
+> > This will result in the CMM always being selected when DU is, increasing
+> > the kernel size even for devices that don't need it. I believe we need a
+> > better construct in Kconfig to fix this.
 > 
-
-I usually wait for test authors to do the review. This patch
-was sent a while back and I ended up picking it up. It stayed
-in next for a while. It is fixed now.
-
-> I mean refined change after this revert has been applied.
+> I had expected this to have the same meaning that we had before the
+> Kconfig change: whenever the dependencies are available, turn it on,
+> otherwise leave it disabled.
 > 
-Of course. I applied your revert to for my next pull request
-to linux-kselftest next
+> Can you describe what behavior you actually want instead?
 
-thanks,
--- Shuah
+Doesn't "imply" mean it gets selected by default but can be manually
+disabled ?
+
+> > > --- a/drivers/gpu/drm/rcar-du/Kconfig
+> > > +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> > > @@ -4,7 +4,6 @@ config DRM_RCAR_DU
+> > >       depends on DRM && OF
+> > >       depends on ARM || ARM64
+> > >       depends on ARCH_RENESAS || COMPILE_TEST
+> > > -     imply DRM_RCAR_CMM
+> > >       imply DRM_RCAR_LVDS
+> > >       select DRM_KMS_HELPER
+> > >       select DRM_KMS_CMA_HELPER
+> > > @@ -15,9 +14,8 @@ config DRM_RCAR_DU
+> > >         If M is selected the module will be called rcar-du-drm.
+> > >
+> > >  config DRM_RCAR_CMM
+> > > -     tristate "R-Car DU Color Management Module (CMM) Support"
+> > > +     def_tristate DRM_RCAR_DU
+> > >       depends on DRM && OF
+> > > -     depends on DRM_RCAR_DU
+> > >       help
+> 
+> It would be easy enough to make this a visible 'bool' symbol and
+> build it into the rcu-du-drm.ko module itself. Would that help you?
+
+That could indeed simplify a few things. I wonder if it could introduce
+a few small issues though (but likely nothing we can't fix). The two
+that come to mind are the fact that the module would have two
+MODULE_DESCRIPTION and MODULE_LICENSE entries (I have no idea if that
+could cause breakages), and that it could make module unloading more
+difficult as the CMM being used by the DU would increase the refcount on
+the module. I think the latter could be worked around by manually
+unbinding the DU device through sysfs before unloading the module (and I
+can't say for sure that unloading the DU module is not broken today
+*innocent and naive look* :-)).
+
+-- 
+Regards,
+
+Laurent Pinchart
