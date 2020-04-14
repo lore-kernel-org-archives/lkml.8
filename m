@@ -1,125 +1,114 @@
-Return-Path: <SRS0=sVLE=55=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A2CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 23:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18E9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 00:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C0720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Apr 2020 23:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BA22072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 00:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V2Pj+9rq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDduSssb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390340AbgDMXzY (ORCPT
+        id S2390357AbgDNAEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 19:55:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42464 "EHLO
+        Mon, 13 Apr 2020 20:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390309AbgDMXzW (ORCPT
+        by vger.kernel.org with ESMTP id S2390344AbgDNAEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 19:55:22 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1EE2C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 16:55:22 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id s19so650360pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 16:55:22 -0700 (PDT)
+        Mon, 13 Apr 2020 20:04:44 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA196C0A3BDC;
+        Mon, 13 Apr 2020 17:04:43 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id b13so6793971oti.3;
+        Mon, 13 Apr 2020 17:04:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=+4rFnX02gj14fuJltOp8b6tx4JnqFsAhBYMqq+dskm8=;
-        b=V2Pj+9rqbJ6+JXga562hk45vktjRQkUkDiy0oBfSI1RI5qub7/7ckyNrqiWyQs/Tn1
-         DFowFUvIEO0v76R08sWihTEswVIBptf58gDrVJH0XsYXNxEVpt8CMnzLvQUMSjkcKYML
-         TQXoNx1Nfzn61EwjknwVbSa1vupDLBhbEB9ZEM77wByW8CMv85WmmYUr2t3uEQ02BQE2
-         2IN3dnGSPW6xHyIb1hqOe7VyhhVVSJ9RHuyFQbWdufIchmklBz+OpgTuMgMC0PQ4JZUx
-         akvkzDJaP9NXF4PJpxKXQv5edTK7dl774rR0QyVP7cIDLH6gGt1ONrN0r5xipDkBMiaX
-         Cpog==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+4+rycwR8GzUJQp1X1LzbsFhbfXsBfzL6VtDkjicxak=;
+        b=PDduSssba/36SmLLxi8QB4NoMeRn5QRTXCf7mFJTyZDC/QGOR2/p1vPbQJWIVJ5ajy
+         TagJCMUelxZ/hb1TdPFZ4LA9nI7oQrCO/SfIWd+Q0zkMlIMwkSLAAAQV34HyP8PhS4O0
+         8kyrOjNXnOppSzBk+bHH9mFW0T36xe1YntXMDsvyBPVzh+ay3pSWnLfgOHNDxRkfpgGk
+         XqkrdQQNSDksd3/tY3TptpQi60Cx+mDkJZvYHTByIF9u1jPnFoid6BEVJW5phS+vPHVG
+         5hKWg8Sw8BZZbyMAccx52BVyk7a0GxDq5cNNlGLE/Svjzail9yaJA1mdKPoR4EKK5PnK
+         +Wow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=+4rFnX02gj14fuJltOp8b6tx4JnqFsAhBYMqq+dskm8=;
-        b=aRkI5x0XDaf/D3q4/iWSsKrp5GyEDV6h+gt6VmLMfsU4y5/5evHQ7hlj47MGVcAGQ2
-         ppwZxBHu/0nCUgAP2/s8QliI0yceasBHOvvfqATxYaG5zLuVz0C6/GRYrZ/X1exGHSrL
-         a2g1CL3SqwF5qj90GNayHwucLKR/qpjw4dedODQ759yLiVwcwJal9xV40X3RjKLnIb1N
-         XYg6ZxTKIkp1P8DkJi21kuZOhtMJhZMywoBqndDgR/3+yRX7Puoy6kKIKSksn9fmgKNO
-         zR3Af4ffdDKAil610G1ykStFAumgPoMNhZPQA7XrnwWls/w7a8MFBxHEoYCH/p3tuACB
-         z8lA==
-X-Gm-Message-State: AGi0PuZtZQfGZePUyEnfEDpHb2/ia1CIiNA5t7ch+31W/O+xEAQ4CpDJ
-        0tcIwp/PAOzBkVaKlB02tnMJXn5wrifT
-X-Google-Smtp-Source: APiQypLBf+cIzoYAbQ41Tj88P0cngrpnOWGou23Er6A8Po4w+vQmv2SPCfQMgxbgBqXIf8ujSH+jk0lhrZRI
-X-Received: by 2002:a17:90a:30e7:: with SMTP id h94mr22650088pjb.186.1586822122091;
- Mon, 13 Apr 2020 16:55:22 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 16:55:15 -0700
-Message-Id: <20200413235515.221467-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH] perf stat: force error in fallback on :k events
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+4+rycwR8GzUJQp1X1LzbsFhbfXsBfzL6VtDkjicxak=;
+        b=Vg1z5V5W5OSFlX4OELtHwiB6GkNS6VWtTgwZXx3/rOPZbJ2QkzxqeJaciwLT+3IPQr
+         TCiogghqUhySDGk9T7zqh9XcIqQBzF/VoO7gG2N1UjVcbE4M7U5yGOC+GWNO/oh4xKYU
+         Spv0CHDh3VSgWT55uO0U/mD7lFukM6vSbFhoMkGh/hpMSatFAXJpTdfhy0sbwjta0RkS
+         2b9yXGJFRwgjCEn8qR0dFMCAJvp5rMlCyTwclB3/ragJUBK28aFXbf0lHbSJlxMOTyGR
+         xaaBiSD/njUuNY+Psb+4tMDSqwR866+LKvAqaXKxoXGNKs1d1+ZEu4yH8kuKLdW3vqLO
+         6hLA==
+X-Gm-Message-State: AGi0PuZhBQJpXwvmrQclcJe0VXg9BeFYSvp1Tstd/CE8wGttVYto+YbL
+        THwsuX7q8K9ErpvbYtqnV/uNFIMiwKu7yEDHzqo=
+X-Google-Smtp-Source: APiQypJOphKMyEudYUDpPvY1hqUNXvYfKKSoRuzdgrn3EUWtoedSaoR6KC92ECz98KoDyWIKX23lAv6/C6kKBSI7Gh0=
+X-Received: by 2002:a9d:629a:: with SMTP id x26mr15111457otk.201.1586822682835;
+ Mon, 13 Apr 2020 17:04:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <96bedbaf-49ea-f24b-b7b1-fb9a57fb6c7d@gmail.com>
+ <20200411154031.642557-1-avagin@gmail.com> <CAKgNAki6uBHVTBdJvj7hzbho9Z94MWRV7ab8npduogQohRndBQ@mail.gmail.com>
+ <20200413154746.39275d0981f69e57a7ecab3e@linux-foundation.org>
+In-Reply-To: <20200413154746.39275d0981f69e57a7ecab3e@linux-foundation.org>
+From:   Andrei Vagin <avagin@gmail.com>
+Date:   Mon, 13 Apr 2020 17:04:31 -0700
+Message-ID: <CANaxB-xu0qcANMYMpkcfM23rdUgQxFn7v1fsa_XnzVqNF5+TpQ@mail.gmail.com>
+Subject: Re: [PATCH v2] timens: show clock symbolic names in /proc/pid/timens_offsets
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+On Mon, Apr 13, 2020 at 3:47 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Sun, 12 Apr 2020 07:51:47 +0200 "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> wrote:
+>
+> > Hi Andrei,
+> >
+> > On Sat, 11 Apr 2020 at 17:40, Andrei Vagin <avagin@gmail.com> wrote:
+> > >
+> > > Michael Kerrisk suggested to replace numeric clock IDs on symbolic
+> > > names.
+> > >
+> > > Now the content of these files looks like this:
+> > > $ cat /proc/774/timens_offsets
+> > > monotonic      864000         0
+> > > boottime      1728000         0
+> >
+> > Thanks.
+> >
+> > Assuming no-one has objections to the patch, please do mark for stable@.
+> >
+>
+> `grep -r timens_offsets Documentation' comes up blank.  Is
+> /proc/pid/timens_offsets documented anywhere?  If not, it should be!
+> And this patch should update that documentation.
+>
+> I assume the time namespace feature itself is documented under clone(2)?
 
-When it is not possible for a non-privilege perf command
-to monitor at the kernel level (:k), the fallback code forces
-a :u. That works if the event was previously monitoring both levels.
-But if the event was already constrained to kernel only, then it does
-not make sense to restrict it to user only.
-Given the code works by exclusion, a kernel only event would have:
-attr->exclude_user = 1
-The fallback code would add:
-attr->exclude_kernel = 1;
+Thanks to Michael, we have the man page for time namespaces:
+https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man7/time_namespaces.7
 
-In the end the end would not monitor in either the user level or kernel
-level. In other words, it would count nothing.
+And it will be updated according with this change.
 
-An event programmed to monitor kernel only cannot be switched to user only
-without seriously warning the user.
-
-This patch forces an error in this case to make it clear the request
-cannot really be satisfied.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d23db6755f51..d1e8862b86ce 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2446,6 +2446,13 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
- 		char *new_name;
- 		const char *sep = ":";
- 
-+		if (evsel->core.attr.exclude_user) {
-+			scnprintf(msg, msgsize,
-+"kernel.perf_event_paranoid=%d, event set to exclude user, so cannot also exclude kernel",
-+				paranoid);
-+			return false;
-+		}
-+
- 		/* Is there already the separator in the name. */
- 		if (strchr(name, '/') ||
- 		    strchr(name, ':'))
--- 
-2.26.0.110.g2183baf09c-goog
-
+Thanks,
+Andrei
