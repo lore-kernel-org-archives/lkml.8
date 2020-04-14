@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430E9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B262C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08C5F2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E522063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgDNNVO (ORCPT
+        id S1731308AbgDNNVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:21:14 -0400
-Received: from 8bytes.org ([81.169.241.247]:35050 "EHLO theia.8bytes.org"
+        Tue, 14 Apr 2020 09:21:45 -0400
+Received: from 8bytes.org ([81.169.241.247]:35392 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502904AbgDNNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2502768AbgDNNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 09:16:07 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id C5CC776D; Tue, 14 Apr 2020 15:15:56 +0200 (CEST)
+        id 3FB4A736; Tue, 14 Apr 2020 15:15:56 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +46,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 28/33] iommu/omap: Remove orphan_dev tracking
-Date:   Tue, 14 Apr 2020 15:15:37 +0200
-Message-Id: <20200414131542.25608-29-joro@8bytes.org>
+Subject: [PATCH v2 25/33] iommu/rockchip: Convert to probe/release_device() call-backs
+Date:   Tue, 14 Apr 2020 15:15:34 +0200
+Message-Id: <20200414131542.25608-26-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 References: <20200414131542.25608-1-joro@8bytes.org>
@@ -58,129 +59,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Remove the tracking of device which could not be probed because
-their IOMMU is not probed yet. Replace it with a call to
-bus_iommu_probe() when a new IOMMU is probed.
+Convert the Rockchip IOMMU driver to use the probe_device() and
+release_device() call-backs of iommu_ops, so that the iommu core code
+does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/omap-iommu.c | 54 +++-----------------------------------
- 1 file changed, 4 insertions(+), 50 deletions(-)
+ drivers/iommu/rockchip-iommu.c | 26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index 887fefcb03b4..ecc9d0829a91 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
-@@ -35,15 +35,6 @@
- 
- static const struct iommu_ops omap_iommu_ops;
- 
--struct orphan_dev {
--	struct device *dev;
--	struct list_head node;
--};
--
--static LIST_HEAD(orphan_dev_list);
--
--static DEFINE_SPINLOCK(orphan_lock);
--
- #define to_iommu(dev)	((struct omap_iommu *)dev_get_drvdata(dev))
- 
- /* bitmap of the page sizes currently supported */
-@@ -62,8 +53,6 @@ static DEFINE_SPINLOCK(orphan_lock);
- static struct platform_driver omap_iommu_driver;
- static struct kmem_cache *iopte_cachep;
- 
--static int _omap_iommu_add_device(struct device *dev);
--
- /**
-  * to_omap_domain - Get struct omap_iommu_domain from generic iommu_domain
-  * @dom:	generic iommu domain handle
-@@ -1177,7 +1166,6 @@ static int omap_iommu_probe(struct platform_device *pdev)
- 	struct omap_iommu *obj;
- 	struct resource *res;
- 	struct device_node *of = pdev->dev.of_node;
--	struct orphan_dev *orphan_dev, *tmp;
- 
- 	if (!of) {
- 		pr_err("%s: only DT-based devices are supported\n", __func__);
-@@ -1260,13 +1248,8 @@ static int omap_iommu_probe(struct platform_device *pdev)
- 
- 	dev_info(&pdev->dev, "%s registered\n", obj->name);
- 
--	list_for_each_entry_safe(orphan_dev, tmp, &orphan_dev_list, node) {
--		err = _omap_iommu_add_device(orphan_dev->dev);
--		if (!err) {
--			list_del(&orphan_dev->node);
--			kfree(orphan_dev);
--		}
--	}
-+	/* Re-probe bus to probe device attached to this IOMMU */
-+	bus_iommu_probe(&platform_bus_type);
- 
- 	return 0;
- 
-@@ -1657,7 +1640,7 @@ static phys_addr_t omap_iommu_iova_to_phys(struct iommu_domain *domain,
- 	return ret;
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index b33cdd5aad81..d25c2486ca07 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -1054,40 +1054,28 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
+ 	kfree(rk_domain);
  }
  
--static int _omap_iommu_add_device(struct device *dev)
-+static int omap_iommu_add_device(struct device *dev)
+-static int rk_iommu_add_device(struct device *dev)
++static struct iommu_device *rk_iommu_probe_device(struct device *dev)
  {
- 	struct omap_iommu_arch_data *arch_data, *tmp;
- 	struct omap_iommu *oiommu;
-@@ -1666,8 +1649,6 @@ static int _omap_iommu_add_device(struct device *dev)
- 	struct platform_device *pdev;
- 	int num_iommus, i;
- 	int ret;
--	struct orphan_dev *orphan_dev;
--	unsigned long flags;
+-	struct iommu_group *group;
+-	struct rk_iommu *iommu;
+ 	struct rk_iommudata *data;
++	struct rk_iommu *iommu;
  
- 	/*
- 	 * Allocate the archdata iommu structure for DT-based devices.
-@@ -1702,23 +1683,7 @@ static int _omap_iommu_add_device(struct device *dev)
- 		if (!pdev) {
- 			of_node_put(np);
- 			kfree(arch_data);
--			spin_lock_irqsave(&orphan_lock, flags);
--			list_for_each_entry(orphan_dev, &orphan_dev_list,
--					    node) {
--				if (orphan_dev->dev == dev)
--					break;
--			}
--			spin_unlock_irqrestore(&orphan_lock, flags);
--
--			if (orphan_dev && orphan_dev->dev == dev)
--				return -EPROBE_DEFER;
--
--			orphan_dev = kzalloc(sizeof(*orphan_dev), GFP_KERNEL);
--			orphan_dev->dev = dev;
--			spin_lock_irqsave(&orphan_lock, flags);
--			list_add(&orphan_dev->node, &orphan_dev_list);
--			spin_unlock_irqrestore(&orphan_lock, flags);
--			return -EPROBE_DEFER;
-+			return -ENODEV;
- 		}
+ 	data = dev->archdata.iommu;
+ 	if (!data)
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
  
- 		oiommu = platform_get_drvdata(pdev);
-@@ -1764,17 +1729,6 @@ static int _omap_iommu_add_device(struct device *dev)
- 	return 0;
+ 	iommu = rk_iommu_from_dev(dev);
+ 
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
+-	iommu_group_put(group);
+-
+-	iommu_device_link(&iommu->iommu, dev);
+ 	data->link = device_link_add(dev, iommu->dev,
+ 				     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
+ 
+-	return 0;
++	return &iommu->iommu;
  }
  
--static int omap_iommu_add_device(struct device *dev)
--{
--	int ret;
--
--	ret = _omap_iommu_add_device(dev);
--	if (ret == -EPROBE_DEFER)
--		return 0;
--
--	return ret;
--}
--
- static void omap_iommu_remove_device(struct device *dev)
+-static void rk_iommu_remove_device(struct device *dev)
++static void rk_iommu_release_device(struct device *dev)
  {
- 	struct omap_iommu_arch_data *arch_data = dev->archdata.iommu;
+-	struct rk_iommu *iommu;
+ 	struct rk_iommudata *data = dev->archdata.iommu;
+ 
+-	iommu = rk_iommu_from_dev(dev);
+-
+ 	device_link_del(data->link);
+-	iommu_device_unlink(&iommu->iommu, dev);
+-	iommu_group_remove_device(dev);
+ }
+ 
+ static struct iommu_group *rk_iommu_device_group(struct device *dev)
+@@ -1126,8 +1114,8 @@ static const struct iommu_ops rk_iommu_ops = {
+ 	.detach_dev = rk_iommu_detach_device,
+ 	.map = rk_iommu_map,
+ 	.unmap = rk_iommu_unmap,
+-	.add_device = rk_iommu_add_device,
+-	.remove_device = rk_iommu_remove_device,
++	.probe_device = rk_iommu_probe_device,
++	.release_device = rk_iommu_release_device,
+ 	.iova_to_phys = rk_iommu_iova_to_phys,
+ 	.device_group = rk_iommu_device_group,
+ 	.pgsize_bitmap = RK_IOMMU_PGSIZE_BITMAP,
 -- 
 2.17.1
 
