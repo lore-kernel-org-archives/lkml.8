@@ -2,136 +2,135 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16D1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E82C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4E52076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F4F2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UW03JANv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3+2T5N+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633300AbgDNUl7 (ORCPT
+        id S2633306AbgDNUme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42578 "EHLO
+        Tue, 14 Apr 2020 16:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729251AbgDNUly (ORCPT
+        by vger.kernel.org with ESMTP id S1729251AbgDNUmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:41:54 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B086C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:41:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z6so15964207wml.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kRD6ER0kESZyvLzhCicmTVhbpnrsXVXBsNz/nRRqon0=;
-        b=UW03JANvjlup8MIxgaN12OcWZzq7aMnlQ1ahjWwW0fKJ3LVfWDPay6E/5n+/DshVIF
-         vsqX/H0BWReIctV3h6m0IbsfCf3/op3n9k9KqN/7abhhc6P7mSI12NkG8sfsIy9RRPvz
-         OZ+JuhkoD38d75gQcIBDzbOwuCyJd5kABsk3la8pblyaMB+WmO56/XDeZHtO1dBSBWOp
-         iDerYsJ+kySrEkSFs1CLjZY2Dh3PHscv752KQmzHpUOHnzZdNVPt7ya0qgqz4F2PXaSg
-         yZCIOtDwCiMjVL7PwmSCpPEONHpMVxYK0//DDBb7tK5GrXc8KD5tIMFvCFHVJEJfB44T
-         JEGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kRD6ER0kESZyvLzhCicmTVhbpnrsXVXBsNz/nRRqon0=;
-        b=lSH6a4c0WnFEWKJQIzWkpC7Z0tTwVWspfiaIfEyzenwu98TsVBAZCt6okrst0mJHeN
-         CiTAcWOZkbrKiczx4x9mRs3FmBjOCHVZHEFy5eeazGPpIR3ZcB9e9h/CH731gcsYMVds
-         HlMtw6rBBeKy+cxa5XlaHSa9fbTfYdqUMORPXMNLMp67IzsShnx+sTbWVJhrNFr5+FLO
-         3yOjVST0J9Od2Jp7S8W8ioOJeuGnm6TlQuFN3CY4d3j9QSgzDp3QfIqvFW0HYKW34zQX
-         jtxcHw3bKojIecQkU6z3REXxfFXjRt2z7M7LvIoW2GLORDYlfSw/vXfclkCjpcddwOuG
-         ahGw==
-X-Gm-Message-State: AGi0PuYvYRQj47PVKZ5Kumk6of503jUag0X9/M5NpzpFUQOpevPorFNr
-        SnAFe9y9I55g+/gHf6F7Y7dpv227IUBGf67+jONRlw==
-X-Google-Smtp-Source: APiQypJfqEPibYcj2k65XEXixEnNsItmQI+g5MjRJaCCFk2dep2r9dX3R/rTcIvaSElU3BOpks6akiiqS+ParjXVlXs=
-X-Received: by 2002:a1c:5ac4:: with SMTP id o187mr1719537wmb.79.1586896912367;
- Tue, 14 Apr 2020 13:41:52 -0700 (PDT)
+        Tue, 14 Apr 2020 16:42:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958F5C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=f6MlGhTrcfhE1matnY+gFa+jGAtYKA2T1KF8VNUMpDE=; b=e3+2T5N+0nfY8EtcHFc1NCkWQG
+        FaeuviunEq6Wm0GkCubBuH66TIFCjGuHLfcqqEzA31UTQtFMnKL0IMjud4r7RsPGNlTTGlZO2GpG4
+        KTnhLkSX/o5DC+G53S0e8WNc4ZeiNbYx64khP15zkcWFLOAExY7Rqcz8J1f3z4RK6vK0Jf8YVhgLt
+        zuQPLCXMwyeDiX4kZG0FZzqXogloO2Uk8ZgibofNW5e4wFZ2KrTstwcJoE5WxgtvsswTmmj72JIgi
+        UirhkeJ1Me/WQjy1XlUriJ27VDRV2KXfC2tbSuM7DjbTAUCEv50/ksza4Gie2K9Mxmtz2p9m/Ts7T
+        QneatjUg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOSNm-0001ZJ-Rr; Tue, 14 Apr 2020 20:42:11 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F899980FA9; Tue, 14 Apr 2020 22:42:08 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 22:42:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Barret Rhoden <brho@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
+Subject: Re: perf: add cond_resched() to task_function_call()
+Message-ID: <20200414204208.GI2483@worktop.programming.kicks-ass.net>
+References: <20200414190351.16893-1-brho@google.com>
 MIME-Version: 1.0
-References: <20200408175058.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
- <CAHp75VcuPoVK_+KV+88Di1dUFZ9S8-1nNqo2s8a_n3vgSMoecg@mail.gmail.com>
- <CAHcu+VZMiFVt9L9kNCTtsmxUP-7tO+pBpCOtMHQPotuye_2w1A@mail.gmail.com> <CAHp75VemvD0mvDHWorSFhqOKaQ1Y_vLYVAQmnb8iz30AH431+Q@mail.gmail.com>
-In-Reply-To: <CAHp75VemvD0mvDHWorSFhqOKaQ1Y_vLYVAQmnb8iz30AH431+Q@mail.gmail.com>
-From:   Daniel Campello <campello@google.com>
-Date:   Tue, 14 Apr 2020 14:41:16 -0600
-Message-ID: <CAHcu+VbZjqnxmfw-fN9H=qwWAdR9Y8JuQC2e39xe7UtFfCXf8A@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v8] iio: Add SEMTECH SX9310/9311 sensor driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414190351.16893-1-brho@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 3:11 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Apr 14, 2020 at 1:56 AM Daniel Campello <campello@google.com> wrote:
-> > On Fri, Apr 10, 2020 at 4:52 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Apr 9, 2020 at 2:54 AM Daniel Campello <campello@chromium.org> wrote:
->
-> As far I understand you agreed on the rest.
-> Correct?
->
-Yes, sorry for not be explicit before.
-> ...
->
-> > > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > > > Signed-off-by: Enrico Granata <egranata@chromium.org>
-> > >
-> > > This is not understandable. Are they who helped you develop the code
-> > > (we have a special tag, i.e. Co-developed-by in addition to SoB), or
-> > > just people in the middle? Then the question is, how come author is
-> > > you and not Gwendal?
-> > >
-> > This patch was initially developed by Gwendal and Enrico (here:
-> > crrev.com/c/1089826).
->
-> So, tags should include
->  SoB: Gwendal ...
->  Co-developed-by: Enrico ...
->  SoB: Enrico ...
->  Co-developed-by: yours (if you developed it)
->  SoB: yours
->
-> and on top git commit --amend --author="Gwendal  ..."
+On Tue, Apr 14, 2020 at 03:03:51PM -0400, Barret Rhoden wrote:
+> Under rare circumstances, task_function_call() can repeatedly fail and
+> cause a soft lockup.
+> 
+> There is a slight race where the process is no longer running on the cpu
+> we targeted by the time remote_function() runs.  The code will simply
+> try again.  If we are very unlucky, this will continue to fail, until a
+> watchdog fires.  This can happen in a heavily loaded, multi-core virtual
+> machine.
 
-I sent v10 with this metadata changed. Thanks!
->
-> ...
->
-> > > > +#define SX9310_REG_IRQ_MSK                             0x03
-> > >
-> > > Is MSK abbreviation in datasheet? Please spell it how it's in datasheet.
-> > Yes, they indead use MSK.
->
-> Okay!
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Sigh,.. virt again :/
 
-Regards,
-Daniel
+> Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> ---
+>  kernel/events/core.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 55e44417f66d..65c2c05e24c2 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -99,7 +99,7 @@ static void remote_function(void *data)
+>   *
+>   * returns: @func return value, or
+>   *	    -ESRCH  - when the process isn't running
+> - *	    -EAGAIN - when the process moved away
+> + *	    -ENXIO  - when the cpu the process was on has gone offline
+>   */
+
+Hurm.. I don't think that was actually intended behaviour. As long as
+the task lives we ought to retry. Luckily I don't think the current code
+cares much, it'll loop again on the caller side.
+
+With the exception of perf_cgroup_attach() that is, that might actually
+be broken because of this.
+
+>  static int
+>  task_function_call(struct task_struct *p, remote_function_f func, void *info)
+> @@ -112,11 +112,15 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+>  	};
+>  	int ret;
+>  
+> -	do {
+> -		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
+> +	while (1) {
+> +		ret = smp_call_function_single(task_cpu(p), remote_function,
+> +					       &data, 1);
+>  		if (!ret)
+>  			ret = data.ret;
+> -	} while (ret == -EAGAIN);
+> +		if (ret != -EAGAIN)
+> +			break;
+> +		cond_resched();
+> +	}
+
+So how about we make that:
+
+	for (;;) {
+		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
+		ret = !ret ? data.ret : -EAGAIN;
+
+		if (ret != -EAGAIN)
+			break;
+
+		cond_resched();
+	}
+
+Or something like that, hmmm?
