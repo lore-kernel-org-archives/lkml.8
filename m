@@ -2,108 +2,113 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE424C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DF6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10A820732
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CA9206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:29:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IXS45WnH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501960AbgDNM2b (ORCPT
+        id S2501967AbgDNM3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:28:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:54386 "EHLO foss.arm.com"
+        Tue, 14 Apr 2020 08:29:03 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:19996 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2501933AbgDNM2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:28:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11BD91FB;
-        Tue, 14 Apr 2020 05:28:10 -0700 (PDT)
-Received: from [10.57.33.145] (unknown [10.57.33.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA6673F6C4;
-        Tue, 14 Apr 2020 05:28:07 -0700 (PDT)
-Subject: Re: [BUG] PCI: rockchip: rk3399: pcie switch support
-To:     Soeren Moch <smoch@web.de>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <4d03dd8c-14f9-d1ef-6fd2-095423be3dd3@web.de>
- <3e9d2c53-4f0d-0c97-fbfa-6d799e223747@arm.com>
- <b088ad0e-bab1-0cff-dc43-eb5709555902@web.de>
- <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d02e0b72-5fb3-dd47-468c-08b86db07a9a@arm.com>
-Date:   Tue, 14 Apr 2020 13:28:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        id S2501933AbgDNM2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:28:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 491lCB2VyJz9ty2q;
+        Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=IXS45WnH; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id OnGikXuRMKJq; Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 491lCB1Nqtz9ty2r;
+        Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586867318; bh=q5tuqv3XX5tdFZ2Nwqglyq4XexfbdM7sUkp/aIyLDRw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IXS45WnHSm1Ayq4SS0uiPxa3vST+WWMTF8g5pm0xicL0YmkmdHBVHM7MqFdvFivSy
+         4VKx/15HSGMZn84Khq7Sc+ziISswwhSUCUvDincDkchHmmJIjHMEuycCM/NgnTr/Xv
+         cQH5RqaZiSzViAlD2v1Y1/wud6OaF/wj8MGMt9vo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E0138B7EB;
+        Tue, 14 Apr 2020 14:28:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 91o1xMRYsudU; Tue, 14 Apr 2020 14:28:39 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F2278B7EA;
+        Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
+Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
+To:     Matthew Wilcox <willy@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+References: <20200413125303.423864-1-npiggin@gmail.com>
+ <20200413125303.423864-5-npiggin@gmail.com>
+ <20200413134106.GN21484@bombadil.infradead.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <36616218-1d3a-b18a-8fb8-4fc9eff22780@c-s.fr>
+Date:   Tue, 14 Apr 2020 14:28:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
+In-Reply-To: <20200413134106.GN21484@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-14 12:35 pm, Soeren Moch wrote:
-> On 06.04.20 19:12, Soeren Moch wrote:
->> On 06.04.20 14:52, Robin Murphy wrote:
->>> On 2020-04-04 7:41 pm, Soeren Moch wrote:
->>>> I want to use a PCIe switch on a RK3399 based RockPro64 V2.1 board.
->>>> "Normal" PCIe cards work (mostly) just fine on this board. The PCIe
->>>> switches (I tried Pericom and ASMedia based switches) also work fine on
->>>> other boards. The RK3399 PCIe controller with pcie_rockchip_host driver
->>>> also recognises the switch, but fails to initialize the buses behind the
->>>> bridge properly, see syslog from linux-5.6.0.
->>>>
->>>> Any ideas what I do wrong, or any suggestions what I can test here?
->>> See the thread here:
->>>
->>> https://lore.kernel.org/linux-pci/CAMdYzYoTwjKz4EN8PtD5pZfu3+SX+68JL+dfvmCrSnLL=K6Few@mail.gmail.com/
->>>
->> Thanks Robin!
->>
->> I also found out in the meantime that device enumeration fails in this
->> fatal way when probing non-existent devices. So if I hack my complete
->> bus topology into rockchip_pcie_valid_device, then all existing devices
->> come up properly. Of course this is not how PCIe should work.
->>> The conclusion there seems to be that the RK3399 root complex just
->>> doesn't handle certain types of response in a sensible manner, and
->>> there's not much that can reasonably be done to change that.
->> Hm, at least there is the promising suggestion to take over the SError
->> handler, maybe in ATF, as workaround.
-> Unfortunately it seems to be not that easy. Only when PCIe device
-> probing runs on one of the Cortex-A72 cores of rk3399 we see the SError.
-> When probing runs on one of the A53 cores, we get a synchronous external
-> abort instead.
+
+
+Le 13/04/2020 à 15:41, Matthew Wilcox a écrit :
+> On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
+>> +static int vmap_pages_range_noflush(unsigned long start, unsigned long end,
+>> +				    pgprot_t prot, struct page **pages,
+>> +				    unsigned int page_shift)
+>> +{
+>> +	if (page_shift == PAGE_SIZE) {
 > 
-> Is this expected to see different error types on big.LITTLE systems? Or
-> is this another special property of the rk3399 pcie controller?
+> ... I think you meant 'page_shift == PAGE_SHIFT'
+> 
+> Overall I like this series, although it's a bit biased towards CPUs
+> which have page sizes which match PMD/PUD sizes.  It doesn't offer the
+> possibility of using 64kB page sizes on ARM, for example.  But it's a
+> step in the right direction.
+> 
 
-As far as I'm aware, the CPU microarchitecture is indeed one of the 
-factors in whether it takes a given external abort synchronously or 
-asynchronously, so yes, I'd say that probably is expected. I wouldn't 
-necessarily even rely on a single microarchitecture only behaving one 
-way, since in principle it's possible that surrounding instructions 
-might affect whether the core still has enough context left to take the 
-exception synchronously or not at the point the abort does come back.
+I was going to ask more or less the same question, I would have liked to 
+use 512kB hugepages on powerpc 8xx.
 
-In general external aborts are a "should never happen" kind of thing, so 
-they're not necessarily expected to be recoverable (I think the RAS 
-extensions might add a more robustness in terms of reporting, but aren't 
-relevant here either way).
+Even the 8M hugepages (still on the 8xx), can they be used as well, 
+taking into account that two PGD entries have to point to the same 8M page ?
 
-At this point I'm starting to wonder whether it might be possible to do 
-something similar to the Arm N1SDP workaround using the Cortex-M0, 
-albeit with the complication that probing would realistically have to be 
-explicitly invoked from the Linux driver due to clocks and external 
-regulators... :/
+I sent out a series which tends to make the management of 512k and 8M 
+pages closer to what Linux expects, in order to use them inside kernel, 
+for Linear mappings and Kasan mappings for the moment. See 
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=164620
+It would be nice if we could amplify it a use it for ioremaps and 
+vmallocs as well.
 
-Robin.
+Christophe
