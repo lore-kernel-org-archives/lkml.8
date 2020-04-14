@@ -2,155 +2,142 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5E2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3842087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55233208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="doeIn3Si"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZPcMzQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502586AbgDNNII (ORCPT
+        id S2502588AbgDNNIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730314AbgDNNIC (ORCPT
+        Tue, 14 Apr 2020 09:08:42 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38612 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730314AbgDNNId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:08:02 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E57C061A0C;
-        Tue, 14 Apr 2020 06:08:01 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id h2so12882097wmb.4;
-        Tue, 14 Apr 2020 06:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NTg88EBEg4qOXVBL74JDWDn01n0VKUHWmo8g8ottwjk=;
-        b=doeIn3Si97S/MngUsuOx9N4xLfiWQ81AHOxJsgpJhSAaWdJ2Vx25UzrTmv1oMFjUT5
-         2QrtYy8fiNH4Kn3zuur6CtddJ+sA9PjIDuvapuo+7hezmgeX1gCLq8q/cvM0dqtWRJ+s
-         RRbl7AO5mYAqbZIYfFOfsLhszvuoM1XdzCh6gHiYb2MIgUpFnlvCr3wmp+TG3kxnoWi2
-         KTfOQAqt+s4VSLVL7pdljX4nIVsSCXJW1iUCV2XueyHuhYle+s3TZXZVNctwVQ/UWr18
-         WrkPmWYC/UlioNHys+m0chulDlp4tIJTjsliPfReuZdcpT6juGkIrPquN6zRthwd3wzu
-         0ZSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NTg88EBEg4qOXVBL74JDWDn01n0VKUHWmo8g8ottwjk=;
-        b=kfmPpT/MOie0nZYLux8VUwp+gTfDh681xjPGEzrFoKV9KZOCzHAEmEpLaQXTa2NP50
-         /gkQnzkL2QSH33IP6DUpt5Th8tiLlsBX2oVlzOhd6Jr9DZwfMgY5ZS1ypMxOhmPyEjjG
-         qy7S8X638prKM3gg+8Q5ilm+DCn3X0KQ85DXR7FOyd8KKSaQ3br8MFUBZVkIzRNJ4Zh3
-         wFaLnqKZQvE+2g3jxlGI9gElg9G90Bbt5SAA/5Ri7qlgjMM3zakwI+9pIdb6Gn3JcDNw
-         /sYLAXVWPBhM+NKcSG7OEhdiHn2KMuhn/G5fECeOhKY2sCFaIedWOfmoaLHqtvX/0pFg
-         aupA==
-X-Gm-Message-State: AGi0Pub/NVKjxacGwySPhgQsoKhj0S8OXxnu/Yd4Wb2hpUUuC+xJ5o7W
-        o/720RD1VLGPLbL3SgZnau6Sc92Y1yFlhKudm3I=
-X-Google-Smtp-Source: APiQypLRdOptdfBucYqQMnGBtfQiQYTTSA5SWpTYFLPJ+tWQQHwbFT4r0uERcCDlgiqUc8evR7fd9G2UXxUjtwOwvAI=
-X-Received: by 2002:a7b:cc8e:: with SMTP id p14mr23079662wma.70.1586869680226;
- Tue, 14 Apr 2020 06:08:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <f4eaf0ca-6cd6-c224-9205-bf64ca533ff5@molgen.mpg.de>
- <dcc4851e-0ab5-683a-2cf2-687d64a3c9da@molgen.mpg.de> <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
- <20200414082150.GD4149624@kroah.com>
-In-Reply-To: <20200414082150.GD4149624@kroah.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 14 Apr 2020 09:07:49 -0400
-Message-ID: <CADnq5_NCnHFO9kZY-8L34B3uVX5aghXO8+gXNC_cPMOnP7UGAg@mail.gmail.com>
-Subject: Re: [regression 5.7-rc1] System does not power off, just halts
-To:     Greg KH <greg@kroah.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Prike Liang <Prike.Liang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        regressions@leemhuis.info, David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>, Huang Rui <ray.huang@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mengbing Wang <Mengbing.Wang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Apr 2020 09:08:33 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAY6PH104127;
+        Tue, 14 Apr 2020 10:36:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=7IB4h4vyHZWuhixM+o7hLit581/PbOa3rBB6fd0VUW8=;
+ b=MZPcMzQjDfxCxXNIYeqRN9HocfuwqrmnTenxdO2rqeN2uXqKXipO3qic8tbl3CbmAfkd
+ V280YB2ZkN7oIwRxDneQg4GZHn/+aZQlq3o49sFIt/5eETL8v9nhgAR4iD/5wj+NZ4L8
+ Lb1xHUE04kmF1i8pZ6kAEs2pLU9Zmdm77AL7UW28fPvPIX2ZGMWMGK2UVnHEkfcW15IQ
+ aMRX44wom+dKiU2FK8yH3jZM5U1S0UKGq5TuA+JNfVqVwYsOhFjGxZW1xDVhMlByNZSa
+ qF8z8HPudP2SzAQ0vTewEvJF5ABa8OARycNnB/DPBuC0KvNeohXeH7GlnlyIBMjzogwz Eg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30b5um3pc6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 10:36:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAW0pY123322;
+        Tue, 14 Apr 2020 10:36:41 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30bqpfy3g0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 10:36:41 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EAabmn015613;
+        Tue, 14 Apr 2020 10:36:37 GMT
+Received: from mihai.localdomain (/10.153.73.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 03:36:36 -0700
+From:   Mihai Carabas <mihai.carabas@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86: microcode: fix return value for microcode late loading
+Date:   Tue, 14 Apr 2020 12:55:35 +0300
+Message-Id: <1586858135-29337-1-git-send-email-mihai.carabas@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=1 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=1 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 4:21 AM Greg KH <greg@kroah.com> wrote:
->
-> On Mon, Apr 13, 2020 at 01:48:58PM -0400, Alex Deucher wrote:
-> > On Mon, Apr 13, 2020 at 1:47 PM Paul Menzel <pmenzel@molgen.mpg.de> wro=
-te:
-> > >
-> > > Dear Prike, dear Alex, dear Linux folks,
-> > >
-> > >
-> > > Am 13.04.20 um 10:44 schrieb Paul Menzel:
-> > >
-> > > > A regression between causes a system with the AMD board MSI B350M M=
-ORTAR
-> > > > (MS-7A37) with an AMD Ryzen 3 2200G not to power off any more but j=
-ust
-> > > > to halt.
-> > > >
-> > > > The regression is introduced in 9ebe5422ad6c..b032227c6293. I am in=
- the
-> > > > process to bisect this, but maybe somebody already has an idea.
-> > >
-> > > I found the Easter egg:
-> > >
-> > > > commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58
-> > > > Author: Prike Liang <Prike.Liang@amd.com>
-> > > > Date:   Tue Apr 7 20:21:26 2020 +0800
-> > > >
-> > > >     drm/amdgpu: fix gfx hang during suspend with video playback (v2=
-)
-> > > >
-> > > >     The system will be hang up during S3 suspend because of SMU is =
-pending
-> > > >     for GC not respose the register CP_HQD_ACTIVE access request.Th=
-is issue
-> > > >     root cause of accessing the GC register under enter GFX CGGPG a=
-nd can
-> > > >     be fixed by disable GFX CGPG before perform suspend.
-> > > >
-> > > >     v2: Use disable the GFX CGPG instead of RLC safe mode guard.
-> > > >
-> > > >     Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-> > > >     Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-> > > >     Reviewed-by: Huang Rui <ray.huang@amd.com>
-> > > >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> > > >     Cc: stable@vger.kernel.org
-> > >
-> > > It reverts cleanly on top of 5.7-rc1, and this fixes the issue.
-> > >
-> > > Greg, please do not apply this to the stable series. The commit messa=
-ge
-> > > doesn=E2=80=99t even reference a issue/bug report, and doesn=E2=80=99=
-t give a detailed
-> > > problem description. What system is it?
-> > >
-> > > Dave, Alex, how to proceed? Revert? I created issue 1094 [1].
-> >
-> > Already fixed:
-> > https://patchwork.freedesktop.org/patch/361195/
->
-> Any reason that doesn't have a cc: stable tag on it?
->
-> And is it committed to any tree at the moment?
+The return value from stop_machine might not be consistent.
 
-It's going out in my -fixes pull this week with a stable tag.
+stop_machine_cpuslocked returns:
+- zero if all functions have returned 0
+- a non-zero value if at least one of the functions returned
+a non-zero value
 
-Alex
+There is no way to know if it is negative or positive. So make
+__reload_late return 0 on success, or negative otherwise.
 
->
-> thanks,
->
-> greg k-h
+Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
+---
+ arch/x86/kernel/cpu/microcode/core.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 7019d4b..336003e 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -545,8 +545,7 @@ static int __wait_for_cpus(atomic_t *t, long long timeout)
+ /*
+  * Returns:
+  * < 0 - on error
+- *   0 - no update done
+- *   1 - microcode was updated
++ *   0 - success (no update done or microcode was updated)
+  */
+ static int __reload_late(void *info)
+ {
+@@ -573,11 +572,9 @@ static int __reload_late(void *info)
+ 	else
+ 		goto wait_for_siblings;
+ 
+-	if (err > UCODE_NFOUND) {
++	if (err >= UCODE_NFOUND) {
+ 		pr_warn("Error reloading microcode on CPU %d\n", cpu);
+ 		ret = -1;
+-	} else if (err == UCODE_UPDATED || err == UCODE_OK) {
+-		ret = 1;
+ 	}
+ 
+ wait_for_siblings:
+@@ -608,7 +605,7 @@ static int microcode_reload_late(void)
+ 	atomic_set(&late_cpus_out, 0);
+ 
+ 	ret = stop_machine_cpuslocked(__reload_late, NULL, cpu_online_mask);
+-	if (ret > 0)
++	if (ret == 0)
+ 		microcode_check();
+ 
+ 	pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
+@@ -649,7 +646,7 @@ static ssize_t reload_store(struct device *dev,
+ put:
+ 	put_online_cpus();
+ 
+-	if (ret >= 0)
++	if (ret == 0)
+ 		ret = size;
+ 
+ 	return ret;
+-- 
+1.8.3.1
+
