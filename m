@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160E4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231DBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD3EC20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AC220678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883056;
-	bh=ooRDyaPgSsVt4tLNtUCnIAPFTG4dZFZGWj4c122vd84=;
+	s=default; t=1586883064;
+	bh=e8sa2L9jrsFs8MZxmSzZtk35TsqpIfaY4VUQqf3DBa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m6buQ0W8RI4lGD0jB6cU4Ipy3YEcFos6Kdy2ukzVICYyuXIOAsfmZz57j9sLQmrZH
-	 DRwjzaiGvIzw8VSJYiowDjDDmDDPmS+fWeahKamHM92s4qedrQeTQTec0zxBVHNQIv
-	 dcAJW9FYZD8GYaOP7WTPj5t+Pq7CQqQGV8nsqowU=
+	b=jbMq0gwcxXRWQb9KhDq8MV8eSZYQW07h104+XyKp7Chz6pt8ppibVWwyW034gORp4
+	 /Gs/iLAJ/Wn/K761tXpTHEAJic6WSblHDQmyQMH2oh2vju15gUOMIIdnAcC/XJftV9
+	 j7rII7WXpuK1Y0QDY71AnBx6oLLzkJMpD953Wiz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441023AbgDNQuz (ORCPT
+        id S2440615AbgDNQvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55812 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440445AbgDNQt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:49:29 -0400
+        id S2440428AbgDNQt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:26 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959CC215A4;
-        Tue, 14 Apr 2020 16:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F43208FE;
+        Tue, 14 Apr 2020 16:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882969;
-        bh=ooRDyaPgSsVt4tLNtUCnIAPFTG4dZFZGWj4c122vd84=;
+        s=default; t=1586882966;
+        bh=e8sa2L9jrsFs8MZxmSzZtk35TsqpIfaY4VUQqf3DBa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SeHHlKJrJjmFhWQD566xMcVZZ3RgShp6zE6sXdagx6I3JTVzCJKuOOS2UZym6bIg/
-         HmEvKoLKwdCG+hv5sYQZRcNu088IZzXQN66IJ/xpxdPKyrcYC4qKr0GcEDeyHWN4ab
-         geawZG7XtYlnh9lMuA/TYI8TC7yqHUzYevZr89vU=
+        b=W5n+Ul2F1XVNQ1AQAU6F1NPlDnGVsDUbcb1/j+DXUSV9YceAsnW+CCddjBCLLv89i
+         1UJSuvzjDufw+nhr94MMOtMFIJXGAyNw7hTR98uNmjss1PqCcjLE5vnumkGR75j+bq
+         eTIndeL3qtd/C9LsTxs/gCwLcuqGfBnMplg+OieU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,10 +47,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 09/15] tools headers UAPI: Sync linux/fscrypt.h with the kernel sources
-Date:   Tue, 14 Apr 2020 13:48:48 -0300
-Message-Id: <20200414164854.26026-10-acme@kernel.org>
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Tiwei Bie <tiwei.bie@intel.com>
+Subject: [PATCH 08/15] tools include UAPI: Sync linux/vhost.h with the kernel sources
+Date:   Tue, 14 Apr 2020 13:48:47 -0300
+Message-Id: <20200414164854.26026-9-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -63,70 +64,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick the changes from:
+To get the changes in:
 
-  e98ad464750c ("fscrypt: add FS_IOC_GET_ENCRYPTION_NONCE ioctl")
+  4c8cf31885f6 ("vhost: introduce vDPA-based backend")
 
-That don't trigger any changes in tooling.
+Silencing this perf build warning:
 
-This silences this perf build warning:
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/vhost.h' differs from latest version at 'include/uapi/linux/vhost.h'
+  diff -u tools/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/fscrypt.h' differs from latest version at 'include/uapi/linux/fscrypt.h'
-  diff -u tools/include/uapi/linux/fscrypt.h include/uapi/linux/fscrypt.h
+This automatically picks these new ioctls, making tools such as 'perf
+trace' aware of them and possibly allowing to use the strings in
+filters, etc:
 
-In time we should come up with something like:
-
-  $ tools/perf/trace/beauty/fsconfig.sh
-  static const char *fsconfig_cmds[] = {
-  	[0] = "SET_FLAG",
-  	[1] = "SET_STRING",
-  	[2] = "SET_BINARY",
-  	[3] = "SET_PATH",
-  	[4] = "SET_PATH_EMPTY",
-  	[5] = "SET_FD",
-  	[6] = "CMD_CREATE",
-  	[7] = "CMD_RECONFIGURE",
-  };
+  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > before
+  $ cp include/uapi/linux/vhost.h tools/include/uapi/linux/vhost.h
+  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > after
+  $ diff -u before after
+  --- before	2020-04-14 09:12:28.559748968 -0300
+  +++ after	2020-04-14 09:12:38.781696242 -0300
+  @@ -24,9 +24,16 @@
+   	[0x44] = "SCSI_GET_EVENTS_MISSED",
+   	[0x60] = "VSOCK_SET_GUEST_CID",
+   	[0x61] = "VSOCK_SET_RUNNING",
+  +	[0x72] = "VDPA_SET_STATUS",
+  +	[0x74] = "VDPA_SET_CONFIG",
+  +	[0x75] = "VDPA_SET_VRING_ENABLE",
+   };
+   static const char *vhost_virtio_ioctl_read_cmds[] = {
+   	[0x00] = "GET_FEATURES",
+   	[0x12] = "GET_VRING_BASE",
+   	[0x26] = "GET_BACKEND_FEATURES",
+  +	[0x70] = "VDPA_GET_DEVICE_ID",
+  +	[0x71] = "VDPA_GET_STATUS",
+  +	[0x73] = "VDPA_GET_CONFIG",
+  +	[0x76] = "VDPA_GET_VRING_NUM",
+   };
   $
-
-And:
-
-  $ tools/perf/trace/beauty/drm_ioctl.sh | head
-  #ifndef DRM_COMMAND_BASE
-  #define DRM_COMMAND_BASE                0x40
-  #endif
-  static const char *drm_ioctl_cmds[] = {
-  	[0x00] = "VERSION",
-  	[0x01] = "GET_UNIQUE",
-  	[0x02] = "GET_MAGIC",
-  	[0x03] = "IRQ_BUSID",
-  	[0x04] = "GET_MAP",
-  	[0x05] = "GET_CLIENT",
-  $
-
-For fscrypt's ioctls.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Eric Biggers <ebiggers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michael S. Tsirkin <mst@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Tiwei Bie <tiwei.bie@intel.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/fscrypt.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/uapi/linux/vhost.h | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/tools/include/uapi/linux/fscrypt.h b/tools/include/uapi/linux/fscrypt.h
-index 0d8a6f47711c..a10e3cdc2839 100644
---- a/tools/include/uapi/linux/fscrypt.h
-+++ b/tools/include/uapi/linux/fscrypt.h
-@@ -163,6 +163,7 @@ struct fscrypt_get_key_status_arg {
- #define FS_IOC_REMOVE_ENCRYPTION_KEY		_IOWR('f', 24, struct fscrypt_remove_key_arg)
- #define FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS	_IOWR('f', 25, struct fscrypt_remove_key_arg)
- #define FS_IOC_GET_ENCRYPTION_KEY_STATUS	_IOWR('f', 26, struct fscrypt_get_key_status_arg)
-+#define FS_IOC_GET_ENCRYPTION_NONCE		_IOR('f', 27, __u8[16])
+diff --git a/tools/include/uapi/linux/vhost.h b/tools/include/uapi/linux/vhost.h
+index 40d028eed645..9fe72e4b1373 100644
+--- a/tools/include/uapi/linux/vhost.h
++++ b/tools/include/uapi/linux/vhost.h
+@@ -116,4 +116,28 @@
+ #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
+ #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
  
- /**********************************************************************/
- 
++/* VHOST_VDPA specific defines */
++
++/* Get the device id. The device ids follow the same definition of
++ * the device id defined in virtio-spec.
++ */
++#define VHOST_VDPA_GET_DEVICE_ID	_IOR(VHOST_VIRTIO, 0x70, __u32)
++/* Get and set the status. The status bits follow the same definition
++ * of the device status defined in virtio-spec.
++ */
++#define VHOST_VDPA_GET_STATUS		_IOR(VHOST_VIRTIO, 0x71, __u8)
++#define VHOST_VDPA_SET_STATUS		_IOW(VHOST_VIRTIO, 0x72, __u8)
++/* Get and set the device config. The device config follows the same
++ * definition of the device config defined in virtio-spec.
++ */
++#define VHOST_VDPA_GET_CONFIG		_IOR(VHOST_VIRTIO, 0x73, \
++					     struct vhost_vdpa_config)
++#define VHOST_VDPA_SET_CONFIG		_IOW(VHOST_VIRTIO, 0x74, \
++					     struct vhost_vdpa_config)
++/* Enable/disable the ring. */
++#define VHOST_VDPA_SET_VRING_ENABLE	_IOW(VHOST_VIRTIO, 0x75, \
++					     struct vhost_vring_state)
++/* Get the max ring size. */
++#define VHOST_VDPA_GET_VRING_NUM	_IOR(VHOST_VIRTIO, 0x76, __u16)
++
+ #endif
 -- 
 2.21.1
 
