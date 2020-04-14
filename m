@@ -2,253 +2,140 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64779C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38D1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34F2A20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7680C20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dko2/UV+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rUyVQqrg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438003AbgDNPQL (ORCPT
+        id S2438022AbgDNPQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:16:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48975 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2407292AbgDNPGq (ORCPT
+        Tue, 14 Apr 2020 11:16:30 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:20387 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407252AbgDNPF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:06:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nXEIy1AaCe7k9Zzu1LjEW9kCRY7hQocKepX00033FfY=;
-        b=Dko2/UV+eDltzadGO/F5IwqH5miTtluyMfCrG/Ej6mcSqHzziNljDv8LcoJkKLqh2tgyMN
-        4rmpbWF0FUj+9JixlsDicFnUrUF/RUTxdhK8VxIfwQeTCo1JgUmEAKL6KoNL5Kp1Okphsw
-        X4WPW68pC9GPA/VwUZsqXvfM1IMqIRo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-zomV_ajINsiNIT1iLw1pIA-1; Tue, 14 Apr 2020 11:06:41 -0400
-X-MC-Unique: zomV_ajINsiNIT1iLw1pIA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Apr 2020 11:05:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586876755; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=2sHXwJ8AdtS+pVXjlc3JcGuGpLLjSecwst28kNFXaDE=; b=rUyVQqrgk8Ms5DInHRGa59N4XnzEwiTKkrsU+zwJN6aRTddQWF71Ndfh3gLXB5oFMv7dH6X7
+ FgK78pwxODIrEo7cDHCzvhGpihUrjOWKRdJwlKA3fbebnfYDxLmGB44YRVrPVrrNh0Yg/6tx
+ zKWHwTP5WHwGkuqzNP14NuXGP3Q=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e95d13b.7fadc8ad0810-smtp-out-n05;
+ Tue, 14 Apr 2020 15:05:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6422BC44788; Tue, 14 Apr 2020 15:05:31 +0000 (UTC)
+Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 395C2107ACC9;
-        Tue, 14 Apr 2020 15:06:39 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DD6019C69;
-        Tue, 14 Apr 2020 15:06:34 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, will@kernel.org,
-        joro@8bytes.org, maz@kernel.org, robin.murphy@arm.com
-Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
-        shameerali.kolothum.thodi@huawei.com, alex.williamson@redhat.com,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
-        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
-        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
-Subject: [PATCH v11 01/13] iommu: Introduce attach/detach_pasid_table API
-Date:   Tue, 14 Apr 2020 17:05:55 +0200
-Message-Id: <20200414150607.28488-2-eric.auger@redhat.com>
-In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
-References: <20200414150607.28488-1-eric.auger@redhat.com>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC3EAC494AA;
+        Tue, 14 Apr 2020 15:05:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC3EAC494AA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC] opp: Fixup release of clock when using set/put clkname
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1586848508-1320-1-git-send-email-rnayak@codeaurora.org>
+ <20200414071823.jdhkprtkizyeua23@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <83c523d0-e18e-0401-5456-2dbba524ee98@codeaurora.org>
+Date:   Tue, 14 Apr 2020 20:35:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414071823.jdhkprtkizyeua23@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-In virtualization use case, when a guest is assigned
-a PCI host device, protected by a virtual IOMMU on the guest,
-the physical IOMMU must be programmed to be consistent with
-the guest mappings. If the physical IOMMU supports two
-translation stages it makes sense to program guest mappings
-onto the first stage/level (ARM/Intel terminology) while the host
-owns the stage/level 2.
+On 4/14/2020 12:48 PM, Viresh Kumar wrote:
+> On 14-04-20, 12:45, Rajendra Nayak wrote:
+>> Fixup dev_pm_opp_put_clkname() to check for a valid clock pointer
+>> before it does a clk_put, since its likely that
+>> _opp_table_kref_release() has already done a clk_put. Also fixup
+> 
+> kref release is the last thing that happens on the table, it can't get
+> called after dev_pm_opp_put_clkname().
 
-In that case, it is mandated to trap on guest configuration
-settings and pass those to the physical iommu driver.
+so in cases where I do have an OPP table for a device in DT and I do
+dev_pm_opp_set_clkname()
+dev_pm_opp_of_add_table()
 
-This patch adds a new API to the iommu subsystem that allows
-to set/unset the pasid table information.
+and clean it up with a
+dev_pm_opp_of_remove_table()
+dev_pm_opp_put_clkname()
 
-A generic iommu_pasid_table_config struct is introduced in
-a new iommu.h uapi header. This is going to be used by the VFIO
-user API.
+things seem to work fine as expected.
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
----
- drivers/iommu/iommu.c      | 19 ++++++++++++++
- include/linux/iommu.h      | 18 ++++++++++++++
- include/uapi/linux/iommu.h | 51 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 88 insertions(+)
+However, given I call these unconditionally in common drivers and on
+some (old) platforms we really don't have an OPP table (only scale clocks)
+things get a little tricky. So looks like the ref counting in such cases
+gets messed up, and we end up with dev_pm_opp_of_remove_table() calling
+_opp_table_kref_release() and releasing the clock, and then the subsequent
+call to dev_pm_opp_put_clkname() crashes.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 2b471419e26c..b71ad56f8c99 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1723,6 +1723,25 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *d=
-omain, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
-=20
-+int iommu_attach_pasid_table(struct iommu_domain *domain,
-+			     struct iommu_pasid_table_config *cfg)
-+{
-+	if (unlikely(!domain->ops->attach_pasid_table))
-+		return -ENODEV;
-+
-+	return domain->ops->attach_pasid_table(domain, cfg);
-+}
-+EXPORT_SYMBOL_GPL(iommu_attach_pasid_table);
-+
-+void iommu_detach_pasid_table(struct iommu_domain *domain)
-+{
-+	if (unlikely(!domain->ops->detach_pasid_table))
-+		return;
-+
-+	domain->ops->detach_pasid_table(domain);
-+}
-+EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
-+
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 7ef8b0bda695..3e1057c3585a 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -248,6 +248,8 @@ struct iommu_iotlb_gather {
-  * @cache_invalidate: invalidate translation caches
-  * @sva_bind_gpasid: bind guest pasid and mm
-  * @sva_unbind_gpasid: unbind guest pasid and mm
-+ * @attach_pasid_table: attach a pasid table
-+ * @detach_pasid_table: detach the pasid table
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-  * @owner: Driver module providing these ops
-  */
-@@ -307,6 +309,9 @@ struct iommu_ops {
- 				      void *drvdata);
- 	void (*sva_unbind)(struct iommu_sva *handle);
- 	int (*sva_get_pasid)(struct iommu_sva *handle);
-+	int (*attach_pasid_table)(struct iommu_domain *domain,
-+				  struct iommu_pasid_table_config *cfg);
-+	void (*detach_pasid_table)(struct iommu_domain *domain);
-=20
- 	int (*page_response)(struct device *dev,
- 			     struct iommu_fault_event *evt,
-@@ -446,6 +451,9 @@ extern int iommu_sva_bind_gpasid(struct iommu_domain =
-*domain,
- 		struct device *dev, struct iommu_gpasid_bind_data *data);
- extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
- 				struct device *dev, ioasid_t pasid);
-+extern int iommu_attach_pasid_table(struct iommu_domain *domain,
-+				    struct iommu_pasid_table_config *cfg);
-+extern void iommu_detach_pasid_table(struct iommu_domain *domain);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev)=
-;
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -1048,6 +1056,16 @@ iommu_aux_get_pasid(struct iommu_domain *domain, s=
-truct device *dev)
- 	return -ENODEV;
- }
-=20
-+static inline
-+int iommu_attach_pasid_table(struct iommu_domain *domain,
-+			     struct iommu_pasid_table_config *cfg)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+void iommu_detach_pasid_table(struct iommu_domain *domain) {}
-+
- static inline struct iommu_sva *
- iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *dr=
-vdata)
- {
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 4ad3496e5c43..8d00be10dc6d 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -321,4 +321,55 @@ struct iommu_gpasid_bind_data {
- 	};
- };
-=20
-+/**
-+ * struct iommu_pasid_smmuv3 - ARM SMMUv3 Stream Table Entry stage 1 rel=
-ated
-+ *     information
-+ * @version: API version of this structure
-+ * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
-+ *         or 2-level table)
-+ * @s1dss: STE s1dss (specifies the behavior when @pasid_bits !=3D 0
-+ *         and no PASID is passed along with the incoming transaction)
-+ * @padding: reserved for future use (should be zero)
-+ *
-+ * The PASID table is referred to as the Context Descriptor (CD) table o=
-n ARM
-+ * SMMUv3. Please refer to the ARM SMMU 3.x spec (ARM IHI 0070A) for ful=
-l
-+ * details.
-+ */
-+struct iommu_pasid_smmuv3 {
-+#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
-+	__u32	version;
-+	__u8	s1fmt;
-+	__u8	s1dss;
-+	__u8	padding[2];
-+};
-+
-+/**
-+ * struct iommu_pasid_table_config - PASID table data used to bind guest=
- PASID
-+ *     table to the host IOMMU
-+ * @version: API version to prepare for future extensions
-+ * @format: format of the PASID table
-+ * @base_ptr: guest physical address of the PASID table
-+ * @pasid_bits: number of PASID bits used in the PASID table
-+ * @config: indicates whether the guest translation stage must
-+ *          be translated, bypassed or aborted.
-+ * @padding: reserved for future use (should be zero)
-+ * @smmuv3: table information when @format is %IOMMU_PASID_FORMAT_SMMUV3
-+ */
-+struct iommu_pasid_table_config {
-+#define PASID_TABLE_CFG_VERSION_1 1
-+	__u32	version;
-+#define IOMMU_PASID_FORMAT_SMMUV3	1
-+	__u32	format;
-+	__u64	base_ptr;
-+	__u8	pasid_bits;
-+#define IOMMU_PASID_CONFIG_TRANSLATE	1
-+#define IOMMU_PASID_CONFIG_BYPASS	2
-+#define IOMMU_PASID_CONFIG_ABORT	3
-+	__u8	config;
-+	__u8    padding[6];
-+	union {
-+		struct iommu_pasid_smmuv3 smmuv3;
-+	};
-+};
-+
- #endif /* _UAPI_IOMMU_H */
---=20
-2.20.1
+>> _opp_table_kref_release() to set the clock pointer to ERR_PTR(-EINVAL)
+>> after its done doing a clk_put so dev_pm_opp_put_clkname() can then
+>> catch it.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>>   drivers/opp/core.c | 10 +++++++---
+>>   1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index e4f01e7..6d064a8 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -1061,8 +1061,10 @@ static void _opp_table_kref_release(struct kref *kref)
+>>   	_of_clear_opp_table(opp_table);
+>>   
+>>   	/* Release clk */
+>> -	if (!IS_ERR(opp_table->clk))
+>> +	if (!IS_ERR(opp_table->clk)) {
+>>   		clk_put(opp_table->clk);
+>> +		opp_table->clk = ERR_PTR(-EINVAL);
+>> +	}
+>>   
+>>   	WARN_ON(!list_empty(&opp_table->opp_list));
+>>   
+>> @@ -1744,8 +1746,10 @@ void dev_pm_opp_put_clkname(struct opp_table *opp_table)
+>>   	/* Make sure there are no concurrent readers while updating opp_table */
+>>   	WARN_ON(!list_empty(&opp_table->opp_list));
+>>   
+>> -	clk_put(opp_table->clk);
+>> -	opp_table->clk = ERR_PTR(-EINVAL);
+>> +	if (!IS_ERR(opp_table->clk)) {
+>> +		clk_put(opp_table->clk);
+>> +		opp_table->clk = ERR_PTR(-EINVAL);
+>> +	}
+>>   
+>>   	dev_pm_opp_put_opp_table(opp_table);
+>>   }
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+> 
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
