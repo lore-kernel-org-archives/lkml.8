@@ -2,78 +2,78 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE186C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16973C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4E3020767
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46AF2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VdPvHOue"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBSDD4vr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgDNTbN (ORCPT
+        id S2504819AbgDNTbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57562 "EHLO
+        Tue, 14 Apr 2020 15:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504776AbgDNT3u (ORCPT
+        by vger.kernel.org with ESMTP id S2504778AbgDNT3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 15:29:50 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40EF1C02C444
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:20:43 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z6so299831plk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:20:43 -0700 (PDT)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37CD0C025481
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:23:32 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id u65so389763pfb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:23:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=IlUPdhKtIbUzJOWhzH8G7CEIltrnGC+nIP0WHGWZMgU=;
-        b=VdPvHOuedrUPrbOlD0+nUakV+M1CzUEwuJFqiS3Xx7oaGbOw2harQFQq1U59pVYsiG
-         +QAD+SkkXgVARYN0MSOc0QwaB2Jgy8v3XTXlIsRTdRDSV8yk9zZHAQ2y4jvFiEyz3XHE
-         7YXQrKCLBOBDCC/2P8bENLJ4utU8LnGnCk131xMn2eazCAg5NFPkJcVTAkcrtjoNjt8o
-         umW7WurDWUYEqIfZJ68QphhKbw9EaCZb9BBq6Je3u0xwLEcXVEn2jxMK+RQ5r4Q0twdT
-         2IuNMJY0g08zNEFIWsZWpLucJ4rmre2MUBIKozG0Ui0kmYPsm860qwPiHHd0LeKrhfpt
-         CKQg==
+        bh=uh/180abQgmQ6BQ7TjempJNClKOaOSf5CJ7rtROtEkE=;
+        b=cBSDD4vrRu2upc6r3gqJwDFaQSWjr+17rSaxPc9/xT79CnR00LWsE6Ow6sJurp1BA5
+         po/AGG98n8lFdQkAWQi+CDtNlbASVECECHMr16HNxN9EVzyN5lct4/KaV7JhTeAhmfNT
+         CKC8vf8rOhffLDtmFRV+XGP/WKpHS7KYBhA2LK/IE5BCOMeA2Ghn6uO2g403g5XEb8Td
+         Uve+jkNURH8epjGee6h9MMB6pIfcQF3E87ZvJhDA4xKu1VYlkBUjJCrZpS2hmnejTScy
+         1uswIyb9bK+TkRw9Y86yKCQWXYLICDOT4HYWtWHkkmGoZls7DTUZxI1i4bRJFzx8C59w
+         fcOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=IlUPdhKtIbUzJOWhzH8G7CEIltrnGC+nIP0WHGWZMgU=;
-        b=n0NRigkDbGTy8GBXo3xnTciGz4jIktHnUSL+bSs3ZbJM02TGH3K0AII6ypC3pJsJIB
-         ZypRHOVIIkAx2Riyo/iBdysttx5SM2RTXMM0os3MghuiWhS2dDMgfUnzINSU7YZ8SnNm
-         DmNGlVohsB8zYIRvT7jJZ92LubW4CEChCe4OEwvTKdNiLu+79inhQyu8F5F/FjV8ccHN
-         orc/7qxuOi6dLp/B/K70hRpSjxhYq3J4O7ArZ5tP2RsRsb0EGzj3zMGJIgdCq9hi1+iU
-         Wqamxl5IdOgQ2lbqwVq3OfEmpv85/BLlO0K1SX6hsVEcB6Fic/OPFwPoOnF+kBul2pTa
-         xnAA==
-X-Gm-Message-State: AGi0Puaj7MzAI0Xf4xWBXVfunjZp+sXY7dfu5tvE7ygQ3cyF1946JJPK
-        LdlQDjUjkvJbm6GWHWEwteI/686Lr1w=
-X-Google-Smtp-Source: APiQypLUUpRxtuhcuQO3KJ+niNqlHwUCt95RC6MVvVR+0zXpkrnql0jYr8IiLloI/8o87V94dEkE4w==
-X-Received: by 2002:a17:90a:3086:: with SMTP id h6mr1912285pjb.49.1586892042521;
-        Tue, 14 Apr 2020 12:20:42 -0700 (PDT)
+        bh=uh/180abQgmQ6BQ7TjempJNClKOaOSf5CJ7rtROtEkE=;
+        b=mnXRgZNkQf9hi0QS6XIxMSY5UB3Sk+a7st/b7w/pv7CzOi5qJNOubmvJYAysOXbufy
+         PxOdE8igtI6QoY6wImK4TYQiRSdu3Tt4O3PVjMU15hZe0oQ2y4BKWIYQfVTrcLwMaL9A
+         m3oxrlFezKbBX7Dp7r1ZPIo7Bqi7bW3ijl9qUy7/6Gmp36cPiemZ172NWJ6YoPiZAgJ6
+         B4h5o4Prl7ucbE+A3z6xfAJrwS+tCjOk9lwxJZxFydqJVgM7fLaSs7c7D9qmBEwnJxFh
+         JJVxiSg6V00nebx0FUsuxsCJTiYMPIKExDXKfULitqxduC/Ua2xt41lq8J+j8biM/8lK
+         TXjw==
+X-Gm-Message-State: AGi0PuYHnYJc4xlxBYINqQ3p+r4k6+Lo5XL/gc4ci0/9N+rIT9Z4HzyM
+        HJ3w2DPsyUBGDZJusVaaVNfsmw==
+X-Google-Smtp-Source: APiQypIh8dv6EhpHtZfx/oK6c8hvmtzPrPegZc68gIU5zluDsBPHkcGRRKdcXzhMGJ8v56855PjPYw==
+X-Received: by 2002:a63:ca41:: with SMTP id o1mr24177997pgi.419.1586892210952;
+        Tue, 14 Apr 2020 12:23:30 -0700 (PDT)
 Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id a1sm11692054pfl.188.2020.04.14.12.20.41
+        by smtp.gmail.com with ESMTPSA id 3sm1147978pgh.75.2020.04.14.12.23.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:20:41 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:20:41 -0700 (PDT)
+        Tue, 14 Apr 2020 12:23:30 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:23:29 -0700 (PDT)
 From:   David Rientjes <rientjes@google.com>
 X-X-Sender: rientjes@chino.kir.corp.google.com
 To:     Christoph Hellwig <hch@lst.de>
-cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+cc:     Hillf Danton <hdanton@sina.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         "Singh, Brijesh" <brijesh.singh@amd.com>,
         "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [rfc v2 4/6] dma-direct: atomic allocations must come from atomic
- coherent pools
-In-Reply-To: <20200414064332.GB23359@lst.de>
-Message-ID: <alpine.DEB.2.22.394.2004141218510.2583@chino.kir.corp.google.com>
+        linux <linux-kernel@vger.kernel.org>,
+        iommu <iommu@lists.linux-foundation.org>
+Subject: Re: [rfc v2 3/6] dma-pool: dynamically expanding atomic pools
+In-Reply-To: <20200414064441.GC23359@lst.de>
+Message-ID: <alpine.DEB.2.22.394.2004141222260.2583@chino.kir.corp.google.com>
 References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
- <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com> <alpine.DEB.2.21.2004081420060.19661@chino.kir.corp.google.com> <20200414064332.GB23359@lst.de>
+ <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com> <20200410145520.17864-1-hdanton@sina.com> <alpine.DEB.2.21.2004101231240.249689@chino.kir.corp.google.com> <20200414064441.GC23359@lst.de>
 User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -84,115 +84,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, 14 Apr 2020, Christoph Hellwig wrote:
 
-> > +	/*
-> > +	 * Unencrypted memory must come directly from DMA atomic pools if
-> > +	 * blocking is not allowed.
-> > +	 */
-> > +	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL) &&
-> > +	    force_dma_unencrypted(dev) && !gfpflags_allow_blocking(gfp)) {
-> > +		ret = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page, gfp);
-> > +		if (!ret)
-> > +			return NULL;
-> > +		goto done;
-> > +	}
-> > +
-> >  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> >  	    dma_alloc_need_uncached(dev, attrs) &&
-> >  	    !gfpflags_allow_blocking(gfp)) {
+> > I'll rely on Christoph to determine whether it makes sense to add some 
+> > periodic scavening of the atomic pools, whether that's needed for this to 
+> > be merged, or wheter we should enforce some maximum pool size.
 > 
-> Can we keep a single conditional for the pool allocations?  Maybe
-> add a new dma_alloc_from_pool helper ala:
+> I don't really see the point.  In fact the only part of the series
+> I feel uneasy about is the growing of the pools, because it already
+> adds a fair amount of complexity that we might not need for simple
+> things, but shrinking really doesn't make any sense.  So I'm tempted
+> to not ever support shrinking, and even make growing optional code under
+> a new config variable.  We'll also need a way to query the current size
+> through e.g. a debugfs file.
 > 
-> static inline bool dma_alloc_from_pool(struct device *dev, gfp_t gfp)
-> {
-> 	if (!IS_ENABLED(CONFIG_DMA_COHERENT_POOL))
-> 		return false;
-> 	if (gfpflags_allow_blocking(gfp))
-> 		return false;
-> 	if (force_dma_unencrypted(dev))
-> 		return true;
-> 	if (dma_alloc_need_uncached(dev))
-> 		return true;
-> }
 
-Looks good, fixed.  I renamed it to dma_should_alloc_from_pool() to avoid 
-confusing it with the actual allocation function and added a 
-dma_should_free_from_pool() as well.
-
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -75,6 +75,39 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
- 			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
- }
- 
-+/*
-+ * Decrypting memory is allowed to block, so if this device requires
-+ * unencrypted memory it must come from atomic pools.
-+ */
-+static inline bool dma_should_alloc_from_pool(struct device *dev, gfp_t gfp,
-+					      unsigned long attrs)
-+{
-+	if (!IS_ENABLED(CONFIG_DMA_COHERENTPOOL))
-+		return false;
-+	if (gfpflags_allow_blocking(gfp))
-+		return false;
-+	if (force_dma_unencrypted(dev))
-+		return true;
-+	if (!IS_ENABLED(CONFIG_DMA_DIRECT_REMAP))
-+		return false;
-+	if (dma_alloc_need_uncached(dev, attrs))
-+		return true;
-+	return false;
-+}
-+
-+static inline bool dma_should_free_from_pool(struct device *dev,
-+					     unsigned long attrs)
-+{
-+	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL))
-+		return true;
-+	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
-+	    !force_dma_unencrypted(dev))
-+		return false;
-+	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP))
-+		return true;
-+	return false;
-+}
-+
- struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
- 		gfp_t gfp, unsigned long attrs)
- {
-@@ -124,9 +157,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	struct page *page;
- 	void *ret;
- 
--	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
--	    dma_alloc_need_uncached(dev, attrs) &&
--	    !gfpflags_allow_blocking(gfp)) {
-+	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
- 		ret = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page, gfp);
- 		if (!ret)
- 			return NULL;
-@@ -202,6 +233,11 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- {
- 	unsigned int page_order = get_order(size);
- 
-+	/* If cpu_addr is not from an atomic pool, dma_free_from_pool() fails */
-+	if (dma_should_free_from_pool(dev, attrs) &&
-+	    dma_free_from_pool(dev, cpu_addr, PAGE_ALIGN(size)))
-+		return;
-+
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
- 	    !force_dma_unencrypted(dev)) {
- 		/* cpu_addr is a struct page cookie, not a kernel address */
-@@ -209,10 +245,6 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 		return;
- 	}
- 
--	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
--	    dma_free_from_pool(dev, cpu_addr, PAGE_ALIGN(size)))
--		return;
--
- 	if (force_dma_unencrypted(dev))
- 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
- 
+New debugfs file sounds good, I'll add it.  If we want to disable dynamic 
+expansion when the pool is depleted under a new config option, let me 
+know.
