@@ -2,125 +2,195 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B7BC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C560C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3252074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D532074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="PZAoOw3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504353AbgDNSrt (ORCPT
+        id S2504371AbgDNSsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:47:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:43699 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504185AbgDNSrn (ORCPT
+        Tue, 14 Apr 2020 14:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504345AbgDNSrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:47:43 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M597q-1jNK8G2wTc-0019oG; Tue, 14 Apr 2020 20:47:40 +0200
-Received: by mail-qt1-f172.google.com with SMTP id w24so11090673qts.11;
-        Tue, 14 Apr 2020 11:47:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaUj0jgMT/pF/Q4T4nB7p2Dvn1GmqpF6LCPz2+76M2w4s/3gzUO
-        jX4r+af9LMGBjZaeoAaGHZYqstvl+pWKP6ZPSNU=
-X-Google-Smtp-Source: APiQypJkm7YK7DFcAXzV9bKRiTg4ndg9+lnP/bhAkYKcaZ1Yw17IqxDBvH++61J2ztireirhfyoBdFwDtwNvTt2Nro4=
-X-Received: by 2002:ac8:d8e:: with SMTP id s14mr17254416qti.204.1586890059307;
- Tue, 14 Apr 2020 11:47:39 -0700 (PDT)
+        Tue, 14 Apr 2020 14:47:53 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739F4C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:47:52 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id y4so943146ljn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OyOL12OCCuEtnIYwyab7jevzcvgkgia9hHwlqC2b/cU=;
+        b=PZAoOw3NbV+FJtp3dr1j+nlatrdGdulU5pItNLclPyjrhf7CyG6zlAVQxY50b0EpDU
+         ebHHUI0nLMYLiUaEy8qSIayJglSY+JSBhsG0RoJFCif1nbPg6XUYMtIPrzwEd6L21B6D
+         eMiaPOblgIGOqBJWeooWrfL6SvkGQAaOTSNNO6Lp9XtIHez2UrZ1ZWIaNMyXBhnjPbaL
+         lLFX2CPaZzf0IfFjObpAbweT8dY+tjxm0VLbPnMFpyGtwNx+9HjbD/0dWLjUqNnUuI1u
+         tiv9RMd+lEZFWKv+bI4SS+IkGpaqRpALLHCWMd+xjGN1t+ibMC4JzxMkPXthqEoK9N5E
+         2Djw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OyOL12OCCuEtnIYwyab7jevzcvgkgia9hHwlqC2b/cU=;
+        b=cZNedFs3WojbAm8Zo4zWmll/EYeroHMw1diVBqkjL+9rgR4wpHjIoHQFvIEtDxKdd/
+         S7ei5P1MF1pgdjZaul4ISr5hPeqobqw/OYiLSpf5E1q55Md/7mvepSga/F9yxtdELAhk
+         tNgdvPEE10fs82GRP9nykGmrLcvt1ZW3EkTjUCM/7peuehRRa6qBhKe9tSHvFtJhBC/F
+         Sf6lTHl0kUhZeAZGbA/DneNjTM6xLSI2GqZGnIpEf+ggqAC38e4W0vJ0KffZwpXs6GDj
+         bZJE7eIScAnM2UHZ4sjAKkKwFSmxcNn4YxtmxeBEKTs7rFj4FXOQsE4g3msiOu/3ChOm
+         lLJA==
+X-Gm-Message-State: AGi0Pubr06CRkQA+VckrPcPx5riUQ/8lTSfIyXt95zRf3jBkzaC02XQk
+        YJhmzJssLO3mWNfwlmYEQv3CGASv9GSgsA==
+X-Google-Smtp-Source: APiQypIU0nDoVIJ/vdOxOcyArNCl8ozzP3P/YWU0FeKyu7KGGin9pZl2KpekHTeHZOvoDagifSazJQ==
+X-Received: by 2002:a2e:a308:: with SMTP id l8mr917166lje.282.1586890070861;
+        Tue, 14 Apr 2020 11:47:50 -0700 (PDT)
+Received: from navi.cosmonova.net.ua ([95.67.24.131])
+        by smtp.gmail.com with ESMTPSA id p2sm2029433lji.40.2020.04.14.11.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 11:47:50 -0700 (PDT)
+From:   andrew@daynix.com
+To:     virtualization@lists.linux-foundation.org
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Fix: buffer overflow during hvc_alloc().
+Date:   Tue, 14 Apr 2020 22:15:03 +0300
+Message-Id: <20200414191503.3471783-1-andrew@daynix.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
- <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
- <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
- <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
- <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
- <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
- <20200414152312.GF5100@ziepe.ca> <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
- <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
-In-Reply-To: <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Apr 2020 20:47:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
-Message-ID: <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:lz+utpL2BuBOA5D9VOLFoYKJVgXLXYJqK4q5UjrxvDCIrqFf0MS
- 3lwqvFNt+ZdhOi6W1+JUOaxRPxnZyz1gFrX8vajN9UA+jAAyTIvKc7WENid2RX/wLJgzjci
- 3GOKK0p8/A14FVytNaUGvXPhjxfVlXgYktvK24OOKskHvQiRErMXEilQriSDhYn+fVRhYax
- geT4oFaicC+O6wM54V3xA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BomH8QEDJV4=:ntIuB13EiCR7pWtapSJVge
- J4cB8Aba+rh8/NTD9cEQ5TyuZ84tIDqwWeQCR2YbElbe3TJ36hfx3NBjVDqk5hVrQaaau2UFy
- rV+Z2om/vZpkzaN1YxtH673J0giu8Iu9nVf2BkyqDneRJbm/wyC/modqYfdhHx8UeVZ/had/L
- 7XvJ+mGC8pIQH1BRv4urhEgq5L42xPihQ1VfTRMwMNPSxq4ZxZLW2gIIWrxoi9d13XGlEtNFC
- gPba6yESbPZMx7GPuJpDKeKdZeafCnVcNquETNmahkLgBk0Lp3n2YDXhfe6tLzCmgZaFj+Q8v
- vl/Px13mgqBM0sY7qjsRP2SSMBPTHXQnZKR87cheG2H4K7ax+JznLa8fodDmjkcu/jCbbs1Vi
- oVjZad18pJp5Gm1DhfUwpzKJo380efPkKxqaoEB+vV+Cnzvlk+GSu+Lxs1dk+F2wSdC+6uUZ6
- 38LyRG2EWJrA+r76L7nVDZrx+YfizZA1LHCgpE1Dfwvj0FdG21nPAzLc+QvaBQM2+G/S+i2mW
- /oR87M6mYgqMJ0ROMQqJp14Cbeo/D8+IpPvF7enJtrNEBOjUCkH7NmaMTvKpTM7WhQrMyjeAF
- m/ltdC70nBsrpz9Wl12UQTV1+nIxVdAXTBeUOBvdiYjWnOU30EwwyF+8RlNKhe4aU0Ibrqu1m
- t0h35AJEarmVsB2e4RIW8japZOHOzURvlmJETW9SqMrvhMj+fZ22/ITLL96vgWIzF9zCrmMOQ
- 8yltUSqjVk6KqbMDCoGWMk+87nGvG8O5AmySaraRl5nyi7LUIY0VjpTb47Nax+Y1OLi5AMB3S
- +9wwz0VSlwjQUobM/9/GFsXGCFOaYX2Snjyw5Fhvx65KWWi1M0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 7:49 PM Saeed Mahameed <saeedm@mellanox.com> wrote:
-> On Tue, 2020-04-14 at 17:25 +0200, Arnd Bergmann wrote:
-> > On Tue, Apr 14, 2020 at 5:23 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > Correct.
-> >
->
-> Great !
->
-> Then bottom line we will change mlx5/Kconfig: to
->
-> depends on VXLAN || !VXLAN
+From: Andrew Melnychenko <andrew@daynix.com>
 
-Ok
+If there is a lot(more then 16) of virtio-console devices
+or virtio_console module is reloaded
+- buffers 'vtermnos' and 'cons_ops' are overflowed.
+In older kernels it overruns spinlock which leads to kernel freezing:
+https://bugzilla.redhat.com/show_bug.cgi?id=1786239
 
-> This will force MLX5_CORE to m when necessary to make vxlan reachable
-> to mlx5_core.  So no need for explicit use of IS_REACHABLE().
-> in mlx5 there are 4 of these:
->
->         imply PTP_1588_CLOCK
->         imply VXLAN
->         imply MLXFW
->         imply PCI_HYPERV_INTERFACE
+To reproduce the issue, you can try simple script that
+loads/unloads module. Something like this:
+while [ 1 ]
+do
+  modprobe virtio_console
+  sleep 2
+  modprobe -r virtio_console
+  sleep 2
+done
 
-As mentioned earlier, we do need to replace the 'imply PTP_1588_CLOCK'
-with the same
+Description of problem:
+Guest get 'Call Trace' when loading module "virtio_console"
+and unloading it frequently - clearly reproduced on kernel-4.18.0:
 
-         depends on PTP_1588_CLOCK || !PTP_1588_CLOCK
+[   81.498208] ------------[ cut here ]------------
+[   81.499263] pvqspinlock: lock 0xffffffff92080020 has corrupted value 0xc0774ca0!
+[   81.501000] WARNING: CPU: 0 PID: 785 at kernel/locking/qspinlock_paravirt.h:500 __pv_queued_spin_unlock_slowpath+0xc0/0xd0
+[   81.503173] Modules linked in: virtio_console fuse xt_CHECKSUM ipt_MASQUERADE xt_conntrack ipt_REJECT nft_counter nf_nat_tftp nft_objref nf_conntrack_tftp tun bridge stp llc nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nf_tables_set nft_chain_nat_ipv6 nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 nft_chain_route_ipv6 nft_chain_nat_ipv4 nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack nft_chain_route_ipv4 ip6_tables nft_compat ip_set nf_tables nfnetlink sunrpc bochs_drm drm_vram_helper ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm i2c_piix4 pcspkr crct10dif_pclmul crc32_pclmul joydev ghash_clmulni_intel ip_tables xfs libcrc32c sd_mod sg ata_generic ata_piix virtio_net libata crc32c_intel net_failover failover serio_raw virtio_scsi dm_mirror dm_region_hash dm_log dm_mod [last unloaded: virtio_console]
+[   81.517019] CPU: 0 PID: 785 Comm: kworker/0:2 Kdump: loaded Not tainted 4.18.0-167.el8.x86_64 #1
+[   81.518639] Hardware name: Red Hat KVM, BIOS 1.12.0-5.scrmod+el8.2.0+5159+d8aa4d83 04/01/2014
+[   81.520205] Workqueue: events control_work_handler [virtio_console]
+[   81.521354] RIP: 0010:__pv_queued_spin_unlock_slowpath+0xc0/0xd0
+[   81.522450] Code: 07 00 48 63 7a 10 e8 bf 64 f5 ff 66 90 c3 8b 05 e6 cf d6 01 85 c0 74 01 c3 8b 17 48 89 fe 48 c7 c7 38 4b 29 91 e8 3a 6c fa ff <0f> 0b c3 0f 0b 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 48
+[   81.525830] RSP: 0018:ffffb51a01ffbd70 EFLAGS: 00010282
+[   81.526798] RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
+[   81.528110] RDX: ffff9e66f1826480 RSI: ffff9e66f1816a08 RDI: ffff9e66f1816a08
+[   81.529437] RBP: ffffffff9153ff10 R08: 000000000000026c R09: 0000000000000053
+[   81.530732] R10: 0000000000000000 R11: ffffb51a01ffbc18 R12: ffff9e66cd682200
+[   81.532133] R13: ffffffff9153ff10 R14: ffff9e6685569500 R15: ffff9e66cd682000
+[   81.533442] FS:  0000000000000000(0000) GS:ffff9e66f1800000(0000) knlGS:0000000000000000
+[   81.534914] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   81.535971] CR2: 00005624c55b14d0 CR3: 00000003a023c000 CR4: 00000000003406f0
+[   81.537283] Call Trace:
+[   81.537763]  __raw_callee_save___pv_queued_spin_unlock_slowpath+0x11/0x20
+[   81.539011]  .slowpath+0x9/0xe
+[   81.539585]  hvc_alloc+0x25e/0x300
+[   81.540237]  init_port_console+0x28/0x100 [virtio_console]
+[   81.541251]  handle_control_message.constprop.27+0x1c4/0x310 [virtio_console]
+[   81.542546]  control_work_handler+0x70/0x10c [virtio_console]
+[   81.543601]  process_one_work+0x1a7/0x3b0
+[   81.544356]  worker_thread+0x30/0x390
+[   81.545025]  ? create_worker+0x1a0/0x1a0
+[   81.545749]  kthread+0x112/0x130
+[   81.546358]  ? kthread_flush_work_fn+0x10/0x10
+[   81.547183]  ret_from_fork+0x22/0x40
+[   81.547842] ---[ end trace aa97649bd16c8655 ]---
+[   83.546539] general protection fault: 0000 [#1] SMP NOPTI
+[   83.547422] CPU: 5 PID: 3225 Comm: modprobe Kdump: loaded Tainted: G        W        --------- -  - 4.18.0-167.el8.x86_64 #1
+[   83.549191] Hardware name: Red Hat KVM, BIOS 1.12.0-5.scrmod+el8.2.0+5159+d8aa4d83 04/01/2014
+[   83.550544] RIP: 0010:__pv_queued_spin_lock_slowpath+0x19a/0x2a0
+[   83.551504] Code: c4 c1 ea 12 41 be 01 00 00 00 4c 8d 6d 14 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 40 a5 02 00 4c 03 24 c5 60 48 34 91 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
+[   83.554449] RSP: 0018:ffffb51a0323fdb0 EFLAGS: 00010202
+[   83.555290] RAX: 000000000000301c RBX: ffffffff92080020 RCX: 0000000000000001
+[   83.556426] RDX: 000000000000301d RSI: 0000000000000000 RDI: 0000000000000000
+[   83.557556] RBP: ffff9e66f196a540 R08: 000000000000028a R09: ffff9e66d2757788
+[   83.558688] R10: 0000000000000000 R11: 0000000000000000 R12: 646e61725f770b07
+[   83.559821] R13: ffff9e66f196a554 R14: 0000000000000001 R15: 0000000000180000
+[   83.560958] FS:  00007fd5032e8740(0000) GS:ffff9e66f1940000(0000) knlGS:0000000000000000
+[   83.562233] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   83.563149] CR2: 00007fd5022b0da0 CR3: 000000038c334000 CR4: 00000000003406e0
 
-So far I have not seen problems for the other two options, so I assume they
-are fine for now -- it seems to build just fine without PCI_HYPERV_INTERFACE,
-and MLXFW has no other dependencies, meaning that 'imply' is the
-same as 'select' here. Using 'select MLXFW' would make it clearer perhaps.
+Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
+---
+ drivers/tty/hvc/hvc_console.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-      Arnd
+diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
+index 27284a2dcd2b..436cc51c92c3 100644
+--- a/drivers/tty/hvc/hvc_console.c
++++ b/drivers/tty/hvc/hvc_console.c
+@@ -302,10 +302,6 @@ int hvc_instantiate(uint32_t vtermno, int index, const struct hv_ops *ops)
+ 	vtermnos[index] = vtermno;
+ 	cons_ops[index] = ops;
+ 
+-	/* reserve all indices up to and including this index */
+-	if (last_hvc < index)
+-		last_hvc = index;
+-
+ 	/* check if we need to re-register the kernel console */
+ 	hvc_check_console(index);
+ 
+@@ -960,13 +956,22 @@ struct hvc_struct *hvc_alloc(uint32_t vtermno, int data,
+ 		    cons_ops[i] == hp->ops)
+ 			break;
+ 
+-	/* no matching slot, just use a counter */
+-	if (i >= MAX_NR_HVC_CONSOLES)
+-		i = ++last_hvc;
++	if (i >= MAX_NR_HVC_CONSOLES) {
++
++		/* find 'empty' slot for console */
++		for (i = 0; i < MAX_NR_HVC_CONSOLES && vtermnos[i] != -1; i++) {
++		}
++
++		/* no matching slot, just use a counter */
++		if (i == MAX_NR_HVC_CONSOLES)
++			i = ++last_hvc + MAX_NR_HVC_CONSOLES;
++	}
+ 
+ 	hp->index = i;
+-	cons_ops[i] = ops;
+-	vtermnos[i] = vtermno;
++	if (i < MAX_NR_HVC_CONSOLES) {
++		cons_ops[i] = ops;
++		vtermnos[i] = vtermno;
++	}
+ 
+ 	list_add_tail(&(hp->next), &hvc_structs);
+ 	mutex_unlock(&hvc_structs_mutex);
+-- 
+2.24.1
+
