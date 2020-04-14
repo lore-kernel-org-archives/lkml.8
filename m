@@ -2,121 +2,107 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B962C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7ACC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB71020575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998D220575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="zE/jGiuF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nq9aL/sI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWhgMvQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406653AbgDNHaa (ORCPT
+        id S2406662AbgDNHa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:30:30 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:60607 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406631AbgDNHaU (ORCPT
+        Tue, 14 Apr 2020 03:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406631AbgDNHav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:30:20 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B2BC5D32;
-        Tue, 14 Apr 2020 03:30:19 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 14 Apr 2020 03:30:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=n8uUxVj2O6wC8BBvVzkUMzLkQR/
-        W6dq7ltsB0YDVqY4=; b=zE/jGiuFNG2fMrdB/Bi9+JqxyycaHke4V7PkoCmi+b9
-        HORrYxEBIEAoV2NCXzmsxIbYPGXeS1AHUrdqXgNdXVnlQrohkJASvtLkA8Axr9O7
-        bY+aeeHGj0Vqvox0bSAFZQ4bk4LOcDrwIab6U5mWJGDmMWrJb7MQDRjO9BC3A4rx
-        tqZSw3F5vQq93lj/qL8EIyB0p9dFZLSGVyiMVUSL7iI8mr0eowO1Qpa3Bi8KNxd0
-        Dn4yhAHL0FQJ4Vvn96HkiLfwxNduXdsFzKVv1zIHECMFSd+JFWfEJhcbDtiJ9FY5
-        ZFfRHDFAtnVqeKJtJo4ykFjm/kZUojMI9ukRhbd5ViA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=n8uUxV
-        j2O6wC8BBvVzkUMzLkQR/W6dq7ltsB0YDVqY4=; b=nq9aL/sICld4Oxszs3w7vg
-        pcSgGRGgUYtKAvmtqzAGoOd3KXWa05yl++VMDpVgW+/9pVqlRwuN7amaUgMToFso
-        JlyMEzobMRUxR63KCR884TYmmuI8brwemTYOho9rHa7HAKNzMfMHQlJyeULiHF3+
-        vtOd2q+meqPfvhAQc3LOoFqzmNNs1L0N4s4qfgDORCGW2o+gxK5ZgZjcsaHeMjjV
-        6UqgjM0iIuCjWYbrG3tssq/Q8wTmXGmNgS6cHf/m1DcE+i7MOAey4YKwZXVDOtK+
-        sMzgvifpt2jVamN8bba4guBuokXZYAz6Kdx/RaLnvFWPf/2o1BHPl0lawVEMr1eg
-        ==
-X-ME-Sender: <xms:imaVXg3gNZwcb1EbhpbiE22rpUEKrAfkPIvS6JlG6HgfFii_3qJJvw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedtgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpegsrghnrghnrgdqphhirdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
-    gtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:imaVXlohIirwGi2SsenxxMbnGlZE4SBaJutpFgbla72X2XGTDHktew>
-    <xmx:imaVXlcdlz5Ni2FvP6C2iTF5s0OJVR4gpId7IOpQw3vgvLeY2TyS1Q>
-    <xmx:imaVXsrdKJYiETffIHCEYuoeZUyX2Ghlt3ujM7eWg-a1bkfFJ6Y1SA>
-    <xmx:i2aVXmsh5wZrIIAt9aBZ14ZdmjLjwC2lIObNO6jry51Lj3DljSKIwQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 800FF3280065;
-        Tue, 14 Apr 2020 03:30:18 -0400 (EDT)
-Date:   Tue, 14 Apr 2020 09:30:17 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Vincent =?utf-8?Q?Stehl=C3=A9?= <vincent.stehle@laposte.net>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: Fix led
- polarity
-Message-ID: <20200414073017.ctfvws2ph67gqgit@gilmour.lan>
-References: <20200411174843.4112-1-vincent.stehle@laposte.net>
+        Tue, 14 Apr 2020 03:30:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1CBC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 00:30:50 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g12so4931040wmh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 00:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Rwt7p9rV0ZpScS3OX0rGuyv3x/Zc5Fmy91OFilUZ1Y=;
+        b=QWhgMvQbdUrtrel97IpCVi+K+iGufbSjnOoA6HrP+kHc7QLpRClgyLZPt/To2X1zLD
+         zGwi7s7p30TVDfrGjxYXVA5WRFotAT2cgStakuBB5AvgCMtB/TQdUiIXnNZvcKT8p7XL
+         EZ0L/ZNkOV618PvidBgSPyXtklufOJ/WK2MRpHnzHLCKIapm0o8+VM9z2JtFUT3CtqE7
+         5/cmytS2jTxz8sa1YnDlC50zOH4qOmDsqM+ss1rQq05M5tqsOTzMQuL2KC3bhil0ocCx
+         G0A9XlRrVG/OE/hUtszlsyfRtUikc9wa540m+78690soPnF2DD4wrAUKSQCzONBW5CXF
+         6pbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Rwt7p9rV0ZpScS3OX0rGuyv3x/Zc5Fmy91OFilUZ1Y=;
+        b=ZwYtvD77Z91sc/vJk6U1Puf7uiHrbVk+DtPHWbUn2lJ5zrG6a6Mn5mbP+3wA+9gjBh
+         uBIbSMOmu+ffmoO9MHtbs/y8JfA6kisBApE1dOCICk7Y71jw0Z3bAvummdSpP7knDUwf
+         9QUtc9dUCYJ8iHrdwXPTvq5nLvXOMgrSzro/Phtr2erW7pdnWPD7DhFJ9LzRbCuVQIsE
+         BJpk9bZKsWndQyDzpmyFMgJDYhAIPC5cYcOCCHyxBKY1rP4yUzb4CdIP0FDl3xPvH78t
+         oFa00nl424vmRjFgxOzYqugv5K66+khUpsl+eMWiJJJoybAw+9tqCNsZE1oNEIIrNgcM
+         ZsGg==
+X-Gm-Message-State: AGi0PuZvVPC0EnM/i0tlOMZyU+F6mJ0bd6wIyQ39A2JLAjY58dp/QN/9
+        gS74FQ8jkp85MgYyJ8706Bw=
+X-Google-Smtp-Source: APiQypIR5EPu+VhS8tNtQUnOjVREATqTvrressnlxnmBB29KUQZb99svQvmsU19ioztDuD9CYUCwKg==
+X-Received: by 2002:a1c:4186:: with SMTP id o128mr2448247wma.21.1586849449238;
+        Tue, 14 Apr 2020 00:30:49 -0700 (PDT)
+Received: from localhost.localdomain ([31.4.236.74])
+        by smtp.gmail.com with ESMTPSA id g74sm17755486wme.44.2020.04.14.00.30.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 00:30:48 -0700 (PDT)
+From:   carlosteniswarrior@gmail.com
+To:     gregkh@linuxfoundation.org
+Cc:     nsaenzjulienne@suse.de, linux@jaseg.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Carlos=20Guerrero=20=C3=81lvarez?= 
+        <carlosteniswarrior@gmail.com>
+Subject: [PATCH] Staging: fbtft : fbtft-bus: fixed two checkpatch errors
+Date:   Tue, 14 Apr 2020 09:30:47 +0200
+Message-Id: <20200414073047.2757-1-carlosteniswarrior@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3day4t7c5vd65lny"
-Content-Disposition: inline
-In-Reply-To: <20200411174843.4112-1-vincent.stehle@laposte.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Carlos Guerrero Álvarez <carlosteniswarrior@gmail.com>
 
---3day4t7c5vd65lny
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixed two checkpatch space prohibited before that close parenthesis errors.
 
-On Sat, Apr 11, 2020 at 07:48:43PM +0200, Vincent Stehl=E9 wrote:
-> The PWR-LED on the bananapi m2 zero board is on when gpio PL10 is low.
-> This has been verified on a board and in the schematics [1].
->
-> [1]: http://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO#Documents
->
-> Fixes: 8b8061fcbfae ("ARM: dts: sun8i: h2+: add support for Banana Pi M2 =
-Zero board")
-> Signed-off-by: Vincent Stehl=E9 <vincent.stehle@laposte.net>
-> Cc: Icenowy Zheng <icenowy@aosc.io>
-> Cc: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Carlos Guerrero Álvarez <carlosteniswarrior@gmail.com>
+---
+ drivers/staging/fbtft/fbtft-bus.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied, thanks
+diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
+index 63c65dd67b17..cdb451dd3fde 100644
+--- a/drivers/staging/fbtft/fbtft-bus.c
++++ b/drivers/staging/fbtft/fbtft-bus.c
+@@ -62,9 +62,9 @@ out:									      \
+ }                                                                             \
+ EXPORT_SYMBOL(func);
+ 
+-define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
++define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8,)
+ define_fbtft_write_reg(fbtft_write_reg16_bus8, __be16, u16, cpu_to_be16)
+-define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
++define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16,)
+ 
+ void fbtft_write_reg8_bus9(struct fbtft_par *par, int len, ...)
+ {
+-- 
+2.26.0
 
-Maxime
-
---3day4t7c5vd65lny
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpVmiQAKCRDj7w1vZxhR
-xSL2AP4pPm/60fbnUXcvq+Sg3y4w2PbhMA606DmAdxn+7ecfbgEAqJyhGyhAizfV
-mjIB3RBOPA9GVgyRlZqz3GmsgnzCRwo=
-=JZo2
------END PGP SIGNATURE-----
-
---3day4t7c5vd65lny--
