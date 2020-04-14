@@ -2,240 +2,196 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71EDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5953C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863E92076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CeM/zs/U"
+	by mail.kernel.org (Postfix) with ESMTP id 92C232076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634187AbgDNWJk (ORCPT
+        id S2634219AbgDNWK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56198 "EHLO
+        Tue, 14 Apr 2020 18:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634160AbgDNWJC (ORCPT
+        by vger.kernel.org with ESMTP id S2634156AbgDNWJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:09:02 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2226C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:09:00 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so8375202wmh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2gAWHTXX9bF3sN9XblA+dduErzaItlbFPxUTg2AHv9w=;
-        b=CeM/zs/UclThxyDL0iHjwTNNx8BhkPJ20N26rghrVb6K5+LCtGWb5MyTEpcd5rEu3E
-         CjsI8KSkwYIQWPrq/HOTk+DGqsK5StvgJrn2YXO0W4wFG/IwyjNRpcFoGbVYhy5HR7KR
-         +KauMyN+PYYV+jpDuZq3+A8+/LKf23wuLKoFrPZAv5IgX443ZelPT7+u+VFIV3lkhsOb
-         s+PA2lmTX4OWgel7/vfshUk87fC4AzigbjZ2H+ZaLrm/foXHuGamGG7c+5MfhQXCnfg9
-         9u5W0WXehBW+qkoic9fY3NhJ5lnFDi0uT/7j5BbbjkK1sfcd1I0Ds4vkJAN5ci+ZTNTv
-         +Dtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2gAWHTXX9bF3sN9XblA+dduErzaItlbFPxUTg2AHv9w=;
-        b=VNQFjGpusK0V1YHUUsj+lqxk7KJ+N7QAX1JwKZJUgNlTRpTasMv/xPG7r8GNBeXmPD
-         MZTfpl/Eu2HVJRmGwL8foPNnbBpO/RkDTHNEo0Z5Z6trlnsguoGqVJYqXLzJkYzXuE5h
-         hujzqidf436+7RTLEK3MqGk+Ek2MUIlwCsjuzoc1R8O90V3TixgmfAF9buaJag9WtNDg
-         xP6PtrXiYTcXWebJCziyayXJXg2TPxXrbAUiA9GAYTj2D51Gr9/v0+RYjgClPTTFjJ/9
-         Nbjp61qheDHuQ00VAw+tB8DElMz1/ogY9ahFJUDuydV/oAiV7S6aq9bedKcQq7A1RWkq
-         axhQ==
-X-Gm-Message-State: AGi0PubK3sDjgHvnLVjCxV8ExyyjgaNxDAY2C092W9wtYNjOEpXE4p3E
-        eQhq/w6pxThouwaMQD1AjwNcbw==
-X-Google-Smtp-Source: APiQypKE+PiQzpQOD6XHn4FFGCkS3xwrkZsF4sltqgVV63EDuVSL7DA5q/T28tGOrQyTlevnqXAkhQ==
-X-Received: by 2002:a1c:998b:: with SMTP id b133mr1885789wme.65.1586902139388;
-        Tue, 14 Apr 2020 15:08:59 -0700 (PDT)
-Received: from localhost.localdomain (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.gmail.com with ESMTPSA id a7sm4099973wrs.61.2020.04.14.15.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 15:08:58 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     amit.kucheria@verdurent.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        linux-pm@vger.kernel.org (open list:THERMAL/CPU_COOLING),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 3/4] thermal/drivers/cpuidle_cooling: Change the registration function
-Date:   Wed, 15 Apr 2020 00:08:32 +0200
-Message-Id: <20200414220837.9284-3-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200414220837.9284-1-daniel.lezcano@linaro.org>
-References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
+        Tue, 14 Apr 2020 18:09:25 -0400
+X-Greylist: delayed 523 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 15:09:24 PDT
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0445C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:09:24 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 491zv119lSzQlDx;
+        Wed, 15 Apr 2020 00:00:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id VaH8NXRFjAii; Wed, 15 Apr 2020 00:00:25 +0200 (CEST)
+Subject: Re: clk: Lantiq/Intel: XWAY CGU support
+To:     Jorge Amoros-Argos <joramar76@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     john@phrozen.org, martin.blumenstingl@googlemail.com
+References: <20200404105309.0000745d@gmail.com>
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+Autocrypt: addr=hauke@hauke-m.de; keydata=
+ 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
+Message-ID: <743865de-c69c-836c-a74f-f50ccaaed9b3@hauke-m.de>
+Date:   Wed, 15 Apr 2020 00:00:20 +0200
+MIME-Version: 1.0
+In-Reply-To: <20200404105309.0000745d@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="qwVuVVLVaWXiPXh0jLzHuXTaDfjrrkDmD"
+X-Rspamd-Queue-Id: EEFEE174C
+X-Rspamd-Score: -2.55 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today, there is no user for the cpuidle cooling device. The targetted
-platform is ARM and ARM64.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--qwVuVVLVaWXiPXh0jLzHuXTaDfjrrkDmD
+Content-Type: multipart/mixed; boundary="n2ptTgqtGx0FFlgGbINeLgqdnjdQpTvVS"
 
-The cpuidle and the cpufreq cooling device are based on the device tree.
+--n2ptTgqtGx0FFlgGbINeLgqdnjdQpTvVS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-As the cpuidle cooling device can have its own configuration depending
-on the platform and the available idle states. The DT node description
-will give the optional properties to set the cooling device up.
+On 4/4/20 10:53 AM, Jorge Amoros-Argos wrote:
+> Dear community,
+>=20
+> This is addresed to the Lantiq/Intel developers for the SoC's VRX200 an=
+d
+> XWAY in general.
+>=20
+> I'm trying to port the current sources to the common clock framework fo=
+r
+> Openwrt.
 
-Do no longer rely on the CPU node which is prone to error and will
-lead to a confusion in the DT because the cpufreq cooling device is
-also using it. Let initialize the cpuidle cooling device with the DT
-binding.
+Thanks for looking into this. this SoC should really be converted to the
+common clock framework.
 
-This was tested on:
- - hikey960
- - hikey6220
- - rock960
- - db845c
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/cpuidle_cooling.c | 58 +++++++++++++++++++++++++------
- include/linux/cpu_cooling.h       |  7 ----
- 2 files changed, 47 insertions(+), 18 deletions(-)
+> For this purpose, I'd need to have a good knowledge of both clock
+> providers and consumers in order to update the device tree and also the=
 
-diff --git a/drivers/thermal/cpuidle_cooling.c b/drivers/thermal/cpuidle_cooling.c
-index 0bb843246f59..b2c81c427f05 100644
---- a/drivers/thermal/cpuidle_cooling.c
-+++ b/drivers/thermal/cpuidle_cooling.c
-@@ -10,6 +10,7 @@
- #include <linux/err.h>
- #include <linux/idle_inject.h>
- #include <linux/idr.h>
-+#include <linux/of_device.h>
- #include <linux/slab.h>
- #include <linux/thermal.h>
- 
-@@ -154,22 +155,25 @@ static struct thermal_cooling_device_ops cpuidle_cooling_ops = {
- };
- 
- /**
-- * cpuidle_of_cooling_register - Idle cooling device initialization function
-+ * __cpuidle_cooling_register: register the cooling device
-  * @drv: a cpuidle driver structure pointer
-- * @np: a node pointer to a device tree cooling device node
-+ * @np: a device node structure pointer used for the thermal binding
-  *
-- * This function is in charge of creating a cooling device per cpuidle
-- * driver and register it to thermal framework.
-+ * This function is in charge of allocating the cpuidle cooling device
-+ * structure, the idle injection, initialize them and register the
-+ * cooling device to the thermal framework.
-  *
-- * Return: zero on success, or negative value corresponding to the
-- * error detected in the underlying subsystems.
-+ * Return: zero on success, a negative value returned by one of the
-+ * underlying subsystem in case of error
-  */
--int cpuidle_of_cooling_register(struct device_node *np,
--				struct cpuidle_driver *drv)
-+static int __cpuidle_cooling_register(struct device_node *np,
-+				      struct cpuidle_driver *drv)
- {
- 	struct idle_inject_device *ii_dev;
- 	struct cpuidle_cooling_device *idle_cdev;
- 	struct thermal_cooling_device *cdev;
-+	unsigned int idle_duration_us = TICK_USEC;
-+	unsigned int latency_us = UINT_MAX;
- 	char dev_name[THERMAL_NAME_LENGTH];
- 	int id, ret;
- 
-@@ -191,7 +195,11 @@ int cpuidle_of_cooling_register(struct device_node *np,
- 		goto out_id;
- 	}
- 
--	idle_inject_set_duration(ii_dev, TICK_USEC, TICK_USEC);
-+	of_property_read_u32(np, "duration", &idle_duration_us);
-+	of_property_read_u32(np, "latency", &latency_us);
-+
-+	idle_inject_set_duration(ii_dev, TICK_USEC, idle_duration_us);
-+	idle_inject_set_latency(ii_dev, latency_us);
- 
- 	idle_cdev->ii_dev = ii_dev;
- 
-@@ -204,6 +212,9 @@ int cpuidle_of_cooling_register(struct device_node *np,
- 		goto out_unregister;
- 	}
- 
-+	pr_info("%s: Idle injection set with idle duration=%u, latency=%u\n",
-+		dev_name, idle_duration_us, latency_us);
-+
- 	return 0;
- 
- out_unregister:
-@@ -221,12 +232,37 @@ int cpuidle_of_cooling_register(struct device_node *np,
-  * @drv: a cpuidle driver structure pointer
-  *
-  * This function is in charge of creating a cooling device per cpuidle
-- * driver and register it to thermal framework.
-+ * driver and register it to the thermal framework.
-  *
-  * Return: zero on success, or negative value corresponding to the
-  * error detected in the underlying subsystems.
-  */
- int cpuidle_cooling_register(struct cpuidle_driver *drv)
- {
--	return cpuidle_of_cooling_register(NULL, drv);
-+	struct device_node *cooling_node;
-+	struct device_node *cpu_node;
-+	int cpu, ret;
-+
-+	for_each_cpu(cpu, drv->cpumask) {
-+
-+		cpu_node = of_cpu_device_node_get(cpu);
-+
-+		cooling_node = of_get_child_by_name(cpu_node, "idle-thermal");
-+
-+		of_node_put(cpu_node);
-+
-+		if (!cooling_node)
-+			continue;
-+
-+		ret = __cpuidle_cooling_register(cooling_node, drv);
-+
-+		of_node_put(cooling_node);
-+
-+		if (ret)
-+			return ret;
-+
-+		cooling_node = NULL;
-+	}
-+
-+	return 0;
- }
-diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
-index 65501d8f9778..4d7b4a303327 100644
---- a/include/linux/cpu_cooling.h
-+++ b/include/linux/cpu_cooling.h
-@@ -64,18 +64,11 @@ struct cpuidle_driver;
- 
- #ifdef CONFIG_CPU_IDLE_THERMAL
- int cpuidle_cooling_register(struct cpuidle_driver *drv);
--int cpuidle_of_cooling_register(struct device_node *np,
--				struct cpuidle_driver *drv);
- #else /* CONFIG_CPU_IDLE_THERMAL */
- static inline int cpuidle_cooling_register(struct cpuidle_driver *drv)
- {
- 	return 0;
- }
--static inline int cpuidle_of_cooling_register(struct device_node *np,
--					      struct cpuidle_driver *drv)
--{
--	return 0;
--}
- #endif /* CONFIG_CPU_IDLE_THERMAL */
- 
- #endif /* __CPU_COOLING_H__ */
--- 
-2.17.1
+> drivers. This means hardware (how devices are connected) and software
+> (what registers do what?)
+>=20
+> There's no such low level detail after all my investigations, which are=
 
+> shown here:
+>=20
+>      https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU
+>=20
+> For instance, the full structure of PLL2 register remains a mistery and=
+
+> also its output; OCP selector, is a kind of divider?; PCIe generator is=
+
+> located where? PMU, is just a gate controller or a provider itself?
+>=20
+> I'd really appreciate if you could share some details in order to start=
+
+> the job.
+
+A common clock framework driver for the Lightning Mountain(LGM) SoC is
+currently being reviewed on the upstream mailling list:
+https://lkml.org/lkml/2020/3/24/4
+there could still be some similarities between the VRX200 and the LGM,
+but there are some generations in between and with the xrx500 many
+registers in the CGU block changed.
+
+Martin started to write a driver some years ago:
+https://github.com/xdarklight/linux/commits/lantiq-clk-20160620
+But this does not really models the clock tree.
+
+Be aware that the clock tree is not so simple, it has a lot of dividers.
+
+Hauke
+
+
+--n2ptTgqtGx0FFlgGbINeLgqdnjdQpTvVS--
+
+--qwVuVVLVaWXiPXh0jLzHuXTaDfjrrkDmD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEyz0/uAcd+JwXmwtD8bdnhZyy68cFAl6WMnQACgkQ8bdnhZyy
+68fpDQgArSsZzLAXPHkYDxEt5E6OxI4viQRhn/12rSydXr+3m43VtmOqZcg9sc1A
+SB7nRph9f3GN2dKMS6B6NxezQGS3Fb3uub3x6ZBNRkZLkF14aHK8oaVUAryCV5io
+6q39njomlLUtPvdkjUMh/91q3zWqy/T8XWR6kg+jww+Y591X+8N9bX1tkLNF+jg3
+UDYC7yZa7S1wLS2B9j8Y+6srnoX8Ld228PmzJeAFq8bz4QGWaYGx5a/HHpOsOcY9
++6W1mLio2diP8P5w3JZjUnw0EDwa+xq+qho1OyS2mCs7TlYpWTR4P4QdiU6u+31E
+SmEqwMxfViolvtX8kxZnK9pmMQYw5g==
+=evkK
+-----END PGP SIGNATURE-----
+
+--qwVuVVLVaWXiPXh0jLzHuXTaDfjrrkDmD--
