@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4783C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C567BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A81B8206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1A120678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KgCGSbwa"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kb5PqeZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440685AbgDNPkm (ORCPT
+        id S2440695AbgDNPku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:40:42 -0400
-Received: from mout.gmx.net ([212.227.15.19]:33139 "EHLO mout.gmx.net"
+        Tue, 14 Apr 2020 11:40:50 -0400
+Received: from mout.gmx.net ([212.227.15.19]:59363 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440635AbgDNPjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:39:53 -0400
+        id S2440637AbgDNPjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:39:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586878783;
-        bh=xayl9wr1Zhh2APoyBF+n7OmgkJn/nVrgwCRIOOlv8F4=;
+        s=badeba3b8450; t=1586878774;
+        bh=qDQL1qzQyEDO5ztNZjiR1182cfMBNg4Z/fUvBHSHojo=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=KgCGSbwazxWP0k9SZLSBRpeMxuMQgGamMe59LQ9Cq7uBTa1m6n8TApHFNqfwacXjQ
-         ThakJSdh27Lks6CyHSUQyYrgEuYJU+Cn42qkW+OqIYwmdD7jX/jLRNszGpL9x2AY/j
-         vCTVVujET1OnIYVH2kLkAP41ni7ftYYGpo2Ta5Gg=
+        b=kb5PqeZLScdCNxIYfwIJluyW9kW1yw6IO1MbTwexg8q3v/N2Wm5gonQ2zaABc+OoU
+         tXyHZ5avDu9PLk7TkdXnI6wojVINSG1y4HV/6fPBHcMzo1FitaEtvx/EGCetmgkTX0
+         0sebk+zHX3jQE1VEI5nXnzpnj+v/brbh1qMQHCzM=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
  (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1ML9uK-1jgSmD17PW-00IBXi; Tue, 14 Apr 2020 17:39:43 +0200
+ 1MUGi9-1jp1LZ2wZH-00RE6J; Tue, 14 Apr 2020 17:39:34 +0200
 From:   Oscar Carter <oscar.carter@gmx.com>
 To:     Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -44,209 +44,266 @@ Cc:     Oscar Carter <oscar.carter@gmx.com>,
         "John B. Wyatt IV" <jbwyatt4@gmail.com>,
         Colin Ian King <colin.king@canonical.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] staging: vt6656: Refactor the assignment of the phy->signal variable
-Date:   Tue, 14 Apr 2020 17:38:48 +0200
-Message-Id: <20200414153849.5785-5-oscar.carter@gmx.com>
+Subject: [PATCH 1/5] staging: vt6656: Return error code in vnt_rf_write_embedded function
+Date:   Tue, 14 Apr 2020 17:38:45 +0200
+Message-Id: <20200414153849.5785-2-oscar.carter@gmx.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200414153849.5785-1-oscar.carter@gmx.com>
 References: <20200414153849.5785-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WULWfV857+3ReqK0uGTtSIhLihDvMVYh4pt9Ad6fOD2coxShS2t
- C+PJi895M1gzYq6KTz/9RhpFYJgy7ciVx/m6oQpYdHaxjDVh4H7J4c0gXaHXKkit3wggFWP
- zb43xmQ3gatPU1R4Z/101hbi3ZLck3pjeerQyGTqeiy5ZqxfiMrS+ErJcxeVPiEHORC8HXh
- tv0CwGAybbr+RJRmeGatQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VrWkre+vVO4=:qClOhRBU9c9lgvyvVQ8/sc
- CNcw6LL6jVIX5ly3kmInF7NvaNDGZHSl055KRAhZ8rJ1+NfUD+/w5vRfth1h6pepIRbhdJcCi
- HiS+fx2N7Z9jECftXE9nPhknJ0MWIrcVbQTt3Fe59fw9jD4pqvy3z2Sdlqz92TIpzhOgw7vCw
- +OQzHlJ8AflXcSGiwAnRgWirnRoDkbdUS2iUtsxf+6A8A8ADRhRDEWLvJYgQTa3u0iKLg7sVG
- HpBKMVHLBJiEPRFiO1Y6/DvzlHIgq8kG0gjq43eVbDYKTdfseH+b8zc8rsOFO2z9GXp1WRCk+
- HSVQ/Ud9hHTNQEasEioUWpInsvy/S9lgfnqy1Y0SWzGcZNNEFIU9W0QO6lzFQkHYMxhMsmqOG
- SiDrB9o3spWxQLZIjPCciE+T/UGO7zA7JovQWkKiOfRihEZASaBhOq/ctuukGL9+cQqvCBTlH
- YMdDnpC6nBTSMjEakKQvHc5kTmveQ87QwA6e4ma4XpY9XOs5GQYTLCqHJSxYoCfvy+mjtvyzI
- IQesgmnhlqR+NNr1WxpXNf9Uj4n61mNM3V4JrD2c7LvJz7n+P9tJb5/wda/V+2mKksDL08ii+
- Qv5QgxEeXgcDO8PBFp9tsG3tasbHGyWMKi+FrkStdwLVmsn6Z5LX8wAOT6iwiTxEMrakpPZv+
- ApGrPkUHkgHs5NNrAupG+J5LIZWim/Oa+Un8WKIFkjdBc/nYO/tOetN72ePRMdtTo+pNpyFVw
- 5qPk9TMfVog1LVG9+2DdLPRMMW9phI/7I9Yt8PbHRLsVVuLPJ488eY/lE0tSxlvkBQA0qYZmv
- 86CRwftsvH8CuEzB1CTZs3rfWIaT3l7q9gSqUHFah+MwoErj8pKyh+T31Eyqtc6Dw6k7OOzIl
- 9W+GHKmCgVxBoy7JuHQcQ7YWJ2GTB6N8EP/mry3V5blv0xLIsCwYTJTRidGS8Gr+t/0gdFPAH
- JlEj1Wga3+FVnED5cPfiaTCFoKT3Vu33IcdewvFXqcnMdbHJ5ZobyAAot3VrL8sVYAt5O+A67
- igGZr5JqLdubSCR610c1XyEqNBCZ6k4e2dtcK4fBVupWZNW36kn62gA1Y/ALSKfYwQNRZzFQu
- aKr9TiAu/NV9hckfIAOW7KKeadYTCfFCCmPRPg7RJUNByKZsqlKJJepnqTVy2Q4SNS786isY7
- BHSvfm7Oz7LJsY/MEQ2a/awyzEyvWlI1UoufzX/CIycL/GDDHrevMVQTXyx+D7MxofPjgBiJj
- Nl3p/5UH/uTdjwF57
+X-Provags-ID: V03:K1:alBt3xgMIo+FQ6uhVxVhk1PKUd0YjG/UVZuABkeRBJVeqZt4HnM
+ DdXVnqrThYR2JAClI8TPHZpI9MxC7MLZlfaeju1zeL1qAmYdIIuIzTQr/59gsbSeY7B7N6F
+ VTzzQhxAZ3erwMV+YB1G+YbZ/g9ZlvAUu5TSj6+005m4W4NsKkm4N1SROXIGETgHcKGP0VY
+ TItfkFX9mITYeQKPkH0bw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5OgZLtgSmLk=:wWw3i7uvqBnuizPlsN2rGf
+ ozQtCN5x2q/Dr0ijYws75itfjEGKY6AvjnVgiQs9uorVYK2RAyzl0bQM/nqNAZEhvY+6F9X+O
+ jadBPTwO3nL5uwmpWRBR97kNDFvFhmCCYflStgFWMl2gOORwdcnvflkiLvMMVczEAmfzaf/39
+ h0brkFecOM0uEW0lbICiZuJX/HJNt10bWJ5GUYKA0oeioPU+rXnaKEcvydIebcT3X5zDYT6e6
+ SKjeYG2UYJV0oGqjLStOxNuXJtUsC1MAI0sG8JcfrZlG2JmsNwCIhNQHokLVRlT+FT6YN+KDV
+ nxUD2skrVfgxDAjdfKB+EJ7kQYUdY48F4XS18DHUCDvz/Org9faAuglrlvjcPfavbdL46aPbk
+ b5FmJWAXFFeXwx8ITyZmeI5QzXQ/FDZKUn2yZE/zWHGQ6SZGs9nEq/spQnQ3y9gDWwLCAMfXy
+ asEGIPvSewtCLw5e5kDT3DdZf18XSrupvLObFoDkxAgMNoy96vlg5CUrGnjH4ciXstYaHZe73
+ fx7quASUqCjbtcxQfJ9nwJouh/GR2tUsp4pbHfVlx1hK+0B7Jk1+gE08EVQ9HrPeqXd09H08G
+ KjExuHUJUtB0p4hm86Zrw6jxfLVZXh05kdC+8N2wWUiSI1EncEdoJPvZCak0U+kwR2to4LHul
+ 0dYl79cwvIX46hoPJJLs4t5HT68jsFLIQ2yBrXy0akoRio07cXPtNpVc9Kzc2zIaGKpo3UM7Z
+ cAD4cNq1Mg8xZCJs8FTDrx2GeByFqkwNgIUnKdxc01YoJqhQGll3/VdJ0jMd3O47PKrvYs5i8
+ VKKLcYT3lsZ0CLEu483pmurheW/k2PzXGCqFleH51fMNTMeu/P19+pHCiGoRCMsfjOUZmwykh
+ cf0ODW8bnqvwNi8hxKnLE0bKh2IffxSY4PaeCT+NXQDpFZf63QAJZz3qsbDEMpBuu1UbF9woO
+ 4hA9JVEUpYAHMHqxq7OM2eBabJUJ6dvUmShgEqh6ePFImzAYjizhHBcIN+GHbuu54R18WZL9V
+ 5xLFudhWIysAaRFcT2sPVduyIVyGm1+yO+9w0a5AisKOMvdZSgTs7iGDUhspHcG+P83dC9xwX
+ WDOtGWVDIv0toJ0K6+bErdhJb/9QF3LO2Qd9x52tKXr/bnl+FugeTBNw0c8rQcOs7po972fCU
+ QgzWWAlzJBzOU4EPJVGb70aAJKTmWhqy7opf6fxkY8BF6TZ4QGxGdg4MWOJikwD+nUuDq9yis
+ C/Uc125M3KumoIIqd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a constant array with the values of the "phy->signal" for every
-rate. Remove all "phy->signal" assignments inside the switch statement
-and replace these with a single reading from the new vnt_phy_signal
-array.
+Use the error code returned by the vnt_control_out function as the
+returned value of the vnt_rf_write_embedded function instead of a
+boolean value.
 
-The constant array can be of one dimension because the OR mask with
-BIT(3) or BIT(4) allow obtain a second value according to the rate,
-the preamble_type and the pkt_type.
+Then, fix all vnt_rf_write_embedded calls removing the "and" operations
+and replace with a direct assignment to the ret variable and add a check
+condition after every call.
+
+Also replace the boolean values true or false in the vnt_rf_set_txpower
+function to 0 or error code EINVAL to follow the coding style guide.
+
+The vnt_rf_set_txpower function is called only in the vnt_rf_setpower
+function that already returns error codes. The calls to this function
+(vnt_rf_set_txpower) not use the returned values, so they not need to be
+fixed.
 
 Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
 =2D--
- drivers/staging/vt6656/baseband.c | 105 ++++++++----------------------
- 1 file changed, 26 insertions(+), 79 deletions(-)
+ drivers/staging/vt6656/rf.c | 99 ++++++++++++++++++++++++-------------
+ 1 file changed, 64 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index 149c9bba7108..3b6f2bcf91a7 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -196,6 +196,21 @@ static const struct vnt_threshold vt3342_vnt_threshol=
-d[] =3D {
- 	{41, 0xff, 0x00}
- };
-
-+static const u8 vnt_phy_signal[] =3D {
-+	0x00,	/* RATE_1M  */
-+	0x01,	/* RATE_2M  */
-+	0x02,	/* RATE_5M  */
-+	0x03,	/* RATE_11M */
-+	0x8b,	/* RATE_6M  */
-+	0x8f,	/* RATE_9M  */
-+	0x8a,	/* RATE_12M */
-+	0x8e,	/* RATE_18M */
-+	0x89,	/* RATE_24M */
-+	0x8d,	/* RATE_36M */
-+	0x88,	/* RATE_48M */
-+	0x8c	/* RATE_54M */
-+};
-+
- /*
-  * Description: Calculate data frame transmitting time
+diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
+index a00179bd4c2e..06fa8867cfa3 100644
+=2D-- a/drivers/staging/vt6656/rf.c
++++ b/drivers/staging/vt6656/rf.c
+@@ -21,6 +21,7 @@
   *
-@@ -264,6 +279,8 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 f=
-rame_length,
- 	u32 count =3D 0;
- 	u32 tmp;
- 	int ext_bit;
-+	int i;
-+	u8 mask =3D 0;
- 	u8 preamble_type =3D priv->preamble_type;
+  */
 
- 	bit_count =3D frame_length * 8;
-@@ -272,27 +289,12 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
- frame_length,
- 	switch (tx_rate) {
- 	case RATE_1M:
- 		count =3D bit_count;
--
--		phy->signal =3D 0x00;
--
- 		break;
- 	case RATE_2M:
- 		count =3D bit_count / 2;
--
--		if (preamble_type =3D=3D PREAMBLE_SHORT)
--			phy->signal =3D 0x09;
--		else
--			phy->signal =3D 0x01;
--
- 		break;
- 	case RATE_5M:
- 		count =3D DIV_ROUND_UP(bit_count * 10, 55);
--
--		if (preamble_type =3D=3D PREAMBLE_SHORT)
--			phy->signal =3D 0x0a;
--		else
--			phy->signal =3D 0x02;
--
- 		break;
- 	case RATE_11M:
- 		count =3D bit_count / 11;
-@@ -305,75 +307,20 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
- frame_length,
- 				ext_bit =3D true;
- 		}
++#include <linux/errno.h>
+ #include "mac.h"
+ #include "rf.h"
+ #include "baseband.h"
+@@ -531,10 +532,8 @@ int vnt_rf_write_embedded(struct vnt_private *priv, u=
+32 data)
+ 	reg_data[2] =3D (u8)(data >> 16);
+ 	reg_data[3] =3D (u8)(data >> 24);
 
--		if (preamble_type =3D=3D PREAMBLE_SHORT)
--			phy->signal =3D 0x0b;
--		else
--			phy->signal =3D 0x03;
+-	vnt_control_out(priv, MESSAGE_TYPE_WRITE_IFRF,
+-			0, 0, ARRAY_SIZE(reg_data), reg_data);
 -
--		break;
--	case RATE_6M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9b;
--		else
--			phy->signal =3D 0x8b;
--
--		break;
--	case RATE_9M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9f;
--		else
--			phy->signal =3D 0x8f;
--
--		break;
--	case RATE_12M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9a;
--		else
--			phy->signal =3D 0x8a;
--
- 		break;
--	case RATE_18M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9e;
--		else
--			phy->signal =3D 0x8e;
--
--		break;
--	case RATE_24M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x99;
--		else
--			phy->signal =3D 0x89;
--
--		break;
--	case RATE_36M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9d;
--		else
--			phy->signal =3D 0x8d;
--
--		break;
--	case RATE_48M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x98;
--		else
--			phy->signal =3D 0x88;
-+	}
+-	return true;
++	return vnt_control_out(priv, MESSAGE_TYPE_WRITE_IFRF, 0, 0,
++			       ARRAY_SIZE(reg_data), reg_data);
+ }
 
--		break;
--	case RATE_54M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9c;
--		else
--			phy->signal =3D 0x8c;
--		break;
--	default:
-+	if (tx_rate > RATE_11M) {
- 		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9c;
--		else
--			phy->signal =3D 0x8c;
--		break;
-+			mask =3D BIT(4);
-+	} else if (tx_rate > RATE_1M) {
-+		if (preamble_type =3D=3D PREAMBLE_SHORT)
-+			mask =3D BIT(3);
- 	}
+ static u8 vnt_rf_addpower(struct vnt_private *priv)
+@@ -568,14 +567,14 @@ static int vnt_rf_set_txpower(struct vnt_private *pr=
+iv, u8 power,
+ 			      struct ieee80211_channel *ch)
+ {
+ 	u32 power_setting =3D 0;
+-	int ret =3D true;
++	int ret =3D 0;
 
-+	i =3D tx_rate > RATE_54M ? RATE_54M : tx_rate;
-+	phy->signal =3D vnt_phy_signal[i] | mask;
+ 	power +=3D vnt_rf_addpower(priv);
+ 	if (power > VNT_RF_MAX_POWER)
+ 		power =3D VNT_RF_MAX_POWER;
+
+ 	if (priv->power =3D=3D power)
+-		return true;
++		return 0;
+
+ 	priv->power =3D power;
+
+@@ -583,35 +582,50 @@ static int vnt_rf_set_txpower(struct vnt_private *pr=
+iv, u8 power,
+ 	case RF_AL2230:
+ 		power_setting =3D 0x0404090 | (power << 12);
+
+-		ret &=3D vnt_rf_write_embedded(priv, power_setting);
++		ret =3D vnt_rf_write_embedded(priv, power_setting);
++		if (ret)
++			return ret;
+
+ 		if (ch->flags & IEEE80211_CHAN_NO_OFDM)
+-			ret &=3D vnt_rf_write_embedded(priv, 0x0001b400);
++			ret =3D vnt_rf_write_embedded(priv, 0x0001b400);
+ 		else
+-			ret &=3D vnt_rf_write_embedded(priv, 0x0005a400);
++			ret =3D vnt_rf_write_embedded(priv, 0x0005a400);
 +
- 	if (pkt_type =3D=3D PK_TYPE_11B) {
- 		phy->service =3D 0x00;
- 		if (ext_bit)
+ 		break;
+ 	case RF_AL2230S:
+ 		power_setting =3D 0x0404090 | (power << 12);
+
+-		ret &=3D vnt_rf_write_embedded(priv, power_setting);
++		ret =3D vnt_rf_write_embedded(priv, power_setting);
++		if (ret)
++			return ret;
+
+ 		if (ch->flags & IEEE80211_CHAN_NO_OFDM) {
+-			ret &=3D vnt_rf_write_embedded(priv, 0x040c1400);
+-			ret &=3D vnt_rf_write_embedded(priv, 0x00299b00);
++			ret =3D vnt_rf_write_embedded(priv, 0x040c1400);
++			if (ret)
++				return ret;
++
++			ret =3D vnt_rf_write_embedded(priv, 0x00299b00);
+ 		} else {
+-			ret &=3D vnt_rf_write_embedded(priv, 0x0005a400);
+-			ret &=3D vnt_rf_write_embedded(priv, 0x00099b00);
++			ret =3D vnt_rf_write_embedded(priv, 0x0005a400);
++			if (ret)
++				return ret;
++
++			ret =3D vnt_rf_write_embedded(priv, 0x00099b00);
+ 		}
++
+ 		break;
+
+ 	case RF_AIROHA7230:
+ 		if (ch->flags & IEEE80211_CHAN_NO_OFDM)
+-			ret &=3D vnt_rf_write_embedded(priv, 0x111bb900);
++			ret =3D vnt_rf_write_embedded(priv, 0x111bb900);
+ 		else
+-			ret &=3D vnt_rf_write_embedded(priv, 0x221bb900);
++			ret =3D vnt_rf_write_embedded(priv, 0x221bb900);
++
++		if (ret)
++			return ret;
+
+ 		if (power >=3D AL7230_PWR_IDX_LEN)
+-			return false;
++			return -EINVAL;
+
+ 		/*
+ 		 * 0x080F1B00 for 3 wire control TxGain(D10)
+@@ -619,61 +633,76 @@ static int vnt_rf_set_txpower(struct vnt_private *pr=
+iv, u8 power,
+ 		 */
+ 		power_setting =3D 0x080c0b00 | (power << 12);
+
+-		ret &=3D vnt_rf_write_embedded(priv, power_setting);
+-
++		ret =3D vnt_rf_write_embedded(priv, power_setting);
+ 		break;
+
+ 	case RF_VT3226:
+ 		if (power >=3D VT3226_PWR_IDX_LEN)
+-			return false;
++			return -EINVAL;
+ 		power_setting =3D ((0x3f - power) << 20) | (0x17 << 8);
+
+-		ret &=3D vnt_rf_write_embedded(priv, power_setting);
+-
++		ret =3D vnt_rf_write_embedded(priv, power_setting);
+ 		break;
+ 	case RF_VT3226D0:
+ 		if (power >=3D VT3226_PWR_IDX_LEN)
+-			return false;
++			return -EINVAL;
+
+ 		if (ch->flags & IEEE80211_CHAN_NO_OFDM) {
+ 			u16 hw_value =3D ch->hw_value;
+
+ 			power_setting =3D ((0x3f - power) << 20) | (0xe07 << 8);
+
+-			ret &=3D vnt_rf_write_embedded(priv, power_setting);
+-			ret &=3D vnt_rf_write_embedded(priv, 0x03c6a200);
++			ret =3D vnt_rf_write_embedded(priv, power_setting);
++			if (ret)
++				return ret;
++
++			ret =3D vnt_rf_write_embedded(priv, 0x03c6a200);
++			if (ret)
++				return ret;
+
+ 			dev_dbg(&priv->usb->dev,
+ 				"%s 11b channel [%d]\n", __func__, hw_value);
+
+ 			hw_value--;
+
+-			if (hw_value < ARRAY_SIZE(vt3226d0_lo_current_table))
+-				ret &=3D vnt_rf_write_embedded(priv,
++			if (hw_value < ARRAY_SIZE(vt3226d0_lo_current_table)) {
++				ret =3D vnt_rf_write_embedded(priv,
+ 					vt3226d0_lo_current_table[hw_value]);
++				if (ret)
++					return ret;
++			}
+
+-			ret &=3D vnt_rf_write_embedded(priv, 0x015C0800);
++			ret =3D vnt_rf_write_embedded(priv, 0x015C0800);
+ 		} else {
+ 			dev_dbg(&priv->usb->dev,
+ 				"@@@@ %s> 11G mode\n", __func__);
+
+ 			power_setting =3D ((0x3f - power) << 20) | (0x7 << 8);
+
+-			ret &=3D vnt_rf_write_embedded(priv, power_setting);
+-			ret &=3D vnt_rf_write_embedded(priv, 0x00C6A200);
+-			ret &=3D vnt_rf_write_embedded(priv, 0x016BC600);
+-			ret &=3D vnt_rf_write_embedded(priv, 0x00900800);
++			ret =3D vnt_rf_write_embedded(priv, power_setting);
++			if (ret)
++				return ret;
++
++			ret =3D vnt_rf_write_embedded(priv, 0x00C6A200);
++			if (ret)
++				return ret;
++
++			ret =3D vnt_rf_write_embedded(priv, 0x016BC600);
++			if (ret)
++				return ret;
++
++			ret =3D vnt_rf_write_embedded(priv, 0x00900800);
+ 		}
++
+ 		break;
+
+ 	case RF_VT3342A0:
+ 		if (power >=3D VT3342_PWR_IDX_LEN)
+-			return false;
++			return -EINVAL;
+
+ 		power_setting =3D  ((0x3f - power) << 20) | (0x27 << 8);
+
+-		ret &=3D vnt_rf_write_embedded(priv, power_setting);
+-
++		ret =3D vnt_rf_write_embedded(priv, power_setting);
+ 		break;
+ 	default:
+ 		break;
 =2D-
 2.20.1
 
