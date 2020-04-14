@@ -2,71 +2,109 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B756C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5043EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10C3320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2788320644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gkxa9gqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732656AbgDNNln (ORCPT
+        id S1732687AbgDNNlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:41:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732577AbgDNNl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:41:26 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764172075E;
-        Tue, 14 Apr 2020 13:41:23 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 09:41:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tue, 14 Apr 2020 09:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502667AbgDNNOY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:14:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886CBC061A0F;
+        Tue, 14 Apr 2020 06:14:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=P0QGXI8WIAUkLA5oaVQBkKr+RjNjEiTElf25rk2wDtU=; b=gkxa9gqqASDphVAfv8wQt845n9
+        jxkDvAqxlxq3J6swikqKkHBol2ekFVYuRiMkqfgxWqwJXtVowUJA7JjIek0DLR0hHrHAizB5G7Wsc
+        oot4UnFb6Xragn/foDCyGfKAjsCHRfqvVZRmIgXoRm+tCfezVrCYGWXgNNVttfszg/ayjEN/RMQ7R
+        59IfeDRqEnNQLXqu1aFCyGpz2UAFfQmjKnYeQBjdx4DL6OZQoyk854r/C68f7mqnWD6X4Jwo3J6Mf
+        YdAyGkJTZ7GF84coUyuViF3tLk9sw6TRCoiRgWSxRil+PRCoYHLztBa/Op3s/jlDqMmwGscHlTz8c
+        rmXaTzog==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOLO6-0006Jn-Io; Tue, 14 Apr 2020 13:14:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [RFC][PATCH 03/36] objtool: Enable compilation of objtool for
- all architectures
-Message-ID: <20200414094121.73f5c82a@gandalf.local.home>
-In-Reply-To: <e8a52162-dd38-6092-7217-cc5c088abadc@redhat.com>
-References: <cover.1586468801.git.mhelsley@vmware.com>
-        <a96d42818c7e8f2a8bd2e151b8c220193f4ae986.1586468801.git.mhelsley@vmware.com>
-        <e8a52162-dd38-6092-7217-cc5c088abadc@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 03/29] staging: android: ion: use vmap instead of vm_map_ram
+Date:   Tue, 14 Apr 2020 15:13:22 +0200
+Message-Id: <20200414131348.444715-4-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200414131348.444715-1-hch@lst.de>
+References: <20200414131348.444715-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 08:39:23 +0100
-Julien Thierry <jthierry@redhat.com> wrote:
+vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
+with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
 
-> My concern with this it that most of the structures and code in arch.h 
-> and check.c can/should be reused across architectures. So, when 
-> providing support for a new architecutre, the first thing that will be 
-> needed is to move those back under tools/objtool whithout disturbing the 
-> arches that don't yet provide support for "check" subcommand.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ drivers/staging/android/ion/ion_heap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Are all the enums and structs in arch.h non-arch specific?
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index 473b465724f1..0755b11348ed 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -99,12 +99,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
+ 
+ static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
+ {
+-	void *addr = vm_map_ram(pages, num, -1, pgprot);
++	void *addr = vmap(pages, num, VM_MAP, pgprot);
+ 
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	memset(addr, 0, PAGE_SIZE * num);
+-	vm_unmap_ram(addr, num);
++	vunmap(addr);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-Or would they need to be split?
-
-> 
-> So, if it is decided that recordmcount should be an objtool subcommand, 
-> the code itself should probably stay under tools/objtool and then have 
-> different compilation configurations for objtool depending on the 
-> architecture (e.g. HAVE_OBJTOOL_CHECK, HAVE_OBJTOOL_ORC) or something of 
-> the sort.
-
-That could work.
-
--- Steve
