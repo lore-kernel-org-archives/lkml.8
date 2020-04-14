@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84499C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3156EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59BC92076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F7620678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586878682;
-	bh=3DcWBMkHYt7UCLuJw2C+rh7kKvm6dei6Pct6rgtk3RM=;
+	s=default; t=1586878696;
+	bh=yoR8dnEAdxGB5gQMFS40YmgPThG76ZaPq9eo50kGaRg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=UFUhJFci1JzYbATHAEXAXMTriKu0Bs90OSVBgRYNphNLRVA3AWQsEP1Uhm+xTNcxx
-	 xPwATgiH/VZUEhDTKY2o1yMRF3t/VBrl2Z60vousFijteUpXHew3MPxwobnW4feXlD
-	 lmczd9URt13V6Wvif3G30scpCaOW4A8Ox+hrJof0=
+	b=T1cQovn98bJm3X6JLCsZoio6yUW2+uhJoy+wxjsNbtr9cfxJV+BbWrTZ5lZPAoQVj
+	 Vg6vKRf48WCMjGTb26kxoVR+U9EClOohrjuWEWi+4HrD6HJgaj9q7slgWIpUm1/WN/
+	 Ff3SMqFjxQhs+BSPCf2gZTP2JquM9B+B3ZuVAv9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440538AbgDNPiB (ORCPT
+        id S2440552AbgDNPiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 11:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440524AbgDNPhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:37:46 -0400
+        id S2440533AbgDNPh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:37:57 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75806206D5;
-        Tue, 14 Apr 2020 15:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD1702076D;
+        Tue, 14 Apr 2020 15:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586878666;
-        bh=3DcWBMkHYt7UCLuJw2C+rh7kKvm6dei6Pct6rgtk3RM=;
+        s=default; t=1586878677;
+        bh=yoR8dnEAdxGB5gQMFS40YmgPThG76ZaPq9eo50kGaRg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=J82j8tq+ov9dP3vL5aafeuxG4z7zN4VfHB4CwPjALkvYUJzA1ITED1XYqQn+Ky1IM
-         4McW1PnbfX4fjeCA9v1Nee7LDWATYcmR0nh2fcLrQ/DA40isbw7ZJs2Cg6w2pSo2dE
-         hm8egFNJbIpA8CUhP9sOnf+W+OD8ZjZejMGqfcwE=
-Date:   Tue, 14 Apr 2020 16:37:43 +0100
+        b=RpPFU7zuhfmDKC/jf/Kv/mDD2c8pXyV+TUZN9t80ZoxvPubI9QbCqpIS7DqGuM/Jd
+         hvJbY3UwaAXaJLRVZ6DELMS9iAtDAUcc+oQleSj4gPk3mxmRacm3Rwxc7tW/56SxnR
+         9oHhI/I/pMkXqa88XuvisJdmIvzmImmpk0aRo39c=
+Date:   Tue, 14 Apr 2020 16:37:54 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     broonie@kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regmap: add reg_sequence helpers" to the regmap tree
-In-Reply-To:  <20200402084111.30123-1-m.felsch@pengutronix.de>
-Message-Id:  <applied-20200402084111.30123-1-m.felsch@pengutronix.de>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     arnd@arndb.de, baolin.wang7@gmail.com, broonie@kernel.org,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com
+Subject: Applied "regmap: Add bus reg_update_bits() support" to the regmap tree
+In-Reply-To:  <df32fd0529957d1e7e26ba1465723f16cfbe92c8.1586757922.git.baolin.wang7@gmail.com>
+Message-Id:  <applied-df32fd0529957d1e7e26ba1465723f16cfbe92c8.1586757922.git.baolin.wang7@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,7 +57,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regmap: add reg_sequence helpers
+   regmap: Add bus reg_update_bits() support
 
 has been applied to the regmap tree at
 
@@ -80,38 +82,33 @@ to this mail.
 Thanks,
 Mark
 
-From bd3ddb495762575ab14e7bd2e4017dc1f9a80b2f Mon Sep 17 00:00:00 2001
-From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Thu, 2 Apr 2020 10:41:11 +0200
-Subject: [PATCH] regmap: add reg_sequence helpers
+From 80215f133d59310fdfce5ee4398aeb7076c2e99f Mon Sep 17 00:00:00 2001
+From: Baolin Wang <baolin.wang7@gmail.com>
+Date: Mon, 13 Apr 2020 14:13:20 +0800
+Subject: [PATCH] regmap: Add bus reg_update_bits() support
 
-Add helper to make it easier to define a reg_sequence array.
+Add reg_update_bits() support in case some platforms use a special method
+to update bits of registers.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Link: https://lore.kernel.org/r/20200402084111.30123-1-m.felsch@pengutronix.de
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Link: https://lore.kernel.org/r/df32fd0529957d1e7e26ba1465723f16cfbe92c8.1586757922.git.baolin.wang7@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/linux/regmap.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/base/regmap/regmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 40b07168fd8e..0b5582a78df8 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -71,6 +71,13 @@ struct reg_sequence {
- 	unsigned int delay_us;
- };
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 59f911e57719..553d92aa0c68 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -827,6 +827,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 	} else if (!bus->read || !bus->write) {
+ 		map->reg_read = _regmap_bus_reg_read;
+ 		map->reg_write = _regmap_bus_reg_write;
++		map->reg_update_bits = bus->reg_update_bits;
  
-+#define REG_SEQ(_reg, _def, _delay_us) {		\
-+				.reg = _reg,		\
-+				.def = _def,		\
-+				.delay_us = _delay_us,	\
-+				}
-+#define REG_SEQ0(_reg, _def)	REG_SEQ(_reg, _def, 0)
-+
- #define	regmap_update_bits(map, reg, mask, val) \
- 	regmap_update_bits_base(map, reg, mask, val, NULL, false, false)
- #define	regmap_update_bits_async(map, reg, mask, val)\
+ 		map->defer_caching = false;
+ 		goto skip_format_initialization;
 -- 
 2.20.1
 
