@@ -2,82 +2,90 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ECFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95060C352B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77903206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689C320857
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 07:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406437AbgDNHJs (ORCPT
+        id S2406450AbgDNHN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:09:48 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42988 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728832AbgDNHJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:09:47 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d7so4558424oif.9;
-        Tue, 14 Apr 2020 00:09:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Z5zt2CUahX5IsPzgShiRFj23zj/g56lthuN3s9ga2E=;
-        b=fsFjPs6Y14mHhPJvwHG2nVoLYDeiYpwPqBi643pwYF8SsT936r5ZjyTw0+nzLN8NBZ
-         bswe+kkXZn0SDEeHK/9XVIKGOBfwSLqfmYS1dj8PRhVEHMIwg/zKaAfuLZiFpW+5ZK/O
-         KN/7iWu3GIKwYlMTlkPKL/E+/90in7Sd3M89Vk80M3lzlHeNoq8n2ehSg321k79a2ryB
-         uv/88vIUAGMGWxkRZTWcbtZI0GEvxTlxAbnH5vvR9DkzUWxI5kPU3NEkmEB9b7B/Jnw4
-         ZqBZ3BWnlrJP5JK1U+4Dnmo9G1RyWDi6UXnZ41hPQu7CidyZPpU8ntDcuW1il1Es9QUp
-         zXLA==
-X-Gm-Message-State: AGi0PubIsK/GfVSGqwICoMA8o+/vfisRtQV4MnHM4RjGUpf/GrnRQUuX
-        HffUSV6qfJErxPRTp4ybrRnILZdG98eMRPf6EFA=
-X-Google-Smtp-Source: APiQypJPAEdSB0/mCpnigVvRvJ7XIRVHn8kPh4UNvKk3GhriQALdtPNdVHc6H4U6yfJQ1kTqUN+mE1pGe6RO8Ue6wUc=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr257295oih.148.1586848186462;
- Tue, 14 Apr 2020 00:09:46 -0700 (PDT)
+        Tue, 14 Apr 2020 03:13:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:60361 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728832AbgDNHN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:13:28 -0400
+IronPort-SDR: Bmi7r8AIOfEmVbCDegF0//TBTZ2W5wFR8I/kst/X8cYiCc4vCg/nCKmFwfbxylI0YhpRuTdTBt
+ MXvcce6zRXIQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 00:13:27 -0700
+IronPort-SDR: 3mzTZiupNXsl0k5QcLc9AHNCJBc5G9UIIEYO8qCIUclLUzsoEbBJJHUqxdgJkxiNvCr7gq5Idq
+ YjsPeTwaKt8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
+   d="scan'208";a="426968243"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga005.jf.intel.com with ESMTP; 14 Apr 2020 00:13:22 -0700
+Date:   Tue, 14 Apr 2020 03:03:44 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Felipe Balbi <balbi@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        intel-gvt-dev@lists.freedesktop.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, io-uring@vger.kernel.org,
+        linux-mm@kvack.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 2/6] i915/gvt/kvm: a NULL ->mm does not mean a thread is
+ a kthread
+Message-ID: <20200414070344.GF10586@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200404094101.672954-1-hch@lst.de>
+ <20200404094101.672954-3-hch@lst.de>
+ <20200407030845.GA10586@joy-OptiPlex-7040>
+ <20200413132730.GB14455@lst.de>
+ <20200414000410.GE10586@joy-OptiPlex-7040>
+ <20200414070013.GA23680@lst.de>
 MIME-Version: 1.0
-References: <20200413041709.3630-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20200413041709.3630-1-christophe.jaillet@wanadoo.fr>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Apr 2020 09:09:35 +0200
-Message-ID: <CAMuHMdXoVGkRh63=H6P29JSS6yNCyKZdsAX1_qUNC_mH=aymyw@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: r9a06g032: Fix some typo in comments
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414070013.GA23680@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 5:12 PM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
-> This file seems to be for R9A06G032 only. So replace reference to
-> R9A09G032 by R9A06G032 to avoid confusion.
->
-> AFAIK, R9A09G032 does'nt exist.
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.8.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On Tue, Apr 14, 2020 at 09:00:13AM +0200, Christoph Hellwig wrote:
+> On Mon, Apr 13, 2020 at 08:04:10PM -0400, Yan Zhao wrote:
+> > > I can't think of another way for a kernel thread to have a mm indeed.
+> > for example, before calling to vfio_dma_rw(), a kernel thread has already
+> > called use_mm(), then its current->mm is not null, and it has flag
+> > PF_KTHREAD.
+> > in this case, we just want to allow the copy_to_user() directly if
+> > current->mm == mm, rather than call another use_mm() again.
+> > 
+> > do you think it makes sense?
+> 
+> I mean no other way than using use_mm.  That being said nesting
+> potentional use_mm callers sounds like a rather bad idea, and we
+> should avoid that.
+yes, agree.
+I was explaining why we just use "current->mm == NULL"
+(not "current->flag & PF_KTHREAD") as a criteria to call use_mm()
+in vfio_dma_rw(), which you might ask us when you take that part into your
+series. :)
