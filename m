@@ -2,96 +2,95 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516BAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77667C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 272C22076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:01:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXTGo/8X"
+	by mail.kernel.org (Postfix) with ESMTP id 4481A2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586887328;
+	bh=Mf8bHCYEr99WjHFpsbYlzYK3FldMLVzTM714Ox0iBV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vbD9h9QOkM7PAlmzPcMk2wv0vVXyCkWG8yBtGbtjPdLx0rWG/YxurlgTNRc9iVq3m
+	 P6h254TiXRHOkoy52WJVB4z+svWKXJr//bM3iBF/DuyBBOhsNFqcu4zj2jsDYruepK
+	 NDV7i8UDfudy8jIFRJftjRcDHusgrKLdh6eufXG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503221AbgDNSBj (ORCPT
+        id S2503252AbgDNSCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:01:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23052 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2503177AbgDNSBW (ORCPT
+        Tue, 14 Apr 2020 14:02:05 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44369 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503222AbgDNSBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:01:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586887280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z05Q+2Rh6hZ2Arh2dMLAzEQOInQCTBfGLKRs8w+a0Pk=;
-        b=cXTGo/8XY2ijXepE8k1eOgM/LZ2pI79khsm025PrMsyZObh+NzG83h5f7/ztE9uU8JpfTg
-        4X96jPbID8MoDFtYlW0ZKU6f4fyO2aNn54UQ3RtTy1S9jc0KxfXAAkvSB0fTi2fhVH6An+
-        3myUZE3h5iCU6HNB6wzhIOhJQiBVP0w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-3uTR-LcoO8a8gbEDYIqANw-1; Tue, 14 Apr 2020 14:01:13 -0400
-X-MC-Unique: 3uTR-LcoO8a8gbEDYIqANw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C666986A07C;
-        Tue, 14 Apr 2020 18:01:11 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2994360BE0;
-        Tue, 14 Apr 2020 18:01:11 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 13:01:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH 1/7] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200414180109.da4v2b4ifpixuzn3@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
- <20200414174406.GC2483@worktop.programming.kicks-ass.net>
+        Tue, 14 Apr 2020 14:01:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j4so532951otr.11;
+        Tue, 14 Apr 2020 11:01:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bilYsvZAPOBeLR5infdzzosnMgLyQCA6aquQk0OK3DQ=;
+        b=tEgFCishxzyDCcPfTWc/NiPCcFl2AZDqtzJq255uxUrD9woHp2cRTyA8ivEke4kXuo
+         rd/B0IkKDbtEb4AoFDejP1HYOlgAwlMufPFrvSCxWgw40BJdAx5jQJwbTB+B4B9FaGkz
+         twmlvqG3ZwxFPJyteqTvrORYprjjHZIq4AxaFcST6GBWx0FoO/u12H8Z92m3p0K+Y/Ip
+         /RUVrfNnkiE9XEOHdt81KeH2CpzfleBXcUkB4Uu/2LGkppgk7MhG/L6Wy1FexiTsIx9d
+         lsMKJWxdK2gQ8OPFnac+ic2oIzsX1/J8QK4PCPs9NER3WJoctTnYvgmXf5YyFYW+gGX+
+         LDKw==
+X-Gm-Message-State: AGi0PuacHfOtzLqxUun/EmEwW/1/jAGeKkFRIx+NRUlkLnqV+xe5goKA
+        lOZQeqOprzofxHP35YneOQ==
+X-Google-Smtp-Source: APiQypIyeT6xZf0FyX/A4PwaP/ZCpTja6l9L2zgL1zqqCWt/vp9DiITDaZcngdai2PZwvxJRbfN1Ag==
+X-Received: by 2002:a9d:12c4:: with SMTP id g62mr814625otg.164.1586887299735;
+        Tue, 14 Apr 2020 11:01:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h11sm6288667ooj.17.2020.04.14.11.01.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 11:01:39 -0700 (PDT)
+Received: (nullmailer pid 11421 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:01:37 -0000
+Date:   Tue, 14 Apr 2020 13:01:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Christophe ROULLIER <christophe.roullier@st.com>
+Cc:     David Miller <davem@davemloft.net>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH V2 0/2] Convert stm32 dwmac to DT schema
+Message-ID: <20200414180137.GA4816@bogus>
+References: <20200403140415.29641-1-christophe.roullier@st.com>
+ <20200403.161414.635525483978443770.davem@davemloft.net>
+ <df446a1a-c651-caa9-6086-9d84b11f3159@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414174406.GC2483@worktop.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <df446a1a-c651-caa9-6086-9d84b11f3159@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:44:06PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 14, 2020 at 11:28:37AM -0500, Josh Poimboeuf wrote:
-> > KLP relocations are livepatch-specific relocations which are applied to
-> >   1) vmlinux-specific KLP relocation sections
-> > 
-> >      .klp.rela.vmlinux.{sec}
-> > 
-> >      These are relocations (applied to the KLP module) which reference
-> >      unexported vmlinux symbols.
-> > 
-> >   2) module-specific KLP relocation sections
-> > 
-> >      .klp.rela.{module}.{sec}:
-> > 
-> >      These are relocations (applied to the KLP module) which reference
-> >      unexported or exported module symbols.
+On Tue, Apr 14, 2020 at 03:11:03PM +0000, Christophe ROULLIER wrote:
+> Hi,
 > 
-> Is there something that disallows a module from being called 'vmlinux' ?
-> If not, we might want to enforce this somewhere.
+> Gentle reminder
 
-I'm pretty sure we don't have a check for that anywhere, though the KLP
-module would almost certainly fail during the module load when it
-couldn't find the vmlinux.ko symbols it needed.
+If it is in DT patchwork, you can see where you are in the queue. Feel 
+free to review patches in front of you for faster response. :)
 
-It wouldn't hurt to add a check somewhere though.  Maybe in
-klp_module_coming() since the restriction only applies to
-CONFIG_LIVEPATCH...
-
--- 
-Josh
-
+Rob
