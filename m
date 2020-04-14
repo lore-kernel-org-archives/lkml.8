@@ -2,110 +2,168 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9FCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D11A2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="efsgNLHp"
+	by mail.kernel.org (Postfix) with ESMTP id 236762063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586870169;
+	bh=v0a5YinYfPspIVz+q0NHgE/kUU23yUEY3inKhdoX4tU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hqwycVqx/SEXfcn2+QOy3A0DuAkdId2x2NaXyFEdLQteLlMfDHKtCc0SQ7BWBYMrP
+	 DpmqcXFk2BpLJIH2oQjZTqgXPseKt6Tepujj1zBz1nbSPq/wiFJpzCuiA9WDJxP8kO
+	 Xo174ZX6PV6CzZi74MyrjT17IgO2XEYQJ4yKiK6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502855AbgDNNPw (ORCPT
+        id S2502893AbgDNNQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502750AbgDNNPA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:15:00 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6981EC061A10;
-        Tue, 14 Apr 2020 06:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tYFsPxnL5Cf0xutooZZA35BzCM3FXJLWimeyQwU4Geo=; b=efsgNLHpIN4Yqr2HXTNKVny1ja
-        RhW54NXX4njkSCMHQvjm7Ifv3W88BOeKN4BVJFdmqKBn+Hq39bpTnIk/9zF+3R7iZ5ADItXTYxs/T
-        GB+rmDWWsKteetqgaAAsSQFaXnWz7cfVUL4O3rb57CERc94sZm33IyCmii25oGkan0JESdDkCtWLD
-        9R7w8VTfPFqpoQoGM/uLMEXjDDeP4lLIFmaRZa0n7fbiJvWGNvpriyAoqbJzAxWzxGDaVIiKp6O9n
-        8UQVzDh4mbS8gOi5U1IUZXQH0by+DSTL/IUiHNEJFj2H1K3Vkwp9Lzn+tMtCKou/z5ti5OwdqIHpa
-        jlEnYuxg==;
-Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOLOl-0006yj-6V; Tue, 14 Apr 2020 13:14:43 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/29] mm: don't return the number of pages from map_kernel_range{,_noflush}
-Date:   Tue, 14 Apr 2020 15:13:34 +0200
-Message-Id: <20200414131348.444715-16-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200414131348.444715-1-hch@lst.de>
-References: <20200414131348.444715-1-hch@lst.de>
+        Tue, 14 Apr 2020 09:16:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502768AbgDNNPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:15:11 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993552075E;
+        Tue, 14 Apr 2020 13:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586870110;
+        bh=v0a5YinYfPspIVz+q0NHgE/kUU23yUEY3inKhdoX4tU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=w3390RS3SR8v6HZfOEkZCrpHMCPLgbTFJk2j24PRa75T/76LECBlHWumjlVFr0KQt
+         IOQF4ZkQGozqEMqhJMSKG1XR3b5udb0nV9muqMutN7bn/yOq95DbwY8+nEVqhJ4uLm
+         d3glyW9gRNB4lcZpGcAtrdqQrBuS2VORrG3uSas0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jOLPA-0039rd-KC; Tue, 14 Apr 2020 14:15:08 +0100
+Date:   Tue, 14 Apr 2020 14:15:07 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <wanghaibin.wang@huawei.com>, <yezengruan@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] KVM: arm64: vgic-v3: Retire all pending LPIs on
+ vcpu destroy
+Message-ID: <20200414141507.0d0a0f93@why>
+In-Reply-To: <a1c67c96-56f0-2976-ba1b-0991972254b3@huawei.com>
+References: <20200414030349.625-1-yuzenghui@huawei.com>
+        <20200414030349.625-2-yuzenghui@huawei.com>
+        <20200414115417.451f8b66@why>
+        <a1c67c96-56f0-2976-ba1b-0991972254b3@huawei.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, wanghaibin.wang@huawei.com, yezengruan@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-None of the callers needs the number of pages, and a 0 / -errno return
-value is a lot more intuitive.
+On Tue, 14 Apr 2020 19:17:49 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- mm/vmalloc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi Marc,
+> 
+> On 2020/4/14 18:54, Marc Zyngier wrote:
+> > On Tue, 14 Apr 2020 11:03:47 +0800
+> > Zenghui Yu <yuzenghui@huawei.com> wrote:
+> > 
+> > Hi Zenghui,
+> >   
+> >> It's likely that the vcpu fails to handle all virtual interrupts if
+> >> userspace decides to destroy it, leaving the pending ones stay in the
+> >> ap_list. If the un-handled one is a LPI, its vgic_irq structure will
+> >> be eventually leaked because of an extra refcount increment in
+> >> vgic_queue_irq_unlock().
+> >>
+> >> This was detected by kmemleak on almost every guest destroy, the
+> >> backtrace is as follows:
+> >>
+> >> unreferenced object 0xffff80725aed5500 (size 128):
+> >> comm "CPU 5/KVM", pid 40711, jiffies 4298024754 (age 166366.512s)
+> >> hex dump (first 32 bytes):
+> >> 00 00 00 00 00 00 00 00 08 01 a9 73 6d 80 ff ff ...........sm...
+> >> c8 61 ee a9 00 20 ff ff 28 1e 55 81 6c 80 ff ff .a... ..(.U.l...
+> >> backtrace:
+> >> [<000000004bcaa122>] kmem_cache_alloc_trace+0x2dc/0x418
+> >> [<0000000069c7dabb>] vgic_add_lpi+0x88/0x418
+> >> [<00000000bfefd5c5>] vgic_its_cmd_handle_mapi+0x4dc/0x588
+> >> [<00000000cf993975>] vgic_its_process_commands.part.5+0x484/0x1198
+> >> [<000000004bd3f8e3>] vgic_its_process_commands+0x50/0x80
+> >> [<00000000b9a65b2b>] vgic_mmio_write_its_cwriter+0xac/0x108
+> >> [<0000000009641ebb>] dispatch_mmio_write+0xd0/0x188
+> >> [<000000008f79d288>] __kvm_io_bus_write+0x134/0x240
+> >> [<00000000882f39ac>] kvm_io_bus_write+0xe0/0x150
+> >> [<0000000078197602>] io_mem_abort+0x484/0x7b8
+> >> [<0000000060954e3c>] kvm_handle_guest_abort+0x4cc/0xa58
+> >> [<00000000e0d0cd65>] handle_exit+0x24c/0x770
+> >> [<00000000b44a7fad>] kvm_arch_vcpu_ioctl_run+0x460/0x1988
+> >> [<0000000025fb897c>] kvm_vcpu_ioctl+0x4f8/0xee0
+> >> [<000000003271e317>] do_vfs_ioctl+0x160/0xcd8
+> >> [<00000000e7f39607>] ksys_ioctl+0x98/0xd8
+> >>
+> >> Fix it by retiring all pending LPIs in the ap_list on the destroy path.
+> >>
+> >> p.s. I can also reproduce it on a normal guest shutdown. It is because
+> >> userspace still send LPIs to vcpu (through KVM_SIGNAL_MSI ioctl) while
+> >> the guest is being shutdown and unable to handle it. A little strange
+> >> though and haven't dig further...  
+> > 
+> > What userspace are you using? You'd hope that the VMM would stop
+> > processing I/Os when destroying the guest. But we still need to handle
+> > it anyway, and I thing this fix makes sense.  
+> 
+> I'm using Qemu (master) for debugging. Looks like an interrupt
+> corresponding to a virtio device configuration change, triggered after
+> all other devices had freed their irqs. Not sure if it's expected.
+> 
+> >>
+> >> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> >> ---
+> >>   virt/kvm/arm/vgic/vgic-init.c | 6 ++++++
+> >>   1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+> >> index a963b9d766b7..53ec9b9d9bc4 100644
+> >> --- a/virt/kvm/arm/vgic/vgic-init.c
+> >> +++ b/virt/kvm/arm/vgic/vgic-init.c
+> >> @@ -348,6 +348,12 @@ void kvm_vgic_vcpu_destroy(struct kvm_vcpu *vcpu)
+> >>   {
+> >>   	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;  
+> >>   >> +	/*  
+> >> +	 * Retire all pending LPIs on this vcpu anyway as we're
+> >> +	 * going to destroy it.
+> >> +	 */
+> >> +	vgic_flush_pending_lpis(vcpu);
+> >> +
+> >>   	INIT_LIST_HEAD(&vgic_cpu->ap_list_head);
+> >>   }  
+> >>   > > I guess that at this stage, the INIT_LIST_HEAD() is superfluous, right?  
+> 
+> I was just thinking that the ap_list_head may not be empty (besides LPI,
+> with other active or pending interrupts), so leave it unchanged.
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index a3d810def567..ca8dc5d42580 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -249,7 +249,7 @@ static int vmap_p4d_range(pgd_t *pgd, unsigned long addr,
-  * function.
-  *
-  * RETURNS:
-- * The number of pages mapped on success, -errno on failure.
-+ * 0 on success, -errno on failure.
-  */
- int map_kernel_range_noflush(unsigned long addr, unsigned long size,
- 			     pgprot_t prot, struct page **pages)
-@@ -269,7 +269,7 @@ int map_kernel_range_noflush(unsigned long addr, unsigned long size,
- 			return err;
- 	} while (pgd++, addr = next, addr != end);
- 
--	return nr;
-+	return 0;
- }
- 
- static int map_kernel_range(unsigned long start, unsigned long size,
+It isn't clear what purpose this serves (the vcpus are about to be
+freed, and so are the ap_lists), but I guess it doesn't hurt either.
+I'll queue both patches.
+
+Thanks,
+
+	M.
 -- 
-2.25.1
-
+Jazz is not dead. It just smells funny...
