@@ -2,188 +2,243 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6C8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FD5C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A762072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L3A+0C9Q"
+	by mail.kernel.org (Postfix) with ESMTP id 8CF292072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404123AbgDNCaw (ORCPT
+        id S2404137AbgDNCi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:30:52 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:64769 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404114AbgDNCau (ORCPT
+        Mon, 13 Apr 2020 22:38:57 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:52660 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S2404127AbgDNCi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 22:30:50 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200414023046epoutp013ec25ba5c5c9a499b6939eb117c5f016~FjssYvyrJ1291612916epoutp01h
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 02:30:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200414023046epoutp013ec25ba5c5c9a499b6939eb117c5f016~FjssYvyrJ1291612916epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586831446;
-        bh=FPE2YSpxOoxpdSqyEDyoO/7BFyhCcE+Q8Io2SIXh5/s=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=L3A+0C9Q+cSRd51m7CNgMcV7x2oJ0KAhaEussHLca1ISXfVDJZOjKfhgo9Ht7k3WO
-         BmBGYcLWj1L7/lMZgfhqVBRxviLK87dF91a1M1fsCd6B+GRHWN5R+UL7qSZlon81NL
-         oklSjYsZ3vhAyCm4i0rYPCWU5rVJphWcx8wn9kf0=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200414023046epcas5p3023d02fc035744c1ee4a73797f1e09ac~FjsrxnpUf2718427184epcas5p3Q;
-        Tue, 14 Apr 2020 02:30:46 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C8.37.04778.550259E5; Tue, 14 Apr 2020 11:30:45 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200414023045epcas5p3b8fdcbe0d52d0b831ca576c9d96dc01a~FjsrEd8nh2718427184epcas5p3O;
-        Tue, 14 Apr 2020 02:30:45 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200414023045epsmtrp28093aec96d6f9571cce00cba067afd51~FjsrDNyfP1795517955epsmtrp2T;
-        Tue, 14 Apr 2020 02:30:45 +0000 (GMT)
-X-AuditID: b6c32a4a-33bff700000012aa-50-5e952055fc4a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A3.3E.04024.550259E5; Tue, 14 Apr 2020 11:30:45 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200414023040epsmtip270a8d27558bd86a4c2e6ce1e423eba35~Fjsm3JoXW1722817228epsmtip2Z;
-        Tue, 14 Apr 2020 02:30:40 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Can Guo'" <cang@codeaurora.org>, <asutoshd@codeaurora.org>,
-        <nguyenb@codeaurora.org>, <hongwus@codeaurora.org>,
-        <rnayak@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-team@android.com>, <saravanak@google.com>,
-        <salyzyn@google.com>
-Cc:     "'Avri Altman'" <avri.altman@wdc.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Stanley Chu'" <stanley.chu@mediatek.com>,
-        "'Bean Huo'" <beanhuo@micron.com>,
-        "'Bart Van Assche'" <bvanassche@acm.org>,
-        "'Venkat Gopalakrishnan'" <venkatg@codeaurora.org>,
-        "'Tomas Winkler'" <tomas.winkler@intel.com>,
-        "'open list'" <linux-kernel@vger.kernel.org>
-In-Reply-To: <1585362454-5413-1-git-send-email-cang@codeaurora.org>
-Subject: RE: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was
- off
-Date:   Tue, 14 Apr 2020 08:00:38 +0530
-Message-ID: <019601d61204$b303ace0$190b06a0$@samsung.com>
+        Mon, 13 Apr 2020 22:38:56 -0400
+X-Greylist: delayed 315 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 22:38:55 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id F157D2008055;
+        Tue, 14 Apr 2020 10:38:53 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NDQZYkZBUoOp; Tue, 14 Apr 2020 10:38:53 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id C453B20129DE;
+        Tue, 14 Apr 2020 10:38:53 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.188.215])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id D4A04C01A1D;
+        Tue, 14 Apr 2020 10:38:52 +0800 (HKT)
+Subject: Re: [PATCH 1/2] iio: DAC extension for ltc2634-12/10/8
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200408080338.11080-1-chris.ruehl@gtsys.com.hk>
+ <20200412120149.73c32f28@archlinux>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <6cb6cdf7-6012-03cb-e949-93ecd9a47214@gtsys.com.hk>
+Date:   Tue, 14 Apr 2020 10:38:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200412120149.73c32f28@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI91G1Bx+ilc5rRFLRaLxyPo/0a0gHKpnZsp5oJSqA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTmd1+7WqtfU/Kk0WNQkGCWFfyUrCirW0bYH0EvVqNuM3w0dn1k
-        RNjLatOa9sJlJZkrLBPM1liu1CiLwsL56AlF09KWOgfVtBfbNfK/73znfOd8HxyeVv1kI/ld
-        mVmiIVObruZCGduDWdEx66ed0czpdCUQZ8FjBenxt3Ok8cNxhpwd8NNksMbKkqfdfQpy+aWN
-        IvY74cTlKOOIqdPOkavNvyniNZ5HxNp2iyWVB2wcMTb94kjl7VeIDBTuJ5ZmL7dEJbjakgXb
-        XRsruE4UUUJ5bbZQUd9DCebLDUg4/OQ+I3yvOcYJ3q7XjOCrnSIcbTBRKWM2hS7cIabvyhEN
-        sYu2haaee2tF+pqwPf03Grh89H28EYXwgOeDucWJjCiUV+G7CH66bZxcDCLweLpYufiG4OAV
-        H/dP8uekK4hV2IngQ3+8PORB8G7Iqgg0OBwD9oqC4KpwPITA19kZXEXjSzS4zI2UEfF8CF4G
-        re5NAUEYToGrAweZAM3gGVD8Ji5AK3E81DnrKRlPgCelbiaAaTwV7nwto2VD08DfZWUDOBwn
-        gLneopBnIuChv5AOnAX8VQFfXJ9YWZAEF47kj4jDoLe5TiHjSPD1ObmAB8BpUOiYJ9P7oPLi
-        I0bGi6GhrSxok8azoMYRK58aB0XDbkpWKuFYgUqengGH+tpHlFFQbDKNGBCg6LOdNaPpllHB
-        LKOCWUYFsPw/Vo6YKjRJ1EsZOlFaoI/LFHNnS9oMKTtTN3v77oxaFPzJ6NV2ZG1Z04Qwj9Rj
-        lZ/XndaoWG2OlJfRhICn1eFKd26xRqXcoc3bKxp2bzVkp4tSE4riGXWEsoRt36LCOm2WmCaK
-        etHwr0vxIZH5KLnXVL1ZH53kq161RlyaeioxaW7iymstuRuHekLiSi9ptFH3Ft8+N7PkS4uR
-        XfvKbReeD+in6jasWpanG69OWRLf0xFV6Fm+oqr1BSlBHcURdTe3OerN/inejuvPvsWe7a7e
-        LpVkXY94915f0HjxV9XEe+U/3sQszfEO7/xYceNZ92Q1I6Vq50bTBkn7F2dmkOGPAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWy7bCSvG6owtQ4g/aVLBZ7206wW7z8eZXN
-        4uDDThaLaR9+Mlt8Wr+M1eL0s3fsFotubGOy2LFdxOLyrjlsFt3Xd7BZLD/+j8niY9dsRotl
-        VzazWixt3MZm0XXoL5vF0q03GS0+9NRZzDr+kc1ByOPyFW+Pbbu3sXpc7utl8liwqdRj8Z6X
-        TB4TFh1g9Gg5uZ/F4/v6DjaPj09vsXh83iTn0X6gmymAO4rLJiU1J7MstUjfLoErY/qdZYwF
-        64Ur3q85wNbA+J2/i5GTQ0LAROJ//2W2LkYuDiGB3YwSS6deZoVISEtc3ziBHcIWllj57zk7
-        RNErRonl/yYxgSTYBHQldixuA+sWEWhhkvi3Zg0LiMMssJRZomPHCVaIlimMElOe3ALKcHBw
-        CjhLXHoSBdItLOAncWLGezaQMIuAqsTE20YgYV4BS4kte/cwQdiCEidnPgHrZBbQk2jbyAgS
-        ZhaQl9j+dg4zxHEKEj+fLgM7WkTASmLCnlnsEDXiEkd/9jBPYBSehWTSLIRJs5BMmoWkYwEj
-        yypGydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOB419LcwXh5SfwhRgEORiUe3gn+U+KE
-        WBPLiitzDzFKcDArifA+KZ8YJ8SbklhZlVqUH19UmpNafIhRmoNFSZz3ad6xSCGB9MSS1OzU
-        1ILUIpgsEwenVAOj7ATbbcyiHFMmXnS0LnrM2fZiw9dKDV2eaZmZEgstVMo/MfoK8vl1fNiu
-        8f6rh2KgUtrz+6xyj0JlmFnDd7n6vDO79XGBJ89/2Rvpx/y8mr8KamVkiXy6dPKbmvLJ9psq
-        7nFFvLk7Eo+tOtHxTUb7xrK3UrOfrlomYnz/fGnW2vfVTGKZDnJKLMUZiYZazEXFiQDvOER7
-        8wIAAA==
-X-CMS-MailID: 20200414023045epcas5p3b8fdcbe0d52d0b831ca576c9d96dc01a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200328022740epcas5p1e97777d3e2dacfbee89fed75d6b36e99
-References: <CGME20200328022740epcas5p1e97777d3e2dacfbee89fed75d6b36e99@epcas5p1.samsung.com>
-        <1585362454-5413-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Can,
+Jonathan
 
-> -----Original Message-----
-> From: Can Guo <cang@codeaurora.org>
-> Sent: 28 March 2020 07:58
-> To: asutoshd@codeaurora.org; nguyenb@codeaurora.org;
-> hongwus@codeaurora.org; rnayak@codeaurora.org; linux-
-> scsi@vger.kernel.org; kernel-team@android.com; saravanak@google.com;
-> salyzyn@google.com; cang@codeaurora.org
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>; Avri Altman
-> <avri.altman@wdc.com>; James E.J. Bottomley <jejb@linux.ibm.com>; Martin
-> K. Petersen <martin.petersen@oracle.com>; Stanley Chu
-> <stanley.chu@mediatek.com>; Bean Huo <beanhuo@micron.com>; Bart Van
-> Assche <bvanassche@acm.org>; Venkat Gopalakrishnan
-> <venkatg@codeaurora.org>; Tomas Winkler <tomas.winkler@intel.com>; open
-> list <linux-kernel@vger.kernel.org>
-> Subject: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was off
+On 12/4/2020 7:02 pm, Jonathan Cameron wrote:
+> On Wed,  8 Apr 2020 16:03:29 +0800
+> Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
 > 
-> From: Asutosh Das <asutoshd@codeaurora.org>
+>> This patch add support for Analog Devices (Linear Technology)
+>> LTC26234 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
+>> The SPI functionality based on them from LTC2632 therefor
+>> add the definitions only and update the Kconfig.
+>>
+>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> Hi Chris
 > 
-> During suspend, if the link is put to off, it would require a full
-initialization during
-> resume. This patch resets and restores both the hba and the card during
-> initialization.
+> Process wise, please make sure patches appear as a series, preferably
+> with a cover letter patch to give a quick overview.
 > 
-In case you have faced issues by not doing what this patch does, it is worth
-mentioning that in the commit mesg.
-
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
-I don't have a way to test this path as of now, changes looks ok though.
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-
->  drivers/scsi/ufs/ufshcd.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> Otherwise, it's far too easy for bad timing to mean a bunch of other
+> emails turn up in the middle in people's inboxes!
 > 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> f19a11e..21e41e5 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8007,9 +8007,13 @@ static int ufshcd_resume(struct ufs_hba *hba, enum
-> ufs_pm_op pm_op)
->  		else
->  			goto vendor_suspend;
->  	} else if (ufshcd_is_link_off(hba)) {
-> -		ret = ufshcd_host_reset_and_restore(hba);
->  		/*
-> -		 * ufshcd_host_reset_and_restore() should have already
-> +		 * A full initialization of the host and the device is
-required
-> +		 * since the link was put to off during suspend.
-> +		 */
-> +		ret = ufshcd_reset_and_restore(hba);
-> +		/*
-> +		 * ufshcd_reset_and_restore() should have already
->  		 * set the link state as active
->  		 */
->  		if (ret || !ufshcd_is_link_active(hba))
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux
-> Foundation Collaborative Project.
+> One minor thing inline.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
 
+Got it. v2 is then on the way !
+txt file -> yaml
+with documentation fix as separate patch
+*the marginal one :)
 
+Chris
+
+> 
+>> ---
+>>   drivers/iio/dac/Kconfig   |  6 ++--
+>>   drivers/iio/dac/ltc2632.c | 61 +++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 64 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+>> index 93744011b63f..e14c9b14c4de 100644
+>> --- a/drivers/iio/dac/Kconfig
+>> +++ b/drivers/iio/dac/Kconfig
+>> @@ -279,12 +279,12 @@ config LTC1660
+>>   	  module will be called ltc1660.
+>>   
+>>   config LTC2632
+>> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
+>> +	tristate "Linear Technology LTC2632,LTC2634,LTC2636-12/10/8 DAC spi driver"
+> 
+> Hmm. That's marginal.  At somepoint we'll just have to give in and say
+> "LTC2632 and similar" and rely on people grepping part names to find them
+> in the help text.
+> 
+>>   	depends on SPI
+>>   	help
+>>   	  Say yes here to build support for Linear Technology
+>> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
+>> -	  LTC2636-8 converters (DAC).
+>> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
+>> +	  low 0-2.5V and high 0-4,096V range converters.
+>>   
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called ltc2632.
+>> diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
+>> index 7adc91056aa1..e939d7f81014 100644
+>> --- a/drivers/iio/dac/ltc2632.c
+>> +++ b/drivers/iio/dac/ltc2632.c
+>> @@ -24,6 +24,7 @@
+>>   /**
+>>    * struct ltc2632_chip_info - chip specific information
+>>    * @channels:		channel spec for the DAC
+>> + * @num_channels:	DAC channel count of the chip
+> 
+> Good to fix this but please pull it out as a precursor patch - ideally
+> with a fixes tag even though it's just documentation.
+> 
+>>    * @vref_mv:		internal reference voltage
+>>    */
+>>   struct ltc2632_chip_info {
+>> @@ -53,6 +54,12 @@ enum ltc2632_supported_device_ids {
+>>   	ID_LTC2632H12,
+>>   	ID_LTC2632H10,
+>>   	ID_LTC2632H8,
+>> +	ID_LTC2634L12,
+>> +	ID_LTC2634L10,
+>> +	ID_LTC2634L8,
+>> +	ID_LTC2634H12,
+>> +	ID_LTC2634H10,
+>> +	ID_LTC2634H8,
+>>   	ID_LTC2636L12,
+>>   	ID_LTC2636L10,
+>>   	ID_LTC2636L8,
+>> @@ -235,6 +242,36 @@ static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
+>>   		.num_channels	= 2,
+>>   		.vref_mv	= 4096,
+>>   	},
+>> +	[ID_LTC2634L12] = {
+>> +		.channels	= ltc2632x12_channels,
+>> +		.num_channels	= 4,
+>> +		.vref_mv	= 2500,
+>> +	},
+>> +	[ID_LTC2634L10] = {
+>> +		.channels	= ltc2632x10_channels,
+>> +		.num_channels	= 4,
+>> +		.vref_mv	= 2500,
+>> +	},
+>> +	[ID_LTC2634L8] =  {
+>> +		.channels	= ltc2632x8_channels,
+>> +		.num_channels	= 4,
+>> +		.vref_mv	= 2500,
+>> +	},
+>> +	[ID_LTC2634H12] = {
+>> +		.channels	= ltc2632x12_channels,
+>> +		.num_channels	= 4,
+>> +		.vref_mv	= 4096,
+>> +	},
+>> +	[ID_LTC2634H10] = {
+>> +		.channels	= ltc2632x10_channels,
+>> +		.num_channels	= 4,
+>> +		.vref_mv	= 4096,
+>> +	},
+>> +	[ID_LTC2634H8] =  {
+>> +		.channels	= ltc2632x8_channels,
+>> +		.num_channels	= 4,
+>> +		.vref_mv	= 4096,
+>> +	},
+>>   	[ID_LTC2636L12] = {
+>>   		.channels	= ltc2632x12_channels,
+>>   		.num_channels	= 8,
+>> @@ -356,6 +393,12 @@ static const struct spi_device_id ltc2632_id[] = {
+>>   	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
+>>   	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
+>>   	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
+>> +	{ "ltc2634-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L12] },
+>> +	{ "ltc2634-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L10] },
+>> +	{ "ltc2634-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L8] },
+>> +	{ "ltc2634-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H12] },
+>> +	{ "ltc2634-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H10] },
+>> +	{ "ltc2634-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H8] },
+>>   	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
+>>   	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
+>>   	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
+>> @@ -385,6 +428,24 @@ static const struct of_device_id ltc2632_of_match[] = {
+>>   	}, {
+>>   		.compatible = "lltc,ltc2632-h8",
+>>   		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
+>> +	}, {
+>> +		.compatible = "lltc,ltc2634-l12",
+>> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L12]
+>> +	}, {
+>> +		.compatible = "lltc,ltc2634-l10",
+>> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L10]
+>> +	}, {
+>> +		.compatible = "lltc,ltc2634-l8",
+>> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L8]
+>> +	}, {
+>> +		.compatible = "lltc,ltc2634-h12",
+>> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H12]
+>> +	}, {
+>> +		.compatible = "lltc,ltc2634-h10",
+>> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H10]
+>> +	}, {
+>> +		.compatible = "lltc,ltc2634-h8",
+>> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H8]
+>>   	}, {
+>>   		.compatible = "lltc,ltc2636-l12",
+>>   		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
+> 
+
+-- 
+GTSYS Limited RFID Technology
+9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
+42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
+Tel (852) 9079 9521
+
+Disclaimer: https://www.gtsys.com.hk/email/classified.html
