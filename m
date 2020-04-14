@@ -2,160 +2,150 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632D7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA117C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45DD4206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FC620578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rKYrGrZi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5upAqVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436682AbgDNIYQ (ORCPT
+        id S2436690AbgDNIYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436525AbgDNIVD (ORCPT
+        Tue, 14 Apr 2020 04:24:25 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33221 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436547AbgDNIV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:21:03 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A314C0A3BE2;
-        Tue, 14 Apr 2020 01:21:03 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOGoW-0006L4-HP; Tue, 14 Apr 2020 10:21:00 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 35F121C0086;
-        Tue, 14 Apr 2020 10:21:00 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 08:20:59 -0000
-From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq: Remove setup_irq() and remove_irq()
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3C0aa8771ada1ac8e1312f6882980c9c08bd023148=2E15853?=
- =?utf-8?q?20721=2Egit=2Eafzal=2Emohd=2Ema=40gmail=2Ecom=3E?=
-References: =?utf-8?q?=3C0aa8771ada1ac8e1312f6882980c9c08bd023148=2E158532?=
- =?utf-8?q?0721=2Egit=2Eafzal=2Emohd=2Ema=40gmail=2Ecom=3E?=
+        Tue, 14 Apr 2020 04:21:56 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id D102D5800F6;
+        Tue, 14 Apr 2020 04:21:53 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 14 Apr 2020 04:21:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=K
+        9NNGyZC3pe81UCb1QBdT9lxusbIOSuDYCMZGd3QvZY=; b=rKYrGrZiQ+j6FJO52
+        iSkryG9dNJ5xdrkn96G/3EeAN0q/9nIeBIKScyX/bjUSuP5RharNdU2JBgX3V13h
+        dGm5DPjvouo3d/VtMmg/Rs9OnOfXNmzvby9b+vwD+fxFcpe0P8TEwfUY/ThhO9u7
+        thz3jiX0LJyCjcmH48jR2z5Xv+6lCR7FfjeGHmyum2MhREQotT+EmcAzXR2T04Af
+        EgRWsOtRQ7UW1n/F4UtJTOvomJXkvIRpYqeHoKkFjR/TJvv1QNnWLRybCh6As6bk
+        gqE3ZFnqqDcpX46s2OUZM5nQj0slUVojKaBDlXWgzhnatdiqnxrW8T7LIs/jHanB
+        vAbjg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=K9NNGyZC3pe81UCb1QBdT9lxusbIOSuDYCMZGd3Qv
+        ZY=; b=X5upAqVGP/jJNnDVewMt9pXltZ5l5C4o0uzAROA3hdKyE/2GPyX52DbLV
+        ydvcDHWHvlYIY/TvderSu4Ne0OXuUOWgTUitW+PbgBquuOEpihu8LD4eyKEKyte3
+        jswqjCQerHgV2wprahLFBYMBRPgo9S8cmpOMVBnXeUkB9HiOVFF0QiNWktAM3RMw
+        9qZOQJe8E8hzbmJbUhPmXugmvxHT6uzetsmIKPSOcAIiRwIfmTXK/YWESLTVMLG4
+        lHUBvN2z736+/VYel2cSnypzlhlmwXC7WLclG99se3rnsCDMcwuC/KFaTXv4DUtS
+        x2zT4fzyvwBPC8pewzyEuTu0Y2n7Q==
+X-ME-Sender: <xms:oHKVXusMLZbM2B0tIBqUesHKVf4dc-FOZqXPNcGnO4bWi0Cr92dTfQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedugddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepfhhrvggvuggvsh
+    hkthhophdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
+    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
+    hm
+X-ME-Proxy: <xmx:oHKVXvAt5ALrBjpPUj6IRVOnCzS0lw4tpvWLLN5CQ2wnYGXqcAAULQ>
+    <xmx:oHKVXhk48uBc81zn02KWktBSC8r4-MsUDClwkdLMkRHog2vIcVartQ>
+    <xmx:oHKVXggTM2EuAuvvsJhYJFn13DuF0Ma3tVjwio0EMfT-YqB2tUuisQ>
+    <xmx:oXKVXvmtBT2B6gQqJaARzl1tNz6065WPfpkTfcxvX1ODSkL1esYTiA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A0A2D3060060;
+        Tue, 14 Apr 2020 04:21:51 -0400 (EDT)
+Date:   Tue, 14 Apr 2020 10:21:50 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Prike Liang <Prike.Liang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        regressions@leemhuis.info, David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "for 3.8" <stable@vger.kernel.org>, Huang Rui <ray.huang@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mengbing Wang <Mengbing.Wang@amd.com>
+Subject: Re: [regression 5.7-rc1] System does not power off, just halts
+Message-ID: <20200414082150.GD4149624@kroah.com>
+References: <f4eaf0ca-6cd6-c224-9205-bf64ca533ff5@molgen.mpg.de>
+ <dcc4851e-0ab5-683a-2cf2-687d64a3c9da@molgen.mpg.de>
+ <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <158685245979.28353.320778403882789166.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+On Mon, Apr 13, 2020 at 01:48:58PM -0400, Alex Deucher wrote:
+> On Mon, Apr 13, 2020 at 1:47 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+> >
+> > Dear Prike, dear Alex, dear Linux folks,
+> >
+> >
+> > Am 13.04.20 um 10:44 schrieb Paul Menzel:
+> >
+> > > A regression between causes a system with the AMD board MSI B350M MORTAR
+> > > (MS-7A37) with an AMD Ryzen 3 2200G not to power off any more but just
+> > > to halt.
+> > >
+> > > The regression is introduced in 9ebe5422ad6c..b032227c6293. I am in the
+> > > process to bisect this, but maybe somebody already has an idea.
+> >
+> > I found the Easter egg:
+> >
+> > > commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58
+> > > Author: Prike Liang <Prike.Liang@amd.com>
+> > > Date:   Tue Apr 7 20:21:26 2020 +0800
+> > >
+> > >     drm/amdgpu: fix gfx hang during suspend with video playback (v2)
+> > >
+> > >     The system will be hang up during S3 suspend because of SMU is pending
+> > >     for GC not respose the register CP_HQD_ACTIVE access request.This issue
+> > >     root cause of accessing the GC register under enter GFX CGGPG and can
+> > >     be fixed by disable GFX CGPG before perform suspend.
+> > >
+> > >     v2: Use disable the GFX CGPG instead of RLC safe mode guard.
+> > >
+> > >     Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+> > >     Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
+> > >     Reviewed-by: Huang Rui <ray.huang@amd.com>
+> > >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> > >     Cc: stable@vger.kernel.org
+> >
+> > It reverts cleanly on top of 5.7-rc1, and this fixes the issue.
+> >
+> > Greg, please do not apply this to the stable series. The commit message
+> > doesn’t even reference a issue/bug report, and doesn’t give a detailed
+> > problem description. What system is it?
+> >
+> > Dave, Alex, how to proceed? Revert? I created issue 1094 [1].
+> 
+> Already fixed:
+> https://patchwork.freedesktop.org/patch/361195/
 
-Commit-ID:     07d8350ede4c4c29634b26c163a1eecdf39dfcfb
-Gitweb:        https://git.kernel.org/tip/07d8350ede4c4c29634b26c163a1eecdf39dfcfb
-Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
-AuthorDate:    Fri, 27 Mar 2020 21:41:16 +05:30
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 14 Apr 2020 10:08:50 +02:00
+Any reason that doesn't have a cc: stable tag on it?
 
-genirq: Remove setup_irq() and remove_irq()
+And is it committed to any tree at the moment?
 
-Now that all the users of setup_irq() & remove_irq() have been replaced by
-request_irq() & free_irq() respectively, delete them.
+thanks,
 
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lkml.kernel.org/r/0aa8771ada1ac8e1312f6882980c9c08bd023148.1585320721.git.afzal.mohd.ma@gmail.com
-
----
- include/linux/irq.h |  2 +--
- kernel/irq/manage.c | 44 +--------------------------------------------
- 2 files changed, 46 deletions(-)
-
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 9315fbb..c63c2aa 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -573,8 +573,6 @@ enum {
- #define IRQ_DEFAULT_INIT_FLAGS	ARCH_IRQ_INIT_FLAGS
- 
- struct irqaction;
--extern int setup_irq(unsigned int irq, struct irqaction *new);
--extern void remove_irq(unsigned int irq, struct irqaction *act);
- extern int setup_percpu_irq(unsigned int irq, struct irqaction *new);
- extern void remove_percpu_irq(unsigned int irq, struct irqaction *act);
- 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index fe40c65..453a8a0 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1690,34 +1690,6 @@ out_mput:
- 	return ret;
- }
- 
--/**
-- *	setup_irq - setup an interrupt
-- *	@irq: Interrupt line to setup
-- *	@act: irqaction for the interrupt
-- *
-- * Used to statically setup interrupts in the early boot process.
-- */
--int setup_irq(unsigned int irq, struct irqaction *act)
--{
--	int retval;
--	struct irq_desc *desc = irq_to_desc(irq);
--
--	if (!desc || WARN_ON(irq_settings_is_per_cpu_devid(desc)))
--		return -EINVAL;
--
--	retval = irq_chip_pm_get(&desc->irq_data);
--	if (retval < 0)
--		return retval;
--
--	retval = __setup_irq(irq, desc, act);
--
--	if (retval)
--		irq_chip_pm_put(&desc->irq_data);
--
--	return retval;
--}
--EXPORT_SYMBOL_GPL(setup_irq);
--
- /*
-  * Internal function to unregister an irqaction - used to free
-  * regular and special interrupts that are part of the architecture.
-@@ -1859,22 +1831,6 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- }
- 
- /**
-- *	remove_irq - free an interrupt
-- *	@irq: Interrupt line to free
-- *	@act: irqaction for the interrupt
-- *
-- * Used to remove interrupts statically setup by the early boot process.
-- */
--void remove_irq(unsigned int irq, struct irqaction *act)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
--
--	if (desc && !WARN_ON(irq_settings_is_per_cpu_devid(desc)))
--		__free_irq(desc, act->dev_id);
--}
--EXPORT_SYMBOL_GPL(remove_irq);
--
--/**
-  *	free_irq - free an interrupt allocated with request_irq
-  *	@irq: Interrupt line to free
-  *	@dev_id: Device identity to free
+greg k-h
