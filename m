@@ -2,134 +2,118 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D54C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1C0C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1A82074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A3F2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="los3CO0F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DkKVdMsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633084AbgDNUYt (ORCPT
+        id S2633096AbgDNU1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633075AbgDNUYq (ORCPT
+        Tue, 14 Apr 2020 16:27:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28438 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2633075AbgDNU0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:24:46 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30DA7C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:46:00 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id t3so10886019qkg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AoePh0L7clLZ89TR81gTXNvMVga1FwbfbOjDUCAzwJo=;
-        b=los3CO0FB7m4TgWuhqYzQR9FgWSb+21Q/SsMnuebxBbbGNW0gnNyNNsG8i1o3kPehA
-         UqL9YGAdbGZNeabsFe79vHOobEfGn5IiAQRKWfhGlzSf93RnDfTney3of7o4lszoFunu
-         yGf5wit5RwJbEA9VKXsP5wv1fv5NJjKWLC8RrDWlS7GSaWqWhFGU7qRWB6b60HDupVz+
-         HglqxNMYFqrSFMyX4ou6DU0TITyXM6yXa7HeCrheAjkz8i7Vn7kyJBnN4du+aF3ie6bl
-         qgStYXPy4Un9Ya4J/zFIhuIpTRky+QTn42egiYvSAZsBknJgEm1Q6/ILQS2zLGG1Lwzz
-         +xVw==
+        Tue, 14 Apr 2020 16:26:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586896003;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=p9TpLNBdviwoTPvCd6HwdAiAsgTDf+tnQwjKV/KP1bE=;
+        b=DkKVdMsdxiAQ9C/c2MnruuaA+2uTlks+gNzgTnKKCExRCzoVghSvRS07V9NUXh8KrSO2ci
+        ++ySoAi2XjJH3jxtWwxFMqNBKUn2va0Fo5+M0UhkXFSeH30eVDTp/PutGmgZKPLfYp6+ZM
+        bLlWj1M0MS1m5D4MUFb91iAeu26HFQQ=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-o4V66PmxPbGdz1vFjuCGtg-1; Tue, 14 Apr 2020 16:26:40 -0400
+X-MC-Unique: o4V66PmxPbGdz1vFjuCGtg-1
+Received: by mail-qt1-f198.google.com with SMTP id n89so13575443qte.15
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:26:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AoePh0L7clLZ89TR81gTXNvMVga1FwbfbOjDUCAzwJo=;
-        b=XK+N6DG5sJTygyVd/JM31sSsYFl1GSo/zbWEt1GlED1VVQDL8hSV6P38yvtDvxsPL8
-         zll31sOYVS5UydmQysvoDnRMc4b1Cmw0oFlR/+w50MZhC9Z6lW5bmZvp10UbxPOO3rbx
-         VBJOwF705U7pwGRTnFDBlFKDCLDYcc1uGyOLp0buWjasq1fnnXO7UhFRkUpgqrK3PsyG
-         VfqtXoKsoxSDycWo8pO5HWSqmd3+M4k34oDoGyN69zMK1pW7fuV+VxuS6URD9W/2OE7n
-         GHLqWjbVyYTpKQy+HLQPH9bN8/uW3Nn8vXkJBII86hcCOrCJQoUzCZhjRRzWSXbRtMOr
-         rHBg==
-X-Gm-Message-State: AGi0PuZMbuBDrnA0pyWkeNTbnpa/UsE+2up9SqN+isG4pIlpyo7qm6wO
-        CTnwZnhtqURUqkMRgazE08P3Vw==
-X-Google-Smtp-Source: APiQypKWcghcF21Ly93yW8h4XKqSbHAzXJ816BD2DogniN0JD3EUK/8yLkrkRxEkIDIcEq13qbx6OA==
-X-Received: by 2002:a37:b702:: with SMTP id h2mr23400870qkf.491.1586893558885;
-        Tue, 14 Apr 2020 12:45:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id p22sm1550903qte.2.2020.04.14.12.45.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 12:45:58 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jORVN-0007BW-VY; Tue, 14 Apr 2020 16:45:57 -0300
-Date:   Tue, 14 Apr 2020 16:45:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm/gup: dereference page table entry using helper
-Message-ID: <20200414194557.GL5100@ziepe.ca>
-References: <1586877001-19138-1-git-send-email-agordeev@linux.ibm.com>
- <20200414163234.GG5100@ziepe.ca>
- <20200414185829.GB1853609@iweiny-DESK2.sc.intel.com>
- <20200414190620.GJ5100@ziepe.ca>
- <20200414193952.GC1853609@iweiny-DESK2.sc.intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=p9TpLNBdviwoTPvCd6HwdAiAsgTDf+tnQwjKV/KP1bE=;
+        b=uG1wY1md0LLxecFo55eGWjMpD/FS1xd2ruQ2YnMUdAZepdV0CeXZ69e8Vycm/OSPOQ
+         MZ/UPbLXlH1UyDQQoqFRoD33ccFzWqNJpeSTFhW80/3PJ4rp30/0fNChKRn8Xvdb3JeE
+         bY7pnCKTFUfd+V2ELFgNq01VzrRVOm2GK8V/T7hYTnDPPPdy5JIiFBTuQNIcb2JtHoiv
+         ZmkkJXAJkDFDWd2d1aQOPpyAVDCUVZBPQfpixFGI9Oe3dHrcD8qxwknh+uUTUe8Rky3s
+         CnWDOhXOT3WXRvQ2sZIfPWJFveW8RGc9d7Tnbhrp/PyGpK2kCLEMNeoPNqNq1OEnNtRl
+         j8Nw==
+X-Gm-Message-State: AGi0PubGsiFg21Gjk2vbHMI0S+UGpAyDasYo5y2ucQZEi+a6J+VM8ANb
+        SHjs9e2Zm/NHeh7xjkEzVh1cPIrorpLjS8yrRW//+6LR4xfqP5S92kuQT9Tdw/q5UJ8znLvMz0q
+        eFo6HaqDscNdjnAofury3CufG
+X-Received: by 2002:a37:4d43:: with SMTP id a64mr21132512qkb.55.1586896000163;
+        Tue, 14 Apr 2020 13:26:40 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIdpcrABXmZxnkowDDGciffEPiMY56MFLXYSgsbGyO9CrWBD6FPOgLLxiNf1ltOhPEA3yvigQ==
+X-Received: by 2002:a37:4d43:: with SMTP id a64mr21132489qkb.55.1586895999934;
+        Tue, 14 Apr 2020 13:26:39 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id p22sm1630458qte.2.2020.04.14.13.26.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 13:26:39 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 13:26:37 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        zhang.jia@linux.alibaba.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: fix wrong return value in tpm_pcr_extend
+Message-ID: <20200414202637.bsr3yccjq6mpflmp@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        zhang.jia@linux.alibaba.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200414114226.96691-1-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200414193952.GC1853609@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200414114226.96691-1-tianjia.zhang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:39:53PM -0700, Ira Weiny wrote:
-> On Tue, Apr 14, 2020 at 04:06:20PM -0300, Jason Gunthorpe wrote:
-> > On Tue, Apr 14, 2020 at 11:58:29AM -0700, Ira Weiny wrote:
-> > > On Tue, Apr 14, 2020 at 01:32:34PM -0300, Jason Gunthorpe wrote:
-> > > > On Tue, Apr 14, 2020 at 05:10:01PM +0200, Alexander Gordeev wrote:
-> > > > > Commit 0005d20 ("mm/gup: Move page table entry dereference
-> > > > > into helper function") wrapped access to page table entries
-> > > > > larger than sizeof(long) into a race-aware accessor. One of
-> > > > > the two dereferences in gup_fast path was however overlooked.
-> > > > > 
-> > > > > CC: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > > CC: linux-mm@kvack.org
-> > > > > Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> > > > >  mm/gup.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/mm/gup.c b/mm/gup.c
-> > > > > index d53f7dd..eceb98b 100644
-> > > > > +++ b/mm/gup.c
-> > > > > @@ -2208,7 +2208,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
-> > > > >  		if (!head)
-> > > > >  			goto pte_unmap;
-> > > > >  
-> > > > > -		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-> > > > > +		if (unlikely(pte_val(pte) != pte_val(gup_get_pte(ptep)))) {
-> > > > 
-> > > > It doesn't seem like this needs the special helper as it is just
-> > > > checking that the pte hasn't changed, it doesn't need to be read
-> > > > exactly.
-> > > > 
-> > > > But it probably should technically still be a READ_ONCE. Although I
-> > > > think the atomic inside try_grab_compound_head prevents any real
-> > > > problems.
-> > > 
-> > > I think we should go for consistency here and use the helper function.
-> > 
-> > It seems quite expensive to do two more unncessary barriers..
-> 
-> But won't a failure to read the 'real' pte result in falling back to GUP slow?
+On Tue Apr 14 20, Tianjia Zhang wrote:
+>For the algorithm that does not match the bank, a positive
+>value EINVAL is returned here. I think this is a typo error.
+>It is necessary to return an error value.
+>
+>Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-If there is no concurrent writer then the direct read will give the
-same result.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-If there is a concurrent writer then it is a random race if fallback
-to gup slow is required.
+>---
+> drivers/char/tpm/tpm-interface.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+>index a438b1206fcb..1621ce818705 100644
+>--- a/drivers/char/tpm/tpm-interface.c
+>+++ b/drivers/char/tpm/tpm-interface.c
+>@@ -323,7 +323,7 @@ int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+>
+> 	for (i = 0; i < chip->nr_allocated_banks; i++) {
+> 		if (digests[i].alg_id != chip->allocated_banks[i].alg_id) {
+>-			rc = EINVAL;
+>+			rc = -EINVAL;
+> 			goto out;
+> 		}
+> 	}
+>-- 
+>2.17.1
+>
 
-Jason
