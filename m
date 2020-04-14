@@ -2,148 +2,108 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFFDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FCFC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 585E92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586873968;
-	bh=WrgNlg4c/bqDmoOdi9O2QdWjiiGVBoD/3riqG6QzEEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fSYZBnb6PZyAXxtMr5Iq8MDAOBqpIMsJ14fmcB79wpeiIaQib8YG+mZKhyk9Krqkv
-	 SQpIEmREfoZ/7mKlURXJdusT7RssxXXK8qhZVvqJujh7Cp06z7rcqcRj1DKwhpTCSz
-	 TZmbah+4yuUQT9T95MDRlOKNq4LuMyCbV4QH4j70=
+	by mail.kernel.org (Postfix) with ESMTP id ECE20206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k+JvPfJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389681AbgDNOT0 (ORCPT
+        id S2389740AbgDNOU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:19:26 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41180 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389553AbgDNOTF (ORCPT
+        Tue, 14 Apr 2020 10:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389553AbgDNOUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:19:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h9so14519947wrc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 07:19:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z5WfYF9qaISCkQkLdw8YD4qrqM7NyTjsNf6l5QbjJTo=;
-        b=JHBW9mz6aeY+lffMWQ2zaWgl2BJsVb0Oyt5abQVDCM0QtA8aU1Nmw8b/7NP9bVkn6z
-         5VnAzQ5g/12Gfh4Iv2iyrUPQR3XP7mOkfQ+Wg5oE09xruAMyL9BbmVx1lFficeoNieOS
-         KChZucfxqCGhFWk7C6dy0km4HwCZ7nBFkL6JL/s8sSYq/x1ObjKjw3Rydh7dkyeSL7k7
-         l3YOpsGKZYnXyQOH1NgSOVDRSL/PtuwmaHcPOcGC+KvM64Y3N8fOj0rVTDhv8syorT1V
-         v25wq2q0w56YhSTU+FCZo0jRsNTRSKbbfpv5ax+y26/K2uaUUhbYIvAkOAXRHTXLM6rA
-         f1fg==
-X-Gm-Message-State: AGi0Pubcuj33afOEGbA98IM6E3mudwsdlbH8Fkn1y2mMvSUEridvM8f9
-        cmXET4fnfoiR1QgCMAh0Qvc=
-X-Google-Smtp-Source: APiQypK6NuQVH3WM+olPPFxSgaP3SCd9gU4Iqdtq/fG4GGGHxVcSyqB43KmhAKxVv7wBOx/6NIt5Ew==
-X-Received: by 2002:adf:f812:: with SMTP id s18mr26513530wrp.347.1586873941783;
-        Tue, 14 Apr 2020 07:19:01 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id b11sm19320446wrq.26.2020.04.14.07.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 07:19:00 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 16:18:59 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com
-Subject: Re: [PATCH 1/2] mm/mempolicy: Allow lookup_node() to handle fatal
- signal
-Message-ID: <20200414141859.GM4629@dhcp22.suse.cz>
-References: <20200408014010.80428-1-peterx@redhat.com>
- <20200408014010.80428-2-peterx@redhat.com>
- <20200409070253.GB18386@dhcp22.suse.cz>
- <CAHk-=whwRqkwdaJQf4g0-Evd6RmXR3dkkKyfnPjbnkeia=b1ug@mail.gmail.com>
- <20200414110429.GF4629@dhcp22.suse.cz>
- <20200414134906.GF38470@xz-x1>
+        Tue, 14 Apr 2020 10:20:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F77FC061A0C;
+        Tue, 14 Apr 2020 07:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=EYElTyl0BVEuRZ/YZRIannaVxf8JX5ztw8CmNN6o67Y=; b=k+JvPfJhqpx47HmkCwXxr89xM+
+        QyEgEaoxNBUTi8nN9/LWRxUHDwtUVhOo0YNyDJ5W6ei8rlBqmf525cLWD6KlLovGZg2abMLOSLsgC
+        U8wk4m1tAXieGZyNr7Aa3+0vMExYQ7HvVRy/YckMT6FP7pWrU6cfoQLCwlyqQ8uaDQdRqKnYkRF85
+        yQRnqEDKov4IQy+woIW66pkgx5WElp0Iqco0DozCF8IxXsxc8UanwYLiVg5+G2RGgAlOH8X2w+1TF
+        7pxsmEI4fCJ4Q8lBBtsqArFRH/jddmGFkpD7092oVyFzilyURxd1GphdGrt2GGHGW+Ljlk6PVVYT3
+        iSr755EQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOMQA-0000bu-TE; Tue, 14 Apr 2020 14:20:14 +0000
+Date:   Tue, 14 Apr 2020 07:20:14 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
+Message-ID: <20200414142014.GO21484@bombadil.infradead.org>
+References: <20200413125303.423864-1-npiggin@gmail.com>
+ <20200413125303.423864-5-npiggin@gmail.com>
+ <20200413134106.GN21484@bombadil.infradead.org>
+ <36616218-1d3a-b18a-8fb8-4fc9eff22780@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200414134906.GF38470@xz-x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <36616218-1d3a-b18a-8fb8-4fc9eff22780@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 14-04-20 09:49:06, Peter Xu wrote:
-> On Tue, Apr 14, 2020 at 01:04:29PM +0200, Michal Hocko wrote:
+On Tue, Apr 14, 2020 at 02:28:35PM +0200, Christophe Leroy wrote:
+> Le 13/04/2020 à 15:41, Matthew Wilcox a écrit :
+> > On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
+> > > +static int vmap_pages_range_noflush(unsigned long start, unsigned long end,
+> > > +				    pgprot_t prot, struct page **pages,
+> > > +				    unsigned int page_shift)
+> > > +{
+> > > +	if (page_shift == PAGE_SIZE) {
+> > 
+> > ... I think you meant 'page_shift == PAGE_SHIFT'
+> > 
+> > Overall I like this series, although it's a bit biased towards CPUs
+> > which have page sizes which match PMD/PUD sizes.  It doesn't offer the
+> > possibility of using 64kB page sizes on ARM, for example.  But it's a
+> > step in the right direction.
 > 
-> [...]
+> I was going to ask more or less the same question, I would have liked to use
+> 512kB hugepages on powerpc 8xx.
 > 
-> > @@ -1247,6 +1248,10 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
-> >  }
-> >  EXPORT_SYMBOL_GPL(fixup_user_fault);
-> >  
-> > +/*
-> > + * Please note that this function, unlike __get_user_pages will not
-> > + * return 0 for nr_pages > 0 without FOLL_NOWAIT
-> > + */
-> >  static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
-> >  						struct mm_struct *mm,
-> >  						unsigned long start,
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 48ba9729062e..1965e2681877 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -927,10 +927,7 @@ static int lookup_node(struct mm_struct *mm, unsigned long addr)
-> >  
-> >  	int locked = 1;
-> >  	err = get_user_pages_locked(addr & PAGE_MASK, 1, 0, &p, &locked);
-> > -	if (err == 0) {
-> > -		/* E.g. GUP interrupted by fatal signal */
-> > -		err = -EFAULT;
-> > -	} else if (err > 0) {
-> > +	if (err > 0) {
-> >  		err = page_to_nid(p);
-> >  		put_page(p);
-> >  	}
+> Even the 8M hugepages (still on the 8xx), can they be used as well, taking
+> into account that two PGD entries have to point to the same 8M page ?
 > 
-> Hi, Michal,
-> 
-> IIUC this is not the only place that we check against ret==0 for gup.
-> For example, the other direct caller of the same function,
-> get_vaddr_frames(), which will set -EFAULT too if ret==0.  So do we
-> want to change all the places and don't check against zero explicitly?
+> I sent out a series which tends to make the management of 512k and 8M pages
+> closer to what Linux expects, in order to use them inside kernel, for Linear
+> mappings and Kasan mappings for the moment. See
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=164620
+> It would be nice if we could amplify it a use it for ioremaps and vmallocs
+> as well.
 
-This would require to analyze each such a call. For example
-get_vaddr_frames has to handle get_user_pages_locked returning 0 because
-it allows callers to specify FOLL_NOWAIT. Whether EFAULT is a proper
-return value for that case is a question I didn't really get to analyze.
+I haven't been looking at vmalloc at all; I've been looking at the page
+cache.  See:
+https://lore.kernel.org/linux-mm/20200212041845.25879-1-willy@infradead.org/
 
-> I'm now thinking whether this would be good even if we refactored gup
-> and only allow it to return either >0 as number of page pinned, or <0
-> for all the rest.  I'm not sure how others will see this, but the
-> answer is probably the same at least to me as before for this issue.
+Once we have large pages in the page cache, I want to sort out the API
+for asking the CPU to insert a TLB entry.  Right now, we use set_pte_at(),
+set_pmd_at() and set_pud_at().  I'm thinking something along the lines of:
 
-I would consider a semantic without that special case for FOLL_NOWAIT
-much more clear but I do not really understand the historical background
-for it TBH so I do not dare to touch that.
+vm_fault_t vmf_set_page_at(struct vm_fault *vmf, struct page *page);
 
-> As a caller, I'll see gup as a black box.  Even if the gup function
-> guarantees that the retcode won't be zero and documented it, I (as a
-> caller) will be using that to index page array so I'd still better to
-> check that value before I do anything (because it's meaningless to
-> index an array with zero size), and a convertion of "ret==0" -->
-> "-EFAULT" (or some other failures) in this case still makes sense.
-> While removing that doesn't help a lot, imho, but instead make it
-> slightly unsafer.
+and the architecture can insert whatever PTEs and/or TLB entries it
+likes based on compound_order(page) -- if, say, it's a 1MB page, it might
+choose to insert 2 * 512kB entries, or just the upper or lower 512kB entry
+(depending which half of the 1MB page the address sits in).
 
-Well, my experience tells me that people really love to copy&paste code
-and error handling and if the error handling is bogus it just spreads
-all over the place until it really defines a new standard which is close
-to impossible to get rid of. So if the error handling can be done
-properly then I would really prefer it. In the above case it is clearly
-misleading, because fatal signal should be never reflected by err==0.
--- 
-Michal Hocko
-SUSE Labs
