@@ -2,228 +2,236 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC172C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AE2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC152072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E0F2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nFKDMs6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439166AbgDNLa0 (ORCPT
+        id S1729499AbgDNL22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:30:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2317 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729505AbgDNL3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:29:19 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 544039E08F019AD4617D;
-        Tue, 14 Apr 2020 19:28:57 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Apr 2020 19:28:48 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <will@kernel.org>, <catalin.marinas@arm.com>,
-        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
-        <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-Subject: [RFC PATCH v3 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-Date:   Tue, 14 Apr 2020 19:28:35 +0800
-Message-ID: <20200414112835.1121-3-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200414112835.1121-1-yezhenyu2@huawei.com>
-References: <20200414112835.1121-1-yezhenyu2@huawei.com>
+        Tue, 14 Apr 2020 07:28:28 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:18260 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439063AbgDNL1a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:27:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1586863649; x=1618399649;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=f3epdgnXRyZzpJEm4PhJjcbsZ8Kfu05a4/+SlqRcVPQ=;
+  b=nFKDMs6rjFbMpzsMRovyN9Qi0CgDYx53dcwTmrsAgz99QvuqLBBstszN
+   HNIq7/7G/ilOVo/TfBu7F08xVmITbKmDflIcH7RCqwgBW6DGQ+fiAzYZC
+   AJgNuRYd+K2gdtNRWV5DOTmpqh+s6H5MMOygl2Vd/a/ja9Kjm56OprX32
+   Z/moN0xjclrIJjy82YT9195CCujP50IIQ9VSMo/pbA19B43Ut1bucqERc
+   tHHknuTILckaXps4V1DYwr865ZSyf8X8ufABQVTeq6qulPbEfGm//TNcq
+   HrJ6JZsP16H4Lg64It9masXmsWbeq3w0rIu6SGlev4nmyxxSk3bi/fz/G
+   A==;
+IronPort-SDR: ZoJSmewa3UTYOlVUEl5uJwwE5PRX0vgBi8kMO9Oo6yLQid1ESp/ZY8Rbhl7aOwwv1X4dc2NYM6
+ vALklRMM5Lm7JOqhSpqTY4SLyB9jQ03cugxcg7tF60m/AxbDqgjtovFpoFSw4XjWfW42wyPmJd
+ LCevTPlINUcZsfRtBEGWqIkvVXw7KXP301UjnzVG8l9F6ylgkwP8SDdcjwSc2V76kN+JoFGyuc
+ 7r0FRkqEjTq+/Qj1RoPCdo6huER+DyDdC7uDkMO/rsoV2O0P3ei3fjMrJ/2DJRLO3qQN1t+Vv/
+ nhk=
+X-IronPort-AV: E=Sophos;i="5.72,382,1580799600"; 
+   d="scan'208";a="75809074"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Apr 2020 04:27:28 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 14 Apr 2020 04:27:15 -0700
+Received: from soft-dev3.microsemi.net (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Tue, 14 Apr 2020 04:27:26 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
+        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
+        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [RFC net-next v5 6/9] bridge: switchdev: mrp: Implement MRP API for switchdev
+Date:   Tue, 14 Apr 2020 13:26:15 +0200
+Message-ID: <20200414112618.3644-7-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200414112618.3644-1-horatiu.vultur@microchip.com>
+References: <20200414112618.3644-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add __TLBI_VADDR_RANGE macro and __flush_tlb_range_directly()
-interface.
+Implement the MRP api for switchdev.
+These functions will just eventually call the switchdev functions:
+switchdev_port_obj_add/del and switchdev_port_attr_set.
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- arch/arm64/include/asm/tlb.h      |   7 +-
- arch/arm64/include/asm/tlbflush.h | 114 +++++++++++++++++++++++++++++-
- 2 files changed, 119 insertions(+), 2 deletions(-)
+ net/bridge/br_mrp_switchdev.c | 144 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+ create mode 100644 net/bridge/br_mrp_switchdev.c
 
-diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-index b76df828e6b7..3a1816770bd1 100644
---- a/arch/arm64/include/asm/tlb.h
-+++ b/arch/arm64/include/asm/tlb.h
-@@ -38,7 +38,12 @@ static inline void tlb_flush(struct mmu_gather *tlb)
- 		return;
- 	}
- 
--	__flush_tlb_range(&vma, tlb->start, tlb->end, stride, last_level);
-+	if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE))
-+		__flush_tlb_range_directly(&vma, tlb->start, tlb->end,
-+					   stride, last_level);
-+	else
-+		__flush_tlb_range(&vma, tlb->start, tlb->end,
-+				  stride, last_level);
- }
- 
- static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index bc3949064725..a482188ea563 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -59,6 +59,44 @@
- 		__ta;						\
- 	})
- 
-+/*
-+ * This macro creates a properly formatted VA operand for the TLBI RANGE.
-+ * The value bit assignments are:
-+ *
-+ * +----------+------+-------+-------+-------+----------------------+
-+ * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
-+ * +-----------------+-------+-------+-------+----------------------+
-+ * |63      48|47  46|45   44|43   39|38   37|36                   0|
-+ *
-+ * The address range is determined by below formula:
-+ * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
-+ *
-+ */
-+#define __TLBI_VADDR_RANGE(addr, asid, tg, scale, num, ttl)	\
-+	({							\
-+		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
-+		__ta &= GENMASK_ULL(36, 0);			\
-+		__ta |= (unsigned long)(ttl) << 37;		\
-+		__ta |= (unsigned long)(num) << 39;		\
-+		__ta |= (unsigned long)(scale) << 44;		\
-+		__ta |= (unsigned long)(tg) << 46;		\
-+		__ta |= (unsigned long)(asid) << 48;		\
-+		__ta;						\
-+	})
+diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
+new file mode 100644
+index 000000000000..2a9578f39835
+--- /dev/null
++++ b/net/bridge/br_mrp_switchdev.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +
-+#define TLB_RANGE_MASK_SHIFT 5
-+#define TLB_RANGE_MASK GENMASK_ULL(TLB_RANGE_MASK_SHIFT - 1, 0)
++#include <net/switchdev.h>
 +
-+/*
-+ * __TG defines translation granule of the system, which is defined by
-+ * PAGE_SHIFT.  Used by TTL.
-+ *  - 4KB	: 1
-+ *  - 16KB	: 2
-+ *  - 64KB	: 3
-+ */
-+#define __TG	((PAGE_SHIFT - 12) / 2 + 1)
++#include "br_private_mrp.h"
 +
-+
- /*
-  *	TLB Invalidation
-  *	================
-@@ -171,12 +209,83 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
- 	dsb(ish);
- }
- 
-+/* The maximum range size of one TLBI-RANGE instruction */
-+#define MAX_TLBI_RANGE_SIZE	(1UL << 21)
-+
-+/*
-+ * This interface uses the *rvale1is* instruction to flush TLBs
-+ * in [start, end) directly.
-+ * This instruction is supported from ARM v8.4.
-+ */
-+static inline void __flush_tlb_range_directly(struct vm_area_struct *vma,
-+				unsigned long start, unsigned long end,
-+				unsigned long stride, bool last_level)
++int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp)
 +{
-+	int num = 0;
-+	int scale = 0;
-+	unsigned long asid = ASID(vma->vm_mm);
-+	unsigned long addr = 0;
-+	unsigned long range_size;
++	struct switchdev_obj_mrp mrp_obj = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_MRP,
++		.p_port = rtnl_dereference(mrp->p_port)->dev,
++		.s_port = rtnl_dereference(mrp->s_port)->dev,
++		.ring_id = mrp->ring_id,
++	};
++	int err;
 +
-+	start = round_down(start, stride);
-+	end = round_up(end, stride);
-+	range_size = (end - start) >> PAGE_SHIFT;
++	err = switchdev_port_obj_add(br->dev, &mrp_obj.obj, NULL);
 +
-+	if (range_size > MAX_TLBI_RANGE_SIZE) {
-+		flush_tlb_mm(vma->vm_mm);
-+		return;
-+	}
++	if (err && err != -EOPNOTSUPP)
++		return err;
 +
-+	dsb(ishst);
-+
-+	/*
-+	 * The minimum size of TLB RANGE is 2 PAGE;
-+	 * Use normal TLB instruction to handle odd PAGEs
-+	 */
-+	if (range_size % 2 == 1) {
-+		addr = __TLBI_VADDR(start, asid);
-+		if (last_level) {
-+			__tlbi(vale1is, addr);
-+			__tlbi_user(vale1is, addr);
-+		} else {
-+			__tlbi(vae1is, addr);
-+			__tlbi_user(vae1is, addr);
-+		}
-+		start += 1 << PAGE_SHIFT;
-+		range_size -= 1;
-+	}
-+
-+	range_size >>= 1;
-+	while (range_size > 0) {
-+		num = (range_size & TLB_RANGE_MASK) - 1;
-+		if (num >= 0) {
-+			addr = __TLBI_VADDR_RANGE(start, asid, __TG,
-+						  scale, num, 0);
-+			if (last_level) {
-+				__tlbi(rvale1is, addr);
-+				__tlbi_user(rvale1is, addr);
-+			} else {
-+				__tlbi(rvae1is, addr);
-+				__tlbi_user(rvae1is, addr);
-+			}
-+			start += (num + 1) << (5 * scale + 1) << PAGE_SHIFT;
-+		}
-+		scale++;
-+		range_size >>= TLB_RANGE_MASK_SHIFT;
-+	}
-+	dsb(ish);
++	return 0;
 +}
 +
- /*
-  * This is meant to avoid soft lock-ups on large TLB flushing ranges and not
-  * necessarily a performance improvement.
-  */
- #define MAX_TLBI_OPS	PTRS_PER_PTE
- 
-+/*
-+ * This interface uses the *vae1is* instruction to flush TLBs
-+ * in [start, end) one by one.
-+ */
- static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 				     unsigned long start, unsigned long end,
- 				     unsigned long stride, bool last_level)
-@@ -218,7 +327,10 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
- 	 * We cannot use leaf-only invalidation here, since we may be invalidating
- 	 * table entries as part of collapsing hugepages or moving page tables.
- 	 */
--	__flush_tlb_range(vma, start, end, PAGE_SIZE, false);
-+	if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE))
-+		__flush_tlb_range_directly(vma, start, end, PAGE_SIZE, false);
++int br_mrp_switchdev_del(struct net_bridge *br, struct br_mrp *mrp)
++{
++	struct switchdev_obj_mrp mrp_obj = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_MRP,
++		.p_port = NULL,
++		.s_port = NULL,
++		.ring_id = mrp->ring_id,
++	};
++	int err;
++
++	err = switchdev_port_obj_del(br->dev, &mrp_obj.obj);
++
++	if (err && err != -EOPNOTSUPP)
++		return err;
++
++	return 0;
++}
++
++int br_mrp_switchdev_set_ring_role(struct net_bridge *br,
++				   struct br_mrp *mrp,
++				   enum br_mrp_ring_role_type role)
++{
++	struct switchdev_obj_ring_role_mrp mrp_role = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
++		.ring_role = role,
++		.ring_id = mrp->ring_id,
++	};
++	int err;
++
++	if (role == BR_MRP_RING_ROLE_DISABLED)
++		err = switchdev_port_obj_del(br->dev, &mrp_role.obj);
 +	else
-+		__flush_tlb_range(vma, start, end, PAGE_SIZE, false);
- }
- 
- static inline void flush_tlb_kernel_range(unsigned long start, unsigned long end)
++		err = switchdev_port_obj_add(br->dev, &mrp_role.obj, NULL);
++
++	if (err && err != -EOPNOTSUPP)
++		return err;
++
++	return 0;
++}
++
++int br_mrp_switchdev_send_ring_test(struct net_bridge *br,
++				    struct br_mrp *mrp, u32 interval,
++				    u8 max_miss, u32 period)
++{
++	struct switchdev_obj_ring_test_mrp test = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_RING_TEST_MRP,
++		.interval = interval,
++		.max_miss = max_miss,
++		.ring_id = mrp->ring_id,
++		.period = period,
++	};
++	int err;
++
++	if (interval == 0)
++		err = switchdev_port_obj_del(br->dev, &test.obj);
++	else
++		err = switchdev_port_obj_add(br->dev, &test.obj, NULL);
++
++	return err;
++}
++
++int br_mrp_switchdev_set_ring_state(struct net_bridge *br,
++				    struct br_mrp *mrp,
++				    enum br_mrp_ring_state_type state)
++{
++	struct switchdev_obj_ring_state_mrp mrp_state = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_RING_STATE_MRP,
++		.ring_state = state,
++		.ring_id = mrp->ring_id,
++	};
++	int err;
++
++	err = switchdev_port_obj_add(br->dev, &mrp_state.obj, NULL);
++
++	if (err && err != -EOPNOTSUPP)
++		return err;
++
++	return 0;
++}
++
++int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
++				    enum br_mrp_port_state_type state)
++{
++	struct switchdev_attr attr = {
++		.orig_dev = p->dev,
++		.id = SWITCHDEV_ATTR_ID_MRP_PORT_STATE,
++		.u.mrp_port_state = state,
++	};
++	int err;
++
++	err = switchdev_port_attr_set(p->dev, &attr);
++	if (err && err != -EOPNOTSUPP)
++		br_warn(p->br, "error setting offload MRP state on port %u(%s)\n",
++			(unsigned int)p->port_no, p->dev->name);
++
++	return err;
++}
++
++int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
++				   enum br_mrp_port_role_type role)
++{
++	struct switchdev_attr attr = {
++		.orig_dev = p->dev,
++		.id = SWITCHDEV_ATTR_ID_MRP_PORT_ROLE,
++		.u.mrp_port_role = role,
++	};
++	int err;
++
++	err = switchdev_port_attr_set(p->dev, &attr);
++	if (err && err != -EOPNOTSUPP)
++		return err;
++
++	return 0;
++}
++
 -- 
-2.19.1
-
+2.17.1
 
