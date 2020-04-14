@@ -2,306 +2,250 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2466C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5F7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A109720575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C487820575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="twJvBaXa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WFGud2tB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504711AbgDNT0v (ORCPT
+        id S2504720AbgDNT1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56648 "EHLO
+        Tue, 14 Apr 2020 15:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730096AbgDNTYp (ORCPT
+        by vger.kernel.org with ESMTP id S1730049AbgDNTYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 15:24:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C976CC08ED7C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:18:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cl8so4530338pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:18:42 -0700 (PDT)
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBB0C08C5F2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:18:40 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p8so340542pgi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9+M6Pn4GgRujfdty6eeHXakq5Khx9VZcPgigNopm4jo=;
-        b=twJvBaXa02w3g8WiVFlHn8ntYIdw/yIj1nUgMG/eakdQZmhF2XqZHd4odiS+31mS2e
-         gzU3L49LtqK4GPDrA9HNak8MZ6J/hYs5psatwpEVxuYWYUlwbsExTl95hQEb4LqaDr2c
-         zwfw02wJHR74A/V9wZITuDkw5c1evZWm2UyJGAGeB4A64G0D4/4p9gaFhdqoE0wkhyYV
-         0jY31Y9N9PIdddsA9gMIURAY6XHkARexddMUDUf4q71Gx5WUvcB3qFCNgsI6nmXlnWw4
-         9LrK7Zodk8m24WEIQyO9gq7zeFNq0KykMBQ6xlnw35gFZCH0qbm8VzdiR0kwc2O7YZXX
-         I8Ow==
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=P9uGK/l9+upt2147+kcKvfUBL5T6QGch+S3tGbTmzhg=;
+        b=WFGud2tBPWFna3TtJBPDwDAuc3HGHK64EaaZKf9mtGIDlcqcqYj+zc5/SdWWRMWshu
+         raTwvHD7blUEj+visUbTeVR/CmwIC4XYp9lmYsXLyaJPZ3ZVp14dQCZwCgF6//ssCtXR
+         0kMk3I6NrQ4quQmpa5nYNEojOp7zczNpCEM3vPAfNRSWnufba2qs902hbkoro4+2x/iz
+         FPjdJMuI04crXUgqCwJxr1hpuJZEo3UncZ80cbCsoRkZx4R1HlU/ZxJ+rB759ZBSsmWA
+         9BJEu8ErySIBz8RRagX/0hFlQTX/hsOlz4XJF+DTn0lVQLrx/oGqN0SNRXj4fZuBebnL
+         eKYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9+M6Pn4GgRujfdty6eeHXakq5Khx9VZcPgigNopm4jo=;
-        b=XIZ2sky2VNRs4y5onon+WCa0JaNBk4ZYm9JkPUjREAInUqO04gIJMHJdWdhuOEyyJ3
-         t26mBwsA4kLx8kAjma4fSixDvNyYeLjPz3YSM4tjwmw7O5IrkY5pbKGEsIKIdLA+3HYt
-         AqD9jCkx1kDUh5+/l+qS34Q8Lpa7b/U015xLPAOCvUjzP43YL0KNoKizwHvI1Q+ALxjt
-         +Ai/2Pq08rue7pg44DR86n3RqehqJbQzxxRdWz6N/vzW9wyJip3l07HsvGuN3lQdILc+
-         IkUgsB321uUOAbfra9Rn6GR2C1uhUS5wuEpKyGo1wb9hIOzl6r8HxL8N8h1zdyijQSBV
-         RuSg==
-X-Gm-Message-State: AGi0Pual3uSyywsr+H9sXSbOZsDpGkwCgj9x4Xy1FG4BeKFC+c7VcWW0
-        1R0mVccOiR4c1XFX1SHTOQW+mEAw4x0B0vfvTc2L6w==
-X-Google-Smtp-Source: APiQypLxakUPPheSHg62X3tD+BdDedT+hk8I8o/owKCoH/az+/mxqtzznke01AUARkTEVXaIiQG4iR9uVn96qodXtw4=
-X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr1362004plo.325.1586891921911;
- Tue, 14 Apr 2020 12:18:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=P9uGK/l9+upt2147+kcKvfUBL5T6QGch+S3tGbTmzhg=;
+        b=YBY1K+nswlZChucjvQQK9FjJ+htp5nNrdlbw3paa3dzQZPk9fqwoqLx/5eFkoiuMza
+         TbW0bV1Vo+n9YOpggiG0iXR+F3dEOm3eVFai4JEslJzTZNujzxy18n3BgjJZG0KFGwJs
+         r2C++ZY7klV8Pk5kCJAn8VS2RZpIIR5+duhgYwBb3k3eKyHi0yyQgViLxaLIc5PAaFTQ
+         6HE8+qL4AiekXuJWFuL0As4AEBxa67yFBDjtXUBs6ESHzLyoFdrhEsAEtcN4muIC9xSY
+         g8xIJeLJDYogo9PQeCrtjtgIITNqmiyVpv3A8NFFYem/5oX1HuneczafkE2GM/65kwH9
+         xEgA==
+X-Gm-Message-State: AGi0PuYyMN5NCy6T/IfFyG2QmfkhqPw9JSfBVfJae5tQ440t2qm4Ysx+
+        iMSJ4gf0vuiHYTyBvyC8BgEZUw==
+X-Google-Smtp-Source: APiQypK8wVeo3OinH7VyXKPdkf8oibdS0+kfLLeCbEyQbUEH3ydOeW4wh59RRBV09oWKbrzrBA9/PA==
+X-Received: by 2002:aa7:9d89:: with SMTP id f9mr3546328pfq.194.1586891919386;
+        Tue, 14 Apr 2020 12:18:39 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id r28sm5417712pfg.186.2020.04.14.12.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 12:18:38 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:18:37 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+cc:     Christoph Hellwig <hch@lst.de>,
+        "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [rfc v2 4/6] dma-direct: atomic allocations must come from atomic
+ coherent pools
+In-Reply-To: <26df6b35-af63-bf17-0c21-51684afa6f67@amd.com>
+Message-ID: <alpine.DEB.2.22.394.2004141216090.2583@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com> <alpine.DEB.2.21.2004081420060.19661@chino.kir.corp.google.com> <26df6b35-af63-bf17-0c21-51684afa6f67@amd.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
- <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
- <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
- <20200310111837.GA1368052@kuha.fi.intel.com> <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
- <CA+G9fYuwv+TEhgi46pjs2-GCe0mmMHyki9nAokvGCEA2syK5Dg@mail.gmail.com>
- <CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com> <20200414081513.GD2828150@kuha.fi.intel.com>
-In-Reply-To: <20200414081513.GD2828150@kuha.fi.intel.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 14 Apr 2020 12:18:30 -0700
-Message-ID: <CAFd5g46KeNu6bmDHBiJtGqEBQEyo1ooh=wK_PJbNih+2UCLoNQ@mail.gmail.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 1:15 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> Hi,
->
-> On Tue, Apr 07, 2020 at 01:56:16PM -0700, Brendan Higgins wrote:
-> > On Tue, Apr 7, 2020 at 2:25 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > On Wed, 11 Mar 2020 at 02:16, Brendan Higgins <brendanhiggins@google.com> wrote:
-> > > > > > > > > > > > > Steps reproduce by using kselftests,
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >           - lsmod || true
-> > > > > > > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
-> > > > > > > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> > > > > > > > > > > > >           - ./printf.sh || true
-> > > > > > > > > > > > >           - ./bitmap.sh || true
-> > > > > > > > > > > > >           - ./prime_numbers.sh || true
-> > > > > > > > > > > > >           - ./strscpy.sh || true
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > x86_64 kernel BUG dump.
-> > > > > > > > > > > > > + ./printf.sh
-> > > > > > > > > > >
-> > > > > > > > > > > Oops, I am wondering if I broke this with my change "Revert "software
-> > > > > > > > > > > node: Simplify software_node_release() function"":
-> > > > > > > > > > >
-> > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
-> > > > > > > > > > >
-> > > > > > > > > > > I am still investigating, will update later.
-> > > > > > > > > >
-> > > > > > > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
-> > > > > > > > > > from kernel test robot a couple days ago that I didn't see:
-> > > > > > > > > >
-> > > > > > > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
-> > > > > > > > > >
-> > > > > > > > > > It shows the same breakage after applying this change.
-> > > > > > > > > >
-> > > > > > > > > > I am still investigating how my change broke it, nevertheless.
-> > > > > > > > >
-> > > > > > > > > As nodes in the tree are being removed, the code before the patch that
-> > > > > > > > > "simplified" the software_node_release() function accessed the node's parent
-> > > > > > > > > in its release function.
-> > > > > > > > >
-> > > > > > > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
-> > > > > > > > > longer necessarily called in order, leading to referencing released memory.
-> > > > > > > > > Oops!
-> > > > > > > > >
-> > > > > > > > > So Heikki's patch actually fixed a bug. :-)
-> > > > > > > >
-> > > > > > > > Well, I think it just hid the problem. It looks like the core
-> > > > > > > > (lib/kobject.c) allows the parent kobject to be released before the
-> > > > > > > > last child kobject is released. To be honest, that does not sound
-> > > > > > > > right to me...
-> > > > > > > >
-> > > > > > > > I think we can workaround this problem by taking reference to the
-> > > > > > > > parent when the child is added, and then releasing it when the child
-> > > > > > > > is released, and in that way be guaranteed that the parent will not
-> > > > > > > > disappear before the child is fully released, but that still does not
-> > > > > > > > feel right. It feels more like the core is not doing it's job to me.
-> > > > > > > > The parent just should not be released before its children.
-> > > > > > > >
-> > > > > > > > Either I'm wrong about that, and we still should take the reference on
-> > > > > > > > the parent, or we revert my patch like Brendan proposed and then fix
-> > > > > > >
-> > > > > > > Either way, isn't it wrong to release the node ID before deleting the
-> > > > > > > sysfs entry? I am not sure that my fix was the correct one, but I
-> > > > > > > believe the bug that Heidi and I found is actually a bug.
-> > > > >
-> > > > > I agree.
-> > > > >
-> > > > > > > > the core with something like this (warning, I did not even try to
-> > > > > > > > compile that):
-> > > > > > >
-> > > > > > > I will try it out.
-> > > > > > >
-> > > > > > > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > > > > > > index 83198cb37d8d..ec5774992337 100644
-> > > > > > > > --- a/lib/kobject.c
-> > > > > > > > +++ b/lib/kobject.c
-> > > > > > > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > > > > > >                 kobject_uevent(kobj, KOBJ_REMOVE);
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > > +       if (t && t->release) {
-> > > > > > > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > > > > > > +                        kobject_name(kobj), kobj);
-> > > > > > > > +               t->release(kobj);
-> > > > > > > > +       }
-> > > > > > > > +
-> > > > > > > >         /* remove from sysfs if the caller did not do it */
-> > > > > > > >         if (kobj->state_in_sysfs) {
-> > > > > > > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > > > > > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > > > > > >                 kobject_del(kobj);
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > > -       if (t && t->release) {
-> > > > > > > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > > > > > > -                        kobject_name(kobj), kobj);
-> > > > > > > > -               t->release(kobj);
-> > > > > > > > -       }
-> > > > > > > > -
-> > > > > > > >         /* free name if we allocated it */
-> > > > > > > >         if (name) {
-> > > > > > > >                 pr_debug("kobject: '%s': free name\n", name);
-> > > > > >
-> > > > > > Alright, so I tried it and it looks like Heikki's suggestion worked.
-> > > > > >
-> > > > > > Is everyone comfortable going this route?
-> > > > >
-> > > > > Hold on. Another way to fix the problem is to increment the parent's
-> > > > > reference count before that kobject_del(kobj) is called, and then
-> > > > > decrementing it after t->release(kobj) is called. It may be safer to
-> > > > > fix the problem like that.
-> > > >
-> > > > Right, this was your first suggestion above, right? That actually made
-> > > > more sense to me, but you seemed skeptical of it due to it being
-> > > > messier, which makes sense.
-> > > >
-> > > > Nevertheless, having children take a reference seems like the right
-> > > > thing to do because the children need to degregister themselves from
-> > > > the parent. Calling t->release() ahead of kobject_del() seems to
-> > > > reintroduce the problem that I pointed out, albeit *much* more
-> > > > briefly. If I understand correctly, it is always wrong to have a sysfs
-> > > > entry that points to a partially deallocated kobject. Please correct
-> > > > me if I am wrong.
-> > > >
-> > > > So I think there are two solutions: Either we have to ensure that each
-> > > > child is deallocated first so we can preserve the kobject_del() and
-> > > > then t->release() ordering, or we have to add some sort of "locking"
-> > > > mechanism to prevent the kobject from being accessed by anything other
-> > > > than the deallocation code until it is fully deallocated; well, it
-> > > > would have to prevent any access at all :-). I think it goes without
-> > > > saying that this "locking" idea is pretty flawed.
-> > > >
-> > > > The problem with just having children take a reference is that the
-> > > > kobject children already take a reference to their parent, so it seems
-> > > > like the kobject should be smart enough to deallocate children rather
-> > > > than having swnode have to keep a separate tally of children, no?
-> > > >
-> > > > Sorry if this all seems obvious, I am not an expert on this part of the kernel.
-> > > >
-> > > > > My example above proofs that there is the problem, but it changes the
-> > > > > order of execution which I think can always have other consequences.
-> > > > >
-> > > > > > Also, should I send this fix as a separate patch? Or do people want me
-> > > > > > to send an updated revision of my revert patch with the fix?
-> > > > >
-> > > > > This needs to be send in its own separate patch. Ideally it could be
-> > > > > send together with the revert in the same series, but I'm not sure
-> > > > > that's possible anymore. Didn't Greg pick the revert already?
-> > > >
-> > > > Sounds good.
-> > > >
-> > > > I did already let Greg know when he emailed us on backporting the
-> > > > patch to stable, and he acked saying he removed them. So as long as
-> > > > these are not in the queue for 5.6 (it is not in Linus' tree yet), we
-> > > > should be good.
-> > >
-> > > The reported bug is still noticed on Linux mainline master branch
-> > > The Kernel BUG noticed on x86_64 and i386 running selftest on Linux
-> > > mainline kernel 5.6.0.
-> >
-> > Oh sorry, I thought that this patch was dropped from the maintainer's
-> > for-next branch.
-> >
-> > Heikki, what do you think about my suggestion of having kobject
-> > deallocate its children?
->
-> I'm not sure what was this suggestion?
->
-> > In the meantime, are people cool with the patch that Heikki proposed
-> > as a temporary mitigation? I think my solution might be a bit more
-> > involved. If I don't hear anything back, I will send out Heikki's
-> > suggestion as a patch.
->
-> Why not just take the reference to the parent like I proposed?
->
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 83198cb37d8d..173046c423f8 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
->   */
->  static void kobject_cleanup(struct kobject *kobj)
->  {
-> +       struct kobject *parent = kobj->parent;
->         struct kobj_type *t = get_ktype(kobj);
->         const char *name = kobj->name;
->
-> @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
->                 kobject_uevent(kobj, KOBJ_REMOVE);
->         }
->
-> +       /* make sure the parent is not released before the (last) child */
-> +       kobject_get(parent)
-> +
->         /* remove from sysfs if the caller did not do it */
->         if (kobj->state_in_sysfs) {
->                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
->                 t->release(kobj);
->         }
->
-> +       kobject_put(parent);
-> +
->         /* free name if we allocated it */
->         if (name) {
->                 pr_debug("kobject: '%s': free name\n", name);
+On Thu, 9 Apr 2020, Tom Lendacky wrote:
 
-Ah, I think that will work. Sorry, I just thought that was a bit
-kludgy, but if you are okay with doing it that way, I think it will
-work.
+> > When a device required unencrypted memory and the context does not allow
+> 
+> required => requires
+> 
 
-I will try it and send out a patch.
+Fixed, thanks.
+
+> > blocking, memory must be returned from the atomic coherent pools.
+> > 
+> > This avoids the remap when CONFIG_DMA_DIRECT_REMAP is not enabled and the
+> > config only requires CONFIG_DMA_COHERENT_POOL.  This will be used for
+> > CONFIG_AMD_MEM_ENCRYPT in a subsequent patch.
+> > 
+> > Keep all memory in these pools unencrypted.
+> > 
+> > Signed-off-by: David Rientjes <rientjes@google.com>
+> > ---
+> >   kernel/dma/direct.c | 16 ++++++++++++++++
+> >   kernel/dma/pool.c   | 15 +++++++++++++--
+> >   2 files changed, 29 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > index 70800ca64f13..44165263c185 100644
+> > --- a/kernel/dma/direct.c
+> > +++ b/kernel/dma/direct.c
+> > @@ -124,6 +124,18 @@ void *dma_direct_alloc_pages(struct device *dev, size_t
+> > size,
+> >   	struct page *page;
+> >   	void *ret;
+> >   +	/*
+> > +	 * Unencrypted memory must come directly from DMA atomic pools if
+> > +	 * blocking is not allowed.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL) &&
+> > +	    force_dma_unencrypted(dev) && !gfpflags_allow_blocking(gfp)) {
+> > +		ret = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page, gfp);
+> > +		if (!ret)
+> > +			return NULL;
+> > +		goto done;
+> > +	}
+> > +
+> >   	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+> >   	    dma_alloc_need_uncached(dev, attrs) &&
+> >   	    !gfpflags_allow_blocking(gfp)) {
+> > @@ -203,6 +215,10 @@ void dma_direct_free_pages(struct device *dev, size_t
+> > size, void *cpu_addr,
+> >   {
+> >   	unsigned int page_order = get_order(size);
+> >   +	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL) &&
+> > +	    dma_free_from_pool(dev, cpu_addr, PAGE_ALIGN(size)))
+> > +		return;
+> > +
+> >   	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+> >   	    !force_dma_unencrypted(dev)) {
+> >   		/* cpu_addr is a struct page cookie, not a kernel address */
+> > diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+> > index e14c5a2da734..6685ab89cfa7 100644
+> > --- a/kernel/dma/pool.c
+> > +++ b/kernel/dma/pool.c
+> > @@ -9,6 +9,7 @@
+> >   #include <linux/dma-contiguous.h>
+> >   #include <linux/init.h>
+> >   #include <linux/genalloc.h>
+> > +#include <linux/set_memory.h>
+> >   #include <linux/slab.h>
+> >   #include <linux/vmalloc.h>
+> >   #include <linux/workqueue.h>
+> > @@ -55,12 +56,20 @@ static int atomic_pool_expand(struct gen_pool *pool,
+> > size_t pool_size,
+> >     	arch_dma_prep_coherent(page, pool_size);
+> >   +#ifdef CONFIG_DMA_DIRECT_REMAP
+> >   	addr = dma_common_contiguous_remap(page, pool_size,
+> >   					   pgprot_dmacoherent(PAGE_KERNEL),
+> >   					   __builtin_return_address(0));
+> >   	if (!addr)
+> >   		goto free_page;
+> > -
+> > +#else
+> > +	addr = page_to_virt(page);
+> > +#endif
+> > +	/*
+> > +	 * Memory in the atomic DMA pools must be unencrypted, the pools do
+> > not
+> > +	 * shrink so no re-encryption occurs in dma_direct_free_pages().
+> > +	 */
+> > +	set_memory_decrypted((unsigned long)page_to_virt(page), 1 << order);
+> >   	ret = gen_pool_add_virt(pool, (unsigned long)addr, page_to_phys(page),
+> >   				pool_size, NUMA_NO_NODE);
+> >   	if (ret)
+> > @@ -69,8 +78,10 @@ static int atomic_pool_expand(struct gen_pool *pool,
+> > size_t pool_size,
+> >   	return 0;
+> >     remove_mapping:
+> > +#ifdef CONFIG_DMA_DIRECT_REMAP
+> >   	dma_common_free_remap(addr, pool_size);
+> 
+> You're about to free the memory, but you've called set_memory_decrypted()
+> against it, so you need to do a set_memory_encrypted() to bring it back to a
+> state ready for allocation again.
+> 
+
+Ah, good catch, thanks.  I notice that I should also be checking the 
+return value of set_memory_decrypted() because pages added to the coherent 
+pools *must* be unencrypted.  If it fails, we fail the expansion.
+
+And do the same thing for set_memory_encrypted(), which would be a bizarre 
+situation (decrypt succeeded, encrypt failed), by simply leaking the page.
+
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -7,6 +7,7 @@
+ #include <linux/dma-contiguous.h>
+ #include <linux/init.h>
+ #include <linux/genalloc.h>
++#include <linux/set_memory.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/workqueue.h>
+@@ -53,22 +54,42 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+ 
+ 	arch_dma_prep_coherent(page, pool_size);
+ 
++#ifdef CONFIG_DMA_DIRECT_REMAP
+ 	addr = dma_common_contiguous_remap(page, pool_size,
+ 					   pgprot_dmacoherent(PAGE_KERNEL),
+ 					   __builtin_return_address(0));
+ 	if (!addr)
+ 		goto free_page;
+-
++#else
++	addr = page_to_virt(page);
++#endif
++	/*
++	 * Memory in the atomic DMA pools must be unencrypted, the pools do not
++	 * shrink so no re-encryption occurs in dma_direct_free_pages().
++	 */
++	ret = set_memory_decrypted((unsigned long)page_to_virt(page),
++				   1 << order);
++	if (ret)
++		goto remove_mapping;
+ 	ret = gen_pool_add_virt(pool, (unsigned long)addr, page_to_phys(page),
+ 				pool_size, NUMA_NO_NODE);
+ 	if (ret)
+-		goto remove_mapping;
++		goto encrypt_mapping;
+ 
+ 	return 0;
+ 
++encrypt_mapping:
++	ret = set_memory_encrypted((unsigned long)page_to_virt(page),
++				   1 << order);
++	if (WARN_ON_ONCE(ret)) {
++		/* Decrypt succeeded but encrypt failed, purposely leak */
++		goto out;
++	}
+ remove_mapping:
++#ifdef CONFIG_DMA_DIRECT_REMAP
+ 	dma_common_free_remap(addr, pool_size);
+-free_page:
++#endif
++free_page: __maybe_unused
+ 	if (!dma_release_from_contiguous(NULL, page, 1 << order))
+ 		__free_pages(page, order);
+ out:
