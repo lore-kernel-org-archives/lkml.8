@@ -2,113 +2,105 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DF6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41093C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24CA9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IXS45WnH"
+	by mail.kernel.org (Postfix) with ESMTP id 23B2F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501967AbgDNM3D (ORCPT
+        id S2501977AbgDNMbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:29:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:19996 "EHLO pegase1.c-s.fr"
+        Tue, 14 Apr 2020 08:31:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9934 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2501933AbgDNM2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:28:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 491lCB2VyJz9ty2q;
-        Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IXS45WnH; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id OnGikXuRMKJq; Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 491lCB1Nqtz9ty2r;
-        Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586867318; bh=q5tuqv3XX5tdFZ2Nwqglyq4XexfbdM7sUkp/aIyLDRw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IXS45WnHSm1Ayq4SS0uiPxa3vST+WWMTF8g5pm0xicL0YmkmdHBVHM7MqFdvFivSy
-         4VKx/15HSGMZn84Khq7Sc+ziISswwhSUCUvDincDkchHmmJIjHMEuycCM/NgnTr/Xv
-         cQH5RqaZiSzViAlD2v1Y1/wud6OaF/wj8MGMt9vo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E0138B7EB;
-        Tue, 14 Apr 2020 14:28:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 91o1xMRYsudU; Tue, 14 Apr 2020 14:28:39 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F2278B7EA;
-        Tue, 14 Apr 2020 14:28:38 +0200 (CEST)
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     Matthew Wilcox <willy@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     linux-arch@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
- <20200413125303.423864-5-npiggin@gmail.com>
- <20200413134106.GN21484@bombadil.infradead.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <36616218-1d3a-b18a-8fb8-4fc9eff22780@c-s.fr>
-Date:   Tue, 14 Apr 2020 14:28:35 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730303AbgDNMbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:31:08 -0400
+IronPort-SDR: Iy9QSZDs70Ath6iSEz+L7OKl0uupYv9kCGWpnvlI3jOOF5yHKrF4CLR2TccrtvBvofGCTCE1u9
+ ld+EBvEcR/Bw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 05:31:07 -0700
+IronPort-SDR: 2vvEyjfovcmuRN2989ozQVCdT6lttKyb06SarfZO7YOkpea33tAObZPt86LQm8lH1HlP0oGldn
+ ni/MNf+4UEvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="241977020"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 14 Apr 2020 05:31:05 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jOKiZ-000Wa9-MJ; Tue, 14 Apr 2020 15:31:07 +0300
+Date:   Tue, 14 Apr 2020 15:31:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
+Message-ID: <20200414123107.GN34613@smile.fi.intel.com>
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
+ <9aa81292-70c2-c12a-ded1-1164faac0024@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200413134106.GN21484@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9aa81292-70c2-c12a-ded1-1164faac0024@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 13/04/2020 à 15:41, Matthew Wilcox a écrit :
-> On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
->> +static int vmap_pages_range_noflush(unsigned long start, unsigned long end,
->> +				    pgprot_t prot, struct page **pages,
->> +				    unsigned int page_shift)
->> +{
->> +	if (page_shift == PAGE_SIZE) {
+On Tue, Apr 14, 2020 at 02:08:42PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> ... I think you meant 'page_shift == PAGE_SHIFT'
+> On 4/8/20 6:09 PM, Andy Shevchenko wrote:
+> > When I started looking into the intel_cht_int33fe driver for an example of use
+> > software node API, I have noticed that it's hard to get and code a bit messy.
+> > Here is a clean up, main part of which is to introduce node groups and API to
+> > register and unregister them. This and some pre-existing APIs can be used in
+> > the driver.
+> > 
+> > So, because of cross-subsystem nature of this series, I may recommend to create
+> > myself the immutable branch which can be pulled to Rafael's and Greg's trees
+> > respectively. I'm also open for other proposals how to proceed.
 > 
-> Overall I like this series, although it's a bit biased towards CPUs
-> which have page sizes which match PMD/PUD sizes.  It doesn't offer the
-> possibility of using 64kB page sizes on ARM, for example.  But it's a
-> step in the right direction.
+> The series looks good to me and I've also tested it on one of
+> the devices using the intel_cht_int33fe driver and everything seems
+> to work fine, so for the whole series:
 > 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
 
-I was going to ask more or less the same question, I would have liked to 
-use 512kB hugepages on powerpc 8xx.
+Thank you, Hans!
+I'll wait for Greg and Rafael to conclude how to proceed with it and maybe for
+Heikki's response as well.
 
-Even the 8M hugepages (still on the 8xx), can they be used as well, 
-taking into account that two PGD entries have to point to the same 8M page ?
+> > Andy Shevchenko (6):
+> >    device property: export set_secondary_fwnode() to modules
+> >    software node: Allow register and unregister software node groups
+> >    platform/x86: intel_cht_int33fe: Convert software node array to group
+> >    platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
+> >    platform/x86: intel_cht_int33fe: Switch to use
+> >      acpi_dev_hid_uid_match()
+> >    platform/x86: intel_cht_int33fe: Fix spelling issues
+> > 
+> >   drivers/base/core.c                           |   1 +
+> >   drivers/base/swnode.c                         |  48 ++++++++
+> >   .../platform/x86/intel_cht_int33fe_typec.c    | 106 +++++++++---------
+> >   include/linux/property.h                      |   3 +
+> >   4 files changed, 108 insertions(+), 50 deletions(-)
 
-I sent out a series which tends to make the management of 512k and 8M 
-pages closer to what Linux expects, in order to use them inside kernel, 
-for Linear mappings and Kasan mappings for the moment. See 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=164620
-It would be nice if we could amplify it a use it for ioremaps and 
-vmallocs as well.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Christophe
+
