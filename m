@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6F9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF093C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC332054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5C62074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883526;
-	bh=TOEoiupC4E+ti6ju/GOnIHeH1zPT6fYBlOAsZVyseAI=;
+	s=default; t=1586883532;
+	bh=ftdzGG92AJu0MB3OTd2YxsGzGZ2H+4UraUBv4G7jloo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBGQV5PnNB+3L+hzJJyjB/9/FCAThXxPSfpwb5P+k2F/0inkVcVfiovu2BFbpKCLX
-	 3dgENAOlZTMB3vLN4SHhieatk+QZM2cRuYhLxHNSi9azpgaJ4m9kF7/0BS/L+nOCuj
-	 gIMGZsK+npVemovxoZFKSQX5ZWW07WzCx0W+9roQ=
+	b=r6wI7U0PMPQFEC8U+40xHdnq+D2zdmF1yOWEvegL1mzzcCzsc/dh/wpHggdgKDgaW
+	 Sy3r+/NZOYj/H0jsiv3/aS8PijmE/j+b7+NH+iraTMzus1sTjOtaAPAH2TBfvJZbad
+	 M/a1RlfwvHbk5rHh+I86HsijhARgreJrid8lhYac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437989AbgDNQ6n (ORCPT
+        id S2440320AbgDNQ6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:58:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38466 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391262AbgDNQ4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:56:17 -0400
+        id S2404908AbgDNQtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:07 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B70772074D;
-        Tue, 14 Apr 2020 16:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 722CE2085B;
+        Tue, 14 Apr 2020 16:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586883376;
-        bh=TOEoiupC4E+ti6ju/GOnIHeH1zPT6fYBlOAsZVyseAI=;
+        s=default; t=1586882942;
+        bh=ftdzGG92AJu0MB3OTd2YxsGzGZ2H+4UraUBv4G7jloo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3X8HmPxhxUOsHAgs2/ih3e8jHcNGjAFQBr1YKiim8wCRst7uWmRfw0EmxvRwMdRS
-         FhNZj1YgkjBSG0SOPcuT/5AwREzZs+4+xlo1yG25E5o+d38FafKUyCLWyCGTEQj8ME
-         CgcoSYgsDpXaPEzxflxJD9lAb6K0uWpRPdI4iUsM=
+        b=titCjmfCrIwVlM7lzs0W4BdbK0Kjuohl6gnGlyZJ1eb6sqp4Kfw9/U5C6AuM8TkG4
+         pWxnMKdkiYg9l0lfBygngiEtYvxtXGja+5nfSj06CsE64wAJ8/QScvMXmLoW6YaE6L
+         uzKFIzszhQkykcjaw6GdS7W4rEeXaypQIEbXpKW8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOOr8-0068yU-W5; Tue, 14 Apr 2020 18:56:15 +0200
+        id 1jOOk8-0068lR-Na; Tue, 14 Apr 2020 18:49:00 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Tim Bird <Tim.Bird@sony.com>
-Subject: [PATCH v2 1/6] scripts: sphinx-pre-install: improve distro detection check
-Date:   Tue, 14 Apr 2020 18:56:08 +0200
-Message-Id: <472924557afdf2b5492ae2a48c5ecfae216d54e2.1586883286.git.mchehab+huawei@kernel.org>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v2 07/33] MAINTAINERS: dt: fix pointers for ARM Integrator, Versatile and RealView
+Date:   Tue, 14 Apr 2020 18:48:33 +0200
+Message-Id: <eae3440fb70c1b1666973e34fd3fd6b8ab4a3bc7.1586881715.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586883286.git.mchehab+huawei@kernel.org>
-References: <cover.1586883286.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1586881715.git.mchehab+huawei@kernel.org>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,54 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Arch-linux detection is hit by catting /etc/issue, whose
-contents is (nowadays):
+There's a conversion from a plain text binding file into 4 yaml ones.
+The old file got removed, causing this new warning:
 
-	Arch Linux \r (\l)
+	Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/arm/arm-boards
 
-It sounds a little ackward to print such string, so,
-instead, let's use the /etc/os-release file, with exists
-on lots of distributions and should provide a more reliable
-result.
+Address it by replacing the old reference by the new ones
 
-We'll keep the old tests before it, in order to avoid possible
-regressions with the other distros, although the new way should
-probably work on all the currently supported distributions.
-
+Fixes: 2d483550b6d2 ("dt-bindings: arm: Drop the non-YAML bindings")
+Fixes: 33fbfb3eaf4e ("dt-bindings: arm: Add Integrator YAML schema")
+Fixes: 4b900070d50d ("dt-bindings: arm: Add Versatile YAML schema")
+Fixes: 7db625b9fa75 ("dt-bindings: arm: Add RealView YAML schema")
+Fixes: 4fb00d9066c1 ("dt-bindings: arm: Add Versatile Express and Juno YAML schema")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/sphinx-pre-install | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ MAINTAINERS | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index fa3fb05cd54b..ea941c6e0647 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -780,6 +780,24 @@ $system_release = catcheck("/etc/system-release") if !$system_release;
- $system_release = catcheck("/etc/redhat-release") if !$system_release;
- $system_release = catcheck("/etc/lsb-release") if !$system_release;
- $system_release = catcheck("/etc/gentoo-release") if !$system_release;
-+
-+# This seems more common than LSB these days
-+if (!$system_release) {
-+	my %os_var;
-+	if (open IN, "cat /etc/os-release|") {
-+		while (<IN>) {
-+			if (m/^([\w\d\_]+)=\"?([^\"]*)\"?\n/) {
-+				$os_var{$1}=$2;
-+			}
-+		}
-+		$system_release = $os_var{"NAME"};
-+		if (defined($os_var{"VERSION_ID"})) {
-+			$system_release .= " " . $os_var{"VERSION_ID"} if (defined($os_var{"VERSION_ID"}));
-+		} else {
-+			$system_release .= " " . $os_var{"VERSION"};
-+		}
-+	}
-+}
- $system_release = catcheck("/etc/issue") if !$system_release;
- $system_release =~ s/\s+$//;
- 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 86f98c3e6cfc..82e4b0a0c921 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1323,7 +1323,10 @@ ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT
+ M:	Linus Walleij <linus.walleij@linaro.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/arm/arm-boards
++F:	Documentation/devicetree/bindings/arm/arm,integrator.yaml
++F:	Documentation/devicetree/bindings/arm/arm,realview.yaml
++F:	Documentation/devicetree/bindings/arm/arm,versatile.yaml
++F:	Documentation/devicetree/bindings/arm/arm,vexpress-juno.yaml
+ F:	Documentation/devicetree/bindings/auxdisplay/arm-charlcd.txt
+ F:	Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
+ F:	Documentation/devicetree/bindings/i2c/i2c-versatile.txt
 -- 
 2.25.2
 
