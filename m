@@ -2,236 +2,133 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AE2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973D8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E0F2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nFKDMs6r"
+	by mail.kernel.org (Postfix) with ESMTP id 7F3B62076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgDNL22 (ORCPT
+        id S2439181AbgDNLau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:28:28 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:18260 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439063AbgDNL1a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:27:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1586863649; x=1618399649;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=f3epdgnXRyZzpJEm4PhJjcbsZ8Kfu05a4/+SlqRcVPQ=;
-  b=nFKDMs6rjFbMpzsMRovyN9Qi0CgDYx53dcwTmrsAgz99QvuqLBBstszN
-   HNIq7/7G/ilOVo/TfBu7F08xVmITbKmDflIcH7RCqwgBW6DGQ+fiAzYZC
-   AJgNuRYd+K2gdtNRWV5DOTmpqh+s6H5MMOygl2Vd/a/ja9Kjm56OprX32
-   Z/moN0xjclrIJjy82YT9195CCujP50IIQ9VSMo/pbA19B43Ut1bucqERc
-   tHHknuTILckaXps4V1DYwr865ZSyf8X8ufABQVTeq6qulPbEfGm//TNcq
-   HrJ6JZsP16H4Lg64It9masXmsWbeq3w0rIu6SGlev4nmyxxSk3bi/fz/G
-   A==;
-IronPort-SDR: ZoJSmewa3UTYOlVUEl5uJwwE5PRX0vgBi8kMO9Oo6yLQid1ESp/ZY8Rbhl7aOwwv1X4dc2NYM6
- vALklRMM5Lm7JOqhSpqTY4SLyB9jQ03cugxcg7tF60m/AxbDqgjtovFpoFSw4XjWfW42wyPmJd
- LCevTPlINUcZsfRtBEGWqIkvVXw7KXP301UjnzVG8l9F6ylgkwP8SDdcjwSc2V76kN+JoFGyuc
- 7r0FRkqEjTq+/Qj1RoPCdo6huER+DyDdC7uDkMO/rsoV2O0P3ei3fjMrJ/2DJRLO3qQN1t+Vv/
- nhk=
-X-IronPort-AV: E=Sophos;i="5.72,382,1580799600"; 
-   d="scan'208";a="75809074"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Apr 2020 04:27:28 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 Apr 2020 04:27:15 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 14 Apr 2020 04:27:26 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
-        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [RFC net-next v5 6/9] bridge: switchdev: mrp: Implement MRP API for switchdev
-Date:   Tue, 14 Apr 2020 13:26:15 +0200
-Message-ID: <20200414112618.3644-7-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200414112618.3644-1-horatiu.vultur@microchip.com>
-References: <20200414112618.3644-1-horatiu.vultur@microchip.com>
+        Tue, 14 Apr 2020 07:30:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:53398 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728727AbgDNL3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:29:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1035D1FB;
+        Tue, 14 Apr 2020 04:29:06 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D553F6C4;
+        Tue, 14 Apr 2020 04:29:03 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:29:01 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     luca abeni <luca.abeni@santannapisa.it>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] sched/deadline: Implement fallback mechanism for
+ !fit case
+Message-ID: <20200414112901.3fhdoefgbxwv2bu4@e107158-lin.cambridge.arm.com>
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-5-dietmar.eggemann@arm.com>
+ <20200409102557.h4humnsa5dlwvlym@e107158-lin.cambridge.arm.com>
+ <20200409150010.468951df@sweethome>
+ <20200409145359.y276yeikn7dp6jmx@e107158-lin.cambridge.arm.com>
+ <b72f72c1-6043-c44f-31f5-fb4137bd5d52@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b72f72c1-6043-c44f-31f5-fb4137bd5d52@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the MRP api for switchdev.
-These functions will just eventually call the switchdev functions:
-switchdev_port_obj_add/del and switchdev_port_attr_set.
+On 04/09/20 20:43, Dietmar Eggemann wrote:
+> On 09.04.20 16:55, Qais Yousef wrote:
+> > Hi Luca
+> > 
+> > On 04/09/20 15:00, luca abeni wrote:
+> 
+> [...]
+> 
+> >> There is already a tunable for the SCHED_DEADLINE admission test
+> >> (/proc/sys/kernel/sched_rt_{runtime,period}_us, if I understand well
+> >> what you are suggesting). The problem is that it is not easy to find a
+> >> value for this tunable that guarantees the hard respect of all
+> >> deadlines.
+> > 
+> > I don't think it's similar to what I was referring to. But my knowledge about
+> > DL could have failed me to fully appreciate what you're saying.
+> > 
+> > This tunable for RT prevents a single task from using 100% CPU time. I think
+> > DL uses it in a similar manner.
+> > 
+> > What I meant by overcommiting, is allowing more DL tasks than the system can
+> > guarantee to meet their deadlines.
+> > 
+> > For example, in the context of capacity awareness, if you have 2 big cores, but
+> > 4 DL tasks request a bandwidth that can only be satisfied by the big cores,
+> > then 2 of them will miss their deadlines (almost) consistently, IIUC.
+> 
+> __dl_overflow() now uses
+> 
+>     X = cap_scale(dl_b->bw, rd_capacity(cpu)) instead of X = cpus
+> 
+> in
+> 
+>     dl_b->bw * X < dl_b->total_bw - old_bw + new_bw;
+> 
+> 
+> As an example, Arm64 Hikey64 with 4 LITTLE and 4 big CPUs uses now
+> (4x462 + 4x1024)/1024 = 5944/1024 ~ 5,80 instead of 8 CPUs.
+> 
+> On mainline, the rt-app tests:
+> 
+> "tasks" : {
+>  "thread0" : {
+>   "policy" : "SCHED_DEADLINE",
+>   "instance" : 8,
+>   "timer" : {"ref" : "unique0", "period" : 16000, "mode" : "absolute" },
+>   "run" : 10000,
+>   "dl-runtime" :11000,
+>   "dl-period" : 16000,
+>   "dl-deadline" : 16000
+>   }
+> }
+> 
+> is admitted on this board whereas with the patchset some of the tasks
+> are rejected:
+> 
+> [rt-app] <crit> [7] sched_setattr returned -1
+> sched_setattr: failed to set deadline attributes: Device or resource busy
+> 
+> ---
+> 
+> IMHO, one of the 3 places where DL Admission Control hooks into is:
+> 
+>     __sched_setscheduler -> sched_dl_overflow() ->__dl_overflow()
+> 
+> [...]
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp_switchdev.c | 144 ++++++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
- create mode 100644 net/bridge/br_mrp_switchdev.c
+Thanks Dietmar! I should have looked at the code with more intent.
 
-diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
-new file mode 100644
-index 000000000000..2a9578f39835
---- /dev/null
-+++ b/net/bridge/br_mrp_switchdev.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <net/switchdev.h>
-+
-+#include "br_private_mrp.h"
-+
-+int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp)
-+{
-+	struct switchdev_obj_mrp mrp_obj = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_MRP,
-+		.p_port = rtnl_dereference(mrp->p_port)->dev,
-+		.s_port = rtnl_dereference(mrp->s_port)->dev,
-+		.ring_id = mrp->ring_id,
-+	};
-+	int err;
-+
-+	err = switchdev_port_obj_add(br->dev, &mrp_obj.obj, NULL);
-+
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_switchdev_del(struct net_bridge *br, struct br_mrp *mrp)
-+{
-+	struct switchdev_obj_mrp mrp_obj = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_MRP,
-+		.p_port = NULL,
-+		.s_port = NULL,
-+		.ring_id = mrp->ring_id,
-+	};
-+	int err;
-+
-+	err = switchdev_port_obj_del(br->dev, &mrp_obj.obj);
-+
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_switchdev_set_ring_role(struct net_bridge *br,
-+				   struct br_mrp *mrp,
-+				   enum br_mrp_ring_role_type role)
-+{
-+	struct switchdev_obj_ring_role_mrp mrp_role = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
-+		.ring_role = role,
-+		.ring_id = mrp->ring_id,
-+	};
-+	int err;
-+
-+	if (role == BR_MRP_RING_ROLE_DISABLED)
-+		err = switchdev_port_obj_del(br->dev, &mrp_role.obj);
-+	else
-+		err = switchdev_port_obj_add(br->dev, &mrp_role.obj, NULL);
-+
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_switchdev_send_ring_test(struct net_bridge *br,
-+				    struct br_mrp *mrp, u32 interval,
-+				    u8 max_miss, u32 period)
-+{
-+	struct switchdev_obj_ring_test_mrp test = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_RING_TEST_MRP,
-+		.interval = interval,
-+		.max_miss = max_miss,
-+		.ring_id = mrp->ring_id,
-+		.period = period,
-+	};
-+	int err;
-+
-+	if (interval == 0)
-+		err = switchdev_port_obj_del(br->dev, &test.obj);
-+	else
-+		err = switchdev_port_obj_add(br->dev, &test.obj, NULL);
-+
-+	return err;
-+}
-+
-+int br_mrp_switchdev_set_ring_state(struct net_bridge *br,
-+				    struct br_mrp *mrp,
-+				    enum br_mrp_ring_state_type state)
-+{
-+	struct switchdev_obj_ring_state_mrp mrp_state = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_RING_STATE_MRP,
-+		.ring_state = state,
-+		.ring_id = mrp->ring_id,
-+	};
-+	int err;
-+
-+	err = switchdev_port_obj_add(br->dev, &mrp_state.obj, NULL);
-+
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
-+				    enum br_mrp_port_state_type state)
-+{
-+	struct switchdev_attr attr = {
-+		.orig_dev = p->dev,
-+		.id = SWITCHDEV_ATTR_ID_MRP_PORT_STATE,
-+		.u.mrp_port_state = state,
-+	};
-+	int err;
-+
-+	err = switchdev_port_attr_set(p->dev, &attr);
-+	if (err && err != -EOPNOTSUPP)
-+		br_warn(p->br, "error setting offload MRP state on port %u(%s)\n",
-+			(unsigned int)p->port_no, p->dev->name);
-+
-+	return err;
-+}
-+
-+int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
-+				   enum br_mrp_port_role_type role)
-+{
-+	struct switchdev_attr attr = {
-+		.orig_dev = p->dev,
-+		.id = SWITCHDEV_ATTR_ID_MRP_PORT_ROLE,
-+		.u.mrp_port_role = role,
-+	};
-+	int err;
-+
-+	err = switchdev_port_attr_set(p->dev, &attr);
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
--- 
-2.17.1
-
+--
+Qais Yousef
