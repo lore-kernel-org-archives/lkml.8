@@ -2,182 +2,346 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647C9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24FEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4063C20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586872300;
-	bh=xygoIyX9KgqcvJoRci1V8WnxjdzucOJRHJgc686jKvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tFfFEQxYJfGG6x+woXmIDkNCJjyIYVJ+5awdt9DrM+xzAgEuGO6MXv7nlTRQu+41t
-	 W8rnfEmJbGc6Uwsj6Y5CgpNQ4KnHoKlxsKvjCHb7sEvqnUaeK42iYzQbmDybGFoHTc
-	 QwL5mSgyhDmzhARfNsVKRYpikN9mmbzPFI0XK/yI=
+	by mail.kernel.org (Postfix) with ESMTP id 9E9CC20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H3wKu80S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388195AbgDNNvf (ORCPT
+        id S2388217AbgDNNvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:51:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36442 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732954AbgDNNuv (ORCPT
+        Tue, 14 Apr 2020 09:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732992AbgDNNvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:50:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b13so8570464oti.3;
-        Tue, 14 Apr 2020 06:50:50 -0700 (PDT)
+        Tue, 14 Apr 2020 09:51:10 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE8A4C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:51:10 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cl8so4104964pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fqFfkj/oSmruqF3cM8sR0s4wL8mmluh/5CuVwXsrTFM=;
+        b=H3wKu80SG2jjOaRyvAbFQFlG7vW4MoTDkKKwj7efiRmUWHxQ8XOHgiLieMiGqCDBvN
+         vpNjrWMMjqaM4Y+nr/fyG2XRPWbXrPd+/4dij9J/SW2d32dyUJxDC6KJczuURmhELTMN
+         SRjejl8h2JVPaHsWaT4VULt41Ih+fH8BXVHQwiMXl4McNLHP6pDn3mlSM7loj5smeWMb
+         W3N6XfgabiHSKetIYmfZ4Fv4HDPPCJKaZ0uV90dGQDkkgceQvEOz36J0MJXHVy+CcdfV
+         gLafdq/bOl1PvvEVHR28Fs/W2n0ec6pdHraWnNIVta2KTZmZhiBtGcZrV1jkfCXyMx2K
+         bB9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C310fwJjsqMN77N1UzYbOt1HSD0OyElfoVqL7lO5IlA=;
-        b=Yvyv4BYpQi/LGR/LkjEmJ9ysChvfpNwwAMuigCl4gIbbo2nUCzTCWcVj2Mr8YsdioA
-         wUoKo/ApISLab1N0VOg3m07bv9ovuiGxUZkRz4Vd38/IJB1YWhIHVmXpJgU1oldOOuxI
-         FN0h+reOoN7/B+FRsTv9/6y9coOSoaRjf21ICmRfWIlp0IHNC5lVund09Tv3QilfflWX
-         t5tiEsGqAm5Ut+Dj0SYQkHGH4OTpKJLTdwK5MHwhMIJjqp74Xr2r3vc3R4c/gPb4nLmH
-         0tbCNqy8nFUqQB2lWhrQywPiDjG/RMosBVfPVb2NOp+H8OkNEkQCzl8Hj/Wi7ZJVm55S
-         IJtA==
-X-Gm-Message-State: AGi0PubHxS+4emTAoKA6RtQJQJKXrnZfEXuNSZGuQwI7QE5HEHYZpYkw
-        V0tK3NUNn8LTtQRd3dgWZQ==
-X-Google-Smtp-Source: APiQypIhHs1TriKn/WY0g92zfK/p1ITDYwn7KHy/jB5xYjLLeSpqejcriNR0GRo2qQH25dAfzFd9sQ==
-X-Received: by 2002:a9d:64cd:: with SMTP id n13mr18490222otl.274.1586872250194;
-        Tue, 14 Apr 2020 06:50:50 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 85sm618190oie.17.2020.04.14.06.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 06:50:48 -0700 (PDT)
-Received: (nullmailer pid 19040 invoked by uid 1000);
-        Tue, 14 Apr 2020 13:50:47 -0000
-Date:   Tue, 14 Apr 2020 08:50:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add Broadcom STB USB support
-Message-ID: <20200414135047.GA8093@bogus>
-References: <20200408181406.40389-1-alcooperx@gmail.com>
- <20200408181406.40389-2-alcooperx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fqFfkj/oSmruqF3cM8sR0s4wL8mmluh/5CuVwXsrTFM=;
+        b=je5a2sgDw1C+2fmmJ3CuBfe5L03F5ZT6eY0sEBO62xFTcjHEH/CTEuC0FZ9MX3OAwj
+         79St5vW4enaaTIzILuBEIrUjhkNWILQ2PfutA9REsRYoXD5OyuI4xEavBjzKNxwN3lYy
+         rNO1+Y4F9RIvZLUjmBIkrIxafyCubdEcaezaIktklne6KSuFyPfK2xNvPxplnH0x9Gi2
+         +wbvfhQkll6iZZQajIQj1Wwtb/0+PO1HUHNMc3f+VsOU3XDcGLB8nitlZwfCW00ftcZ8
+         fkXSBXHHnb+2FD6Pwxf6RPPp5HvJVjc5+JfA2N+ZkJu8JBdSegOByS/q4dF22obsDlbh
+         WM5A==
+X-Gm-Message-State: AGi0PuawxKItFRyntwzhndzTkWtrF1bNOAWEWoUdUldGqW80bweuosVP
+        ULZeV5pRfGk1j+so/d2kj0LnUI1WiAUVrarveBQ8GQ==
+X-Google-Smtp-Source: APiQypI7sge0JAOCb+8U6KLq2WhyrRr51kd7eWIqTU465ZyN2BI023Nuo4U41FdoJVmdEXR9/OUkwdBbfiIWJbuLKuI=
+X-Received: by 2002:a17:90a:9af:: with SMTP id 44mr224966pjo.128.1586872269584;
+ Tue, 14 Apr 2020 06:51:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408181406.40389-2-alcooperx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414031647.124664-1-davidgow@google.com> <20200414031647.124664-3-davidgow@google.com>
+In-Reply-To: <20200414031647.124664-3-davidgow@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 14 Apr 2020 15:50:58 +0200
+Message-ID: <CAAeHK+z8AXQuTAPc20kmR0i7Ny1LU1ghWrUf6gOAMdSop+NjgA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] KUnit: KASAN Integration
+To:     David Gow <davidgow@google.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 02:14:03PM -0400, Al Cooper wrote:
-> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
-> 
-> NOTE: The OHCI driver is not included because it uses the generic
->       platform driver.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+On Tue, Apr 14, 2020 at 5:17 AM 'David Gow' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> From: Patricia Alfonso <trishalfonso@google.com>
+>
+> Integrate KASAN into KUnit testing framework.
+>         - Fail tests when KASAN reports an error that is not expected
+>         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN
+>         tests
+>         - Expected KASAN reports pass tests and are still printed when run
+>         without kunit_tool (kunit_tool still bypasses the report due to the
+>         test passing)
+>         - KUnit struct in current task used to keep track of the current
+>         test from KASAN code
+>         - Also make KASAN no-longer panic when panic_on_warn and
+>         kasan_multi_shot are enabled (as multi-shot does nothing
+>         otherwise)
+>
+> Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
+> kunit_resource API beyond allocated resources" and "[PATCH v3
+> kunit-next 2/2] kunit: add support for named resources" from Alan
+> Maguire [1]
+>         - A named resource is added to a test when a KASAN report is
+>          expected
+>         - This resource contains a struct for kasan_data containing
+>         booleans representing if a KASAN report is expected and if a
+>         KASAN report is found
+>
+> [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
+>
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> Signed-off-by: David Gow <davidgow@google.com>
+> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 > ---
->  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
->  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
->  2 files changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> new file mode 100644
-> index 000000000000..d41710574b5e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: GPL-2.0
+>  include/kunit/test.h  |  5 +++++
+>  include/linux/kasan.h |  6 ++++++
+>  lib/kunit/test.c      | 13 ++++++++-----
+>  lib/test_kasan.c      | 44 +++++++++++++++++++++++++++++++++++++++----
+>  mm/kasan/report.c     | 34 ++++++++++++++++++++++++++++++++-
+>  5 files changed, 92 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index ac59d18e6bab..1dc3d118f64b 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -225,6 +225,11 @@ struct kunit {
+>         struct list_head resources; /* Protected by lock. */
+>  };
+>
+> +static inline void kunit_set_failure(struct kunit *test)
+> +{
+> +       WRITE_ONCE(test->success, false);
+> +}
+> +
+>  void kunit_init_test(struct kunit *test, const char *name, char *log);
+>
+>  int kunit_run_tests(struct kunit_suite *suite);
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index 5cde9e7c2664..148eaef3e003 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -14,6 +14,12 @@ struct task_struct;
+>  #include <asm/kasan.h>
+>  #include <asm/pgtable.h>
+>
+> +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
+> +struct kunit_kasan_expectation {
+> +       bool report_expected;
+> +       bool report_found;
+> +};
+> +
+>  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+>  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+>  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 2cb7c6220a00..030a3281591e 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -10,16 +10,12 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kref.h>
+>  #include <linux/sched/debug.h>
+> +#include <linux/sched.h>
+>
+>  #include "debugfs.h"
+>  #include "string-stream.h"
+>  #include "try-catch-impl.h"
+>
+> -static void kunit_set_failure(struct kunit *test)
+> -{
+> -       WRITE_ONCE(test->success, false);
+> -}
+> -
+>  static void kunit_print_tap_version(void)
+>  {
+>         static bool kunit_has_printed_tap_version;
+> @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
+>         struct kunit_suite *suite = ctx->suite;
+>         struct kunit_case *test_case = ctx->test_case;
+>
+> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+> +       current->kunit_test = test;
+> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
+> +
+>         /*
+>          * kunit_run_case_internal may encounter a fatal error; if it does,
+>          * abort will be called, this thread will exit, and finally the parent
+> @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
+>                 spin_unlock(&test->lock);
+>                 kunit_remove_resource(test, res);
+>         }
+> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+> +       current->kunit_test = NULL;
+> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_cleanup);
+>
+> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> index 3872d250ed2c..7b4cb107b387 100644
+> --- a/lib/test_kasan.c
+> +++ b/lib/test_kasan.c
+> @@ -23,12 +23,48 @@
+>
+>  #include <asm/page.h>
+>
+> -/*
+> - * Note: test functions are marked noinline so that their names appear in
+> - * reports.
+> +#include <kunit/test.h>
+> +
+> +static struct kunit_resource resource;
+> +static struct kunit_kasan_expectation fail_data;
+> +static bool multishot;
+> +
+> +static int kasan_test_init(struct kunit *test)
+> +{
+> +       /*
+> +        * Temporarily enable multi-shot mode and set panic_on_warn=0.
+> +        * Otherwise, we'd only get a report for the first case.
+> +        */
+> +       multishot = kasan_save_enable_multi_shot();
+> +
+> +       return 0;
+> +}
+> +
+> +static void kasan_test_exit(struct kunit *test)
+> +{
+> +       kasan_restore_multi_shot(multishot);
+> +}
+> +
+> +/**
+> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
+> + * not cause a KASAN error. This uses a KUnit resource named "kasan_data." Do
+> + * Do not use this name for a KUnit resource outside here.
+> + *
+>   */
+> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
+> +       fail_data.report_expected = true; \
+> +       fail_data.report_found = false; \
+> +       kunit_add_named_resource(test, \
+> +                               NULL, \
+> +                               NULL, \
+> +                               &resource, \
+> +                               "kasan_data", &fail_data); \
+> +       condition; \
+> +       KUNIT_EXPECT_EQ(test, \
+> +                       fail_data.report_expected, \
+> +                       fail_data.report_found); \
+> +} while (0)
+>
+> -static noinline void __init kmalloc_oob_right(void)
+>  {
+>         char *ptr;
+>         size_t size = 123;
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 5ef9f24f566b..a58a9f3b7f2c 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -32,6 +32,8 @@
+>
+>  #include <asm/sections.h>
+>
+> +#include <kunit/test.h>
+> +
+>  #include "kasan.h"
+>  #include "../slab.h"
+>
+> @@ -92,7 +94,7 @@ static void end_report(unsigned long *flags)
+>         pr_err("==================================================================\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+>         spin_unlock_irqrestore(&report_lock, *flags);
 
-Dual license new bindings please:
+[...]
 
-(GPL-2.0-only OR BSD-2-Clause)
+> -       if (panic_on_warn)
+> +       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+>                 panic("panic_on_warn set ...\n");
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/brcm,bcm7445-ehci.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom STB USB EHCI Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "usb-hcd.yaml"
-> +
-> +maintainers:
-> +  - Al Cooper <alcooperx@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      const: brcm,bcm7445-ehci
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: Clock specifier for the EHCI clock
-> +
-> +  clock-names:
-> +    const: sw_usb
-> +
-> +  phys:
-> +    description: PHY specifier for the USB PHY
+Please move this change into a separate commit.
 
-maxItems: 1
+With that:
 
-And you can drop the description.
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
+>         kasan_enable_current();
+>  }
+> @@ -455,12 +457,37 @@ static bool report_enabled(void)
+>         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
+>  }
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +static void kasan_update_kunit_status(struct kunit *cur_test)
+> +{
+> +       struct kunit_resource *resource;
+> +       struct kunit_kasan_expectation *kasan_data;
 > +
-> +  phy-names:
-> +    const: usbphy
+> +       resource = kunit_find_named_resource(cur_test, "kasan_data");
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - phys
-> +  - clocks
+> +       if (!resource) {
+> +               kunit_set_failure(cur_test);
+> +               return;
+> +       }
 > +
-> +additionalProperties: false
+> +       kasan_data = (struct kunit_kasan_expectation *)resource->data;
+> +       kasan_data->report_found = true;
+> +       kunit_put_resource(resource);
+> +}
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
 > +
-> +examples:
-> +  - |
-> +    usb@f0b00300 {
-> +        compatible = "brcm,bcm7445-ehci";
-> +        reg = <0xf0b00300 0xa8>;
-> +        interrupts = <0x0 0x5a 0x0>;
-> +        phys = <&usbphy_0 0x0>;
-> +        phy-names = "usbphy";
-> +        clocks = <&usb20>;
-> +        clock-names = "sw_usb";
-> +    };
+>  void kasan_report_invalid_free(void *object, unsigned long ip)
+>  {
+>         unsigned long flags;
+>         u8 tag = get_tag(object);
+>
+>         object = reset_tag(object);
 > +
-> +...
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 3f378951d624..aafc316b5a8e 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -23,6 +23,7 @@ Required properties:
->        device
->      - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
->        device
-> +    - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
->      - "xhci-platform" (deprecated)
->  
->      When compatible with the generic version, nodes must list the
-> -- 
-> 2.17.1
-> 
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +       if (current->kunit_test)
+> +               kasan_update_kunit_status(current->kunit_test);
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> +
+>         start_report(&flags);
+>         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
+>         print_tags(tag, object);
+> @@ -481,6 +508,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
+>         if (likely(!report_enabled()))
+>                 return;
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +       if (current->kunit_test)
+> +               kasan_update_kunit_status(current->kunit_test);
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> +
+>         disable_trace_on_warning();
+>
+>         tagged_addr = (void *)addr;
+> --
+> 2.26.0.110.g2183baf09c-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200414031647.124664-3-davidgow%40google.com.
