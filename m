@@ -2,182 +2,190 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8752C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF18BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BCC2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A2F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSDcWEev"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EtkFVJ4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391648AbgDNTvX (ORCPT
+        id S2391662AbgDNTwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
+        Tue, 14 Apr 2020 15:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505215AbgDNTsw (ORCPT
+        by vger.kernel.org with ESMTP id S2391637AbgDNTvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:48:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1167C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:48:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w65so401444pfc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:48:50 -0700 (PDT)
+        Tue, 14 Apr 2020 15:51:20 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E9EC0610D5;
+        Tue, 14 Apr 2020 12:51:20 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a81so15661315wmf.5;
+        Tue, 14 Apr 2020 12:51:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QzfWbgrVmlKmMQ0dUMWreU+tU586B0O/544TZDFd2wk=;
-        b=uSDcWEevkdPO2BldxquEtYDapREbfjzovtjYGr7QC/qXowPp2x61NxzIVl4fycYCyl
-         2SqsR0v0wa135qZZBc0cuMWuEgviwsD5lxGMaO8Yjx1yrs9JgV6YTlb3kO+HNhPPK0Ge
-         FNAwHsE9RQ2mycfyXtdGGmnQJk+mavcfTr5QWGIxIsWxREFO0mdVpDLuMhT+rrVZtGPa
-         FpzhILEmFp9yNwv1A+Y6DYakiZV4McPBdAG+esElmWFigl8WUwEotmA+5V6HSy2jy57o
-         DscjdSksxaosjaaj2dhL9oEV1twMz4dcISZ+JItsnV/DPjcua32f6PyZ8W8NDB8wQSmo
-         guEQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wmfcMhvG8Z0vEINCyaO7pmox4TkBpgd1lx9zOICoTqE=;
+        b=EtkFVJ4P6kPq5zDhchMj44e/ao7tDFLAS5fHqVSp67Vc69oau+0lapCkGg4FAIEK0Y
+         3FwfBUpis4d+hn4MaQNoyQBYMD1RzN/d7yIslSCMyjynMvOsCK3htGSvk4XqFeC4X/wx
+         Ng74LeujzCDpUAcRKt9CGQw99YaEJdmHfcppaoRR7H8krAU5zuB6vga4msDAkdoKqgO9
+         AvuMS8NRgieEf/lICbyIfw7UrGkFiJvFPJvRPLYgJMxXl2KfNjOYKmHwDvRh79gARiHM
+         ac7Y9lL/7d0CiyZHui9LyXZ5U43j7xh/hXw2H6xTd9SkY/I/KkrKa1zkwgoCosFqrk2U
+         jTMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QzfWbgrVmlKmMQ0dUMWreU+tU586B0O/544TZDFd2wk=;
-        b=jngUfd5nMMfWH+jtVDg0DKB3ekSpTEKG0U4DG1TFbMD3gyu1yx7Vvqg3uCWnfJ/K7p
-         rgF37bDOY/OKGxsYnGSzfWwnPpB1lTjfIEH8ATyb+9n5jfCkK0HA1mN22/gw9y7FIuC0
-         x36ttjMH4x9Gqf/iHdjFFPJqCFDe+xer/iQQyCRfouwdo7ae07PDpG7/cgU/E2EmG73b
-         zEFTDS+ALpiU17kvP+tGvKoDJJ//Q4MQK4gU7ztsqKbtrk4ujIB2mDfUKTBwbFWaLu1i
-         LQcmqs+qxGdt3cUREog+VJpIsUfwMXKiPbBNTSmjozdwFVVvttlqlIx5hdQE++t3KRX7
-         NNvA==
-X-Gm-Message-State: AGi0Puaa/m24om4r8E7etE5j1KJ8NQ5JeiMYtmhi1NBFCgqOCnEkFXHD
-        +woqXAPUU2O+jVl6u/jumHhROQ==
-X-Google-Smtp-Source: APiQypL6lnNwJto83RFzIyUPUtCgs3+X8dI+tR3vBY30qIrtNl7nmd7VPUWU3PcMk1ulLsjgCFwFpg==
-X-Received: by 2002:a62:7c8b:: with SMTP id x133mr23836465pfc.229.1586893730271;
-        Tue, 14 Apr 2020 12:48:50 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a1sm11727542pfl.188.2020.04.14.12.48.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wmfcMhvG8Z0vEINCyaO7pmox4TkBpgd1lx9zOICoTqE=;
+        b=ABWPnGHK0ls3iMNHOa58zUpB3EUm5BQP+b6MCEapykVFd5y01lH+R+ZPi6byA0gxKY
+         R7tWD/c2wRU89hkIMRtvvYlqysalNMZkBu760GcybPniHTGIptlF1pxfRSMKQhcWW5IY
+         IU6RR1myGZMACK3qhuACK8JdmCuMW1e7LtHul/CxsdZzl+NKWvIGzHB8iB8fkgsx4yjG
+         ZEAouu5uk9qGwT1UHrLbsoUjrFv6LRFhVZWb5p8g5/9L8dgoNCc/VKu/JEcciU38rLO8
+         i8zJwPd00/V1Wi/rJyiHA9TCh9XZwb8fEC97VV8ekeJ/cRpbPd7H0TmjskIGi2oWoczO
+         sm1g==
+X-Gm-Message-State: AGi0PuYcRfvllVPbJj/r1NwOThrgcXUTRA/ot+LqD5T1+TITKUnSgEZx
+        uQQi3qKSexCRR4islLxe7rmaSX6nLJM=
+X-Google-Smtp-Source: APiQypIRkBwsxASMLC6HHXJ5UwuAZ6o8hDlK7RWcSFluHkg0o2JANop6K6rTzyBdwrXR4xh1aml9rQ==
+X-Received: by 2002:a1c:e1c1:: with SMTP id y184mr1450299wmg.143.1586893878852;
+        Tue, 14 Apr 2020 12:51:18 -0700 (PDT)
+Received: from localhost.localdomain (p200300F13717DF00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3717:df00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id s14sm20886844wme.33.2020.04.14.12.51.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:48:49 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 12:48:47 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Alex Elder <elder@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Suman Anna <s-anna@ti.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] remoteproc: Split firmware name allocation from
- rproc_alloc()
-Message-ID: <20200414194847.GF892431@yoga>
-References: <20200413193401.27234-1-mathieu.poirier@linaro.org>
- <20200413193401.27234-3-mathieu.poirier@linaro.org>
- <bd8cc8d5-94c1-5767-d089-535731fc1055@linaro.org>
- <20200414005506.GG20625@builder.lan>
- <CANLsYkx69cZotLUrt170XYiYxpkTGKBNC8FUioBD=OSnDYm46Q@mail.gmail.com>
+        Tue, 14 Apr 2020 12:51:18 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     jbrunet@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-clk@vger.kernel.org
+Cc:     narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 2/2] clk: meson: g12a: Prepare the GPU clock tree to change at runtime
+Date:   Tue, 14 Apr 2020 21:50:31 +0200
+Message-Id: <20200414195031.224021-3-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200414195031.224021-1-martin.blumenstingl@googlemail.com>
+References: <20200414195031.224021-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANLsYkx69cZotLUrt170XYiYxpkTGKBNC8FUioBD=OSnDYm46Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 14 Apr 08:43 PDT 2020, Mathieu Poirier wrote:
+The "mali_0" or "mali_1" clock trees should not be updated while the
+clock is running. Enforce this by setting CLK_SET_RATE_GATE on the
+"mali_0" and "mali_1" gates. This makes the CCF switch to the "mali_1"
+tree when "mali_0" is currently active and vice versa, which is exactly
+what the vendor driver does when updating the frequency of the mali
+clock.
+Also propagate set_rate requests from the gate to the divider and from
+the divider to the the mux so the GPU clock frequency can be updated at
+runtime (which will be required for GPU DVFS). Don't propagate rate
+changes to the mux parents because we don't want to change the MPLL
+clocks (these are reserved for audio).
 
-> Hi guys,
-> 
-> On Mon, 13 Apr 2020 at 18:54, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Mon 13 Apr 13:56 PDT 2020, Alex Elder wrote:
-> >
-> > > On 4/13/20 2:33 PM, Mathieu Poirier wrote:
-> > > > Make the firmware name allocation a function on its own in order to
-> > > > introduce more flexibility to function rproc_alloc().
-> > > >
-> > > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > >
-> > > I didn't look at the larger context (MCU series); I'm only looking
-> > > at this (and the others in this series) in isolation.  I like
-> > > that you're encapsulating this stuff into functions but doing so
-> > > doesn't really add any flexibility.
-> > >
-> > > Two small suggestions for you to consider but they're truly
-> > > more about style so it's entirely up to you.  Outside of that
-> > > this looks straightforward to me, and the result of the series
-> > > is an improvement.
-> > >
-> > > I'll let you comment on my suggestions before offering my
-> > > "reviewed-by" indication.
-> > >
-> > >                                       -Alex
-> > >
-> > > > ---
-> > > >  drivers/remoteproc/remoteproc_core.c | 66 ++++++++++++++++------------
-> > > >  1 file changed, 39 insertions(+), 27 deletions(-)
-> > > >
-> > > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> > > > index 80056513ae71..4dee63f319ba 100644
-> > > > --- a/drivers/remoteproc/remoteproc_core.c
-> > > > +++ b/drivers/remoteproc/remoteproc_core.c
-> > > > @@ -1979,6 +1979,33 @@ static const struct device_type rproc_type = {
-> > > >     .release        = rproc_type_release,
-> > > >  };
-> > > >
-> > > > +static int rproc_alloc_firmware(struct rproc *rproc,
-> > > > +                           const char *name, const char *firmware)
-> > > > +{
-> > > > +   char *p, *template = "rproc-%s-fw";
-> > > > +   int name_len;
-> > >
-> > > Not a big deal (and maybe it's not consistent with other nearby
-> > > style) but template and name_len could be defined inside the
-> > > "if (!firmware)" block.
-> > >
-> >
-> > I prefer variables declared in the beginning of the function, so I'm
-> > happy with this.
-> >
-> > > > +   if (!firmware) {
-> > > > +           /*
-> > > > +            * If the caller didn't pass in a firmware name then
-> > > > +            * construct a default name.
-> > > > +            */
-> > > > +           name_len = strlen(name) + strlen(template) - 2 + 1;
-> > > > +           p = kmalloc(name_len, GFP_KERNEL);
-> > >
-> > >
-> > > I don't know if it would be an improvement, but you could
-> > > check for a null p value below for both cases.  I.e.:
-> > >
-> > >               if (p)
-> > >                       snprintf(p, ...);
-> > >
-> >
-> > Moving the common NULL check and return out seems nice, but given that
-> > we then have to have this positive conditional I think the end result is
-> > more complex.
-> >
-> > That said, if we're not just doing a verbatim copy from rproc_alloc() I
-> > think we should make this function:
-> >
-> >         if (!firmware)
-> >                 p = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
-> >         else
-> >                 p = kstrdup_const(firmware, GFP_KERNEL);
-> >
-> >         rproc->firmware = p;
-> >
-> >         return p ? 0 : -ENOMEM;
-> 
-> At this time I was going for a pure re-arrangement of the code and
-> avoiding further improvement.  This is simple enough that it can be
-> rolled-in the next revision.
-> 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/clk/meson/g12a.c | 30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
-The resulting patch would be "factor out AND rewrite", which generally
-is good cause for splitting things in two patches...
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index fad616cac01e..30c15766ebb1 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -3702,7 +3702,9 @@ static struct clk_regmap g12a_hdmi = {
+ 
+ /*
+  * The MALI IP is clocked by two identical clocks (mali_0 and mali_1)
+- * muxed by a glitch-free switch.
++ * muxed by a glitch-free switch. The CCF can manage this glitch-free
++ * mux because it does top-to-bottom updates the each clock tree and
++ * switches to the "inactive" one when CLK_SET_RATE_GATE is set.
+  */
+ static const struct clk_parent_data g12a_mali_0_1_parent_data[] = {
+ 	{ .fw_name = "xtal", },
+@@ -3726,7 +3728,13 @@ static struct clk_regmap g12a_mali_0_sel = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_data = g12a_mali_0_1_parent_data,
+ 		.num_parents = 8,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		/*
++		 * Don't request the parent to change the rate because
++		 * all GPU frequencies can be derived from the fclk_*
++		 * clocks and one special GP0_PLL setting. This is
++		 * important because we need the MPLL clocks for audio.
++		 */
++		.flags = 0,
+ 	},
+ };
+ 
+@@ -3743,7 +3751,7 @@ static struct clk_regmap g12a_mali_0_div = {
+ 			&g12a_mali_0_sel.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3759,7 +3767,7 @@ static struct clk_regmap g12a_mali_0 = {
+ 			&g12a_mali_0_div.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3774,7 +3782,13 @@ static struct clk_regmap g12a_mali_1_sel = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_data = g12a_mali_0_1_parent_data,
+ 		.num_parents = 8,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		/*
++		 * Don't request the parent to change the rate because
++		 * all GPU frequencies can be derived from the fclk_*
++		 * clocks and one special GP0_PLL setting. This is
++		 * important because we need the MPLL clocks for audio.
++		 */
++		.flags = 0,
+ 	},
+ };
+ 
+@@ -3791,7 +3805,7 @@ static struct clk_regmap g12a_mali_1_div = {
+ 			&g12a_mali_1_sel.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3807,7 +3821,7 @@ static struct clk_regmap g12a_mali_1 = {
+ 			&g12a_mali_1_div.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3827,7 +3841,7 @@ static struct clk_regmap g12a_mali = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_hws = g12a_mali_parent_hws,
+ 		.num_parents = 2,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+-- 
+2.26.0
 
-Regards,
-Bjorn
