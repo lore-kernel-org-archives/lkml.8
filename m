@@ -2,185 +2,128 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD56C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B3FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D432072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVJeYBtn"
+	by mail.kernel.org (Postfix) with ESMTP id 1CA5F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437515AbgDNJP4 (ORCPT
+        id S2437523AbgDNJQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:15:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39824 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2437499AbgDNJPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 05:16:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:6671 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437501AbgDNJPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 05:15:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586855749;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=j5c0biPw8qqSpXMigpo9EggnTwc818vqPebM9btjbZk=;
-        b=FVJeYBtn/H3bB33iJh/rnp1OIKQWfz9WBZBuNEmcS81eryBmAsu5+zBKtr4kePRgwXiiiQ
-        D9VA6FI4b/2BIoFWGXRM82Dt0Y4kCEW+9ImpDVQhuA1q4VkBTBmndEUDbyjzxf+UKPVwIA
-        KOGpjBcHkzqx4RnvnetY23yxLuwANLo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-PZNCwjlqM3mAX8E12DBoiA-1; Tue, 14 Apr 2020 05:15:45 -0400
-X-MC-Unique: PZNCwjlqM3mAX8E12DBoiA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC6768024D0;
-        Tue, 14 Apr 2020 09:15:40 +0000 (UTC)
-Received: from [10.36.113.201] (ovpn-113-201.ams2.redhat.com [10.36.113.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 539565D9CD;
-        Tue, 14 Apr 2020 09:15:19 +0000 (UTC)
-Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200311171422.10484-1-david@redhat.com>
- <20200329084128-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <b9984195-bb48-e2a6-887d-0905692a7524@redhat.com>
-Date:   Tue, 14 Apr 2020 11:15:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+IronPort-SDR: vsAFenhHhBG8uNqmm57MCkbFvgULZIV3BdLdLZHCibLXQHxMDlClqqrBlZXzPStZ53R2DBg18X
+ qHlPgU1yQXaw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 02:15:51 -0700
+IronPort-SDR: XaAYwih13kluB8Qgni89e9NJqmeCKNVE2sToDlr5+9vgt6ce6+duySDm202IkG2rAZDr8JHY8B
+ xm/SXmfn0eag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
+   d="scan'208";a="241932506"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 14 Apr 2020 02:15:46 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jOHfY-000UKW-Di; Tue, 14 Apr 2020 12:15:48 +0300
+Date:   Tue, 14 Apr 2020 12:15:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ernesto Corona <ernesto.corona@intel.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org,
+        Oleksandr Shamray <oleksandrs@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Steven Filary <steven.a.filary@intel.com>,
+        Amithash Prasad <amithash@fb.com>,
+        Patrick Williams <patrickw3@fb.com>, Rgrs <rgrs@protonmail.com>
+Subject: Re: [PATCH v29 6/6] drivers: jtag: Add JTAG core driver Maintainers
+Message-ID: <20200414091548.GH34613@smile.fi.intel.com>
+References: <20200413222920.4722-1-ernesto.corona@intel.com>
+ <20200413222920.4722-7-ernesto.corona@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200329084128-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413222920.4722-7-ernesto.corona@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.03.20 14:42, Michael S. Tsirkin wrote:
-> On Wed, Mar 11, 2020 at 06:14:12PM +0100, David Hildenbrand wrote:
->> This series is based on latest linux-next. The patches are located at:
->>     https://github.com/davidhildenbrand/linux.git virtio-mem-v2
->>
->> I now have acks for all !virtio-mem changes. I'll be happy to get revi=
-ew
->> feedback, testing reports, etc. for the virtio-mem changes. If there a=
-re
->> no further comments, I guess this is good to go as a v1 soon.
->=20
-> I'd like to queue it for merge after the release. If you feel it's read=
-y
-> please ping me after the release to help make sure it didn't get
-> dropped.  I see there were some reports about people having trouble
-> using this, pls keep working on this meanwhile.
+On Mon, Apr 13, 2020 at 03:29:20PM -0700, Ernesto Corona wrote:
+> JTAG class driver provide infrastructure to support hardware/software
+> JTAG platform drivers. It provide user layer API interface for flashing
+> and debugging external devices which equipped with JTAG interface
+> using standard transactions.
 
-Hi Michael,
+Don't forget to run
+      scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS --order
 
-I think this is ready to go as a first version. There are a couple of
-future work items related to kexec/kdump:
-- Teach kexec-tools/kexec_file_load() to not place the kexec
-  kernel/initrd onto virtio-mem added memory.
-- Teach kexec-tools/kdump to consider a bigger number of memory
-  resources for dumping.
+> Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
+> Signed-off-by: Ernesto Corona <ernesto.corona@intel.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: Jiri Pirko <jiri@mellanox.com>
+> Cc: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Cc: Steven Filary <steven.a.filary@intel.com>
+> Cc: Amithash Prasad <amithash@fb.com>
+> Cc: Patrick Williams <patrickw3@fb.com>
+> Cc: Rgrs <rgrs@protonmail.com>
+> ---
+>  MAINTAINERS | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64e5db31497..96d20fbb719c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9144,6 +9144,17 @@ L:	linux-serial@vger.kernel.org
+>  S:	Orphan
+>  F:	drivers/tty/serial/jsm/
+>  
+> +JTAG SUBSYSTEM
+> +M:	Oleksandr Shamray <oleksandrs@mellanox.com>
+> +M:	Vadim Pasternak <vadimp@mellanox.com>
+> +M	Ernesto Corona <ernesto.corona@intel.com>
+> +S:	Maintained
+> +F:	include/linux/jtag.h
+> +F:	include/uapi/linux/jtag.h
+> +F:	drivers/jtag/
+> +F:	Documentation/devicetree/bindings/jtag/
+> +F:	Documentation/ABI/testing/jtag-dev
+> +
+>  K10TEMP HARDWARE MONITORING DRIVER
+>  M:	Clemens Ladisch <clemens@ladisch.de>
+>  L:	linux-hwmon@vger.kernel.org
+> -- 
+> 2.17.1
+> 
 
-In general, as virtio-mem adds a lot of memory resources, we might want
-to tweak performance in that area as well. Future stuff.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-So I suggest queuing this. If you need a resend, please let me know.
-
-Cheers!
-
---=20
-Thanks,
-
-David / dhildenb
 
