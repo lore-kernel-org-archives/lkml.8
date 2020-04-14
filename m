@@ -2,94 +2,73 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C95C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CCDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12EFD20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UXtZj/Hx"
+	by mail.kernel.org (Postfix) with ESMTP id C8BF720644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633491AbgDNU5D (ORCPT
+        id S2633501AbgDNU5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:57:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633447AbgDNU42 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:56:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C736AC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:56:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id l1so491432pff.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=NtGBbRMFHuGLYVWwP2S8WNTOMnjyQJo86GhiRsq/RLI=;
-        b=UXtZj/Hxj2RogzSqhPdsIrV+Tb1Mi6cLH48af5r9FlBJkIsru50FCL5CzAaQQeqJ7n
-         rsIoZhTl1LDgqnD5qEIf3p202tMUHA7FkZPQ5/P1FGdHN3SH3xTUhgGA5Dk5VXQ7LnQs
-         3UcGLqg1dTAzptGp9XrHAIY2rkU1JMmoyOJsw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=NtGBbRMFHuGLYVWwP2S8WNTOMnjyQJo86GhiRsq/RLI=;
-        b=jTV8lR45ts2gq1lQLEwjwOv0+CECIQz/qN/ObU7cNs6dvPFSIYNkHR2bNSgXFiyFs2
-         j2kVD540EAURwRNv3b3K0PF/CtIbITne83WJmZTcem5NCsffd0yOaL4Rvp8tv2XcOA+N
-         KYUUKQ5O2NAbFEIDimzuDaBFVzYQqHwM5WjWNMzWzLlyO9XgDhBPwDD9iZ+G1v3K/r1P
-         9aMsP5LoSDPijGBbUegOxuz4PGRe0wYkPs7qruMo36Un/Uqsmq20WBNChUzP/LJcY/UQ
-         HSCrgRuSPPKGPRoCslBF0dEfWaZVgYr4e9s+Hzz1+zdmPNPfXfAZrk97npgqore8W8Ya
-         lRGw==
-X-Gm-Message-State: AGi0PubJNOK22LIVZjfW/oKeiR3S0dulVc38R4OOZ8C8E63r9o4KaLpn
-        nQGPAJaVxmamEK02e553KXm7lA==
-X-Google-Smtp-Source: APiQypK6gPQlntq3g5CB8LbqghejJJbCs9iCRhnLW7s+orakW8jOYEegO8lYlVr+WaR9N/K8T1o/Xw==
-X-Received: by 2002:aa7:8505:: with SMTP id v5mr1947475pfn.224.1586897787330;
-        Tue, 14 Apr 2020 13:56:27 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b21sm6889644pfb.130.2020.04.14.13.56.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:56:26 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Apr 2020 16:57:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:34490 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633476AbgDNU4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:56:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 694451FB;
+        Tue, 14 Apr 2020 13:56:47 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EFF53F73D;
+        Tue, 14 Apr 2020 13:56:45 -0700 (PDT)
+References: <20200414150556.10920-1-qais.yousef@arm.com> <jhjh7xlvqqe.mognet@arm.com> <20200414162742.0ef4d9ee@gandalf.local.home>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Paul Turner <pjt@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Josh Don <joshdon@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] sched/rt: Distribute tasks in find_lowest_rq()
+In-reply-to: <20200414162742.0ef4d9ee@gandalf.local.home>
+Date:   Tue, 14 Apr 2020 21:56:43 +0100
+Message-ID: <jhjftd5vl9w.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585809534-11244-4-git-send-email-sanm@codeaurora.org>
-References: <1585809534-11244-1-git-send-email-sanm@codeaurora.org> <1585809534-11244-4-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v5 3/3] phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Tue, 14 Apr 2020 13:56:25 -0700
-Message-ID: <158689778567.105027.9816194008999279570@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-04-01 23:38:54)
-> Adding QMP v3 USB3 PHY support for SC7180.
-> Adding only usb phy reset in the list to avoid
-> reset of DP block.
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On 14/04/20 21:27, Steven Rostedt wrote:
+> On Tue, 14 Apr 2020 19:58:49 +0100
+> Valentin Schneider <valentin.schneider@arm.com> wrote:
+>
+>> To move this forward, I would suggest renaming the current cpumask_any_*()
+>> into cpumask_first_*(), and THEN introduce the new pseudo-random
+>> ones. People are then free to hand-fix specific locations if it makes sense
+>> there, like you're doing for RT.
+>
+> Or leave "cpumask_any()" as is, and create a new "cpumask_random()" for
+> this purpose.
+>
+
+Sure; I'll be happy as long as there isn't a blanket replacement of
+existing callsites.
+
+> -- Steve
