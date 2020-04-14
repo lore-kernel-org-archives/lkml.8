@@ -2,518 +2,416 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C95C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC461C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7376B206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82A2206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:44:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ax7eBhzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405557AbgDNFnQ (ORCPT
+        id S2405567AbgDNFoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:43:16 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:58591 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgDNFnP (ORCPT
+        Tue, 14 Apr 2020 01:44:03 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:44768 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729064AbgDNFoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:43:15 -0400
-Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A922E200004;
-        Tue, 14 Apr 2020 05:43:10 +0000 (UTC)
-Subject: Re: [PATCH RFC 4/8] riscv/kaslr: randomize the kernel image offset
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-References: <cover.1584352425.git.zong.li@sifive.com>
- <16924c3f07b142688a3c0562d229cd67dc7bf8e6.1584352425.git.zong.li@sifive.com>
- <71cc2070-e867-17e1-cc64-66b634e3f48e@ghiti.fr>
- <CANXhq0rQ_YqmBBDEgOCcu8vr+5NWqNdnfZ+EX8ofaaD6PuBAFQ@mail.gmail.com>
- <69a9ecc5-550e-24a0-6f91-d65af3e00f18@ghiti.fr>
- <CANXhq0q62t3nZgqbYJzW9p1ntaNAFFX5LQFB65fkO5KCCv-RHA@mail.gmail.com>
- <c68dacf1-eca1-9d28-3c04-dd6793fe3274@ghiti.fr>
- <CANXhq0q6xNLzUAetQ6hHR5y_h5iZarcxyvSo3YAbprO=5LZomA@mail.gmail.com>
- <6dd04bc5-b0e8-6dbc-d4c5-9d19db5081dd@ghiti.fr>
- <CANXhq0pcmUigMEFXpEBv_NanLJ-0+tOL9QM-p7LB+mBAFLvKDA@mail.gmail.com>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <eaac42fa-aebf-f59b-f929-54f07bfba544@ghiti.fr>
-Date:   Tue, 14 Apr 2020 01:43:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <CANXhq0pcmUigMEFXpEBv_NanLJ-0+tOL9QM-p7LB+mBAFLvKDA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 14 Apr 2020 01:44:01 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E5er5H001212;
+        Tue, 14 Apr 2020 01:43:44 -0400
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2106.outbound.protection.outlook.com [104.47.70.106])
+        by mx0b-00128a01.pphosted.com with ESMTP id 30bah6qjxd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 01:43:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PRyFRKL7ZWvUEjip+txWgEjyAKefy9plJ4rEQKEvFlHzdFbCoR1KyMvYLkLUeow1RE5oDSrT40//PX/yrqwOj9qjy4UN7pRE1PLlcbsM267ISIw8hwkssZH0H5YvssQBUNNivNqv79RY3+QVAiIjF/SQZ3XJd1lxpAdOzyC2qm0dbeVxI5aRxt1ZE1ikL2a3lmYDxTL+QIPtq8wEaZZDBmOMw7FUce9Y/s0guCiSJ364hvkrbkP+uXyJOTgPsZWQehdX2ovKqyYWFJBoT+ntudduuna/tPA8No6D3Q07da7jmOXLlsZp+bVXz2BAd3gQ2TBGnzb/we+y+3CtqtOJXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tPAOW9PFxQRuoioogzW18zU13z07hEcWKrQOfKv5w7E=;
+ b=oMN7Q0VHAH5aoHQ+DfvsXWfAelk35k+OnwXyvBVC7won+6vPfTUWvGDbwrB1whpv/wZqbjb1+POrES37e4v9ycIW0RnOKDPTwhkDrwyMLt3Z2b4jJBh1bt3hU6eN0115NFa7CXwPlrxZA2BQHS5QKQOKI7QOT6SjA/olEkCdC+M6/cJ2p1zAsDU2fMx4qQshwH1lDIJSNvo9hxeQeliR7DV9KVtEjLqtiXubndAXsw5UTy3oSpaJ5M+WhpGT65xGkLQO2n5s4b9DSqxDM7bJ3QPjCu6ykIdANH0p4SrZLl8SuzXTy0XEE0340eDvOsTuemJg9DbzeYXEC/2lwx5KRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tPAOW9PFxQRuoioogzW18zU13z07hEcWKrQOfKv5w7E=;
+ b=ax7eBhzuHVd84/MDyichyhewRop3CWD1l4YEhUed9nla2JSYCJ2dNVE62RDESUESSabOBD+vpfdl3f9TsL+zjVpz9xIGfvrXK67RrY8g6P8Hy8s41nJaeFOQRasZaQJqClmvLeoa5+SQp2CGv5iom/GNufbqXQHztFL+e+gVyiY=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4331.namprd03.prod.outlook.com (2603:10b6:5:10c::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.19; Tue, 14 Apr
+ 2020 05:43:41 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2900.026; Tue, 14 Apr 2020
+ 05:43:41 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v3 3/5] iio: buffer: move iio buffer chrdev in
+ industrialio-buffer.c
+Thread-Topic: [PATCH v3 3/5] iio: buffer: move iio buffer chrdev in
+ industrialio-buffer.c
+Thread-Index: AQHWD0KucG2IM5L4lE6eIQwahEyBB6h3OioAgADmnIA=
+Date:   Tue, 14 Apr 2020 05:43:40 +0000
+Message-ID: <f13a7de6698281d510e636a08e907c5f2fbdedb8.camel@analog.com>
+References: <20200410141729.82834-1-alexandru.ardelean@analog.com>
+         <20200410141729.82834-4-alexandru.ardelean@analog.com>
+         <20200413165816.6d372e37@archlinux>
+In-Reply-To: <20200413165816.6d372e37@archlinux>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.27.135.58]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d54880ea-9d1e-474a-d1a0-08d7e036c996
+x-ms-traffictypediagnostic: DM6PR03MB4331:
+x-microsoft-antispam-prvs: <DM6PR03MB43311927F9E5D1405A53EDCBF9DA0@DM6PR03MB4331.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(39860400002)(136003)(396003)(366004)(346002)(36756003)(66476007)(66446008)(2616005)(4326008)(54906003)(8936002)(8676002)(5660300002)(66946007)(81156014)(186003)(66556008)(64756008)(86362001)(316002)(26005)(478600001)(30864003)(6512007)(6486002)(2906002)(71200400001)(6916009)(76116006)(6506007)(91956017);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5+l6SzXxnrCAkcNULrIE50PHKHQFGuLqeiVmJVP/sXMJii4mgbyG91gDXecUnPn1LXqPUBEZJL/Jn5YchbbQne1N1Bw+y+DUyypwzEMvmH7XNW8bqp48mGrGhD2lK1RTinOYPyBx8VdR1NCCRcsQp1k5MxgDPWcgrEcTjgpedPQgZgmfVhu2Sb7vXtj527fl79BelmKzZBHbpHku/UfItr5Ly5c/d7cn4AXl9138fN1C6DzAHNgxChceVpcKevosSwJdD9TPxS/p1arVBtXd9XmChQCfyamqYzRyc2WEtHwgDgCrw7OywJ+LH03l5+5DtSN+gNPe6A/hlr82L3WQ8PsUvQybO17tHaxG4B8jErLzou/HvVkWc+vzWyxeGqCaw4xlVLPRYJpCJWEWYCwFkdhqB87qlzsE0/2ilIdt2lBYWTmlGXHXm7X3szN7qCDh
+x-ms-exchange-antispam-messagedata: sS1nywbKiBsNBSXQblXsKWab3ANT+mctgfA9gD8AY4jCnGp/wYRGe4jlMgMcvf3jHpk9ksjxkCYWIQv+w6v1WS7xd8FlRzWLKKDpNMJBZXRgVRgMP+JLCSuRWVtm69+Hpdoq6FwXggZ1l5mHHhs7ag==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <321A6BA1CB01E64D91C67E76067F0157@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d54880ea-9d1e-474a-d1a0-08d7e036c996
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 05:43:40.9355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fso3cWQL40KG7+illXDhCfQ7IPQNX6VGa2hEjqNYe62lhPt+jZnABeB+oG+4aCoWEdBSoZE49i9rgi5zHbLVS7gjjjaUkMRI6UVzqOPrmDE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4331
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_01:2020-04-13,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
+ suspectscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/13/20 10:46 PM, Zong Li wrote:
-> On Sun, Apr 12, 2020 at 2:53 PM Alex Ghiti <alex@ghiti.fr> wrote:
->>
->>
->>
->> On 4/11/20 4:20 AM, Zong Li wrote:
->>> On Fri, Apr 10, 2020 at 11:58 PM Alex Ghiti <alex@ghiti.fr> wrote:
->>>>
->>>> Hi Zong,
->>>>
->>>> On 4/9/20 6:31 AM, Zong Li wrote:
->>>>> On Thu, Apr 9, 2020 at 1:51 PM Alex Ghiti <alex@ghiti.fr> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 4/7/20 6:53 AM, Zong Li wrote:
->>>>>>> On Tue, Apr 7, 2020 at 1:11 PM Alex Ghiti <alex@ghiti.fr> wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 3/24/20 3:30 AM, Zong Li wrote:
->>>>>>>>> Entropy is derived from the banner and timer, it is better than nothing
->>>>>>>>> but not enough secure, so previous stage may pass entropy via the device
->>>>>>>>> tree /chosen/kaslr-seed node.
->>>>>>>>>
->>>>>>>>> We limit randomization range within 1GB, so we can exploit early page
->>>>>>>>> table to map new destination of kernel image. Additionally, the kernel
->>>>>>>>> offset need 2M alignment to ensure it's good in PMD page table.
->>>>>>>>>
->>>>>>>>> We also checks the kernel offset whether it's safe by avoiding to
->>>>>>>>> overlaps with dtb, initrd and reserved memory regions.
->>>>>>>>>
->>>>>>>>
->>>>>>>> That maybe changes the way my sv48 patchset will be implemented: I can't
->>>>>>>> get user preference (3-level or 4-level) by any means, device-tree or
->>>>>>>> kernel parameter.
->>>>>>>>
->>>>>>>> But I don't see how you could get a random offset without info from the
->>>>>>>> device tree anyway (reserved memory regions especially), so maybe I
->>>>>>>> could parse dtb for allowing the user to choose. I'll move this
->>>>>>>> discussion to the sv48 introduction.
->>>>>>>
->>>>>>> Maybe I'm a little bit misunderstanding here, but I think I got the
->>>>>>> random offset through some information by parsing dtb.
->>>>>>>
->>>>>>
->>>>>> I was just saying that I may use the dtb too in sv48 patchset to make it
->>>>>> possible for users to choose sv39 even if sv48 is supported by hardware
->>>>>> (which is not the case in my current patchset).
->>>>>>
->>>>>>>>
->>>>>>>>> Signed-off-by: Zong Li <zong.li@sifive.com>
->>>>>>>>> ---
->>>>>>>>>       arch/riscv/kernel/kaslr.c | 274 +++++++++++++++++++++++++++++++++++++-
->>>>>>>>>       arch/riscv/mm/init.c      |   2 +-
->>>>>>>>>       2 files changed, 273 insertions(+), 3 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/riscv/kernel/kaslr.c b/arch/riscv/kernel/kaslr.c
->>>>>>>>> index 281b5fcca5c8..9ec2b608eb7f 100644
->>>>>>>>> --- a/arch/riscv/kernel/kaslr.c
->>>>>>>>> +++ b/arch/riscv/kernel/kaslr.c
->>>>>>>>> @@ -11,23 +11,293 @@
->>>>>>>>>       #include <asm/cacheflush.h>
->>>>>>>>>
->>>>>>>>>       extern char _start[], _end[];
->>>>>>>>> +extern void *dtb_early_va;
->>>>>>>>> +extern phys_addr_t dtb_early_pa;
->>>>>>>>>       extern void secondary_random_target(void);
->>>>>>>>>       extern void kaslr_create_page_table(uintptr_t start, uintptr_t end);
->>>>>>>>>
->>>>>>>>>       uintptr_t secondary_next_target __initdata;
->>>>>>>>>       static uintptr_t kaslr_offset __initdata;
->>>>>>>>>
->>>>>>>>> +static const __init u32 *get_reg_address(int root_cells,
->>>>>>>>> +                                      const u32 *value, u64 *result)
->>>>>>>>> +{
->>>>>>>>> +     int cell;
->>>>>>>>> +     *result = 0;
->>>>>>>>> +
->>>>>>>>> +     for (cell = root_cells; cell > 0; --cell)
->>>>>>>>> +             *result = (*result << 32) + fdt32_to_cpu(*value++);
->>>>>>>>> +
->>>>>>>>> +     return value;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static __init int get_node_addr_size_cells(const char *path, int *addr_cell,
->>>>>>>>> +                                        int *size_cell)
->>>>>>>>> +{
->>>>>>>>> +     int node = fdt_path_offset(dtb_early_va, path);
->>>>>>>>> +     fdt64_t *prop;
->>>>>>>>> +
->>>>>>>>> +     if (node < 0)
->>>>>>>>> +             return -EINVAL;
->>>>>>>>> +
->>>>>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "#address-cells", NULL);
->>>>>>>>> +     if (!prop)
->>>>>>>>> +             return -EINVAL;
->>>>>>>>> +     *addr_cell = fdt32_to_cpu(*prop);
->>>>>>>>> +
->>>>>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "#size-cells", NULL);
->>>>>>>>> +     if (!prop)
->>>>>>>>> +             return -EINVAL;
->>>>>>>>> +     *size_cell = fdt32_to_cpu(*prop);
->>>>>>>>> +
->>>>>>>>> +     return node;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static __init void kaslr_get_mem_info(uintptr_t *mem_start,
->>>>>>>>> +                                   uintptr_t *mem_size)
->>>>>>>>> +{
->>>>>>>>> +     int node, root, addr_cells, size_cells;
->>>>>>>>> +     u64 base, size;
->>>>>>>>> +
->>>>>>>>> +     /* Get root node's address cells and size cells. */
->>>>>>>>> +     root = get_node_addr_size_cells("/", &addr_cells, &size_cells);
->>>>>>>>> +     if (root < 0)
->>>>>>>>> +             return;
->>>>>>>>> +
->>>>>>>>> +     /* Get memory base address and size. */
->>>>>>>>> +     fdt_for_each_subnode(node, dtb_early_va, root) {
->>>>>>>>> +             const char *dev_type;
->>>>>>>>> +             const u32 *reg;
->>>>>>>>> +
->>>>>>>>> +             dev_type = fdt_getprop(dtb_early_va, node, "device_type", NULL);
->>>>>>>>> +             if (!dev_type)
->>>>>>>>> +                     continue;
->>>>>>>>> +
->>>>>>>>> +             if (!strcmp(dev_type, "memory")) {
->>>>>>>>> +                     reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
->>>>>>>>> +                     if (!reg)
->>>>>>>>> +                             return;
->>>>>>>>> +
->>>>>>>>> +                     reg = get_reg_address(addr_cells, reg, &base);
->>>>>>>>> +                     reg = get_reg_address(size_cells, reg, &size);
->>>>>>>>> +
->>>>>>>>> +                     *mem_start = base;
->>>>>>>>> +                     *mem_size = size;
->>>>>>>>> +
->>>>>>>>> +                     break;
->>>>>>>>> +             }
->>>>>>>>> +     }
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +/* Return a default seed if there is no HW generator. */
->>>>>>>>> +static u64 kaslr_default_seed = ULL(-1);
->>>>>>>>> +static __init u64 kaslr_get_seed(void)
->>>>>>>>> +{
->>>>>>>>> +     int node, len;
->>>>>>>>> +     fdt64_t *prop;
->>>>>>>>> +     u64 ret;
->>>>>>>>> +
->>>>>>>>> +     node = fdt_path_offset(dtb_early_va, "/chosen");
->>>>>>>>> +     if (node < 0)
->>>>>>>>> +             return kaslr_default_seed++;
->>>>>>>>> +
->>>>>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "kaslr-seed", &len);
->>>>>>>>> +     if (!prop || len != sizeof(u64))
->>>>>>>>> +             return kaslr_default_seed++;
->>>>>>>>> +
->>>>>>>>> +     ret = fdt64_to_cpu(*prop);
->>>>>>>>> +
->>>>>>>>> +     /* Re-write to zero for checking whether get seed at second time */
->>>>>>>>> +     *prop = 0;
->>>>>>>>> +
->>>>>>>>> +     return ret;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static __init bool is_overlap(uintptr_t s1, uintptr_t e1, uintptr_t s2,
->>>>>>>>> +                           uintptr_t e2)
->>>>>>>>> +{
->>>>>>>>> +     return e1 >= s2 && e2 >= s1;
->>>>>>>>> +}
->>>>>>>>
->>>>>>>> Inline this function or use a macro maybe.
->>>>>>>
->>>>>>> Yes, sure. Thanks.
->>>>>>>
->>>>>>>>
->>>>>>>>> +
->>>>>>>>> +static __init bool is_overlap_reserved_mem(uintptr_t start_addr,
->>>>>>>>> +                                        uintptr_t end_addr)
->>>>>>>>> +{
->>>>>>>>> +     int node, rsv_mem, addr_cells, size_cells;
->>>>>>>>> +
->>>>>>>>> +     /* Get the reserved-memory node. */
->>>>>>>>> +     rsv_mem = get_node_addr_size_cells("/reserved-memory",
->>>>>>>>> +                                        &addr_cells,
->>>>>>>>> +                                        &size_cells);
->>>>>>>>> +     if (rsv_mem < 0)
->>>>>>>>> +             return false;
->>>>>>>>> +
->>>>>>>>> +     /* Get memory base address and size. */
->>>>>>>>> +     fdt_for_each_subnode(node, dtb_early_va, rsv_mem) {
->>>>>>>>> +             uint64_t base, size;
->>>>>>>>> +             const uint32_t *reg;
->>>>>>>>> +
->>>>>>>>> +             reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
->>>>>>>>> +             if (!reg)
->>>>>>>>> +                     return 0;
->>>>>>>>> +
->>>>>>>>> +             reg = get_reg_address(addr_cells, reg, &base);
->>>>>>>>> +             reg = get_reg_address(size_cells, reg, &size);
->>>>>>>>> +
->>>>>>>>> +             if (is_overlap(start_addr, end_addr, base, base + size))
->>>>>>>>> +                     return true;
->>>>>>>>> +     }
->>>>>>>>> +
->>>>>>>>> +     return false;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static __init bool is_overlap_initrd(uintptr_t start_addr, uintptr_t end_addr)
->>>>>>>>> +{
->>>>>>>>> +     int node;
->>>>>>>>> +     uintptr_t initrd_start, initrd_end;
->>>>>>>>> +     fdt64_t *prop;
->>>>>>>>> +
->>>>>>>>> +     node = fdt_path_offset(dtb_early_va, "/chosen");
->>>>>>>>> +     if (node < 0)
->>>>>>>>> +             return false;
->>>>>>>>> +
->>>>>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-start", NULL);
->>>>>>>>> +     if (!prop)
->>>>>>>>> +             return false;
->>>>>>>>> +
->>>>>>>>> +     initrd_start = fdt64_to_cpu(*prop);
->>>>>>>>> +
->>>>>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-end", NULL);
->>>>>>>>> +     if (!prop)
->>>>>>>>> +             return false;
->>>>>>>>> +
->>>>>>>>> +     initrd_end = fdt64_to_cpu(*prop);
->>>>>>>>> +
->>>>>>>>> +     return is_overlap(start_addr, end_addr, initrd_start, initrd_end);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static __init bool is_overlap_dtb(uintptr_t start_addr, uintptr_t end_addr)
->>>>>>>>> +{
->>>>>>>>> +     uintptr_t dtb_start = dtb_early_pa;
->>>>>>>>> +     uintptr_t dtb_end = dtb_start + fdt_totalsize(dtb_early_va);
->>>>>>>>> +
->>>>>>>>> +     return is_overlap(start_addr, end_addr, dtb_start, dtb_end);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static __init bool has_regions_overlapping(uintptr_t start_addr,
->>>>>>>>> +                                        uintptr_t end_addr)
->>>>>>>>> +{
->>>>>>>>> +     if (is_overlap_dtb(start_addr, end_addr))
->>>>>>>>> +             return true;
->>>>>>>>> +
->>>>>>>>> +     if (is_overlap_initrd(start_addr, end_addr))
->>>>>>>>> +             return true;
->>>>>>>>> +
->>>>>>>>> +     if (is_overlap_reserved_mem(start_addr, end_addr))
->>>>>>>>> +             return true;
->>>>>>>>> +
->>>>>>>>> +     return false;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static inline __init unsigned long get_legal_offset(int random_index,
->>>>>>>>> +                                                 int max_index,
->>>>>>>>> +                                                 uintptr_t mem_start,
->>>>>>>>> +                                                 uintptr_t kernel_size)
->>>>>>>>> +{
->>>>>>>>> +     uintptr_t start_addr, end_addr;
->>>>>>>>> +     int idx, stop_idx;
->>>>>>>>> +
->>>>>>>>> +     idx = stop_idx = random_index;
->>>>>>>>> +
->>>>>>>>> +     do {
->>>>>>>>> +             start_addr = mem_start + idx * SZ_2M + kernel_size;
->>>>>>>>> +             end_addr = start_addr + kernel_size;
->>>>>>>>> +
->>>>>>>>> +             /* Check overlap to other regions. */
->>>>>>>>> +             if (!has_regions_overlapping(start_addr, end_addr))
->>>>>>>>> +                     return idx * SZ_2M + kernel_size;
->>>>>>>>> +
->>>>>>>>> +             if (idx-- < 0)
->>>>>>>>> +                     idx = max_index;
->>>>>>>>
->>>>>>>> Isn't the fallback to max_index a security breach ? Because at some
->>>>>>>> point, the kernel will be loaded at this specific address.
->>>>>>>
->>>>>>> The max_index is the maximum safe index for destination of new kernel
->>>>>>> image. Could you give more explain here?
->>>>>>>
->>>>>>
->>>>>> But max_index is not random at all. I really don't know if that's a
->>>>>> problem, I just found intriguing the fact the kernel could be loaded at
->>>>>> some specific location. Would it be more secure, instead of picking
->>>>>> max_index as fallback when reaching 0, to pick another random number
->>>>>> between random_index and max_index ?
->>>>>
->>>>> ok, I can get your point. The original idea here is that we get a
->>>>> random index first, then we decrease the index to retry to find a good
->>>>> place if there are overlapping with other regions. A bit like the ring
->>>>> buffer, the end of index traversing is not zero, but the random_index
->>>>> - 1, we might consider it as continuity, so we don't know where is the
->>>>> end point because the start point is random, whether we stop at zero
->>>>> or random_index - 1.
->>>>>
->>>>> Pick another random number is more secure when occurring overlapping,
->>>>> but I a little bit worry that it would take very long time to retry
->>>>> many times in the worst case. for example, there is just only one
->>>>> index could fit kernel image in (except for original location). In the
->>>>> meantime, we don't need to wait the index being decreased to zero,
->>>>> because it seems to me that they are the same to stop at zero or
->>>>> random_index - 1, so if we decide to re-calculate a new random number,
->>>>> maybe we could remove the index decreasing here.
->>>>
->>>> But you're right that it could take some time before converging to a
->>>> "good" index. Maybe we could restrict the index range to indexes that we
->>>> know for sure will be good ?
->>>>
->>>
->>> Yes, it would be good for ensuring that we only need to get the random
->>> number just once, but there are some points need to be discussed. The
->>> first one is that we couldn't dynamically allocate a memory space at
->>> that moment, because the memblock is not ready, so we might need to
->>> declare a enough big array at static time to collect all good indexes.
->>> Maybe CONFIG_MAXPHYSMEM_2GB and CONFIG_MAXPHYSMEM_128GB could be used
->>> to decide the number of elements of this array. The second one is that
->>> we always need to take the time to traverse the whole memory and check
->>> the overlapping for all indexes no matter what the cases are. I'm not
->>> sure whether it is good because this way increases the time and space
->>> cost, but it would be more secure. Do you have any idea?
->>>
->>
->> What about simply finding the biggest range of contiguous non-reserved
->> memory and getting an index from there ?
-> 
-> This needs something like mentioned above, we need a big enough array
-> to collect these index of the biggest range, and check all indexes > whether they are safe, and it would limit and reduce the random range
-> of we could use.
-
-You just have to get the min and max indexes of the biggest range, no 
-need to store all indexes. And the vast majority of the usable memory 
-will be in this biggest range, so it won't reduce the random range.
-
-> On original way, the value of max_index won't be the
-> end of traversing index, it would continue to decrease the index to
-> find a good place until the index becoming random_offset again, so
-> kernel doesn't be loaded to the specific location which max_index
-> specify to, it seems to me that there isn't the worry of you
-> mentioned >
->>
->>>
->>>> Alex
->>>>
->>>>>
->>>>>>
->>>>>> Alex
->>>>>>
->>>>>>>>
->>>>>>>>> +
->>>>>>>>> +     } while (idx != stop_idx);
->>>>>>>>> +
->>>>>>>>> +     return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static inline __init u64 rotate_xor(u64 hash, const void *area, size_t size)
->>>>>>>>> +{
->>>>>>>>> +     size_t i;
->>>>>>>>> +     uintptr_t *ptr = (uintptr_t *) area;
->>>>>>>>> +
->>>>>>>>> +     for (i = 0; i < size / sizeof(hash); i++) {
->>>>>>>>> +             /* Rotate by odd number of bits and XOR. */
->>>>>>>>> +             hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
->>>>>>>>> +             hash ^= ptr[i];
->>>>>>>>> +     }
->>>>>>>>> +
->>>>>>>>> +     return hash;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +#define MEM_RESERVE_START    __pa(PAGE_OFFSET)
->>>>>>>>> +static __init uintptr_t get_random_offset(u64 seed, uintptr_t kernel_size)
->>>>>>>>> +{
->>>>>>>>> +     uintptr_t mem_start = 0, mem_size= 0, random_size;
->>>>>>>>> +     uintptr_t kernel_size_align = round_up(kernel_size, SZ_2M);
->>>>>>>>> +     int index;
->>>>>>>>> +     u64 random = 0;
->>>>>>>>> +     cycles_t time_base;
->>>>>>>>> +
->>>>>>>>> +     /* Attempt to create a simple but unpredictable starting entropy */
->>>>>>>>> +     random = rotate_xor(random, linux_banner, strlen(linux_banner));
->>>>>>>>> +
->>>>>>>>> +     /*
->>>>>>>>> +      * If there is no HW random number generator, use timer to get a random
->>>>>>>>> +      * number. This is better than nothing but not enough secure.
->>>>>>>>> +      */
->>>>>>>>> +     time_base = get_cycles() << 32;
->>>>>>>>> +     time_base ^= get_cycles();
->>>>>>>>> +     random = rotate_xor(random, &time_base, sizeof(time_base));
->>>>>>>>> +
->>>>>>>>> +     if (seed)
->>>>>>>>> +             random = rotate_xor(random, &seed, sizeof(seed));
->>>>>>>>> +
->>>>>>>>> +     kaslr_get_mem_info(&mem_start, &mem_size);
->>>>>>>>> +     if (!mem_size)
->>>>>>>>> +             return 0;
->>>>>>>>> +
->>>>>>>>> +     if (mem_start < MEM_RESERVE_START) {
->>>>>>>>> +             mem_size -= MEM_RESERVE_START - mem_start;
->>>>>>>>> +             mem_start = MEM_RESERVE_START;
->>>>>>>>> +     }
->>>>>>>>> +
->>>>>>>>> +     /*
->>>>>>>>> +      * Limit randomization range within 1G, so we can exploit
->>>>>>>>> +      * early_pmd/early_pte during early page table phase.
->>>>>>>>> +      */
->>>>>>>>> +     random_size = min_t(u64,
->>>>>>>>> +                         mem_size - (kernel_size_align * 2),
->>>>>>>>> +                         SZ_1G - (kernel_size_align * 2));
->>>>>>>>
->>>>>>>> pgdir size is 30 bits in sv39, but it's 39 bits in sv48, you should use
->>>>>>>> PGDIR_SIZE macro here.
->>>>>>>
->>>>>>> OK, change it in the next version. Thanks.
->>>>>>>
->>>>>>>>
->>>>>>>>> +
->>>>>>>>> +     /* The index of 2M block in whole avaliable region */
->>>>>>>>> +     index = random % (random_size / SZ_2M);
->>>>>>>>> +
->>>>>>>>> +     return get_legal_offset(index, random_size / SZ_2M,
->>>>>>>>> +                             mem_start, kernel_size_align);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>>       uintptr_t __init kaslr_early_init(void)
->>>>>>>>>       {
->>>>>>>>> +     u64 seed;
->>>>>>>>>           uintptr_t dest_start, dest_end;
->>>>>>>>>           uintptr_t kernel_size = (uintptr_t) _end - (uintptr_t) _start;
->>>>>>>>>
->>>>>>>>>           /* Get zero value at second time to avoid doing randomization again. */
->>>>>>>>> -     if (kaslr_offset)
->>>>>>>>> +     seed = kaslr_get_seed();
->>>>>>>>> +     if (!seed)
->>>>>>>>>                   return 0;
->>>>>>>>>
->>>>>>>>>           /* Get the random number for kaslr offset. */
->>>>>>>>> -     kaslr_offset = 0x10000000;
->>>>>>>>> +     kaslr_offset = get_random_offset(seed, kernel_size);
->>>>>>>>>
->>>>>>>>>           /* Update kernel_virt_addr for get_kaslr_offset. */
->>>>>>>>>           kernel_virt_addr += kaslr_offset;
->>>>>>>>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->>>>>>>>> index 2f5b25f02b6c..34c6ecf2c599 100644
->>>>>>>>> --- a/arch/riscv/mm/init.c
->>>>>>>>> +++ b/arch/riscv/mm/init.c
->>>>>>>>> @@ -125,7 +125,7 @@ static void __init setup_initrd(void)
->>>>>>>>>       }
->>>>>>>>>       #endif /* CONFIG_BLK_DEV_INITRD */
->>>>>>>>>
->>>>>>>>> -static phys_addr_t dtb_early_pa __initdata;
->>>>>>>>> +phys_addr_t dtb_early_pa __initdata;
->>>>>>>>>
->>>>>>>>>       void __init setup_bootmem(void)
->>>>>>>>>       {
->>>>>>>>>
->>>>>>>>
->>>>>>>> Alex
+T24gTW9uLCAyMDIwLTA0LTEzIGF0IDE2OjU4ICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBGcmksIDEwIEFwciAyMDIwIDE3OjE3OjI3ICswMzAw
+DQo+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdy
+b3RlOg0KPiANCj4gPiBUaGlzIGNoYW5nZSBtYWtlcyB0aGUgZmlyc3QganVtcCB0byBtb3ZlIHRo
+ZSBidWZmZXIgY2hhcmRldiBmcm9tIGluZGlvX2Rldg0KPiA+IHRvIHRoZSBidWZmZXIgYXR0YWNo
+ZWQgdG8gaW5kaW9fZGV2IChpLmUuIGluZGlvX2Rldi0+YnVmZmVyKS4NCj4gPiANCj4gPiBUaGlz
+IHJlcXVpcmVzIHRoYXQgc29tZSBmdW5jdGlvbnMgdGhhdCBhcmUgc2hhcmVkIGJldHdlZW4NCj4g
+PiAnaW5kdXN0cmlhbGlvLWNvcmUuYycgJiBpbmR1c3RyaWFsaW8tYnVmZmVyLmMgYmUgcmUtc2h1
+ZmZsZWQuDQo+ID4gVGhlICdpaW9fYnVmZmVyX2ZpbGVvcHMnIGlzIG5vdyBtb3ZlZCB0byAnaW5k
+dXN0cmlhbGlvLWJ1ZmZlci5jJy4gSXQncyBhbHNvDQo+ID4gbW9yZSBhcHByb3ByaWF0ZSB0byBo
+YXZlIGl0IGhlcmUsIGJ1dCB0aGUgb2xkICdsZWdhY3knIGlpb19pb2N0bCgpIG11c3QgYmUNCj4g
+PiBwYXNzZWQgdG8gaXQuDQo+ID4gDQo+ID4gV2hhdCBoYXBwZW5zIG5vdyBpczoNCj4gPiAqIGlm
+IElTX0VOQUJMRUQoQ09ORklHX0lJT19CVUZGRVIpIGFuZCAnaW5kaW9fZGV2LT5idWZmZXIgIT0g
+TlVMTCcgdGhlDQo+ID4gICBpbmRpb19kZXYtPmJ1ZmZlci0+Y2hyZGV2IHdpbGwgYmUgaW5pdGlh
+bGl6ZWQgKGFzIHRoZSBvbGQgbGVnYWN5IHN0eWxlDQo+ID4gICBjaGFyZGV2KQ0KPiA+ICogaWYg
+LUVOT1RTVVBQIGlzIHJldHVybmVkIGZvciBlaXRoZXIgb2YgdGhlIGNvbmRpdGlvbnMgYWJvdmUg
+KG5vdCBiZWluZw0KPiA+ICAgbWV0KSwgdGhlIGNoYXJkZXYgd2lsbCBiZSBjcmVhdGVkIGRpcmVj
+dGx5IHZpYSAnaW5kaW9fZGV2LT5jaHJkZXYnLCBzYW1lDQo+ID4gICBhcyBiZWZvcmU7IGEgbmV3
+IGZpZWxkIGlzIHJlcXVpcmVkIG5vdyAnaW5kaW9fZGV2LT5jaHJkZXZfaW5pdGlhbGl6ZWQnIHRv
+DQo+ID4gICBtYXJrIGl0IHRydWUsIHNvIHRoYXQgJ2luZGlvX2Rldi0+Y2hyZGV2JyBnZXRzIGRl
+bGV0ZWQgaWYgaW5pdGlhbGl6ZWQ7DQo+ID4gDQo+ID4gJ2luZGlvX2Rldi0+Y2hyZGV2X2luaXRp
+YWxpemVkJyBpcyBvZiB0eXBlICdpbnQnLCBiZWNhdXNlIHJlY2VudGx5DQo+ID4gY2hlY2twYXRj
+aCBjb21wbGFpbnMgdGhhdCAnYm9vbCcgdHlwZXMgb24gc3RydWN0cyBjYW4gY2F1c2UgYWxpZ25t
+ZW50DQo+ID4gaXNzdWVzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRl
+bGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+IA0KPiBJIHdvbmRlciBpZiBp
+dCB3b3VsZCBiZSBwb3NzaWJsZSB0byBtYWtlIHRoZSBpb2N0bCBtZXNzIGEgYml0IGNsZWFuZXIu
+DQo+IEhhdmUgdGhlIGJ1ZmZlciBpb2N0bCBmdW5jdGlvbiBhcyBoZXJlLCBidXQgaGF2ZSB0aGF0
+IGNhbGwgYSBnZW5lcmljDQo+IGlpb19kZXZpY2VfaW9jdGwgZnVuY3Rpb24gaW4gaW5kdXN0cmlh
+bGlvLWNvcmUuYyB3aGljaCBjYW4gaW4gdGhlb3J5DQo+IGhhbmRsZSAnZGV2aWNlIHdpZGUnIGlv
+Y3Rscy4gIFRoZW4gaGF2ZSB0aGUgZXZlbnRzIGNvZGUgcmVnaXN0ZXIgaW50bw0KPiB0aGF0IGFz
+IGEgY29uc3VtZXIgb2YgYSBwYXJ0aWN1bGFyIGRldmljZSB3aWRlIGlvY3RsLg0KPiANCj4gVGhh
+dCB3YXkgdGhlIGxheWVyaW5nIGlzIGEgdmlvbGF0ZWQgYSBsaXR0bGUgbGVzcy4NCj4gDQo+IFdo
+YXQgZG8geW91IHRoaW5rPw0KDQpJIGxpa2UgaXQuDQpXaWxsIGNyZWF0ZSBhIHBhdGNoIGZvciB0
+aGF0Lg0KDQpJJ2xsIHNlZSBpZiBJIGNhbiBtYWtlIGl0IG5lYXQgaW50byB0aGlzIHNlcmllcyBz
+b21laG93Lg0KT3RoZXJ3aXNlLCB3b3VsZCBpdCBiZSBvayB0byBkbyBpdCBvbiB0b3Agb2YgdGhp
+cyBzZXJpZXM/DQpJIGN1cnJlbnRseSBkb24ndCBoYXZlIGEgY2xlYXIgaWRlYSBvZiBob3cgY2xl
+YW4gdGhlIHBhdGNoc2V0IHdvdWxkIGxvb2suDQoNCg0KPiANCj4gSm9uYXRoYW4NCj4gDQo+ID4g
+LS0tDQo+ID4gIGRyaXZlcnMvaWlvL2lpb19jb3JlLmggICAgICAgICAgICB8ICAyNSArKysrLS0t
+DQo+ID4gIGRyaXZlcnMvaWlvL2luZHVzdHJpYWxpby1idWZmZXIuYyB8IDExOSArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrLS0NCj4gPiAgZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUu
+YyAgIHwgIDU5ICsrKysrKysrLS0tLS0tLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L2lpby9idWZmZXJf
+aW1wbC5oICAgfCAgIDcgKysNCj4gPiAgaW5jbHVkZS9saW51eC9paW8vaWlvLmggICAgICAgICAg
+IHwgICAyICsNCj4gPiAgNSBmaWxlcyBjaGFuZ2VkLCAxNzAgaW5zZXJ0aW9ucygrKSwgNDIgZGVs
+ZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2lpb19jb3JlLmgg
+Yi9kcml2ZXJzL2lpby9paW9fY29yZS5oDQo+ID4gaW5kZXggZmQ5YTVmMWQ1ZTUxLi40YmRhZGVh
+YzI3MTAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9paW8vaWlvX2NvcmUuaA0KPiA+ICsrKyBi
+L2RyaXZlcnMvaWlvL2lpb19jb3JlLmgNCj4gPiBAQCAtNDAsMjQgKzQwLDMxIEBAIHNzaXplX3Qg
+aWlvX2Zvcm1hdF92YWx1ZShjaGFyICpidWYsIHVuc2lnbmVkIGludCB0eXBlLA0KPiA+IGludCBz
+aXplLCBpbnQgKnZhbHMpOw0KPiA+ICAjaWZkZWYgQ09ORklHX0lJT19CVUZGRVINCj4gPiAgc3Ry
+dWN0IHBvbGxfdGFibGVfc3RydWN0Ow0KPiA+ICANCj4gPiAtX19wb2xsX3QgaWlvX2J1ZmZlcl9w
+b2xsKHN0cnVjdCBmaWxlICpmaWxwLA0KPiA+IC0JCQkgICAgIHN0cnVjdCBwb2xsX3RhYmxlX3N0
+cnVjdCAqd2FpdCk7DQo+ID4gLXNzaXplX3QgaWlvX2J1ZmZlcl9yZWFkX291dGVyKHN0cnVjdCBm
+aWxlICpmaWxwLCBjaGFyIF9fdXNlciAqYnVmLA0KPiA+IC0JCQkgICAgICBzaXplX3QgbiwgbG9m
+Zl90ICpmX3BzKTsNCj4gPiArbG9uZyBpaW9fZGV2aWNlX2V2ZW50X2lvY3RsKHN0cnVjdCBpaW9f
+ZGV2ICppbmRpb19kZXYsIHN0cnVjdCBmaWxlICpmaWxwLA0KPiA+ICsJCQkgICAgdW5zaWduZWQg
+aW50IGNtZCwgdW5zaWduZWQgbG9uZyBhcmcpOw0KPiA+ICsNCj4gPiAraW50IGlpb19kZXZpY2Vf
+YnVmZmVyc19pbml0KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsIHN0cnVjdCBtb2R1bGUNCj4g
+PiAqdGhpc19tb2QpOw0KPiA+ICt2b2lkIGlpb19kZXZpY2VfYnVmZmVyc191bmluaXQoc3RydWN0
+IGlpb19kZXYgKmluZGlvX2Rldik7DQo+ID4gKw0KPiA+ICt2b2lkIGlpb19kZXZpY2VfYnVmZmVy
+c19wdXQoc3RydWN0IGlpb19kZXYgKmluZGlvX2Rldik7DQo+ID4gIA0KPiA+ICBpbnQgaWlvX2J1
+ZmZlcl9hbGxvY19zeXNmc19hbmRfbWFzayhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KTsNCj4g
+PiAgdm9pZCBpaW9fYnVmZmVyX2ZyZWVfc3lzZnNfYW5kX21hc2soc3RydWN0IGlpb19kZXYgKmlu
+ZGlvX2Rldik7DQo+ID4gIA0KPiA+IC0jZGVmaW5lIGlpb19idWZmZXJfcG9sbF9hZGRyICgmaWlv
+X2J1ZmZlcl9wb2xsKQ0KPiA+IC0jZGVmaW5lIGlpb19idWZmZXJfcmVhZF9vdXRlcl9hZGRyICgm
+aWlvX2J1ZmZlcl9yZWFkX291dGVyKQ0KPiA+IC0NCj4gPiAgdm9pZCBpaW9fZGlzYWJsZV9hbGxf
+YnVmZmVycyhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KTsNCj4gPiAgdm9pZCBpaW9fYnVmZmVy
+X3dha2V1cF9wb2xsKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYpOw0KPiA+ICANCj4gPiAgI2Vs
+c2UNCj4gPiAgDQo+ID4gLSNkZWZpbmUgaWlvX2J1ZmZlcl9wb2xsX2FkZHIgTlVMTA0KPiA+IC0j
+ZGVmaW5lIGlpb19idWZmZXJfcmVhZF9vdXRlcl9hZGRyIE5VTEwNCj4gPiArc3RhdGljIGlubGlu
+ZSBpbnQgaWlvX2RldmljZV9idWZmZXJzX2luaXQoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwN
+Cj4gPiArCQkJCQkgIHN0cnVjdCBtb2R1bGUgKnRoaXNfbW9kKQ0KPiA+ICt7DQo+ID4gKwlyZXR1
+cm4gLUVOT1RTVVBQOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgaWlv
+X2RldmljZV9idWZmZXJzX3VuaW5pdChzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KSB7fQ0KPiA+
+ICsNCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGlpb19kZXZpY2VfYnVmZmVyc19wdXQoc3RydWN0
+IGlpb19kZXYgKmluZGlvX2Rldikge30NCj4gPiAgDQo+ID4gIHN0YXRpYyBpbmxpbmUgaW50IGlp
+b19idWZmZXJfYWxsb2Nfc3lzZnNfYW5kX21hc2soc3RydWN0IGlpb19kZXYNCj4gPiAqaW5kaW9f
+ZGV2KQ0KPiA+ICB7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2luZHVzdHJpYWxpby1i
+dWZmZXIuYyBiL2RyaXZlcnMvaWlvL2luZHVzdHJpYWxpby0NCj4gPiBidWZmZXIuYw0KPiA+IGlu
+ZGV4IGY5ZmZjNzc2MmY2Yy4uNGI1YzNiYWFkYWFiIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+aWlvL2luZHVzdHJpYWxpby1idWZmZXIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvaWlvL2luZHVzdHJp
+YWxpby1idWZmZXIuYw0KPiA+IEBAIC05OSwxMSArOTksMTEgQEAgc3RhdGljIGJvb2wgaWlvX2J1
+ZmZlcl9yZWFkeShzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LA0KPiA+IHN0cnVjdCBpaW9fYnVm
+ZmVyICpidWYsDQo+ID4gICAqIFJldHVybjogbmVnYXRpdmUgdmFsdWVzIGNvcnJlc3BvbmRpbmcg
+dG8gZXJyb3IgY29kZXMgb3IgcmV0ICE9IDANCj4gPiAgICoJICAgZm9yIGVuZGluZyB0aGUgcmVh
+ZGluZyBhY3Rpdml0eQ0KPiA+ICAgKiovDQo+ID4gLXNzaXplX3QgaWlvX2J1ZmZlcl9yZWFkX291
+dGVyKHN0cnVjdCBmaWxlICpmaWxwLCBjaGFyIF9fdXNlciAqYnVmLA0KPiA+IC0JCQkgICAgICBz
+aXplX3QgbiwgbG9mZl90ICpmX3BzKQ0KPiA+ICtzdGF0aWMgc3NpemVfdCBpaW9fYnVmZmVyX3Jl
+YWRfb3V0ZXIoc3RydWN0IGZpbGUgKmZpbHAsIGNoYXIgX191c2VyICpidWYsDQo+ID4gKwkJCQkg
+ICAgIHNpemVfdCBuLCBsb2ZmX3QgKmZfcHMpDQo+ID4gIHsNCj4gPiAtCXN0cnVjdCBpaW9fZGV2
+ICppbmRpb19kZXYgPSBmaWxwLT5wcml2YXRlX2RhdGE7DQo+ID4gLQlzdHJ1Y3QgaWlvX2J1ZmZl
+ciAqcmIgPSBpbmRpb19kZXYtPmJ1ZmZlcjsNCj4gPiArCXN0cnVjdCBpaW9fYnVmZmVyICpyYiA9
+IGZpbHAtPnByaXZhdGVfZGF0YTsNCj4gPiArCXN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYgPSBy
+Yi0+aW5kaW9fZGV2Ow0KPiA+ICAJREVGSU5FX1dBSVRfRlVOQyh3YWl0LCB3b2tlbl93YWtlX2Z1
+bmN0aW9uKTsNCj4gPiAgCXNpemVfdCBkYXR1bV9zaXplOw0KPiA+ICAJc2l6ZV90IHRvX3dhaXQ7
+DQo+ID4gQEAgLTE2NSwxMSArMTY1LDExIEBAIHNzaXplX3QgaWlvX2J1ZmZlcl9yZWFkX291dGVy
+KHN0cnVjdCBmaWxlICpmaWxwLCBjaGFyDQo+ID4gX191c2VyICpidWYsDQo+ID4gICAqIFJldHVy
+bjogKEVQT0xMSU4gfCBFUE9MTFJETk9STSkgaWYgZGF0YSBpcyBhdmFpbGFibGUgZm9yIHJlYWRp
+bmcNCj4gPiAgICoJICAgb3IgMCBmb3Igb3RoZXIgY2FzZXMNCj4gPiAgICovDQo+ID4gLV9fcG9s
+bF90IGlpb19idWZmZXJfcG9sbChzdHJ1Y3QgZmlsZSAqZmlscCwNCj4gPiArc3RhdGljIF9fcG9s
+bF90IGlpb19idWZmZXJfcG9sbChzdHJ1Y3QgZmlsZSAqZmlscCwNCj4gPiAgCQkJICAgICBzdHJ1
+Y3QgcG9sbF90YWJsZV9zdHJ1Y3QgKndhaXQpDQo+ID4gIHsNCj4gPiAtCXN0cnVjdCBpaW9fZGV2
+ICppbmRpb19kZXYgPSBmaWxwLT5wcml2YXRlX2RhdGE7DQo+ID4gLQlzdHJ1Y3QgaWlvX2J1ZmZl
+ciAqcmIgPSBpbmRpb19kZXYtPmJ1ZmZlcjsNCj4gPiArCXN0cnVjdCBpaW9fYnVmZmVyICpyYiA9
+IGZpbHAtPnByaXZhdGVfZGF0YTsNCj4gPiArCXN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYgPSBy
+Yi0+aW5kaW9fZGV2Ow0KPiA+ICANCj4gPiAgCWlmICghaW5kaW9fZGV2LT5pbmZvIHx8IHJiID09
+IE5VTEwpDQo+ID4gIAkJcmV0dXJuIDA7DQo+ID4gQEAgLTE4MCw2ICsxODAsNDggQEAgX19wb2xs
+X3QgaWlvX2J1ZmZlcl9wb2xsKHN0cnVjdCBmaWxlICpmaWxwLA0KPiA+ICAJcmV0dXJuIDA7DQo+
+ID4gIH0NCj4gPiAgDQo+ID4gKy8qKg0KPiA+ICsgKiBpaW9fYnVmZmVyX2NocmRldl9vcGVuKCkg
+LSBjaHJkZXYgZmlsZSBvcGVuIGZvciBidWZmZXIgYWNjZXNzDQo+ID4gKyAqIEBpbm9kZToJSW5v
+ZGUgc3RydWN0dXJlIGZvciBpZGVudGlmeWluZyB0aGUgZGV2aWNlIGluIHRoZSBmaWxlIHN5c3Rl
+bQ0KPiA+ICsgKiBAZmlscDoJRmlsZSBzdHJ1Y3R1cmUgZm9yIGlpbyBkZXZpY2UgdXNlZCB0byBr
+ZWVwIGFuZCBsYXRlciBhY2Nlc3MNCj4gPiArICoJCXByaXZhdGUgZGF0YQ0KPiA+ICsgKg0KPiA+
+ICsgKiBSZXR1cm46IDAgb24gc3VjY2VzcyBvciAtRUJVU1kgaWYgdGhlIGRldmljZSBpcyBhbHJl
+YWR5IG9wZW5lZA0KPiA+ICsgKiovDQo+ID4gK3N0YXRpYyBpbnQgaWlvX2J1ZmZlcl9jaHJkZXZf
+b3BlbihzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkNCj4gPiArew0KPiA+
+ICsJc3RydWN0IGlpb19idWZmZXIgKmJ1ZmZlciA9IGNvbnRhaW5lcl9vZihpbm9kZS0+aV9jZGV2
+LA0KPiA+ICsJCQkJCQkgc3RydWN0IGlpb19idWZmZXIsIGNocmRldik7DQo+ID4gKw0KPiA+ICsJ
+aWYgKHRlc3RfYW5kX3NldF9iaXQoSUlPX0JVU1lfQklUX1BPUywgJmJ1ZmZlci0+ZmlsZV9vcHNf
+ZmxhZ3MpKQ0KPiA+ICsJCXJldHVybiAtRUJVU1k7DQo+ID4gKw0KPiA+ICsJaWlvX2J1ZmZlcl9n
+ZXQoYnVmZmVyKTsNCj4gPiArDQo+ID4gKwlmaWxwLT5wcml2YXRlX2RhdGEgPSBidWZmZXI7DQo+
+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gKy8qKg0KPiA+ICsgKiBp
+aW9fYnVmZmVyX2NocmRldl9yZWxlYXNlKCkgLSBjaHJkZXYgZmlsZSBjbG9zZSBmb3IgYnVmZmVy
+IGFjY2Vzcw0KPiA+ICsgKiBAaW5vZGU6CUlub2RlIHN0cnVjdHVyZSBwb2ludGVyIGZvciB0aGUg
+Y2hhciBkZXZpY2UNCj4gPiArICogQGZpbHA6CUZpbGUgc3RydWN0dXJlIHBvaW50ZXIgZm9yIHRo
+ZSBjaGFyIGRldmljZQ0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46IDAgZm9yIHN1Y2Nlc3NmdWwg
+cmVsZWFzZQ0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGludCBpaW9fYnVmZmVyX2NocmRldl9yZWxl
+YXNlKHN0cnVjdCBpbm9kZSAqaW5vZGUsIHN0cnVjdCBmaWxlDQo+ID4gKmZpbHApDQo+ID4gK3sN
+Cj4gPiArCXN0cnVjdCBpaW9fYnVmZmVyICpidWZmZXIgPSBjb250YWluZXJfb2YoaW5vZGUtPmlf
+Y2RldiwNCj4gPiArCQkJCQkJIHN0cnVjdCBpaW9fYnVmZmVyLCBjaHJkZXYpOw0KPiA+ICsNCj4g
+PiArCWNsZWFyX2JpdChJSU9fQlVTWV9CSVRfUE9TLCAmYnVmZmVyLT5maWxlX29wc19mbGFncyk7
+DQo+ID4gKw0KPiA+ICsJaWlvX2J1ZmZlcl9wdXQoYnVmZmVyKTsNCj4gPiArDQo+ID4gKwlyZXR1
+cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgLyoqDQo+ID4gICAqIGlpb19idWZmZXJfd2FrZXVw
+X3BvbGwgLSBXYWtlcyB1cCB0aGUgYnVmZmVyIHdhaXRxdWV1ZQ0KPiA+ICAgKiBAaW5kaW9fZGV2
+OiBUaGUgSUlPIGRldmljZQ0KPiA+IEBAIC0xMTIxLDYgKzExNjMsMTQgQEAgdm9pZCBpaW9fZGlz
+YWJsZV9hbGxfYnVmZmVycyhzdHJ1Y3QgaWlvX2Rldg0KPiA+ICppbmRpb19kZXYpDQo+ID4gIAlp
+aW9fYnVmZmVyX2RlYWN0aXZhdGVfYWxsKGluZGlvX2Rldik7DQo+ID4gIH0NCj4gPiAgDQo+ID4g
+K2xvbmcgaWlvX2J1ZmZlcl9pb2N0bChzdHJ1Y3QgZmlsZSAqZmlsZXAsIHVuc2lnbmVkIGludCBj
+bWQsIHVuc2lnbmVkIGxvbmcNCj4gPiBhcmcpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpaW9fYnVm
+ZmVyICpidWZmZXIgPSBmaWxlcC0+cHJpdmF0ZV9kYXRhOw0KPiA+ICsJc3RydWN0IGlpb19kZXYg
+KmluZGlvX2RldiA9IGJ1ZmZlci0+aW5kaW9fZGV2Ow0KPiA+ICsNCj4gPiArCXJldHVybiBpaW9f
+ZGV2aWNlX2V2ZW50X2lvY3RsKGluZGlvX2RldiwgZmlsZXAsIGNtZCwgYXJnKTsNCj4gPiArfQ0K
+PiA+ICsNCj4gPiAgc3RhdGljIHNzaXplX3QgaWlvX2J1ZmZlcl9zdG9yZV9lbmFibGUoc3RydWN0
+IGRldmljZSAqZGV2LA0KPiA+ICAJCQkJICAgICAgIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICph
+dHRyLA0KPiA+ICAJCQkJICAgICAgIGNvbnN0IGNoYXIgKmJ1ZiwNCj4gPiBAQCAtMTM1Niw2ICsx
+NDA2LDYxIEBAIHZvaWQgaWlvX2J1ZmZlcl9mcmVlX3N5c2ZzX2FuZF9tYXNrKHN0cnVjdCBpaW9f
+ZGV2DQo+ID4gKmluZGlvX2RldikNCj4gPiAgCWlpb19mcmVlX2NoYW5fZGV2YXR0cl9saXN0KCZp
+bmRpb19kZXYtPmJ1ZmZlci0+c2Nhbl9lbF9kZXZfYXR0cl9saXN0KTsNCj4gPiAgfQ0KPiA+ICAN
+Cj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMgaWlvX2J1ZmZlcl9maWxl
+b3BzID0gew0KPiA+ICsJLnJlYWQgPSBpaW9fYnVmZmVyX3JlYWRfb3V0ZXIsDQo+ID4gKwkucmVs
+ZWFzZSA9IGlpb19idWZmZXJfY2hyZGV2X3JlbGVhc2UsDQo+ID4gKwkub3BlbiA9IGlpb19idWZm
+ZXJfY2hyZGV2X29wZW4sDQo+ID4gKwkucG9sbCA9IGlpb19idWZmZXJfcG9sbCwNCj4gPiArCS5v
+d25lciA9IFRISVNfTU9EVUxFLA0KPiA+ICsJLmxsc2VlayA9IG5vb3BfbGxzZWVrLA0KPiA+ICsJ
+LnVubG9ja2VkX2lvY3RsID0gaWlvX2J1ZmZlcl9pb2N0bCwNCj4gPiArCS5jb21wYXRfaW9jdGwg
+PSBjb21wYXRfcHRyX2lvY3RsLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAraW50IGlpb19kZXZpY2Vf
+YnVmZmVyc19pbml0KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsIHN0cnVjdCBtb2R1bGUNCj4g
+PiAqdGhpc19tb2QpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpaW9fYnVmZmVyICpidWZmZXIgPSBp
+bmRpb19kZXYtPmJ1ZmZlcjsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJaWYgKCFidWZm
+ZXIpDQo+ID4gKwkJcmV0dXJuIC1FTk9UU1VQUDsNCj4gPiArDQo+ID4gKwljZGV2X2luaXQoJmJ1
+ZmZlci0+Y2hyZGV2LCAmaWlvX2J1ZmZlcl9maWxlb3BzKTsNCj4gPiArDQo+ID4gKwlidWZmZXIt
+PmNocmRldi5vd25lciA9IHRoaXNfbW9kOw0KPiA+ICsNCj4gPiArCXJldCA9IGNkZXZfZGV2aWNl
+X2FkZCgmYnVmZmVyLT5jaHJkZXYsICZpbmRpb19kZXYtPmRldik7DQo+ID4gKwlpZiAocmV0KQ0K
+PiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJaWlvX2RldmljZV9nZXQoaW5kaW9fZGV2
+KTsNCj4gPiArCWlpb19idWZmZXJfZ2V0KGJ1ZmZlcik7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7
+DQo+ID4gK30NCj4gPiArDQo+ID4gK3ZvaWQgaWlvX2RldmljZV9idWZmZXJzX3B1dChzdHJ1Y3Qg
+aWlvX2RldiAqaW5kaW9fZGV2KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaWlvX2J1ZmZlciAqYnVm
+ZmVyID0gaW5kaW9fZGV2LT5idWZmZXI7DQo+ID4gKw0KPiA+ICsJaWYgKCFidWZmZXIpDQo+ID4g
+KwkJcmV0dXJuOw0KPiA+ICsNCj4gPiArCWlpb19idWZmZXJfcHV0KGJ1ZmZlcik7DQo+ID4gK30N
+Cj4gPiArDQo+ID4gK3ZvaWQgaWlvX2RldmljZV9idWZmZXJzX3VuaW5pdChzdHJ1Y3QgaWlvX2Rl
+diAqaW5kaW9fZGV2KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaWlvX2J1ZmZlciAqYnVmZmVyID0g
+aW5kaW9fZGV2LT5idWZmZXI7DQo+ID4gKw0KPiA+ICsJaWYgKCFidWZmZXIpDQo+ID4gKwkJcmV0
+dXJuOw0KPiA+ICsNCj4gPiArCWNkZXZfZGV2aWNlX2RlbCgmYnVmZmVyLT5jaHJkZXYsICZpbmRp
+b19kZXYtPmRldik7DQo+ID4gKwlpaW9fYnVmZmVyX3B1dChidWZmZXIpOw0KPiA+ICsJaWlvX2Rl
+dmljZV9wdXQoaW5kaW9fZGV2KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgLyoqDQo+ID4gICAqIGlp
+b192YWxpZGF0ZV9zY2FuX21hc2tfb25laG90KCkgLSBWYWxpZGF0ZXMgdGhhdCBleGFjdGx5IG9u
+ZSBjaGFubmVsIGlzDQo+ID4gc2VsZWN0ZWQNCj4gPiAgICogQGluZGlvX2RldjogdGhlIGlpbyBk
+ZXZpY2UNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYyBi
+L2RyaXZlcnMvaWlvL2luZHVzdHJpYWxpby0NCj4gPiBjb3JlLmMNCj4gPiBpbmRleCBjOGMwNzQ2
+MDI3MDkuLjIxNThhZWFiMGJkMiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lpby9pbmR1c3Ry
+aWFsaW8tY29yZS5jDQo+ID4gKysrIGIvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYw0K
+PiA+IEBAIC0xNDc1LDcgKzE0NzUsNyBAQCBzdGF0aWMgdm9pZCBpaW9fZGV2X3JlbGVhc2Uoc3Ry
+dWN0IGRldmljZSAqZGV2aWNlKQ0KPiA+ICAJaWlvX2RldmljZV91bnJlZ2lzdGVyX2V2ZW50c2V0
+KGluZGlvX2Rldik7DQo+ID4gIAlpaW9fZGV2aWNlX3VucmVnaXN0ZXJfc3lzZnMoaW5kaW9fZGV2
+KTsNCj4gPiAgDQo+ID4gLQlpaW9fYnVmZmVyX3B1dChpbmRpb19kZXYtPmJ1ZmZlcik7DQo+ID4g
+KwlpaW9fZGV2aWNlX2J1ZmZlcnNfcHV0KGluZGlvX2Rldik7DQo+ID4gIA0KPiA+ICAJaWRhX3Np
+bXBsZV9yZW1vdmUoJmlpb19pZGEsIGluZGlvX2Rldi0+aWQpOw0KPiA+ICAJa2ZyZWUoaW5kaW9f
+ZGV2KTsNCj4gPiBAQCAtMTYxMCw3ICsxNjEwLDcgQEAgdm9pZCBkZXZtX2lpb19kZXZpY2VfZnJl
+ZShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdA0KPiA+IGlpb19kZXYgKmlpb19kZXYpDQo+ID4g
+IEVYUE9SVF9TWU1CT0xfR1BMKGRldm1faWlvX2RldmljZV9mcmVlKTsNCj4gPiAgDQo+ID4gIC8q
+Kg0KPiA+IC0gKiBpaW9fY2hyZGV2X29wZW4oKSAtIGNocmRldiBmaWxlIG9wZW4gZm9yIGJ1ZmZl
+ciBhY2Nlc3MgYW5kIGlvY3Rscw0KPiA+ICsgKiBpaW9fY2hyZGV2X29wZW4oKSAtIGNocmRldiBm
+aWxlIG9wZW4gZm9yIGV2ZW50IGlvY3Rscw0KPiA+ICAgKiBAaW5vZGU6CUlub2RlIHN0cnVjdHVy
+ZSBmb3IgaWRlbnRpZnlpbmcgdGhlIGRldmljZSBpbiB0aGUgZmlsZSBzeXN0ZW0NCj4gPiAgICog
+QGZpbHA6CUZpbGUgc3RydWN0dXJlIGZvciBpaW8gZGV2aWNlIHVzZWQgdG8ga2VlcCBhbmQgbGF0
+ZXIgYWNjZXNzDQo+ID4gICAqCQlwcml2YXRlIGRhdGENCj4gPiBAQCAtMTYzMyw3ICsxNjMzLDcg
+QEAgc3RhdGljIGludCBpaW9fY2hyZGV2X29wZW4oc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0
+DQo+ID4gZmlsZSAqZmlscCkNCj4gPiAgfQ0KPiA+ICANCj4gPiAgLyoqDQo+ID4gLSAqIGlpb19j
+aHJkZXZfcmVsZWFzZSgpIC0gY2hyZGV2IGZpbGUgY2xvc2UgYnVmZmVyIGFjY2VzcyBhbmQgaW9j
+dGxzDQo+ID4gKyAqIGlpb19jaHJkZXZfcmVsZWFzZSgpIC0gY2hyZGV2IGZpbGUgY2xvc2UgZm9y
+IGV2ZW50IGlvY3Rscw0KPiA+ICAgKiBAaW5vZGU6CUlub2RlIHN0cnVjdHVyZSBwb2ludGVyIGZv
+ciB0aGUgY2hhciBkZXZpY2UNCj4gPiAgICogQGZpbHA6CUZpbGUgc3RydWN0dXJlIHBvaW50ZXIg
+Zm9yIHRoZSBjaGFyIGRldmljZQ0KPiA+ICAgKg0KPiA+IEBAIC0xNjQ5LDExICsxNjQ5LDkgQEAg
+c3RhdGljIGludCBpaW9fY2hyZGV2X3JlbGVhc2Uoc3RydWN0IGlub2RlICppbm9kZSwNCj4gPiBz
+dHJ1Y3QgZmlsZSAqZmlscCkNCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4gIA0KPiA+IC0v
+KiBTb21ld2hhdCBvZiBhIGNyb3NzIGZpbGUgb3JnYW5pemF0aW9uIHZpb2xhdGlvbiAtIGlvY3Rs
+cyBoZXJlIGFyZQ0KPiA+IGFjdHVhbGx5DQo+ID4gLSAqIGV2ZW50IHJlbGF0ZWQgKi8NCj4gPiAt
+c3RhdGljIGxvbmcgaWlvX2lvY3RsKHN0cnVjdCBmaWxlICpmaWxwLCB1bnNpZ25lZCBpbnQgY21k
+LCB1bnNpZ25lZCBsb25nDQo+ID4gYXJnKQ0KPiA+ICtsb25nIGlpb19kZXZpY2VfZXZlbnRfaW9j
+dGwoc3RydWN0IGlpb19kZXYgKmluZGlvX2Rldiwgc3RydWN0IGZpbGUgKmZpbHAsDQo+ID4gKwkJ
+CSAgICB1bnNpZ25lZCBpbnQgY21kLCB1bnNpZ25lZCBsb25nIGFyZykNCj4gPiAgew0KPiA+IC0J
+c3RydWN0IGlpb19kZXYgKmluZGlvX2RldiA9IGZpbHAtPnByaXZhdGVfZGF0YTsNCj4gPiAgCWlu
+dCBfX3VzZXIgKmlwID0gKGludCBfX3VzZXIgKilhcmc7DQo+ID4gIAlpbnQgZmQ7DQo+ID4gIA0K
+PiA+IEBAIC0xNjcxLDE2ICsxNjY5LDE1IEBAIHN0YXRpYyBsb25nIGlpb19pb2N0bChzdHJ1Y3Qg
+ZmlsZSAqZmlscCwgdW5zaWduZWQNCj4gPiBpbnQgY21kLCB1bnNpZ25lZCBsb25nIGFyZykNCj4g
+PiAgCXJldHVybiAtRUlOVkFMOw0KPiA+ICB9DQo+ID4gIA0KPiA+IC1zdGF0aWMgY29uc3Qgc3Ry
+dWN0IGZpbGVfb3BlcmF0aW9ucyBpaW9fYnVmZmVyX2ZpbGVvcHMgPSB7DQo+ID4gLQkucmVhZCA9
+IGlpb19idWZmZXJfcmVhZF9vdXRlcl9hZGRyLA0KPiA+IC0JLnJlbGVhc2UgPSBpaW9fY2hyZGV2
+X3JlbGVhc2UsDQo+ID4gLQkub3BlbiA9IGlpb19jaHJkZXZfb3BlbiwNCj4gPiAtCS5wb2xsID0g
+aWlvX2J1ZmZlcl9wb2xsX2FkZHIsDQo+ID4gLQkub3duZXIgPSBUSElTX01PRFVMRSwNCj4gPiAt
+CS5sbHNlZWsgPSBub29wX2xsc2VlaywNCj4gPiAtCS51bmxvY2tlZF9pb2N0bCA9IGlpb19pb2N0
+bCwNCj4gPiAtCS5jb21wYXRfaW9jdGwgPSBjb21wYXRfcHRyX2lvY3RsLA0KPiA+IC19Ow0KPiA+
+ICsvKiBTb21ld2hhdCBvZiBhIGNyb3NzIGZpbGUgb3JnYW5pemF0aW9uIHZpb2xhdGlvbiAtIGlv
+Y3RscyBoZXJlIGFyZQ0KPiA+IGFjdHVhbGx5DQo+ID4gKyAqIGV2ZW50IHJlbGF0ZWQgKi8NCj4g
+PiArc3RhdGljIGxvbmcgaWlvX2V2ZW50X2lvY3RsX3dyYXBwZXIoc3RydWN0IGZpbGUgKmZpbHAs
+IHVuc2lnbmVkIGludCBjbWQsDQo+ID4gKwkJCQkgICAgdW5zaWduZWQgbG9uZyBhcmcpDQo+ID4g
+K3sNCj4gPiArCXN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYgPSBmaWxwLT5wcml2YXRlX2RhdGE7
+DQo+ID4gKw0KPiANCj4gSG1tLiBJIHdvbmRlciBpZiB3ZSBrZWVwIGEgbGV2ZWwgb2YgaW5kaXJl
+Y3Rpb24gaW4gaGVyZS4gIFNvIGFjdHVhbGx5IGNhbGwNCj4gc29tZXRoaW5nIGxpa2U6ICdpaW9f
+ZGV2aWNlX2lvY3RsJyBpbiBpbmR1c3RyaWFsaW8tY29yZS5jIGFuZCBoYXZlIHRoZQ0KPiBldmVu
+dCByZWdpc3RyYXRpb24gcmVnaXN0ZXIgYSBjYWxsYmFjayB3aXRoIHRoZSBjb3JlLiAgVGh1cyBu
+byBldmVudHMgYW5kDQo+IG5vdGhpbmcgaXMgcmVnaXN0ZXJlZCBzbyB0aGF0IGNvcmUgZnVuY3Rp
+b24gc2ltcGx5IHJldHVybnMgYW4gZXJyb3INCj4gLSByaWdodCBub3cgSSBzdXNwZWN0IGl0IHJl
+dHVybnMgYSBjaGFyZGV2IHRoYXQgaXMgY29tcGxldGVseSB1c2VsZXNzDQo+IChpZiBubyBldmVu
+dHMgc3VwcG9ydGVkIGJ5IHRoZSBkZXZpY2UpLg0KPiANCj4gPiArCXJldHVybiBpaW9fZGV2aWNl
+X2V2ZW50X2lvY3RsKGluZGlvX2RldiwgZmlscCwgY21kLCBhcmcpOw0KPiA+ICt9DQo+ID4gIA0K
+PiA+ICBzdGF0aWMgaW50IGlpb19jaGVja191bmlxdWVfc2Nhbl9pbmRleChzdHJ1Y3QgaWlvX2Rl
+diAqaW5kaW9fZGV2KQ0KPiA+ICB7DQo+ID4gQEAgLTE3MTIsNyArMTcwOSw3IEBAIHN0YXRpYyBj
+b25zdCBzdHJ1Y3QgZmlsZV9vcGVyYXRpb25zIGlpb19ldmVudF9maWxlb3BzDQo+ID4gPSB7DQo+
+ID4gIAkub3BlbiA9IGlpb19jaHJkZXZfb3BlbiwNCj4gPiAgCS5vd25lciA9IFRISVNfTU9EVUxF
+LA0KPiA+ICAJLmxsc2VlayA9IG5vb3BfbGxzZWVrLA0KPiA+IC0JLnVubG9ja2VkX2lvY3RsID0g
+aWlvX2lvY3RsLA0KPiA+ICsJLnVubG9ja2VkX2lvY3RsID0gaWlvX2V2ZW50X2lvY3RsX3dyYXBw
+ZXIsDQo+ID4gIAkuY29tcGF0X2lvY3RsID0gY29tcGF0X3B0cl9pb2N0bCwNCj4gPiAgfTsNCj4g
+PiAgDQo+ID4gQEAgLTE3NjYsMTYgKzE3NjMsMjEgQEAgaW50IF9faWlvX2RldmljZV9yZWdpc3Rl
+cihzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LA0KPiA+IHN0cnVjdCBtb2R1bGUgKnRoaXNfbW9k
+KQ0KPiA+ICAJCWluZGlvX2Rldi0+c2V0dXBfb3BzID09IE5VTEwpDQo+ID4gIAkJaW5kaW9fZGV2
+LT5zZXR1cF9vcHMgPSAmbm9vcF9yaW5nX3NldHVwX29wczsNCj4gPiAgDQo+ID4gLQlpZiAoaW5k
+aW9fZGV2LT5idWZmZXIpDQo+ID4gLQkJY2Rldl9pbml0KCZpbmRpb19kZXYtPmNocmRldiwgJmlp
+b19idWZmZXJfZmlsZW9wcyk7DQo+ID4gLQllbHNlDQo+ID4gKwlyZXQgPSBpaW9fZGV2aWNlX2J1
+ZmZlcnNfaW5pdChpbmRpb19kZXYsIHRoaXNfbW9kKTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiAr
+CQlpZiAocmV0ICE9IC1FTk9UU1VQUCkNCj4gPiArCQkJZ290byBlcnJvcl91bnJlZ19ldmVudHNl
+dDsNCj4gPiArDQo+ID4gIAkJY2Rldl9pbml0KCZpbmRpb19kZXYtPmNocmRldiwgJmlpb19ldmVu
+dF9maWxlb3BzKTsNCj4gPiAgDQo+ID4gLQlpbmRpb19kZXYtPmNocmRldi5vd25lciA9IHRoaXNf
+bW9kOw0KPiA+ICsJCWluZGlvX2Rldi0+Y2hyZGV2Lm93bmVyID0gdGhpc19tb2Q7DQo+ID4gIA0K
+PiA+IC0JcmV0ID0gY2Rldl9kZXZpY2VfYWRkKCZpbmRpb19kZXYtPmNocmRldiwgJmluZGlvX2Rl
+di0+ZGV2KTsNCj4gPiAtCWlmIChyZXQgPCAwKQ0KPiA+IC0JCWdvdG8gZXJyb3JfdW5yZWdfZXZl
+bnRzZXQ7DQo+ID4gKwkJcmV0ID0gY2Rldl9kZXZpY2VfYWRkKCZpbmRpb19kZXYtPmNocmRldiwg
+JmluZGlvX2Rldi0+ZGV2KTsNCj4gPiArCQlpZiAocmV0IDwgMCkNCj4gPiArCQkJZ290byBlcnJv
+cl91bnJlZ19ldmVudHNldDsNCj4gPiArDQo+ID4gKwkJaW5kaW9fZGV2LT5jaHJkZXZfaW5pdGlh
+bGl6ZWQgPSB0cnVlOw0KPiA+ICsJfQ0KPiA+ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICANCj4g
+PiBAQCAtMTc5Nyw3ICsxNzk5LDEyIEBAIEVYUE9SVF9TWU1CT0woX19paW9fZGV2aWNlX3JlZ2lz
+dGVyKTsNCj4gPiAgICoqLw0KPiA+ICB2b2lkIGlpb19kZXZpY2VfdW5yZWdpc3RlcihzdHJ1Y3Qg
+aWlvX2RldiAqaW5kaW9fZGV2KQ0KPiA+ICB7DQo+ID4gLQljZGV2X2RldmljZV9kZWwoJmluZGlv
+X2Rldi0+Y2hyZGV2LCAmaW5kaW9fZGV2LT5kZXYpOw0KPiA+ICsJaWYgKGluZGlvX2Rldi0+Y2hy
+ZGV2X2luaXRpYWxpemVkKQ0KPiA+ICsJCWNkZXZfZGV2aWNlX2RlbCgmaW5kaW9fZGV2LT5jaHJk
+ZXYsICZpbmRpb19kZXYtPmRldik7DQo+ID4gKw0KPiA+ICsJaW5kaW9fZGV2LT5jaHJkZXZfaW5p
+dGlhbGl6ZWQgPSBmYWxzZTsNCj4gPiArDQo+ID4gKwlpaW9fZGV2aWNlX2J1ZmZlcnNfdW5pbml0
+KGluZGlvX2Rldik7DQo+ID4gIA0KPiA+ICAJbXV0ZXhfbG9jaygmaW5kaW9fZGV2LT5pbmZvX2V4
+aXN0X2xvY2spOw0KPiA+ICANCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9paW8vYnVm
+ZmVyX2ltcGwuaA0KPiA+IGIvaW5jbHVkZS9saW51eC9paW8vYnVmZmVyX2ltcGwuaA0KPiA+IGlu
+ZGV4IDhmYjkyMjUwYTE5MC4uYjRhNTVjM2Y1NTZiIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUv
+bGludXgvaWlvL2J1ZmZlcl9pbXBsLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2lpby9idWZm
+ZXJfaW1wbC5oDQo+ID4gQEAgLTEsNiArMSw3IEBADQo+ID4gIC8qIFNQRFgtTGljZW5zZS1JZGVu
+dGlmaWVyOiBHUEwtMi4wICovDQo+ID4gICNpZm5kZWYgX0lJT19CVUZGRVJfR0VORVJJQ19JTVBM
+X0hfDQo+ID4gICNkZWZpbmUgX0lJT19CVUZGRVJfR0VORVJJQ19JTVBMX0hfDQo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9jZGV2Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9zeXNmcy5oPg0KPiA+ICAj
+aW5jbHVkZSA8bGludXgva3JlZi5oPg0KPiA+ICANCj4gPiBAQCAtNzIsNiArNzMsMTIgQEAgc3Ry
+dWN0IGlpb19idWZmZXIgew0KPiA+ICAJLyoqIEBpbmRpb19kZXY6IElJTyBkZXZpY2UgdG8gd2hp
+Y2ggdGhpcyBidWZmZXIgYmVsb25ncyB0by4gKi8NCj4gPiAgCXN0cnVjdCBpaW9fZGV2ICppbmRp
+b19kZXY7DQo+ID4gIA0KPiA+ICsJLyoqIEBjaHJkZXY6IGFzc29jaWF0ZWQgY2hhcmFjdGVyIGRl
+dmljZS4gKi8NCj4gPiArCXN0cnVjdCBjZGV2IGNocmRldjsNCj4gPiArDQo+ID4gKwkvKiogQGZp
+bGVfb3BzX2ZsYWdzOiBmaWxlIG9wcyByZWxhdGVkIGZsYWdzIGluY2x1ZGluZyBidXN5IGZsYWcu
+ICovDQo+ID4gKwl1bnNpZ25lZCBsb25nIGZpbGVfb3BzX2ZsYWdzOw0KPiA+ICsNCj4gPiAgCS8q
+KiBAbGVuZ3RoOiBOdW1iZXIgb2YgZGF0dW1zIGluIGJ1ZmZlci4gKi8NCj4gPiAgCXVuc2lnbmVk
+IGludCBsZW5ndGg7DQo+ID4gIA0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2lpby9p
+aW8uaCBiL2luY2x1ZGUvbGludXgvaWlvL2lpby5oDQo+ID4gaW5kZXggZTk3NTAyMGFiYWE2Li5l
+OTM0OTdmNDgzZjcgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9paW8vaWlvLmgNCj4g
+PiArKysgYi9pbmNsdWRlL2xpbnV4L2lpby9paW8uaA0KPiA+IEBAIC01MTcsNiArNTE3LDcgQEAg
+c3RydWN0IGlpb19idWZmZXJfc2V0dXBfb3BzIHsNCj4gPiAgICogQHNldHVwX29wczoJCVtEUklW
+RVJdIGNhbGxiYWNrcyB0byBjYWxsIGJlZm9yZSBhbmQgYWZ0ZXINCj4gPiBidWZmZXINCj4gPiAg
+ICoJCQllbmFibGUvZGlzYWJsZQ0KPiA+ICAgKiBAY2hyZGV2OgkJW0lOVEVSTl0gYXNzb2NpYXRl
+ZCBjaGFyYWN0ZXIgZGV2aWNlDQo+ID4gKyAqIEBjaHJkZXZfaW5pdGlhbGl6ZWQ6CVtJTlRFUk5d
+IHRydWUgaWYgQGNocmRldiBkZXZpY2UgaGFzIGJlZW4NCj4gPiBpbml0aWFsaXplZA0KPiA+ICAg
+KiBAZ3JvdXBzOgkJW0lOVEVSTl0gYXR0cmlidXRlIGdyb3Vwcw0KPiA+ICAgKiBAZ3JvdXBjb3Vu
+dGVyOglbSU5URVJOXSBpbmRleCBvZiBuZXh0IGF0dHJpYnV0ZSBncm91cA0KPiA+ICAgKiBAZmxh
+Z3M6CQlbSU5URVJOXSBmaWxlIG9wcyByZWxhdGVkIGZsYWdzIGluY2x1ZGluZyBidXN5IGZsYWcu
+DQo+ID4gQEAgLTU2MCw2ICs1NjEsNyBAQCBzdHJ1Y3QgaWlvX2RldiB7DQo+ID4gIAlzdHJ1Y3Qg
+bXV0ZXgJCQlpbmZvX2V4aXN0X2xvY2s7DQo+ID4gIAljb25zdCBzdHJ1Y3QgaWlvX2J1ZmZlcl9z
+ZXR1cF9vcHMJKnNldHVwX29wczsNCj4gPiAgCXN0cnVjdCBjZGV2CQkJY2hyZGV2Ow0KPiA+ICsJ
+aW50CQkJCWNocmRldl9pbml0aWFsaXplZDsNCj4gPiAgI2RlZmluZSBJSU9fTUFYX0dST1VQUyA2
+DQo+ID4gIAljb25zdCBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwCSpncm91cHNbSUlPX01BWF9HUk9V
+UFMgKyAxXTsNCj4gPiAgCWludAkJCQlncm91cGNvdW50ZXI7DQo=
