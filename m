@@ -2,105 +2,127 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC152C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32177C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877252087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UyQbo7MJ"
+	by mail.kernel.org (Postfix) with ESMTP id 189CF2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502569AbgDNNGX (ORCPT
+        id S2502578AbgDNNGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2502552AbgDNNF2 (ORCPT
+        Tue, 14 Apr 2020 09:06:36 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:55642 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502564AbgDNNGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:05:28 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90C6C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:05:27 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a25so14256876wrd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=hXwIQYgoQP2Wup93C1/59d2xx2g3UUkrum6b3g6XEYk=;
-        b=UyQbo7MJKG1NihktiWx4FwRnJw5Y/jhDfqPKDzBCTAnc3WqjnfQ/r8MXmIK4H2tTcc
-         p/suue+ZEK+pVaNOs6LS+XEDherVb2ELvDV3m+CCOdnmZ7LUmlSkF83KfwIE0byLOtbw
-         iHvrkfYP+0z/V/MbtwnwT1czz90p5UT2RrjBNhc6GjdHa7Af859SsPQAzcnFmpM/zkCG
-         ongBPvM7Zj3IMiwBjBcpWjBJewL221NaOWh7Y1Y4IFBXdjQAQ1SRqHVMiSf4LwkETeiv
-         lsHf4UojuwH3EeQvz64OlDVcDd2O8e8O0UvizYkWaPpibK0sDuMefLzpyhTJC5+5qfRr
-         p1rQ==
+        Tue, 14 Apr 2020 09:06:16 -0400
+Received: by mail-il1-f197.google.com with SMTP id h10so14720448ilq.22
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:06:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=hXwIQYgoQP2Wup93C1/59d2xx2g3UUkrum6b3g6XEYk=;
-        b=KVTm/wNw7MB4rgavdJm4g+JNHqlqA1S+E0xwpj391CiRrynya/UU+aaelbI2xyTN/1
-         Tcmkql/DY/jxev/v0AAX8ratYnY2Z2YpHKrdCIaVAJUNQaLSrWQ/CCBBnsA2jCKzPU9+
-         ZudUy0c0yig3daWkeVSNy4YBbd2IOmaodWGVJtcyyiJet0OtbF/aRaLc267JOgx5COu9
-         JcTi/8NROd2MRMitQOf+p3RqUb+BCblQghuc7PBh3EU6Bw+/YhFeP01HjSCwOXgZbtdl
-         R8LT3DRQtsoLYdE1IXI/O/2/E4ajSw1gbXHKwo7qGGlvMdewwi4K0RMhWqx0mFiqCx+L
-         jH8A==
-X-Gm-Message-State: AGi0PuZRHz/DAWWjz/FcN2+HXr3oCjG02VKC+VASdWXeeHBTFgNzSOFV
-        8Kce9vOVZ81NI9DwKckguA0/sA==
-X-Google-Smtp-Source: APiQypLVat6kUor59eAwhpTgIo0JZwEUdzMv6AqD1oJjYDhA/1hYzmlEALMZYP/w2KFVxCghsnhsSw==
-X-Received: by 2002:adf:a54a:: with SMTP id j10mr22627237wrb.233.1586869526464;
-        Tue, 14 Apr 2020 06:05:26 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id k3sm9397220wru.90.2020.04.14.06.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 06:05:23 -0700 (PDT)
-References: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, khilman@baylibre.com,
-        narmstrong@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC v1 0/5] GPU DVFS for Meson GXBB/GXL/GXM/G12A/G12B/SM1
-In-reply-to: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
-Date:   Tue, 14 Apr 2020 15:05:22 +0200
-Message-ID: <1jftd6tdyl.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=WGQ3SBJwnf5YlDpIwsgsa30mhVfEOL2HbfrgyzxLGnc=;
+        b=KcfRnsOg0fWL37ZUgYk2jijedTOrrm5v8KvwuN+jPSG1K/YvKDd/Iz3eve5MJRcQ5N
+         33UOff88vNJwPM6Il3ap4bcVZGET+OKBc+6LECcIvzLZkQ9qDcOsVnIk5Xmig7cNsncH
+         t+RqbvfHkwnL47lpoDS7jOqctXEjBCLZottMyBfL2dvbGzX8dPQR594vSdakwFdMwNYa
+         er/O7prxpVoKXsfWgoAsRXyCySxI3QsbMShOJ1MFBYzeQrrgD29cIK5QJfyMq2w93juU
+         QGBBfQ5qI1+KBCcMYaIOkCxgM3AgdjKhk1F99OmECoobn7ARgNW0KnX4/dSJcsFj6t2i
+         ownQ==
+X-Gm-Message-State: AGi0PuYmDPbywe1FEjwlhTEP1R3krrSvJZWKi15yzlOdXVhL7usRhDkJ
+        jBQFbbEzF5STRi46nBPVpk0qTGuAdJTcRGlJF81j36QdkT0h
+X-Google-Smtp-Source: APiQypJhM6Ooj+LDG0cOS+J2eVV/xc3nBrVxB8AaWinUc083RZNukheeDbjpO8n8EebTcWpWn6KhKsXwn1rfWItyQs/rkAkmoVwg
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6602:2a56:: with SMTP id k22mr530410iov.22.1586869575527;
+ Tue, 14 Apr 2020 06:06:15 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 06:06:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005ab2f105a33fdd82@google.com>
+Subject: WARNING in plist_check_prev_next
+From:   syzbot <syzbot+9c64e877cca5f208807f@syzkaller.appspotmail.com>
+To:     len.brown@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, pavel@ucw.cz, rjw@rjwysocki.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On Tue 31 Mar 2020 at 00:10, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+syzbot found the following crash on:
 
->
-> [0] https://cgit.freedesktop.org/drm-misc/commit/?id=1996970773a323533e1cc1b6b97f00a95d675f32
->
->
-> Martin Blumenstingl (5):
->   clk: meson: gxbb: Prepare the GPU clock tree to change at runtime
->   clk: meson: g12a: Prepare the GPU clock tree to change at runtime
->   arm64: dts: amlogic: meson-gx: add the Mali-450 OPP table and use DVFS
->   arm64: dts: amlogic: meson-gxm: add the Mali OPP table and use DVFS
->   arm64: dts: amlogic: meson-g12: add the Mali OPP table and use DVFS
->
->  .../boot/dts/amlogic/meson-g12-common.dtsi    | 49 ++++++++++-----
->  .../boot/dts/amlogic/meson-gx-mali450.dtsi    | 61 +++++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   | 51 ++++------------
->  .../boot/dts/amlogic/meson-gxl-mali.dtsi      | 46 +++-----------
->  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi    | 45 +++++++++-----
->  drivers/clk/meson/g12a.c                      | 30 ++++++---
->  drivers/clk/meson/gxbb.c                      | 40 ++++++------
->  7 files changed, 189 insertions(+), 133 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
+HEAD commit:    c0cc2711 Merge tag 'modules-for-v5.7' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1600bdb3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23c5a352e32a1944
+dashboard link: https://syzkaller.appspot.com/bug?extid=9c64e877cca5f208807f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
 
-Clock part looks good to me and aligns with meson8.
-Please resend the clock part without the RFC tag
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9c64e877cca5f208807f@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+top: 00000000dcea6c9a, n: 0000000093c70fdb, p: 0000000013dbca61
+prev: 00000000dcea6c9a, n: 0000000093c70fdb, p: 0000000013dbca61
+next: 0000000093c70fdb, n: 0000000093c70fdb, p: 0000000093c70fdb
+WARNING: CPU: 1 PID: 30481 at lib/plist.c:35 plist_check_prev_next+0x108/0x1a0 lib/plist.c:35
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 30481 Comm: syz-executor.3 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:plist_check_prev_next+0x108/0x1a0 lib/plist.c:35
+Code: df 48 c1 ee 03 80 3c 16 00 75 6c 49 8b 14 24 41 55 4d 89 f1 49 89 d8 50 4c 89 e6 48 c7 c7 80 20 fc 88 55 41 57 e8 60 52 7b f9 <0f> 0b 48 83 c4 20 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 1f
+RSP: 0018:ffffc90007d9f8d0 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: ffffffff899a9780 RCX: 0000000000000000
+RDX: 0000000000020c0b RSI: ffffffff815cd551 RDI: fffff52000fb3f0c
+RBP: ffff8880a8479858 R08: ffff8880673a60c0 R09: ffffed1015ce45f1
+R10: ffff8880ae722f83 R11: ffffed1015ce45f0 R12: ffffffff899a9780
+R13: ffff8880a8479858 R14: ffff8880a8479858 R15: ffffffff8bbc3ed8
+ plist_check_list+0x41/0xa0 lib/plist.c:48
+ plist_add+0x2f/0x4e0 lib/plist.c:78
+ pm_qos_update_target+0x4ac/0x5d0 kernel/power/qos.c:125
+ cpu_latency_qos_apply+0x40/0x70 kernel/power/qos.c:247
+ cpu_latency_qos_add_request+0xf1/0x3c0 kernel/power/qos.c:277
+ snd_pcm_hw_params+0x173c/0x1da0 sound/core/pcm_native.c:757
+ snd_pcm_kernel_ioctl+0xd1/0x240 sound/core/pcm_native.c:3305
+ snd_pcm_oss_change_params_locked+0x1328/0x34b0 sound/core/oss/pcm_oss.c:941
+ snd_pcm_oss_make_ready_locked+0xb3/0x130 sound/core/oss/pcm_oss.c:1166
+ snd_pcm_oss_write1 sound/core/oss/pcm_oss.c:1384 [inline]
+ snd_pcm_oss_write+0x43b/0x8c0 sound/core/oss/pcm_oss.c:2765
+ __vfs_write+0x76/0x100 fs/read_write.c:495
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x12d/0x250 fs/read_write.c:612
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
