@@ -2,165 +2,156 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFBEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7140AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643252072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e0djzw/g"
+	by mail.kernel.org (Postfix) with ESMTP id 5351E206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438722AbgDNK4J (ORCPT
+        id S2438732AbgDNK42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:56:09 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41820 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438407AbgDNKeP (ORCPT
+        Tue, 14 Apr 2020 06:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438401AbgDNKeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:34:15 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAXI6P102563;
-        Tue, 14 Apr 2020 10:34:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=M8MvkDpLyHCF3YAFTo6D5bpm4FyG8RWh04rIgFIGDTc=;
- b=e0djzw/gAjSZac/wMBtbjiY9qsuwkuOFYBlhthLzM/ooy3+F5O6jO4FEonqBaGuCJ7Ap
- +DebQfdjkSkekTEKq31QCDrziLi4fsjFQToW7G4Z+vVsmORTerlEbd/KKawLVUyO73EX
- YPhRGYWzRrf5xbBydp+LSo9ZFujcxqdGjUan2QeG8JF0bltxs9QYlOLtqYjMr0uXRzZu
- zOBtQMmRVVYDg3anWyobDWGAGsnVB8wN6kxgQngw5BP4n4LKaPO72GxNU0B/lYwiTY3l
- VtXjRLSPMx+c66yEU7MG31tFbN182VCehjf3QbQWwdGy9Swslu4j+ZefTsPCvdAaTdJK Pg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30b6hpkms5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:34:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAW0gU123332;
-        Tue, 14 Apr 2020 10:32:01 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30bqpfxnq0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:32:00 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EAVmjb013580;
-        Tue, 14 Apr 2020 10:31:53 GMT
-Received: from linux-1.home (/92.157.90.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 03:31:48 -0700
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        peterz@infradead.org, jthierry@redhat.com, tglx@linutronix.de,
-        alexandre.chartre@oracle.com
-Subject: [PATCH V3 0/9] objtool changes to check retpoline code
-Date:   Tue, 14 Apr 2020 12:36:09 +0200
-Message-Id: <20200414103618.12657-1-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 2.18.2
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140087
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140087
+        Tue, 14 Apr 2020 06:34:10 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8277C061A41;
+        Tue, 14 Apr 2020 03:34:10 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jOItH-0008Sj-8p; Tue, 14 Apr 2020 12:34:03 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DECA71C0086;
+        Tue, 14 Apr 2020 12:34:02 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 10:34:02 -0000
+From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] objtool: Support Clang non-section symbols in ORC
+ generation
+Cc:     Dmitry Golovin <dima@golovin.in>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com>
+References: <9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+Message-ID: <158686044251.28353.5727217228270138782.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the x86/urgent branch of tip:
 
-This is version 3 of the patchset previously named "objtool changes to
-remove all ANNOTATE_NOSPEC_ALTERNATIVE". This patchset proposes two
-main changes:
+Commit-ID:     e81e0724432542af8d8c702c31e9d82f57b1ff31
+Gitweb:        https://git.kernel.org/tip/e81e0724432542af8d8c702c31e9d82f57b1ff31
+Author:        Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate:    Wed, 01 Apr 2020 13:23:27 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 14 Apr 2020 12:03:42 +02:00
 
- 1. Add intra-function call support to objtool. This allows objtool
-    to check code like retpoline and RSB stuffing. Such code is present
-    in alternative and it is not currently checked because of
-    ANNOTATE_NOSPEC_ALTERNATIVE directives.
+objtool: Support Clang non-section symbols in ORC generation
 
- 2. Add alternative code validation in objtool. For stack unwinding to
-    work, Peter and Josh have clearly explained that alternative code
-    should have the same stack change sequence as the original code.
-    This patchset adds this capability to objtool.
+When compiling the kernel with AS=clang, objtool produces a lot of
+warnings:
 
-After changes 1, we could remove the ANNOTATE_SPEC_ALTERNATIVE directives
-from retpoline/RSB alternatives, and alternatives would be correclty checked
-by objtool. But, because of changes 2, objtool would now report inconsistency
-in alternatives, like this:
+  warning: objtool: missing symbol for section .text
+  warning: objtool: missing symbol for section .init.text
+  warning: objtool: missing symbol for section .ref.text
 
-  AS      arch/x86/lib/retpoline.o
-arch/x86/lib/retpoline.o: warning: objtool: __x86_indirect_thunk_rax()+0x0: error in alternative
-arch/x86/lib/retpoline.o: warning: objtool: .altinstr_replacement+0x0: in alternative 1
-arch/x86/lib/retpoline.o: warning: objtool: .altinstr_replacement+0x5: misaligned alternative state change
-arch/x86/lib/retpoline.o: warning: objtool: .altinstr_replacement+0x11: in alternative 2
-arch/x86/lib/retpoline.o: warning: objtool: .altinstr_replacement+0x14: misaligned alternative state change
+It then fails to generate the ORC table.
 
-So this pachset doesn't remove ANNOTATE_NOSPEC_ALTERNATIVE directives
-(unlike v1 and v2). But it makes objtool able to detect inconsistent
-alternatives. Then such alternative will need to be refactored to
-have stack unwinding information compatible with the original code.
-For example, here is Peter suggestion for retpoline code:
-  https://lkml.org/lkml/2020/4/8/905
+The problem is that objtool assumes text section symbols always exist.
+But the Clang assembler is aggressive about removing them.
 
+When generating relocations for the ORC table, objtool always tries to
+reference instructions by their section symbol offset.  If the section
+symbol doesn't exist, it bails.
 
-Changes:
+Do a fallback: when a section symbol isn't available, reference a
+function symbol instead.
 
-v2->v3:
- - rebase on v5.7-rc1
- - add alternative code validation in objtool
- - add return address unwind hints
- - track return address to correctly handle ret with intra-function call
- - remove inclusion of PeterZ UNWIND_HINT_RET_OFFSET patch
- - move alt_group changes to appropriate patch
- - move stack changes for calls to INSN_CALL decode
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/669
+Link: https://lkml.kernel.org/r/9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com
+---
+ tools/objtool/orc_gen.c | 33 ++++++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
 
-v1->v2:
- - replace RETPOLINE_RET with PeterZ UNWIND_HINT_RET_OFFSET
- - make objtool intra-function call action architecture dependent
- - objtool now automatically detects and validates all intra-function
-   calls but it issues a warning if the call was not explicitly tagged
- - change __FILL_RETURN_BUFFER to work with objtool
- - add generic ANNOTATE_INTRA_FUNCTION_CALL macro
- - remove all ANNOTATE_SPEC_ALTERNATIVE (even for __FILL_RETURN_BUFFER)
-
-Thanks,
-
-alex.
-
------
-
-Alexandre Chartre (9):
-  objtool: is_fentry_call() crashes if call has no destination
-  objtool: Allow branches within the same alternative.
-  objtool: Add support for intra-function calls
-  objtool: Handle return instruction with intra-function call
-  objtool: Add return address unwind hints
-  objtool: Report inconsistent stack changes in alternative
-  x86/speculation: Change __FILL_RETURN_BUFFER to work with objtool
-  x86/speculation: Add return address unwind hints to retpoline and RSB
-    stuffing
-  x86/speculation: Annotate intra-function calls
-
- arch/x86/include/asm/nospec-branch.h          |  42 +-
- arch/x86/include/asm/orc_types.h              |   2 +
- arch/x86/include/asm/unwind_hints.h           |  23 +
- include/linux/frame.h                         |  11 +
- tools/arch/x86/include/asm/orc_types.h        |   2 +
- .../Documentation/stack-validation.txt        |   8 +
- tools/objtool/arch/x86/decode.c               |  13 +
- tools/objtool/check.c                         | 480 ++++++++++++++++--
- tools/objtool/check.h                         |   8 +-
- 9 files changed, 545 insertions(+), 44 deletions(-)
-
--- 
-2.18.2
-
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
+index 41e4a27..4c0dabd 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/orc_gen.c
+@@ -88,11 +88,6 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
+ 	struct orc_entry *orc;
+ 	struct rela *rela;
+ 
+-	if (!insn_sec->sym) {
+-		WARN("missing symbol for section %s", insn_sec->name);
+-		return -1;
+-	}
+-
+ 	/* populate ORC data */
+ 	orc = (struct orc_entry *)u_sec->data->d_buf + idx;
+ 	memcpy(orc, o, sizeof(*orc));
+@@ -105,8 +100,32 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
+ 	}
+ 	memset(rela, 0, sizeof(*rela));
+ 
+-	rela->sym = insn_sec->sym;
+-	rela->addend = insn_off;
++	if (insn_sec->sym) {
++		rela->sym = insn_sec->sym;
++		rela->addend = insn_off;
++	} else {
++		/*
++		 * The Clang assembler doesn't produce section symbols, so we
++		 * have to reference the function symbol instead:
++		 */
++		rela->sym = find_symbol_containing(insn_sec, insn_off);
++		if (!rela->sym) {
++			/*
++			 * Hack alert.  This happens when we need to reference
++			 * the NOP pad insn immediately after the function.
++			 */
++			rela->sym = find_symbol_containing(insn_sec,
++							   insn_off - 1);
++		}
++		if (!rela->sym) {
++			WARN("missing symbol for insn at offset 0x%lx\n",
++			     insn_off);
++			return -1;
++		}
++
++		rela->addend = insn_off - rela->sym->offset;
++	}
++
+ 	rela->type = R_X86_64_PC32;
+ 	rela->offset = idx * sizeof(int);
+ 	rela->sec = ip_relasec;
