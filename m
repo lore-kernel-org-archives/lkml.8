@@ -7,403 +7,518 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51702C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE69CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1597C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FF9206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cvrVe0cq"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SzMRHQ7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437174AbgDNIwI (ORCPT
+        id S2437181AbgDNIwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:52:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:19054 "EHLO pegase1.c-s.fr"
+        Tue, 14 Apr 2020 04:52:13 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38528 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437061AbgDNIuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2437062AbgDNIuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 04:50:55 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 491dgV2Yjpz9v1Fh;
-        Tue, 14 Apr 2020 10:19:18 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 491dgg5F82z9tydT;
+        Tue, 14 Apr 2020 10:19:27 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=cvrVe0cq; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=SzMRHQ7O; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cr-ssWed6tv9; Tue, 14 Apr 2020 10:19:18 +0200 (CEST)
+        with ESMTP id 4m40qpucuOQw; Tue, 14 Apr 2020 10:19:27 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 491dgV1XGvz9ty3F;
-        Tue, 14 Apr 2020 10:19:18 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 491dgg3TDNz9tydb;
+        Tue, 14 Apr 2020 10:19:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586852358; bh=b5rTmlcr3VntZTQ0P0m2nQnrwBhA8x8uGnMvNjNdhas=;
+        t=1586852367; bh=GxsSM1mHvfOul+e3M/Zrv9n+OF+1JHGP+dH0vKyY4Wo=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=cvrVe0cqwVoC+vrv12jNqYRAAfdXNTtUY3SKQ7l8eGxQxmrtyTTXKx1eqYoRlF9Wd
-         CDru2pXLTQcQOX9YwmhL4i2KkQnh3+HiQVZuSRqndDqrqdwecy4BD9Kd3EFNlptFxy
-         teMZIMeyDf+U7GPF6VMVweaN6whACIzJ47M8QOgM=
+        b=SzMRHQ7OubKCwGJEXseVGiO+8GFoaCb00GF0vEItQQTJ0oVtqXt/6r70dHM3CEEcV
+         XgkOiNsFZD+1hIJOGWp6JaPyAI/GAZIp/rJJJSAbUyMavhaN5z6locADJbl4kS3u+L
+         PqDu06UuktRhlJXau1vYInPtDfTsBJNhXX/CqNvw=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4B8068B796;
-        Tue, 14 Apr 2020 10:19:19 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 82FD88B797;
+        Tue, 14 Apr 2020 10:19:28 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 0EkyqAUYEpS9; Tue, 14 Apr 2020 10:19:19 +0200 (CEST)
+        with ESMTP id mcJSbZTfelP4; Tue, 14 Apr 2020 10:19:28 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE30D8B797;
-        Tue, 14 Apr 2020 10:19:18 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A1D78B798;
+        Tue, 14 Apr 2020 10:19:28 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 7F3C66578B; Tue, 14 Apr 2020 08:19:18 +0000 (UTC)
-Message-Id: <9988528a455bb8c9962e2ea9e8df06ebca8cded1.1586852082.git.christophe.leroy@c-s.fr>
+        id D0DB86578A; Tue, 14 Apr 2020 08:19:27 +0000 (UTC)
+Message-Id: <76be76b2d8eed1f4aa3c4f9e6fdefc117361af26.1586852082.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1586852082.git.christophe.leroy@c-s.fr>
 References: <cover.1586852082.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 02/13] powerpc/40x: Rework 40x PTE access and TLB miss
+Subject: [PATCH v3 11/13] powerpc: Remove IBM405 Erratum #77
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
         arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 14 Apr 2020 08:19:18 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 08:19:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1bc54c03117b ("powerpc: rework 4xx PTE access and TLB miss")
-reworked 44x PTE access to avoid atomic pte updates, and
-left 8xx, 40x and fsl booke with atomic pte updates.
-Commit 6cfd8990e27d ("powerpc: rework FSL Book-E PTE access and TLB
-miss") removed atomic pte updates on fsl booke.
-It went away on 8xx with commit ddfc20a3b9ae ("powerpc/8xx: Remove
-PTE_ATOMIC_UPDATES").
+This erratum is dedicated to IBM 405GP and STB03xxx
+which are now gone.
 
-40x is the last platform setting PTE_ATOMIC_UPDATES.
-
-Rework PTE access and TLB miss to remove PTE_ATOMIC_UPDATES for 40x:
-- Always handle DSI as a fault.
-- Bail out of TLB miss handler when CONFIG_SWAP is set and
-_PAGE_ACCESSED is not set.
-- Bail out of ITLB miss handler when _PAGE_EXEC is not set.
-- Only set WR bit when both _PAGE_RW and _PAGE_DIRTY are set.
-- Remove _PAGE_HWWRITE
-- Don't require PTE_ATOMIC_UPDATES anymore
+Remove this erratum.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/nohash/32/pte-40x.h |  23 +--
- arch/powerpc/include/asm/nohash/pgtable.h    |   2 -
- arch/powerpc/kernel/head_40x.S               | 177 +++----------------
- arch/powerpc/mm/nohash/40x.c                 |   4 +-
- 4 files changed, 34 insertions(+), 172 deletions(-)
+ arch/powerpc/include/asm/asm-405.h           | 19 -------------------
+ arch/powerpc/include/asm/atomic.h            | 11 -----------
+ arch/powerpc/include/asm/bitops.h            |  4 ----
+ arch/powerpc/include/asm/cmpxchg.h           | 11 -----------
+ arch/powerpc/include/asm/futex.h             |  3 ---
+ arch/powerpc/include/asm/nohash/32/pgtable.h |  1 -
+ arch/powerpc/include/asm/spinlock.h          |  4 ----
+ arch/powerpc/kernel/entry_32.S               | 11 -----------
+ arch/powerpc/kernel/head_40x.S               |  3 ---
+ arch/powerpc/platforms/40x/Kconfig           |  6 ------
+ 10 files changed, 73 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/asm-405.h
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pte-40x.h b/arch/powerpc/include/asm/nohash/32/pte-40x.h
-index 12c6811e344b..2d3153cfc0d7 100644
---- a/arch/powerpc/include/asm/nohash/32/pte-40x.h
-+++ b/arch/powerpc/include/asm/nohash/32/pte-40x.h
-@@ -44,9 +44,8 @@
- #define	_PAGE_WRITETHRU	0x008	/* W: caching is write-through */
- #define	_PAGE_USER	0x010	/* matches one of the zone permission bits */
- #define	_PAGE_SPECIAL	0x020	/* software: Special page */
--#define	_PAGE_RW	0x040	/* software: Writes permitted */
- #define	_PAGE_DIRTY	0x080	/* software: dirty page */
--#define _PAGE_HWWRITE	0x100	/* hardware: Dirty & RW, set in exception */
-+#define _PAGE_RW	0x100	/* hardware: WR, anded with dirty in exception */
- #define _PAGE_EXEC	0x200	/* hardware: EX permission */
- #define _PAGE_ACCESSED	0x400	/* software: R: page referenced */
- 
-@@ -58,8 +57,8 @@
- 
- #define _PAGE_KERNEL_RO		0
- #define _PAGE_KERNEL_ROX	_PAGE_EXEC
--#define _PAGE_KERNEL_RW		(_PAGE_DIRTY | _PAGE_RW | _PAGE_HWWRITE)
--#define _PAGE_KERNEL_RWX	(_PAGE_DIRTY | _PAGE_RW | _PAGE_HWWRITE | _PAGE_EXEC)
-+#define _PAGE_KERNEL_RW		(_PAGE_DIRTY | _PAGE_RW)
-+#define _PAGE_KERNEL_RWX	(_PAGE_DIRTY | _PAGE_RW | _PAGE_EXEC)
- 
- #define _PMD_PRESENT	0x400	/* PMD points to page of PTEs */
- #define _PMD_PRESENT_MASK	_PMD_PRESENT
-@@ -85,21 +84,5 @@
- #define PAGE_READONLY	__pgprot(_PAGE_BASE | _PAGE_USER)
- #define PAGE_READONLY_X	__pgprot(_PAGE_BASE | _PAGE_USER | _PAGE_EXEC)
- 
--#ifndef __ASSEMBLY__
--static inline pte_t pte_wrprotect(pte_t pte)
--{
--	return __pte(pte_val(pte) & ~(_PAGE_RW | _PAGE_HWWRITE));
--}
+diff --git a/arch/powerpc/include/asm/asm-405.h b/arch/powerpc/include/asm/asm-405.h
+deleted file mode 100644
+index 7270d3ae7c8e..000000000000
+--- a/arch/powerpc/include/asm/asm-405.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-#ifndef _ASM_POWERPC_ASM_405_H
+-#define _ASM_POWERPC_ASM_405_H
 -
--#define pte_wrprotect pte_wrprotect
+-#include <asm/asm-const.h>
 -
--static inline pte_t pte_mkclean(pte_t pte)
--{
--	return __pte(pte_val(pte) & ~(_PAGE_DIRTY | _PAGE_HWWRITE));
--}
--
--#define pte_mkclean pte_mkclean
+-#ifdef __KERNEL__
+-#ifdef CONFIG_IBM405_ERR77
+-/* Erratum #77 on the 405 means we need a sync or dcbt before every
+- * stwcx.  The old ATOMIC_SYNC_FIX covered some but not all of this.
+- */
+-#define PPC405_ERR77(ra,rb)	stringify_in_c(dcbt	ra, rb;)
+-#define	PPC405_ERR77_SYNC	stringify_in_c(sync;)
+-#else
+-#define PPC405_ERR77(ra,rb)
+-#define PPC405_ERR77_SYNC
+-#endif
 -#endif
 -
- #endif /* __KERNEL__ */
- #endif /*  _ASM_POWERPC_NOHASH_32_PTE_40x_H */
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index 7fed9dc0f147..21e4d0d3eb3b 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -130,12 +130,10 @@ static inline pte_t pte_exprotect(pte_t pte)
- 	return __pte(pte_val(pte) & ~_PAGE_EXEC);
- }
+-#endif /* _ASM_POWERPC_ASM_405_H */
+diff --git a/arch/powerpc/include/asm/atomic.h b/arch/powerpc/include/asm/atomic.h
+index 31c231ea56b7..498785ffc25f 100644
+--- a/arch/powerpc/include/asm/atomic.h
++++ b/arch/powerpc/include/asm/atomic.h
+@@ -10,7 +10,6 @@
+ #include <linux/types.h>
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+-#include <asm/asm-405.h>
  
--#ifndef pte_mkclean
- static inline pte_t pte_mkclean(pte_t pte)
- {
- 	return __pte(pte_val(pte) & ~_PAGE_DIRTY);
- }
+ #define ATOMIC_INIT(i)		{ (i) }
+ 
+@@ -47,7 +46,6 @@ static __inline__ void atomic_##op(int a, atomic_t *v)			\
+ 	__asm__ __volatile__(						\
+ "1:	lwarx	%0,0,%3		# atomic_" #op "\n"			\
+ 	#asm_op " %0,%2,%0\n"						\
+-	PPC405_ERR77(0,%3)						\
+ "	stwcx.	%0,0,%3 \n"						\
+ "	bne-	1b\n"							\
+ 	: "=&r" (t), "+m" (v->counter)					\
+@@ -63,7 +61,6 @@ static inline int atomic_##op##_return_relaxed(int a, atomic_t *v)	\
+ 	__asm__ __volatile__(						\
+ "1:	lwarx	%0,0,%3		# atomic_" #op "_return_relaxed\n"	\
+ 	#asm_op " %0,%2,%0\n"						\
+-	PPC405_ERR77(0, %3)						\
+ "	stwcx.	%0,0,%3\n"						\
+ "	bne-	1b\n"							\
+ 	: "=&r" (t), "+m" (v->counter)					\
+@@ -81,7 +78,6 @@ static inline int atomic_fetch_##op##_relaxed(int a, atomic_t *v)	\
+ 	__asm__ __volatile__(						\
+ "1:	lwarx	%0,0,%4		# atomic_fetch_" #op "_relaxed\n"	\
+ 	#asm_op " %1,%3,%0\n"						\
+-	PPC405_ERR77(0, %4)						\
+ "	stwcx.	%1,0,%4\n"						\
+ "	bne-	1b\n"							\
+ 	: "=&r" (res), "=&r" (t), "+m" (v->counter)			\
+@@ -130,7 +126,6 @@ static __inline__ void atomic_inc(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_inc\n\
+ 	addic	%0,%0,1\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%0,0,%2 \n\
+ 	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -146,7 +141,6 @@ static __inline__ int atomic_inc_return_relaxed(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_inc_return_relaxed\n"
+ "	addic	%0,%0,1\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%0,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -163,7 +157,6 @@ static __inline__ void atomic_dec(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_dec\n\
+ 	addic	%0,%0,-1\n"
+-	PPC405_ERR77(0,%2)\
+ "	stwcx.	%0,0,%2\n\
+ 	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -179,7 +172,6 @@ static __inline__ int atomic_dec_return_relaxed(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_dec_return_relaxed\n"
+ "	addic	%0,%0,-1\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%0,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -220,7 +212,6 @@ static __inline__ int atomic_fetch_add_unless(atomic_t *v, int a, int u)
+ 	cmpw	0,%0,%3 \n\
+ 	beq	2f \n\
+ 	add	%0,%2,%0 \n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%0,0,%1 \n\
+ 	bne-	1b \n"
+ 	PPC_ATOMIC_EXIT_BARRIER
+@@ -251,7 +242,6 @@ static __inline__ int atomic_inc_not_zero(atomic_t *v)
+ 	cmpwi	0,%0,0\n\
+ 	beq-	2f\n\
+ 	addic	%1,%0,1\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%1,0,%2\n\
+ 	bne-	1b\n"
+ 	PPC_ATOMIC_EXIT_BARRIER
+@@ -280,7 +270,6 @@ static __inline__ int atomic_dec_if_positive(atomic_t *v)
+ 	cmpwi	%0,1\n\
+ 	addi	%0,%0,-1\n\
+ 	blt-	2f\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.	%0,0,%1\n\
+ 	bne-	1b"
+ 	PPC_ATOMIC_EXIT_BARRIER
+diff --git a/arch/powerpc/include/asm/bitops.h b/arch/powerpc/include/asm/bitops.h
+index 28dcf8222943..4a4d3afd5340 100644
+--- a/arch/powerpc/include/asm/bitops.h
++++ b/arch/powerpc/include/asm/bitops.h
+@@ -41,7 +41,6 @@
+ #include <linux/compiler.h>
+ #include <asm/asm-compat.h>
+ #include <asm/synch.h>
+-#include <asm/asm-405.h>
+ 
+ /* PPC bit number conversion */
+ #define PPC_BITLSHIFT(be)	(BITS_PER_LONG - 1 - (be))
+@@ -73,7 +72,6 @@ static inline void fn(unsigned long mask,	\
+ 	prefix					\
+ "1:"	PPC_LLARX(%0,0,%3,0) "\n"		\
+ 	stringify_in_c(op) "%0,%0,%2\n"		\
+-	PPC405_ERR77(0,%3)			\
+ 	PPC_STLCX "%0,0,%3\n"			\
+ 	"bne- 1b\n"				\
+ 	: "=&r" (old), "+m" (*p)		\
+@@ -119,7 +117,6 @@ static inline unsigned long fn(			\
+ 	prefix						\
+ "1:"	PPC_LLARX(%0,0,%3,eh) "\n"			\
+ 	stringify_in_c(op) "%1,%0,%2\n"			\
+-	PPC405_ERR77(0,%3)				\
+ 	PPC_STLCX "%1,0,%3\n"				\
+ 	"bne- 1b\n"					\
+ 	postfix						\
+@@ -175,7 +172,6 @@ clear_bit_unlock_return_word(int nr, volatile unsigned long *addr)
+ 	PPC_RELEASE_BARRIER
+ "1:"	PPC_LLARX(%0,0,%3,0) "\n"
+ 	"andc %1,%0,%2\n"
+-	PPC405_ERR77(0,%3)
+ 	PPC_STLCX "%1,0,%3\n"
+ 	"bne- 1b\n"
+ 	: "=&r" (old), "=&r" (t)
+diff --git a/arch/powerpc/include/asm/cmpxchg.h b/arch/powerpc/include/asm/cmpxchg.h
+index 27183871eb3b..cf091c4c22e5 100644
+--- a/arch/powerpc/include/asm/cmpxchg.h
++++ b/arch/powerpc/include/asm/cmpxchg.h
+@@ -6,7 +6,6 @@
+ #include <linux/compiler.h>
+ #include <asm/synch.h>
+ #include <linux/bug.h>
+-#include <asm/asm-405.h>
+ 
+ #ifdef __BIG_ENDIAN
+ #define BITOFF_CAL(size, off)	((sizeof(u32) - size - off) * BITS_PER_BYTE)
+@@ -29,7 +28,6 @@ static inline u32 __xchg_##type##sfx(volatile void *p, u32 val)	\
+ "1:	lwarx   %0,0,%3\n"					\
+ "	andc	%1,%0,%5\n"					\
+ "	or	%1,%1,%4\n"					\
+-	PPC405_ERR77(0,%3)					\
+ "	stwcx.	%1,0,%3\n"					\
+ "	bne-	1b\n"						\
+ 	: "=&r" (prev), "=&r" (tmp), "+m" (*(u32*)p)		\
+@@ -60,7 +58,6 @@ u32 __cmpxchg_##type##sfx(volatile void *p, u32 old, u32 new)	\
+ "	bne-	2f\n"						\
+ "	andc	%1,%0,%6\n"					\
+ "	or	%1,%1,%5\n"					\
+-	PPC405_ERR77(0,%3)					\
+ "	stwcx.  %1,0,%3\n"					\
+ "	bne-    1b\n"						\
+ 	br2							\
+@@ -92,7 +89,6 @@ __xchg_u32_local(volatile void *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2 \n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%3,0,%2 \n\
+ 	bne-	1b"
+ 	: "=&r" (prev), "+m" (*(volatile unsigned int *)p)
+@@ -109,7 +105,6 @@ __xchg_u32_relaxed(u32 *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%3,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (prev), "+m" (*p)
+@@ -127,7 +122,6 @@ __xchg_u64_local(volatile void *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	ldarx	%0,0,%2 \n"
+-	PPC405_ERR77(0,%2)
+ "	stdcx.	%3,0,%2 \n\
+ 	bne-	1b"
+ 	: "=&r" (prev), "+m" (*(volatile unsigned long *)p)
+@@ -144,7 +138,6 @@ __xchg_u64_relaxed(u64 *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	ldarx	%0,0,%2\n"
+-	PPC405_ERR77(0, %2)
+ "	stdcx.	%3,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (prev), "+m" (*p)
+@@ -229,7 +222,6 @@ __cmpxchg_u32(volatile unsigned int *p, unsigned long old, unsigned long new)
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32\n\
+ 	cmpw	0,%0,%3\n\
+ 	bne-	2f\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%4,0,%2\n\
+ 	bne-	1b"
+ 	PPC_ATOMIC_EXIT_BARRIER
+@@ -252,7 +244,6 @@ __cmpxchg_u32_local(volatile unsigned int *p, unsigned long old,
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32\n\
+ 	cmpw	0,%0,%3\n\
+ 	bne-	2f\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%4,0,%2\n\
+ 	bne-	1b"
+ 	"\n\
+@@ -273,7 +264,6 @@ __cmpxchg_u32_relaxed(u32 *p, unsigned long old, unsigned long new)
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32_relaxed\n"
+ "	cmpw	0,%0,%3\n"
+ "	bne-	2f\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%4,0,%2\n"
+ "	bne-	1b\n"
+ "2:"
+@@ -301,7 +291,6 @@ __cmpxchg_u32_acquire(u32 *p, unsigned long old, unsigned long new)
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32_acquire\n"
+ "	cmpw	0,%0,%3\n"
+ "	bne-	2f\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%4,0,%2\n"
+ "	bne-	1b\n"
+ 	PPC_ACQUIRE_BARRIER
+diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
+index f187bb5e524e..e93ee3202e4c 100644
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -8,14 +8,12 @@
+ #include <linux/uaccess.h>
+ #include <asm/errno.h>
+ #include <asm/synch.h>
+-#include <asm/asm-405.h>
+ 
+ #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg) \
+   __asm__ __volatile ( \
+ 	PPC_ATOMIC_ENTRY_BARRIER \
+ "1:	lwarx	%0,0,%2\n" \
+ 	insn \
+-	PPC405_ERR77(0, %2) \
+ "2:	stwcx.	%1,0,%2\n" \
+ 	"bne-	1b\n" \
+ 	PPC_ATOMIC_EXIT_BARRIER \
+@@ -82,7 +80,6 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ "1:     lwarx   %1,0,%3         # futex_atomic_cmpxchg_inatomic\n\
+         cmpw    0,%1,%4\n\
+         bne-    3f\n"
+-        PPC405_ERR77(0,%3)
+ "2:     stwcx.  %5,0,%3\n\
+         bne-    1b\n"
+         PPC_ATOMIC_EXIT_BARRIER
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+index fdbfcc44fea8..bbeb7c543274 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -9,7 +9,6 @@
+ #include <linux/sched.h>
+ #include <linux/threads.h>
+ #include <asm/mmu.h>			/* For sub-arch specific PPC_PIN_SIZE */
+-#include <asm/asm-405.h>
+ 
+ #ifdef CONFIG_44x
+ extern int icache_44x_need_flush;
+diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+index 860228e917dc..2d620896cdae 100644
+--- a/arch/powerpc/include/asm/spinlock.h
++++ b/arch/powerpc/include/asm/spinlock.h
+@@ -23,7 +23,6 @@
+ #endif
+ #include <asm/synch.h>
+ #include <asm/ppc-opcode.h>
+-#include <asm/asm-405.h>
+ 
+ #ifdef CONFIG_PPC64
+ /* use 0x800000yy when locked, where yy == CPU number */
+@@ -210,7 +209,6 @@ static inline long __arch_read_trylock(arch_rwlock_t *rw)
+ 	__DO_SIGN_EXTEND
+ "	addic.		%0,%0,1\n\
+ 	ble-		2f\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.		%0,0,%1\n\
+ 	bne-		1b\n"
+ 	PPC_ACQUIRE_BARRIER
+@@ -234,7 +232,6 @@ static inline long __arch_write_trylock(arch_rwlock_t *rw)
+ "1:	" PPC_LWARX(%0,0,%2,1) "\n\
+ 	cmpwi		0,%0,0\n\
+ 	bne-		2f\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.		%1,0,%2\n\
+ 	bne-		1b\n"
+ 	PPC_ACQUIRE_BARRIER
+@@ -292,7 +289,6 @@ static inline void arch_read_unlock(arch_rwlock_t *rw)
+ 	PPC_RELEASE_BARRIER
+ "1:	lwarx		%0,0,%1\n\
+ 	addic		%0,%0,-1\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.		%0,0,%1\n\
+ 	bne-		1b"
+ 	: "=&r"(tmp)
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index a6371fb8f761..8ea50472528c 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -28,7 +28,6 @@
+ #include <asm/unistd.h>
+ #include <asm/ptrace.h>
+ #include <asm/export.h>
+-#include <asm/asm-405.h>
+ #include <asm/feature-fixups.h>
+ #include <asm/barrier.h>
+ #include <asm/kup.h>
+@@ -541,9 +540,6 @@ syscall_exit_work:
+ 	addi	r12,r2,TI_FLAGS
+ 3:	lwarx	r8,0,r12
+ 	andc	r8,r8,r11
+-#ifdef CONFIG_IBM405_ERR77
+-	dcbt	0,r12
 -#endif
+ 	stwcx.	r8,0,r12
+ 	bne-	3b
+ 	
+@@ -918,9 +914,6 @@ resume_kernel:
+ 	addi	r5,r2,TI_FLAGS
+ 0:	lwarx	r8,0,r5
+ 	andc	r8,r8,r11
+-#ifdef CONFIG_IBM405_ERR77
+-	dcbt	0,r5
+-#endif
+ 	stwcx.	r8,0,r5
+ 	bne-	0b
+ 1:
+@@ -997,7 +990,6 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_TYPE_47x)
+ 	mtspr	SPRN_XER,r10
+ 	mtctr	r11
  
- static inline pte_t pte_mkold(pte_t pte)
- {
+-	PPC405_ERR77(0,r1)
+ BEGIN_FTR_SECTION
+ 	lwarx	r11,0,r1
+ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+@@ -1066,7 +1058,6 @@ exc_exit_start:
+ 	lwz	r1,GPR1(r1)
+ 	.globl exc_exit_restart_end
+ exc_exit_restart_end:
+-	PPC405_ERR77_SYNC
+ 	rfi
+ 	b	.			/* prevent prefetch past rfi */
+ 
+@@ -1109,7 +1100,6 @@ exc_exit_restart_end:
+ 	lwz	r11,_CTR(r1);						\
+ 	mtspr	SPRN_XER,r10;						\
+ 	mtctr	r11;							\
+-	PPC405_ERR77(0,r1);						\
+ 	stwcx.	r0,0,r1;		/* to clear the reservation */	\
+ 	lwz	r11,_LINK(r1);						\
+ 	mtlr	r11;							\
+@@ -1129,7 +1119,6 @@ exc_exit_restart_end:
+ 	lwz	r10,GPR10(r1);						\
+ 	lwz	r11,GPR11(r1);						\
+ 	lwz	r1,GPR1(r1);						\
+-	PPC405_ERR77_SYNC;						\
+ 	exc_lvl_rfi;							\
+ 	b	.;		/* prevent prefetch past exc_lvl_rfi */
+ 
 diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
-index 9bb663977e84..08cf4cf083b1 100644
+index faeea5b56525..afa93a36437b 100644
 --- a/arch/powerpc/kernel/head_40x.S
 +++ b/arch/powerpc/kernel/head_40x.S
-@@ -176,135 +176,16 @@ _ENTRY(saved_ksp_limit)
-  * 0x0300 - Data Storage Exception
-  * This happens for just a few reasons.  U0 set (but we don't do that),
-  * or zone protection fault (user violation, write to protected page).
-- * If this is just an update of modified status, we do that quickly
-- * and exit.  Otherwise, we call heavywight functions to do the work.
-+ * The other Data TLB exceptions bail out to this point
-+ * if they can't resolve the lightweight TLB fault.
-  */
- 	START_EXCEPTION(0x0300,	DataStorage)
--	mtspr	SPRN_SPRG_SCRATCH0, r10 /* Save some working registers */
--	mtspr	SPRN_SPRG_SCRATCH1, r11
--#ifdef CONFIG_403GCX
--	stw     r12, 0(r0)
--	stw     r9, 4(r0)
--	mfcr    r11
--	mfspr   r12, SPRN_PID
--	stw     r11, 8(r0)
--	stw     r12, 12(r0)
--#else
--	mtspr	SPRN_SPRG_SCRATCH3, r12
--	mtspr	SPRN_SPRG_SCRATCH4, r9
--	mfcr	r11
--	mfspr	r12, SPRN_PID
--	mtspr	SPRN_SPRG_SCRATCH6, r11
--	mtspr	SPRN_SPRG_SCRATCH5, r12
--#endif
--
--	/* First, check if it was a zone fault (which means a user
--	* tried to access a kernel or read-protected page - always
--	* a SEGV).  All other faults here must be stores, so no
--	* need to check ESR_DST as well. */
--	mfspr	r10, SPRN_ESR
--	andis.	r10, r10, ESR_DIZ@h
--	bne	2f
--
--	mfspr	r10, SPRN_DEAR		/* Get faulting address */
--
--	/* If we are faulting a kernel address, we have to use the
--	 * kernel page tables.
--	 */
--	lis	r11, PAGE_OFFSET@h
--	cmplw	r10, r11
--	blt+	3f
--	lis	r11, swapper_pg_dir@h
--	ori	r11, r11, swapper_pg_dir@l
--	li	r9, 0
--	mtspr	SPRN_PID, r9		/* TLB will have 0 TID */
--	b	4f
--
--	/* Get the PGD for the current thread.
--	 */
--3:
--	mfspr	r11,SPRN_SPRG_THREAD
--	lwz	r11,PGDIR(r11)
--4:
--	tophys(r11, r11)
--	rlwimi	r11, r10, 12, 20, 29	/* Create L1 (pgdir/pmd) address */
--	lwz	r11, 0(r11)		/* Get L1 entry */
--	rlwinm.	r12, r11, 0, 0, 19	/* Extract L2 (pte) base address */
--	beq	2f			/* Bail if no table */
--
--	rlwimi	r12, r10, 22, 20, 29	/* Compute PTE address */
--	lwz	r11, 0(r12)		/* Get Linux PTE */
--
--	andi.	r9, r11, _PAGE_RW	/* Is it writeable? */
--	beq	2f			/* Bail if not */
--
--	/* Update 'changed'.
--	*/
--	ori	r11, r11, _PAGE_DIRTY|_PAGE_ACCESSED|_PAGE_HWWRITE
--	stw	r11, 0(r12)		/* Update Linux page table */
--
--	/* Most of the Linux PTE is ready to load into the TLB LO.
--	 * We set ZSEL, where only the LS-bit determines user access.
--	 * We set execute, because we don't have the granularity to
--	 * properly set this at the page level (Linux problem).
--	 * If shared is set, we cause a zero PID->TID load.
--	 * Many of these bits are software only.  Bits we don't set
--	 * here we (properly should) assume have the appropriate value.
--	 */
--	li	r12, 0x0ce2
--	andc	r11, r11, r12		/* Make sure 20, 21 are zero */
--
--	/* find the TLB index that caused the fault.  It has to be here.
--	*/
--	tlbsx	r9, 0, r10
--
--	tlbwe	r11, r9, TLB_DATA		/* Load TLB LO */
--
--	/* Done...restore registers and get out of here.
--	*/
--#ifdef CONFIG_403GCX
--	lwz     r12, 12(r0)
--	lwz     r11, 8(r0)
--	mtspr   SPRN_PID, r12
--	mtcr    r11
--	lwz     r9, 4(r0)
--	lwz     r12, 0(r0)
--#else
--	mfspr	r12, SPRN_SPRG_SCRATCH5
--	mfspr	r11, SPRN_SPRG_SCRATCH6
--	mtspr	SPRN_PID, r12
--	mtcr	r11
--	mfspr	r9, SPRN_SPRG_SCRATCH4
--	mfspr	r12, SPRN_SPRG_SCRATCH3
--#endif
--	mfspr	r11, SPRN_SPRG_SCRATCH1
--	mfspr	r10, SPRN_SPRG_SCRATCH0
+@@ -36,7 +36,6 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/ptrace.h>
+ #include <asm/export.h>
+-#include <asm/asm-405.h>
+ 
+ #include "head_32.h"
+ 
+@@ -486,7 +485,6 @@ _ENTRY(saved_ksp_limit)
+ 	lwz	r12,GPR12(r11)
+ 	lwz	r10,crit_r10@l(0)
+ 	lwz	r11,crit_r11@l(0)
 -	PPC405_ERR77_SYNC
--	rfi			/* Should sync shadow TLBs */
--	b	.		/* prevent prefetch past rfi */
--
--2:
--	/* The bailout.  Restore registers to pre-exception conditions
--	 * and call the heavyweights to help us out.
--	 */
--#ifdef CONFIG_403GCX
--	lwz     r12, 12(r0)
--	lwz     r11, 8(r0)
--	mtspr   SPRN_PID, r12
--	mtcr    r11
--	lwz     r9, 4(r0)
--	lwz     r12, 0(r0)
--#else
--	mfspr	r12, SPRN_SPRG_SCRATCH5
--	mfspr	r11, SPRN_SPRG_SCRATCH6
--	mtspr	SPRN_PID, r12
--	mtcr	r11
--	mfspr	r9, SPRN_SPRG_SCRATCH4
--	mfspr	r12, SPRN_SPRG_SCRATCH3
--#endif
--	mfspr	r11, SPRN_SPRG_SCRATCH1
--	mfspr	r10, SPRN_SPRG_SCRATCH0
--	b	DataAccess
-+	EXCEPTION_PROLOG
-+	mfspr	r5, SPRN_ESR		/* Grab the ESR, save it, pass arg3 */
-+	stw	r5, _ESR(r11)
-+	mfspr	r4, SPRN_DEAR		/* Grab the DEAR, save it, pass arg2 */
-+	stw	r4, _DEAR(r11)
-+	EXC_XFER_LITE(0x300, handle_page_fault)
+ 	rfci
+ 	b	.
  
- /*
-  * 0x0400 - Instruction Storage Exception
-@@ -414,11 +295,17 @@ _ENTRY(saved_ksp_limit)
- 
- 	rlwimi	r12, r10, 22, 20, 29	/* Compute PTE address */
- 	lwz	r11, 0(r12)		/* Get Linux PTE */
--	andi.	r9, r11, _PAGE_PRESENT
--	beq	5f
-+#ifdef CONFIG_SWAP
-+	li	r9, _PAGE_PRESENT | _PAGE_ACCESSED
-+#else
-+	li	r9, _PAGE_PRESENT
-+#endif
-+	andc.	r9, r9, r11		/* Check permission */
-+	bne	5f
- 
--	ori	r11, r11, _PAGE_ACCESSED
--	stw	r11, 0(r12)
-+	rlwinm	r9, r11, 1, _PAGE_RW	/* dirty => rw */
-+	and	r9, r9, r11		/* hwwrite = dirty & rw */
-+	rlwimi	r11, r9, 0, _PAGE_RW	/* replace rw by hwwrite */
- 
- 	/* Create TLB tag.  This is the faulting address plus a static
- 	 * set of bits.  These are size, valid, E, U0.
-@@ -462,7 +349,7 @@ _ENTRY(saved_ksp_limit)
- #endif
+@@ -568,7 +566,6 @@ finish_tlb_load:
+ 	mfspr	r12, SPRN_SPRG_SCRATCH3
  	mfspr	r11, SPRN_SPRG_SCRATCH1
  	mfspr	r10, SPRN_SPRG_SCRATCH0
--	b	DataAccess
-+	b	DataStorage
+-	PPC405_ERR77_SYNC
+ 	rfi			/* Should sync shadow TLBs */
+ 	b	.		/* prevent prefetch past rfi */
  
- /* 0x1200 - Instruction TLB Miss Exception
-  * Nearly the same as above, except we get our information from different
-@@ -514,11 +401,17 @@ _ENTRY(saved_ksp_limit)
+diff --git a/arch/powerpc/platforms/40x/Kconfig b/arch/powerpc/platforms/40x/Kconfig
+index ebe283476461..e3e5217c9822 100644
+--- a/arch/powerpc/platforms/40x/Kconfig
++++ b/arch/powerpc/platforms/40x/Kconfig
+@@ -69,12 +69,6 @@ config PPC4xx_GPIO
+ 	help
+ 	  Enable gpiolib support for ppc40x based boards
  
- 	rlwimi	r12, r10, 22, 20, 29	/* Compute PTE address */
- 	lwz	r11, 0(r12)		/* Get Linux PTE */
--	andi.	r9, r11, _PAGE_PRESENT
--	beq	5f
-+#ifdef CONFIG_SWAP
-+	li	r9, _PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_EXEC
-+#else
-+	li	r9, _PAGE_PRESENT | _PAGE_EXEC
-+#endif
-+	andc.	r9, r9, r11		/* Check permission */
-+	bne	5f
- 
--	ori	r11, r11, _PAGE_ACCESSED
--	stw	r11, 0(r12)
-+	rlwinm	r9, r11, 1, _PAGE_RW	/* dirty => rw */
-+	and	r9, r9, r11		/* hwwrite = dirty & rw */
-+	rlwimi	r11, r9, 0, _PAGE_RW	/* replace rw by hwwrite */
- 
- 	/* Create TLB tag.  This is the faulting address plus a static
- 	 * set of bits.  These are size, valid, E, U0.
-@@ -668,18 +561,6 @@ WDTException:
- 	                  (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)),
- 			  crit_transfer_to_handler, ret_from_crit_exc)
- 
--/*
-- * The other Data TLB exceptions bail out to this point
-- * if they can't resolve the lightweight TLB fault.
-- */
--DataAccess:
--	EXCEPTION_PROLOG
--	mfspr	r5,SPRN_ESR		/* Grab the ESR, save it, pass arg3 */
--	stw	r5,_ESR(r11)
--	mfspr	r4,SPRN_DEAR		/* Grab the DEAR, save it, pass arg2 */
--	stw	r4, _DEAR(r11)
--	EXC_XFER_LITE(0x300, handle_page_fault)
+-# 40x errata/workaround config symbols, selected by the CPU models above
 -
- /* Other PowerPC processors, namely those derived from the 6xx-series
-  * have vectors from 0x2100 through 0x2F00 defined, but marked as reserved.
-  * However, for the 4xx-series processors these are neither defined nor
-diff --git a/arch/powerpc/mm/nohash/40x.c b/arch/powerpc/mm/nohash/40x.c
-index 82862723ab42..3eee9cc28c51 100644
---- a/arch/powerpc/mm/nohash/40x.c
-+++ b/arch/powerpc/mm/nohash/40x.c
-@@ -102,7 +102,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 
- 	while (s >= LARGE_PAGE_SIZE_16M) {
- 		pmd_t *pmdp;
--		unsigned long val = p | _PMD_SIZE_16M | _PAGE_EXEC | _PAGE_HWWRITE;
-+		unsigned long val = p | _PMD_SIZE_16M | _PAGE_EXEC | _PAGE_RW
- 
- 		pmdp = pmd_ptr_k(v);
- 		*pmdp++ = __pmd(val);
-@@ -117,7 +117,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 
- 	while (s >= LARGE_PAGE_SIZE_4M) {
- 		pmd_t *pmdp;
--		unsigned long val = p | _PMD_SIZE_4M | _PAGE_EXEC | _PAGE_HWWRITE;
-+		unsigned long val = p | _PMD_SIZE_4M | _PAGE_EXEC | _PAGE_RW;
- 
- 		pmdp = pmd_ptr_k(v);
- 		*pmdp = __pmd(val);
+-# All 405-based cores up until the 405GPR and 405EP have this errata.
+-config IBM405_ERR77
+-	bool
+-
+ config APM8018X
+ 	bool "APM8018X"
+ 	depends on 40x
 -- 
 2.25.0
 
