@@ -2,344 +2,87 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21D7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F38C3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B5020578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:00:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="twdTfWjV"
+	by mail.kernel.org (Postfix) with ESMTP id B52AA20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbgDNOAx (ORCPT
+        id S2388757AbgDNOBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388638AbgDNOAb (ORCPT
+        Tue, 14 Apr 2020 10:01:23 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:51605 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388719AbgDNOBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:00:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA41C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 07:00:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b8so6084118pfp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 07:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FXAHgZfY/WDAJS22zqOeVPqoXgR7iYMdLBK+n2JKck8=;
-        b=twdTfWjVtK8Jvbb3roxO+/806VrXQBKLDvb2EMceKOMymCAWrxZBlk/xAfNmouTW1E
-         qfvBMqEQ10Aj2rG8vwxhGv2I3adsSX3zwRs8wLQEyZtuYWO6WM0HheMg4WvHO7PPs4WP
-         NWZGxEgDbWzWqwRQZqv102Woi9g83v9lhXgXQAY+pGPLcP9zdtslXNn30dcGAkv5bzVO
-         0295JSnhH5rAMeMeRK1aUFTb73bGMqdL5dpZd6SmfyqdMmBFJoaSmsFDhozixCZYR355
-         MI665oCFQyy4YrrVdm0D1dgo0xYLuYA+/e0KZ7PJ4dwzwKaWmW01hAMsmQRWH+Q3bhGI
-         /aeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FXAHgZfY/WDAJS22zqOeVPqoXgR7iYMdLBK+n2JKck8=;
-        b=tXsYPTG+uJgvlBhS+wy5PCFtJ2gPXFZJ04GMTyAYXHgUe2htka60ZfGiK5ngXVpgg0
-         TmqoCkadY1hqt2JXqvWpjln78bT2OR36p3RLZt7nnyj8kuDE+W8nR41IQyFFH7VQDUwT
-         pkx1hVzFj9anQ75CZ1hZ40UJvamCibORJ1rChhP144vTsKTyx2RGYa7BoCXVsSM3vTgn
-         FrKukpqq3UdrRhRWxonNlS/SF8eMl/MK0CwgclJIKc3+btSA08X54TeK8SUcUN7C3eNc
-         Cc3AEUgWpngEbDMw8vaVZYEraOpeGmYJJv2VmbLrRk1sneaaU3GIdXuYg45M4xK3XS8Y
-         SOqA==
-X-Gm-Message-State: AGi0PuboSBlhIDNRiDfosaVu4+mUdmtk1v+BL42+BsSMmgfb+Kif5Cxz
-        lhCyQXWYA2T+TccL2SvYFODW4q3dDGig18G7b01gcg==
-X-Google-Smtp-Source: APiQypKSXhZQVEVBN9qo5EOx6rZ/V65FRY9S2yA8lF1RDzedNPcxXakhf3ZN/kJ3eBsogliBOrKAcz2kFA57SUSakMM=
-X-Received: by 2002:a63:cf02:: with SMTP id j2mr22304641pgg.130.1586872829015;
- Tue, 14 Apr 2020 07:00:29 -0700 (PDT)
+        Tue, 14 Apr 2020 10:01:15 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MbRXj-1iqxJQ0zN3-00bsIH; Tue, 14 Apr 2020 16:01:13 +0200
+Received: by mail-qt1-f169.google.com with SMTP id c16so4381681qtv.1;
+        Tue, 14 Apr 2020 07:01:12 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub8VFe2W+VnzrN30YSstRYzJJ+7jMaZrqvRlBc9Z3oRJH4a1njH
+        lWE6uozpmFAob3OVRZ6f2XTOvreGi/7xKi8djnc=
+X-Google-Smtp-Source: APiQypJnCxnYmw722mKV+S9ulqw05gvvCTLTPiReXurJiDepLa1M4UQL7fvv7Hr4QeMwCm32MRni4rllUWyjgXsOVOQ=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr15912388qtb.142.1586872871915;
+ Tue, 14 Apr 2020 07:01:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200414031647.124664-1-davidgow@google.com> <20200414031647.124664-3-davidgow@google.com>
-In-Reply-To: <20200414031647.124664-3-davidgow@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 14 Apr 2020 16:00:18 +0200
-Message-ID: <CAAeHK+yT+hPK6Vcj+KWv-7vPk=OQUGvODJUUO3atqHcoVTXvSQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] KUnit: KASAN Integration
-To:     David Gow <davidgow@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-4-hch@lst.de>
+In-Reply-To: <20200414070142.288696-4-hch@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Apr 2020 16:00:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2iHD4tzaNunA2FFpxpQg9DFCKROnrtUR7=1scO76+oCw@mail.gmail.com>
+Message-ID: <CAK8P3a2iHD4tzaNunA2FFpxpQg9DFCKROnrtUR7=1scO76+oCw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] signal: replace __copy_siginfo_to_user32 with to_compat_siginfo
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ukxhwA5NdxBemLbDSsRcAhObRe1CWAeAW5tNRCWtLREQYVmahJA
+ 5dQJGh5A9FGzCiCtH0lK2w1LTUaiBYNq+KRfQNzuBZynd1ydil7uVEpMcGhaJtOnrxuPlNT
+ 1zkhd9ZqLQ6gf0jdqvW7baDPJTBh2RWXbabwVkzGsBOniz/vgITwUZcDH/mA96Q7gubEdtD
+ q+uVbqmI/a9MkwfKYXn0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:G8s8f7/LAVs=:dMF36GmlK9xwLQ4VUvXmSf
+ aEwBLKeNCK0/7rpqQtXnEK9U1lHn57P/gMUHzqRTjxGJyc7hkKHbWUfSOTg9H9h7mSMSSXb8P
+ 0hht68vF+80E6P+mgvG0BQXnL3NEGl88tw0T0pdLZkYES48AEJoiWx/YKcJBxD6ph6BZq9Inj
+ UBH3w9tp/FCL9J6/itE5dN67Fk0aVr0oYc0r5vdcCOpoVk06Wwcnvti6t4CJ/OEeU+Z4A3PzI
+ hTW2XxhymmWA/ozfuXXriynzZ+bUD/mm02S3l0hPjECKPpmlxASIBtnF/FBO2saOYqj2pkI51
+ Qq6PgSqNi3eJPnbL7FUHsl6v6GOORoxv2uZ2RAAiTCUrroRKneaH0EBZaQ+mMAsmftgSQYx54
+ rzMsOOZzbH578VuuB45zP5F526O0GsQxcMjWmqlffk94FUc6wXWy8mew7GQ68+ILxa+E7FqZa
+ P2D0tcp3BNF/FtfkroYdhw5vHz+CdABUnSC59VXyl4mlvbfscHf1JLY1olzt86xiLsNZkr+dD
+ bOplD5YiY+xgDi501oJOQ979cV8pn2kZFHV/kcws3Mio6otsaLWJNzP+9GEJFS3la8JFJW/8X
+ aNrql/tgp8cx3o4yhJvt9gHfw1Dfdyss8pk1QpszaYvUhhASUWjpqd7qN91DNJ9x4joReHdeY
+ EJBnV8nadLzQz8q/rBRGW3n1dpGkgohxsGA1L2jX7RHb+H4AfTPc4zUuIwgz1jmhZEhdLVNBq
+ N0Gj8Rsc9Z+XpEpOzyjq272Z3ShnMUAMBkQUCmmrNrysVpEVdfl9M7tAA2MIvA2/m7ZbGV3a3
+ qrKkRlAeaBtsVMX3z7giUZi9TZWgeDfkQGv4CkBsNH0dyqH2XU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 5:17 AM 'David Gow' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
+On Tue, Apr 14, 2020 at 9:01 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> From: Patricia Alfonso <trishalfonso@google.com>
+> Move copying the siginfo to userspace into the callers, so that the
+> compat_siginfo conversion can be reused by the ELF coredump code without
+> set_fs magic.
 >
-> Integrate KASAN into KUnit testing framework.
->         - Fail tests when KASAN reports an error that is not expected
->         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN
->         tests
->         - Expected KASAN reports pass tests and are still printed when run
->         without kunit_tool (kunit_tool still bypasses the report due to the
->         test passing)
->         - KUnit struct in current task used to keep track of the current
->         test from KASAN code
->         - Also make KASAN no-longer panic when panic_on_warn and
->         kasan_multi_shot are enabled (as multi-shot does nothing
->         otherwise)
->
-> Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
-> kunit_resource API beyond allocated resources" and "[PATCH v3
-> kunit-next 2/2] kunit: add support for named resources" from Alan
-> Maguire [1]
->         - A named resource is added to a test when a KASAN report is
->          expected
->         - This resource contains a struct for kasan_data containing
->         booleans representing if a KASAN report is expected and if a
->         KASAN report is found
->
-> [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> Signed-off-by: David Gow <davidgow@google.com>
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> ---
->  include/kunit/test.h  |  5 +++++
->  include/linux/kasan.h |  6 ++++++
->  lib/kunit/test.c      | 13 ++++++++-----
->  lib/test_kasan.c      | 44 +++++++++++++++++++++++++++++++++++++++----
->  mm/kasan/report.c     | 34 ++++++++++++++++++++++++++++++++-
->  5 files changed, 92 insertions(+), 10 deletions(-)
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index ac59d18e6bab..1dc3d118f64b 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -225,6 +225,11 @@ struct kunit {
->         struct list_head resources; /* Protected by lock. */
->  };
->
-> +static inline void kunit_set_failure(struct kunit *test)
-> +{
-> +       WRITE_ONCE(test->success, false);
-> +}
-> +
->  void kunit_init_test(struct kunit *test, const char *name, char *log);
->
->  int kunit_run_tests(struct kunit_suite *suite);
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 5cde9e7c2664..148eaef3e003 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -14,6 +14,12 @@ struct task_struct;
->  #include <asm/kasan.h>
->  #include <asm/pgtable.h>
->
-> +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
-> +struct kunit_kasan_expectation {
-> +       bool report_expected;
-> +       bool report_found;
-> +};
-> +
->  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
->  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
->  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 2cb7c6220a00..030a3281591e 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -10,16 +10,12 @@
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/sched/debug.h>
-> +#include <linux/sched.h>
->
->  #include "debugfs.h"
->  #include "string-stream.h"
->  #include "try-catch-impl.h"
->
-> -static void kunit_set_failure(struct kunit *test)
-> -{
-> -       WRITE_ONCE(test->success, false);
-> -}
-> -
->  static void kunit_print_tap_version(void)
->  {
->         static bool kunit_has_printed_tap_version;
-> @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
->         struct kunit_suite *suite = ctx->suite;
->         struct kunit_case *test_case = ctx->test_case;
->
-> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> +       current->kunit_test = test;
-> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
-> +
->         /*
->          * kunit_run_case_internal may encounter a fatal error; if it does,
->          * abort will be called, this thread will exit, and finally the parent
-> @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
->                 spin_unlock(&test->lock);
->                 kunit_remove_resource(test, res);
->         }
-> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> +       current->kunit_test = NULL;
-> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
->  }
->  EXPORT_SYMBOL_GPL(kunit_cleanup);
->
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 3872d250ed2c..7b4cb107b387 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -23,12 +23,48 @@
->
->  #include <asm/page.h>
->
-> -/*
-> - * Note: test functions are marked noinline so that their names appear in
-> - * reports.
-> +#include <kunit/test.h>
-> +
-> +static struct kunit_resource resource;
-> +static struct kunit_kasan_expectation fail_data;
-> +static bool multishot;
-> +
-> +static int kasan_test_init(struct kunit *test)
-> +{
-> +       /*
-> +        * Temporarily enable multi-shot mode and set panic_on_warn=0.
-> +        * Otherwise, we'd only get a report for the first case.
-> +        */
-> +       multishot = kasan_save_enable_multi_shot();
-> +
-> +       return 0;
-> +}
-> +
-> +static void kasan_test_exit(struct kunit *test)
-> +{
-> +       kasan_restore_multi_shot(multishot);
-> +}
-> +
-> +/**
-> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
-> + * not cause a KASAN error. This uses a KUnit resource named "kasan_data." Do
-> + * Do not use this name for a KUnit resource outside here.
-> + *
->   */
-> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
-> +       fail_data.report_expected = true; \
-> +       fail_data.report_found = false; \
-> +       kunit_add_named_resource(test, \
-> +                               NULL, \
-> +                               NULL, \
-> +                               &resource, \
-> +                               "kasan_data", &fail_data); \
-> +       condition; \
-> +       KUNIT_EXPECT_EQ(test, \
-> +                       fail_data.report_expected, \
-> +                       fail_data.report_found); \
-> +} while (0)
->
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-[...]
+Looks all good to me, but I noticed that the naming is now a bit
+inconsistent. to_compat_siginfo() is basically the reverse of
+post_copy_siginfo_from_user32(), but the names are very different.
 
-> -static noinline void __init kmalloc_oob_right(void)
+I suppose this can always be cleaned up later though, as your
+naming choice is more consistent with how things are in the
+rest of the kernel these days.
 
-Actually this also needs to be fixed. You remove this line in this
-patch and add it back in the next one. Please test that the kernel
-builds with your patches applied one by one.
-
->  {
->         char *ptr;
->         size_t size = 123;
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 5ef9f24f566b..a58a9f3b7f2c 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -32,6 +32,8 @@
->
->  #include <asm/sections.h>
->
-> +#include <kunit/test.h>
-> +
->  #include "kasan.h"
->  #include "../slab.h"
->
-> @@ -92,7 +94,7 @@ static void end_report(unsigned long *flags)
->         pr_err("==================================================================\n");
->         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
->         spin_unlock_irqrestore(&report_lock, *flags);
-> -       if (panic_on_warn)
-> +       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
->                 panic("panic_on_warn set ...\n");
->         kasan_enable_current();
->  }
-> @@ -455,12 +457,37 @@ static bool report_enabled(void)
->         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
->  }
->
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +static void kasan_update_kunit_status(struct kunit *cur_test)
-> +{
-> +       struct kunit_resource *resource;
-> +       struct kunit_kasan_expectation *kasan_data;
-> +
-> +       resource = kunit_find_named_resource(cur_test, "kasan_data");
-> +
-> +       if (!resource) {
-> +               kunit_set_failure(cur_test);
-> +               return;
-> +       }
-> +
-> +       kasan_data = (struct kunit_kasan_expectation *)resource->data;
-> +       kasan_data->report_found = true;
-> +       kunit_put_resource(resource);
-> +}
-> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> +
->  void kasan_report_invalid_free(void *object, unsigned long ip)
->  {
->         unsigned long flags;
->         u8 tag = get_tag(object);
->
->         object = reset_tag(object);
-> +
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +       if (current->kunit_test)
-> +               kasan_update_kunit_status(current->kunit_test);
-> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> +
->         start_report(&flags);
->         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
->         print_tags(tag, object);
-> @@ -481,6 +508,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
->         if (likely(!report_enabled()))
->                 return;
->
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +       if (current->kunit_test)
-> +               kasan_update_kunit_status(current->kunit_test);
-> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> +
->         disable_trace_on_warning();
->
->         tagged_addr = (void *)addr;
-> --
-> 2.26.0.110.g2183baf09c-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200414031647.124664-3-davidgow%40google.com.
+    Arnd
