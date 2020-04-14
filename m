@@ -2,150 +2,98 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4EEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24808C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 420AE2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99962072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586861891;
+	bh=HC/z7X/QOJ8n4Wel61R5j+aAnU/kKVm52z0JLKdp0dI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VXScN/7If8MjVImtUGKkaiAXeRdQj7QUbNPppA/FFV53F99926nA4Z61I0Wve0GlJ
+	 71mPZ/oZVvTBB0S4IsQqfg0XF8wxnlqqAIotN5JLMZTFXEGN3j5HWXuzv1XeBJoTA9
+	 ogn8nzPNLSQeVlZ1C4PuxVdEOx9GX+XUsE59XqcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438802AbgDNK6D (ORCPT
+        id S2438812AbgDNK6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:58:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43203 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438755AbgDNK5K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:57:10 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jOIye-0002Aq-5I; Tue, 14 Apr 2020 10:39:36 +0000
-Date:   Tue, 14 Apr 2020 12:39:34 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 5/8] kernfs: let objects opt-in to propagating from the
- initial namespace
-Message-ID: <20200414103934.ks4x45cwt7ss7v4d@wittgenstein>
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
- <20200408152151.5780-6-christian.brauner@ubuntu.com>
- <20200413190239.GG60335@mtj.duckdns.org>
- <20200413193950.tokh5m7wsyrous3c@wittgenstein>
- <20200413194550.GJ60335@mtj.duckdns.org>
- <20200413195915.yo2l657nmtkwripb@wittgenstein>
- <20200413203716.GK60335@mtj.duckdns.org>
+        Tue, 14 Apr 2020 06:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438770AbgDNK52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:57:28 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1A74206D5;
+        Tue, 14 Apr 2020 10:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586861848;
+        bh=HC/z7X/QOJ8n4Wel61R5j+aAnU/kKVm52z0JLKdp0dI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SzjGmVqJ/kf8kEdv3afqCuLT3+MrPHN0Fboi86rFJN8W8mAe9WXxfRJdn0vaU1Ad5
+         LU49xOnYCFOPDfF5bu2fwWU2COv/EELobDLaumXwjNWBUGLVxmkrNScdekGPIVNb7G
+         00wKGGh73UoT+IpvnTqKZanz2v6TGDRmdVBb6v2g=
+Date:   Tue, 14 Apr 2020 11:57:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 0/3] regulator: max77826: Add MAX77826 support
+Message-ID: <20200414105725.GB5412@sirena.org.uk>
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
 Content-Disposition: inline
-In-Reply-To: <20200413203716.GK60335@mtj.duckdns.org>
+In-Reply-To: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 04:37:16PM -0400, Tejun Heo wrote:
-> Hello,
-> 
-> On Mon, Apr 13, 2020 at 09:59:15PM +0200, Christian Brauner wrote:
-> > Right, pid namespaces deal with a single random identifier about which
-> > userspace makes no assumptions other than that it's a positive number so
-> > generating aliases is fine. In addition pid namespaces are nicely
-> 
-> I don't see any fundamental differences between pids and device numbers. One
-> of the reasons pid namespace does aliasing instead of just showing subsets is
-> because applications can have expectations on what the specific numbers should
-> be - e.g. for checkpoint-restarting.
 
-One difference is that ownership is hierarchial in a pid namespace. This
-becomes clear when looking at the parent child relationship when
-creating new processes in nested pid namespaces. All processes created
-in the innermost pid namespace are owned by that pid namespaces's init
-process. If that pid namespace's init/subreaper process dies all
-processes get zapped and autoreaped. In essence, unless the ancestor pid
-namespace has setns()ed a process in there, ownership of that process is
-clearly defined. I don't think that model is transferable to a device.
-What seems most important to me here is that a pid namespace completely
-defines ownership of a process. But there's not necessarily
-a single namespace that guarantees ownership for all device types.
-Network devices, imho are a good example for that. Their full ownership
-is network namespace + user namespace actually. You could easily
-envision other device classes where a combination of namespaces would
-make sense.
+--61jdw2sOBCFtR2d/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > hierarchical. I fear that we might introduce unneeded complexity if we
-> > go this way and start generating aliases for devices that userspace
-> 
-> It adds complexity for sure but the other side of the scale is losing
-> visiblity into what devices are on the system, which can become really nasty
-> in practice, so I do think it can probably justify some additional complexity
-> especially if it's something which can be used by different devices. Even just
-> for block, if we end up expanding ns support to regular block devices for some
-> reason, it's kinda dreadful to think a situation where all devices can't be
-> discovered at the system level.
+On Mon, Apr 13, 2020 at 07:44:37PM +0300, Iskren Chernev wrote:
+> The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly=
+ other
+> devices. It is produced by Maxim Integrated and contains 15 LDOs a buck a=
+nd
+> a buck boost regulator.
+>=20
+> Iskren Chernev (3):
+>   regulator: max77826: Add max77826 regulator driver
+>   dt-bindings: regulator: Add document bindings for max77826
 
-Hm, it is already the case that we can't see all devices at the system
-level. That includes network devices and also binderfs devices (the
-latter don't have sysfs entries though which is what this is about).
-And for virtual devices just as loop, binder, and network devices this
-is fine imho. They are not physicall attached to your computer. Actual
-disk devices where this would matter wouldn't be namespaced anyway imho.
+Aside from the compatible string and the subject prefix on the DT
+binding patch this looks good to me.
 
-We also need to consider that it is potentially dangerous for a
-namespace to trigger a device event tricking the host into performing an
-action on it. If e.g. the creation of a network device were to propagate
-into all namespaces and there'd be a rule matching it you could trick
-the host into performing privileged actions it. So it also isn't
-obviously safe propagating devices out of their namespace. (I fixed
-something similar to this just recently in a sysfs series.)
+--61jdw2sOBCFtR2d/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I addition the file ownership permissions would propagate from the inner
-to all outer sysfs instances as well which would mean you'd suddenly
-have 100000:100000 entries in your host's sysfs in the initial
-namespace.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> > already knows about and has expectations of. We also still face some of
-> > the other problems I mentioned.
-> > I do think that what you say might make sense to explore in more detail
-> > for a new device class (or type under a given class) that userspace does
-> > not yet know about and were we don't regress anything.
-> 
-> I don't quite follow why adding namespace support would break existing users.
-> Wouldn't namespace usage be opt-in?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6VlxQACgkQJNaLcl1U
+h9D46Af/SJxcfNXW9eOmfK1epWMpCJsjv6HU6xLEC+756AfV+YFPeduENlTju/oX
+NCYmt5UxMC5JjjtTjdYgRhFQCUJfeyLxYP4GtMHLl3b11lzhykvkAyvBYw+/Pcim
+du97gWPk/ELVGejGc2Dgjp3OeyHqCPf3P5v2/44vHEtqBIHBDr8xhbTwrS+zLNsF
+sykjBqvvg1SdNFWrt1CXyuPzY9nePYDpiJw+vm/ePFg99EMWLUic6lYHhU3izbx0
+oU/w9PVg2SYuBjtql2799kt4cGcqBlf+iohZCkaTBJ+cCoKC4rshi45t8nWoM3PF
+QXXiMsXnT5SeQEs+pSByZ62t+I/8dQ==
+=PcSI
+-----END PGP SIGNATURE-----
 
-For sysfs, this change is opt-in per device type and it only applies to
-loop devices here, i.e. if you don't e.g. use loopfs nothing changes
-for you at all. If you use it, all that you get is correct ownership for
-sysfs entries for those loop devices accounted to you in addition to all
-the other entries that have always been there. This way we can handle
-legacy workloads cleanly which we really want for our use-case.
-
-Your model would effectively require a new version of sysfs where you
-e.g. mount it with a new option that zaps all device entries that don't
-belong to non-initial user namespaces. Which would mean most major tools
-in containers will break completely. We can still totally try to bring
-up a change like this independent of this patchset. This patchset
-doesn't rule this out at all.
-
-Christian
+--61jdw2sOBCFtR2d/--
