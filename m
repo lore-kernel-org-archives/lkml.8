@@ -2,133 +2,127 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1243EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99F42074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AH+xoIgY"
+	by mail.kernel.org (Postfix) with ESMTP id A63B820678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586883163;
+	bh=jd11BH+E0kQ4lfNrsHgxWhZfvWguP7UNkigN6xgvlsM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SiHiq5gqC8MRjB34YlOblT9JE5BRJl3i7o9pI5y8uWSHPXXWFAnFIlFtDZDnHNOZJ
+	 ftyoobooHllB2OtWogrMAaA/p2p35udAOOmA12UJy3VazM6T+RYH6TWdSfqSgMEhvS
+	 2Y48uJNZ92eNtwz69rd6Ij7/Yjax4AMgoQurhVYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502352AbgDNQwU (ORCPT
+        id S2502461AbgDNQwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:52:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50028 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441029AbgDNQvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:51:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586883077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xEwW/84Bx+Wn4UVzdKy29mX/tgdsrLXZkRwHZ2M75ns=;
-        b=AH+xoIgYnCAHv9ZmXyrRI2RLrNizErROBc4D/B1HKpjc7Y5kx/14yCp10LLIRWYM+pqYdK
-        VBrZONbC1bnufWaQb1QR9uDQKdlF2n9PS/HkQy0BLIzdr5QerGx5MUljpne60GirQ5pLHD
-        ls2lCzuWwHwMZ8vnkY4NbwcUjBERNls=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-1cSpM5MuMS-25Gm7FYRJJQ-1; Tue, 14 Apr 2020 12:51:15 -0400
-X-MC-Unique: 1cSpM5MuMS-25Gm7FYRJJQ-1
-Received: by mail-wm1-f69.google.com with SMTP id f8so4530499wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:51:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xEwW/84Bx+Wn4UVzdKy29mX/tgdsrLXZkRwHZ2M75ns=;
-        b=bNZ//FX//pCHpbkdzhdxp+oQUZAqXf6fYtnmnf6QmYtesJcxdDbjbpwj1O/89XkU1X
-         CEqXM1WNNuFs85k7hsdtVzB5VRQaZ1D7e7Zo+pwzH4oYWdIXl/1KGh4ENmI1qPZ2x/Y2
-         2c/zbvD49lDy/9D2WJfUD8TmfPhuBIMt+MzmNrRbfum1itytrpZfrxwiaE7KuSsEJ9rT
-         soIEE0deKQbuEoz/HV1c4l3lPosL9YzNPAj4MDTSfaV3xyeoWsSOgV3boSpzYiVTWpZi
-         NczeROcqhEYFOSLcc5lSdUtYIfApzABHUSnoiTllbD2qiXSXkjuwyvHKUFoJ521XZldB
-         73WQ==
-X-Gm-Message-State: AGi0PubLkNjzUr5jxxtRDOLR61cgZ/Uw4DvjMgSrsZ8gx+O3XKR/2E0W
-        CzeexjScNDCO1OKd2WjkiqJmSDZ0UshP8hr9VksGm/30PQFmX7x5XLoI8Nfy9hALpuPnkS6w7pa
-        VDZlblmTmoJPo5qVs5NsWW5w3
-X-Received: by 2002:a05:600c:2314:: with SMTP id 20mr809882wmo.118.1586883073922;
-        Tue, 14 Apr 2020 09:51:13 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJCdYCN7qTchgvOqHA8okoWjFJVzrdCxgqqIR560y3Z2b+3g4AVFAj455QlShPovTl9i6iVNA==
-X-Received: by 2002:a05:600c:2314:: with SMTP id 20mr809859wmo.118.1586883073583;
-        Tue, 14 Apr 2020 09:51:13 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id t20sm9185423wmi.2.2020.04.14.09.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:51:12 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to pointer primary_channel
-In-Reply-To: <20200414152343.243166-1-colin.king@canonical.com>
-References: <20200414152343.243166-1-colin.king@canonical.com>
-Date:   Tue, 14 Apr 2020 18:51:11 +0200
-Message-ID: <87d08axb7k.fsf@vitty.brq.redhat.com>
+        Tue, 14 Apr 2020 12:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440386AbgDNQtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:49:19 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8D222202;
+        Tue, 14 Apr 2020 16:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586882943;
+        bh=jd11BH+E0kQ4lfNrsHgxWhZfvWguP7UNkigN6xgvlsM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h3BRPSdhXr2NWHwbVytJt888whMqL4XdRsAPxAnw06Ccp/8/5WpOzD2ZM96n5x6dZ
+         cdVFapXprQxXuhCY/n2SNcnDoE8RDnuGzMLof2XGViItjgjBVO4NGLCrzRjnihl0PE
+         bjuwdVqcxt0zVMi/Lyj0l7/uWN5m/+uaMpeCJYas=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOOk9-0068nY-JQ; Tue, 14 Apr 2020 18:49:01 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 33/33] lib: bitmap.c: get rid of some doc warnings
+Date:   Tue, 14 Apr 2020 18:48:59 +0200
+Message-Id: <1e2568fdfa838c1a0d8cc2a1d70dd4b6de99bfb1.1586881715.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586881715.git.mchehab+huawei@kernel.org>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> writes:
+There are two ascii art drawings there. Use a block markup tag there
+in order to get rid of those warnings:
 
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The pointer primary_channel is being assigned with a value that is never,
-> The assignment is redundant and can be removed.
->
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/hv/channel_mgmt.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index ffd7fffa5f83..f7bbb8dc4b0f 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
->  
->  	if (channel->primary_channel == NULL) {
->  		list_del(&channel->listentry);
-> -
-> -		primary_channel = channel;
->  	} else {
->  		primary_channel = channel->primary_channel;
->  		spin_lock_irqsave(&primary_channel->lock, flags);
+	./lib/bitmap.c:189: WARNING: Unexpected indentation.
+	./lib/bitmap.c:190: WARNING: Block quote ends without a blank line; unexpected unindent.
+	./lib/bitmap.c:190: WARNING: Unexpected indentation.
+	./lib/bitmap.c:191: WARNING: Line block ends without a blank line.
 
-If I'm looking at the right source (5.7-rc1) it *is* beeing used:
+It should be noticed that there's actually a syntax violation
+right now, as something like:
 
-	if (channel->primary_channel == NULL) {
-		list_del(&channel->listentry);
+	/**
+	 ...
+	 @src:
 
-		primary_channel = channel;
-	} else {
-		primary_channel = channel->primary_channel;
-		spin_lock_irqsave(&primary_channel->lock, flags);
-		list_del(&channel->sc_list);
-		spin_unlock_irqrestore(&primary_channel->lock, flags);
-	}
+will be handled as a definition for @src parameter, and not as
+part of a diagram. So, we need to add something before it, in
+order for this to be processed the way it should.
 
-	/*
-	 * We need to free the bit for init_vp_index() to work in the case
-	 * of sub-channel, when we reload drivers like hv_netvsc.
-	 */
-	if (channel->affinity_policy == HV_LOCALIZED)
-		cpumask_clear_cpu(channel->target_cpu,
-				  &primary_channel->alloced_cpus_in_node);
-                                   ^^^^^ HERE ^^^^^
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ lib/bitmap.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 89260aa342d6..21a7640c5eed 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -182,21 +182,22 @@ EXPORT_SYMBOL(__bitmap_shift_left);
+  *
+  * In pictures, example for a big-endian 32-bit architecture:
+  *
+- * @src:
+- * 31                                   63
+- * |                                    |
+- * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
+- *                 |  |              |                                    |
+- *                16  14             0                                   32
++ * The @src bitmap is::
+  *
+- * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is:
++ *   31                                   63
++ *   |                                    |
++ *   10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
++ *                   |  |              |                                    |
++ *                  16  14             0                                   32
+  *
+- * 31                                   63
+- * |                                    |
+- * 10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
+- *                    |              |                                    |
+- *                    14 (bit 17     0                                   32
+- *                        from @src)
++ * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is::
++ *
++ *   31                                   63
++ *   |                                    |
++ *   10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
++ *                      |              |                                    |
++ *                      14 (bit 17     0                                   32
++ *                          from @src)
+  *
+  * Note that @dst and @src might overlap partially or entirely.
+  *
 -- 
-Vitaly
+2.25.2
 
