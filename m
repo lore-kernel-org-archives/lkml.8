@@ -2,254 +2,116 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4E2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D28C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 376EF20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:03:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drZVtAqG"
+	by mail.kernel.org (Postfix) with ESMTP id BC75F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505480AbgDNUDV (ORCPT
+        id S2505494AbgDNUJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:03:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55765 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505445AbgDNUCv (ORCPT
+        Tue, 14 Apr 2020 16:09:11 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:14482 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2505445AbgDNUJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:02:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586894569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=55O3NEeOmFMu2pI5z7Txh645s57BVO3ScH0+97Mu2jE=;
-        b=drZVtAqGtA22psCAfcnEKXj5DW5QIypeQMu8yXsScRxOBHBY4ezEs+IZMjt50Pv3sJcIAM
-        uGuBpDT+7aSGCGlZDs4RRx1gU9qoFvQN8vw/KlBlWncJ8Lh/eoHv3BxugS/ba/SNnunnSk
-        yNB/uNo2Nby0A+ntCiafyy7svaSr1sA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-9yYcqMz-OTCLtF2LTf-VbA-1; Tue, 14 Apr 2020 16:02:45 -0400
-X-MC-Unique: 9yYcqMz-OTCLtF2LTf-VbA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D33A1005509;
-        Tue, 14 Apr 2020 20:02:42 +0000 (UTC)
-Received: from llong.com (ovpn-118-173.rdu2.redhat.com [10.10.118.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 89A065C1A2;
-        Tue, 14 Apr 2020 20:02:35 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, Waiman Long <longman@redhat.com>
-Subject: [PATCH v3 2/3] crypto: Remove unnecessary memzero_explicit()
-Date:   Tue, 14 Apr 2020 16:02:14 -0400
-Message-Id: <20200414200214.1873-1-longman@redhat.com>
-In-Reply-To: <20200413211550.8307-1-longman@redhat.com>
-References: <20200413211550.8307-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Tue, 14 Apr 2020 16:09:11 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 14 Apr 2020 13:09:08 -0700
+Received: from localhost (unknown [10.129.220.242])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 8678C40733;
+        Tue, 14 Apr 2020 13:09:10 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 13:09:10 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     Julien Thierry <jthierry@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [RFC][PATCH 00/36] objtool: Make recordmcount a subcommand
+Message-ID: <20200414200910.GB118458@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Miroslav Benes <mbenes@suse.cz>
+References: <cover.1586468801.git.mhelsley@vmware.com>
+ <3a3f70df-07b0-91d9-33e1-e997e72b0c5c@redhat.com>
+ <20200414093506.7b91bbbb@gandalf.local.home>
+ <064f41bd-0dfe-e875-df7c-214184c29fa7@redhat.com>
+ <20200414115458.093e221b@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200414115458.093e221b@gandalf.local.home>
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kfree_sensitive() will do an implicit memzero_explicit(),
-there is no need to call memzero_explicit() before it. Eliminate those
-memzero_explicit() and simplify the call sites. For better correctness,
-keylen is cleared if key memory allocation fails.
+On Tue, Apr 14, 2020 at 11:54:58AM -0400, Steven Rostedt wrote:
+> On Tue, 14 Apr 2020 15:17:39 +0100
+> Julien Thierry <jthierry@redhat.com> wrote:
+> 
+> > > I was hoping to have objtool handle all the operations needed that required
+> > > reading elf headers.
+> > >   
+> > 
+> > That makes sense, however, having each operation as an objtool 
+> > subcommand doesn't solve that issue, right? Each invocation of objtool 
+> > will re-read the elf object.
+> > 
+> > I guess having all the relevant code in objtool as subcommand would be a 
+> > first step towards that goal.
+> 
+> Exactly. I believe the goal (it's been a while since we discussed this),
+> was that we could "batch" the sub commands into a single command. That way,
+> the executable will be executed once per object file, load all the elf
+> headers, than iterate over all the sub commands that we set on the command
+> line.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 23 +++++++-----------
- .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 24 +++++++------------
- drivers/crypto/amlogic/amlogic-gxl-cipher.c   | 14 ++++-------
- drivers/crypto/inside-secure/safexcel_hash.c  |  3 +--
- 4 files changed, 24 insertions(+), 40 deletions(-)
+Yup. The idea is it's somewhat like a pipe but instead of reloading the file
+and re-creating the linked data structures each time, each sub command would
+simply hand off the ELF section/symbol/relocation structures to the next tool.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-index aa4e8fdc2b32..a2bac10d2876 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-@@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
- {
- 	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	crypto_free_sync_skcipher(op->fallback_tfm);
- 	pm_runtime_put_sync_suspend(op->ce->dev);
- }
-@@ -391,14 +388,13 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		dev_dbg(ce->dev, "ERROR: Invalid keylen %u\n", keylen);
- 		return -EINVAL;
- 	}
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
--	if (!op->key)
-+	if (unlikely(!op->key)) {
-+		op->keylen = 0;
- 		return -ENOMEM;
-+	}
- 
- 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
- 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-@@ -416,14 +412,13 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 	if (err)
- 		return err;
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
--	if (!op->key)
-+	if (unlikely(!op->key)) {
-+		op->keylen = 0;
- 		return -ENOMEM;
-+	}
- 
- 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
- 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-index 5246ef4f5430..a24d567a6c36 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-@@ -249,7 +249,6 @@ static int sun8i_ss_cipher(struct skcipher_request *areq)
- 			offset = areq->cryptlen - ivsize;
- 			if (rctx->op_dir & SS_DECRYPTION) {
- 				memcpy(areq->iv, backup_iv, ivsize);
--				memzero_explicit(backup_iv, ivsize);
- 				kfree_sensitive(backup_iv);
- 			} else {
- 				scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
-@@ -367,10 +366,7 @@ void sun8i_ss_cipher_exit(struct crypto_tfm *tfm)
- {
- 	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	crypto_free_sync_skcipher(op->fallback_tfm);
- 	pm_runtime_put_sync(op->ss->dev);
- }
-@@ -392,14 +388,13 @@ int sun8i_ss_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		dev_dbg(ss->dev, "ERROR: Invalid keylen %u\n", keylen);
- 		return -EINVAL;
- 	}
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
--	if (!op->key)
-+	if (unlikely(!op->key))
-+		op->keylen = 0;
- 		return -ENOMEM;
-+	}
- 
- 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
- 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-@@ -418,14 +413,13 @@ int sun8i_ss_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		return -EINVAL;
- 	}
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
--	if (!op->key)
-+	if (unlikely(!op->key))
-+		op->keylen = 0;
- 		return -ENOMEM;
-+	}
- 
- 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
- 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-index fd1269900d67..5312bad7534e 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-@@ -341,10 +341,7 @@ void meson_cipher_exit(struct crypto_tfm *tfm)
- {
- 	struct meson_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	crypto_free_sync_skcipher(op->fallback_tfm);
- }
- 
-@@ -368,14 +365,13 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		dev_dbg(mc->dev, "ERROR: Invalid keylen %u\n", keylen);
- 		return -EINVAL;
- 	}
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
--	if (!op->key)
-+	if (unlikely(!op->key))
-+		op->keylen = 0;
- 		return -ENOMEM;
-+	}
- 
- 	return crypto_sync_skcipher_setkey(op->fallback_tfm, key, keylen);
- }
-diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-index 43962bc709c6..4a2d162914de 100644
---- a/drivers/crypto/inside-secure/safexcel_hash.c
-+++ b/drivers/crypto/inside-secure/safexcel_hash.c
-@@ -1081,8 +1081,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
- 		}
- 
- 		/* Avoid leaking */
--		memzero_explicit(keydup, keylen);
--		kfree(keydup);
-+		kfree_sensitive(keydup);
- 
- 		if (ret)
- 			return ret;
--- 
-2.18.1
+If we look in scripts/Makefile.build for example we can see the rule_cc_o_c
+definition, after producing the initial .o with the compiler, does:
 
+	$(call cmd,gen_ksymdeps)
+        $(call cmd,checkdoc)
+        $(call cmd,objtool)
+        $(call cmd,modversions_c)
+        $(call cmd,record_mcount)
+
+The latter 3 all deal with loading and walking the ELF file output
+from the previous step. If we could merge that into a single "call" to
+objtool then we can avoid the extra write-close-open-read cycles. I also
+wonder if we could move "checkdoc" because then 4 tools in a row could
+be relevant to convert (genksyms makes simple use of nm).
+
+I also noticed that, for example, sorttable uses the same ELF code /
+patterns as recordmcount -- like the double-include trick. Of course
+it operates on a larger scale than per-object-file and so there might
+only be code maintenance savings there...
+
+Also, the follow-on is definitely more speculative -- these patches show
+that things like recordmcount can be converted to share the same ELF code
+as objtool. The benefits of chaining commands together, how easy/hard
+that would be, etc. haven't been fully fleshed out. For instance, I was
+only looking at "check" and "mcount" chained together.
+
+But even aside from those changes, having all of the tools use the same
+ELF code and keeping that ELF code in one place rather than copy-paste
+it seems like it would be useful for maintenance.
+
+Cheers,
+    -Matt
