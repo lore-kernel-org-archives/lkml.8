@@ -7,120 +7,187 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E85C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A340C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E14206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5254821BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:51:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iJRtpihP"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cVr5c0jH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437081AbgDNIvB (ORCPT
+        id S2437089AbgDNIvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:51:01 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:33838 "EHLO pegase1.c-s.fr"
+        Tue, 14 Apr 2020 04:51:07 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21591 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437047AbgDNIuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2437050AbgDNIuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 04:50:52 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 491dgd3ZLyz9tydX;
-        Tue, 14 Apr 2020 10:19:25 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 491dgW1GpTz9tySh;
+        Tue, 14 Apr 2020 10:19:19 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=iJRtpihP; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=cVr5c0jH; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 4V4LQiifNT80; Tue, 14 Apr 2020 10:19:25 +0200 (CEST)
+        with ESMTP id 5jTE3S0dXcDQ; Tue, 14 Apr 2020 10:19:19 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 491dgd2YLhz9tydT;
-        Tue, 14 Apr 2020 10:19:25 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 491dgV717lz9ty3K;
+        Tue, 14 Apr 2020 10:19:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586852365; bh=P5l/XUfUvD4P00st6kgxn9/rml1eRRECj9OWtVUlXpg=;
+        t=1586852359; bh=A8l6zV1WqeUvYxhf98emJX8J5sChmaXS6oSMuqzxy9w=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=iJRtpihPkggZ5i1hMqrmky1S8ldtIo29f/5nR2JTCWLlSYnMrwYw2v1wAVchTYsKW
-         ExX0ZMQRcL7PTQ/JgNDr0cQW7yESUe+pZhgVSRBL1tjP/8DpkbiLbweiulhv0m6dWM
-         1ld6hsoEswW0hltcpf8V4phb2m9e+9oYplr8u7LU=
+        b=cVr5c0jH5swJmsM/Xz3RWzOsnbuwbGAmzPPOLGyDR9ELAes3Wh1Dqr7/qY4U8IC5c
+         gYt/ioyZbtGNdV5HwTeij52oQKxW+9+DHZ0xN+3rAgI4VJ9oUXtD5nT7kdAWMrSLou
+         sdxX1PIjC08Z3M97bCEW2CgKOrQTwfvRBaeH7sWM=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 662C78B797;
-        Tue, 14 Apr 2020 10:19:26 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 124428B797;
+        Tue, 14 Apr 2020 10:19:20 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id G3sFzHe7Qy3X; Tue, 14 Apr 2020 10:19:26 +0200 (CEST)
+        with ESMTP id ABg1UYln-uJc; Tue, 14 Apr 2020 10:19:19 +0200 (CEST)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F05618B796;
-        Tue, 14 Apr 2020 10:19:25 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B1BF88B796;
+        Tue, 14 Apr 2020 10:19:19 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id C33ED6578A; Tue, 14 Apr 2020 08:19:25 +0000 (UTC)
-Message-Id: <c43cc980a4483879f555d46399b296957a46fe8e.1586852082.git.christophe.leroy@c-s.fr>
+        id 856096578A; Tue, 14 Apr 2020 08:19:19 +0000 (UTC)
+Message-Id: <8ccef8c0f8eaafa0466622704ad0f780beebd442.1586852082.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1586852082.git.christophe.leroy@c-s.fr>
 References: <cover.1586852082.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 09/13] powerpc/40x: Remove support for IBM 405GP
+Subject: [PATCH v3 03/13] powerpc/pgtable: Drop PTE_ATOMIC_UPDATES
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
         arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 14 Apr 2020 08:19:25 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 08:19:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All platforms selecting the obsolete processor are gone now.
+40x was the last user of PTE_ATOMIC_UPDATES.
 
-Remove support for it.
+Drop everything related to PTE_ATOMIC_UPDATES.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/cputable.c     | 13 -------------
- arch/powerpc/platforms/40x/Kconfig |  6 ------
- 2 files changed, 19 deletions(-)
+ arch/powerpc/include/asm/nohash/32/pgtable.h | 32 --------------------
+ arch/powerpc/include/asm/nohash/64/pgtable.h | 27 -----------------
+ 2 files changed, 59 deletions(-)
 
-diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
-index bdc4eab0daaf..8ed553734919 100644
---- a/arch/powerpc/kernel/cputable.c
-+++ b/arch/powerpc/kernel/cputable.c
-@@ -1232,19 +1232,6 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 	},
- #endif /* CONFIG_PPC_8xx */
- #ifdef CONFIG_40x
--	{	/* 405GP */
--		.pvr_mask		= 0xffff0000,
--		.pvr_value		= 0x40110000,
--		.cpu_name		= "405GP",
--		.cpu_features		= CPU_FTRS_40X,
--		.cpu_user_features	= PPC_FEATURE_32 |
--			PPC_FEATURE_HAS_MMU | PPC_FEATURE_HAS_4xxMAC,
--		.mmu_features		= MMU_FTR_TYPE_40x,
--		.icache_bsize		= 32,
--		.dcache_bsize		= 32,
--		.machine_check		= machine_check_4xx,
--		.platform		= "ppc405",
--	},
- 	{	/* STB 04xxx */
- 		.pvr_mask		= 0xffff0000,
- 		.pvr_value		= 0x41810000,
-diff --git a/arch/powerpc/platforms/40x/Kconfig b/arch/powerpc/platforms/40x/Kconfig
-index 5d9d96e7223a..253c047fe6fe 100644
---- a/arch/powerpc/platforms/40x/Kconfig
-+++ b/arch/powerpc/platforms/40x/Kconfig
-@@ -51,12 +51,6 @@ config PPC40x_SIMPLE
- 	help
- 	  This option enables the simple PowerPC 40x platform support.
- 
--config 405GP
--	bool
--	select IBM405_ERR77
--	select IBM405_ERR51
--	select IBM_EMAC_ZMII if IBM_EMAC
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+index b04ba257fddb..fdbfcc44fea8 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -227,20 +227,6 @@ static inline unsigned long pte_update(pte_t *p,
+ 				       unsigned long clr,
+ 				       unsigned long set)
+ {
+-#ifdef PTE_ATOMIC_UPDATES
+-	unsigned long old, tmp;
 -
- config 405EX
- 	bool
- 	select IBM_EMAC_EMAC4 if IBM_EMAC
+-	__asm__ __volatile__("\
+-1:	lwarx	%0,0,%3\n\
+-	andc	%1,%0,%4\n\
+-	or	%1,%1,%5\n"
+-	PPC405_ERR77(0,%3)
+-"	stwcx.	%1,0,%3\n\
+-	bne-	1b"
+-	: "=&r" (old), "=&r" (tmp), "=m" (*p)
+-	: "r" (p), "r" (clr), "r" (set), "m" (*p)
+-	: "cc" );
+-#else /* PTE_ATOMIC_UPDATES */
+ 	unsigned long old = pte_val(*p);
+ 	unsigned long new = (old & ~clr) | set;
+ 
+@@ -249,7 +235,6 @@ static inline unsigned long pte_update(pte_t *p,
+ #else
+ 	*p = __pte(new);
+ #endif
+-#endif /* !PTE_ATOMIC_UPDATES */
+ 
+ #ifdef CONFIG_44x
+ 	if ((old & _PAGE_USER) && (old & _PAGE_EXEC))
+@@ -262,25 +247,8 @@ static inline unsigned long long pte_update(pte_t *p,
+ 					    unsigned long clr,
+ 					    unsigned long set)
+ {
+-#ifdef PTE_ATOMIC_UPDATES
+-	unsigned long long old;
+-	unsigned long tmp;
+-
+-	__asm__ __volatile__("\
+-1:	lwarx	%L0,0,%4\n\
+-	lwzx	%0,0,%3\n\
+-	andc	%1,%L0,%5\n\
+-	or	%1,%1,%6\n"
+-	PPC405_ERR77(0,%3)
+-"	stwcx.	%1,0,%4\n\
+-	bne-	1b"
+-	: "=&r" (old), "=&r" (tmp), "=m" (*p)
+-	: "r" (p), "r" ((unsigned long)(p) + 4), "r" (clr), "r" (set), "m" (*p)
+-	: "cc" );
+-#else /* PTE_ATOMIC_UPDATES */
+ 	unsigned long long old = pte_val(*p);
+ 	*p = __pte((old & ~(unsigned long long)clr) | set);
+-#endif /* !PTE_ATOMIC_UPDATES */
+ 
+ #ifdef CONFIG_44x
+ 	if ((old & _PAGE_USER) && (old & _PAGE_EXEC))
+diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
+index 9a33b8bd842d..3cacace9bfa0 100644
+--- a/arch/powerpc/include/asm/nohash/64/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
+@@ -211,22 +211,8 @@ static inline unsigned long pte_update(struct mm_struct *mm,
+ 				       unsigned long set,
+ 				       int huge)
+ {
+-#ifdef PTE_ATOMIC_UPDATES
+-	unsigned long old, tmp;
+-
+-	__asm__ __volatile__(
+-	"1:	ldarx	%0,0,%3		# pte_update\n\
+-	andc	%1,%0,%4 \n\
+-	or	%1,%1,%6\n\
+-	stdcx.	%1,0,%3 \n\
+-	bne-	1b"
+-	: "=&r" (old), "=&r" (tmp), "=m" (*ptep)
+-	: "r" (ptep), "r" (clr), "m" (*ptep), "r" (set)
+-	: "cc" );
+-#else
+ 	unsigned long old = pte_val(*ptep);
+ 	*ptep = __pte((old & ~clr) | set);
+-#endif
+ 	/* huge pages use the old page table lock */
+ 	if (!huge)
+ 		assert_pte_locked(mm, addr);
+@@ -310,21 +296,8 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
+ 	unsigned long bits = pte_val(entry) &
+ 		(_PAGE_DIRTY | _PAGE_ACCESSED | _PAGE_RW | _PAGE_EXEC);
+ 
+-#ifdef PTE_ATOMIC_UPDATES
+-	unsigned long old, tmp;
+-
+-	__asm__ __volatile__(
+-	"1:	ldarx	%0,0,%4\n\
+-		or	%0,%3,%0\n\
+-		stdcx.	%0,0,%4\n\
+-		bne-	1b"
+-	:"=&r" (old), "=&r" (tmp), "=m" (*ptep)
+-	:"r" (bits), "r" (ptep), "m" (*ptep)
+-	:"cc");
+-#else
+ 	unsigned long old = pte_val(*ptep);
+ 	*ptep = __pte(old | bits);
+-#endif
+ 
+ 	flush_tlb_page(vma, address);
+ }
 -- 
 2.25.0
 
