@@ -2,166 +2,79 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FE3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB24AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F632054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8727E206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 17:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586885928;
-	bh=BlRdEu7bWkoJW8GKNHvreZ6ibTBfjVJvw4Fqm/MWRIU=;
+	s=default; t=1586886057;
+	bh=wifdIhHBXcBKo+z7JFNY3dNgAxQamyKVML4OkIclRLk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1SvT3hlxLctKfM/DL0f/2p7T/vjtLvdyt+zk1Kdk790HERGc3o/rNXSZ1jS5jzIeY
-	 X8jVNpPOYzpTG51Rc09J5qTjBegpLXWz88bzXbfj+N8UEhjY9atqbDqT30X/wuTpDt
-	 mr2n5+78SH20kQllzdHO8dUFfngB15xf4rj6docI=
+	b=lztjz1btdhlhCVyxKLMGHXv1hs5nIWVW46auWrajqvPaVd8YYKyO69Cf11psIQ68a
+	 d6fE+v/SuxKG+a4TLd+d1Yd6s7CslO14/MqRgLqU8imxHuFr2jFNa4kp5qyOOSkGtz
+	 ai3PgpURkOKrPjHlRLczkg+zpKOoT725abm4Tdgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440468AbgDNRiq (ORCPT
+        id S1730394AbgDNRk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:38:46 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43058 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730099AbgDNRil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:38:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g14so451589otg.10;
-        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Nz3sKqk6tf6wfMqMfDxAKL6dU6xyEXZ2XEc3RZw1kA=;
-        b=HAea2NfyN4EFRHBhVGk45x5b1ywH72yfmLIX+OIf4N7IU41ZZgJQlIsdkf9JzvKfWd
-         aDGUkIWXXNgf6OruWAIYGOXvogoqXyXN5Pqx7BSf0nOa+fPplI7anS1zgRRs1Tvat5U7
-         ksCGk9BG9xvyZh8qd3c3UFRCQlGYgcYgFq35smDJcIUQIbGasG9NbttBq6eUTYjUTqc5
-         e/KEkTZ6je/8bY0GnCNzVU3mYAuHk9LCsKmo7UqFzV75fHgO7aS8WKLIPPG2zNf4GOhQ
-         B/Bw9LiGsKzUSSMBxPGhQSQr/oqgjypOpK294XQ/a7sCMIVaJl3KpQH+bwIjlMziPHD+
-         rySA==
-X-Gm-Message-State: AGi0PuamumCRgqT3zCvTLvm2P0jC+yyFY0t0A5n8DwUsWmeYuw5XsrXa
-        cQMLy6QPcUPg8Fv19mnMWQ==
-X-Google-Smtp-Source: APiQypLLc0miyc2capf1MVVpp0fAaq2ltXN508BsmSUu5FT95kopV2NU4H4Jg7eQPEjl2rrJC7bPYg==
-X-Received: by 2002:a9d:2c1:: with SMTP id 59mr699714otl.321.1586885920167;
-        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d61sm5640680otb.53.2020.04.14.10.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:38:39 -0700 (PDT)
-Received: (nullmailer pid 2638 invoked by uid 1000);
-        Tue, 14 Apr 2020 17:38:38 -0000
-Date:   Tue, 14 Apr 2020 12:38:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
-Message-ID: <20200414173838.GA29176@bogus>
-References: <20200403002608.946-1-ansuelsmth@gmail.com>
- <20200403002608.946-2-ansuelsmth@gmail.com>
+        Tue, 14 Apr 2020 13:40:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728863AbgDNRkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:40:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37F852054F;
+        Tue, 14 Apr 2020 17:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586886052;
+        bh=wifdIhHBXcBKo+z7JFNY3dNgAxQamyKVML4OkIclRLk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RqNIZMy/CJO8IlBNaoE4yafQcughMM/ou6rFRxyye6ssQ/QDZgQ4r46N+Rgrjf8Rh
+         vMQq3+DYkSW7ymX04fjQI3hftHodeNJlFR7Lj24O0RGIPDD50Tx8yn6Vbaf7xAozjZ
+         jm9sVOMz6gvdEIhu+509DvGCKsGXKgv073jbk3K0=
+Date:   Tue, 14 Apr 2020 19:40:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH 4.19.y] erofs: correct the remaining shrink objects
+Message-ID: <20200414174049.GA1035385@kroah.com>
+References: <20200414153820.29012-1-hsiangkao.ref@aol.com>
+ <20200414153820.29012-1-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403002608.946-2-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414153820.29012-1-hsiangkao@aol.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
-> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-> inizialize and use usb on ipq806x SoC
+On Tue, Apr 14, 2020 at 11:38:20PM +0800, Gao Xiang wrote:
+> From: Gao Xiang <gaoxiang25@huawei.com>
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> commit 9d5a09c6f3b5fb85af20e3a34827b5d27d152b34 upstream.
+> 
+> The remaining count should not include successful
+> shrink attempts.
+> 
+> Fixes: e7e9a307be9d ("staging: erofs: introduce workstation for decompression")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Link: https://lore.kernel.org/r/20200226081008.86348-1-gaoxiang25@huawei.com
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > ---
->  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65 +++++++++++++++++++
->  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65 +++++++++++++++++++
->  2 files changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-> new file mode 100644
-> index 000000000000..0bb59e3c2ab8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm DWC3 HS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers. Each DWC3 PHY controller should have its own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,dwc3-hs-usb-phy
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  regmap:
-> +    maxItems: 1
-> +    description: phandle to usb3 dts definition
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Is required
-> +      - "xo"	Optional external reference clock
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - regmap
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    hs_phy_0: hs_phy_0 {
-> +      compatible = "qcom,dwc3-hs-usb-phy";
-> +      regmap = <&usb3_0>;
+> trivial adaption, build verified.
 
-If the registers for the phy are part of 'qcom,dwc3' then make this node 
-a child of it.
+Both backports now queued up, thanks.
 
-> +      clocks = <&gcc USB30_0_UTMI_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> +
-> +    usb3_0: usb3@110f8800 {
-> +      compatible = "qcom,dwc3", "syscon";
-> +      reg = <0x110f8800 0x8000>;
-> +
-> +      /* ... */
-
-Incomplete examples should or will fail validation.
-
-> +    };
+greg k-h
