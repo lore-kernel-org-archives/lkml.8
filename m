@@ -2,119 +2,107 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14962C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C02C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49D02074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EDB20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fBwO8Izr"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="j02DrJAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504850AbgDNTc5 (ORCPT
+        id S2504864AbgDNTeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57942 "EHLO
+        Tue, 14 Apr 2020 15:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504842AbgDNTcP (ORCPT
+        by vger.kernel.org with ESMTP id S2504842AbgDNTdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:32:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31AEC061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:32:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a81so15586108wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:32:14 -0700 (PDT)
+        Tue, 14 Apr 2020 15:33:40 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EBFC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:33:39 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id p19so520586qve.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r6dF4D+wN0hoeI/HD/8hpNX9Zi5cUiRTSVM80fnZiTg=;
-        b=fBwO8IzrniZxcSL/9GbflmZPAl8MqOi6BSiWdmNVZDtvwiDrXcJ8sFwXX48lFfCr/X
-         wAgnGE8TBRQDx7zep17eczot4owoqocmojJ2B1UIF3996KL5H5yKdjPmNSVnUf4AqjNa
-         rln2yoActQTeguQWHfcZC3czrrvZnhzuMvVik=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8dnkQ9M3xI6On5BSh1/mhM6wNLNSVaCuNmJxtnHMKQk=;
+        b=j02DrJAJJMYYgQIUy1JTsUOwROPiKWFCYonh6yaIg0yjBkI7sW/ZCXWHB3l802npmp
+         bYy2/EcDTPLn0/iuzVb4x85UU2Nq/ZY9dpCCfTjXBFNaq2BW8zidhYBYt7AzkbTyHqEx
+         fKxdQ+E96b4q2cb28IOD47KEjHifg7tVjb1lW0i+y87/rHdkfki3d0DcOUJOtws4hOnI
+         6LuC08+F3VlCgq9il2WJHfDhUMyMRo6bZYUy7sUS+lWgsIe9HVl+E7zL3JuvGCTIy7CE
+         UFSJwifhn/w8dAKoeXJHnUc4V/hSx+Cy827SG0+Y5fH46DOr95sbY2ZqL45CmGPZm0XQ
+         kAlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r6dF4D+wN0hoeI/HD/8hpNX9Zi5cUiRTSVM80fnZiTg=;
-        b=jRZ/TtiuA3Grkkk4jpAsnki4NPcI4pB3Fnvx4W/Swty3O9+lriZC0KyXRUI3JuXTUY
-         XC75oRFyUJkfZ1n3bfAYsXMU9hagDzSuu/YzDwYc8W+taNuUsU0fGoj54S8XqnsKvUQj
-         aGxC5g5U1+qeG5vRxqZaBFXfhkK5A4fyOV9kImTHR+dQNa3LC46hDzXnMxCLXL1cc9ko
-         BWjamDzYZjqgU3AdWYzmevaUWp4GATGPMnA7hX2luHdkpqpUUhJNHrxGfjyC29rg3ZXz
-         UGMeaI67YALDLstW2z4od+uB0PKzah+U0C162cONTtYPNk2T9gMN0gChXZxzXGvNWKNT
-         OU5A==
-X-Gm-Message-State: AGi0PuZKGTUtS+4epN0/vaxddYm6xzBqMvg2nWQnUCi/OAMdC63f5s+T
-        qMHwNABOYTr7XvRb59MsO+VVZG9ssxT3U6tPxtrC1w==
-X-Google-Smtp-Source: APiQypLlztDYYEwUmNspxfYCm4X+JL6rjJrBiwa1m4IaNyse2DCEG6Vj7c7I41oPprzB2RKLqJ1TOmG77/BhEZSyEk4=
-X-Received: by 2002:a7b:cb03:: with SMTP id u3mr1303254wmj.12.1586892732880;
- Tue, 14 Apr 2020 12:32:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8dnkQ9M3xI6On5BSh1/mhM6wNLNSVaCuNmJxtnHMKQk=;
+        b=D9phPFWwszl4F+OicOpUPl58yC7dzkiGhEpw5KVgUOJnK6gXtTgGmgw+HgmJFRmzvu
+         3p4mEeMSIlNoLiUhiTAECQKWmiS90+ssbQORmtKl4k9speO9X9UOBPbDxLgDFpAPHjs3
+         QvbQnRqFGRsRqkhvDp58DLc5QODziSnpF5jy4al6glocAdpENO2w2ZcquSJxmw1HT7Wt
+         WOn30qVBPbo6BE9MQm52rr6UKzkRq8zp9Z3aVCsWG3mg4TwoIcUf6taaXiIZSE7z5KU7
+         mkb5dtWLkjcmdqPH2Z5k/amIXEvnWoO3JB1CMAuOpj2BXvejgE+ILiRWNKltaQvHmDI9
+         XYDg==
+X-Gm-Message-State: AGi0PuZY6X53RoCeCyjg40Usqml+/aqnv8GYTVnrURELYyXtI5PoJV/i
+        xq27LJjc1UgIryWw1ubJPs0HtYlNgqlcgw==
+X-Google-Smtp-Source: APiQypL0GLPU2qVCJsM0kf2FXn3IWzAgvpM/edl/Z91YfQTa69LDuZZfAydhjhxbF4ueX1QhOkOzNw==
+X-Received: by 2002:a0c:e092:: with SMTP id l18mr1565731qvk.116.1586892818419;
+        Tue, 14 Apr 2020 12:33:38 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o6sm5702880qkj.126.2020.04.14.12.33.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 12:33:37 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jORJR-0005TM-EB; Tue, 14 Apr 2020 16:33:37 -0300
+Date:   Tue, 14 Apr 2020 16:33:37 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v2 17/33] docs: infiniband: verbs.c: fix some
+ documentation warnings
+Message-ID: <20200414193337.GA20929@ziepe.ca>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+ <4c5466d0f450c5a9952138150c3485740b37f9c5.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200306002112.255361-1-dbasehore@chromium.org> <ecbfb5f8-615a-4a88-5dac-de17158125bf@gmail.com>
-In-Reply-To: <ecbfb5f8-615a-4a88-5dac-de17158125bf@gmail.com>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Tue, 14 Apr 2020 12:32:01 -0700
-Message-ID: <CAGAzgsqpjZxh7PEL_Dy7HrFeFGm7+=F6cL3QG9KmK9CHvDWZ9g@mail.gmail.com>
-Subject: Re: [PATCH v10 0/2] Panel rotation patches
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c5466d0f450c5a9952138150c3485740b37f9c5.1586881715.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry, sorry for the late reply.
+On Tue, Apr 14, 2020 at 06:48:43PM +0200, Mauro Carvalho Chehab wrote:
+> Parsing this file with kernel-doc produce some warnings:
+> 
+> 	./drivers/infiniband/core/verbs.c:2579: WARNING: Unexpected indentation.
+> 	./drivers/infiniband/core/verbs.c:2581: WARNING: Block quote ends without a blank line; unexpected unindent.
+> 	./drivers/infiniband/core/verbs.c:2613: WARNING: Unexpected indentation.
+> 	./drivers/infiniband/core/verbs.c:2579: WARNING: Unexpected indentation.
+> 	./drivers/infiniband/core/verbs.c:2581: WARNING: Block quote ends without a blank line; unexpected unindent.
+> 	./drivers/infiniband/core/verbs.c:2613: WARNING: Unexpected indentation.
+> 
+> Address them by adding an extra blank line and converting the
+> parameters on one of the arguments to a table.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/infiniband/core/verbs.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-On Sun, Mar 8, 2020 at 12:25 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 06.03.2020 03:21, Derek Basehore =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > This adds the plumbing for reading panel rotation from the devicetree
-> > and sets up adding a panel property for the panel orientation on
-> > Mediatek SoCs when a rotation is present.
->
-> Hello Derek and everyone,
->
-> I'm looking at adding display rotation support to NVIDIA Tegra DRM
-> driver because some devices have display panel physically mounted
-> upside-down, and thus, display controller's scan-out needs to be rotated
-> by 180=C2=B0 in this case.
->
-> Derek, yours panel-rotation patches add support for assigning panel's
-> orientation to the connector, but then only primary display plane
-> receives rotation value in [1], while rotation needs to be applied to
-> all available overlay/cursor planes and this should happen in other
-> places than [1] as well.
+As before we can take RDMA patches through the RDMA tree, so applied
+to for-next
 
-This is intended. We don't correct the output in the kernel. We
-instead rely on notifying userspace that the panel is rotated, then we
-handle it there.
-
->
-> [1] drm_client_modeset_commit_atomic()
->
-> Please also note that in a case of the scan-out rotation, plane's
-> coordinates need to be changed in accordance to the display's rotation.
->
-> I looked briefly through the DRM code and my understanding that the DRM
-> core currently doesn't support use-case where scan-out needs to rotated
-> based on a panel's orientation, correct? Is it the use-case you're
-> working on for the Mediatek driver?
-
-Yes, we rely on userspace to rotate the output. The major reason for
-this is because there may not be a "free" hardware rotation that can
-be applied to the overlay. Sean Paul and others also preferred that
-userspace control what is output to the screen instead of the kernel
-taking care of it. This code just adds the drm property to the panel.
+Thanks,
+Jason
