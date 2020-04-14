@@ -7,260 +7,262 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A48C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE56C2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC69A20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2B720644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ujNnnr01"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p1SpySKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438434AbgDNKfP (ORCPT
+        id S2438453AbgDNKfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:35:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56026 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438372AbgDNKcb (ORCPT
+        Tue, 14 Apr 2020 06:35:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40214 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438373AbgDNKci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:32:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAS66L099192;
-        Tue, 14 Apr 2020 10:32:01 GMT
+        Tue, 14 Apr 2020 06:32:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EATIE1098998;
+        Tue, 14 Apr 2020 10:32:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=3elyCtL31IJdXHdlLwwE8jV/D1Z9hDRkcmsvbBLWNv4=;
- b=ujNnnr01CBKYRUAg/k9d/55h/0T+92MRQ9gYHyM4VkbaqDTC0HiBvxkOoCQSSrSswVtG
- 6uTX6ppjVQmCZYLkkWIr1b2324Pq1y/myTau6Ul0LuJir8mXyGJMqdXBCTKJFie/fNmR
- +AXbvp7P1da3sxj5YrboYXQewcoNs0Q+VpJ118o+uK/Zbpmhx3kLs9ZZD8Ugi0OxWt2e
- C090vB7aHJsP7yd4vIlNFOyTFouQegPpH74T1WcKy8QJ1MQnyb7/MxEs3boZZPKmVXjl
- 5gS93s3qobvCSiVmiKwJs5uBsPCylruJiWK/y0tKhuY0g9HKWxudpHICvnTaOjO3GRDI FQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30b5um3nkn-1
+ bh=MDCxMbwZCIalkERKeoAG/k67T3C98x/pTWapXX1xkMk=;
+ b=p1SpySKC/FngDeAc5GiZkWb0Y/SW2geU1EWRcPOB9FLkIhbc6R6AbqTWGcJSFowL8Vca
+ Pf9xiQMGBeGey0pFmAsOtJI/yuFLgYwBdEJym1QIcT3Q9FilDHUkuBpT5fqwo6B5Plh4
+ RtY8D0Hs/VTlGeGPEeBkxOVHG5ecjpgSRenDVWNiBZ9SExU59jr7Me+KzNcGhwqEF3AM
+ NEolvtnVjNq28fGX3my6KzZSAlXY2Q7OqfvwJxWiKVS/mOKsHDvlbIVEijt2P2mxwwrU
+ n8HNcgB+/dTRwwtUYVBJYtVhSSl/i4irLqtmOLhYZzkjHB/Un36mSQmMPyk3f05j9YBG tg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30b6hpkmeq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:32:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAR7CR034962;
-        Tue, 14 Apr 2020 10:32:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30cta9txta-1
+        Tue, 14 Apr 2020 10:32:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EAVxaJ123210;
+        Tue, 14 Apr 2020 10:32:02 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30bqpfxnx9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 10:32:01 +0000
+        Tue, 14 Apr 2020 10:32:02 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EAW0DP008874;
-        Tue, 14 Apr 2020 10:32:00 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EAVwlD013715;
+        Tue, 14 Apr 2020 10:31:59 GMT
 Received: from linux-1.home (/92.157.90.160)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 03:32:00 -0700
+        with ESMTP ; Tue, 14 Apr 2020 03:31:58 -0700
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
         peterz@infradead.org, jthierry@redhat.com, tglx@linutronix.de,
         alexandre.chartre@oracle.com
-Subject: [PATCH V3 6/9] objtool: Report inconsistent stack changes in alternative
-Date:   Tue, 14 Apr 2020 12:36:15 +0200
-Message-Id: <20200414103618.12657-7-alexandre.chartre@oracle.com>
+Subject: [PATCH V3 5/9] objtool: Add return address unwind hints
+Date:   Tue, 14 Apr 2020 12:36:14 +0200
+Message-Id: <20200414103618.12657-6-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200414103618.12657-1-alexandre.chartre@oracle.com>
 References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
- spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140086
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=1 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140087
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=1 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140086
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 suspectscore=1
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow a valid stack unwinding, an alternative should have code
-where the same stack changes happens at the same places as in the
-original code. Add a check in objtool to validate that stack changes
-in alternative are effectively consitent with the original code.
+Add the UNWIND_HINT_RADDR_DELETE and UNWIND_HINT_RADDR_ALTER unwind
+hint macros to flag instructions which remove or modify return
+addresses.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- tools/objtool/check.c | 155 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 155 insertions(+)
+ arch/x86/include/asm/orc_types.h       |  2 +
+ arch/x86/include/asm/unwind_hints.h    | 23 +++++++++
+ tools/arch/x86/include/asm/orc_types.h |  2 +
+ tools/objtool/check.c                  | 67 ++++++++++++++++++++++++++
+ 4 files changed, 94 insertions(+)
 
+diff --git a/arch/x86/include/asm/orc_types.h b/arch/x86/include/asm/orc_types.h
+index 6e060907c163..5c1141175d51 100644
+--- a/arch/x86/include/asm/orc_types.h
++++ b/arch/x86/include/asm/orc_types.h
+@@ -60,6 +60,8 @@
+ #define ORC_TYPE_REGS_IRET		2
+ #define UNWIND_HINT_TYPE_SAVE		3
+ #define UNWIND_HINT_TYPE_RESTORE	4
++#define UNWIND_HINT_TYPE_RADDR_ALTER	6
++#define UNWIND_HINT_TYPE_RADDR_DELETE	7
+ 
+ #ifndef __ASSEMBLY__
+ /*
+diff --git a/arch/x86/include/asm/unwind_hints.h b/arch/x86/include/asm/unwind_hints.h
+index f5e2eb12cb71..5211d2c5b7a2 100644
+--- a/arch/x86/include/asm/unwind_hints.h
++++ b/arch/x86/include/asm/unwind_hints.h
+@@ -94,6 +94,23 @@
+ 	UNWIND_HINT type=UNWIND_HINT_TYPE_RESTORE
+ .endm
+ 
++/*
++ * RADDR_DELETE: Used on instructions (other than ret instruction)
++ * which remove a return address from the stack. count is the number
++ * of return address which are removed.
++ */
++.macro UNWIND_HINT_RADDR_DELETE count=1
++	UNWIND_HINT type=UNWIND_HINT_TYPE_RADDR_DELETE sp_offset=\count
++.endm
++
++/*
++ * RADDR_ALTER: Used on instructions which change a return address on
++ * the stack. count is the number of return address which are changed.
++ */
++.macro UNWIND_HINT_RADDR_ALTER count=1
++	UNWIND_HINT type=UNWIND_HINT_TYPE_RADDR_ALTER sp_offset=\count
++.endm
++
+ #else /* !__ASSEMBLY__ */
+ 
+ #define UNWIND_HINT(sp_reg, sp_offset, type, end)		\
+@@ -112,6 +129,12 @@
+ 
+ #define UNWIND_HINT_RESTORE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_RESTORE, 0)
+ 
++#define UNWIND_HINT_RADDR_ALTER(count)	\
++	UNWIND_HINT(0, count, UNWIND_HINT_TYPE_RADDR_ALTER, 0)
++
++#define UNWIND_HINT_RADDR_DELETE(count)	\
++	UNWIND_HINT(0, count, UNWIND_HINT_TYPE_RADDR_DELETE, 0)
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_X86_UNWIND_HINTS_H */
+diff --git a/tools/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
+index 6e060907c163..5c1141175d51 100644
+--- a/tools/arch/x86/include/asm/orc_types.h
++++ b/tools/arch/x86/include/asm/orc_types.h
+@@ -60,6 +60,8 @@
+ #define ORC_TYPE_REGS_IRET		2
+ #define UNWIND_HINT_TYPE_SAVE		3
+ #define UNWIND_HINT_TYPE_RESTORE	4
++#define UNWIND_HINT_TYPE_RADDR_ALTER	6
++#define UNWIND_HINT_TYPE_RADDR_DELETE	7
+ 
+ #ifndef __ASSEMBLY__
+ /*
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 0574ce8e232d..9488a9c7be24 100644
+index 8b1df659cd68..0574ce8e232d 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -2724,6 +2724,156 @@ static int validate_reachable_instructions(struct objtool_file *file)
- 	return 0;
+@@ -66,6 +66,28 @@ static bool raddr_pop(struct instruction **insn)
+ 	return true;
  }
  
-+static int validate_alternative_state(struct objtool_file *file,
-+				      struct instruction *first,
-+				      struct instruction *prev,
-+				      struct instruction *current,
-+				      bool include_current)
++static bool raddr_delete(int count)
 +{
-+	struct instruction *alt_insn, *alt_first;
-+	unsigned long roff_prev, roff_curr, roff;
-+	int count, err = 0, err_alt, alt_num;
-+	struct alternative *alt;
-+	const char *err_str;
++	if (raddr_count < count)
++		return false;
 +
++	raddr_count -= count;
++	return true;
++}
++
++static bool raddr_alter(int count)
++{
++	int i;
++
++	if (raddr_count < count)
++		false;
++
++	for (i = 0; i < count; i++)
++		raddr_list[raddr_count - 1 - i] = RADDR_ALTERED;
++
++	return true;
++}
++
+ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			   struct instruction *from,
+ 			   struct instruction *first, struct insn_state state);
+@@ -1314,6 +1336,14 @@ static int read_unwind_hints(struct objtool_file *file)
+ 			insn->restore = true;
+ 			insn->hint = true;
+ 			continue;
++
++		} else if (hint->type == UNWIND_HINT_TYPE_RADDR_DELETE) {
++			insn->raddr_delete = hint->sp_offset;
++			continue;
++
++		} else if (hint->type == UNWIND_HINT_TYPE_RADDR_ALTER) {
++			insn->raddr_alter = hint->sp_offset;
++			continue;
+ 		}
+ 
+ 		insn->hint = true;
+@@ -1526,6 +1556,13 @@ static bool has_modified_stack_frame(struct insn_state *state)
+ 	    state->drap)
+ 		return true;
+ 
 +	/*
-+	 * Check that instructions in alternatives between the corresponding
-+	 * previous and current instructions, have the same stack state.
++	 * If the stack was altered then don't check registers because
++	 * a callee-saved registers might have been pushed on the stack.
 +	 */
++	if (state->stack_altered)
++		return false;
 +
-+	/* use relative offset to find corresponding alt instructions */
-+	roff_prev = prev->offset - first->offset;
-+	roff_curr = current->offset - first->offset;
-+	alt_num = 0;
-+
-+	list_for_each_entry(alt, &first->alts, list) {
-+		if (!alt->insn->alt_group)
-+			continue;
-+
-+		alt_num++;
-+		alt_first = alt->insn;
-+		count = 0;
-+		err_alt = 0;
-+
-+		for (alt_insn = alt_first;
-+		     alt_insn && alt_insn->alt_group == alt_first->alt_group;
-+		     alt_insn = next_insn_same_sec(file, alt_insn)) {
-+
-+			roff = alt_insn->offset - alt_first->offset;
-+			if (roff < roff_prev)
-+				continue;
-+
-+			if (roff > roff_curr ||
-+			    (roff == roff_curr && !include_current))
-+				break;
-+
-+			count++;
-+			/*
-+			 * The first instruction we check must be aligned with
-+			 * the corresponding "prev" instruction because stack
-+			 * change should happen at the same offset.
-+			 */
-+			if (count == 1 && roff != roff_prev) {
-+				err_str = "misaligned alternative state change";
-+				err_alt++;
-+			}
-+
-+			if (!err_alt && memcmp(&prev->state, &alt_insn->state,
-+					       sizeof(struct insn_state))) {
-+				err_str = "invalid alternative state";
-+				err_alt++;
-+			}
-+
-+			/*
-+			 * On error, report the error and stop checking
-+			 * this alternative but continue checking other
-+			 * alternatives.
-+			 */
-+			if (err_alt) {
-+				if (!err) {
-+					WARN_FUNC("error in alternative",
-+						  first->sec, first->offset);
-+				}
-+				WARN_FUNC("in alternative %d",
-+					  alt_first->sec, alt_first->offset,
-+					  alt_num);
-+				WARN_FUNC("%s", alt_insn->sec, alt_insn->offset,
-+					  err_str);
-+
-+				err += err_alt;
-+				break;
-+			}
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+static int validate_alternative(struct objtool_file *file)
-+{
-+	struct instruction *first, *prev, *next, *insn;
-+	bool in_alternative;
-+	int err;
-+
-+	err = 0;
-+	first = prev = NULL;
-+	in_alternative = false;
-+	for_each_insn(file, insn) {
-+		if (insn->ignore || !insn->alt_group || insn->ignore_alts)
-+			continue;
-+
-+		if (!in_alternative) {
-+			if (list_empty(&insn->alts))
-+				continue;
-+
-+			/*
-+			 * Setup variables to start the processing of a
-+			 * new alternative.
-+			 */
-+			first = insn;
-+			prev = insn;
-+			err = 0;
-+			in_alternative = true;
-+
-+		} else if (!err && memcmp(&prev->state, &insn->state,
-+					  sizeof(struct insn_state))) {
-+			/*
-+			 * The stack state has changed and no error was
-+			 * reported for this alternative. Check that the
-+			 * stack state is the same in all alternatives
-+			 * between the last check and up to this instruction.
-+			 *
-+			 * Once we have an error, stop checking the
-+			 * alternative because once the stack state is
-+			 * inconsistent, it will likely be inconsistent
-+			 * for other instructions as well.
-+			 */
-+			err = validate_alternative_state(file, first,
-+							 prev, insn, false);
-+			prev = insn;
-+		}
-+
+ 	for (i = 0; i < CFI_NUM_REGS; i++)
+ 		if (state->regs[i].base != initial_func_cfi.regs[i].base ||
+ 		    state->regs[i].offset != initial_func_cfi.regs[i].offset)
+@@ -2103,6 +2140,15 @@ static int validate_return_address(struct objtool_file *file,
+ 		if (!raddr_insn)
+ 			break;
+ 
 +		/*
-+		 * If the next instruction is in the same alternative then
-+		 * continue with processing this alternative. Otherwise
-+		 * that's the end of this alternative so check there is no
-+		 * stack state changes in remaining instructions (if no
-+		 * error was reported yet).
++		 * If this is a dynamic branch then we expect this
++		 * branch to return or not, depending on the defined
++		 * list of RA we have, so just continue the processing
++		 * of the RA list.
 +		 */
-+		next = list_next_entry(insn, list);
-+		if (next && !next->ignore &&
-+		    next->alt_group == first->alt_group)
++		if (raddr_insn == RADDR_ALTERED)
 +			continue;
 +
-+		if (!err)
-+			err = validate_alternative_state(file, first,
-+							 prev, insn, true);
-+		in_alternative = false;
-+	}
-+
-+	return 0;
-+}
-+
- static struct objtool_file file;
+ 		/*
+ 		 * If we are branching to a defined address then
+ 		 * just do an unconditional jump there.
+@@ -2287,6 +2333,27 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 				return 0;
+ 		}
  
- int check(const char *_objname, bool orc)
-@@ -2769,6 +2919,11 @@ int check(const char *_objname, bool orc)
- 		goto out;
- 	warnings += ret;
- 
-+	ret = validate_alternative(&file);
-+	if (ret < 0)
-+		goto out;
-+	warnings += ret;
++		if (insn->raddr_delete) {
++			/* delete return address */
++			if (!raddr_delete(insn->raddr_delete)) {
++				WARN_FUNC("fail to delete %d return address",
++					  insn->sec, insn->offset,
++					  insn->raddr_delete);
++				return 1;
++			}
++			state.stack_altered = true;
 +
- 	if (!warnings) {
- 		ret = validate_reachable_instructions(&file);
- 		if (ret < 0)
++		} else if (insn->raddr_alter) {
++			/* alter return address */
++			if (!raddr_alter(insn->raddr_alter)) {
++				WARN_FUNC("fail to alter %d return address",
++					  insn->sec, insn->offset,
++					  insn->raddr_alter);
++				return 1;
++			}
++			state.stack_altered = true;
++		}
++
+ 		switch (insn->type) {
+ 
+ 		case INSN_RETURN:
 -- 
 2.18.2
 
