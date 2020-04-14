@@ -2,215 +2,327 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9A7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E922DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D8D206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9093206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634509AbgDNX5H (ORCPT
+        id S2634138AbgDNX56 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:57:07 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:51180 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1732541AbgDNX5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 19:57:02 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id A5A8F20156CF;
-        Wed, 15 Apr 2020 07:56:58 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rITjnQJBjKIy; Wed, 15 Apr 2020 07:56:58 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 8AB8F2001496;
-        Wed, 15 Apr 2020 07:56:58 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 879A2C019EC;
-        Wed, 15 Apr 2020 07:56:58 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 81CC9201602; Wed, 15 Apr 2020 07:56:58 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     chris.ruehl@gtsys.com.hk
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Steve Winslow <swinslow@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-Date:   Wed, 15 Apr 2020 07:56:04 +0800
-Message-Id: <20200414235609.20125-4-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200414235609.20125-1-chris.ruehl@gtsys.com.hk>
-References: <20200414235609.20125-1-chris.ruehl@gtsys.com.hk>
+        Tue, 14 Apr 2020 19:57:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12062 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732131AbgDNX5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 19:57:42 -0400
+IronPort-SDR: UU4GOJYsdsEUhlcjA/U1Sn1TWeFnxslnDYcAAx+bzQuEsbKpFtUwLxjuRJtisjuQNEr3Y1hcMG
+ UqNfAWe1Q2jQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 16:57:38 -0700
+IronPort-SDR: Pwjf1VDhFVZLSwGmMYvye6Nz/aHWw/j6AN8eCIzW7qqmiXwulZ/w2GxpB3X/8Ulf4U56bpac0T
+ T6CL8FruPd7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
+   d="scan'208";a="277437693"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Apr 2020 16:57:38 -0700
+Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Apr 2020 16:57:38 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Apr 2020 16:57:37 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
+ Wed, 15 Apr 2020 07:57:34 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
+Subject: RE: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Topic: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Index: AQHWAEVGCz5QQWvL/U+nYnlD7MiZ7Khl/jEAgACVNICAAJ/EgIAF8c6ggAA/A4CAAMnRgIAAzpAAgAb/OoCAAMrPQIAAC1kAgAA5CgCAAPxYkP//i8oAgACGwnCAAEEggIABEuCg
+Date:   Tue, 14 Apr 2020 23:57:33 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D81F946@SHSMSX104.ccr.corp.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+        <20200402165954.48d941ee@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+        <20200403112545.6c115ba3@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+        <20200407095801.648b1371@w520.home>     <20200408040021.GS67127@otc-nc-03>
+        <20200408101940.3459943d@w520.home>
+        <20200413031043.GA18183@araj-mobl1.jf.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
+        <20200413132122.46825849@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D81D376@SHSMSX104.ccr.corp.intel.com>
+        <20200413212836.117b4c86@x1.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D81D456@SHSMSX104.ccr.corp.intel.com>
+ <20200414092401.039edef6@w520.home>
+In-Reply-To: <20200414092401.039edef6@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Tuesday, April 14, 2020 11:24 PM
+> 
+> On Tue, 14 Apr 2020 03:42:42 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> 
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Tuesday, April 14, 2020 11:29 AM
+> > >
+> > > On Tue, 14 Apr 2020 02:40:58 +0000
+> > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > >
+> > > > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > > > Sent: Tuesday, April 14, 2020 3:21 AM
+> > > > >
+> > > > > On Mon, 13 Apr 2020 08:05:33 +0000
+> > > > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > > > >
+> > > > > > > From: Tian, Kevin
+> > > > > > > Sent: Monday, April 13, 2020 3:55 PM
+> > > > > > >
+> > > > > > > > From: Raj, Ashok <ashok.raj@linux.intel.com>
+> > > > > > > > Sent: Monday, April 13, 2020 11:11 AM
+> > > > > > > >
+> > > > > > > > On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson
+> wrote:
+> > > > > > > > > On Tue, 7 Apr 2020 21:00:21 -0700
+> > > > > > > > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> > > > > > > > >
+> > > > > > > > > > Hi Alex
+> > > > > > > > > >
+> > > > > > > > > > + Bjorn
+> > > > > > > > >
+> > > > > > > > >  + Don
+> > > > > > > > >
+> > > > > > > > > > FWIW I can't understand why PCI SIG went different ways
+> with
+> > > ATS,
+> > > > > > > > > > where its enumerated on PF and VF. But for PASID and PRI its
+> > > only
+> > > > > > > > > > in PF.
+> > > > > > > > > >
+> > > > > > > > > > I'm checking with our internal SIG reps to followup on that.
+> > > > > > > > > >
+> > > > > > > > > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson
+> > > wrote:
+> > > > > > > > > > > > Is there vendor guarantee that hidden registers will locate
+> at
+> > > the
+> > > > > > > > > > > > same offset between PF and VF config space?
+> > > > > > > > > > >
+> > > > > > > > > > > I'm not sure if the spec really precludes hidden registers,
+> but
+> > > the
+> > > > > > > > > > > fact that these registers are explicitly outside of the
+> capability
+> > > > > > > > > > > chain implies they're only intended for device specific use,
+> so
+> > > I'd
+> > > > > say
+> > > > > > > > > > > there are no guarantees about anything related to these
+> > > registers.
+> > > > > > > > > >
+> > > > > > > > > > As you had suggested in the other thread, we could consider
+> > > > > > > > > > using the same offset as in PF, but even that's a better guess
+> > > > > > > > > > still not reliable.
+> > > > > > > > > >
+> > > > > > > > > > The other option is to maybe extend driver ops in the PF to
+> > > expose
+> > > > > > > > > > where the offsets should be. Sort of adding the quirk in the
+> > > > > > > > > > implementation.
+> > > > > > > > > >
+> > > > > > > > > > I'm not sure how prevalent are PASID and PRI in VF devices. If
+> > > SIG is
+> > > > > > > > resisting
+> > > > > > > > > > making VF's first class citizen, we might ask them to add
+> some
+> > > > > verbiage
+> > > > > > > > > > to suggest leave the same offsets as PF open to help
+> emulation
+> > > > > software.
+> > > > > > > > >
+> > > > > > > > > Even if we know where to expose these capabilities on the VF,
+> it's
+> > > not
+> > > > > > > > > clear to me how we can actually virtualize the capability itself.
+> If
+> > > > > > > > > the spec defines, for example, an enable bit as r/w then
+> software
+> > > that
+> > > > > > > > > interacts with that register expects the bit is settable.  There's
+> no
+> > > > > > > > > protocol for "try to set the bit and re-read it to see if the
+> hardware
+> > > > > > > > > accepted it".  Therefore a capability with a fixed enable bit
+> > > > > > > > > representing the state of the PF, not settable by the VF, is
+> > > > > > > > > disingenuous to the spec.
+> > > > > > > >
+> > > > > > > > I think we are all in violent agreement. A lot of times the pci spec
+> > > gets
+> > > > > > > > defined several years ahead of real products and no one
+> > > remembers
+> > > > > > > > the justification on why they restricted things the way they did.
+> > > > > > > >
+> > > > > > > > Maybe someone early product wasn't quite exposing these
+> features
+> > > to
+> > > > > the
+> > > > > > > > VF
+> > > > > > > > and hence the spec is bug compatible :-)
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > If what we're trying to do is expose that PASID and PRI are
+> enabled
+> > > on
+> > > > > > > > > the PF to a VF driver, maybe duplicating the PF capabilities on
+> the
+> > > VF
+> > > > > > > > > without the ability to control it is not the right approach.
+> Maybe
+> > > we
+> > > > > > > >
+> > > > > > > > As long as the capability enable is only provided when the PF has
+> > > > > enabled
+> > > > > > > > the feature. Then it seems the hardware seems to do the right
+> thing.
+> > > > > > > >
+> > > > > > > > Assume we expose PASID/PRI only when PF has enabled it. It will
+> be
+> > > the
+> > > > > > > > case since the PF driver needs to exist, and IOMMU would have
+> set
+> > > the
+> > > > > > > > PASID/PRI/ATS on PF.
+> > > > > > > >
+> > > > > > > > If the emulation is purely spoofing the capability. Once vIOMMU
+> > > driver
+> > > > > > > > enables PASID, the context entries for the VF are completely
+> > > > > independent
+> > > > > > > > from the PF context entries.
+> > > > > > > >
+> > > > > > > > vIOMMU would enable PASID, and we just spoof the PASID
+> > > capability.
+> > > > > > > >
+> > > > > > > > If vIOMMU or guest for some reason does disable_pasid(), then
+> the
+> > > > > > > > vIOMMU driver can disaable PASID on the VF context entries. So
+> the
+> > > VF
+> > > > > > > > although the capability is blanket enabled on PF, IOMMU
+> gaurantees
+> > > > > the
+> > > > > > > > transactions are blocked.
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > In the interim, it seems like the intent of the virtual capability
+> > > > > > > > can be honored via help from the IOMMU for the controlling
+> aspect..
+> > > > > > > >
+> > > > > > > > Did i miss anything?
+> > > > > > >
+> > > > > > > Above works for emulating the enable bit (under the assumption
+> that
+> > > > > > > PF driver won't disable pasid when vf is assigned). However, there
+> are
+> > > > > > > also "Execute permission enable" and "Privileged mode enable"
+> bits in
+> > > > > > > PASID control registers. I don't know how those bits could be
+> cleanly
+> > > > > > > emulated when the guest writes a value different from PF's...
+> > > > > >
+> > > > > > sent too quick. the IOMMU also includes control bits for allowing/
+> > > > > > blocking execute requests and supervisor requests. We can rely on
+> > > > > > IOMMU to block those requests to emulate the disabled cases of
+> > > > > > all three control bits in the pasid cap.
+> > > > >
+> > > > >
+> > > > > So if the emulation of the PASID capability takes into account the
+> > > > > IOMMU configuration to back that emulation, shouldn't we do that
+> > > > > emulation in the hypervisor, ie. QEMU, rather than the kernel vfio
+> > > > > layer?  Thanks,
+> > > > >
+> > > > > Alex
+> > > >
+> > > > We need enforce it in physical IOMMU, to ensure that even the
+> > > > VF may send requests which violate the guest expectation those
+> > > > requests are always blocked by IOMMU. Kernel vfio identifies
+> > > > such need when emulating the pasid cap and then forward the
+> > > > request to host iommu driver.
+> > >
+> > > Implementing this in the kernel would be necessary if we needed to
+> > > protect from the guest device doing something bad to the host or
+> > > other devices.  Making sure the physical IOMMU is configured to meet
+> > > guest expectations doesn't sound like it necessarily falls into that
+> > > category.  We do that on a regular basis to program the DMA mappings.
+> > > Tell me more about why the hypervisor can't handle this piece of
+> > > guest/host synchronization on top of all the other things it
+> > > synchronizes to make a VM.  Thanks,
+> > >
+> >
+> > I care more about "execution permission" and "privileged mode".
+> > It might be dangerous when the guest disallows the VF from sending
+> 
+> "Dangerous" how?  We're generally ok with the user managing their own
+> consistency, it's when the user can affect other users/devices that we
+> require vfio in the kernel to actively manage something.  There's a very
+> different scope to the vfio-pci kernel module implementing a fake
+> capability and trying to make it behave indistinguishably from the real
+> capability versus a userspace driver piecing together an emulation
+> that's good enough for their purposes.  Thanks,
+>
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- .../bindings/iio/dac/lltc,ltc2632.yaml        | 78 +++++++++++++++++++
- .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
- 2 files changed, 78 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+How could emulation fix this gap when the VF DMAs don't go through
+the vIOMMU? What you explained all makes sense before talking about
+the emulation of PASID capability, i.e. vfio only cares about isolation 
+between assigned devices. However now vfio exposes a capability 
+which is shared by PF/VF while pure software emulation may break 
+the guest expectation, and now the only viable mitigation is to get 
+the help from physical IOMMU. then why cannot vfio include such 
+mitigation in its emulation of the PASID capability? 
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-new file mode 100644
-index 000000000000..314bf700d934
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+# Copyright 2020 Christopher Ruehl <chris.ruehl@gtsys.com.hk>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
-+
-+maintainers:
-+  - Jonathan Cameron <jic23@kernel.org>
-+
-+description: |
-+  Bindings for the Linear Technology LTC2632/2634/2636 DAC
-+  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lltc,ltc2632-l12
-+      - lltc,ltc2632-l10
-+      - lltc,ltc2632-l8
-+      - lltc,ltc2632-h12
-+      - lltc,ltc2632-h10
-+      - lltc,ltc2632-h8
-+      - lltc,ltc2634-l12
-+      - lltc,ltc2634-l10
-+      - lltc,ltc2634-l8
-+      - lltc,ltc2634-h12
-+      - lltc,ltc2634-h10
-+      - lltc,ltc2634-h8
-+      - lltc,ltc2636-l12
-+      - lltc,ltc2636-l10
-+      - lltc,ltc2636-l8
-+      - lltc,ltc2636-h12
-+      - lltc,ltc2636-h10
-+      - lltc,ltc2636-h8
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 2000000
-+
-+  vref-supply:
-+    description:
-+	  Phandle to the external reference voltage supply. This should
-+      only be set if there is an external reference voltage connected to the VREF
-+      pin. If the property is not set the internal reference is used.
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    vref: regulator-vref {
-+        compatible = "regulator-fixed";
-+        regulator-name = "vref-ltc2632";
-+        regulator-min-microvolt = <1250000>;
-+        regulator-max-microvolt = <1250000>;
-+        regulator-always-on;
-+    };
-+
-+    spi_master {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dac: ltc2632@0 {
-+        compatible = "lltc,ltc2632";
-+        reg = <0>;    /* CS0 */
-+        spi-max-frequency = <1000000>;
-+        vref-supply = <&vref>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-deleted file mode 100644
-index 1ab9570cf219..000000000000
---- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--Linear Technology LTC2632/2634/2636 DAC
--
--Required properties:
-- - compatible: Has to contain one of the following:
--	lltc,ltc2632-l12
--	lltc,ltc2632-l10
--	lltc,ltc2632-l8
--	lltc,ltc2632-h12
--	lltc,ltc2632-h10
--	lltc,ltc2632-h8
--	lltc,ltc2634-l12
--	lltc,ltc2634-l10
--	lltc,ltc2634-l8
--	lltc,ltc2634-h12
--	lltc,ltc2634-h10
--	lltc,ltc2634-h8
--	lltc,ltc2636-l12
--	lltc,ltc2636-l10
--	lltc,ltc2636-l8
--	lltc,ltc2636-h12
--	lltc,ltc2636-h10
--	lltc,ltc2636-h8
--
--Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
--apply. In particular, "reg" and "spi-max-frequency" properties must be given.
--
--Optional properties:
--	- vref-supply: Phandle to the external reference voltage supply. This should
--	  only be set if there is an external reference voltage connected to the VREF
--	  pin. If the property is not set the internal reference is used.
--
--Example:
--
--	vref: regulator-vref {
--		compatible = "regulator-fixed";
--		regulator-name = "vref-ltc2632";
--		regulator-min-microvolt = <1250000>;
--		regulator-max-microvolt = <1250000>;
--		regulator-always-on;
--	};
--
--	spi_master {
--		dac: ltc2632@0 {
--			compatible = "lltc,ltc2632-l12";
--			reg = <0>; /* CS0 */
--			spi-max-frequency = <1000000>;
--			vref-supply = <&vref>; /* optional */
--		};
--	};
--- 
-2.20.1
+Thanks
+Kevin
+
+> 
+> > DMA requests which have the execute or privileged bit set while the VF
+> > can still do so w/o proper protection in the IOMMU. This is all about
+> > vSVA for vfio devices, where the guest page table is directly linked in
+> > IOMMU and vfio doesn't participate in the specific DMA mappings. if
+> > an emulated device includes a pasid cap, Qemu vIOMMU will handle
+> > it for sure.
+> >
+> > Thanks
+> > Kevin
+> >
 
