@@ -2,124 +2,134 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA82C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845B5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DB2206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8F1206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPH+wfkP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gwOWdDcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391760AbgDNQdE (ORCPT
+        id S2391766AbgDNQdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57828 "EHLO
+        Tue, 14 Apr 2020 12:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391745AbgDNQcp (ORCPT
+        by vger.kernel.org with ESMTP id S2391745AbgDNQdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:32:45 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A92FC061A0C;
-        Tue, 14 Apr 2020 09:32:44 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y4so451721ljn.7;
-        Tue, 14 Apr 2020 09:32:44 -0700 (PDT)
+        Tue, 14 Apr 2020 12:33:09 -0400
+Received: from mail-vs1-xe4a.google.com (mail-vs1-xe4a.google.com [IPv6:2607:f8b0:4864:20::e4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CC1C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:33:09 -0700 (PDT)
+Received: by mail-vs1-xe4a.google.com with SMTP id x14so172770vsn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UIF3BoyuEURXStfcfS+K3X+B8H9N0p09Wke+0dl3XYI=;
-        b=TPH+wfkPooywpXdD9Cf7DoG2SqrrH+5LpkpkmZTl2bh9FId8Wj45SwrTvanUR+//y4
-         1gyvpoEbxgDB6f6yK/MJENkQqPxMTz5nTI3FzoffpEyVA17tiyTDji/CIDQhBod3hB0t
-         gv65qG85q4UmhmbqFsxqMtyltgGFNkSTKJxcG/BivRtkIXzTdW1pPGXkjePT2Y2Ya4gb
-         mDnqUTHkMGID7WFd2qOqiHKII7nPj4rrp650VIA1YKaaX3WTwLdojM4zxt0/Fbu1VF/h
-         myLEbsGAEwjtSKTBFBFo39mWBo5ExLUaB+Dc6Zs3wyZn0yUbf9c2mVU5Y7SXZ+x98az/
-         9Fxg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=C/WMPxWmNKBqJ/Zz9SNZ/9dLp/Pjl7eWvbmkGXyv5l8=;
+        b=gwOWdDcr8K2xj9bCTj7H5OL85GAIl6qKwa9aYWhyWu1Rn5CPfXHvSHlcLupYSb+aNy
+         Hhvbi7HVhzDRTVj1FQJhmoVvVW0EJ45dX1P6BDPkSE/+XklQDRWskVCf0zeCRRdQvXog
+         iBOjzhbsYUBtOdcFJnwtrxajIPEzSc58MWMoqofCIGjCmQuLE4DKZhCRSNAydisOSAhj
+         ILLq36JK5Ke6AD0l/kg/Z6WzFiIqOig6iBOEeLGDDrBw762y0GBLAH+Bb0+ynatGlrkS
+         C+e9T2LfS+F5yZTVUFEwAnkfN0fe5gOmUNc7Bcu1aYgve/Lj9EmOsoX83Q5BObCWGYjs
+         0M2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UIF3BoyuEURXStfcfS+K3X+B8H9N0p09Wke+0dl3XYI=;
-        b=uBUpXBDrZWBeUlxR68PndaAkWqVwkCZ+2USAAmwMKOcwoJd0/v6koU9rcnoGI+F5Ju
-         Ul/I5dSVphTjXOyMAYR5BkrNbQk2eVWe0zMSVJW4fIC65/ylDdWA7ihEikucZQl76JKL
-         sZB4cD1v09XAmKdSeCiVTJwrJaqeG6iLW5vpzIO108CXP0yDa9f2yJ6rISmlES88W+Vg
-         L29HjciRLDlVbxzAQWTOPCqtLqGPMF3XVjRe+E7J0F7YCGnNZlIXp7WXvniQVN4y76hb
-         su036Jm9PEnTzn/OYTukhxHRfW3NAwqeCgURSx/CwNupTqsbiHublCzpunIsJNc0Xpv4
-         XLDw==
-X-Gm-Message-State: AGi0PuaQu2c0489JGCKUp0G5AFfARMUouG5GJKd7mIJ67HbTZabNGD3q
-        d9mbZ0vjugqyygKTmKwhWDGNNy6OyIc6wdv0iEGd
-X-Google-Smtp-Source: APiQypKnvMdqW175yj1MgsnJQRnNqTHf4wkmjSzS+0xThgvpXsnNBDZYsd9iTF/sm8QIq/tkcEC8WgbmdDmZUCqtAAI=
-X-Received: by 2002:a2e:2a42:: with SMTP id q63mr563631ljq.81.1586881963108;
- Tue, 14 Apr 2020 09:32:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
- <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
-From:   =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
-Date:   Tue, 14 Apr 2020 18:32:32 +0200
-Message-ID: <CADDKRnAvC7U6kWdiqmib40cJ7r41COyic4LTdO9utsp4GOJnvA@mail.gmail.com>
-Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=C/WMPxWmNKBqJ/Zz9SNZ/9dLp/Pjl7eWvbmkGXyv5l8=;
+        b=BFjyM1ZzKOEEsC5PetRhaHNFyjlfGzNMNC2BXd0r9iIuJnW/IV9szMzwcq8HMFNOo+
+         UTtfnZEFi3Q7dCgvqn+CbGdzlMRk93txQjIm/mI+luWeZC7sZJe1cEl+RkkfDGcUE4Hu
+         8CuqkVX4qg4DzE/pqE6w5s6ovvp56nc3mICxPj1/mt71WAJfez73eJOrqqwBTZs9e30y
+         gCdzJIapg6cfCygolZl7UMQqEFICARgpHYaAQONjvInz3zPqJ1TqoNXSREJZ0dNYgIgv
+         7sxaAp55GY/InGTwgZpibWjwfd/kWvU6VHquWrVi9BUu66Sa5GI3Y7fm3UAE2H+pfU/W
+         V65A==
+X-Gm-Message-State: AGi0PuZq1btV7YxA8uExi5Gsi8Urlz8w7USd4cIRush9FgyWYMOA6zNQ
+        0SOVSKI5GjddnDMBn1mr3teHo0cTunl1
+X-Google-Smtp-Source: APiQypL2292vcdQOPgM/pbOZPk9A8GWPQ48YdWAzRpisGiQjViIba//xyUIANE+PSCLKQ5rg8OUQVFnSzjm+
+X-Received: by 2002:a67:2284:: with SMTP id i126mr890118vsi.223.1586881988191;
+ Tue, 14 Apr 2020 09:33:08 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 09:32:55 -0700
+Message-Id: <20200414163255.66437-1-maskray@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH v2] arm64: Delete the space separator in __emit_inst
+From:   Fangrui Song <maskray@google.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Jian Cai <jiancai@google.com>,
+        Fangrui Song <maskray@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Di., 14. Apr. 2020 um 12:50 Uhr schrieb Ard Biesheuvel <ardb@kernel.org>=
-:
->
-> On Tue, 14 Apr 2020 at 12:40, J=C3=B6rg Otte <jrg.otte@gmail.com> wrote:
-> >
-> > Booting my notebook with kernel V57-rc1 I get following
-> > display:
-> >
-> > exit_boot() failed!
-> > efi_main() failed!
-> > StartImage failed: Buffer Too Small
-> >
-> > Booting Kernel V5.6 works well.
-> >
-> > From dmesg (kernel V5.6):
-> > efi: EFI v2.31 by Phoenix Technologies Ltd.
-> > efi:  ACPI=3D0xdcffe000  ACPI 2.0=3D0xdcffe014  SMBIOS=3D0xdce80000  RN=
-G=3D0xdc3cd198
-> > efi: seeding entropy pool
-> > efi: [Firmware Bug]: Invalid EFI memory map entries:
-> > efi: mem47: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > efi: mem48: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > efi: mem49: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > efi: mem50: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > efi: mem51: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
-> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
-> > efi: Removing 5 invalid memory map entries.
-> >
->
-> Thanks for the report.
->
-> Can you try booting with efi=3Dno_disable_early_pci_dma passed via the
-> kernel command line? [*]
->
-Yes, that works!
+In assembly, many instances of __emit_inst(x) expand to a directive. In
+a few places __emit_inst(x) is used as an assembler macro argument. For
+example, in arch/arm64/kvm/hyp/entry.S
 
-> If that does not help, can you try to reproduce with this branch?
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Defi/=
-urgent
+  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
 
-Should I give that branch a try anyway?
+expands to the following by the C preprocessor:
 
-Thanks, J=C3=B6rg
+  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+Both comma and space are separators, with an exception that content
+inside a pair of parentheses/quotes is not split, so the clang
+integrated assembler splits the arguments to:
+
+   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
+(along with many other non-x86 backends) sees:
+
+  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # .inst(...) is parsed as one argument
+
+while its x86 backend sees:
+
+  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
+
+The non-x86 backend's behavior is considered unintentional
+(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
+So drop the space separator inside `.inst (...)` to make the clang
+integrated assembler work.
+
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/939
+---
+ arch/arm64/include/asm/sysreg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index ebc622432831..c4ac0ac25a00 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -49,7 +49,9 @@
+ #ifndef CONFIG_BROKEN_GAS_INST
+ 
+ #ifdef __ASSEMBLY__
+-#define __emit_inst(x)			.inst (x)
++// The space separator is omitted so that __emit_inst(x) can be parsed as
++// either an assembler directive or an assembler macro argument.
++#define __emit_inst(x)			.inst(x)
+ #else
+ #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+ #endif
+-- 
+2.26.0.110.g2183baf09c-goog
+
