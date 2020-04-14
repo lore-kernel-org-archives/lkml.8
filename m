@@ -2,89 +2,344 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D25C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21D7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF0720578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B5020578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:00:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="twdTfWjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388686AbgDNOAn (ORCPT
+        id S2388714AbgDNOAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:00:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46852 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388611AbgDNOA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:00:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29568AF3D;
-        Tue, 14 Apr 2020 14:00:26 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 6AB2ADA72D; Tue, 14 Apr 2020 15:59:47 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.7-rc2
-Date:   Tue, 14 Apr 2020 15:59:45 +0200
-Message-Id: <cover.1586868872.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 14 Apr 2020 10:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388638AbgDNOAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:00:31 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA41C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 07:00:30 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b8so6084118pfp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 07:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FXAHgZfY/WDAJS22zqOeVPqoXgR7iYMdLBK+n2JKck8=;
+        b=twdTfWjVtK8Jvbb3roxO+/806VrXQBKLDvb2EMceKOMymCAWrxZBlk/xAfNmouTW1E
+         qfvBMqEQ10Aj2rG8vwxhGv2I3adsSX3zwRs8wLQEyZtuYWO6WM0HheMg4WvHO7PPs4WP
+         NWZGxEgDbWzWqwRQZqv102Woi9g83v9lhXgXQAY+pGPLcP9zdtslXNn30dcGAkv5bzVO
+         0295JSnhH5rAMeMeRK1aUFTb73bGMqdL5dpZd6SmfyqdMmBFJoaSmsFDhozixCZYR355
+         MI665oCFQyy4YrrVdm0D1dgo0xYLuYA+/e0KZ7PJ4dwzwKaWmW01hAMsmQRWH+Q3bhGI
+         /aeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FXAHgZfY/WDAJS22zqOeVPqoXgR7iYMdLBK+n2JKck8=;
+        b=tXsYPTG+uJgvlBhS+wy5PCFtJ2gPXFZJ04GMTyAYXHgUe2htka60ZfGiK5ngXVpgg0
+         TmqoCkadY1hqt2JXqvWpjln78bT2OR36p3RLZt7nnyj8kuDE+W8nR41IQyFFH7VQDUwT
+         pkx1hVzFj9anQ75CZ1hZ40UJvamCibORJ1rChhP144vTsKTyx2RGYa7BoCXVsSM3vTgn
+         FrKukpqq3UdrRhRWxonNlS/SF8eMl/MK0CwgclJIKc3+btSA08X54TeK8SUcUN7C3eNc
+         Cc3AEUgWpngEbDMw8vaVZYEraOpeGmYJJv2VmbLrRk1sneaaU3GIdXuYg45M4xK3XS8Y
+         SOqA==
+X-Gm-Message-State: AGi0PuboSBlhIDNRiDfosaVu4+mUdmtk1v+BL42+BsSMmgfb+Kif5Cxz
+        lhCyQXWYA2T+TccL2SvYFODW4q3dDGig18G7b01gcg==
+X-Google-Smtp-Source: APiQypKSXhZQVEVBN9qo5EOx6rZ/V65FRY9S2yA8lF1RDzedNPcxXakhf3ZN/kJ3eBsogliBOrKAcz2kFA57SUSakMM=
+X-Received: by 2002:a63:cf02:: with SMTP id j2mr22304641pgg.130.1586872829015;
+ Tue, 14 Apr 2020 07:00:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200414031647.124664-1-davidgow@google.com> <20200414031647.124664-3-davidgow@google.com>
+In-Reply-To: <20200414031647.124664-3-davidgow@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 14 Apr 2020 16:00:18 +0200
+Message-ID: <CAAeHK+yT+hPK6Vcj+KWv-7vPk=OQUGvODJUUO3atqHcoVTXvSQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] KUnit: KASAN Integration
+To:     David Gow <davidgow@google.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 14, 2020 at 5:17 AM 'David Gow' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> From: Patricia Alfonso <trishalfonso@google.com>
+>
+> Integrate KASAN into KUnit testing framework.
+>         - Fail tests when KASAN reports an error that is not expected
+>         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN
+>         tests
+>         - Expected KASAN reports pass tests and are still printed when run
+>         without kunit_tool (kunit_tool still bypasses the report due to the
+>         test passing)
+>         - KUnit struct in current task used to keep track of the current
+>         test from KASAN code
+>         - Also make KASAN no-longer panic when panic_on_warn and
+>         kasan_multi_shot are enabled (as multi-shot does nothing
+>         otherwise)
+>
+> Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
+> kunit_resource API beyond allocated resources" and "[PATCH v3
+> kunit-next 2/2] kunit: add support for named resources" from Alan
+> Maguire [1]
+>         - A named resource is added to a test when a KASAN report is
+>          expected
+>         - This resource contains a struct for kasan_data containing
+>         booleans representing if a KASAN report is expected and if a
+>         KASAN report is found
+>
+> [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
+>
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> Signed-off-by: David Gow <davidgow@google.com>
+> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> ---
+>  include/kunit/test.h  |  5 +++++
+>  include/linux/kasan.h |  6 ++++++
+>  lib/kunit/test.c      | 13 ++++++++-----
+>  lib/test_kasan.c      | 44 +++++++++++++++++++++++++++++++++++++++----
+>  mm/kasan/report.c     | 34 ++++++++++++++++++++++++++++++++-
+>  5 files changed, 92 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index ac59d18e6bab..1dc3d118f64b 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -225,6 +225,11 @@ struct kunit {
+>         struct list_head resources; /* Protected by lock. */
+>  };
+>
+> +static inline void kunit_set_failure(struct kunit *test)
+> +{
+> +       WRITE_ONCE(test->success, false);
+> +}
+> +
+>  void kunit_init_test(struct kunit *test, const char *name, char *log);
+>
+>  int kunit_run_tests(struct kunit_suite *suite);
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index 5cde9e7c2664..148eaef3e003 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -14,6 +14,12 @@ struct task_struct;
+>  #include <asm/kasan.h>
+>  #include <asm/pgtable.h>
+>
+> +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
+> +struct kunit_kasan_expectation {
+> +       bool report_expected;
+> +       bool report_found;
+> +};
+> +
+>  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+>  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+>  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 2cb7c6220a00..030a3281591e 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -10,16 +10,12 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kref.h>
+>  #include <linux/sched/debug.h>
+> +#include <linux/sched.h>
+>
+>  #include "debugfs.h"
+>  #include "string-stream.h"
+>  #include "try-catch-impl.h"
+>
+> -static void kunit_set_failure(struct kunit *test)
+> -{
+> -       WRITE_ONCE(test->success, false);
+> -}
+> -
+>  static void kunit_print_tap_version(void)
+>  {
+>         static bool kunit_has_printed_tap_version;
+> @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
+>         struct kunit_suite *suite = ctx->suite;
+>         struct kunit_case *test_case = ctx->test_case;
+>
+> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+> +       current->kunit_test = test;
+> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
+> +
+>         /*
+>          * kunit_run_case_internal may encounter a fatal error; if it does,
+>          * abort will be called, this thread will exit, and finally the parent
+> @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
+>                 spin_unlock(&test->lock);
+>                 kunit_remove_resource(test, res);
+>         }
+> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+> +       current->kunit_test = NULL;
+> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_cleanup);
+>
+> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> index 3872d250ed2c..7b4cb107b387 100644
+> --- a/lib/test_kasan.c
+> +++ b/lib/test_kasan.c
+> @@ -23,12 +23,48 @@
+>
+>  #include <asm/page.h>
+>
+> -/*
+> - * Note: test functions are marked noinline so that their names appear in
+> - * reports.
+> +#include <kunit/test.h>
+> +
+> +static struct kunit_resource resource;
+> +static struct kunit_kasan_expectation fail_data;
+> +static bool multishot;
+> +
+> +static int kasan_test_init(struct kunit *test)
+> +{
+> +       /*
+> +        * Temporarily enable multi-shot mode and set panic_on_warn=0.
+> +        * Otherwise, we'd only get a report for the first case.
+> +        */
+> +       multishot = kasan_save_enable_multi_shot();
+> +
+> +       return 0;
+> +}
+> +
+> +static void kasan_test_exit(struct kunit *test)
+> +{
+> +       kasan_restore_multi_shot(multishot);
+> +}
+> +
+> +/**
+> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
+> + * not cause a KASAN error. This uses a KUnit resource named "kasan_data." Do
+> + * Do not use this name for a KUnit resource outside here.
+> + *
+>   */
+> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
+> +       fail_data.report_expected = true; \
+> +       fail_data.report_found = false; \
+> +       kunit_add_named_resource(test, \
+> +                               NULL, \
+> +                               NULL, \
+> +                               &resource, \
+> +                               "kasan_data", &fail_data); \
+> +       condition; \
+> +       KUNIT_EXPECT_EQ(test, \
+> +                       fail_data.report_expected, \
+> +                       fail_data.report_found); \
+> +} while (0)
+>
 
-we have a few regressions and one fix for stable. Please pull, thanks.
+[...]
 
-* revert fsync optimization
+> -static noinline void __init kmalloc_oob_right(void)
 
-* fix lost i_size update
+Actually this also needs to be fixed. You remove this line in this
+patch and add it back in the next one. Please test that the kernel
+builds with your patches applied one by one.
 
-* fix a space accounting leak
-
-* build fix, add back definition of a deprecated ioctl flag
-
-* fix search condition for old roots in relocation
-
-----------------------------------------------------------------
-The following changes since commit 6ff06729c22ec0b7498d900d79cc88cfb8aceaeb:
-
-  btrfs: fix missing semaphore unlock in btrfs_sync_file (2020-03-25 16:29:16 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc1-tag
-
-for you to fetch changes up to 34c51814b2b87cb2e5a98c92fe957db2ee8e27f4:
-
-  btrfs: re-instantiate the removed BTRFS_SUBVOL_CREATE_ASYNC definition (2020-04-10 18:48:27 +0200)
-
-----------------------------------------------------------------
-Eugene Syromiatnikov (1):
-      btrfs: re-instantiate the removed BTRFS_SUBVOL_CREATE_ASYNC definition
-
-Filipe Manana (3):
-      btrfs: fix lost i_size update after cloning inline extent
-      btrfs: make full fsyncs always operate on the entire file again
-      btrfs: fix reclaim counter leak of space_info objects
-
-Josef Bacik (1):
-      btrfs: check commit root generation in should_ignore_root
-
- fs/btrfs/block-group.c     |  1 +
- fs/btrfs/file.c            | 15 ++++++++
- fs/btrfs/reflink.c         |  1 +
- fs/btrfs/relocation.c      |  4 +-
- fs/btrfs/space-info.c      | 20 +++++++---
- fs/btrfs/tree-log.c        | 93 +++++++---------------------------------------
- include/uapi/linux/btrfs.h | 10 ++---
- 7 files changed, 51 insertions(+), 93 deletions(-)
+>  {
+>         char *ptr;
+>         size_t size = 123;
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 5ef9f24f566b..a58a9f3b7f2c 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -32,6 +32,8 @@
+>
+>  #include <asm/sections.h>
+>
+> +#include <kunit/test.h>
+> +
+>  #include "kasan.h"
+>  #include "../slab.h"
+>
+> @@ -92,7 +94,7 @@ static void end_report(unsigned long *flags)
+>         pr_err("==================================================================\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+>         spin_unlock_irqrestore(&report_lock, *flags);
+> -       if (panic_on_warn)
+> +       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+>                 panic("panic_on_warn set ...\n");
+>         kasan_enable_current();
+>  }
+> @@ -455,12 +457,37 @@ static bool report_enabled(void)
+>         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
+>  }
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +static void kasan_update_kunit_status(struct kunit *cur_test)
+> +{
+> +       struct kunit_resource *resource;
+> +       struct kunit_kasan_expectation *kasan_data;
+> +
+> +       resource = kunit_find_named_resource(cur_test, "kasan_data");
+> +
+> +       if (!resource) {
+> +               kunit_set_failure(cur_test);
+> +               return;
+> +       }
+> +
+> +       kasan_data = (struct kunit_kasan_expectation *)resource->data;
+> +       kasan_data->report_found = true;
+> +       kunit_put_resource(resource);
+> +}
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> +
+>  void kasan_report_invalid_free(void *object, unsigned long ip)
+>  {
+>         unsigned long flags;
+>         u8 tag = get_tag(object);
+>
+>         object = reset_tag(object);
+> +
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +       if (current->kunit_test)
+> +               kasan_update_kunit_status(current->kunit_test);
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> +
+>         start_report(&flags);
+>         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
+>         print_tags(tag, object);
+> @@ -481,6 +508,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
+>         if (likely(!report_enabled()))
+>                 return;
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +       if (current->kunit_test)
+> +               kasan_update_kunit_status(current->kunit_test);
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> +
+>         disable_trace_on_warning();
+>
+>         tagged_addr = (void *)addr;
+> --
+> 2.26.0.110.g2183baf09c-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200414031647.124664-3-davidgow%40google.com.
