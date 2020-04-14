@@ -2,160 +2,153 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B15C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75698C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1E520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF0F2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586908204;
+	bh=Ta/a/jsZTXWomQK9b0NQipsMBPIc66j48kQ7+U0J5Ek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ehQqE99lIl6nnbFQds+KRWS4NAmQgjOnfp7w7vK611Z3lNPeinTisvqOD71Fq9Zj8
+	 d9j58uH+5NeGgyFamkwqRXfCAYS9Zc/Hqv1ZGQS0W/IGvpf65nqb+zzQu7/9HJ2EJu
+	 W5yGSj0O5OeqomwJEGsGCUSegrkH9KVErude2tic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634402AbgDNXr4 convert rfc822-to-8bit (ORCPT
+        id S2634421AbgDNXuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:47:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61459 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634390AbgDNXrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 19:47:46 -0400
-IronPort-SDR: ASxAReHKm6cZ9kuqRKnSxCurTy5vf+Pbi7jkgA3is8cNv+5Hv8R1XqLstDJDeM//ubOsqC4fUZ
- 7D8AyEUx2QnA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 16:47:45 -0700
-IronPort-SDR: HJEwfmx2SlLZPGikH6t0hQXnR0ePb56U5BQzHKT4XGZ+/3vb8VlyroeVtSYWf0JrbYhiiKd1kK
- 2vnv/4bA4F2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
-   d="scan'208";a="400120235"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga004.jf.intel.com with ESMTP; 14 Apr 2020 16:47:44 -0700
-Received: from fmsmsx123.amr.corp.intel.com (10.18.125.38) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 14 Apr 2020 16:47:44 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- fmsmsx123.amr.corp.intel.com (10.18.125.38) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 14 Apr 2020 16:47:43 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Wed, 15 Apr 2020 07:47:41 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-Subject: RE: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Topic: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Index: AQHWAvq+z2SPyfblHkGvV1oKjQsO9ahaFEoAgAB7VgCAAS14gP//zqQAgAEODYCABAXlIIAALvMAgAFssACAACIBAIABY/uQgAHtwgCAEWzRgIAAG8+AgABw0ICAALrWAIAAEIMAgABZOwCAAJqrwA==
-Date:   Tue, 14 Apr 2020 23:47:40 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D81F901@SHSMSX104.ccr.corp.intel.com>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-        <20200327165335.397f24a3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
-        <20200330090746.23c5599c@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
-        <20200331085444.44bee0bb@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
-        <20200402113604.6eea1e6f@jacob-builder>
-        <20200413134157.395981a6@jacob-builder> <20200413162129.313b3b5a@w520.home>
-        <20200413220515.25a107b6@jacob-builder> <20200414101358.3ae66ac5@w520.home>
-        <20200414101304.27e587eb@jacob-builder>
- <20200414153226.30d8cab3@jacob-builder>
-In-Reply-To: <20200414153226.30d8cab3@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 14 Apr 2020 19:50:01 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42099 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731575AbgDNXtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 19:49:50 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l21so1594100otd.9;
+        Tue, 14 Apr 2020 16:49:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ErGz/RmN1nNcMdKysMZ4QZyfLOTmTqEmcgzrHidWa00=;
+        b=ZWlJ/WpzzGu9qjM6IHUPGp3r7lcNJkd1Jz/xzLAVSkcFmlle0/tn4byoxvyup8gVxF
+         QVCUtEzU5gBMY/AJ3x1AqFf93UKvnZsglCX7mfvtVQggSDqHVuOWVtVlptvz0JS8rZkN
+         oRWMSGFgaM9mqxz6lxbcxVg/hHv5Kk0HXZtf8WVJe7aq1hGsAJ5elcURsdbVaffCh1NZ
+         0WK7oNIK2GnKEG4ONV/2wAhDcQpndjuiBTi5XzCNPcwCe2zZdHPu6CFruRO3arwzfqX/
+         NOQjg9xyfxz7F16hmNB8NPD9+c1uVFU/T/a/4HrONSxajZZp/CbXqaWVUhmKA0th6yeU
+         dkVg==
+X-Gm-Message-State: AGi0PuY14HRlCkA/ovHyYmvirOqpIjHJ1QUEFYq7k0/lCX8mrzxt7ft2
+        Fq7Ivb/21VIvFSYZPVc2kA==
+X-Google-Smtp-Source: APiQypJZufTrwX1G/fitQmoTtHPOYT+eQR62XJjFIzEKrvQjyVS3XgX0fIR0P3iFCf2lzUhQvtbcGw==
+X-Received: by 2002:a9d:441:: with SMTP id 59mr10612961otc.236.1586908189851;
+        Tue, 14 Apr 2020 16:49:49 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l7sm5632301otj.52.2020.04.14.16.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 16:49:49 -0700 (PDT)
+Received: (nullmailer pid 28246 invoked by uid 1000);
+        Tue, 14 Apr 2020 23:49:48 -0000
+Date:   Tue, 14 Apr 2020 18:49:47 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dhananjay Kangude <dkangude@cadence.com>
+Cc:     linux-edac@vger.kernel.org, bp@alien8.de, mchehab@kernel.org,
+        tony.luck@intel.com, james.morse@arm.com,
+        linux-kernel@vger.kernel.org, mparab@cadence.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: Add cadence ddr mc support
+Message-ID: <20200414234947.GA24554@bogus>
+References: <20200406131341.1253-1-dkangude@cadence.com>
+ <20200406131341.1253-2-dkangude@cadence.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406131341.1253-2-dkangude@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Sent: Wednesday, April 15, 2020 6:32 AM
+On Mon, Apr 06, 2020 at 03:13:40PM +0200, Dhananjay Kangude wrote:
+> Add documentation for cadence ddr memory controller EDAC DTS bindings
 > 
-> On Tue, 14 Apr 2020 10:13:04 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
+> ---
+>  .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |   47 ++++++++++++++++++++
+>  1 files changed, 47 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
 > 
-> > > > >  In any of the proposed solutions, the
-> > > > > IOMMU driver is ultimately responsible for validating the user
-> > > > > data, so do we want vfio performing the copy_from_user() to an
-> > > > > object that could later be assumed to be sanitized, or should
-> > > > > vfio just pass a user pointer to make it obvious that the
-> > > > > consumer is responsible for all the user protections?  Seems
-> > > > > like the latter.
-> > > > I like the latter as well.
-> > > >
-> On a second thought, I think the former is better. Two reasons:
-> 
-> 1. IOMMU API such as page_response is also used in baremetal. So it is
-> not suitable to pass a __user *.
-> https://www.spinics.net/lists/arm-kernel/msg798677.html
+> diff --git a/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+> new file mode 100644
+> index 0000000..30ea757
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/edac/cdns,ddr-edac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cadence DDR IP with ECC support (EDAC)
+> +
+> +description:
+> +  This binding describes the Cadence DDR/LPDDR IP with ECC feature enabled
+> +  to detect and correct CE/UE errors.
+> +
+> +maintainers:
+> +  - Dhananjay Kangdue <dkangude@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cdns,ddr4-mc
 
-You can have a wrapped version accepting a __user* and an internal
-version for kernel pointers.
+Surely there's more than 1 version?
 
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description:
+> +          Register block of DDR/LPDDR apb registers up to mapped area.
+> +          Mapped area contains the register set for memory controller,
+> +          phy and PI module register set doesn't part of this mapping.
+
+doesn't part of this mapping?
+
+Need a description for the 2nd region.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    edac: edac@fd100000 {
+
+memory-controller@
+
+> +        compatible = "cdns,ddr4-mc-edac";
+
+Doesn't match.
+
+> +        reg = <0xfd100000 0x4000>;
+> +        interrupts = <0x00 0x01 0x04>;
+> +    };
+> +...
+> -- 
+> 1.7.1
 > 
-> 2. Some data are in the mandatory (fixed offset, never removed or
-> extended) portion of the uAPI structure. It is simpler for VFIO to
-> extract that and pass it to IOMMU API. For example, the PASID value used
-> for unbind_gpasid(). VFIO also need to sanitize the PASID value to make
-> sure it belongs to the same VM that did the allocation.
-
-I don't think this makes much difference. If anyway you still plan to
-let IOMMU driver parse some user pointers, why not making a clear
-split to have it sparse all IOMMU specific fields?
-
-Thanks
-Kevin
-
-> 
-> 
-> > > > >  That still really
-> > > > > doesn't address what's in that user data blob yet, but the vfio
-> > > > > interface could be:
-> > > > >
-> > > > > struct {
-> > > > > 	__u32 argsz;
-> > > > > 	__u32 flags;
-> > > > > 	__u8  data[];
-> > > > > }
-> > > > >
-> > > > > Where flags might be partitioned like we do for DEVICE_FEATURE
-> > > > > to indicate the format of data and what vfio should do with it,
-> > > > > and data might simply be defined as a (__u64 __user *).
-> > > > >
-> > > > So, __user * will be passed to IOMMU driver if VFIO checks minsz
-> > > > include flags and they are valid.
-> > > > IOMMU driver can copy the rest based on the mandatory
-> > > > version/minsz and flags in the IOMMU uAPI structs.
-> > > > Does it sound right? This is really choice #2.
-> > >
-> > > Sounds like each IOMMU UAPI struct just needs to have an embedded
-> > > size and flags field, but yes.
-> > >
-> > Yes, an argsz field can be added to each UAPI. There are already flags
-> > or the equivalent. IOMMU driver can process the __user * based on the
-> > argsz, flags, check argsz against offsetofend(iommu_uapi_struct,
-> > last_element), etc.;
