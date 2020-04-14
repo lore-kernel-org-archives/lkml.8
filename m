@@ -2,126 +2,131 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1ACC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A19C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85BC206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73CB206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="re2AKKov"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="HP4M9PaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505070AbgDNTk7 (ORCPT
+        id S2505079AbgDNTlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
+        Tue, 14 Apr 2020 15:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504935AbgDNTjv (ORCPT
+        by vger.kernel.org with ESMTP id S2505029AbgDNTjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 15:39:51 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B334C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:04:17 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id cf1so772022qvb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:04:17 -0700 (PDT)
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D4AC061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:39:51 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id k28so706420lfe.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:39:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=wEXhi2KDTL49/7/ZUX9XUdxIt6VXHRWvzpEoOczneLE=;
-        b=re2AKKovrbQOdYfoefUhsXCD8Vblkx7RtBDuhCUz9JbcE2R29tLdtqLfNNYj1W+4p+
-         NqmzPC7nMS9/AG0Fqf0ddPTW9pKqGgase2913Dn4nE95p/dlWLzjRnX+yKEfR6CkfTDs
-         oHFN3/5LLwVr27dS7A3/30R/sD814WL7brDf1/QzrONVahRxKQnkk8VOCeEvu5h1pZfd
-         RBeUDWSaWOK4RZrUONVvfEZNT6gRaZmlChQr0MvIYrvUX1loaKu9DJhtnwDoQGGu5W2X
-         DLyzqpFKYxSVL65gzvAkCInfgxIBzeNNI+ybDDSd40m30oqTdlTDWlBhlSJF9gFYSX+9
-         yZvA==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qRs5i4iVAKA4TTRujU3GhWk99mVzfuZXxL+8IzLaq00=;
+        b=HP4M9PaOeDZ5Rjcv9V2eDLSMU9Szdx7xY7b2n7tP7awEgqgz0TeBMaAZDXXw5N1MV+
+         hmsV+bZUVJAXt+2gd5lV3+jiG1SW/bbEl8TzRqf68raINWJVdyvtFGThXpgC1p+Ltyi6
+         +AGpE1Kkqct7VoUWSG4Rjk/ONitbFKHLBgHZWdvSsGFi1YJGExzK/gw1EdWCBhndMWOq
+         6Av4TdtSr5NKtYFuVm9faWi3WZvh+7DgA3PKD69Q+cCA1sK5hkmUX9B2UlcO4NlSXFaq
+         C8FyPMiO21Q+jGqFKDOZ6Gc0IJJX9toSqlxac4rzoxD2aMEiiincaZUqKyinoWN+Mycy
+         Y88Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=wEXhi2KDTL49/7/ZUX9XUdxIt6VXHRWvzpEoOczneLE=;
-        b=QKk8t6WN9TT3iW8g/oxPqC/Z43lrQD+KVYndv9UuKFL65CMKdB0nq+4J2LHdjSaO5m
-         +JTu2+FtkyWrZlWHBmgnhYHvUAV/p3sJn2h7vuD9uBJwrnQZO4TGppcbXx3Txoy4KA6p
-         dX1F/ODsekLETuXmRjT3BNRuzfeyEcreEMnycUIw44HR4dOrOCk1qbptrEBMrPXZ1BIs
-         lpA2QCgB9PIBFxVugFh+UNA2cXeTxcrbMcysV3e0ePOa2i4wuYhnVjh4xrZh34boLs6g
-         JcY2GuEySUo9LywlGAsE7ppPTzopLjRyjPEyYBT+p2t6B4i8xpiMvbIpLPybPhtgyqTa
-         uyGA==
-X-Gm-Message-State: AGi0PuboxaE2iuU1K+myeBgrzWbQ5DE93WB2faZ82ZvHQhqd8MrPpgd6
-        2Ow/HwpqdJJ9rk5heBbfSgB6X8O1
-X-Google-Smtp-Source: APiQypIXDaXG+77AFk7cpEZJzSlcSgxXpeGbEIvqAkcaRkEBxOkMTVXGD0JE11O6mFyQ07uoH+Ued9Ts
-X-Received: by 2002:ac8:31ac:: with SMTP id h41mr17598668qte.139.1586891056302;
- Tue, 14 Apr 2020 12:04:16 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 15:03:51 -0400
-Message-Id: <20200414190351.16893-1-brho@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: perf: add cond_resched() to task_function_call()
-From:   Barret Rhoden <brho@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qRs5i4iVAKA4TTRujU3GhWk99mVzfuZXxL+8IzLaq00=;
+        b=qSKy0y1uZTUUmOpQcgHwOD/o+rJx5V6wIIUOUj2lJgA7QW2jsR5K++UQv9q8jiX+K9
+         IG6nxOMS9NbVL5hK1vVd5mPExONGxr4wlYBdnvsQllw46oCCMbDcETV19KOz3kb+Yoiw
+         r15Yboj1mSTQOk2ZVeX87yVol2PT7eO/VeCAFgBTbHjEOMDrgHfs1JzMjYTB6kXdwCpu
+         rbD04L9tDG8q2xZquax83ej4nGVS32GmVpDDj8izbYfFpCPmNhkU68KIU56IklSw6XOR
+         9wwXyxD0gb22gK/Mh3yOOzBto5USTFg87ibKFkpFWB+jYOqkVwe9ETujUAj+t2/mO1PZ
+         nfCg==
+X-Gm-Message-State: AGi0PuavlxME6JUBs4eexCZATmbgy1Ih+0XhVDHLBV5VeLaueM480vfY
+        rA4FZ94zwg68u+kG/zjD5vGGhuCPFi4=
+X-Google-Smtp-Source: APiQypI+s5n9rB+qwjmjZHIypmy+J644bf/a7w1c+pOeelNxSUe1AtB3mEv6uQTT+cLbbQwbQY9Crg==
+X-Received: by 2002:a19:6b03:: with SMTP id d3mr798341lfa.209.1586893189426;
+        Tue, 14 Apr 2020 12:39:49 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id 6sm10989254lfy.97.2020.04.14.12.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 12:39:48 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 21:39:48 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+Message-ID: <20200414193948.GA350588@oden.dyn.berto.se>
+References: <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200310124605.GO2975348@oden.dyn.berto.se>
+ <OSBPR01MB35905FFB621C2F4222692832AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+ <20200310140625.GA88560@oden.dyn.berto.se>
+ <CA+V-a8vsYGdx6AtgqwS0LXREn4hu-EjVh2D5Dp_rHmpazBYG5A@mail.gmail.com>
+ <20200319150329.GB3192108@oden.dyn.berto.se>
+ <CA+V-a8u8=H-6WfaYMLWH73zo5ehP8cu9D-tdGULk=Hkvq4KuAQ@mail.gmail.com>
+ <20200330120745.GA3213219@oden.dyn.berto.se>
+ <CA+V-a8vbTc0DZ15y0zZ97PH6khwQVxz=M-8_kgx1AiKkdg5QaA@mail.gmail.com>
+ <20200407095620.GA1716317@oden.dyn.berto.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200407095620.GA1716317@oden.dyn.berto.se>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Under rare circumstances, task_function_call() can repeatedly fail and
-cause a soft lockup.
+Hi Lad,
 
-There is a slight race where the process is no longer running on the cpu
-we targeted by the time remote_function() runs.  The code will simply
-try again.  If we are very unlucky, this will continue to fail, until a
-watchdog fires.  This can happen in a heavily loaded, multi-core virtual
-machine.
+I spent all day playing with different solutions to how to move forward 
+with this. My main problem is I have no setup where I can produce RAW 
+image formats to test. But reading the datasheet I see the problem you 
+are trying to solve.
 
-Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Signed-off-by: Barret Rhoden <brho@google.com>
----
- kernel/events/core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+I think for now the best solution might be to in rvin_crop_scale_comp() 
+add a check for if the pixelformat is RAW and cut the value written to 
+VNIS_REG in half. The bpp for the format shall still be set to 1.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 55e44417f66d..65c2c05e24c2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -99,7 +99,7 @@ static void remote_function(void *data)
-  *
-  * returns: @func return value, or
-  *	    -ESRCH  - when the process isn't running
-- *	    -EAGAIN - when the process moved away
-+ *	    -ENXIO  - when the cpu the process was on has gone offline
-  */
- static int
- task_function_call(struct task_struct *p, remote_function_f func, void *info)
-@@ -112,11 +112,15 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
- 	};
- 	int ret;
- 
--	do {
--		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
-+	while (1) {
-+		ret = smp_call_function_single(task_cpu(p), remote_function,
-+					       &data, 1);
- 		if (!ret)
- 			ret = data.ret;
--	} while (ret == -EAGAIN);
-+		if (ret != -EAGAIN)
-+			break;
-+		cond_resched();
-+	}
- 
- 	return ret;
- }
+
+    fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
+    stride = vin->format.bytesperline / fmt->bpp;
+
+    if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
+        stride /= 2;
+
+    rvin_write(vin, stride, VNIS_REG);
+
+I would also add a nice big comment above the if () that explains why 
+the stride is cut in half for raw.
+
+On 2020-04-07 11:56:23 +0200, Niklas wrote:
+> Hi Lad,
+> 
+> On 2020-04-06 18:20:33 +0100, Lad, Prabhakar wrote:
+> > Did you manage to get the required information on this ?
+> 
+> I'm still working on it, sorry for not completing it last week. I will 
+> let you know as soon as I can.
+> 
+> -- 
+> Regards,
+> Niklas Söderlund
+
 -- 
-2.26.0.110.g2183baf09c-goog
-
+Regards,
+Niklas Söderlund
