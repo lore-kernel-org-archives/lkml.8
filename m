@@ -2,145 +2,121 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EE3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB665C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A83206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987E3206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oU9Ij/oN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3XQpqCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392035AbgDNWjD (ORCPT
+        id S2392049AbgDNWkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        Tue, 14 Apr 2020 18:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729629AbgDNWi7 (ORCPT
+        by vger.kernel.org with ESMTP id S1729629AbgDNWkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:38:59 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D771AC061A0C;
-        Tue, 14 Apr 2020 15:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=5JBZjn7sy5GQCd0bRK3Ru9SkD6beDun/x68fbss5o7E=; b=oU9Ij/oNfaefY44bgvBm5o1a42
-        Mn5zWr00gZJ9EkND9EkEp2nxCWFvFaV/9qKVALtZXgm/Eig4RoJQkvJKw+AFTobpnVL0HyWA4mBLS
-        zAFLTPuEbY0+spcUsStPCfNIkzTZOfeoP2FwBZe/Ngo0+dolVEixoQDCAIgvT3OemekSLJHidwlLD
-        P57PeW6dktFb+AaN/HdnMcEGjzqU/1bX48hpcGLmtvwOg7niEhnKI0IW/XeXtqid23y0+U3i6uokN
-        lDmiVU0kZLpIxVyHy96nItHc+mtlX/zY+LiyBguHJbZ1LHr/hCHlcsml8lEVW/yLcy1nsrX5feLUG
-        Gxfz23Sw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOUCg-0005Kp-UP; Tue, 14 Apr 2020 22:38:51 +0000
-Subject: Re: [PATCH v1] kobject: make sure parent is not released before
- children
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org,
-        sakari.ailus@linux.intel.com, andy.shevchenko@gmail.com,
-        hdegoede@redhat.com, rafael.j.wysocki@intel.com,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        shuah@kernel.org, anders.roxell@linaro.org,
-        lkft-triage@lists.linaro.org, linux@rasmusvillemoes.dk,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-References: <20200414204240.186377-1-brendanhiggins@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <71775e76-6175-d64b-0f4e-1beeb6b589b3@infradead.org>
-Date:   Tue, 14 Apr 2020 15:38:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 18:40:00 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0CCC061A0C;
+        Tue, 14 Apr 2020 15:39:58 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m16so513456pls.4;
+        Tue, 14 Apr 2020 15:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9t1OfRpRitZtOf4uo1UYB1/mDlF//ZHx3ZZOkOotBBs=;
+        b=l3XQpqCuW3oYa5DHK/NlM9glUOcgF931LKIPpyUBbva6wQh/ApqWSeCHyzi1hghTZH
+         E28Z7/PJgq8fK1ExjJYDRNg4bZEoHVY1Ka5gYHY7mRzcqb+ZSh6TFhMkpczIT5DetY1E
+         Vfj0fgXh0s7lbHOBTeyH7qVzN6vqDxOPeyU369EWm3IC4lAaYIl58qqVXJdRpWo98ba6
+         YwME3XfFr32hcDXqmy2j9PTh2FH/yV5Kc3Dbd3hIWB0AH7Sd2tg6uCIGaKfOW18TVAkM
+         jLTIivkcJLKxd3oVpuERxs6gjCojoeC0IVzTuimvDjg/UPsqZ8qI/Yy/o+l+uNXkalOH
+         7SeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9t1OfRpRitZtOf4uo1UYB1/mDlF//ZHx3ZZOkOotBBs=;
+        b=lsKMUZOdi+fJrvMaKXVrzsVJDkVhTscdtKQGCcyAN49PFH3PKBLoS7I+hH+ENLMhSb
+         6jEO7Wl/hmFIacQ6e3k9c0ycAS5rIHEJvkA0aiIUN29SHloN3PbRPeYEQF8jiRG6L3F2
+         vOt/9opm5VuaRYulFaRp3yJXed6KB+R7Iz3+o3J6wX+Xpsf+TVbfsTaQQYrYn02GmOgw
+         fLueMmilHWeJfPTTA8OO/W1uzY1Ql6O0amJF0LH6xkkdkbG2kGywJHVXal8EMJskRN62
+         /VwN+XV0NkJEOgaSN4q0iYYUeAtLc3JZ8gXM5lgTXJbdAYXrMQgV4d4GzwGH02Pvbdbr
+         itqg==
+X-Gm-Message-State: AGi0PuZCAmJpN9Kt9zsNCpvZY2QtHs+9ABFYxSmhlCeF0bzpx5We4ZEo
+        SKR66ePAE8jgAE3pAIVROIL1CJfT
+X-Google-Smtp-Source: APiQypLpzCWuUJeGz0XSN07gJ7EzCXSnJI9C2zEP968l+WFRfqF85ygGJoM3ztime9HQeFmq1bturg==
+X-Received: by 2002:a17:902:262:: with SMTP id 89mr2073094plc.131.1586903997813;
+        Tue, 14 Apr 2020 15:39:57 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id e11sm12176214pfl.65.2020.04.14.15.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 15:39:56 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     olteanv@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support),
+        linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
+Date:   Tue, 14 Apr 2020 15:39:52 -0700
+Message-Id: <20200414223952.5886-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20200414204240.186377-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 1:42 PM, Brendan Higgins wrote:
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> Previously, kobjects were released before the associated kobj_types;
-> this can cause a kobject deallocation to fail when the kobject has
-> children; an example of this is in software_node_unregister_nodes(); it
-> calls release on the parent before children meaning that children can be
-> released after the parent, which may be needed for removal.
-> 
-> So, take a reference to the parent before we delete a node to ensure
-> that the parent is not released before the children.
-> 
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-> Link: https://lore.kernel.org/linux-kselftest/CAFd5g44s5NQvT8TG_x4rwbqoa7zWzkV0TX+ETZoQdOB7OwXCPQ@mail.gmail.com/T/#m71f37f3985f2abd7209c8ca8e0fa4edc45e171d6
-> Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
+configure the MTU for switch ports") my Lamobo R1 platform which uses
+an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
+by rejecting a MTU of 1536. The reason for that is that the DMA
+capabilities are not readable on this version of the IP, and there
+is also no 'tx-fifo-depth' property being provided in Device Tree. The
+property is documented as optional, and is not provided.
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Chen-Yu indicated that the FIFO sizes are 4KB for TX and 16KB for RX, so
+provide these values through platform data as an immediate fix until
+various Device Tree sources get updated accordingly.
 
-Fixes the lib/test_printf.ko use-after-free on linux-next 20200410
-that I reported last week.
+Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
+Suggested-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-> ---
-> 
-> This patch is based on the diff written by Heikki linked above.
-> 
-> Heikki, can you either reply with a Signed-off-by? Otherwise, I can
-> resend with me as the author and I will list you as the Co-developed-by.
-> 
-> Sorry for all the CCs: I just want to make sure everyone who was a party
-> to the original bug sees this.
-> 
-> ---
->  lib/kobject.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 83198cb37d8d..5921e2470b46 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
->   */
->  static void kobject_cleanup(struct kobject *kobj)
->  {
-> +	struct kobject *parent = kobj->parent;
->  	struct kobj_type *t = get_ktype(kobj);
->  	const char *name = kobj->name;
->  
-> @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
->  		kobject_uevent(kobj, KOBJ_REMOVE);
->  	}
->  
-> +	/* make sure the parent is not released before the (last) child */
-> +	kobject_get(parent);
-> +
->  	/* remove from sysfs if the caller did not do it */
->  	if (kobj->state_in_sysfs) {
->  		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
->  		t->release(kobj);
->  	}
->  
-> +	kobject_put(parent);
-> +
->  	/* free name if we allocated it */
->  	if (name) {
->  		pr_debug("kobject: '%s': free name\n", name);
-> 
-> base-commit: 8632e9b5645bbc2331d21d892b0d6961c1a08429
-> 
-
-Thanks.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+index 7d40760e9ba8..0e1ca2cba3c7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+@@ -150,6 +150,8 @@ static int sun7i_gmac_probe(struct platform_device *pdev)
+ 	plat_dat->init = sun7i_gmac_init;
+ 	plat_dat->exit = sun7i_gmac_exit;
+ 	plat_dat->fix_mac_speed = sun7i_fix_speed;
++	plat_dat->tx_fifo_size = 4096;
++	plat_dat->rx_fifo_size = 16384;
+ 
+ 	ret = sun7i_gmac_init(pdev, plat_dat->bsp_priv);
+ 	if (ret)
 -- 
-~Randy
+2.19.1
 
