@@ -2,121 +2,90 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFB4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C55EC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCD220774
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2496F2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586887990;
+	bh=u0NkTleULn+zSjT9L9M78XEYUbfi1MBjevJUUG9qtdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QA4hLprXxe+Hetc8Lf65hMkr667FMNsjS1YN2GSLb65zibgFxwi8TV+b/W4ZG5JEj
+	 VDbyTo/TcSynhUqjwt0VhRTZPXyOB8P6irAVE+rBGuS+w9taOHSSSa4ipV+JfkLMd4
+	 /89hejmUkZLvpNbxsYYRrgZvsGU0zb01xma5y0QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503466AbgDNSM6 (ORCPT
+        id S2503586AbgDNSNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:12:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47030 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503521AbgDNSMA (ORCPT
+        Tue, 14 Apr 2020 14:13:08 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42975 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503533AbgDNSMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:12:00 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 6E7F92A1BE3
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 22FA14800F7; Tue, 14 Apr 2020 20:11:56 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH] ASoC: sgtl5000: Fix VAG power-on handling
-Date:   Tue, 14 Apr 2020 20:11:40 +0200
-Message-Id: <20200414181140.145825-1-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 14 Apr 2020 14:12:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id d7so6200135oif.9;
+        Tue, 14 Apr 2020 11:12:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JbkL8cT84GMwOThia0hI7fpyipnzfE/v8BeyXwmlGqk=;
+        b=MyJaNNiz9gZWXX+6lVeOO9rD0Pbsl+hG4HqbIH3umZ0m9JOMKSxlNntwOuU69tlv26
+         1ctIFQM9U4qawpnry95H42kt/jrQ/NTw9wJQjHP5ok1FRwXhCCK5Z0ke9gYFvKVjjjhc
+         haS7HCODsHtJ+vy5zIeOXiAtPQXkhvBKtm+/S+2/fB/atSD9QhuwjOx0HgWLbEcEtzo6
+         kh1MEmt5FTHImJB1SGqtIttI6DJ4QN7LyEcwJ6BjsH4vYatGxerzNkZKOYRb/fRhwtO0
+         h/CBVv7pCR4ANYeedLH4sFncb1hQhiai2ffKk4w2WSZQc9+oy4p6vfEBQYEZRLKe0yv8
+         m1vQ==
+X-Gm-Message-State: AGi0PubTzz3SDWU2EC9JSo2IQHjz5+ATH3bBkvJRbaTe/btXTZYujlc0
+        Cqe4m/20wKLT9Gq0He7E9A==
+X-Google-Smtp-Source: APiQypJ9Zq8kiIMVEyTPzpiU4EKX0rS7dKCNaqzL+3I+Jc5UO3riOzaMYx1BmPbxlhKgaXJ22Hq3BA==
+X-Received: by 2002:aca:1107:: with SMTP id 7mr7932181oir.133.1586887938535;
+        Tue, 14 Apr 2020 11:12:18 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z15sm5675058otp.10.2020.04.14.11.12.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 11:12:17 -0700 (PDT)
+Received: (nullmailer pid 10763 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:12:16 -0000
+Date:   Tue, 14 Apr 2020 13:12:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     skomatineni@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, helen.koike@collabora.com, digetx@gmail.com,
+        sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v6 3/9] dt-bindings: clock: tegra: Add clk id for CSI
+ TPG clock
+Message-ID: <20200414181216.GA10665@bogus>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585963507-12610-4-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As mentioned slightly out of patch context in the code, there
-is no reset routine for the chip. On boards where the chip is
-supplied by a fixed regulator, it might not even be resetted
-during (e.g. watchdog) reboot and can be in any state.
+On Fri, 3 Apr 2020 18:25:01 -0700, Sowjanya Komatineni wrote:
+> Tegra210 uses PLLD out internally for CSI TPG.
+> 
+> This patch adds clk id for this CSI TPG clock from PLLD.
+> 
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  include/dt-bindings/clock/tegra210-car.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-If the device is probed with VAG enabled, the driver's probe
-routine will generate a loud pop sound when ANA_POWER is
-being programmed. Avoid this by properly disabling just the
-VAG bit and waiting the required power down time.
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- sound/soc/codecs/sgtl5000.c | 34 ++++++++++++++++++++++++++++++++++
- sound/soc/codecs/sgtl5000.h |  1 +
- 2 files changed, 35 insertions(+)
-
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index d5130193b4a2..e8a8bf7b4ffe 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1653,6 +1653,40 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
- 		dev_err(&client->dev,
- 			"Error %d initializing CHIP_CLK_CTRL\n", ret);
- 
-+	/* Mute everything to avoid pop from the following power-up */
-+	ret = regmap_write(sgtl5000->regmap, SGTL5000_CHIP_ANA_CTRL,
-+			   SGTL5000_CHIP_ANA_CTRL_DEFAULT);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Error %d muting outputs via CHIP_ANA_CTRL\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	/*
-+	 * If VAG is powered-on (e.g. from previous boot), it would be disabled
-+	 * by the write to ANA_POWER in later steps of the probe code. This
-+	 * may create a loud pop even with all outputs muted. The proper way
-+	 * to circumvent this is disabling the bit first and waiting the proper
-+	 * cool-down time.
-+	 */
-+	ret = regmap_read(sgtl5000->regmap, SGTL5000_CHIP_ANA_POWER, &value);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to read ANA_POWER: %d\n", ret);
-+		goto disable_clk;
-+	}
-+	if (value & SGTL5000_VAG_POWERUP) {
-+		ret = regmap_update_bits(sgtl5000->regmap,
-+					 SGTL5000_CHIP_ANA_POWER,
-+					 SGTL5000_VAG_POWERUP,
-+					 0);
-+		if (ret) {
-+			dev_err(&client->dev, "Error %d disabling VAG\n", ret);
-+			goto disable_clk;
-+		}
-+
-+		msleep(SGTL5000_VAG_POWERDOWN_DELAY);
-+	}
-+
- 	/* Follow section 2.2.1.1 of AN3663 */
- 	ana_pwr = SGTL5000_ANA_POWER_DEFAULT;
- 	if (sgtl5000->num_supplies <= VDDD) {
-diff --git a/sound/soc/codecs/sgtl5000.h b/sound/soc/codecs/sgtl5000.h
-index a4bf4bca95bf..56ec5863f250 100644
---- a/sound/soc/codecs/sgtl5000.h
-+++ b/sound/soc/codecs/sgtl5000.h
-@@ -233,6 +233,7 @@
- /*
-  * SGTL5000_CHIP_ANA_CTRL
-  */
-+#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
- #define SGTL5000_LINE_OUT_MUTE			0x0100
- #define SGTL5000_HP_SEL_MASK			0x0040
- #define SGTL5000_HP_SEL_SHIFT			6
--- 
-2.25.1
-
+Acked-by: Rob Herring <robh@kernel.org>
