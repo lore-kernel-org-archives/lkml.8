@@ -2,97 +2,68 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B95C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F775C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7B22076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AA72078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414702AbgDOP0e (ORCPT
+        id S1414706AbgDOP0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:26:34 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:15062 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2636874AbgDOPZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:25:39 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 47E7D4E0F0E;
-        Wed, 15 Apr 2020 23:25:37 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v2,2/5] powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
-Date:   Wed, 15 Apr 2020 08:24:39 -0700
-Message-Id: <20200415152442.122873-3-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200415152442.122873-1-wenhu.wang@vivo.com>
-References: <20200415124929.GA3265842@kroah.com>
- <20200415152442.122873-1-wenhu.wang@vivo.com>
+        Wed, 15 Apr 2020 11:26:47 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:36328 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1414683AbgDOP0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:26:15 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jOjuy-0006EH-RF; Thu, 16 Apr 2020 01:25:37 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 01:25:36 +1000
+Date:   Tue, 14 Apr 2020 23:57:31 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH] lib/mpi: Fix building for powerpc with clang
+Message-ID: <20200414135731.GA8766@gondor.apana.org.au>
+References: <20200413195041.24064-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVDTE5CQkJCSUxOSUtMTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OE06FCo6IzgzHggeLyozGQ8O
-        OBUKFAhVSlVKTkNNQk1PSEhMTU5PVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUhJTE83Bg++
-X-HM-Tid: 0a717e72138c9376kuws47e7d4e0f0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413195041.24064-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include linux/io.h into fsl_85xx_cache_sram.c to fix the
-implicit-declaration compile error when building Cache-Sram.
+On Mon, Apr 13, 2020 at 12:50:42PM -0700, Nathan Chancellor wrote:
+> 0day reports over and over on an powerpc randconfig with clang:
+> 
+> lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
+> inline asm context requiring an l-value: remove the cast or build with
+> -fheinous-gnu-extensions
+> 
+> Remove the superfluous casts, which have been done previously for x86
+> and arm32 in commit dea632cadd12 ("lib/mpi: fix build with clang") and
+> commit 7b7c1df2883d ("lib/mpi/longlong.h: fix building with 32-bit
+> x86").
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/991
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                          ^~~~~~~~~~~~~~~~
-                          bitmap_complement
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                        ^
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
-  iounmap(cache_sram->base_virt);
-  ^~~~~~~
-  roundup
-cc1: all warnings being treated as errors
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
----
-Changes since v1:
- * None
----
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-index f6c665dac725..be3aef4229d7 100644
---- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_platform.h>
- #include <asm/pgtable.h>
- #include <asm/fsl_85xx_cache_sram.h>
-+#include <linux/io.h>
- 
- #include "fsl_85xx_cache_ctlr.h"
- 
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 -- 
-2.17.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
