@@ -2,124 +2,125 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69475C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B7BC352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2AB2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AskEzpYs"
+	by mail.kernel.org (Postfix) with ESMTP id 9E3252074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504331AbgDNSqg (ORCPT
+        id S2504353AbgDNSrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504293AbgDNSqc (ORCPT
+        Tue, 14 Apr 2020 14:47:49 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:43699 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504185AbgDNSrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:46:32 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6265C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:46:32 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id y15so662002vsm.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hm1Qks6SZ0yWu4P75XfFoZTXE4Nra+rfLYilmC4vdmU=;
-        b=AskEzpYssKBaC+I8r9xjA/upQU03fey7fH06JRnjoVatycGcNwUujD+hfTF271zYY3
-         LjnobQTSiBTpktVOcl+h3EILwuI8sCGjEqPFBGZ1b5w4ZJnfJ+SaoQpR5w56BJfu7UPp
-         iHdwkGKCYF2HEvA47R3NTYI22vz2qYDlqXVdk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hm1Qks6SZ0yWu4P75XfFoZTXE4Nra+rfLYilmC4vdmU=;
-        b=TZ+DWozBm24tep/31Y2MzFU2NUXj6pJHq8WVxJK5D4KFgKQfbpvRv5NAMbq7FTuK7H
-         h0RJZeKAlHTBgQpp0sOaC48oNas6AhfVdGdMKs1Cp0uPUZTI/IerFeQDthGSNppCRqPJ
-         /zBsjBoi8BebsQ3aOIItMhnNxS5sfwgkCWUJLxwMMHx35PHPOUZbTWyyHu3UTjsB7qXB
-         vS65ijupbLgUBO5JEHhOhFNY+u94epo9ZPMEst9qn75jQQt1nIjxGhN1xQiRGHduDdtT
-         gfBBF2xTSX9B4hQpY/vw4R1X1DIBrEOOpxN3CnbI9cbSTkQqB0Mh3SrZ+R60rOO8GPZd
-         IoJg==
-X-Gm-Message-State: AGi0PubhZm9wltUN4qjbdjmddfGbMsmut2oLSkbMC193O+tH/z255NfH
-        2AtJn/t/GpYTWpWBlFPEvKHCRpAzDQo=
-X-Google-Smtp-Source: APiQypJvwAu8fdA+RHdEKh/eDAPzdyLQAOmby/HfXwOnm2gudesmyZajnEg2dTUUPpjgWcVcyYM4lA==
-X-Received: by 2002:a67:1947:: with SMTP id 68mr1514222vsz.145.1586889991673;
-        Tue, 14 Apr 2020 11:46:31 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id w143sm4334978vkd.5.2020.04.14.11.46.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 11:46:31 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id u11so635469vsu.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 11:46:31 -0700 (PDT)
-X-Received: by 2002:a67:2b07:: with SMTP id r7mr1505045vsr.169.1586889990771;
- Tue, 14 Apr 2020 11:46:30 -0700 (PDT)
+        Tue, 14 Apr 2020 14:47:43 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M597q-1jNK8G2wTc-0019oG; Tue, 14 Apr 2020 20:47:40 +0200
+Received: by mail-qt1-f172.google.com with SMTP id w24so11090673qts.11;
+        Tue, 14 Apr 2020 11:47:40 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaUj0jgMT/pF/Q4T4nB7p2Dvn1GmqpF6LCPz2+76M2w4s/3gzUO
+        jX4r+af9LMGBjZaeoAaGHZYqstvl+pWKP6ZPSNU=
+X-Google-Smtp-Source: APiQypJkm7YK7DFcAXzV9bKRiTg4ndg9+lnP/bhAkYKcaZ1Yw17IqxDBvH++61J2ztireirhfyoBdFwDtwNvTt2Nro4=
+X-Received: by 2002:ac8:d8e:: with SMTP id s14mr17254416qti.204.1586890059307;
+ Tue, 14 Apr 2020 11:47:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200414104120.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
- <9c633ea161df91265a338aaa93a78443894c268f.camel@perches.com>
-In-Reply-To: <9c633ea161df91265a338aaa93a78443894c268f.camel@perches.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 14 Apr 2020 11:46:19 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X8Wci5cKPcfHQq-PjsexwLCjErnB63gF4_XgTBK9aWFQ@mail.gmail.com>
-Message-ID: <CAD=FV=X8Wci5cKPcfHQq-PjsexwLCjErnB63gF4_XgTBK9aWFQ@mail.gmail.com>
-Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Factor "tcs_reg_addr" and
- "tcs_cmd_addr" calculation
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+ <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+ <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
+ <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+ <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+ <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+ <20200414152312.GF5100@ziepe.ca> <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+ <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+In-Reply-To: <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Apr 2020 20:47:22 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
+Message-ID: <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:lz+utpL2BuBOA5D9VOLFoYKJVgXLXYJqK4q5UjrxvDCIrqFf0MS
+ 3lwqvFNt+ZdhOi6W1+JUOaxRPxnZyz1gFrX8vajN9UA+jAAyTIvKc7WENid2RX/wLJgzjci
+ 3GOKK0p8/A14FVytNaUGvXPhjxfVlXgYktvK24OOKskHvQiRErMXEilQriSDhYn+fVRhYax
+ geT4oFaicC+O6wM54V3xA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BomH8QEDJV4=:ntIuB13EiCR7pWtapSJVge
+ J4cB8Aba+rh8/NTD9cEQ5TyuZ84tIDqwWeQCR2YbElbe3TJ36hfx3NBjVDqk5hVrQaaau2UFy
+ rV+Z2om/vZpkzaN1YxtH673J0giu8Iu9nVf2BkyqDneRJbm/wyC/modqYfdhHx8UeVZ/had/L
+ 7XvJ+mGC8pIQH1BRv4urhEgq5L42xPihQ1VfTRMwMNPSxq4ZxZLW2gIIWrxoi9d13XGlEtNFC
+ gPba6yESbPZMx7GPuJpDKeKdZeafCnVcNquETNmahkLgBk0Lp3n2YDXhfe6tLzCmgZaFj+Q8v
+ vl/Px13mgqBM0sY7qjsRP2SSMBPTHXQnZKR87cheG2H4K7ax+JznLa8fodDmjkcu/jCbbs1Vi
+ oVjZad18pJp5Gm1DhfUwpzKJo380efPkKxqaoEB+vV+Cnzvlk+GSu+Lxs1dk+F2wSdC+6uUZ6
+ 38LyRG2EWJrA+r76L7nVDZrx+YfizZA1LHCgpE1Dfwvj0FdG21nPAzLc+QvaBQM2+G/S+i2mW
+ /oR87M6mYgqMJ0ROMQqJp14Cbeo/D8+IpPvF7enJtrNEBOjUCkH7NmaMTvKpTM7WhQrMyjeAF
+ m/ltdC70nBsrpz9Wl12UQTV1+nIxVdAXTBeUOBvdiYjWnOU30EwwyF+8RlNKhe4aU0Ibrqu1m
+ t0h35AJEarmVsB2e4RIW8japZOHOzURvlmJETW9SqMrvhMj+fZ22/ITLL96vgWIzF9zCrmMOQ
+ 8yltUSqjVk6KqbMDCoGWMk+87nGvG8O5AmySaraRl5nyi7LUIY0VjpTb47Nax+Y1OLi5AMB3S
+ +9wwz0VSlwjQUobM/9/GFsXGCFOaYX2Snjyw5Fhvx65KWWi1M0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 14, 2020 at 7:49 PM Saeed Mahameed <saeedm@mellanox.com> wrote:
+> On Tue, 2020-04-14 at 17:25 +0200, Arnd Bergmann wrote:
+> > On Tue, Apr 14, 2020 at 5:23 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > Correct.
+> >
+>
+> Great !
+>
+> Then bottom line we will change mlx5/Kconfig: to
+>
+> depends on VXLAN || !VXLAN
 
-On Tue, Apr 14, 2020 at 10:58 AM Joe Perches <joe@perches.com> wrote:
->
-> On Tue, 2020-04-14 at 10:41 -0700, Douglas Anderson wrote:
-> > We can make some of the register access functions more readable by
-> > factoring out the calculations a little bit.
->
-> unrelated trivia:
->
-> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> []
-> >  static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
-> >                              u32 data)
-> >  {
-> > -     writel(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
-> > +     writel(data, tcs_reg_addr(drv, reg, tcs_id));
-> >       for (;;) {
-> > -             if (data == readl(drv->tcs_base + reg +
-> > -                               RSC_DRV_TCS_OFFSET * tcs_id))
-> > +             if (data == readl(tcs_reg_addr(drv, reg, tcs_id)))
-> >                       break;
-> >               udelay(1);
-> >       }
->
-> There a lockup potential here.
->
-> It might be better to use some max loop counter with
-> an error/warning emitted instead of a continuous retry.
+Ok
 
-Yeah, I noticed that too but I assumed that it was probably OK.  I
-think in this case it's really just confirming that the write made it
-across the bus since it's checking the same bit that it's writing.
-...but I wouldn't be opposed to this changing to use
-readl_poll_timeout().
+> This will force MLX5_CORE to m when necessary to make vxlan reachable
+> to mlx5_core.  So no need for explicit use of IS_REACHABLE().
+> in mlx5 there are 4 of these:
+>
+>         imply PTP_1588_CLOCK
+>         imply VXLAN
+>         imply MLXFW
+>         imply PCI_HYPERV_INTERFACE
 
--Doug
+As mentioned earlier, we do need to replace the 'imply PTP_1588_CLOCK'
+with the same
+
+         depends on PTP_1588_CLOCK || !PTP_1588_CLOCK
+
+So far I have not seen problems for the other two options, so I assume they
+are fine for now -- it seems to build just fine without PCI_HYPERV_INTERFACE,
+and MLXFW has no other dependencies, meaning that 'imply' is the
+same as 'select' here. Using 'select MLXFW' would make it clearer perhaps.
+
+      Arnd
