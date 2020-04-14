@@ -2,143 +2,122 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30931C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B24EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1437720644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654EC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 11:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586863155;
+	bh=6SbxWz9MT+wHNROI/dMEj/KQxgymGfq6tc7mxtyrokk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q/wKqbqqHHY7sf/DLG/bVmuaJaqEorZByta/hlAEI2mCDV0elQxcF7WO0v00H7pDP
+	 OBq5GO70VkAWQea34UBXkQXzHOXGkSdPeUQkd/+fIYsjZAfweDxwpCvwOmSZvOzGa2
+	 4Ns05XDaF7x//pMcmBSb//FAzA0cCJ3kfy0RrJ/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439005AbgDNLS1 (ORCPT
+        id S2439019AbgDNLTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:18:27 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2370 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438988AbgDNLSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:18:03 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1D8E5BC680AC97D09CAD;
-        Tue, 14 Apr 2020 19:17:58 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Apr 2020
- 19:17:50 +0800
-Subject: Re: [PATCH 1/2] KVM: arm64: vgic-v3: Retire all pending LPIs on vcpu
- destroy
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <wanghaibin.wang@huawei.com>, <yezengruan@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200414030349.625-1-yuzenghui@huawei.com>
- <20200414030349.625-2-yuzenghui@huawei.com> <20200414115417.451f8b66@why>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <a1c67c96-56f0-2976-ba1b-0991972254b3@huawei.com>
-Date:   Tue, 14 Apr 2020 19:17:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 14 Apr 2020 07:19:12 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45690 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438988AbgDNLTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:19:08 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m12so16552857edl.12;
+        Tue, 14 Apr 2020 04:19:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kLr1otCrFIODbPMjYkvy3aKgept10MpBYq6j6d3c97s=;
+        b=Lkpk71t5dUqBb1Br8APtSp2E/Ovfy4KU5iskMlVizPr3JdwxjAnHr0aXEDsGwBR8xd
+         DyXXXwDSRirPCe0zZn/ANlwYeyH1IEAFNgVzrgjafNQ0aR/wXNPvx7cedaMDmQHkXUYN
+         EZjHxD9vSd3a2RBbywqSQCEUUErYivDr2tg9MzL8cnZT2HrgkQ6fKzmTBT7aj4i+hDwZ
+         iyDe/1BqP++5vgKwITGM+57Cigfl1sRmfLNKlWMUKghBRWoxKjX5H1nxqZ7ljjcAzzMS
+         PQ8dyuxL9IjpvV3EvQGJOtYjvhiWQX04JQVY9BEURda+Uur3h7w+74+mbG2KLVXsmHID
+         c+yg==
+X-Gm-Message-State: AGi0PuYV65CIKOT8fCSmDGTerMGIH0/cZlI4KGDQMUxWEXo0IPHEol0n
+        lKs2fNXOaBj9ccPRI2pcf+4wcteO
+X-Google-Smtp-Source: APiQypI+e8NhZbH4s6s1t6e787WWdZVnlyyo3DThuzngTxyATZQvoEtvVJUA6KnpSKeyc8xiorGa1Q==
+X-Received: by 2002:a17:906:7e19:: with SMTP id e25mr20500556ejr.358.1586863146621;
+        Tue, 14 Apr 2020 04:19:06 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id j5sm1662117edh.4.2020.04.14.04.19.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 04:19:05 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 13:19:03 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: Build regressions/improvements in v5.7-rc1
+Message-ID: <20200414111903.GA1895@kozik-lap>
+References: <20200413093100.24470-1-geert@linux-m68k.org>
+ <alpine.DEB.2.21.2004131232220.32713@ramsan.of.borg>
+ <877dyijrh7.fsf@mpe.ellerman.id.au>
+ <20200414110627.GA1373@kozik-lap>
 MIME-Version: 1.0
-In-Reply-To: <20200414115417.451f8b66@why>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200414110627.GA1373@kozik-lap>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/4/14 18:54, Marc Zyngier wrote:
-> On Tue, 14 Apr 2020 11:03:47 +0800
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
+On Tue, Apr 14, 2020 at 01:06:27PM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Apr 14, 2020 at 08:23:32PM +1000, Michael Ellerman wrote:
+ > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable-4k.h: error: expected ')' before '!=' token:  => 58:40
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable-4k.h: error: expected ')' before '==' token:  => 57:37
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable-4k.h: error: expected identifier or '(' before '!' token:  => 56:25
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected ')' before '!=' token:  => 163:40
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected ')' before '==' token:  => 333:50
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected ')' before '^' token:  => 333:36
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected identifier or '(' before '!' token:  => 146:27, 144:24, 160:25, 161:24, 143:25
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/64/pgtable.h: error: expected identifier or '(' before 'struct':  => 77:21
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/pgtable.h: error: redefinition of 'pgd_huge':  => 291:19
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/pte-book3e.h: error: redefinition of 'pte_mkprivileged':  => 108:26
+> > >>  + /kisskb/src/arch/powerpc/include/asm/nohash/pte-book3e.h: error: redefinition of 'pte_mkuser':  => 115:20
+> > >>  + /kisskb/src/arch/powerpc/kvm/book3s_64_vio_hv.c: error: 'struct kvm_arch' has no member named 'spapr_tce_tables':  => 68:46, 68:2
+> > >
+> > > ppc64_book3e_allmodconfig
+> > 
+> > Caused by:
+> > 
+> > e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
+> > 
+> > Which did:
+> > 
+> >  config SPAPR_TCE_IOMMU
+> >  	bool "sPAPR TCE IOMMU Support"
+> > -	depends on PPC_POWERNV || PPC_PSERIES
+> > +	depends on PPC_POWERNV || PPC_PSERIES || (PPC && COMPILE_TEST)
+> > 
+> > 
+> > Which is just ... not right, the dependencies on the correct platform
+> > are important, otherwise the build breaks.
 > 
-> Hi Zenghui,
+> The SPAPR_TCE_IOMMU should compile fine.  The actual trouble here is
+> that KVM_BOOK3S_64 selects SPAPR_TCE_IOMMU which is a user-visible
+> symbol.  This is generally discouraged because of exactly this error -
+> select ignores any dependencies.
 > 
->> It's likely that the vcpu fails to handle all virtual interrupts if
->> userspace decides to destroy it, leaving the pending ones stay in the
->> ap_list. If the un-handled one is a LPI, its vgic_irq structure will
->> be eventually leaked because of an extra refcount increment in
->> vgic_queue_irq_unlock().
->>
->> This was detected by kmemleak on almost every guest destroy, the
->> backtrace is as follows:
->>
->> unreferenced object 0xffff80725aed5500 (size 128):
->> comm "CPU 5/KVM", pid 40711, jiffies 4298024754 (age 166366.512s)
->> hex dump (first 32 bytes):
->> 00 00 00 00 00 00 00 00 08 01 a9 73 6d 80 ff ff ...........sm...
->> c8 61 ee a9 00 20 ff ff 28 1e 55 81 6c 80 ff ff .a... ..(.U.l...
->> backtrace:
->> [<000000004bcaa122>] kmem_cache_alloc_trace+0x2dc/0x418
->> [<0000000069c7dabb>] vgic_add_lpi+0x88/0x418
->> [<00000000bfefd5c5>] vgic_its_cmd_handle_mapi+0x4dc/0x588
->> [<00000000cf993975>] vgic_its_process_commands.part.5+0x484/0x1198
->> [<000000004bd3f8e3>] vgic_its_process_commands+0x50/0x80
->> [<00000000b9a65b2b>] vgic_mmio_write_its_cwriter+0xac/0x108
->> [<0000000009641ebb>] dispatch_mmio_write+0xd0/0x188
->> [<000000008f79d288>] __kvm_io_bus_write+0x134/0x240
->> [<00000000882f39ac>] kvm_io_bus_write+0xe0/0x150
->> [<0000000078197602>] io_mem_abort+0x484/0x7b8
->> [<0000000060954e3c>] kvm_handle_guest_abort+0x4cc/0xa58
->> [<00000000e0d0cd65>] handle_exit+0x24c/0x770
->> [<00000000b44a7fad>] kvm_arch_vcpu_ioctl_run+0x460/0x1988
->> [<0000000025fb897c>] kvm_vcpu_ioctl+0x4f8/0xee0
->> [<000000003271e317>] do_vfs_ioctl+0x160/0xcd8
->> [<00000000e7f39607>] ksys_ioctl+0x98/0xd8
->>
->> Fix it by retiring all pending LPIs in the ap_list on the destroy path.
->>
->> p.s. I can also reproduce it on a normal guest shutdown. It is because
->> userspace still send LPIs to vcpu (through KVM_SIGNAL_MSI ioctl) while
->> the guest is being shutdown and unable to handle it. A little strange
->> though and haven't dig further...
-> 
-> What userspace are you using? You'd hope that the VMM would stop
-> processing I/Os when destroying the guest. But we still need to handle
-> it anyway, and I thing this fix makes sense.
+> I can revert the COMPILE_TEST for SPAPR_TCE_IOMMU or change
+> select->depends in KVM_BOOK3S_64.  I think the latter is the proper
+> change here.
 
-I'm using Qemu (master) for debugging. Looks like an interrupt
-corresponding to a virtio device configuration change, triggered after
-all other devices had freed their irqs. Not sure if it's expected.
+Eh, not really, it looks more complex because there are more
+dependencies (the book3s_64_vio_hv is pulled by KVM Makefile if
+SPAPR_TCE_IOMMU is set).
 
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   virt/kvm/arm/vgic/vgic-init.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
->> index a963b9d766b7..53ec9b9d9bc4 100644
->> --- a/virt/kvm/arm/vgic/vgic-init.c
->> +++ b/virt/kvm/arm/vgic/vgic-init.c
->> @@ -348,6 +348,12 @@ void kvm_vgic_vcpu_destroy(struct kvm_vcpu *vcpu)
->>   {
->>   	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
->>   
->> +	/*
->> +	 * Retire all pending LPIs on this vcpu anyway as we're
->> +	 * going to destroy it.
->> +	 */
->> +	vgic_flush_pending_lpis(vcpu);
->> +
->>   	INIT_LIST_HEAD(&vgic_cpu->ap_list_head);
->>   }
->>   
-> 
-> I guess that at this stage, the INIT_LIST_HEAD() is superfluous, right?
+I guess the revert of this part makes most sense.
 
-I was just thinking that the ap_list_head may not be empty (besides LPI,
-with other active or pending interrupts), so leave it unchanged.
-
-> Otherwise, looks good. If you agree with the above, I can fix that
-> locally, no need to resend this patch.
-
-Thanks,
-Zenghui
+Best regards,
+Krzysztof
 
