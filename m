@@ -2,150 +2,113 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA77C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D11C38A29
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675AC20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaO/qKQO"
+	by mail.kernel.org (Postfix) with ESMTP id 7DF4020644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbgDNNs5 (ORCPT
+        id S1732358AbgDNNtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:48:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgDNNsg (ORCPT
+        Tue, 14 Apr 2020 09:49:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8472 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388027AbgDNNsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:48:36 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B04CC061A0C;
-        Tue, 14 Apr 2020 06:48:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h11so4666129plr.11;
-        Tue, 14 Apr 2020 06:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tRIC1+fbqgksFCXZuCIwbMy1gMACOqNnoWCEPyufkRo=;
-        b=GaO/qKQOZHoYDBE0SZJhbEGpsDQbuszrib3RZ+LJ4A9j8Jpt43q+nfImee6LnjJ+j/
-         aR8OOlq5dPwT1bFM7V+3RYw78okenlCnJXMsZYvnGOP95JFuWYxDxQQDLadVHaJ0jV8S
-         Dz0RnmM+GdP/zaU++I85DtwtYRhtfdbluCsGpJn9Oy15ByBq6ysdXVIDPMh825yh1wYd
-         pp4dIKSYES6/riRi0KecsSOdbDwZNIvFIiw7pELOFQEBy1kmKs7lbV1UKfikocbd84wz
-         xRLiaQuj4ssVo5PvKaRnZlYgWxbxmm/frB53eAnJVbTEcz17KjfIqMsWPK+e2OW/uYRY
-         G7rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tRIC1+fbqgksFCXZuCIwbMy1gMACOqNnoWCEPyufkRo=;
-        b=pB3BR3sE1ouzJsb/alituJQPzBoaHjSrbjUZhfJqU0fgRpxQ+8ELfzoIrgP3VQUJik
-         cGP5Cl5OOkPzIx7QRGE+JCiFONh6tb1TiPvcXsfPoMZC4JHILNe++mnssk8xERoDYor4
-         /3kmO+qQjeApeCql9Wpn8OgtW3vV9OSKzeh/TJi3ZDBK4wZqXEuLG60f+G1Vt9hhAyGV
-         oX+yBqwmVBa8BkB017PruuXZ220QxS4/WMuEXXEvsexbrXLSrrxOVv2g5jP8s4Lmm7gb
-         5PswPuPafgl4XoeVBtTXBaLintZ4Igpxw4S/LlG9HySHa14gt9IPZ/p+jD/xRddZUf6w
-         8Zag==
-X-Gm-Message-State: AGi0PuaYElEE9qPi1z5dWc/HLORv7eJAO/jRgWIqLCtl5LuLDu0UO4Ga
-        QU8xQQ8pjY4o9ugmnU3qqGk=
-X-Google-Smtp-Source: APiQypKxu4lvNh7B1YEtxxWsTvlQwDsLJQmCevNqmTW3KEEsrC0UcP+R0Mko5eh4rrhyjzXZHSxvwA==
-X-Received: by 2002:a17:90b:3444:: with SMTP id lj4mr185611pjb.37.1586872114531;
-        Tue, 14 Apr 2020 06:48:34 -0700 (PDT)
-Received: from localhost ([89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id g3sm10233341pgd.64.2020.04.14.06.48.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 06:48:34 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, alain.volmat@st.com,
-        linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v1] i2c: busses: convert to devm_platform_get_and_ioremap_resource
-Date:   Tue, 14 Apr 2020 21:48:27 +0800
-Message-Id: <20200414134827.18674-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
+        Tue, 14 Apr 2020 09:48:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EDYdWZ100004
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:48:41 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cvqfd99j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:48:41 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 14 Apr 2020 14:48:00 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 14:47:55 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EDmY7P37028098
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 13:48:34 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4A1BCAE051;
+        Tue, 14 Apr 2020 13:48:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67B60AE04D;
+        Tue, 14 Apr 2020 13:48:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.236.92])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 13:48:33 +0000 (GMT)
+Subject: Re: [PATCH] evm: Fix possible memory leak in evm_calc_hmac_or_hash()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Tue, 14 Apr 2020 09:48:32 -0400
+In-Reply-To: <20200414080131.29411-1-roberto.sassu@huawei.com>
+References: <20200414080131.29411-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041413-0020-0000-0000-000003C7B0C1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041413-0021-0000-0000-000022208C90
+Message-Id: <1586872112.7311.194.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_05:2020-04-14,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ impostorscore=0 adultscore=0 spamscore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use devm_platform_get_and_ioremap_resource() to simplify code, which
-contains platform_get_resource() and devm_ioremap_resource(), it also
-get the resource for use by the following code.
+Thanks, Roberto.
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/i2c/busses/i2c-cadence.c      | 3 +--
- drivers/i2c/busses/i2c-pca-platform.c | 3 +--
- drivers/i2c/busses/i2c-rcar.c         | 4 +---
- drivers/i2c/busses/i2c-stm32f7.c      | 3 +--
- 4 files changed, 4 insertions(+), 9 deletions(-)
+Sorry for the delays in reviewing the miscellaneous set of IMA patches
+you previously posted.  They're next on my "todo" list.
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 89d58f7d2a25..803c802611eb 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -906,8 +906,7 @@ static int cdns_i2c_probe(struct platform_device *pdev)
- 		id->quirks = data->quirks;
- 	}
- 
--	r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	id->membase = devm_ioremap_resource(&pdev->dev, r_mem);
-+	id->membase = devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
- 	if (IS_ERR(id->membase))
- 		return PTR_ERR(id->membase);
- 
-diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
-index 635dd697ac0b..546426a470cc 100644
---- a/drivers/i2c/busses/i2c-pca-platform.c
-+++ b/drivers/i2c/busses/i2c-pca-platform.c
-@@ -149,8 +149,7 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
- 	if (!i2c)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	i2c->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	i2c->reg_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(i2c->reg_base))
- 		return PTR_ERR(i2c->reg_base);
- 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 3b5397aa4ca6..a45c4bf1ec01 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -938,9 +938,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->clk);
- 	}
- 
--	priv->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	priv->io = devm_ioremap_resource(dev, priv->res);
-+	priv->io = devm_platform_get_and_ioremap_resource(pdev, 0, &priv->res);
- 	if (IS_ERR(priv->io))
- 		return PTR_ERR(priv->io);
- 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 330ffed011e0..cf48f8df4423 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1940,8 +1940,7 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 	if (!i2c_dev)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	i2c_dev->base = devm_ioremap_resource(&pdev->dev, res);
-+	i2c_dev->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(i2c_dev->base))
- 		return PTR_ERR(i2c_dev->base);
- 	phy_addr = (dma_addr_t)res->start;
--- 
-2.25.0
+Mimi
+
+On Tue, 2020-04-14 at 10:01 +0200, Roberto Sassu wrote:
+> Don't immediately return if the signature is portable and security.ima is
+> not present. Just set error so that memory allocated is freed before
+> returning from evm_calc_hmac_or_hash().
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 50b977481fce9 ("EVM: Add support for portable signature format")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
+>  security/integrity/evm/evm_crypto.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+> index 35682852ddea..499ea01b2edc 100644
+> --- a/security/integrity/evm/evm_crypto.c
+> +++ b/security/integrity/evm/evm_crypto.c
+> @@ -241,7 +241,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
+>  
+>  	/* Portable EVM signatures must include an IMA hash */
+>  	if (type == EVM_XATTR_PORTABLE_DIGSIG && !ima_present)
+> -		return -EPERM;
+> +		error = -EPERM;
+>  out:
+>  	kfree(xattr_value);
+>  	kfree(desc);
 
