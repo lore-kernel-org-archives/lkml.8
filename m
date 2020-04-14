@@ -2,112 +2,116 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B580EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BDAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9786B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15F42063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=bovi.onmicrosoft.com header.i=@bovi.onmicrosoft.com header.b="1KyrZffg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504490AbgDNSyG (ORCPT
+        id S2504499AbgDNSyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:54:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:25328 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504434AbgDNSyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:54:04 -0400
-IronPort-SDR: cLw27pjfhl03m3Z5KJ4KurPrcVHYPtVLSC9oxY5/UzjqD23GnSjHZ/Zs3wh3A8E1HE86sGxZxc
- xDERD+K7QDWg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 11:54:03 -0700
-IronPort-SDR: hoN/JjJah2VUqWKnTwlrf7C3VPLIlSMNSn/PJq4GuJetvLLjSlJI+Hy1urbgwRtKxsxZSt2RKB
- y0j8foxGrwzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
-   d="scan'208";a="253280689"
-Received: from svarahab-mobl.amr.corp.intel.com (HELO [10.212.190.40]) ([10.212.190.40])
-  by orsmga003.jf.intel.com with ESMTP; 14 Apr 2020 11:54:00 -0700
-Subject: Re: [PATCH v2] ASoC: bdw-rt5650: remove 3-channel capture support
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Ben Zhang <benzh@chromium.org>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Mark Brown <broonie@kernel.org>
-References: <1586766533-18557-1-git-send-email-brent.lu@intel.com>
- <9a484795-ea4a-e559-4ea9-3de24417ec9b@linux.intel.com>
- <BN6PR1101MB21320F655CFC1C271CCA9CE097DD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4b9455cb-d0d2-f5d8-f04c-df6e5abb4441@linux.intel.com>
-Date:   Tue, 14 Apr 2020 13:53:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 14 Apr 2020 14:54:37 -0400
+Received: from mail-vi1eur05on2105.outbound.protection.outlook.com ([40.107.21.105]:38081
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732442AbgDNSye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:54:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Br7xfqOxWtTeJAOowoczLGtCBhCLs+XBtlRdR3l7/KstgZJAl1vb++zmMO3QMl5t0RyzPP7E3LpgIouXwl6kIdnzOalgQKnAM02ZTS8WARNbTwx75WxrQIBwDx9ZxuvKBx3dnY/9ad5THJgvp/4avRhQID4EBiyeqWo8ehBzjVVaz7yyI9kxYwyY/QEPzeNC8zztSNAkrF0FLuB8ElzyUgUBwDjb2w8HSOF3bsH1By6I6ro5StcENBG4eAYMejb+COx0KoKIkBxw/AH5OpTvzZejIuGdpx1KaTF0jxTfy8f9mVNyeeiI9SghlUaz3gkunW+4Gxmtn6hoAroU1OgjrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UPeHLjuEeNWM5wgqq0E1k86X8yLY57lTDX+6Ayaya/Y=;
+ b=a5gR2D9u51EiwQulWPKSbFiGbFS8ZrE8IzX5vkIWFTV0kTzhojSw3f73NwNZtnCNUAupjots1LsUCjnH6mMG9ClBil7uQ+kj2XuKM/dJsQE7jTQqZO3xcrR8dY+6ilWHpCNAeWztywIOBaEyWuxhbiV5k51LBk6xKqTZ4ZI0nfM6yo9ASl1xjxjJYh8OUVtNHrAPw9fAenXYQ84kWKoO6qq8uDiDcXqYcmbnjMFqdTZ3ATKQIuOm95555AwLB4vd7X7PM6VMikLBHcmZ/zdh3uGx9AFXwupIVk3xCiJcCNog/yjCMte1vvS9HZGu8StsPYmg1Ghj1h5NfeiO+9x+zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bovensiepen.net; dmarc=pass action=none
+ header.from=bovensiepen.net; dkim=pass header.d=bovensiepen.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bovi.onmicrosoft.com;
+ s=selector2-bovi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UPeHLjuEeNWM5wgqq0E1k86X8yLY57lTDX+6Ayaya/Y=;
+ b=1KyrZffgYQvn11qniPSwLCcLuJIB+U1kuAa2U/LpjZlRgidyos+liPC03tgHqqYZUguK1TmcQH1UVbrY2JnmiJFnFFrjRQQc5iutHwKTMiZBVveASf3BlnlKA+oxr1caP0mtoPCKLFgt3naqNkL3v82NOODvM8hqwmC3DNaG2lY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=daniel@bovensiepen.net; 
+Received: from AM0P191MB0771.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:15c::9)
+ by AM0P191MB0546.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:151::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
+ 2020 18:54:31 +0000
+Received: from AM0P191MB0771.EURP191.PROD.OUTLOOK.COM
+ ([fe80::8495:e73a:ffdf:cf32]) by AM0P191MB0771.EURP191.PROD.OUTLOOK.COM
+ ([fe80::8495:e73a:ffdf:cf32%5]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 18:54:31 +0000
+Date:   Tue, 14 Apr 2020 20:54:30 +0200
+From:   Daniel Bovensiepen <daniel@bovensiepen.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: tools: string.c doc fix
+Message-ID: <20200414185430.GA14496@daboVM>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::21) To AM0P191MB0771.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:20b:15c::9)
 MIME-Version: 1.0
-In-Reply-To: <BN6PR1101MB21320F655CFC1C271CCA9CE097DD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from daboVM (91.66.30.126) by FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17 via Frontend Transport; Tue, 14 Apr 2020 18:54:31 +0000
+X-Originating-IP: [91.66.30.126]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9644ac46-f071-44d5-113d-08d7e0a5445a
+X-MS-TrafficTypeDiagnostic: AM0P191MB0546:
+X-Microsoft-Antispam-PRVS: <AM0P191MB05466D6C5ACD15545EF306D9D4DA0@AM0P191MB0546.EURP191.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0373D94D15
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0P191MB0771.EURP191.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(346002)(366004)(136003)(39830400003)(376002)(4744005)(86362001)(33656002)(1076003)(33716001)(508600001)(6916009)(9686003)(81156014)(186003)(26005)(55016002)(6496006)(4326008)(16526019)(8676002)(66556008)(66476007)(8936002)(316002)(2906002)(66946007)(52116002)(5660300002)(956004);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: bovensiepen.net does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WKQbqcGP6mkg7yimX/42LtQnfAlPdM9ODp1Axi6J7zX5bj9b9e0e1LGaERH+rnUonPMJ7nlpadPx1l8ZVrFYqMDtI0oFGqFAh9Lu3zSu8eSFcpq6qJAf7BsStOQE8xKMWDX/grWEs/PQP/VijCv9YypJ1VnwrlFDenOZj4gAc5XHlU5OyKSgnHY8V4/kznJ8wx1wWVBTU4BFI4qyEz1CquFUzYIATOEqFBObVGzBZRyfdET90HRrQrjnSi8Nwgs6V7pClYyxKdwtRJG69W0OsuOdSbfcnFBWj1fw7YxvdVRQeirp5Zz1lhRx0b9of72v6lHgKAXKc9g5sd86+uvPsyQmDzrSrKfk+3A4MKrjbZKk6arWZPxZZLssSCa6sEspMJuLuKw43U8q5Oz2Da+KpGYlW25AZiQaMvkHhI8I4OAenOqxePeA9o549pOGTRPX
+X-MS-Exchange-AntiSpam-MessageData: g1XE71HhNPCMAfYgdbdmzXchy++sVoCWjP9TpCifuPJlbAIIFhUdPqtYXJmJZE78E9zZSHcu6vFsZXYF6RILRLGvrs6K5sbcVlrkMZgUMD/7dEJI5xWEo1KHRKhxgdifg81A9hKmlZ/I80r/+n1DPw==
+X-OriginatorOrg: bovensiepen.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9644ac46-f071-44d5-113d-08d7e0a5445a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 18:54:31.8388
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 66f9801c-3e1e-402f-a0bf-b23980f5c9a0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rucvxevw9VCc4aroM6yC4V/bi1iMUKrx+1gqeZNwz+ZQHDYOyFDhtIMrszvNSYdF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0P191MB0546
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix spelling error in the comment.
 
+Signed-off-by: Daniel Bovensiepen <daniel@bovensiepen.net>
+---
+ tools/lib/string.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 4/13/20 9:29 AM, Lu, Brent wrote:
->>
->> That looks like an error caught by the ALSA conformance tool?
->>
->> What are the odds that we have a similar issue with the other broadwell
->> drivers which don't have a constraint on the number of channels either on
->> their 'System PCM' dailink?
->>
->> Thanks
->> -Pierre
->>
-> 
-> Yes. That's why I am sending patch for this old BDW platform...
-> 
-> So far as I know only 'buddy' supports 2/4-channel recording while other BDW
-> Chrome products should support stereo recording only. Therefore, this defect
-> should only be triggered by the ALSA conformance tool.
-> 
-> I am think about implementing the constraint in FE DAI's startup() callback
-> instead of DAI Link's callback. Since the channels_max is 4 for the capture
-> stream, ALSA conformance tool will always test 3-channel recording on any
-> platforms using this driver. Does it make sense to you?
-
-Looking back at previous threads, you indicated that the number of 
-channels supported in propagated from BE to FE, so a similar patch to 
-add 2ch constraints for bwd-rt5677 was dropped  ("ASoC: bdw-rt5677: 
-channel constraint support")
-
-Actually I am not sure it was dropped since later you submitted another 
-patch ("ASoC: bdw-rt5677: enable runtime channel merge"), and my 
-feedback was that it seemed simpler to add constraints on all machine 
-drivers.
-
-And now this patch only addresses bdw-rt5650.c but with the initial 
-solution suggested for bdw-rt5677.c
-
-It seems like a generic problem on all Broadwell devices so let's solve 
-with one a single patchset.
-
-Shouldn't we just add the 2ch constraints for broadwell.c and 
-bdw-rt5677.c, and the 2 or 4ch constraint for bdw-rt5650.c? Would this 
-work for you?
-
-Thanks
--Pierre
+diff --git a/tools/lib/string.c b/tools/lib/string.c
+index f645343815de..f73a1020fad9 100644
+--- a/tools/lib/string.c
++++ b/tools/lib/string.c
+@@ -41,7 +41,7 @@ void *memdup(const void *src, size_t len)
+  * @s: input string
+  * @res: result
+  *
+- * This routine returns 0 iff the first character is one of 'Yy1Nn0', or
++ * This routine returns 0 if the first character is one of 'Yy1Nn0', or
+  * [oO][NnFf] for "on" and "off". Otherwise it will return -EINVAL.  Value
+  * pointed to by res is updated upon finding a match.
+  */
+-- 
+2.17.1
 
