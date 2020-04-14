@@ -2,167 +2,256 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DD1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38BD52064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFD02064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438560AbgDNKoM (ORCPT
+        id S2438538AbgDNKnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438539AbgDNKne (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:43:34 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFE0C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:43:34 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 260612A186E
-Received: by earth.universe (Postfix, from userid 1000)
-        id E27743C08C7; Tue, 14 Apr 2020 12:43:30 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 12:43:30 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adam Honse <calcprogrammer1@gmail.com>
-Subject: Re: [PATCH] i2c: piix4: Add second SMBus for X370/X470/X570
-Message-ID: <20200414104330.k46jemtlkmxdrm62@earth.universe>
-References: <20200413150634.474842-1-sebastian.reichel@collabora.com>
- <20200414094158.089dd5ea@endymion>
+        Tue, 14 Apr 2020 06:43:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48660 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438448AbgDNKfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:35:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 873BAABB2;
+        Tue, 14 Apr 2020 10:35:33 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 20:35:24 +1000
+From:   Aleksa Sarai <asarai@suse.de>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
+ syscall
+Message-ID: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
+References: <20200202151907.23587-1-cyphar@cyphar.com>
+ <20200202151907.23587-3-cyphar@cyphar.com>
+ <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com>
+ <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
+ <cd3a6aad-b906-ee57-1b5b-5939b9602ad0@gmail.com>
+ <20200412164943.imwpdj5qgtyfn5de@yavin.dot.cyphar.com>
+ <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="g7bibnhk6q2xn6m4"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="imnm2xqfgm757zs2"
 Content-Disposition: inline
-In-Reply-To: <20200414094158.089dd5ea@endymion>
+In-Reply-To: <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---g7bibnhk6q2xn6m4
-Content-Type: text/plain; charset=us-ascii
+--imnm2xqfgm757zs2
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Apr 14, 2020 at 09:41:58AM +0200, Jean Delvare wrote:
-> On Mon, 13 Apr 2020 17:06:34 +0200, Sebastian Reichel wrote:
-> > The second interface can be found on X370, X470 and X570 according
-> > to the bugzilla entry. I only tested with X570 on an ASRock X570
-> > Taichi:
+On 2020-04-13, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> >>>> .\" FIXME I find the "previously-functional systems" in the previous
+> >>>> .\" sentence a little odd (since openat2() ia new sysycall), so I wo=
+uld
+> >>>> .\" like to clarify a little...
+> >>>> .\" Are you referring to the scenario where someone might take an
+> >>>> .\" existing application that uses openat() and replaces the uses
+> >>>> .\" of openat() with openat2()? In which case, is it correct to
+> >>>> .\" understand that you mean that one should not just indiscriminate=
+ly
+> >>>> .\" add the RESOLVE_NO_XDEV flag to all of the openat2() calls?
+> >>>> .\" If I'm not on the right track, could you point me in the right
+> >>>> .\" direction please.
+> >>>
+> >>> This is mostly meant as a warning to hopefully avoid applications
+> >>> because the developer didn't realise that system paths may contain
+> >>> symlinks or bind-mounts. For an application which has switched to
+> >>> openat2() and then uses RESOLVE_NO_SYMLINKS for a non-security reason,
+> >>> it's possible that on some distributions (or future versions of a
+> >>> distribution) that their application will stop working because a syst=
+em
+> >>> path suddenly contains a symlink or is a bind-mount.
+> >>>
+> >>> This was a concern which was brought up on LWN some time ago. If you =
+can
+> >>> think of a phrasing that makes this more clear, I'd appreciate it.
+> >>
+> >> Thanks. I've made the text:
+> >>
+> >>                      Applications  that  employ  the RESOLVE_NO_XDEV f=
+lag
+> >>                      are encouraged to make its use configurable  (unl=
+ess
+> >>                      it is used for a specific security purpose), as b=
+ind
+> >>                      mounts are widely used by end-users.   Setting  t=
+his
+> >>                      flag indiscriminately=E2=80=94i.e., for purposes =
+not specif=E2=80=90
+> >>                      ically related to security=E2=80=94for all uses o=
+f openat2()
+> >>                      may  result  in  spurious errors on previously-fu=
+nc=E2=80=90
+> >>                      tional systems.  This may occur if, for  example,=
+  a
+> >>                      system  pathname  that  is used by an application=
+ is
+> >>                      modified (e.g., in a new  distribution  release) =
+ so
+> >>                      that  a  pathname  component  (now)  contains a b=
+ind
+> >>                      mount.
+> >>
+> >> Okay?
 > >=20
-> > $ lspci -nnv -d 1022:790b
-> > 00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus Cont=
-roller [1022:790b] (rev 61)
-> > 	Subsystem: ASRock Incorporation FCH SMBus Controller [1849:ffff]
-> > 	Flags: 66MHz, medium devsel
-> > 	Kernel driver in use: piix4_smbus
-> > 	Kernel modules: i2c_piix4, sp5100_tco
-> >=20
-> > Before the patch:
-> >=20
-> > $ i2cdetect -l | grep PIIX4
-> > i2c-1	unknown   	SMBus PIIX4 adapter port 2 at 0b00	N/A
-> > i2c-0	unknown   	SMBus PIIX4 adapter port 0 at 0b00	N/A
-> >=20
-> > After the patch:
-> >=20
-> > $ i2cdetect -l | grep PIIX4
-> > i2c-1	unknown   	SMBus PIIX4 adapter port 2 at 0b00	N/A
-> > i2c-2	unknown   	SMBus PIIX4 adapter port 1 at 0b20	N/A
-> > i2c-0	unknown   	SMBus PIIX4 adapter port 0 at 0b00	N/A
-> >=20
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D202587
-> > Reported-by: Adam Honse <calcprogrammer1@gmail.com>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> > Hi,
-> >=20
-> > The Bugzilla entry contains a second change, which reduces the timeouts
-> > for quicker operation. I did not include that change, since I do not kn=
-ow
-> > if this is a good idea for all devices supported by this driver. In any
-> > case it should be a separate patch. Let's get the interface working for
-> > now.
-> >=20
-> > -- Sebastian
-> > ---
-> >  drivers/i2c/busses/i2c-piix4.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-pi=
-ix4.c
-> > index 30ded6422e7b..3e89143a0ecf 100644
-> > --- a/drivers/i2c/busses/i2c-piix4.c
-> > +++ b/drivers/i2c/busses/i2c-piix4.c
-> > @@ -976,9 +976,11 @@ static int piix4_probe(struct pci_dev *dev, const =
-struct pci_device_id *id)
-> >  		}
-> >  	}
-> > =20
-> > -	if (dev->vendor =3D=3D PCI_VENDOR_ID_AMD &&
-> > -	    dev->device =3D=3D PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
-> > -		retval =3D piix4_setup_sb800(dev, id, 1);
-> > +	if (dev->vendor =3D=3D PCI_VENDOR_ID_AMD) {
-> > +		if (dev->device =3D=3D PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
-> > +		    dev->device =3D=3D PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
-> > +			retval =3D piix4_setup_sb800(dev, id, 1);
-> > +		}
-> >  	}
-> > =20
-> >  	if (retval > 0) {
+> > Yup,
 >=20
-> Adam just sent pretty much the same patch:
+> Thanks.
 >=20
-> https://patchwork.ozlabs.org/project/linux-i2c/patch/20200410204843.3856-=
-1-calcprogrammer1@gmail.com/
+> > and the same text should be used for the same warning I gave for
+> > RESOLVE_NO_SYMLINKS (for the same reason, because system paths may
+> > switch to symlinks -- the prime example being what Arch Linux did
+> > several years ago).
 >=20
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> Okay -- I added similar text to RESOLVE_NO_SYMLINKS.
+
+Much appreciated.
+
+> >>>> .\" FIXME: what specific details in symlink(7) are being referred
+> >>>> .\" by the following sentence? It's not clear.
+> >>>
+> >>> The section on magic-links, but you're right that the sentence orderi=
+ng
+> >>> is a bit odd. It should probably go after the first sentence.
+> >>
+> >> I must admit that I'm still confused. There's only the briefest of=20
+> >> mentions of magic links in symlink(7). Perhaps that needs to be fixed?
+> >=20
+> > It wouldn't hurt to add a longer description of magic-links in
+> > symlink(7). I'll send you a small patch to beef up the description (I
+> > had planned to include a longer rewrite with the O_EMPTYPATH patches but
+> > those require quite a bit more work to land).
 >=20
-> I'll leave it to Wolfram which one he wants to apply.
+> That would be great. Thank you!
 
-Ok, I wasn't aware of that and thought this patch was forgotten. In
-that case Adam should receive all the credits of course. Feel free
-to take over anything usable from my commit message. The patch from
-Adam is
+I'll cook something up later this week.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> >> And, while I think of it, the text just preceding that FIXME says:
+> >>
+> >>     Due to the potential danger of unknowingly opening=20
+> >>     these magic links, it may be preferable for users to=20
+> >>     disable their resolution entirely.
+> >>
+> >> This sentence reads a little strangely. Could you please give me some
+> >> concrete examples, and I will try rewording that sentence a bit.
+> >=20
+> > The primary example is that certain files (such as tty devices) are
+> > best not opened by an unsuspecting program (if you do not have a
+> > controlling TTY, and you open such a file that console becomes your
+> > controlling TTY unless you use O_NOCTTY).
+> >=20
+> > But more generally, magic-links allow programs to be "beamed" all over
+> > the system (bypassing ordinary mount namespace restrictions). Since they
+> > are fairly rarely used intentionally by most programs, this is more of a
+> > tip to programmers that maybe they should play it safe and disallow
+> > magic-links unless they are expecting to have to use them.
+>=20
+>=20
+> I've reworked the text on RESOLVE_NO_MAGICLINKS substantially:
+>=20
+>        RESOLVE_NO_MAGICLINKS
+>               Disallow all magic-link resolution during path reso=E2=80=90
+>               lution.
+>=20
+>               Magic links are symbolic link-like objects that  are
+>               most  notably  found  in  proc(5);  examples include
+>               /proc/[pid]/exe  and  /proc/[pid]/fd/*.   (See  sym=E2=80=90
+>               link(7) for more details.)
+>=20
+>               Unknowingly  opening  magic  links  can be risky for
+>               some applications.  Examples of such  risks  include
+>               the following:
+>=20
+>               =C2=B7 If the process opening a pathname is a controlling
+>                 process that currently has no controlling terminal
+>                 (see  credentials(7)),  then  opening a magic link
+>                 inside /proc/[pid]/fd that happens to refer  to  a
+>                 terminal would cause the process to acquire a con=E2=80=90
+>                 trolling terminal.
+>=20
+>               =C2=B7 In  a  containerized  environment,  a  magic  link
+>                 inside  /proc  may  refer to an object outside the
+>                 container, and thus may provide a means to  escape
+>                 from the container.
+>=20
+> [The above example derives from https://lwn.net/Articles/796868/]
+>=20
+>               Because  of such risks, an application may prefer to
+>               disable   magic   link    resolution    using    the
+>               RESOLVE_NO_MAGICLINKS flag.
+>=20
+>               If  the trailing component (i.e., basename) of path=E2=80=90
+>               name is a magic link, and  how.flags  contains  both
+>               O_PATH  and O_NOFOLLOW, then an O_PATH file descrip=E2=80=90
+>               tor referencing the magic link will be returned.
+>=20
+> How does the above look?
 
-Thanks,
+The changes look correct, though you could end up going through procfs
+even if you weren't resolving a path inside proc directly (since you can
+bind-mount symlinks or have a symlink to procfs). But I'm not sure if
+it's necessary to outline all the ways a program could be tricked into
+doing something unintended.
 
--- Sebastian
+> Also, regarding the last paragraph, I  have a question.  The
+> text doesn't seem quite to relate to the rest of the discussion.
+> Should it be saying something like:
+>=20
+> If the trailing component (i.e., basename) of pathname is a magic link,
+> **how.resolve contains RESOLVE_NO_MAGICLINKS,**
+> and how.flags contains both O_PATH and O_NOFOLLOW, then an O_PATH
+> file descriptor referencing the magic link will be returned.
+>=20
+> ?
 
---g7bibnhk6q2xn6m4
+Yes, that is what I meant to write -- and I believe that the
+RESOLVE_NO_SYMLINKS section is missing similar text in the second
+paragraph (except it should refer to RESOLVE_NO_SYMLINKS, obviously).
+
+Thanks!
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--imnm2xqfgm757zs2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6Vk8sACgkQ2O7X88g7
-+pqQ9A/7BwSHbsoaxkGwMB05DN/hCXdFhZ6J0a1e82CQO0cAkivFUFx20qiXZGeV
-5QexoxYj2SW/uHX7zyl9hMCb/iKtf2GqIvSDSQLO7QuZBvc1/9hVX1B3X70CrLH0
-rtWXCHuxdu2OS24Ym6qGYO86NdAI58Dr8amfxOvueBBhSGE4EI6LjsMX7KCKVqof
-IDI7G1hHz2E5cLmvdB07USd+79CnnWMCZTLnOgcRQelkkSaJi732yZyLkJrbmwIN
-Wr+TbVPvOIXE3I4oc9XmgDxFMyB3KN+/aQtOOovmesGDGaI6uhBlh/6eGkMuHR91
-QfyU4Q9v7AS/uVPPHFOtEc8cssNL5lU6thBnp4KV9grioliygX0menXaVitEWSl/
-LLeSkfqARRkSSQtddFZkPQqYM89aoWOgPbhcRnRcM/+K4num6IvIaM2tZIZq01lN
-7KM+a9qF5bLqfxXrQmAGHrmgr0/WbY2akP+3fKnIcP0ZU/r4MQkzMiHtfPAiVOO4
-8AxNDkDjC/PoOFA/eZoVwaO11T/WZCXriWuL5ISr6ykO4KhAZHKpgKnXPUkWoreZ
-mc0X/FR6aOhZ6zygzOZR04yhDAX0QpqygiMiq8ow/Nt/6z2JqXfdo8sqpTEGwNWf
-qq5AQ4D4jnNzfA/RY1BhYFfZsBZaymW0rckKwLwM0by10DBtZcE=
-=7zje
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl6VkekACgkQnhiqJn3b
+jbRFCBAAySOXNoi4rBtphTOrPpV04SkFI3zJXufokazx9NSB/q0Wn399VAyuwORF
+R8Zlq+6SvA/jDR/oOBduXIWOWs1wcnI3a+fBF5lhm63Gidvf1NroIAYnHS+kJ91Z
+gnZlleHHx9QOwYp3Ds6CTphKBJ5kYIArTIMaPyrEyd7gmDyT+oEJ25s+WidiYDUe
+I0IVdjLJNc9U7QG2va02xhv91QSkZYDvsZH+mjcZs1fZAksccEIB8oovUUz7sI8t
+mLlpHdcx9X+75QJozHyzoBB4Zh0fyndkzVpgKyvZgS2ZKWzra94Lln0ZBv/jP+kl
+4Lk0a1L0YIrr2EYXVgcjQM+G8HOozVYQfoaabtdxLB5qKTv3Xlfb/imeOAG0d86K
+9pUANSuDg0JQwFcxnIcEDoNtmiRdmovF67wdBM73z001TScYuBchwQALkBAwbpXF
+OAi0wrOv6oZ7xpoCHEY5jrV472fGA/3fnBR+eV/9X2jEjmsLTFZSaINxvRTNZT1H
+ClxmIEJE0pkS1FsuBCxYyihpTWNZ2nDlSmSZAxNrz9/s7zyAvOUEr1zY3yACsjLJ
+Xx0A/TiTdvm4d8/Zw6cteImWKVXxj6Wko1pLvXTbOEgv3xQV1WAe4hbvraqUnoB0
+PBSuKd7vQtGxlg9cHOEPGablYwu4SXnIgQPBszoGOBT6vRNf5Jo=
+=vLXb
 -----END PGP SIGNATURE-----
 
---g7bibnhk6q2xn6m4--
+--imnm2xqfgm757zs2--
