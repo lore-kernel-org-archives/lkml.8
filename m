@@ -2,116 +2,121 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BDAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51946C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C15F42063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bovi.onmicrosoft.com header.i=@bovi.onmicrosoft.com header.b="1KyrZffg"
+	by mail.kernel.org (Postfix) with ESMTP id 350D02074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586890530;
+	bh=D4uD8lJngE4r0vCQv58R/Cgz9fWEBtk9Yx3Wo3ClZqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dSlzArf/YZj0waJvGveqBvPjKsJ8uxl0cdxXgEbrCXq+bKgPYwKZ+JrD3wFuqxMCy
+	 1jMbWmgc1xqmmEpU1aFBAR2pkGhnARi5dj82nqPQz4fU7AorVNqsS9WDuBsdEdzbEs
+	 eS9/XX7vxvuXzSuVIHKy8VxCNn9zzLG7BzpypAmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504499AbgDNSyh (ORCPT
+        id S2504507AbgDNSz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:54:37 -0400
-Received: from mail-vi1eur05on2105.outbound.protection.outlook.com ([40.107.21.105]:38081
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732442AbgDNSye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:54:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Br7xfqOxWtTeJAOowoczLGtCBhCLs+XBtlRdR3l7/KstgZJAl1vb++zmMO3QMl5t0RyzPP7E3LpgIouXwl6kIdnzOalgQKnAM02ZTS8WARNbTwx75WxrQIBwDx9ZxuvKBx3dnY/9ad5THJgvp/4avRhQID4EBiyeqWo8ehBzjVVaz7yyI9kxYwyY/QEPzeNC8zztSNAkrF0FLuB8ElzyUgUBwDjb2w8HSOF3bsH1By6I6ro5StcENBG4eAYMejb+COx0KoKIkBxw/AH5OpTvzZejIuGdpx1KaTF0jxTfy8f9mVNyeeiI9SghlUaz3gkunW+4Gxmtn6hoAroU1OgjrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UPeHLjuEeNWM5wgqq0E1k86X8yLY57lTDX+6Ayaya/Y=;
- b=a5gR2D9u51EiwQulWPKSbFiGbFS8ZrE8IzX5vkIWFTV0kTzhojSw3f73NwNZtnCNUAupjots1LsUCjnH6mMG9ClBil7uQ+kj2XuKM/dJsQE7jTQqZO3xcrR8dY+6ilWHpCNAeWztywIOBaEyWuxhbiV5k51LBk6xKqTZ4ZI0nfM6yo9ASl1xjxjJYh8OUVtNHrAPw9fAenXYQ84kWKoO6qq8uDiDcXqYcmbnjMFqdTZ3ATKQIuOm95555AwLB4vd7X7PM6VMikLBHcmZ/zdh3uGx9AFXwupIVk3xCiJcCNog/yjCMte1vvS9HZGu8StsPYmg1Ghj1h5NfeiO+9x+zA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bovensiepen.net; dmarc=pass action=none
- header.from=bovensiepen.net; dkim=pass header.d=bovensiepen.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bovi.onmicrosoft.com;
- s=selector2-bovi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UPeHLjuEeNWM5wgqq0E1k86X8yLY57lTDX+6Ayaya/Y=;
- b=1KyrZffgYQvn11qniPSwLCcLuJIB+U1kuAa2U/LpjZlRgidyos+liPC03tgHqqYZUguK1TmcQH1UVbrY2JnmiJFnFFrjRQQc5iutHwKTMiZBVveASf3BlnlKA+oxr1caP0mtoPCKLFgt3naqNkL3v82NOODvM8hqwmC3DNaG2lY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=daniel@bovensiepen.net; 
-Received: from AM0P191MB0771.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:15c::9)
- by AM0P191MB0546.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:151::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
- 2020 18:54:31 +0000
-Received: from AM0P191MB0771.EURP191.PROD.OUTLOOK.COM
- ([fe80::8495:e73a:ffdf:cf32]) by AM0P191MB0771.EURP191.PROD.OUTLOOK.COM
- ([fe80::8495:e73a:ffdf:cf32%5]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 18:54:31 +0000
-Date:   Tue, 14 Apr 2020 20:54:30 +0200
-From:   Daniel Bovensiepen <daniel@bovensiepen.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: tools: string.c doc fix
-Message-ID: <20200414185430.GA14496@daboVM>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::21) To AM0P191MB0771.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:15c::9)
+        Tue, 14 Apr 2020 14:55:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732445AbgDNSz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:55:26 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420B42074D;
+        Tue, 14 Apr 2020 18:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586890525;
+        bh=D4uD8lJngE4r0vCQv58R/Cgz9fWEBtk9Yx3Wo3ClZqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tUBphm2Rb7rh1cocNFCF1O3d+uVd8Mn+1KwUOvaIashLzhYAJJs6WNDl3X86yG9DI
+         9aLh5UjxG3LWYb5CqkQZi3z3ge5ZDoA2lJw2UnrACJBojsjTRDcGYSATVnqgk+gwd7
+         hv1wN/PhGiKOWf6tqhg7U4DyL5tiqkU8Ii2fGoQY=
+Date:   Tue, 14 Apr 2020 19:55:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
+Message-ID: <20200414185523.GO5412@sirena.org.uk>
+References: <20200411200632.4045-1-peron.clem@gmail.com>
+ <20200411200632.4045-2-peron.clem@gmail.com>
+ <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com>
+ <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
+ <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com>
+ <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com>
+ <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
+ <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
+ <000f26f4-3640-797f-c7f6-4b31a5e2669e@arm.com>
+ <CAJiuCccF3tmbmMWNh0nC5WRJ1_iPdj6f1oH1zYMSue_pFrXsPQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from daboVM (91.66.30.126) by FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17 via Frontend Transport; Tue, 14 Apr 2020 18:54:31 +0000
-X-Originating-IP: [91.66.30.126]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9644ac46-f071-44d5-113d-08d7e0a5445a
-X-MS-TrafficTypeDiagnostic: AM0P191MB0546:
-X-Microsoft-Antispam-PRVS: <AM0P191MB05466D6C5ACD15545EF306D9D4DA0@AM0P191MB0546.EURP191.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0373D94D15
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0P191MB0771.EURP191.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(346002)(366004)(136003)(39830400003)(376002)(4744005)(86362001)(33656002)(1076003)(33716001)(508600001)(6916009)(9686003)(81156014)(186003)(26005)(55016002)(6496006)(4326008)(16526019)(8676002)(66556008)(66476007)(8936002)(316002)(2906002)(66946007)(52116002)(5660300002)(956004);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: bovensiepen.net does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WKQbqcGP6mkg7yimX/42LtQnfAlPdM9ODp1Axi6J7zX5bj9b9e0e1LGaERH+rnUonPMJ7nlpadPx1l8ZVrFYqMDtI0oFGqFAh9Lu3zSu8eSFcpq6qJAf7BsStOQE8xKMWDX/grWEs/PQP/VijCv9YypJ1VnwrlFDenOZj4gAc5XHlU5OyKSgnHY8V4/kznJ8wx1wWVBTU4BFI4qyEz1CquFUzYIATOEqFBObVGzBZRyfdET90HRrQrjnSi8Nwgs6V7pClYyxKdwtRJG69W0OsuOdSbfcnFBWj1fw7YxvdVRQeirp5Zz1lhRx0b9of72v6lHgKAXKc9g5sd86+uvPsyQmDzrSrKfk+3A4MKrjbZKk6arWZPxZZLssSCa6sEspMJuLuKw43U8q5Oz2Da+KpGYlW25AZiQaMvkHhI8I4OAenOqxePeA9o549pOGTRPX
-X-MS-Exchange-AntiSpam-MessageData: g1XE71HhNPCMAfYgdbdmzXchy++sVoCWjP9TpCifuPJlbAIIFhUdPqtYXJmJZE78E9zZSHcu6vFsZXYF6RILRLGvrs6K5sbcVlrkMZgUMD/7dEJI5xWEo1KHRKhxgdifg81A9hKmlZ/I80r/+n1DPw==
-X-OriginatorOrg: bovensiepen.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9644ac46-f071-44d5-113d-08d7e0a5445a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 18:54:31.8388
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 66f9801c-3e1e-402f-a0bf-b23980f5c9a0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rucvxevw9VCc4aroM6yC4V/bi1iMUKrx+1gqeZNwz+ZQHDYOyFDhtIMrszvNSYdF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0P191MB0546
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WoqaC9TUMqqIOlla"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCccF3tmbmMWNh0nC5WRJ1_iPdj6f1oH1zYMSue_pFrXsPQ@mail.gmail.com>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix spelling error in the comment.
 
-Signed-off-by: Daniel Bovensiepen <daniel@bovensiepen.net>
----
- tools/lib/string.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--WoqaC9TUMqqIOlla
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index f645343815de..f73a1020fad9 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -41,7 +41,7 @@ void *memdup(const void *src, size_t len)
-  * @s: input string
-  * @res: result
-  *
-- * This routine returns 0 iff the first character is one of 'Yy1Nn0', or
-+ * This routine returns 0 if the first character is one of 'Yy1Nn0', or
-  * [oO][NnFf] for "on" and "off". Otherwise it will return -EINVAL.  Value
-  * pointed to by res is updated upon finding a match.
-  */
--- 
-2.17.1
+On Tue, Apr 14, 2020 at 08:20:23PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Liam and Mark,
 
+You might want to flag stuff like this in the subject line, I very
+nearly deleted this without opening it since most of the email I get
+about panfrost appears to be coming from me having sent patches rather
+than being relevant.
+
+> We are having an issue with Panfrost driver registering two times the
+> same regulator and giving an error when trying to create the debugfs
+> folder.
+
+> Could you clarify if it is allowed for a device to register two times
+> the same regulator?
+
+> I check Documentation/power/regulator/regulator.rst but this point is
+> not specified.
+
+We don't actively prevent it and I can't think what other than debugfs
+might run into problems (and that's just a warning) but it does seem
+like a weird thing to want to do and like it's pointing to some
+confusion in your code with two different parts of the device
+controlling the same supply independently.  What's the use case here?
+
+--WoqaC9TUMqqIOlla
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6WBxoACgkQJNaLcl1U
+h9AufQf/b6efImc7LvBHGoIjbHuK7UiFNve0LJJqjKwvdUwdpOp/m+WzrHWaNAvO
+5JNbL9U5h7T5oGh5A9AiToEysk1Fo7St5WLmbEJBXqD8Nhg9yQU/3OtCTgHi+2LP
+gx3nA1upkwg3OVkAt5RO1jX70kRXebrAPGy4FgGUyiLhNKnK6Nqf8FXnVzhy6Szl
+wH1/jGJlNphErY6s9t9nQLHSY8uS2h2AVvRHA8m5TJeGCGVcfr9iH8r/lLgfIWZI
+9SiBZkDSSPsqPOaUylAF2QPyGRx8hNQrJX0Ih4MFsuts0JW1YUO1iNTW6HGj7gL9
+8c4/u0KEtqVMiq2q6PnG7cfk2XlkNA==
+=+uTF
+-----END PGP SIGNATURE-----
+
+--WoqaC9TUMqqIOlla--
