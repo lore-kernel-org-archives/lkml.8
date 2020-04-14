@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C4BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64412C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D476C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4458820678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDQ545hg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JlQiyNVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391675AbgDNQag (ORCPT
+        id S2391678AbgDNQas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:30:36 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35340 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391616AbgDNQ3Q (ORCPT
+        Tue, 14 Apr 2020 12:30:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48528 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391618AbgDNQ3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 12:29:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586881747;
+        s=mimecast20190719; t=1586881748;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ansrsv2hxb0Ty4Mz0j8p11EC1rt+8+lNlWzTh4/A3Hw=;
-        b=EDQ545hgCMtJITFhLzlQgrnDiCTwpb6zs68jT6jKdtJ+JzGTS6b86LRsIsv/A59oWOeYqr
-        ozAKdUMwxtGViF3dH7jwHU9TmzEDktNZGR8RiuqPNF/9tdIEG6vi/VyZF2DQlavVo6XREo
-        G7lv92z8iu/ezJYZ0imYyNh6s7jaGvc=
+        bh=ZOl4gvwUQNfJhPnPSLsb7hfqt8/TBu9hAvFbDAoKS5Y=;
+        b=JlQiyNVsTthmQit6bYnOXki9QNtelBcYNc0E9jXnsbGovQ9DOqE3Ij4NnRImF5B29CnX80
+        SK4C5/4pisR/CaEeCNd3+dCd3e4VqxyG+JyEX+6jh49ThkfCUg9HuPCZM4qpoNXFlWPlV+
+        h9btEAKYN5kpezgsWXZKWvDa65HgDKE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-213-j6zz4NoGO5ebvhD9g9UlRg-1; Tue, 14 Apr 2020 12:29:05 -0400
-X-MC-Unique: j6zz4NoGO5ebvhD9g9UlRg-1
+ us-mta-251-tYp5-msVPTyiubAwKDOxYg-1; Tue, 14 Apr 2020 12:29:00 -0400
+X-MC-Unique: tYp5-msVPTyiubAwKDOxYg-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6349918FF68E;
-        Tue, 14 Apr 2020 16:29:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68EFD802560;
+        Tue, 14 Apr 2020 16:28:59 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A521D5DA66;
-        Tue, 14 Apr 2020 16:29:01 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AAFF85DA66;
+        Tue, 14 Apr 2020 16:28:58 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     live-patching@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 6/7] livepatch: Remove module_disable_ro() usage
-Date:   Tue, 14 Apr 2020 11:28:42 -0500
-Message-Id: <9f0d8229bbe79d8c13c091ed70c41d49caf598f2.1586881704.git.jpoimboe@redhat.com>
+Subject: [PATCH 3/7] livepatch: Prevent module-specific KLP rela sections from referencing vmlinux symbols
+Date:   Tue, 14 Apr 2020 11:28:39 -0500
+Message-Id: <9d572c8aa26776e878c14b219b65a360ec6a21cf.1586881704.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1586881704.git.jpoimboe@redhat.com>
 References: <cover.1586881704.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
@@ -63,45 +63,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With arch_klp_init_object_loaded() gone, and apply_relocate_add() now
-using text_poke(), livepatch no longer needs to use module_disable_ro().
+Prevent module-specific KLP rela sections from referencing vmlinux
+symbols.  This helps prevent ordering issues with module special section
+initializations.  Presumably such symbols are exported and normal relas
+can be used instead.
 
-The text_mutex usage can also be removed -- its purpose was to protect
-against module permission change races.
-
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- kernel/livepatch/core.c | 8 --------
- 1 file changed, 8 deletions(-)
+ kernel/livepatch/core.c | 39 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 11 deletions(-)
 
 diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 817676caddee..3a88639b3326 100644
+index af8f06382e43..817676caddee 100644
 --- a/kernel/livepatch/core.c
 +++ b/kernel/livepatch/core.c
-@@ -767,10 +767,6 @@ static int klp_init_object_loaded(struct klp_patch *=
-patch,
- 	struct klp_modinfo *info =3D patch->mod->klp_info;
+@@ -192,17 +192,20 @@ static int klp_find_object_symbol(const char *objna=
+me, const char *name,
+ }
 =20
- 	if (klp_is_module(obj)) {
--
--		mutex_lock(&text_mutex);
--		module_disable_ro(patch->mod);
--
- 		/*
- 		 * Only write module-specific relocations here
- 		 * (.klp.rela.{module}.*).  vmlinux-specific relocations were
-@@ -782,10 +778,6 @@ static int klp_init_object_loaded(struct klp_patch *=
-patch,
- 					    patch->mod->core_kallsyms.strtab,
- 					    info->symndx, patch->mod,
- 					    obj->name);
--
--		module_enable_ro(patch->mod, true);
--		mutex_unlock(&text_mutex);
--
+ static int klp_resolve_symbols(Elf64_Shdr *sechdrs, const char *strtab,
+-			       unsigned int symndx, Elf_Shdr *relasec)
++			       unsigned int symndx, Elf_Shdr *relasec,
++			       const char *sec_objname)
+ {
+-	int i, cnt, vmlinux, ret;
+-	char objname[MODULE_NAME_LEN];
+-	char symname[KSYM_NAME_LEN];
++	int i, cnt, ret;
++	char sym_objname[MODULE_NAME_LEN];
++	char sym_name[KSYM_NAME_LEN];
+ 	Elf_Rela *relas;
+ 	Elf_Sym *sym;
+ 	unsigned long sympos, addr;
++	bool sym_vmlinux;
++	bool sec_vmlinux =3D !strcmp(sec_objname, "vmlinux");
+=20
+ 	/*
+-	 * Since the field widths for objname and symname in the sscanf()
++	 * Since the field widths for sym_objname and sym_name in the sscanf()
+ 	 * call are hard-coded and correspond to MODULE_NAME_LEN and
+ 	 * KSYM_NAME_LEN respectively, we must make sure that MODULE_NAME_LEN
+ 	 * and KSYM_NAME_LEN have the values we expect them to have.
+@@ -223,20 +226,33 @@ static int klp_resolve_symbols(Elf64_Shdr *sechdrs,=
+ const char *strtab,
+ 			return -EINVAL;
+ 		}
+=20
+-		/* Format: .klp.sym.objname.symname,sympos */
++		/* Format: .klp.sym.sym_objname.sym_name,sympos */
+ 		cnt =3D sscanf(strtab + sym->st_name,
+ 			     ".klp.sym.%55[^.].%127[^,],%lu",
+-			     objname, symname, &sympos);
++			     sym_objname, sym_name, &sympos);
+ 		if (cnt !=3D 3) {
+ 			pr_err("symbol %s has an incorrectly formatted name\n",
+ 			       strtab + sym->st_name);
+ 			return -EINVAL;
+ 		}
+=20
++		sym_vmlinux =3D !strcmp(sym_objname, "vmlinux");
++
++		/*
++		 * Prevent module-specific KLP rela sections from referencing
++		 * vmlinux symbols.  This helps prevent ordering issues with
++		 * module special section initializations.  Presumably such
++		 * symbols are exported and normal relas can be used instead.
++		 */
++		if (!sec_vmlinux && sym_vmlinux) {
++			pr_err("invalid access to vmlinux symbol '%s' from module-specific li=
+vepatch relocation section",
++			       sym_name);
++			return -EINVAL;
++		}
++
+ 		/* klp_find_object_symbol() treats a NULL objname as vmlinux */
+-		vmlinux =3D !strcmp(objname, "vmlinux");
+-		ret =3D klp_find_object_symbol(vmlinux ? NULL : objname,
+-					     symname, sympos, &addr);
++		ret =3D klp_find_object_symbol(sym_vmlinux ? NULL : sym_objname,
++					     sym_name, sympos, &addr);
  		if (ret)
  			return ret;
- 	}
+=20
+@@ -301,7 +317,8 @@ int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *s=
+echdrs,
+ 		if (strcmp(objname ? objname : "vmlinux", sec_objname))
+ 			continue;
+=20
+-		ret =3D klp_resolve_symbols(sechdrs, strtab, symndx, sec);
++		ret =3D klp_resolve_symbols(sechdrs, strtab, symndx, sec,
++					  sec_objname);
+ 		if (ret)
+ 			break;
+=20
 --=20
 2.21.1
 
