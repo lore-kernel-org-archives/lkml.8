@@ -2,120 +2,100 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D492BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E04C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B710F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4279820768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WnC7IQHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502208AbgDNMsY (ORCPT
+        id S2502220AbgDNMth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:48:24 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:60679 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502184AbgDNMrp (ORCPT
+        Tue, 14 Apr 2020 08:49:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36245 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2502177AbgDNMtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:47:45 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A6D5220000E;
-        Tue, 14 Apr 2020 12:47:41 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 14:47:41 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu.Beznea@microchip.com
-Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
-Message-ID: <20200414124741.GJ34509@piout.net>
-References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
- <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
- <20200410222658.GB3628@piout.net>
- <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
- <20200413104652.GE3628@piout.net>
- <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
- <20200414111600.GE34509@piout.net>
- <a07d841e-efa9-6c01-69e2-0ed33f9759c5@microchip.com>
+        Tue, 14 Apr 2020 08:49:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586868573; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=FEC6UXkgrlVz/1ReSPT9a5+LzjnDG2h4x4E5PpkB6Xk=;
+ b=WnC7IQHnoz0IjCTfkCHGzbydU6N3i+4ZuxoixaEvh2+bRbiNyYD5ZmN457RKWSt82lWHHcDy
+ ZDJysKEPtwwbSDnXQEN0kFmOYpxX4zI2C6vNO/L/iH3Mo7RAysduxnPSf4zDM+Nb+H7PzVK4
+ uKJTdTiPDN4jt1qdnuDcVztXqyo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e95b157.7fc2ff541500-smtp-out-n04;
+ Tue, 14 Apr 2020 12:49:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 25401C44788; Tue, 14 Apr 2020 12:49:27 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 265FEC433CB;
+        Tue, 14 Apr 2020 12:49:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 265FEC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a07d841e-efa9-6c01-69e2-0ed33f9759c5@microchip.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtw88: avoid unused function warnings
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200408185413.218643-1-arnd@arndb.de>
+References: <20200408185413.218643-1-arnd@arndb.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Chin-Yen Lee <timlee@realtek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Brian Norris <briannorris@chromium.org>,
+        Chris Chiu <chiu@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200414124927.25401C44788@smtp.codeaurora.org>
+Date:   Tue, 14 Apr 2020 12:49:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/04/2020 12:13:46+0000, Claudiu.Beznea@microchip.com wrote:
-> 
-> 
-> On 14.04.2020 14:16, Alexandre Belloni wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On 14/04/2020 08:42:08+0000, Claudiu.Beznea@microchip.com wrote:
-> >>> Why would one use the RTT while the RTC is far superior?
-> >>
-> >> I didn't enabled this for a particular use case, but: couldn't this be used
-> >> by some user that wants to generate multiple alarms? from multiple RTCs?
-> >>
-> > 
-> > I very much doubt that as Linux is able to properly multiplex alarms and
-> > basically, the only one we are interested in is actually wakeup.
-> 
-> I think you can use the wakealarm sysfs exported file to prepare an alarm
-> and take user space actions based on that without being suspended.
-> 
-> > 
-> >> Moreover, this IP's counter has the possibility of being clocked at 1Hz.
-> >> Couldn't this minimize the power consumption while being in a power saving
-> >> mode?
-> >>
-> > 
-> > And that 1Hz clock is coming from the RTC so using the RTC is
-> > definitively consuming less power.
-> 
-> Datasheet specifies this: "Configuring the RTPRES field value to 0x8000
-> (default value) corresponds to feeding the real-time counter with a
-> 
-> 1Hz signal (if the slow clock is 32.768 kHz)."
-> 
-> So, it is not the RTC, it is the slow clock divided by 32768.
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-This is not what you described previously, using RTPRES means running
-the RTT at 32kHz. This is exactly what happens with the RTC but you get
-the added clock calibration circuitry that is probably not drawing to
-much power but the added consumption of the configurable prescaler
-versus the static prescaler of the RTC is probably similar.
+> The rtw88 driver defines emtpy functions with multiple indirections
+> but gets one of these wrong:
+> 
+> drivers/net/wireless/realtek/rtw88/pci.c:1347:12: error: 'rtw_pci_resume' defined but not used [-Werror=unused-function]
+>  1347 | static int rtw_pci_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~
+> drivers/net/wireless/realtek/rtw88/pci.c:1342:12: error: 'rtw_pci_suspend' defined but not used [-Werror=unused-function]
+>  1342 | static int rtw_pci_suspend(struct device *dev)
+> 
+> Better simplify it to rely on the conditional reference in
+> SIMPLE_DEV_PM_OPS(), and mark the functions as __maybe_unused to avoid
+> warning about it.
+> 
+> I'm not sure if these are needed at all given that the functions
+> don't do anything, but they were only recently added.
+> 
+> Fixes: 44bc17f7f5b3 ("rtw88: support wowlan feature for 8822c")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Using RTC1HZ would be driving the RTT at 1Hz.
+Patch applied to wireless-drivers.git, thanks.
 
-> > But this is very unlikely to happen because this would be limited to a
-> > single board device tree instead of impact every sam9x60 based boards.
-> 
-> Very unlikely but a having a patch with diff like this:
-> 
-> +&gpbr {
-> +     status = "okay";
-> +};
-> +
-> +&rtt {
-> +     atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-> +     status = "okay";
-> +};
-> +
-> 
-> and reverting it may affect the other users of gpbr in sam9x60ek.dts.
-> 
-
-Again, this affects only sam9x60ek.dts instead of possibly multiple DTs
-that may be out of tree. So the risk of doing that is null.
+7dc7c41607d1 rtw88: avoid unused function warnings
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+https://patchwork.kernel.org/patch/11480657/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
