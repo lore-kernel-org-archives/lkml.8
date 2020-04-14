@@ -6,157 +6,166 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB759C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A6D2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD962054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 23:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MqZrnHNZ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qkQKYtZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634330AbgDNW6e (ORCPT
+        id S2634350AbgDNXEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634321AbgDNW62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:58:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52153C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:58:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id v23so662577pfm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EF11WfQVnD9UTOZQHwLCz7V4fPkuL/l2xmqk1xxRd88=;
-        b=MqZrnHNZ7XofH+r983WLDOJb7uvqqwBHnwLjioaZAViwpvOMBOOh3c1mvmzN4tg5Ao
-         0MSZjzPNc53ywbOHV4rpEpGt/dVAwarzcMCW1P4ziNkDNAVl8FTrgU8adOTXA7F8xxSK
-         e44q4agun5bEPcUgwk01nbBPH4Hs3cNqTr7ZUTranDNkOMKBCqX6pkks95GrsPEWTkmp
-         Z/vRdRFfDfwp67oevd8oouTuL0AKu6+qscORta066PANcNTjqLi5RmZyf+dUbA48847j
-         TCrsM5mE8GqdkA2+1bf7ePi8p+Vu+95k74Fvw6qlUO3In8j30isooIeaLzH37Y7UOAHn
-         v13w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EF11WfQVnD9UTOZQHwLCz7V4fPkuL/l2xmqk1xxRd88=;
-        b=f9iNoxGZ8T3u1e9Z/zXgUmOeLbsiqsrTnPN2RaGnugNt6ERXtVr4OI3R81MaffdtqL
-         9GRl2OgRlPWgqxGFjDplDwJ+3NYNkxNa+QwFLKgweQ7XoPcn6jEHzib+5kXy3DXp3uw/
-         YRxwEUQswd2QvTyuhGWiGyeU/7G/DI8YD2hV8QRz7bcYlnEreh126ink03UJwJiTkCoB
-         OgW1/q2GoP7rUreheWSaoPzm4+up454MdvBdJ5oRoSIoUbmw+HdDkdfzJtq2LWlWe3c4
-         fmjXBerF0gl2AtlCR53zslZ+MENOSZbNd+cuvQWOymem+i2rnDHjfMtobAVcnUYAxfxQ
-         8sbA==
-X-Gm-Message-State: AGi0PuaUWWLkjGsDjefyBy9p+jhQJ2RkWEjiX1L0632byTMCZIYlWWI2
-        CnroyjF7I8RrwPlD8iF8KCem8NmibCg=
-X-Google-Smtp-Source: APiQypI6ohmT7OqQbKuTQ4od+84Rmx0PrnmhQsFTwpM7mPJJvW2AxQJj3rO69QWEz9/bt/2Vmic6CQ==
-X-Received: by 2002:aa7:95ae:: with SMTP id a14mr23692405pfk.164.1586905106770;
-        Tue, 14 Apr 2020 15:58:26 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i190sm10122359pfc.119.2020.04.14.15.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 15:58:26 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 15:58:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org, kernel@vivo.com, agross@kernel.org,
-        ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3,0/3] drivers: rpmon: new driver Remote Processor
- Monitor
-Message-ID: <20200414225823.GH892431@yoga>
-References: <20200412112405.24116-1-wenhu.wang@vivo.com>
- <20200414035949.107225-1-wenhu.wang@vivo.com>
+        Tue, 14 Apr 2020 19:04:49 -0400
+Received: from mail-eopbgr20065.outbound.protection.outlook.com ([40.107.2.65]:62670
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731157AbgDNXEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 19:04:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PeHux+xRrktFx3EmRm/IHrrE4m5fUCHWgFnarV3JyleAgXOEcgTPi+XnLEnC9Axuox2VOo2IKfhYdQLs6FmQIPk+3jTkf7Xq02NCoheuTIKdQUsruBLtxLu2DH2PSbplAfc0Sxut5RzHEv9J+mCCf/lbPQdYEqD7vMQ4/2XOSHgN01FN1Fknx1K2fz6iKc9LZWcLTeTWNbdV5T10lNsVxXSFFGxHiBGcCpjwOBOCEonOPVl8USSUx4HtzYC3v9SHQy4VCgW+s7rKe3x46BXOUTULnB82LFWBYxrlfQf6SjRDye85yLArQDr5HsjphyraYFgAg8t/Ct57imJIuZlbSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xk3eyvmEu0cGdo9crw47iVwBRhWCgTqTQ57qHpPk2Ho=;
+ b=URF2RfftT8aX1X0T7nI9rRdgJzI5OhjXigmHOsufGLVuQaaHJ6s3o4aE38HV8HJUjy/jY10ck5XGm5QGFV2g+UwvnUao4vZ9PnaMUXDG7F033vJe0xNyjqcS82HdseJHc6OERPux2GF7l4olodOQe6yfuL5F0u+ngBEkGwQXX+5NXO9ptB1ZjTmMtFRYo4e4g3KUHsAzle3yt7276dfjiwzhQwI9qLVX253SiF8Ke/vWeqHVKJSsr5xLbnypmON5HcDf63IeEBz7Ud/OKHwPQQtKOQFIf1uZiMeTuvmpqpoc2DdsF6Ni4ewERmgoBJM7trZyBqnzNqDTkZEyb8GJQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xk3eyvmEu0cGdo9crw47iVwBRhWCgTqTQ57qHpPk2Ho=;
+ b=qkQKYtZSSpljO7VVk1AzheuyTuTLtSZdgEgADGD2J+FqKgYWbx2+jhvqOKTavLZ3BqIBw3BzRCUl9bp2Tz8aER2uibuhGgo0w8w63/e0/rxB4PzbnaO/SZIHSNm/2AJECaENP9sjR0edd4cvCMN4yqrxxMKafKWMvmIzIrJgG5k=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2920.eurprd04.prod.outlook.com (2603:10a6:4:9d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
+ 2020 23:04:42 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 23:04:41 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: RE: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
+Thread-Topic: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
+Thread-Index: AQHWEWDF3qNLhxLm4UOCh+3sub5JH6h4otcAgACcRgA=
+Date:   Tue, 14 Apr 2020 23:04:41 +0000
+Message-ID: <DB6PR0402MB2760232F4EDEB9D9BE42F71988DA0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <1586760548-23046-1-git-send-email-peng.fan@nxp.com>
+ <20200414134419.GE30676@dragon>
+In-Reply-To: <20200414134419.GE30676@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b40e0e1d-2a15-441e-b8e9-08d7e0c83729
+x-ms-traffictypediagnostic: DB6PR0402MB2920:|DB6PR0402MB2920:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB292037454EEC66F6F387388A88DA0@DB6PR0402MB2920.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(396003)(39860400002)(136003)(346002)(83080400001)(52536014)(66946007)(33656002)(55016002)(76116006)(9686003)(2906002)(54906003)(966005)(7696005)(6506007)(64756008)(66476007)(316002)(66556008)(45080400002)(26005)(66446008)(186003)(44832011)(478600001)(5660300002)(8936002)(86362001)(71200400001)(81156014)(6916009)(4326008)(8676002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tiZqzEPKuU1A8JPLsRtL3bhNeZtw+Pz/YDGXcJFj2cYHMaYGWybMtcwDY9Q3ovZuZq3jMVdW1N7dh5SFfm2E5VoMzbrH1SitlG6IKBrqK8pxxRlhJ75T+YkTluXlxqcQEnF2gcUFnYLaU27rWIk1X2Z5tcaWSPKoYSDbAN/2wy0kia3ZURadXilSMXj5vKtFW7v9Wrz5QZ21RohuitSBlBXBSzuEXqgl8cFyWtdaXS6a30mWbDSrbDzwRhdLa8Lbus3a96OMbmFDbBBBOgU2G9n0ZrHfLYT8xuUUjFRE/fIBV+FUPTX8/EwMUYhNRCJ55yvSuoQqgSJ500psTeju2KzA7AezyRTlqX/qA03w9k/ljSRKX1WSknlDvLzU166Y6pPkmSm8eqmkYddHzS0UHz7upvRF5A8uR3lYW6vTIpVOUThkCatJRuFy9rfaiTFhSBPdY2WcSxRW41goEshtDaLD7rGh0odICLfNJ5H68i4HXoXyRb8GsQAXbt0UKBow
+x-ms-exchange-antispam-messagedata: 2t2oMZsLzcqr2vAj4WOo65XKb91AQ4T9cxu95LT+HBAplE8HGKM6bZN987SdtEmnQSVCzTiyoe0wXCckhq0OzG8DWGyYkBYMQ9r1YvwvZ8R8edyTkH0xeoe0DlbFPQoai5c876z0S6plnwQ/HqLvog==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414035949.107225-1-wenhu.wang@vivo.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b40e0e1d-2a15-441e-b8e9-08d7e0c83729
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 23:04:41.8977
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wOQvS1JgNaJ0jyQX4ebDOgltPYk26EUvkkPKwyyzBWGoc9Pm7+ksRDtGR5Gz6i99cUepH+SkTlRp87lAqf7LoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2920
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13 Apr 20:59 PDT 2020, Wang Wenhu wrote:
+> Subject: Re: [PATCH V2 0/4] ARM: imx7ulp: support HSRUN mode
+>=20
+> On Mon, Apr 13, 2020 at 02:49:04PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > V2:
+> >  Fix dt_bindings check
+>=20
+> Confusing.  The series posted on Mar. 16 was already numbered v3.  Now,
+> it goes back to v2.  You should at least have a note to explain how they =
+are
+> related.
 
-> RPMON is a driver framework. It supports remote processor monitor
-> from user level. The basic components are a character device
-> with sysfs interfaces for user space communication and different
-> kinds of message drivers introduced modularly, which are used to
-> communicate with remote processors.
-> 
-> As for user space, one can get notifications of different events
-> of remote processors, like their registrations, through standard
-> file read operation of the file descriptors related to the exported
-> character devices. Actions can also be taken into account via
-> standard write operations to the devices. Besides, the sysfs class
-> attributes could be accessed conveniently.
-> 
-> Message drivers act as engines to communicate with remote processors.
-> Currently RPMON_QMI is available which uses QMI infrastructures
-> on Qualcomm SoC Platforms.
-> 
-> RPMON_QMI implements a kind of communication routine for RPMON to
-> communicate with remote processors through QMI infrastructure.
-> RPMON_QMI itself is designed as a modular framework that would
-> introduce different kind of message sets which are binding to
-> different services.
-> 
-> RPMON_QMI creates a device of rpmon_device type for each remote
-> processor endpoint. All the endpoint devices share an unique set
-> of QMI suite.
-> 
-> RPMON_QMI_MSG_V01 implements a RPMON_QMI message set for connection check.
-> RPMON_QMI defines its message types modularly. Each rpmon service
-> binds to a message set and introduced as a module. This version 1.0
-> message set could be used for connection checking of remote processors.
-> 
-> RPMON_QMI messages depend on QCOM_QMI_HELPERS and should be updated
-> together with QMI related modules.
-> 
+Sorry, this should be v4. I format patch with wrong subject prefix.
+Will post this patchset again with v4.
 
-Hi Wang,
+Thanks,
+Peng.
 
-What additional transports do you expect for this to be a framework and
-not just a driver? Why not implement the rpmon client directly in
-userspace?
-
-Regards,
-Bjorn
-
-> Changes since v1:
->  - Addressed review comments from Randy
-> Changes since v2:
->  - Added Cc list
->  - Commit log typo fixing
->  - Use the ARRAY_SIZE instead of calculations of multiple sizeof()
->  - Use micros for qmi message tly_type fields
-> 
-> Wang Wenhu (3):
->   driver: rpmon: new driver Remote Processor Monitor
->   driver: rpmon: qmi message version 01
->   driver: rpmon: add rpmon_qmi driver
-> 
->  drivers/Kconfig                  |   2 +
->  drivers/Makefile                 |   1 +
->  drivers/rpmon/Kconfig            |  54 ++++
->  drivers/rpmon/Makefile           |   3 +
->  drivers/rpmon/rpmon.c            | 506 +++++++++++++++++++++++++++++++
->  drivers/rpmon/rpmon_qmi.c        | 431 ++++++++++++++++++++++++++
->  drivers/rpmon/rpmon_qmi.h        |  76 +++++
->  drivers/rpmon/rpmon_qmi_msg_v1.c | 258 ++++++++++++++++
->  include/linux/rpmon.h            |  68 +++++
->  9 files changed, 1399 insertions(+)
->  create mode 100644 drivers/rpmon/Kconfig
->  create mode 100644 drivers/rpmon/Makefile
->  create mode 100644 drivers/rpmon/rpmon.c
->  create mode 100644 drivers/rpmon/rpmon_qmi.c
->  create mode 100644 drivers/rpmon/rpmon_qmi.h
->  create mode 100644 drivers/rpmon/rpmon_qmi_msg_v1.c
->  create mode 100644 include/linux/rpmon.h
-> 
-> -- 
-> 2.17.1
-> 
+>=20
+> Shawn
+>=20
+> >
+> > This is a splited part from V2:
+> > ARM: imx7ulp: add cpufreq using cpufreq-dt
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
+c
+> >
+> hwork.kernel.org%2Fcover%2F11390589%2F&amp;data=3D02%7C01%7Cpeng.f
+> an%40n
+> >
+> xp.com%7C5d5665f577bc4175d56108d7e079f573%7C686ea1d3bc2b4c6fa92
+> cd99c5c
+> >
+> 301635%7C0%7C1%7C637224686727427611&amp;sdata=3DLP0xeyGrCzZcR7U
+> ruDnPqAFT
+> > qzFgdj68hs41%2F5eiWrc%3D&amp;reserved=3D0
+> > Nothing changed
+> >
+> >
+> > The original V2 patchset is to support i.MX7ULP cpufreq, still waiting
+> > the virtual clk being accepted. so to decouple, this patchset only
+> > takes the run mode part.
+> >
+> > Peng Fan (4):
+> >   dt-bindings: fsl: add i.MX7ULP PMC binding doc
+> >   ARM: dts: imx7ulp: add pmc node
+> >   ARM: imx: imx7ulp: support HSRUN mode
+> >   ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
+> >
+> >  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32
+> ++++++++++++++++++++++
+> >  arch/arm/boot/dts/imx7ulp.dtsi                     | 10 +++++++
+> >  arch/arm/mach-imx/common.h                         |  1 +
+> >  arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14
+> ++++++++--
+> >  arch/arm/mach-imx/pm-imx7ulp.c                     | 25
+> +++++++++++++++++
+> >  5 files changed, 79 insertions(+), 3 deletions(-)  create mode 100644
+> > Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+> >
+> > --
+> > 2.16.4
+> >
