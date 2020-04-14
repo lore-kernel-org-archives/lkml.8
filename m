@@ -2,113 +2,106 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6FFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7E5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A7D2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S5HfZ0Q5"
+	by mail.kernel.org (Postfix) with ESMTP id 1B81D2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407018AbgDNIKD (ORCPT
+        id S2407029AbgDNIKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406992AbgDNIJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:09:13 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E264C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:09:12 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r7so11426498ljg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:09:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BH97faggmx227cgHpqUW9JiWE/eaQpsgM1AKIb1xoFQ=;
-        b=S5HfZ0Q5do+ZQxO2izw86Wx99lJRZBoj9bO6GRsr6lRMbs7Zis4y7ox6OxZ1fIztwm
-         qYcpGxmBntky93DfrWAuFE8EDrtGsG+alRgjrwcEr4D7YkUYe4HFCKr0qhGv9QYFI1fq
-         1RZX6r+CnUrUgHQ8TI7Xcre5arBYpcZAyOIoGmoHPJkdOi/Fe8MS2rDY7K7MAiU6T7oK
-         R77uuqj+NDzQCY+8tqAu7pqhXCNs21XyLBEI41F1rXwv+TKgSVZQha/NjZv0iuzEVPvy
-         00d6h7tU5vJzQqtHdRcRRC3ZdMYE/GXKHsvQeEpzn8fxHjmwuJzRGxFX831SibCGwXEk
-         MqSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BH97faggmx227cgHpqUW9JiWE/eaQpsgM1AKIb1xoFQ=;
-        b=K82H/PLkIOLXwBH4FuJCXjmp5LoImfSyAtlohK/NvfMusfMnjkXiO65sbG5EOWpI1b
-         bRj91kCDL1W9fjuqFFsge/m8NAb+rswJJ3ju1S2wKGMeUmtu7zVFm9MF/EkVtAqNyM5q
-         RlA1PwUXI9u37P2Wk3sKGz2ciTc44MCPfpJky7vQBUMjdg6pjPBzXxidWn5ZsU621/cd
-         NPjEBuHdY3ErTTyDkcqiBMYOE6Eunt5vgPPj9ZhHjVfQKGimuw/ioJl+UjZ3KOcNbzfj
-         HUYtTK7K+IQMhVzesJFPvoitQgHHnI4NVsRNH5eOmwyHoHyP7R9DtTvDGv3vwqsdWVd/
-         JMKA==
-X-Gm-Message-State: AGi0PuaHPPti+Zr1VeiRnKWzDEFlyuUBzhf0Yp1j/lx3wnm3wsdibGnS
-        XN1zpV/JRpEl6HsBKkHGkrdEehM7vSCp/fobgWIQOw==
-X-Google-Smtp-Source: APiQypIIk2cLXHtiC8MnuNrPh7up9FX+y9rMvbK44VZBdB7km9+JE7XQ6tW30FdFYhEhIsN78Q87x1WEPGMi4vfe+OM=
-X-Received: by 2002:a2e:9d98:: with SMTP id c24mr12075706ljj.137.1586851750461;
- Tue, 14 Apr 2020 01:09:10 -0700 (PDT)
+        Tue, 14 Apr 2020 04:10:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2368 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406964AbgDNIJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:09:50 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0FED587026F4E7C56769;
+        Tue, 14 Apr 2020 16:09:43 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Apr 2020
+ 16:09:37 +0800
+Subject: Re: [PATCH] irqchip/gic-v4.1: Disallow setting affinity for virtual
+ SGIs
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <wanghaibin.wang@huawei.com>,
+        Nianyao Tang <tangnianyao@huawei.com>
+References: <20200411091032.661-1-yuzenghui@huawei.com>
+ <86pnces6kn.wl-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <e0c86d66-e8d4-99ba-917f-c6ba75181e03@huawei.com>
+Date:   Tue, 14 Apr 2020 16:09:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <1586779281-103078-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1586779281-103078-1-git-send-email-zou_wei@huawei.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 14 Apr 2020 10:08:58 +0200
-Message-ID: <CAKfTPtDtJo2Vnziy9cLGyORqmN-1u+Mf=jKZmeKR0yMuHz1kuA@mail.gmail.com>
-Subject: Re: [PATCH-next] sched/topology: use true, false for bool variable
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <86pnces6kn.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 at 13:55, Zou Wei <zou_wei@huawei.com> wrote:
->
-> Fixes coccicheck warning:
->
-> kernel/sched/topology.c:224:3-22: WARNING: Assignment of 0/1 to bool variable
-> kernel/sched/topology.c:226:3-22: WARNING: Assignment of 0/1 to bool variable
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Hi Marc,
 
-You will probably be interested by this thread
-https://lkml.org/lkml/2020/3/27/785
+On 2020/4/11 17:41, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On Sat, 11 Apr 2020 10:10:32 +0100,
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
+>>
+>> Running a guest on the GICv4.1-implemented board, we will get the
+>> following warning:
+>>
+>> [   59.062120] genirq: irq_chip GICv4.1-sgi did not update eff. affinity mask of irq 46
+>>
+>> It may be caused by irqbalance (or other userspace tools) which tries to
+>> change the affinity of virtual SGIs on the host. One way to "fix" it is
+>> to update the effective_affinity value in irq_set_affinity callback. But
+>> as the comment above says, "There is no notion of affinity for virtual
+>> SGIs, at least not on the host", doing so only makes things confusing.
+>>
+>> Given the vSGIs are private to the specified vPE, changing the affinity
+>> on host is actually meaningless and achieves nothing. Let's just forbid
+>> it.
+>>
+>> Reported-by: Nianyao Tang <tangnianyao@huawei.com>
+>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>> ---
+>>
+>> Hi Marc,
+>>
+>> This just restores the behavior of your v5 [*]. I wonder that what's the
+>> reason to change it to 'return IRQ_SET_MASK_OK' in v6? What I've missed
+>> here?
+>>
+>> [*] https://lore.kernel.org/kvm/20200304203330.4967-9-maz@kernel.org/
+> 
+> Not allowing the affinity move results in the kernel screaming when
+> playing with CPU hotplug (it really wants to move the interrupt
+> around). Which is why I dropped the -EINVAL, therefore introducing
+> another bug. I fixed it with this patch[1], which I was planning to
+> post after -rc1.
 
-> ---
->  kernel/sched/topology.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 8344757b..e4d6464 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -221,9 +221,9 @@ int sched_energy_aware_handler(struct ctl_table *table, int write,
->                 state = static_branch_unlikely(&sched_energy_present);
->                 if (state != sysctl_sched_energy_aware) {
->                         mutex_lock(&sched_energy_mutex);
-> -                       sched_energy_update = 1;
-> +                       sched_energy_update = true;
->                         rebuild_sched_domains();
-> -                       sched_energy_update = 0;
-> +                       sched_energy_update = false;
->                         mutex_unlock(&sched_energy_mutex);
->                 }
->         }
-> --
-> 2.6.2
->
+I didn't realize the CPU hotplug case. Please take your approach to
+fix it. (As mentioned, this was also one way I planned to fix it.)
+
+> 
+> Let me know what you think
+
+TBH, I'm not very familiar with the IRQ core behavior on CPU hotplug.
+I will read further and comment on your formal patch (please cc me),
+but now spinning on some other things...
+
+
+Thanks,
+Zenghui
+
