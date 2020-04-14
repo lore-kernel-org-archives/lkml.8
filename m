@@ -2,87 +2,167 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434ACC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1956E20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dXevArOi"
+	by mail.kernel.org (Postfix) with ESMTP id 38BD52064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 10:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438548AbgDNKn4 (ORCPT
+        id S2438560AbgDNKoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:43:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48405 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2438505AbgDNKm0 (ORCPT
+        Tue, 14 Apr 2020 06:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438539AbgDNKne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:42:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586860945;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XIJFty4A7/x7MXrExzV9BBal3iymPjuyPXQKR8dThbY=;
-        b=dXevArOiDz132TppQ4BiE2CkHKWJyc4ucjfNVyPstcK8r68VlJpiplZexQW5EvAUHv+JKj
-        OeqQ9Dtqapia8jGzhuXlkGWr/60IUEUOJ2YF5UQGwkCWY++rATsDP4JcKEtETaNz99wEIP
-        7cHGCqFDcyFQaTl8NB1cEY98Ja5uMsY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-119-z82y5mbfOcmUvhsWElBrAA-1; Tue, 14 Apr 2020 06:42:22 -0400
-X-MC-Unique: z82y5mbfOcmUvhsWElBrAA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10154802560;
-        Tue, 14 Apr 2020 10:42:21 +0000 (UTC)
-Received: from ovpn-113-222.ams2.redhat.com (ovpn-113-222.ams2.redhat.com [10.36.113.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A13F6092D;
-        Tue, 14 Apr 2020 10:42:18 +0000 (UTC)
-Message-ID: <66c3db9b1978a384246c729034a934cc558b75a6.camel@redhat.com>
-Subject: Re: WARNING in hwsim_new_radio_nl
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     syzbot <syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com>,
-        davem@davemloft.net, johannes@sipsolutions.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Date:   Tue, 14 Apr 2020 12:42:17 +0200
-In-Reply-To: <000000000000bb471d05a2f246d7@google.com>
-References: <000000000000bb471d05a2f246d7@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 14 Apr 2020 06:43:34 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFE0C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 03:43:34 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 260612A186E
+Received: by earth.universe (Postfix, from userid 1000)
+        id E27743C08C7; Tue, 14 Apr 2020 12:43:30 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 12:43:30 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adam Honse <calcprogrammer1@gmail.com>
+Subject: Re: [PATCH] i2c: piix4: Add second SMBus for X370/X470/X570
+Message-ID: <20200414104330.k46jemtlkmxdrm62@earth.universe>
+References: <20200413150634.474842-1-sebastian.reichel@collabora.com>
+ <20200414094158.089dd5ea@endymion>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g7bibnhk6q2xn6m4"
+Content-Disposition: inline
+In-Reply-To: <20200414094158.089dd5ea@endymion>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git master
 
-I don't see why the bisection pointed to the MPTCP commit ?!? the
-following patch should address the issue.
----
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 7fe8207db6ae..2082abdb08d4 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -635,7 +635,8 @@ static const struct nla_policy hwsim_genl_policy[HWSIM_ATTR_MAX + 1] = {
-        [HWSIM_ATTR_SUPPORT_P2P_DEVICE] = { .type = NLA_FLAG },
-        [HWSIM_ATTR_USE_CHANCTX] = { .type = NLA_FLAG },
-        [HWSIM_ATTR_DESTROY_RADIO_ON_CLOSE] = { .type = NLA_FLAG },
--       [HWSIM_ATTR_RADIO_NAME] = { .type = NLA_STRING },
-+       [HWSIM_ATTR_RADIO_NAME] = { .type = NLA_STRING,
-+                                   .len = NL80211_WIPHY_NAME_MAXLEN },
-        [HWSIM_ATTR_NO_VIF] = { .type = NLA_FLAG },
-        [HWSIM_ATTR_FREQ] = { .type = NLA_U32 },
-        [HWSIM_ATTR_TX_INFO_FLAGS] = { .type = NLA_BINARY },
+--g7bibnhk6q2xn6m4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
+
+On Tue, Apr 14, 2020 at 09:41:58AM +0200, Jean Delvare wrote:
+> On Mon, 13 Apr 2020 17:06:34 +0200, Sebastian Reichel wrote:
+> > The second interface can be found on X370, X470 and X570 according
+> > to the bugzilla entry. I only tested with X570 on an ASRock X570
+> > Taichi:
+> >=20
+> > $ lspci -nnv -d 1022:790b
+> > 00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus Cont=
+roller [1022:790b] (rev 61)
+> > 	Subsystem: ASRock Incorporation FCH SMBus Controller [1849:ffff]
+> > 	Flags: 66MHz, medium devsel
+> > 	Kernel driver in use: piix4_smbus
+> > 	Kernel modules: i2c_piix4, sp5100_tco
+> >=20
+> > Before the patch:
+> >=20
+> > $ i2cdetect -l | grep PIIX4
+> > i2c-1	unknown   	SMBus PIIX4 adapter port 2 at 0b00	N/A
+> > i2c-0	unknown   	SMBus PIIX4 adapter port 0 at 0b00	N/A
+> >=20
+> > After the patch:
+> >=20
+> > $ i2cdetect -l | grep PIIX4
+> > i2c-1	unknown   	SMBus PIIX4 adapter port 2 at 0b00	N/A
+> > i2c-2	unknown   	SMBus PIIX4 adapter port 1 at 0b20	N/A
+> > i2c-0	unknown   	SMBus PIIX4 adapter port 0 at 0b00	N/A
+> >=20
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D202587
+> > Reported-by: Adam Honse <calcprogrammer1@gmail.com>
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > ---
+> > Hi,
+> >=20
+> > The Bugzilla entry contains a second change, which reduces the timeouts
+> > for quicker operation. I did not include that change, since I do not kn=
+ow
+> > if this is a good idea for all devices supported by this driver. In any
+> > case it should be a separate patch. Let's get the interface working for
+> > now.
+> >=20
+> > -- Sebastian
+> > ---
+> >  drivers/i2c/busses/i2c-piix4.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-pi=
+ix4.c
+> > index 30ded6422e7b..3e89143a0ecf 100644
+> > --- a/drivers/i2c/busses/i2c-piix4.c
+> > +++ b/drivers/i2c/busses/i2c-piix4.c
+> > @@ -976,9 +976,11 @@ static int piix4_probe(struct pci_dev *dev, const =
+struct pci_device_id *id)
+> >  		}
+> >  	}
+> > =20
+> > -	if (dev->vendor =3D=3D PCI_VENDOR_ID_AMD &&
+> > -	    dev->device =3D=3D PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
+> > -		retval =3D piix4_setup_sb800(dev, id, 1);
+> > +	if (dev->vendor =3D=3D PCI_VENDOR_ID_AMD) {
+> > +		if (dev->device =3D=3D PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
+> > +		    dev->device =3D=3D PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
+> > +			retval =3D piix4_setup_sb800(dev, id, 1);
+> > +		}
+> >  	}
+> > =20
+> >  	if (retval > 0) {
+>=20
+> Adam just sent pretty much the same patch:
+>=20
+> https://patchwork.ozlabs.org/project/linux-i2c/patch/20200410204843.3856-=
+1-calcprogrammer1@gmail.com/
+>=20
+> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+>=20
+> I'll leave it to Wolfram which one he wants to apply.
+
+Ok, I wasn't aware of that and thought this patch was forgotten. In
+that case Adam should receive all the credits of course. Feel free
+to take over anything usable from my commit message. The patch from
+Adam is
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+Thanks,
+
+-- Sebastian
+
+--g7bibnhk6q2xn6m4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6Vk8sACgkQ2O7X88g7
++pqQ9A/7BwSHbsoaxkGwMB05DN/hCXdFhZ6J0a1e82CQO0cAkivFUFx20qiXZGeV
+5QexoxYj2SW/uHX7zyl9hMCb/iKtf2GqIvSDSQLO7QuZBvc1/9hVX1B3X70CrLH0
+rtWXCHuxdu2OS24Ym6qGYO86NdAI58Dr8amfxOvueBBhSGE4EI6LjsMX7KCKVqof
+IDI7G1hHz2E5cLmvdB07USd+79CnnWMCZTLnOgcRQelkkSaJi732yZyLkJrbmwIN
+Wr+TbVPvOIXE3I4oc9XmgDxFMyB3KN+/aQtOOovmesGDGaI6uhBlh/6eGkMuHR91
+QfyU4Q9v7AS/uVPPHFOtEc8cssNL5lU6thBnp4KV9grioliygX0menXaVitEWSl/
+LLeSkfqARRkSSQtddFZkPQqYM89aoWOgPbhcRnRcM/+K4num6IvIaM2tZIZq01lN
+7KM+a9qF5bLqfxXrQmAGHrmgr0/WbY2akP+3fKnIcP0ZU/r4MQkzMiHtfPAiVOO4
+8AxNDkDjC/PoOFA/eZoVwaO11T/WZCXriWuL5ISr6ykO4KhAZHKpgKnXPUkWoreZ
+mc0X/FR6aOhZ6zygzOZR04yhDAX0QpqygiMiq8ow/Nt/6z2JqXfdo8sqpTEGwNWf
+qq5AQ4D4jnNzfA/RY1BhYFfZsBZaymW0rckKwLwM0by10DBtZcE=
+=7zje
+-----END PGP SIGNATURE-----
+
+--g7bibnhk6q2xn6m4--
