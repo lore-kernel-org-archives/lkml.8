@@ -2,98 +2,166 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796CBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AFEC38A2C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED4B2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CE32076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 22:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q1+fhQ7m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xz/FKi3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634145AbgDNWIm (ORCPT
+        id S2634170AbgDNWJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:08:42 -0400
-Received: from ozlabs.org ([203.11.71.1]:37221 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729934AbgDNWIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:08:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49204H63Clz9sSd;
-        Wed, 15 Apr 2020 08:08:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586902112;
-        bh=WKpUgiPoFV6JdQ9oLMsXNxlqFTV0n+/7rq4xiZLMIvI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=q1+fhQ7mLP/pDfQkFp3FsfppKUNn3J5a3h4xkv5EfkMDi3SIeTWdkN9FLsFjrs4qy
-         Varbn/IsROsVI+C/3KjzbXCjJRble93hU9HBIdbRvc44q3oSA2AbG0s8TBBQBxhj5l
-         yzwDMzbVGnHQ6a42agpLS02mORYUyB15wQyJX8pi/bom0RpG9v5eBIHG7s8Jeeh/z5
-         Xe/aDcpLzgVGjMeDpXfrZ6ImeenuNYQv/IOnEzTWc215G9H9TgVlY7rPyn4kxNjTs1
-         yA5NACsVmSdZdqG+QSHuaxLP3juB2jtfnykVpuoVQ1aKTCc1BGzzhktkO8e2lWrenw
-         sd/5WiBxAlyBw==
-Date:   Wed, 15 Apr 2020 08:08:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
- tree
-Message-ID: <20200415080827.30c2c9c1@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9Cgl.5rAq_5Va.lomBnmNSa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 14 Apr 2020 18:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2634146AbgDNWIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 18:08:54 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5502FC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:08:54 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z6so16258614wml.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 15:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/VXMLsnEdFtu7k13O3hijxHV9EAnp9rCBMScPJUvt8E=;
+        b=Xz/FKi3/eo2Z0NCI7DXFsCyI9TYATBR3mGQdjcgmFYX9ph6KDEJhtXW9U1VnGKp/99
+         hoqWR9eEs20GbKQXi4Ipn26cyGerMwRUG3qRO/wxioCpikbHucOK/iZv5YtufGZNwBpt
+         TyXATbJ/6YyeJj1XM1GYCK3xdBnMim6r9DxTfG+3aRSCujE67NQFsgJPJzF9L5Nnwz+l
+         N4gjmw84GGRvKMftMdT58jt19o3nmhrfjSnmGHrz3zRbXGq2qW/l3+O4wNsXRTyxGlz+
+         cl2JFr0bXA90LG1It9IIZDKpKd+dQy3ogcA58sLmxVnXGArNbBdf3h3B3dNJjT0j1qWp
+         zCMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/VXMLsnEdFtu7k13O3hijxHV9EAnp9rCBMScPJUvt8E=;
+        b=ku1VOUR67KOsfqv6pym+45T4QQlW/cyMmzP+hLYEOX9khuo0bka8KMxqXX2CdfmMtp
+         fYUNB2bY6Whk031YtR1EDgossAdE9dfmgapYE263X7w0pZcr400iEjKXN4+XM76nJvnf
+         NYdnLc8h/FA2GOlHUL38VeiiIzRK3/0aalDSK7MdWJsqDNKqcRAK4zncnYMoxSjFp6jX
+         hn5KnSR33KLzN2Dq6N/TaAeaXTA/iQWTge9rX8InBoQIq53PSY9hVj7em5z1dBdMWB07
+         v2a8cRAb7ft0YiBw5tvSK4kFHmTog7zth1OwNg8TFTADko6Ei7V5pw5s5FfiQh2KWWX8
+         WERw==
+X-Gm-Message-State: AGi0PuahPROG95ZK/1/x8XLsiA8omMLmOqG0ujG3dL3ZQYO7N6rnZY8a
+        ndkN7cgCVNGI3c5hLUBJLsOKFQ==
+X-Google-Smtp-Source: APiQypIR0YCUcj0f3UMEytiFmfxblPOyEvh9SW2C+KGbKy7Bv1gp+ctMoW+5Hl14SjZpskRV0vYXsA==
+X-Received: by 2002:a7b:c5cb:: with SMTP id n11mr2067920wmk.160.1586902132760;
+        Tue, 14 Apr 2020 15:08:52 -0700 (PDT)
+Received: from localhost.localdomain (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.gmail.com with ESMTPSA id a7sm4099973wrs.61.2020.04.14.15.08.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 15:08:52 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     amit.kucheria@verdurent.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 1/4] powercap/drivers/idle_inject: Specify idle state max latency
+Date:   Wed, 15 Apr 2020 00:08:30 +0200
+Message-Id: <20200414220837.9284-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9Cgl.5rAq_5Va.lomBnmNSa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Currently the idle injection framework uses the play_idle() function
+which puts the current CPU in an idle state. The idle state is the
+deepest one, as specified by the latency constraint when calling the
+subsequent play_idle_precise() function with the INT_MAX.
 
-Hi all,
+The idle_injection is used by the cpuidle_cooling device which
+computes the idle / run duration to mitigate the temperature by
+injecting idle cycles. The cooling device has no control on the depth
+of the idle state.
 
-In commit
+Allow finer control of the idle injection mechanism by allowing to
+specify the latency for the idle state. Thus the cooling device has
+the ability to have a guarantee on the exit latency of the idle states
+it is injecting.
 
-  ec4d3e3a0545 ("b43legacy: Fix case where channel status is corrupted")
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/powercap/idle_inject.c | 16 +++++++++++++++-
+ include/linux/idle_inject.h    |  4 ++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-Fixes tag
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index cd1270614cc6..49f42c475620 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -61,12 +61,14 @@ struct idle_inject_thread {
+  * @timer: idle injection period timer
+  * @idle_duration_us: duration of CPU idle time to inject
+  * @run_duration_us: duration of CPU run time to allow
++ * @latency_us: max allowed latency
+  * @cpumask: mask of CPUs affected by idle injection
+  */
+ struct idle_inject_device {
+ 	struct hrtimer timer;
+ 	unsigned int idle_duration_us;
+ 	unsigned int run_duration_us;
++	unsigned int latency_us;
+ 	unsigned long int cpumask[0];
+ };
+ 
+@@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
+ 	 */
+ 	iit->should_run = 0;
+ 
+-	play_idle(READ_ONCE(ii_dev->idle_duration_us));
++	play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
++			  READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
+ }
+ 
+ /**
+@@ -169,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
+ }
+ 
++/**
++ * idle_inject_set_latency - set the maximum latency allowed
++ * @latency_us: set the latency requirement for the idle state
++ */
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_us)
++{
++	WRITE_ONCE(ii_dev->latency_us, latency_us);
++}
++
+ /**
+  * idle_inject_start - start idle injections
+  * @ii_dev: idle injection control device structure
+@@ -297,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+ 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ii_dev->timer.function = idle_inject_timer_fn;
++	ii_dev->latency_us = UINT_MAX;
+ 
+ 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+ 
+diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+index a445cd1a36c5..91a8612b8bf9 100644
+--- a/include/linux/idle_inject.h
++++ b/include/linux/idle_inject.h
+@@ -26,4 +26,8 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 				 unsigned int *run_duration_us,
+ 				 unsigned int *idle_duration_us);
++
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_ns);
++
+ #endif /* __IDLE_INJECT_H__ */
+-- 
+2.17.1
 
-  Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx device=
-s")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9Cgl.5rAq_5Va.lomBnmNSa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WNFsACgkQAVBC80lX
-0GwBpwf9GTBWa6briKFg+vjJrtYfiGiCz0b4KJxf4PPeMxdTy8hXYnGPLehOwvPG
-2f5wT99wXGk3DktQDM0uMxCY7JnP/RHwMAC6kBwsxCaofAV3CWzACjOFDjUFVd/2
-WaSQV98Uq87aEv9T840M4ZQulYi5gfxEqwLLTydbdDkalvGFCNdIMiIWPajo6k30
-/nieyC3q2loQtHyvjGErD0px+fZ0tThWH1FucEus97SIhY+47wHndiX6rAT0/zuv
-9gCy36TW/B+FW3mAn0sSbiZFlMc6hI/arMTxSMA5ocHkFDEJEJ3MDNbSCr0FEcp7
-X7y0UzM86qVQVnG7xDF56Mw+EJxSew==
-=m/fh
------END PGP SIGNATURE-----
-
---Sig_/9Cgl.5rAq_5Va.lomBnmNSa--
