@@ -2,65 +2,103 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DABC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0CEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC6120578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wtnfpDpq"
+	by mail.kernel.org (Postfix) with ESMTP id 4F30320578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 14:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586873316;
+	bh=/CZzkResPf7E6hFzJrBZJpNXxg20WuFvxi09S+Jl+kE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zH/nssmTSOl4c4jSebngyiATPdSolGYFnBWq0xT4BVcq7Mw2R8HHB0ioAbNpPd1I6
+	 bm15tPy4p3MCM4l3g/CxdEoySjMFcVbif8+axgrmgS3IXZpWuB5QCLPDMY8KVlE2SU
+	 il2yt8gP8mtzbgKFqUuu/32Cw59n2Zn1zizwTYmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388997AbgDNOHv (ORCPT
+        id S2389174AbgDNOIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:07:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36520 "EHLO vps0.lunn.ch"
+        Tue, 14 Apr 2020 10:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388950AbgDNOHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:07:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Apg7KSuzSoY9RJMbqt/rU+GxBZW+ZwBg4apqMt7/XV8=; b=wtnfpDpqG2O9AWbgb7SMqSg4br
-        OXH3oXlLC0KnNsXtHWIjXODdRbV37oC5lrubW1D5KrNmFP42+0ATjqeio+0i6vMpt+zmIC2eTiaJT
-        Vwwsj1jEI/ma0qYQxWnxEKXlliGPsiaVlrlDQPKWXYEo9uC6PoVjBaoBWGHLaHic94xw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jOMDq-002f8R-6R; Tue, 14 Apr 2020 16:07:30 +0200
-Date:   Tue, 14 Apr 2020 16:07:30 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        open list <linux-kernel@vger.kernel.org>, davem@davemloft.net,
-        kuba@kernel.org
-Subject: Re: [PATCH net 3/4] net: dsa: b53: Fix ARL register definitions
-Message-ID: <20200414140730.GL436020@lunn.ch>
-References: <20200414041630.5740-1-f.fainelli@gmail.com>
- <20200414041630.5740-4-f.fainelli@gmail.com>
+        id S2388998AbgDNOIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:08:21 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.50.36.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E7D20578;
+        Tue, 14 Apr 2020 14:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586873301;
+        bh=/CZzkResPf7E6hFzJrBZJpNXxg20WuFvxi09S+Jl+kE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PXrG9szbWzZ5+DwgtEzkXznw9odEhttqrZKiFSwnf/FMDGvPw0zy1UkmnbKQDArDu
+         EScbiV+INt+/GnPfqiVz6VkmXKSltccDN+TejgOMSzSsyby9mwgPj2mHFKabDUybFq
+         AaQA0t8DAZywA46W81/T4L0HBmqVcLJJmsEXhyGI=
+Date:   Tue, 14 Apr 2020 19:38:09 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     jic23@kernel.org, robh+dt@kernel.org, narcisaanamaria12@gmail.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: iio: chemical: Add binding for CCS811
+ VOC sensor
+Message-ID: <20200414140808.GB29491@Mani-XPS-13-9360>
+References: <20200412183658.6755-1-mani@kernel.org>
+ <20200412183658.6755-2-mani@kernel.org>
+ <20200414132717.GA15437@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414041630.5740-4-f.fainelli@gmail.com>
+In-Reply-To: <20200414132717.GA15437@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 09:16:29PM -0700, Florian Fainelli wrote:
-> The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
-> which means that when we read/wrote from/to ARL bin index 0, we were
-> actually accessing the ARLA_RWCTRL register.
+On Tue, Apr 14, 2020 at 08:27:17AM -0500, Rob Herring wrote:
+> On Mon, 13 Apr 2020 00:06:56 +0530, mani@kernel.org wrote:
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > This commit adds devicetree binding for AMS CCS811 VOC sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > ---
+> >  .../bindings/iio/chemical/ams,ccs811.yaml     | 50 +++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > 
 > 
-> Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Error: Documentation/devicetree/bindings/iio/chemical/ams,ccs811.example.dts:24.38-39 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/iio/chemical/ams,ccs811.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/iio/chemical/ams,ccs811.example.dt.yaml] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1269473
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Ah, sorry. I did run 'dtbs_check' but forgot that it won't report errors in the
+binding schemas.
 
-    Andrew
+Will run `dt_binding_check` hereafter.
+
+Thanks,
+Mani
+
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
