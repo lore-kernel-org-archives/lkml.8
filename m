@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E346C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761FF206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B99B2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586878658;
-	bh=OkUMHeV6ia5DXa6r7XqF0EcDiCxeMDiKyETeOhmHuVk=;
+	s=default; t=1586878664;
+	bh=CqaKK6+aVg5D1Nr505BsEp2b4ZBD+GLgCm9Y6FhaO5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAmyBMkxbAIWDgTUxDt8R72+3EZaU6RwhJxMFFE622/nH7cRnQ069ExxQa9OLwhqJ
-	 j8VbExSXMv/gGt0g6CWc33Y2+QFbfaT201Cc7K6XYKWuLoRW8Bosg7c0HNPL4HXT+z
-	 wDUfNopmO/9U2yDLOLgxCxclwJ+MTQMRtcoCUN98=
+	b=lui4h22DLJ1DNWx2j2fMnL0sge1mrtMW0Cc7WYH+QdK3dd6CbNPAyGna2XLXLRdTz
+	 ml+82KH2tDDL0zbpvRXND9PZSqicHc2DxRfc7yEj2cKVwpAnbmpgrQgAUxISarmXl1
+	 hvP9GTL6rqCVoBuj/xOP2mENedmGJqGXkpm+y8ZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440514AbgDNPhg (ORCPT
+        id S2440521AbgDNPhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 11:37:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440151AbgDNPgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:36:09 -0400
+        id S2440490AbgDNPh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:37:27 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BB9220678;
-        Tue, 14 Apr 2020 15:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0989206D5;
+        Tue, 14 Apr 2020 15:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586878567;
-        bh=OkUMHeV6ia5DXa6r7XqF0EcDiCxeMDiKyETeOhmHuVk=;
+        s=default; t=1586878645;
+        bh=CqaKK6+aVg5D1Nr505BsEp2b4ZBD+GLgCm9Y6FhaO5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8tX7R1x8U/ypmylK2W4LDnRW6MuKA4OEuE/rqzE6DaYywwga3vLXpHEF3UVeO4Va
-         FFCv5+sxV8WYkmXLLTJJ/Itrpb3pR20BFzXeYTGuZyIz7BkhLayzoPUZnRYGhPBI+/
-         9dW/K6VSA3NvaHSUOdrqvqcGgofvXYqm4FLQQriE=
+        b=TIU3Y4/BP8R5HFjWKB4Rmbnxn+YL/C+cyvm9VFW4zfGVaOrEFBPnfTQvvacGktioX
+         gSlAJkOtV7YH1cGIDUV9ajgtcnBzYrWnAUYHC9A961Ty8BmpAPQOn2t383YSjR0zKg
+         9FVQAlTRoUWPWY9rs58gJHD/LVWxwGErlNZP2VZc=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -72,9 +72,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         uclinux-h8-devel@lists.sourceforge.jp,
         Mike Rapoport <rppt@kernel.org>,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v4 06/14] nios2: add support for folded p4d page tables
-Date:   Tue, 14 Apr 2020 18:34:47 +0300
-Message-Id: <20200414153455.21744-7-rppt@kernel.org>
+Subject: [PATCH v4 14/14] mm: remove __ARCH_HAS_5LEVEL_HACK and include/asm-generic/5level-fixup.h
+Date:   Tue, 14 Apr 2020 18:34:55 +0300
+Message-Id: <20200414153455.21744-15-rppt@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200414153455.21744-1-rppt@kernel.org>
 References: <20200414153455.21744-1-rppt@kernel.org>
@@ -87,85 +87,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-Implement primitives necessary for the 4th level folding, add walks of p4d
-level where appropriate and remove usage of __ARCH_USE_5LEVEL_HACK.
+There are no architectures that use include/asm-generic/5level-fixup.h
+therefore it can be removed along with __ARCH_HAS_5LEVEL_HACK define and
+the code it surrounds
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/nios2/include/asm/pgtable.h | 3 +--
- arch/nios2/mm/fault.c            | 9 +++++++--
- arch/nios2/mm/ioremap.c          | 6 +++++-
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ include/asm-generic/5level-fixup.h | 58 ------------------------------
+ include/linux/mm.h                 |  6 ----
+ mm/kasan/init.c                    | 11 ------
+ mm/memory.c                        |  8 -----
+ 4 files changed, 83 deletions(-)
+ delete mode 100644 include/asm-generic/5level-fixup.h
 
-diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
-index f98b7f4519ba..47a1a3ea5734 100644
---- a/arch/nios2/include/asm/pgtable.h
-+++ b/arch/nios2/include/asm/pgtable.h
-@@ -22,7 +22,6 @@
- #include <asm/tlbflush.h>
+diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
+deleted file mode 100644
+index 4c74b1c1d13b..000000000000
+--- a/include/asm-generic/5level-fixup.h
++++ /dev/null
+@@ -1,58 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _5LEVEL_FIXUP_H
+-#define _5LEVEL_FIXUP_H
+-
+-#define __ARCH_HAS_5LEVEL_HACK
+-#define __PAGETABLE_P4D_FOLDED 1
+-
+-#define P4D_SHIFT			PGDIR_SHIFT
+-#define P4D_SIZE			PGDIR_SIZE
+-#define P4D_MASK			PGDIR_MASK
+-#define MAX_PTRS_PER_P4D		1
+-#define PTRS_PER_P4D			1
+-
+-#define p4d_t				pgd_t
+-
+-#define pud_alloc(mm, p4d, address) \
+-	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
+-		NULL : pud_offset(p4d, address))
+-
+-#define p4d_alloc(mm, pgd, address)	(pgd)
+-#define p4d_offset(pgd, start)		(pgd)
+-
+-#ifndef __ASSEMBLY__
+-static inline int p4d_none(p4d_t p4d)
+-{
+-	return 0;
+-}
+-
+-static inline int p4d_bad(p4d_t p4d)
+-{
+-	return 0;
+-}
+-
+-static inline int p4d_present(p4d_t p4d)
+-{
+-	return 1;
+-}
+-#endif
+-
+-#define p4d_ERROR(p4d)			do { } while (0)
+-#define p4d_clear(p4d)			pgd_clear(p4d)
+-#define p4d_val(p4d)			pgd_val(p4d)
+-#define p4d_populate(mm, p4d, pud)	pgd_populate(mm, p4d, pud)
+-#define p4d_populate_safe(mm, p4d, pud)	pgd_populate(mm, p4d, pud)
+-#define p4d_page(p4d)			pgd_page(p4d)
+-#define p4d_page_vaddr(p4d)		pgd_page_vaddr(p4d)
+-
+-#define __p4d(x)			__pgd(x)
+-#define set_p4d(p4dp, p4d)		set_pgd(p4dp, p4d)
+-
+-#undef p4d_free_tlb
+-#define p4d_free_tlb(tlb, x, addr)	do { } while (0)
+-#define p4d_free(mm, x)			do { } while (0)
+-
+-#undef  p4d_addr_end
+-#define p4d_addr_end(addr, end)		(end)
+-
+-#endif
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5a323422d783..f794b77df1ca 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2060,11 +2060,6 @@ int __pte_alloc_kernel(pmd_t *pmd);
  
- #include <asm/pgtable-bits.h>
--#define __ARCH_USE_5LEVEL_HACK
- #include <asm-generic/pgtable-nopmd.h>
+ #if defined(CONFIG_MMU)
  
- #define FIRST_USER_ADDRESS	0UL
-@@ -100,7 +99,7 @@ extern pte_t invalid_pte_table[PAGE_SIZE/sizeof(pte_t)];
-  */
- static inline void set_pmd(pmd_t *pmdptr, pmd_t pmdval)
+-/*
+- * The following ifdef needed to get the 5level-fixup.h header to work.
+- * Remove it when 5level-fixup.h has been removed.
+- */
+-#ifndef __ARCH_HAS_5LEVEL_HACK
+ static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+ 		unsigned long address)
  {
--	pmdptr->pud.pgd.pgd = pmdval.pud.pgd.pgd;
-+	*pmdptr = pmdval;
+@@ -2078,7 +2073,6 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+ 	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
+ 		NULL : pud_offset(p4d, address);
  }
+-#endif /* !__ARCH_HAS_5LEVEL_HACK */
  
- /* to find an entry in a page-table-directory */
-diff --git a/arch/nios2/mm/fault.c b/arch/nios2/mm/fault.c
-index ec9d8a9c426f..964eac1a21d0 100644
---- a/arch/nios2/mm/fault.c
-+++ b/arch/nios2/mm/fault.c
-@@ -242,6 +242,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
- 		 */
- 		int offset = pgd_index(address);
- 		pgd_t *pgd, *pgd_k;
-+		p4d_t *p4d, *p4d_k;
- 		pud_t *pud, *pud_k;
- 		pmd_t *pmd, *pmd_k;
- 		pte_t *pte_k;
-@@ -253,8 +254,12 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
- 			goto no_context;
- 		set_pgd(pgd, *pgd_k);
+ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+ {
+diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+index ce45c491ebcd..fe6be0be1f76 100644
+--- a/mm/kasan/init.c
++++ b/mm/kasan/init.c
+@@ -250,20 +250,9 @@ int __ref kasan_populate_early_shadow(const void *shadow_start,
+ 			 * 3,2 - level page tables where we don't have
+ 			 * puds,pmds, so pgd_populate(), pud_populate()
+ 			 * is noops.
+-			 *
+-			 * The ifndef is required to avoid build breakage.
+-			 *
+-			 * With 5level-fixup.h, pgd_populate() is not nop and
+-			 * we reference kasan_early_shadow_p4d. It's not defined
+-			 * unless 5-level paging enabled.
+-			 *
+-			 * The ifndef can be dropped once all KASAN-enabled
+-			 * architectures will switch to pgtable-nop4d.h.
+ 			 */
+-#ifndef __ARCH_HAS_5LEVEL_HACK
+ 			pgd_populate(&init_mm, pgd,
+ 					lm_alias(kasan_early_shadow_p4d));
+-#endif
+ 			p4d = p4d_offset(pgd, addr);
+ 			p4d_populate(&init_mm, p4d,
+ 					lm_alias(kasan_early_shadow_pud));
+diff --git a/mm/memory.c b/mm/memory.c
+index f703fe8c8346..379277c631b4 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4434,19 +4434,11 @@ int __pud_alloc(struct mm_struct *mm, p4d_t *p4d, unsigned long address)
+ 	smp_wmb(); /* See comment in __pte_alloc */
  
--		pud = pud_offset(pgd, address);
--		pud_k = pud_offset(pgd_k, address);
-+		p4d = p4d_offset(pgd, address);
-+		p4d_k = p4d_offset(pgd_k, address);
-+		if (!p4d_present(*p4d_k))
-+			goto no_context;
-+		pud = pud_offset(p4d, address);
-+		pud_k = pud_offset(p4d_k, address);
- 		if (!pud_present(*pud_k))
- 			goto no_context;
- 		pmd = pmd_offset(pud, address);
-diff --git a/arch/nios2/mm/ioremap.c b/arch/nios2/mm/ioremap.c
-index 819bdfcc2e71..fe821efb9a99 100644
---- a/arch/nios2/mm/ioremap.c
-+++ b/arch/nios2/mm/ioremap.c
-@@ -86,11 +86,15 @@ static int remap_area_pages(unsigned long address, unsigned long phys_addr,
- 	if (address >= end)
- 		BUG();
- 	do {
-+		p4d_t *p4d;
- 		pud_t *pud;
- 		pmd_t *pmd;
- 
- 		error = -ENOMEM;
--		pud = pud_alloc(&init_mm, dir, address);
-+		p4d = p4d_alloc(&init_mm, dir, address);
-+		if (!p4d)
-+			break;
-+		pud = pud_alloc(&init_mm, p4d, address);
- 		if (!pud)
- 			break;
- 		pmd = pmd_alloc(&init_mm, pud, address);
+ 	spin_lock(&mm->page_table_lock);
+-#ifndef __ARCH_HAS_5LEVEL_HACK
+ 	if (!p4d_present(*p4d)) {
+ 		mm_inc_nr_puds(mm);
+ 		p4d_populate(mm, p4d, new);
+ 	} else	/* Another has populated it */
+ 		pud_free(mm, new);
+-#else
+-	if (!pgd_present(*p4d)) {
+-		mm_inc_nr_puds(mm);
+-		pgd_populate(mm, p4d, new);
+-	} else	/* Another has populated it */
+-		pud_free(mm, new);
+-#endif /* __ARCH_HAS_5LEVEL_HACK */
+ 	spin_unlock(&mm->page_table_lock);
+ 	return 0;
+ }
 -- 
 2.25.1
 
