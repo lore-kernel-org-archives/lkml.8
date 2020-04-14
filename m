@@ -2,255 +2,156 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A1FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4A2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 620E92076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586843330;
-	bh=dxNtBJSmXqe1DZ37vfP7M6NMjflxtXyP+i0cD5Aa+2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JqvBSVst850x3JFHcMeQ3eYry/YXlJU0Qgh3ZGAm/N1VuKNOKSnxMpFn8U0WTbozp
-	 LB06qc/Iqt78OBf+BixPk4E76r0AW30YY5sJap9qOIKO7XSpEdQEJz8X2yj55IZA4T
-	 vwfEUqXCAGZ8ATotLfR7tBA4dsYvlMTIIX5ly2rI=
+	by mail.kernel.org (Postfix) with ESMTP id DC3DF20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 05:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SynwL+OK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405609AbgDNFss (ORCPT
+        id S2405620AbgDNFtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 01:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbgDNFsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 01:48:41 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18BF20678;
-        Tue, 14 Apr 2020 05:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586843320;
-        bh=dxNtBJSmXqe1DZ37vfP7M6NMjflxtXyP+i0cD5Aa+2g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H2bHlPj1rxVQDB8ViSd6AtK99uicW+XH+EiQmjfYXctvIn8im47nHNpVKnmx5eCAd
-         wl7+tWouzn2ek62ML1pkv1BnXTJArgo1cTJVTW2nkbJc5bBHiC2n77qR0z74c1Yx6W
-         RHnRPI5y2hUIlvld4l6sVRmEy+2CwyZ2yiWcSVoQ=
-Date:   Tue, 14 Apr 2020 08:48:36 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between
- console and hrtimer locks
-Message-ID: <20200414054836.GA956407@unreal>
-References: <20200407170925.1775019-1-leon@kernel.org>
+        Tue, 14 Apr 2020 01:49:19 -0400
+Received: from mail-mw2nam10on2062.outbound.protection.outlook.com ([40.107.94.62]:13121
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729111AbgDNFtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 01:49:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g0/myYQnNp6Mh+uIXG5Dkqq7hqHp28L7P6uWPVc2XcHP4+w/jhsAQBGFAUpeGCEo4ON89YqzmFLcdpWDXj1H74I6r5OlvF164mPl1maI9MgdUzQYrlzIbYXOq0nuYqjtFsrBDMUaMkipDSgzFuGKFO3ywUvfQoLBD6SLG1KsV7jY6IPzkhxiDG4K7mQNanmughzFFfSRwJT7eemwISLCkmbeoAx4IHxkhAr0j24V2zVnLkfoySgPk2Q3kQ45nyJHdTZomCDBhtOWFpk70aQoNTGDTQAMRU/MVi7dkgtWNw7DZEZ9m7q7RB7DMQR1MVHQw4IWREuYGXPi+fJY5mr2AQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1T+h6ZTNnmu/FTHXu5fdBtv4AFr3LYnrqQecMNzxO5U=;
+ b=Kti6wFgnktpJJJZMEiP2kUTlbPVrZiGPNscRC3ZeVtV03Lyl3DSNQv/hs6zz0r8NbWRONvUOTg2t8elfUpORYQZKJlO74mSZ5BYnV8UmuNLSpkXCYbiX3+uwGheRoOKAQ4yF78OvLOoWd2G/+NdmMPErmv6SDUGqdYJbPEGQwJtH6O+CiQrq+h6Odtm/hJrc+lTrWQoWJf0os+t4VksjLjJL2i17e6zu3pugAjRE6Vi3h6iJ2coNigANixYpaYMJe9CVOjF+kAVvxwXRokNC8HBctdTMQ/I4p++t5GlZwrLk+MlVV3WGh+B36SDokMVP9cV59NH2q9KIIvsHLq4ODw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1T+h6ZTNnmu/FTHXu5fdBtv4AFr3LYnrqQecMNzxO5U=;
+ b=SynwL+OKXxiWLQWFEWXnL88xZAzB/kXNmbDIC9mj0JhKHmWlGbnFXrbzJKsmUZEuqiEW30CEv1gtlC7/wciB4hrpVqAIsXhvZOrUX17GDB/PCvx0GH++bpaaFsZOnASHpmR1b1g74nUBAfKBwFoPJvU3NKRtqKz8S/WkkE6IUVQ=
+Received: from BYAPR02MB5896.namprd02.prod.outlook.com (2603:10b6:a03:122::10)
+ by BYAPR02MB5253.namprd02.prod.outlook.com (2603:10b6:a03:61::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Tue, 14 Apr
+ 2020 05:49:06 +0000
+Received: from BYAPR02MB5896.namprd02.prod.outlook.com
+ ([fe80::c9d7:1fa3:6ec1:f7a9]) by BYAPR02MB5896.namprd02.prod.outlook.com
+ ([fe80::c9d7:1fa3:6ec1:f7a9%5]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 05:49:06 +0000
+From:   Manish Narani <MNARANI@xilinx.com>
+To:     Manish Narani <MNARANI@xilinx.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        Michal Simek <michals@xilinx.com>
+CC:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, git <git@xilinx.com>
+Subject: RE: [PATCH v3 0/6] Add support for Xilinx Versal SDHCI in Arasan
+ driver
+Thread-Topic: [PATCH v3 0/6] Add support for Xilinx Versal SDHCI in Arasan
+ driver
+Thread-Index: AQHWDDsANGwar7+SeUGv1U0VGn/7m6h4KBHg
+Date:   Tue, 14 Apr 2020 05:49:06 +0000
+Message-ID: <BYAPR02MB5896E3E2BB1DC4C2D454B2E2C1DA0@BYAPR02MB5896.namprd02.prod.outlook.com>
+References: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=MNARANI@xilinx.com; 
+x-originating-ip: [183.83.137.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7b2dfda0-e2e2-4279-b329-08d7e0378baa
+x-ms-traffictypediagnostic: BYAPR02MB5253:|BYAPR02MB5253:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB52534E3F5FFD5109835E607FC1DA0@BYAPR02MB5253.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5896.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(136003)(396003)(366004)(478600001)(110136005)(7416002)(26005)(4326008)(6636002)(107886003)(54906003)(186003)(71200400001)(53546011)(86362001)(6506007)(316002)(7696005)(55016002)(66476007)(33656002)(64756008)(66446008)(9686003)(8676002)(52536014)(81156014)(66946007)(8936002)(2906002)(5660300002)(76116006)(66556008);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: i1Owk4emep2SVnad8d+DjVlKRwteCaqalPovln/QBAIK1suWLgEGio79ZmfYPO7XQxQfJ7lLc1LolhhPRv8/EP1TS/coOwzUc9b7+crNto1wdZB+EkwWN5tIhiYot1TwqVCKzBF7s6VJc/a+e6ZE/x0eIuAFrR7RIfL7+Oi/8zpOUq8Mo9P8SjORH4czCcnKNADm4gV1RRUJUSs9pb56c6V/ZtjeKnTsm1+Y0pXkAfB1JdW6HtilxT+vNpWUzUAuEWyQUJaXR4MDttjhFKzqXs09UYeFZtsYpckn6RlytSCyMjaP2qVXs80DWuSviKJL5Lgcqvhtpjn4O1XByEx3p6qPAWwvswxFS0hemFCYvCPCNbmwCs5aaGmBx0UOjp3Sc1DwRx353RrSog/4n8hVIpKyDAkWQxDQ61Cq6Y6fnpiooRg/40FpFDurXko5vmIA
+x-ms-exchange-antispam-messagedata: VVQ0k9LQpQB73gSRh4Neb/oIcMqQzQAsxHfCQTH+Wh6qbrnbCML2glnELf1E5V4MC4k2a10yTSrjt2sV4J+8IDVbdurorHd5cSOc3mtTUAW0cGf5X6WDP82ynME5wZ4sEU8Wxzls9jgZU/jsH04Qlg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407170925.1775019-1-leon@kernel.org>
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b2dfda0-e2e2-4279-b329-08d7e0378baa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 05:49:06.4989
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u7sYt1lapZ6f/3vwiNdXEeQ5Rh9u5b33TpJB8y31bHHuEL3qipptBuDWb4XeDT8ilFMVgXWJudPiPfpvKZJTWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5253
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Ping!
 
-Any feedback?
-https://lore.kernel.org/lkml/20200407170925.1775019-1-leon@kernel.org/
-
-Thanks
-
-On Tue, Apr 07, 2020 at 08:09:25PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
->
-> clockevents_switch_state() calls printk() from under hrtimer_bases.lock.
-> That causes lock inversion on scheduler locks because printk() can call
-> into the scheduler. Lockdep puts it as:
->
->  [  728.464312] ====================================================================================================
->  [  735.312580] TSC deadline timer enabled
->  [  735.324143]
->  [  735.324146] ======================================================
->  [  735.324148] WARNING: possible circular locking dependency detected
->  [  735.324150] 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1 Not tainted
->  [  735.324152] ------------------------------------------------------
->  [  735.324154] swapper/3/0 is trying to acquire lock:
->  [  735.324155] ffffffff8442c858 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0x13/0x70
->  [  735.324162]
->  [  735.324164] but task is already holding lock:
->  [  735.324165] ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
->  [  735.324171]
->  [  735.324173] which lock already depends on the new lock.
->  [  735.324174]
->  [  735.324175]
->  [  735.324177] the existing dependency chain (in reverse order) is:
->  [  735.324179]
->  [  735.324180] -> #4 (hrtimer_bases.lock){-.-.}-{2:2}:
->  [  735.324186]        _raw_spin_lock_irqsave+0x3c/0x4b
->  [  735.324187]        lock_hrtimer_base+0x71/0x120
->  [  735.324189]        hrtimer_start_range_ns+0xc6/0xaa0
->  [  735.324191]        __enqueue_rt_entity+0xc44/0xf50
->  [  735.324192]        enqueue_rt_entity+0x79/0xc0
->  [  735.324194]        enqueue_task_rt+0x5c/0x2e0
->  [  735.324195]        activate_task+0x15a/0x2c0
->  [  735.324197]        ttwu_do_activate+0xcf/0x120
->  [  735.324199]        sched_ttwu_pending+0x160/0x230
->  [  735.324200]        scheduler_ipi+0x1c0/0x530
->  [  735.324202]        reschedule_interrupt+0xf/0x20
->  [  735.324204]        tick_nohz_idle_enter+0x16c/0x250
->  [  735.324205]        do_idle+0x90/0x530
->  [  735.324207]        cpu_startup_entry+0x19/0x20
->  [  735.324208]        start_secondary+0x2ee/0x3e0
->  [  735.324210]        secondary_startup_64+0xa4/0xb0
->  [  735.324211]
->  [  735.324212] -> #3 (&rt_b->rt_runtime_lock){-...}-{2:2}:
->  [  735.324218]        _raw_spin_lock+0x25/0x30
->  [  735.324219]        rq_online_rt+0x288/0x550
->  [  735.324221]        set_rq_online+0x11f/0x190
->  [  735.324223]        sched_cpu_activate+0x1d4/0x390
->  [  735.324225]        cpuhp_invoke_callback+0x1c5/0x1560
->  [  735.324226]        cpuhp_thread_fun+0x3f8/0x6f0
->  [  735.324228]        smpboot_thread_fn+0x305/0x5f0
->  [  735.324229]        kthread+0x2f8/0x3b0
->  [  735.324231]        ret_from_fork+0x24/0x30
->  [  735.324232]
->  [  735.324233] -> #2 (&rq->lock){-.-.}-{2:2}:
->  [  735.324238]        _raw_spin_lock+0x25/0x30
->  [  735.324240]        task_fork_fair+0x34/0x430
->  [  735.324241]        sched_fork+0x48a/0xa60
->  [  735.324243]        copy_process+0x15df/0x5970
->  [  735.324244]        _do_fork+0x106/0xcd0
->  [  735.324246]        kernel_thread+0x9e/0xe0
->  [  735.324247]        rest_init+0x28/0x330
->  [  735.324249]        start_kernel+0x6ac/0x6ed
->  [  735.324251]        secondary_startup_64+0xa4/0xb0
->  [  735.324252]
->  [  735.324253] -> #1 (&p->pi_lock){-.-.}-{2:2}:
->  [  735.324258]        _raw_spin_lock_irqsave+0x3c/0x4b
->  [  735.324260]        try_to_wake_up+0x9a/0x1700
->  [  735.324261]        up+0x7a/0xb0
->  [  735.324263]        __up_console_sem+0x3c/0x70
->  [  735.324264]        console_unlock+0x4f4/0xab0
->  [  735.324266]        con_font_op+0x907/0x1010
->  [  735.324267]        vt_ioctl+0x10a6/0x2890
->  [  735.324269]        tty_ioctl+0x257/0x1240
->  [  735.324270]        ksys_ioctl+0x3e9/0x1190
->  [  735.324272]        __x64_sys_ioctl+0x6f/0xb0
->  [  735.324273]        do_syscall_64+0xe7/0x12c0
->  [  735.324275]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
->  [  735.324276]
->  [  735.324277] -> #0 ((console_sem).lock){-...}-{2:2}:
->  [  735.324283]        __lock_acquire+0x374a/0x5210
->  [  735.324284]        lock_acquire+0x1b9/0x920
->  [  735.324286]        _raw_spin_lock_irqsave+0x3c/0x4b
->  [  735.324288]        down_trylock+0x13/0x70
->  [  735.324289]        __down_trylock_console_sem+0x33/0xa0
->  [  735.324291]        console_trylock+0x13/0x60
->  [  735.324292]        vprintk_emit+0xec/0x370
->  [  735.324294]        printk+0x9c/0xc3
->  [  735.324296]        lapic_timer_set_oneshot+0x4e/0x60
->  [  735.324297]        clockevents_switch_state+0x1e1/0x360
->  [  735.324299]        tick_program_event+0xae/0xc0
->  [  735.324301]        hrtimer_start_range_ns+0x4b6/0xaa0
->  [  735.324302]        tick_nohz_idle_stop_tick+0x67c/0xa90
->  [  735.324304]        do_idle+0x326/0x530
->  [  735.324305]        cpu_startup_entry+0x19/0x20
->  [  735.324307]        start_secondary+0x2ee/0x3e0
->  [  735.324309]        secondary_startup_64+0xa4/0xb0
->  [  735.324310]
->  [  735.324311] other info that might help us debug this:
->  [  735.324312]
->  [  735.324314] Chain exists of:
->  [  735.324315]   (console_sem).lock --> &rt_b->rt_runtime_lock --> hrtimer_bases.lock
->  [  735.324322]
->  [  735.324324]  Possible unsafe locking scenario:
->  [  735.324325]
->  [  735.324327]        CPU0                    CPU1
->  [  735.324328]        ----                    ----
->  [  735.324329]   lock(hrtimer_bases.lock);
->  [  735.324333]                                lock(&rt_b->rt_runtime_lock);
->  [  735.324337]                                lock(hrtimer_bases.lock);
->  [  735.324341]   lock((console_sem).lock);
->  [  735.324344]
->  [  735.324345]  *** DEADLOCK ***
->  [  735.324346]
->  [  735.324348] 1 lock held by swapper/3/0:
->  [  735.324349]  #0: ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
->  [  735.324356]
->  [  735.324357] stack backtrace:
->  [  735.324360] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1
->  [  735.324363] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
->  [  735.324364] Call Trace:
->  [  735.324366]  dump_stack+0xb7/0x10b
->  [  735.324367]  check_noncircular+0x37f/0x460
->  [  735.324369]  ? arch_stack_walk+0x7c/0xd0
->  [  735.324370]  ? print_circular_bug+0x4e0/0x4e0
->  [  735.324372]  ? mark_lock+0x1a4/0xb60
->  [  735.324373]  ? __lock_acquire+0x374a/0x5210
->  [  735.324375]  __lock_acquire+0x374a/0x5210
->  [  735.324376]  ? register_lock_class+0x17e0/0x17e0
->  [  735.324378]  ? register_lock_class+0x17e0/0x17e0
->  [  735.324380]  lock_acquire+0x1b9/0x920
->  [  735.324381]  ? down_trylock+0x13/0x70
->  [  735.324383]  ? check_flags.part.29+0x450/0x450
->  [  735.324384]  ? lock_downgrade+0x760/0x760
->  [  735.324386]  ? vprintk_emit+0xec/0x370
->  [  735.324387]  _raw_spin_lock_irqsave+0x3c/0x4b
->  [  735.324389]  ? down_trylock+0x13/0x70
->  [  735.324390]  down_trylock+0x13/0x70
->  [  735.324392]  __down_trylock_console_sem+0x33/0xa0
->  [  735.324393]  console_trylock+0x13/0x60
->  [  735.324395]  vprintk_emit+0xec/0x370
->  [  735.324396]  printk+0x9c/0xc3
->  [  735.324398]  ? kmsg_dump_rewind_nolock+0xd9/0xd9
->  [  735.324399]  lapic_timer_set_oneshot+0x4e/0x60
->  [  735.324401]  clockevents_switch_state+0x1e1/0x360
->  [  735.324402]  ? enqueue_hrtimer+0x116/0x310
->  [  735.324404]  tick_program_event+0xae/0xc0
->  [  735.324406]  hrtimer_start_range_ns+0x4b6/0xaa0
->  [  735.324407]  ? hrtimer_run_softirq+0x210/0x210
->  [  735.324409]  ? rcu_read_lock_sched_held+0xab/0xe0
->  [  735.324410]  ? rcu_read_lock_bh_held+0xe0/0xe0
->  [  735.324412]  tick_nohz_idle_stop_tick+0x67c/0xa90
->  [  735.324413]  ? tsc_verify_tsc_adjust+0x71/0x290
->  [  735.324415]  do_idle+0x326/0x530
->  [  735.324416]  ? arch_cpu_idle_exit+0x40/0x40
->  [  735.324418]  cpu_startup_entry+0x19/0x20
->  [  735.324419]  start_secondary+0x2ee/0x3e0
->  [  735.324421]  ? set_cpu_sibling_map+0x2f70/0x2f70
->  [  735.324423]  secondary_startup_64+0xa4/0xb0
->  [  760.028504] ====================================================================================================
->
-> Fix by using deferred variant of printk which doesn't call to the scheduler.
->
-> Fixes: 279f1461432c ("x86: apic: Use tsc deadline for oneshot when available")
-> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-> ---
-> It is far away from my main expertise and I'm not sure that the solution
-> is correct, but it definitely fixed our regression.
-> ---
->  arch/x86/kernel/apic/apic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> index d254cebdd3c3..6706b2cd9aec 100644
-> --- a/arch/x86/kernel/apic/apic.c
-> +++ b/arch/x86/kernel/apic/apic.c
-> @@ -353,7 +353,7 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
->  		 */
->  		asm volatile("mfence" : : : "memory");
->
-> -		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
-> +		printk_deferred_once(KERN_DEBUG "TSC deadline timer enabled\n");
->  		return;
->  	}
->
+> -----Original Message-----
+> From: Manish Narani <manish.narani@xilinx.com>
+> Sent: Monday, April 6, 2020 11:13 PM
+> To: ulf.hansson@linaro.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> adrian.hunter@intel.com; Michal Simek <michals@xilinx.com>
+> Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; git
+> <git@xilinx.com>; Manish Narani <MNARANI@xilinx.com>
+> Subject: [PATCH v3 0/6] Add support for Xilinx Versal SDHCI in Arasan dri=
+ver
+>=20
+> This patch series includes:
+>  -> Document the Xilinx Versal SD controller
+>  -> Add support for Versal SD Tap Delays
+>  -> Reorganizing the clock operations handling
+>  -> Resolve kernel-doc warnings
+>=20
+> Changes in v2:
+> 	- Addressed review comments given in v1
+> 	- Changed clock operation handling for better modularity.
+> 	- Changed comments to fix kernel-doc warnings
+>=20
+> Changes in v3:
+> 	- Addressed review comments from v2
+> 	- Move platform related structure before doing clock related changes
+> 	- Rename sdhci_arasan_data to avoid confusion with another struct
+> name
+>=20
+> Manish Narani (6):
+>   dt-bindings: mmc: arasan: Document 'xlnx,versal-8.9a' controller
+>   sdhci: arasan: Add support for Versal Tap Delays
+>   mmc: sdhci-of-arasan: Rename sdhci_arasan_data to avoid confusion
+>   mmc: sdhci-of-arasan: Rearrange the platform data structs for
+>     modularity
+>   mmc: sdhci-of-arasan: Modify clock operations handling
+>   mmc: sdhci-of-arasan: Fix kernel-doc warnings
+>=20
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  15 +
+>  drivers/mmc/host/sdhci-of-arasan.c                 | 473 +++++++++++++++=
+------
+>  2 files changed, 361 insertions(+), 127 deletions(-)
+>=20
 > --
-> 2.25.1
->
+> 2.1.1
+
