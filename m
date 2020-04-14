@@ -2,79 +2,98 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C8CC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 00:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF1DC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 00:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF5B215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 00:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D0320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 00:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lct5lXl+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PMRE9MFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390452AbgDNA2C (ORCPT
+        id S2390484AbgDNAaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 20:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
+        Mon, 13 Apr 2020 20:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgDNA2A (ORCPT
+        with ESMTP id S2390455AbgDNAaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 20:28:00 -0400
+        Mon, 13 Apr 2020 20:30:00 -0400
 Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A24C0A3BDC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 17:28:00 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u65so5297219pfb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 17:28:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC29C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 17:30:00 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a13so5300504pfa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 17:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=Iab8a1FKfuOAzK+EtN5ksWX3Ch8SBZHLkolYH18vMow=;
-        b=lct5lXl+IscuWLrw6XCAopB0jz61pOOckI0TmsidUgK4aX5mFUXIL+srhSrr7xsXiI
-         R858On8eqIKqa3BXB4MJdWnfFhKywElGKTmO4z+5bqMcrhqViWsYCBSTHeu5VymTDvXy
-         vzDM5SQexLRHSqiZTMW5uVEwHz6m0ToMk5ffxuaUr7dFrUjGIrbFJSlBk8RtMkG1HFta
-         e9YzM1vFQZlEpZx+IwYLnAg7oi80UtsWCGSGE9hdWjS2nYrQr6DSDyUzhadbwcYpuzTu
-         tfVONL2lwfWuYRw4uqk4mrPTFWRAPc4c1PM/LJ8V399ICf9ZbS1MhBB39wQOxCgx1dGp
-         +4hw==
+        bh=GtP40NBc6K+wY7TevCqJVJVyGGxw6eyhk3x6njvRZbI=;
+        b=PMRE9MFBjRNguCLZJxvQ0tC6cbj5HN/L0mNJHOjg1H5naWvyPaji8Uw6CjXqOQ2azW
+         MhWs/LuNrHlvICFisvb7Cy6SJ3VKQrmiHJlokad5hGoOXcGXzDY3vorrrgpyAZrAVUDE
+         dUN76VdbMCLvs9G10TRyVoj/R2uKEUPKhrkRhwWPh9Qq6Oj8zqhrDAXwnWHye+K8R3ym
+         lDZQumSHVx6+RupP9U0o1EyjztcXPr7zTXefIIyzd+nYkxQBJg3bKkumuWN4k6N/hrZC
+         eN210smaNX58gX6QVglgalvDGfi5xzWfnOSt7/cWPG1d3xQeaexIo7gZ03EO3NRYAH/8
+         2wUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=Iab8a1FKfuOAzK+EtN5ksWX3Ch8SBZHLkolYH18vMow=;
-        b=RliE2PAF9cHp2EHfVpHY5NNmSJQvVqnUe9dAxUy+77a9dbdHYCai6Bh0G1W+RSayXa
-         qK6IlpsLBpbKT9mEY+9+nUxGO00NMzX78K+ynd764lkNWwDVZdphdl41N3g2f8BnC1DX
-         RWMTzP/7zKf0n6sxblaM0/CCyhPv4keP1d4ykjUT1+dnCDNmlO1lWEih9klBTbspo9Ax
-         ivZ/+JHzrpn4sgwWkiRt1KpYztXjRyE8FH9yfT1gzzAgd2u3opguZc8evgLAtzTEFc+C
-         1IrhNh/L4QCfuiRYbr9HvUzSGhQxMlAIdw+2FqqzgGbaEWGTzmbcqO4NemBt6mZimfWf
-         BuqA==
-X-Gm-Message-State: AGi0PuacaeJWCPvH9XkA5q6EMF9h1y36S94ENlvko2KmsyWYm+rSj9zN
-        uZ8FcZUGbFruxM07LCKVG9/Fj0GLUt8=
-X-Google-Smtp-Source: APiQypLZpjmT/ThpynRDdIZHTO4aZH7CnvngDUK8vlIGwZhBDCAfCPTuSg0ilh9qJ0MLoF72azaR+A==
-X-Received: by 2002:a63:5724:: with SMTP id l36mr15697582pgb.366.1586824079677;
-        Mon, 13 Apr 2020 17:27:59 -0700 (PDT)
+        bh=GtP40NBc6K+wY7TevCqJVJVyGGxw6eyhk3x6njvRZbI=;
+        b=DqxvVRdIKdEPyEQ45MAmf9mgaBoEYrFf2KsJXc3U2iopAd+aLREs4tG/hZ4IOI/35c
+         PhLJowYVlJsZdqTmbjA3uEGQVHXZpDjEV+34llPcD8uOKPipuk6vvS/pvMGxEsFlqfJB
+         mDmLCZ4ORxDXhhZQQl/DqsP/o+T7hx1YTnIqjHAdiIIsSLE+vSwSmJiETaAkvaW8cBj1
+         CTKg/Jbz/rZYjAXc9q14LJKI4zig3eDcfr5ooqKEmOiiDP7Q8ocgMXzCYedK1n9WU4lx
+         ufdO66S0i+9kbVkK8XDkDRgL/zje/+OsDHhQbNVnjqYpTRuUIl3s9bZQ4+u2lgOxvt0U
+         cO3w==
+X-Gm-Message-State: AGi0Pua8xLgogWQ3n5oMtoPqsojrFKz7W/OEm4pI9yurIDm3s/3OTaYd
+        2YpyXeFOqZUIDoqaySK+7DS/nQ==
+X-Google-Smtp-Source: APiQypL5W5g7xmsU3GZXO1UecYYPwVLK1dPD412glciRM3pdZ8NSkRu/LjnNHn8Pg6Fxg4L/cgCpIw==
+X-Received: by 2002:a62:dd48:: with SMTP id w69mr10144721pff.86.1586824199909;
+        Mon, 13 Apr 2020 17:29:59 -0700 (PDT)
 Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 132sm9849909pfc.183.2020.04.13.17.27.58
+        by smtp.gmail.com with ESMTPSA id g11sm10055136pjs.17.2020.04.13.17.29.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 17:27:59 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 17:27:58 -0700 (PDT)
+        Mon, 13 Apr 2020 17:29:59 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 17:29:58 -0700 (PDT)
 From:   David Rientjes <rientjes@google.com>
 X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Nicholas Piggin <npiggin@gmail.com>
-cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+To:     Waiman Long <longman@redhat.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 0/4] huge vmalloc mappings
-In-Reply-To: <20200413125303.423864-1-npiggin@gmail.com>
-Message-ID: <alpine.DEB.2.21.2004131727150.260270@chino.kir.corp.google.com>
-References: <20200413125303.423864-1-npiggin@gmail.com>
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
+In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+Message-ID: <alpine.DEB.2.21.2004131729410.260270@chino.kir.corp.google.com>
+References: <20200413211550.8307-1-longman@redhat.com> <20200413211550.8307-2-longman@redhat.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -83,39 +102,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020, Nicholas Piggin wrote:
+On Mon, 13 Apr 2020, Waiman Long wrote:
 
-> We can get a significant win with larger mappings for some of the big
-> global hashes.
+> As said by Linus:
 > 
-> Since RFC, relevant architectures have added p?d_leaf accessors so no
-> real arch changes required, and I changed it not to allocate huge
-> mappings for modules and a bunch of other fixes.
+>   A symmetric naming is only helpful if it implies symmetries in use.
+>   Otherwise it's actively misleading.
 > 
+>   In "kzalloc()", the z is meaningful and an important part of what the
+>   caller wants.
+> 
+>   In "kzfree()", the z is actively detrimental, because maybe in the
+>   future we really _might_ want to use that "memfill(0xdeadbeef)" or
+>   something. The "zero" part of the interface isn't even _relevant_.
+> 
+> The main reason that kzfree() exists is to clear sensitive information
+> that should not be leaked to other future users of the same memory
+> objects.
+> 
+> Rename kzfree() to kfree_sensitive() to follow the example of the
+> recently added kvfree_sensitive() and make the intention of the API
+> more explicit. In addition, memzero_explicit() is used to clear the
+> memory to make sure that it won't get optimized away by the compiler.
+> 
+> The renaming is done by using the command sequence:
+> 
+>   git grep -w --name-only kzfree |\
+>   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
+> 
+> followed by some editing of the kfree_sensitive() kerneldoc and the
+> use of memzero_explicit() instead of memset().
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Hi Nicholas,
-
-Any performance numbers to share besides the git diff in the last patch in 
-the series?  I'm wondering if anything from mmtests or lkp-tests makes 
-sense to try?
-
-> Nicholas Piggin (4):
->   mm/vmalloc: fix vmalloc_to_page for huge vmap mappings
->   mm: Move ioremap page table mapping function to mm/
->   mm: HUGE_VMAP arch query functions cleanup
->   mm/vmalloc: Hugepage vmalloc mappings
-> 
->  arch/arm64/mm/mmu.c                      |   8 +-
->  arch/powerpc/mm/book3s64/radix_pgtable.c |   6 +-
->  arch/x86/mm/ioremap.c                    |   6 +-
->  include/linux/io.h                       |   3 -
->  include/linux/vmalloc.h                  |  15 +
->  lib/ioremap.c                            | 203 +----------
->  mm/vmalloc.c                             | 413 +++++++++++++++++++----
->  7 files changed, 380 insertions(+), 274 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
-> 
-> 
+Acked-by: David Rientjes <rientjes@google.com>
