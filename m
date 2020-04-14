@@ -2,113 +2,120 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC1DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D492BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDF0A206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kbzpx2bD"
+	by mail.kernel.org (Postfix) with ESMTP id B710F206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502197AbgDNMrx (ORCPT
+        id S2502208AbgDNMsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729455AbgDNMrj (ORCPT
+        Tue, 14 Apr 2020 08:48:24 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:60679 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502184AbgDNMrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:47:39 -0400
-X-Greylist: delayed 72711 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 05:47:39 PDT
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39173C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 05:47:39 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F0C1D0021F05AC4D60C335F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1d00:21f0:5ac4:d60c:335f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8FF3E1EC0CDE;
-        Tue, 14 Apr 2020 14:47:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586868456;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vP4PbFC2Ql0uKPjbBVGyLCqT4YXRCyjqKtYPNE0k1+U=;
-        b=kbzpx2bD9bU7020BOrk7rhM9RaEK4j4gkgGAAdw+xoI82QHY5EPcneTPrNsr67rtlQ0D8L
-        ilzLeGKq2VM9IrLsqwjzmyqSHkpLC1eCPGhc1rt3fwcYMMrRk9o7TJiuXiuF6dTr57mIEE
-        hSh31XhQW/1XV4liU2uL6zPiJAv9jV8=
-Date:   Tue, 14 Apr 2020 14:47:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     khuong@os.amperecomputing.com, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] EDAC, xgene: remove set but not used 'address'
-Message-ID: <20200414124731.GB31737@zn.tnic>
-References: <20200409093259.20069-1-yanaijie@huawei.com>
+        Tue, 14 Apr 2020 08:47:45 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A6D5220000E;
+        Tue, 14 Apr 2020 12:47:41 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 14:47:41 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
+Message-ID: <20200414124741.GJ34509@piout.net>
+References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+ <20200410222658.GB3628@piout.net>
+ <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
+ <20200413104652.GE3628@piout.net>
+ <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
+ <20200414111600.GE34509@piout.net>
+ <a07d841e-efa9-6c01-69e2-0ed33f9759c5@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200409093259.20069-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a07d841e-efa9-6c01-69e2-0ed33f9759c5@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:32:59PM +0800, Jason Yan wrote:
-> Fix the following gcc warning:
+On 14/04/2020 12:13:46+0000, Claudiu.Beznea@microchip.com wrote:
 > 
-> drivers/edac/xgene_edac.c:1486:7: warning: variable ‘address’ set but
-> not used [-Wunused-but-set-variable]
->    u32 address;
->        ^~~~~~~
-> And remove the unused macro RBERRADDR_RD after that.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/edac/xgene_edac.c | 3 ---
->  1 file changed, 3 deletions(-)
+> On 14.04.2020 14:16, Alexandre Belloni wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > On 14/04/2020 08:42:08+0000, Claudiu.Beznea@microchip.com wrote:
+> >>> Why would one use the RTT while the RTC is far superior?
+> >>
+> >> I didn't enabled this for a particular use case, but: couldn't this be used
+> >> by some user that wants to generate multiple alarms? from multiple RTCs?
+> >>
+> > 
+> > I very much doubt that as Linux is able to properly multiplex alarms and
+> > basically, the only one we are interested in is actually wakeup.
 > 
-> diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
-> index e4a1032ba0b5..1d2c27a00a4a 100644
-> --- a/drivers/edac/xgene_edac.c
-> +++ b/drivers/edac/xgene_edac.c
-> @@ -1349,7 +1349,6 @@ static int xgene_edac_l3_remove(struct xgene_edac_dev_ctx *l3)
->  #define WORD_ALIGNED_ERR_MASK		BIT(28)
->  #define PAGE_ACCESS_ERR_MASK		BIT(27)
->  #define WRITE_ACCESS_MASK		BIT(26)
-> -#define RBERRADDR_RD(src)		((src) & 0x03FFFFFF)
->  
->  static const char * const soc_mem_err_v1[] = {
->  	"10GbE0",
-> @@ -1483,13 +1482,11 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
->  		return;
->  	if (reg & STICKYERR_MASK) {
->  		bool write;
-> -		u32 address;
->  
->  		dev_err(edac_dev->dev, "IOB bus access error(s)\n");
->  		if (regmap_read(ctx->edac->rb_map, RBEIR, &reg))
->  			return;
->  		write = reg & WRITE_ACCESS_MASK ? 1 : 0;
-> -		address = RBERRADDR_RD(reg);
->  		if (reg & AGENT_OFFLINE_ERR_MASK)
->  			dev_err(edac_dev->dev,
->  				"IOB bus %s access to offline agent error\n",
-> -- 
+> I think you can use the wakealarm sysfs exported file to prepare an alarm
+> and take user space actions based on that without being suspended.
+> 
+> > 
+> >> Moreover, this IP's counter has the possibility of being clocked at 1Hz.
+> >> Couldn't this minimize the power consumption while being in a power saving
+> >> mode?
+> >>
+> > 
+> > And that 1Hz clock is coming from the RTC so using the RTC is
+> > definitively consuming less power.
+> 
+> Datasheet specifies this: "Configuring the RTPRES field value to 0x8000
+> (default value) corresponds to feeding the real-time counter with a
+> 
+> 1Hz signal (if the slow clock is 32.768 kHz)."
+> 
+> So, it is not the RTC, it is the slow clock divided by 32768.
 
-Applied, thanks.
+This is not what you described previously, using RTPRES means running
+the RTT at 32kHz. This is exactly what happens with the RTC but you get
+the added clock calibration circuitry that is probably not drawing to
+much power but the added consumption of the configurable prescaler
+versus the static prescaler of the RTC is probably similar.
+
+Using RTC1HZ would be driving the RTT at 1Hz.
+
+> > But this is very unlikely to happen because this would be limited to a
+> > single board device tree instead of impact every sam9x60 based boards.
+> 
+> Very unlikely but a having a patch with diff like this:
+> 
+> +&gpbr {
+> +     status = "okay";
+> +};
+> +
+> +&rtt {
+> +     atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
+> +     status = "okay";
+> +};
+> +
+> 
+> and reverting it may affect the other users of gpbr in sam9x60ek.dts.
+> 
+
+Again, this affects only sam9x60ek.dts instead of possibly multiple DTs
+that may be out of tree. So the risk of doing that is null.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
