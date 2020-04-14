@@ -2,84 +2,119 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADC1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18D7C3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47A020768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kqWNaAN0"
+	by mail.kernel.org (Postfix) with ESMTP id 9955620768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:10:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437091AbgDNPKH (ORCPT
+        id S2440352AbgDNPKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:10:07 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:12613 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437001AbgDNPJV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:09:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586876961; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=OS+STgIODNgZTcpBgh6hwEBupTearScuPMfVu+byNqk=;
- b=kqWNaAN06UfJczZ6yKWwhOzTpzDDCv6IacLCGQrDOrpOuL7VL53t/YSjfPvIZ0LOZig6Rpu0
- XYrsOhD7dh/XTtirRDnAoE0VrZ4x5eyu5M7SRxWM8uOKFuczitNatmvBGT08SXX8hMyDBe58
- atT9RGRYy7zmtCdNZzowDJu5yd8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e95d21d.7fe913496d88-smtp-out-n01;
- Tue, 14 Apr 2020 15:09:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E73AC433CB; Tue, 14 Apr 2020 15:09:17 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A766C433BA;
-        Tue, 14 Apr 2020 15:09:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A766C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Apr 2020 11:10:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38622 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436635AbgDNPJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:09:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5D6F4ACB1;
+        Tue, 14 Apr 2020 15:09:31 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2555C1E125F; Tue, 14 Apr 2020 17:09:29 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 17:09:29 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc:     viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, jack@suse.cz, tj@kernel.org,
+        bigeasy@linutronix.de, linfeilong <linfeilong@huawei.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        renxudong <renxudong1@huawei.com>
+Subject: Re: [PATCH] buffer: remove useless comment and
+ WB_REASON_FREE_MORE_MEM, reason.
+Message-ID: <20200414150929.GD28226@quack2.suse.cz>
+References: <5844aa66-de1e-278b-5491-b7e6839640e9@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] qtnfmac: Simplify code in _attach functions
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200407193233.9439-1-christophe.jaillet@wanadoo.fr>
-References: <20200407193233.9439-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     imitsyanko@quantenna.com, avinashp@quantenna.com,
-        smatyukevich@quantenna.com, davem@davemloft.net,
-        huangfq.daxian@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200414150917.1E73AC433CB@smtp.codeaurora.org>
-Date:   Tue, 14 Apr 2020 15:09:17 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5844aa66-de1e-278b-5491-b7e6839640e9@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-
-> There is no need to re-implement 'netdev_alloc_skb_ip_align()' here.
-> Keep the code simple.
+On Mon 13-04-20 13:12:10, Zhiqiang Liu wrote:
+> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+> free_more_memory func has been completely removed in commit bc48f001de12
+> ("buffer: eliminate the need to call free_more_memory() in __getblk_slow()")
+> 
+> So comment and `WB_REASON_FREE_MORE_MEM` reason about free_more_memory
+> are no longer needed.
+> 
+> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-Patch applied to wireless-drivers-next.git, thanks.
+Thanks. The patch looks good to me. You can add:
 
-c960e2b384ef qtnfmac: Simplify code in _attach functions
+Reviewed-by: Jan Kara <jack@suse.cz>
 
+								Honza
+
+> ---
+>  fs/buffer.c                      | 2 +-
+>  include/linux/backing-dev-defs.h | 1 -
+>  include/trace/events/writeback.h | 1 -
+>  3 files changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index b8d28370cfd7..07ab0405f3f5 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -973,7 +973,7 @@ grow_dev_page(struct block_device *bdev, sector_t block,
+>  	struct page *page;
+>  	struct buffer_head *bh;
+>  	sector_t end_block;
+> -	int ret = 0;		/* Will call free_more_memory() */
+> +	int ret = 0;
+>  	gfp_t gfp_mask;
+> 
+>  	gfp_mask = mapping_gfp_constraint(inode->i_mapping, ~__GFP_FS) | gfp;
+> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+> index 4fc87dee005a..ee577a83cfe6 100644
+> --- a/include/linux/backing-dev-defs.h
+> +++ b/include/linux/backing-dev-defs.h
+> @@ -54,7 +54,6 @@ enum wb_reason {
+>  	WB_REASON_SYNC,
+>  	WB_REASON_PERIODIC,
+>  	WB_REASON_LAPTOP_TIMER,
+> -	WB_REASON_FREE_MORE_MEM,
+>  	WB_REASON_FS_FREE_SPACE,
+>  	/*
+>  	 * There is no bdi forker thread any more and works are done
+> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+> index d94def25e4dc..85a33bea76f1 100644
+> --- a/include/trace/events/writeback.h
+> +++ b/include/trace/events/writeback.h
+> @@ -36,7 +36,6 @@
+>  	EM( WB_REASON_SYNC,			"sync")			\
+>  	EM( WB_REASON_PERIODIC,			"periodic")		\
+>  	EM( WB_REASON_LAPTOP_TIMER,		"laptop_timer")		\
+> -	EM( WB_REASON_FREE_MORE_MEM,		"free_more_memory")	\
+>  	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
+>  	EMe(WB_REASON_FORKER_THREAD,		"forker_thread")
+> 
+> -- 
+> 2.19.1
+> 
+> 
 -- 
-https://patchwork.kernel.org/patch/11478939/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
