@@ -2,76 +2,128 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F362FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D813C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1AE220575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440F02074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejCS7DL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504768AbgDNT3E (ORCPT
+        id S2504774AbgDNT3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:29:04 -0400
-Received: from smtprelay0211.hostedemail.com ([216.40.44.211]:41858 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504730AbgDNT25 (ORCPT
+        Tue, 14 Apr 2020 15:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504753AbgDNT26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:28:57 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id 2B1CF18064C30;
-        Tue, 14 Apr 2020 19:12:00 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 032BF100E7B45;
-        Tue, 14 Apr 2020 19:12:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rain29_4b79cd438ab50
-X-Filterd-Recvd-Size: 1707
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 14 Apr 2020 19:11:58 +0000 (UTC)
-Message-ID: <19df87f5d093a6c2721316811aca1c90d287bf1d.camel@perches.com>
-Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, paul@crapouillou.net,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Tue, 14 Apr 2020 12:09:49 -0700
-In-Reply-To: <20200414184925.GA12862@kadam>
-References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
-         <20200414135827.GB3593749@ulmo>
-         <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
-         <20200414184925.GA12862@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 14 Apr 2020 15:28:58 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C789C061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:28:57 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id x11so888521otp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yXl5LngxcEox6tFkMcsHWj7/e31HOzYbZGvPkAeshzo=;
+        b=ejCS7DL3ag6duTxMi2Ewpv00tGgVeaaEYl909NqixmQ15Qfq51ylCT9rHeFXSPUOk2
+         vtyBZ6NZuEAQdkWQHdUA1JMWEZ5a6JIJb0+mJx2uExrZl2LAL3R0IkdFluJ5FE4QU0H3
+         XAZImBwtrpZeU6j+JV+hS3nuxF3J2vNG6uk42/IVOlWQo4YYxfDSRoioISx/gckZPhmt
+         CQ2i4dwZhU7B1CYMJik4ck7ILQHs9mpEkR5EF377I+1sComWBiqgdjX+IdeAa6W8E8KK
+         a2DSXOfoToBilcypqD49C2OvoP8jMRnBBfFpAJyp0pwsff8FnqzSXoiUU7D68iQ4qpqO
+         rdug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yXl5LngxcEox6tFkMcsHWj7/e31HOzYbZGvPkAeshzo=;
+        b=Lq37kmiYzg0W6n5tWGXb2VQGwLNwkLRnBgZzFhuPZGGXMN7VANsreVc2pvj0OtjbnK
+         UuEpTVOkRmHFmu8jLAyG1oDD49SK8jBOVkUuiuGneIkFEOgtcIHfwJaK1+TwOq2vdkNZ
+         MkhVeDyag3DFotknmEK+ze8zJHVHIJT8cJQb+m/V9HRofF91it1aqjBcwb2gVU93aW6z
+         /M38UjZjFbrtjpacd6wo8ffd3bCcUH4cj18O81765Y9skU1A+fKjnJuuEtXn23hUkthQ
+         twxNssp2amJEEKzGtKh/bMwNKrkvojPy4V0iFtzHRXEPSmPZu0pp9bu7p/EJorhS7vSu
+         8BmQ==
+X-Gm-Message-State: AGi0PuaWRSpUGHlN8m4UusNCM35a9cdWwdOVbf/LcfoQzfcBjOuz3ODm
+        +kFKv/mhCTYkSkI8Jr3KCP62STBSac4fDJ19hgiVUA==
+X-Google-Smtp-Source: APiQypLNgzWQIOmbMjbOIDPabi7ahVlW8rXca4fleUQzDSYq/+Zo4l7gzAwDGKt/X8yYn92PkHHYUl5oOnJLWGe/36A=
+X-Received: by 2002:a4a:3006:: with SMTP id q6mr10846802oof.70.1586892536562;
+ Tue, 14 Apr 2020 12:28:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200414185744.84581-1-john.stultz@linaro.org> <CAD=FV=XT_icz04g4M+iZHZRzjM1jnuHgkPBsaVmzc1wyoUe=7A@mail.gmail.com>
+In-Reply-To: <CAD=FV=XT_icz04g4M+iZHZRzjM1jnuHgkPBsaVmzc1wyoUe=7A@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 14 Apr 2020 12:28:45 -0700
+Message-ID: <CALAqxLWS7+wqARFVoDStVcf-B77sPc6GaHBKebfMh1gXyUP4HQ@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy"
+ compat string
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 21:49 +0300, Dan Carpenter wrote:
-> Huh...
-> 
-> If you look at dev_vprintk_emit().  It looks like if
-> create_syslog_header() returns a string then vprintk_store() will add
-> a newline.
-> 
-> I guess that means that dev_printk() can't be used to pr_cont().  And
-> probably that's deliberate because using pr_cont() after boot is racy
-> anyway.
+On Tue, Apr 14, 2020 at 12:14 PM Doug Anderson <dianders@chromium.org> wrote:
+> On Tue, Apr 14, 2020 at 11:57 AM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > This patch fixes a regression in 5.7-rc1.
+> >
+> > In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> > PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> > as a generic compat string. However the change also removed
+> > the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> > in the binding and already in use.
+> >
+> > This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> > which allows the driver to continue to work with existing dts
+> > entries such as found on the db845c.
+> >
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Doug Anderson <dianders@chromium.org>
+> > Cc: Manu Gautam <mgautam@codeaurora.org>
+> > Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+> > Cc: Matthias Kaehlcke <mka@chromium.org>
+> > Cc: Stephen Boyd <swboyd@chromium.org>
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Cc: linux-arm-msm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+> > Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+>
+> Re-adding reviews from:
+> https://lore.kernel.org/r/158631458374.216820.17829557619378130779@swboyd.mtv.corp.google.com
+> https://lore.kernel.org/r/CAD=FV=Wh9_4a-cDGPdpMrXUi_HmJvS-a2Ubeyo5WG3sgwVWKKQ@mail.gmail.com
+>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Perhaps that's true, it didn't used to be.
+Ah! Sorry, I thought I had added those to my git commit, but
+apparently I didn't!
 
-There are couple dozen or so KERN_CONT uses after a dev_<level>
-without a newline, so those _might_ be broken, but I don't thinks so.
-
-$ git grep -P -A10 '\bdev_\w+\s*\(' | \
-  grep -P -B10 "KERN_CONT|pr_cont"
-
+Many thanks!
+-john
