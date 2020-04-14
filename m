@@ -2,134 +2,152 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB405C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3C2C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A6C206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227EC20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OCiuS6MD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PU3oFjoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436734AbgDNIY5 (ORCPT
+        id S2436748AbgDNIZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:24:57 -0400
-Received: from mout.web.de ([217.72.192.78]:41197 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436695AbgDNIYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:24:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586852667;
-        bh=xYmpjD3b4g0+uRWfz6ZucD+8z8VMXMdEU294FPLBGDw=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=OCiuS6MDsv9C7UUT7Q0JZyw17KAsUJDdSnwsGfZZhlAwpkVZIbx5Hj9QJEhyoSVrR
-         l+nLv4u3axnO8pdnqr/TMQTP2gs4ywi0lX8/B/bjoE3us/BERe0Muea3j5/siNMq5t
-         6309TORDTwKMbju1S4rsJKndEZsV9AjsevQ+abn4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.66.171]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MGzjq-1jTAPA3hZa-00DpHE; Tue, 14
- Apr 2020 10:24:27 +0200
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alex Elder <elder@linaro.org>, linux-remoteproc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/4] remoteproc: Fix a bug in rproc_alloc()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e459f807-4c61-257b-b7b5-dd767202c435@web.de>
-Date:   Tue, 14 Apr 2020 10:24:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 04:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436713AbgDNIYo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:24:44 -0400
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on062d.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe02::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B96AC0A3BDC
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 01:18:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iTmsh+6u1b+9LKOIQNJww3FgO1MUSDFclLXRVxfVPk9WUPTH0Szhs//ArCi7gxV4SnyvgsR0H9gw7i2ULoh4rY+ZNysNlAlKvyzxvI/AwLE1VQQXl43jiZCb0lylNm4Nuq9PA2XtMPswDNTBsoAL/MMoVmuhEmHJCcAMrQJqIlbohginnMDrMlGFxjcFgP9PI/hrlX9QnkaZSrg6GIFZFwkdg50eW+VhzvhHgwqeEx1roUXiz9MZ4g+xE5IKtyy6DzvDeqBQ2HkayOiztdJkcMS3l5cOMRIgkmZfM0Q8kfSRjJpZdcAbiW3sJlSTKLIRO/2Z7lRR1TZtWAdftw9g+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4tC66cTJ89BNeaHvzMKQcbO3/xuvJdWcFBmJTwpL6Tc=;
+ b=XnmRDvPp6u/Wqd23K1vTP6EbKy0FuXgQHYX9WZDatcaaos0OwrB/pJVlOtXLAvSCFA+H/tyb2UiYIgPOenjCHfpmtRySq+2nxdxxfvfsRs9+wZMZKU46sRo+Gc3sHKbcosMpZsfF1yOmqkcFFY8rqX3BFLuRKrWu650u29ZKU/139aV6tP3JYYTa3GvXY/o8S4ylVoXIUiXN4LJFMF3MgBLaV+yAcgDSvrAmRtcNNmY9nB+ynIJ0oUeDq7ElX5ysCCka5fq6Rw4Rulw0kEstlk0b/jOB1HNhiHXWy38+T2Ps4SvbYu63ZkbtFhDfkHy+A8oEPMppS1zVg+qH7kpw2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4tC66cTJ89BNeaHvzMKQcbO3/xuvJdWcFBmJTwpL6Tc=;
+ b=PU3oFjoC6LmUjmT+GgiO2GsdEqCc6lFM6fYz/dLQI1YTo+U6+pKMFZAEW9YTkXXXmox0bX+HHncdKDag3SSRpYzfqbvXUfU/2ibD7Sz+Z+qLpqnNKAud0ZrBk7Qf40p+dqktzOulMHwAGDjRrdaG6DZhrdgZMBjXV7bsyGtMs+M=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
+ by AM0PR04MB6724.eurprd04.prod.outlook.com (2603:10a6:208:17a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16; Tue, 14 Apr
+ 2020 08:18:41 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 08:18:41 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
+        jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
+        leonard.crestez@nxp.com
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] mailbox: imx-mailbox: fix scu msg header size check
+Date:   Tue, 14 Apr 2020 16:10:26 +0800
+Message-Id: <1586851826-16596-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0093.apcprd02.prod.outlook.com
+ (2603:1096:4:90::33) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:x3pdaU8T+pJDvPTFMHeaGE4NFDXjx/oIl5bqFFTbxRwj1inj0Ds
- tccARXNh0XLP+iqXBZqa+oYIL6Qp0SXzOCdzwQgA7zkMhgU9/gD2LJtlRLewApYYY5A5neR
- OtsauIzyL5k75EJYnHwuMXdWFPi5uJSSensDTfI4G8vewDnWX0hwshX8b5QwtiwbHijL8LP
- OeQDDOaLbYd5qCsa/Xs6w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8YkSqLQf2Ng=:eO37U/FXPCWPJUy/sX82K7
- 0K8+vQULu9iyydiGNH51uxY/ezTzK8AuUuZ5DyOXRCFqd4D/ZTJrDESvDbkEvVMpgMcKxE1oT
- ooMD/ZGf3US8iZruJHIvZEI0tGLBc3s/89gEfQ+C4nx17z6wazfqNQvkncXIgeVDf33y+LAJQ
- 1V69d6Wj6BHq8PeRlxfk9vf5i8WLuRkLtWpgF/CEVA1iwf2OwNW9yoEqa40LPoCI0Ukfnvylr
- uiR8q2FQht1LiPUNS6UoAe/GjpnBeIxaFAAZLTDste45NI3UhcN7a06lODlgq9EG5g9VzmBJH
- FmAoke6FpPRM1Yp60emMFgCb0eoYFrHmsDfXWgV3oQnVFjX5IVtSPGqV51E6LBT7UQx5iMOrH
- 35a3IK4PQz4aI5XxR/I7VhqyABlDjHeKUT8HWyPWuoyCYUMAvhdDxgNdYxkVFXu70VflKS+sa
- gmTjTI96pYt3HDpEawk3AqeqJbIiLwr4PeQPyejEDmnyRAJRr7s+8eE45JrbbVitpAHgdXSc4
- v+9bNtpQ3Sa6qC3UYNg8qpk/vS82t3rcEH49yXAfsY6iOb9MnLdaZJ5szWDJUCEgvbiwTB2Fr
- j6NCTUYr7gupaB8oYeKcxpG3EvtuLiAWUjbsHCIXPskWO7e/Y9uAD1n5d4tciZn6LYFPfI/bR
- mjbuuSaZPVsG01ZZGwCU5L3+6P3DnufEXWhKr3UH4dsJAJgxd9M+eQvgy9MvsRgQuWb9RMUvS
- +p/DjN/4cuJ9d9CkJQYJgoR+zmDSk9et3WS0QbCiF1KgJJzFlBkoMjfKaxSzSPK2QfFnEzR/F
- lpbNVeFfvghx+BdJ20Qw70Q3JzznW+bO0YHYbYx/dkLk8xw5UMAH4vW4CzNCmQ3RogoN3R0/6
- wkEqbZ9dCVlJ9iG4+FlvRC1gnuB2wmisTlnULg5Dwn956aDliwLxEapNvc+hhhIrl7foxqp5n
- ZrbUrrkJqZXiUOOcMsOSOFBhk4k5YikgBqmOExDvW6u58vgtqaFSetj49DdN2cld46PNnMZAI
- a6fystAJe2FkPGCO27xOcPicAzDbAw5fijtbveDe1u33BBORhfcn03Z6RRr8B7FK8OfwsQY+k
- Ug4/wL58vdVpdjZ0kIs1JN5+egCPEKr0MC3bbr5WVUpuu/branPjPa3c0zRlc5X+r1IF7OQjV
- kblWrjkFesJkND+qCGpIt6tpGMJwiq/tOT6M87LTZkSvdqYnA3I+vPKq/RnWufHZCPqdBghap
- kGZbmDN5IIXq27gtN
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.67) by SG2PR02CA0093.apcprd02.prod.outlook.com (2603:1096:4:90::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2900.16 via Frontend Transport; Tue, 14 Apr 2020 08:18:37 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 641d2a65-68c9-460c-0027-08d7e04c70ce
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6724:|AM0PR04MB6724:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB67241FFA827BDA53397544A288DA0@AM0PR04MB6724.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0373D94D15
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(396003)(39850400004)(136003)(366004)(69590400007)(316002)(16526019)(8936002)(9686003)(6512007)(8676002)(5660300002)(478600001)(66946007)(66476007)(81156014)(6666004)(2906002)(36756003)(66556008)(86362001)(52116002)(186003)(2616005)(4326008)(26005)(6506007)(956004)(15650500001)(6486002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 93Zb3XKBd7s3dUxmpSUpB/9fHGkGAb80nIUZ351TSrge3k7pt1UkWeEOobxm1mlijjJtdpEQmOtDkYTX7/dANH9/HTrFnsJPDNnhhKOFh1lUOHh+JcNRjGeD7d3pakSAgRC0YJ+rMiGcsPpjKHYZOIbmdJ7i/z7pw1injAZOV5PpvU9LseQDdhgjQe4vo5kKQL/jRT67fSkKJdGY28yr5n3JgBESMKQCfAweJE8FO5oKSzsvB5L3Eki6qz1mgdzWhg9ScUk65iMkrNhtTMZZnoHIE2Vi3a9Imdxf8eNvrjXx4f86MJi78X2pmHoJLOJuh9pnx/mh/4wOQsPt4XmM0goKVpXq3hzZDn4njDdabW9/oASQwfMytqn03+XIuOD4hOW5dkAM1vZSuAjW58gEGNrCZR7XBX6xT2Opd5LnkGleGNJtA+Y9b7XQCTDU46oyYiUmor704jwBHICgcR1o+QKzzI25zMXMFOuXqOQijSKfrDU28h/mNDdPO3olPqdN
+X-MS-Exchange-AntiSpam-MessageData: TOfm9Iue543fqmYrmFvZuioKoiOZLRDgA1QIKQxHLD2nYNggMYSVk7JtPxnrl0Gs+QqKkOrEtrIAa+dyaPus4/eEi+SNWtsl/FTNLcSQ9eMkGQc3H2pgqrNsXmwVhId8+EK5imqV8CrkKWGY0R0yXA==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 641d2a65-68c9-460c-0027-08d7e04c70ce
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 08:18:41.3138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ayxUYNV3b+gqRX7Fa2ed2WnMAW59YjmMzGjdy+kxdrgMvFOq3/KB/MX85boWt4bK90q4Sz987Ao6ggXom4JBQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6724
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I'm not actually sure this case causes an observable problem, but
-> it's incorrect.  Fix this by initializing the notifyids field before
-> calling ida_simple_get() in rproc_alloc().
+From: Peng Fan <peng.fan@nxp.com>
 
-I suggest to improve the commit message.
+The i.MX8 SCU message header size is the number of "u32" elements,
+not "u8", so fix the check.
 
-* Can the information =E2=80=9Cfield initialisation=E2=80=9D be more helpf=
-ul than =E2=80=9Cbug=E2=80=9D
-  in the patch subject?
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1461658 ("Memory - corruptions")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-* Will the tag =E2=80=9CFixes=E2=80=9D become relevant?
+V2:
+ I not include the fixes tag, since this patch still in next tree.
 
-Regards,
-Markus
+ drivers/mailbox/imx-mailbox.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 7906624a731c..c2398cb63ea0 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -154,12 +154,12 @@ static int imx_mu_scu_tx(struct imx_mu_priv *priv,
+ 
+ 	switch (cp->type) {
+ 	case IMX_MU_TYPE_TX:
+-		if (msg->hdr.size > sizeof(*msg)) {
++		if (msg->hdr.size > (sizeof(*msg) / 4)) {
+ 			/*
+ 			 * The real message size can be different to
+ 			 * struct imx_sc_rpc_msg_max size
+ 			 */
+-			dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i\n", sizeof(*msg), msg->hdr.size);
++			dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i\n", sizeof(*msg) / 4, msg->hdr.size);
+ 			return -EINVAL;
+ 		}
+ 
+@@ -198,9 +198,9 @@ static int imx_mu_scu_rx(struct imx_mu_priv *priv,
+ 	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
+ 	*data++ = imx_mu_read(priv, priv->dcfg->xRR[0]);
+ 
+-	if (msg.hdr.size > sizeof(msg)) {
++	if (msg.hdr.size > (sizeof(msg) / 4)) {
+ 		dev_err(priv->dev, "Exceed max msg size (%zu) on RX, got: %i\n",
+-			sizeof(msg), msg.hdr.size);
++			sizeof(msg) / 4, msg.hdr.size);
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.16.4
+
