@@ -2,136 +2,132 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275DFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77B3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF182072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCCE2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404953AbgDND4A (ORCPT
+        id S2404966AbgDND4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:56:00 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55254 "EHLO mga12.intel.com"
+        Mon, 13 Apr 2020 23:56:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46666 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgDNDz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:55:57 -0400
-IronPort-SDR: wQefF3Ufyl6QElO6HZomZKHX62kvB2KE6CEnooVivTbMAlN5MiNgOr2WO7OEuQcGxZopsFBBfw
- o28AeEVdzNjg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 20:55:56 -0700
-IronPort-SDR: vzBTEWecsrmKI4L9C7YiW1yyInHNJ3i4lIT4gQGtWjIi+WnNK/AuRWIIcxjwPuLxsO7+5VA5Ev
- 8a6ExhrjiMxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="399825341"
-Received: from spandruv-mobl3.jf.intel.com (HELO yzrodnik-mobl.amr.corp.intel.com) ([10.251.1.193])
-  by orsmga004.jf.intel.com with ESMTP; 13 Apr 2020 20:55:55 -0700
-Message-ID: <bad9e0bd5504df83092c7add2d84331e164b60cc.camel@linux.intel.com>
-Subject: Re: [PATCH 1/3] x86/mce/therm_throt: remove unused
- platform_thermal_notify function pointer
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        x86@kernel.org, arnd@arndb.de, bberg@redhat.com, bp@suse.de
-Date:   Mon, 13 Apr 2020 20:55:55 -0700
-In-Reply-To: <20200407063345.4484-1-Jason@zx2c4.com>
-References: <20200407063345.4484-1-Jason@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        id S1728295AbgDND4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Apr 2020 23:56:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A30A2ABB2;
+        Tue, 14 Apr 2020 03:56:32 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Date:   Tue, 14 Apr 2020 13:56:25 +1000
+Cc:     David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
+In-Reply-To: <20200413191532.6b234b50caea9134fb95a151@linux-foundation.org>
+References: <20200403083543.11552-1-mhocko@kernel.org> <20200403083543.11552-2-mhocko@kernel.org> <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com> <87blo8xnz2.fsf@notabene.neil.brown.name> <20200406070137.GC19426@dhcp22.suse.cz> <4f861f07-4b47-8ddc-f783-10201ea302d3@nvidia.com> <alpine.DEB.2.21.2004061626540.45667@chino.kir.corp.google.com> <efbdbe8f-f4fe-cfc8-4f15-1e19ee0bf416@nvidia.com> <20200413191532.6b234b50caea9134fb95a151@linux-foundation.org>
+Message-ID: <87h7xmu3di.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-07 at 00:33 -0600, Jason A. Donenfeld wrote:
-> A long time ago platform_thermal_notify was added as some generic
-> mechanism for platform drivers to hook thermal events. It seems as
-> though this has been entirely superseded, and nothing uses it. Remove
-> the plumbing for this, since this code runs in an interrupt hot path.
-Good idea.
+--=-=-=
+Content-Type: text/plain
 
-Thanks,
-Srinivas
+On Mon, Apr 13 2020, Andrew Morton wrote:
 
-> 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> I've rather lost the plot with this little patch.  Is the below
+> suitable, or do we think that changes are needed?
+>
+>
+> From: Michal Hocko <mhocko@suse.com>
+> Subject: mm: clarify __GFP_MEMALLOC usage
+>
+> It seems that the existing documentation is not explicit about the
+> expected usage and potential risks enough.  While it is calls out that
+> users have to free memory when using this flag it is not really apparent
+> that users have to careful to not deplete memory reserves and that they
+> should implement some sort of throttling wrt.  freeing process.
+>
+> This is partly based on Neil's explanation [1].
+>
+> Let's also call out that a pre allocated pool allocator should be
+> considered.
+>
+> [1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
+>
+> [akpm@linux-foundation.org: coding style fixes]
+> Link: http://lkml.kernel.org/r/20200403083543.11552-2-mhocko@kernel.org
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: Neil Brown <neilb@suse.de>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> [mhocko@kernel.org: update]
+>   Link: http://lkml.kernel.org/r/20200406070137.GC19426@dhcp22.suse.cz
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 > ---
->  arch/x86/include/asm/mce.h            |  3 ---
->  arch/x86/kernel/cpu/mce/therm_throt.c | 25 -------------------------
->  2 files changed, 28 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-> index 4359b955e0b7..ee30cb60ad36 100644
-> --- a/arch/x86/include/asm/mce.h
-> +++ b/arch/x86/include/asm/mce.h
-> @@ -257,9 +257,6 @@ extern void (*deferred_error_int_vector)(void);
->  
->  void intel_init_thermal(struct cpuinfo_x86 *c);
->  
-> -/* Interrupt Handler for core thermal thresholds */
-> -extern int (*platform_thermal_notify)(__u64 msr_val);
-> -
->  /* Interrupt Handler for package thermal thresholds */
->  extern int (*platform_thermal_package_notify)(__u64 msr_val);
->  
-> diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c
-> b/arch/x86/kernel/cpu/mce/therm_throt.c
-> index f36dc0742085..f904e85eb68f 100644
-> --- a/arch/x86/kernel/cpu/mce/therm_throt.c
-> +++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-> @@ -105,10 +105,6 @@ struct thermal_state {
->  	struct _thermal_state pkg_thresh1;
->  };
->  
-> -/* Callback to handle core threshold interrupts */
-> -int (*platform_thermal_notify)(__u64 msr_val);
-> -EXPORT_SYMBOL(platform_thermal_notify);
-> -
->  /* Callback to handle core package threshold_interrupts */
->  int (*platform_thermal_package_notify)(__u64 msr_val);
->  EXPORT_SYMBOL_GPL(platform_thermal_package_notify);
-> @@ -551,24 +547,6 @@ static void notify_package_thresholds(__u64
-> msr_val)
->  		platform_thermal_package_notify(msr_val);
->  }
->  
-> -static void notify_thresholds(__u64 msr_val)
-> -{
-> -	/* check whether the interrupt handler is defined;
-> -	 * otherwise simply return
-> -	 */
-> -	if (!platform_thermal_notify)
-> -		return;
-> -
-> -	/* lower threshold reached */
-> -	if ((msr_val & THERM_LOG_THRESHOLD0) &&
-> -			thresh_event_valid(CORE_LEVEL, 0))
-> -		platform_thermal_notify(msr_val);
-> -	/* higher threshold reached */
-> -	if ((msr_val & THERM_LOG_THRESHOLD1) &&
-> -			thresh_event_valid(CORE_LEVEL, 1))
-> -		platform_thermal_notify(msr_val);
-> -}
-> -
->  /* Thermal transition interrupt handler */
->  static void intel_thermal_interrupt(void)
->  {
-> @@ -579,9 +557,6 @@ static void intel_thermal_interrupt(void)
->  
->  	rdmsrl(MSR_IA32_THERM_STATUS, msr_val);
->  
-> -	/* Check for violation of core thermal thresholds*/
-> -	notify_thresholds(msr_val);
-> -
->  	therm_throt_process(msr_val & THERM_STATUS_PROCHOT,
->  			    THERMAL_THROTTLING_EVENT,
->  			    CORE_LEVEL);
+>
+>  include/linux/gfp.h |    5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> --- a/include/linux/gfp.h~mm-clarify-__gfp_memalloc-usage
+> +++ a/include/linux/gfp.h
+> @@ -110,6 +110,11 @@ struct vm_area_struct;
+>   * the caller guarantees the allocation will allow more memory to be freed
+>   * very shortly e.g. process exiting or swapping. Users either should
+>   * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
+> + * Users of this flag have to be extremely careful to not deplete the reserve
+> + * completely and implement a throttling mechanism which controls the
+> + * consumption of the reserve based on the amount of freed memory.
+> + * Usage of a pre-allocated pool (e.g. mempool) should be always considered
+> + * before using this flag.
 
+I particularly don't like the connection between the consumption and the
+amount freed.  I don't think that say anything useful and it misses the
+main point which, I think, is having a bound on total usage.
+
+Nichal's previous proposal is, I think, the best concrete proposal so
+far.
+
+NeilBrown
+
+>   *
+>   * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
+>   * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
+> _
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6VNGkACgkQOeye3VZi
+gbmUqw/+IOvlNMYdYcojRcEW8VsmDaByc7Fki5Jdl5TdAVpGjzkO5hvJmpJ/kegK
+Sp3MFIDL0ZKCSXLR5oMivlxj9fs3Kp0hSZKakT3HGb4rKOPtvrdOlEJwtK2n8QuZ
+WG3gUivxitP/jVra95l0YMjWdByaks1A2LUuCkSRFXTbXxNCbTtsejOSQZ1nHNmw
+aNDPza3HVLBTs/7C1ddI9yERlangq2OpTRneubVRA8b92naJ7eszVnree/U0C+YK
+LlhfsBoHe/VR6US2Ow5Z8O+d3S73+a71q+6RKfJFjwRRIkVih+j9aWMZS0kwvW5h
+zavZiWweRw9naOvm2i4VR+09Lyo3GJmMDLAAvgdGTE8wR7bzQ3dh2pKG5llhnWvB
+MFyyru3xl3kwcb7MnAU9wPTraK17P6IDzjHdIHfYv/hge5QvO6kvJUpYkOaRke1c
+ZTK9pzNsaFn16d0mbktyAadIXZ05md0DZ4uFr0Yz36RoOWL4YP7mo5TMM/ZXkTPc
+AXlAY2YnXrEhGazhNTv8cJFqgmpaydcYPDoFX6KbeUYXMtGlwDvTgN8O18bXruGr
+Z7C/M5C4Xbxr5y/ZST5VrgY61oYQeOSMzQ0TXpH0OCEx7luaFQYs+KMU1QynsWDS
+lS/vwruSb7QjUy5xSAUru2sOGgeEQe4tAALoCVaChEL0QU3e/RI=
+=6JJt
+-----END PGP SIGNATURE-----
+--=-=-=--
