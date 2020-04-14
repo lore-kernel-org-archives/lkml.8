@@ -2,126 +2,77 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2909BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8A0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F281C2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrh7iBsM"
+	by mail.kernel.org (Postfix) with ESMTP id 4B82A206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437445AbgDNJLP (ORCPT
+        id S2437447AbgDNJLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437407AbgDNJLD (ORCPT
+        Tue, 14 Apr 2020 05:11:42 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5120 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437407AbgDNJLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:11:03 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FBCC0A3BD0;
-        Tue, 14 Apr 2020 02:11:03 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id r14so5773123pfl.12;
-        Tue, 14 Apr 2020 02:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=32ds5tL0YEBK/fjJ+CT4RkbpJZ2m0HbKxbVRo9m7pVg=;
-        b=hrh7iBsMf81wW8o2XOz392GPw9NQQ+0GNz5p1FysFnPSRSMyPwH4RoxYvPfP0ajscY
-         xUdofOONEWCkmE4tGN16loAG2e3/82SExQU4WGMsVazrNyhzifvxLgeO3kiOu7HT/QLR
-         pThArRqDhqmfY4NqkQzz6krhQs5TY5lnSVFpydOnDdFo3SmOwv75Lp0+m3v1ZYxpnz8z
-         kiKHtoB0kLpmVKFgnjp85MqboIeflrwvwGtrQqsgHhfejLRfyKYXDFsT7DAMMFELQDo9
-         1YJLo7QlGpi/bRONcHni6cP4lSp5ezYGFRxXEvJ6upEBdNiYeLsVIxQUmYGXaU5bEY5I
-         4nSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=32ds5tL0YEBK/fjJ+CT4RkbpJZ2m0HbKxbVRo9m7pVg=;
-        b=Qpj7Mxi5LR6ktNaX/ccRFa0i67e1zEWoFijW2EU+O905jtEng8ex++lpU9nuOQryiI
-         lfReq7dJdFlZpRS0oOlVincM6ojYGLID9E9KfwhKuRMwjwqWSdlQ3DYcbx6G5NoO0pWm
-         38AJ2PZffufPsvPTvPQ8KtG15EhATATCArb/T4dNo+WrZgu+Ar9lLDk4GT4G2NT+siio
-         aDjwQrDZuc7LwTaUFfMwtjwXNMzruTMEAE6EP4vDhHR1h29T/g9WzcIs+/0SjfzBkcSQ
-         PRfBr59MBeGfuEbA/26JQix7tpZHRnn3y/Ol5bQAyrffHjuHZ0hBvRguYa+/0Yb3Lg32
-         XV2A==
-X-Gm-Message-State: AGi0PuYVyk+QaLSITw9jYwEIFFlxx29Oukl4LJxN+AguW9dy54sKuJ4k
-        d2V3UFyAUBiY8ZupWM0HAhF7gWB1sl1Y+vpomwM=
-X-Google-Smtp-Source: APiQypLZHb9q22KG1TM33678SbhBoclm0DhV+XJRNjOggDfRSvaXtIguQHLzedNRUEV1rBir3XaigO6BiPQArS8wfNI=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr20275328pgb.74.1586855463228;
- Tue, 14 Apr 2020 02:11:03 -0700 (PDT)
+        Tue, 14 Apr 2020 05:11:32 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e957e3387b-4fa4f; Tue, 14 Apr 2020 17:11:15 +0800 (CST)
+X-RM-TRANSID: 2eec5e957e3387b-4fa4f
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85e957e33267-d28c6;
+        Tue, 14 Apr 2020 17:11:15 +0800 (CST)
+X-RM-TRANSID: 2ee85e957e33267-d28c6
+Subject: Re: [PATCH] usb: gadget: fsl: Fix a wrong judgment in fsl_udc_probe()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Li Yang <leoyang.li@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200410015832.8012-1-tangbin@cmss.chinamobile.com>
+ <be8cd229-884a-40e6-3363-7c4680a51b30@web.de>
+ <0b718268-d330-dfc1-aca3-3dd3203363d7@cmss.chinamobile.com>
+ <20200414083036.GC14722@kadam>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <f712918c-2f61-0ba5-2ba8-b5ca3cce9a35@cmss.chinamobile.com>
+Date:   Tue, 14 Apr 2020 17:13:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200408175058.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
- <CAHp75VcuPoVK_+KV+88Di1dUFZ9S8-1nNqo2s8a_n3vgSMoecg@mail.gmail.com> <CAHcu+VZMiFVt9L9kNCTtsmxUP-7tO+pBpCOtMHQPotuye_2w1A@mail.gmail.com>
-In-Reply-To: <CAHcu+VZMiFVt9L9kNCTtsmxUP-7tO+pBpCOtMHQPotuye_2w1A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Apr 2020 12:10:56 +0300
-Message-ID: <CAHp75VemvD0mvDHWorSFhqOKaQ1Y_vLYVAQmnb8iz30AH431+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v8] iio: Add SEMTECH SX9310/9311 sensor driver
-To:     Daniel Campello <campello@google.com>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414083036.GC14722@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 1:56 AM Daniel Campello <campello@google.com> wrote:
-> On Fri, Apr 10, 2020 at 4:52 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Apr 9, 2020 at 2:54 AM Daniel Campello <campello@chromium.org> wrote:
+Hi
 
-As far I understand you agreed on the rest.
-Correct?
+On 2020/4/14 16:30, Dan Carpenter wrote:
+> On Fri, Apr 10, 2020 at 04:05:06PM +0800, Tang Bin wrote:
+>>>
+>>>> Thus it must be fixed.
+>>> Wording alternative:
+>>>     Thus adjust the error detection and corresponding exception handling.
+>> Got it.
+> Wow...
+>
+> No, don't listen to Markus when it comes to writing commit messages.
+> You couldn't find worse advice anywhere.  :P
 
-...
+I'm actively waiting for a reply from the maintainer. Thank you very much.
 
-> > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > > Signed-off-by: Enrico Granata <egranata@chromium.org>
-> >
-> > This is not understandable. Are they who helped you develop the code
-> > (we have a special tag, i.e. Co-developed-by in addition to SoB), or
-> > just people in the middle? Then the question is, how come author is
-> > you and not Gwendal?
-> >
-> This patch was initially developed by Gwendal and Enrico (here:
-> crrev.com/c/1089826).
-
-So, tags should include
- SoB: Gwendal ...
- Co-developed-by: Enrico ...
- SoB: Enrico ...
- Co-developed-by: yours (if you developed it)
- SoB: yours
-
-and on top git commit --amend --author="Gwendal  ..."
-
-...
-
-> > > +#define SX9310_REG_IRQ_MSK                             0x03
-> >
-> > Is MSK abbreviation in datasheet? Please spell it how it's in datasheet.
-> Yes, they indead use MSK.
-
-Okay!
+Tang Bin
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+
