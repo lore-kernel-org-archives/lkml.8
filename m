@@ -2,181 +2,200 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B19C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9928B2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8E82076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391253AbgDNQEH (ORCPT
+        id S2388029AbgDNQE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:04:07 -0400
-Received: from smtprelay0149.hostedemail.com ([216.40.44.149]:37068 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388149AbgDNQDd (ORCPT
+        Tue, 14 Apr 2020 12:04:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391234AbgDNQDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:03:33 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 7AA5E18016BAA;
-        Tue, 14 Apr 2020 16:03:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hope66_1e399ae4d9553
-X-Filterd-Recvd-Size: 5838
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 14 Apr 2020 16:03:27 +0000 (UTC)
-Message-ID: <d3725a08531898adc1bfb1e6d875888c434b42d6.camel@perches.com>
-Subject: Re: [PATCH 1/2] staging: rtl8192u: Refactoring setKey function
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
-Cc:     gregkh@linuxfoundation.org, navid.emamdoost@gmail.com,
-        sylphrenadin@gmail.com, nishkadg.linux@gmail.com,
-        stephen@brennan.io, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Date:   Tue, 14 Apr 2020 09:01:18 -0700
-In-Reply-To: <20200414123326.GG1163@kadam>
-References: <20200413030129.861-1-c.cantanheide@gmail.com>
-         <20200414123326.GG1163@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 14 Apr 2020 12:03:46 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EG3FBP006645
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:03:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cwm0gtr5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:03:42 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Tue, 14 Apr 2020 17:02:33 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 17:02:30 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EG33Nu43647070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 16:03:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 791F7A4059;
+        Tue, 14 Apr 2020 16:03:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0AB9A404D;
+        Tue, 14 Apr 2020 16:03:02 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.12.13])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 16:03:02 +0000 (GMT)
+Date:   Tue, 14 Apr 2020 18:03:00 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name, borntraeger@de.ibm.com,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+        <20200306132537.783769-3-imbrenda@linux.ibm.com>
+        <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041416-0016-0000-0000-0000030474C9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041416-0017-0000-0000-000033686D4D
+Message-Id: <20200414180300.52640444@p-imbrenda>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=344 phishscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 15:33 +0300, Dan Carpenter wrote:
-> On Mon, Apr 13, 2020 at 03:01:28AM +0000, Camylla Goncalves Cantanheide wrote:
-> > Changes of the local variable value and
-> > modification in the seletive repetition structure.
-> > 
+On Mon, 13 Apr 2020 13:22:24 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
+
+> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
+> > On s390x the function is not supposed to fail, so it is ok to use a
+> > WARN_ON on failure. If we ever need some more finegrained handling
+> > we can tackle this when we know the details.  
 > 
-> This changelog isn't totally clear why you're doing this.  Just say:
-> "I am refactorying setKey() to make it more clear.  I have unrolled the
-> first two iterations through the loop.  This patch will not change
-> runtime."
+> Could you explain a bit why the function can't fail?
+
+the concept of "making accessible" is only to make sure that accessing
+the page will not trigger faults or I/O or DMA errors. in general it
+does not mean freely accessing the content of the page in cleartext. 
+
+on s390x, protected guest pages can be shared. the guest has to
+actively share its pages, and in that case those pages are both part of
+the protected VM and freely accessible by the host.
+
+pages that are not shared cannot be accessed by the host.
+
+in our case "making the page accessible" means:
+ - if the page was shared, make sure it stays shared
+ - if the page was not shared, first encrypt it and then make it
+   accessible to the host (both operations performed securely and
+   atomically by the hardware)
+
+then the page can be swapped out, or used for direct I/O (obviously if
+you do I/O on a page that was not shared, you cannot expect good
+things to happen, since you basically corrupt the memory of the guest).
+
+on s390x performing I/O directly on protected pages results in (in
+practice) unrecoverable I/O errors, so we want to avoid it at all costs.
+
+accessing protected pages from the CPU triggers an exception that can
+be handled (and we do handle it, in fact)
+
+now imagine a buggy or malicious qemu process crashing the whole machine
+just because it did I/O to/from a protected page. we clearly don't want
+that.
+
+> If the guest has secret data in the page, then it *can* and does fail.
+
+no, that's the whole point of this mechanism. in fact, most of the
+guest pages will be "secret data", only the few pages used for guest I/O
+bounce buffers will be shared with the host
+
+> It won't fail, though, if the host and guest agree on whether the page
+> is protected.
 > 
-> So long as it's clear what you're trying to do and why, that's the
-> important thing with a commit message.
+> Right?
 > 
-> > Signed-off-by: Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>
-> > ---
-> >  drivers/staging/rtl8192u/r8192U_core.c | 52 ++++++++++++--------------
-> >  1 file changed, 24 insertions(+), 28 deletions(-)
-> > 
-> > diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
-> > index 9b8d85a4855d..87c02aee3854 100644
-> > --- a/drivers/staging/rtl8192u/r8192U_core.c
-> > +++ b/drivers/staging/rtl8192u/r8192U_core.c
-> > @@ -4880,7 +4880,7 @@ void EnableHWSecurityConfig8192(struct net_device *dev)
-> >  void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
-> >  	    u8 *macaddr, u8 defaultkey, u32 *keycontent)
-> >  {
-> > -	u32 target_command = 0;
-> > +	u32 target_command = CAM_CONTENT_COUNT * entryno |  BIT(31) | BIT(16);
-> >  	u32 target_content = 0;
-> >  	u16 us_config = 0;
-> >  	u8 i;
-> > @@ -4890,39 +4890,35 @@ void setKey(struct net_device *dev, u8 entryno, u8 keyindex, u16 keytype,
+> > @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
+> > *page, bool keep_write) inc_zone_page_state(page,
+> > NR_ZONE_WRITE_PENDING); }
+> >  	unlock_page_memcg(page);
+> > +	access_ret = arch_make_page_accessible(page);
+> > +	/*
+> > +	 * If writeback has been triggered on a page that cannot
+> > be made
+> > +	 * accessible, it is too late to recover here.
+> > +	 */
+> > +	VM_BUG_ON_PAGE(access_ret != 0, page);
+> > +
+> >  	return ret;
 > >  
-> >  	RT_TRACE(COMP_SEC,
-> >  		 "====>to %s, dev:%p, EntryNo:%d, KeyIndex:%d, KeyType:%d, MacAddr%pM\n",
-> > -        	 __func__, dev, entryno, keyindex, keytype, macaddr);
-> > +		 __func__, dev, entryno, keyindex, keytype, macaddr);
+> >  }  
 > 
-> Do this white space change in a separate patch.
-> 
-> >  
-> >  	if (defaultkey)
-> >  		us_config |= BIT(15) | (keytype << 2);
-> >  	else
-> >  		us_config |= BIT(15) | (keytype << 2) | keyindex;
-> >  
-> > -	for (i = 0; i < CAM_CONTENT_COUNT; i++) {
-> > -		target_command  = i + CAM_CONTENT_COUNT * entryno;
-> > -		target_command |= BIT(31) | BIT(16);
-> > -
-> > -		if (i == 0) { /* MAC|Config */
-> > -			target_content = (u32)(*(macaddr + 0)) << 16 |
-> > -					(u32)(*(macaddr + 1)) << 24 |
-> > -					(u32)us_config;
-> > -
-> > -			write_nic_dword(dev, WCAMI, target_content);
-> > -			write_nic_dword(dev, RWCAM, target_command);
-> > -		} else if (i == 1) { /* MAC */
-> > -			target_content = (u32)(*(macaddr + 2))	 |
-> > -					(u32)(*(macaddr + 3)) <<  8 |
-> > -					(u32)(*(macaddr + 4)) << 16 |
-> > -					(u32)(*(macaddr + 5)) << 24;
-> > -			write_nic_dword(dev, WCAMI, target_content);
-> > -			write_nic_dword(dev, RWCAM, target_command);
-> > -		} else {
-> > -			/* Key Material */
-> > -			if (keycontent) {
-> > -				write_nic_dword(dev, WCAMI,
-> > -						*(keycontent + i - 2));
-> > -				write_nic_dword(dev, RWCAM, target_command);
-> > -                	}
-> > -		}
-> > +	target_content = macaddr[0] << 16 |
-> > +			 macaddr[0] << 24 |
-> > +			(u32)us_config;
-> > +
-> > +	write_nic_dword(dev, WCAMI, target_content);
-> > +	write_nic_dword(dev, RWCAM, target_command++);
-> > +
-> > +	/* MAC */
-> > +	target_content = macaddr[2]	  |
-> > +			 macaddr[3] <<  8 |
-> > +			 macaddr[4] << 16 |
-> > +			 macaddr[5] << 24;
-> > +	write_nic_dword(dev, WCAMI, target_content);
-> > +	write_nic_dword(dev, RWCAM, target_command++);
-> > +
-> > +	/* Key Material */
-> > +	if (!keycontent)
-> > +		return;
-> > +
-> > +	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
-> > +		write_nic_dword(dev, WCAMI, *keycontent++);
-> 
-> This code was wrong in the original as well, but now that I see the bug
-> let's fix it.  CAM_CONTENT_COUNT is 8.  8 - 2 = 6.  We are writing 6
-> u32 variables to write_nic_dword().  But the *keycontent buffer only has
-> 4 u32 variables so it is a buffer overflow.
+> This seems like a really odd place to do this.  Writeback is specific
+> to block I/O.  I would have thought there were other kinds of devices
+> that matter, not just block devices.
 
-Did you find the overflow with smatch?
+well, yes and no. for writeback (block I/O and swap) this is the right
+place. at this point we know that the page is present and nobody else
+has started doing I/O yet, and I/O will happen soon-ish. so we make the
+page accessible. there is no turning back here, unlike pinning. we
+are not allowed to fail, we can't 
 
-Perhaps this but it'll write 0's for the
-last couple cam entries instead of random
-address values.
+regarding the other kinds of devices: yes, they will use pinning, which
+is covered by the rest of the patch. the semantics of get page and pin
+page (if the documentation has not changed meanwhile) is that the
+traditional get_page is used for when the page is needed but not its
+content, and pin_page is used when the content of the page is accessed.
+since the only issue here is accessing the content of the page, we
+don't need to make it accessible for get_page, but only for pin_page.
 
-Dunno what effect that'd have.  Likely none.
+get_page and pin_page are allowed to fail, so in this case we return an
+error code, so other architectures can potentially abort the pinning if
+needed. on s390x we will never fail, for the same reasons written
+above.
 
----
- drivers/staging/rtl8192u/r8192U_wx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Also, this patch seems odd that it only does the
+> arch_make_page_accessible() half.  Where's the other half where the
+> page is made inaccessible?
 
-diff --git a/drivers/staging/rtl8192u/r8192U_wx.c b/drivers/staging/rtl8192u/r8192U_wx.c
-index 100532..923c0c 100644
---- a/drivers/staging/rtl8192u/r8192U_wx.c
-+++ b/drivers/staging/rtl8192u/r8192U_wx.c
-@@ -733,7 +733,7 @@ static int r8192_wx_set_enc_ext(struct net_device *dev,
- 	{
- 		u8 broadcast_addr[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
- 		u8 zero[6] = {0};
--		u32 key[4] = {0};
-+		u32 key[6] = {0};
- 		struct iw_encode_ext *ext = (struct iw_encode_ext *)extra;
- 		struct iw_point *encoding = &wrqu->encoding;
- 		u8 idx = 0, alg = 0, group = 0;
+that is very arch-specific. for s390x, you can look at this patch and
+the ones immediately before/after: 214d9bbcd3a67230b932f6ce
+
+> I assume it's OK to "leak" things like this, it's just not clear to me
+> _why_ it's OK.
+
+nothing is being leaked :)
 
 
+
+I hope I clarified a little how this works on s390x :)
+feel free to poke me again if some things are still unclear
+
+
+best regards,
+
+
+Claudio Imbrenda
 
