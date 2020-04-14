@@ -2,124 +2,125 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9823EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F4FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69BF02075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B58320768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aT1LOY9e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xq+K2mzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbgDNNgs (ORCPT
+        id S1732489AbgDNNhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:36:48 -0400
-Received: from mail-eopbgr60061.outbound.protection.outlook.com ([40.107.6.61]:14995
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728395AbgDNNdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:33:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vi92amGerpA6nAbGKdaNuFLRulK7/xISCpGQ+K1GfNqYKlH47YCE+FovY6uI2rGl8QxKLzwIHgavbBXnp54NRgl+V0Hj82G9dMvLQmIdl4kpwGFeNO26pMoh6ejdCkDh1tnDKDsXcWuFN0pv2eOWntX0GJSdcvsz60dG1vQ5zzQZP9u6nkFtjVZY0N2Sw+aCToEX/KPR1AE4cQ2WHd7xAbFsYDi+ldELesTIOuMlc+qmuSrf7iCS6BjaAj/3bW1TmDOlwrH609XrJPwy3xXKwdkiLEnMeLg2GElqbQ61LEwUs+lA/rMSmauwFHtZYCxpVahiSB89UGZBSfjmLhyinA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d8r56iU6nx/DKLqagQWCqusB9o+EarkpsCAau+xRQlo=;
- b=Ti+hh6h6Yg0e3gR50xXC+XHOcZEy8J5OmxOdEbsM/GKedGa4Ii69hPRoh6hRSUj1s4c+n4emkvlEUMQT4hUmSg2Cshs+2yAwkkUG/BMKatbn/cuntKDmbHamo4CfEgTHKVC9T/TE4H9ZUX9uUKeKcgNu4xOF3eyE7tj8oGBVJpTpL+HyyzHa8AbzK2u+t52nQOFL9p+kiiHiIC+hGjyAIT39RtYREgcULWmR2i4bZs3lwiIqmhEBWbhoIIk5mFz4Bfg3rXNHZEHyYxA/OMvz1c65NvmScpP80WlUgqiXHZE1URLCCRttZXlVPwiKzgzZt565Pcf/EYXsAUUocPBCJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d8r56iU6nx/DKLqagQWCqusB9o+EarkpsCAau+xRQlo=;
- b=aT1LOY9erm1exX3/WEHhb3zNeeqx9Kgioy9hbsM904VkUjtaXNNU285Y5SpdDx0ZOHO21ypcZ2aQ2bnnsUScsc3TF/L4eJPcSjygbOdbU9Y63Du25ln0hOtKQR5SS6dgGGcVk442y3YHvjpUBWUNF2VRQLMleGYa4+8DG71sVlI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
- by AM0PR04MB6868.eurprd04.prod.outlook.com (2603:10a6:208:18c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Tue, 14 Apr
- 2020 13:32:56 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
- 13:32:56 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        jaswinder.singh@linaro.org, linux@rempel-privat.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/2] dt-bindings: mailbox: imx-mu: correct example
-Date:   Tue, 14 Apr 2020 21:24:27 +0800
-Message-Id: <1586870668-32630-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0118.apcprd03.prod.outlook.com
- (2603:1096:4:91::22) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Tue, 14 Apr 2020 09:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502811AbgDNNPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:15:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD055C061A10;
+        Tue, 14 Apr 2020 06:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=J3GKe+LnzmvEZkshr8z32ndR4j0MvDyZMMYBvJP8rpA=; b=Xq+K2mziXAcFNoeIFJDjPsWR53
+        oAquzR/7oWgic8OGSzzRE/7waOx7o8yen0eds5cCBH1Dn9GpzcPQoSIOcDIlZTtktp5R3ZhBgRN5L
+        8THhGnYNdNEtTlDwy/lHgbGULPOA2R3QO0U9Dxt7luDp+VIdZhgs+irFIyr9G57j0gu/fEvay/b/W
+        +2iWha7fJrWw+UJG2tvszEY3ndPnK5fStj7t6SAynZZTXtGSQxv3lQMxmx6ulM6hcJytqKouFn/Z1
+        CFezBjcKxPLVgbWu+/U57fiPEpQdDap+OrwdlO/ThiAOahflGAV/HAtuKETqVF5sUpy47K8OCINE/
+        7CQnrRMA==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOLP0-0007EL-Uw; Tue, 14 Apr 2020 13:14:59 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 20/29] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
+Date:   Tue, 14 Apr 2020 15:13:39 +0200
+Message-Id: <20200414131348.444715-21-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200414131348.444715-1-hch@lst.de>
+References: <20200414131348.444715-1-hch@lst.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.67) by SG2PR03CA0118.apcprd03.prod.outlook.com (2603:1096:4:91::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2921.12 via Frontend Transport; Tue, 14 Apr 2020 13:32:52 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 65831955-a08f-4087-1f54-08d7e0785782
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6868:|AM0PR04MB6868:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB6868973C7AFF1E98885E6B4D88DA0@AM0PR04MB6868.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
-X-Forefront-PRVS: 0373D94D15
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(136003)(366004)(396003)(39860400002)(376002)(2906002)(16526019)(7416002)(5660300002)(956004)(2616005)(15650500001)(6666004)(26005)(69590400007)(86362001)(316002)(186003)(8936002)(6506007)(4744005)(6486002)(478600001)(4326008)(52116002)(81156014)(9686003)(66556008)(8676002)(66476007)(36756003)(66946007)(6512007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MpnXO7c5PJ3B5T5985cGHJPZKkBsTaF5TRb9zBFKIicyR3f2QcQ20AwS1PxnULm1dyJ0EuvGxWWZiZBiWaTq9Dp+1jfyCM0M7CMKbER5x8tzu3yFq3EA9b9BKedcArSV86fN3KccDLZ6RUF4Cvx49NVX8pbpoorKYiPQPOCojWg4ZAx1tSpcK0u6QXTeeeneodPuPmP+CY6D1FboENIC6E4wdZ2RpsxmeWJvg+X4lA9z8cf1s7ZINGj9zLZM6uY+E1CRcX7c7wZLyckYhSfpN7Fp3PkccaLoPAhxPNnLHzTRd2NXhAyE0JOtycLf6QD//qHG6gEZ7TaW+rQr9pIF/xMuNzE9l7Dmkb202nruTFr5FATKqXPRJVjVpRQpVLaxyjQg/d31VNYph6Mracax5W4ki8eEcCBM9vbVcuD0LwS3hodUV9KVBAXpSDfdWcbIANbXyVuBLQHg4tAzLbj9hdpaG+HnDZ5MyRkpvdzKjZVgTRY14fdsOX8eTKC0Z+Mv
-X-MS-Exchange-AntiSpam-MessageData: 6lwQ1bCmp2oYRoZEEG5lHJ1EmE77+mXjgP4+bXt5kJ3I9th10oBjBrNy/UBJsBXSkRmsowbrRZyZSCNawTM032soiaUkG847c/MIRKdmThKFpJdVudbNt9qyl5knKwtuzpAkoZMLYsPbjXxHfJmE8A==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65831955-a08f-4087-1f54-08d7e0785782
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2020 13:32:56.8235
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0NidV26Tm2GkekpePOo5kc+94hIYfR2Uzn4LNyq079n3jtbW9qqnARr+1D9AVndBW5QzQzlGIvSVvxhz4nHLNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6868
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+The non-cached vmalloc mapping was initially added as a hack for the
+first-gen amigaone platform (6xx/book32s), isn't fully supported
+upstream, and which used the legacy radeon driver together with
+non-coherent DMA. However this only ever worked reliably for DRI .
 
-The example use i.MX8QXP MU, but actually the MU is compatible with
-i.MX6SX, so add the compatible.
+Remove the hack as it is the last user of __vmalloc passing a page
+protection flag other than PAGE_KERNEL and didn't do anything for
+other platforms with non-coherent DMA.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_scatter.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-index 31486c9f6443..26b7a88c2fea 100644
---- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-+++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-@@ -51,7 +51,7 @@ Optional properties:
- Examples:
- --------
- lsio_mu0: mailbox@5d1b0000 {
--	compatible = "fsl,imx8qxp-mu";
-+	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
- 	reg = <0x0 0x5d1b0000 0x0 0x10000>;
- 	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
- 	#mbox-cells = <2>;
+diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+index ca520028b2cb..f4e6184d1877 100644
+--- a/drivers/gpu/drm/drm_scatter.c
++++ b/drivers/gpu/drm/drm_scatter.c
+@@ -43,15 +43,6 @@
+ 
+ #define DEBUG_SCATTER 0
+ 
+-static inline void *drm_vmalloc_dma(unsigned long size)
+-{
+-#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
+-	return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
+-#else
+-	return vmalloc_32(size);
+-#endif
+-}
+-
+ static void drm_sg_cleanup(struct drm_sg_mem * entry)
+ {
+ 	struct page *page;
+@@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+ 		return -ENOMEM;
+ 	}
+ 
+-	entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
++	entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
+ 	if (!entry->virtual) {
+ 		kfree(entry->busaddr);
+ 		kfree(entry->pagelist);
 -- 
-2.16.4
+2.25.1
 
