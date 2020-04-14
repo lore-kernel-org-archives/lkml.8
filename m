@@ -2,112 +2,92 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DC2C352B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06D1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B67D2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D822063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 09:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YprgSRcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437393AbgDNJHq (ORCPT
+        id S2437406AbgDNJI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        Tue, 14 Apr 2020 05:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437383AbgDNJHo (ORCPT
+        with ESMTP id S2437383AbgDNJIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 05:07:44 -0400
-X-Greylist: delayed 1495 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 02:07:44 PDT
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25118C0A3BD0;
-        Tue, 14 Apr 2020 02:07:44 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jOHXP-00079g-G2; Tue, 14 Apr 2020 11:07:23 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D11CB100D14; Tue, 14 Apr 2020 11:07:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: ARM: futex: Address build warning
-In-Reply-To: <20200413100112.2e114e24@canb.auug.org.au>
-References: <20200330134746.627dcd93@canb.auug.org.au> <20200401085753.617c1636@canb.auug.org.au> <877dyzv6y2.fsf@nanos.tec.linutronix.de> <20200402090051.741905cd@canb.auug.org.au> <874ku2q18k.fsf@nanos.tec.linutronix.de> <20200413100112.2e114e24@canb.auug.org.au>
-Date:   Tue, 14 Apr 2020 11:07:22 +0200
-Message-ID: <87pncao2ph.fsf@nanos.tec.linutronix.de>
+        Tue, 14 Apr 2020 05:08:51 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49C1C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 02:08:50 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z26so11627126ljz.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 02:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zyjNeTqvfEjZX8vIKzclorxGtdOVdVhWe6jr1cd8Lcw=;
+        b=YprgSRcuKMz2TB2H7Js6CV9O0igeW65lMXILU0J5LZC5dkVlZVfMejJaTxk04tAwGb
+         SKRQrIaXIHu7IAXDTdwvQIFevn1Pw+oltQRWXV9hhLtCckgmgeuH1V0jUCz6Tf4puJXv
+         0wyzzp1faSmkY8mg9d/yHWuGC7GaRgnindjLgjC67KJR0wVTeeLNDcy14kb+eaJy2Sm0
+         FJTwfDwSCas6Tp+ruj7SxunLNrOtrbaZ3OLjgQTZODzWeIQZlzHCevccg7vyk4xBmm5J
+         44mYUWCTr8x3RfWzk4bU1eOLrjRnG12wzlJ625PyNW41w6trhwqpxDEkPFYGmCGgBXrJ
+         TbSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zyjNeTqvfEjZX8vIKzclorxGtdOVdVhWe6jr1cd8Lcw=;
+        b=lGr7yk5C4PyUhZXfNmxiECeJuOR/HiulnBvjJJwl2lIsQ9kWFVyBbSHv4ZK7C9ZxHA
+         m9ms0TfJLF5ZT3n1mieGs432L4cH5o/x45N0rqq0R1t9S9O2vDtCq2w34cK8iqcvDkJw
+         N0B7LIRxKFZGYwTIxTDjfOSSfCjOau/eZOH7ZPG7xi6D8XHSQ5a0DxpIXtg4lTI4I+83
+         Pwu0smcK58kocr0csyIUAP+6DgTbV5XvxXC6hjglUEJV7+AsepCmMPuHzQVl0h6cnFwH
+         P3nu48/c3Wj2T8il7TZb9WtfsAvdHV0VNH8ca63LGC7iInjWVMf/UC850PNoMz+rtTYJ
+         0lvQ==
+X-Gm-Message-State: AGi0PuZEebWm5SUsp0S/MLbV5ApSpt8yn08zXAkyvA8+k60Beegi9d+K
+        Zcbl4v1DmDg5cDB2xexOKyv3xNdqQq0RRw4RiRXwzg==
+X-Google-Smtp-Source: APiQypLF1woHKulkGKUVOcynI3F6bPW0neabdjjFhnRcaLD4bVyCGbpN1rI1nFV64y7Zz5AswkKA1tI10XRVvnW0pE8=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr12489541ljh.258.1586855329250;
+ Tue, 14 Apr 2020 02:08:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200405173252.67614-1-stephan@gerhold.net> <20200405173252.67614-2-stephan@gerhold.net>
+In-Reply-To: <20200405173252.67614-2-stephan@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 14 Apr 2020 11:08:38 +0200
+Message-ID: <CACRpkdYW930B-riUi5OnmsDCJD_piJ+321rgB40bq93ndzSp5A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: defconfig: u8500: Enable CONFIG_GP2AP002
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen reported the following build warning on a ARM multi_v7_defconfig
-build with GCC 9.2.1:
+On Sun, Apr 5, 2020 at 7:34 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-kernel/futex.c: In function 'do_futex':
-kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
- 1676 |   return oldval == cmparg;
-      |          ~~~~~~~^~~~~~~~~
-kernel/futex.c:1652:6: note: 'oldval' was declared here
- 1652 |  int oldval, ret;
-      |      ^~~~~~
+> sharp,gp2ap002s00f is used as a proximity sensor in
+> samsung-golden and samsung-skomer.
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-calling conventions change").
+Ooops I saw now that I already had this in my "Skomer and misc"
+enablement patch. (rebasing my trees today).
 
-While that change should not make any difference it confuses GCC which
-fails to work out that oldval is not referenced when the return value is
-not zero.
+I can put this in front of that patch and take it out of mine if you
+prefer stepwise enablement.
 
-GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-early return, the issue is with the assembly macros. GCC fails to detect
-that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-which makes oldval uninteresting. The store to the callsite supplied oldval
-pointer is conditional on ret == 0.
-
-The straight forward way to solve this is to make the store unconditional.
-
-Aside of addressing the build warning this makes sense anyway because it
-removes the conditional from the fastpath. In the error case the stored
-value is uninteresting and the extra store does not matter at all.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/874ku2q18k.fsf@nanos.tec.linutronix.de
----
- arch/arm/include/asm/futex.h |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int
- 	preempt_enable();
- #endif
- 
--	if (!ret)
--		*oval = oldval;
-+	/*
-+	 * Store unconditionally. If ret != 0 the extra store is the least
-+	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-+	 * is either setting ret to -EFAULT or storing the old value in
-+	 * oldval which results in a uninitialized warning at the call site.
-+	 */
-+	*oval = oldval;
- 
- 	return ret;
- }
+Yours,
+Linus Walleij
