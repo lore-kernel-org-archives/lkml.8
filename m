@@ -2,113 +2,124 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44ECC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA82C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7A020678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DB2206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="bGSSp+1W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPH+wfkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391750AbgDNQcz (ORCPT
+        id S2391760AbgDNQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57806 "EHLO
+        Tue, 14 Apr 2020 12:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391601AbgDNQcg (ORCPT
+        by vger.kernel.org with ESMTP id S2391745AbgDNQcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:32:36 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4CFC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:32:36 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b62so13926007qkf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:32:36 -0700 (PDT)
+        Tue, 14 Apr 2020 12:32:45 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A92FC061A0C;
+        Tue, 14 Apr 2020 09:32:44 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id y4so451721ljn.7;
+        Tue, 14 Apr 2020 09:32:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QBdKhl12xvvYi9lcxj1S9EA5zV6NRqJ0DNsgwZaL5f0=;
-        b=bGSSp+1WA5PYJleV9ifx6NNnf93E6ao5JcRqKpwnklWFlxyK7FUkcisjZaCRvqQIDY
-         XjVzONiep1xbXRC+TQ8OrlINiYy/Z0j7ng22kRs4pG6i7dN4zHeRSmNW5Fq2rsindx9Z
-         es8/FlpOaZT4RzmV4YFvcD9/9HR9ySqyzfqtxPxRBNfG5N1eyihCeuzOjfqWBrP7DQyU
-         sX6zjLXg1/mYyvzXinc0g9Xg9V7QUFPyD5tjcE6aX9P5wWzAUr3po/BJ4aanhAtyPjN1
-         8uTX7UEbD8b6klDvQ8o6lzbJFrXbS+P8ooinQ5r/7/hCxaVslUfBje7vcFcvPzpB21pG
-         0nsQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UIF3BoyuEURXStfcfS+K3X+B8H9N0p09Wke+0dl3XYI=;
+        b=TPH+wfkPooywpXdD9Cf7DoG2SqrrH+5LpkpkmZTl2bh9FId8Wj45SwrTvanUR+//y4
+         1gyvpoEbxgDB6f6yK/MJENkQqPxMTz5nTI3FzoffpEyVA17tiyTDji/CIDQhBod3hB0t
+         gv65qG85q4UmhmbqFsxqMtyltgGFNkSTKJxcG/BivRtkIXzTdW1pPGXkjePT2Y2Ya4gb
+         mDnqUTHkMGID7WFd2qOqiHKII7nPj4rrp650VIA1YKaaX3WTwLdojM4zxt0/Fbu1VF/h
+         myLEbsGAEwjtSKTBFBFo39mWBo5ExLUaB+Dc6Zs3wyZn0yUbf9c2mVU5Y7SXZ+x98az/
+         9Fxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QBdKhl12xvvYi9lcxj1S9EA5zV6NRqJ0DNsgwZaL5f0=;
-        b=siFCEkl1L9kuVGdtzTMSKMGMvcXpInoS6R+5RMB77l+4ATUHBA2MJDRnZBBPByZbg7
-         zzdXgZsj1FZzXTf8yPzdU6SxSPTilNKum/xdnSDePqvC8ie6PpvvbtkhuFf1YmRMXDPX
-         s54UwSI7VxYetEWvE95LVhmajkI6EVcbrdmcKy6qZQug5+GrtPgX2kCW1JyNYN6nO/5n
-         wWm47tB+LVM2M805FJ77tLK9ULzJ0/aWNLU4SINR7L2BKzXv04EEktn0VhsbgVAHvDHW
-         OwqXw5+D4L9EgW4xhhAl2R7Jk2P8SzQ6wMzEPJORbHQDfIM3TtK8CUPkSJ6AU/wUgC70
-         +4Wg==
-X-Gm-Message-State: AGi0Pub9NGM8ZKMYjgF5TfZbSrNnUCGg7Tz2Tp2xpDa7Lq0+gnLgRghW
-        iX/JTy3Cae9jFleZdTDMI29pcg==
-X-Google-Smtp-Source: APiQypL35bvylggzZE0yMT8vcGrCFxCjV/OJPpuQpN3/dXZvvHERYdDgIWBReT0U8zOAMVy0imoEUw==
-X-Received: by 2002:a37:6393:: with SMTP id x141mr3886719qkb.179.1586881955711;
-        Tue, 14 Apr 2020 09:32:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id m1sm11597515qtm.22.2020.04.14.09.32.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 09:32:35 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jOOUE-0006Ly-OX; Tue, 14 Apr 2020 13:32:34 -0300
-Date:   Tue, 14 Apr 2020 13:32:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm/gup: dereference page table entry using helper
-Message-ID: <20200414163234.GG5100@ziepe.ca>
-References: <1586877001-19138-1-git-send-email-agordeev@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UIF3BoyuEURXStfcfS+K3X+B8H9N0p09Wke+0dl3XYI=;
+        b=uBUpXBDrZWBeUlxR68PndaAkWqVwkCZ+2USAAmwMKOcwoJd0/v6koU9rcnoGI+F5Ju
+         Ul/I5dSVphTjXOyMAYR5BkrNbQk2eVWe0zMSVJW4fIC65/ylDdWA7ihEikucZQl76JKL
+         sZB4cD1v09XAmKdSeCiVTJwrJaqeG6iLW5vpzIO108CXP0yDa9f2yJ6rISmlES88W+Vg
+         L29HjciRLDlVbxzAQWTOPCqtLqGPMF3XVjRe+E7J0F7YCGnNZlIXp7WXvniQVN4y76hb
+         su036Jm9PEnTzn/OYTukhxHRfW3NAwqeCgURSx/CwNupTqsbiHublCzpunIsJNc0Xpv4
+         XLDw==
+X-Gm-Message-State: AGi0PuaQu2c0489JGCKUp0G5AFfARMUouG5GJKd7mIJ67HbTZabNGD3q
+        d9mbZ0vjugqyygKTmKwhWDGNNy6OyIc6wdv0iEGd
+X-Google-Smtp-Source: APiQypKnvMdqW175yj1MgsnJQRnNqTHf4wkmjSzS+0xThgvpXsnNBDZYsd9iTF/sm8QIq/tkcEC8WgbmdDmZUCqtAAI=
+X-Received: by 2002:a2e:2a42:: with SMTP id q63mr563631ljq.81.1586881963108;
+ Tue, 14 Apr 2020 09:32:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586877001-19138-1-git-send-email-agordeev@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
+ <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
+From:   =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+Date:   Tue, 14 Apr 2020 18:32:32 +0200
+Message-ID: <CADDKRnAvC7U6kWdiqmib40cJ7r41COyic4LTdO9utsp4GOJnvA@mail.gmail.com>
+Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 05:10:01PM +0200, Alexander Gordeev wrote:
-> Commit 0005d20 ("mm/gup: Move page table entry dereference
-> into helper function") wrapped access to page table entries
-> larger than sizeof(long) into a race-aware accessor. One of
-> the two dereferences in gup_fast path was however overlooked.
-> 
-> CC: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> CC: linux-mm@kvack.org
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
->  mm/gup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index d53f7dd..eceb98b 100644
-> +++ b/mm/gup.c
-> @@ -2208,7 +2208,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->  		if (!head)
->  			goto pte_unmap;
->  
-> -		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-> +		if (unlikely(pte_val(pte) != pte_val(gup_get_pte(ptep)))) {
+Am Di., 14. Apr. 2020 um 12:50 Uhr schrieb Ard Biesheuvel <ardb@kernel.org>=
+:
+>
+> On Tue, 14 Apr 2020 at 12:40, J=C3=B6rg Otte <jrg.otte@gmail.com> wrote:
+> >
+> > Booting my notebook with kernel V57-rc1 I get following
+> > display:
+> >
+> > exit_boot() failed!
+> > efi_main() failed!
+> > StartImage failed: Buffer Too Small
+> >
+> > Booting Kernel V5.6 works well.
+> >
+> > From dmesg (kernel V5.6):
+> > efi: EFI v2.31 by Phoenix Technologies Ltd.
+> > efi:  ACPI=3D0xdcffe000  ACPI 2.0=3D0xdcffe014  SMBIOS=3D0xdce80000  RN=
+G=3D0xdc3cd198
+> > efi: seeding entropy pool
+> > efi: [Firmware Bug]: Invalid EFI memory map entries:
+> > efi: mem47: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
+> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > efi: mem48: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
+> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > efi: mem49: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
+> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > efi: mem50: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
+> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > efi: mem51: [Reserved           |   |  |  |  |  |  |  |  |   |  |  |
+> > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > efi: Removing 5 invalid memory map entries.
+> >
+>
+> Thanks for the report.
+>
+> Can you try booting with efi=3Dno_disable_early_pci_dma passed via the
+> kernel command line? [*]
+>
+Yes, that works!
 
-It doesn't seem like this needs the special helper as it is just
-checking that the pte hasn't changed, it doesn't need to be read
-exactly.
+> If that does not help, can you try to reproduce with this branch?
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Defi/=
+urgent
 
-But it probably should technically still be a READ_ONCE. Although I
-think the atomic inside try_grab_compound_head prevents any real
-problems.
+Should I give that branch a try anyway?
 
-Jason
+Thanks, J=C3=B6rg
