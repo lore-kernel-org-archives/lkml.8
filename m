@@ -2,99 +2,211 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F88CC3815B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B6C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E9A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AEUBmdw5"
+	by mail.kernel.org (Postfix) with ESMTP id 138B82074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504452AbgDNSuU (ORCPT
+        id S2504462AbgDNSu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:50:20 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44224 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504407AbgDNStx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:49:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIeAUR125070;
-        Tue, 14 Apr 2020 18:49:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=q4qne1W5zGbbsc7dFpIdBBMnXKX3IuZywtcs1GLXfAk=;
- b=AEUBmdw5FvchfI0MAffJp5KIT5P8nawjMtj2+vu0SSs2fyMVNPkQKhs+9E2nvpcygU9d
- eJPWCPoP4EEtZ/Xm8zRIhmOCeiqhX5GrfR4Y8cIwgoF+Z7C+Wfky70YmUBDdtNnWRfzN
- mLKOB+OF7VoHYojZEdjeCuhEAAb74n4AJQE/tWtJkZBYxxKGVcW29q+uosslRPh6no7L
- lWRgeC4fYHVg//FEnvHkwHXtkpPBBkjTa3HdMFJSZ/wMUoqF59sHjH3Dh/N9x6o+A8GV
- tmssRsqcYhSS3dUkf71nDK4vEfucSbVeRC3k93ye47JRQT0wgiysZSmefCCVZRJlu4QF jA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30b5um6q6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 18:49:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIc7PK008702;
-        Tue, 14 Apr 2020 18:49:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30bqphh50g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 18:49:35 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EInXgC004751;
-        Tue, 14 Apr 2020 18:49:33 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 11:49:32 -0700
-Date:   Tue, 14 Apr 2020 21:49:25 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, paul@crapouillou.net,
-        Joe Perches <joe@perches.com>, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
-Message-ID: <20200414184925.GA12862@kadam>
-References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
- <20200414135827.GB3593749@ulmo>
- <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
+        Tue, 14 Apr 2020 14:50:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42105 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504444AbgDNSuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:50:18 -0400
+IronPort-SDR: 2LeQPx0Bn2/i+aG1bcwR0YCd1gKDDv5kUxUrzuSWakOWFiZNQaC/nzZ3OMI60oXaZhoLTW6SBZ
+ 8YZ8GtYlR56Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 11:50:16 -0700
+IronPort-SDR: PYQVkEfUchPkWpqwZZkb8t+LOcsZAU10TZeysUlOS43ZhWgPDhIyuDrzchhwDThEWAdpdMQHIS
+ NqLZPEZps9jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="256606792"
+Received: from nkadakia-mobl1.amr.corp.intel.com (HELO [10.251.28.160]) ([10.251.28.160])
+  by orsmga006.jf.intel.com with ESMTP; 14 Apr 2020 11:50:16 -0700
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name, borntraeger@de.ibm.com,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+ <20200306132537.783769-3-imbrenda@linux.ibm.com>
+ <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+ <20200414180300.52640444@p-imbrenda>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <93dc9885-adb4-8b9d-a62a-e40301053551@intel.com>
+Date:   Tue, 14 Apr 2020 11:50:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=864 malwarescore=0
- adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
- mlxlogscore=939 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140132
+In-Reply-To: <20200414180300.52640444@p-imbrenda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Huh...
+On 4/14/20 9:03 AM, Claudio Imbrenda wrote:
+> On Mon, 13 Apr 2020 13:22:24 -0700
+> Dave Hansen <dave.hansen@intel.com> wrote:
+> 
+>> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
+>>> On s390x the function is not supposed to fail, so it is ok to use a
+>>> WARN_ON on failure. If we ever need some more finegrained handling
+>>> we can tackle this when we know the details.  
+>>
+>> Could you explain a bit why the function can't fail?
+> 
+> the concept of "making accessible" is only to make sure that accessing
+> the page will not trigger faults or I/O or DMA errors. in general it
+> does not mean freely accessing the content of the page in cleartext. 
+> 
+> on s390x, protected guest pages can be shared. the guest has to
+> actively share its pages, and in that case those pages are both part of
+> the protected VM and freely accessible by the host.
 
-If you look at dev_vprintk_emit().  It looks like if
-create_syslog_header() returns a string then vprintk_store() will add
-a newline.
+Oh, that's interesting.
 
-I guess that means that dev_printk() can't be used to pr_cont().  And
-probably that's deliberate because using pr_cont() after boot is racy
-anyway.
+It sounds like there are three separate concepts:
+1. Protection
+2. Sharing
+3. Accessibility
 
-regards,
-dan carpenter
+Protected pages may be shared and the request of the guest.
+Shared pages' plaintext can be accessed by the host.  For unshared
+pages, the host can only see ciphertext.
 
+I wonder if Documentation/virt/kvm/s390-pv.rst can be beefed up with
+some of this information.  It seems a bit sparse on this topic.
+
+As it stands, if I were modifying generic code, I don't think I'd have
+even a chance of getting an arch_make_page_accessible() in the right spot.
+
+> in our case "making the page accessible" means:
+...
+>  - if the page was not shared, first encrypt it and then make it
+>    accessible to the host (both operations performed securely and
+>    atomically by the hardware)
+
+What happens to the guest's view of the page when this happens?  Does it
+keep seeing plaintext?
+
+> then the page can be swapped out, or used for direct I/O (obviously if
+> you do I/O on a page that was not shared, you cannot expect good
+> things to happen, since you basically corrupt the memory of the guest).
+
+So why even allow access to the encrypted contents if the host can't do
+anything useful with it?  Is there some reason for going to the trouble
+of encrypting it and exposing it to the host?
+
+> on s390x performing I/O directly on protected pages results in (in
+> practice) unrecoverable I/O errors, so we want to avoid it at all costs.
+
+This is understandable, but we usually steer I/O operations in places
+like the DMA API, not in the core VM.
+
+We *have* the concept of pages to which I/O can't be done.  There are
+plenty of crippled devices where we have to bounce data into a low
+buffer before it can go where we really want it to.  I think the AMD SEV
+patches do this, for instance.
+
+> accessing protected pages from the CPU triggers an exception that can
+> be handled (and we do handle it, in fact)
+> 
+> now imagine a buggy or malicious qemu process crashing the whole machine
+> just because it did I/O to/from a protected page. we clearly don't want
+> that.
+
+Is DMA disallowed to *all* protected pages?  Even pages which the guest
+has explicitly shared with the host?
+
+
+>>> @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
+>>> *page, bool keep_write) inc_zone_page_state(page,
+>>> NR_ZONE_WRITE_PENDING); }
+>>>  	unlock_page_memcg(page);
+>>> +	access_ret = arch_make_page_accessible(page);
+>>> +	/*
+>>> +	 * If writeback has been triggered on a page that cannot
+>>> be made
+>>> +	 * accessible, it is too late to recover here.
+>>> +	 */
+>>> +	VM_BUG_ON_PAGE(access_ret != 0, page);
+>>> +
+>>>  	return ret;
+>>>  
+>>>  }  
+>>
+>> This seems like a really odd place to do this.  Writeback is specific
+>> to block I/O.  I would have thought there were other kinds of devices
+>> that matter, not just block devices.
+> 
+> well, yes and no. for writeback (block I/O and swap) this is the right
+> place. at this point we know that the page is present and nobody else
+> has started doing I/O yet, and I/O will happen soon-ish. so we make the
+> page accessible. there is no turning back here, unlike pinning. we
+> are not allowed to fail, we can't 
+
+This description sounds really incomplete to me.
+
+Not all swap involved device I/O.  For instance, zswap doesn't involve
+any devices.  Would zswap need this hook?
