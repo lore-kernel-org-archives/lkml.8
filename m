@@ -2,90 +2,74 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF76C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F272075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3572075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="F+NDxTzt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bOGD0uXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502489AbgDNNC2 (ORCPT
+        id S2502506AbgDNNCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
+        Tue, 14 Apr 2020 09:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2502439AbgDNNB7 (ORCPT
+        by vger.kernel.org with ESMTP id S2502475AbgDNNCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:01:59 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF81C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:01:57 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id d77so12868869wmd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 06:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=YVNWdCQPKJKUDqzVBB1EjscpuxC/BVDNlLQR4zPQltE=;
-        b=F+NDxTzt0jSNyYuibeNcpYS29kH/dH9SgCKN6b+K3wMYaZUuxlLfgfyGcAbP2h0qdZ
-         v5ty2KiP40jcS2YPnLUs9N3wLbBGFlPsmxLBz9vYkJmAglbzu5s+mOrpAJ5SHAH1gCk/
-         RbLkmcGHtlfzo0bULOJlIvArXgTW/oEjAnUAiJ0LCi4ZBNTgD1NgT8uDdMRaxaKs0iUW
-         GAi8PV/bvtqXnJSi3/taYGo2up50KspNB97UU4DtyFS78WE7jbTDyHVMSY2dQLxInGjw
-         UQht2jQM0IoMKbzEzH6Mc/oo535EjsNaJEY0ODfgPfo0e+H/6DJngLZRx793PprZeo1D
-         rvBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=YVNWdCQPKJKUDqzVBB1EjscpuxC/BVDNlLQR4zPQltE=;
-        b=NiMZa24GW/hQW4qOYqzTEjDaCQc0lwBxMGgWQMgG6cX8lk3mp6k123kOLm079G7a83
-         qh7ysAOQlyQykc3ROlKeBtEEb5Hx0lyvCAjXyx+EaeZBzyqZYdZuLZQY4nS00ahYQEoa
-         ZahYQ64FRvdLCDtNGY0T28ram5XWG8gHSeyi9ES2fALHMvf+ge8uvGxzAEh0f/yzg66k
-         e7oTxQ1qyQPEqmclJhNkgJPwlzYdovmtoLKjSkZeG9vAyNg9IXqEK0ns0Oouoto1MKWJ
-         8PrXvOjQ7ykNU4rloeDzoowLaXpi8XpJyEyKhmGtvZm6Yvnqk64ZZfSATFH/Cyqep3EI
-         Q/1g==
-X-Gm-Message-State: AGi0PubRuAQCFVfmCCHr67Ol8gOFmbsRH9GWbHvR4ywOp8KKld8mFdqV
-        /QuzkNG63UZXY2yusyaz3hOjgA==
-X-Google-Smtp-Source: APiQypIOrOF7YYEaKaXDccoLPvbc0JkxGKYNccCQyRAQHIKq/YkGUH67S+Cjj2L2nU6/ItuV/nM6cA==
-X-Received: by 2002:a05:600c:414b:: with SMTP id h11mr23316590wmm.9.1586869315652;
-        Tue, 14 Apr 2020 06:01:55 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id h10sm21260991wrq.33.2020.04.14.06.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 06:01:54 -0700 (PDT)
-References: <20200330234535.3327513-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, narmstrong@baylibre.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 0/2] clk: meson8b: allow the HDMI driver to manage "hdmi_sys"
-In-reply-to: <20200330234535.3327513-1-martin.blumenstingl@googlemail.com>
-Date:   Tue, 14 Apr 2020 15:01:53 +0200
-Message-ID: <1jh7xmte4e.fsf@starbuckisacylon.baylibre.com>
+        Tue, 14 Apr 2020 09:02:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9952DC061A0C;
+        Tue, 14 Apr 2020 06:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=T6z0bd+fqDvkVl7fHhA0/8UcwUryWcByqLrcGyIrH5s=; b=bOGD0uXfBJxjATisnWE13caPpw
+        yM9EhSXpjZ/69j68Wx2mvv4rPOnCCnL4tZZOnQ/NrScoRBkaop1XY/iOcVOh0AkRZpQOQz5AVjtpv
+        cMV61Q/X5bapJJYHYlrURSsjHy7o3Gg83EN4vlKiDfRTyRH5zdQnD3aKzJJQD/Kfm9D/MZmyrS5dF
+        6Bl0eEJCl5IRt9WB6xgPE10wzHrxN2D4jZ8Wklbvo3XU7xQtw94VjIEPtaSS9ZKYl/NsjwULmC+Yi
+        /zy17VuWZ3bNc0Ndims46fX3T7ww6xbwzSO+4eEXTFMbss0b2VRfn9nH14CqQ8MjZl0Uf7RSHY+CP
+        kRablIbA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOLCV-0005fb-Ei; Tue, 14 Apr 2020 13:02:03 +0000
+Date:   Tue, 14 Apr 2020 06:02:03 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
+Message-ID: <20200414130203.GA20867@infradead.org>
+References: <20200413125303.423864-1-npiggin@gmail.com>
+ <20200413125303.423864-5-npiggin@gmail.com>
+ <20200414072316.GA5503@infradead.org>
+ <1586864403.0qfilei2ft.astroid@bobo.none>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586864403.0qfilei2ft.astroid@bobo.none>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 10:13:44PM +1000, Nicholas Piggin wrote:
+> Which case? Usually the answer would be because you don't want to use
+> contiguous physical memory and/or you don't want to use the linear 
+> mapping.
 
-On Tue 31 Mar 2020 at 01:45, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->
-> Martin Blumenstingl (2):
->   clk: meson8b: export the HDMI system clock
->   clk: meson: meson8b: make the hdmi_sys clock tree mutable
->
->  drivers/clk/meson/meson8b.c              | 6 +++---
->  drivers/clk/meson/meson8b.h              | 1 -
->  include/dt-bindings/clock/meson8b-clkc.h | 1 +
->  3 files changed, 4 insertions(+), 4 deletions(-)
-
-Applied, Thx
+But with huge pages you do by definition already use large contiguous
+areas.  So you want allocations larger than "small" huge pages but not
+using gigantic pages using vmalloc?
