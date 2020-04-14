@@ -2,425 +2,303 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CA9C38A29
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820E9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4C120768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513AB20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i24St3aY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1QMrcAJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440269AbgDNPIa (ORCPT
+        id S2440287AbgDNPLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:08:30 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22877 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440218AbgDNPHy (ORCPT
+        Tue, 14 Apr 2020 11:11:19 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37008 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437157AbgDNPLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:07:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aqrnXjdPBfxfVuxlacCt5rvOSdIzq18sQRUJB9e8Rtg=;
-        b=i24St3aYJjOpW/MW/JaGGrr4S0rgoioxdjytPtleQaPEQL+vCIVF6JemiPfVPa3y3J3lhJ
-        Ct8Fz2cYxneInYXcUKQeLRXcdiGYBKEhZUBOVkcMHSHQp3WlQYM3pe7bZ/c+x7C4m0SIFI
-        h7Gauh7rjBpd9OlVr3PQThfnKQvbU/w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-6afP4QIZMLGlxhmgx-Hb1Q-1; Tue, 14 Apr 2020 11:07:47 -0400
-X-MC-Unique: 6afP4QIZMLGlxhmgx-Hb1Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1556913F8;
-        Tue, 14 Apr 2020 15:07:45 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 85EC5271B2;
-        Tue, 14 Apr 2020 15:07:40 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, will@kernel.org,
-        joro@8bytes.org, maz@kernel.org, robin.murphy@arm.com
-Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
-        shameerali.kolothum.thodi@huawei.com, alex.williamson@redhat.com,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
-        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
-        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
-Subject: [PATCH v11 09/13] dma-iommu: Implement NESTED_MSI cookie
-Date:   Tue, 14 Apr 2020 17:06:03 +0200
-Message-Id: <20200414150607.28488-10-eric.auger@redhat.com>
-In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
-References: <20200414150607.28488-1-eric.auger@redhat.com>
+        Tue, 14 Apr 2020 11:11:03 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EF3jcg007678;
+        Tue, 14 Apr 2020 17:10:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=s0utWXUZka6BfIqJ7O3Ofw5CPkq/aQgIteyawv2LxbA=;
+ b=1QMrcAJFyTyNJ78QvVQIocZ318V8ht42CNOQkSwvFs/z/I9aj1sMrk1sSNbdMF/iJJrc
+ tptKaUVlsnL/VALoKWOWezoOaGeYm6ayhn1axasuj7fVbWHHU2Wv34shRlyf8veH+++n
+ foBdmkYvfrXSYHrz/CX9wibrGYO116hZLmmzzl8rj/0AQRaK9yIyA2EPGqiCw6NuY+DW
+ GQYRJUhXUafVTUpIQYwKICiMT/tuBYG1ASilkDbacpeTOCpSISznSjVvRj9JmeRhNze5
+ 93QhX0GEXPkQmpAAEm5e1QVRem8LNl7ZRSsQWzCIsmpyLfhvId6v+uXiS6T/Q3JwT41V qw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30b5sjxe1h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Apr 2020 17:10:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DD8AD10002A;
+        Tue, 14 Apr 2020 17:10:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA01B2B2F95;
+        Tue, 14 Apr 2020 17:10:26 +0200 (CEST)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 17:10:26 +0200
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Tue, 14 Apr 2020 17:10:26 +0200
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "joabreu@synopsys.com" <joabreu@synopsys.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Peppe CAVALLARO <peppe.cavallaro@st.com>
+CC:     "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+Subject: Re: [PATCHv2 1/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+Thread-Topic: [PATCHv2 1/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+Thread-Index: AQHV+3KcsJPnUGhLZUuQ86OpgL2bwKhkSBCAgBR9IoA=
+Date:   Tue, 14 Apr 2020 15:10:26 +0000
+Message-ID: <ecbfd26c-8dcb-3763-c1aa-ccc4c110aefa@st.com>
+References: <20200316090907.18488-1-christophe.roullier@st.com>
+ <cb0a5dd3-02da-7d60-7069-a8ee080ad239@st.com>
+In-Reply-To: <cb0a5dd3-02da-7d60-7069-a8ee080ad239@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DDC5D222574ECD44BAC7833D7E524BAA@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Up to now, when the type was UNMANAGED, we used to
-allocate IOVA pages within a reserved IOVA MSI range.
-
-If both the host and the guest are exposed with SMMUs, each
-would allocate an IOVA. The guest allocates an IOVA (gIOVA)
-to map onto the guest MSI doorbell (gDB). The Host allocates
-another IOVA (hIOVA) to map onto the physical doorbell (hDB).
-
-So we end up with 2 unrelated mappings, at S1 and S2:
-         S1             S2
-gIOVA    ->     gDB
-               hIOVA    ->    hDB
-
-The PCI device would be programmed with hIOVA.
-No stage 1 mapping would existing, causing the MSIs to fault.
-
-iommu_dma_bind_guest_msi() allows to pass gIOVA/gDB
-to the host so that gIOVA can be used by the host instead of
-re-allocating a new hIOVA.
-
-         S1           S2
-gIOVA    ->    gDB    ->    hDB
-
-this time, the PCI device can be programmed with the gIOVA MSI
-doorbell which is correctly mapped through both stages.
-
-Nested mode is not compatible with HW MSI regions as in that
-case gDB and hDB should have a 1-1 mapping. This check will
-be done when attaching each device to the IOMMU domain.
-
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-
----
-
-v10 -> v11:
-- fix compilation if !CONFIG_IOMMU_DMA
-
-v7 -> v8:
-- correct iommu_dma_(un)bind_guest_msi when
-  !CONFIG_IOMMU_DMA
-- Mentioned nested mode is not compatible with HW MSI regions
-  in commit message
-- protect with msi_lock on unbind
-
-v6 -> v7:
-- removed device handle
-
-v3 -> v4:
-- change function names; add unregister
-- protect with msi_lock
-
-v2 -> v3:
-- also store the device handle on S1 mapping registration.
-  This garantees we associate the associated S2 mapping binds
-  to the correct physical MSI controller.
-
-v1 -> v2:
-- unmap stage2 on put()
----
- drivers/iommu/dma-iommu.c | 142 +++++++++++++++++++++++++++++++++++++-
- include/linux/dma-iommu.h |  16 +++++
- 2 files changed, 155 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index ba128d1cdaee..f25297bd09d6 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -20,6 +20,7 @@
- #include <linux/irq.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
-+#include <linux/mutex.h>
- #include <linux/pci.h>
- #include <linux/scatterlist.h>
- #include <linux/vmalloc.h>
-@@ -28,12 +29,15 @@
- struct iommu_dma_msi_page {
- 	struct list_head	list;
- 	dma_addr_t		iova;
-+	dma_addr_t		gpa;
- 	phys_addr_t		phys;
-+	size_t			s1_granule;
- };
-=20
- enum iommu_dma_cookie_type {
- 	IOMMU_DMA_IOVA_COOKIE,
- 	IOMMU_DMA_MSI_COOKIE,
-+	IOMMU_DMA_NESTED_MSI_COOKIE,
- };
-=20
- struct iommu_dma_cookie {
-@@ -45,6 +49,7 @@ struct iommu_dma_cookie {
- 		dma_addr_t		msi_iova;
- 	};
- 	struct list_head		msi_page_list;
-+	spinlock_t			msi_lock;
-=20
- 	/* Domain for flush queue callback; NULL if flush queue not in use */
- 	struct iommu_domain		*fq_domain;
-@@ -63,6 +68,7 @@ static struct iommu_dma_cookie *cookie_alloc(enum iommu=
-_dma_cookie_type type)
-=20
- 	cookie =3D kzalloc(sizeof(*cookie), GFP_KERNEL);
- 	if (cookie) {
-+		spin_lock_init(&cookie->msi_lock);
- 		INIT_LIST_HEAD(&cookie->msi_page_list);
- 		cookie->type =3D type;
- 	}
-@@ -96,14 +102,17 @@ EXPORT_SYMBOL(iommu_get_dma_cookie);
-  *
-  * Users who manage their own IOVA allocation and do not want DMA API su=
-pport,
-  * but would still like to take advantage of automatic MSI remapping, ca=
-n use
-- * this to initialise their own domain appropriately. Users should reser=
-ve a
-+ * this to initialise their own domain appropriately. Users may reserve =
-a
-  * contiguous IOVA region, starting at @base, large enough to accommodat=
-e the
-  * number of PAGE_SIZE mappings necessary to cover every MSI doorbell ad=
-dress
-- * used by the devices attached to @domain.
-+ * used by the devices attached to @domain. The other way round is to pr=
-ovide
-+ * usable iova pages through the iommu_dma_bind_doorbell API (nested sta=
-ges
-+ * use case)
-  */
- int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
- {
- 	struct iommu_dma_cookie *cookie;
-+	int nesting, ret;
-=20
- 	if (domain->type !=3D IOMMU_DOMAIN_UNMANAGED)
- 		return -EINVAL;
-@@ -111,7 +120,12 @@ int iommu_get_msi_cookie(struct iommu_domain *domain=
-, dma_addr_t base)
- 	if (domain->iova_cookie)
- 		return -EEXIST;
-=20
--	cookie =3D cookie_alloc(IOMMU_DMA_MSI_COOKIE);
-+	ret =3D  iommu_domain_get_attr(domain, DOMAIN_ATTR_NESTING, &nesting);
-+	if (!ret && nesting)
-+		cookie =3D cookie_alloc(IOMMU_DMA_NESTED_MSI_COOKIE);
-+	else
-+		cookie =3D cookie_alloc(IOMMU_DMA_MSI_COOKIE);
-+
- 	if (!cookie)
- 		return -ENOMEM;
-=20
-@@ -132,6 +146,7 @@ void iommu_put_dma_cookie(struct iommu_domain *domain=
-)
- {
- 	struct iommu_dma_cookie *cookie =3D domain->iova_cookie;
- 	struct iommu_dma_msi_page *msi, *tmp;
-+	bool s2_unmap =3D false;
-=20
- 	if (!cookie)
- 		return;
-@@ -139,7 +154,15 @@ void iommu_put_dma_cookie(struct iommu_domain *domai=
-n)
- 	if (cookie->type =3D=3D IOMMU_DMA_IOVA_COOKIE && cookie->iovad.granule)
- 		put_iova_domain(&cookie->iovad);
-=20
-+	if (cookie->type =3D=3D IOMMU_DMA_NESTED_MSI_COOKIE)
-+		s2_unmap =3D true;
-+
- 	list_for_each_entry_safe(msi, tmp, &cookie->msi_page_list, list) {
-+		if (s2_unmap && msi->phys) {
-+			size_t size =3D cookie_msi_granule(cookie);
-+
-+			WARN_ON(iommu_unmap(domain, msi->gpa, size) !=3D size);
-+		}
- 		list_del(&msi->list);
- 		kfree(msi);
- 	}
-@@ -148,6 +171,92 @@ void iommu_put_dma_cookie(struct iommu_domain *domai=
-n)
- }
- EXPORT_SYMBOL(iommu_put_dma_cookie);
-=20
-+/**
-+ * iommu_dma_bind_guest_msi - Allows to pass the stage 1
-+ * binding of a virtual MSI doorbell used by @dev.
-+ *
-+ * @domain: domain handle
-+ * @iova: guest iova
-+ * @gpa: gpa of the virtual doorbell
-+ * @size: size of the granule used for the stage1 mapping
-+ *
-+ * In nested stage use case, the user can provide IOVA/IPA bindings
-+ * corresponding to a guest MSI stage 1 mapping. When the host needs
-+ * to map its own MSI doorbells, it can use @gpa as stage 2 input
-+ * and map it onto the physical MSI doorbell.
-+ */
-+int iommu_dma_bind_guest_msi(struct iommu_domain *domain,
-+			     dma_addr_t iova, phys_addr_t gpa, size_t size)
-+{
-+	struct iommu_dma_cookie *cookie =3D domain->iova_cookie;
-+	struct iommu_dma_msi_page *msi;
-+	int ret =3D 0;
-+
-+	if (!cookie)
-+		return -EINVAL;
-+
-+	if (cookie->type !=3D IOMMU_DMA_NESTED_MSI_COOKIE)
-+		return -EINVAL;
-+
-+	iova =3D iova & ~(dma_addr_t)(size - 1);
-+	gpa =3D gpa & ~(phys_addr_t)(size - 1);
-+
-+	spin_lock(&cookie->msi_lock);
-+
-+	list_for_each_entry(msi, &cookie->msi_page_list, list) {
-+		if (msi->iova =3D=3D iova)
-+			goto unlock; /* this page is already registered */
-+	}
-+
-+	msi =3D kzalloc(sizeof(*msi), GFP_ATOMIC);
-+	if (!msi) {
-+		ret =3D -ENOMEM;
-+		goto unlock;
-+	}
-+
-+	msi->iova =3D iova;
-+	msi->gpa =3D gpa;
-+	msi->s1_granule =3D size;
-+	list_add(&msi->list, &cookie->msi_page_list);
-+unlock:
-+	spin_unlock(&cookie->msi_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL(iommu_dma_bind_guest_msi);
-+
-+void iommu_dma_unbind_guest_msi(struct iommu_domain *domain, dma_addr_t =
-giova)
-+{
-+	struct iommu_dma_cookie *cookie =3D domain->iova_cookie;
-+	struct iommu_dma_msi_page *msi;
-+
-+	if (!cookie)
-+		return;
-+
-+	if (cookie->type !=3D IOMMU_DMA_NESTED_MSI_COOKIE)
-+		return;
-+
-+	spin_lock(&cookie->msi_lock);
-+
-+	list_for_each_entry(msi, &cookie->msi_page_list, list) {
-+		dma_addr_t aligned_giova =3D
-+			giova & ~(dma_addr_t)(msi->s1_granule - 1);
-+
-+		if (msi->iova =3D=3D aligned_giova) {
-+			if (msi->phys) {
-+				/* unmap the stage 2 */
-+				size_t size =3D cookie_msi_granule(cookie);
-+
-+				WARN_ON(iommu_unmap(domain, msi->gpa, size) !=3D size);
-+			}
-+			list_del(&msi->list);
-+			kfree(msi);
-+			break;
-+		}
-+	}
-+	spin_unlock(&cookie->msi_lock);
-+}
-+EXPORT_SYMBOL(iommu_dma_unbind_guest_msi);
-+
- /**
-  * iommu_dma_get_resv_regions - Reserved region driver helper
-  * @dev: Device from iommu_get_resv_regions()
-@@ -1175,6 +1284,33 @@ static struct iommu_dma_msi_page *iommu_dma_get_ms=
-i_page(struct device *dev,
- 		if (msi_page->phys =3D=3D msi_addr)
- 			return msi_page;
-=20
-+	/*
-+	 * In nested stage mode, we do not allocate an MSI page in
-+	 * a range provided by the user. Instead, IOVA/IPA bindings are
-+	 * individually provided. We reuse thise IOVAs to build the
-+	 * GIOVA -> GPA -> MSI HPA nested stage mapping.
-+	 */
-+	if (cookie->type =3D=3D IOMMU_DMA_NESTED_MSI_COOKIE) {
-+		list_for_each_entry(msi_page, &cookie->msi_page_list, list)
-+			if (!msi_page->phys) {
-+				int ret;
-+
-+				/* do the stage 2 mapping */
-+				ret =3D iommu_map(domain,
-+						msi_page->gpa, msi_addr, size,
-+						IOMMU_MMIO | IOMMU_WRITE);
-+				if (ret) {
-+					pr_warn("MSI S2 mapping failed (%d)\n",
-+						ret);
-+					return NULL;
-+				}
-+				msi_page->phys =3D msi_addr;
-+				return msi_page;
-+			}
-+		pr_warn("%s no MSI binding found\n", __func__);
-+		return NULL;
-+	}
-+
- 	msi_page =3D kzalloc(sizeof(*msi_page), GFP_KERNEL);
- 	if (!msi_page)
- 		return NULL;
-diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-index 2112f21f73d8..f112ecdb4af6 100644
---- a/include/linux/dma-iommu.h
-+++ b/include/linux/dma-iommu.h
-@@ -12,6 +12,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/iommu.h>
- #include <linux/msi.h>
-+#include <uapi/linux/iommu.h>
-=20
- /* Domain management interface for IOMMU drivers */
- int iommu_get_dma_cookie(struct iommu_domain *domain);
-@@ -36,6 +37,9 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
- 			       struct msi_msg *msg);
-=20
- void iommu_dma_get_resv_regions(struct device *dev, struct list_head *li=
-st);
-+int iommu_dma_bind_guest_msi(struct iommu_domain *domain,
-+			     dma_addr_t iova, phys_addr_t gpa, size_t size);
-+void iommu_dma_unbind_guest_msi(struct iommu_domain *domain, dma_addr_t =
-giova);
-=20
- #else /* CONFIG_IOMMU_DMA */
-=20
-@@ -74,6 +78,18 @@ static inline void iommu_dma_compose_msi_msg(struct ms=
-i_desc *desc,
- {
- }
-=20
-+static inline int
-+iommu_dma_bind_guest_msi(struct iommu_domain *domain,
-+			 dma_addr_t iova, phys_addr_t gpa, size_t size)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void
-+iommu_dma_unbind_guest_msi(struct iommu_domain *domain, dma_addr_t giova=
-)
-+{
-+}
-+
- static inline void iommu_dma_get_resv_regions(struct device *dev, struct=
- list_head *list)
- {
- }
---=20
-2.20.1
-
+SGksDQoNCkdlbnRsZSByZW1pbmRlcg0KDQpUaGFua3MsDQoNCkNocmlzdG9waGUuDQoNCk9uIDAx
+LzA0LzIwMjAgMTY6MTcsIEFsZXhhbmRyZSBUb3JndWUgd3JvdGU6DQo+IEhpIENocmlzdG9waGUN
+Cj4NCj4gT24gMy8xNi8yMCAxMDowOSBBTSwgQ2hyaXN0b3BoZSBSb3VsbGllciB3cm90ZToNCj4+
+IE5vIG5ldyBmZWF0dXJlLCBqdXN0IHRvIHNpbXBsaWZ5IHN0bTMyIHBhcnQgdG8gYmUgZWFzaWVy
+IHRvIHVzZS4NCj4+IEFkZCBieSBkZWZhdWx0IGFsbCBFdGhlcm5ldCBjbG9ja3MgaW4gRFQsIGFu
+ZCBhY3RpdmF0ZSBvciBub3QgaW4gDQo+PiBmdW5jdGlvbg0KPj4gb2YgcGh5IG1vZGUsIGNsb2Nr
+IGZyZXF1ZW5jeSwgaWYgcHJvcGVydHkgInN0LGV4dC1waHljbGsiIGlzIHNldCBvciBub3QuDQo+
+PiBLZWVwIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkNCj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiB8UEhZ
+X01PREUgfCBOb3JtYWwgfCBQSFkgd28gY3J5c3RhbHzCoMKgIFBIWSB3byBjcnlzdGFswqDCoCB8
+wqAgTm8gMTI1TWh6wqAgfA0KPj4gfMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHzC
+oMKgwqDCoMKgIDI1TUh6wqDCoMKgIHzCoMKgwqDCoMKgwqDCoCA1ME1IesKgwqDCoMKgwqDCoCB8
+wqAgZnJvbSBQSFnCoMKgIHwNCj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiB8wqAgTUlJwqDCoMKgIHzC
+oMKgwqDCoCAtwqDCoMKgIHzCoMKgwqDCoCBldGgtY2vCoMKgwqAgfMKgwqDCoMKgwqDCoCBuL2Eg
+fMKgwqDCoMKgwqDCoMKgIG4vYcKgIHwNCj4+IHzCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKg
+wqDCoCB8IHN0LGV4dC1waHljbGsgfCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwNCj4+IC0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tDQo+PiB8wqAgR01JScKgwqAgfMKgwqDCoMKgIC3CoMKgwqAgfMKgwqDCoMKg
+IGV0aC1ja8KgwqDCoCB8wqDCoMKgwqDCoMKgIG4vYSB8wqDCoMKgwqDCoMKgwqAgbi9hwqAgfA0K
+Pj4gfMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHwgc3QsZXh0LXBoeWNsayB8IHzC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfA0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IHwgUkdNSUnC
+oMKgIHzCoMKgwqDCoCAtwqDCoMKgIHzCoMKgwqDCoCBldGgtY2vCoMKgwqAgfMKgwqDCoMKgwqDC
+oCBuL2HCoMKgwqDCoMKgwqDCoMKgwqAgfCBldGgtY2vCoCB8DQo+PiB8wqDCoMKgwqDCoMKgwqDC
+oCB8wqDCoMKgwqDCoMKgwqAgfCBzdCxleHQtcGh5Y2xrIHwgfHN0LGV0aC1jbGstc2VsfA0KPj4g
+fMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IG9ywqDCoMKg
+wqAgfA0KPj4gfMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
+IHN0LGV4dC1waHljbGt8DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IHwgUk1JScKgwqDCoCB8wqDC
+oMKgwqAgLcKgwqDCoCB8wqDCoMKgwqAgZXRoLWNrwqDCoMKgIHzCoMKgwqDCoMKgIGV0aC1jayB8
+wqDCoMKgwqDCoMKgwqDCoCBuL2HCoCB8DQo+PiB8wqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDC
+oMKgwqAgfCBzdCxleHQtcGh5Y2xrIHwgc3QsZXRoLXJlZi1jbGstc2VsIHzCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB8DQo+PiB8wqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqAgfMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCBvciBzdCxleHQtcGh5Y2xrIHzCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB8DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+DQo+PiBTaWduZWQtb2Zm
+LWJ5OiBDaHJpc3RvcGhlIFJvdWxsaWVyIDxjaHJpc3RvcGhlLnJvdWxsaWVyQHN0LmNvbT4NCj4+
+DQo+PiAtLS0NCj4NCj4gQWNrZWQtYnk6IEFsZXhhbmRyZSBUT1JHVUUgPGFsZXhhbmRyZS50b3Jn
+dWVAc3QuY29tPg0KPg0KPg0KPj4gLi4uL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21h
+Yy1zdG0zMi5jIHwgNzQgKysrKysrKysrKystLS0tLS0tLQ0KPj4gwqAgMSBmaWxlIGNoYW5nZWQs
+IDQ0IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1zdG0zMi5jIA0KPj4gYi9k
+cml2ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9kd21hYy1zdG0zMi5jDQo+PiBpbmRl
+eCBiMmRjOTkyODk2ODcuLjVkNGRmNGM1MjU0ZSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvbmV0
+L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL2R3bWFjLXN0bTMyLmMNCj4+ICsrKyBiL2RyaXZlcnMv
+bmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL2R3bWFjLXN0bTMyLmMNCj4+IEBAIC0yOSw2ICsy
+OSwxMSBAQA0KPj4gwqAgI2RlZmluZSBTWVNDRkdfUE1DUl9FVEhfQ0xLX1NFTMKgwqDCoMKgwqDC
+oMKgIEJJVCgxNikNCj4+IMKgICNkZWZpbmUgU1lTQ0ZHX1BNQ1JfRVRIX1JFRl9DTEtfU0VMwqDC
+oMKgIEJJVCgxNykNCj4+IMKgICsvKiBDTE9DSyBmZWVkIHRvIFBIWSovDQo+PiArI2RlZmluZSBF
+VEhfQ0tfRl8yNU3CoMKgwqAgMjUwMDAwMDANCj4+ICsjZGVmaW5lIEVUSF9DS19GXzUwTcKgwqDC
+oCA1MDAwMDAwMA0KPj4gKyNkZWZpbmUgRVRIX0NLX0ZfMTI1TcKgwqDCoCAxMjUwMDAwMDANCj4+
+ICsNCj4+IMKgIC8qwqAgRXRoZXJuZXQgUEhZIGludGVyZmFjZSBzZWxlY3Rpb24gaW4gcmVnaXN0
+ZXIgU1lTQ0ZHIENvbmZpZ3VyYXRpb24NCj4+IMKgwqAgKi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gwqDCoCAqIHNyY8KgwqDCoMKgIHxCSVQoMjMpfCBCSVQo
+MjIpfCBCSVQoMjEpfEJJVCgyMCl8DQo+PiBAQCAtNTgsMzMgKzYzLDIwIEBADQo+PiDCoMKgICp8
+wqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqAgMjVNSHrCoMKgwqAg
+fMKgwqDCoMKgwqDCoMKgIDUwTUh6IA0KPj4gfMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfA0KPj4gwqDCoCAqIA0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiDCoMKgICp8wqAg
+TUlJwqDCoMKgIHzCoMKgwqDCoCAtwqDCoCB8wqDCoMKgwqAgZXRoLWNrwqDCoMKgIHzCoMKgwqDC
+oMKgwqDCoMKgwqAgbi9hIHzCoMKgwqDCoMKgIA0KPj4gbi9hwqDCoMKgwqDCoMKgwqAgfA0KPj4g
+LSAqfMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwNCj4+ICsgKnzCoMKgwqDCoMKgwqDC
+oMKgIHzCoMKgwqDCoMKgwqDCoCB8IHN0LGV4dC1waHljbGsgfCB8wqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHwNCj4+IMKgwqAgKiANCj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gwqDCoCAqfMKg
+IEdNSUnCoMKgIHzCoMKgwqDCoCAtwqDCoCB8wqDCoMKgwqAgZXRoLWNrwqDCoMKgIHzCoMKgwqDC
+oMKgwqDCoMKgwqAgbi9hIHzCoMKgwqDCoMKgIA0KPj4gbi9hwqDCoMKgwqDCoMKgwqAgfA0KPj4g
+LSAqfMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHwgfMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8DQo+PiArICp8wqDCoMKgwqDC
+oMKgwqDCoCB8wqDCoMKgwqDCoMKgwqAgfCBzdCxleHQtcGh5Y2xrIHwgfMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCB8DQo+PiDCoMKgICogDQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0gKnwg
+UkdNSUnCoMKgIHzCoMKgwqDCoCAtwqDCoCB8wqDCoMKgwqAgZXRoLWNrwqDCoMKgIHzCoMKgwqDC
+oMKgwqDCoMKgwqAgbi9hwqDCoMKgwqDCoCB8IGV0aC1jayANCj4+IChubyBwaW4pIHwNCj4+IC0g
+KnzCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCANCj4+IHN0
+LGV0aC1jbGstc2VswqAgfA0KPj4gKyAqfCBSR01JScKgwqAgfMKgwqDCoMKgIC3CoMKgIHzCoMKg
+wqDCoCBldGgtY2vCoMKgwqAgfMKgwqDCoMKgwqDCoMKgwqDCoCBuL2EgfMKgwqDCoMKgwqAgDQo+
+PiBldGgtY2vCoMKgwqDCoMKgIHwNCj4+ICsgKnzCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKg
+wqDCoCB8IHN0LGV4dC1waHljbGsgfMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHwgDQo+PiBzdCxldGgtY2xrLXNlbCBvcnwNCj4+ICsgKnzCoMKgwqDCoMKgwqDCoMKgIHzC
+oMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCANCj4+IHN0LGV4dC1waHljbGvCoMKgwqAgfA0K
+Pj4gwqDCoCAqIA0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiDCoMKgICp8IFJNSUnCoMKgwqAg
+fMKgwqDCoMKgIC3CoMKgIHzCoMKgwqDCoCBldGgtY2vCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIGV0
+aC1jayB8wqDCoMKgwqDCoCANCj4+IG4vYcKgwqDCoMKgwqDCoMKgIHwNCj4+IC0gKnzCoMKgwqDC
+oMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgc3Qs
+ZXRoLXJlZi1jbGstc2VsIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfA0KPj4gKyAqfMKgwqDC
+oMKgwqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHwgc3QsZXh0LXBoeWNsayB8IHN0LGV0aC1yZWYt
+Y2xrLXNlbCANCj4+IHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfA0KPj4gKyAqfMKgwqDCoMKg
+wqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
+b3Igc3QsZXh0LXBoeWNsayB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwNCj4+IMKgwqAgKiAN
+Cj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gwqDCoCAqDQo+PiAtICogQklUKDE3KSA6IHNldCB0
+aGlzIGJpdCBpbiBSTUlJIG1vZGUgd2hlbiB5b3UgaGF2ZSBQSFkgd2l0aG91dCANCj4+IGNyeXN0
+YWwgNTBNSHoNCj4+IC0gKiBCSVQoMTYpIDogc2V0IHRoaXMgYml0IGluIEdNSUkvUkdNSUkgUEhZ
+IHdoZW4geW91IGRvIG5vdCB3YW50IHVzZSANCj4+IDEyNU1oeg0KPj4gLSAqIGZyb20gUEhZDQo+
+PiAtICotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KPj4gLSAqIHNyY8KgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgIEJJVCgxNynCoMKgwqDCoMKg
+wqAgfMKgwqDCoMKgwqDCoCBCSVQoMTYpwqDCoMKgwqDCoCB8DQo+PiAtICotLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gLSAqIE1JScKgwqAg
+fMKgwqDCoMKgwqDCoMKgwqDCoMKgIG4vYcKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgIG4vYcKg
+wqDCoMKgwqDCoMKgIHwNCj4+IC0gKi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tDQo+PiAtICogR01JScKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoCBu
+L2HCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIHN0LGV0aC1jbGstc2VswqDCoCB8DQo+PiAtICotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gLSAq
+IFJHTUlJIHzCoMKgwqDCoMKgwqDCoMKgwqDCoCBuL2HCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIHN0
+LGV0aC1jbGstc2VswqDCoCB8DQo+PiAtICotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gLSAqIFJNSUnCoCB8wqDCoCBzdCxldGgtcmVmLWNs
+ay1zZWzCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoCBuL2HCoMKgwqDCoMKgwqDCoCB8DQo+PiAt
+ICotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+Pj4gLSAqDQo+PiDCoMKgICovDQo+PiDCoCDCoCBzdHJ1Y3Qgc3RtMzJfZHdtYWMgew0KPj4gQEAg
+LTkzLDYgKzg1LDggQEAgc3RydWN0IHN0bTMyX2R3bWFjIHsNCj4+IMKgwqDCoMKgwqAgc3RydWN0
+IGNsayAqY2xrX2V0aF9jazsNCj4+IMKgwqDCoMKgwqAgc3RydWN0IGNsayAqY2xrX2V0aHN0cDsN
+Cj4+IMKgwqDCoMKgwqAgc3RydWN0IGNsayAqc3lzY2ZnX2NsazsNCj4+ICvCoMKgwqAgaW50IGV4
+dF9waHljbGs7DQo+PiArwqDCoMKgIGludCBlbmFibGVfZXRoX2NrOw0KPj4gwqDCoMKgwqDCoCBp
+bnQgZXRoX2Nsa19zZWxfcmVnOw0KPj4gwqDCoMKgwqDCoCBpbnQgZXRoX3JlZl9jbGtfc2VsX3Jl
+ZzsNCj4+IMKgwqDCoMKgwqAgaW50IGlycV9wd3Jfd2FrZXVwOw0KPj4gQEAgLTE1NSwxNCArMTQ5
+LDE3IEBAIHN0YXRpYyBpbnQgc3RtMzJtcDFfY2xrX3ByZXBhcmUoc3RydWN0IA0KPj4gc3RtMzJf
+ZHdtYWMgKmR3bWFjLCBib29sIHByZXBhcmUpDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0ID0g
+Y2xrX3ByZXBhcmVfZW5hYmxlKGR3bWFjLT5zeXNjZmdfY2xrKTsNCj4+IMKgwqDCoMKgwqDCoMKg
+wqDCoCBpZiAocmV0KQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJldDsN
+Cj4+IC3CoMKgwqDCoMKgwqDCoCByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZHdtYWMtPmNsa19l
+dGhfY2spOw0KPj4gLcKgwqDCoMKgwqDCoMKgIGlmIChyZXQpIHsNCj4+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGNsa19kaXNhYmxlX3VucHJlcGFyZShkd21hYy0+c3lzY2ZnX2Nsayk7DQo+PiAt
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gcmV0Ow0KPj4gK8KgwqDCoMKgwqDCoMKgIGlm
+IChkd21hYy0+ZW5hYmxlX2V0aF9jaykgew0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0
+ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGR3bWFjLT5jbGtfZXRoX2NrKTsNCj4+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGlmIChyZXQpIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGR3bWFjLT5zeXNjZmdfY2xrKTsNCj4+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJldDsNCj4+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIH0NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCB9DQo+PiDCoMKgwqDCoMKgIH0gZWxzZSB7
+DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGR3bWFjLT5zeXNj
+ZmdfY2xrKTsNCj4+IC3CoMKgwqDCoMKgwqDCoCBjbGtfZGlzYWJsZV91bnByZXBhcmUoZHdtYWMt
+PmNsa19ldGhfY2spOw0KPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChkd21hYy0+ZW5hYmxlX2V0aF9j
+aykNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsa19kaXNhYmxlX3VucHJlcGFyZShkd21h
+Yy0+Y2xrX2V0aF9jayk7DQo+PiDCoMKgwqDCoMKgIH0NCj4+IMKgwqDCoMKgwqAgcmV0dXJuIHJl
+dDsNCj4+IMKgIH0NCj4+IEBAIC0xNzAsMjQgKzE2NywzNCBAQCBzdGF0aWMgaW50IHN0bTMybXAx
+X2Nsa19wcmVwYXJlKHN0cnVjdCANCj4+IHN0bTMyX2R3bWFjICpkd21hYywgYm9vbCBwcmVwYXJl
+KQ0KPj4gwqAgc3RhdGljIGludCBzdG0zMm1wMV9zZXRfbW9kZShzdHJ1Y3QgcGxhdF9zdG1tYWNl
+bmV0X2RhdGEgKnBsYXRfZGF0KQ0KPj4gwqAgew0KPj4gwqDCoMKgwqDCoCBzdHJ1Y3Qgc3RtMzJf
+ZHdtYWMgKmR3bWFjID0gcGxhdF9kYXQtPmJzcF9wcml2Ow0KPj4gLcKgwqDCoCB1MzIgcmVnID0g
+ZHdtYWMtPm1vZGVfcmVnOw0KPj4gK8KgwqDCoCB1MzIgcmVnID0gZHdtYWMtPm1vZGVfcmVnLCBj
+bGtfcmF0ZTsNCj4+IMKgwqDCoMKgwqAgaW50IHZhbDsNCj4+IMKgICvCoMKgwqAgY2xrX3JhdGUg
+PSBjbGtfZ2V0X3JhdGUoZHdtYWMtPmNsa19ldGhfY2spOw0KPj4gK8KgwqDCoCBkd21hYy0+ZW5h
+YmxlX2V0aF9jayA9IGZhbHNlOw0KPj4gwqDCoMKgwqDCoCBzd2l0Y2ggKHBsYXRfZGF0LT5pbnRl
+cmZhY2UpIHsNCj4+IMKgwqDCoMKgwqAgY2FzZSBQSFlfSU5URVJGQUNFX01PREVfTUlJOg0KPj4g
+K8KgwqDCoMKgwqDCoMKgIGlmIChjbGtfcmF0ZSA9PSBFVEhfQ0tfRl8yNU0gJiYgZHdtYWMtPmV4
+dF9waHljbGspDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkd21hYy0+ZW5hYmxlX2V0aF9j
+ayA9IHRydWU7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgdmFsID0gU1lTQ0ZHX1BNQ1JfRVRIX1NF
+TF9NSUk7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcHJfZGVidWcoIlNZU0NGRyBpbml0IDogUEhZ
+X0lOVEVSRkFDRV9NT0RFX01JSVxuIik7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+
+PiDCoMKgwqDCoMKgIGNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX0dNSUk6DQo+PiDCoMKgwqDCoMKg
+wqDCoMKgwqAgdmFsID0gU1lTQ0ZHX1BNQ1JfRVRIX1NFTF9HTUlJOw0KPj4gLcKgwqDCoMKgwqDC
+oMKgIGlmIChkd21hYy0+ZXRoX2Nsa19zZWxfcmVnKQ0KPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChj
+bGtfcmF0ZSA9PSBFVEhfQ0tfRl8yNU0gJiYNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIChk
+d21hYy0+ZXRoX2Nsa19zZWxfcmVnIHx8IGR3bWFjLT5leHRfcGh5Y2xrKSkgew0KPj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgZHdtYWMtPmVuYWJsZV9ldGhfY2sgPSB0cnVlOw0KPj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgdmFsIHw9IFNZU0NGR19QTUNSX0VUSF9DTEtfU0VMOw0KPj4g
+K8KgwqDCoMKgwqDCoMKgIH0NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBwcl9kZWJ1ZygiU1lTQ0ZH
+IGluaXQgOiBQSFlfSU5URVJGQUNFX01PREVfR01JSVxuIik7DQo+PiDCoMKgwqDCoMKgwqDCoMKg
+wqAgYnJlYWs7DQo+PiDCoMKgwqDCoMKgIGNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JNSUk6DQo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqAgdmFsID0gU1lTQ0ZHX1BNQ1JfRVRIX1NFTF9STUlJOw0KPj4g
+LcKgwqDCoMKgwqDCoMKgIGlmIChkd21hYy0+ZXRoX3JlZl9jbGtfc2VsX3JlZykNCj4+ICvCoMKg
+wqDCoMKgwqDCoCBpZiAoKGNsa19yYXRlID09IEVUSF9DS19GXzI1TSB8fCBjbGtfcmF0ZSA9PSBF
+VEhfQ0tfRl81ME0pICYmDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAoZHdtYWMtPmV0aF9y
+ZWZfY2xrX3NlbF9yZWcgfHwgZHdtYWMtPmV4dF9waHljbGspKSB7DQo+PiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBkd21hYy0+ZW5hYmxlX2V0aF9jayA9IHRydWU7DQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB2YWwgfD0gU1lTQ0ZHX1BNQ1JfRVRIX1JFRl9DTEtfU0VMOw0KPj4gK8Kg
+wqDCoMKgwqDCoMKgIH0NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBwcl9kZWJ1ZygiU1lTQ0ZHIGlu
+aXQgOiBQSFlfSU5URVJGQUNFX01PREVfUk1JSVxuIik7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAg
+YnJlYWs7DQo+PiDCoMKgwqDCoMKgIGNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJOg0KPj4g
+QEAgLTE5NSw4ICsyMDIsMTEgQEAgc3RhdGljIGludCBzdG0zMm1wMV9zZXRfbW9kZShzdHJ1Y3Qg
+DQo+PiBwbGF0X3N0bW1hY2VuZXRfZGF0YSAqcGxhdF9kYXQpDQo+PiDCoMKgwqDCoMKgIGNhc2Ug
+UEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJX1JYSUQ6DQo+PiDCoMKgwqDCoMKgIGNhc2UgUEhZX0lO
+VEVSRkFDRV9NT0RFX1JHTUlJX1RYSUQ6DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgdmFsID0gU1lT
+Q0ZHX1BNQ1JfRVRIX1NFTF9SR01JSTsNCj4+IC3CoMKgwqDCoMKgwqDCoCBpZiAoZHdtYWMtPmV0
+aF9jbGtfc2VsX3JlZykNCj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAoKGNsa19yYXRlID09IEVUSF9D
+S19GXzI1TSB8fCBjbGtfcmF0ZSA9PSBFVEhfQ0tfRl8xMjVNKSAmJg0KPj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgKGR3bWFjLT5ldGhfY2xrX3NlbF9yZWcgfHwgZHdtYWMtPmV4dF9waHljbGsp
+KSB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkd21hYy0+ZW5hYmxlX2V0aF9jayA9IHRy
+dWU7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB2YWwgfD0gU1lTQ0ZHX1BNQ1JfRVRI
+X0NMS19TRUw7DQo+PiArwqDCoMKgwqDCoMKgwqAgfQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHBy
+X2RlYnVnKCJTWVNDRkcgaW5pdCA6IFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01JSVxuIik7DQo+PiDC
+oMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+PiDCoMKgwqDCoMKgIGRlZmF1bHQ6DQo+PiBAQCAt
+Mjk0LDYgKzMwNCw5IEBAIHN0YXRpYyBpbnQgc3RtMzJtcDFfcGFyc2VfZGF0YShzdHJ1Y3Qgc3Rt
+MzJfZHdtYWMgDQo+PiAqZHdtYWMsDQo+PiDCoMKgwqDCoMKgIHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+bnAgPSBkZXYtPm9mX25vZGU7DQo+PiDCoMKgwqDCoMKgIGludCBlcnIgPSAwOw0KPj4gwqAgK8Kg
+wqDCoCAvKiBFdGhlcm5ldCBQSFkgaGF2ZSBubyBjcnlzdGFsICovDQo+PiArwqDCoMKgIGR3bWFj
+LT5leHRfcGh5Y2xrID0gb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAic3QsZXh0LXBoeWNsayIp
+Ow0KPj4gKw0KPj4gwqDCoMKgwqDCoCAvKiBHaWdhYml0IEV0aGVybmV0IDEyNU1IeiBjbG9jayBz
+ZWxlY3Rpb24uICovDQo+PiDCoMKgwqDCoMKgIGR3bWFjLT5ldGhfY2xrX3NlbF9yZWcgPSBvZl9w
+cm9wZXJ0eV9yZWFkX2Jvb2wobnAsIA0KPj4gInN0LGV0aC1jbGstc2VsIik7DQo+PiDCoCBAQCAt
+NDMxLDcgKzQ0NCw4IEBAIHN0YXRpYyBpbnQgc3RtMzJtcDFfc3VzcGVuZChzdHJ1Y3Qgc3RtMzJf
+ZHdtYWMgDQo+PiAqZHdtYWMpDQo+PiDCoCDCoMKgwqDCoMKgIGNsa19kaXNhYmxlX3VucHJlcGFy
+ZShkd21hYy0+Y2xrX3R4KTsNCj4+IMKgwqDCoMKgwqAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGR3
+bWFjLT5zeXNjZmdfY2xrKTsNCj4+IC3CoMKgwqAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGR3bWFj
+LT5jbGtfZXRoX2NrKTsNCj4+ICvCoMKgwqAgaWYgKGR3bWFjLT5lbmFibGVfZXRoX2NrKQ0KPj4g
+K8KgwqDCoMKgwqDCoMKgIGNsa19kaXNhYmxlX3VucHJlcGFyZShkd21hYy0+Y2xrX2V0aF9jayk7
+DQo+PiDCoCDCoMKgwqDCoMKgIHJldHVybiByZXQ7DQo+PiDCoCB9DQo+Pg==
