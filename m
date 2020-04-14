@@ -2,230 +2,178 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE84C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46689C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F292075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291232076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391455AbgDNQYn (ORCPT
+        id S2391462AbgDNQYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:24:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50420 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391413AbgDNQXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:23:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DD246ABCE;
-        Tue, 14 Apr 2020 16:23:27 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D3DA01E0E3B; Tue, 14 Apr 2020 18:23:26 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 18:23:26 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
-        hch@infradead.org, jack@suse.cz, akpm@linux-foundation.org,
-        david@fromorbit.com
-Subject: Re: [PATCH v4 RESEND 1/2] vfs: track per-sb writeback errors and
- report them to syncfs
-Message-ID: <20200414162326.GJ28226@quack2.suse.cz>
-References: <20200414120409.293749-1-jlayton@kernel.org>
- <20200414120409.293749-2-jlayton@kernel.org>
+        Tue, 14 Apr 2020 12:24:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391445AbgDNQYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:24:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DB4C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:24:30 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 99A302A1ADC
+Subject: Re: [PATCH v2 1/2] platform/chrome: cros_ec_ishtp: skip old cros_ec
+ responses
+To:     Mathew King <mathewk@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Jett Rink <jettrink@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+References: <20200410162305.76638-1-mathewk@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <c0e0c052-17bd-fea7-a4a8-07b4afbe56bd@collabora.com>
+Date:   Tue, 14 Apr 2020 18:24:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414120409.293749-2-jlayton@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200410162305.76638-1-mathewk@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 14-04-20 08:04:08, Jeff Layton wrote:
-> From: Jeff Layton <jlayton@redhat.com>
-> 
-> Usually we suggest that applications call fsync when they want to
-> ensure that all data written to the file has made it to the backing
-> store, but that can be inefficient when there are a lot of open
-> files.
-> 
-> Calling syncfs on the filesystem can be more efficient in some
-> situations, but the error reporting doesn't currently work the way most
-> people expect. If a single inode on a filesystem reports a writeback
-> error, syncfs won't necessarily return an error. syncfs only returns an
-> error if __sync_blockdev fails, and on some filesystems that's a no-op.
-> 
-> It would be better if syncfs reported an error if there were any writeback
-> failures. Then applications could call syncfs to see if there are any
-> errors on any open files, and could then call fsync on all of the other
-> descriptors to figure out which one failed.
-> 
-> This patch adds a new errseq_t to struct super_block, and has
-> mapping_set_error also record writeback errors there.
-> 
-> To report those errors, we also need to keep an errseq_t in struct
-> file to act as a cursor. This patch adds a dedicated field for that
-> purpose, which slots nicely into 4 bytes of padding at the end of
-> struct file on x86_64.
-> 
-> An earlier version of this patch used an O_PATH file descriptor to cue
-> the kernel that the open file should track the superblock error and not
-> the inode's writeback error.
-> 
-> I think that API is just too weird though. This is simpler and should
-> make syncfs error reporting "just work" even if someone is multiplexing
-> fsync and syncfs on the same fds.
-> 
-> Cc: Andres Freund <andres@anarazel.de>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Hi Jett and Mathew,
 
-The patch looks good to me. You can add:
+Thank you for the patch
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+On 10/4/20 18:23, Mathew King wrote:
+> From: Jett Rink <jettrink@chromium.org>
+> 
+> The ISHTP layer can give us old responses that we already gave up on. We
+> do not want to interpret these old responses as the current response we
+> are waiting for.
+> 
+> The cros_ish should only have one request in flight at a time. We send
+> the request and wait for the response from the ISH. If the ISH is too
+> slow to respond we give up on that request and we can send a new
+> request. The ISH may still send the response to the request that timed
+> out and without this we treat the old response as the response to the
+> current command. This is a condition that should not normally happen but
+> it has been observed with a bad ISH image. So add a token to the request
+> header which is copied into the response header when the ISH processes
+> the message to ensure that response is for the current request.
+> 
+> Signed-off-by: Jett Rink <jettrink@chromium.org>
+> Signed-off-by: Mathew King <mathewk@chromium.org>
 
-								Honza
+Queued for 5.8
 
 > ---
->  drivers/dax/device.c    |  1 +
->  fs/file_table.c         |  1 +
->  fs/open.c               |  3 +--
->  fs/sync.c               |  6 ++++--
->  include/linux/fs.h      | 16 ++++++++++++++++
->  include/linux/pagemap.h |  5 ++++-
->  6 files changed, 27 insertions(+), 5 deletions(-)
+> v2: - Change from using id to token
+>     - Reword the commit message
+> ---
+>  drivers/platform/chrome/cros_ec_ishtp.c | 32 ++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> index 1af823b2fe6b..4c0af2eb7e19 100644
-> --- a/drivers/dax/device.c
-> +++ b/drivers/dax/device.c
-> @@ -377,6 +377,7 @@ static int dax_open(struct inode *inode, struct file *filp)
->  	inode->i_mapping->a_ops = &dev_dax_aops;
->  	filp->f_mapping = inode->i_mapping;
->  	filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
-> +	filp->f_sb_err = file_sample_sb_err(filp);
->  	filp->private_data = dev_dax;
->  	inode->i_flags = S_DAX;
+> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
+> index 93a71e93a2f1..e673a7f738fc 100644
+> --- a/drivers/platform/chrome/cros_ec_ishtp.c
+> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
+> @@ -48,7 +48,8 @@ static const guid_t cros_ish_guid =
+>  struct header {
+>  	u8 channel;
+>  	u8 status;
+> -	u8 reserved[2];
+> +	u8 token;
+> +	u8 reserved;
+>  } __packed;
 >  
-> diff --git a/fs/file_table.c b/fs/file_table.c
-> index 30d55c9a1744..676e620948d2 100644
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -198,6 +198,7 @@ static struct file *alloc_file(const struct path *path, int flags,
->  	file->f_inode = path->dentry->d_inode;
->  	file->f_mapping = path->dentry->d_inode->i_mapping;
->  	file->f_wb_err = filemap_sample_wb_err(file->f_mapping);
-> +	file->f_sb_err = file_sample_sb_err(file);
->  	if ((file->f_mode & FMODE_READ) &&
->  	     likely(fop->read || fop->read_iter))
->  		file->f_mode |= FMODE_CAN_READ;
-> diff --git a/fs/open.c b/fs/open.c
-> index 719b320ede52..d9467a8a7f6a 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -743,9 +743,8 @@ static int do_dentry_open(struct file *f,
->  	path_get(&f->f_path);
->  	f->f_inode = inode;
->  	f->f_mapping = inode->i_mapping;
-> -
-> -	/* Ensure that we skip any errors that predate opening of the file */
->  	f->f_wb_err = filemap_sample_wb_err(f->f_mapping);
-> +	f->f_sb_err = file_sample_sb_err(f);
->  
->  	if (unlikely(f->f_flags & O_PATH)) {
->  		f->f_mode = FMODE_PATH | FMODE_OPENED;
-> diff --git a/fs/sync.c b/fs/sync.c
-> index 4d1ff010bc5a..c6f6f5be5682 100644
-> --- a/fs/sync.c
-> +++ b/fs/sync.c
-> @@ -161,7 +161,7 @@ SYSCALL_DEFINE1(syncfs, int, fd)
+>  struct cros_ish_out_msg {
+> @@ -90,6 +91,7 @@ static DECLARE_RWSEM(init_lock);
+>   * data exceeds this value, we log an error.
+>   * @size: Actual size of data received from firmware.
+>   * @error: 0 for success, negative error code for a failure in process_recv().
+> + * @token: Expected token for response that we are waiting on.
+>   * @received: Set to true on receiving a valid firmware	response to host command
+>   * @wait_queue: Wait queue for host to wait for firmware response.
+>   */
+> @@ -98,6 +100,7 @@ struct response_info {
+>  	size_t max_size;
+>  	size_t size;
+>  	int error;
+> +	u8 token;
+>  	bool received;
+>  	wait_queue_head_t wait_queue;
+>  };
+> @@ -162,6 +165,7 @@ static int ish_send(struct ishtp_cl_data *client_data,
+>  		    u8 *out_msg, size_t out_size,
+>  		    u8 *in_msg, size_t in_size)
 >  {
->  	struct fd f = fdget(fd);
->  	struct super_block *sb;
-> -	int ret;
-> +	int ret, ret2;
+> +	static u8 next_token;
+>  	int rv;
+>  	struct header *out_hdr = (struct header *)out_msg;
+>  	struct ishtp_cl *cros_ish_cl = client_data->cros_ish_cl;
+> @@ -174,8 +178,11 @@ static int ish_send(struct ishtp_cl_data *client_data,
+>  	client_data->response.data = in_msg;
+>  	client_data->response.max_size = in_size;
+>  	client_data->response.error = 0;
+> +	client_data->response.token = next_token++;
+>  	client_data->response.received = false;
 >  
->  	if (!f.file)
->  		return -EBADF;
-> @@ -171,8 +171,10 @@ SYSCALL_DEFINE1(syncfs, int, fd)
->  	ret = sync_filesystem(sb);
->  	up_read(&sb->s_umount);
->  
-> +	ret2 = errseq_check_and_advance(&sb->s_wb_err, &f.file->f_sb_err);
+> +	out_hdr->token = client_data->response.token;
 > +
->  	fdput(f);
-> -	return ret;
-> +	return ret ? ret : ret2;
->  }
+>  	rv = ishtp_cl_send(cros_ish_cl, out_msg, out_size);
+>  	if (rv) {
+>  		dev_err(cl_data_to_dev(client_data),
+> @@ -249,17 +256,23 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
 >  
->  /**
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 4f6f59b4f22a..5ad13cd6441c 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -976,6 +976,7 @@ struct file {
->  #endif /* #ifdef CONFIG_EPOLL */
->  	struct address_space	*f_mapping;
->  	errseq_t		f_wb_err;
-> +	errseq_t		f_sb_err; /* for syncfs */
->  } __randomize_layout
->    __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
+>  	switch (in_msg->hdr.channel) {
+>  	case CROS_EC_COMMAND:
+> -		/* Sanity check */
+> -		if (!client_data->response.data) {
+> +		if (client_data->response.received) {
+>  			dev_err(dev,
+> -				"Receiving buffer is null. Should be allocated by calling function\n");
+> -			client_data->response.error = -EINVAL;
+> -			goto error_wake_up;
+> +				"Previous firmware message not yet processed\n");
+> +			goto end_error;
+>  		}
 >  
-> @@ -1520,6 +1521,9 @@ struct super_block {
->  	/* Being remounted read-only */
->  	int s_readonly_remount;
->  
-> +	/* per-sb errseq_t for reporting writeback errors via syncfs */
-> +	errseq_t s_wb_err;
+> -		if (client_data->response.received) {
+> +		if (client_data->response.token != in_msg->hdr.token) {
+> +			dev_err_ratelimited(dev,
+> +					    "Dropping old response token %d\n",
+> +					    in_msg->hdr.token);
+> +			goto end_error;
+> +		}
 > +
->  	/* AIO completions deferred from interrupt context */
->  	struct workqueue_struct *s_dio_done_wq;
->  	struct hlist_head s_pins;
-> @@ -2827,6 +2831,18 @@ static inline errseq_t filemap_sample_wb_err(struct address_space *mapping)
->  	return errseq_sample(&mapping->wb_err);
->  }
+> +		/* Sanity check */
+> +		if (!client_data->response.data) {
+>  			dev_err(dev,
+> -				"Previous firmware message not yet processed\n");
+> +				"Receiving buffer is null. Should be allocated by calling function\n");
+>  			client_data->response.error = -EINVAL;
+>  			goto error_wake_up;
+>  		}
+> @@ -289,9 +302,10 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
+>  		memcpy(client_data->response.data,
+>  		       rb_in_proc->buffer.data, data_len);
 >  
-> +/**
-> + * file_sample_sb_err - sample the current errseq_t to test for later errors
-> + * @mapping: mapping to be sampled
-> + *
-> + * Grab the most current superblock-level errseq_t value for the given
-> + * struct file.
-> + */
-> +static inline errseq_t file_sample_sb_err(struct file *file)
-> +{
-> +	return errseq_sample(&file->f_path.dentry->d_sb->s_wb_err);
-> +}
+> +error_wake_up:
+>  		/* Set flag before waking up the caller */
+>  		client_data->response.received = true;
+> -error_wake_up:
 > +
->  static inline int filemap_nr_thps(struct address_space *mapping)
->  {
->  #ifdef CONFIG_READ_ONLY_THP_FOR_FS
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index a8f7bd8ea1c6..d4409b13747e 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -51,7 +51,10 @@ static inline void mapping_set_error(struct address_space *mapping, int error)
->  		return;
+>  		/* Wake the calling thread */
+>  		wake_up_interruptible(&client_data->response.wait_queue);
 >  
->  	/* Record in wb_err for checkers using errseq_t based tracking */
-> -	filemap_set_wb_err(mapping, error);
-> +	__filemap_set_wb_err(mapping, error);
-> +
-> +	/* Record it in superblock */
-> +	errseq_set(&mapping->host->i_sb->s_wb_err, error);
->  
->  	/* Record it in flags for now, for legacy callers */
->  	if (error == -ENOSPC)
-> -- 
-> 2.25.2
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
