@@ -8,107 +8,114 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D00C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E3EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 815242072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEC12072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 04:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1mQh4zZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJNNYYSu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405203AbgDNERW (ORCPT
+        id S2405213AbgDNES2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 00:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56414 "EHLO
+        Tue, 14 Apr 2020 00:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405149AbgDNEQq (ORCPT
+        by vger.kernel.org with ESMTP id S2405149AbgDNESX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 00:16:46 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD440C008748;
-        Mon, 13 Apr 2020 21:16:45 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a25so12727319wrd.0;
-        Mon, 13 Apr 2020 21:16:45 -0700 (PDT)
+        Tue, 14 Apr 2020 00:18:23 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E70C0A3BDC;
+        Mon, 13 Apr 2020 21:18:23 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t16so378797plo.7;
+        Mon, 13 Apr 2020 21:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ra5+xF56vl//7UQmklkjgQ0mAqGgB+1LQ/hOVbR+zp8=;
-        b=n1mQh4zZgBTivIGIq0ThPh99lt7S4FyW1UChIFlAwSdXkBJR2/4+kSNFOa/WCLQA03
-         nkg/u3g+SRR0REzWDyTaoYwsc+1kZ3R5zIpgqdDI8Fdx3pwMUxYuPDJc879NJzCbCqTS
-         Yg+lwbtKbsMfPp/Plt5urXY7NUAcKKlowAUNj+WbOiRq4aXfG65C6i85IEnvygc0vlcP
-         Me5OX7gtNUwonSK03HGwxucAg0ljDeNBsajyWyVCI37QWVq6EWcN+bzlBkFHjZXLf0w7
-         KSmtnhzTkBygOd3vULpq+Ss6TooUf4zBnJ8gx7i7VnmIdydkvu87illGZUh1urZS11gj
-         Osfw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4xcEG33EjZw/LrE9HUefk/4aqk4uWI4YbQ1ppYifMxQ=;
+        b=bJNNYYSu2+okRxcogXY4Y6Mt80VD42NQX8DnoADvAreT9VLW/HkbVBErMRlDi9GItv
+         SApNFY5KNNe2bJ/cRN/XZtRa9zibZlOLKu9LfEujzunzjyxXwHLEGQzOy5PEyIS3F/gj
+         P1KXvfAIU3y/23yp8pmFsq9hPPDm/T/r5QtPUlp9uRito14FJtVg2HpwEHeNbJqUsBGU
+         u7CZd/6rhIkEHF8iJw/fuq8+9WuidTSuaH18GlayTmOs3cypu976JRiXsXMCcBjz7dkN
+         WNBvZzXU8tNb+3C9aYWyGD5SeExdbnTDjAROdvYoYaTZcrRXuuAwzALxH/s28J8qbbf4
+         pr2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ra5+xF56vl//7UQmklkjgQ0mAqGgB+1LQ/hOVbR+zp8=;
-        b=AjJ0kUMgm857nmte4Ht4PFSP7w+Gb5TZ9MeiHEsgS34ZeJiB+U32SSMToJHHxDjtV8
-         VLFak+6Kf2nxM4LEEW1lMJoG7v+8PD+x69Zpw0NRWufuzwCG8YQCg8e/ejAUSqe6jed0
-         dJa9yf4HFsuOIWDl5XpU6WG7erkT6ts11JEieKZaBf5D5eH0WGgTB/Hd1eYg4ki9F0hw
-         ksm7rj3N3Pdy/PsO0USE0gLEhMBXLOWG6oD4cwpTR+D0HqFiKyBbYDAN5fbPSY9+BUgG
-         tWsie4b2/3M0UNkSrxYGcjqMkYbZ3DDFpdIetGrN+39P3FrRiTR1RThv2SXY8fJvJPGu
-         ZlsQ==
-X-Gm-Message-State: AGi0PubDjWwcUpQc1DhQTXwrnBh4EyvafWQhQKNjY4P0NljjuHzhwot4
-        YGiX3RyyVzgtiBv/ei6ChasZXDLA
-X-Google-Smtp-Source: APiQypJ/i7+CQzsGFIbl7j9E8gK6ahy1bJ4l277DKHg/E1+y06RBB87cOEhcbxQubMbHmFFOlf1Cnw==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr21605238wrc.42.1586837804231;
-        Mon, 13 Apr 2020 21:16:44 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n4sm16704471wmi.20.2020.04.13.21.16.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4xcEG33EjZw/LrE9HUefk/4aqk4uWI4YbQ1ppYifMxQ=;
+        b=NERyEZMi+DLs49tjuQMk6GieEmZuTXGJllIlnWCbrG4TaL68//l+B23mG9hpBkGXJe
+         X3pCNUTXojQ1Q9aIIeYqsC5bJzOhEAvA8HAPjM9I5IUNKmhc8enKojfFl3nnuePikpZh
+         5LgBrJ7+ZFFg+449y38DfnF6PPXcZ2sJQkvwxiHaYzxTAxDdK5R+GRY7QVq/mRcVvA9F
+         Ii+hrv9vXTFVn5uIPJrBjT17eBN0IBk9DL16ICn1ZELn6z8fHcCpJEs9X56bqEyhnN5k
+         EO65t1/xh/qji29M/4AT5tcEf0nG0d1gNjpXVIUGpNM5J1gDDvQauHLScq4WIPp4ijDG
+         C34g==
+X-Gm-Message-State: AGi0Pubk4004q3rxughHIAfIAVfy2kOkiwuBYV05pgSTReIrpg+rhTDb
+        P792MAB+RSaNgaIUWDrG6Lc=
+X-Google-Smtp-Source: APiQypKuSyu00FmXhbJYSusoKPKJUDFO7cmxWS0GS6JihlkrNj5XZmR8P7/jpgJ0Xoqz5gD7hUchPw==
+X-Received: by 2002:a17:90b:f13:: with SMTP id br19mr11533283pjb.153.1586837902552;
+        Mon, 13 Apr 2020 21:18:22 -0700 (PDT)
+Received: from osboxes.am.sony.com (ip68-225-228-191.oc.oc.cox.net. [68.225.228.191])
+        by smtp.gmail.com with ESMTPSA id v94sm1021202pjb.39.2020.04.13.21.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 21:16:43 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        linux-kernel@vger.kernel.org (open list), davem@davemloft.net,
-        kuba@kernel.org
-Subject: [PATCH net 3/4] net: dsa: b53: Fix ARL register definitions
-Date:   Mon, 13 Apr 2020 21:16:29 -0700
-Message-Id: <20200414041630.5740-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200414041630.5740-1-f.fainelli@gmail.com>
-References: <20200414041630.5740-1-f.fainelli@gmail.com>
+        Mon, 13 Apr 2020 21:18:21 -0700 (PDT)
+From:   Maciej Grochowski <maciek.grochowski@gmail.com>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     Maciej Grochowski <maciej.grochowski@pm.me>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] include/linux/dmaengine: Typos fixes in API documentation
+Date:   Tue, 14 Apr 2020 00:17:03 -0400
+Message-Id: <20200414041703.6661-1-maciek.grochowski@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
-which means that when we read/wrote from/to ARL bin index 0, we were
-actually accessing the ARLA_RWCTRL register.
+From: Maciej Grochowski <maciej.grochowski@pm.me>
 
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Maciej Grochowski <maciej.grochowski@pm.me>
 ---
- drivers/net/dsa/b53/b53_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/dmaengine.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index 2a9f421680aa..d914e756cdab 100644
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -304,7 +304,7 @@
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 21065c04c4ac..31e58ec9f741 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -83,9 +83,9 @@ enum dma_transfer_direction {
+ /**
+  * Interleaved Transfer Request
+  * ----------------------------
+- * A chunk is collection of contiguous bytes to be transfered.
++ * A chunk is collection of contiguous bytes to be transferred.
+  * The gap(in bytes) between two chunks is called inter-chunk-gap(ICG).
+- * ICGs may or maynot change between chunks.
++ * ICGs may or may not change between chunks.
+  * A FRAME is the smallest series of contiguous {chunk,icg} pairs,
+  *  that when repeated an integral number of times, specifies the transfer.
+  * A transfer template is specification of a Frame, the number of times
+@@ -1069,7 +1069,7 @@ static inline int dmaengine_terminate_all(struct dma_chan *chan)
+  * dmaengine_synchronize() needs to be called before it is safe to free
+  * any memory that is accessed by previously submitted descriptors or before
+  * freeing any resources accessed from within the completion callback of any
+- * perviously submitted descriptors.
++ * previously submitted descriptors.
   *
-  * BCM5325 and BCM5365 share most definitions below
-  */
--#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
-+#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
- #define   ARLTBL_MAC_MASK		0xffffffffffffULL
- #define   ARLTBL_VID_S			48
- #define   ARLTBL_VID_MASK_25		0xff
-@@ -316,7 +316,7 @@
- #define   ARLTBL_VALID_25		BIT(63)
- 
- /* ARL Table Data Entry N Registers (32 bit) */
--#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
-+#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
- #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
- #define   ARLTBL_TC(tc)			((3 & tc) << 11)
- #define   ARLTBL_AGE			BIT(14)
+  * This function can be called from atomic context as well as from within a
+  * complete callback of a descriptor submitted on the same channel.
+@@ -1091,7 +1091,7 @@ static inline int dmaengine_terminate_async(struct dma_chan *chan)
+  *
+  * Synchronizes to the DMA channel termination to the current context. When this
+  * function returns it is guaranteed that all transfers for previously issued
+- * descriptors have stopped and and it is safe to free the memory assoicated
++ * descriptors have stopped and it is safe to free the memory associated
+  * with them. Furthermore it is guaranteed that all complete callback functions
+  * for a previously submitted descriptor have finished running and it is safe to
+  * free resources accessed from within the complete callbacks.
 -- 
-2.17.1
+2.20.1
 
