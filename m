@@ -2,150 +2,98 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA117C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDE0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78FC620578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rKYrGrZi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5upAqVG"
+	by mail.kernel.org (Postfix) with ESMTP id 3F7BB20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 08:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436690AbgDNIYZ (ORCPT
+        id S2436699AbgDNIYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:24:25 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33221 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436547AbgDNIV4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:21:56 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D102D5800F6;
-        Tue, 14 Apr 2020 04:21:53 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 14 Apr 2020 04:21:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=K
-        9NNGyZC3pe81UCb1QBdT9lxusbIOSuDYCMZGd3QvZY=; b=rKYrGrZiQ+j6FJO52
-        iSkryG9dNJ5xdrkn96G/3EeAN0q/9nIeBIKScyX/bjUSuP5RharNdU2JBgX3V13h
-        dGm5DPjvouo3d/VtMmg/Rs9OnOfXNmzvby9b+vwD+fxFcpe0P8TEwfUY/ThhO9u7
-        thz3jiX0LJyCjcmH48jR2z5Xv+6lCR7FfjeGHmyum2MhREQotT+EmcAzXR2T04Af
-        EgRWsOtRQ7UW1n/F4UtJTOvomJXkvIRpYqeHoKkFjR/TJvv1QNnWLRybCh6As6bk
-        gqE3ZFnqqDcpX46s2OUZM5nQj0slUVojKaBDlXWgzhnatdiqnxrW8T7LIs/jHanB
-        vAbjg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=K9NNGyZC3pe81UCb1QBdT9lxusbIOSuDYCMZGd3Qv
-        ZY=; b=X5upAqVGP/jJNnDVewMt9pXltZ5l5C4o0uzAROA3hdKyE/2GPyX52DbLV
-        ydvcDHWHvlYIY/TvderSu4Ne0OXuUOWgTUitW+PbgBquuOEpihu8LD4eyKEKyte3
-        jswqjCQerHgV2wprahLFBYMBRPgo9S8cmpOMVBnXeUkB9HiOVFF0QiNWktAM3RMw
-        9qZOQJe8E8hzbmJbUhPmXugmvxHT6uzetsmIKPSOcAIiRwIfmTXK/YWESLTVMLG4
-        lHUBvN2z736+/VYel2cSnypzlhlmwXC7WLclG99se3rnsCDMcwuC/KFaTXv4DUtS
-        x2zT4fzyvwBPC8pewzyEuTu0Y2n7Q==
-X-ME-Sender: <xms:oHKVXusMLZbM2B0tIBqUesHKVf4dc-FOZqXPNcGnO4bWi0Cr92dTfQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedugddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepfhhrvggvuggvsh
-    hkthhophdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
-    hm
-X-ME-Proxy: <xmx:oHKVXvAt5ALrBjpPUj6IRVOnCzS0lw4tpvWLLN5CQ2wnYGXqcAAULQ>
-    <xmx:oHKVXhk48uBc81zn02KWktBSC8r4-MsUDClwkdLMkRHog2vIcVartQ>
-    <xmx:oHKVXggTM2EuAuvvsJhYJFn13DuF0Ma3tVjwio0EMfT-YqB2tUuisQ>
-    <xmx:oXKVXvmtBT2B6gQqJaARzl1tNz6065WPfpkTfcxvX1ODSkL1esYTiA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A0A2D3060060;
-        Tue, 14 Apr 2020 04:21:51 -0400 (EDT)
-Date:   Tue, 14 Apr 2020 10:21:50 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Prike Liang <Prike.Liang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        regressions@leemhuis.info, David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>, Huang Rui <ray.huang@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mengbing Wang <Mengbing.Wang@amd.com>
-Subject: Re: [regression 5.7-rc1] System does not power off, just halts
-Message-ID: <20200414082150.GD4149624@kroah.com>
-References: <f4eaf0ca-6cd6-c224-9205-bf64ca533ff5@molgen.mpg.de>
- <dcc4851e-0ab5-683a-2cf2-687d64a3c9da@molgen.mpg.de>
- <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
+        Tue, 14 Apr 2020 04:24:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:50778 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436548AbgDNIWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 04:22:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82AE91FB;
+        Tue, 14 Apr 2020 01:21:57 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 539AC3F73D;
+        Tue, 14 Apr 2020 01:21:48 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 09:21:36 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, dietmar.eggemann@arm.com,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 01/11] MIPS: setup: Drop prefill_possible_map
+Message-ID: <20200414082123.GA6459@bogus>
+References: <20200412032123.3896114-1-jiaxun.yang@flygoat.com>
+ <20200412032123.3896114-2-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADnq5_OXdpEebFY3+kyQb-WEw0Rb6cqoOFKGqgxaigU5hean1g@mail.gmail.com>
+In-Reply-To: <20200412032123.3896114-2-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 01:48:58PM -0400, Alex Deucher wrote:
-> On Mon, Apr 13, 2020 at 1:47 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
-> >
-> > Dear Prike, dear Alex, dear Linux folks,
-> >
-> >
-> > Am 13.04.20 um 10:44 schrieb Paul Menzel:
-> >
-> > > A regression between causes a system with the AMD board MSI B350M MORTAR
-> > > (MS-7A37) with an AMD Ryzen 3 2200G not to power off any more but just
-> > > to halt.
-> > >
-> > > The regression is introduced in 9ebe5422ad6c..b032227c6293. I am in the
-> > > process to bisect this, but maybe somebody already has an idea.
-> >
-> > I found the Easter egg:
-> >
-> > > commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58
-> > > Author: Prike Liang <Prike.Liang@amd.com>
-> > > Date:   Tue Apr 7 20:21:26 2020 +0800
-> > >
-> > >     drm/amdgpu: fix gfx hang during suspend with video playback (v2)
-> > >
-> > >     The system will be hang up during S3 suspend because of SMU is pending
-> > >     for GC not respose the register CP_HQD_ACTIVE access request.This issue
-> > >     root cause of accessing the GC register under enter GFX CGGPG and can
-> > >     be fixed by disable GFX CGPG before perform suspend.
-> > >
-> > >     v2: Use disable the GFX CGPG instead of RLC safe mode guard.
-> > >
-> > >     Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-> > >     Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-> > >     Reviewed-by: Huang Rui <ray.huang@amd.com>
-> > >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> > >     Cc: stable@vger.kernel.org
-> >
-> > It reverts cleanly on top of 5.7-rc1, and this fixes the issue.
-> >
-> > Greg, please do not apply this to the stable series. The commit message
-> > doesn’t even reference a issue/bug report, and doesn’t give a detailed
-> > problem description. What system is it?
-> >
-> > Dave, Alex, how to proceed? Revert? I created issue 1094 [1].
+On Sun, Apr 12, 2020 at 11:20:31AM +0800, Jiaxun Yang wrote:
+> All the plat_smp_setup are setting up possible cpus in their
+> platform code. So prefill_possible_map is actually overwriting
+> platform's setup, which seems unreasonable.
 > 
-> Already fixed:
-> https://patchwork.freedesktop.org/patch/361195/
 
-Any reason that doesn't have a cc: stable tag on it?
+Why don't you rearrange the code so that this still remains as is and
+the platforms can override if they need. If you do so, you don't need
+the change in 04/11 as I suggested previously.
 
-And is it committed to any tree at the moment?
-
-thanks,
-
-greg k-h
+-- 
+Regards,
+Sudeep
