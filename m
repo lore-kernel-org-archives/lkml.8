@@ -2,147 +2,103 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA03C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465D9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0168D2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25BBF20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:57:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lgU7dLDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406167AbgDNGu7 (ORCPT
+        id S2406172AbgDNG5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 02:50:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58687 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406135AbgDNGuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 02:50:32 -0400
-IronPort-SDR: HLywqpAtjln3ODpDTTfajLhWYAC4TFR77CZD94LVRasqz7Gq9tmuvOC11j6vn0GDosDUGxM+ee
- 46kpPq0UiMBA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 23:50:31 -0700
-IronPort-SDR: 1zX7xUoXY6F2Iske0khthpiXytW/LDuEgmESGtWbStn+66HlC04sNpprulO/8prq/aWE56W9/F
- BNhe8cZywDPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
-   d="scan'208";a="277158378"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.132])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Apr 2020 23:50:29 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v8 3/4] x86/split_lock: Export sld_update_msr() and sld_state
-Date:   Tue, 14 Apr 2020 14:31:28 +0800
-Message-Id: <20200414063129.133630-4-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200414063129.133630-1-xiaoyao.li@intel.com>
-References: <20200414063129.133630-1-xiaoyao.li@intel.com>
+        Tue, 14 Apr 2020 02:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406131AbgDNG5f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 02:57:35 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86496C0A3BDC
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:57:35 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b8so5654191pfp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q2jESVtXxhYH38LYW9tkhMflmHCStmCuPZYYIP7Auok=;
+        b=lgU7dLDZ8GPd6/o+FxoFGW0xrmikpr9pxTDLUBLibyeqY52c52/V07LWzf6RywRgPx
+         mGBr0lzXgLr+eNrQQGaVIdENtypNYRQDn9Tn/mW4E0L47bHx2oVpHXJAI5mREArUxqIa
+         b/ATkvIxN22ECDKbLOxDDC1Qa/mPLLllnA1k4wMeOZeSImuf2kSRLYWC0W5A4dJbziUA
+         H/o9kuft8xCN3F4h6Sqh7h7TahnKSRTsDa5a1HgLHpJ5i20Klq63aM9L9/XWb/EI+GXo
+         7m2XCuCdlKFoXiF/33tM14AnPy9A++lFhg9VG54Wl+YrkoSn/+Ieiz/QvV5umWkAJEyA
+         RdkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q2jESVtXxhYH38LYW9tkhMflmHCStmCuPZYYIP7Auok=;
+        b=Is6KqsWMm7V2+koiWS5f0vnx0z3KlIx5rIEgcvdpAsFg/DrSpBFiI61mpb1HDMTflY
+         o7ADULoCIRaT8BCV+qC948PXzNPzjVEoh2F3h07KwW1Giegxvs5HOSgcvM14paYOtvr8
+         AwKHOxyVGAXNFKoGZrsOzj6v16LVaJXr9RrcsGy9FYBTb0dVQBMVHjSJCBKkC+oOn+5+
+         u4MjkYH0eFI+CIc8eXbKYYUaj6h9fI3UovbXjhFY+Laje+MxU5FBrMKdswHTOThvwyeJ
+         gJbrm7jtuR5grCfbI/UIfHCniDZi9vhWKtLED/DgEdgNQXoiqqo4v029wklQhI1jfr45
+         aaGA==
+X-Gm-Message-State: AGi0Pub/D5PGDCM0kMQGTq3uLD0KAxxw9pFOWKeaO0glQRF60YwIJMsr
+        PGzzzWBLMQjDyKp9AS7TXws8tQ==
+X-Google-Smtp-Source: APiQypLz/nfBSW1lBv6C3GbzFRvOoPqv/0+vewJdOT2t7iCez7rtRBzCKxhQU28JpU/IUwWN0VWF+g==
+X-Received: by 2002:a63:140c:: with SMTP id u12mr14135300pgl.243.1586847454873;
+        Mon, 13 Apr 2020 23:57:34 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id w5sm10358588pfw.154.2020.04.13.23.57.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Apr 2020 23:57:33 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 12:27:32 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/21] opp: Manage empty OPP tables with clk handle
+Message-ID: <20200414065732.rwrbiv7ke3kwgeti@vireshk-i7>
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-2-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586353607-32222-2-git-send-email-rnayak@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sld_update_msr() and sld_state will be used in KVM in future patch
-to add virtualization support of split lock detection.
+On 08-04-20, 19:16, Rajendra Nayak wrote:
+> With OPP core now supporting DVFS for IO devices, we have instances of
+> IO devices (same IP block) which require an OPP on some platforms/SoCs
+> while just needing to scale the clock on some others.
+> 
+> In order to avoid conditional code in every driver which supports such
+> devices (to check for availability of OPPs and then deciding to do
+> either dev_pm_opp_set_rate() or clk_set_rate()) add support to manage
+> empty OPP tables with a clk handle.
+> 
+> This makes dev_pm_opp_set_rate() equivalent of a clk_set_rate() for
+> devices with just a clk and no OPPs specified, and makes
+> dev_pm_opp_set_rate(0) bail out without throwing an error.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  drivers/opp/core.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/include/asm/cpu.h  | 12 ++++++++++++
- arch/x86/kernel/cpu/intel.c | 13 +++++--------
- 2 files changed, 17 insertions(+), 8 deletions(-)
+Applied. Thanks.
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index dd17c2da1af5..6c6528b3153e 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -40,12 +40,23 @@ int mwait_usable(const struct cpuinfo_x86 *);
- unsigned int x86_family(unsigned int sig);
- unsigned int x86_model(unsigned int sig);
- unsigned int x86_stepping(unsigned int sig);
-+enum split_lock_detect_state {
-+	sld_off = 0,
-+	sld_warn,
-+	sld_fatal,
-+};
-+
- #ifdef CONFIG_CPU_SUP_INTEL
-+extern enum split_lock_detect_state sld_state __ro_after_init;
-+
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
- extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
- extern bool handle_guest_split_lock(unsigned long ip);
-+extern void sld_update_msr(bool on);
- #else
-+#define sld_state sld_off
-+
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
- static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-@@ -57,5 +68,6 @@ static inline bool handle_guest_split_lock(unsigned long ip)
- {
- 	return false;
- }
-+static inline void sld_update_msr(bool on) {}
- #endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index bf08d4508ecb..80d1c0c93c08 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -34,18 +34,14 @@
- #include <asm/apic.h>
- #endif
- 
--enum split_lock_detect_state {
--	sld_off = 0,
--	sld_warn,
--	sld_fatal,
--};
--
- /*
-  * Default to sld_off because most systems do not support split lock detection
-  * split_lock_setup() will switch this to sld_warn on systems that support
-  * split lock detect, unless there is a command line override.
-  */
--static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
-+enum split_lock_detect_state sld_state __ro_after_init = sld_off;
-+EXPORT_SYMBOL_GPL(sld_state);
-+
- static u64 msr_test_ctrl_cache __ro_after_init;
- 
- /*
-@@ -1052,7 +1048,7 @@ static void __init split_lock_setup(void)
-  * is not implemented as one thread could undo the setting of the other
-  * thread immediately after dropping the lock anyway.
-  */
--static void sld_update_msr(bool on)
-+void sld_update_msr(bool on)
- {
- 	u64 test_ctrl_val = msr_test_ctrl_cache;
- 
-@@ -1061,6 +1057,7 @@ static void sld_update_msr(bool on)
- 
- 	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
- }
-+EXPORT_SYMBOL_GPL(sld_update_msr);
- 
- static void split_lock_init(void)
- {
 -- 
-2.20.1
-
+viresh
