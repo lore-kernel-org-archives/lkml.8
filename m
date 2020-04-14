@@ -2,137 +2,159 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26829C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C041BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020F8206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:09:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDTo166r"
+	by mail.kernel.org (Postfix) with ESMTP id 99E042075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586866231;
+	bh=9nLijrfFYT0Yv0LLGW5g9Cnrm+SAsUFzF6rXqjQvE9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cmlIhTIzSiYb/ULkd9dhWmqEPx9NACiGnoM3e8EddYhVGFwU6XFN6K0IlK/sI0WO1
+	 pRFKWPQHR9dcvenWmVXCnpOg99qXt/qvcMbElTx0P5SHVbMy9WtKBlpWrFC/IRb1Pw
+	 s/b1Lh0ypnw+IiTGcqoqufGVqzIDLzteop9UP4Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgDNMJS (ORCPT
+        id S2439909AbgDNMKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:09:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44616 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2439886AbgDNMIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:08:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586866132;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BICdmTDYO4rOQ/Tod0xREH+kF4MdkX3G6Bj84FXcA2A=;
-        b=EDTo166rMiV8sUGNcp2ueAfmN7W3GKhL7ul+S+9h75gN7SApN2jnP6fCXFo5smFBhY+uAW
-        McZu3fcJpkZYyxSXBRe4viDLyNxLvTsk7Lnv4qoj08zi2dPnFbpoc9id/9Fr/XF1fIC7xD
-        3tGIsRZgMUaCg7TLECvSCm8RGde6NnE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-yO-Soot9MZmg4CXOz5LTNg-1; Tue, 14 Apr 2020 08:08:48 -0400
-X-MC-Unique: yO-Soot9MZmg4CXOz5LTNg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Apr 2020 08:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729798AbgDNMKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:10:22 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76A9A800D5C;
-        Tue, 14 Apr 2020 12:08:46 +0000 (UTC)
-Received: from gondolin (ovpn-113-32.ams2.redhat.com [10.36.113.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D519410013A1;
-        Tue, 14 Apr 2020 12:08:40 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 14:08:38 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20200414140838.54f777b8.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-4-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-4-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 09300206A2;
+        Tue, 14 Apr 2020 12:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586866221;
+        bh=9nLijrfFYT0Yv0LLGW5g9Cnrm+SAsUFzF6rXqjQvE9Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TfD6ULUK00pKiRiq73UbKHBodLii08HNnSGkJDWXcXFt630iGbxxo8Hyzf6qqoj+G
+         FUwHuWtVAqgHGoqKHTOXzWfruB6qPXAdYB14cwMu28ceC/p3FX8PXPqbmSUMXwk5UR
+         XSiXFSry0KNmgxv7CkqzOYhS09dMwT60kU0Sp2Hk=
+Date:   Tue, 14 Apr 2020 17:40:09 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: iio: chemical: Add binding for CCS811
+ VOC sensor
+Message-ID: <20200414121009.GA28866@Mani-XPS-13-9360>
+References: <20200412183658.6755-1-mani@kernel.org>
+ <20200412183658.6755-2-mani@kernel.org>
+ <20200413175323.7f41b766@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413175323.7f41b766@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:03 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> Introduces a new driver callback to prevent a root user from unbinding
-> an AP queue from its device driver if the queue is in use. The intent of
-> this callback is to provide a driver with the means to prevent a root user
-> from inadvertently taking a queue away from a guest and giving it to the
-> host while the guest is still using it. The callback will
-> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
-> attributes would result in one or more AP queues being removed from its
-> driver. If the callback responds in the affirmative for any driver
-> queried, the change to the apmask or aqmask will be rejected with a device
-> in use error.
+On Mon, Apr 13, 2020 at 05:53:23PM +0100, Jonathan Cameron wrote:
+> On Mon, 13 Apr 2020 00:06:56 +0530
+> mani@kernel.org wrote:
 > 
-> For this patch, only non-default drivers will be queried. Currently,
-> there is only one non-default driver, the vfio_ap device driver. The
-> vfio_ap device driver manages AP queues passed through to one or more
-> guests and we don't want to unexpectedly take AP resources away from
-> guests which are most likely independently administered.
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > This commit adds devicetree binding for AMS CCS811 VOC sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> Great to see this driver getting some more attention.
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
->  drivers/s390/crypto/ap_bus.h |   4 +
->  2 files changed, 142 insertions(+), 6 deletions(-)
+> A few things inline
 > 
-> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-> index 5256e3ce84e5..af15c095e76a 100644
-> --- a/drivers/s390/crypto/ap_bus.c
-> +++ b/drivers/s390/crypto/ap_bus.c
-> @@ -35,6 +35,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/debugfs.h>
->  #include <linux/ctype.h>
-> +#include <linux/module.h>
->  
->  #include "ap_bus.h"
->  #include "ap_debug.h"
-> @@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
->  	newmap = kmalloc(size, GFP_KERNEL);
->  	if (!newmap)
->  		return -ENOMEM;
-> -	if (mutex_lock_interruptible(lock)) {
-> -		kfree(newmap);
-> -		return -ERESTARTSYS;
-> +	if (lock) {
-> +		if (mutex_lock_interruptible(lock)) {
-> +			kfree(newmap);
-> +			return -ERESTARTSYS;
-> +		}
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  .../bindings/iio/chemical/ams,ccs811.yaml     | 50 +++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > new file mode 100644
+> > index 000000000000..564208af7b2b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > @@ -0,0 +1,50 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> 
+> Preferred that all new binding docs are dual licensed with BSD as well
+> to allow there use by things other than the kernel.
+> 
 
-This whole function is a bit odd. It seems all masks we want to
-manipulate are always guarded by the ap_perms_mutex, and the need for
-allowing lock == NULL comes from wanting to call this function with the
-ap_perms_mutex already held.
+Okay will do.
 
-That would argue for a locked/unlocked version of this function... but
-looking at it, why do we lock the way we do? The one thing this
-function (prior to this patch) does outside of the holding of the mutex
-is the allocation and freeing of newmap. But with this patch, we do the
-allocation and freeing of newmap while holding the mutex. Something
-seems a bit weird here.
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/chemical/ams,ccs811.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: AMS CCS811 VOC Sensor
+> > +
+> > +maintainers:
+> > +  - Narcisa Vasile <narcisaanamaria12@gmail.com>
+> > +
+> > +description: |
+> > +  Ultra-Low Power Digital Gas Sensor for Monitoring Indoor Air Quality.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ams,ccs811
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  reset-gpios:
+> > +    description: GPIO connected to the nRESET line. This is an active low
+> > +                 input to CCS811.
+> > +    maxItems: 1
+> > +
+> > +  wakeup-gpios:
+> > +    description: GPIO connected to the nWAKE line. This is an active low
+> > +                 input to CCS811.
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +      ccs811@5b {
+> Hmm. Not sure we have a generic name in the dt spec for voc sensor.
+> Even so we should try for something appropriate.
+> 
+> Could go with voc@5b?
+> 
 
->  	}
->  
->  	if (*str == '+' || *str == '-') {
+Sounds good to me.
 
+Thanks,
+Mani
+
+> > +        compatible = "ams,ccs811";
+> > +        reg = <0x5b>;
+> > +        reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
+> > +        wakeup-gpios = <&gpioa 12 GPIO_ACTIVE_LOW>;
+> > +      };
+> > +    };
+> > +
+> > +...
+> 
