@@ -2,71 +2,153 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1D0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB4CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4917120678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A8020678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lWJKpyVs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EBVOg6X/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391346AbgDNQQ5 (ORCPT
+        id S2391030AbgDNQSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390547AbgDNQQr (ORCPT
+        Tue, 14 Apr 2020 12:18:44 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14120 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390722AbgDNQSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:16:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD65C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 09:16:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=r8fDQKggXKxqP/PULk16XmyAUlc/RU4HQ2YTQKZ3Wuw=; b=lWJKpyVsLnE+APPi6xA1HuX0CI
-        fteOch0wMZnrqVUoewWwfdpujygcw0fietYLplQN55DLyduy4e2MXF2swkeuhXKbZAwzqg3Z1WWEm
-        SXAI96rSiBoXD/hWJmgsbnjyryUAGnFBz867ne/k+zQWKGwcysZRP1RbVeIFMKHgZTuRmRDhdNZBS
-        65IJLFhqaAthdcQTjuyTQsazgumm4poc4VI1OL9KpRpFe3rudyAWWp8mgbo/+sdItYfllVhfdKF2r
-        g9kyfhO3TjjUaAlxJYiAs7MBA9gPZuiU2uY3msY1cYRZHtM5bkYuFFne+2mSAzIcyN2TxlnkZWGO9
-        3QwHmefA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOOEp-0000my-OM; Tue, 14 Apr 2020 16:16:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E534F304D58;
-        Tue, 14 Apr 2020 18:16:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D47E72B22FBEF; Tue, 14 Apr 2020 18:16:36 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 18:16:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH V3 5/9] objtool: Add return address unwind hints
-Message-ID: <20200414161636.GP20713@hirez.programming.kicks-ass.net>
-References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
- <20200414103618.12657-6-alexandre.chartre@oracle.com>
+        Tue, 14 Apr 2020 12:18:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586881119; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=pjzwfTcChHnISigCJHUetoRvOtw8Q36XYbff0pt71XY=;
+ b=EBVOg6X/p8Plyh7uVYSdxlpC70ArYFEMk51fgEK/B/bp2K3IC3orEv8eF9AUu4Su42r8ezrX
+ K1qYYCFrTbBc9M/3Zqh/IMWsCue72TzGg9VhmaiDSgEktaKEupqbWlzfvEoULpBcPWQj0zwA
+ ypoXb7FqSNiEGrGW/FfJyVMDAuU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e95e25e.7f4c0c536228-smtp-out-n04;
+ Tue, 14 Apr 2020 16:18:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 06F62C4478F; Tue, 14 Apr 2020 16:18:37 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28FA7C433F2;
+        Tue, 14 Apr 2020 16:18:37 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414103618.12657-6-alexandre.chartre@oracle.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Apr 2020 21:48:37 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH 2/2] iommu/arm-smmu: Allow client devices to select direct
+ mapping
+In-Reply-To: <CAE=gft7HFBc7XtgiV1hkG-m3ONMUiE2vu8Vg_7Mu1dfe2BjYpA@mail.gmail.com>
+References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
+ <813cc5b2da10c27db982254b274bf26008a9e6da.1579692800.git.saiprakash.ranjan@codeaurora.org>
+ <CAE=gft7HFBc7XtgiV1hkG-m3ONMUiE2vu8Vg_7Mu1dfe2BjYpA@mail.gmail.com>
+Message-ID: <eb30fcf85127676e401ca5d83f9a6ad7@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:36:14PM +0200, Alexandre Chartre wrote:
-> Add the UNWIND_HINT_RADDR_DELETE and UNWIND_HINT_RADDR_ALTER unwind
-> hint macros to flag instructions which remove or modify return
-> addresses.
+Hi Evan,
 
-I'm confused by this thing; why? AFAICT the rest of the patches are
-actually simpler without this one.
+On 2020-04-14 04:42, Evan Green wrote:
+> On Wed, Jan 22, 2020 at 3:48 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> From: Jordan Crouse <jcrouse@codeaurora.org>
+>> 
+>> Some client devices want to directly map the IOMMU themselves instead
+>> of using the DMA domain. Allow those devices to opt in to direct
+>> mapping by way of a list of compatible strings.
+>> 
+>> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+>> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  drivers/iommu/arm-smmu-qcom.c | 39 
+>> +++++++++++++++++++++++++++++++++++
+>>  drivers/iommu/arm-smmu.c      |  3 +++
+>>  drivers/iommu/arm-smmu.h      |  5 +++++
+>>  3 files changed, 47 insertions(+)
+>> 
+>> diff --git a/drivers/iommu/arm-smmu-qcom.c 
+>> b/drivers/iommu/arm-smmu-qcom.c
+>> index 64a4ab270ab7..ff746acd1c81 100644
+>> --- a/drivers/iommu/arm-smmu-qcom.c
+>> +++ b/drivers/iommu/arm-smmu-qcom.c
+>> @@ -3,6 +3,7 @@
+>>   * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>>   */
+>> 
+>> +#include <linux/of_device.h>
+>>  #include <linux/qcom_scm.h>
+>> 
+>>  #include "arm-smmu.h"
+>> @@ -11,6 +12,43 @@ struct qcom_smmu {
+>>         struct arm_smmu_device smmu;
+>>  };
+>> 
+>> +static const struct arm_smmu_client_match_data qcom_adreno = {
+>> +       .direct_mapping = true,
+>> +};
+>> +
+>> +static const struct arm_smmu_client_match_data qcom_mdss = {
+>> +       .direct_mapping = true,
+> 
+> I don't actually see direct_mapping being used. Shouldn't this member
+> be checked somewhere?
+> 
+
+Thanks for spotting this, my bad. It should be checked in 
+qcom_smmu_request_domain().
+
+diff --git a/drivers/iommu/arm-smmu-qcom.c 
+b/drivers/iommu/arm-smmu-qcom.c
+index ff746acd1c81..3ff62ca13ad5 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -43,7 +43,7 @@ static int qcom_smmu_request_domain(struct device 
+*dev)
+         const struct arm_smmu_client_match_data *client;
+
+         client = qcom_smmu_client_data(dev);
+-       if (client)
++       if (client && client->direct_mapping)
+                 iommu_request_dm_for_dev(dev);
+
+         return 0;
+
+-Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
