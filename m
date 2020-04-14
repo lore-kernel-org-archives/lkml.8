@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92F0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E346C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04312075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761FF206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586878647;
-	bh=ybPPvADQAq307A0mTIfstOnJj2n8fbsD+ITheeuQdo0=;
+	s=default; t=1586878658;
+	bh=OkUMHeV6ia5DXa6r7XqF0EcDiCxeMDiKyETeOhmHuVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGDQWus1DtD+nfcSGFBT59IoHo60NMZUxAI6gPlYe+wK/vCYHBIX/0CBYJXDNqe+g
-	 BCzYq64r5Bimf0xGOOvQD4yoS3AJ9Gg5VwxtataBuxlgZ5CwA2CXP14ejMn89QoYRI
-	 NT4inAkBRLaYReUGdvLHqIpIcfMEp1083kCM3+ko=
+	b=AAmyBMkxbAIWDgTUxDt8R72+3EZaU6RwhJxMFFE622/nH7cRnQ069ExxQa9OLwhqJ
+	 j8VbExSXMv/gGt0g6CWc33Y2+QFbfaT201Cc7K6XYKWuLoRW8Bosg7c0HNPL4HXT+z
+	 wDUfNopmO/9U2yDLOLgxCxclwJ+MTQMRtcoCUN98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440489AbgDNPhY (ORCPT
+        id S2440514AbgDNPhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55048 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 11:37:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439378AbgDNPgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:36:38 -0400
+        id S2440151AbgDNPgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:36:09 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C03320678;
-        Tue, 14 Apr 2020 15:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB9220678;
+        Tue, 14 Apr 2020 15:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586878596;
-        bh=ybPPvADQAq307A0mTIfstOnJj2n8fbsD+ITheeuQdo0=;
+        s=default; t=1586878567;
+        bh=OkUMHeV6ia5DXa6r7XqF0EcDiCxeMDiKyETeOhmHuVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/yCmpCcn8sCzGMmKhQcslmtaEsbx0+I+UZtglQV6ojnIQromBlhZlaLBILJGAd6y
-         4Vn8iZPrK0sW8k+OougefKf9e1ZgbFEiDkY2u2fJZMlwXYYyOiu+omc8hiEdMujXQD
-         1OSJEg4mIUApPR9xNP/PjDEgG9IK6jvSzBnwpCpg=
+        b=g8tX7R1x8U/ypmylK2W4LDnRW6MuKA4OEuE/rqzE6DaYywwga3vLXpHEF3UVeO4Va
+         FFCv5+sxV8WYkmXLLTJJ/Itrpb3pR20BFzXeYTGuZyIz7BkhLayzoPUZnRYGhPBI+/
+         9dW/K6VSA3NvaHSUOdrqvqcGgofvXYqm4FLQQriE=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -72,9 +72,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         uclinux-h8-devel@lists.sourceforge.jp,
         Mike Rapoport <rppt@kernel.org>,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v4 09/14] sh: fault: Modernize printing of kernel messages
-Date:   Tue, 14 Apr 2020 18:34:50 +0300
-Message-Id: <20200414153455.21744-10-rppt@kernel.org>
+Subject: [PATCH v4 06/14] nios2: add support for folded p4d page tables
+Date:   Tue, 14 Apr 2020 18:34:47 +0300
+Message-Id: <20200414153455.21744-7-rppt@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200414153455.21744-1-rppt@kernel.org>
 References: <20200414153455.21744-1-rppt@kernel.org>
@@ -85,113 +85,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-  - Convert from printk() to pr_*(),
-  - Add missing continuations,
-  - Use "%llx" to format u64,
-  - Join multiple prints in show_fault_oops() into a single print.
+Implement primitives necessary for the 4th level folding, add walks of p4d
+level where appropriate and remove usage of __ARCH_USE_5LEVEL_HACK.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/sh/mm/fault.c | 39 ++++++++++++++++++---------------------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+ arch/nios2/include/asm/pgtable.h | 3 +--
+ arch/nios2/mm/fault.c            | 9 +++++++--
+ arch/nios2/mm/ioremap.c          | 6 +++++-
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
-index 5f23d7907597..7b74e18b71d7 100644
---- a/arch/sh/mm/fault.c
-+++ b/arch/sh/mm/fault.c
-@@ -47,10 +47,10 @@ static void show_pte(struct mm_struct *mm, unsigned long addr)
- 			pgd = swapper_pg_dir;
- 	}
+diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
+index f98b7f4519ba..47a1a3ea5734 100644
+--- a/arch/nios2/include/asm/pgtable.h
++++ b/arch/nios2/include/asm/pgtable.h
+@@ -22,7 +22,6 @@
+ #include <asm/tlbflush.h>
  
--	printk(KERN_ALERT "pgd = %p\n", pgd);
-+	pr_alert("pgd = %p\n", pgd);
- 	pgd += pgd_index(addr);
--	printk(KERN_ALERT "[%08lx] *pgd=%0*Lx", addr,
--	       (u32)(sizeof(*pgd) * 2), (u64)pgd_val(*pgd));
-+	pr_alert("[%08lx] *pgd=%0*llx", addr, (u32)(sizeof(*pgd) * 2),
-+		 (u64)pgd_val(*pgd));
+ #include <asm/pgtable-bits.h>
+-#define __ARCH_USE_5LEVEL_HACK
+ #include <asm-generic/pgtable-nopmd.h>
  
- 	do {
- 		pud_t *pud;
-@@ -61,33 +61,33 @@ static void show_pte(struct mm_struct *mm, unsigned long addr)
- 			break;
- 
- 		if (pgd_bad(*pgd)) {
--			printk("(bad)");
-+			pr_cont("(bad)");
- 			break;
- 		}
- 
- 		pud = pud_offset(pgd, addr);
- 		if (PTRS_PER_PUD != 1)
--			printk(", *pud=%0*Lx", (u32)(sizeof(*pud) * 2),
--			       (u64)pud_val(*pud));
-+			pr_cont(", *pud=%0*llx", (u32)(sizeof(*pud) * 2),
-+				(u64)pud_val(*pud));
- 
- 		if (pud_none(*pud))
- 			break;
- 
- 		if (pud_bad(*pud)) {
--			printk("(bad)");
-+			pr_cont("(bad)");
- 			break;
- 		}
- 
- 		pmd = pmd_offset(pud, addr);
- 		if (PTRS_PER_PMD != 1)
--			printk(", *pmd=%0*Lx", (u32)(sizeof(*pmd) * 2),
--			       (u64)pmd_val(*pmd));
-+			pr_cont(", *pmd=%0*llx", (u32)(sizeof(*pmd) * 2),
-+				(u64)pmd_val(*pmd));
- 
- 		if (pmd_none(*pmd))
- 			break;
- 
- 		if (pmd_bad(*pmd)) {
--			printk("(bad)");
-+			pr_cont("(bad)");
- 			break;
- 		}
- 
-@@ -96,11 +96,11 @@ static void show_pte(struct mm_struct *mm, unsigned long addr)
- 			break;
- 
- 		pte = pte_offset_kernel(pmd, addr);
--		printk(", *pte=%0*Lx", (u32)(sizeof(*pte) * 2),
--		       (u64)pte_val(*pte));
-+		pr_cont(", *pte=%0*llx", (u32)(sizeof(*pte) * 2),
-+			(u64)pte_val(*pte));
- 	} while (0);
- 
--	printk("\n");
-+	pr_cont("\n");
+ #define FIRST_USER_ADDRESS	0UL
+@@ -100,7 +99,7 @@ extern pte_t invalid_pte_table[PAGE_SIZE/sizeof(pte_t)];
+  */
+ static inline void set_pmd(pmd_t *pmdptr, pmd_t pmdval)
+ {
+-	pmdptr->pud.pgd.pgd = pmdval.pud.pgd.pgd;
++	*pmdptr = pmdval;
  }
  
- static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
-@@ -188,14 +188,11 @@ show_fault_oops(struct pt_regs *regs, unsigned long address)
- 	if (!oops_may_print())
- 		return;
+ /* to find an entry in a page-table-directory */
+diff --git a/arch/nios2/mm/fault.c b/arch/nios2/mm/fault.c
+index ec9d8a9c426f..964eac1a21d0 100644
+--- a/arch/nios2/mm/fault.c
++++ b/arch/nios2/mm/fault.c
+@@ -242,6 +242,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
+ 		 */
+ 		int offset = pgd_index(address);
+ 		pgd_t *pgd, *pgd_k;
++		p4d_t *p4d, *p4d_k;
+ 		pud_t *pud, *pud_k;
+ 		pmd_t *pmd, *pmd_k;
+ 		pte_t *pte_k;
+@@ -253,8 +254,12 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long cause,
+ 			goto no_context;
+ 		set_pgd(pgd, *pgd_k);
  
--	printk(KERN_ALERT "BUG: unable to handle kernel ");
--	if (address < PAGE_SIZE)
--		printk(KERN_CONT "NULL pointer dereference");
--	else
--		printk(KERN_CONT "paging request");
--
--	printk(KERN_CONT " at %08lx\n", address);
--	printk(KERN_ALERT "PC:");
-+	pr_alert("BUG: unable to handle kernel %s at %08lx\n",
-+		 address < PAGE_SIZE ? "NULL pointer dereference"
-+				     : "paging request",
-+		 address);
-+	pr_alert("PC:");
- 	printk_address(regs->pc, 1);
+-		pud = pud_offset(pgd, address);
+-		pud_k = pud_offset(pgd_k, address);
++		p4d = p4d_offset(pgd, address);
++		p4d_k = p4d_offset(pgd_k, address);
++		if (!p4d_present(*p4d_k))
++			goto no_context;
++		pud = pud_offset(p4d, address);
++		pud_k = pud_offset(p4d_k, address);
+ 		if (!pud_present(*pud_k))
+ 			goto no_context;
+ 		pmd = pmd_offset(pud, address);
+diff --git a/arch/nios2/mm/ioremap.c b/arch/nios2/mm/ioremap.c
+index 819bdfcc2e71..fe821efb9a99 100644
+--- a/arch/nios2/mm/ioremap.c
++++ b/arch/nios2/mm/ioremap.c
+@@ -86,11 +86,15 @@ static int remap_area_pages(unsigned long address, unsigned long phys_addr,
+ 	if (address >= end)
+ 		BUG();
+ 	do {
++		p4d_t *p4d;
+ 		pud_t *pud;
+ 		pmd_t *pmd;
  
- 	show_pte(NULL, address);
+ 		error = -ENOMEM;
+-		pud = pud_alloc(&init_mm, dir, address);
++		p4d = p4d_alloc(&init_mm, dir, address);
++		if (!p4d)
++			break;
++		pud = pud_alloc(&init_mm, p4d, address);
+ 		if (!pud)
+ 			break;
+ 		pmd = pmd_alloc(&init_mm, pud, address);
 -- 
 2.25.1
 
