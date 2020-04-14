@@ -2,187 +2,260 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B59CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25470C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E7C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CE320678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YedDG0ZF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LxWn5dS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440811AbgDNPnQ (ORCPT
+        id S2440822AbgDNPnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49932 "EHLO
+        Tue, 14 Apr 2020 11:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440802AbgDNPnL (ORCPT
+        by vger.kernel.org with ESMTP id S2440812AbgDNPnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:43:11 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8985CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:43:11 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g32so46529pgb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:43:11 -0700 (PDT)
+        Tue, 14 Apr 2020 11:43:35 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4D4C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:43:34 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b18so170006ilf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 08:43:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HrHc89msdXgi2Y4Q0qH1yTEHGNBhvf5/H8327yK+Ls4=;
-        b=YedDG0ZFTRyqyAnKIG8z1JZFuDUEx5ng/hd+NQImZj6HKH3GWoHZv0p4lx3TpGALhZ
-         0qQoPEflzIgF6SfYYPStjVZve457G0ZBKn0C4+GyrXP90wjqyuOaWcwOYMJLTN1Kf9IH
-         fCwuZd0xvBU0B+dv3VE61SLogfaxzz8/hPw5W/tgGRa6JD5RX1Q1P0nAiUwvIGyIJ+rP
-         1v+4mMz2/8PCz8/50zqXGyDQ2VcxWbkl8DmfpVhbio84eoaC9hcIMloYnWqZQjy+IcAz
-         xL1P9teLDVAzbR346QhSdbQML5K+vB+crLmnYqhiM2kFg9BTV4/BHo8ERW3n1xxobog0
-         pp+g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lVLS9Ai08OPfxLm48X/SePV3ZDqp6/dSkFQuslL/8FE=;
+        b=LxWn5dS4CgxTQNcs4w83JJyQD27eFCNjOl47eKoSvbtU/G+4BbfikWMfOcRhC/3Q3c
+         dBfc+Q6yL9+SpaJrKkU3ud40/xG6nuFQ5jbZzKtcnj7AOrCgnmOfTlSqY6FiMo3M7TTC
+         rYM0Va3g4L22+wZjANo7csIwf2fNObAXPrlVWwgdh1lVkZY1uS7Q5tdRLsHYVSbB7CFw
+         e9vebkwQoAdqisY57PaO/AtFjudW40fbsyyukstPPr5pcqzcw/QAQGWXYc7RVsmkFLHu
+         43SPpMnBrzhq9juigDya6lHtfA8pwnmCYGiyNSZ300X0w91WIOWeh864eDGkdqs/hl4Y
+         jm2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HrHc89msdXgi2Y4Q0qH1yTEHGNBhvf5/H8327yK+Ls4=;
-        b=TgSa8bwb6jwqsPKmqLYaMgf01+sOV8tdmn1AlBZWz3TDaeJda9uFKtep+P0f+UgCnA
-         Zj1nPr2CY2L127aM/B+MnveZpW8QlW6jQ31bucVItonZzMzuwsRntoUus5NZkl3Xip2L
-         rU+YwMEXIpcVZ/OZisQlcywXmqGPAwhfRS3V635AZUlQhUMoJFz3du2NQnvOc9VGqYE2
-         eM/S7vuujaqapF42yzCcja6wiBGvu5ki/cHoypdsoj5rT2CpEkiyT34WR5tBi8FYdkQz
-         eZtakdD/6aUle4RVszSpWhxCY5RuD0Arkxkr4pMxZ99TUglongD8ARRc9WagObrDyClA
-         4fMg==
-X-Gm-Message-State: AGi0PuaUSJlUTRsT6lYMBU+yJhFtfwBZxAvxL1wy8rXCZsXq2Gt8ITmb
-        ceX0fvlU8q6i1TjvBmbgFKCDXw==
-X-Google-Smtp-Source: APiQypLrT1386zPYBPL87WSGpCvwjpvwKbln64uclI2ODgTX44mVS85T8KsJwkSSsXo6kzAPWf/95g==
-X-Received: by 2002:a63:1e0a:: with SMTP id e10mr23094381pge.417.1586878990825;
-        Tue, 14 Apr 2020 08:43:10 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id s9sm11766283pjr.5.2020.04.14.08.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 08:43:10 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 08:43:07 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] arm64: Delete the space separator in __emit_inst
-Message-ID: <20200414154307.2cke3x5ocz3q2as4@google.com>
-References: <20200413033811.75074-1-maskray@google.com>
- <20200414095904.GB1278@C02TD0UTHF1T.local>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lVLS9Ai08OPfxLm48X/SePV3ZDqp6/dSkFQuslL/8FE=;
+        b=TbTMER8lGQUVU1eWMy1LyBJQaxuqYVcC2vO45ugIZ5cJ72qDGxqwAeyVpFvXgOmsV+
+         jxgQHIHJ8n9otLmoScG/QX/9zAtMRyC1pf19BxCaORIFxTABNaFAZHTXukXqt5cNzYr+
+         cvGZff0RMzyT1t5NC8OMSPF+B8eMXjlqxx6R+o8YUuA8PBR5HDedsdieNfv6+XA8LHlE
+         fp4ezt8u+sFbY4acQZxr5WIBrbv/4LmK/O3JmDp19UHefnpqzIgni2tg7AfY4iUMrSHq
+         Q9Ni9xyFdEJH+awBgABgGWDIK+D/bSONICb7M2O43+2uq7mekuS3KNkypof1k30qQONd
+         zpfw==
+X-Gm-Message-State: AGi0PuYDL3kM/SbS5cgOd1U9KwCowEN4Fcf42hh9f0p/s76UscSzdNXN
+        sS6zCPhJov3I93/lf47rke1WdjCv7GsV1WPpU1AnUw==
+X-Google-Smtp-Source: APiQypJ4WPRxpgG3J1PS6bP25BZLPYttAmK4ZLhXeXL4c5emjyAPvO8lVjCYmeFWQcCOpghRQnkUBk484AiLddSfa7A=
+X-Received: by 2002:a92:740e:: with SMTP id p14mr827341ilc.57.1586879014077;
+ Tue, 14 Apr 2020 08:43:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200414095904.GB1278@C02TD0UTHF1T.local>
+References: <20200413193401.27234-1-mathieu.poirier@linaro.org>
+ <20200413193401.27234-3-mathieu.poirier@linaro.org> <bd8cc8d5-94c1-5767-d089-535731fc1055@linaro.org>
+ <20200414005506.GG20625@builder.lan>
+In-Reply-To: <20200414005506.GG20625@builder.lan>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 14 Apr 2020 09:43:22 -0600
+Message-ID: <CANLsYkx69cZotLUrt170XYiYxpkTGKBNC8FUioBD=OSnDYm46Q@mail.gmail.com>
+Subject: Re: [PATCH 2/4] remoteproc: Split firmware name allocation from rproc_alloc()
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Alex Elder <elder@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Suman Anna <s-anna@ti.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi guys,
 
-On 2020-04-14, Mark Rutland wrote:
->Hi Fangrui,
+On Mon, 13 Apr 2020 at 18:54, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
->On Sun, Apr 12, 2020 at 08:38:11PM -0700, Fangrui Song wrote:
->> Many instances of __emit_inst(x) expand to a directive. In a few places
->> it is used as a macro argument, e.g.
->>
->>   arch/arm64/include/asm/sysreg.h
->>   #define __emit_inst(x)                       .inst (x)
->>
->>   arch/arm64/include/asm/sysreg.h
->>   #define SET_PSTATE_PAN(x)            __emit_inst(0xd500401f | PSTATE_PAN | ((!!x) << PSTATE_Imm_shift))
->>
->>   arch/arm64/kvm/hyp/entry.S
->>   ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
->>
->> Clang integrated assembler parses `.inst (x)` as two arguments passing
->> to a macro. We delete the space separator so that `.inst(x)` will be
->> parsed as one argument.
+> On Mon 13 Apr 13:56 PDT 2020, Alex Elder wrote:
 >
->I'm a little confused by the above; sorry if the below sounds stupid or
->pedantic, but I just want to make sure I've understood the problem
->correctly.
+> > On 4/13/20 2:33 PM, Mathieu Poirier wrote:
+> > > Make the firmware name allocation a function on its own in order to
+> > > introduce more flexibility to function rproc_alloc().
+> > >
+> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >
+> > I didn't look at the larger context (MCU series); I'm only looking
+> > at this (and the others in this series) in isolation.  I like
+> > that you're encapsulating this stuff into functions but doing so
+> > doesn't really add any flexibility.
+> >
+> > Two small suggestions for you to consider but they're truly
+> > more about style so it's entirely up to you.  Outside of that
+> > this looks straightforward to me, and the result of the series
+> > is an improvement.
+> >
+> > I'll let you comment on my suggestions before offering my
+> > "reviewed-by" indication.
+> >
+> >                                       -Alex
+> >
+> > > ---
+> > >  drivers/remoteproc/remoteproc_core.c | 66 ++++++++++++++++------------
+> > >  1 file changed, 39 insertions(+), 27 deletions(-)
+> > >
+> > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > > index 80056513ae71..4dee63f319ba 100644
+> > > --- a/drivers/remoteproc/remoteproc_core.c
+> > > +++ b/drivers/remoteproc/remoteproc_core.c
+> > > @@ -1979,6 +1979,33 @@ static const struct device_type rproc_type = {
+> > >     .release        = rproc_type_release,
+> > >  };
+> > >
+> > > +static int rproc_alloc_firmware(struct rproc *rproc,
+> > > +                           const char *name, const char *firmware)
+> > > +{
+> > > +   char *p, *template = "rproc-%s-fw";
+> > > +   int name_len;
+> >
+> > Not a big deal (and maybe it's not consistent with other nearby
+> > style) but template and name_len could be defined inside the
+> > "if (!firmware)" block.
+> >
 >
->For the above, ALTERNATIVE() and SET_PSTATE_PAN() are both preprocessor
->macros, so I would expect those to be expanded before either the
->integrated assembler or an external assembler consumes any of the
->assembly (and both would see the same expanded text). Given that, I'm a
->bit confused as to why the integrated assembly would have an impact on
->preprocessing.
+> I prefer variables declared in the beginning of the function, so I'm
+> happy with this.
 >
->Does compiling the pre-processed source using the integrated assembler
->result in the same behaviour? Can we see the expanded text to make that
->clear?
+> > > +   if (!firmware) {
+> > > +           /*
+> > > +            * If the caller didn't pass in a firmware name then
+> > > +            * construct a default name.
+> > > +            */
+> > > +           name_len = strlen(name) + strlen(template) - 2 + 1;
+> > > +           p = kmalloc(name_len, GFP_KERNEL);
+> >
+> >
+> > I don't know if it would be an improvement, but you could
+> > check for a null p value below for both cases.  I.e.:
+> >
+> >               if (p)
+> >                       snprintf(p, ...);
+> >
 >
->... at what stage exactly does this go wrong?
+> Moving the common NULL check and return out seems nice, but given that
+> we then have to have this positive conditional I think the end result is
+> more complex.
 >
->Thanks,
->Mark.
+> That said, if we're not just doing a verbatim copy from rproc_alloc() I
+> think we should make this function:
+>
+>         if (!firmware)
+>                 p = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
+>         else
+>                 p = kstrdup_const(firmware, GFP_KERNEL);
+>
+>         rproc->firmware = p;
+>
+>         return p ? 0 : -ENOMEM;
 
-Hi Mark,
+At this time I was going for a pure re-arrangement of the code and
+avoiding further improvement.  This is simple enough that it can be
+rolled-in the next revision.
 
-The C preprocessor expands arch/arm64/kvm/hyp/entry.S
-    ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+Thanks,
+Mathieu
 
-to:
-    alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-`alternative_insn` is an assembler macro, not handled by the C preprocessor.
-
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so clang -cc1as or GNU
-as x86 splits arguments this way:
-
-    nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-I actually feel that GNU as arm64's behavior is a little bit buggy. It
-works just because GNU as has another preprocessing step `do_scrub_chars`
-and its arm64 backend deletes the space before '('
-
-    alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-
-The x86 backend keeps the space before the outmost '('
-
-   alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-
-By reading its state machine, I think keeping the spaces will be the
-most reasonable behavior.
-
-If .inst were only used as arguments,
-
-    alternative_insn nop, ".inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8))", 4, 1
-
-would be the best to avoid parsing issues.
-
->>
->> Note, GNU as parsing `.inst (x)` as one argument is unintentional (for
->> example the x86 backend will parse the construct as two arguments).
->> See https://sourceware.org/bugzilla/show_bug.cgi?id=25750#c10
->>
->> Link: https://github.com/ClangBuiltLinux/linux/issues/939
->> Cc: clang-built-linux@googlegroups.com
->> Signed-off-by: Fangrui Song <maskray@google.com>
->> ---
->>  arch/arm64/include/asm/sysreg.h | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index ebc622432831..af21e2ec5e3e 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -49,7 +49,9 @@
->>  #ifndef CONFIG_BROKEN_GAS_INST
->>
->>  #ifdef __ASSEMBLY__
->> -#define __emit_inst(x)			.inst (x)
->> +// The space separator is omitted so that __emit_inst(x) can be parsed as
->> +// either a directive or a macro argument.
->> +#define __emit_inst(x)			.inst(x)
->>  #else
->>  #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
->>  #endif
->> --
->> 2.26.0.110.g2183baf09c-goog
->>
+>
+> Regards,
+> Bjorn
+>
+> > (more below)
+> >
+> > > +           if (!p)
+> > > +                   return -ENOMEM;
+> > > +           snprintf(p, name_len, template, name);
+> > > +   } else {
+> > > +           p = kstrdup(firmware, GFP_KERNEL);
+> > > +           if (!p)
+> > > +                   return -ENOMEM;
+> > > +   }
+> > > +
+> >
+> >       if (!p)
+> >               return -ENOMEM;
+> >
+> > > +   rproc->firmware = p;
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> > >  /**
+> > >   * rproc_alloc() - allocate a remote processor handle
+> > >   * @dev: the underlying device
+> > > @@ -2007,42 +2034,21 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> > >                       const char *firmware, int len)
+> > >  {
+> > >     struct rproc *rproc;
+> > > -   char *p, *template = "rproc-%s-fw";
+> > > -   int name_len;
+> > >
+> > >     if (!dev || !name || !ops)
+> > >             return NULL;
+> > >
+> > > -   if (!firmware) {
+> > > -           /*
+> > > -            * If the caller didn't pass in a firmware name then
+> > > -            * construct a default name.
+> > > -            */
+> > > -           name_len = strlen(name) + strlen(template) - 2 + 1;
+> > > -           p = kmalloc(name_len, GFP_KERNEL);
+> > > -           if (!p)
+> > > -                   return NULL;
+> > > -           snprintf(p, name_len, template, name);
+> > > -   } else {
+> > > -           p = kstrdup(firmware, GFP_KERNEL);
+> > > -           if (!p)
+> > > -                   return NULL;
+> > > -   }
+> > > -
+> > >     rproc = kzalloc(sizeof(struct rproc) + len, GFP_KERNEL);
+> > > -   if (!rproc) {
+> > > -           kfree(p);
+> > > +   if (!rproc)
+> > >             return NULL;
+> > > -   }
+> > > +
+> > > +   if (rproc_alloc_firmware(rproc, name, firmware))
+> > > +           goto free_rproc;
+> > >
+> > >     rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+> > > -   if (!rproc->ops) {
+> > > -           kfree(p);
+> > > -           kfree(rproc);
+> > > -           return NULL;
+> > > -   }
+> > > +   if (!rproc->ops)
+> > > +           goto free_firmware;
+> > >
+> > > -   rproc->firmware = p;
+> > >     rproc->name = name;
+> > >     rproc->priv = &rproc[1];
+> > >     rproc->auto_boot = true;
+> > > @@ -2091,6 +2097,12 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> > >     rproc->state = RPROC_OFFLINE;
+> > >
+> > >     return rproc;
+> > > +
+> > > +free_firmware:
+> > > +   kfree(rproc->firmware);
+> > > +free_rproc:
+> > > +   kfree(rproc);
+> > > +   return NULL;
+> > >  }
+> > >  EXPORT_SYMBOL(rproc_alloc);
+> > >
+> > >
+> >
