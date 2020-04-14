@@ -2,30 +2,31 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A71C352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38881C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30EDD2078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C7220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404263AbgDNCzi (ORCPT
+        id S2404278AbgDNCzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:55:38 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:20359 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728757AbgDNCza (ORCPT
+        Mon, 13 Apr 2020 22:55:50 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:51909 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404225AbgDNCzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 22:55:30 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
+        Mon, 13 Apr 2020 22:55:31 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 13 Apr 2020 19:55:25 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 13 Apr 2020 19:55:25 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 12C7E210E1; Tue, 14 Apr 2020 08:25:24 +0530 (IST)
+        id 542F9216B2; Tue, 14 Apr 2020 08:25:24 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
@@ -33,9 +34,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH V3 1/8] dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
-Date:   Tue, 14 Apr 2020 08:25:15 +0530
-Message-Id: <1586832922-29191-2-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V3 4/8] clk: qcom: Add DT bindings for ipq6018 apss clock controller
+Date:   Tue, 14 Apr 2020 08:25:18 +0530
+Message-Id: <1586832922-29191-5-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
 References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
@@ -44,205 +45,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm APCS global block provides a bunch of generic properties which
-are required in a device tree. Add YAML schema for these properties.
+add dt-binding for ipq6018 apss clock controller
 
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 ----------------------
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 88 ++++++++++++++++++++++
- 2 files changed, 88 insertions(+), 88 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+ include/dt-bindings/clock/qcom,apss-ipq.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-deleted file mode 100644
-index beec612..0000000
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-+++ /dev/null
-@@ -1,88 +0,0 @@
--Binding for the Qualcomm APCS global block
--==========================================
--
--This binding describes the APCS "global" block found in various Qualcomm
--platforms.
--
--- compatible:
--	Usage: required
--	Value type: <string>
--	Definition: must be one of:
--		    "qcom,msm8916-apcs-kpss-global",
--		    "qcom,msm8996-apcs-hmss-global"
--		    "qcom,msm8998-apcs-hmss-global"
--		    "qcom,qcs404-apcs-apps-global"
--		    "qcom,sc7180-apss-shared"
--		    "qcom,sdm845-apss-shared"
--		    "qcom,sm8150-apss-shared"
--		    "qcom,ipq8074-apcs-apps-global"
--
--- reg:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: must specify the base address and size of the global block
--
--- clocks:
--	Usage: required if #clock-names property is present
--	Value type: <phandle array>
--	Definition: phandles to the two parent clocks of the clock driver.
--
--- #mbox-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: as described in mailbox.txt, must be 1
--
--- #clock-cells:
--	Usage: optional
--	Value type: <u32>
--	Definition: as described in clock.txt, must be 0
--
--- clock-names:
--	Usage: required if the platform data based clock driver needs to
--	retrieve the parent clock names from device tree.
--	This will requires two mandatory clocks to be defined.
--	Value type: <string-array>
--	Definition: must be "pll" and "aux"
--
--= EXAMPLE
--The following example describes the APCS HMSS found in MSM8996 and part of the
--GLINK RPM referencing the "rpm_hlos" doorbell therein.
--
--	apcs_glb: mailbox@9820000 {
--		compatible = "qcom,msm8996-apcs-hmss-global";
--		reg = <0x9820000 0x1000>;
--
--		#mbox-cells = <1>;
--	};
--
--	rpm-glink {
--		compatible = "qcom,glink-rpm";
--
--		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
--
--		qcom,rpm-msg-ram = <&rpm_msg_ram>;
--
--		mboxes = <&apcs_glb 0>;
--		mbox-names = "rpm_hlos";
--	};
--
--Below is another example of the APCS binding on MSM8916 platforms:
--
--	apcs: mailbox@b011000 {
--		compatible = "qcom,msm8916-apcs-kpss-global";
--		reg = <0xb011000 0x1000>;
--		#mbox-cells = <1>;
--		clocks = <&a53pll>;
--		#clock-cells = <0>;
--	};
--
--Below is another example of the APCS binding on QCS404 platforms:
--
--	apcs_glb: mailbox@b011000 {
--		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
--		reg = <0x0b011000 0x1000>;
--		#mbox-cells = <1>;
--		clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
--		clock-names = "pll", "aux";
--		#clock-cells = <0>;
--	};
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+diff --git a/include/dt-bindings/clock/qcom,apss-ipq.h b/include/dt-bindings/clock/qcom,apss-ipq.h
 new file mode 100644
-index 0000000..b46474b
+index 0000000..77b6e05
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/mailbox/qcom,apcs-kpss-global.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++++ b/include/dt-bindings/clock/qcom,apss-ipq.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ */
 +
-+title: Qualcomm APCS global block bindings
++#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
++#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
 +
-+description:
-+  This binding describes the APCS "global" block found in various Qualcomm
-+  platforms.
++#define APCS_ALIAS0_CLK_SRC			0
++#define APCS_ALIAS0_CORE_CLK			1
 +
-+maintainers:
-+  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,ipq8074-apcs-apps-global
-+      - qcom,msm8916-apcs-kpss-global
-+      - qcom,msm8996-apcs-hmss-global
-+      - qcom,msm8998-apcs-hmss-global
-+      - qcom,qcs404-apcs-apps-global
-+      - qcom,sc7180-apss-shared
-+      - qcom,sdm845-apss-shared
-+      - qcom,sm8150-apss-shared
-+
-+  reg:
-+    description: specifies the base address and size of the global block
-+    maxItems: 1
-+
-+  clocks:
-+    description: phandles to the parent clocks of the clock driver
-+
-+  '#mbox-cells':
-+    const: 1
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  clock-names:
-+    description:
-+      parent clock names, required if the platform data based clock driver
-+      needs to retrieve the parent clock names from device tree.
-+    maxItems: 2
-+    items:
-+      - const: pll
-+      - const: aux
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#mbox-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+
-+  # Example apcs with msm8996
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    apcs_glb: mailbox@9820000 {
-+        compatible = "qcom,msm8996-apcs-hmss-global";
-+        reg = <0x9820000 0x1000>;
-+
-+        #mbox-cells = <1>;
-+    };
-+
-+    rpm-glink {
-+        compatible = "qcom,glink-rpm";
-+        interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+        qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+        mboxes = <&apcs_glb 0>;
-+        mbox-names = "rpm_hlos";
-+    };
-+
-+  # Example apcs with qcs404
-+  - |
-+    #define GCC_APSS_AHB_CLK_SRC  1
-+    #define GCC_GPLL0_AO_OUT_MAIN 123
-+    apcs: mailbox@b011000 {
-+        compatible = "qcom,qcs404-apcs-apps-global";
-+        reg = <0x0b011000 0x1000>;
-+        #mbox-cells = <1>;
-+        clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
-+        clock-names = "pll", "aux";
-+        #clock-cells = <0>;
-+    };
++#endif
 -- 
 2.7.4
 
