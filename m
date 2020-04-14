@@ -2,105 +2,115 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41093C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EBDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B2F206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA82E206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 12:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V4TpNo1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501977AbgDNMbL (ORCPT
+        id S2501987AbgDNMbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:31:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9934 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730303AbgDNMbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:31:08 -0400
-IronPort-SDR: Iy9QSZDs70Ath6iSEz+L7OKl0uupYv9kCGWpnvlI3jOOF5yHKrF4CLR2TccrtvBvofGCTCE1u9
- ld+EBvEcR/Bw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 05:31:07 -0700
-IronPort-SDR: 2vvEyjfovcmuRN2989ozQVCdT6lttKyb06SarfZO7YOkpea33tAObZPt86LQm8lH1HlP0oGldn
- ni/MNf+4UEvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
-   d="scan'208";a="241977020"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 14 Apr 2020 05:31:05 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOKiZ-000Wa9-MJ; Tue, 14 Apr 2020 15:31:07 +0300
-Date:   Tue, 14 Apr 2020 15:31:07 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
-Message-ID: <20200414123107.GN34613@smile.fi.intel.com>
-References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
- <9aa81292-70c2-c12a-ded1-1164faac0024@redhat.com>
+        Tue, 14 Apr 2020 08:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730303AbgDNMbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:31:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9ECC061A0C;
+        Tue, 14 Apr 2020 05:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=uizMBC4KFq8zXurx9Zz5OqewqR6VP2ZPVfe8F/b2Zxk=; b=V4TpNo1W8TtjYsqTrxUeWFJD/D
+        uK3XEeFjEbrTYZqyO+CHQnAKGkuQ34/piSsPTufYLjMXJM4kx6mxvYrrjqEGHTr/nvCiJed3mykTA
+        xFRpkzzG/drNZzxjCHAYjo+8PEFoSqvOy0eD/O+XlfnL6WeVPgfcdfZFAZpSBsKJTf1y9zWrNTPI4
+        CARgrjUR56ebslQak6Qi/2e8fNzUajAuu2hDwsk4P5BnO8rxvMpFJus8twKL2IPZeNmUwcsf6IbbN
+        VHtHJ9zu8rJL0qn7GNH34HyaGR9VxoWTrfDajHLihlNX6qzFsuhp8A37DMMjTrwwTPYbx8LTIT4my
+        Ulfueqng==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOKj4-0000j4-8Y; Tue, 14 Apr 2020 12:31:38 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: qcom_scm: fix bogous abuse of dma-direct internals
+Date:   Tue, 14 Apr 2020 14:31:36 +0200
+Message-Id: <20200414123136.441454-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9aa81292-70c2-c12a-ded1-1164faac0024@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 02:08:42PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 4/8/20 6:09 PM, Andy Shevchenko wrote:
-> > When I started looking into the intel_cht_int33fe driver for an example of use
-> > software node API, I have noticed that it's hard to get and code a bit messy.
-> > Here is a clean up, main part of which is to introduce node groups and API to
-> > register and unregister them. This and some pre-existing APIs can be used in
-> > the driver.
-> > 
-> > So, because of cross-subsystem nature of this series, I may recommend to create
-> > myself the immutable branch which can be pulled to Rafael's and Greg's trees
-> > respectively. I'm also open for other proposals how to proceed.
-> 
-> The series looks good to me and I've also tested it on one of
-> the devices using the intel_cht_int33fe driver and everything seems
-> to work fine, so for the whole series:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
+As far as the device is concerned the dma address is the physical
+address.  There is no need to convert it to a physical address,
+especially not using dma-direct internals that are not available
+to drivers and which will interact badly with IOMMUs.  Last but not
+least the commit introducing it claimed to just fix a type issue,
+but actually changed behavior.
 
-Thank you, Hans!
-I'll wait for Greg and Rafael to conclude how to proceed with it and maybe for
-Heikki's response as well.
+Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/firmware/qcom_scm.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-> > Andy Shevchenko (6):
-> >    device property: export set_secondary_fwnode() to modules
-> >    software node: Allow register and unregister software node groups
-> >    platform/x86: intel_cht_int33fe: Convert software node array to group
-> >    platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
-> >    platform/x86: intel_cht_int33fe: Switch to use
-> >      acpi_dev_hid_uid_match()
-> >    platform/x86: intel_cht_int33fe: Fix spelling issues
-> > 
-> >   drivers/base/core.c                           |   1 +
-> >   drivers/base/swnode.c                         |  48 ++++++++
-> >   .../platform/x86/intel_cht_int33fe_typec.c    | 106 +++++++++---------
-> >   include/linux/property.h                      |   3 +
-> >   4 files changed, 108 insertions(+), 50 deletions(-)
-
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 059bb0fbae9e..4701487573f7 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -6,7 +6,6 @@
+ #include <linux/init.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+-#include <linux/dma-direct.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -806,8 +805,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	struct qcom_scm_mem_map_info *mem_to_map;
+ 	phys_addr_t mem_to_map_phys;
+ 	phys_addr_t dest_phys;
+-	phys_addr_t ptr_phys;
+-	dma_addr_t ptr_dma;
++	dma_addr_t ptr_phys;
+ 	size_t mem_to_map_sz;
+ 	size_t dest_sz;
+ 	size_t src_sz;
+@@ -824,10 +822,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+ 			ALIGN(dest_sz, SZ_64);
+ 
+-	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
++	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
+ 	if (!ptr)
+ 		return -ENOMEM;
+-	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
+ 
+ 	/* Fill source vmid detail */
+ 	src = ptr;
+@@ -855,7 +852,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 
+ 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
+ 				    ptr_phys, src_sz, dest_phys, dest_sz);
+-	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
++	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
+ 	if (ret) {
+ 		dev_err(__scm->dev,
+ 			"Assign memory protection call failed %d\n", ret);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
