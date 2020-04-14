@@ -2,272 +2,227 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75204C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 562222072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99342072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 03:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MaRtlpQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404731AbgDNDZL (ORCPT
+        id S2404741AbgDND24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:25:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1852 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404696AbgDNDZF (ORCPT
+        Mon, 13 Apr 2020 23:28:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51891 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404733AbgDND2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:25:05 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03E34iTi056648
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:25:04 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30d4kurtyd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Apr 2020 23:25:04 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 14 Apr 2020 04:24:24 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 Apr 2020 04:24:19 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03E3Oup119726396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 03:24:56 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D7945204E;
-        Tue, 14 Apr 2020 03:24:56 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.60.157])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 353B25205A;
-        Tue, 14 Apr 2020 03:24:23 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
-        fweisbec@gmail.com, mingo@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.ibm.com
-Subject: [PATCH v3 16/16] powerpc/watchpoint/xmon: Support 2nd dawr
-Date:   Tue, 14 Apr 2020 08:46:59 +0530
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
-References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+        Mon, 13 Apr 2020 23:28:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586834924;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C9mqH+aSg2B9etP5nDjtE7RFbZ6ObRo29eOLCwS0Ci4=;
+        b=MaRtlpQJrtzQMWMqHPjpF1H7g5FfMJmIUR2VhqhwFnJKoKcB+QTSLjUFTJkamEmaIoiSf+
+        77dgRjanpBPaSit43Q5vLPXVLoT2dkoR0+sQDv6ox49i6Lihj4GOMIrUhG8NeJkpcUz9hq
+        wRiIkx8kQo6a7i/YL7Srp9BN082fU7U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-cf1mVbgROBq6eE-reOx51g-1; Mon, 13 Apr 2020 23:28:40 -0400
+X-MC-Unique: cf1mVbgROBq6eE-reOx51g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6C88800D53;
+        Tue, 14 Apr 2020 03:28:38 +0000 (UTC)
+Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F34C6092D;
+        Tue, 14 Apr 2020 03:28:37 +0000 (UTC)
+Date:   Mon, 13 Apr 2020 21:28:36 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Wu, Hao" <hao.wu@intel.com>, Don Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200413212836.117b4c86@x1.home>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D81D376@SHSMSX104.ccr.corp.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+        <20200402165954.48d941ee@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+        <20200403112545.6c115ba3@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+        <20200407095801.648b1371@w520.home>
+        <20200408040021.GS67127@otc-nc-03>
+        <20200408101940.3459943d@w520.home>
+        <20200413031043.GA18183@araj-mobl1.jf.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D81A31F@SHSMSX104.ccr.corp.intel.com>
+        <20200413132122.46825849@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D81D376@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041403-0020-0000-0000-000003C76146
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041403-0021-0000-0000-00002220396D
-Message-Id: <20200414031659.58875-17-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-13_11:2020-04-13,2020-04-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 mlxscore=0
- phishscore=0 spamscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140020
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for 2nd DAWR in xmon. With this, we can have two
-simultaneous breakpoints from xmon.
+On Tue, 14 Apr 2020 02:40:58 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/xmon/xmon.c | 101 ++++++++++++++++++++++++++-------------
- 1 file changed, 69 insertions(+), 32 deletions(-)
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Tuesday, April 14, 2020 3:21 AM
+> > 
+> > On Mon, 13 Apr 2020 08:05:33 +0000
+> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> >   
+> > > > From: Tian, Kevin
+> > > > Sent: Monday, April 13, 2020 3:55 PM
+> > > >  
+> > > > > From: Raj, Ashok <ashok.raj@linux.intel.com>
+> > > > > Sent: Monday, April 13, 2020 11:11 AM
+> > > > >
+> > > > > On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:  
+> > > > > > On Tue, 7 Apr 2020 21:00:21 -0700
+> > > > > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> > > > > >  
+> > > > > > > Hi Alex
+> > > > > > >
+> > > > > > > + Bjorn  
+> > > > > >
+> > > > > >  + Don
+> > > > > >  
+> > > > > > > FWIW I can't understand why PCI SIG went different ways with ATS,
+> > > > > > > where its enumerated on PF and VF. But for PASID and PRI its only
+> > > > > > > in PF.
+> > > > > > >
+> > > > > > > I'm checking with our internal SIG reps to followup on that.
+> > > > > > >
+> > > > > > > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:  
+> > > > > > > > > Is there vendor guarantee that hidden registers will locate at the
+> > > > > > > > > same offset between PF and VF config space?  
+> > > > > > > >
+> > > > > > > > I'm not sure if the spec really precludes hidden registers, but the
+> > > > > > > > fact that these registers are explicitly outside of the capability
+> > > > > > > > chain implies they're only intended for device specific use, so I'd  
+> > say  
+> > > > > > > > there are no guarantees about anything related to these registers.  
+> > > > > > >
+> > > > > > > As you had suggested in the other thread, we could consider
+> > > > > > > using the same offset as in PF, but even that's a better guess
+> > > > > > > still not reliable.
+> > > > > > >
+> > > > > > > The other option is to maybe extend driver ops in the PF to expose
+> > > > > > > where the offsets should be. Sort of adding the quirk in the
+> > > > > > > implementation.
+> > > > > > >
+> > > > > > > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is  
+> > > > > resisting  
+> > > > > > > making VF's first class citizen, we might ask them to add some  
+> > verbiage  
+> > > > > > > to suggest leave the same offsets as PF open to help emulation  
+> > software.  
+> > > > > >
+> > > > > > Even if we know where to expose these capabilities on the VF, it's not
+> > > > > > clear to me how we can actually virtualize the capability itself.  If
+> > > > > > the spec defines, for example, an enable bit as r/w then software that
+> > > > > > interacts with that register expects the bit is settable.  There's no
+> > > > > > protocol for "try to set the bit and re-read it to see if the hardware
+> > > > > > accepted it".  Therefore a capability with a fixed enable bit
+> > > > > > representing the state of the PF, not settable by the VF, is
+> > > > > > disingenuous to the spec.  
+> > > > >
+> > > > > I think we are all in violent agreement. A lot of times the pci spec gets
+> > > > > defined several years ahead of real products and no one remembers
+> > > > > the justification on why they restricted things the way they did.
+> > > > >
+> > > > > Maybe someone early product wasn't quite exposing these features to  
+> > the  
+> > > > > VF
+> > > > > and hence the spec is bug compatible :-)
+> > > > >  
+> > > > > >
+> > > > > > If what we're trying to do is expose that PASID and PRI are enabled on
+> > > > > > the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+> > > > > > without the ability to control it is not the right approach.  Maybe we  
+> > > > >
+> > > > > As long as the capability enable is only provided when the PF has  
+> > enabled  
+> > > > > the feature. Then it seems the hardware seems to do the right thing.
+> > > > >
+> > > > > Assume we expose PASID/PRI only when PF has enabled it. It will be the
+> > > > > case since the PF driver needs to exist, and IOMMU would have set the
+> > > > > PASID/PRI/ATS on PF.
+> > > > >
+> > > > > If the emulation is purely spoofing the capability. Once vIOMMU driver
+> > > > > enables PASID, the context entries for the VF are completely  
+> > independent  
+> > > > > from the PF context entries.
+> > > > >
+> > > > > vIOMMU would enable PASID, and we just spoof the PASID capability.
+> > > > >
+> > > > > If vIOMMU or guest for some reason does disable_pasid(), then the
+> > > > > vIOMMU driver can disaable PASID on the VF context entries. So the VF
+> > > > > although the capability is blanket enabled on PF, IOMMU gaurantees  
+> > the  
+> > > > > transactions are blocked.
+> > > > >
+> > > > >
+> > > > > In the interim, it seems like the intent of the virtual capability
+> > > > > can be honored via help from the IOMMU for the controlling aspect..
+> > > > >
+> > > > > Did i miss anything?  
+> > > >
+> > > > Above works for emulating the enable bit (under the assumption that
+> > > > PF driver won't disable pasid when vf is assigned). However, there are
+> > > > also "Execute permission enable" and "Privileged mode enable" bits in
+> > > > PASID control registers. I don't know how those bits could be cleanly
+> > > > emulated when the guest writes a value different from PF's...  
+> > >
+> > > sent too quick. the IOMMU also includes control bits for allowing/
+> > > blocking execute requests and supervisor requests. We can rely on
+> > > IOMMU to block those requests to emulate the disabled cases of
+> > > all three control bits in the pasid cap.  
+> > 
+> > 
+> > So if the emulation of the PASID capability takes into account the
+> > IOMMU configuration to back that emulation, shouldn't we do that
+> > emulation in the hypervisor, ie. QEMU, rather than the kernel vfio
+> > layer?  Thanks,
+> > 
+> > Alex  
+> 
+> We need enforce it in physical IOMMU, to ensure that even the
+> VF may send requests which violate the guest expectation those
+> requests are always blocked by IOMMU. Kernel vfio identifies
+> such need when emulating the pasid cap and then forward the 
+> request to host iommu driver.
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 99e9138661e4..01da49b666db 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -111,7 +111,7 @@ struct bpt {
- 
- #define NBPTS	256
- static struct bpt bpts[NBPTS];
--static struct bpt dabr;
-+static struct bpt dabr[HBP_NUM_MAX];
- static struct bpt *iabr;
- static unsigned bpinstr = 0x7fe00008;	/* trap */
- 
-@@ -787,10 +787,17 @@ static int xmon_sstep(struct pt_regs *regs)
- 
- static int xmon_break_match(struct pt_regs *regs)
- {
-+	int i;
-+
- 	if ((regs->msr & (MSR_IR|MSR_PR|MSR_64BIT)) != (MSR_IR|MSR_64BIT))
- 		return 0;
--	if (dabr.enabled == 0)
--		return 0;
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (dabr[i].enabled)
-+			goto found;
-+	}
-+	return 0;
-+
-+found:
- 	xmon_core(regs, 0);
- 	return 1;
- }
-@@ -929,13 +936,16 @@ static void insert_bpts(void)
- 
- static void insert_cpu_bpts(void)
- {
-+	int i;
- 	struct arch_hw_breakpoint brk;
- 
--	if (dabr.enabled) {
--		brk.address = dabr.address;
--		brk.type = (dabr.enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
--		brk.len = DABR_MAX_LEN;
--		__set_breakpoint(0, &brk);
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (dabr[i].enabled) {
-+			brk.address = dabr[i].address;
-+			brk.type = (dabr[i].enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
-+			brk.len = 8;
-+			__set_breakpoint(i, &brk);
-+		}
- 	}
- 
- 	if (iabr)
-@@ -1349,6 +1359,35 @@ static long check_bp_loc(unsigned long addr)
- 	return 1;
- }
- 
-+static int find_free_data_bpt(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (!dabr[i].enabled)
-+			return i;
-+	}
-+	printf("Couldn't find free breakpoint register\n");
-+	return -1;
-+}
-+
-+static void print_data_bpts(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (!dabr[i].enabled)
-+			continue;
-+
-+		printf("   data   "REG"  [", dabr[i].address);
-+		if (dabr[i].enabled & 1)
-+			printf("r");
-+		if (dabr[i].enabled & 2)
-+			printf("w");
-+		printf("]\n");
-+	}
-+}
-+
- static char *breakpoint_help_string =
-     "Breakpoint command usage:\n"
-     "b                show breakpoints\n"
-@@ -1382,10 +1421,9 @@ bpt_cmds(void)
- 			printf("Hardware data breakpoint not supported on this cpu\n");
- 			break;
- 		}
--		if (dabr.enabled) {
--			printf("Couldn't find free breakpoint register\n");
-+		i = find_free_data_bpt();
-+		if (i < 0)
- 			break;
--		}
- 		mode = 7;
- 		cmd = inchar();
- 		if (cmd == 'r')
-@@ -1394,15 +1432,15 @@ bpt_cmds(void)
- 			mode = 6;
- 		else
- 			termch = cmd;
--		dabr.address = 0;
--		dabr.enabled = 0;
--		if (scanhex(&dabr.address)) {
--			if (!is_kernel_addr(dabr.address)) {
-+		dabr[i].address = 0;
-+		dabr[i].enabled = 0;
-+		if (scanhex(&dabr[i].address)) {
-+			if (!is_kernel_addr(dabr[i].address)) {
- 				printf(badaddr);
- 				break;
- 			}
--			dabr.address &= ~HW_BRK_TYPE_DABR;
--			dabr.enabled = mode | BP_DABR;
-+			dabr[i].address &= ~HW_BRK_TYPE_DABR;
-+			dabr[i].enabled = mode | BP_DABR;
- 		}
- 
- 		force_enable_xmon();
-@@ -1441,7 +1479,9 @@ bpt_cmds(void)
- 			for (i = 0; i < NBPTS; ++i)
- 				bpts[i].enabled = 0;
- 			iabr = NULL;
--			dabr.enabled = 0;
-+			for (i = 0; i < nr_wp_slots(); i++)
-+				dabr[i].enabled = 0;
-+
- 			printf("All breakpoints cleared\n");
- 			break;
- 		}
-@@ -1475,14 +1515,7 @@ bpt_cmds(void)
- 		if (xmon_is_ro || !scanhex(&a)) {
- 			/* print all breakpoints */
- 			printf("   type            address\n");
--			if (dabr.enabled) {
--				printf("   data   "REG"  [", dabr.address);
--				if (dabr.enabled & 1)
--					printf("r");
--				if (dabr.enabled & 2)
--					printf("w");
--				printf("]\n");
--			}
-+			print_data_bpts();
- 			for (bp = bpts; bp < &bpts[NBPTS]; ++bp) {
- 				if (!bp->enabled)
- 					continue;
-@@ -1942,8 +1975,13 @@ static void dump_207_sprs(void)
- 
- 	printf("hfscr  = %.16lx  dhdes = %.16lx rpr    = %.16lx\n",
- 		mfspr(SPRN_HFSCR), mfspr(SPRN_DHDES), mfspr(SPRN_RPR));
--	printf("dawr   = %.16lx  dawrx = %.16lx ciabr  = %.16lx\n",
--		mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0), mfspr(SPRN_CIABR));
-+	printf("dawr0  = %.16lx dawrx0 = %.16lx\n",
-+	       mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0));
-+	if (nr_wp_slots() > 1) {
-+		printf("dawr1  = %.16lx dawrx1 = %.16lx\n",
-+		       mfspr(SPRN_DAWR1), mfspr(SPRN_DAWRX1));
-+	}
-+	printf("ciabr  = %.16lx\n", mfspr(SPRN_CIABR));
- #endif
- }
- 
-@@ -3873,10 +3911,9 @@ static void clear_all_bpt(void)
- 		bpts[i].enabled = 0;
- 
- 	/* Clear any data or iabr breakpoints */
--	if (iabr || dabr.enabled) {
--		iabr = NULL;
--		dabr.enabled = 0;
--	}
-+	iabr = NULL;
-+	for (i = 0; i < nr_wp_slots(); i++)
-+		dabr[i].enabled = 0;
- }
- 
- #ifdef CONFIG_DEBUG_FS
--- 
-2.21.1
+Implementing this in the kernel would be necessary if we needed to
+protect from the guest device doing something bad to the host or
+other devices.  Making sure the physical IOMMU is configured to meet
+guest expectations doesn't sound like it necessarily falls into that
+category.  We do that on a regular basis to program the DMA mappings.
+Tell me more about why the hypervisor can't handle this piece of
+guest/host synchronization on top of all the other things it
+synchronizes to make a VM.  Thanks,
+
+Alex
 
