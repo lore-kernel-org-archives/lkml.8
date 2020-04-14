@@ -2,90 +2,117 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75269C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ABEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 504EF2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F5220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXnMIBLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbgDNToO (ORCPT
+        id S2505151AbgDNTo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:44:14 -0400
-Received: from smtprelay0090.hostedemail.com ([216.40.44.90]:45892 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728340AbgDNTn7 (ORCPT
+        Tue, 14 Apr 2020 15:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2440692AbgDNToH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:43:59 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id 2B6EF1802B57F;
-        Tue, 14 Apr 2020 19:06:44 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 00FE6181D341E;
-        Tue, 14 Apr 2020 19:06:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sky28_1d7a3c1bf3225
-X-Filterd-Recvd-Size: 2209
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 14 Apr 2020 19:06:42 +0000 (UTC)
-Message-ID: <b867ee8a02043ec6b18c9330bfe3a091d66c816c.camel@perches.com>
-Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
-From:   Joe Perches <joe@perches.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        paul@crapouillou.net, Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Tue, 14 Apr 2020 12:04:32 -0700
-In-Reply-To: <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
-References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
-         <20200414135827.GB3593749@ulmo>
-         <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 14 Apr 2020 15:44:07 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9DE3C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:44:06 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a13so417864pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=VbtTAnrt40z6tPxpWEZvoewnWhsSpl940nLeLk/aZs4=;
+        b=HXnMIBLCMj8Xz+aXGEJ8YsgpiE9MRABN++ki0Yxg0qmvHDq2ZE/0xLTjUn7/VKHqm8
+         HU4ja01m9CzqgP8xULfiY9Uet8Q0l1SMN78aKYhe6kleUE6XPMeyprxdMR8kDKmbmLl+
+         eWAhCCx/DLHRRdw+ui1cKx6bEenVcV1+eFntc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=VbtTAnrt40z6tPxpWEZvoewnWhsSpl940nLeLk/aZs4=;
+        b=Wu/JENCL0lr/cZ0AmZA54UBycRD/uPAWiNKJ/OBa/g2KV2De/EYWzcPGO359HSdmYw
+         Lu6zrPGKy0LSHqUDinMfHlkuAocqTqGKl6Kx0OWwnC5gQRLiqHnl4qn00zgYy86uBVo2
+         ZjFuaxLtqeXTaofQTBxkU58xmSm40lbJUnJGKQFqj/xB2ZBNybJQYLKqxRe5uExu3//A
+         ZAoDZggFvSDpZx/IAqQgZWo2MPKMrFFEV0Flf7KxR/QKBu8U0U7+gSyBcQ/KU2R7p1UT
+         jK8kG+XKcJS1zPBMsJWs/Au1HgCRdiHAGOEOym5imRHHo0uVyGi7BousOhv4ZrBmhQp1
+         pTNA==
+X-Gm-Message-State: AGi0PuaS7rNtaKDgtHcG2jlBTNxItClXlZVSAW5v2a1beu5wqzLi/nJo
+        SAw79iul9JMDi5cYRS4b8HLzoA==
+X-Google-Smtp-Source: APiQypI19hmEasOLVbF+NjBLSG3rtOoCjwF9p246fz6LzJ2gVKLHeYMvSplzv1Cy2N7YqG8m2mQFew==
+X-Received: by 2002:a63:ca41:: with SMTP id o1mr24256005pgi.419.1586893446374;
+        Tue, 14 Apr 2020 12:44:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y25sm9049090pfr.44.2020.04.14.12.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 12:44:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414104120.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
+References: <20200414104120.1.Ic70288f256ff0be65cac6a600367212dfe39f6c9@changeid>
+Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Factor "tcs_reg_addr" and "tcs_cmd_addr" calculation
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mkshah@codeaurora.org, mka@chromium.org, joe@perches.com,
+        evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Date:   Tue, 14 Apr 2020 12:44:04 -0700
+Message-ID: <158689344462.84447.17260207632295085186@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 20:30 +0200, Christophe JAILLET wrote:
-> Being able to detect early missing trailing '\n' would help maintainers 
-> and patch providers.
-> 
-> You are the 2nd person (I've added Paul Cercueil in copy of my reply) 
-> who reports that he is thinking that it is no more required to add a '\n'.
+Quoting Douglas Anderson (2020-04-14 10:41:34)
+> We can make some of the register access functions more readable by
+> factoring out the calculations a little bit.
+>=20
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>=20
+>  drivers/soc/qcom/rpmh-rsc.c | 27 ++++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 732316bb67dc..de1f9c7732e1 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -136,36 +136,45 @@
+>   *  +---------------------------------------------------+
+>   */
+> =20
+> +static inline void __iomem *
+> +tcs_reg_addr(struct rsc_drv *drv, int reg, int tcs_id)
 
-The printk subsystem will, for every printk, check
-if the last printk has a newline termination and if
-it doesn't and the current printk does not start with
-KERN_CONT will insert a newline.
+const drv?
 
-The negative to this approach is the last printk,
-if it does not have a newline, is buffered and not
-emitted until another printk occurs.
+> +{
+> +       return drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg;
+> +}
+> +
+> +static inline void __iomem *
+> +tcs_cmd_addr(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
 
-There is also the (now small) possibility that
-multiple concurrent kernel threads or processes
-could interleave printks without a terminating
-newline and a different process could emit a
-printk that starts with KERN_CONT and the emitted
-message could be garbled.
+const drv?
 
-See:
-
-commit 4bcc595ccd80decb4245096e3d1258989c50ed41
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat Oct 8 20:32:40 2016 -0700
-
-    printk: reinstate KERN_CONT for printing continuation lines
-
-
-
-
+> +{
+> +       return tcs_reg_addr(drv, reg, tcs_id) + RSC_DRV_CMD_OFFSET * cmd_=
+id;
+> +}
+> +
