@@ -2,115 +2,89 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0AEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A62AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0C20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lv1rUkd0"
+	by mail.kernel.org (Postfix) with ESMTP id D141820575
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 18:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586889169;
+	bh=aMgICZ0DbRdXvD3uWrORNNguBQeKs4PhM0IInqphAhQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nP1qh8fY0dv72jgJTh6rRHvel96PDwHd60Vv4Y2CEA9cc3v4pKih2QjkPQTmUmAiE
+	 OO8K+jaWo/bqvtSWA8KmtuO1PEC5JJExBOgbbcDsgyA8eU6fEYP7QGFrGhOJ62Ex4v
+	 UQmBRNwjHPj5YwgTykwuXQYW38i8x/Uoym5rhKMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504020AbgDNSco (ORCPT
+        id S2504043AbgDNScs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 Apr 2020 14:32:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504019AbgDNSco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 14:32:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33064 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503999AbgDNSck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:32:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIABfO076585;
-        Tue, 14 Apr 2020 18:32:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=GTvnzmPIuo+zTA3LV2i2vcOkGvW+n0eKPUcwXXWxyHQ=;
- b=Lv1rUkd0In8etyKFdwJQxVsGJI9E/m4wkPCei6qvgpMHTkjq79ezUkpDfzxL0ULw84Zd
- CzideGZzS16NPhzCt00rz5zjoFeRAzgUHat4N8d4snKi+8AVseHWf+ENxBiH+wvamMVD
- imcNE06zwyq1Auk/yX/ZkMXg5+fLu3pZTYprduPzMtYu3MKJ17rFItAP5Xvo3fN+/KAy
- sysPKjMlaFpJuf8ACFcuufkyzxnFe2oAAkUqyXon17LUoQPPfVKY+0ZNLRbT3pOVFtzK
- CpAJGmWqcdD54wJffz4Z5HFJ6z5ZKHTVC5t8BhhzJzIO80V9mdTSm0+/vyZqtIAWrWum Cw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30b5um6mdq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 18:32:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EI77AP155020;
-        Tue, 14 Apr 2020 18:32:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 30bqm2j9hm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 18:32:30 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EIWSSx020662;
-        Tue, 14 Apr 2020 18:32:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 11:32:27 -0700
-Date:   Tue, 14 Apr 2020 21:32:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Camylla Goncalves Cantanheide <c.cantanheide@gmail.com>,
-        gregkh@linuxfoundation.org, navid.emamdoost@gmail.com,
-        sylphrenadin@gmail.com, nishkadg.linux@gmail.com,
-        stephen@brennan.io, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: Re: [PATCH 1/2] staging: rtl8192u: Refactoring setKey function
-Message-ID: <20200414181812.GE14511@kadam>
-References: <20200413030129.861-1-c.cantanheide@gmail.com>
- <20200414123326.GG1163@kadam>
- <d3725a08531898adc1bfb1e6d875888c434b42d6.camel@perches.com>
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 040DD2074D;
+        Tue, 14 Apr 2020 18:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586889164;
+        bh=aMgICZ0DbRdXvD3uWrORNNguBQeKs4PhM0IInqphAhQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XfIhvFsgxducy/79xPb6PuW6aGDpJNTv8SgSfkKE5j8IOkLygZtW12kHVhyyfdo+I
+         PK7OLQyfIkruNmP7rsqIhJ85FSuV148czdCpC2qQRitLDO1MefAABnaRbTqULLz7KA
+         UFlEKdLVcW1cpZ96WHu9sVApx7wt4ztMN55pzeVI=
+Received: by mail-io1-f49.google.com with SMTP id s18so10966641ioe.10;
+        Tue, 14 Apr 2020 11:32:43 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaDfxWVsEhz/p0TGTB8sUkvxCYFTbj7eD2/nQ0uKHnjyC1kj+AB
+        yLmBmge861Hcq0zF1Gzf0U8qqe958d8gz05yUyA=
+X-Google-Smtp-Source: APiQypKav3WF7b4959gYRb4rMnNBPvkKR4rIb6+qdaWp1uLO7cvZSPLe+Li9/xtzPrkG38ZrAXVf5g0i0NS110Xnpzg=
+X-Received: by 2002:a6b:ef03:: with SMTP id k3mr11387607ioh.203.1586889163435;
+ Tue, 14 Apr 2020 11:32:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3725a08531898adc1bfb1e6d875888c434b42d6.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=915
- adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004140131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 mlxscore=0
- mlxlogscore=983 lowpriorityscore=0 impostorscore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140131
+References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
+ <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com> <CAHk-=wi-s0mmLAVg-aSmNU55=cE8ES7mC=Mc3Wn62P8W9VjY-A@mail.gmail.com>
+In-Reply-To: <CAHk-=wi-s0mmLAVg-aSmNU55=cE8ES7mC=Mc3Wn62P8W9VjY-A@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 14 Apr 2020 20:32:32 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE9046X9EDd636Bw1A9npv0QKAuLcTAzMXAn=JVZeCN0Q@mail.gmail.com>
+Message-ID: <CAMj1kXE9046X9EDd636Bw1A9npv0QKAuLcTAzMXAn=JVZeCN0Q@mail.gmail.com>
+Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 09:01:18AM -0700, Joe Perches wrote:
-> On Tue, 2020-04-14 at 15:33 +0300, Dan Carpenter wrote:
-> > On Mon, Apr 13, 2020 at 03:01:28AM +0000, Camylla Goncalves Cantanheide wrote:
-> > > +
-> > > +	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
-> > > +		write_nic_dword(dev, WCAMI, *keycontent++);
-> > 
-> > This code was wrong in the original as well, but now that I see the bug
-> > let's fix it.  CAM_CONTENT_COUNT is 8.  8 - 2 = 6.  We are writing 6
-> > u32 variables to write_nic_dword().  But the *keycontent buffer only has
-> > 4 u32 variables so it is a buffer overflow.
-> 
-> Did you find the overflow with smatch?
+On Tue, 14 Apr 2020 at 20:27, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, Apr 14, 2020 at 3:50 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > [*] GRUB on x86 turns out not to zero initialize BSS when it invokes
+> > the EFI stub as a PE/COFF executable
+>
+> The fix seems to be to put all globals in the .data section, even if
+> they don't have initializers.
+>
+> That seems very fragile. Very easy to forget to not declare some
+> static variable with __efistub_global.
+>
+> Could we not make the EFI stub code zero out the BSS itself? Perhaps
+> setting a warning flag (for a later printout) if it wasn't already
+> zero, so that people could point fingers are buggy loaders..
+>
 
-No.  Smatch isn't smart enough to understand that *(keycontent + i - 2)
-is an array overflow.  It thinks *(keycontent + i) is an array overflow
-but the "- 2" confuses it.  Also Smatch isn't smart enough to parse the
-*keycontent++.  It takes a shortcut when it parses loops.
-
-To be honest, I just didn't like starting the loop from 2 and was trying
-to see if there was a better define to use.
-
-I agree that your solution of making the buffer larger is probably the
-safest approach given that none of us really know the hardware.
-
-regards,
-dan carpenter
-
+That is the quick fix, but Arvind is working on getting rid of
+__efistub_global entirely, and use the right linker foo to put .bss in
+.data. This gives a tiny bit of bloat, but we are talking about a
+handful of bools here.
