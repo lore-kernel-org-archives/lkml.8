@@ -2,82 +2,135 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1344EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B050C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E180A2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80E52072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 06:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405989AbgDNG1S (ORCPT
+        id S2406007AbgDNG13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 02:27:18 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:34114 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S2405926AbgDNG1J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 02:27:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 9258F200E7CA;
-        Tue, 14 Apr 2020 14:27:05 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oeA8V0CZWbwx; Tue, 14 Apr 2020 14:27:05 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 7782E200E96E;
-        Tue, 14 Apr 2020 14:27:05 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 6D7D1C01A1D;
-        Tue, 14 Apr 2020 14:27:05 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 68042201602; Tue, 14 Apr 2020 14:27:05 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     chris.ruehl@gtsys.com.hk
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] iio: documentation ltc2632_chip_info add num_channels
-Date:   Tue, 14 Apr 2020 14:26:59 +0800
-Message-Id: <20200414062703.19068-1-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Apr 2020 02:27:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:37638 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405926AbgDNG1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 02:27:25 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 23D05227A81; Tue, 14 Apr 2020 08:27:19 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 08:27:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V7 5/9] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200414062718.GE23154@lst.de>
+References: <20200413054046.1560106-1-ira.weiny@intel.com> <20200413054046.1560106-6-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413054046.1560106-6-ira.weiny@intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation for ltc_2632_chip_info missed the desciption for the
-num_channels. This privial patch add it.
+On Sun, Apr 12, 2020 at 10:40:42PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> that it is enabled for DAX.
+> 
+> Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> and underlying storage support dax.
+> 
+> Add a new function xfs_inode_enable_dax() which reflects if the inode
+> should be enabled for DAX.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from v6:
+> 	Change enable checks to be sequential logic.
+> 	Update for 2 bit tri-state option.
+> 	Make 'static' consistent.
+> 	Don't set S_DAX if !CONFIG_FS_DAX
+> 
+> Changes from v5:
+> 	Update to reflect the new tri-state mount option
+> 
+> Changes from v3:
+> 	Update functions and names to be more clear
+> 	Update commit message
+> 	Merge with
+> 		'fs/xfs: Clean up DAX support check'
+> 		don't allow IS_DAX() on a directory
+> 		use STATIC macro for static
+> 		make xfs_inode_supports_dax() static
+> ---
+>  fs/xfs/xfs_iops.c | 34 +++++++++++++++++++++++++++++-----
+>  1 file changed, 29 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..37bd15b55878 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1244,12 +1244,11 @@ xfs_inode_supports_dax(
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  
+>  	/* Only supported on non-reflinked files. */
+> -	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
+> +	if (xfs_is_reflink_inode(ip))
+>  		return false;
+>  
+> -	/* DAX mount option or DAX iflag must be set. */
+> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> +	/* Only supported on regular files. */
+> +	if (!S_ISREG(VFS_I(ip)->i_mode))
+>  		return false;
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- drivers/iio/dac/ltc2632.c | 1 +
- 1 file changed, 1 insertion(+)
+To me it would make sense to check S_ISREG before reflink, as it seems
+more logical.
 
-diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-index 7adc91056aa1..2a84ea654645 100644
---- a/drivers/iio/dac/ltc2632.c
-+++ b/drivers/iio/dac/ltc2632.c
-@@ -24,6 +24,7 @@
- /**
-  * struct ltc2632_chip_info - chip specific information
-  * @channels:		channel spec for the DAC
-+ * @num_channels:	DAC channel count of the chip
-  * @vref_mv:		internal reference voltage
-  */
- struct ltc2632_chip_info {
--- 
-2.20.1
+> +#ifdef CONFIG_FS_DAX
+> +static bool
+> +xfs_inode_enable_dax(
+> +	struct xfs_inode *ip)
+> +{
+> +	if (ip->i_mount->m_flags & XFS_MOUNT_NODAX)
+> +		return false;
+> +	if (!xfs_inode_supports_dax(ip))
+> +		return false;
+> +	if (ip->i_mount->m_flags & XFS_MOUNT_DAX)
+> +		return true;
+> +	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> +		return true;
+> +	return false;
+> +}
+> +#else /* !CONFIG_FS_DAX */
+> +static bool
+> +xfs_inode_enable_dax(
+> +	struct xfs_inode *ip)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_FS_DAX */
 
+Just throw in a
+
+	if (!IS_ENABLED(CONFIG_FS_DAX))
+		return false;
+
+as the first statement of the full version and avoid the stub entirely?
