@@ -2,166 +2,141 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D05C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E20D92074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CSqlXQVE"
+	by mail.kernel.org (Postfix) with ESMTP id 14B3E2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 20:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633428AbgDNUxr (ORCPT
+        id S2633442AbgDNUys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730661AbgDNUxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:53:45 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68A0C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:53:43 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b7so5827255pju.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 13:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=K0jdNDYsyVBKVJ8vrSclC2i6UhecRADdZccibZZW3Fk=;
-        b=CSqlXQVETewXhgi7NEbLvyqtymrdv4KHSnaV7YJrij7Z94Wt9M/LRF+hI64VHazJtJ
-         1OEaNJd60jfAh5LIyE1CGhu25SP010BksVkq1wrNNHfLFFEZ61/P7rUnVcuhRDEqhcNY
-         df4JRfjYorbuTTNhpo8Q3kiPlE4PL/0KJw86w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K0jdNDYsyVBKVJ8vrSclC2i6UhecRADdZccibZZW3Fk=;
-        b=S0bzTE8dwsY41MXdR2+1ZxBNpI05qftanSqgVHuRrXVgJkFw5wi0wD2Y0p9TsOBWxK
-         drrz28sRlAw12KnuszVle5ncnIF5Cuc6xwQ0r0l23b1lB8vTDD2KF35SVE/IyL+HLajv
-         9Z4w47XPutt7kd57ej/h2492ufZflNgSTApeaL66apoqNxvxxwFxlnw49+T3SpHsSYFN
-         q7Yz/45PUfJeYclbgnm3gnKafsHwbbYRU8rXPeIRb1O6FRNWbyQ2/hNY+xKayjCft3Cv
-         13qjoblq+T8erMq6ZTAXg7Zgc8CORHxT5H+GESJgy5EVIKMpf04SD0S73+79e/081JcD
-         fepg==
-X-Gm-Message-State: AGi0PuZvApeSoP7e/3CpL51Kkf87If/QDJn9laHvQn0H6Bq7Clbz+tRc
-        wb09gA6PHlhvm1tgLcSV9CI/UQ==
-X-Google-Smtp-Source: APiQypLdGMmw7NvSuzoHy8mBNVlipdBTPHcElNsahD9loveLyoxd/GXH2+3BqDp98wZz9NH2Z0oODA==
-X-Received: by 2002:a17:90a:e2c1:: with SMTP id fr1mr2244175pjb.124.1586897623282;
-        Tue, 14 Apr 2020 13:53:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a1sm11810795pfl.188.2020.04.14.13.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:53:42 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 13:53:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Kristof Beyls <Kristof.Beyls@arm.com>,
-        Stephen Hines <srhines@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jian Cai <caij2003@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peter Smith <Peter.Smith@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jian Cai <jiancai@google.com>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
-Message-ID: <202004141258.6D9CB92507@keescook>
-References: <20200409232728.231527-1-caij2003@gmail.com>
- <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
- <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com>
- <20200410123301.GX25745@shell.armlinux.org.uk>
- <CAMj1kXFpknCfwb6JMdk_SHopnGqMswgSqaQUeAUEh5yaV10vJg@mail.gmail.com>
- <CAKwvOdk-xwuppJzxd1+5sfsC8jYiP3t8D=aTNaYxnFCRDiEUmQ@mail.gmail.com>
- <CAMj1kXFHb8th0rv1yjrsr=c1o-g9_ERPUy4itnrVN13fcQcXag@mail.gmail.com>
- <CAKwvOdm5aawsa2-=atB8z6W8zo8YVgdDEVbU3i4evDcpo1_AxQ@mail.gmail.com>
+        Tue, 14 Apr 2020 16:54:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32810 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730661AbgDNUyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 16:54:46 -0400
+IronPort-SDR: J0S1V3hJcgIJ1pWqKTnjwYCrZAVd56mNz4t0oJSxvYK9tIqfpTfUNNsi76Ulqf/htW40jAHbaV
+ 769S3qJgU7dA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 13:54:44 -0700
+IronPort-SDR: BZChCMYVjYFNgj/WPAnrIXxxL30sSdjjJOLvtEa8gqzFAPoAV1bL8QYBJ4AhNfUMFrGcQwknUh
+ TlfbYx01RNGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,384,1580803200"; 
+   d="scan'208";a="253308266"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga003.jf.intel.com with ESMTP; 14 Apr 2020 13:54:44 -0700
+Date:   Tue, 14 Apr 2020 13:54:44 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V7 9/9] Documentation/dax: Update Usage section
+Message-ID: <20200414205443.GC1982089@iweiny-DESK2.sc.intel.com>
+References: <20200413054046.1560106-1-ira.weiny@intel.com>
+ <20200413054046.1560106-10-ira.weiny@intel.com>
+ <CAPcyv4g1gGWUuzVyOgOtkRTxzoSKOjVpAOmW-UDtmud9a3CUUA@mail.gmail.com>
+ <20200414161509.GF6742@magnolia>
+ <CAPcyv4hr+NKbpAU4UhKcmHfvDq1+GTM+y+K28XGbkDYBP=Kaag@mail.gmail.com>
+ <20200414195754.GH6742@magnolia>
+ <20200414200015.GF1853609@iweiny-DESK2.sc.intel.com>
+ <20200414201808.GI6742@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdm5aawsa2-=atB8z6W8zo8YVgdDEVbU3i4evDcpo1_AxQ@mail.gmail.com>
+In-Reply-To: <20200414201808.GI6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't know if this will help, but I feel like folks might be talking
-past each other a little here. I see two primary issues that are
-colliding, and I just want to call them out specifically...
+On Tue, Apr 14, 2020 at 01:18:08PM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 14, 2020 at 01:00:15PM -0700, Ira Weiny wrote:
+> > On Tue, Apr 14, 2020 at 12:57:54PM -0700, Darrick J. Wong wrote:
+> > > On Tue, Apr 14, 2020 at 12:04:57PM -0700, Dan Williams wrote:
+> > > > On Tue, Apr 14, 2020 at 9:15 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > 
+> > [snip]
+> > 
+> > > > > > > +
+> > > > > > > +Enabling DAX on xfs
+> > > > > > > +-------------------
+> > > > > > > +
+> > > > > > > +Summary
+> > > > > > > +-------
+> > > > > > > +
+> > > > > > > + 1. There exists an in-kernel access mode flag S_DAX that is set when
+> > > > > > > +    file accesses go directly to persistent memory, bypassing the page
+> > > > > > > +    cache.
+> > > > > >
+> > > > > > I had reserved some quibbling with this wording, but now that this is
+> > > > > > being proposed as documentation I'll let my quibbling fly. "dax" may
+> > > > > > imply, but does not require persistent memory nor does it necessarily
+> > > > > > "bypass page cache". For example on configurations that support dax,
+> > > > > > but turn off MAP_SYNC (like virtio-pmem), a software flush is
+> > > > > > required. Instead, if we're going to define "dax" here I'd prefer it
+> > > > > > be a #include of the man page definition that is careful (IIRC) to
+> > > > > > only talk about semantics and not backend implementation details. In
+> > > > > > other words, dax is to page-cache as direct-io is to page cache,
+> > > > > > effectively not there, but dig a bit deeper and you may find it.
+> > > > >
+> > > > > Uh, which manpage?  Are you talking about the MAP_SYNC documentation?
+> > > > 
+> > > > No, I was referring to the proposed wording for STATX_ATTR_DAX.
+> > > > There's no reason for this description to say anything divergent from
+> > > > that description.
+> > > 
+> > > Ahh, ok.  Something like this, then:
+> > > 
+> > >  1. There exists an in-kernel access mode flag S_DAX.  When set, the
+> > >     file is in the DAX (cpu direct access) state.  DAX state attempts to
+> > >     minimize software cache effects for both I/O and memory mappings of
+> > >     this file.  The S_DAX state is exposed to userspace via the
+> > >     STATX_ATTR_DAX statx flag.
+> > > 
+> > >     See the STATX_ATTR_DAX in the statx(2) manpage for more information.
+> > 
+> > We crossed in the ether!!!  I propose even less details here...  Leave all the
+> > details to the man page.
+> > 
+> > <quote>
+> > 1. There exists an in-kernel access mode flag S_DAX that is set when file
+> >     accesses is enabled for 'DAX'.  Applications must call statx to discover
+> >     the current S_DAX state (STATX_ATTR_DAX).  See the man page for statx for
+> >     more details.
+> > </quote>
+> 
+> Why stop cutting there? :)
+> 
+>  1. There exists an in-kernel file access mode flag S_DAX that
+>     corresponds to the statx flag STATX_ATTR_DIRECT_LOAD_STORE.  See the
+>     manpage for statx(2) for details about this access mode.
 
-On Tue, Apr 14, 2020 at 1:59 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> On Mon, 13 Apr 2020 at 22:45, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > 1. continuous integration and randconfigs.  We need CI to help us spot
-> > where things are still broken, and help us from regressing the ground
-> > we've fought for.  We can't expect kernel developers to test with
-> > LLVM.  Currently, we have LLVM builds in numerous kernel continuous
+Sure!  But I'm holding to STATX_ATTR_DAX...  I don't like introducing another
+alias for this stuff.  Why have '-o dax=x' and then have some other term here?
 
-First, is this one. To paraphrase, "we don't want to lose hard-won
-ground."
+Keep the name the same for consistency.
 
-> To be honest with you, I don't actually think iwmmxt is that
-> important. But I have already demonstrated how we can use a couple of
-> macros to emit the same instructions without resorting to bare
-> opcodes, so there is really no need to disable pieces left and right
-> because the Clang assembler does not support them outright - it just
-> needs someone to care enough about this, rather than rush through the
-> list with a tick the box attitude, and rip out the pieces that look a
-> bit too complicated.
+Searching for 'DAX Linux'[*] results in 'About 877,000 results' on Google.
 
-The second is this one. To paraphrase, "we can just fix things instead
-of disabling them."
+While "'direct load store' Linux" results in 'About 2,630 results'.
 
-This feels a lot to me like the pain I (and plenty of others) have felt
-when doing treewide changes (adding full compiler support is kind of a
-treewide change). The above two points were really strongly felt when we
-were trying to remove VLAs. In our case, we didn't even have the option
-to disable stuff, so the pain was even worse: VLAs were being added to
-the kernel faster than we could remove them.
+I'll update the rest of the text though!  :-D
 
-What's a good middle ground here? For VLAs, I ended up getting akpm's
-help by having him add -Wvla to his local builds and send nag emails
-to people when they added VLAs. That's not really a thing here, but it
-seems like there should be a way to avoid losing ground (in this case,
-it's the erosion of attention: repeated known-issue warnings means the
-CI gets ignored for the warnings on newly added issues). It does seem
-to me like adding the negative depends is a reasonable first step: it
-marks what hard things need fixing later without losing coverage for
-things that can be more easily fixed now with available resources.
+Ira
 
-For the specific iwmmxt.S case, perhaps the solution is the suggested
-changes? I imagine it should be possible to do a binary diff to see zero
-changes before/after.
-
-For others, is a negative depends acceptable? Given how responsive
-Nick, Nathan, and others are, I don't think there is any real risk of a
-"slippery slope" of things just getting swept under the rug forever.
-Everyone here wants to see the kernel be awesome. :)
-
--Kees
-
--- 
-Kees Cook
+[*] Because 'DAX' is some company index and or a rapper...  <sigh>
