@@ -2,100 +2,132 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D5EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0393C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8201D208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C77320732
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 13:10:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BTAN21Wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502621AbgDNNJX (ORCPT
+        id S2502633AbgDNNKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:09:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:55112 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502606AbgDNNJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:09:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30E0130E;
-        Tue, 14 Apr 2020 06:09:07 -0700 (PDT)
-Received: from [10.57.33.145] (unknown [10.57.33.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B89573F73D;
-        Tue, 14 Apr 2020 06:09:05 -0700 (PDT)
-Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Steven Price <steven.price@arm.com>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-References: <20200411200632.4045-1-peron.clem@gmail.com>
- <20200411200632.4045-2-peron.clem@gmail.com>
- <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com>
- <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <729d73c5-2d2d-a2b6-7715-7293744f8f95@arm.com>
-Date:   Tue, 14 Apr 2020 14:09:02 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 09:10:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47669 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2502601AbgDNNJG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:09:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586869745;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hBYiVbPBfUS+AcwD+sXBpDKSbw0tQLOGN9sYzZKYAmI=;
+        b=BTAN21WocSEZDEQm2BhK4woJchErWB0xzslg0PRL+jaW73JuBBrb4U+r4OkMNKBbmzZ4UU
+        SCbUG2wUypFUui+uF2bDpjjfzTzcGjJONpKqua7ehfBP327KAv9KBAk5zaFQIpt7gAzXFP
+        mOe73lGOE/I3IOT6gqpXRWTm7whysyw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-106-PA7uLtZsM327ACx1G3T_7g-1; Tue, 14 Apr 2020 09:07:49 -0400
+X-MC-Unique: PA7uLtZsM327ACx1G3T_7g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96CEA8048E4;
+        Tue, 14 Apr 2020 13:07:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AB5418A8E;
+        Tue, 14 Apr 2020 13:06:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+References: <20200413211550.8307-2-longman@redhat.com> <20200413211550.8307-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>, herbert@gondor.apana.org.au
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
 MIME-Version: 1.0
-In-Reply-To: <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3807473.1586869616.1@warthog.procyon.org.uk>
+Date:   Tue, 14 Apr 2020 14:06:56 +0100
+Message-ID: <3807474.1586869616@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-13 3:18 pm, Clément Péron wrote:
-> Hi Steven,
-> 
-> On Mon, 13 Apr 2020 at 15:18, Steven Price <steven.price@arm.com> wrote:
->>
->> On 11/04/2020 21:06, Clément Péron wrote:
->>> OPP table can defined both frequency and voltage.
->>>
->>> Register the mali regulator if it exist.
->>>
->>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
->>> ---
->>>    drivers/gpu/drm/panfrost/panfrost_devfreq.c | 34 ++++++++++++++++++---
->>>    drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
->>>    2 files changed, 31 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
->>> index 62541f4edd81..2dc8e2355358 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
->>> @@ -78,12 +78,26 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
->>>        struct device *dev = &pfdev->pdev->dev;
->>>        struct devfreq *devfreq;
->>>        struct thermal_cooling_device *cooling;
->>> +     const char *mali = "mali";
->>> +     struct opp_table *opp_table = NULL;
->>> +
->>> +     /* Regulator is optional */
->>> +     opp_table = dev_pm_opp_set_regulators(dev, &mali, 1);
->>
->> This looks like it applies before 3e1399bccf51 ("drm/panfrost: Add
->> support for multiple regulators") which is currently in drm-misc-next
->> (and linux-next). You want something more like:
-> 
-> Thanks for you review, indeed I didn't see that multiple regulators
-> support has been added.
-> Will update in v2.
+Waiman Long <longman@redhat.com> wrote:
 
-Although note that we probably also want a version that can be 
-backported to stable without that dependency, since this behaviour is 
-arguably a regression since 221bc77914cb ("drm/panfrost: Use generic 
-code for devfreq"), and does appear to have been causing subtle problems 
-for users.
+> As said by Linus:
+> 
+>   A symmetric naming is only helpful if it implies symmetries in use.
+>   Otherwise it's actively misleading.
+> 
+>   In "kzalloc()", the z is meaningful and an important part of what the
+>   caller wants.
+> 
+>   In "kzfree()", the z is actively detrimental, because maybe in the
+>   future we really _might_ want to use that "memfill(0xdeadbeef)" or
+>   something. The "zero" part of the interface isn't even _relevant_.
+> 
+> The main reason that kzfree() exists is to clear sensitive information
+> that should not be leaked to other future users of the same memory
+> objects.
+> 
+> Rename kzfree() to kfree_sensitive() to follow the example of the
+> recently added kvfree_sensitive() and make the intention of the API
+> more explicit. In addition, memzero_explicit() is used to clear the
+> memory to make sure that it won't get optimized away by the compiler.
+> 
+> The renaming is done by using the command sequence:
+> 
+>   git grep -w --name-only kzfree |\
+>   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
+> 
+> followed by some editing of the kfree_sensitive() kerneldoc and the
+> use of memzero_explicit() instead of memset().
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Robin.
+Since this changes a lot of crypto stuff, does it make sense for it to go via
+the crypto tree?
+
+Acked-by: David Howells <dhowells@redhat.com>
+
