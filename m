@@ -2,131 +2,165 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A19C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF4C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73CB206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D644206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="HP4M9PaO"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="WesUpgsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505079AbgDNTlD (ORCPT
+        id S2505087AbgDNTlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:41:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        Tue, 14 Apr 2020 15:41:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505029AbgDNTjv (ORCPT
+        by vger.kernel.org with ESMTP id S2505027AbgDNTjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:39:51 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D4AC061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:39:51 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id k28so706420lfe.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qRs5i4iVAKA4TTRujU3GhWk99mVzfuZXxL+8IzLaq00=;
-        b=HP4M9PaOeDZ5Rjcv9V2eDLSMU9Szdx7xY7b2n7tP7awEgqgz0TeBMaAZDXXw5N1MV+
-         hmsV+bZUVJAXt+2gd5lV3+jiG1SW/bbEl8TzRqf68raINWJVdyvtFGThXpgC1p+Ltyi6
-         +AGpE1Kkqct7VoUWSG4Rjk/ONitbFKHLBgHZWdvSsGFi1YJGExzK/gw1EdWCBhndMWOq
-         6Av4TdtSr5NKtYFuVm9faWi3WZvh+7DgA3PKD69Q+cCA1sK5hkmUX9B2UlcO4NlSXFaq
-         C8FyPMiO21Q+jGqFKDOZ6Gc0IJJX9toSqlxac4rzoxD2aMEiiincaZUqKyinoWN+Mycy
-         Y88Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qRs5i4iVAKA4TTRujU3GhWk99mVzfuZXxL+8IzLaq00=;
-        b=qSKy0y1uZTUUmOpQcgHwOD/o+rJx5V6wIIUOUj2lJgA7QW2jsR5K++UQv9q8jiX+K9
-         IG6nxOMS9NbVL5hK1vVd5mPExONGxr4wlYBdnvsQllw46oCCMbDcETV19KOz3kb+Yoiw
-         r15Yboj1mSTQOk2ZVeX87yVol2PT7eO/VeCAFgBTbHjEOMDrgHfs1JzMjYTB6kXdwCpu
-         rbD04L9tDG8q2xZquax83ej4nGVS32GmVpDDj8izbYfFpCPmNhkU68KIU56IklSw6XOR
-         9wwXyxD0gb22gK/Mh3yOOzBto5USTFg87ibKFkpFWB+jYOqkVwe9ETujUAj+t2/mO1PZ
-         nfCg==
-X-Gm-Message-State: AGi0PuavlxME6JUBs4eexCZATmbgy1Ih+0XhVDHLBV5VeLaueM480vfY
-        rA4FZ94zwg68u+kG/zjD5vGGhuCPFi4=
-X-Google-Smtp-Source: APiQypI+s5n9rB+qwjmjZHIypmy+J644bf/a7w1c+pOeelNxSUe1AtB3mEv6uQTT+cLbbQwbQY9Crg==
-X-Received: by 2002:a19:6b03:: with SMTP id d3mr798341lfa.209.1586893189426;
-        Tue, 14 Apr 2020 12:39:49 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id 6sm10989254lfy.97.2020.04.14.12.39.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:39:48 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 21:39:48 +0200
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
- MEDIA_BUS_FMT_SRGGB8_1X8 format
-Message-ID: <20200414193948.GA350588@oden.dyn.berto.se>
-References: <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200310124605.GO2975348@oden.dyn.berto.se>
- <OSBPR01MB35905FFB621C2F4222692832AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <20200310140625.GA88560@oden.dyn.berto.se>
- <CA+V-a8vsYGdx6AtgqwS0LXREn4hu-EjVh2D5Dp_rHmpazBYG5A@mail.gmail.com>
- <20200319150329.GB3192108@oden.dyn.berto.se>
- <CA+V-a8u8=H-6WfaYMLWH73zo5ehP8cu9D-tdGULk=Hkvq4KuAQ@mail.gmail.com>
- <20200330120745.GA3213219@oden.dyn.berto.se>
- <CA+V-a8vbTc0DZ15y0zZ97PH6khwQVxz=M-8_kgx1AiKkdg5QaA@mail.gmail.com>
- <20200407095620.GA1716317@oden.dyn.berto.se>
+        Tue, 14 Apr 2020 15:39:46 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on20600.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8a::600])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CA7C061A0E;
+        Tue, 14 Apr 2020 12:03:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kzz6WKLYItK9cNoaIf3RK3AQB9L9+5msCkonXUnSoCBi/3xxF54NoCS4Ss+8gp5M8XVCUGT9F2XJO/I67vW1Z5hn0stxiZ6N+/mYMUpqjtApHv5gS2rBZu2UenI/JbD4k8E5BNLq92XGxDPqeE1E5P9IHfZtf5eyeKiagSJl0kK5CqefKh7thaLHWNYur/puCwQIMczt57GuCvLMRS45zlm36mRpxfVBqg+WYlDXG4FiIIZzQ9IPUQM0ujqbsvqQKjvPE2u+qjFKEkTCC3/+csYcvHGa3gKSFPrt9Ot6IT1D9f7BoXqkuFouLLqMRg5jIVfdolVxDNjE6QpDk5Y73g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YU/em2oqVpN+eqgIEjMDV+yMyZKqf55fjPa/p6CV7Q0=;
+ b=iHpZaSJ1GsZeoZSrKphzQJqkLURxAcC11vMuFb0i7b5cBnMtfd9546Fi68lo7YQzHiJqASvv4mF2PTTilY6eHwrfkTAp1KU+lEquaw0N5cOp68jBd1tWJfzBmKylTDETnFOPwOQFVhQKGK3y1zJvL3K9JByqR7rtbl1rmIcck59ZUqiOBXYmgsyZ40Z85xEsc0ZZeYhsIt3yF+kR3ReyMqf3TJCpYrIQCQpBJHpdLnmADkg71zQ5jS/ciR+GegG1wWdQm71OdeXR0JLXoZcr2OnvVkBQ6+iy/bjxzjEQb23lOL0Pyqr75JrAKEzwph9W7skmZRotIPgBSEgndydBnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YU/em2oqVpN+eqgIEjMDV+yMyZKqf55fjPa/p6CV7Q0=;
+ b=WesUpgsjQ3C4JOwNXFxG6dCIKykPUKlV+K0BlT9c9P8/EbM98xBplMu1QrWf3hj9mumdoE1FZGF4u3/vwNWXWbmSJj4X/cZhtDSDiWlymh12dYaioPt6ckb7OV8xUuB6dzHg1AfELJWb3koNOK+vE+E7RJZJljXJ44nEwAMae4c=
+Received: from BY5PR05MB7191.namprd05.prod.outlook.com (2603:10b6:a03:1d9::14)
+ by BY5PR05MB6980.namprd05.prod.outlook.com (2603:10b6:a03:1ca::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.24; Tue, 14 Apr
+ 2020 19:03:44 +0000
+Received: from BY5PR05MB7191.namprd05.prod.outlook.com
+ ([fe80::7869:d443:6c46:e7e7]) by BY5PR05MB7191.namprd05.prod.outlook.com
+ ([fe80::7869:d443:6c46:e7e7%9]) with mapi id 15.20.2921.024; Tue, 14 Apr 2020
+ 19:03:44 +0000
+From:   Mike Stunes <mstunes@vmware.com>
+To:     Joerg Roedel <joro@8bytes.org>
+CC:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
+ handler
+Thread-Topic: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
+ handler
+Thread-Index: AQHWEo9rgGvn/WKAp0SMYIwlFMJeIg==
+Date:   Tue, 14 Apr 2020 19:03:44 +0000
+Message-ID: <A7DF63B4-6589-4386-9302-6B7F8BE0D9BA@vmware.com>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-41-joro@8bytes.org>
+In-Reply-To: <20200319091407.1481-41-joro@8bytes.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.60.0.2.5)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mstunes@vmware.com; 
+x-originating-ip: [2601:600:9e7f:eac1:d5ed:96a3:68a4:b0d7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6e7eb8d7-4b57-430e-afca-08d7e0a68dc8
+x-ms-traffictypediagnostic: BY5PR05MB6980:|BY5PR05MB6980:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR05MB69802B0E431DD7479D0CF15DC8DA0@BY5PR05MB6980.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR05MB7191.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(71200400001)(66946007)(5660300002)(6506007)(53546011)(66446008)(33656002)(36756003)(6512007)(316002)(6486002)(64756008)(2616005)(76116006)(54906003)(2906002)(66556008)(8936002)(7416002)(81156014)(186003)(66476007)(8676002)(4326008)(86362001)(478600001)(6916009);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BJE39FT4nXFZHEX9l0EePiNr46M3gj+ipzLCY7IknoFcGGFCoJQuEYz0jnqSBltt74viJ/Bl5FqWG7mk2OcqfC+lQZC7rAcaVE7EeWTQfeUpTYNdjTferlcjbbUoor/eVC7gfUsomt4IGGIMBpVSIp0orb0mMi9ONn4jLGbYNU3igiVNMMbrqiUxYpqXAtnsPftYP0Czzp95KJ0Tme3V6PSQD2kLl0CDokg1+6JlldsIKgQivpy2nC6NMCvEVCYFjTohtDxTuDBQ20bdSXaDK8l9oQphLHlXiL8y2lWK+qC0F943dyIPR5FGErHxO/JZNV/ppLBQIQHK75NA9R9LOVoynpc+N1iCG17dIVAuQrSQ5wxXWIBQaqPcl2uQEkd7hgi5+9ZhtSUke0JaBt2aai0e/M6DJ1AMHU0ntwyyUgPlc2EQ+IVOFp9QyB5pilQz
+x-ms-exchange-antispam-messagedata: yBX4H57CQXhyyCLqbIQ1k2CYflyb+R7XL/5RTrhqqpJ8VGTggukmFKZHNhFaXdmQ3Tz99x8TcQCRrAgkqFEg7BciISPkic0ZJjir2Oi8Jo5THtfubgK1sL+GvcTo6WAeMFAQEymsRAdmeztQHfrO+39O0l+XvxP43qlOQGaV2hFxJ1tygpTmU3enKIc4AjdL9fFMDcEFFBcd9KebRn3AVQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CCC02F7E87773D41B51FCDF4C0FD1521@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200407095620.GA1716317@oden.dyn.berto.se>
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e7eb8d7-4b57-430e-afca-08d7e0a68dc8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 19:03:44.3350
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cA02r/+UqGfjEdTgA53A6FJ4xXypy0l79HjPUTmgjFsFfLe1haiynBiHKnFMmKfUOAnbTRiojdqOgJVYhuvgfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR05MB6980
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+On Mar 19, 2020, at 2:13 AM, Joerg Roedel <joro@8bytes.org> wrote:
+>=20
+> From: Tom Lendacky <thomas.lendacky@amd.com>
+>=20
+> The runtime handler needs a GHCB per CPU. Set them up and map them
+> unencrypted.
+>=20
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+> arch/x86/include/asm/mem_encrypt.h |  2 ++
+> arch/x86/kernel/sev-es.c           | 28 +++++++++++++++++++++++++++-
+> arch/x86/kernel/traps.c            |  3 +++
+> 3 files changed, 32 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+> index c17980e8db78..4bf5286310a0 100644
+> --- a/arch/x86/kernel/sev-es.c
+> +++ b/arch/x86/kernel/sev-es.c
+> @@ -197,6 +203,26 @@ static bool __init sev_es_setup_ghcb(void)
+> 	return true;
+> }
+>=20
+> +void sev_es_init_ghcbs(void)
+> +{
+> +	int cpu;
+> +
+> +	if (!sev_es_active())
+> +		return;
+> +
+> +	/* Allocate GHCB pages */
+> +	ghcb_page =3D __alloc_percpu(sizeof(struct ghcb), PAGE_SIZE);
+> +
+> +	/* Initialize per-cpu GHCB pages */
+> +	for_each_possible_cpu(cpu) {
+> +		struct ghcb *ghcb =3D (struct ghcb *)per_cpu_ptr(ghcb_page, cpu);
+> +
+> +		set_memory_decrypted((unsigned long)ghcb,
+> +				     sizeof(*ghcb) >> PAGE_SHIFT);
+> +		memset(ghcb, 0, sizeof(*ghcb));
+> +	}
+> +}
+> +
 
-I spent all day playing with different solutions to how to move forward 
-with this. My main problem is I have no setup where I can produce RAW 
-image formats to test. But reading the datasheet I see the problem you 
-are trying to solve.
-
-I think for now the best solution might be to in rvin_crop_scale_comp() 
-add a check for if the pixelformat is RAW and cut the value written to 
-VNIS_REG in half. The bpp for the format shall still be set to 1.
-
-
-    fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
-    stride = vin->format.bytesperline / fmt->bpp;
-
-    if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
-        stride /= 2;
-
-    rvin_write(vin, stride, VNIS_REG);
-
-I would also add a nice big comment above the if () that explains why 
-the stride is cut in half for raw.
-
-On 2020-04-07 11:56:23 +0200, Niklas wrote:
-> Hi Lad,
-> 
-> On 2020-04-06 18:20:33 +0100, Lad, Prabhakar wrote:
-> > Did you manage to get the required information on this ?
-> 
-> I'm still working on it, sorry for not completing it last week. I will 
-> let you know as soon as I can.
-> 
-> -- 
-> Regards,
-> Niklas Söderlund
-
--- 
-Regards,
-Niklas Söderlund
+set_memory_decrypted needs to check the return value. I see it
+consistently return ENOMEM. I've traced that back to split_large_page
+in arch/x86/mm/pat/set_memory.c.
