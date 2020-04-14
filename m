@@ -2,237 +2,110 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0657C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A98AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C0120644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586900053;
-	bh=rdmPMTavuwD05fQFm3lRuHU2A3YTNuYNBOLxSPIVcLQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lPX5sK/v2Z9Z+0QxMa1fnuqoxVfwIC064nyDu+hLOeSLq4eKjvpE2JUt+IvTmfHMS
-	 ugBm2z0t/Vs35DFU5Ogov+ofA7b5BXe74ErrLaqm5ZiWY+KBZKa8ETC+39t6vmt7Fl
-	 UOq/kZ5dtIzXnlX4O7UE6zfN43qSrQV7L7aSntI0=
+	by mail.kernel.org (Postfix) with ESMTP id 348FA206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 21:35:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="a40M9wPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633954AbgDNVeB (ORCPT
+        id S2633960AbgDNVf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633934AbgDNVdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:33:53 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B356920644;
-        Tue, 14 Apr 2020 21:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586900032;
-        bh=rdmPMTavuwD05fQFm3lRuHU2A3YTNuYNBOLxSPIVcLQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U4cpVSNCZ+hsXqe8rQKFaSi81Q9nsqFd7RcpfN2sASQ9QNYh5c86xv3VFoegQ/qW2
-         Ih/p+vlnb4UieF0x6RFvgTy8t9nn/eorW1WDn7OADyUJ91LR2pxJI/t+vd2guTlsTn
-         HayeXTPCdijuN221rkA9edqk0BHE0A5tKbhJjTfw=
-Date:   Tue, 14 Apr 2020 23:33:47 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: media/master bisection: v4l2-compliance-vivid.device-presence
- on qemu_x86_64
-Message-ID: <20200414233347.2a844b85@coco.lan>
-In-Reply-To: <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
-References: <5e960bf5.1c69fb81.8a349.6851@mx.google.com>
-        <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 14 Apr 2020 17:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731763AbgDNVfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 17:35:20 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61889C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:35:19 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id b13so1312389oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 14:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JnHk7VpBnwNwlRi2040XE6uitJWwqet8iTZkvolguqg=;
+        b=a40M9wPTOSLU/0cGOlCpSJUUPUFrgOrvTKgRLRSYfYuZOzrVhoSZry+eneW9qww53t
+         SJYvk3ffq/pNk5fcbHTaFpS7TJJ91ShgYNe3DoajUkQmvbG9EJ9oNB6WGbuwhKNxwbjO
+         0uTt2TfuG++4SEP63a8g+exO08GnaRLoDo8EI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JnHk7VpBnwNwlRi2040XE6uitJWwqet8iTZkvolguqg=;
+        b=K72mbdPp4YNsY3TTMsfL9RJlvovzQE6FqcvkF7EafYYh102143OZfIqJkd6PMXH/2n
+         bdvyAoQIzTEfFhaoFfSfPv1iNnjRH6H32MfzqAnUlm4/mCrFuvN66jvyyMyIzusKbhNY
+         pUzRYrAy79f9NK8cA+ht0PMwXhuxwKhbevCTC8JTrkhv73NRRPwzfLHOc1A+I5VQfY4o
+         drZqz+8Qc/GDnn0lMKmnv98pZFs4+Wge9deHYL3HHT8thiVGwh0lFzZbTXjPAU3mZ1m3
+         ZHLaZnMnsC7/+W4to0Buphg7obpFNPksD2HsJRSey9zwF/ddtxPBx8lqLAgIkvPfS08R
+         86oA==
+X-Gm-Message-State: AGi0PuZSLdRqaFIkFu4flojgzV1I7s1BhZ/4BEE5Y+S7GN35NtAEFfV4
+        JKuhk5ZIi0bXO24Gq7AyUSAQ4XTDbGjmGGxVqlGDoQ==
+X-Google-Smtp-Source: APiQypI6qQXAlBRHe5B9IMx4CI1nKnHqx8bIn0YBS5VQ3pwSBEPndm25wfn72CSzgVVXy729HPVi7V+ESKzncERVfQw=
+X-Received: by 2002:a4a:dbc7:: with SMTP id t7mr19942420oou.57.1586900118509;
+ Tue, 14 Apr 2020 14:35:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
+ <20200414113639.GS20730@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200414113639.GS20730@hirez.programming.kicks-ass.net>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Tue, 14 Apr 2020 17:35:07 -0400
+Message-ID: <CANaguZDwK6bXvJabt5gS=kLMVsGNf97u50+1-v_t8bJxCrJ6sQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 03/13] sched: Core-wide rq->lock
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 14 Apr 2020 22:23:52 +0100
-Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
+> Aside from the fact that it's probably much saner to write this as:
+>
+>         rq->core_enabled = static_key_enabled(&__sched_core_enabled);
+>
+> I'm fairly sure I didn't write this part. And while I do somewhat see
+> the point of disabling core scheduling for a core that has only a single
+> thread on, I wonder why we care.
+>
+I think this change was to fix some crashes which happened due to
+uninitialized rq->core if a sibling was offline during boot and is
+onlined after coresched was enabled.
 
-> Please see the bisection report below about absence of the vivid
-> driver, which caused v4l2-compliance to fail to run.
-> 
-> Presumably we need to update the configuration fragment used by
-> kernelci.org to enable platform drivers.  Until now we've been
-> using this:
-> 
->     CONFIG_MEDIA_SUPPORT=y
->     CONFIG_MEDIA_CAMERA_SUPPORT=y
->     CONFIG_VIDEO_DEV=y
->     CONFIG_VIDEO_V4L2=y
->     CONFIG_V4L_TEST_DRIVERS=y
->     CONFIG_VIDEO_VIVID=y
->     CONFIG_VIDEO_VIVID_MAX_DEVS=64
-> 
-> Do we simply need to add this one in v5.7 onwards?
-> 
->     CONFIG_MEDIA_PLATFORM_SUPPORT=y
+https://lwn.net/ml/linux-kernel/20190424111913.1386-1-vpillai@digitalocean.com/
 
-No, this shouldn't be needed.
-
-Helen sent us a patch that should likely fix it:
-
-	https://git.linuxtv.org/media_tree.git/commit/?id=860b511766a3d95308a942ac09a34e4d1839e706
-
-Could you please check if this solves the issue?
+I tried to fix it by initializing coresched members during a cpu online
+and tearing it down on a cpu offline. This was back in v3 and do not
+remember the exact details. I shall revisit this and see if there is a
+better way to fix the race condition above.
 
 Thanks,
-Mauro
-
-> 
-> 
-> On 14/04/2020 20:16, kernelci.org bot wrote:
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > * This automated bisection report was sent to you on the basis  *
-> > * that you may be involved with the breaking commit it has      *
-> > * found.  No manual investigation has been done to verify it,   *
-> > * and the root cause of the problem may be somewhere else.      *
-> > *                                                               *
-> > * If you do send a fix, please include this trailer:            *
-> > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> > *                                                               *
-> > * Hope this helps!                                              *
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > 
-> > media/master bisection: v4l2-compliance-vivid.device-presence on qemu_x86_64
-> > 
-> > Summary:
-> >   Start:      ba445b7ff43b3 media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
-> >   Plain log:  https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.txt
-> >   HTML log:   https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.html
-> >   Result:     06b93644f4d10 media: Kconfig: add an option to filter in/out platform drivers
-> > 
-> > Checks:
-> >   revert:     PASS
-> >   verify:     PASS
-> > 
-> > Parameters:
-> >   Tree:       media
-> >   URL:        https://git.linuxtv.org/media_tree.git
-> >   Branch:     master
-> >   Target:     qemu_x86_64
-> >   CPU arch:   x86_64
-> >   Lab:        lab-collabora
-> >   Compiler:   gcc-8
-> >   Config:     x86_64_defconfig+virtualvideo
-> >   Test case:  v4l2-compliance-vivid.device-presence
-> > 
-> > Breaking commit found:
-> > 
-> > -------------------------------------------------------------------------------
-> > commit 06b93644f4d102bdfc297159121acc1de794d68d
-> > Author: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > Date:   Tue Mar 24 10:27:15 2020 +0100
-> > 
-> >     media: Kconfig: add an option to filter in/out platform drivers
-> >     
-> >     Most systems don't need support for those, while others only
-> >     need those, instead of the others.
-> >     
-> >     So, add an option to filter in/out platform drivers.
-> >     
-> >     Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > 
-> > diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-> > index 9dfea5c4b6ab7..2b6ea8beb9199 100644
-> > --- a/drivers/media/Kconfig
-> > +++ b/drivers/media/Kconfig
-> > @@ -87,6 +87,18 @@ config MEDIA_CEC_SUPPORT
-> >  	  Say Y when you have an HDMI receiver, transmitter or a USB CEC
-> >  	  adapter that supports HDMI CEC.
-> >  
-> > +config MEDIA_PLATFORM_SUPPORT
-> > +	bool "Platform-specific devices support"
-> > +	help
-> > +	  Enable support for complex cameras, codecs, and other hardware
-> > +	  that are integrated at the CPU, GPU or on Image Signalling Processor
-> > +	  and don't use PCI, USB or Firewire buses.
-> > +
-> > +	  This is found on Embedded hardware (SoC), on V4L2 codecs and
-> > +	  on some GPU and newer CPU chipsets.
-> > +
-> > +	  Say Y when you want to be able so see such devices.
-> > +
-> >  source "drivers/media/cec/Kconfig"
-> >  
-> >  source "drivers/media/mc/Kconfig"
-> > @@ -161,15 +173,14 @@ source "drivers/media/dvb-core/Kconfig"
-> >  
-> >  comment "Media drivers"
-> >  
-> > -#
-> > -# V4L platform/mem2mem drivers
-> > -#
-> > -
-> >  source "drivers/media/usb/Kconfig"
-> >  source "drivers/media/pci/Kconfig"
-> > +source "drivers/media/radio/Kconfig"
-> > +
-> > +if MEDIA_PLATFORM_SUPPORT
-> >  source "drivers/media/platform/Kconfig"
-> >  source "drivers/media/mmc/Kconfig"
-> > -source "drivers/media/radio/Kconfig"
-> > +endif
-> >  
-> >  comment "Supported FireWire (IEEE 1394) Adapters"
-> >  	depends on DVB_CORE && FIREWIRE
-> > -------------------------------------------------------------------------------
-> > 
-> > 
-> > Git bisection log:
-> > 
-> > -------------------------------------------------------------------------------
-> > git bisect start
-> > # good: [2632e7b618a7730969f9782593c29ca53553aa22] media: venus: firmware: Ignore secure call error on first resume
-> > git bisect good 2632e7b618a7730969f9782593c29ca53553aa22
-> > # bad: [ba445b7ff43b3e45836a9a290efdc3a36ea63941] media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
-> > git bisect bad ba445b7ff43b3e45836a9a290efdc3a36ea63941
-> > # good: [29d9f30d4ce6c7a38745a54a8cddface10013490] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> > git bisect good 29d9f30d4ce6c7a38745a54a8cddface10013490
-> > # good: [e109f506074152b7241bcbd3949a099e776cb802] Merge tag 'mtd/for-5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
-> > git bisect good e109f506074152b7241bcbd3949a099e776cb802
-> > # good: [aa1a8ce533324d12696a9f4b71dbc5eb561a2e04] Merge tag 'trace-v5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
-> > git bisect good aa1a8ce533324d12696a9f4b71dbc5eb561a2e04
-> > # good: [c7b6a566b98524baea6a244186e665d22b633545] mm/gup: Mark lock taken only after a successful retake
-> > git bisect good c7b6a566b98524baea6a244186e665d22b633545
-> > # good: [e4da01d8333e500e15a674d75885a9dfcfd31e77] Merge tag 'powerpc-5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-> > git bisect good e4da01d8333e500e15a674d75885a9dfcfd31e77
-> > # good: [6900433e0fbca146d8170bdf876271cdf3053021] Merge tag 'for-linus-5.7-1' of git://github.com/cminyard/linux-ipmi
-> > git bisect good 6900433e0fbca146d8170bdf876271cdf3053021
-> > # good: [b753101a4ac0b906064a72feec43f5b80a1fe2e5] Merge tag 'kbuild-v5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
-> > git bisect good b753101a4ac0b906064a72feec43f5b80a1fe2e5
-> > # bad: [4b32216adb010a364f23a055c45e06e839b089f9] media: split test drivers from platform directory
-> > git bisect bad 4b32216adb010a364f23a055c45e06e839b089f9
-> > # good: [20e2aa812620439d010a3f78ba4e05bc0b3e2861] Merge tag 'perf-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> > git bisect good 20e2aa812620439d010a3f78ba4e05bc0b3e2861
-> > # good: [0785249f8b93836986e9d1bdeefd2a2c13f160af] Merge tag 'timers-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> > git bisect good 0785249f8b93836986e9d1bdeefd2a2c13f160af
-> > # good: [3b50142d8528e1efc1c07f69c540f926c58ab3ad] MAINTAINERS: sort field names for all entries
-> > git bisect good 3b50142d8528e1efc1c07f69c540f926c58ab3ad
-> > # bad: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
-> > git bisect bad 06b93644f4d102bdfc297159121acc1de794d68d
-> > # good: [d9d6e1f3d5bbca799910072b2110963250e0b9c6] media: dvb-usb: auto-select CYPRESS_FIRMWARE
-> > git bisect good d9d6e1f3d5bbca799910072b2110963250e0b9c6
-> > # first bad commit: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
-> > -------------------------------------------------------------------------------
-> >   
-> 
-
-
-
-Thanks,
-Mauro
+Vineeth
