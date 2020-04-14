@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6933C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5991DC3815B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9348020768
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6D92078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 15:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXsfOenO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="La5G2Clc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440205AbgDNPHe (ORCPT
+        id S2440230AbgDNPIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:07:34 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59383 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436504AbgDNPHB (ORCPT
+        Tue, 14 Apr 2020 11:08:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22856 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2436701AbgDNPHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:07:01 -0400
+        Tue, 14 Apr 2020 11:07:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586876820;
+        s=mimecast20190719; t=1586876844;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wi4Jh9LpqkWQ8FgIrc+LUaKxo2ewQeuAx/AgKj7vtRQ=;
-        b=VXsfOenOql0lhMsb2hj3QGhXlK+JqOyvdh59oRlwqIC94/PUsc/qlCb3jXLVBcGdwbrnZK
-        pb53MFsKpR7ZKe3g+JZteCf018/0P/ULdmJycPJXs3V9iYbo/AN+aWr2W+BOwaDlFFyRh4
-        3zcuhVKhdpUK8pbs5bWR2UEDFHJZ/ss=
+        bh=XLfUEvncMSN2IdVwHVtfvHoOX5DPXg9vZNdRCxVTUD8=;
+        b=La5G2Clc62eksH8A8qGxm8T7qGFXtkJw8k9Niwwg19yDB7kXrG729UU4IiQbSXrWwkRgTq
+        iWiYEQoK+eH0W5SuC5oKW9WWTo0w7szcAMJrwlKUQJsOxfDiIJKytayumzkjlwthxHFSBR
+        IPG2kHbPYHLOC1LIKU/kbNoCnAegRkQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-preTWx42MDegmYGFUlvpOw-1; Tue, 14 Apr 2020 11:06:58 -0400
-X-MC-Unique: preTWx42MDegmYGFUlvpOw-1
+ us-mta-103-Ug0CyV-oOdGES9Et9LHdew-1; Tue, 14 Apr 2020 11:07:22 -0400
+X-MC-Unique: Ug0CyV-oOdGES9Et9LHdew-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17C10800D5C;
-        Tue, 14 Apr 2020 15:06:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C65881005510;
+        Tue, 14 Apr 2020 15:07:19 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 837F519C69;
-        Tue, 14 Apr 2020 15:06:44 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C26A27098;
+        Tue, 14 Apr 2020 15:07:03 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc:     jean-philippe@linaro.org, zhangfei.gao@linaro.org,
         jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
         peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
         zhangfei.gao@foxmail.com, bbhushan2@marvell.com
-Subject: [PATCH v11 03/13] iommu/arm-smmu-v3: Maintain a SID->device structure
-Date:   Tue, 14 Apr 2020 17:05:57 +0200
-Message-Id: <20200414150607.28488-4-eric.auger@redhat.com>
+Subject: [PATCH v11 05/13] iommu/smmuv3: Get prepared for nested stage support
+Date:   Tue, 14 Apr 2020 17:05:59 +0200
+Message-Id: <20200414150607.28488-6-eric.auger@redhat.com>
 In-Reply-To: <20200414150607.28488-1-eric.auger@redhat.com>
 References: <20200414150607.28488-1-eric.auger@redhat.com>
 MIME-Version: 1.0
@@ -68,195 +68,218 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+When nested stage translation is setup, both s1_cfg and
+s2_cfg are allocated.
 
-When handling faults from the event or PRI queue, we need to find the
-struct device associated to a SID. Add a rb_tree to keep track of SIDs.
+We introduce a new smmu domain abort field that will be set
+upon guest stage1 configuration passing.
+
+arm_smmu_write_strtab_ent() is modified to write both stage
+fields in the STE and deal with the abort field.
+
+In nested mode, only stage 2 is "finalized" as the host does
+not own/configure the stage 1 context descriptor; guest does.
 
 Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+
 ---
- drivers/iommu/arm-smmu-v3.c | 112 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 111 insertions(+), 1 deletion(-)
+v10 -> v11:
+- Fix an issue reported by Shameer when switching from with vSMMU
+  to without vSMMU. Despite the spec does not seem to mention it
+  seems to be needed to reset the 2 high 64b when switching from
+  S1+S2 cfg to S1 only. Especially dst[3] needs to be reset (S2TTB).
+  On some implementations, if the S2TTB is not reset, this causes
+  a C_BAD_STE error
+
+v7 -> v8:
+- rebase on 8be39a1a04c1 iommu/arm-smmu-v3: Add a master->domain
+  pointer
+- restore live checks for not nested cases and add s1_live and
+  s2_live to be more previse. Remove bypass local variable.
+  In STE live case, move the ste to abort state and send a
+  CFGI_STE before updating the rest of the fields.
+- check s2ttb in case of live s2
+
+v4 -> v5:
+- reset ste.abort on detach
+
+v3 -> v4:
+- s1_cfg.nested_abort and nested_bypass removed.
+- s/ste.nested/ste.abort
+- arm_smmu_write_strtab_ent modifications with introduction
+  of local abort, bypass and translate local variables
+- comment updated
+---
+ drivers/iommu/arm-smmu-v3.c | 68 +++++++++++++++++++++++++++++++------
+ 1 file changed, 58 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 82508730feb7..ac7009348749 100644
+index da3739bb7323..dd3c12034e84 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -677,6 +677,16 @@ struct arm_smmu_device {
+@@ -223,6 +223,7 @@
+ #define STRTAB_STE_0_CFG_BYPASS		4
+ #define STRTAB_STE_0_CFG_S1_TRANS	5
+ #define STRTAB_STE_0_CFG_S2_TRANS	6
++#define STRTAB_STE_0_CFG_NESTED		7
 =20
- 	/* IOMMU core code handle */
- 	struct iommu_device		iommu;
-+
-+	struct rb_root			streams;
-+	struct mutex			streams_mutex;
-+
-+};
-+
-+struct arm_smmu_stream {
-+	u32				id;
-+	struct arm_smmu_master		*master;
-+	struct rb_node			node;
- };
+ #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
+ #define STRTAB_STE_0_S1FMT_LINEAR	0
+@@ -721,6 +722,7 @@ struct arm_smmu_domain {
+ 	enum arm_smmu_domain_stage	stage;
+ 	struct arm_smmu_s1_cfg		*s1_cfg;
+ 	struct arm_smmu_s2_cfg		*s2_cfg;
++	bool				abort;
 =20
- /* SMMU private data for each master */
-@@ -687,6 +697,7 @@ struct arm_smmu_master {
- 	struct list_head		domain_head;
- 	u32				*sids;
- 	unsigned int			num_sids;
-+	struct arm_smmu_stream		*streams;
- 	bool				ats_enabled;
- 	unsigned int			ssid_bits;
- };
-@@ -1967,6 +1978,32 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu=
-_device *smmu, u32 sid)
- 	return 0;
- }
+ 	struct iommu_domain		domain;
 =20
-+__maybe_unused
-+static struct arm_smmu_master *
-+arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
-+{
-+	struct rb_node *node;
-+	struct arm_smmu_stream *stream;
-+	struct arm_smmu_master *master =3D NULL;
-+
-+	mutex_lock(&smmu->streams_mutex);
-+	node =3D smmu->streams.rb_node;
-+	while (node) {
-+		stream =3D rb_entry(node, struct arm_smmu_stream, node);
-+		if (stream->id < sid) {
-+			node =3D node->rb_right;
-+		} else if (stream->id > sid) {
-+			node =3D node->rb_left;
-+		} else {
-+			master =3D stream->master;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&smmu->streams_mutex);
-+
-+	return master;
-+}
-+
- /* IRQ and event handlers */
- static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
- {
-@@ -2912,6 +2949,69 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_=
-device *smmu, u32 sid)
- 	return sid < limit;
- }
-=20
-+static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
-+				  struct arm_smmu_master *master)
-+{
-+	int i;
-+	int ret =3D 0;
-+	struct arm_smmu_stream *new_stream, *cur_stream;
-+	struct rb_node **new_node, *parent_node =3D NULL;
-+
-+	master->streams =3D kcalloc(master->num_sids,
-+				  sizeof(struct arm_smmu_stream), GFP_KERNEL);
-+	if (!master->streams)
-+		return -ENOMEM;
-+
-+	mutex_lock(&smmu->streams_mutex);
-+	for (i =3D 0; i < master->num_sids && !ret; i++) {
-+		new_stream =3D &master->streams[i];
-+		new_stream->id =3D master->sids[i];
-+		new_stream->master =3D master;
-+
-+		new_node =3D &(smmu->streams.rb_node);
-+		while (*new_node) {
-+			cur_stream =3D rb_entry(*new_node, struct arm_smmu_stream,
-+					      node);
-+			parent_node =3D *new_node;
-+			if (cur_stream->id > new_stream->id) {
-+				new_node =3D &((*new_node)->rb_left);
-+			} else if (cur_stream->id < new_stream->id) {
-+				new_node =3D &((*new_node)->rb_right);
-+			} else {
-+				dev_warn(master->dev,
-+					 "stream %u already in tree\n",
-+					 cur_stream->id);
-+				ret =3D -EINVAL;
-+				break;
-+			}
-+		}
-+
-+		if (!ret) {
-+			rb_link_node(&new_stream->node, parent_node, new_node);
-+			rb_insert_color(&new_stream->node, &smmu->streams);
-+		}
-+	}
-+	mutex_unlock(&smmu->streams_mutex);
-+
-+	return ret;
-+}
-+
-+static void arm_smmu_remove_master(struct arm_smmu_device *smmu,
-+				   struct arm_smmu_master *master)
-+{
-+	int i;
-+
-+	if (!master->streams)
-+		return;
-+
-+	mutex_lock(&smmu->streams_mutex);
-+	for (i =3D 0; i < master->num_sids; i++)
-+		rb_erase(&master->streams[i].node, &smmu->streams);
-+	mutex_unlock(&smmu->streams_mutex);
-+
-+	kfree(master->streams);
-+}
-+
- static struct iommu_ops arm_smmu_ops;
-=20
- static int arm_smmu_add_device(struct device *dev)
-@@ -2979,15 +3079,21 @@ static int arm_smmu_add_device(struct device *dev=
+@@ -1807,8 +1809,10 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
+mmu_master *master, u32 sid,
+ 	 * three cases at the moment:
+ 	 *
+ 	 * 1. Invalid (all zero) -> bypass/fault (init)
+-	 * 2. Bypass/fault -> translation/bypass (attach)
+-	 * 3. Translation/bypass -> bypass/fault (detach)
++	 * 2. Bypass/fault -> single stage translation/bypass (attach)
++	 * 3. Single or nested stage Translation/bypass -> bypass/fault (detach=
 )
- 	if (ret)
- 		goto err_disable_pasid;
-=20
-+	ret =3D arm_smmu_insert_master(smmu, master);
-+	if (ret)
-+		goto err_unlink;
-+
- 	group =3D iommu_group_get_for_dev(dev);
- 	if (IS_ERR(group)) {
- 		ret =3D PTR_ERR(group);
--		goto err_unlink;
-+		goto err_remove_master;
++	 * 4. S2 -> S1 + S2 (attach_pasid_table)
++	 * 5. S1 + S2 -> S2 (detach_pasid_table)
+ 	 *
+ 	 * Given that we can't update the STE atomically and the SMMU
+ 	 * doesn't read the thing in a defined order, that leaves us
+@@ -1819,7 +1823,8 @@ static void arm_smmu_write_strtab_ent(struct arm_sm=
+mu_master *master, u32 sid,
+ 	 * 3. Update Config, sync
+ 	 */
+ 	u64 val =3D le64_to_cpu(dst[0]);
+-	bool ste_live =3D false;
++	bool abort, translate, s1_live =3D false, s2_live =3D false, ste_live;
++	bool nested =3D false;
+ 	struct arm_smmu_device *smmu =3D NULL;
+ 	struct arm_smmu_s1_cfg *s1_cfg =3D NULL;
+ 	struct arm_smmu_s2_cfg *s2_cfg =3D NULL;
+@@ -1839,6 +1844,7 @@ static void arm_smmu_write_strtab_ent(struct arm_sm=
+mu_master *master, u32 sid,
+ 	if (smmu_domain) {
+ 		s1_cfg =3D smmu_domain->s1_cfg;
+ 		s2_cfg =3D smmu_domain->s2_cfg;
++		nested =3D (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_NESTED);
  	}
 =20
- 	iommu_group_put(group);
- 	return 0;
+ 	if (val & STRTAB_STE_0_V) {
+@@ -1846,23 +1852,37 @@ static void arm_smmu_write_strtab_ent(struct arm_=
+smmu_master *master, u32 sid,
+ 		case STRTAB_STE_0_CFG_BYPASS:
+ 			break;
+ 		case STRTAB_STE_0_CFG_S1_TRANS:
++			s1_live =3D true;
++			break;
+ 		case STRTAB_STE_0_CFG_S2_TRANS:
+-			ste_live =3D true;
++			s2_live =3D true;
++			break;
++		case STRTAB_STE_0_CFG_NESTED:
++			s1_live =3D true;
++			s2_live =3D true;
+ 			break;
+ 		case STRTAB_STE_0_CFG_ABORT:
+-			BUG_ON(!disable_bypass);
+ 			break;
+ 		default:
+ 			BUG(); /* STE corruption */
+ 		}
+ 	}
 =20
-+err_remove_master:
-+	arm_smmu_remove_master(smmu, master);
- err_unlink:
- 	iommu_device_unlink(&smmu->iommu, dev);
- err_disable_pasid:
-@@ -3011,6 +3117,7 @@ static void arm_smmu_remove_device(struct device *d=
-ev)
- 	smmu =3D master->smmu;
- 	arm_smmu_detach_dev(master);
- 	iommu_group_remove_device(dev);
-+	arm_smmu_remove_master(smmu, master);
- 	iommu_device_unlink(&smmu->iommu, dev);
- 	arm_smmu_disable_pasid(master);
- 	kfree(master);
-@@ -3365,6 +3472,9 @@ static int arm_smmu_init_structures(struct arm_smmu=
-_device *smmu)
- {
- 	int ret;
-=20
-+	mutex_init(&smmu->streams_mutex);
-+	smmu->streams =3D RB_ROOT;
++	ste_live =3D s1_live || s2_live;
 +
- 	ret =3D arm_smmu_init_queues(smmu);
- 	if (ret)
- 		return ret;
+ 	/* Nuke the existing STE_0 value, as we're going to rewrite it */
+ 	val =3D STRTAB_STE_0_V;
+=20
+ 	/* Bypass/fault */
+-	if (!smmu_domain || !(s1_cfg || s2_cfg)) {
+-		if (!smmu_domain && disable_bypass)
++
++	if (!smmu_domain)
++		abort =3D disable_bypass;
++	else
++		abort =3D smmu_domain->abort;
++	translate =3D s1_cfg || s2_cfg;
++
++	if (abort || !translate) {
++		if (abort)
+ 			val |=3D FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_ABORT);
+ 		else
+ 			val |=3D FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_BYPASS);
+@@ -1880,8 +1900,18 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
+mmu_master *master, u32 sid,
+ 		return;
+ 	}
+=20
++	/* S1 or S2 translation */
++
++	BUG_ON(ste_live && !nested);
++
++	if (ste_live) {
++		/* First invalidate the live STE */
++		dst[0] =3D cpu_to_le64(STRTAB_STE_0_CFG_ABORT);
++		arm_smmu_sync_ste_for_sid(smmu, sid);
++	}
++
+ 	if (s1_cfg) {
+-		BUG_ON(ste_live);
++		BUG_ON(s1_live);
+ 		dst[1] =3D cpu_to_le64(
+ 			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
+@@ -1900,7 +1930,14 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
+mmu_master *master, u32 sid,
+ 	}
+=20
+ 	if (s2_cfg) {
+-		BUG_ON(ste_live);
++		u64 vttbr =3D s2_cfg->vttbr & STRTAB_STE_3_S2TTB_MASK;
++
++		if (s2_live) {
++			u64 s2ttb =3D le64_to_cpu(dst[3] & STRTAB_STE_3_S2TTB_MASK);
++
++			BUG_ON(s2ttb !=3D vttbr);
++		}
++
+ 		dst[2] =3D cpu_to_le64(
+ 			 FIELD_PREP(STRTAB_STE_2_S2VMID, s2_cfg->vmid) |
+ 			 FIELD_PREP(STRTAB_STE_2_VTCR, s2_cfg->vtcr) |
+@@ -1910,9 +1947,12 @@ static void arm_smmu_write_strtab_ent(struct arm_s=
+mmu_master *master, u32 sid,
+ 			 STRTAB_STE_2_S2PTW | STRTAB_STE_2_S2AA64 |
+ 			 STRTAB_STE_2_S2R);
+=20
+-		dst[3] =3D cpu_to_le64(s2_cfg->vttbr & STRTAB_STE_3_S2TTB_MASK);
++		dst[3] =3D cpu_to_le64(vttbr);
+=20
+ 		val |=3D FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S2_TRANS);
++	} else {
++		dst[2] =3D 0;
++		dst[3] =3D 0;
+ 	}
+=20
+ 	if (master->ats_enabled)
+@@ -2602,6 +2642,14 @@ static int arm_smmu_domain_finalise(struct iommu_d=
+omain *domain,
+ 		return 0;
+ 	}
+=20
++	if (smmu_domain->stage =3D=3D ARM_SMMU_DOMAIN_NESTED &&
++	    (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1) ||
++	     !(smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
++		dev_info(smmu_domain->smmu->dev,
++			 "does not implement two stages\n");
++		return -EINVAL;
++	}
++
+ 	/* Restrict the stage to what we can actually support */
+ 	if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1))
+ 		smmu_domain->stage =3D ARM_SMMU_DOMAIN_S2;
 --=20
 2.20.1
 
