@@ -2,121 +2,88 @@ Return-Path: <SRS0=4xmc=56=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96585C38A29
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77322C352BE
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741C12074D
+	by mail.kernel.org (Postfix) with ESMTP id 5690A20767
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 19:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NI2CbHQm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ov9Px5z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505213AbgDNTsE (ORCPT
+        id S2505205AbgDNTsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60362 "EHLO
+        Tue, 14 Apr 2020 15:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505188AbgDNTr1 (ORCPT
+        by vger.kernel.org with ESMTP id S2505166AbgDNTpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:47:27 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158C2C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:47:25 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z26so1100345ljz.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JJK+Q+UKkDQaruBYiWcWjNudKJdkietMzkyNFKfwUfY=;
-        b=NI2CbHQmy0JJhl4ytQt1TbKJDLFhbGdB6cugYS+62mNdDgladQHA0hgMSpm0uXhk9o
-         OenLF/9qzYoyXCkuv5tboOvQ6DYSBgPak6ZedVQ8kUkb2+i3/FPQaVyVDxSnO7vm1ajm
-         O8Ee2EwUzbtxLpnuvL5B21vXVbTPdRKawqDL3gkIiIr+Jrz202HaTyAyl3ggcMnK6bgF
-         aHJmI2L8Q4H3BoMBCL08Cbenfkc2Ktqw+9w5IwhZlfXIkOWQjb/acdtVBaaBe5mpT7GX
-         kwMHIbu70LH9UdN5hfijW4qXB2bKDyy7J84+hu3Wd69S/RaX2rI2sxEYDfE0xTjOAuIN
-         MV3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JJK+Q+UKkDQaruBYiWcWjNudKJdkietMzkyNFKfwUfY=;
-        b=hWufysNL6BsReUyWqSw44D3w4emGDsEECdXVgPqxuEx96hx5OubOzFKbFrYXkDoJNN
-         D8ZnG8bkLJ2BDYvVCbHq4+iqlH+HNKgamJHiCFuqqnt54V3sRAXmiE/0FNZZ6+C7AMVE
-         l/AsnO9cJ0mcYs1M9IXCdAZJFeNE1F2bALRnBHXhvxTYTURR8yVQ2QwvARHiJKwgr/Mp
-         ZUpkqhtOZhBKMsnik6znyHbRubgb21PF/eTy+DbZ8S4a02TgVA4W3r2jRr1STTfnFTSG
-         o+RLOoEJZAOdJtKaJsKgkIgRAJX5QZctic1XWcPBhxWOt4HFHyJkYV6Kf75GcwDDzMpW
-         U8dg==
-X-Gm-Message-State: AGi0PuY6RNmhGH/6BBkGbVsU52FE2WWx0SI8kfVsiLstVERvL5nFHd9M
-        z+B4t3RxyenShaQZBlgDfEZpGnWM7IqX8YCICHQ=
-X-Google-Smtp-Source: APiQypLGUYk3suy/eSUDKH5ICT7nYCw/nP+Vjdcx+EdWiVN7l3yhVL9RbojbaGVteYNrgDbwy7b43T8oKlKY7EU+/X4=
-X-Received: by 2002:a2e:6c05:: with SMTP id h5mr1012285ljc.217.1586893643490;
- Tue, 14 Apr 2020 12:47:23 -0700 (PDT)
+        Tue, 14 Apr 2020 15:45:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8DAC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 12:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=qiGDdgrymzs3lmhrk9O/Fh6Zpf8KL3+mfXiGBIdA72Q=; b=Ov9Px5z+q5KNIHq3yt1v5Jr77j
+        VtNf1+7arPv5fEqoCFrBblJej1Iu0OwmZx8BrX3g6RhaCxcZaCRy3M/Wb4qcs+GeB7yiazICcuJF0
+        QGKZBYe1990B9qvV6u2HhBT2WAYl5sIA8n+eFAwr5HmSGe44S01dQHLXfHE97ydbtsB4tVU+xFuHU
+        oyDG8w709Ik4IGQJ16q0pEtD7ZEdQ1y5tKoBJm5my8m/PsVlqU2L9NfDr5XFdlqOMr1GchEsDqhQj
+        i2sB8Ku/gyqPAGiDmFkTP539x2v9JsaoaMidiAP09BfH03YV/2jyHJav9KXlsH8ZetqbzF7dpQNlL
+        gmUO/AKQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jORVH-0002f3-9V; Tue, 14 Apr 2020 19:45:51 +0000
+Subject: Re: [PATCH] staging: tools: string.c doc fix
+To:     Daniel Bovensiepen <daniel@bovensiepen.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200414185430.GA14496@daboVM>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <266382a3-a5f4-5934-8130-aead5eeec264@infradead.org>
+Date:   Tue, 14 Apr 2020 12:45:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200407095107.1988-1-miles.chen@mediatek.com> <20200407181908.GB94792@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20200407181908.GB94792@iweiny-DESK2.sc.intel.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Wed, 15 Apr 2020 01:25:07 +0530
-Message-ID: <CAFqt6zYztssQEgMJtafr_ZdMYvBwAU-BZ4Z4tOWQPJ6eFnHq2Q@mail.gmail.com>
-Subject: Re: [PATCH] mm/gup: fix null pointer dereference detected by coverity
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Miles Chen <miles.chen@mediatek.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414185430.GA14496@daboVM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 11:49 PM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Tue, Apr 07, 2020 at 05:51:07PM +0800, Miles Chen wrote:
-> > In fixup_user_fault(), it is possible that unlocked is NULL,
-> > so we should test unlocked before using it.
-> >
-> > For example, in arch/arc/kernel/process.c, NULL is passed
-> > to fixup_user_fault().
-> >
-> > SYSCALL_DEFINE3(arc_usr_cmpxchg, int *, uaddr, int, expected, int, new)
-> > {
-> > ...
-> >       ret = fixup_user_fault(current, current->mm, (unsigned long) uaddr,
-> >                              FAULT_FLAG_WRITE, NULL);
-> > ...
-> > }
-> >
-> > Fixes: 4a9e1cda2748 ("mm: bring in additional flag for fixup_user_fault to signal unlock")
-> > Signed-off-by: Miles Chen <miles.chen@mediatek.com>
->
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+On 4/14/20 11:54 AM, Daniel Bovensiepen wrote:
+> Fix spelling error in the comment.
 
-Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+Nope, that's math-speak for "if and only if."
 
->
-> > ---
-> >  mm/gup.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index da3e03185144..a68d11dc232d 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -1230,7 +1230,8 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
-> >       if (ret & VM_FAULT_RETRY) {
-> >               down_read(&mm->mmap_sem);
-> >               if (!(fault_flags & FAULT_FLAG_TRIED)) {
-> > -                     *unlocked = true;
-> > +                     if (unlocked)
-> > +                             *unlocked = true;
-> >                       fault_flags |= FAULT_FLAG_TRIED;
-> >                       goto retry;
-> >               }
-> > --
-> > 2.18.0
->
+> Signed-off-by: Daniel Bovensiepen <daniel@bovensiepen.net>
+> ---
+>  tools/lib/string.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/string.c b/tools/lib/string.c
+> index f645343815de..f73a1020fad9 100644
+> --- a/tools/lib/string.c
+> +++ b/tools/lib/string.c
+> @@ -41,7 +41,7 @@ void *memdup(const void *src, size_t len)
+>   * @s: input string
+>   * @res: result
+>   *
+> - * This routine returns 0 iff the first character is one of 'Yy1Nn0', or
+> + * This routine returns 0 if the first character is one of 'Yy1Nn0', or
+>   * [oO][NnFf] for "on" and "off". Otherwise it will return -EINVAL.  Value
+>   * pointed to by res is updated upon finding a match.
+>   */
+> 
+
+-- 
+~Randy
+
