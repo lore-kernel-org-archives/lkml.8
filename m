@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DEFC352BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFC3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 702342074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6963820678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Apr 2020 16:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883178;
-	bh=xeWLJ5bbYzC5ofnPbd+yDJyUexrL+I58u1pgHQo6oLk=;
+	s=default; t=1586883194;
+	bh=41LZqW8d5XmQTbyN0N2s8HTXUkkGdeEX8LK2FJmvOYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMuXmdkFAJZRDA9Syf0DYiARsi6sJRRD0cgcjJ/Oa5mpnmRDJev9xcCyzG45p4h/2
-	 6M8R/8A0KTcFdx6DFF2SrTE3OM+mWp+vviMwFKpufyac8XwOQX7ZIf10Uj+A9Gx1DI
-	 2v6wln8iIid7grZioFOyN6L5nP56e+b1cXaS498Y=
+	b=sn6D+qBQ4R9BAE/fLUMd5KOwYeKSevF9RPkT5EVjTCfxJJg1pKyrjsNMtky+1GoVN
+	 lLgbgt2UPHf2MD5njjaZ56ZLG5eocrB9G05qwg7zX861qWh+6eXzw9APCTTO5IRd92
+	 jFA2UkpyDcAJescD4xGvkH6yBuwkadfrCPTt6Bg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440678AbgDNQwz (ORCPT
+        id S1732065AbgDNQxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55224 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 12:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440380AbgDNQtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2440387AbgDNQtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Apr 2020 12:49:19 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942EE21D93;
-        Tue, 14 Apr 2020 16:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BBD62075E;
+        Tue, 14 Apr 2020 16:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882946;
-        bh=xeWLJ5bbYzC5ofnPbd+yDJyUexrL+I58u1pgHQo6oLk=;
+        s=default; t=1586882944;
+        bh=41LZqW8d5XmQTbyN0N2s8HTXUkkGdeEX8LK2FJmvOYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jr/WHtigLKQ2M4yeId7djpC0RlVTYb3LKJd+UlGAdgtmIBkA6JqJU6xZBnWM68ApB
-         ZRPncgx2wyEFCxG7J7lOYYDqQjnXWwM0dRAQKwuKOYuIONS3kcaFVrCcM9xAV5U6vV
-         zu0uB/6IVVl988v0e/pybeekMRNKgxYYIpXmQDKQ=
+        b=KRVoHvJf+hMJK0n0m955DHZ+GejZg5QdNQFZWoqN9OkhqWrCEuqQMn6wb0TxCTjGp
+         qaBLYvZVKu2+KjKPr8n2xDFuIP90WYz6gIYoVUKPheyBUMU1TFu08c7O6OHYA9a/NW
+         bpNy08Mwtqp3JKpObprxqXV6zTWPZqKsylkVDGgA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,10 +46,12 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 02/15] perf python: Check if clang supports -fno-semantic-interposition
-Date:   Tue, 14 Apr 2020 13:48:41 -0300
-Message-Id: <20200414164854.26026-3-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 01/15] tools arch x86: Sync the msr-index.h copy with the kernel sources
+Date:   Tue, 14 Apr 2020 13:48:40 -0300
+Message-Id: <20200414164854.26026-2-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
@@ -62,48 +64,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The set of C compiler options used by distros to build python bindings
-may include options that are unknown to clang, we check for a variety of
-such options, add -fno-semantic-interposition to that mix:
+To pick up the changes in:
 
-This fixes the build on, among others, Manjaro Linux:
+  6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
 
-    GEN      /tmp/build/perf/python/perf.so
-  clang-9: error: unknown argument: '-fno-semantic-interposition'
-  error: command 'clang' failed with exit status 1
-  make: Leaving directory '/git/perf/tools/perf'
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h' differs from latest version at 'arch/x86/include/asm/msr-index.h'
+  diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
 
-  [perfbuilder@602aed1c266d ~]$ gcc -v
-  Using built-in specs.
-  COLLECT_GCC=gcc
-  COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper
-  Target: x86_64-pc-linux-gnu
-  Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-pkgversion='Arch Linux 9.3.0-1' --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++,d --enable-shared --enable-threads=posix --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --enable-multilib --disable-werror --enable-checking=release --enable-default-pie --enable-default-ssp --enable-cet=auto gdc_include_dir=/usr/include/dlang/gdc
-  Thread model: posix
-  gcc version 9.3.0 (Arch Linux 9.3.0-1)
-  [perfbuilder@602aed1c266d ~]$
+Which causes these changes in tooling:
+
+  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > before
+  $ cp arch/x86/include/asm/msr-index.h tools/arch/x86/include/asm/msr-index.h
+  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > after
+  $ diff -u before after
+  --- before	2020-04-01 12:11:14.789344795 -0300
+  +++ after	2020-04-01 12:11:56.907798879 -0300
+  @@ -10,6 +10,7 @@
+   	[0x00000029] = "KNC_EVNTSEL1",
+   	[0x0000002a] = "IA32_EBL_CR_POWERON",
+   	[0x0000002c] = "EBC_FREQUENCY_ID",
+  +	[0x00000033] = "TEST_CTRL",
+   	[0x00000034] = "SMI_COUNT",
+   	[0x0000003a] = "IA32_FEAT_CTL",
+   	[0x0000003b] = "IA32_TSC_ADJUST",
+  @@ -27,6 +28,7 @@
+   	[0x000000c2] = "IA32_PERFCTR1",
+   	[0x000000cd] = "FSB_FREQ",
+   	[0x000000ce] = "PLATFORM_INFO",
+  +	[0x000000cf] = "IA32_CORE_CAPS",
+   	[0x000000e2] = "PKG_CST_CONFIG_CONTROL",
+   	[0x000000e7] = "IA32_MPERF",
+   	[0x000000e8] = "IA32_APERF",
+  $
+
+  $ make -C tools/perf O=/tmp/build/perf install-bin
+  <SNIP>
+    CC       /tmp/build/perf/trace/beauty/tracepoints/x86_msr.o
+    LD       /tmp/build/perf/trace/beauty/tracepoints/perf-in.o
+    LD       /tmp/build/perf/trace/beauty/perf-in.o
+    LD       /tmp/build/perf/perf-in.o
+    LINK     /tmp/build/perf/perf
+  <SNIP>
+
+Now one can do:
+
+	perf trace -e msr:* --filter=msr==IA32_CORE_CAPS
+
+or:
+
+	perf trace -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
+
+And see only those MSRs being accessed via:
+
+  # perf trace -v -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
+  New filter for msr:read_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+  New filter for msr:write_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+  New filter for msr:rdpmc: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/lkml/20200401153325.GC12534@kernel.org/
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/setup.py | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/arch/x86/include/asm/msr-index.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index 347b2c0789e4..c5e3e9a68162 100644
---- a/tools/perf/util/setup.py
-+++ b/tools/perf/util/setup.py
-@@ -21,6 +21,8 @@ if cc_is_clang:
-             vars[var] = sub("-fstack-clash-protection", "", vars[var])
-         if not clang_has_option("-fstack-protector-strong"):
-             vars[var] = sub("-fstack-protector-strong", "", vars[var])
-+        if not clang_has_option("-fno-semantic-interposition"):
-+            vars[var] = sub("-fno-semantic-interposition", "", vars[var])
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index d5e517d1c3dd..12c9684d59ba 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -41,6 +41,10 @@
  
- from distutils.core import setup, Extension
+ /* Intel MSRs. Some also available on other CPUs */
  
++#define MSR_TEST_CTRL				0x00000033
++#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT	29
++#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT)
++
+ #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
+ #define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
+ #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
+@@ -70,6 +74,11 @@
+  */
+ #define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
+ 
++/* Abbreviated from Intel SDM name IA32_CORE_CAPABILITIES */
++#define MSR_IA32_CORE_CAPS			  0x000000cf
++#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT  5
++#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT)
++
+ #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
+ #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
+ #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
 -- 
 2.21.1
 
