@@ -2,183 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256A3C38A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792BFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0496E20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A5E20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh/qkSRR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y7bDos5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416299AbgDOQx7 (ORCPT
+        id S1416308AbgDOQyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410562AbgDOQxe (ORCPT
+        Wed, 15 Apr 2020 12:54:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57460 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1416286AbgDOQxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:53:34 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138FEC061A0C;
-        Wed, 15 Apr 2020 09:53:34 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so715036wrx.4;
-        Wed, 15 Apr 2020 09:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=qSFqdR3FlK/8YD5+KmU963ChViLz5asYpHXALyUz8zg=;
-        b=lh/qkSRR2q0rz21SvhbeddtEnTG1gL1C7Gj5sszZ4sH8jTdjW3VlqYEi+vIv32XaU2
-         jWyKcqYVvB3SvWmPyxiBg9Sm6pH/Bx3aeVyu53sEilxvdom7MHjt33q2OVQuXwyNyFIT
-         2gFKs/oggqM8xv2RjYn5jzXMYUAP2kcXGn1nYAZHib/mNxFgdUVNs+GOPQ8JLmwNdeWt
-         p8nzcbH59ineFrIxCWxQP3Z33Tv4HxErZhllM+QrPa2f1I6BpjLJ4m/Qz5oks4wB+0hp
-         RhcrCKE8mtBtQNUgCf3x24cNlcSfzm3AdsKKzEFACAugcwNPVvp/kFI4o7hVIALhSJv/
-         gocw==
+        Wed, 15 Apr 2020 12:53:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586969626;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5OcF7TWn34i9EQblMYEKpClfav9C/6cS7BZfVRtY1ig=;
+        b=Y7bDos5wO2M4VbCFu32z2ZPVL4HIN8IM0T1ibBJQkfB9YY4DfImcNeCmktGxXWuqQaBjOl
+        WJRunKnP9dGn9Q2z1nogc1BQ/60wL+ZaLIQpUyCUZlu8oslXNlS5hW2LgVXF0QJ1RFfQ+Y
+        T56MX/bCUbpQs7fSw2nO5oFeRMUWy0Q=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-mpjXo2FdOpWDLE7xQgcAIA-1; Wed, 15 Apr 2020 12:53:45 -0400
+X-MC-Unique: mpjXo2FdOpWDLE7xQgcAIA-1
+Received: by mail-ot1-f70.google.com with SMTP id f3so381386otf.21
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:53:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=qSFqdR3FlK/8YD5+KmU963ChViLz5asYpHXALyUz8zg=;
-        b=X7abJsYx5qQJ7lpUbXeDQGCN0f63LVLi04MZkeiXSHVK446JBTewiciX8idP7e0Yxr
-         nGeK1y1oN4isoRJCOwGPagWEJJ82j6NBITa4vbrMQF/8sRRhGMqHdTqnp6Vg2MHPA6vj
-         YbIUumKaCMO1sEa9JghtEN40PxJHUh1PQVD8UJ9yX0BYQvJsYSFkVGTZ3xPIdVWssPcL
-         9550R6188CBjYZrCibN+m3PDX9N+S5TzQ38iAnP9G1tk9R/VtO5t7htcSfsX1/0+LDo9
-         PAI4cUPz/gJ5mkFe/uQT4qV7lk6VYzFgMagmWReArDGu1BZN1M8Q3tLxT+SLK8kyQj4F
-         bcqg==
-X-Gm-Message-State: AGi0PubSFQJBSoA5ofwzuIwOofc8oXy5BTAX1p9kmtxrfCxqX2gZcpD/
-        Bf5NAIMP6RjFp/u2yq6sC1IDDmaJCJ8=
-X-Google-Smtp-Source: APiQypJiIITjjK6VWhGWP47Ot8DOs4nOVL2YTiDNOOs0rPCSib2Bz7Qd+lEzdaR51D9N5nxP+ZySiw==
-X-Received: by 2002:a5d:5304:: with SMTP id e4mr16191827wrv.87.1586969612335;
-        Wed, 15 Apr 2020 09:53:32 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F6CCC.dip0.t-ipconnect.de. [91.63.108.204])
-        by smtp.gmail.com with ESMTPSA id 132sm131870wmc.47.2020.04.15.09.53.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 09:53:31 -0700 (PDT)
-Subject: Re: [PATCH v9 0/6] Add battery charger driver support for MP2629
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <dea1d71e-af5d-356a-79c0-38f343f54dfd@gmail.com>
-Date:   Wed, 15 Apr 2020 18:53:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5OcF7TWn34i9EQblMYEKpClfav9C/6cS7BZfVRtY1ig=;
+        b=Poz7eM77gJHDEeNZb1ttqMRrZQbWty3ZM2LvA5yg/LfC3XN7co05FmbjtiA7n/esj+
+         aiXWh375GXL9/BPkU3rQefaB6EOJ6dlitPWc/A2Z6SOPWtKafGSNGBqSApqFSGnduFqK
+         H1MPNwXNyixvjPzMo654Y0Pwu+H3aGwb+WG8goRGCn9B+0q98XAaDmT8JwBaxPHcfRV3
+         n1mWuKX4VS1HX3gRGscNMX7OH0QoDDuBEOEYXUZsVqJcOFomXqleqsesXrKKLNfgsDoH
+         Na+L0DfK1jFaACH26MeWpNzRp9PnPH9XFrx+9v4bcfbNnA1TfVnytDUwfgdJTWLEQKYm
+         LuuQ==
+X-Gm-Message-State: AGi0PuZrSRr+C2HZscJkrrvae5zq9qc+43Z1h36XkmM6KxD/2iQlERH2
+        AiqpdfnJHFkXUtKZtGnNa1WSJ2RqvcyzVH7I/kStA7vpgFwNJrTZunQxCiiEnfxIKVyxIOSEDji
+        JICIxP12UkInJGWXAYh/8eIOzMkeGz7zhX10cddWM
+X-Received: by 2002:aca:b104:: with SMTP id a4mr98038oif.103.1586969623612;
+        Wed, 15 Apr 2020 09:53:43 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLkvY6tKCCKHK+4XBaEZP1jLaOUmd+3Gz8TobGRm5I4yu2oGVOna4Zb5zyid5UxSIVu1Z9+oaZs2SxeDRP40G8=
+X-Received: by 2002:aca:b104:: with SMTP id a4mr98019oif.103.1586969623350;
+ Wed, 15 Apr 2020 09:53:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191128153203.GA23803@workstation-kernel-dev>
+ <20191130020742.GF157739@google.com> <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
+ <CAHC9VhTdfkxdiEwCZu-JCQGxJ_DNr0b_Ukm40VEUxq=Lc-zx1g@mail.gmail.com> <20200415161503.umujm6v4gadmf6qm@madcap2.tricolour.ca>
+In-Reply-To: <20200415161503.umujm6v4gadmf6qm@madcap2.tricolour.ca>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Wed, 15 Apr 2020 18:53:32 +0200
+Message-ID: <CAFqZXNuYnvru+pMhPwNTBn1+uB=MfYh1yWWBeAn+J-=LXrFgcg@mail.gmail.com>
+Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-On 15/04/20 6:40 pm, Andy Shevchenko wrote:
-> On Wed, Apr 15, 2020 at 7:20 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
->> changes in v9:
->>   - fixed review comments in mp2629 power supply such as resource based
->>     iio channel, replace workqueue by threaded irq, irq get with "_optional"
->>
-> May I ask you why you are ignoring my tag?
-> If you don't want to have your patches reviewed / applied, just don't send them.
-
-
-Sorry last time it was by mistake. But now I have added in below, if 
-suppose to added in top its my ignorance
-
+On Wed, Apr 15, 2020 at 6:15 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-04-15 12:06, Paul Moore wrote:
+> > On Wed, Apr 15, 2020 at 11:34 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2019-11-29 21:07, Joel Fernandes wrote:
+> > > > On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
+> > > > > add __rcu notation to RCU protected global pointer auditd_conn
+> > > >
+> > > > Again, please use proper punctuation and captilization. This is unacceptable.
+> > > > Please put more effort into changelog.
+> > > >
+> > > > Otherwise the patch diff itself looks good to me, with the above nit
+> > > > corrected, you could add my tag to the next revision:
+> > > >
+> > > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > >
+> > > > thanks,
+> > > >
+> > > >  - Joel
+> > > >
+> > > > >
+> > > > > Fixes multiple instances of sparse error:
+> > > > > error: incompatible types in comparison expression
+> > > > > (different address spaces)
+> > >
+> > > Amol or Joel: Is there a reproducer recipe for this?
+> >
+> > The commit which was merged has a slightly better description which may help.
 >
->> changes in v8:
->>   - fixed order of call in probe/remove in iio adc
->>   - add ABI documentation for mp2629 power supply
->>
->> changes in v7:
->>   - fixed probe/remove order, managed and unmanaged call mix use in adc.
->>   - Documentation dual license, i2c node with controller address
->>
->> Overall looks good to me, FWIW,
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>
->> One question though in reply to patch 4.
-
-
-Please see here, this is first experience of tag in cover letter so just 
-kept here as you gave against v7
-
->>
->> changes in v6:
->>   - removed includes types.h in mfd, of_device.h in adc.
->>   - fixed review comments parentheses, err check, kstrtouint
->>
->> changes in v5:
->>   - removed platfrom data stored in mfd and directly accessed mfd struct in child
->>   - fixed spell check and capitalization in mfd and documentation
->>
->> changes in v4:
->>   - fixed capitalization in mfg Kconfig and documentation
->>
->> changes in v3:
->>   - regmap for children passed using platform data and remove mfd driver info
->>     access directly from children
->>
->> changes in v2:
->>   - removed EXPORT_SYMBOL of register set/get helper
->>   - regmap bit filed used, fixed other review comments
->>
->> This patch series add support for Battery charger control driver for Monolithic
->> Power System's MP2629 chipset, includes MFD driver for ADC battery & input
->> power supply measurement and battery charger control driver.
->>
->> Thanks,
->> Saravanan
->>
->> Saravanan Sekar (6):
->>    dt-bindings: mfd: add document bindings for mp2629
->>    mfd: mp2629: Add support for mps battery charger
->>    iio: adc: mp2629: Add support for mp2629 ADC driver
->>    power: supply: Add support for mps mp2629 battery charger
->>    power: supply: mp2629: Add impedance compenstation config
->>    MAINTAINERS: Add entry for mp2629 Battery Charger driver
->>
->>   .../ABI/testing/sysfs-class-power-mp2629      |   8 +
->>   .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
->>   MAINTAINERS                                   |   5 +
->>   drivers/iio/adc/Kconfig                       |  10 +
->>   drivers/iio/adc/Makefile                      |   1 +
->>   drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
->>   drivers/mfd/Kconfig                           |   9 +
->>   drivers/mfd/Makefile                          |   2 +
->>   drivers/mfd/mp2629.c                          |  86 +++
->>   drivers/power/supply/Kconfig                  |  10 +
->>   drivers/power/supply/Makefile                 |   1 +
->>   drivers/power/supply/mp2629_charger.c         | 667 ++++++++++++++++++
->>   include/linux/mfd/mp2629.h                    |  28 +
->>   13 files changed, 1095 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
->>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->>   create mode 100644 drivers/iio/adc/mp2629_adc.c
->>   create mode 100644 drivers/mfd/mp2629.c
->>   create mode 100644 drivers/power/supply/mp2629_charger.c
->>   create mode 100644 include/linux/mfd/mp2629.h
->>
->> --
->> 2.17.1
->>
+> I've already seen this.  Perhaps I should have replied to this message
+> instead to make that evident.  What really needed was Amol's original
+> message sent to this list, but it was Joel who included this list in his
+> reply (all 3 versions).
 >
+> I'm looking for the specific setup and commands that produced this error.
+
+You can run make with "C=1", which will run sparse on all files that
+are rebuilt during that make run. For example, if I fully build the
+kernel and then revert commit
+cb5172d96d16df72db8b55146b0ec00bfd97f079, I get:
+
+$ make [...] C=1
+[...]
+  CHECK   [...]/kernel/audit.c
+[...]/kernel/audit.c:218:14: error: incompatible types in comparison
+expression (different address spaces):
+[...]/kernel/audit.c:218:14:    struct auditd_connection [noderef] <asn:4> *
+[...]/kernel/audit.c:218:14:    struct auditd_connection *
+(...and a lot more errors like this + 2 different warnings)
+
+And when I un-revert it again, I get only the 2 warnings.
+
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
+
