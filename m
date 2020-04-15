@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2FEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66763C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CE1206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E67C20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951791;
-	bh=RcHhJ91AHTGJVw8sl+DGn5fvCtyzvZPESe/szQp5q28=;
+	s=default; t=1586951803;
+	bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XfCZdySgN2hFj2TDMzGygT0CzgvTwTZU+pFJooW+Fny0q2QlCUiIlUsCqVBsGDyd
-	 KjNUER3eP7PYP6vrgDwalaiWg7UTwjFBMMisM5mAMYkDxbU2iImaSuuv8FqEdNhd6K
-	 RCs+8pnrJKIoLAB+uVFqq21t/C/RMRT9tOk2xu/8=
+	b=B3YE7prrKbzR1TPhTWVLug425e33MntJ5AYIS8/SNWnKwOdS8fDxAG6aFVDmSvMte
+	 i/DpWOBFXp4dHF5U2YKobQxjF1TBvEucbpc5zrrqZLyESmOdcPAgP/8ZTsbwg8amet
+	 DXmeQsGQg+BOPEOLd8vTEPEUuGlHa4g9FhOUpIbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409642AbgDOL43 (ORCPT
+        id S2409654AbgDOL4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:56:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409229AbgDOLpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:55 -0400
+        id S2409235AbgDOLp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 408332078A;
-        Wed, 15 Apr 2020 11:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6B95206A2;
+        Wed, 15 Apr 2020 11:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951153;
-        bh=RcHhJ91AHTGJVw8sl+DGn5fvCtyzvZPESe/szQp5q28=;
+        s=default; t=1586951157;
+        bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m7d6/HCiGL23DSORdTXomRJvhwLIZ2VJlODGEmWCChblFQOkEBbHUjhQ0JsWNoVP/
-         qyhGgv5mkZtQSVqnzqdj61FfFyqUkFfeVtErqM6pqFK74qDgFw1KgHelSSoYGQ7Ctp
-         rXe9KJXnV1d2X4wWZ2OT5o7OTZaJ3jsUHrNt3vyA=
+        b=eJFXgNSfYZma71e7veKU0jKfSkx5d3koLQphOU/zBanxDw14yiqOoh+hNGGWdIS7i
+         hCM68MbY2/kQJPA6+UMjYF6uMNT5n9DSw6NdTTIUxS6mXtAIXp0XApk5UGtz1FWPq7
+         k8j/n46V2RuqxfRSPVwql5BzsQajPAhP8KgRThSE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 59/84] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-Date:   Wed, 15 Apr 2020 07:44:16 -0400
-Message-Id: <20200415114442.14166-59-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 63/84] csky: Fixup get wrong psr value from phyical reg
+Date:   Wed, 15 Apr 2020 07:44:20 -0400
+Message-Id: <20200415114442.14166-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -61,66 +58,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
+[ Upstream commit 9c0e343d7654a329d1f9b53d253cbf7fb6eff85d ]
 
-After the power-down bit is cleared, the chip internally triggers a
-global reset. According to the KSZ9031 documentation, we have to wait at
-least 1ms for the reset to finish.
+We should get psr value from regs->psr in stack, not directly get
+it from phyiscal register then save the vector number in
+tsk->trap_no.
 
-If the chip is accessed during reset, read will return 0xffff, while
-write will be ignored. Depending on the system performance and MDIO bus
-speed, we may or may not run in to this issue.
-
-This bug was discovered on an iMX6QP system with KSZ9031 PHY and
-attached PHY interrupt line. If IRQ was used, the link status update was
-lost. In polling mode, the link status update was always correct.
-
-The investigation showed, that during a read-modify-write access, the
-read returned 0xffff (while the chip was still in reset) and
-corresponding write hit the chip _after_ reset and triggered (due to the
-0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
-resulting in the next write being lost due to the new reset cycle.
-
-This patch fixes the issue by adding a 1...2 ms sleep after the
-genphy_resume().
-
-Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/micrel.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/csky/include/asm/processor.h |  1 +
+ arch/csky/kernel/traps.c          | 11 ++++++++++-
+ arch/csky/mm/fault.c              |  7 +++++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 63dedec0433de..51b64f0877172 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -25,6 +25,7 @@
- #include <linux/micrel_phy.h>
- #include <linux/of.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
+diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
+index 21e0bd5293dde..c6bcd7f7c720b 100644
+--- a/arch/csky/include/asm/processor.h
++++ b/arch/csky/include/asm/processor.h
+@@ -43,6 +43,7 @@ extern struct cpuinfo_csky cpu_data[];
+ struct thread_struct {
+ 	unsigned long  ksp;       /* kernel stack pointer */
+ 	unsigned long  sr;        /* saved status register */
++	unsigned long  trap_no;   /* saved status register */
  
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
-@@ -902,6 +903,12 @@ static int kszphy_resume(struct phy_device *phydev)
+ 	/* FPU regs */
+ 	struct user_fp __aligned(16) user_fp;
+diff --git a/arch/csky/kernel/traps.c b/arch/csky/kernel/traps.c
+index b057480e7463c..63715cb90ee99 100644
+--- a/arch/csky/kernel/traps.c
++++ b/arch/csky/kernel/traps.c
+@@ -115,8 +115,9 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 	int sig;
+ 	unsigned long vector;
+ 	siginfo_t info;
++	struct task_struct *tsk = current;
  
- 	genphy_resume(phydev);
+-	vector = (mfcr("psr") >> 16) & 0xff;
++	vector = (regs->sr >> 16) & 0xff;
  
-+	/* After switching from power-down to normal mode, an internal global
-+	 * reset is automatically generated. Wait a minimum of 1 ms before
-+	 * read/write access to the PHY registers.
-+	 */
-+	usleep_range(1000, 2000);
+ 	switch (vector) {
+ 	case VEC_ZERODIV:
+@@ -129,6 +130,7 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 		sig = SIGTRAP;
+ 		break;
+ 	case VEC_ILLEGAL:
++		tsk->thread.trap_no = vector;
+ 		die_if_kernel("Kernel mode ILLEGAL", regs, vector);
+ #ifndef CONFIG_CPU_NO_USER_BKPT
+ 		if (*(uint16_t *)instruction_pointer(regs) != USR_BKPT)
+@@ -146,16 +148,20 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 		sig = SIGTRAP;
+ 		break;
+ 	case VEC_ACCESS:
++		tsk->thread.trap_no = vector;
+ 		return buserr(regs);
+ #ifdef CONFIG_CPU_NEED_SOFTALIGN
+ 	case VEC_ALIGN:
++		tsk->thread.trap_no = vector;
+ 		return csky_alignment(regs);
+ #endif
+ #ifdef CONFIG_CPU_HAS_FPU
+ 	case VEC_FPE:
++		tsk->thread.trap_no = vector;
+ 		die_if_kernel("Kernel mode FPE", regs, vector);
+ 		return fpu_fpe(regs);
+ 	case VEC_PRIV:
++		tsk->thread.trap_no = vector;
+ 		die_if_kernel("Kernel mode PRIV", regs, vector);
+ 		if (fpu_libc_helper(regs))
+ 			return;
+@@ -164,5 +170,8 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 		sig = SIGSEGV;
+ 		break;
+ 	}
 +
- 	ret = kszphy_config_reset(phydev);
- 	if (ret)
- 		return ret;
++	tsk->thread.trap_no = vector;
++
+ 	send_sig(sig, current, 0);
+ }
+diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
+index f76618b630f91..562c7f7087490 100644
+--- a/arch/csky/mm/fault.c
++++ b/arch/csky/mm/fault.c
+@@ -179,11 +179,14 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+ bad_area_nosemaphore:
+ 	/* User mode accesses just cause a SIGSEGV */
+ 	if (user_mode(regs)) {
++		tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
+ 		force_sig_fault(SIGSEGV, si_code, (void __user *)address);
+ 		return;
+ 	}
+ 
+ no_context:
++	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++
+ 	/* Are we prepared to handle this kernel fault? */
+ 	if (fixup_exception(regs))
+ 		return;
+@@ -198,6 +201,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+ 	die_if_kernel("Oops", regs, write);
+ 
+ out_of_memory:
++	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++
+ 	/*
+ 	 * We ran out of memory, call the OOM killer, and return the userspace
+ 	 * (which will retry the fault, or kill us if we got oom-killed).
+@@ -206,6 +211,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+ 	return;
+ 
+ do_sigbus:
++	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++
+ 	up_read(&mm->mmap_sem);
+ 
+ 	/* Kernel mode? Handle exceptions or die */
 -- 
 2.20.1
 
