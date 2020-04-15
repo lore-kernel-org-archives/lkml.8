@@ -2,110 +2,84 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DD1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1923C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF6620767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5BB20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409920AbgDOMaJ (ORCPT
+        id S2409929AbgDOMaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:30:09 -0400
-Received: from sauhun.de ([88.99.104.3]:53654 "EHLO pokefinder.org"
+        Wed, 15 Apr 2020 08:30:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52318 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S369431AbgDOM3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:29:50 -0400
-Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 949342C1FF1;
-        Wed, 15 Apr 2020 14:29:45 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 14:29:45 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] i2c: iproc: generate stop event for slave writes
-Message-ID: <20200415122945.GC910@ninjato>
-References: <20200322182019.32493-1-rayagonda.kokatanur@broadcom.com>
+        id S369427AbgDOM3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:29:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7F854AC11;
+        Wed, 15 Apr 2020 12:29:42 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 14:29:40 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 13/33] iommu: Export bus_iommu_probe() and make is
+ safe for re-probing
+Message-ID: <20200415122940.GB21899@suse.de>
+References: <20200414131542.25608-1-joro@8bytes.org>
+ <20200414131542.25608-14-joro@8bytes.org>
+ <1853992c-47a6-3724-812c-a52558c13732@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="96YOpH+ONegL0A3E"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200322182019.32493-1-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <1853992c-47a6-3724-812c-a52558c13732@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Baolu,
 
---96YOpH+ONegL0A3E
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 15, 2020 at 02:10:03PM +0800, Lu Baolu wrote:
+> On 2020/4/14 21:15, Joerg Roedel wrote:
+> > > +	/* Device is probed already if in a group */
+> > +	if (iommu_group_get(dev) != NULL)
+> 
+> Same as
+> 	if (iommu_group_get(dev))
+> ?
+> 
+> By the way, do we need to put the group if device has already been
+> probed?
 
-On Sun, Mar 22, 2020 at 11:50:19PM +0530, Rayagonda Kokatanur wrote:
-> When slave status is I2C_SLAVE_RX_END, generate I2C_SLAVE_STOP
-> event to i2c_client.
->=20
-> Fixes:=C2=A0c245d94ed106 ("i2c: iproc: Add multi byte read-write support =
-for slave mode")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Right, fixed both, thank you.
 
-Just to make sure: That means the HW has already detected a STOP
-condition on the bus?
 
-> ---
->  drivers/i2c/busses/i2c-bcm-iproc.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-=
-bcm-iproc.c
-> index 30efb7913b2e..b58224b7ba79 100644
-> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> @@ -360,6 +360,9 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_=
-i2c_dev *iproc_i2c,
->  			value =3D (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
->  			i2c_slave_event(iproc_i2c->slave,
->  					I2C_SLAVE_WRITE_RECEIVED, &value);
-> +			if (rx_status =3D=3D I2C_SLAVE_RX_END)
-> +				i2c_slave_event(iproc_i2c->slave,
-> +						I2C_SLAVE_STOP, &value);
->  		}
->  	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
->  		/* Master read other than start */
-> --=20
-> 2.17.1
->=20
+Regards,
 
---96YOpH+ONegL0A3E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W/jUACgkQFA3kzBSg
-Kba56w//YyHFH3d77V7+5og30eKP1+eGDNLfHEL29jHAg9fqHDj+PlN8Z6kWxoir
-2w/sI1a0Yj3e/G1q3G2bL7gWErqYjOMTHP8gYVJQSdNoFTMF3i1ynawW6x7aAXh6
-HOLy/0ijpt52+YGlFvfwDdtzYf1lc6t5nBiqp3OiK7PKLWS6Oj88SjtImTwIFpZD
-yW3RdHndNZ7dj1nG+Ny+nVIlLRjPBPX415uKOgpcw759SGezT07llFsD65sK9c/r
-hWWHgKLq+l9bzFd3LQTF9WwqHyUzx8RTpiJ0U6hwh9PPTcRwuuomynDUdS4R0EeA
-PTYPmPrxpI6psoTJFAEKD3VTYS/QymiatT+TKmvZZXiGTStG3zIK2THaLPIPV93U
-UIwRD1DOPeSPX/EzBuZ7D31EYhjfmsJzpbIPgryIj4AFS567yrm7lwWMVlUwvQ5A
-GGyPrPDHraPDRibrDts+i3YXXOZrIrHJ6OVK25xoz3HcRYULe7Ik5t2YocwmHSHa
-ymjlay9LXDG0fTqjmo7KvAZ9Iv992jKH7an2n1m+TEWNZ6yVqQvJ304NHoDmbydO
-05SgO8qnX7eAeGiNKls7H8J8+3uY3cEMiOLdQlccWpUZEP6fCN0fkFlR+oop2IgJ
-EKuHtdrx8QEMYgiRI8OuEqwINsqawezG89uWHCCSENvhh9Hu73s=
-=PQOf
------END PGP SIGNATURE-----
-
---96YOpH+ONegL0A3E--
+	Joerg
