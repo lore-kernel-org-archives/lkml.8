@@ -2,181 +2,163 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5776DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A28EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B60520771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF24E20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404011AbgDOHAi (ORCPT
+        id S2404048AbgDOHA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:00:38 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:41282 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403948AbgDOHAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:00:35 -0400
-Received: from sf.home (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: slyfox)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id BD55D34F326;
-        Wed, 15 Apr 2020 07:00:32 +0000 (UTC)
-Received: by sf.home (Postfix, from userid 1000)
-        id DF8E75A22061; Wed, 15 Apr 2020 08:00:03 +0100 (BST)
-From:   Sergei Trofimovich <slyfox@gentoo.org>
-To:     linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Tony Vroon <chainsaw@gentoo.org>
-Subject: [PATCH] umh: always return error when helper was not called
-Date:   Wed, 15 Apr 2020 07:59:40 +0100
-Message-Id: <20200415065940.4103990-1-slyfox@gentoo.org>
-X-Mailer: git-send-email 2.26.1
+        Wed, 15 Apr 2020 03:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404013AbgDOHAs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:00:48 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29738C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:00:48 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOc27-0006DZ-RA; Wed, 15 Apr 2020 09:00:27 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOc25-0007Ko-JT; Wed, 15 Apr 2020 09:00:25 +0200
+Date:   Wed, 15 Apr 2020 09:00:25 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] iio: DAC extension for ltc2634-12/10/8
+Message-ID: <20200415070025.6isvybjzpfhh3ts3@pengutronix.de>
+References: <20200414235609.20125-1-chris.ruehl@gtsys.com.hk>
+ <20200414235609.20125-3-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414235609.20125-3-chris.ruehl@gtsys.com.hk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before this change on a system with the following setup crashed kernel:
+On Wed, Apr 15, 2020 at 07:56:03AM +0800, Chris Ruehl wrote:
+> This patch add support for Analog Devices (Linear Technology)
+> LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
+> The SPI functionality based on them from LTC2632 therefor
+> add the definitions only and update the Kconfig.
+> 
+> V2:
+> Send the documentation fix in a extra patch
+> Kconfig simplify the driver description, details to the help text
+> ltc2632.txt add to this patch-set (prepare to convert to yaml)
+> 
+> V3:
+> Consistens decimal separator in help text
 
-```
-CONFIG_STATIC_USERMODEHELPER=y
-CONFIG_STATIC_USERMODEHELPER_PATH=""
-kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
-```
+The description about how the patch evolves usually goes below the ---
+and S-o-b area. This way it doesn't make it into the commit history.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+>  .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
+>  drivers/iio/dac/Kconfig                       |  6 +-
+>  drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
+>  3 files changed, 70 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> index 338c3220f01a..1ab9570cf219 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> @@ -1,4 +1,4 @@
+> -Linear Technology LTC2632/2636 DAC
+> +Linear Technology LTC2632/2634/2636 DAC
+>  
+>  Required properties:
+>   - compatible: Has to contain one of the following:
+> @@ -8,6 +8,12 @@ Required properties:
+>  	lltc,ltc2632-h12
+>  	lltc,ltc2632-h10
+>  	lltc,ltc2632-h8
+> +	lltc,ltc2634-l12
+> +	lltc,ltc2634-l10
+> +	lltc,ltc2634-l8
+> +	lltc,ltc2634-h12
+> +	lltc,ltc2634-h10
+> +	lltc,ltc2634-h8
+>  	lltc,ltc2636-l12
+>  	lltc,ltc2636-l10
+>  	lltc,ltc2636-l8
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 93744011b63f..aee13ced6ddf 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -279,12 +279,12 @@ config LTC1660
+>  	  module will be called ltc1660.
+>  
+>  config LTC2632
+> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
+> +	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
+>  	depends on SPI
+>  	help
+>  	  Say yes here to build support for Linear Technology
+> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
+> -	  LTC2636-8 converters (DAC).
+> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
+> +	  low 0-2.5V and high 0-4.096V range converters.
+>  
 
-The crash happens when a core dump is attempted:
+The naming pattern seems to be:
 
-```
-[    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
-[    2.819859] #PF: supervisor read access in kernel mode
-[    2.820035] #PF: error_code(0x0000) - not-present page
-[    2.820188] PGD 0 P4D 0
-[    2.820305] Oops: 0000 [#1] SMP PTI
-[    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
-[    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-[    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
-[    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
-0 0f 84 9c 01 00 00 44
-[    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
-[    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
-[    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
-[    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
-[    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
-[    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
-[    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
-[    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
-[    2.825479] Call Trace:
-[    2.825790]  get_signal+0x11e/0x720
-[    2.826087]  do_signal+0x1d/0x670
-[    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
-[    2.826691]  ? force_sig_fault+0x3c/0x40
-[    2.826996]  ? do_trap+0xc9/0x100
-[    2.827179]  exit_to_usermode_loop+0x49/0x90
-[    2.827359]  prepare_exit_to_usermode+0x77/0xb0
-[    2.827559]  ? invalid_op+0xa/0x30
-[    2.827747]  ret_from_intr+0x20/0x20
-[    2.827921] RIP: 0033:0x55e2c76d2129
-[    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01 c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89 e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
-0 00 00 00 00 0f 1f 40
-[    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
-[    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
-[    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
-[    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
-[    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
-[    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    2.829964] CR2: 0000000000000020
-[    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
-```
+	LTC263ab-cc
 
-Here is the sequence of events why it happens:
-fs/coredump.c:do_coredump():
-1. create 'coredump_params = { .file = NULL }'
-2. detect pipe mode
-3. `call_usermodehelper_setup(..., umh_pipe_setup, ...)`
-4. `call_usermodehelper_exec()`
-5. (if both succeeded) `file_start_write(cprm.file);`
+with:
 
-Here crash happens at [5.] as `cprm.file` is still NULL.
+	a = 2 -> 2 channels
+	a = 4 -> 4 channels
+	a = 6 -> 8 channels
 
-Normally it works because `fs/coredump.c:umh_pipe_setup()` is called
-successfully and populates `.file` field (or returns the error):
+	b = L -> Vref = 2.5V
+	b = H -> Vref = 4.096V
 
-```
-static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-{
-        //...
-        struct coredump_params *cp = (struct coredump_params *)info->data;
-        // ...
-        cp->file = files[1];
-        // ...
-}
-```
+	cc = 8 -> 8 bit precision
+	cc = 10 -> 10 bit precision
+	cc = 12 -> 12 bit precision
 
-But in our case neither happens because `kernel/umh.c:call_usermodehelper_exec()`
-has a special case:
+Would it make sense to document this somewhere?
 
-```
-int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
-{
-    int retval = 0;
-    // ...
-    /*
-     * If there is no binary for us to call, then just return and get out of
-     * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
-     * disable all call_usermodehelper() calls.
-     */
-    if (strlen(sub_info->path) == 0)
-        goto out;
-    ...
-    out:
-        // ...
-        return retval;
+But as this is (somewhat) orthogonal to this patch:
 
-```
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-This breaks assumption of `do_coredump()`: "either helper was called successfully
-and created a file to dump core to or it failed".
+Best regards
+Uwe
 
-This change converts this special case to `-EPERM` error.
-
-This way we notify user that helper call was not successful
-and don't attempt to act on uninitialized `.file` field.
-
-User gets `"Core dump to |%s pipe failed\n` dmesg entry.
-
-Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
-Reported-by: Tony Vroon <chainsaw@gentoo.org>
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=199795
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>
----
- kernel/umh.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/umh.c b/kernel/umh.c
-index 7f255b5a8845..66b02634a9ba 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -565,8 +565,10 @@ int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
- 	 * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
- 	 * disable all call_usermodehelper() calls.
- 	 */
--	if (strlen(sub_info->path) == 0)
-+	if (strlen(sub_info->path) == 0) {
-+		retval = -EPERM;
- 		goto out;
-+	}
- 
- 	/*
- 	 * Set the completion pointer only if there is a waiter.
 -- 
-2.26.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
