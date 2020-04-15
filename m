@@ -2,242 +2,129 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBA7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDAA3206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586929378;
-	bh=3Taj3Ol8Hg2/sKpPZLERaiQ3+4EDsUg0KQl6ETQ0+vY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gW2Wx+EQJdaGRs9DES0PEQ6aLeq+VZOEnfEjHhx4irhe9j6jSgi5j6IQ2PTQiOEga
-	 6CBxsXN0o3WdQRWcG9iqgoGDQyoaD2QCZOolPxuqW8YxEzDO4afGMs5u7K2d6uxYN3
-	 fuC0yvFOtkIqi9DQfeHHjRfTZbN/lH/GN9eL+m4c=
+	by mail.kernel.org (Postfix) with ESMTP id 781F22074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6tyGJ46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393407AbgDOFmz (ORCPT
+        id S2393416AbgDOFnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:42:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35285 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393395AbgDOFmj (ORCPT
+        Wed, 15 Apr 2020 01:43:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393395AbgDOFm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:42:39 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t11so1012574pgg.2;
-        Tue, 14 Apr 2020 22:42:36 -0700 (PDT)
+        Wed, 15 Apr 2020 01:42:59 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A5DC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:42:58 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a32so6309469pje.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CYNgjV9miUJh8498GJp/E0H6GBvf4hXm8dM5oc2Z5rg=;
+        b=Z6tyGJ46RDxT/TEh9zaYlzuWjvowL2tuWTe+Upk1M/TX7J11fGxgxoR0KXY3O9LKw5
+         XlrSOpH8Chfgvu1AldMlRXvyNc0tUXjN30v9y3sCalPbdI2Gm/xD/rJtanqDuBzl0wrK
+         SQU9nF/5ldVvce4d72M9Cnf0S01oCQx88oO7BxT977DNEbfGeapzJQIgCGhygd/I+SP1
+         doJ/IuKY65j5V6fF+nKtl7KXU2s3SjgNRBIno2vb2qNTVGEN9VNtd3LuCvQuWNIy6vf5
+         WYrEf/3QpXeytcqmNfs7FhZmNVER1DRByjcwapmiHS/evraq4X6wC0a4oiLE0MOez8GF
+         Pjsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WVRGT38XUU6swRwzPEXLZ5k+G+eQg7kh7o2o1EiB+e0=;
-        b=BURb0KoXrGq3CeMemEwS/w7sasWpNmr4obb6UxIeGSij1vZZnTlbGq+ZriFI8wfwzj
-         R7k3hiH2aFVm0SAUK3/dAptHSG+x60ITAmgvTgnEXxzLXIKI97hckoZUhBhkDUrtTOVt
-         x2QNqTlLnLb7PpJSuuB3G9iIeY8mVtY/5m2m7LuI8wtgVaCINSi9Gc0JpzxYq6PVCuUj
-         OdLXBuSoTlQYf1T2Luy5aZAqHWaX/l8h/hsD3YLSm3Mwinz2OMlqftmFRwnpqhvLfDTV
-         s2QWHHKGcvyInT9KLQFCaW4jF+E6ao6tG5H1eV5QW6A5qoEE5lpAWkzCofuJ3hOJMrsw
-         f2Ug==
-X-Gm-Message-State: AGi0PuYC5+ADKGwXBniX2eHnYfqF54vF2Uu7pLcwy8+Xap4a0kG5oH9Q
-        aMuCqQcid7hvRA7oLTBxQhw=
-X-Google-Smtp-Source: APiQypLmh/Lgdr/B3ZY1buelbusFHBjMg4/XhSao7YfVHnutpJiQaiLvOKzKUkf7C36e2nFiqFgLgw==
-X-Received: by 2002:a63:602:: with SMTP id 2mr25278301pgg.383.1586929356466;
-        Tue, 14 Apr 2020 22:42:36 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id p1sm13349461pjr.40.2020.04.14.22.42.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 22:42:34 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1E49F40277; Wed, 15 Apr 2020 05:42:34 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 05:42:34 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 4/5] mm/swapfile: refcount block and queue before using
- blkcg_schedule_throttle()
-Message-ID: <20200415054234.GQ11244@42.do-not-panic.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-5-mcgrof@kernel.org>
- <20200414154447.GC25765@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414154447.GC25765@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CYNgjV9miUJh8498GJp/E0H6GBvf4hXm8dM5oc2Z5rg=;
+        b=ZwjPh2tnPwyMgIArv4qJTSXUNZyRNzjYOT+msKi/bFSVWioLuSKw8CAVKhB2QBIbr5
+         tl2bS3uqYAOeA6EyU0jNg+oT80PQ6uTavPJw4Urseff/RY6P8bCSsvPN5qMbKAr3pq3S
+         J/dPQb1Z8JxNOGBuy8Dg66DRJaYNI4+eW2H+MguyaaAvVPYsdJMSNg8hbRRP/3PF7y06
+         BKVu/MTqdmGlsfLVEI1TGUwThyO9s0XYRYKurCZ3+Ezkz6lrM5XKTh/uYO6T3koNS5Qu
+         CrvccB9vThwCjAlWBVFa4dORGUyfZbC7BOEap86mQslZG/S8IH3HaYCv+LP30hEH4m+l
+         gKMQ==
+X-Gm-Message-State: AGi0PuaegLDGF+HcHEezCoD5OGC87VQbal0R9MnTNFotroEosV0i4aLm
+        waX3eY0XrlfculVKl1rNJ9uEZ4w0
+X-Google-Smtp-Source: APiQypKdTaBGZjKti0ZzPJkOWvvDkU+t/nJ6vMx78hCq0ogYRaQDFdcrKjXO8E6OYCXLdLw6NyENCQ==
+X-Received: by 2002:a17:90a:32ea:: with SMTP id l97mr4282291pjb.50.1586929378325;
+        Tue, 14 Apr 2020 22:42:58 -0700 (PDT)
+Received: from bj08259pcu1.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id x25sm10456254pfm.203.2020.04.14.22.42.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Apr 2020 22:42:57 -0700 (PDT)
+From:   jing.xia.mail@gmail.com
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        chunyan.zhang@unisoc.com, orson.zhai@unisoc.com,
+        Jing Xia <jing.xia@unisoc.com>
+Subject: [PATCH] mm: init: report kasan-tag information stored in page->flags
+Date:   Wed, 15 Apr 2020 13:42:50 +0800
+Message-Id: <1586929370-10838-1-git-send-email-jing.xia.mail@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:44:47AM -0700, Christoph Hellwig wrote:
-> On Tue, Apr 14, 2020 at 04:19:01AM +0000, Luis Chamberlain wrote:
-> > block devices are refcounted so to ensure once its final user goes away it
-> > can be cleaned up by the lower layers properly. The block device's
-> > request_queue structure is also refcounted, however, if the last
-> > blk_put_queue() is called under atomic context the block layer has
-> > to defer removal.
-> > 
-> > By refcounting the block device during the use of blkcg_schedule_throttle(),
-> > we ensure ensure two things:
-> > 
-> > 1) the block device remains available during the call
-> > 2) we ensure avoid having to deal with the fact we're using the
-> >    request_queue structure in atomic context, since the last
-> >    blk_put_queue() will be called upon disk_release(), *after*
-> >    our own bdput().
-> > 
-> > This means this code path is *not* going to remove the request_queue
-> > structure, as we are ensuring some later upper layer disk_release()
-> > will be the one to release the request_queue structure for us.
-> > 
-> > Cc: Bart Van Assche <bvanassche@acm.org>
-> > Cc: Omar Sandoval <osandov@fb.com>
-> > Cc: Hannes Reinecke <hare@suse.com>
-> > Cc: Nicolai Stange <nstange@suse.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > Cc: yu kuai <yukuai3@huawei.com>
-> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > ---
-> >  mm/swapfile.c | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> > index 6659ab563448..9285ff6030ca 100644
-> > --- a/mm/swapfile.c
-> > +++ b/mm/swapfile.c
-> > @@ -3753,6 +3753,7 @@ static void free_swap_count_continuations(struct swap_info_struct *si)
-> >  void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
-> >  				  gfp_t gfp_mask)
-> >  {
-> > +	struct block_device *bdev;
-> >  	struct swap_info_struct *si, *next;
-> >  	if (!(gfp_mask & __GFP_IO) || !memcg)
-> >  		return;
-> > @@ -3771,8 +3772,17 @@ void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
-> >  	plist_for_each_entry_safe(si, next, &swap_avail_heads[node],
-> >  				  avail_lists[node]) {
-> >  		if (si->bdev) {
-> > -			blkcg_schedule_throttle(bdev_get_queue(si->bdev),
-> > -						true);
-> > +			bdev = bdgrab(si->bdev);
-> > +			if (!bdev)
-> > +				continue;
-> > +			/*
-> > +			 * By adding our own bdgrab() we ensure the queue
-> > +			 * sticks around until disk_release(), and so we ensure
-> > +			 * our release of the request_queue does not happen in
-> > +			 * atomic context.
-> > +			 */
-> > +			blkcg_schedule_throttle(bdev_get_queue(bdev), true);
-> > +			bdput(bdev);
-> 
-> I don't understand the atomic part of the comment.  How does
-> bdgrab/bdput help us there?
+From: Jing Xia <jing.xia@unisoc.com>
 
-The commit log above did a better job at explaining this in terms of our
-goal to use the request_queue and how this use would prevent the risk of
-releasing the request_queue, which could sleep.
+The pagefalgs_layout_usage shows incorrect message by means of
+mminit_loglevel when Kasan runs in the mode of software tag-based
+enabled with CONFIG_KASAN_SW_TAGS.
+This patch corrects it and reports kasan-tag information.
 
-If its not clear still, at least why we'd escape the sleep potential
-of the request_queue, we can just see its up to the disk_release()
-to call the last blk_put_queue():
+Signed-off-by: Jing Xia <jing.xia@unisoc.com>
+---
+ mm/mm_init.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-static void __device_add_disk(struct device *parent, struct gendisk disk,      
-			      const struct attribute_group **groups,            
-			      bool register_queue)                              
-{   
-	...
-        /*                                                                      
-	 * Take an extra ref on queue which will be put on disk_release()
-	 * so that it sticks around as long as @disk is there.                  
-	 */                                                                     
-	WARN_ON_ONCE(!blk_get_queue(disk->queue));
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 7da6991..435e5f7 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -67,26 +67,30 @@ void __init mminit_verify_pageflags_layout(void)
+ 	unsigned long or_mask, add_mask;
+ 
+ 	shift = 8 * sizeof(unsigned long);
+-	width = shift - SECTIONS_WIDTH - NODES_WIDTH - ZONES_WIDTH - LAST_CPUPID_SHIFT;
++	width = shift - SECTIONS_WIDTH - NODES_WIDTH - ZONES_WIDTH
++		- LAST_CPUPID_SHIFT - KASAN_TAG_WIDTH;
+ 	mminit_dprintk(MMINIT_TRACE, "pageflags_layout_widths",
+-		"Section %d Node %d Zone %d Lastcpupid %d Flags %d\n",
++		"Section %d Node %d Zone %d Lastcpupid %d Kasantag %d Flags %d\n",
+ 		SECTIONS_WIDTH,
+ 		NODES_WIDTH,
+ 		ZONES_WIDTH,
+ 		LAST_CPUPID_WIDTH,
++		KASAN_TAG_WIDTH,
+ 		NR_PAGEFLAGS);
+ 	mminit_dprintk(MMINIT_TRACE, "pageflags_layout_shifts",
+-		"Section %d Node %d Zone %d Lastcpupid %d\n",
++		"Section %d Node %d Zone %d Lastcpupid %d Kasantag %d\n",
+ 		SECTIONS_SHIFT,
+ 		NODES_SHIFT,
+ 		ZONES_SHIFT,
+-		LAST_CPUPID_SHIFT);
++		LAST_CPUPID_SHIFT,
++		KASAN_TAG_WIDTH);
+ 	mminit_dprintk(MMINIT_TRACE, "pageflags_layout_pgshifts",
+-		"Section %lu Node %lu Zone %lu Lastcpupid %lu\n",
++		"Section %lu Node %lu Zone %lu Lastcpupid %lu Kasantag %lu\n",
+ 		(unsigned long)SECTIONS_PGSHIFT,
+ 		(unsigned long)NODES_PGSHIFT,
+ 		(unsigned long)ZONES_PGSHIFT,
+-		(unsigned long)LAST_CPUPID_PGSHIFT);
++		(unsigned long)LAST_CPUPID_PGSHIFT,
++		(unsigned long)KASAN_TAG_PGSHIFT);
+ 	mminit_dprintk(MMINIT_TRACE, "pageflags_layout_nodezoneid",
+ 		"Node/Zone ID: %lu -> %lu\n",
+ 		(unsigned long)(ZONEID_PGOFF + ZONEID_SHIFT),
+-- 
+1.9.1
 
-	disk_add_events(disk);
-	blk_integrity_add(disk);
-}
-
-static void disk_release(struct device *dev)                                    
-{                                                                               
-	struct gendisk *disk = dev_to_disk(dev);
-
-	blk_free_devt(dev->devt);
-	disk_release_events(disk);
-	kfree(disk->random);
-	disk_replace_part_tbl(disk, NULL);
-	hd_free_part(&disk->part0);
-	if (disk->queue)
-		blk_put_queue(disk->queue);
-	kfree(disk);
-}     
-
-I admit that all this however it did a poor job at explaining why
-bdgrab()/bdput() was safe in atomic context other than the implicit
-reasoning that we already do that elsewhere in atomic context.
-
-bdgrab() specifically was added to be able to refcount a block device in
-atomic context via commit dddac6a7b445 ("("PM / Hibernate: Replace bdget
-call with simple atomic_inc of i_count"). In its latest incarnation we
-have:
-
-/**
- * bdgrab -- Grab a reference to an already referenced block device
- * @bdev:       Block device to grab a reference to.                            
- */
-struct block_device *bdgrab(struct block_device *bdev)
-{
-	ihold(bdev->bd_inode);                                                  
-	return bdev;                                                            
-}                                                                               
-EXPORT_SYMBOL(bdgrab); 
-
-And this in turn:
-
-/*                                                                              
- * get additional reference to inode; caller must already hold one.
- */
-void ihold(struct inode *inode)                                                 
-{                                                                               
-	WARN_ON(atomic_inc_return(&inode->i_count) < 2);                        
-}                                                                               
-EXPORT_SYMBOL(ihold);
-
-However... I'd eventure to say we don't have tribal knowledge documented
-about why bdput() is safe in atomic context when used with bdgrab(),
-including the commit log which added it. So the only thing backing its
-safety is that we already use this combo in atomic context, and if its
-incorrect, other areas would be incorrect as well.
-
-But looking underneath the hood, I see at the end of __blkdev_get():
-
-static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)  
-{
-	...
-	disk = bdev_get_gendisk(bdev, &partno);
-	...
-        /* only one opener holds refs to the module and disk */                 
-	if (!first_open)                                                        
-		put_disk_and_module(disk); 
-	...
-}
-
-So ihold() seems like a way to ensure the caller of bdgrab() won't be
-this first opener. If only one opener holds the ref to the disk and it
-was not us, we musn't be the one to decrease it, and if the disk is
-held, it should mean the block device should be refcounted by it as
-well. More review on this later part is appreciated though.
-
-  Luis
