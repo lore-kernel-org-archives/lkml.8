@@ -2,191 +2,532 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86CAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD71C352BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78AEC206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586917292;
-	bh=WJBpFm/NCBXnSlP8fGPrnKMZRCJrO1PNVdsLOPDZHyg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mI5mQdmJ/nfjxA3ofqa1/G8vGFIsP4/hVsPod7p55O1OjzxXPVBskU+cXR4pFhwE1
-	 VunzLt/6mqfyIzcWRh/f/jRP4gB4K3DHChWRnWbDtCamD5P4mSBZkKo+vOzowZfGM7
-	 XBlm6B2B4QtlbdTn7lWthokevDm71rAUtI19RE5U=
+	by mail.kernel.org (Postfix) with ESMTP id 4B5E220774
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="aGeMm+Kb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392953AbgDOCV1 (ORCPT
+        id S2392981AbgDOC0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:21:27 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39799 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392947AbgDOCUw (ORCPT
+        Tue, 14 Apr 2020 22:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388576AbgDOC0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:20:52 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y24so16980100wma.4;
-        Tue, 14 Apr 2020 19:20:45 -0700 (PDT)
+        Tue, 14 Apr 2020 22:26:12 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F94C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:26:11 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d17so834896pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iNT/Cyy6/sNs471OJMdaugj1SEGLrROiteW7Bli011w=;
+        b=aGeMm+Kb5kWjedIH2HVZbyVcvxudPtqjqQeJSzv1AvE9mRuPj4plpcHOqcjqaPonC6
+         XsdYtv88rcYVzg346oBi00czD1ujmupuG3seK4dsQ0ADsA7mxKJZI4Ho9ZyZsTBdh51p
+         QC8zCkDhYMgr8UxN8Mhf1nqzVsRgNABDfdbMemvUX/7+sygyNDZaEkpXwG1x6mSE3rZi
+         9XL+5tetY6pme41Z3EOp2xoQjIRZhIzPZO0n/tZKkGu3QWYsQOehJ9d1KhBxsviuTHK2
+         J+pPGZI5mDhm2lMBxfK6SlyZcuzBDGKrcAYPfgX4zNjgrg6rapveeA3eezhlq+Pxe9I6
+         BedQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CuXdsYfPbBL2eKph97AQSiGG9cqWrrcnrqRkunTgj10=;
-        b=rsEfqvwCJjAku6KB9mhjZ6kBPAkEyrdesF3JCNK4kYgT44s4mFGpseMcUaK/RTmkU0
-         E4e30ltZ2TkiwHCEbdvBwMRjC1O0VrAk32CAue1S6FWMxUZ+0Qve9JB6GvkuRw3izvX6
-         1ovTiTAmYKdJgvj28gBuARovDjWTdxlSQ0iQbTzNN7Xn66A9+l5MddApzOFVnxt7S7ED
-         RUkv6YhUH9qMFBSzonLH6PkCXFSQFYOExvibjIBEzGFCoCSfBkoCx5hhGTBYULS+X5zk
-         L8VW6Tua3g3zB0fmuZ2Emwk2pIqEAKX/aFuNc6w4l/+BqHzdwxqX4cULageWAWcsuMlN
-         n++w==
-X-Gm-Message-State: AGi0PuaRj5GGap5zJ7Hqu+woxyISfKkk78OouAiiBRlYU0z0TP5g0CV9
-        Hk47A45OyysnOPVbQ5auhAcDOZhmCyisIgw6vH0=
-X-Google-Smtp-Source: APiQypLqsbG6eIVRcLpV6hRfNXmcFYbqw/lwTvEU+FMm14R5SgmbtJPlNqfPyGJyjHOeH1B5ayt2XzX/HOK8QBGv/3Y=
-X-Received: by 2002:a1c:2007:: with SMTP id g7mr2695011wmg.70.1586917244706;
- Tue, 14 Apr 2020 19:20:44 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=iNT/Cyy6/sNs471OJMdaugj1SEGLrROiteW7Bli011w=;
+        b=rzBUxiEk92ItYbu5KSbXoeXvwi8Wpv0EomGANvCgy5R6T5ZS3jclN5a7cpADKjH88h
+         r8SKuCw0PcejRqTCGUVWGo6fQYPTC472AuS0I55e+lzYkz8VBuYUyLbcGWLwqKew1OA8
+         omgS4Fm1vojlmEefjpSEIIYPyoNmQF8chwlHVxDvzofl/sGuWTFJ5asUJ/lJf1DDnqvZ
+         f06CtjzgMcMREEj1t44Wv1fYnMjjUMsN78VGFVSmaYE4R1G4jUYBGoHNQCll6TLA1LxY
+         lQAUuFOjcAroD88hh1eurEaMxf1mMC6x6TyG20Wr0Nl61drI1mbZfQQ44P2GTSwrejSA
+         HgAg==
+X-Gm-Message-State: AGi0PubW7khE7MKGHGQxVuK57iJ10A3p6h50AYQLsujkVFaLG0RS/sUr
+        UT7yXbk8+E0xKsMIsM6Sf6tzWsw8wkk=
+X-Google-Smtp-Source: APiQypImq+5ky/Kh+p/Ub9qxGxKXE4MqgsaaizN+sAwrLoQR33WZY/b6NoMGJk72e6doQs7vFp5L1w==
+X-Received: by 2002:a62:fc51:: with SMTP id e78mr26366866pfh.155.1586917570386;
+        Tue, 14 Apr 2020 19:26:10 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-87-207.dyn.iinet.net.au. [124.171.87.207])
+        by smtp.gmail.com with ESMTPSA id p11sm9988668pff.173.2020.04.14.19.26.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 19:26:09 -0700 (PDT)
+Subject: Re: [PATCH 1/4] dma-mapping: move the remaining DMA API calls out of
+ line
+To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
+Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200414122506.438134-1-hch@lst.de>
+ <20200414122506.438134-2-hch@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <c2572d30-f03c-450d-e257-3a8673b42d44@ozlabs.ru>
+Date:   Wed, 15 Apr 2020 12:26:04 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200411064248.247530-1-irogers@google.com> <CAM9d7cgOO88sWDh8F1x2Mnk2ikSF0FUCp88c1wAheW5zJ9+B0g@mail.gmail.com>
- <CAP-5=fW_5pPZTA3bXdT9d9Tt_d5aJw=4bf_fr9eqzGPfoVs3aQ@mail.gmail.com>
- <CAM9d7cgsR7mU_N3BaOz3i2XWY_GchOYWHvNh8g+=2VHTFGEm9Q@mail.gmail.com> <CAP-5=fU+rrpK=zNBWWDBxUMYBz6yV3FZV3uhwye7euN7m8saDg@mail.gmail.com>
-In-Reply-To: <CAP-5=fU+rrpK=zNBWWDBxUMYBz6yV3FZV3uhwye7euN7m8saDg@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 15 Apr 2020 11:20:32 +0900
-Message-ID: <CAM9d7chvpCOdSAeRH1+1vt_m+-Ecwm7jRXrN2OAjAP5yJwc=og@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] tools api: add a lightweight buffered reading api
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414122506.438134-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:48 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Mon, Apr 13, 2020 at 5:16 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Tue, Apr 14, 2020 at 1:22 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Mon, Apr 13, 2020 at 12:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > Hi Ian,
-> > > >
-> > > > On Sat, Apr 11, 2020 at 3:42 PM Ian Rogers <irogers@google.com> wrote:
-> > > > >
-> > > > > The synthesize benchmark shows the majority of execution time going to
-> > > > > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-> > > > > reading library that will be used to replace these calls in a follow-up
-> > > > > CL. Add tests for the library to perf test.
-> > > > >
-> > > > > v4 adds the test file missed in v3.
-> > > > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > ---
-> > > > > +/* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
-> > > > > + * first character isn't hexadecimal returns -2, io->eof returns -1, otherwise
-> > > > > + * returns the character after the hexadecimal value which may be -1 for eof.
-> > > >
-> > > > I'm not sure returning -1 is good when it actually reads something and
-> > > > meets EOF.
-> > > > Although it would have a valid value, users might consider it an error IMHO.
-> > > > Why not returning 0 instead? (I'm ok with -1 for the later use of the API).
-> > >
-> > > Thanks for the feedback! In the code for /proc/pid/maps this is a
-> > > hypothetical, but I think having the API right is important. I didn't
-> > > go with 0 as you mention 0 'could' encode a character, for example,
-> > > 7fffabcd\0 wouldn't be distinguishable from 7fffabcd<EOF>.
-> >
-> > Practically I don't think it matters in this case as long as we can
-> > distinguish them in the next call (if the user wants to do).
-> > What users want to do (I think) is whether the returned value
-> > (in *hex) is ok to use or not.  By returning -1 on EOF, it might
-> > be confusing for users..
->
-> In the /proc/pid/maps case the code for reading an address like
-> "00400000-00452000 " the code is:
->
-> if (io__get_hex(io, start) != '-')
->   return false;
-> if (io__get_hex(io, end) != ' ')
->   return false;
->
-> If io__get_hex doesn't return the next character it becomes:
->
-> if (io__get_hex(io, start))
->   return false;
-> if (io__get_char(io) != '-')
->   return false;
-> if (io__get_hex(io, end))
->   return false;
-> if (io__get_char(io) != ' ')
->   return false;
->
-> Which is twice as verbose and requires that io have a rewind operation
-> to go backward when io__get_hex and io__get_dec have gone 1 character
-> too far.
 
-Yeah, I'm not against returning the next character - it's good.
-The only concern was whether it should return -1 or 0 when
-it meets EOF after parsing some digits.
 
-But I think we can go with this version as there's no such case
-when parsing /proc/pid/maps.
+On 14/04/2020 22:25, Christoph Hellwig wrote:
+> For a long time the DMA API has been implemented inline in dma-mapping.h,
+> but the function bodies can be quite large.  Move them all out of line.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/dma-direct.h  |  58 +++++++++
+>  include/linux/dma-mapping.h | 247 ++++--------------------------------
+>  kernel/dma/direct.c         |   9 --
+>  kernel/dma/mapping.c        | 164 ++++++++++++++++++++++++
+>  4 files changed, 244 insertions(+), 234 deletions(-)
+> 
+> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+> index 24b8684aa21d..da689ad5fffd 100644
+> --- a/include/linux/dma-direct.h
+> +++ b/include/linux/dma-direct.h
+> @@ -85,4 +85,62 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>  		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>  		unsigned long attrs);
+>  int dma_direct_supported(struct device *dev, u64 mask);
+> +dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
+> +		unsigned long offset, size_t size, enum dma_data_direction dir,
+> +		unsigned long attrs);
+> +int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+> +		enum dma_data_direction dir, unsigned long attrs);
+> +dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+> +		size_t size, enum dma_data_direction dir, unsigned long attrs);
+> +
+> +#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+> +    defined(CONFIG_SWIOTLB)
+> +void dma_direct_sync_single_for_device(struct device *dev,
+> +		dma_addr_t addr, size_t size, enum dma_data_direction dir);
+> +void dma_direct_sync_sg_for_device(struct device *dev,
+> +		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
+> +#else
+> +static inline void dma_direct_sync_single_for_device(struct device *dev,
+> +		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+> +{
+> +}
+> +static inline void dma_direct_sync_sg_for_device(struct device *dev,
+> +		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+> +{
+> +}
+> +#endif
+> +
+> +#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+> +    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) || \
+> +    defined(CONFIG_SWIOTLB)
+> +void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+> +		size_t size, enum dma_data_direction dir, unsigned long attrs);
+> +void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+> +		int nents, enum dma_data_direction dir, unsigned long attrs);
+> +void dma_direct_sync_single_for_cpu(struct device *dev,
+> +		dma_addr_t addr, size_t size, enum dma_data_direction dir);
+> +void dma_direct_sync_sg_for_cpu(struct device *dev,
+> +		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
+> +#else
+> +static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+> +		size_t size, enum dma_data_direction dir, unsigned long attrs)
+> +{
+> +}
+> +static inline void dma_direct_unmap_sg(struct device *dev,
+> +		struct scatterlist *sgl, int nents, enum dma_data_direction dir,
+> +		unsigned long attrs)
+> +{
+> +}
+> +static inline void dma_direct_sync_single_for_cpu(struct device *dev,
+> +		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+> +{
+> +}
+> +static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
+> +		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+> +{
+> +}
+> +#endif
+> +
+> +size_t dma_direct_max_mapping_size(struct device *dev);
+> +
+>  #endif /* _LINUX_DMA_DIRECT_H */
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index 330ad58fbf4d..793ad775cd54 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -188,73 +188,6 @@ static inline int dma_mmap_from_global_coherent(struct vm_area_struct *vma,
+>  }
+>  #endif /* CONFIG_DMA_DECLARE_COHERENT */
+>  
+> -static inline bool dma_is_direct(const struct dma_map_ops *ops)
+> -{
+> -	return likely(!ops);
+> -}
+> -
+> -/*
+> - * All the dma_direct_* declarations are here just for the indirect call bypass,
+> - * and must not be used directly drivers!
+> - */
+> -dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
+> -		unsigned long offset, size_t size, enum dma_data_direction dir,
+> -		unsigned long attrs);
+> -int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+> -		enum dma_data_direction dir, unsigned long attrs);
+> -dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+> -		size_t size, enum dma_data_direction dir, unsigned long attrs);
+> -
+> -#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+> -    defined(CONFIG_SWIOTLB)
+> -void dma_direct_sync_single_for_device(struct device *dev,
+> -		dma_addr_t addr, size_t size, enum dma_data_direction dir);
+> -void dma_direct_sync_sg_for_device(struct device *dev,
+> -		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
+> -#else
+> -static inline void dma_direct_sync_single_for_device(struct device *dev,
+> -		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+> -{
+> -}
+> -static inline void dma_direct_sync_sg_for_device(struct device *dev,
+> -		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+> -{
+> -}
+> -#endif
+> -
+> -#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+> -    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) || \
+> -    defined(CONFIG_SWIOTLB)
+> -void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+> -		size_t size, enum dma_data_direction dir, unsigned long attrs);
+> -void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+> -		int nents, enum dma_data_direction dir, unsigned long attrs);
+> -void dma_direct_sync_single_for_cpu(struct device *dev,
+> -		dma_addr_t addr, size_t size, enum dma_data_direction dir);
+> -void dma_direct_sync_sg_for_cpu(struct device *dev,
+> -		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
+> -#else
+> -static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+> -		size_t size, enum dma_data_direction dir, unsigned long attrs)
+> -{
+> -}
+> -static inline void dma_direct_unmap_sg(struct device *dev,
+> -		struct scatterlist *sgl, int nents, enum dma_data_direction dir,
+> -		unsigned long attrs)
+> -{
+> -}
+> -static inline void dma_direct_sync_single_for_cpu(struct device *dev,
+> -		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+> -{
+> -}
+> -static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
+> -		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
+> -{
+> -}
+> -#endif
+> -
+> -size_t dma_direct_max_mapping_size(struct device *dev);
+> -
+>  #ifdef CONFIG_HAS_DMA
+>  #include <asm/dma-mapping.h>
+>  
+> @@ -271,164 +204,6 @@ static inline void set_dma_ops(struct device *dev,
+>  	dev->dma_ops = dma_ops;
+>  }
+>  
+> -static inline dma_addr_t dma_map_page_attrs(struct device *dev,
+> -		struct page *page, size_t offset, size_t size,
+> -		enum dma_data_direction dir, unsigned long attrs)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -	dma_addr_t addr;
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		addr = dma_direct_map_page(dev, page, offset, size, dir, attrs);
+> -	else
+> -		addr = ops->map_page(dev, page, offset, size, dir, attrs);
+> -	debug_dma_map_page(dev, page, offset, size, dir, addr);
+> -
+> -	return addr;
+> -}
+> -
+> -static inline void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr,
+> -		size_t size, enum dma_data_direction dir, unsigned long attrs)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		dma_direct_unmap_page(dev, addr, size, dir, attrs);
+> -	else if (ops->unmap_page)
+> -		ops->unmap_page(dev, addr, size, dir, attrs);
+> -	debug_dma_unmap_page(dev, addr, size, dir);
+> -}
+> -
+> -/*
+> - * dma_maps_sg_attrs returns 0 on error and > 0 on success.
+> - * It should never return a value < 0.
+> - */
+> -static inline int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+> -				   int nents, enum dma_data_direction dir,
+> -				   unsigned long attrs)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -	int ents;
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
+> -	else
+> -		ents = ops->map_sg(dev, sg, nents, dir, attrs);
+> -	BUG_ON(ents < 0);
+> -	debug_dma_map_sg(dev, sg, nents, ents, dir);
+> -
+> -	return ents;
+> -}
+> -
+> -static inline void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+> -				      int nents, enum dma_data_direction dir,
+> -				      unsigned long attrs)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	debug_dma_unmap_sg(dev, sg, nents, dir);
+> -	if (dma_is_direct(ops))
+> -		dma_direct_unmap_sg(dev, sg, nents, dir, attrs);
+> -	else if (ops->unmap_sg)
+> -		ops->unmap_sg(dev, sg, nents, dir, attrs);
+> -}
+> -
+> -static inline dma_addr_t dma_map_resource(struct device *dev,
+> -					  phys_addr_t phys_addr,
+> -					  size_t size,
+> -					  enum dma_data_direction dir,
+> -					  unsigned long attrs)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -	dma_addr_t addr = DMA_MAPPING_ERROR;
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -
+> -	/* Don't allow RAM to be mapped */
+> -	if (WARN_ON_ONCE(pfn_valid(PHYS_PFN(phys_addr))))
+> -		return DMA_MAPPING_ERROR;
+> -
+> -	if (dma_is_direct(ops))
+> -		addr = dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
+> -	else if (ops->map_resource)
+> -		addr = ops->map_resource(dev, phys_addr, size, dir, attrs);
+> -
+> -	debug_dma_map_resource(dev, phys_addr, size, dir, addr);
+> -	return addr;
+> -}
+> -
+> -static inline void dma_unmap_resource(struct device *dev, dma_addr_t addr,
+> -				      size_t size, enum dma_data_direction dir,
+> -				      unsigned long attrs)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (!dma_is_direct(ops) && ops->unmap_resource)
+> -		ops->unmap_resource(dev, addr, size, dir, attrs);
+> -	debug_dma_unmap_resource(dev, addr, size, dir);
+> -}
+> -
+> -static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
+> -					   size_t size,
+> -					   enum dma_data_direction dir)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
+> -	else if (ops->sync_single_for_cpu)
+> -		ops->sync_single_for_cpu(dev, addr, size, dir);
+> -	debug_dma_sync_single_for_cpu(dev, addr, size, dir);
+> -}
+> -
+> -static inline void dma_sync_single_for_device(struct device *dev,
+> -					      dma_addr_t addr, size_t size,
+> -					      enum dma_data_direction dir)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		dma_direct_sync_single_for_device(dev, addr, size, dir);
+> -	else if (ops->sync_single_for_device)
+> -		ops->sync_single_for_device(dev, addr, size, dir);
+> -	debug_dma_sync_single_for_device(dev, addr, size, dir);
+> -}
+> -
+> -static inline void
+> -dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
+> -		    int nelems, enum dma_data_direction dir)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		dma_direct_sync_sg_for_cpu(dev, sg, nelems, dir);
+> -	else if (ops->sync_sg_for_cpu)
+> -		ops->sync_sg_for_cpu(dev, sg, nelems, dir);
+> -	debug_dma_sync_sg_for_cpu(dev, sg, nelems, dir);
+> -}
+> -
+> -static inline void
+> -dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+> -		       int nelems, enum dma_data_direction dir)
+> -{
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -	if (dma_is_direct(ops))
+> -		dma_direct_sync_sg_for_device(dev, sg, nelems, dir);
+> -	else if (ops->sync_sg_for_device)
+> -		ops->sync_sg_for_device(dev, sg, nelems, dir);
+> -	debug_dma_sync_sg_for_device(dev, sg, nelems, dir);
+> -
+> -}
+>  
+>  static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
+>  {
+> @@ -439,6 +214,28 @@ static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
+>  	return 0;
+>  }
+>  
+> +dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
+> +		size_t offset, size_t size, enum dma_data_direction dir,
+> +		unsigned long attrs);
+> +void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
+> +		enum dma_data_direction dir, unsigned long attrs);
+> +int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
+> +		enum dma_data_direction dir, unsigned long attrs);
+> +void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+> +				      int nents, enum dma_data_direction dir,
+> +				      unsigned long attrs);
+> +dma_addr_t dma_map_resource(struct device *dev, phys_addr_t phys_addr,
+> +		size_t size, enum dma_data_direction dir, unsigned long attrs);
+> +void dma_unmap_resource(struct device *dev, dma_addr_t addr, size_t size,
+> +		enum dma_data_direction dir, unsigned long attrs);
+> +void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr, size_t size,
+> +		enum dma_data_direction dir);
+> +void dma_sync_single_for_device(struct device *dev, dma_addr_t addr,
+> +		size_t size, enum dma_data_direction dir);
+> +void dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
+> +		    int nelems, enum dma_data_direction dir);
+> +void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+> +		       int nelems, enum dma_data_direction dir);
+>  void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+>  		gfp_t flag, unsigned long attrs);
+>  void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 8f4bbdaf965e..f1a9099a4b5b 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -260,7 +260,6 @@ void dma_direct_sync_single_for_device(struct device *dev,
+>  	if (!dev_is_dma_coherent(dev))
+>  		arch_sync_dma_for_device(paddr, size, dir);
+>  }
+> -EXPORT_SYMBOL(dma_direct_sync_single_for_device);
 
->
-> > > The updated
-> > > code distinguishes the cases as 0 meaning character \0, -1 meaning EOF
-> > > and -2 meaning bad encoding. Your worry is that a hex number that's
-> > > next to EOF will get a result of -1 showing the EOF came next. and
-> > > code that does 'if ( .. < 0)' would trigger. While clunky, it'd be
-> > > possible in those cases to change the code to 'if ( .. < -1)'.
-> >
-> > Yes, but it's not conventional IMHO.
-> >
-> >
-> > > So my thoughts are:
-> > > 1) being able to tell apart the 3 cases could be important - this is
-> > > all hypothetical;
-> > > 2) keeping EOF and error as negative numbers has a degree of consistency;
-> > > 3) using -1 for EOF comes from get_char, it'd be nice to have one
-> > > value mean EOF.
-> > > Perhaps the issue is the name of the function? It isn't a standard API
-> > > to return the next character, but it simplified things for me as I
-> > > didn't need to add a 'rewind' operation. The function names could be
-> > > something like io__get_hex_then_char and io__get_dec_then_char, EOF
-> > > for the 'then_char' part would be more consistent. I'd tried to keep
-> > > the names short and have a load bearing comment, which isn't ideal but
-> > > generally I believe the style is that function names are kept short.
-> > > Let me know what you think.
-> >
-> > I'm ok with the function name and understand your concerns.
-> > And I don't want to insist it strongly but just sharing my thoughts.
-> >
-> > Thanks
-> > Namhyung
->
-> Thanks, feedback appreciated! It is useful to discuss and it is
-> straightforward to change the API but I'm in two minds as to whether
-> it would be better.
->
-> I'd still like to land this and the next patch, as getting rid of
-> fgets/sscanf saves 50us from event synthesis. Breaking out the io part
-> of that change wasn't done so much with a view to replacing stdio, but
-> just something minimal that serves the /proc/pid/maps case.
 
-The performance gain looks nice!  Thanks for working on this.
+May be this is correct and allowed (no idea) but removing exported
+symbols at least deserves a mention in the commit log, does not it?
 
-Thanks
-Namhyung
+The rest of the series is fine and works. Thanks,
+
+
+
+-- 
+Alexey
