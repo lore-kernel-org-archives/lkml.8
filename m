@@ -2,154 +2,229 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8152DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F4920725
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548AE206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qOr675zQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fcE3AmoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390899AbgDOX55 (ORCPT
+        id S2390964AbgDOX6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389935AbgDOX5y (ORCPT
+        Wed, 15 Apr 2020 19:58:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38730 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730005AbgDOX6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:57:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFCDC061A0C;
-        Wed, 15 Apr 2020 16:57:54 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m21so772124pff.13;
-        Wed, 15 Apr 2020 16:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6XVWvegwjkBtKDIL/m/TOa2z4OMyDMsl6BzKwWS9diE=;
-        b=qOr675zQ4f7Do58c+0t4AP1/5HP4sRtm4dUbC9WwDTygNtqBjcw4wsk55X3Yhf8LmI
-         Fk6AKwMX2yeRjNbCMmrrfdxFQ7Xa5mYe0v9onaazGCw86T9W3pxueIjPctjui+V6xKQ0
-         w3MGE99YvlZzKXEOODhhaAE+qveo/NKKYja6LiHz0YZMVVUBodLBDEkt7RgI4Vb1/wP7
-         cioKRz786UDxwILiYdtViN087vxJomRHwkv5LqVauuSlWKDXjfungLA7agJV7caVwERy
-         BcUMOi0DanRi0xzXGrwKQZiHuyMHqDqgQVq13jpOEh4pzSZjj5ng/tCYS1a5paAydaeD
-         rTGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6XVWvegwjkBtKDIL/m/TOa2z4OMyDMsl6BzKwWS9diE=;
-        b=pPrqJiyVyoIpkRGuRLgwkcwrTFMkJTsrBZzkDXhZOO2AS1obe8GpKhPLQPBx3WyuKi
-         NKlRowUT9Zj7kCavFr2gxz5V27XMYl1VV/trJcX+fXyDHfRT4Hk25pnknQBOGo8NBObf
-         uIYWp25IIibTGq7GHk4UdNBfGVW47LHExR9HO/4A/C3kuXlf39Rs2zvVUKmmLJCgDsJA
-         nn77kSDwaeK8I++WgSVjaMEVV8iPu2mVVHVDY6xQWkMtrIXI8b/bq53IHtu2NWKGerxn
-         9Q/pz6H5Sw6Tqhp8cw/kDPLn4IGvQT6L7fdQMwQ71XDWDuSUpnSZwQu632odG8yO6650
-         E8lw==
-X-Gm-Message-State: AGi0PuZOWcr4hO3ftpOPI0sxdECVx28I5PSG2qTkEqIlijC5jak7iqgu
-        OjQHhVQR89ih/ftXEm5yA+w=
-X-Google-Smtp-Source: APiQypJxx5C4CQnpwUcwcY2p3ECJeumcoJszg33CjcVBv7Chlpu46XdqlWM/IXYFAaf47Yjuqvt1WQ==
-X-Received: by 2002:aa7:9484:: with SMTP id z4mr994585pfk.144.1586995073637;
-        Wed, 15 Apr 2020 16:57:53 -0700 (PDT)
-Received: from [10.230.188.26] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id np4sm681106pjb.48.2020.04.15.16.57.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 16:57:52 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-To:     Robert Marko <robert.marko@sartura.hr>, andrew@lunn.ch,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-References: <20200415150244.2737206-1-robert.marko@sartura.hr>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <915ce152-d8d1-3dea-6cc8-3d21f24a4457@gmail.com>
-Date:   Wed, 15 Apr 2020 16:57:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Wed, 15 Apr 2020 19:58:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FNw0WG140765;
+        Wed, 15 Apr 2020 23:58:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=/HuKgOISMSSp6FBWgYwKINeJR9xqAL62CULDfVaFD3I=;
+ b=fcE3AmoUb0jaz3u9ndxLpBS0WrNUOFP1xptbDrxiagOI4FwtVZqIR0HzxXGaFtvVA+A8
+ 0tzDj1+BFmwoGYfl6mBHe8sitMn3SIrVU04AICXw2bAOzmeqVSvudJ9LsqzVUbdnq5sn
+ IoctUtBFccXm0R84w8jbJ/wIw9H4CCS0dzM3cqjdQkKuadLF8C4z1KHuvWn+DK5iNSoG
+ xQFuVBHubczhVtMUMZvOqfSSeRa6VtfxDIBKBG7CHMfzERDsvk5l227+dbeM+SbNEZVd
+ 7BaWntTg1GFqYJaxvAY+6Y3k09fRFnPbsRqBzA1LUBfxUe6dga48WuWdebzqLjH3jwhy XA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 30e0bfbxnp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 23:58:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FNvCf3101163;
+        Wed, 15 Apr 2020 23:57:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30dn8x8cnd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 23:57:59 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03FNvvwL028653;
+        Wed, 15 Apr 2020 23:57:57 GMT
+Received: from localhost.localdomain (/10.159.130.134)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Apr 2020 16:57:57 -0700
+Subject: Re: [PATCH 1/1] selftests: kvm: Add overlapped memory regions test
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        pbonzini@redhat.com, kvm@vger.kernel.org
+Cc:     drjones@redhat.com, sean.j.christopherson@intel.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20200415204505.10021-1-wainersm@redhat.com>
+ <20200415204505.10021-2-wainersm@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <455a01b6-506b-3c16-7ad8-327ad63292e9@oracle.com>
+Date:   Wed, 15 Apr 2020 16:57:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200415150244.2737206-1-robert.marko@sartura.hr>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200415204505.10021-2-wainersm@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=2 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150180
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 adultscore=0 suspectscore=2 phishscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 4/15/20 1:45 PM, Wainer dos Santos Moschetta wrote:
+> Add the test_overlap_memory_regions() test case in
+> set_memory_region_test. This should check that overlapping
+> memory regions on the guest physical address cannot be added.
 
-On 4/15/2020 8:02 AM, Robert Marko wrote:
-> This patch adds the driver for the MDIO interface
-> inside of Qualcomm IPQ40xx series SoC-s.
-> 
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Cc: Luka Perkov <luka.perkov@sartura.hr>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I think the commit header and the body need some improvement. For example,
+
+         Header: Test that overlapping guest memory regions can not be added
+
+         Body:  Enhance the existing tests in set_memory_region_test.c 
+so that it tests overlapping guest
+
+                     memory regions. The new test verifies that adding 
+overlapping guest memory regions fails.
+
+>
+> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+> ---
+>   .../selftests/kvm/set_memory_region_test.c    | 75 ++++++++++++++++++-
+>   1 file changed, 74 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+> index 260e638826dc..74a987002273 100644
+> --- a/tools/testing/selftests/kvm/set_memory_region_test.c
+> +++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+> @@ -331,6 +331,8 @@ static void test_add_max_memory_regions(void)
+>   	uint64_t mem_reg_npages;
+>   	void *mem;
+>   
+> +	pr_info("Testing KVM_CAP_NR_MEMSLOTS memory regions can be added\n");
+> +
+>   	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
+>   	TEST_ASSERT(max_mem_slots > 0,
+>   		    "KVM_CAP_NR_MEMSLOTS should be greater than 0");
+> @@ -338,7 +340,8 @@ static void test_add_max_memory_regions(void)
+>   
+>   	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
+>   
+> -	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, MEM_REGION_SIZE);
+> +	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT,
+> +						 MEM_REGION_SIZE);
+>   
+>   	/* Check it can be added memory slots up to the maximum allowed */
+>   	pr_info("Adding slots 0..%i, each memory region with %dK size\n",
+> @@ -365,6 +368,75 @@ static void test_add_max_memory_regions(void)
+>   	kvm_vm_free(vm);
+>   }
+>   
+> +/*
+> + * Test it cannot add memory slots with overlapped regions.
+
+
+     "Test that we can not add memory slots with overlapping regions."
+
+> + *
+> + * The following cases are covered:
+> + *
+> + *             0x100000 0x300000
+> + *       0x0       0x200000  0x400000
+> + * slot0 |         |---2MB--|           (SUCCESS)
+> + * slot1       |---2MB--|               (FAIL)
+> + * slot2 |---2MB--|                     (SUCCESS)
+> + * slot3           |---2MB--|           (FAIL)
+> + * slot4                |---2MB--|      (FAIL)
+> + * slot5                     |---2MB--| (SUCCESS)
+> + */
+> +void test_overlap_memory_regions(void)
+> +{
+> +	int i;
+> +	int ret;
+> +	int vm_fd;
+> +	struct kvm_userspace_memory_region kvm_region;
+> +	struct kvm_vm *vm;
+> +	struct slot_t {
+> +		uint64_t guest_addr;
+> +		int exp_ret; /* Expected ioctl return value */
+> +	};
+> +	struct slot_t slots[] = {{0x200000,  0}, {0x100000, -1}, {0x000000,  0},
+> +				 {0x200000, -1}, {0x300000, -1}, {0x400000,  0}
+> +				};
+> +	uint64_t mem_reg_npages;
+> +	void *mem;
+> +
+> +	pr_info("Testing KVM_SET_USER_MEMORY_REGION with overlapped memory regions\n");
+> +
+> +	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
+> +	vm_fd = vm_get_fd(vm);
+> +
+> +	pr_info("Working with memory region of %iMB\n", MEM_REGION_SIZE >> 20);
+> +	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT,
+> +						 MEM_REGION_SIZE);
+> +
+> +	mem = mmap(NULL, MEM_REGION_SIZE, PROT_READ | PROT_WRITE,
+> +		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> +	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() host");
+
+
+I think a better message would be:  "mmap() failure in host".
+
+> +
+> +	kvm_region.flags = 0;
+> +	kvm_region.memory_size = MEM_REGION_SIZE;
+> +	kvm_region.userspace_addr = (uint64_t) mem;
+> +
+> +	for (i = 0; i < sizeof(slots)/sizeof(struct slot_t); i++) {
+> +		pr_info("Add slot %i, guest address 0x%06lx, expect rc=%i\n",
+> +			i, slots[i].guest_addr, slots[i].exp_ret);
+> +		if (slots[i].exp_ret == 0) {
+> +			vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+> +						    slots[i].guest_addr, i,
+> +						    mem_reg_npages, 0);
+> +		} else {
+> +			kvm_region.slot = i;
+> +			kvm_region.guest_phys_addr = slots[i].guest_addr;
+> +			ret = ioctl(vm_fd, KVM_SET_USER_MEMORY_REGION,
+> +				    &kvm_region);
+> +			TEST_ASSERT(ret == -1 && errno == EEXIST,
+> +				    "Adding overlapped memory region should fail with EEXIT");
+> +		}
+> +	}
+> +
+> +	munmap(mem, MEM_REGION_SIZE);
+> +	kvm_vm_free(vm);
+> +}
+> +
+>   int main(int argc, char *argv[])
+>   {
+>   #ifdef __x86_64__
+> @@ -383,6 +455,7 @@ int main(int argc, char *argv[])
+>   #endif
+>   
+>   	test_add_max_memory_regions();
+> +	test_overlap_memory_regions();
+>   
+>   #ifdef __x86_64__
+>   	if (argc > 1)
+
+Other than the comments above,
+
+     Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+
