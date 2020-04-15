@@ -2,115 +2,132 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BE3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D54FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D32A720767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3CE20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WRxp2lhf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eaRogXqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414777AbgDOPh2 (ORCPT
+        id S1414788AbgDOPie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1414766AbgDOPhX (ORCPT
+        Wed, 15 Apr 2020 11:38:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33139 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728834AbgDOPiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:37:23 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B641C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:37:23 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id y3so17629986qky.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EeFIVTegln/F+8Ij5JttngNbXaEaGERsEIMec13qZzg=;
-        b=WRxp2lhfPadNKlqzoLQV8hxug+VjD1ar3yARtG3bgGXwaV60vtGjZu8bYj/o37CTnb
-         zB9cQxs1a26yeWJxcq0kShTttFpZdGdVWGFu2b2NWqZtAUSvKXrdWq1e61oPN65WnmPv
-         0wOyIFtOQ+sdg9DpVuH+Y9bIzb1WyusCnIKviWgXUBuPrlUD4FkuIJ8ilAH4pOlXDPs5
-         RDFFcI86GJlJlgy1CIJS+sVrjplPRCBwz5CS0669dIORCcYAqaa0aS8nLJF1HkEVDFn8
-         jLh4wehfQ/a5bDFy1BtqaBNoIWddIDLPYeSBKvL4Dl5RZV/c/WlhfsftBxtC7yrquuNs
-         FE3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EeFIVTegln/F+8Ij5JttngNbXaEaGERsEIMec13qZzg=;
-        b=ASafoGU7V7uzUOoV2cD4kXc2qUPTXBV/1q8f2h1CNcOyG6e9yLosLwroS8yBXDhG9u
-         DnG5qMej6Rc4+ziOmqCZrj3JweQogBth1g2vG2vYv4kJuzA2JYI/+Pa/p8Ga0JR1ymdt
-         FpRaA5ctRpwiNhjTmb3EYgVXUrEgWnu4j42OQYaa4Sf7XiG0KNn99zL+CRJ2JCyDMC28
-         cSWo+BHtsE3naPZO7xgfde0nMxXA9g+yAFNojLsJ0bSKGHOOLWvy3PKPEqzg+1GZrSew
-         OMTDYxZFJigIX9ohYCCNSroPs1hs1gPyaFBje1B4kMQaZjaVvXFg0DqlxJG3WxtCABcX
-         nXiw==
-X-Gm-Message-State: AGi0PuZSzfbQtJytIogad2JZbj92kndtE0oeco7dZtXga9mPch2cvByV
-        Fi6/rpkrUGrt4omq8D5ltbx3Lg==
-X-Google-Smtp-Source: APiQypJ7MP0hT7vNZTsu3/X7j7aM4EOHAvvziUhebjXuHKDZ0gVy14WJy7E9ieTiHCGKFcrHes4q2w==
-X-Received: by 2002:a37:9dd6:: with SMTP id g205mr8286950qke.9.1586965042621;
-        Wed, 15 Apr 2020 08:37:22 -0700 (PDT)
-Received: from ovpn-113-148.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i20sm12549999qkl.135.2020.04.15.08.37.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 08:37:21 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     paulmck@kernel.org, pbonzini@redhat.com
-Cc:     elver@google.com, sean.j.christopherson@intel.com,
-        kasan-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] kvm/svm: disable KCSAN for svm_vcpu_run()
-Date:   Wed, 15 Apr 2020 11:37:09 -0400
-Message-Id: <20200415153709.1559-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Wed, 15 Apr 2020 11:38:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586965096;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=A8FUkjVdBofT9s7NZzj5Scx0Uhc9mtgjr7nvRsCO88E=;
+        b=eaRogXqyGDJXdtUpBp5ql1oKEf3o2ho8QGJh3APB3uIwj0P4RZJLHN7EBMPcDlm3pc1kKM
+        y8D3bCDAOz1j6u4ijbecpr5IKkyp26EGhSNLmiYmOdcN/gBLVeIfg1tkZgtQNFe1qPTwQT
+        aP6OU18Jbmbe+lnirBoUnWUx6s4jsFk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-y6T9yrGgM4-uzT9WvVQRIA-1; Wed, 15 Apr 2020 11:38:09 -0400
+X-MC-Unique: y6T9yrGgM4-uzT9WvVQRIA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A31458018A2;
+        Wed, 15 Apr 2020 15:38:08 +0000 (UTC)
+Received: from quaco.ghostprotocols.net (unknown [10.3.128.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F27A4118DED;
+        Wed, 15 Apr 2020 15:38:07 +0000 (UTC)
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 42B20409A3; Wed, 15 Apr 2020 12:38:03 -0300 (-03)
+Date:   Wed, 15 Apr 2020 12:38:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc:     Konstantin Kharlamov <hi-angel@yandex.ru>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf stat: Honour --timeout for forked workloads
+Message-ID: <20200415153803.GB20324@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207243
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some reasons, running a simple qemu-kvm command with KCSAN will
-reset AMD hosts. It turns out svm_vcpu_run() could not be instrumented.
-Disable it for now.
+Hi guys,
 
- # /usr/libexec/qemu-kvm -name ubuntu-18.04-server-cloudimg -cpu host
-	-smp 2 -m 2G -hda ubuntu-18.04-server-cloudimg.qcow2
+	Please take a look and give this your acks, Tested-by, etc.
 
-=== console output ===
-Kernel 5.6.0-next-20200408+ on an x86_64
+Thanks,
 
-hp-dl385g10-05 login:
+- Arnaldo
 
-<...host reset...>
+----
 
-HPE ProLiant System BIOS A40 v1.20 (03/09/2018)
-(C) Copyright 1982-2018 Hewlett Packard Enterprise Development LP
-Early system initialization, please wait...
+When --timeout is used and a workload is specified to be started by
+'perf stat', i.e.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+  $ perf stat --timeout 1000 sleep 1h
+
+The --timeout wasn't being honoured, i.e. the workload, 'sleep 1h' in
+the above example, should be terminated after 1000ms, but it wasn't,
+'perf stat' was waiting for it to finish.
+
+Fix it by sending a SIGTERM when the timeout expires.
+
+Now it works:
+
+  # perf stat -e cycles --timeout 1234 sleep 1h
+  sleep: Terminated
+
+   Performance counter stats for 'sleep 1h':
+
+           1,066,692      cycles
+
+         1.234314838 seconds time elapsed
+
+         0.000750000 seconds user
+         0.000000000 seconds sys
+
+  #
+
+Reported-by: Konstantin Kharlamov <hi-angel@yandex.ru>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207243
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/x86/kvm/svm/svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 2be5bbae3a40..1fdb300e9337 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3278,7 +3278,7 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index ec053dc1e35c..9207b6c45475 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -686,8 +686,11 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 					break;
+ 			}
+ 		}
+-		if (child_pid != -1)
++		if (child_pid != -1) {
++			if (timeout)
++				kill(child_pid, SIGTERM);
+ 			wait4(child_pid, &status, 0, &stat_config.ru_data);
++		}
  
- bool __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
- 
--static void svm_vcpu_run(struct kvm_vcpu *vcpu)
-+static __no_kcsan void svm_vcpu_run(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
+ 		if (workload_exec_errno) {
+ 			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
 -- 
-2.21.0 (Apple Git-122.2)
+2.25.2
 
