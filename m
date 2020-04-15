@@ -2,136 +2,145 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68244C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5261C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B04420767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7D020857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586958271;
+	bh=LBaT8ZJQGI5DoX0BaOKcay3nNpJ8jL6vioLVwcpw1hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O183YQEi0kj/nk8nFW7USuQkfoJUbXv//jaGRJN4PNRwh3trN+0iq59O9cb6LhgFn
+	 IKGFbuiUy8Z/e5K/Y27cvbeL1WD4fmdlKEs7WFGhmD3IEAAE/9wMF3zX4cPIcOnX+3
+	 wZmQbYaDnrbSykQAPjHdhrzO5qAwu3lI42GZ2pes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633439AbgDONnL (ORCPT
+        id S2633530AbgDONo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:43:11 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:49077 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730647AbgDONnH (ORCPT
+        Wed, 15 Apr 2020 09:44:28 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38760 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730647AbgDONoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:43:07 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TvcmpSS_1586958174;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvcmpSS_1586958174)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 15 Apr 2020 21:42:55 +0800
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
- <20200413180725.GA99267@cmpxchg.org>
- <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
- <20200414163114.GA136578@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
-Date:   Wed, 15 Apr 2020 21:42:26 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Wed, 15 Apr 2020 09:44:22 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e5so4874383edq.5;
+        Wed, 15 Apr 2020 06:44:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ue1uYbSCM3f3qpA8DP0y7k1ImrV8BLgfQdpHr8wCsNY=;
+        b=rpO9MnuZ7LUd/ZIOmj2qbKe0/TaEjah/TLCxkZpXoXGjK/A3yPVenorS7cbNxROyh7
+         WfrRYLna0DDCJX9HtDBU9Tbt0TcWRQ7g8YIGVUmRNB1eT2VySRHIAPGFUzs0PR4ZDAM3
+         gLwZzmwMxxNsOBlwzCj/81AChokwFjuV2BEmeZMVa5ONQ6B0lvkEe6dx11hrNXlKjPGB
+         PVPGEVLBOgme4fJu727b3Zn4fVRmtzfApq6jFdwMacNwRK8TJ+XvKDO/eYML/ZW7EFD6
+         bLqAhgpREjkbK5m8Mizjp0mlUttn56QaIDDyAcysI7ZO7EdXf/E8dQHxSEXAqJqhMagR
+         Ahnw==
+X-Gm-Message-State: AGi0Pua+I8RsrF+K0p94JD3SRwtP2Pa6sEZ4fTZ32X0fVJWvvwSE81v2
+        6ujeTK0oP6HHd4LFsORbvwjpodqc
+X-Google-Smtp-Source: APiQypKNYzTDTcjJXJkyJ1tW3CmeNRTTMuezBm45FxKlxDAUOBaCIldgd2OqLmdaCh5e2z6JTgFDtA==
+X-Received: by 2002:a17:907:118b:: with SMTP id uz11mr4894575ejb.89.1586958259236;
+        Wed, 15 Apr 2020 06:44:19 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id bs8sm2626297ejb.92.2020.04.15.06.44.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Apr 2020 06:44:18 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 15:44:15 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
+Message-ID: <20200415134415.GA21120@kozik-lap>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
+ <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
+ <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20200414163114.GA136578@cmpxchg.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 02:50:31PM +0200, H. Nikolaus Schaller wrote:
+> 
+> > Am 15.04.2020 um 13:49 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
+> > 
+> > On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >> 
+> >> From: Jonathan Bakker <xc-racer2@live.ca>
+> >> 
+> >> to add support for SGX540 GPU.
+> > 
+> > Do not continue the subject in commit msg like it is one sentence.
+> > These are two separate sentences, so commit msg starts with capital
+> > letter and it is sentence by itself.
+> > 
+> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> ---
+> >> arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
+> >> 1 file changed, 15 insertions(+)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+> >> index 2ad642f51fd9..e7fc709c0cca 100644
+> >> --- a/arch/arm/boot/dts/s5pv210.dtsi
+> >> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> >> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
+> >>                        #interrupt-cells = <1>;
+> >>                };
+> >> 
+> >> +               g3d: g3d@f3000000 {
+> >> +                       compatible = "samsung,s5pv210-sgx540-120";
+> >> +                       reg = <0xf3000000 0x10000>;
+> >> +                       interrupt-parent = <&vic2>;
+> >> +                       interrupts = <10>;
+> >> +                       clock-names = "sclk";
+> >> +                       clocks = <&clocks CLK_G3D>;
+> > 
+> > Not part of bindings, please remove or add to the bindings.
+> 
+> Well, the bindings should describe what is common for all SoC
+> and they are quite different in what they need in addition.
+> 
+> Thererfore we have no "additionalProperties: false" in the
+> bindings [PATCH v6 01/12].
 
+If these properties are needed for Exynos-specific implementation, they
+should be in the bindings. If they are not needed, they should not be
+here.
 
-在 2020/4/15 上午12:31, Johannes Weiner 写道:
-> On Tue, Apr 14, 2020 at 12:52:30PM +0800, Alex Shi wrote:
->> 在 2020/4/14 上午2:07, Johannes Weiner 写道:
->>> Plus, the overhead of tracking is tiny - 512k per G of swap (0.04%).
->>>
->>> Maybe we should just delete MEMCG_SWAP and unconditionally track swap
->>> entry ownership when the memory controller is enabled. I don't see a
->>> good reason not to, and it would simplify the entire swapin path, the
->>> LRU locking, and the page->mem_cgroup stabilization rules.
->>>
->>
->> Sorry for not follow you up, did you mean just remove the MEMCG_SWAP configuration
->> and keep the feature in default memcg? 
-> 
-> Yes.
-> 
->> That does can remove lrucare, but PageLRU lock scheme still fails since
->> we can not isolate the page during commit_charge, is that right?
-> 
-> No, without lrucare the scheme works. Charges usually do:
-> 
-> page->mem_cgroup = new;
-> SetPageLRU(page);
-> 
-> And so if you can TestClearPageLRU(), page->mem_cgroup is stable.
-> 
-> lrucare charging is the exception: it changes page->mem_cgroup AFTER
-> PageLRU has already been set, and even when it CANNOT acquire the
-> PageLRU lock itself. It violates the rules.
-> 
-> If we make MEMCG_SWAP mandatory, we always have cgroup records for
-> swapped out pages. That means we can charge all swapin pages
-> (incl. readahead pages) directly in __read_swap_cache_async(), before
-> setting PageLRU on the new pages.
-> 
-> Then we can delete lrucare.
-> 
-> And then TestClearPageLRU() guarantees page->mem_cgroup is stable.
-> 
+Take a look at midgard bindings for example. This is a nice starting
+point for these here.
 
-Hi Johannes,
-
-Thanks a lot for point out!
-
-Charging in __read_swap_cache_async would ask for 3 layers function arguments
-pass, that would be a bit ugly. Compare to this, could we move out the
-lru_cache add after commit_charge, like ksm copied pages?
-
-That give a bit extra non lru list time, but the page just only be used only
-after add_anon_rmap setting. Could it cause troubles?
-
-I tried to track down the reason of lru_cache_add here, but no explanation
-till first git kernel commit.
-
-Thanks
-Alex 
-
+Best regards,
+Krzysztof
