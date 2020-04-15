@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBD0C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF93BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21636206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FE520775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895945AbgDOJuw (ORCPT
+        id S2895957AbgDOJvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51884 "EHLO
+        Wed, 15 Apr 2020 05:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895890AbgDOJtz (ORCPT
+        by vger.kernel.org with ESMTP id S2895891AbgDOJtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 05:49:55 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C88C0610D5;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2D7C0610D6;
         Wed, 15 Apr 2020 02:49:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOeg1-0005t5-Ob; Wed, 15 Apr 2020 11:49:49 +0200
+        id 1jOeg2-0005tL-6Y; Wed, 15 Apr 2020 11:49:50 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 449831C03A9;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC2CB1C0081;
         Wed, 15 Apr 2020 11:49:49 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 09:49:48 -0000
+Date:   Wed, 15 Apr 2020 09:49:49 -0000
 From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce: Convert the CEC to use the MCE notifier
+Subject: [tip: ras/core] x86/mce: Rename "first" function as "early"
 Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200214222720.13168-3-tony.luck@intel.com>
-References: <20200214222720.13168-3-tony.luck@intel.com>
+In-Reply-To: <20200214222720.13168-2-tony.luck@intel.com>
+References: <20200214222720.13168-2-tony.luck@intel.com>
 MIME-Version: 1.0
-Message-ID: <158694418890.28353.11828147027206185087.tip-bot2@tip-bot2>
+Message-ID: <158694418938.28353.14495297521999305514.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,145 +58,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the ras/core branch of tip:
 
-Commit-ID:     9554bfe403bdfc084823df8695a01f28c680af61
-Gitweb:        https://git.kernel.org/tip/9554bfe403bdfc084823df8695a01f28c680af61
+Commit-ID:     c9c6d216ed28be6e2c91e3651af169eca284813a
+Gitweb:        https://git.kernel.org/tip/c9c6d216ed28be6e2c91e3651af169eca284813a
 Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Fri, 14 Feb 2020 14:27:15 -08:00
+AuthorDate:    Fri, 14 Feb 2020 14:27:14 -08:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 14 Apr 2020 15:58:08 +02:00
+CommitterDate: Tue, 14 Apr 2020 15:55:01 +02:00
 
-x86/mce: Convert the CEC to use the MCE notifier
+x86/mce: Rename "first" function as "early"
 
-The CEC code has its claws in a couple of routines in mce/core.c.
-Convert it to just register itself on the normal MCE notifier chain.
+It isn't going to be first on the notifier chain when the CEC is moved
+to be a normal user of the notifier chain.
 
- [ bp: Make cec_add_elem() and cec_init() static. ]
+Fix the enum for the MCE_PRIO symbols to list them in reverse order so
+that the compiler can give them numbers from low to high priority. Add
+an entry for MCE_PRIO_CEC as the highest priority.
+
+ [ bp: Use passive voice, add comments. ]
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200214222720.13168-3-tony.luck@intel.com
+Link: https://lkml.kernel.org/r/20200214222720.13168-2-tony.luck@intel.com
 ---
- arch/x86/kernel/cpu/mce/core.c | 19 -------------------
- drivers/ras/cec.c              | 30 ++++++++++++++++++++++++++++--
- include/linux/ras.h            |  5 -----
- 3 files changed, 28 insertions(+), 26 deletions(-)
+ arch/x86/include/asm/mce.h     | 16 +++++++++-------
+ arch/x86/kernel/cpu/mce/core.c | 10 +++++-----
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 83b6dda..689ac6e 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -144,14 +144,16 @@ struct mce_log_buffer {
+ 	struct mce entry[];
+ };
+ 
++/* Highest last */
+ enum mce_notifier_prios {
+-	MCE_PRIO_FIRST		= INT_MAX,
+-	MCE_PRIO_UC		= INT_MAX - 1,
+-	MCE_PRIO_EXTLOG		= INT_MAX - 2,
+-	MCE_PRIO_NFIT		= INT_MAX - 3,
+-	MCE_PRIO_EDAC		= INT_MAX - 4,
+-	MCE_PRIO_MCELOG		= 1,
+-	MCE_PRIO_LOWEST		= 0,
++	MCE_PRIO_LOWEST,
++	MCE_PRIO_MCELOG,
++	MCE_PRIO_EDAC,
++	MCE_PRIO_NFIT,
++	MCE_PRIO_EXTLOG,
++	MCE_PRIO_UC,
++	MCE_PRIO_EARLY,
++	MCE_PRIO_CEC
+ };
+ 
+ struct notifier_block;
 diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 43b1519..b033b35 100644
+index a6009ef..43b1519 100644
 --- a/arch/x86/kernel/cpu/mce/core.c
 +++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -544,21 +544,6 @@ bool mce_is_correctable(struct mce *m)
+@@ -559,7 +559,7 @@ static bool cec_add_mce(struct mce *m)
+ 	return false;
  }
- EXPORT_SYMBOL_GPL(mce_is_correctable);
  
--static bool cec_add_mce(struct mce *m)
--{
--	if (!m)
--		return false;
--
--	/* We eat only correctable DRAM errors with usable addresses. */
--	if (mce_is_memory_error(m) &&
--	    mce_is_correctable(m)  &&
--	    mce_usable_address(m))
--		if (!cec_add_elem(m->addr >> PAGE_SHIFT))
--			return true;
--
--	return false;
--}
--
- static int mce_early_notifier(struct notifier_block *nb, unsigned long val,
+-static int mce_first_notifier(struct notifier_block *nb, unsigned long val,
++static int mce_early_notifier(struct notifier_block *nb, unsigned long val,
  			      void *data)
  {
-@@ -567,9 +552,6 @@ static int mce_early_notifier(struct notifier_block *nb, unsigned long val,
- 	if (!m)
- 		return NOTIFY_DONE;
- 
--	if (cec_add_mce(m))
--		return NOTIFY_STOP;
--
- 	/* Emit the trace record: */
- 	trace_mce_record(m);
- 
-@@ -2612,7 +2594,6 @@ static int __init mcheck_late_init(void)
- 		static_branch_inc(&mcsafe_key);
- 
- 	mcheck_debugfs_init();
--	cec_init();
- 
- 	/*
- 	 * Flush out everything that has been logged during early boot, now that
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index c09cf55..6b42040 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -309,7 +309,7 @@ static bool sanity_check(struct ce_array *ca)
- 	return ret;
+ 	struct mce *m = (struct mce *)data;
+@@ -580,9 +580,9 @@ static int mce_first_notifier(struct notifier_block *nb, unsigned long val,
+ 	return NOTIFY_DONE;
  }
  
--int cec_add_elem(u64 pfn)
-+static int cec_add_elem(u64 pfn)
+-static struct notifier_block first_nb = {
+-	.notifier_call	= mce_first_notifier,
+-	.priority	= MCE_PRIO_FIRST,
++static struct notifier_block early_nb = {
++	.notifier_call	= mce_early_notifier,
++	.priority	= MCE_PRIO_EARLY,
+ };
+ 
+ static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
+@@ -2041,7 +2041,7 @@ __setup("mce", mcheck_enable);
+ int __init mcheck_init(void)
  {
- 	struct ce_array *ca = &ce_arr;
- 	unsigned int to = 0;
-@@ -527,7 +527,30 @@ err:
- 	return 1;
- }
- 
--void __init cec_init(void)
-+static int cec_notifier(struct notifier_block *nb, unsigned long val,
-+			void *data)
-+{
-+	struct mce *m = (struct mce *)data;
-+
-+	if (!m)
-+		return NOTIFY_DONE;
-+
-+	/* We eat only correctable DRAM errors with usable addresses. */
-+	if (mce_is_memory_error(m) &&
-+	    mce_is_correctable(m)  &&
-+	    mce_usable_address(m))
-+		if (!cec_add_elem(m->addr >> PAGE_SHIFT))
-+			return NOTIFY_STOP;
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block cec_nb = {
-+	.notifier_call	= cec_notifier,
-+	.priority	= MCE_PRIO_CEC,
-+};
-+
-+static void __init cec_init(void)
- {
- 	if (ce_arr.disabled)
- 		return;
-@@ -546,8 +569,11 @@ void __init cec_init(void)
- 	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
- 	schedule_delayed_work(&cec_work, CEC_DECAY_DEFAULT_INTERVAL);
- 
-+	mce_register_decode_chain(&cec_nb);
-+
- 	pr_info("Correctable Errors collector initialized.\n");
- }
-+late_initcall(cec_init);
- 
- int __init parse_cec_param(char *str)
- {
-diff --git a/include/linux/ras.h b/include/linux/ras.h
-index 7c3debb..1f4048b 100644
---- a/include/linux/ras.h
-+++ b/include/linux/ras.h
-@@ -17,12 +17,7 @@ static inline int ras_add_daemon_trace(void) { return 0; }
- #endif
- 
- #ifdef CONFIG_RAS_CEC
--void __init cec_init(void);
- int __init parse_cec_param(char *str);
--int cec_add_elem(u64 pfn);
--#else
--static inline void __init cec_init(void)	{ }
--static inline int cec_add_elem(u64 pfn)		{ return -ENODEV; }
- #endif
- 
- #ifdef CONFIG_RAS
+ 	mcheck_intel_therm_init();
+-	mce_register_decode_chain(&first_nb);
++	mce_register_decode_chain(&early_nb);
+ 	mce_register_decode_chain(&mce_uc_nb);
+ 	mce_register_decode_chain(&mce_default_nb);
+ 	mcheck_vendor_init_severity();
