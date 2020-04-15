@@ -2,53 +2,54 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237E3C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB27C38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7F9920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E1A21707
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951175;
-	bh=M8E/aNrFYn1/9bNSs0TvZi9Xc8SxJ8APXi7e1rp2YN0=;
+	s=default; t=1586951193;
+	bh=xfxEHbO2CYxxBaJ6smtcDNMkhdPl2Aa+kTgvxGBP8Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=da/W0Kvc0yQDMmL8NFHtV1O3/kyeEUJDAAY7oZp+zaqDOhkXF6TzIxksttYfGlNAJ
-	 /1Lp53nGU45Cb9amsr0Pe304m0eD//+Crm5s/biGwDzJNriauf7o2Kxfo1UP+B/o7G
-	 YztbNRd3KWrQ8Pr1F5IcaOOkHyzA+uFTcs9VOezs=
+	b=oobNMfdw8tFCjjU0GFLzrUGzZZ2Wv++kOuqmexnnaElKShOGzX7WYk7QxPrHPfrTV
+	 Hh+v2nPljizDXz88t9AE1tLtn3U3PYSV0scAf2pAExpAa96iBmmC73jwGk/N1KdVFT
+	 +JuVaVocwomYA3f3HSk0A6SSqSC1iaNazvRypP5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409265AbgDOLqK (ORCPT
+        id S2406480AbgDOLqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:46:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897472AbgDOLmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:35 -0400
+        id S2897483AbgDOLmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96885214D8;
-        Wed, 15 Apr 2020 11:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EACB206A2;
+        Wed, 15 Apr 2020 11:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950955;
-        bh=M8E/aNrFYn1/9bNSs0TvZi9Xc8SxJ8APXi7e1rp2YN0=;
+        s=default; t=1586950958;
+        bh=xfxEHbO2CYxxBaJ6smtcDNMkhdPl2Aa+kTgvxGBP8Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TqlTPf008TCQRVQXsanrxiyI+DhqnqmKTBgR15dLzYFqNr3gD0MH55digbU5XiKzZ
-         1CA1fv24EISlFcZbegWUzKj1upAO4l/wAzmv+YChafSDvgi/oemqF8o2qeiZGvuwWj
-         tuMvGrDChHA2xvZuKpwi2bQ/Vo+lhTvhIgysw8fI=
+        b=nrhVDEh1SkwzUfjtuL8dQeWYfiso4TfAUWijpH7AdA1RLylt/MQLlptUi2aTiCRvq
+         cMeRpcdKMhau8YUDWVn5PKNInLHbdIxClpDrj+3laZQXnVcyN+BVJNcpW4VoQZhRxf
+         WvB0uqfDmSJhWbptsvt5P5dB6cWKW+Wy4z4BHkDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Torsten Duwe <duwe@suse.de>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 007/106] s390/crypto: explicitly memzero stack key material in aes_s390.c
-Date:   Wed, 15 Apr 2020 07:40:47 -0400
-Message-Id: <20200415114226.13103-7-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Wenbo Zhang <ethercflow@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 009/106] bpf: Reliably preserve btf_trace_xxx types
+Date:   Wed, 15 Apr 2020 07:40:49 -0400
+Message-Id: <20200415114226.13103-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -61,44 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Torsten Duwe <duwe@suse.de>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 4a559cd15dbc79958fa9b18ad4e8afe4a0bf4744 ]
+[ Upstream commit 441420a1f0b3031f228453697406c86f110e59d4 ]
 
-aes_s390.c has several functions which allocate space for key material on
-the stack and leave the used keys there. It is considered good practice
-to clean these locations before the function returns.
+btf_trace_xxx types, crucial for tp_btf BPF programs (raw tracepoint with
+verifier-checked direct memory access), have to be preserved in kernel BTF to
+allow verifier do its job and enforce type/memory safety. It was reported
+([0]) that for kernels built with Clang current type-casting approach doesn't
+preserve these types.
 
-Link: https://lkml.kernel.org/r/20200221165511.GB6928@lst.de
-Signed-off-by: Torsten Duwe <duwe@suse.de>
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+This patch fixes it by declaring an anonymous union for each registered
+tracepoint, capturing both struct bpf_raw_event_map information, as well as
+recording btf_trace_##call type reliably. Structurally, it's still the same
+content as for a plain struct bpf_raw_event_map, so no other changes are
+necessary.
+
+  [0] https://github.com/iovisor/bcc/issues/2770#issuecomment-591007692
+
+Fixes: e8c423fb31fa ("bpf: Add typecast to raw_tracepoints to help BTF generation")
+Reported-by: Wenbo Zhang <ethercflow@gmail.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200301081045.3491005-2-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/trace/bpf_probe.h | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index ead0b2c9881d1..14d006b424eb1 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -354,6 +354,7 @@ static int cbc_aes_crypt(struct skcipher_request *req, unsigned long modifier)
- 		memcpy(walk.iv, param.iv, AES_BLOCK_SIZE);
- 		ret = skcipher_walk_done(&walk, nbytes - n);
- 	}
-+	memzero_explicit(&param, sizeof(param));
- 	return ret;
- }
+diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+index b04c292709730..1ce3be63add1f 100644
+--- a/include/trace/bpf_probe.h
++++ b/include/trace/bpf_probe.h
+@@ -75,13 +75,17 @@ static inline void bpf_test_probe_##call(void)				\
+ 	check_trace_callback_type_##call(__bpf_trace_##template);	\
+ }									\
+ typedef void (*btf_trace_##call)(void *__data, proto);			\
+-static struct bpf_raw_event_map	__used					\
+-	__attribute__((section("__bpf_raw_tp_map")))			\
+-__bpf_trace_tp_map_##call = {						\
+-	.tp		= &__tracepoint_##call,				\
+-	.bpf_func	= (void *)(btf_trace_##call)__bpf_trace_##template,	\
+-	.num_args	= COUNT_ARGS(args),				\
+-	.writable_size	= size,						\
++static union {								\
++	struct bpf_raw_event_map event;					\
++	btf_trace_##call handler;					\
++} __bpf_trace_tp_map_##call __used					\
++__attribute__((section("__bpf_raw_tp_map"))) = {			\
++	.event = {							\
++		.tp		= &__tracepoint_##call,			\
++		.bpf_func	= __bpf_trace_##template,		\
++		.num_args	= COUNT_ARGS(args),			\
++		.writable_size	= size,					\
++	},								\
+ };
  
-@@ -489,6 +490,8 @@ static int xts_aes_crypt(struct skcipher_request *req, unsigned long modifier)
- 			 walk.dst.virt.addr, walk.src.virt.addr, n);
- 		ret = skcipher_walk_done(&walk, nbytes - n);
- 	}
-+	memzero_explicit(&pcc_param, sizeof(pcc_param));
-+	memzero_explicit(&xts_param, sizeof(xts_param));
- 	return ret;
- }
- 
+ #define FIRST(x, ...) x
 -- 
 2.20.1
 
