@@ -2,216 +2,215 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99270C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8507DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA272076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614B32076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:07:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="iWw1bOn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371237AbgDOPG5 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:06:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60720 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394095AbgDOPGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:06:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C82B1AFBB;
-        Wed, 15 Apr 2020 15:06:18 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     saravanak@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] of: property: Move of_link_to_phandle()
-Date:   Wed, 15 Apr 2020 17:05:48 +0200
-Message-Id: <20200415150550.28156-4-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200415150550.28156-1-nsaenzjulienne@suse.de>
-References: <20200415150550.28156-1-nsaenzjulienne@suse.de>
+        id S2393118AbgDOPHj (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 11:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730523AbgDOPH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:07:29 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C63C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:07:29 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id j16so13722234oih.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BJ/egVWRNDuUrA/1e/qFDXWs5Qc4J9+ABqHJ5tB4g3c=;
+        b=iWw1bOn3loZLesgeK5vvFlv/vbKF1B9cNeqqd8NzRsrGERu7XHxYHXWJ5Vj2aIKqQt
+         ALZSRzXYFGnpipKbpX9Mj6K4dlBHCsyPxQWdqycQN4uudHiPdiNQ0A4222J8g43ypldP
+         OoxNb0rt9UnzHvWxrcg9sL819b/jYP4eu3+0EmNCdVKPHvJcY9vtyTYzET+LtNy8PYxy
+         w5zNHoiUMDb8nwu0Ak6Y43R2eh/vABGjwHeVRBBsoy1i6JORJ6gx1bi4NriKKzTDSfEW
+         +T7kNtgF2mUJ+v+m5uG2JWiihzllu8oTQDSg0pj7Z+C/Og4Ys6uPJ1cmXJnz3/1755By
+         AQYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BJ/egVWRNDuUrA/1e/qFDXWs5Qc4J9+ABqHJ5tB4g3c=;
+        b=CeoKs+KZaSEUWUzg2skjPWgDovbTA/OxtR6jj9nN9dVGt3m4MhAYS/SC6246BjBy1k
+         EKbyqWj7guqvHR0PaWEuXEtZYEdMJH9YUIhPgDdDU59fOwPlYejF1nlvC19if6sqX4Iw
+         gJ3Sx4/pPjosrnmYDepyJJfkHXMViXMEMm9l6GHZ8LXelD5ArRLsJBB+nb4X2Sv4zy1E
+         AVHzeTiyCk6YZ01ZPnv4tCe2igZRAMHbANld7+c/viWZX9p/mf9ndtV6sor92/VcsxI7
+         pAtlYIVEH0bFH/i0xJrFX6xKmFkYpdukEB4wRaxjLWyr50tV19AoNNBJ/eFimIjzHlxg
+         KdEg==
+X-Gm-Message-State: AGi0PuYzoAG3r7+Y97JgtRmwipcQOvq0sHjtYHAxa+SQioCEydkP5a0Z
+        /ns7wavaAIwU21iouvKrrCR86c9z/g3b3FiYqZsvWQ==
+X-Google-Smtp-Source: APiQypLvNSLmbcj2GoOJKPRwQ0b4TevwhF9jPUtKlLczQuSmRgDhP5Yyzo2l8yt6eZwfR64jtzXnvSUgm75W51k8BEs=
+X-Received: by 2002:aca:4d86:: with SMTP id a128mr19561982oib.96.1586963248561;
+ Wed, 15 Apr 2020 08:07:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200414181012.114905-1-robert.marko@sartura.hr> <20200415093334.GC25745@shell.armlinux.org.uk>
+In-Reply-To: <20200415093334.GC25745@shell.armlinux.org.uk>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Wed, 15 Apr 2020 17:07:17 +0200
+Message-ID: <CA+HBbNEYkQKy-WjxB+QDasknH8gAChddcbtNX6xxE3a+GoNC2g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is done in order to simplify further changes.
+I have sent a v3.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/of/property.c | 145 +++++++++++++++++++++---------------------
- 1 file changed, 73 insertions(+), 72 deletions(-)
+I tried to incorporate all of your remarks there.
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 487685ff8bb19..2c7978ef22be1 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1014,78 +1014,6 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
- 	return false;
- }
- 
--/**
-- * of_link_to_phandle - Add device link to supplier from supplier phandle
-- * @dev: consumer device
-- * @sup_np: phandle to supplier device tree node
-- *
-- * Given a phandle to a supplier device tree node (@sup_np), this function
-- * finds the device that owns the supplier device tree node and creates a
-- * device link from @dev consumer device to the supplier device. This function
-- * doesn't create device links for invalid scenarios such as trying to create a
-- * link with a parent device as the consumer of its child device. In such
-- * cases, it returns an error.
-- *
-- * Returns:
-- * - 0 if link successfully created to supplier
-- * - -EAGAIN if linking to the supplier should be reattempted
-- * - -EINVAL if the supplier link is invalid and should not be created
-- * - -ENODEV if there is no device that corresponds to the supplier phandle
-- */
--static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
--			      u32 dl_flags)
--{
--	struct device *sup_dev;
--	int ret = 0;
--	struct device_node *tmp_np = sup_np;
--	int is_populated;
--
--	of_node_get(sup_np);
--	/*
--	 * Find the device node that contains the supplier phandle.  It may be
--	 * @sup_np or it may be an ancestor of @sup_np.
--	 */
--	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
--		sup_np = of_get_next_parent(sup_np);
--	if (!sup_np) {
--		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
--		return -ENODEV;
--	}
--
--	/* Don't allow linking a device node as consumer of a disabled node */
--	if (!of_device_is_available(sup_np)) {
--		dev_dbg(dev, "Not linking to %pOFP - Not available\n", sup_np);
--		of_node_put(sup_np);
--		return -ENODEV;
--	}
--
--	/*
--	 * Don't allow linking a device node as a consumer of one of its
--	 * descendant nodes. By definition, a child node can't be a functional
--	 * dependency for the parent node.
--	 */
--	if (of_is_ancestor_of(dev->of_node, sup_np)) {
--		dev_dbg(dev, "Not linking to %pOFP - is descendant\n", sup_np);
--		of_node_put(sup_np);
--		return -EINVAL;
--	}
--	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
--	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
--	of_node_put(sup_np);
--	if (!sup_dev && is_populated) {
--		/* Early device without struct device. */
--		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
--			sup_np);
--		return -ENODEV;
--	} else if (!sup_dev) {
--		return -EAGAIN;
--	}
--	if (!device_link_add(dev, sup_dev, dl_flags))
--		ret = -EAGAIN;
--	put_device(sup_dev);
--	return ret;
--}
--
- /**
-  * parse_prop_cells - Property parsing function for suppliers
-  *
-@@ -1243,6 +1171,79 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{}
- };
- 
-+/**
-+ * of_link_to_phandle - Add device link to supplier from supplier phandle
-+ * @dev: consumer device
-+ * @sup_np: phandle to supplier device tree node
-+ *
-+ * Given a phandle to a supplier device tree node (@sup_np), this function
-+ * finds the device that owns the supplier device tree node and creates a
-+ * device link from @dev consumer device to the supplier device. This function
-+ * doesn't create device links for invalid scenarios such as trying to create a
-+ * link with a parent device as the consumer of its child device. In such
-+ * cases, it returns an error.
-+ *
-+ * Returns:
-+ * - 0 if link successfully created to supplier
-+ * - -EAGAIN if linking to the supplier should be reattempted
-+ * - -EINVAL if the supplier link is invalid and should not be created
-+ * - -ENODEV if there is no device that corresponds to the supplier phandle
-+ */
-+static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-+			      u32 dl_flags)
-+{
-+	struct device *sup_dev;
-+	int ret = 0;
-+	struct device_node *tmp_np = sup_np;
-+	int is_populated;
-+
-+	of_node_get(sup_np);
-+	/*
-+	 * Find the device node that contains the supplier phandle.  It may be
-+	 * @sup_np or it may be an ancestor of @sup_np.
-+	 */
-+	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-+		sup_np = of_get_next_parent(sup_np);
-+	if (!sup_np) {
-+		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
-+		return -ENODEV;
-+	}
-+
-+	/* Don't allow linking a device node as consumer of a disabled node */
-+	if (!of_device_is_available(sup_np)) {
-+		dev_dbg(dev, "Not linking to %pOFP - Not available\n", sup_np);
-+		of_node_put(sup_np);
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Don't allow linking a device node as a consumer of one of its
-+	 * descendant nodes. By definition, a child node can't be a functional
-+	 * dependency for the parent node.
-+	 */
-+	if (of_is_ancestor_of(dev->of_node, sup_np)) {
-+		dev_dbg(dev, "Not linking to %pOFP - is descendant\n", sup_np);
-+		of_node_put(sup_np);
-+		return -EINVAL;
-+	}
-+	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-+	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
-+	of_node_put(sup_np);
-+	if (!sup_dev && is_populated) {
-+		/* Early device without struct device. */
-+		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
-+			sup_np);
-+		return -ENODEV;
-+	} else if (!sup_dev) {
-+		return -EAGAIN;
-+	}
-+
-+	if (!device_link_add(dev, sup_dev, dl_flags))
-+		ret = -EAGAIN;
-+	put_device(sup_dev);
-+	return ret;
-+}
-+
- /**
-  * of_link_property - Create device links to suppliers listed in a property
-  * @dev: Consumer device
--- 
-2.26.0
+Thanks
+Robert
 
+On Wed, Apr 15, 2020 at 11:33 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Apr 14, 2020 at 08:10:11PM +0200, Robert Marko wrote:
+> > diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+> > new file mode 100644
+> > index 000000000000..d8c11c621f20
+> > --- /dev/null
+> > +++ b/drivers/net/phy/mdio-ipq40xx.c
+> > @@ -0,0 +1,176 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> > +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
+> > +/* Copyright (c) 2020 Sartura Ltd. */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/io.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_mdio.h>
+> > +#include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+>
+> Looking at how these registers are used, they could be renamed:
+>
+> > +#define MDIO_CTRL_0_REG              0x40
+>
+> This seems to be unused.
+>
+> > +#define MDIO_CTRL_1_REG              0x44
+>
+> MDIO_ADDR_REG
+>
+> > +#define MDIO_CTRL_2_REG              0x48
+>
+> MDIO_DATA_WRITE_REG
+>
+> > +#define MDIO_CTRL_3_REG              0x4c
+>
+> MDIO_DATA_READ_REG
+>
+> > +#define MDIO_CTRL_4_REG              0x50
+> > +#define MDIO_CTRL_4_ACCESS_BUSY              BIT(16)
+> > +#define MDIO_CTRL_4_ACCESS_START             BIT(8)
+> > +#define MDIO_CTRL_4_ACCESS_CODE_READ         0
+> > +#define MDIO_CTRL_4_ACCESS_CODE_WRITE        1
+>
+> MDIO_CMD_* ?
+>
+> > +
+> > +#define IPQ40XX_MDIO_RETRY   1000
+> > +#define IPQ40XX_MDIO_DELAY   10
+> > +
+> > +struct ipq40xx_mdio_data {
+> > +     void __iomem    *membase;
+> > +};
+> > +
+> > +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
+> > +{
+> > +     struct ipq40xx_mdio_data *priv = bus->priv;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
+> > +             unsigned int busy;
+> > +
+> > +             busy = readl(priv->membase + MDIO_CTRL_4_REG) &
+> > +                     MDIO_CTRL_4_ACCESS_BUSY;
+> > +             if (!busy)
+> > +                     return 0;
+> > +
+> > +             /* BUSY might take to be cleard by 15~20 times of loop */
+> > +             udelay(IPQ40XX_MDIO_DELAY);
+> > +     }
+> > +
+> > +     dev_err(bus->parent, "MDIO operation timed out\n");
+> > +
+> > +     return -ETIMEDOUT;
+> > +}
+> > +
+> > +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+> > +{
+> > +     struct ipq40xx_mdio_data *priv = bus->priv;
+> > +     int value = 0;
+> > +     unsigned int cmd = 0;
+>
+> No need to initialise either of these, and you can eliminate "value"
+> which will then satisfy davem's requirement for reverse-christmas-tree
+> ordering of variable declarations.
+>
+> > +
+> > +     /* Reject clause 45 */
+> > +     if (regnum & MII_ADDR_C45)
+> > +             return -EOPNOTSUPP;
+> > +
+> > +     if (ipq40xx_mdio_wait_busy(bus))
+> > +             return -ETIMEDOUT;
+> > +
+> > +     /* issue the phy address and reg */
+> > +     writel((mii_id << 8) | regnum, priv->membase + MDIO_CTRL_1_REG);
+> > +
+> > +     cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
+> > +
+> > +     /* issue read command */
+> > +     writel(cmd, priv->membase + MDIO_CTRL_4_REG);
+> > +
+> > +     /* Wait read complete */
+> > +     if (ipq40xx_mdio_wait_busy(bus))
+> > +             return -ETIMEDOUT;
+> > +
+> > +     /* Read data */
+> > +     value = readl(priv->membase + MDIO_CTRL_3_REG);
+> > +
+> > +     return value;
+> > +}
+> > +
+> > +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+> > +                                                      u16 value)
+> > +{
+> > +     struct ipq40xx_mdio_data *priv = bus->priv;
+> > +     unsigned int cmd = 0;
+>
+> No need to initialise cmd.
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
