@@ -2,264 +2,229 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA21C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAA7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C56D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C9C206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:23:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="poMVaLmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732277AbgDOWUq (ORCPT
+        id S1731950AbgDOWXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:20:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43926 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgDOWUk (ORCPT
+        Wed, 15 Apr 2020 18:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727993AbgDOWXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:20:40 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 8701ae94ebb8b663; Thu, 16 Apr 2020 00:20:35 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-Date:   Thu, 16 Apr 2020 00:20:35 +0200
-Message-ID: <1998412.Cp2JyuGtSI@kreacher>
-In-Reply-To: <Pine.LNX.4.44L0.2004141150590.12758-100000@netrider.rowland.org>
-References: <Pine.LNX.4.44L0.2004141150590.12758-100000@netrider.rowland.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 15 Apr 2020 18:23:21 -0400
+Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FDCC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:23:19 -0700 (PDT)
+Received: by mail-wr1-x44a.google.com with SMTP id p16so709341wro.16
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:23:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1mIzf0uNJ1HQHSrhnAJYE+OaaNLEalR5nV8OrmGRp7Q=;
+        b=poMVaLmZKcdcG4Bcnx75nTnUfAeTVUBbSMRILdWrxvxVpUbfv9HFq6Pemby1CsT/fT
+         k+/QnoQB850GaS3TsSdLhVxdbwa9CfwxhS6O7eBACVCAPW0yD95HpJAYn2dq6LR2Obc6
+         ddDNnZa+R8Ko+HWsj7W5NbHrr8oPUcpODFOGeDKojz8RghWgVgLMoL5rkotLQ8zdEX5G
+         kT98bNuIZPtygPXOe+idOGBcWhGsWm/hOYLhMMtGummX0ehzhvxXeIQqfO2wzs35lxWX
+         GruxOJh+SGsWu0zIRfue5b+IlZHotMFkSNM6OewW/ijGMwt64yxNVJ7y0aGfUfCZcxdn
+         pS1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1mIzf0uNJ1HQHSrhnAJYE+OaaNLEalR5nV8OrmGRp7Q=;
+        b=hSIhekabv/FnHMT2F9FwhLOas6vZC7cePiWXRRpuFf5E8Vw9YjqghA2HFj7/syLx91
+         WfC78pI00FDtpFF8zJCNGvITkuUZ4Uz/S9SLQWWbyX+ntNy00bGT6Tr9wJAogdBsVBlx
+         sGn/ajIdpfzjjCpbb/i9dosc7mzbAlQtjR1Ioj+59sa0lS+21uFVm8mmbQvqSCE044az
+         9SabXpo5A4XkklMgNczAkVkEhUQYV5cLCPHG75IRp4oA9NyIhFKlXhhh9iV5KUJRNUg4
+         7tc0Q+bXMlRfoDAyMX2hZiPm/OI2U/HhJpyH0NvCEHIYb9QRhePaR8lQ95+xFJaHYU9q
+         N7rg==
+X-Gm-Message-State: AGi0PuYR4eXBqpQEmqB52YPOPtLTkHsOuE/19dk1ACdDY0ObIMrF0U+P
+        3iF4Ewbwzos5fp/sWa15fQRRm/ASig==
+X-Google-Smtp-Source: APiQypJPKdrDSHFKJN23DtNTfbMmvVvnzTvIvil6PSbMBOaJJFx9sscPfhIkTKVVc6rydsLOzcHl9F2HyQ==
+X-Received: by 2002:adf:ed86:: with SMTP id c6mr29887988wro.286.1586989398145;
+ Wed, 15 Apr 2020 15:23:18 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 00:23:12 +0200
+Message-Id: <20200415222312.236431-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+Subject: [PATCH] vmalloc: Fix remap_vmalloc_range() bounds checks
+From:   Jann Horn <jannh@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, April 14, 2020 7:47:35 PM CEST Alan Stern wrote:
-> On Tue, 14 Apr 2020, Rafael J. Wysocki wrote:
-> 
-> > Note to self: avoid replying to technical messages late in the night ...
-> > 
-> > On Mon, Apr 13, 2020 at 11:32 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > On Saturday, April 11, 2020 4:41:14 AM CEST Alan Stern wrote:
-> > > > Okay, this is my attempt to summarize what we have been discussing.
-> > > > But first: There is a dev_pm_skip_resume() helper routine which
-> > > > subsystems can call to see whether resume-side _early and _noirq driver
-> > > > callbacks should be skipped.  But there is no corresponding
-> > > > dev_pm_skip_suspend() helper routine.  Let's add one, or rename
-> > > > dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
-> > >
-> > > OK
-> > >
-> > > > Given that, here's my understanding of what should happen.  (I'm
-> > > > assuming the direct_complete mechanism is not being used.)  This tries
-> > > > to describe what we _want_ to happen, which is not always the same as
-> > > > what the current code actually _does_.
-> > >
-> > > OK
-> > >
-> > > >       During the suspend side, for each of the
-> > > >       {suspend,freeze,poweroff}_{late,noirq} phases: If
-> > > >       dev_pm_skip_suspend() returns true then the subsystem should
-> > > >       not invoke the driver's callback, and if there is no subsystem
-> > > >       callback then the core will not invoke the driver's callback.
-> > > >
-> > > >       During the resume side, for each of the
-> > > >       {resume,thaw,restore}_{early,noirq} phases: If
-> > > >       dev_pm_skip_resume() returns true then the subsystem should
-> > > >       not invoke the driver's callback, and if there is no subsystem
-> > > >       callback then the core will not invoke the driver's callback.
-> > > >
-> > > >       dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
-> > > >       set and the device's runtime status is "suspended".
-> > >
-> > > Agreed with the above.
-> > >
-> > > >       power.must_resume gets set following the suspend-side _noirq
-> > > >       phase if power.usage_count > 1 (indicating the device was
-> > > >       in active use before the start of the sleep transition) or
-> > > >       power.must_resume is set for any of the device's dependents.
-> > >
-> > > Or MAY_SKIP_RESUME is unset (which means that the driver does not
-> > > allow its resume callbacks to be skipped), or power.may_skip_resume
-> > > is unset (which means that the subsystem does not allow the
-> > > driver callbacks to be skipped).
-> 
-> Are you certain about that?  It contradicts what you said earlier, that
-> MAY_SKIP_RESUME doesn't affect THAW transitions.
+remap_vmalloc_range() has had various issues with the bounds checks it
+promises to perform ("This function checks that addr is a valid vmalloc'ed
+area, and that it is big enough to cover the vma") over time, e.g.:
 
-Yes, MAY_SKIP_RESUME, as well as power.may_skip_resume for that matter, really
-should not affect the THAW transition at all.  I overlooked that when I was
-writing the above (and earlier).
+ - not detecting pgoff<<PAGE_SHIFT overflow
+ - not detecting (pgoff<<PAGE_SHIFT)+usize overflow
+ - not checking whether addr and addr+(pgoff<<PAGE_SHIFT) are the same
+   vmalloc allocation
+ - comparing a potentially wildly out-of-bounds pointer with the end of the
+   vmalloc region
 
-This means that the dev_pm_skip_resume() logic really is relatively
-straightforward:
- - If the current transition is RESTORE, return "false".
- - Otherwise, if the current transition is THAW, return the return value
-   of dev_pm_skip_suspend().
- - Otherwise (so the current transition is RESUME which is the only remaining
-   case), return the logical negation of power.must_resume.
+In particular, since commit fc9702273e2e ("bpf: Add mmap() support for
+BPF_MAP_TYPE_ARRAY"), unprivileged users can cause kernel null pointer
+dereferences by calling mmap() on a BPF map with a size that is bigger than
+the distance from the start of the BPF map to the end of the address space.
+This could theoretically be used as a kernel ASLR bypass, by using whether
+mmap() with a given offset oopses or returns an error code to perform a
+binary search over the possible address range.
 
-> Also, it would mean 
-> that a device whose subsystem doesn't know about power.may_skip_resume 
-> would never be allowed to stay in runtime suspend.
+To allow remap_vmalloc_range_partial() to verify that addr and
+addr+(pgoff<<PAGE_SHIFT) are in the same vmalloc region, pass the offset
+to remap_vmalloc_range_partial() instead of adding it to the pointer in
+remap_vmalloc_range().
 
-Not really, because I want the core to set power.may_skip_resume for the
-devices for which dev_pm_skip_suspend() returns "true" if the "suspend_late"
-subsystem-level callback is not present.  [It might be more consistent
-to simply set it for all devices for which dev_pm_skip_suspend() returns
-"true" and let the subsystems update it should they want to?  IOW, the
-default value of power.may_skip_resume could be the return value of
-dev_pm_skip_suspend()?]
+In remap_vmalloc_range_partial(), fix the check against get_vm_area_size()
+by using size comparisons instead of pointer comparisons, and add checks
+for pgoff.
 
-> > > >       dev_pm_skip_resume() will return "false" if the current
-> > > >       transition is RESTORE or power.must_resume is set.  Otherwise:
-> > > >       It will return true if the current transition is THAW,
-> > > >       SMART_SUSPEND is set, and the device's runtime status is
-> > > >       "suspended".
-> > >
-> > > The other way around.  That is:
-> > >
-> > > dev_pm_skip_resume() will return "true" if the current transition is
-> > > THAW and dev_pm_skip_suspend() returns "true" for that device (so
-> > > SMART_SUSPEND is set, and the device's runtime status is "suspended",
-> > > as per the definition of that function above).
-> > 
-> > The above is what I wanted to say ->
-> 
-> So for THAW, dev_pm_skip_resume() can return "true" even if 
-> power.must_resume is set?  That doesn't seem right.
+Cc: stable@vger.kernel.org
+Fixes: 833423143c3a ("[PATCH] mm: introduce remap_vmalloc_range()")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+I'm just sending this on the public list, since the worst-case impact for
+non-root users is leaking kernel pointers to userspace. In a context where
+you can reach BPF (no sandboxing), I don't think that kernel ASLR is very
+effective at the moment anyway.
 
-But it cannot be the other way around.
+ fs/proc/vmcore.c         |  5 +++--
+ include/linux/vmalloc.h  |  2 +-
+ mm/vmalloc.c             | 16 +++++++++++++---
+ samples/vfio-mdev/mdpy.c |  2 +-
+ 4 files changed, 18 insertions(+), 7 deletions(-)
 
-For example, invoking ->thaw_early() from the driver without the corresponding
-->freeze_late() would be a bug in general, unless they point to the same
-routines as ->runtime_resume() and ->runtime_suspend() (or equivalent),
-respectively, but that need not be the case.
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 7dc800cce3543..c663202da8de7 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -266,7 +266,8 @@ static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
+ 		if (start < offset + dump->size) {
+ 			tsz = min(offset + (u64)dump->size - start, (u64)size);
+ 			buf = dump->buf + start - offset;
+-			if (remap_vmalloc_range_partial(vma, dst, buf, tsz)) {
++			if (remap_vmalloc_range_partial(vma, dst, buf, 0,
++							tsz)) {
+ 				ret = -EFAULT;
+ 				goto out_unlock;
+ 			}
+@@ -624,7 +625,7 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+ 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)start, size);
+ 		kaddr = elfnotes_buf + start - elfcorebuf_sz - vmcoredd_orig_sz;
+ 		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
+-						kaddr, tsz))
++						kaddr, 0, tsz))
+ 			goto fail;
+ 
+ 		size -= tsz;
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 0507a162ccd0e..a95d3cc74d79b 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -137,7 +137,7 @@ extern void vunmap(const void *addr);
+ 
+ extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
+ 				       unsigned long uaddr, void *kaddr,
+-				       unsigned long size);
++				       unsigned long pgoff, unsigned long size);
+ 
+ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 							unsigned long pgoff);
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 399f219544f74..9a8227afa0738 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -34,6 +34,7 @@
+ #include <linux/llist.h>
+ #include <linux/bitops.h>
+ #include <linux/rbtree_augmented.h>
++#include <linux/overflow.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/tlbflush.h>
+@@ -3054,6 +3055,7 @@ long vwrite(char *buf, char *addr, unsigned long count)
+  * @vma:		vma to cover
+  * @uaddr:		target user address to start at
+  * @kaddr:		virtual address of vmalloc kernel memory
++ * @pgoff:		offset from @kaddr to start at
+  * @size:		size of map area
+  *
+  * Returns:	0 for success, -Exxx on failure
+@@ -3066,9 +3068,15 @@ long vwrite(char *buf, char *addr, unsigned long count)
+  * Similar to remap_pfn_range() (see mm/memory.c)
+  */
+ int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
+-				void *kaddr, unsigned long size)
++				void *kaddr, unsigned long pgoff,
++				unsigned long size)
+ {
+ 	struct vm_struct *area;
++	unsigned long off;
++	unsigned long end_index;
++
++	if (check_shl_overflow(pgoff, PAGE_SHIFT, &off))
++		return -EINVAL;
+ 
+ 	size = PAGE_ALIGN(size);
+ 
+@@ -3082,8 +3090,10 @@ int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
+ 	if (!(area->flags & (VM_USERMAP | VM_DMA_COHERENT)))
+ 		return -EINVAL;
+ 
+-	if (kaddr + size > area->addr + get_vm_area_size(area))
++	if (check_add_overflow(size, off, &end_index) ||
++	    end_index > get_vm_area_size(area))
+ 		return -EINVAL;
++	kaddr += off;
+ 
+ 	do {
+ 		struct page *page = vmalloc_to_page(kaddr);
+@@ -3122,7 +3132,7 @@ int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 						unsigned long pgoff)
+ {
+ 	return remap_vmalloc_range_partial(vma, vma->vm_start,
+-					   addr + (pgoff << PAGE_SHIFT),
++					   addr, pgoff,
+ 					   vma->vm_end - vma->vm_start);
+ }
+ EXPORT_SYMBOL(remap_vmalloc_range);
+diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+index cc86bf6566e42..9894693f3be17 100644
+--- a/samples/vfio-mdev/mdpy.c
++++ b/samples/vfio-mdev/mdpy.c
+@@ -418,7 +418,7 @@ static int mdpy_mmap(struct mdev_device *mdev, struct vm_area_struct *vma)
+ 		return -EINVAL;
+ 
+ 	return remap_vmalloc_range_partial(vma, vma->vm_start,
+-					   mdev_state->memblk,
++					   mdev_state->memblk, 0,
+ 					   vma->vm_end - vma->vm_start);
+ }
+ 
 
-> > > Otherwise, it will return "true" if the current transition is RESTORE
-> > > (which means that all devices are resumed) or power.must_resume is not
-> > > set (so this particular device need not be resumed).
-> > 
-> > -> but this isn't.  In particular, I messed up the RESTORE part, so it
-> > should read:
-> > 
-> > Otherwise, it will return "true" if the current transition is *not*
-> > RESTORE (in which case all devices would be resumed) *and*
-> > power.must_resume is not set (so this particular device need not be
-> > resumed).
-> > 
-> > Sorry about that.
-> 
-> For the RESTORE and THAW cases that is exactly the same as what I 
-> wrote, apart from the THAW issue noted above.
-
-OK then.
-
-> > > >  It will return "true" if the current transition is
-> > > >       RESUME, SMART_SUSPEND and MAY_SKIP_RESUME are both set, and
-> > > >       the device's runtime status is "suspended".
-> > >
-> > > Unless MAY_SKIP_RESUME is unset for at least one of its descendants (or
-> > > dependent devices).
-> > 
-> > That should include the power.may_skip_resume flag, so as to read as follows:
-> > 
-> > Unless MAY_SKIP_RESUME is unset or power.may_skip_resume is unset for
-> > at least one of its descendants (or dependent devices).
-> 
-> What about the runtime PM usage counter?
-
-Yes, it applies to that too.
-
-Of course, if dev_pm_skip_suspend() returns "true", the usage counter cannot
-be greater than 1 (for the given device as well as for any dependent devices).
-
-> > > >       For a RESUME
-> > > >       transition, it will also return "true" if MAY_SKIP_RESUME and
-> > > >       power.may_skip_resume are both set, regardless of
-> > > >       SMART_SUSPEND or the current runtime status.
-> > >
-> > > And if the device was not in active use before suspend (as per its usage
-> > > counter) or MAY_SKIP_RESUME is unset for at least one of its descendants (or
-> > > dependent devices in general).
-> > 
-> > And analogously here, so what I really should have written is:
-> > 
-> > And if the device was not in active use before suspend (as per its
-> > usage counter) or MAY_SKIP_RESUME or power.may_skip_resume is unset
-> > for at least one of its descendants (or dependent devices in general).
-> 
-> In other words, for RESUME transitions you want the MAY_SKIP_RESUME and
-> power.may_skip_resume restrictions to propagate up from dependent
-> devices.
-
-Yes, I do.
-
-> And of course, the way to do that is by adding them into the
-> power.must_resume flag.
-
-Right.
-
-> How do you want to handle the usage counter restriction.  
-> Should that also propagate upward?
-
-Yes, it should.
-
-> And how should the result of dev_pm_skip_resume() be affected by 
-> SMART_SUSPEND for RESUME transitions?
-
-Not directly, just through power.must_resume.
-
-> Maybe this is getting confusing because of the way I organized it.  
-> Let's try like this:
-> 
-> Transition   Conditions for dev_pm_skip_resume() to return "true"
-> ----------   ----------------------------------------------------
-> 
-> RESTORE      Never
-
-Right.
-
-> THAW         power.must_resume is clear (which requires
->                MAY_SKIP_RESUME and power.may_skip_resume to be set and 
->                the runtime usage counter to be = 1, and which 
->                propagates up from dependent devices)
->              SMART_SUSPEND is set,
->              runtime status is "suspended"
-
-Like I said above:
-
- THAW			dev_pm_skip_suspend() returns "true".
-
-> 
-> RESUME       Same as THAW?  Or maybe don't require SMART_SUSPEND?
->                (But if SMART_SUSPEND is clear, how could the runtime 
->                status be "suspended"?)
-
- RESUME		power.must_resume is clear (which requires
-				  MAY_SKIP_RESUME and power.may_skip_resume to be set and
-				  the runtime usage counter to be = 1, and which 
-				  propagates up from dependent devices)
-
-Nothing else is really strictly required IMO.
-
-> 
-> I can't really tell what you want, because your comments at various 
-> times have been inconsistent.
-
-Sorry for the inconsistencies, I hope that it's more clear now.
-
-Cheers!
-
-
+base-commit: 8632e9b5645bbc2331d21d892b0d6961c1a08429
+-- 
+2.26.0.110.g2183baf09c-goog
 
