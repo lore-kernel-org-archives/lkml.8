@@ -2,152 +2,255 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FC8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E003DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D8B2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="reeYQ8Wn"
+	by mail.kernel.org (Postfix) with ESMTP id BEFC82074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895539AbgDOJaX (ORCPT
+        id S2895556AbgDOJab convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895527AbgDOJaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:30:18 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35A2C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:30:17 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t14so5039305wrw.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OBdwBYebBJuoimbTaQN5QWpwweg/EKkjkWJ4yfY8dv8=;
-        b=reeYQ8WnjncSc2T7Jajbw6ovboRJQxLghh5cijCOXyREaR7Dl+S8j8D2XG5mStUhwl
-         mVaew31PHI9qkmosAPw9GSGyLyVe5zlsjJcDZbr2vAxywVnS2SzWx3Uw8e6jEuwJHU1S
-         iovJsQeMZQzBbgYX7Ak1PVka6TVJl0082uVSrQOu3EXpRLsnNLNh2+LkgyIK6Qq6qylD
-         inE+/o9g1hR6fynzjHgA+07E+Z+6ltXE+i3BF6w7+/XFpA60n0zNBMiVB7MNGlepPvYQ
-         Q7pAST5/u+Eea4/A9OZEen4ukNfsQHOesmlMaqlowLF/1zDMwgQ8VPrh9/fzd0xNJdB+
-         LzDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OBdwBYebBJuoimbTaQN5QWpwweg/EKkjkWJ4yfY8dv8=;
-        b=jmUW3YSsjlX9++TkJ5crMQt9lYUbmEBhsEtHQDnlVTbXNblFTMa3ZewB9BHDHFMhpB
-         6G1JbYcKSsSx4hpX6jSG6tB8RPZPC/R8uWHmPpUbS3RtifGdBCUXWHZ1NI+IjDpDN1lX
-         5RHkuWErDECGykf3eFBE9dUp421Lx8RE91KRF360hFp7I7E/DWdlUiABLbCF88OVPXdk
-         aNi8nOQIxMoagHxx5oygMEi8TNDOIt9Byf21dC/ugc9WLEKKPsQyP/lGP4Twzept1wqa
-         hJv7HNlQYdfKIFoQF7SzVjoanQJf7XaqZUezmXBSafQEzo5xL7aVGfpu52CmAdXt/tTs
-         +Qsg==
-X-Gm-Message-State: AGi0PuZhRGE+5aOhtLj92wyL+SWSJJprnA7h0fqXXmsf+AG7yjAQgRW4
-        dtVVnQmVcRpKIEujY86oPLZByA==
-X-Google-Smtp-Source: APiQypJzG0axis5t2o+sttyC3y5d8wml7TaIbWStXxtN12O7zTtqqsicoGy8Ok1q7cM6FamBaWXPaw==
-X-Received: by 2002:a5d:6607:: with SMTP id n7mr5205782wru.150.1586943016404;
-        Wed, 15 Apr 2020 02:30:16 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h13sm11465797wrs.22.2020.04.15.02.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:30:15 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:31:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-Subject: Re: [PATCH v5 1/4] mfd: syscon: Add fwnode_to_regmap
-Message-ID: <20200415093116.GH2167633@dell>
-References: <cover.1585103753.git.eswara.kota@linux.intel.com>
- <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
+        Wed, 15 Apr 2020 05:30:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:40276 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895529AbgDOJaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:30:20 -0400
+IronPort-SDR: XAGK+kAv//POpVwkO63ovpawwZbOaSJ/iRjeF2SIgL96iLh45I/gl/OfIwEWw2FQnXoriuLEAB
+ bC4kupd8OtTQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:30:17 -0700
+IronPort-SDR: yM53F0BqUjgFsaDl9yfqZonlhinnz2Q8mQ5cZVayuk7Ezt98ExL1qraLe7SEXiWUq+pG/+DJBy
+ mg7unbdi2o2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="253471562"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 02:30:17 -0700
+Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Apr 2020 02:30:17 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Apr 2020 02:30:16 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
+ Wed, 15 Apr 2020 17:30:14 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 5/7] iommu/vt-d: Save prq descriptors in an internal
+ list
+Thread-Topic: [PATCH v2 5/7] iommu/vt-d: Save prq descriptors in an internal
+ list
+Thread-Index: AQHWEubRQl+z5SUG+E2NKgqcVznRXah56kTQ
+Date:   Wed, 15 Apr 2020 09:30:13 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8207B2@SHSMSX104.ccr.corp.intel.com>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-6-baolu.lu@linux.intel.com>
+In-Reply-To: <20200415052542.30421-6-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020, Dilip Kota wrote:
-
-> Traverse regmap handle entry from firmware node handle.
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Wednesday, April 15, 2020 1:26 PM
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Currently, the page request interrupt thread handles the page
+> requests in the queue in this way:
+> 
+> - Clear PPR bit to ensure new interrupt could come in;
+> - Read and record the head and tail registers;
+> - Handle all descriptors between head and tail;
+> - Write tail to head register.
+> 
+> This might cause some descriptors to be handles multiple times.
+> An example sequence:
+> 
+> - Thread A got scheduled with PRQ_1 and PRQ_2 in the queue;
+> - Thread A clear the PPR bit and record the head and tail;
+> - A new PRQ_3 comes and Thread B gets scheduled;
+> - Thread B record the head and tail which includes PRQ_1
+>   and PRQ_2.
+
+I may overlook something but isn't the prq interrupt thread
+per iommu then why would two prq threads contend here?
+
+Thanks,
+Kevin
+
+> 
+> As the result, PRQ_1 and PRQ_2 are handled twice in Thread_A and
+> Thread_B.
+> 
+>        Thread_A            Thread_B
+>       .--------.          .--------.
+>       |        |          |        |
+>       .--------.          .--------.
+>   head| PRQ_1  |      head| PRQ_1  |
+>       .--------.          .--------.
+>       | PRQ_2  |          | PRQ_2  |
+>       .--------.          .--------.
+>   tail|        |          | PRQ_3  |
+>       .--------.          .--------.
+>       |        |      tail|        |
+>       '--------'          '--------'
+> 
+> To avoid this, probably, we need to apply a spinlock to ensure
+> that PRQs are handled in a serialized way. But that means the
+> intel_svm_process_prq() will be called with a spinlock held.
+> This causes extra complexities in intel_svm_process_prq().
+> 
+> This aims to make PRQ descriptors to be handled in a serialized
+> way while remove the requirement of holding the spin lock in
+> intel_svm_process_prq() by saving the descriptors in a list.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 > ---
-> Changes on v5:
->   No changes
+>  drivers/iommu/intel-svm.c   | 58 ++++++++++++++++++++++++++++++-------
+>  include/linux/intel-iommu.h |  2 ++
+>  2 files changed, 49 insertions(+), 11 deletions(-)
 > 
-> Changes on v4:
->   No changes
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index a1921b462783..05aeb8ea51c4 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -50,6 +50,8 @@ int intel_svm_enable_prq(struct intel_iommu *iommu)
+>  		return ret;
+>  	}
+>  	iommu->pr_irq = irq;
+> +	INIT_LIST_HEAD(&iommu->prq_list);
+> +	spin_lock_init(&iommu->prq_lock);
 > 
->  drivers/mfd/syscon.c       | 8 ++++++++
->  include/linux/mfd/syscon.h | 6 ++++++
->  2 files changed, 14 insertions(+)
-
-I think you'll find it very difficult to have a patch merged if you do
-not send it to any Maintainers of the associated subsystem(s).
-
-Did you use `scripts/get_maintainer.pl` at all?
-
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index e22197c832e8..08064ffc5394 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(device_node_to_regmap);
->  
-> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
-> +{
-> +	struct device_node *np = to_of_node(fwnode);
+>  	snprintf(iommu->prq_name, sizeof(iommu->prq_name), "dmar%d-
+> prq", iommu->seq_id);
+> 
+> @@ -698,6 +700,14 @@ struct page_req_dsc {
+> 
+>  #define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
+> 
+> +struct page_req {
+> +	struct list_head list;
+> +	struct page_req_dsc desc;
+> +	unsigned int processing:1;
+> +	unsigned int drained:1;
+> +	unsigned int completed:1;
+> +};
 > +
-> +	return device_node_get_regmap(np, false);
-> +}
-> +EXPORT_SYMBOL_GPL(fwnode_to_regmap);
-> +
->  struct regmap *syscon_node_to_regmap(struct device_node *np)
+>  static bool access_error(struct vm_area_struct *vma, struct page_req_dsc
+> *req)
 >  {
->  	if (!of_device_is_compatible(np, "syscon"))
-> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-> index 112dc66262cc..a024dd88bdd4 100644
-> --- a/include/linux/mfd/syscon.h
-> +++ b/include/linux/mfd/syscon.h
-> @@ -18,6 +18,7 @@ struct device_node;
->  
->  #ifdef CONFIG_MFD_SYSCON
->  extern struct regmap *device_node_to_regmap(struct device_node *np);
-> +extern struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode);
->  extern struct regmap *syscon_node_to_regmap(struct device_node *np);
->  extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
->  extern struct regmap *syscon_regmap_lookup_by_phandle(
-> @@ -29,6 +30,11 @@ static inline struct regmap *device_node_to_regmap(struct device_node *np)
->  	return ERR_PTR(-ENOTSUPP);
+>  	unsigned long requested = 0;
+> @@ -842,34 +852,60 @@ static void process_single_prq(struct intel_iommu
+> *iommu,
+>  	}
 >  }
->  
-> +static inline struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
-> +{
-> +	return ERR_PTR(-ENOTSUPP);
-> +}
-> +
->  static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
+> 
+> -static void intel_svm_process_prq(struct intel_iommu *iommu,
+> -				  struct page_req_dsc *prq,
+> -				  int head, int tail)
+> +static void intel_svm_process_prq(struct intel_iommu *iommu)
 >  {
->  	return ERR_PTR(-ENOTSUPP);
+> -	struct page_req_dsc *req;
+> -
+> -	while (head != tail) {
+> -		req = &iommu->prq[head / sizeof(*req)];
+> -		process_single_prq(iommu, req);
+> -		head = (head + sizeof(*req)) & PRQ_RING_MASK;
+> +	struct page_req *req;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&iommu->prq_lock, flags);
+> +	while (!list_empty(&iommu->prq_list)) {
+> +		req = list_first_entry(&iommu->prq_list, struct page_req, list);
+> +		if (!req->processing) {
+> +			req->processing = true;
+> +			spin_unlock_irqrestore(&iommu->prq_lock, flags);
+> +			process_single_prq(iommu, &req->desc);
+> +			spin_lock_irqsave(&iommu->prq_lock, flags);
+> +			req->completed = true;
+> +		} else if (req->completed) {
+> +			list_del(&req->list);
+> +			kfree(req);
+> +		} else {
+> +			break;
+> +		}
+>  	}
+> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
+>  }
+> 
+>  static irqreturn_t prq_event_thread(int irq, void *d)
+>  {
+>  	struct intel_iommu *iommu = d;
+> +	unsigned long flags;
+>  	int head, tail;
+> 
+> +	spin_lock_irqsave(&iommu->prq_lock, flags);
+>  	/*
+>  	 * Clear PPR bit before reading head/tail registers, to
+>  	 * ensure that we get a new interrupt if needed.
+>  	 */
+>  	writel(DMA_PRS_PPR, iommu->reg + DMAR_PRS_REG);
+> -
+>  	tail = dmar_readq(iommu->reg + DMAR_PQT_REG) &
+> PRQ_RING_MASK;
+>  	head = dmar_readq(iommu->reg + DMAR_PQH_REG) &
+> PRQ_RING_MASK;
+> -	intel_svm_process_prq(iommu, iommu->prq, head, tail);
+> +	while (head != tail) {
+> +		struct page_req_dsc *dsc;
+> +		struct page_req *req;
+> +
+> +		dsc = &iommu->prq[head / sizeof(*dsc)];
+> +		req = kzalloc(sizeof (*req), GFP_ATOMIC);
+> +		if (!req)
+> +			break;
+> +		req->desc = *dsc;
+> +		list_add_tail(&req->list, &iommu->prq_list);
+> +		head = (head + sizeof(*dsc)) & PRQ_RING_MASK;
+> +	}
+>  	dmar_writeq(iommu->reg + DMAR_PQH_REG, tail);
+> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
+> +
+> +	intel_svm_process_prq(iommu);
+> 
+>  	return IRQ_RETVAL(1);
+>  }
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index cca1e5f9aeaa..80715a59491c 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -590,6 +590,8 @@ struct intel_iommu {
+>  #ifdef CONFIG_INTEL_IOMMU_SVM
+>  	struct page_req_dsc *prq;
+>  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+> +	struct list_head prq_list;	/* pending page request list */
+> +	spinlock_t prq_lock;		/* protect above pending list */
+>  	struct ioasid_allocator_ops pasid_allocator; /* Custom allocator for
+> PASIDs */
+>  #endif
+>  	struct q_inval  *qi;            /* Queued invalidation info */
+> --
+> 2.17.1
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
