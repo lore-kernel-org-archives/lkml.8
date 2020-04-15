@@ -2,201 +2,79 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096ECC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C921C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D936820787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RjcoQOzs"
+	by mail.kernel.org (Postfix) with ESMTP id EAC5420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411505AbgDORtG (ORCPT
+        id S2437037AbgDORuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:49:06 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4134 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411463AbgDORso (ORCPT
+        Wed, 15 Apr 2020 13:50:19 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51281 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411506AbgDORuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:48:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e97488e0001>; Wed, 15 Apr 2020 10:46:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 10:48:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 10:48:44 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 17:48:44 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 17:48:43 +0000
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
-Message-ID: <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
-Date:   Wed, 15 Apr 2020 10:48:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 13:50:05 -0400
+Received: by mail-io1-f72.google.com with SMTP id s1so20579515iow.18
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:50:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=nHxID+TcYcl1NAxOyN05IyLFyVfL/SAIIcfsEnpexvY=;
+        b=OYBLR1oZ9VDGmDJkicyL6ctWgNMQ3lnQXoTSEF3v6aqDgE2gC3bvAw/IYfvhBi1cb5
+         pAgC8g49d7eN6WazOuFIzObABN+oV/qG4PEW5jejyRW/4LFoHtIHZPmID1BJ+QT7WL21
+         gHKB7uE2nz5do/nBVOicBHATTdBvJWQSqqrpYrDfsLB+un/szMxKALtDm+DOI/WuiZJo
+         FB5nTk5b5EeLr4tDg0UpyoEq81c4lRBx3Wj7cp8xpOjK10qlOyrVkQzgiy6lpqB/mm2/
+         RHDW8h/x+kbK5cKrhtMOHfNPD+kEsPHtxdw8v1bHr/ppdRT4Nuy0RhsQf7EPbYS26T+4
+         cb7w==
+X-Gm-Message-State: AGi0PubjIJYpuolnK+Td94k6wdVZ9PX7L3TohTyVaysdu8sthXzb6ijm
+        bZjWt73Y/kngqOrLiRH09n82j83u0AHZ4AjFlheSSDSwlszO
+X-Google-Smtp-Source: APiQypKCFYBPF9OFykDZd9n8d4hXnAVLQ6F+DTzMLIY+9TSrA/7PY0fhxsgiHvbNThyhKTwcCS3oyc4PK82BmuGBS5ArqpOAKflC
 MIME-Version: 1.0
-In-Reply-To: <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586972814; bh=0IjbbYpWt22c2ICcfjJ3RaB+wcJhHtA9EFoR3fkmRWw=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=RjcoQOzseawg6p4wUclOWhZbD5rwb2+jzGt3UYzW1srAPfXLPBwdR0sBJggHZJHcz
-         V8rseSuCp/vVes0k4OOTy5k/aSGTJa8YWW0c5TYztV0m8HJrvZAKO6hARW/PoQjE8c
-         CpBPICtAh3ub37eoMwduk5gp9xU1LT3aNfa3m/n4cEFn/scnyppa1R9X9luP0s4LfH
-         bVOqyl40qh+ePMkzrZYi5MJ6IqewtHIHOyGrfaS0IhNXi/dvWiTQrViLVkuandTd3O
-         EPGuGOJnRZb142zMHgZ61k/6zzhQWZmV/zVjXZavUAo324VQVfzeUjnA5M6E1+JYfP
-         vAiHguUmto+hw==
+X-Received: by 2002:a02:7785:: with SMTP id g127mr26306155jac.134.1586973002978;
+ Wed, 15 Apr 2020 10:50:02 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:50:02 -0700
+In-Reply-To: <000000000000f8a16405a0376780@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001c5eaa05a357f2e1@google.com>
+Subject: Re: possible deadlock in proc_pid_personality
+From:   syzbot <syzbot+d9ae59d4662c941e39c6@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, christian@brauner.io,
+        ebiederm@xmission.com, guro@fb.com, kent.overstreet@gmail.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@suse.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot suspects this bug was fixed by commit:
 
-On 4/15/20 10:47 AM, Sowjanya Komatineni wrote:
->
-> On 4/15/20 10:21 AM, Sowjanya Komatineni wrote:
->>
->> On 4/15/20 9:54 AM, Sowjanya Komatineni wrote:
->>>
->>> On 4/15/20 7:22 AM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 15.04.2020 05:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> +static int tegra_csi_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_csi *csi =3D platform_get_drvd=
-ata(pdev);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 err =3D host1x_client_unregister(&csi->clie=
-nt);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (err < 0) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 dev_err(csi->dev,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed to unregiste=
-r host1x client: %d\n",=20
->>>>> err);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return err;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(csi->dev);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kfree(csi);
->>>> IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
->>>> sure how moving away from the resource-managed API helps here.=20
->>>> Could you
->>>> please explain in a more details?
->>>>
->>>> Have you tried to test this driver under KASAN? I suspect that you=20
->>>> just
->>>> masked the problem, instead of fixing it.
->>> Using devm_kzalloc for vi/csi structures based on prior feedback=20
->>> request to switch to use kzalloc all over this driver.
->>>
->>> Hi Hans,
->>>
->>> video devices lifetime is till video device nodes are released. So,=20
->>> v4l2 device release callback does the release of tegra channel=20
->>> allocation which hold video device.
->>>
->>> Below are the 3 possible cases of unbind/unload,
->>>
->>> 1. during tegra-video module unload, if v4l2 device refcnt is not 0=20
->>> which is the case when any of video device node handle is kept=20
->>> opened then unloading module will not happen and module refcnt is=20
->>> also non-zero and unloading tegra-video module reports module in use.
->>>
->>> 2. during tegra-video driver unbind, tegra-video driver removal will=20
->>> do vi/csi clients exit ops which unregisters video device allocated=20
->>> memory during release callback of v4l2 device. vi/csi structure=20
->>> allocation remains same as vi/csi driver removal will not happen in=20
->>> this case.
->>>
->>>
->>> 3. during direct host1x client drivers vi/csi unbind, both=20
->>> host1x_clients vi/csi gets unregistered, deletes host1x logical=20
->>> device which executes tegra-video driver removal() -> vi/csi exit()=20
->>> before vi/csi memory gets freed in vi/csi driver remove().
->>>
->>> So, any active streaming will stop and video devices are=20
->>> unregistered during direct client driver unbind prior to freeing=20
->>> vi/csi memory.
->>>
->>> Also vi/csi driver remove does explicit free vi/csi as its allocated=20
->>> with kzalloc. So not sure how using kzalloc is different to=20
->>> devm_kzalloc for vi/csi structure in terms of when vi/csi memory=20
->>> gets freed?
->>>
->>> Except for channel allocation which holds video device and as video=20
->>> device life time is beyond tegra-video module unbind->vi exit(),=20
->>> looks like we can use devm_kzalloc for vi/csi.
->>>
->>>
->>> Can you please comment if you still think we need to use kzalloc=20
->>> rather than devm_kzalloc for vi/csi structure allocation?
->>>
->>> Thanks
->>>
->>> Sowjanya
->>>
->> One more case is when video device node is kept opened with v4l2-ctl=20
->> sleep (rather than streaming), where it will keep device node open=20
->> for specified time and if direct vi client driver unbind happens then=20
->> vi driver remove() will free vi memory before v4l2 device release=20
->> happens.
->>
->> But I don't see any crash or errors with this case.
->>
->> Also if we allow direct client driver unbind, then vi structure=20
->> memory lifetime should also be till v4l2 device release happens.
->>
->> But we can free vi in v4l2 device release callback as in case when=20
->> device node is not kept opened, video device release happens=20
->> immediate and we cant free vi that early.
->
-> typo fix:
->
-> But we can't free vi structure memory allocation in v4l2 device=20
-> release callback as in case when device node is not kept opened,=20
-> device release happens immediate and we can't free vi structure memory=20
-> that early.
->
->>
->> Hans/Thierry, Can you please comment on this case?
->>
->> Thanks
->>
->> Sowjanya
->>
-Also, Can you please help explain on cases where we do/need direct=20
-host1x clients vi/csi drivers unbind?
+commit 2db9dbf71bf98d02a0bf33e798e5bfd2a9944696
+Author: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Date:   Fri Mar 20 20:27:24 2020 +0000
+
+    proc: Use new infrastructure to fix deadlocks in execve
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=136aea00100000
+start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+dashboard link: https://syzkaller.appspot.com/bug?extid=d9ae59d4662c941e39c6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1374670de00000
+
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: proc: Use new infrastructure to fix deadlocks in execve
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
