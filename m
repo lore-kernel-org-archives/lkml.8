@@ -2,77 +2,113 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFA8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E2C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8C972084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B102078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbgDOE0B (ORCPT
+        id S2393070AbgDOEgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 00:26:01 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5121 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgDOEZ7 (ORCPT
+        Wed, 15 Apr 2020 00:36:17 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53465 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388430AbgDOEgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 00:25:59 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e968cc87ac-6198a; Wed, 15 Apr 2020 12:25:44 +0800 (CST)
-X-RM-TRANSID: 2eec5e968cc87ac-6198a
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95e968cc5044-63201;
-        Wed, 15 Apr 2020 12:25:44 +0800 (CST)
-X-RM-TRANSID: 2ee95e968cc5044-63201
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     sre@kernel.org, wens@csie.org, hdegoede@redhat.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] power: supply: axp288_charger: Omit superfluous error message
-Date:   Wed, 15 Apr 2020 12:27:27 +0800
-Message-Id: <20200415042727.13496-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 15 Apr 2020 00:36:13 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03F4ZrA8004305
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 00:35:54 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id C36DD42013D; Wed, 15 Apr 2020 00:35:53 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 00:35:53 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     syzbot <syzbot+bca9799bf129256190da@syzkaller.appspotmail.com>
+Cc:     adilger.kernel@dilger.ca, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jack@suse.cz, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ generic_perform_write (2)
+Message-ID: <20200415043553.GH90651@mit.edu>
+References: <00000000000016a67305a33a11f7@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000016a67305a33a11f7@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the axp288_charger_probe(), when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5b8b9d0c6d0e0f1993c6c56deaf9646942c49d94
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
----
- drivers/power/supply/axp288_charger.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/power/supply/axp288_charger.c b/drivers/power/supply/axp288_charger.c
-index 1bbba6bba..16fb4ae1c 100644
---- a/drivers/power/supply/axp288_charger.c
-+++ b/drivers/power/supply/axp288_charger.c
-@@ -825,10 +825,9 @@ static int axp288_charger_probe(struct platform_device *pdev)
- 	/* Register charger interrupts */
- 	for (i = 0; i < CHRG_INTR_END; i++) {
- 		pirq = platform_get_irq(info->pdev, i);
--		if (pirq < 0) {
--			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
-+		if (pirq < 0)
- 			return pirq;
--		}
-+
- 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
- 		if (info->irq[i] < 0) {
- 			dev_warn(&info->pdev->dev,
--- 
-2.20.1.windows.1
-
-
-
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 9728e7b0e84f..e44fee317965 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1728,6 +1728,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
+ #define MOPT_NO_EXT3	0x0200
+ #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
+ #define MOPT_STRING	0x0400
++#define MOPT_NO_REMOUNT 0x0800
+ 
+ static const struct mount_opts {
+ 	int	token;
+@@ -1777,7 +1778,7 @@ static const struct mount_opts {
+ 	{Opt_min_batch_time, 0, MOPT_GTE0},
+ 	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+ 	{Opt_init_itable, 0, MOPT_GTE0},
+-	{Opt_dax, EXT4_MOUNT_DAX, MOPT_SET},
++	{Opt_dax, EXT4_MOUNT_DAX, MOPT_SET | MOPT_NO_REMOUNT},
+ 	{Opt_stripe, 0, MOPT_GTE0},
+ 	{Opt_resuid, 0, MOPT_GTE0},
+ 	{Opt_resgid, 0, MOPT_GTE0},
+@@ -1819,7 +1820,7 @@ static const struct mount_opts {
+ 	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
+ 	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
+ 	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
+-	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
++	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
+ 	{Opt_err, 0, 0}
+ };
+ 
+@@ -1917,6 +1918,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+ 			 "Mount option \"%s\" incompatible with ext3", opt);
+ 		return -1;
+ 	}
++	if ((m->flags & MOPT_NO_REMOUNT) && is_remount) {
++		ext4_msg(sb, KERN_ERR,
++			 "Mount option \"%s\" not supported when remounting",
++			 opt);
++		return -1;
++	}
+ 
+ 	if (args->from && !(m->flags & MOPT_STRING) && match_int(args, &arg))
+ 		return -1;
+@@ -5429,18 +5436,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		}
+ 	}
+ 
+-	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_NO_MBCACHE) {
+-		ext4_msg(sb, KERN_ERR, "can't enable nombcache during remount");
+-		err = -EINVAL;
+-		goto restore_opts;
+-	}
+-
+-	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX) {
+-		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+-			"dax flag with busy inodes while remounting");
+-		sbi->s_mount_opt ^= EXT4_MOUNT_DAX;
+-	}
+-
+ 	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+ 		ext4_abort(sb, EXT4_ERR_ESHUTDOWN, "Abort forced by user");
+ 
