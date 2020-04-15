@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07696C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F3EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB526206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC68206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951394;
-	bh=6ABThuKfcs9bb20hYMcbkyDGTqWa0wK0bnJidWE479s=;
+	s=default; t=1586951407;
+	bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDEGSNV2q+feGGB12q3OUWRRXtfJcYWbZk+Exxd/n2Bz/83bOuZUuH/U6CUk4L324
-	 UeT0S3MU/p68Vq316My0zaVHwNsHpyaK/DHZB1MhGU2utoLCg3Yd9oPZW8E9y+Y7l4
-	 2GtnTY+BR3a1tYDggcp8zyAE+jUSW+kRVLCgP+Os=
+	b=ct7HwU6EEMqhxyAogteFd5fOkS4XbETvv0N89fTllsYDmX8/ku8+bQMVQNr8KstDH
+	 HHroCxfbk8W6MCQxn0xVF0Olgex50mkudJGQ4/9fack9DjiPkAZ/I/chTuepL34jTj
+	 UUcGcrct9A+fC/yaS8xK9luXAG3PhoG9xEOK/vhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406743AbgDOLtw (ORCPT
+        id S2409521AbgDOLuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35326 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897509AbgDOLnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:24 -0400
+        id S2897520AbgDOLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 802CA2168B;
-        Wed, 15 Apr 2020 11:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E7D5214D8;
+        Wed, 15 Apr 2020 11:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951003;
-        bh=6ABThuKfcs9bb20hYMcbkyDGTqWa0wK0bnJidWE479s=;
+        s=default; t=1586951011;
+        bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQsB+g1iIGdGPTVmrb8ENiYJs8a+w1PeRUxMLITmq3OiIxEIilSwoXpd6ZT7B2zI0
-         5xBriN+39VODY5Ny7okBHTz4sXiPzaSEXQKvGc6+Xnl0/p2ywOvjW4uP1XRyoNrpUc
-         VszSbOII9CUjW001MsPZjJbSqoQ19xCj44NTpq5w=
+        b=HC8yKBERmY2yh4mSP9ed6QAnCugan1/mEN2q8aSM96pLbELGwP2RMZyVZE2u6/Q3X
+         8eldzg2/C0MnFD8ySXdSm5e6tfORzBXCzR4SFbYySo5llCBjBrur/TzmiuErhV3ZA/
+         ZqSEzmOFANVDsYwX4ojTna53rfmr0leVCJjsu/ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 048/106] ext4: do not commit super on read-only bdev
-Date:   Wed, 15 Apr 2020 07:41:28 -0400
-Message-Id: <20200415114226.13103-48-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 054/106] dt-bindings: thermal: tsens: Fix nvmem-cell-names schema
+Date:   Wed, 15 Apr 2020 07:41:34 -0400
+Message-Id: <20200415114226.13103-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -61,48 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit c96e2b8564adfb8ac14469ebc51ddc1bfecb3ae2 ]
+[ Upstream commit b9589def9f9af93d9d4c5969c9a6c166f070e36e ]
 
-Under some circumstances we may encounter a filesystem error on a
-read-only block device, and if we try to save the error info to the
-superblock and commit it, we'll wind up with a noisy error and
-backtrace, i.e.:
+There's a typo 'nvmem-cells-names' in the schema which means the correct
+'nvmem-cell-names' in the examples are not checked. The possible values
+are wrong too both in that the 2nd entry is not specified correctly and the
+values are just wrong based on the dts files in the kernel.
 
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-...
-
-To avoid this, commit the error info in the superblock only if the
-block device is writable.
-
-Reported-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Link: https://lore.kernel.org/r/4b6e774d-cc00-3469-7abb-108eb151071a@sandeen.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: a877e768f655 ("dt-bindings: thermal: tsens: Convert over to a yaml schema")
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/thermal/qcom-tsens.yaml          | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 71e2b80ff4aae..f59c587faccb5 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -389,7 +389,8 @@ static void save_error_info(struct super_block *sb, const char *func,
- 			    unsigned int line)
- {
- 	__save_error_info(sb, func, line);
--	ext4_commit_super(sb, 1);
-+	if (!bdev_read_only(sb->s_bdev))
-+		ext4_commit_super(sb, 1);
- }
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index eef13b9446a87..a4df53228122a 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -53,13 +53,12 @@ properties:
+     description:
+       Reference to an nvmem node for the calibration data
  
- /*
+-  nvmem-cells-names:
++  nvmem-cell-names:
+     minItems: 1
+     maxItems: 2
+     items:
+-      - enum:
+-        - caldata
+-        - calsel
++      - const: calib
++      - const: calib_sel
+ 
+   "#qcom,sensors":
+     allOf:
+@@ -125,7 +124,7 @@ examples:
+                  <0x4a8000 0x1000>; /* SROT */
+ 
+            nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+-           nvmem-cell-names = "caldata", "calsel";
++           nvmem-cell-names = "calib", "calib_sel";
+ 
+            interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+            interrupt-names = "uplow";
 -- 
 2.20.1
 
