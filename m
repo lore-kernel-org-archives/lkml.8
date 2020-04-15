@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0C5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC8EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAB6C208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F02A2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953083;
-	bh=S8BciryhmOjmP06oCroyDH/n35WS5a6CLZ6N5yiRrvQ=;
+	s=default; t=1586953102;
+	bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OPd4KnVbN7E+Jo+ly21pp1o4zk2JdAqhwiphd/vFmKQk4oVnjoP2vddExyzLpfjF
-	 HGtlNb2ENJT44OimQ0NClaKS4eQ4iAjhjcUReb8P5pBH1Z8M3deah4GKKSSH5xAXz1
-	 mXqFanwuNSVqyaMZcAvd8iVlobLPwcHxJOeZBnto=
+	b=WyLNVsQI96tVtTj2HkqHN901grtVAJwVS6p5Oe6d63+ran1xmOOOBgvrLvh5hEFXU
+	 k41cclOeFDHTbwcmiXFeFU94RelchdAjEOlIW1R8gdSC/gcXp6azYLmwzMo2cwFxCt
+	 tcLnBGLdVfguXNQg4QcP6Iljt43ZNXOXHMGF0Gy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368840AbgDOMSC (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:18:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        id S368868AbgDOMSV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409281AbgDOLqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:19 -0400
+        id S2409273AbgDOLqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62B0420775;
-        Wed, 15 Apr 2020 11:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409CC206A2;
+        Wed, 15 Apr 2020 11:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951179;
-        bh=S8BciryhmOjmP06oCroyDH/n35WS5a6CLZ6N5yiRrvQ=;
+        s=default; t=1586951174;
+        bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIqtJTvw+0jZ6EXCJaAgF4Ewv76mM1WB1uOkribtNJ0hToIgXdxYNKVOSyz5D0wEO
-         1J5CUby2ZJpmqkDYO76picHP0pEwslKlbEwfxsgZ3zMdH0m0dzbo2sDbbO5/6O3CvY
-         47IMQhupxMkelyAxleALbe1npxnJmALPGsSsnACQ=
+        b=gKirTRHF3NqR/x6MEVlaaFSsLocxeRks00KCJmXGsgiS0jeujNlG6Ea3o6lcenOZv
+         hyK0bNIENwSiR5bcBoi06/Q7Xhr0UD/iNhst+QHIGgpzH3RUyI+QagS9bw4E3yBFd2
+         zs6ymomKj0/YGgvyzj+5f8wh1qAZeM+W75yVydZA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 82/84] acpi/nfit: improve bounds checking for 'func'
-Date:   Wed, 15 Apr 2020 07:44:39 -0400
-Message-Id: <20200415114442.14166-82-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 78/84] csky: Fixup init_fpu compile warning with __init
+Date:   Wed, 15 Apr 2020 07:44:35 -0400
+Message-Id: <20200415114442.14166-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,84 +58,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 01091c496f920e634ea84b689f480c39016752a8 ]
+[ Upstream commit 12879bda3c2a974b7e4fe199a9c21f0c5f6bca04 ]
 
-The 'func' variable can come from the user in the __nd_ioctl().  If it's
-too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
-undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
-which could result in an out of bounds access.
+WARNING: vmlinux.o(.text+0x2366): Section mismatch in reference from the
+function csky_start_secondary() to the function .init.text:init_fpu()
 
-To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
-updated nfit_dsm_revid() to use that define as well instead of magic
-numbers.
+The function csky_start_secondary() references
+the function __init init_fpu().
+This is often because csky_start_secondary lacks a __init
+annotation or the annotation of init_fpu is wrong.
 
-Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/nfit/core.c | 10 ++++++----
- drivers/acpi/nfit/nfit.h |  1 +
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ arch/csky/abiv2/fpu.c         | 5 -----
+ arch/csky/abiv2/inc/abi/fpu.h | 3 ++-
+ arch/csky/kernel/smp.c        | 3 +++
+ 3 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 14e68f202f810..12d980aafc5ff 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_info(acpi_handle handle)
+diff --git a/arch/csky/abiv2/fpu.c b/arch/csky/abiv2/fpu.c
+index 86d187d4e5af1..5acc5c2e544e1 100644
+--- a/arch/csky/abiv2/fpu.c
++++ b/arch/csky/abiv2/fpu.c
+@@ -10,11 +10,6 @@
+ #define MTCR_DIST	0xC0006420
+ #define MFCR_DIST	0xC0006020
  
- static u8 nfit_dsm_revid(unsigned family, unsigned func)
- {
--	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
-+	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
- 		[NVDIMM_FAMILY_INTEL] = {
- 			[NVDIMM_INTEL_GET_MODES] = 2,
- 			[NVDIMM_INTEL_GET_FWINFO] = 2,
-@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family, unsigned func)
+-void __init init_fpu(void)
+-{
+-	mtcr("cr<1, 2>", 0);
+-}
+-
+ /*
+  * fpu_libc_helper() is to help libc to excute:
+  *  - mfcr %a, cr<1, 2>
+diff --git a/arch/csky/abiv2/inc/abi/fpu.h b/arch/csky/abiv2/inc/abi/fpu.h
+index 22ca3cf2794a1..09e2700a36936 100644
+--- a/arch/csky/abiv2/inc/abi/fpu.h
++++ b/arch/csky/abiv2/inc/abi/fpu.h
+@@ -9,7 +9,8 @@
  
- 	if (family > NVDIMM_FAMILY_MAX)
- 		return 0;
--	if (func > 31)
-+	if (func > NVDIMM_CMD_MAX)
- 		return 0;
- 	id = revid_table[family][func];
- 	if (id == 0)
-@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
- 	 * make sure that the DSM function is supported.
- 	 */
--	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
-+	if (cmd == ND_CMD_CALL &&
-+	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
- 		return -ENOTTY;
- 	else if (!test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
-@@ -3499,7 +3500,8 @@ static int acpi_nfit_clear_to_send(struct nvdimm_bus_descriptor *nd_desc,
- 	if (nvdimm && cmd == ND_CMD_CALL &&
- 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
- 		func = call_pkg->nd_command;
--		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
-+		if (func > NVDIMM_CMD_MAX ||
-+		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
- 			return -EOPNOTSUPP;
- 	}
+ int fpu_libc_helper(struct pt_regs *regs);
+ void fpu_fpe(struct pt_regs *regs);
+-void __init init_fpu(void);
++
++static inline void init_fpu(void) { mtcr("cr<1, 2>", 0); }
  
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 24241941181ce..b317f4043705f 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -34,6 +34,7 @@
- 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
+ void save_to_user_fp(struct user_fp *user_fp);
+ void restore_from_user_fp(struct user_fp *user_fp);
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index de61feb4b6df2..b5c5bc3afeb5c 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -22,6 +22,9 @@
+ #include <asm/sections.h>
+ #include <asm/mmu_context.h>
+ #include <asm/pgalloc.h>
++#ifdef CONFIG_CPU_HAS_FPU
++#include <abi/fpu.h>
++#endif
  
- #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
-+#define NVDIMM_CMD_MAX 31
- 
- #define NVDIMM_STANDARD_CMDMASK \
- (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
+ struct ipi_data_struct {
+ 	unsigned long bits ____cacheline_aligned;
 -- 
 2.20.1
 
