@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828D4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AEEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A92F2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541A0206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961859;
-	bh=EaNKRyoKAmu0SYupy5gnfzNURPElXi66AZeWAzWbgA4=;
+	s=default; t=1586961866;
+	bh=whIc/g6snA4mC0yASCocLrh5mqkEG1560/rJBnBIugM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XiugQTmSkgGBBKhAECF7AzUk3jvsU7TkZAO+azw86jKxth4v8pwcwwznDvhb/pvkR
-	 uVJMHdhk6krFmYhKvDCZuvOXi4PgbQy7CqGVuPAvKf6zcKKxDrpH11WhVMbBrJUefN
-	 7oa2xNvVC+4p63ghThS77nNbY5iJnuHpNky40cOg=
+	b=jhX1QpB9eKTmHOFXKPHBGUIYogUn7RRvIzhDxVblZ/FNad4Kt1mS7AGDF9w1w3yHF
+	 L9ZS+Z8utmnDr+kO3qdgITOpSuW/Unz6zqjkaH77ywlXUXuhBqBVgyR+PPwsygFSpq
+	 LWc3151GIxJ9igddU59LgFXC4f2Gp6P3eB/ybM/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389151AbgDOOoP (ORCPT
+        id S2636783AbgDOOoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45452 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392114AbgDOOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2394040AbgDOOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 10:32:58 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F5542173E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C01D21707;
         Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961171;
-        bh=EaNKRyoKAmu0SYupy5gnfzNURPElXi66AZeWAzWbgA4=;
+        bh=whIc/g6snA4mC0yASCocLrh5mqkEG1560/rJBnBIugM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aeA29pmrBhA7setJsjCWNOu3hQ2AUUvDkWGHWpK726j3D2Z3NgyX+NEZOPHmWGWF9
-         JxX7hgb2t7M1q2CRc+bIZlQ3+ZK0BQqz6eR439AyXB5HjCVZuXHLouEJnDMaSgWEmm
-         nHLTclbxyo3jaqaogcfKsqlh6XvN4LjzUKyiiT+M=
+        b=SbfuPht6vNKQOBXa5+YSjoEn4FTB+aRexUz68eM2lVg33m2m9nSmaV3b9y0vVlA0Q
+         cDTnZg5a/ndZXiymvjT4BL3oPiTv5PpVmO+FrQseVT77uvPk3WqqAsFtMxqNQEa0gS
+         izHYznx9ThRsNmujiX3RfdHVrzW+kczH7W40mj7w=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kOo-FF; Wed, 15 Apr 2020 16:32:49 +0200
+        id 1jOj5t-006kOj-E8; Wed, 15 Apr 2020 16:32:49 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 14/34] docs: filesystems: convert dnotify.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:27 +0200
-Message-Id: <ed628af6cc9fc157c617825c74d6084eb42c7800.1586960617.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 13/34] docs: filesystems: convert devpts.txt to ReST
+Date:   Wed, 15 Apr 2020 16:32:26 +0200
+Message-Id: <0144d68b5afc2930b34e62e66120d2c76f897c09.1586960617.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
 References: <cover.1586960617.git.mchehab+huawei@kernel.org>
@@ -64,84 +62,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 - Add a SPDX header;
 - Add a document title;
 - Some whitespace fixes and new line breaks;
-- Add table markups;
-- Add it to filesystems/index.rst
+- Mark literal blocks as such;
+- Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../filesystems/{dnotify.txt => dnotify.rst}          | 11 ++++++++---
- Documentation/filesystems/index.rst                   |  1 +
- MAINTAINERS                                           |  2 +-
- 3 files changed, 10 insertions(+), 4 deletions(-)
- rename Documentation/filesystems/{dnotify.txt => dnotify.rst} (90%)
+ Documentation/admin-guide/sysctl/kernel.rst |  2 +-
+ Documentation/filesystems/devpts.rst        | 36 +++++++++++++++++++++
+ Documentation/filesystems/devpts.txt        | 26 ---------------
+ Documentation/filesystems/index.rst         |  1 +
+ 4 files changed, 38 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/filesystems/devpts.rst
+ delete mode 100644 Documentation/filesystems/devpts.txt
 
-diff --git a/Documentation/filesystems/dnotify.txt b/Documentation/filesystems/dnotify.rst
-similarity index 90%
-rename from Documentation/filesystems/dnotify.txt
-rename to Documentation/filesystems/dnotify.rst
-index 08d575ece45d..a28a1f9ef79c 100644
---- a/Documentation/filesystems/dnotify.txt
-+++ b/Documentation/filesystems/dnotify.rst
-@@ -1,5 +1,8 @@
--		Linux Directory Notification
--		============================
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 39c95c0e13d3..6427cfa6cc91 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -880,7 +880,7 @@ this sysctl interface anymore.
+ pty
+ ===
+ 
+-See Documentation/filesystems/devpts.txt.
++See Documentation/filesystems/devpts.rst.
+ 
+ 
+ randomize_va_space
+diff --git a/Documentation/filesystems/devpts.rst b/Documentation/filesystems/devpts.rst
+new file mode 100644
+index 000000000000..a03248ddfb4c
+--- /dev/null
++++ b/Documentation/filesystems/devpts.rst
+@@ -0,0 +1,36 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+============================
-+Linux Directory Notification
-+============================
- 
- 	   Stephen Rothwell <sfr@canb.auug.org.au>
- 
-@@ -12,6 +15,7 @@ being delivered using signals.
- The application decides which "events" it wants to be notified about.
- The currently defined events are:
- 
-+	=========	=====================================================
- 	DN_ACCESS	A file in the directory was accessed (read)
- 	DN_MODIFY	A file in the directory was modified (write,truncate)
- 	DN_CREATE	A file was created in the directory
-@@ -19,6 +23,7 @@ The currently defined events are:
- 	DN_RENAME	A file in the directory was renamed
- 	DN_ATTRIB	A file in the directory had its attributes
- 			changed (chmod,chown)
-+	=========	=====================================================
- 
- Usually, the application must reregister after each notification, but
- if DN_MULTISHOT is or'ed with the event mask, then the registration will
-@@ -36,7 +41,7 @@ especially important if DN_MULTISHOT is specified.  Note that SIGRTMIN
- is often blocked, so it is better to use (at least) SIGRTMIN + 1.
- 
- Implementation expectations (features and bugs :-))
-----------------------------
-+---------------------------------------------------
- 
- The notification should work for any local access to files even if the
- actual file system is on a remote server.  This implies that remote
++=====================
++The Devpts Filesystem
++=====================
++
++Each mount of the devpts filesystem is now distinct such that ptys
++and their indicies allocated in one mount are independent from ptys
++and their indicies in all other mounts.
++
++All mounts of the devpts filesystem now create a ``/dev/pts/ptmx`` node
++with permissions ``0000``.
++
++To retain backwards compatibility the a ptmx device node (aka any node
++created with ``mknod name c 5 2``) when opened will look for an instance
++of devpts under the name ``pts`` in the same directory as the ptmx device
++node.
++
++As an option instead of placing a ``/dev/ptmx`` device node at ``/dev/ptmx``
++it is possible to place a symlink to ``/dev/pts/ptmx`` at ``/dev/ptmx`` or
++to bind mount ``/dev/ptx/ptmx`` to ``/dev/ptmx``.  If you opt for using
++the devpts filesystem in this manner devpts should be mounted with
++the ``ptmxmode=0666``, or ``chmod 0666 /dev/pts/ptmx`` should be called.
++
++Total count of pty pairs in all instances is limited by sysctls::
++
++    kernel.pty.max = 4096	- global limit
++    kernel.pty.reserve = 1024	- reserved for filesystems mounted from the initial mount namespace
++    kernel.pty.nr		- current count of ptys
++
++Per-instance limit could be set by adding mount option ``max=<count>``.
++
++This feature was added in kernel 3.4 together with
++``sysctl kernel.pty.reserve``.
++
++In kernels older than 3.4 sysctl ``kernel.pty.max`` works as per-instance limit.
+diff --git a/Documentation/filesystems/devpts.txt b/Documentation/filesystems/devpts.txt
+deleted file mode 100644
+index 9f94fe276dea..000000000000
+--- a/Documentation/filesystems/devpts.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Each mount of the devpts filesystem is now distinct such that ptys
+-and their indicies allocated in one mount are independent from ptys
+-and their indicies in all other mounts.
+-
+-All mounts of the devpts filesystem now create a /dev/pts/ptmx node
+-with permissions 0000.
+-
+-To retain backwards compatibility the a ptmx device node (aka any node
+-created with "mknod name c 5 2") when opened will look for an instance
+-of devpts under the name "pts" in the same directory as the ptmx device
+-node.
+-
+-As an option instead of placing a /dev/ptmx device node at /dev/ptmx
+-it is possible to place a symlink to /dev/pts/ptmx at /dev/ptmx or
+-to bind mount /dev/ptx/ptmx to /dev/ptmx.  If you opt for using
+-the devpts filesystem in this manner devpts should be mounted with
+-the ptmxmode=0666, or chmod 0666 /dev/pts/ptmx should be called.
+-
+-Total count of pty pairs in all instances is limited by sysctls:
+-kernel.pty.max = 4096		- global limit
+-kernel.pty.reserve = 1024	- reserved for filesystems mounted from the initial mount namespace
+-kernel.pty.nr			- current count of ptys
+-
+-Per-instance limit could be set by adding mount option "max=<count>".
+-This feature was added in kernel 3.4 together with sysctl kernel.pty.reserve.
+-In kernels older than 3.4 sysctl kernel.pty.max works as per-instance limit.
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 470b2da2b7b1..960e0cc29491 100644
+index 8e3ccb4ed483..470b2da2b7b1 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -26,6 +26,7 @@ algorithms work.
+@@ -25,6 +25,7 @@ algorithms work.
+    locking
     directory-locking
     dax
-    devpts
-+   dnotify
++   devpts
  
     automount-support
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 511d19bcfa1e..eebb55517709 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4995,7 +4995,7 @@ M:	Jan Kara <jack@suse.cz>
- R:	Amir Goldstein <amir73il@gmail.com>
- L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
--F:	Documentation/filesystems/dnotify.txt
-+F:	Documentation/filesystems/dnotify.rst
- F:	fs/notify/dnotify/
- F:	include/linux/dnotify.h
  
 -- 
 2.25.2
