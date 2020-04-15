@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B080C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB3BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E556220768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F87F20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586977902;
-	bh=uX+VB0420gMf/ohkw7XASVivlF4bxxbUvzMx8QiMIUU=;
+	s=default; t=1586977909;
+	bh=2l9U0yUneLktbz9bJbjoUFt6ssHRk74IpMShA/7D+8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DY8VWM5tLB83glaGeKSyzwPvm4S15v9TJ+j+d5T1+dg8ocSf16w0Wsdotp7flr44N
-	 8T+jMQIrtHGjp6X3bmnea5KzfdHMtSIk5nQ/NnPvcC8mN1lswHAssySVApRmUQZIl7
-	 apPl7Tf4SqzDfUv/U09tRCFpGUR06Q2uEh41DnZg=
+	b=H+wZEyh8J2Psi4MgEweaK8IX0oMLevTyHfKbtzOiYZixVe1UnTPOG7sSFbnrVwuSk
+	 +s3Cng9ahZR8ZfWKGxAKBu/jyskxDXkGYlbJiZA00tkuNgZxGynGN+NXFZR1qmJeDY
+	 eBTu8kBip+MQYzP02pl/TihtkeNtgceu/CjNQE1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504276AbgDOTLk (ORCPT
+        id S2441629AbgDOTLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:11:40 -0400
+        Wed, 15 Apr 2020 15:11:47 -0400
 Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416859AbgDOSts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1416862AbgDOSts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 14:49:48 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79726208E4;
-        Wed, 15 Apr 2020 18:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 624B92084D;
+        Wed, 15 Apr 2020 18:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586976587;
-        bh=uX+VB0420gMf/ohkw7XASVivlF4bxxbUvzMx8QiMIUU=;
+        s=default; t=1586976588;
+        bh=2l9U0yUneLktbz9bJbjoUFt6ssHRk74IpMShA/7D+8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b7/ydYqmtdfmNr2OCd/urTfAO/yqTT1YNf2L0mdtXhWZGqKaprWVAm0IVl/k/EQXG
-         qoQ0dqIug+srZthzrbQpP8YMb9jnFGZXJacSjSghjmplBMmAmmuXK9Yle/Ky1Hm1na
-         uouBQTRgIr/guXESYGIypPmXdfxDwPoQ/dHNMIXc=
+        b=kWc8ItRJ/a4IXNFiyZa4+ODDbw55VCznrW2FYHN5Fr/ZVg2ZGFcxfYa32hT5mnuiI
+         o9jn+VTyoUwktL25zQFco0KJE95wCvHtP25BtKrvEMadGBzBZ5sohphPBinzs2RCpD
+         73WW3kselljdW1lkz1PaTzRZr0YsEd/JPQQaeJ/M=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         kernel-team@fb.com, mingo@kernel.org
@@ -48,9 +48,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         akiyks@gmail.com,
         "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH lkmm tip/core/rcu 03/10] Documentation: LKMM: Move MP+onceassign+derefonce to new litmus-tests/rcu/
-Date:   Wed, 15 Apr 2020 11:49:38 -0700
-Message-Id: <20200415184945.16487-3-paulmck@kernel.org>
+Subject: [PATCH lkmm tip/core/rcu 06/10] MAINTAINERS: Update maintainers for new Documentaion/litmus-tests/
+Date:   Wed, 15 Apr 2020 11:49:41 -0700
+Message-Id: <20200415184945.16487-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415183343.GA12265@paulmck-ThinkPad-P72>
 References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
@@ -61,55 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-Move MP+onceassign+derefonce to the new Documentation/litmus-tests/rcu/
-directory.
+Also add me as Reviewer for LKMM. Previously a patch to do this was
+Acked but somewhere along the line got lost. Add myself in this patch.
 
-More RCU-related litmus tests would be added here.
-
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 Acked-by: Andrea Parri <parri.andrea@gmail.com>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/litmus-tests/README                                | 9 +++++++++
- .../litmus-tests/rcu}/MP+onceassign+derefonce.litmus             | 0
- tools/memory-model/litmus-tests/README                           | 3 ---
- 3 files changed, 9 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/litmus-tests/README
- rename {tools/memory-model/litmus-tests => Documentation/litmus-tests/rcu}/MP+onceassign+derefonce.litmus (100%)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-new file mode 100644
-index 0000000..84208bc
---- /dev/null
-+++ b/Documentation/litmus-tests/README
-@@ -0,0 +1,9 @@
-+============
-+LITMUS TESTS
-+============
-+
-+RCU (/rcu directory)
-+--------------------
-+MP+onceassign+derefonce.litmus
-+    Demonstrates that rcu_assign_pointer() and rcu_dereference() to
-+    ensure that an RCU reader will not see pre-initialization garbage.
-diff --git a/tools/memory-model/litmus-tests/MP+onceassign+derefonce.litmus b/Documentation/litmus-tests/rcu/MP+onceassign+derefonce.litmus
-similarity index 100%
-rename from tools/memory-model/litmus-tests/MP+onceassign+derefonce.litmus
-rename to Documentation/litmus-tests/rcu/MP+onceassign+derefonce.litmus
-diff --git a/tools/memory-model/litmus-tests/README b/tools/memory-model/litmus-tests/README
-index 681f906..79e1b1e 100644
---- a/tools/memory-model/litmus-tests/README
-+++ b/tools/memory-model/litmus-tests/README
-@@ -63,9 +63,6 @@ LB+poonceonces.litmus
- 	As above, but with store-release replaced with WRITE_ONCE()
- 	and load-acquire replaced with READ_ONCE().
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db..5d2b065 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9806,6 +9806,7 @@ M:	Luc Maranget <luc.maranget@inria.fr>
+ M:	"Paul E. McKenney" <paulmck@kernel.org>
+ R:	Akira Yokosawa <akiyks@gmail.com>
+ R:	Daniel Lustig <dlustig@nvidia.com>
++R:	Joel Fernandes <joel@joelfernandes.org>
+ L:	linux-kernel@vger.kernel.org
+ L:	linux-arch@vger.kernel.org
+ S:	Supported
+@@ -9816,6 +9817,7 @@ F:	Documentation/core-api/atomic_ops.rst
+ F:	Documentation/core-api/refcount-vs-atomic.rst
+ F:	Documentation/memory-barriers.txt
+ F:	tools/memory-model/
++F:	Documentation/litmus-tests/
  
--MP+onceassign+derefonce.litmus
--	As below, but with rcu_assign_pointer() and an rcu_dereference().
--
- MP+polockmbonce+poacquiresilsil.litmus
- 	Protect the access with a lock and an smp_mb__after_spinlock()
- 	in one process, and use an acquire load followed by a pair of
+ LIS3LV02D ACCELEROMETER DRIVER
+ M:	Eric Piel <eric.piel@tremplin-utc.net>
 -- 
 2.9.5
 
