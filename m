@@ -2,135 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FEEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1747AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3056C206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586932251;
-	bh=l09AdI2cg5/TXBH2+fXRH5Uz46pZ5XguVEg+06S/y0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2r9ZvjKnohu2F+ixSSlb6tGVYhcO28R+Ufd3owRqT+QWBzIESqLWBGHfr9PQCw+t3
-	 OVtnCPmafvVkP2eCAq2vDaWeYOR1PbmF1L07kSLiIUgub55OMS75B7beAlQtRC0u1B
-	 w6FJJ08M/XEp6zsqx+UmmRFSbQya1d+wSZfaO1p4=
+	by mail.kernel.org (Postfix) with ESMTP id CF685206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:31:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YYJ80kD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634889AbgDOGat (ORCPT
+        id S2634899AbgDOGbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:30:49 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40025 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634860AbgDOGao (ORCPT
+        Wed, 15 Apr 2020 02:31:15 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:56403 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2634890AbgDOGbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:30:44 -0400
-Received: by mail-pj1-f66.google.com with SMTP id a22so1897026pjk.5;
-        Tue, 14 Apr 2020 23:30:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4LxcdXE4D1IxsThm3AhK7U6oJIApRsieXToTt1nK21A=;
-        b=s4N0X4UW5dadmnNR0mWMOazvtZM0Dx1BKiO0E+IZShk++erPeNdVkqduzMQteG2vLf
-         xm2jUfZS41xbG5g5Los2JHdGscep2QjyqWrZOlqWduhpGuuVK6WiK7Un1RjhfOt8msg+
-         IFlFbNJQ4ltVVp5SpBXjgAQz+8QFHtD62uOeIvInZQVtHL9FXA9zUWpcW9+4SpJzNNkR
-         BW/bL7e21cGcxizPlEzBC3344rO75d+Hv/EV4FUj1RXj2+1ZFBtd5MMcaVMCXSZBbPka
-         efFhIudidFd8tEhl4YOhd9+84+RV6UDjfzEx46CizHS1aT8p7SCICieZFvmp5iVwWD0m
-         R8PA==
-X-Gm-Message-State: AGi0PuZAmulZ2b5W5IbCCcRQ4ukfYGxQ1p8FEBKNp0lgxIiEZRYMkD01
-        PrcMU2WssoHF/bjCsW+Jhro=
-X-Google-Smtp-Source: APiQypJFLgQFEvz8AfxQfJ1OPsrl6W7Iz6lebKgSICb68UwY5Tr8ekRd4l9VhDpF57YV7QrUZX+Vnw==
-X-Received: by 2002:a17:90a:d101:: with SMTP id l1mr4382396pju.79.1586932243703;
-        Tue, 14 Apr 2020 23:30:43 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id d188sm12635163pfa.7.2020.04.14.23.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 23:30:42 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id CFE4340277; Wed, 15 Apr 2020 06:30:41 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 06:30:41 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
- command line
-Message-ID: <20200415063041.GT11244@42.do-not-panic.com>
-References: <20200414113222.16959-1-vbabka@suse.cz>
- <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
+        Wed, 15 Apr 2020 02:31:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586932270; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=0qyYONgS3KzCR72TXDQaI57YcGvWrSu9zzL9q8Vkm/A=; b=YYJ80kD9icHQZMQshW6KpdBL6VyddsEzK+K9XHN/fpk8wJU5pE6wO6J7jPX5uwtGGtaOhjjf
+ pw+dptaMuYbOiNaYdGBH60CjOM2+XYak9FK4VDUNYYbhr6OKyWyLtoOq1e9Cc+3X1JRfrSf+
+ YEDQM2889qoDwH9eWXS5cXadrj8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e96aa26.7f500d6a9880-smtp-out-n02;
+ Wed, 15 Apr 2020 06:31:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C0D2CC433BA; Wed, 15 Apr 2020 06:31:02 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EAE84C433CB;
+        Wed, 15 Apr 2020 06:30:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EAE84C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.carpenter@oracle.com,
+        gustavo@embeddedor.com, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] soc: qcom: pdr: Remove impossible error condition
+Date:   Wed, 15 Apr 2020 11:59:55 +0530
+Message-Id: <20200415062955.21439-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:23:59PM +0900, Masami Hiramatsu wrote:
-> Hi Vlastimil,
-> 
-> On Tue, 14 Apr 2020 13:32:19 +0200
-> Vlastimil Babka <vbabka@suse.cz> wrote:
-> 
-> > This series adds support for something that seems like many people always
-> > wanted but nobody added it yet, so here's the ability to set sysctl parameters
-> > via kernel command line options in the form of sysctl.vm.something=1
-> 
-> Sounds good. And would you consider to use the bootconfig instead of (or
-> in addition to) the kernel command line, because it is too short to describe
-> the sysctl options?
+The patch fbe639b44a82: "soc: qcom: Introduce Protection Domain
+Restart helpers" leads to the following static checker warning:
 
-FWIW for the lazy:
+drivers/soc/qcom/pdr_interface.c:158 pdr_register_listener()
+'(resp.curr_state < (-((~0 >> 1)) - 1)) => (s32min-s32max < s32min)'
+These are casted to int so they can't be outside of int range.
 
-The cmdline limitation:
+Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/soc/qcom/pdr_interface.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Documentation/admin-guide/kernel-parameters.rst
-
-```
-The number of kernel parameters is not limited, but the length of the           
-complete command line (parameters including spaces etc.) is limited to          
-a fixed number of characters. This limit depends on the architecture            
-and is between 256 and 4096 characters. It is defined in the file               
-./include/asm/setup.h as COMMAND_LINE_SIZE.
-```
-
-The bootconfig limitation:
-
-Documentation/admin-guide/bootconfig.rst
-
-```
-Currently the maximum config size size is 32KB and the total key-words
-(not     key-value entries) must be under 1024 nodes.  Note: this is not
-the number of entries but nodes, an entry must consume more than 2 nodes
-(a key-word and a value). So theoretically, it will be up to 512
-key-value pairs. If keys contains 3 words in average, it can contain 256
-key-value pairs. In most cases, the number of config items will be under
-100 entries and smaller than 8KB, so it would be enough.  If the node
-number exceeds 1024, parser returns an error even if the file       size
-is smaller than 32KB.  Anyway, since bootconfig command verifies it when
-appending a boot config       to initrd image, user can notice it before
-boot.  
-```
-*recommending* bootconfig due to the limitation of cmdline seems
-sensible, however if we advise that.. wouldn't the space for 512
-theoretical entries full up rather fast?
-
-  Luis
+diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+index 17ad3b8698e16..bdcf16f88a97f 100644
+--- a/drivers/soc/qcom/pdr_interface.c
++++ b/drivers/soc/qcom/pdr_interface.c
+@@ -155,10 +155,6 @@ static int pdr_register_listener(struct pdr_handle *pdr,
+ 		return ret;
+ 	}
+ 
+-	if ((int)resp.curr_state < INT_MIN || (int)resp.curr_state > INT_MAX)
+-		pr_err("PDR: %s notification state invalid: 0x%x\n",
+-		       pds->service_path, resp.curr_state);
+-
+ 	pds->state = resp.curr_state;
+ 
+ 	return 0;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
