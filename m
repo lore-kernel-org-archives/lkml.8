@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD3BC38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03502C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E9A20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C613120737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955994;
-	bh=ak3MKSqPh/TSr0rPK5DUxHnAyY73imxeaHdwafJvqA8=;
+	s=default; t=1586956003;
+	bh=iX++jc0756BuIDSz45PBmNchVhHN9bHdUsV/FmZkq3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T6RaMnx57YkFCFGfLrCPpTJn4fmfWU9A/nGFF6+ud/eHUy3Bc88AmJiPkS0a3i8/+
-	 TDKHATY0DNKg86RdLg3yoYDVyRP0RUQHO4D8yiHn/Qms+JvclzJXjGpfL7kmMRBO+n
-	 NhSV+eKEZCBty4PfJK89rBJEb8MbJf/v2kxkYMr8=
+	b=HNdLOBaTxDgJnDdkGkFqHFP7esYnjlyz34+YTG9+0tCUxfqYMf/XaKCgck2Go4nOP
+	 JnecHbnp5tOUvyOTPjCPRi1j7rijYcZBvoE/0MMh0Vfr8nRWF51YPRIWFdokjFhAx0
+	 WRCBD2LUPbUXFofLztWtM/w+jGmmX7lYoCKSuqBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897114AbgDOLgH (ORCPT
+        id S2505966AbgDONGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54312 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408863AbgDOLeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:34:50 -0400
+        id S2897106AbgDOLgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B148520775;
-        Wed, 15 Apr 2020 11:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 835432078A;
+        Wed, 15 Apr 2020 11:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950489;
-        bh=ak3MKSqPh/TSr0rPK5DUxHnAyY73imxeaHdwafJvqA8=;
+        s=default; t=1586950563;
+        bh=iX++jc0756BuIDSz45PBmNchVhHN9bHdUsV/FmZkq3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTuuJMCPXcGFmeqzyPbu3QYS1Olh4swdhdl/hw/qccYmj+MDCClCElgkvZ2Wsr8Vg
-         Hgk2595dVJ/qZrFLXlf1iy3WJeXWbhHrGfs5RWg5qQar85G8xHGFoO/9BrMtBIyLkK
-         iQqvL5teSgEjemlHQl2XMhdPtMhvFpYibMM0BRX4=
+        b=tOqts8mDXsvmUnRGz3jJBHSossudJubFtABYEuMbfv4qgu7dsf2s5Qv8jqegapltX
+         nZqvQnaR1qwuBNbHJKei0Q2tdUlHG0/EEy0hK4r0nszRUUAD+6Mt9rH92oSRdWt2ty
+         HhR5cmYcIBngXg274je4QrVd14a/ZZw6ZqR0KHUM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 003/129] clk: Don't cache errors from clk_ops::get_phase()
-Date:   Wed, 15 Apr 2020 07:32:38 -0400
-Message-Id: <20200415113445.11881-3-sashal@kernel.org>
+Cc:     Herat Ramani <herat@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 067/129] cxgb4: fix MPS index overwrite when setting MAC address
+Date:   Wed, 15 Apr 2020 07:33:42 -0400
+Message-Id: <20200415113445.11881-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -61,132 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Herat Ramani <herat@chelsio.com>
 
-[ Upstream commit f21cf9c77ee82ef8adfeb2143adfacf21ec1d5cc ]
+[ Upstream commit 41aa8561ca3fc5748391f08cc5f3e561923da52c ]
 
-We don't check for errors from clk_ops::get_phase() before storing away
-the result into the clk_core::phase member. This can lead to some fairly
-confusing debugfs information if these ops do return an error. Let's
-skip the store when this op fails to fix this. While we're here, move
-the locking outside of clk_core_get_phase() to simplify callers from
-the debugfs side.
+cxgb4_update_mac_filt() earlier requests firmware to add a new MAC
+address into MPS TCAM. The MPS TCAM index returned by firmware is
+stored in pi->xact_addr_filt. However, the saved MPS TCAM index gets
+overwritten again with the return value of cxgb4_update_mac_filt(),
+which is wrong.
 
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20200205232802.29184-2-sboyd@kernel.org
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+When trying to update to another MAC address later, the wrong MPS TCAM
+index is sent to firmware, which causes firmware to return error,
+because it's not the same MPS TCAM index that firmware had sent
+earlier to driver.
+
+So, fix by removing the wrong overwrite being done after call to
+cxgb4_update_mac_filt().
+
+Fixes: 3f8cfd0d95e6 ("cxgb4/cxgb4vf: Program hash region for {t4/t4vf}_change_mac()")
+Signed-off-by: Herat Ramani <herat@chelsio.com>
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 48 +++++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 95adf6c6db3db..305544b68b8a7 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2660,12 +2660,14 @@ static int clk_core_get_phase(struct clk_core *core)
- {
- 	int ret;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 97f90edbc0683..6767c73c87a1e 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -3138,7 +3138,6 @@ static int cxgb_set_mac_addr(struct net_device *dev, void *p)
+ 		return ret;
  
--	clk_prepare_lock();
-+	lockdep_assert_held(&prepare_lock);
-+	if (!core->ops->get_phase)
-+		return 0;
-+
- 	/* Always try to update cached phase if possible */
--	if (core->ops->get_phase)
--		core->phase = core->ops->get_phase(core->hw);
--	ret = core->phase;
--	clk_prepare_unlock();
-+	ret = core->ops->get_phase(core->hw);
-+	if (ret >= 0)
-+		core->phase = ret;
- 
- 	return ret;
- }
-@@ -2679,10 +2681,16 @@ static int clk_core_get_phase(struct clk_core *core)
-  */
- int clk_get_phase(struct clk *clk)
- {
-+	int ret;
-+
- 	if (!clk)
- 		return 0;
- 
--	return clk_core_get_phase(clk->core);
-+	clk_prepare_lock();
-+	ret = clk_core_get_phase(clk->core);
-+	clk_prepare_unlock();
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(clk_get_phase);
- 
-@@ -2896,13 +2904,21 @@ static struct hlist_head *orphan_list[] = {
- static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
- 				 int level)
- {
--	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu %5d %6d\n",
-+	int phase;
-+
-+	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu ",
- 		   level * 3 + 1, "",
- 		   30 - level * 3, c->name,
- 		   c->enable_count, c->prepare_count, c->protect_count,
--		   clk_core_get_rate(c), clk_core_get_accuracy(c),
--		   clk_core_get_phase(c),
--		   clk_core_get_scaled_duty_cycle(c, 100000));
-+		   clk_core_get_rate(c), clk_core_get_accuracy(c));
-+
-+	phase = clk_core_get_phase(c);
-+	if (phase >= 0)
-+		seq_printf(s, "%5d", phase);
-+	else
-+		seq_puts(s, "-----");
-+
-+	seq_printf(s, " %6d\n", clk_core_get_scaled_duty_cycle(c, 100000));
+ 	memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
+-	pi->xact_addr_filt = ret;
+ 	return 0;
  }
  
- static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
-@@ -2939,6 +2955,7 @@ DEFINE_SHOW_ATTRIBUTE(clk_summary);
- 
- static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
- {
-+	int phase;
- 	unsigned long min_rate, max_rate;
- 
- 	clk_core_get_boundaries(c, &min_rate, &max_rate);
-@@ -2952,7 +2969,9 @@ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
- 	seq_printf(s, "\"min_rate\": %lu,", min_rate);
- 	seq_printf(s, "\"max_rate\": %lu,", max_rate);
- 	seq_printf(s, "\"accuracy\": %lu,", clk_core_get_accuracy(c));
--	seq_printf(s, "\"phase\": %d,", clk_core_get_phase(c));
-+	phase = clk_core_get_phase(c);
-+	if (phase >= 0)
-+		seq_printf(s, "\"phase\": %d,", phase);
- 	seq_printf(s, "\"duty_cycle\": %u",
- 		   clk_core_get_scaled_duty_cycle(c, 100000));
- }
-@@ -3434,14 +3453,11 @@ static int __clk_core_init(struct clk_core *core)
- 		core->accuracy = 0;
- 
- 	/*
--	 * Set clk's phase.
-+	 * Set clk's phase by clk_core_get_phase() caching the phase.
- 	 * Since a phase is by definition relative to its parent, just
- 	 * query the current clock phase, or just assume it's in phase.
- 	 */
--	if (core->ops->get_phase)
--		core->phase = core->ops->get_phase(core->hw);
--	else
--		core->phase = 0;
-+	clk_core_get_phase(core);
- 
- 	/*
- 	 * Set clk's duty cycle.
 -- 
 2.20.1
 
