@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D94C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7416FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 586452078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4509E208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951842;
-	bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
+	s=default; t=1586951854;
+	bh=zcjOvUCT85bEb9F0JG20QA/GI5+xjX+Y9XXT4eiJ2bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TLRkjgOzEru7lb+pqbjjTh1fd54dKLTq1Ls5QkbdUHFarrXc9fAl3bICsuFNdrIj7
-	 DavyQaZLN2VF8EpjmVzb9tF9rKYKtA4Wgp8moKlNOAfIDBlblwZcCulc6voeI18Ip+
-	 m3DrJcBxzipltRtwqA88iH9/E0/TjKztP3TvEhUY=
+	b=Ycyt38RjNoVZOunlqqWHFciNDsIPyjCrRkIKQSBV3Bfxz5JyRYE7bUOZATGrvEWI4
+	 StPuTHBEt82JyagqlCAxTBVskyX7Zdo1YcIp40iVqdYAAKCt+scjPg6sF7C4ETlAp3
+	 pDJv/Gp6GEUrBNcyNRrX4hFboy/yWNx5lDvxcLtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897960AbgDOL5U (ORCPT
+        id S2897970AbgDOL50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406455AbgDOLqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:18 -0400
+        id S2409286AbgDOLqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 548C92078A;
-        Wed, 15 Apr 2020 11:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E3A621569;
+        Wed, 15 Apr 2020 11:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951178;
-        bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
+        s=default; t=1586951181;
+        bh=zcjOvUCT85bEb9F0JG20QA/GI5+xjX+Y9XXT4eiJ2bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ptbxrdzKlZ99faPCWKMoPrexWdWv5NWYL+CMonI9OFyXpsCUJ1467TNg+0HbK6wuI
-         fGbNN0WFPzC3jLjhU9NwJJk+hzABD9+lOiLJjDLDF27fQ/QJ0G9IbgFrS4ItMsPFIq
-         cIKKf8H+i6S3useRn/6SaIJ3PVnxj2uW1ylGjQ94=
+        b=AIxYfeJ2MgTZG0NVdCbD5i91j8s+u5VKAhEHdFZnz++th8srQDh4hsW+5A+fvx5pH
+         oVX/o/8/2H4CoB3Bz84/v0akvej/V9D8cSxSO0CXHC0gop5XAM7VAcg3YtoUItnSQz
+         41zRO8bvhJuUPzvprzER6hbVzJMw5iuO4TdthXLI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 5.4 81/84] libnvdimm: Out of bounds read in __nd_ioctl()
-Date:   Wed, 15 Apr 2020 07:44:38 -0400
-Message-Id: <20200415114442.14166-81-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 84/84] f2fs: fix to wait all node page writeback
+Date:   Wed, 15 Apr 2020 07:44:41 -0400
+Message-Id: <20200415114442.14166-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,41 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
+[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
 
-The "cmd" comes from the user and it can be up to 255.  It it's more
-than the number of bits in long, it results out of bounds read when we
-check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
-ND_CMD_CALL (10) so I added a compare against that.
+There is a race condition that we may miss to wait for all node pages
+writeback, fix it.
 
-Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+- fsync()				- shrink
+ - f2fs_do_sync_file
+					 - __write_node_page
+					  - set_page_writeback(page#0)
+					  : remove DIRTY/TOWRITE flag
+  - f2fs_fsync_node_pages
+  : won't find page #0 as TOWRITE flag was removeD
+  - f2fs_wait_on_node_pages_writeback
+  : wont' wait page #0 writeback as it was not in fsync_node_list list.
+					   - f2fs_add_fsync_node_entry
+
+Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/f2fs/node.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index d47412dcdf38d..5e5c6aafc070b 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -1010,8 +1010,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 			return -EFAULT;
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 8b66bc4c004b6..f14401a77d601 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1562,15 +1562,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 	if (atomic && !test_opt(sbi, NOBARRIER))
+ 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+ 
+-	set_page_writeback(page);
+-	ClearPageError(page);
+-
++	/* should add to global list before clearing PAGECACHE status */
+ 	if (f2fs_in_warm_node_list(sbi, page)) {
+ 		seq = f2fs_add_fsync_node_entry(sbi, page);
+ 		if (seq_id)
+ 			*seq_id = seq;
  	}
  
--	if (!desc || (desc->out_num + desc->in_num == 0) ||
--			!test_bit(cmd, &cmd_mask))
-+	if (!desc ||
-+	    (desc->out_num + desc->in_num == 0) ||
-+	    cmd > ND_CMD_CALL ||
-+	    !test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
- 
- 	/* fail write commands (when read-only) */
++	set_page_writeback(page);
++	ClearPageError(page);
++
+ 	fio.old_blkaddr = ni.blk_addr;
+ 	f2fs_do_write_node_page(nid, &fio);
+ 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
 -- 
 2.20.1
 
