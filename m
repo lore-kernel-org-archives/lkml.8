@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61192C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F7EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 424B2206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12F8206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955075;
-	bh=VyOZnvDN6v7p/4EWitshi6AaubiDqI05pzbnVO4r8mA=;
+	s=default; t=1586955082;
+	bh=JTDIwijcZwHGMxB9O0aoixYI7r3ZtbL2U0goW3aJfk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRo5TytXf40bS8Wd0yi5GSB3AhbOWijQEuuaU9dV8iEx80O90WtFxp1tafR3G3XNC
-	 IY1jqAvl6x0sXNlU23Za+ih0HsEjrHJDirUpBK709CZZdN2cyRKjWAmGY3Rp/s6CQu
-	 qv+CiqVh2NqI2mD7OxeTBAimbq6fizXJq5butT2U=
+	b=OBNG8FGR+4x1J7RgAJ45zdoXupApn02YWPkGBAoEpCdA2cK3XYYRcR9ZQ5OQ1RlQy
+	 RMeT+i0mWUY0u/HcGsVN5fLjRPrDzlCT/6psx3vRW2WKdwjEApdHzFn3UULdCz6TvO
+	 JaiqO4PkSgmucNmtl/Ems58Vh0m/FSzmmq5CAH/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408953AbgDOMvL (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
+        id S370466AbgDOMvV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408921AbgDOLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:54 -0400
+        id S2408919AbgDOLmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB81E20936;
-        Wed, 15 Apr 2020 11:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E63320775;
+        Wed, 15 Apr 2020 11:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950971;
-        bh=VyOZnvDN6v7p/4EWitshi6AaubiDqI05pzbnVO4r8mA=;
+        s=default; t=1586950970;
+        bh=JTDIwijcZwHGMxB9O0aoixYI7r3ZtbL2U0goW3aJfk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iX7dPB623rPbvtHBk2KsU27CecUgvfazqs2xOjcJKJ5xO7wZdGowv2/0OlwqJeL2m
-         9KO1l/eXqdUHmHv5HBS7EpqOM6f1E3N6XhjyHGD1pUIModeRYxbp2I0AVi92QzPMjC
-         jYU4zYAL1APBUObqEoTtpFsHJBo5KV6XrkM9AgAg=
+        b=G+Y4i3ijZL3asZQ/EA+QxL0VtKrNcOegJvwBcpvkTkeRXukhm4uRL/FSa/zfIWEHb
+         08gT/arsTBryYUh9mc3wK5OHFMx9Vt620no/j0GArPdR7gCcUHP+7tQRKk53M05QR5
+         sr+oDD/ZQvBsoMICA2Ig3cW0G2V+jiEWaEjrlFbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 020/106] arm64: dts: marvell: espressobin: add ethernet alias
-Date:   Wed, 15 Apr 2020 07:41:00 -0400
-Message-Id: <20200415114226.13103-20-sashal@kernel.org>
+Cc:     Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 019/106] xfs: fix regression in "cleanup xfs_dir2_block_getdents"
+Date:   Wed, 15 Apr 2020 07:40:59 -0400
+Message-Id: <20200415114226.13103-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,38 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Maciej Nowak <tmn505@gmail.com>
+From: Tommi Rantala <tommi.t.rantala@nokia.com>
 
-[ Upstream commit 5253cb8c00a6f4356760efb38bca0e0393aa06de ]
+[ Upstream commit 3d28e7e278913a267b1de360efcd5e5274065ce2 ]
 
-The maker of this board and its variants, stores MAC address in U-Boot
-environment. Add alias for bootloader to recognise, to which ethernet
-node inject the factory MAC address.
+Commit 263dde869bd09 ("xfs: cleanup xfs_dir2_block_getdents") introduced
+a getdents regression, when it converted the pointer arithmetics to
+offset calculations: offset is updated in the loop already for the next
+iteration, but the updated offset value is used incorrectly in two
+places, where we should have used the not-yet-updated value.
 
-Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+This caused for example "git clean -ffdx" failures to cleanup certain
+directory structures when running in a container.
+
+Fix the regression by making sure we use proper offset in the loop body.
+Thanks to Christoph Hellwig for suggestion how to best fix the code.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: 263dde869bd09 ("xfs: cleanup xfs_dir2_block_getdents")
+Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/xfs/xfs_dir2_readdir.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-index 53b8ac55a7f3d..e5262dab28f58 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-@@ -13,6 +13,12 @@
- #include "armada-372x.dtsi"
+diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
+index 0d3b640cf1cce..871ec22c9aee9 100644
+--- a/fs/xfs/xfs_dir2_readdir.c
++++ b/fs/xfs/xfs_dir2_readdir.c
+@@ -147,7 +147,7 @@ xfs_dir2_block_getdents(
+ 	xfs_off_t		cook;
+ 	struct xfs_da_geometry	*geo = args->geo;
+ 	int			lock_mode;
+-	unsigned int		offset;
++	unsigned int		offset, next_offset;
+ 	unsigned int		end;
  
- / {
-+	aliases {
-+		ethernet0 = &eth0;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+ 	/*
+@@ -173,9 +173,10 @@ xfs_dir2_block_getdents(
+ 	 * Loop over the data portion of the block.
+ 	 * Each object is a real entry (dep) or an unused one (dup).
+ 	 */
+-	offset = geo->data_entry_offset;
+ 	end = xfs_dir3_data_end_offset(geo, bp->b_addr);
+-	while (offset < end) {
++	for (offset = geo->data_entry_offset;
++	     offset < end;
++	     offset = next_offset) {
+ 		struct xfs_dir2_data_unused	*dup = bp->b_addr + offset;
+ 		struct xfs_dir2_data_entry	*dep = bp->b_addr + offset;
+ 		uint8_t filetype;
+@@ -184,14 +185,15 @@ xfs_dir2_block_getdents(
+ 		 * Unused, skip it.
+ 		 */
+ 		if (be16_to_cpu(dup->freetag) == XFS_DIR2_DATA_FREE_TAG) {
+-			offset += be16_to_cpu(dup->length);
++			next_offset = offset + be16_to_cpu(dup->length);
+ 			continue;
+ 		}
+ 
+ 		/*
+ 		 * Bump pointer for the next iteration.
+ 		 */
+-		offset += xfs_dir2_data_entsize(dp->i_mount, dep->namelen);
++		next_offset = offset +
++			xfs_dir2_data_entsize(dp->i_mount, dep->namelen);
+ 
+ 		/*
+ 		 * The entry is before the desired starting point, skip it.
 -- 
 2.20.1
 
