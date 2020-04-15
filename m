@@ -2,104 +2,95 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09F8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47202C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC7A20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A96520737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956062;
+	bh=vEzWw+t++McwV7z+x0GXmR2vXdqjpx3hTiJQ1o5LGiw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aDFo7QzQsZpICcpGFvUJ32GOQyhpv+5jmjqmZkiXLbILwEK0lGYS6idD8+/5qUM11
+	 yJav2uCgr9lRepPWpFlKnRNT9jB0mJxvUQ8vKW7kU5v5zGtdTNmSLgDKPMWxdS59rb
+	 tLk2NXbbA5lI1BrS5OuOTicMFptR38ZYeeb2aWfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506038AbgDONHW (ORCPT
+        id S1729641AbgDONHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:07:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12616 "EHLO mga18.intel.com"
+        Wed, 15 Apr 2020 09:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503911AbgDONGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:06:55 -0400
-IronPort-SDR: U5qlzJyLxtMK43nMYAjQ/ZWsmVyQdhXr0JepVrLFKt/fpihuyLy4+bAszaJ5q3Cn4rdbRrRzbX
- 5jWPPi9bg6nA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 06:06:53 -0700
-IronPort-SDR: X0FV4juNS/j6mhVgSKyGzTWkLMQfq/EdlDRtnBYd9XoCMXDaq1clfbOdrKq8BA0ui9WyQaW9cV
- LSg0XpREzEWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="400307602"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 06:06:51 -0700
-Subject: Re: [PATCH 3/7] mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Suneel Garapati <suneel.garapati@xilinx.com>,
-        Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
- <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <67dc68ce-d8ec-4486-f4f9-3fb2580d2675@intel.com>
-Date:   Wed, 15 Apr 2020 16:06:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2897089AbgDOLfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:53 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D85AE21707;
+        Wed, 15 Apr 2020 11:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950553;
+        bh=vEzWw+t++McwV7z+x0GXmR2vXdqjpx3hTiJQ1o5LGiw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0Cfu84ocq8/Ea8ibOtSMcB6ugwHM8dF9AdQY/Xs8g5nVgEY1YgD+b8OQ3u59ZnFFU
+         MXbK11qO0DQ2Kkj5wcPo6uvTlphnyRd/q6Onxz6hM0fzw61LvpDBI5pGqrMSt5ygw8
+         Ge5Qa53ol7VghgV5DN/fM92QR/8zcmXz3mH7WdJw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 059/129] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 15 Apr 2020 07:33:34 -0400
+Message-Id: <20200415113445.11881-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/04/20 2:54 pm, Michał Mirosław wrote:
-> Fix returned clock rate for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN case.
+From: Josh Triplett <josh@joshtriplett.org>
 
-Does this change anything, because it looks the same to me?
+[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
 
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> Cc: stable@kernel.vger.org
-> Fixes: d1955c3a9a1d ("mmc: sdhci: add quirk SDHCI_QUIRK_CLOCK_DIV_ZERO_BROKEN")
-> ---
->  drivers/mmc/host/sdhci.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index b2dc4f1cfa5c..a043bf5e3565 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1807,9 +1807,12 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  
->  		if (!host->clk_mul || switch_base_clk) {
->  			/* Version 3.00 divisors must be a multiple of 2. */
-> -			if (host->max_clk <= clock)
-> +			if (host->max_clk <= clock) {
->  				div = 1;
-> -			else {
-> +				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
-> +					&& host->max_clk <= 25000000)
-> +					div = 2;
-> +			} else {
->  				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
->  				     div += 2) {
->  					if ((host->max_clk / div) <= clock)
-> @@ -1818,9 +1821,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  			}
->  			real_div = div;
->  			div >>= 1;
-> -			if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
-> -				&& !div && host->max_clk <= 25000000)
-> -				div = 1;
->  		}
->  	} else {
->  		/* Version 2.00 divisors must be a power of 2. */
-> 
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
+
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ext4/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 7d35f9a993d6a..e87008ac7be08 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4158,7 +4158,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
+-- 
+2.20.1
 
