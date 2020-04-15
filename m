@@ -2,479 +2,158 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79107C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A49C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 454F720678
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69B52072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dIJoQuRE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WReb3Foo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgDODKt (ORCPT
+        id S2389267AbgDODK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 23:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46412 "EHLO
+        Tue, 14 Apr 2020 23:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728573AbgDODKm (ORCPT
+        by vger.kernel.org with ESMTP id S1731048AbgDODKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 23:10:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA23C061A0C;
-        Tue, 14 Apr 2020 20:10:41 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id i3so874408pgk.1;
-        Tue, 14 Apr 2020 20:10:41 -0700 (PDT)
+        Tue, 14 Apr 2020 23:10:45 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87A97C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 20:10:45 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r4so868373pgg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 20:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TubayRyrZxNKx1xKPwILFJfInk36KmvHGUZ+NGa724A=;
-        b=dIJoQuREpNG8MRzsHMJvEFuwZPPXisc5U0Ole8bmEqF5bg8uwiQ+hPoXWnoo7MKrva
-         TP2kjKZq0l+VWe1imTWiJizK1d9gQykAOiymnc3EYFpDFf7JC5XF0A1CMzKCRQpEpIuC
-         hp7hdkYQdvrloZC924hbUjFtJw47IrXsSSp61n3qTeYFQjmsReerXmPa88OeF1ipcxp+
-         esp0Bw208rwCnnZ2BCyP/1g9H6TsXmq1O6ZX9jNXgX6FMh9yu6hg7YcHLGnrxuZBFjZX
-         alSqGqlAudEWXhBjsTm4Mj6ulu/Zs9nmUEOx1UuP3EbhmAGiwDGGn2ghlvPB7yHqoFHx
-         KC5g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rl9PWj3uTfyqXygouG7eBzkOuRR3ht3SlSVZEdS5vi4=;
+        b=WReb3FooecG/mGVKk7KoTDNmzBB8JA07kS8Wlt7cGOj1b+24cYEuDDpfQIYT19Pgq3
+         D6Lmumf0FVKLo2Mq50BPVQcRiaZfDl6vC92/MGZX/r0LfWfPWUejG4s92xqamybetQPm
+         UmeEt0q1UUwCZuMGpM5Q2JjGxrKiO51WcBNsI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TubayRyrZxNKx1xKPwILFJfInk36KmvHGUZ+NGa724A=;
-        b=kU1QKv3yCx0DL+n2RKpx8ogUn47TCHTZv/AS+hjQ1yjVv/hNy0xkBLNUwj16xGNJXX
-         4ze4P+glQBFahJqBSJb7TqIh6hB7+2pFIHw02bDsJvLs5v6nbTl2cPssOnwb3LWVXgUp
-         ke32uIQbywDenMbyuO4HkkwInBlIvyf40OA9RS/ilvMbFIUup8EegwvCY83WCtPXO2Xr
-         mTUoPg/wAZbMV5Bau7uTX/XUihKZr78O+0TX2E1VhRm9VvKHKAK1dXhUTChU+1tEpT6V
-         SS1es6ItxTy5OdoeICHvoZKxdCHRYtf1rZxlHbZ0oc8LBjVAIbxRmEBtI5jNPR1Cjcgb
-         fGfQ==
-X-Gm-Message-State: AGi0PuaTDmildj6jS+GtcqVBibimZPN/pEqx3SoROTjsxmY7ow93P2Gg
-        tiCKnComsqnbHhhcj4ndSPM0mHMF
-X-Google-Smtp-Source: APiQypKukbS392u8xXv/8eyeAQfcteMEQs+YT/in8F0v01SoSOjMMh+klIZ3mRn8zhd6y761JExH3g==
-X-Received: by 2002:a63:a55b:: with SMTP id r27mr22003399pgu.141.1586920240879;
-        Tue, 14 Apr 2020 20:10:40 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z7sm3131364pff.47.2020.04.14.20.10.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rl9PWj3uTfyqXygouG7eBzkOuRR3ht3SlSVZEdS5vi4=;
+        b=dPzPzwiH38nALXYY/YuLTGbGmAc7UnyLFpWFHl0KdudEu7YQWYcM3rBLIxIaxwuikj
+         1a/UeeVHFsESttMJqpUQvzvSXW71LiP35c5bRcKCmVkrGNk9Ul3cAp69NM+cRyZ2Adbj
+         yrmhtgHwtItuzbuB7MSvcKCOXzMO7hpa2ICRCkRJ3KkNhW8zmE2Rflv+fy9vtODCSmak
+         35/3kODlwvxon+K+4ZWmwCNYyCS/zzzXdH+13wC/v0ooMJjRgUyiemlwEkawpaq9J2o1
+         raLlJqDH3E1W41JOShsMclRz6v2OyKe7KD4GQSNeM9L+ZTxB+tfBk0r4e2mLg21kO0Dy
+         Fymw==
+X-Gm-Message-State: AGi0PuYU4DV6hsrjYwgRZHK5yzpiJd/RWopTLMfRvueGzfRR9vFxBcZk
+        mHpwe6xxEHv1FwGml5PD7wLgUQ==
+X-Google-Smtp-Source: APiQypLN7j/9XXU0t6HBqN7MgkhuUOzn37VdNDeJBnJniYxDkolOenYFHYWHDRbtpX384Nu0Yk81cA==
+X-Received: by 2002:a62:e213:: with SMTP id a19mr11074202pfi.180.1586920245009;
+        Tue, 14 Apr 2020 20:10:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 189sm12161684pfg.170.2020.04.14.20.10.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 20:10:40 -0700 (PDT)
-From:   zhang.lyra@gmail.com
-To:     linux-pm@vger.kernel.org
-Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [RFC PATCH v1 2/2] thermal/drivers/sprd_cpu_cooling: Add platform mitigation thermal driver
-Date:   Wed, 15 Apr 2020 11:09:59 +0800
-Message-Id: <20200415030959.1463-3-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415030959.1463-1-zhang.lyra@gmail.com>
-References: <20200415030959.1463-1-zhang.lyra@gmail.com>
+        Tue, 14 Apr 2020 20:10:44 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 20:10:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH] test_firmware: remove unnecessary test_fw_mutex in
+ test_dev_config_show_xxx
+Message-ID: <202004142010.C0847F5@keescook>
+References: <20200415002517.4328-1-scott.branden@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415002517.4328-1-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeson Gao <jeson.gao@unisoc.com>
+On Tue, Apr 14, 2020 at 05:25:17PM -0700, Scott Branden wrote:
+> Remove unnecessary use of test_fw_mutex in test_dev_config_show_xxx
+> functions that show simple bool, int, and u8.
 
-This driver provides a further core ctrl policy to reduce temperature for
-unisoc platform.
+I would expect at least a READ_ONCE(), yes?
 
-CPU unplug or isolation usually would be used for core ctrl policy.
+> 
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>  lib/test_firmware.c | 26 +++-----------------------
+>  1 file changed, 3 insertions(+), 23 deletions(-)
+> 
+> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+> index 0c7fbcf07ac5..9fee2b93a8d1 100644
+> --- a/lib/test_firmware.c
+> +++ b/lib/test_firmware.c
+> @@ -310,27 +310,13 @@ static int test_dev_config_update_bool(const char *buf, size_t size,
+>  	return ret;
+>  }
+>  
+> -static ssize_t
+> -test_dev_config_show_bool(char *buf,
+> -			  bool config)
+> +static ssize_t test_dev_config_show_bool(char *buf, bool val)
+>  {
+> -	bool val;
+> -
+> -	mutex_lock(&test_fw_mutex);
+> -	val = config;
+> -	mutex_unlock(&test_fw_mutex);
+> -
+>  	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+>  }
+>  
+> -static ssize_t test_dev_config_show_int(char *buf, int cfg)
+> +static ssize_t test_dev_config_show_int(char *buf, int val)
+>  {
+> -	int val;
+> -
+> -	mutex_lock(&test_fw_mutex);
+> -	val = cfg;
+> -	mutex_unlock(&test_fw_mutex);
+> -
+>  	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+>  }
+>  
+> @@ -354,14 +340,8 @@ static int test_dev_config_update_u8(const char *buf, size_t size, u8 *cfg)
+>  	return size;
+>  }
+>  
+> -static ssize_t test_dev_config_show_u8(char *buf, u8 cfg)
+> +static ssize_t test_dev_config_show_u8(char *buf, u8 val)
+>  {
+> -	u8 val;
+> -
+> -	mutex_lock(&test_fw_mutex);
+> -	val = cfg;
+> -	mutex_unlock(&test_fw_mutex);
+> -
+>  	return snprintf(buf, PAGE_SIZE, "%u\n", val);
+>  }
+>  
+> -- 
+> 2.17.1
+> 
 
-This dirver is showing an example of using core ctrl policy.
-
-Signed-off-by: Jeson Gao <jeson.gao@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
----
- drivers/thermal/Kconfig            |   8 +
- drivers/thermal/Makefile           |   1 +
- drivers/thermal/sprd_cpu_cooling.c | 340 +++++++++++++++++++++++++++++
- 3 files changed, 349 insertions(+)
- create mode 100644 drivers/thermal/sprd_cpu_cooling.c
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 91af271e9bb0..41a57b0a0d57 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -490,4 +490,12 @@ config SPRD_THERMAL
- 	help
- 	  Support for the Spreadtrum thermal sensor driver in the Linux thermal
- 	  framework.
-+
-+config SPRD_CPU_COOLING
-+	tristate "sprd cpu cooling support"
-+	depends on CPU_FREQ_THERMAL
-+	help
-+	  This implements the sprd cpu cooling mechanism to mitigate temperature
-+	  rising.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 8c8ed7b79915..403184299485 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -60,3 +60,4 @@ obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
- obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
- obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
- obj-$(CONFIG_SPRD_THERMAL)	+= sprd_thermal.o
-+obj-$(CONFIG_SPRD_CPU_COOLING)	+= sprd_cpu_cooling.o
-diff --git a/drivers/thermal/sprd_cpu_cooling.c b/drivers/thermal/sprd_cpu_cooling.c
-new file mode 100644
-index 000000000000..18ce41e2bd5a
---- /dev/null
-+++ b/drivers/thermal/sprd_cpu_cooling.c
-@@ -0,0 +1,340 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 Spreadtrum Communications Inc.
-+
-+#include <linux/thermal.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/cpu.h>
-+#include <linux/sched.h>
-+#include <linux/platform_device.h>
-+#include <linux/printk.h>
-+#include <linux/cpufreq.h>
-+
-+#include <linux/cpu_cooling.h>
-+
-+struct sprd_cooling_cluster {
-+	int id;
-+	int cpu;
-+	int cpus;
-+	u32 min_freq;
-+	struct cpufreq_policy policy;
-+};
-+
-+struct sprd_cooling_data {
-+	int nr_clusters;
-+	struct sprd_cooling_cluster *cluster;
-+};
-+
-+static void sprd_update_target_cpus(struct cpufreq_policy *policy,
-+				    u32 target_cpus)
-+{
-+	int ret, cpu, first;
-+	u32 curr_online_cpus, ncpus;
-+
-+	ncpus = cpumask_weight(policy->related_cpus);
-+	curr_online_cpus = cpumask_weight(policy->cpus);
-+	first = cpumask_first(policy->related_cpus);
-+
-+	if (target_cpus > curr_online_cpus) {
-+		cpu = first;
-+		for_each_cpu(cpu, policy->related_cpus) {
-+			if (curr_online_cpus == target_cpus)
-+				break;
-+			if ((target_cpus > curr_online_cpus) &&
-+			    !cpu_online(cpu)) {
-+				ret = add_cpu(cpu);
-+				if (!ret && cpu_online(cpu))
-+					curr_online_cpus++;
-+			}
-+		}
-+	} else if (target_cpus < curr_online_cpus) {
-+		for (cpu = (first + ncpus - 1); cpu >= first; cpu--) {
-+			if (curr_online_cpus == target_cpus)
-+				break;
-+			if ((target_cpus < curr_online_cpus) &&
-+			    cpu_online(cpu)) {
-+				ret = remove_cpu(cpu);
-+				if (!ret && !cpu_online(cpu))
-+					curr_online_cpus--;
-+			}
-+		}
-+	}
-+}
-+
-+static void sprd_estimate_down_cpus(struct cpufreq_policy *policy,
-+				    u32 load, u32 normalised_power,
-+				    u32 freq_power)
-+{
-+	int i = 0;
-+	u32 target_cpus, online_cpus;
-+	u32 avg_load, estimate_power =  0;
-+
-+	if (normalised_power) {
-+		online_cpus = cpumask_weight(policy->cpus);
-+		if (!online_cpus)
-+			return;
-+
-+		avg_load = (load / online_cpus) ?: 1;
-+		do {
-+			estimate_power += (freq_power * avg_load) / 100;
-+			if (estimate_power > normalised_power)
-+				break;
-+			i++;
-+		} while (i < online_cpus);
-+
-+		target_cpus = max(i, 0);
-+	} else
-+		target_cpus = 0;
-+
-+	sprd_update_target_cpus(policy, target_cpus);
-+}
-+
-+static void sprd_estimate_up_cpus(struct cpufreq_policy *policy,
-+				  u32 load, u32 normalised_power,
-+				  u32 freq_power)
-+{
-+	int i = 0, ncpus;
-+	u32 target_cpus;
-+	u32 avg_load, estimate_power =  0;
-+
-+	ncpus = cpumask_weight(policy->related_cpus);
-+	avg_load = (load / ncpus) ?: 1;
-+
-+	do {
-+		estimate_power += (freq_power * avg_load) / 100;
-+		if (estimate_power > normalised_power)
-+			break;
-+		i++;
-+	} while (i < ncpus);
-+
-+	target_cpus = min(i, ncpus);
-+	sprd_update_target_cpus(policy, target_cpus);
-+}
-+
-+static void sprd_keep_cpus(struct cpufreq_policy *policy)
-+{
-+	u32 online_cpus;
-+
-+	online_cpus = cpumask_weight(policy->cpus);
-+	sprd_update_target_cpus(policy, online_cpus);
-+}
-+
-+static int sprd_cpufreq_cpu_ctrl(struct cpufreq_policy *policy,
-+				 u32 load, u32 normalised_power,
-+				 u32 freq_power)
-+{
-+	unsigned int ncpus, online_cpus;
-+
-+	ncpus = cpumask_weight(policy->related_cpus);
-+	online_cpus = cpumask_weight(policy->cpus);
-+
-+	if (normalised_power <  freq_power)
-+		sprd_estimate_down_cpus(policy, load,
-+					normalised_power, freq_power);
-+	else if (online_cpus < ncpus)
-+		sprd_estimate_up_cpus(policy, load,
-+				      normalised_power, freq_power);
-+	else
-+		sprd_keep_cpus(policy);
-+
-+	return 0;
-+}
-+
-+static void sprd_cpufreq_min_freq_limit(struct cpufreq_policy *policy,
-+					u32 *target_freq)
-+{
-+	struct sprd_cooling_cluster *cluster =
-+		container_of(policy, struct sprd_cooling_cluster, policy);
-+
-+	if (*target_freq < cluster->min_freq)
-+		*target_freq = cluster->min_freq;
-+}
-+
-+struct cpufreq_cooling_plat_ops plat_ops = {
-+	.cpufreq_plat_cpu_ctrl = sprd_cpufreq_cpu_ctrl,
-+	.cpufreq_plat_min_freq_limit = sprd_cpufreq_min_freq_limit,
-+};
-+
-+static int sprd_get_cluster_counts(void)
-+{
-+	int cpu = 0, core_num = -1;
-+	int cluster_num = 0;
-+
-+	do {
-+		core_num = cpumask_weight(topology_core_cpumask(cpu));
-+		if (core_num > 0) {
-+			cpu = cpu + core_num;
-+			cluster_num++;
-+		} else
-+			break;
-+	} while (cpu > 0);
-+
-+	return cluster_num;
-+}
-+
-+static int sprd_cpu_cooing_ops_register(struct platform_device *pdev)
-+{
-+	int id, ret = 0;
-+	struct thermal_cooling_device *cdev;
-+	struct sprd_cooling_cluster *cluster;
-+	struct sprd_cooling_data *data = platform_get_drvdata(pdev);
-+
-+	for (id = 0; id < data->nr_clusters; id++) {
-+		cluster = &data->cluster[id];
-+		cdev = cluster->policy.cdev;
-+		if (cdev) {
-+			ret = cpufreq_cooling_plat_ops_register(cdev,
-+								&plat_ops);
-+			if (ret < 0) {
-+				dev_err(&pdev->dev,
-+					"CPU%d: failed to register platform function\n",
-+					cluster->cpu);
-+				break;
-+			}
-+		} else {
-+			ret = -ENODEV;
-+			dev_err(&pdev->dev,
-+				"CPU%d: failed to get thermal device\n",
-+				cluster->cpu);
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int sprd_cpu_cooing_ops_unregister(struct platform_device *pdev)
-+{
-+	int id, ret = 0;
-+	struct thermal_cooling_device *cdev;
-+	struct sprd_cooling_cluster *cluster;
-+	struct sprd_cooling_data *data = platform_get_drvdata(pdev);
-+
-+	for (id = 0; id < data->nr_clusters; id++) {
-+		cluster = &data->cluster[id];
-+		cdev = cluster->policy.cdev;
-+		if (cdev) {
-+			ret = cpufreq_cooling_plat_ops_unregister(cdev);
-+			if (ret < 0) {
-+				dev_err(&pdev->dev,
-+					"cpu%d: failed to unregister platform function\n",
-+					cluster->cpu);
-+				break;
-+			}
-+		} else {
-+			dev_err(&pdev->dev,
-+				"cpu%d: failed to get thermal device\n",
-+				cluster->cpu);
-+			ret = -ENODEV;
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int sprd_init_cooling_cluster(struct platform_device *pdev)
-+{
-+	int cpu = 0, id, core_num, ret = 0;
-+	struct sprd_cooling_cluster *cluster;
-+	struct sprd_cooling_data *data = platform_get_drvdata(pdev);
-+
-+	do {
-+		core_num = cpumask_weight(topology_core_cpumask(cpu));
-+		id = topology_physical_package_id((cpu));
-+		if (core_num > 0 && id >= 0) {
-+			cluster = &data->cluster[id];
-+			cluster->id = id;
-+			cluster->cpu = cpu;
-+			cluster->cpus = core_num;
-+			ret = cpufreq_get_policy(&(cluster->policy), cpu);
-+			if (ret < 0) {
-+				dev_err(&pdev->dev,
-+					"CPU%d failed to get policy\n",
-+					cpu);
-+				break;
-+			}
-+
-+			cpu = cpu + core_num;
-+		} else
-+			break;
-+
-+	} while (cpu > 0);
-+
-+	return ret;
-+}
-+
-+static int sprd_cpu_cooling_probe(struct platform_device *pdev)
-+{
-+	int ret = -1;
-+	int counts = 0;
-+	struct sprd_cooling_data *data;
-+	struct device *dev = &pdev->dev;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	counts = sprd_get_cluster_counts();
-+	data->nr_clusters = counts;
-+	data->cluster = devm_kzalloc(dev,
-+				     sizeof(*data->cluster) * data->nr_clusters,
-+				     GFP_KERNEL);
-+	if (!data->cluster)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	ret = sprd_init_cooling_cluster(pdev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to init cooling cluster\n");
-+		return ret;
-+	}
-+
-+	ret = sprd_cpu_cooing_ops_register(pdev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to register cooling callback function\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sprd_cpu_cooling_remove(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = sprd_cpu_cooing_ops_unregister(pdev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to unregister cooling callback function\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver sprd_cpu_cooling_driver = {
-+	.probe = sprd_cpu_cooling_probe,
-+	.remove = sprd_cpu_cooling_remove,
-+	.driver = {
-+		   .owner = THIS_MODULE,
-+		   .name = "sprd_cpu_cooling",
-+		   },
-+};
-+static int __init sprd_cpu_cooling_init(void)
-+{
-+	return platform_driver_register(&sprd_cpu_cooling_driver);
-+}
-+
-+static void __exit sprd_cpu_cooling_exit(void)
-+{
-+	platform_driver_unregister(&sprd_cpu_cooling_driver);
-+}
-+
-+module_init(sprd_cpu_cooling_init)
-+module_exit(sprd_cpu_cooling_exit);
-+
-+MODULE_DESCRIPTION("sprd cpu cooling");
-+MODULE_LICENSE("GPL");
 -- 
-2.20.1
-
+Kees Cook
