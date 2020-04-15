@@ -2,128 +2,89 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8707BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458E6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B402078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0CC20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408591AbgDOK0g (ORCPT
+        id S2408607AbgDOK1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:26:36 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:35467 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408508AbgDOKUI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:20:08 -0400
-X-IronPort-AV: E=Sophos;i="5.72,386,1580742000"; 
-   d="scan'208";a="44789385"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Apr 2020 19:19:26 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 924424007F4F;
-        Wed, 15 Apr 2020 19:19:24 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 2/3] media: rcar-vin: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
-Date:   Wed, 15 Apr 2020 11:19:07 +0100
-Message-Id: <1586945948-11026-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 15 Apr 2020 06:27:25 -0400
+Received: from sauhun.de ([88.99.104.3]:51666 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896454AbgDOKW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:22:57 -0400
+Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
+        by pokefinder.org (Postfix) with ESMTPSA id 450FF2C1FF1;
+        Wed, 15 Apr 2020 12:21:59 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 12:21:58 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, alain.volmat@st.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: busses: convert to
+ devm_platform_get_and_ioremap_resource
+Message-ID: <20200415102158.GH1141@ninjato>
+References: <20200414134827.18674-1-zhengdejin5@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4LFBTxd4L5NLO6ly"
+Content-Disposition: inline
+In-Reply-To: <20200414134827.18674-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by setting
-format type to RAW8 in VNMC register and appropriately setting the bpp
-and bytesperline to enable V4L2_PIX_FMT_SRGGB8.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/media/platform/rcar-vin/rcar-dma.c  | 15 ++++++++++++++-
- drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+--4LFBTxd4L5NLO6ly
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-index 48bd9bfc3948..3e8e29573e6d 100644
---- a/drivers/media/platform/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-@@ -85,6 +85,7 @@
- #define VNMC_INF_YUV8_BT601	(1 << 16)
- #define VNMC_INF_YUV10_BT656	(2 << 16)
- #define VNMC_INF_YUV10_BT601	(3 << 16)
-+#define VNMC_INF_RAW8		(4 << 16)
- #define VNMC_INF_YUV16		(5 << 16)
- #define VNMC_INF_RGB888		(6 << 16)
- #define VNMC_VUP		(1 << 10)
-@@ -587,13 +588,19 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
- 	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
- 	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
- 
--
- 	/* TODO: Add support for the UDS scaler. */
- 	if (vin->info->model != RCAR_GEN3)
- 		rvin_crop_scale_comp_gen2(vin);
- 
- 	fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
- 	stride = vin->format.bytesperline / fmt->bpp;
-+
-+	/* For RAW8 format bpp is 1, but the hardware process RAW8
-+	 * format in 2 pixel unit hence configure VNIS_REG as stride / 2.
-+	 */
-+	if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
-+		stride /= 2;
-+
- 	rvin_write(vin, stride, VNIS_REG);
- }
- 
-@@ -676,6 +683,9 @@ static int rvin_setup(struct rvin_dev *vin)
- 
- 		input_is_yuv = true;
- 		break;
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+		vnmc |= VNMC_INF_RAW8;
-+		break;
- 	default:
- 		break;
- 	}
-@@ -737,6 +747,9 @@ static int rvin_setup(struct rvin_dev *vin)
- 	case V4L2_PIX_FMT_ABGR32:
- 		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
- 		break;
-+	case V4L2_PIX_FMT_SRGGB8:
-+		dmr = 0;
-+		break;
- 	default:
- 		vin_err(vin, "Invalid pixelformat (0x%x)\n",
- 			vin->format.pixelformat);
-diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-index 5151a3cd8a6e..ca542219e8ae 100644
---- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-@@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
- 		.fourcc			= V4L2_PIX_FMT_ABGR32,
- 		.bpp			= 4,
- 	},
-+	{
-+		.fourcc			= V4L2_PIX_FMT_SRGGB8,
-+		.bpp			= 1,
-+	},
- };
- 
- const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
--- 
-2.20.1
+On Tue, Apr 14, 2020 at 09:48:27PM +0800, Dejin Zheng wrote:
+> use devm_platform_get_and_ioremap_resource() to simplify code, which
+> contains platform_get_resource() and devm_ioremap_resource(), it also
+> get the resource for use by the following code.
+>=20
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
+Applied to for-next, because it seems 'the new way' but...
+
+> -	r_mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	id->membase =3D devm_ioremap_resource(&pdev->dev, r_mem);
+> +	id->membase =3D devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
+
+=2E.. guys, do you really think this one line reduction improves
+readability? Oh well...
+
+
+--4LFBTxd4L5NLO6ly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W4EIACgkQFA3kzBSg
+KbamCA/+PjnvKJsZh5zv3h9+f+/+k1RNX3gHTRtOpPy+Mq9fWzySA//u0arFuTEo
+fneK30U2oflrSd1cDLiX7rE3/BI9EArmZR2hfFM7TSd1/j77Tx67y12ZP+MfndNH
+I59kfBFQACoJ9QgSrClcTVVwEBUMe/kf2zpHKeXw/ly9eirKQab5hnX4f83nQI3R
+5BtIv/tnyDwvUrKB9vSiUHORa1/5ObvOmgOdwv5peyHBDyjTrkFAsmJoIwZD+iKV
+jX5K3SoBluFaxOIhw23/NwrZv0EfDLEVT6bX9Eo5Yz4ip3WiDrO2JOJiVgAelduW
+WvrIQQIlOs9RPYua8BliSYTfr8lXUESelA5Z5N50g89+ozfH/swHtm6IiubUtW4T
+q36yAh7fuZSwBwWwEO3wvu6z0moIFqw0ZecRA8ucoSRmGOBtlxQsfitJgO6O7Pi3
+6HPJN7l4ZI6DZfTz1yEOOA2TET1UH02n+5exQHJIOecj6v/cg/eUV0MumkDWQ43z
+3eyEuF1ZJT3S9HPbzinCgSms1a7CzeAyyVlJkNwthpI8W8jg1fOXvBRqb4GF4NHL
+koP5MoMDOq7wohB+8P6EIADcQ9TD5pYrc6wt0kqzRbxOIhg3h9nNs0CgPcfF4FQp
+Dqu5c1aMoa9UVSGkhIIMbIW0jBJXEV5fw1CA8LDNLC32kdhCYXw=
+=uSZW
+-----END PGP SIGNATURE-----
+
+--4LFBTxd4L5NLO6ly--
