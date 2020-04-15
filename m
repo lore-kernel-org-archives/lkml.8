@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266A7C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDADC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03BFF20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C81320737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954047;
-	bh=sJRlZ3mJya5wdFuThA+patbUhvI8Xqv0PFU2vE8Muh8=;
+	s=default; t=1586954106;
+	bh=92e03qfV5WzTTcnm4d7dLXBPeHPv6FHPB6NTC593rt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qElDDHL+vQB0XIAdSeszXC06DG6tCAxmq2alUFjiUW3JBOvZp7kubIeIlBKNpc+i3
-	 X8VJBFphpVMdDJUFFXN314TYgW1ZWqfIIHtA17WF+c6pvGQsuB3VQ+bF8FgU3+VamN
-	 mpiT38V0Km2cGr4Cbkjp03Uc3Sa+B6foo2367sYQ=
+	b=p+yhbpAcenUWij480cRecQbdctNGLMUou3qM5KBCONVnRI9/3OTpO32HKXsdvFZTY
+	 0ynWjWwduMjflvz+zLcbDFtxR5EaEdJf2VrPP1PSwWQibQiy977/MpWsA+89FpUhQK
+	 nARcyEPFX4sRqcl+zAbWH0ywb6bc6siDo2Gdf9kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369585AbgDOMdY (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
+        id S369797AbgDOMfA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409066AbgDOLob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:31 -0400
+        id S2409058AbgDOLoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6152B215A4;
-        Wed, 15 Apr 2020 11:44:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B3B20737;
+        Wed, 15 Apr 2020 11:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951064;
-        bh=sJRlZ3mJya5wdFuThA+patbUhvI8Xqv0PFU2vE8Muh8=;
+        s=default; t=1586951050;
+        bh=92e03qfV5WzTTcnm4d7dLXBPeHPv6FHPB6NTC593rt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdhuse+BJeWVy2fVQhWV0EWwn206jHA/qD4M84xJgGVD1+OpKFbatqnjgbl3jxygZ
-         vcydalWSBlRyy8E2uAsiWURLvR0UcXk/ZXmfVij6HwxIA0Y2LV4dlx/DXz4mz93m8l
-         yZaoMeWScPtnsYg0FLqklRpJLt1UR6L2bGonmy/g=
+        b=mCPdP8IwV1z/6Bi9ZGJAKA7tf++CFwwss5dU33C2xinZ6/8FNQdZU9mM3GUJ7YlkN
+         QjJGnc9TkhHoMeu0iHyUUga1SvivA/rwhirkS9cMa9SNQykof3wyBYXmgLFIf84i7v
+         ZiDUbp1SdVA2f0UBlSnk1adOyQjX4Cw+MOfrWpM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 096/106] ovl: fix value of i_ino for lower hardlink corner case
-Date:   Wed, 15 Apr 2020 07:42:16 -0400
-Message-Id: <20200415114226.13103-96-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 085/106] mfd: dln2: Fix sanity checking for endpoints
+Date:   Wed, 15 Apr 2020 07:42:05 -0400
+Message-Id: <20200415114226.13103-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -58,53 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 ]
+[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
 
-Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
-cases"), relaxed the condition nfs_export=on in order to set the value of
-i_ino to xino map of real ino.
+While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+tries to harden the sanity checks it made at the same time a regression,
+i.e.  mixed in and out endpoints. Obviously it should have been not tested on
+real hardware at that time, but unluckily it didn't happen.
 
-Specifically, it also relaxed the pre-condition that index=on for
-consistent i_ino. This opened the corner case of lower hardlink in
-ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
-ovl_init_inode() is called to set i_ino to lower real ino without the xino
-mapping.
+So, fix above mentioned typo and make device being enumerated again.
 
-Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
-can initialize i_ino correctly.
+While here, introduce an enumerator for magic values to prevent similar issue
+to happen in the future.
 
-Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mfd/dln2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-index b045cf1826fc4..bb980721502dd 100644
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -881,7 +881,7 @@ struct inode *ovl_get_inode(struct super_block *sb,
- 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
- 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
- 					oip->index);
--	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
-+	int fsid = bylower ? lowerpath->layer->fsid : 0;
- 	bool is_dir, metacopy = false;
- 	unsigned long ino = 0;
- 	int err = oip->newinode ? -EEXIST : -ENOMEM;
-@@ -931,6 +931,8 @@ struct inode *ovl_get_inode(struct super_block *sb,
- 			err = -ENOMEM;
- 			goto out_err;
- 		}
-+		ino = realinode->i_ino;
-+		fsid = lowerpath->layer->fsid;
- 	}
- 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
- 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 7841c11411d08..4faa8d2e5d045 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -90,6 +90,11 @@ struct dln2_mod_rx_slots {
+ 	spinlock_t lock;
+ };
+ 
++enum dln2_endpoint {
++	DLN2_EP_OUT	= 0,
++	DLN2_EP_IN	= 1,
++};
++
+ struct dln2_dev {
+ 	struct usb_device *usb_dev;
+ 	struct usb_interface *interface;
+@@ -733,10 +738,10 @@ static int dln2_probe(struct usb_interface *interface,
+ 	    hostif->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
+-	epin = &hostif->endpoint[0].desc;
+-	epout = &hostif->endpoint[1].desc;
++	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
+ 	if (!usb_endpoint_is_bulk_out(epout))
+ 		return -ENODEV;
++	epin = &hostif->endpoint[DLN2_EP_IN].desc;
+ 	if (!usb_endpoint_is_bulk_in(epin))
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
