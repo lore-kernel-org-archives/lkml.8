@@ -2,122 +2,113 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E799C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D733C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327FD20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B48320768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhOW0LP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411851AbgDOTLR (ORCPT
+        id S2441674AbgDOTNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:11:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46959 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416844AbgDOSlm (ORCPT
+        Wed, 15 Apr 2020 15:13:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1416868AbgDOSuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:41:42 -0400
-Received: from static-50-53-47-111.bvtn.or.frontiernet.net ([50.53.47.111] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1jOmyY-0001iJ-0w; Wed, 15 Apr 2020 18:41:30 +0000
-Subject: Re: [PATCH v2] apparmor: fix potential label refcnt leak in
- aa_change_profile
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        linux-security-module@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Kangjie Lu <kjlu@umn.edu>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Yuan Zhang <yuanxzhang@fudan.edu.cn>
-References: <e9f36822-2483-9512-732b-b158ed104bf2@web.de>
-From:   John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Canonical
-Message-ID: <f5930264-946a-ad70-a327-62117499681b@canonical.com>
-Date:   Wed, 15 Apr 2020 11:41:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 14:50:22 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12520C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:50:20 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d77so836255wmd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:50:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HxG0r7hAOihPQolhiAxiSpbfJApEZjUojCdyDxEKaME=;
+        b=WhOW0LP0WSkxBIxmIudr/kHzIGLgmxz4wfb1q2QmUH1rHOcIi1ByObTmVdUVydbvIX
+         sbj1Ilay83nb8NWkB0KHCAAITGOThoT6pTS1JS3BGOOONMu5KOI0klloxRsZK3U4B1k8
+         u03ho6QlmEranl40DzWLacHt3b06UwzuQ0nef5K/HrIrcyVcRw/E37eAIgwXg/nsPKZ3
+         12AuvCeyh3QMIuXfs+ivUK0WvMIo1gzB1gA4l7ujyTtgsDppAcu54tGMSol/O75UeAmY
+         0uuHuNkgxXJUCQKWjRtYZ52KiH+iKm6Z/UyDdgO0/imK82/UxcxxNYpwYeC/msJ1Ls1D
+         CCQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HxG0r7hAOihPQolhiAxiSpbfJApEZjUojCdyDxEKaME=;
+        b=CU3ri2vuEui5Nzg1GrtfeLnBQR+eZuU7GxxBeQQZY7O3pkUoF7N47sXtkjEDU8KTbM
+         rZchhTjBzM/4/uwAO0ZcZk2aOTMqNiA41ZebvQTXx8OmGsM4Pi1W4TeQZGaz2cQnHWUf
+         1P3guIX+r8QDdTd3Xo6BTJvHg6Mm8T6idfX1wdZkhY+B/gvbnZbr8ukF9TZiIzRSsQ8O
+         YM/FWOfbWpic5/nTnEaWxk01C4aAoSiT4RTLKWNFkI13ogekvfgl43NX2hrW9cFvKyt/
+         wpFB/XzldMulXSXSW9lj9WEcpW5lL8IaYEz2TmnMHPwfkQ3kyRN8NtAtEHFNK7r5CYnz
+         WDyg==
+X-Gm-Message-State: AGi0PuaUXuT55+y/Y1aZ4Vyzk40yjPz/9MBnrrkmBEyUUYNwwEAwZD+B
+        dRd68Ph5gUt90y/pxaqcSq3bAy+QuqhW
+X-Google-Smtp-Source: APiQypJV8x2h4LVXyK95Cuo6S9zkHKN7YGpqDtNLNkYj27uheKPDHGd0nP+GdMRbkbEW0FDHExr6AQ==
+X-Received: by 2002:a1c:9ecb:: with SMTP id h194mr671829wme.49.1586976615589;
+        Wed, 15 Apr 2020 11:50:15 -0700 (PDT)
+Received: from ninjahost.lan (79-73-33-244.dynamic.dsl.as9105.com. [79.73.33.244])
+        by smtp.gmail.com with ESMTPSA id w7sm24757618wrr.60.2020.04.15.11.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 11:50:15 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     boqun.feng@gmail.com, Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Qian Cai <cai@lca.pw>,
+        Eiichi Tsukata <devel@etsukata.com>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: [PATCH 1/1] cpu: Add annotation inside clear_tasks_mm_cpumask()
+Date:   Wed, 15 Apr 2020 19:49:37 +0100
+Message-Id: <20200415184937.32373-2-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200415184937.32373-1-jbi.octave@gmail.com>
+References: <20200415184937.32373-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e9f36822-2483-9512-732b-b158ed104bf2@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/20 4:27 AM, Markus Elfring wrote:
->> According to the comment of aa_get_current_label(), …
-> 
-> I suggest to make this wording clearer.
-> Would you like to refer to any software documentation here?
-> 
-> 
->> However, when the original object pointed by "label" becomes
->> unreachable because aa_change_profile() returns or a new object
->> is assigned to "label", reference count increased by
->> aa_get_current_label() is not decreased, causing a refcnt leak.
-> 
-> How do you think about to reduce abbreviations in the commit message?
-> 
-> Would you like to add the tag “Fixes” to the change description?
-> 
-Fixes tags are always nice to have filled out, but some times its
-hard to determine or the patch submitter doesn't know how or ...
-If the fixes tags aren't there I will add them before I push them up.
-In this case its
+Sparse reports a warning
 
-Fixes: 9fcf78cca198 ("apparmor: update domain transitions that are subsets of confinement at nnp")
+warning: context imbalance in clear_tasks_mm_cpumask() - different lock contexts for basic block
 
-> Regards,
-> Markus
-> 
+The root cause is the missing annotation inside clear_tasks_mm_cpumask()
+
+Add the missing __acquire(&t->alloc_lock) annotation.
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ kernel/cpu.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 9c706af713fb..d8c452a8dd09 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -834,6 +834,7 @@ void clear_tasks_mm_cpumask(int cpu)
+ 		t = find_lock_task_mm(p);
+ 		if (!t)
+ 			continue;
++		__acquire(&t->alloc_lock);
+ 		cpumask_clear_cpu(cpu, mm_cpumask(t->mm));
+ 		task_unlock(t);
+ 	}
+-- 
+2.24.1
 
